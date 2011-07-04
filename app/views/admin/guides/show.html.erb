@@ -1,0 +1,10 @@
+<%= @guide.inspect %>
+
+<h2>Editions</h2>
+
+<% @guide.editions.each do |edition| %>
+<h3>
+  <%= edition.version_number %> : <%= edition.title %>
+</h3>
+<p><%= link_to 'edit', [:edit, :admin, @guide, edition] %></p>
+<% end %>

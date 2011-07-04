@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @guides.each do |guide| %>
+    <tr>
+      <td><%= guide.title %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to '+ Add New', new_admin_guide_path %></p>
