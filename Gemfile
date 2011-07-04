@@ -12,6 +12,10 @@ gem "bson_ext", "~> 1.3"
 
 gem "factory_girl_rails", "~> 1.1.rc1"
 
+gem 'inherited_resources'
+gem 'formtastic'
+gem 'has_scope'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
