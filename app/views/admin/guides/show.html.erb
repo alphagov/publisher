@@ -14,8 +14,8 @@
   </div>
 </div>
 
+<% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-$(function () {
-  $('#guide-info').tabs();
-})
+$(function () { $('#guide-info').tabs(); });
 </script>
+<% end %>

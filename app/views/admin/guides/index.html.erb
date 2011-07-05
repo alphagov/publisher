@@ -39,8 +39,8 @@
 
 <p><%= link_to '+ Add New', new_admin_guide_path %></p>
 
+<% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-$(function () {
-  $('#guide-lists').tabs();
-})
+$(function () { $('#guide-lists').tabs(); });
 </script>
+<% end %>

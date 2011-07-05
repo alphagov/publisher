@@ -5,7 +5,7 @@
   <% end %>
 
   <div id="parts">
-    <h3>Parts</h3>
+    <h2>Parts</h2>
 
     <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
 
@@ -22,6 +22,7 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
+<% content_for :extra_headers do %>
 <style type="text/css" media="screen">
   #parts fieldset {
     border: 1px solid #ccc;
@@ -29,32 +30,10 @@
     margin: 0.5em;
   }
 </style>
+<% end %>
 
+<% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-  var formtastic_ids = {};
-
-  $(document).ready(function () {
-    $('.add-associated').click(function () {
-      elem = $(this);
-      var target_id = elem.data('target');
-      var target = $('#' + target_id);
-    
-      var template_id = elem.data('tmpl_id');
-      template_contents = $('#' + template_id).html();
-    
-      if (typeof(formtastic_ids[template_id]) == 'undefined') {
-        var current_id = target.find('fieldset:last-child input').attr('id').match(/_attributes_(\d+)_/)[1];
-        formtastic_ids[template_id] = current_id;
-      }
-
-      formtastic_ids[template_id]++;
-    
-      var html = $.mustache(template_contents, {
-        index: formtastic_ids[template_id]
-      });
-    
-      target.append(html);
-      return false;
-    })
-  })
+  $(function () { $("#parts").accordion(); });
 </script>
+<% end %>
