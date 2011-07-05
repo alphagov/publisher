@@ -11,6 +11,10 @@ class Guide
   embeds_many :editions
   embeds_many :publishings
   
+  def title
+    self.editions.any? ? self.editions.last.title : 'Title TBD'
+  end
+
   def build_edition(title,introduction)
     version_number = self.editions.length + 1
     self.editions.build(:title=> title, :introduction => introduction,:version_number=>version_number)
