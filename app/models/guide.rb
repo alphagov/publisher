@@ -23,13 +23,14 @@ class Guide
   end
   
   def publish!(edition,notes)
-    self.publishings.create(:version_number=>version.version_number,:change_notes=>notes)
+    self.publishings.build(:version_number=>edition.version_number,:change_notes=>notes)
+    self.save!
   end
   
   def published_edition
-    latest_publishing = self.publishings.find(sort:[["created_at DESC"]])
+    latest_publishing = self.publishings.first
     if latest_publishing
-      self.editions.first(:version_number => latest_publishing.version_number)
+      self.editions.first {|s| s.version_number == latest_publishing.version_number }
     else
       nil
     end

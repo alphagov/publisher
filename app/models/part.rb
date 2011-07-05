@@ -1,6 +1,5 @@
 class Part
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   embedded_in :guide
   
@@ -9,4 +8,6 @@ class Part
   field :excerpt, :type => String
   field :body, :type => String
   field :slug, :type => String
+  field :created_at, :type => DateTime, :default => lambda { Time.now }
+  
 end

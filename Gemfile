@@ -10,7 +10,6 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem "mongoid", "~> 2.0"
 gem "bson_ext", "~> 1.3"
 
-gem "factory_girl_rails", "~> 1.1.rc1"
 
 gem 'inherited_resources'
 gem 'formtastic'
@@ -34,6 +33,7 @@ gem 'has_scope'
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end
+group :development, :test do
+  gem "factory_girl_rails", "~> 1.1.rc1"
+  gem "timecop"
+end
