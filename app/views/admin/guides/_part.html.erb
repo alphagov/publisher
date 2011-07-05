@@ -1,7 +1,10 @@
-<h3><a href="#">Section 1</a></h3>
-<%= f.inputs do %>
-  <%= f.input :title %>
-  <%= f.input :excerpt, :as => :text %>
-  <%= f.input :body, :as => :text %>
-  <%= f.input :slug %>
-<% end %>
+<div class="part">
+  <h3><a href="#">Section 1</a></h3>
+  <%= f.inputs do %>
+    <%= f.input :title %>
+    <%= f.input :excerpt, :as => :text %>
+    <%= f.input :body, :as => :text %>
+    <%= f.input :slug %>
+    <%= f.remove_link "Remove" %>
+  <% end %>
+</div>
