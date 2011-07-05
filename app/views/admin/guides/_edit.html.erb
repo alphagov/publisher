@@ -1,0 +1,60 @@
+<%= semantic_form_for [:admin, @guide, @latest_edition] do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :title %>
+    <%= f.input :introduction %>
+  <% end %>
+
+  <div id="parts">
+    <h3>Parts</h3>
+
+    <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
+
+    <%= f.semantic_fields_for :parts do |part| %>
+      <%= render :partial => 'part', :locals => {:f => part} %>
+    <% end %>
+
+  </div>
+
+  <p><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">+ Part</a></p>
+  
+  <%= f.buttons %>
+
+  <%= f.add_associated_jquery_template :parts %>
+<% end %>
+
+<style type="text/css" media="screen">
+  #parts fieldset {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    margin: 0.5em;
+  }
+</style>
+
+<script type="text/javascript" charset="utf-8">
+  var formtastic_ids = {};
+
+  $(document).ready(function () {
+    $('.add-associated').click(function () {
+      elem = $(this);
+      var target_id = elem.data('target');
+      var target = $('#' + target_id);
+    
+      var template_id = elem.data('tmpl_id');
+      template_contents = $('#' + template_id).html();
+    
+      if (typeof(formtastic_ids[template_id]) == 'undefined') {
+        var current_id = target.find('fieldset:last-child input').attr('id').match(/_attributes_(\d+)_/)[1];
+        formtastic_ids[template_id] = current_id;
+      }
+
+      formtastic_ids[template_id]++;
+    
+      var html = $.mustache(template_contents, {
+        index: formtastic_ids[template_id]
+      });
+    
+      target.append(html);
+      return false;
+    })
+  })
+</script>

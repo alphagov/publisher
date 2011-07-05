@@ -1,0 +1,21 @@
+<% @guide.editions.each do |edition| %>
+  <div class="edition">
+    <h3>v<%= edition.version_number %></h3>
+    <div class="buttons">
+      <%= button_to 'Preview' %>
+      <%= button_to 'Diff' %>
+      <%= button_to 'Diff with latest' %>
+    </div>
+    <ul>
+      <li>
+        <p>Something done by some person
+        <br />01/01/2011 09:23</p>
+
+      </li>
+      <li>
+        <p>Something done by some person
+        <br />01/01/2011 09:23</p>
+      </li>
+    </ul>
+  </div>
+<% end %>

@@ -1,10 +1,21 @@
-<%= @guide.inspect %>
+<div id="guide-info">
+  <ul>
+    <li><a href="#edit">Edit</a></li>
+    <li><a href="#metadata">Metadata</a></li>
+    <li><a href="#history">History</a></li>
+  </ul>
+  <div id="edit">
+    <%= render 'edit' %>
+  </div>
+  <div id="metadata">
+  </div>
+  <div id="history">
+    <%= render 'history' %>
+  </div>
+</div>
 
-<h2>Editions</h2>
-
-<% @guide.editions.each do |edition| %>
-<h3>
-  <%= edition.version_number %> : <%= edition.title %>
-</h3>
-<p><%= link_to 'edit', [:edit, :admin, @guide, edition] %></p>
-<% end %>
+<script type="text/javascript" charset="utf-8">
+$(function () {
+  $('#guide-info').tabs();
+})
+</script>
