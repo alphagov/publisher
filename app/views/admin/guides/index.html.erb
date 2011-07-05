@@ -7,7 +7,7 @@
   <tbody>
     <% @guides.each do |guide| %>
     <tr>
-      <td><%= guide.title %></td>
+      <td><%= link_to guide.title, [:admin, guide] %></td>
     </tr>
     <% end %>
   </tbody>
