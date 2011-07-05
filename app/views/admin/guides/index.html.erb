@@ -1,16 +1,46 @@
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @guides.each do |guide| %>
-    <tr>
-      <td><%= link_to guide.title, [:admin, guide] %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<div id="guide-lists">
+  <ul>
+    <li>New</li>
+    <li>Published</li>
+    <li>Archive</li>
+    <li>Review Requested</li>
+  </ul>
+  
+  <div id="new">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @guides.each do |guide| %>
+        <tr>
+          <td>
+            <%= link_to guide.title, [:admin, guide] %>
+          </td>
+          <td>
+            <%= link_to 'Edit', [:edit, :admin, guide] %>
+            <%= link_to 'Preview', '#' %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <div id="published">
+  </div>
+  <div id="archive">
+  </div>
+  <div id="review-requested">
+  </div>
+</div>
 
 <p><%= link_to '+ Add New', new_admin_guide_path %></p>
+
+<script type="text/javascript" charset="utf-8">
+$(function () {
+  $('#guide-lists').tabs();
+})
+</script>
