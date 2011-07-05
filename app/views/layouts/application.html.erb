@@ -2,15 +2,17 @@
 <html>
 <head>
   <title>Mguides</title>
-  <%= stylesheet_link_tag :all %>
+  <%= stylesheet_link_tag '/guide-assets/stylesheets/formtastic.css', '/guide-assets/stylesheets/formtastic_changes.css' %>
   <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <%= javascript_include_tag 'jquery.mustache.js', 'jquery-ui-1.8.14.custom.min.js' %>
+  <%= javascript_include_tag '/guide-assets/javascripts/jquery.mustache.js', '/guide-assets/javascripts/jquery-ui-1.8.14.custom.min.js' %>
   <%# javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
 
-<%= yield %>
+  <div id="wrapper">
+    <%= yield %>
+  </div>
 
 </body>
 </html>
