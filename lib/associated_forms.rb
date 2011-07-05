@@ -64,49 +64,6 @@ module Formtastic #:nodoc:
       out = hidden_field(:_destroy)
       out += template.link_to_function(name, function, *args.push(options))
     end
-
-    # Add a link to add more partials
-    #    # Example:
-    #    <% semantic_form_for @post do |post| %>
-    #      <%= post.input :title %>
-    #      <% post.inputs :name => 'Authors', :id => 'authors' do %>
-    #        <%= post.add_associated_link "+ Author", :authors, :partial => 'authors/add_author' %>
-    #      <% end %>
-    #    <% end %>
-    #
-    #    # app/views/authors/_add_author.html.erb
-    #    <% f.input :name %>
-    #
-    #    # Output:
-    #   <form ...>
-    #     <li class="string"><input type='text' name='post[author][name]' id='post_author_name' /></li>
-    #     <fieldset class="inputs" id="authors"><legend><span>Authors</span></legend><ol>
-    #       <a href="#" onclick="if (typeof formtastic_next_author_id == 'undefined') ....return false;">+ Author</a>
-    #     </ol></fieldset>
-    #   </form>
-    #
-    #   if no partial name as give, it will use the association name 'authors' #=> app/views/posts/_authors.html.erb
-    #   you can use :container to customize the container of nesteds #=> :container => '#my_authors'
-    #   :before_function will be executed before the add method
-    #   :after_function will be executed after
-    #
-    #
-    def add_associated_link(name, association, opts = {})
-      object = @object.send(association).build
-      associated_name = extract_option_or_class_name(opts, :name, object)
-      variable = "formtastic_next_#{associated_name}_id"
-
-      opts.symbolize_keys!
-      partial = opts.delete(:partial) || associated_name
-      container = opts.delete(:expression) || "'#{opts.delete(:container) || '#'+associated_name.pluralize}'"
-      before_function = opts.delete(:before_function) || ''
-      after_function  = opts.delete(:after_function)  || ''
-
-      function = "#{before_function};if (typeof #{variable} == 'undefined') { #{variable} = $(#{container}).children().length; } 
-      $('#tmpl-#{association}').tmpl({index: #{variable}++}).appendTo(#{container});#{after_function}"
-
-      template.link_to_function(name, function, opts)
-    end
     
     def add_associated_jquery_template(association, opts = {})
       object = @object.send(association).build
