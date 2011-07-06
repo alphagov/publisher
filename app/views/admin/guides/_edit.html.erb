@@ -26,24 +26,30 @@
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () { 
-    $('input.title').change(function () {
+    var accordion_opts = {
+      header: "> div > h3",
+			collapsible: true
+    }
+    var sortable_opts = {
+      axis: "y",
+			handle: "h3",
+			stop: function() {
+				stop = true;
+			}
+    }
+
+    $('input.title').live('change', function () {
       var elem = $(this);
       var header = elem.closest('fieldset').prev('h3').find('a');
       header.text(elem.val());
     });
-    $("#parts").accordion({
-    				header: "> div > h3",
-    				collapsible: true
-    			}).sortable({
-    				axis: "y",
-    				handle: "h3",
-    				stop: function() {
-    					stop = true;
-    				}
-    			});; 
+    $("#parts").accordion(accordion_opts).sortable(sortable_opts); 
     $('.add-associated').bind('associated-added', function () {
       var active_index = $('#parts div.part').length;
-      $('#parts').accordion( "destroy" ).accordion({'collapsible': true, active: active_index - 1});
+      var my_opts = accordion_opts;
+      my_opts.active = active_index - 1;
+      $('#parts').sortable('destroy').accordion("destroy").
+        accordion(my_opts).sortable(sortable_opts);
     });
   });
 </script>
