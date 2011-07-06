@@ -1,4 +1,4 @@
-<div id="guide-lists">
+<div id="guide-nav">
   <ul>
     <li><a href="#new">New</a></li>
     <li><a href="#published">Published</a></li>
@@ -7,7 +7,7 @@
   </ul>
 
   <div id="new">
-    <table>
+    <table cellspacing="0">
       <thead>
         <tr>
           <th>Title</th>
@@ -41,6 +41,6 @@
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-$(function () { $('#guide-lists').tabs(); });
+$(function () { $('#guide-nav').tabs(); });
 </script>
 <% end %>

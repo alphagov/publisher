@@ -8,9 +8,9 @@
 </head>
 <body>
 
-  <div id="wrapper">
+  <div id="wrapper" class="wrapper">
     <%= yield %>
-    
+
     <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <%= javascript_include_tag '/guide-assets/javascripts/jquery.mustache.js', '/guide-assets/javascripts/jquery-ui-1.8.14.custom.min.js', '/guide-assets/javascripts/form-tools.js' %>
     <%= yield :extra_javascript %>
