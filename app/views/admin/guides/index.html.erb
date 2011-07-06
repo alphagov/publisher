@@ -15,33 +15,56 @@
         </tr>
       </thead>
       <tbody>
-        <% @guides.each do |guide| %>
-        <tr>
-          <td>
-            <%= link_to guide.title, [:admin, guide] %>
-          </td>
-          <td>
-            <%= link_to 'Edit', [:edit, :admin, guide] %>
-            <%= link_to 'Preview', '#' %>
-          </td>
-        </tr>
-        <% end %>
+        <%= render @drafts %>
       </tbody>
     </table>
   </div>
 
   <div id="published">
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @published %>
+      </tbody>
+    </table>
   </div>
   <div id="archive">
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @archive %>
+      </tbody>
+    </table>
   </div>
   <div id="review-requested">
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @review_requested %>
+      </tbody>
+    </table>
   </div>
 </div>
 
 <p class="button"><%= link_to '+ Add New Guide', new_admin_guide_path %></p>
 
 <% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
 $(function () { $('#guide-nav').tabs(); });
 </script>
 <% end %>

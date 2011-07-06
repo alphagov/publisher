@@ -1,10 +1,10 @@
 <div class="part">
-  <h3><a href="#">Section 1</a></h3>
+ <h3><a href="#"><%= f.object.title.present? ? f.object.title : 'Untitled Part' %></a></h3>
   <%= f.inputs do %>
-    <%= f.input :title %>
+    <%= f.input :title, :input_html => { :class => 'title' } %>
     <%= f.input :excerpt, :as => :text %>
     <%= f.input :body, :as => :text %>
     <%= f.input :slug %>
-    <%= f.remove_link "Remove" %>
+    <li><%= f.remove_link "Remove" %></li>
   <% end %>
 </div>

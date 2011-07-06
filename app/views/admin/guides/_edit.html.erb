@@ -4,8 +4,9 @@
     <%= f.input :introduction %>
   <% end %>
 
+  <h2>Parts</h2>
+
   <div id="parts">
-    <h2>Parts</h2>
 
     <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
 
@@ -22,18 +23,34 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
-<% content_for :extra_headers do %>
-<style type="text/css" media="screen">
-  #parts fieldset {
-    border: 1px solid #ccc;
-    padding: 0.5em;
-    margin: 0.5em;
-  }
-</style>
-<% end %>
-
 <% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
-  $(function () { $("#parts").accordion(); });
+<script type="text/javascript">
+  $(function () { 
+    var accordion_opts = {
+      header: "> div > h3",
+			collapsible: true
+    }
+    var sortable_opts = {
+      axis: "y",
+			handle: "h3",
+			stop: function() {
+				stop = true;
+			}
+    }
+
+    $('input.title').live('change', function () {
+      var elem = $(this);
+      var header = elem.closest('fieldset').prev('h3').find('a');
+      header.text(elem.val());
+    });
+    $("#parts").accordion(accordion_opts).sortable(sortable_opts); 
+    $('.add-associated').bind('associated-added', function () {
+      var active_index = $('#parts div.part').length;
+      var my_opts = accordion_opts;
+      my_opts.active = active_index - 1;
+      $('#parts').sortable('destroy').accordion("destroy").
+        accordion(my_opts).sortable(sortable_opts);
+    });
+  });
 </script>
 <% end %>

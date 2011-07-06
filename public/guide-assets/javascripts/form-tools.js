@@ -21,6 +21,13 @@ $(function () {
     });
 
     target.append(html);
+    $(this).trigger('associated-added');
     return false;
   });
+  
+  $('.remove-associated').click(function () {
+    var css_selector = $(this).data('selector');
+    $(this).parents(css_selector).hide(); $(this).prev(':input').val('1');
+  })
 });
+

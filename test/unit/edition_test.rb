@@ -49,7 +49,7 @@ class EditionTest < ActiveSupport::TestCase
   test "an edition of a guide can be published" do
     edition = template_edition
     guide = template_edition.guide
-    guide.publish! edition,"Published because I did"
+    guide.publish edition,"Published because I did"
     assert_not_nil guide.published_edition
   end
   
@@ -58,15 +58,15 @@ class EditionTest < ActiveSupport::TestCase
     guide = template_edition.guide
     guide.save
     
-    guide.publish! edition, "First publication"
-    guide.publish! edition, "Second publication"
+    guide.publish edition, "First publication"
+    guide.publish edition, "Second publication"
     
     new_edition = edition.build_clone
     new_edition.parts.first.body = "Some other version text"
     
-    guide.publish! new_edition, "Third publication"
+    guide.publish new_edition, "Third publication"
     
-    puts "HELLO #{guide.publishings}"
+    assert_equal 3, guide.publishings.length
   end
   
 end

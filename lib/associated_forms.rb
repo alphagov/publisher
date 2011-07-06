@@ -57,12 +57,9 @@ module Formtastic #:nodoc:
     def remove_link(name, *args)
       options = args.extract_options!
       css_selector = options.delete(:selector) || ".#{@object.class.name.split("::").last.underscore}"
-
-      function = options.delete(:function) || ""
-      function    << ";$(this).parents('#{css_selector}').hide(); $(this).prev(':input').val('1');"
-
-      out = hidden_field(:_destroy)
-      out += template.link_to_function(name, function, *args.push(options))
+      link = '<a href="#" class="remove-associated" data-selector="' + css_selector + '">Remove</a>'
+      output = hidden_field(:_destroy) + link.html_safe
+      output
     end
     
     def add_associated_jquery_template(association, opts = {})
