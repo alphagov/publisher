@@ -4,8 +4,9 @@
     <%= f.input :introduction %>
   <% end %>
 
+  <h2>Parts</h2>
+
   <div id="parts">
-    <h2>Parts</h2>
 
     <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
 
@@ -33,7 +34,13 @@
 <% end %>
 
 <% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
-  $(function () { $("#parts").accordion(); });
+<script type="text/javascript">
+  $(function () { 
+    $("#parts").accordion({'collapsible': true}); 
+    $('.add-associated').bind('associated-added', function () {
+      var active_index = $('#parts div.part').length;
+      $('#parts').accordion( "destroy" ).accordion({'collapsible': true, active: active_index - 1});
+    });
+  });
 </script>
 <% end %>
