@@ -23,16 +23,6 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
-<% content_for :extra_headers do %>
-<style type="text/css" media="screen">
-  #parts fieldset {
-    border: 1px solid #ccc;
-    padding: 0.5em;
-    margin: 0.5em;
-  }
-</style>
-<% end %>
-
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () { 
