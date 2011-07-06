@@ -2,18 +2,21 @@
 <html>
 <head>
   <title>Mguides</title>
-  <%= stylesheet_link_tag '/guide-assets/stylesheets/formtastic.css', '/guide-assets/stylesheets/formtastic_changes.css' %>
+  <%= stylesheet_link_tag '/guide-assets/stylesheets/formtastic.css', '/guide-assets/stylesheets/formtastic_changes.css', '/stylesheets/admin/jquery-ui-1.8.14.css' %>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
 </head>
 <body>
 
   <div id="wrapper" class="wrapper">
-    <%= yield %>
 
-    <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <%= javascript_include_tag '/guide-assets/javascripts/jquery.mustache.js', '/guide-assets/javascripts/jquery-ui-1.8.14.custom.min.js', '/guide-assets/javascripts/form-tools.js' %>
-    <%= yield :extra_javascript %>
+    <div class="content" role="main">
+      <%= yield %>
+
+      <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+      <%= javascript_include_tag '/guide-assets/javascripts/jquery.mustache.js', '/guide-assets/javascripts/jquery-ui-1.8.14.custom.min.js', '/guide-assets/javascripts/form-tools.js' %>
+      <%= yield :extra_javascript %>
+    </div>
   </div>
 
 
