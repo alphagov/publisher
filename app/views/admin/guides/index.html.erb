@@ -11,16 +11,17 @@
       <thead>
         <tr>
           <th>Title</th>
+          <td></td>
         </tr>
       </thead>
       <tbody>
         <% @guides.each do |guide| %>
         <tr>
           <td>
-            <%= link_to guide.title, [:admin, guide] %>
+            <%= guide.title %>
           </td>
           <td>
-            <%= link_to 'Edit', [:edit, :admin, guide] %>
+            <%= link_to 'Edit', [:admin, guide] %>
             <%= link_to 'Preview', '#' %>
           </td>
         </tr>
@@ -30,17 +31,20 @@
   </div>
 
   <div id="published">
+    <p>This will list published guides</p>
   </div>
   <div id="archive">
+    <p>This will list archived guides</p>
   </div>
   <div id="review-requested">
+    <p>This will list guides pending review</p>
   </div>
 </div>
 
 <p class="button"><%= link_to '+ Add New', new_admin_guide_path %></p>
 
 <% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
 $(function () { $('#guide-nav').tabs(); });
 </script>
 <% end %>
