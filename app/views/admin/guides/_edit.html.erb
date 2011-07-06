@@ -26,7 +26,21 @@
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () { 
-    $("#parts").accordion({'collapsible': true}); 
+    $('input.title').change(function () {
+      var elem = $(this);
+      var header = elem.closest('fieldset').prev('h3').find('a');
+      header.text(elem.val());
+    });
+    $("#parts").accordion({
+    				header: "> div > h3",
+    				collapsible: true
+    			}).sortable({
+    				axis: "y",
+    				handle: "h3",
+    				stop: function() {
+    					stop = true;
+    				}
+    			});; 
     $('.add-associated').bind('associated-added', function () {
       var active_index = $('#parts div.part').length;
       $('#parts').accordion( "destroy" ).accordion({'collapsible': true, active: active_index - 1});
