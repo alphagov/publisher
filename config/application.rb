@@ -20,7 +20,7 @@ module Mguides
         g.template_engine :erb # this could be :haml or whatever
         g.test_framework :test_unit, :fixture => false # this could be :rpsec or whatever
     end
-    
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -44,7 +44,7 @@ module Mguides
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    
+
     config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
   end
 end
