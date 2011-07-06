@@ -15,29 +15,49 @@
         </tr>
       </thead>
       <tbody>
-        <% @guides.each do |guide| %>
-        <tr>
-          <td>
-            <%= guide.title %>
-          </td>
-          <td>
-            <%= link_to 'Edit', [:admin, guide] %>
-            <%= link_to 'Preview', '#' %>
-          </td>
-        </tr>
-        <% end %>
+        <%= render @drafts %>
       </tbody>
     </table>
   </div>
 
   <div id="published">
-    <p>This will list published guides</p>
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @published %>
+      </tbody>
+    </table>
   </div>
   <div id="archive">
-    <p>This will list archived guides</p>
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @archive %>
+      </tbody>
+    </table>
   </div>
   <div id="review-requested">
-    <p>This will list guides pending review</p>
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render @review_requested %>
+      </tbody>
+    </table>
   </div>
 </div>
 
