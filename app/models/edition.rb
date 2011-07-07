@@ -10,7 +10,7 @@ class Edition
   field :title, :type => String
   field :introduction, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
-  
+
   accepts_nested_attributes_for :parts
 
   def build_clone
@@ -25,4 +25,9 @@ class Edition
     end
   end
   
+
+  def latest_action
+    actions.desc(:created_at).first
+  end
+
 end

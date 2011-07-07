@@ -67,9 +67,9 @@ class Guide
       nil
     end
   end
-  
+
   def latest_edition
     self.editions.sort(&:created_at).last
   end
-  
+
 end

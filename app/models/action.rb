@@ -1,6 +1,9 @@
 class Action
   include Mongoid::Document
   
+  CREATED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED = 
+      "created", "review_requested", "published", "new_version", "okayed", "reviewed"
+
   embedded_in :edition
   
   field :requester_id, :type => Integer
