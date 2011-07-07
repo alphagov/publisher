@@ -16,7 +16,7 @@
 
   </div>
 
-  <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">+ Part</a></p>
+  <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add New Part</a></p>
 
   <%= f.buttons %>
 
@@ -25,7 +25,7 @@
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
-  $(function () { 
+  $(function () {
     var accordion_opts = {
       header: "> div > h3",
 			collapsible: true
@@ -43,7 +43,7 @@
       var header = elem.closest('fieldset').prev('h3').find('a');
       header.text(elem.val());
     });
-    $("#parts").accordion(accordion_opts).sortable(sortable_opts); 
+    $("#parts").accordion(accordion_opts).sortable(sortable_opts);
     $('.add-associated').bind('associated-added', function () {
       var active_index = $('#parts div.part').length;
       var my_opts = accordion_opts;
