@@ -19,4 +19,10 @@ class Edition
     new_edition
   end
   
+  def order_parts
+    parts.each_with_index do |obj, i|
+      obj.order = i + 1
+    end
+  end
+  
 end

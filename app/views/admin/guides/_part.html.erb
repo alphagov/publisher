@@ -5,6 +5,7 @@
     <%= f.input :excerpt, :as => :text %>
     <%= f.input :body, :as => :text %>
     <%= f.input :slug %>
+    <%= f.input :order, :as => :hidden, :input_html => { :class => 'order' } %>
     <li><%= f.remove_link "Remove" %></li>
   <% end %>
 </div>
