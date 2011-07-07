@@ -8,8 +8,8 @@
 
   <div id="parts">
 
-    <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
-
+    <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
+    
     <%= f.semantic_fields_for :parts do |part| %>
       <%= render :partial => 'part', :locals => {:f => part} %>
     <% end %>
@@ -34,7 +34,9 @@
       axis: "y",
 			handle: "h3",
 			stop: function() {
-				stop = true;
+				$('.part').each(function (i, elem) {
+				  $(elem).find('input.order').val(i + 1);
+				});
 			}
     }
 
@@ -50,6 +52,7 @@
       my_opts.active = active_index - 1;
       $('#parts').sortable('destroy').accordion("destroy").
         accordion(my_opts).sortable(sortable_opts);
+      $('#parts .part:last-child').find('input.order').val(active_index);
     });
   });
 </script>
