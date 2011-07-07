@@ -14,6 +14,7 @@ gem "bson_ext", "~> 1.3"
 gem 'inherited_resources'
 gem 'formtastic'
 gem 'has_scope'
+gem 'gds-sso', :git => 'git@github.com:alphagov/gds-sso.git'
 gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 
 # Use unicorn as the web server

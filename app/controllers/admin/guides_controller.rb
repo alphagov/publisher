@@ -1,4 +1,6 @@
 class Admin::GuidesController < InheritedResources::Base
+  #before_filter :authenticate_user!
+  
   defaults :route_prefix => 'admin'
   
   def index
