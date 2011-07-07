@@ -14,4 +14,8 @@ class Admin::GuidesController < InheritedResources::Base
     @guide = resource
     @latest_edition = resource.latest_edition
   end
+  
+  def update
+    update! { admin_guide_url(@guide, :anchor => 'metadata') }
+  end
 end
