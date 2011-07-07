@@ -5,6 +5,6 @@ class Admin::EditionsController < InheritedResources::Base
   belongs_to :guide
  
   def update
-    update! { admin_guides_path(@guide) }
+    update! { admin_guide_path(@guide) }
   end
 end
