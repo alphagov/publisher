@@ -11,6 +11,13 @@
   <div id="wrapper" class="wrapper">
 
     <div class="content" role="main">
+      
+      <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
+        <p class="flash-<%= k %>">
+          <%= flash[k] %>
+        </p>
+      <% end %>
+      
       <%= yield %>
 
       <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
