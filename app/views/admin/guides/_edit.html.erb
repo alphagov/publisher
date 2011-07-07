@@ -8,7 +8,7 @@
 
   <div id="parts">
 
-    <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
+    <% setup_association(f.object, :parts, :new => 1, :edit => 1) %>
 
     <%= f.semantic_fields_for :parts do |part| %>
       <%= render :partial => 'part', :locals => {:f => part} %>
