@@ -23,6 +23,11 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
+<%= button_to 'Request review', progress_admin_guide_path(@guide, :activity => 'request_review', :edition_id => @latest_edition)  %>
+<%= button_to 'Reviewed', progress_admin_guide_path(@guide, :activity => 'review', :edition_id => @latest_edition)  %>
+<%= button_to 'Okay', progress_admin_guide_path(@guide, :activity => 'okay', :edition_id => @latest_edition)  %>
+<%= button_to 'Publish', progress_admin_guide_path(@guide, :activity => 'publish', :edition_id => @latest_edition)  %>
+
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () {
