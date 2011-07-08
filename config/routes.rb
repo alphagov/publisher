@@ -5,6 +5,9 @@ Guides::Application.routes.draw do
 
   namespace :admin do
     resources :guides do
+      member do
+        post :progress
+      end
       resources :editions
     end
     
