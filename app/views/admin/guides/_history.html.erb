@@ -9,7 +9,11 @@
     <ul>
       <% edition.actions.each do |action| %>
       <li>
-        <%= action.inspect %>
+        <p><%= action.request_type %> by <%= action.requester %></p>
+        <p class="action-time"><%= action.created_at.strftime("%d/%m/%Y %R") %></p>
+        <% if action.comment.present? %>
+        <blockquote><%= action.comment %></blockquote>
+        <% end %>
       </li>
       <% end %>
     </ul>
