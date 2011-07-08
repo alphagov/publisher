@@ -25,6 +25,10 @@ class Edition
     end
   end
   
+  def new_action(user,type,comment)
+    self.actions << Action.new(:requester=>self._id,:request_type=>type,:comment=>comment)
+    self.guide.calculate_statuses
+  end
 
   def latest_action
     actions.desc(:created_at).first

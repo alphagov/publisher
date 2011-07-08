@@ -12,7 +12,7 @@ class User
   end
 
   def record_action(edition,type,comment=nil)
-    edition.actions << Action.new(:requester=>self._id,:request_type=>type,:comment=>comment)
+    edition.new_action(self._id,type,comment)
   end
   
   def create_guide

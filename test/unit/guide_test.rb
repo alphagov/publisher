@@ -45,4 +45,12 @@ class GuideTest < ActiveSupport::TestCase
     assert guide.has_published
   end
    
+  test "a guide should be marked as having reviewables if requested for review" do
+    guide = template_guide
+    user = User.new(:name=>"Ben")
+    assert !guide.has_reviewables
+    user.request_review(guide.editions.first,"Review this guide please.")
+    assert guide.has_reviewables
+  end
+   
 end

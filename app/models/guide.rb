@@ -32,7 +32,7 @@ class Guide
     drafts = (all_versions - published_versions)
     self.has_drafts = drafts.any?
 
-    # has reviewables too.
+    self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
   end
   
   def title
