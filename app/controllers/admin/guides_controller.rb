@@ -1,6 +1,6 @@
 class Admin::GuidesController < InheritedResources::Base
 
-  before_filter :authenticate_user!
+  # before_filter :authenticate_user!
   defaults :route_prefix => 'admin'
   
   def index
@@ -22,17 +22,20 @@ class Admin::GuidesController < InheritedResources::Base
   def progress
     @guide = resource
     @latest_edition = resource.latest_edition
-    
+    notes = ''
+
     case params[:activity]
-    when 'request review'
-      current_user.request_review(@latest_edition)
+    when 'request_review'
+      current_user.request_review(@latest_edition, notes)
     when 'review'
-      current_user.review(@latest_edition)
+      current_user.review(@latest_edition, notes)
     when 'okay'
-      current_user.okay(@latest_edition)
+      current_user.okay(@latest_edition, notes)
     when 'publish'
-      current_user.publish(@latest_edition)
+      current_user.publish(@latest_edition, notes)
     end
+
+    @latest_edition.save
     
     redirect_to admin_guide_path(@guide), :notice => 'Guide updated'
   end
