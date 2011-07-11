@@ -31,8 +31,10 @@ class Guide
     all_versions = Set.new(editions.map(&:version_number))
     drafts = (all_versions - published_versions)
     self.has_drafts = drafts.any?
-
+    
     self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
+
+    true
   end
   
   def title
