@@ -13,6 +13,6 @@ form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
 
 --------------------------------------------------------------------------------------------------*/
 
-/* TEXTAREA OVERRIDES
---------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li.text textarea { font-size: 1.6em; line-height: 1.4; }
+
+form.formtastic fieldset > ol > li label { display:block; width:auto; float:none; padding-top:.2em; }
