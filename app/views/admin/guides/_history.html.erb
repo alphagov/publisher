@@ -2,7 +2,7 @@
   <div class="edition">
     <h3>v<%= edition.version_number %></h3>
     <div class="buttons">
-      <%= button_to 'Preview' %>
+      <%= link_to 'Preview', preview_edition_path(edition) %>
       <%= button_to 'Diff' %>
       <%= button_to 'Diff with latest' %>
     </div>

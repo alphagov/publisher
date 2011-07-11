@@ -1,7 +1,7 @@
 require 'guides_front_end'
 
 Guides::Application.routes.draw do
-  match '/preview/:edition_id' => GuidesFrontEnd, :anchor => false
+  match '/preview/:edition_id' => GuidesFrontEnd, :anchor => false, :as => :preview_edition_prefix
 
   namespace :admin do
     resources :guides do
