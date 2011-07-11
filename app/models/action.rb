@@ -13,6 +13,23 @@ class Action
   field :request_type, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   
+  def friendly_description
+    case request_type
+    when CREATED
+      "Guide created by #{requester.name}."
+    when NEW_VERSION
+      "New version \"#{edition.title}\" created by #{requester.name}."
+    when REVIEW_REQUESTED
+      "A review and publish was requested by #{requester.name}."
+    when REVIEWED
+      "Reviewed by #{requester.name}. Not OK'd for published."
+    when OKAYED
+      "OK'd for publication by #{requester.name}."
+    when PUBLISHED
+      "Published."
+    end
+  end
+  
   def requester
     @requester ||= User.find(self.requester_id)
   rescue

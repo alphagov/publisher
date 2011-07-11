@@ -21,4 +21,14 @@ module Admin::GuidesHelper
       progress_button(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition)
     }.join("\n").html_safe
   end
+  
+  def friendly_date(date)
+#    .strftime("%d/%m/%Y %R")
+    if Time.now - date < 2.days
+      time_ago_in_words(date) + " ago."
+    else
+      date.strftime("%d/%m/%Y %R")
+    end
+  end
+  
 end

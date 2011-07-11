@@ -6,13 +6,13 @@
       <%= button_to 'Diff' %>
       <%= button_to 'Diff with latest' %>
     </div>
-    <ul>
+    <ul class="history">
       <% edition.actions.each do |action| %>
       <li>
-        <p><%= action.request_type %> by <%= action.requester %></p>
-        <p class="action-time"><%= action.created_at.strftime("%d/%m/%Y %R") %></p>
+        <h4><%= action.friendly_description %></h4>
+        <p class="action-time"><%= friendly_date(action.created_at) %></p>
         <% if action.comment.present? %>
-        <blockquote><%= action.comment %></blockquote>
+        <blockquote class="comment"><%= action.comment %></blockquote>
         <% end %>
       </li>
       <% end %>
