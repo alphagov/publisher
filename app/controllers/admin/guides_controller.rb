@@ -1,6 +1,6 @@
 class Admin::GuidesController < InheritedResources::Base
 
-  # before_filter :authenticate_user!
+  before_filter :authenticate_user!
   defaults :route_prefix => 'admin'
   
   def index
@@ -15,6 +15,15 @@ class Admin::GuidesController < InheritedResources::Base
     @latest_edition = resource.latest_edition
   end
   
+  def create
+    @guide = current_user.create_guide(params[:guide])
+    if @guide.save
+      redirect_to admin_guide_path(@guide), :notice => 'Guide successfully created' and return
+    else
+      render :action => 'new'
+    end
+  end
+
   def update
     update! { admin_guide_url(@guide, :anchor => 'metadata') }
   end
