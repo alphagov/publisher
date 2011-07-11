@@ -25,6 +25,22 @@ class Edition
     end
   end
   
+  def can_request_review?
+    ! [Action::REVIEW_REQUESTED,Action::PUBLISHED].include?(latest_action.request_type)
+  end
+  
+  def can_review?
+    Action::REVIEW_REQUESTED == latest_action.request_type
+  end
+  
+  def can_publish?
+    Action::OKAYED == latest_action.request_type
+  end
+  
+  def can_okay?
+    Action::REVIEW_REQUESTED == latest_action.request_type
+  end
+  
   def new_action(user,type,comment)
     self.actions << Action.new(:requester_id=>user.id,:request_type=>type,:comment=>comment)
     self.guide.calculate_statuses
