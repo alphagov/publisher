@@ -26,19 +26,21 @@ class Edition
   end
   
   def can_request_review?
-    ! [Action::REVIEW_REQUESTED,Action::PUBLISHED].include?(latest_action.request_type)
+    latest_action &&  
+    latest_action.request_type != Action::REVIEW_REQUESTED && 
+    latest_action.request_type != Action::PUBLISHED
   end
   
   def can_review?
-    Action::REVIEW_REQUESTED == latest_action.request_type
+    latest_action && Action::REVIEW_REQUESTED == latest_action.request_type
   end
   
   def can_publish?
-    Action::OKAYED == latest_action.request_type
+    latest_action && Action::OKAYED == latest_action.request_type
   end
   
   def can_okay?
-    Action::REVIEW_REQUESTED == latest_action.request_type
+    latest_action && Action::REVIEW_REQUESTED == latest_action.request_type
   end
   
   def new_action(user,type,comment)
@@ -47,7 +49,7 @@ class Edition
   end
 
   def latest_action
-    actions.desc(:created_at).first
+    self.actions.sort_by(&:created_at).last
   end
 
 end

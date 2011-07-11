@@ -52,5 +52,21 @@ class GuideTest < ActiveSupport::TestCase
     user.request_review(guide.editions.first,"Review this guide please.")
     assert guide.has_reviewables
   end
-   
+  
+  test "guide workflow" do
+    user = User.new(:name=>"Ben")
+    guide = user.create_guide
+    edition = guide.editions.first
+    assert edition.can_request_review?
+    user.request_review(edition,"Review this guide please.")
+    assert !edition.can_request_review?
+    assert edition.can_review?
+    user.review(edition,"I've reviewed it")
+    assert !edition.can_review?
+    user.request_review(edition,"Review this guide please.")
+    assert edition.can_okay?
+    user.okay(edition,"Looks good to me")
+    assert edition.can_publish?
+  end
+  
 end

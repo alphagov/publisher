@@ -71,7 +71,7 @@ class Guide
   end
 
   def latest_edition
-    self.editions.sort(&:created_at).last
+    self.editions.sort_by(&:created_at).last
   end
 
 end
