@@ -15,8 +15,8 @@ class User
     edition.new_action(self._id,type,comment)
   end
   
-  def create_guide
-    guide = Guide.new
+  def create_guide(attributes = {})
+    guide = Guide.new(attributes)
     record_action guide.editions.first, Action::CREATED
     guide
   end
