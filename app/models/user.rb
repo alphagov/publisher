@@ -12,7 +12,7 @@ class User
   end
 
   def record_action(edition,type,comment=nil)
-    edition.new_action(self._id,type,comment)
+    edition.new_action(self, type, comment)
   end
   
   def create_guide(attributes = {})
@@ -48,4 +48,7 @@ class User
     edition
   end
 
+  def to_s
+    name
+  end
 end

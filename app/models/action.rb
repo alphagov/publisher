@@ -13,4 +13,9 @@ class Action
   field :request_type, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   
+  def requester
+    @requester ||= User.find(self.requester_id)
+  rescue
+    nil
+  end
 end

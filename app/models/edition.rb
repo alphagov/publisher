@@ -26,7 +26,7 @@ class Edition
   end
   
   def new_action(user,type,comment)
-    self.actions << Action.new(:requester_id=>self._id,:request_type=>type,:comment=>comment)
+    self.actions << Action.new(:requester_id=>user.id,:request_type=>type,:comment=>comment)
     self.guide.calculate_statuses
   end
 
