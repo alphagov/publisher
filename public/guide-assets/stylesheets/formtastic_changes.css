@@ -13,6 +13,15 @@ form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
 
 --------------------------------------------------------------------------------------------------*/
 
+form.formtastic { padding: 1em 1.4em; }
+
+form.formtastic fieldset.inputs, form.formtastic fieldset.buttons { padding: 0; }
+
+form.formtastic fieldset.buttons { clear: right; float: right; margin: 0; padding: 0; }
+form.formtastic fieldset.buttons li { padding-right: 0; }
+
+form.formtastic fieldset > ol { padding: 0; }
+
 form.formtastic fieldset > ol > li.text textarea { font-size: 1.6em; line-height: 1.4; }
 
-form.formtastic fieldset > ol > li label { display:block; width:auto; float:none; padding-top:.2em; }
+form.formtastic fieldset > ol > li label { display: block; width: auto; float: none; font-size: 1em; padding-top: 0; margin-bottom: 0.5em; }
