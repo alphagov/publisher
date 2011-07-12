@@ -15,9 +15,10 @@ form.formtastic fieldset ol li fieldset legend { margin-left: -6px;}
 
 form.formtastic { padding: 1em 1.4em; }
 
-form.formtastic fieldset.inputs, form.formtastic fieldset.buttons { padding: 0; }
+form.formtastic fieldset.inputs,
+form.formtastic fieldset.buttons { padding: 0; width: 100%; background: transparent; }
 
-form.formtastic fieldset.buttons { clear: right; float: right; margin: 0; padding: 0; }
+/*form.formtastic fieldset.buttons { clear: right; float: right; margin: 0; padding: 0; }*/
 form.formtastic fieldset.buttons li { padding-right: 0; }
 
 form.formtastic fieldset > ol { padding: 0; }
