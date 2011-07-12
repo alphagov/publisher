@@ -153,7 +153,6 @@ DEPENDENCIES
   has_scope
   inherited_resources
   mongoid (~> 2.0)
-  rack (= 1.2.2)
   rails (~> 3.0.7)
   sinatra
   slimmer!
