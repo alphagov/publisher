@@ -19,4 +19,6 @@ Guides::Application.configure do
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
+  
+  config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
 end

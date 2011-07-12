@@ -49,7 +49,5 @@ module Guides
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-
-    config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
   end
 end

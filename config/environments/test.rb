@@ -32,4 +32,6 @@ Guides::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+  
+  config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
 end
