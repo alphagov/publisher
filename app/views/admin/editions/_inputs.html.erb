@@ -3,8 +3,8 @@
   <%= f.input :introduction %>
 <% end %>
 
-<div id="parts">
-  <h3>Parts</h3>
+<div id="parts" class="group">
+  <h2>Parts</h2>
 
   <% setup_association(f.object, :parts, :new => 3, :edit => 3) %>
 
@@ -14,7 +14,7 @@
 
 </div>
 
-<p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add New Part</a></p>
+<p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</a></p>
 
 <%= f.buttons %>
 
