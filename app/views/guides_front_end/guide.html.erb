@@ -1,63 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
-	<title><%= edition.title %> | alpha.gov.uk</title>	
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title><%= guide.title %> | alpha.gov.uk</title>
 </head>
 <body>
-	<header>
-    AlphaGov
-	</header>
-    <article>
-      <div id="page">
-        <div id="content-container">
-            <div id="content">
-                <div class="text-content">
-                  <div id="task-name" class="page_heading article-heading"> 
-                    <figure> 
-                    <h1> 
-                      <%= edition.title %>
-                    </h1> 
-                    </figure>
+  <header>AlphaGov</header>
+  <article>
+    <div id="page">
+      <div id="content-container">
+          <div id="content">
+              <div class="text-content">
+                <div id="task-name" class="page_heading article-heading">
+                  <figure>
+                  <h1>
+                    <%= guide.title %>
+                  </h1>
+                  </figure>
+                </div>
+                <div class="two-third-col">
+                  <div class="paginated clear">
+                    <%- if guide.has_previous_part?(part) -%>
+                    <p class="paginated-prev"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous</a></p>
+                    <%- end -%>
+                    <p class="paginated-pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
+                    <%- if guide.has_next_part?(part) -%>
+                    <p class="paginated-next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next &rarr;</a></p>
+                    <%- end -%>
                   </div>
-                  <div class="two-third-col"> 
-                    <div class="paginated clear"> 
-                      <p class="paginated-pages">Part <%= part.order %> of <%= guide.parts.count %> in this guide.</p> 
-                      <p class="paginated-next"><a href="/guides-redundancy/redundancy-consultations-more/">Next &rarr;</a></p> 
-                    </div> 
-                    <small class="modified-date">Last updated: <%= edition.updated_at %></small> 
-                    <div class="article-text guides-introduction">
-                      <%= Govspeak::Document.new(part.body).to_html %>
-                    </div>
+                  <small class="modified-date">Last updated: <%= "guide.updated_at" %></small>
+                  <div class="article-text guides-introduction">
+                    <%= Govspeak::Document.new(part.body).to_html %>
                   </div>
-                  <div class="paginated clear bottom"> 
-                    <p class="paginated-pages">Part <%= part.order %> of <%= guide.parts.count %> in this guide.</p> 
-                    <p class="paginated-next"><a href="/guides-redundancy/redundancy-consultations-more/">Next &rarr;</a></p> 
-                  </div> 
-                </div> 
-                <div class="one-third-col right with-definitions"> 
-                  <ol class="helpers"> 
-                    <% guide.parts.each do |nav_part| %>
-                    <li <% if part == nav_part %>class="active"<% end %>> 
-                      <a href="/guides-redundancy/redundancy-consultation/"> 
-                        <p class="step-label"> 
-                          <span class="step-number"><%= nav_part.order %></span> 
-                        </p> 
-                        <h3><%= nav_part.title %></h3> 
-                        <p><%= nav_part.excerpt %></p> 
-                      </a> 
-                    </li> 
-                    <% end %>
-                  </ol>
+                </div>
+                <div class="paginated clear bottom">
+                  <%- if guide.has_previous_part?(part) -%>
+                  <p class="paginated-prev"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous</a></p>
+                  <%- end -%>
+                  <p class="paginated-pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
+                  <%- if guide.has_next_part?(part) -%>
+                  <p class="paginated-next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next &rarr;</a></p>
+                  <%- end -%>
                 </div>
               </div>
-            </div>                    
-        </div>   
-      </div>     
-    </article>        
-    <footer>
-
-	</footer>
+              <div class="one-third-col right with-definitions">
+                <ol class="helpers">
+                  <% guide.parts.each do |nav_part| %>
+                  <li <% if part == nav_part %>class="active"<% end %>>
+                    <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
+                      <p class="step-label">
+                        <span class="step-number"><%= nav_part.number %></span>
+                      </p>
+                      <h3><%= nav_part.title %></h3>
+                      <p><%= nav_part.excerpt %></p>
+                    </a>
+                  </li>
+                  <% end %>
+                </ol>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </article>
+  <footer>
+  </footer>
 </body>
 </html>
 

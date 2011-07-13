@@ -1,7 +1,6 @@
 require 'test_helper'
 
-
-class GuideTest < ActiveSupport::TestCase
+class GuideGenerationTest < ActiveSupport::TestCase
   def setup
     @creation_time = Time.now
     @guide = Guide.new(slug: 'test_slug', tags: 'tag, other')

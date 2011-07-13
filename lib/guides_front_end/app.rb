@@ -1,42 +1,20 @@
-require 'sinatra'
-require 'erubis'
-
 module GuidesFrontEnd
-  class App < Sinatra::Base
-    set :views, File.expand_path('../../app/views/guides_front_end', __FILE__)
-
-    def self.preview_mode?(env)
-      env.has_key?('action_dispatch.request.path_parameters')
+  class App < GuidesFrontEnd::Base
+    configure do
+      case ENV['RACK_ENV']
+        when ('development' or 'test')
+          api_host = "local.alphagov.co.uk:3000"
+        when 'production'
+          api_host = "api.alpha.gov.uk"
+        else
+          api_host = "guides.#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
+      end
+      set :api_host, api_host
     end
 
-    def preview_mode?
-      self.class.preview_mode?(request.env)
-    end
-
-    def self.preview_edition_id(env)
-      env['action_dispatch.request.path_parameters'][:edition_id]
-    end
-
-    def preview_edition_id
-      self.class.preview_edition_id(request.env)
-    end
-
-    get '/:slug/:part_slug' do
-      guide = Guide.where(:slug => params[:slug]).first
-      halt(404) if guide.nil? # 404 if guide not found
-      edition = preview_mode? ? guide.editions.first {|e| e.version_number == preview_edition_id.to_i } : guide.published_edition
-      halt(404) if edition.nil? # 404 if edition not found
-      part = edition.parts.where(:slug => params[:part_slug]).first
-      halt(404) if part.nil? # 404 if part not found
-      erubis :"guide.html", :locals => {:part => part, :edition => edition, :guide => guide}
-    end
-
-    get '/:slug' do
-      guide = Guide.where(:slug => params[:slug]).first
-      halt(404) if guide.nil? # 404 if guide not found
-      edition = preview_mode? ? guide.editions.first {|s| s.version_number == preview_edition_id.to_i } : guide.published_edition
-      halt(404) if edition.nil? # 404 if edition not found
-      redirect to("/#{params[:slug]}/#{edition.order_parts.first.slug}")
+    def guide
+      response = HTTParty.get("http://#{settings.api_host}/guides/#{params[:slug]}.json").to_hash
+      Api::Client::Guide.from_hash(response)
     end
   end
 end
