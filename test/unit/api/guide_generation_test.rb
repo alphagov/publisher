@@ -2,12 +2,12 @@ require 'test_helper'
 
 class GuideGenerationTest < ActiveSupport::TestCase
   def setup
-    @creation_time = Time.now
+    @updated_time = Time.now
     @guide = Guide.new(slug: 'test_slug', tags: 'tag, other')
-    @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', introduction: 'Look now', created_at: @creation_time}
+    @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', introduction: 'Look now', updated_at: @updated_time}
     @edition = @guide.editions.first
-    @edition.parts.build(order: 1, title: 'Part 1 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_one', created_at: @creation_time)
-    @edition.parts.build(order: 2, title: 'Part 2 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_two', created_at: @creation_time)
+    @edition.parts.build(order: 1, title: 'Part 1 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
+    @edition.parts.build(order: 2, title: 'Part 2 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
   end
 
   def generated
@@ -29,6 +29,10 @@ class GuideGenerationTest < ActiveSupport::TestCase
   def test_api_hash_generation_has_edition_introduction
     assert_equal "Look now", generated['introduction']
   end
+  # TO DO - we need to add updated_at to editions...
+  # def test_api_hash_generation_has_edition_updated_at
+  #   assert_equal @updated_time, generated['updated_at']
+  # end
 
   def test_api_hash_generation_has_parts
     assert_equal 2, generated['parts'].length
