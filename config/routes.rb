@@ -11,7 +11,8 @@ Guides::Application.routes.draw do
       resources :editions
     end
     
-    
     root :to => 'guides#index'
   end
+  
+  resources :audiences
 end
