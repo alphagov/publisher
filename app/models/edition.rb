@@ -8,7 +8,6 @@ class Edition
   
   field :version_number, :type => Integer, :default => 1
   field :title, :type => String
-  field :introduction, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
 
   accepts_nested_attributes_for :parts
