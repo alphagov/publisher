@@ -2,8 +2,8 @@
  <h3><a href="#"><%= f.object.title.present? ? f.object.title : 'Untitled part' %></a></h3>
   <%= f.inputs do %>
     <%= f.input :title, :input_html => { :class => 'title' }, :label => false, :hint => "Enter text to rename this part", %>
-    <%= f.input :excerpt, :as => :text, :input_html => { :class => 'autogrow', :rows => 4, :cols => 50, :maxlength => 10 } %>
-    <%= f.input :body, :as => :text, :input_html => { :class => 'autogrow', :rows => 8, :cols => 50, :maxlength => 10 } %>
+    <%= f.input :excerpt, :as => :text, :input_html => { :class => 'autogrow', :rows => 4, :cols => 50, :maxlength => 255 } %>
+    <%= f.input :body, :as => :text, :input_html => { :class => 'autogrow', :rows => 8, :cols => 50 } %>
     <%= f.input :slug, :hint => "gov.uk/guide-title/slug-name", :required => true %>
     <%= f.input :order, :as => :hidden, :input_html => { :class => 'order' } %>
     <li><%= f.remove_link "Remove this part" %></li>
