@@ -2,6 +2,8 @@ class Guide
   include Mongoid::Document
   include Mongoid::Timestamps
   
+  AUDIENCES = []
+  
   scope :in_draft,         where(has_drafts: true)
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
@@ -14,6 +16,7 @@ class Guide
   field :slug,        :type => String
   field :tags,        :type => String
   field :is_business, :type => Boolean
+  field :audiences,   :type => Array
   
   field :has_drafts,      :type => Boolean
   field :has_published,   :type => Boolean

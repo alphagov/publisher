@@ -1,4 +1,9 @@
 <%= semantic_form_for([:admin, @guide]) do |f| %>
-  <%= f.inputs :slug, :tags %>
+  <%= f.inputs do %>
+    <%= f.input :slug %>
+    <%= f.input :tags %>
+    <%= f.input :audiences, :as => :check_boxes, :collection => Guide::AUDIENCES %>
+  <% end %>
+
   <%= f.buttons %>
 <% end %>
