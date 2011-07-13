@@ -21,6 +21,8 @@ end
 gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
 
+gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
