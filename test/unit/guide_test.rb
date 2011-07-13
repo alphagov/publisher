@@ -7,7 +7,7 @@ class GuideTest < ActiveSupport::TestCase
     g = Guide.new(:slug=>"childcare")
     edition = g.editions.first
     edition.title = 'One'
-    g.build_edition("Two","New edition")
+    g.build_edition("Two")
     g
   end
   

@@ -13,7 +13,7 @@ class Edition
   accepts_nested_attributes_for :parts
 
   def build_clone
-    new_edition = self.guide.build_edition(self.title,self.introduction)
+    new_edition = self.guide.build_edition(self.title)
     new_edition.parts = self.parts.map {|p| p.dup }
     new_edition
   end
