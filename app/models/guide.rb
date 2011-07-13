@@ -2,7 +2,43 @@ class Guide
   include Mongoid::Document
   include Mongoid::Timestamps
   
-  AUDIENCES = []
+  AUDIENCES = [
+    "Age-related audiences",
+    "Carers",
+    "Civil partnerships",
+    "Crime and justice-related audiences",
+    "Disabled people",
+    "Employment-related audiences",
+    "Family-related audiences",
+    "Graduates",
+    "Gypsies and travellers",
+    "Horse owners",
+    "Intermediaries",
+    "International audiences",
+    "Long-term sick",
+    "Members of the Armed Forces",
+    "Nationality-related audiences",
+    "Older people",
+    "Partners of people claiming benefits",
+    "Partners of students",
+    "People of working age",
+    "People on a low income",
+    "Personal representatives (for a deceased person)",
+    "Property-related audiences",
+    "Road users",
+    "Same-sex couples",
+    "Single people",
+    "Smallholders",
+    "Students",
+    "Terminally ill",
+    "Trustees",
+    "Veterans",
+    "Visitors to the UK",
+    "Volunteers",
+    "Widowers",
+    "Widows",
+    "Young people"
+  ]
   
   scope :in_draft,         where(has_drafts: true)
   scope :published,        where(has_published: true)
