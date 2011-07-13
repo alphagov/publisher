@@ -1,12 +1,12 @@
 <%= semantic_form_for [:admin, @guide, @latest_edition] do |f| %>
   <%= f.inputs do %>
-    <%= f.input :title %>
+    <%= f.input :title, :label => "Name of guide" %>
     <%= f.input :introduction %>
   <% end %>
 
-  <h2>Parts</h2>
+  <h2 class="visuallyhidden">Parts</h2>
 
-  <div id="parts" class="group">
+  <section id="parts" class="group">
 
     <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
 
@@ -14,7 +14,7 @@
       <%= render :partial => 'part', :locals => {:f => part} %>
     <% end %>
 
-  </div>
+  </section>
 
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</a></p>
 
@@ -23,7 +23,9 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
+<nav role="secondary" class="group">
 <%= progress_buttons(@guide,@latest_edition) %>
+</nav>
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
