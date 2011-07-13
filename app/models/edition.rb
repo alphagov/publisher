@@ -10,7 +10,7 @@ class Edition
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
 
-  accepts_nested_attributes_for :parts
+  accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
 
   def build_clone
     new_edition = self.guide.build_edition(self.title)
