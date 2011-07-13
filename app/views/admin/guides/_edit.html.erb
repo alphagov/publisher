@@ -17,7 +17,9 @@
 
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</a></p>
 
-  <%= f.buttons %>
+  <%= f.buttons do %>
+    <%= f.commit_button 'Save' %>
+  <% end %>
 
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
