@@ -82,7 +82,7 @@ class Guide
 
   def build_edition(title)
     version_number = self.editions.length + 1
-    edition =  Edition.new(:title=> title, :version_number=>version_number)
+    edition = Edition.new(:title=> title, :version_number=>version_number)
     self.editions << edition
     calculate_statuses
     edition
