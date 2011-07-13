@@ -4,6 +4,6 @@
   </td>
   <td>
     <%= link_to 'Edit', [:admin, guide] %>
-    <%= link_to 'Preview', '#' %>
+    <%= link_to 'Preview', preview_edition_path(guide.latest_edition) %>
   </td>
 </tr>
