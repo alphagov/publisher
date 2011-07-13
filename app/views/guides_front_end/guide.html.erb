@@ -13,8 +13,44 @@
         <div id="content-container">
             <div id="content">
                 <div class="text-content">
-                  <h1>HELLO <%= edition.title %></h1>
+                  <div id="task-name" class="page_heading article-heading"> 
+                    <figure> 
+                    <h1> 
+                      <%= edition.title %>
+                    </h1> 
+                    </figure>
+                  </div>
+                  <div class="two-third-col"> 
+                    <div class="paginated clear"> 
+                      <p class="paginated-pages">Part <%= part.order %> of <%= guide.parts.count %> in this guide.</p> 
+                      <p class="paginated-next"><a href="/guides-redundancy/redundancy-consultations-more/">Next &rarr;</a></p> 
+                    </div> 
+                    <small class="modified-date">Last updated: <%= edition.updated_at %></small> 
+                    <div class="article-text guides-introduction">
+                      <%= Govspeak::Document.new(part.body).to_html %>
+                    </div>
+                  </div>
+                  <div class="paginated clear bottom"> 
+                    <p class="paginated-pages">Part <%= part.order %> of <%= guide.parts.count %> in this guide.</p> 
+                    <p class="paginated-next"><a href="/guides-redundancy/redundancy-consultations-more/">Next &rarr;</a></p> 
+                  </div> 
+                </div> 
+                <div class="one-third-col right with-definitions"> 
+                  <ol class="helpers"> 
+                    <% guide.parts.each do |nav_part| %>
+                    <li <% if part == nav_part %>class="active"<% end %>> 
+                      <a href="/guides-redundancy/redundancy-consultation/"> 
+                        <p class="step-label"> 
+                          <span class="step-number"><%= nav_part.order %></span> 
+                        </p> 
+                        <h3><%= nav_part.title %></h3> 
+                        <p><%= nav_part.excerpt %></p> 
+                      </a> 
+                    </li> 
+                    <% end %>
+                  </ol>
                 </div>
+              </div>
             </div>                    
         </div>   
       </div>     
