@@ -10,7 +10,7 @@ $(function () {
     template_contents = $('#' + template_id).html();
 
     if (typeof(formtastic_ids[template_id]) == 'undefined') {
-      var current_id = target.find('fieldset:last-child input').attr('id').match(/_attributes_(\d+)_/)[1];
+      var current_id = target.find('fieldset input').last().attr('id').match(/_attributes_(\d+)_/)[1];
       formtastic_ids[template_id] = current_id;
     }
 
