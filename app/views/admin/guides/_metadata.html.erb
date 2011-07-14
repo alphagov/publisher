@@ -1,9 +1,11 @@
-<%= semantic_form_for([:admin, @guide]) do |f| %>
+<%= semantic_form_for([:admin, publication]) do |f| %>
   <%= f.inputs do %>
     <%= f.input :slug, :hint => true %>
     <%= f.input :tags, :hint => true %>
     <%= f.input :audiences, :as => :check_boxes, :collection => Guide::AUDIENCES %>
   <% end %>
 
-  <%= f.buttons %>
+  <%= f.buttons do %>
+    <%= f.commit_button 'Save' %>
+  <% end %>
 <% end %>

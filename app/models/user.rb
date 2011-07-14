@@ -21,6 +21,12 @@ class User
     guide
   end
 
+  def create_answer(attributes = {})
+     answer = Answer.new(attributes)
+     record_action answer.editions.first, Action::CREATED
+     answer
+   end
+
   def new_version(edition)
     new_edition = edition.build_clone
     record_action new_edition, Action::NEW_VERSION
@@ -44,7 +50,7 @@ class User
 
   def publish(edition,notes)
     record_action edition, Action::PUBLISHED
-    edition.guide.publish(edition,notes)
+    edition.publish(edition,notes)
     edition
   end
 

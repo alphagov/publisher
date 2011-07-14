@@ -20,10 +20,10 @@
     <%= render 'edit' %>
   </div>
   <div id="metadata">
-    <%= render 'metadata' %>
+    <%= render :partial => 'metadata', :locals => {:publication => @guide} %>
   </div>
   <div id="history">
-    <%= render 'history' %>
+    <%= render :partial => 'history', :locals => {:publication => @guide} %>
   </div>
 </div>
 

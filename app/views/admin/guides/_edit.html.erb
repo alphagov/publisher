@@ -1,4 +1,4 @@
-<%= semantic_form_for [:admin, @guide, @latest_edition] do |f| %>
+<%= semantic_form_for @latest_edition, :url => admin_guide_edition_path(@guide, @latest_edition) do |f| %>
   <%= f.inputs do %>
     <%= f.input :title, :label => "Name of guide" %>
   <% end %>

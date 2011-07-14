@@ -1,0 +1,9 @@
+<tr>
+  <td>
+    Answer: <%= answer.title %>
+  </td>
+  <td>
+    <%= link_to 'Edit', [:admin, answer] %>
+    <%= link_to 'Preview', preview_edition_path(answer.latest_edition) %>
+  </td>
+</tr>

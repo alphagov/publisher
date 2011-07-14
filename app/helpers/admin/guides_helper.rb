@@ -1,6 +1,10 @@
 module Admin::GuidesHelper
   def preview_edition_path(edition)
-    preview_edition_prefix_path(edition) + "/#{edition.guide.slug}"
+    if edition.respond_to?(:guide)
+      preview_edition_prefix_path(edition) + "/#{edition.guide.slug}"
+    else
+      "#"
+    end
   end
 
   def progress_button(opts)

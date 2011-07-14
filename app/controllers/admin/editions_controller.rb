@@ -1,20 +1,25 @@
 class Admin::EditionsController < InheritedResources::Base
-  #before_filter :authenticate_user!
-  
+  before_filter :authenticate_user!
   defaults :route_prefix => 'admin'
-  belongs_to :guide
+  polymorphic_belongs_to :guide, :answer
  
   def create
-    guide = Guide.find(params[:guide_id])
-    new_edition = guide.build_edition(guide.latest_edition.title)
+    new_edition = edition_parent.build_edition(edition_parent.latest_edition.title)
     if new_edition.save
-      redirect_to [:admin, guide], :notice => 'New edition created'
+      redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else
-      redirect_to [:admin, guide], :notice => 'Failed to create new edition'
+      redirect_to [:admin, edition_parent], :notice => 'Failed to create new edition'
     end
   end
 
   def update
-    update! { admin_guide_path(@guide) }
+    update! { [:admin, parent] }
   end
+  
+  protected
+    # I think we can get this via InheritedResources' "parent" method, but that wasn't
+    # working for our create method and I can't see where it's initialised
+    def edition_parent
+      @edition_parent ||= params[:answer_id] ? Answer.find(params[:answer_id]) : Guide.find(params[:guide_id])
+    end
 end
