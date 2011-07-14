@@ -3,10 +3,6 @@
     <%= f.input :title, :label => "Name of guide" %>
   <% end %>
 
-  <%= f.buttons do %>
-    <%= f.commit_button 'Save' %>
-  <% end %>
-
   <h2 class="visuallyhidden">Parts</h2>
 
   <section id="parts" class="group">
@@ -20,10 +16,6 @@
   </section>
 
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts" role="button">Add new part</a></p>
-
-  <%= f.buttons do %>
-    <%= f.commit_button 'Save' %>
-  <% end %>
 
   <%= f.add_associated_jquery_template :parts %>
 <% end %>

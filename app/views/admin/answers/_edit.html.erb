@@ -1,6 +1,6 @@
 <%= semantic_form_for @latest_edition, :url => admin_answer_edition_path(@answer, @latest_edition) do |f| %>
   <%= f.inputs do %>
-    <%= f.input :title %>
+    <%= f.input :title, :label => "Name of answer" %>
     <%= f.input :body, :as => :text %>
   <% end %>
 
