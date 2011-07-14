@@ -12,7 +12,7 @@ class Answer < Publication
   
   def create_first_edition
     unless self.persisted? or self.editions.any?
-      self.editions << AnswerEdition.new
+      self.editions << AnswerEdition.new(:title => self.name)
     end
     calculate_statuses
   end

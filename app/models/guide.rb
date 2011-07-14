@@ -12,7 +12,7 @@ class Guide < Publication
   
   def create_first_edition
     unless self.persisted? or self.editions.any?
-      self.editions << GuideEdition.new
+      self.editions << GuideEdition.new(:title => self.name)
     end
     calculate_statuses
   end

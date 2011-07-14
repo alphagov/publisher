@@ -40,6 +40,7 @@ class Publication
     "Young people"
   ]
   
+  field :name,        :type => String
   field :slug,        :type => String
   field :tags,        :type => String
   field :audiences,   :type => Array
@@ -60,7 +61,10 @@ class Publication
   field :has_reviewables, :type => Boolean
   
   field :archived, :type => Boolean
-  
+
+  validates_presence_of :name  
+  validates_presence_of :slug
+    
   def calculate_statuses
      self.has_published = self.publishings.any? && ! self.archived
 
@@ -91,9 +95,8 @@ class Publication
   def latest_edition
     self.editions.sort_by(&:created_at).last
   end
-  
-  def title
-    self.editions.any? ? self.editions.last.title : 'Title TBD'
-  end
 
+  def title
+    self.name || latest_edition.title
+  end
 end

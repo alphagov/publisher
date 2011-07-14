@@ -3,19 +3,17 @@
   <p class="intro">New guide intro paragraph goes here. Rich should probably write it.</p>
 
   <%= semantic_form_for [:admin, @answer] do |f| %>
-    <%= f.inputs :title, :for => :editions %>
     <%= render :partial => '/admin/guides/inputs', :locals => {:f => f} %>
   <% end %>
 
   <% content_for :extra_javascript do %>
   <script type="text/javascript" charset="utf-8">
-    $(function () {
-      $('#answer_editions_attributes_0_title').change(function () {
-        if ($('#answer_slug').text() == '') {
-          var title = $('#answer_editions_attributes_0_title').val();
-          $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
-        }
-      });
+  $(function () {
+    $('#answer_name').change(function () {
+      if ($('#answer_slug').text() == '') {
+        var title = $('#answer_name').val();
+        $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
+      }
     });
   </script>
   <% end %>
