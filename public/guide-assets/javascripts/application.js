@@ -8,3 +8,7 @@ var GovUKGuideUtils = {
       .replace(/ +/g,'-');
   }
 }
+
+$(function () {
+  $('.flash-notice').delay(3000).slideUp(300).one('click', function () { $(this).slideUp(300); });
+})
