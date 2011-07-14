@@ -1,5 +1,5 @@
 class Answer < Publication
-  embeds_many :editions, :class_name => 'AnswerEdition'
+  embeds_many :editions, :class_name => 'AnswerEdition', :inverse_of => :publication
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
   
   def build_edition(title)
