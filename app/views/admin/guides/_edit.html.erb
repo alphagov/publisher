@@ -28,10 +28,6 @@
   <%= f.add_associated_jquery_template :parts %>
 <% end %>
 
-<nav role="secondary" class="group">
-<%= progress_buttons(@guide,@latest_edition) %>
-</nav>
-
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () {
