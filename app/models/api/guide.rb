@@ -6,7 +6,7 @@ module Api
       def self.edition_to_hash(edition)
         attrs = edition.guide.as_json(:only => [:slug, :tags, :updated_at])
         attrs.merge!(edition.as_json(:only => [:title, :introduction]))
-        attrs['parts'] = edition.parts.collect { |p| p.as_json(:only => [:slug, :title, :body, :excerpt]).merge('number' => p.order) }
+        attrs['parts'] = edition.parts.collect { |p| p.as_json(:only => [:slug, :title, :body]).merge('number' => p.order) }
         attrs
       end
     end

@@ -6,8 +6,8 @@ class GuideGenerationTest < ActiveSupport::TestCase
     @guide = Guide.new(slug: 'test_slug', tags: 'tag, other')
     @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', introduction: 'Look now', updated_at: @updated_time}
     @edition = @guide.editions.first
-    @edition.parts.build(order: 1, title: 'Part 1 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
-    @edition.parts.build(order: 2, title: 'Part 2 title', excerpt: 'Excerpt text', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
+    @edition.parts.build(order: 1, title: 'Part 1 title', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
+    @edition.parts.build(order: 2, title: 'Part 2 title', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
   end
 
   def generated
@@ -48,10 +48,6 @@ class GuideGenerationTest < ActiveSupport::TestCase
 
   def test_api_hash_generation_has_part_title
     assert_equal 'Part 2 title', generated['parts'][1]['title']
-  end
-
-  def test_api_hash_generation_has_part_excerpt
-    assert_equal 'Excerpt text', generated['parts'][0]['excerpt']
   end
 
   def test_api_hash_generation_has_part_body

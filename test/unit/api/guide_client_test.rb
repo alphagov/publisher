@@ -3,8 +3,8 @@ require 'test_helper'
 class GuideClientTest < ActiveSupport::TestCase
   def setup
     @guide_client = Api::Client::Guide.from_hash('slug' => 'test_slug', 'tags' => 'tag, other', 'title' => 'Test guide', 'introduction' => 'Look now', 'parts' => [
-      {'number' => 1, 'title' => 'Part 1 title', 'excerpt' => 'Excerpt text', 'body' => 'Body text', 'slug' => 'part_one'},
-      {'number' => 1, 'title' => 'Part 2 title', 'excerpt' => 'Excerpt text', 'body' => 'Body text', 'slug' => 'part_two'}
+      {'number' => 1, 'title' => 'Part 1 title', 'body' => 'Body text', 'slug' => 'part_one'},
+      {'number' => 1, 'title' => 'Part 2 title', 'body' => 'Body text', 'slug' => 'part_two'}
     ])
   end
 
@@ -38,10 +38,6 @@ class GuideClientTest < ActiveSupport::TestCase
 
   def test_api_client_has_part_title
     assert_equal 'Part 2 title', @guide_client.parts[1].title
-  end
-
-  def test_api_client_has_part_excerpt
-    assert_equal 'Excerpt text', @guide_client.parts[0].excerpt
   end
 
   def test_api_client_has_part_body

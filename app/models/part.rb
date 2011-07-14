@@ -5,7 +5,6 @@ class Part
   
   field :order, :type => Integer
   field :title, :type => String
-  field :excerpt, :type => String
   field :body, :type => String
   field :slug, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }

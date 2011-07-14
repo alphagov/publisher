@@ -2,7 +2,6 @@
  <h3><a href="#"><%= f.object.title.present? ? f.object.title : 'Untitled part' %></a></h3>
   <%= f.inputs do %>
     <%= f.input :title, :input_html => { :class => 'title' }, :label => false, :hint => true, :required => true %>
-    <%= f.input :excerpt, :as => :text, :input_html => { :class => 'autogrow', :rows => 4, :cols => 50, :maxlength => 255 } %>
     <%= f.input :body, :as => :text, :input_html => { :class => 'autogrow', :rows => 8, :cols => 50 } %>
     <%= f.input :slug, :input_html => { :class => 'slug' }, :hint => true, :required => true, :hint => true %>
     <%= f.input :order, :as => :hidden, :input_html => { :class => 'order' } %>
