@@ -16,6 +16,7 @@
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
   $(function () {
+    $('#edition_title')[0].focus();
     $('input.title').
       live('change', function () {
         var elem = $(this);
