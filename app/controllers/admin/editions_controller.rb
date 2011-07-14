@@ -4,7 +4,7 @@ class Admin::EditionsController < InheritedResources::Base
   polymorphic_belongs_to :guide, :answer
  
   def create
-    new_edition = edition_parent.build_edition(edition_parent.latest_edition.title)
+    new_edition = current_user.new_version(edition_parent.latest_edition)
     if new_edition.save
       redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else

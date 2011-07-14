@@ -48,6 +48,7 @@ class GuideTest < ActiveSupport::TestCase
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
     user = User.new(:name=>"Ben")
+    user.save
     assert !guide.has_reviewables
     user.request_review(guide.editions.first,"Review this guide please.")
     assert guide.has_reviewables
@@ -55,6 +56,7 @@ class GuideTest < ActiveSupport::TestCase
   
   test "guide workflow" do
     user = User.new(:name=>"Ben")
+    user.save
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?

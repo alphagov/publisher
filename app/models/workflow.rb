@@ -25,8 +25,10 @@ module Workflow
    end
 
    def new_action(user,type,comment)
-     self.actions << Action.new(:requester_id=>user.id,:request_type=>type,:comment=>comment)
+     action = Action.new(:requester_id=>user.id,:request_type=>type,:comment=>comment)
+     self.actions << action
      self.calculate_statuses
+     action
    end
 
    def latest_action
