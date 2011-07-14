@@ -3,16 +3,17 @@ module Admin::GuidesHelper
     if edition.respond_to?(:guide)
       preview_edition_prefix_path(edition) + "/#{edition.guide.slug}"
     else
-      "#"
+      preview_edition_prefix_path(edition) + "/#{edition.answer.slug}"
     end
+  rescue => e
+    Rails.logger.warn e.inspect
+    return '#'
   end
 
   def progress_button(opts)
     title,guide,edition,activity = opts[:title],opts[:guide],opts[:edition],opts[:activity]
     check_method = "can_#{activity}?".to_sym
-    if edition.send(check_method)
-      button_to title, progress_admin_guide_path(guide, :activity => activity, :edition_id => edition)
-    end
+    button_to title, progress_admin_guide_path(guide, :activity => activity, :edition_id => edition), :disabled => !edition.send(check_method)
   end
   
   def progress_buttons(guide,edition)
