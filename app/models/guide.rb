@@ -63,6 +63,8 @@ class Guide
   embeds_many :editions
   embeds_many :publishings
   
+  accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
+
   def calculate_statuses
     self.has_published = self.publishings.any? && ! self.archived
     
@@ -89,7 +91,7 @@ class Guide
   end
   
   def create_first_edition
-    unless self.persisted?
+    unless self.persisted? or self.editions.any?
       self.editions << Edition.new
     end
     calculate_statuses
