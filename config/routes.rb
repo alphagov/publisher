@@ -4,6 +4,13 @@ Guides::Application.routes.draw do
   match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
 
   namespace :admin do
+    resources :answers do
+      member do
+        post :progress
+      end
+      resources :editions
+    end
+    
     resources :guides do
       member do
         post :progress

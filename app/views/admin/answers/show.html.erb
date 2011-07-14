@@ -1,7 +1,7 @@
 <p>Viewing Edition <%= @latest_edition.version_number %></p>
-<%= button_to 'Create new Edition', admin_guide_editions_path(@guide) %>
+<%= button_to 'Create new Edition', admin_answer_editions_path(@answer) %>
 
-<div id="guide-nav">
+<div id="answer-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
@@ -11,15 +11,15 @@
     <%= render 'edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => 'metadata', :locals => {:publication => @guide} %>
+    <%= render :partial => '/admin/guides/metadata', :locals => {:publication => @answer} %>
   </div>
   <div id="history">
-    <%= render :partial => 'history', :locals => {:publication => @guide} %>
+    <%= render :partial => '/admin/guides/history', :locals => {:publication => @answer} %>
   </div>
 </div>
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-$(function () { $('#guide-nav').tabs(); });
+$(function () { $('#answer-nav').tabs(); });
 </script>
 <% end %>
