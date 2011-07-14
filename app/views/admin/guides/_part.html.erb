@@ -4,7 +4,7 @@
     <%= f.input :title, :input_html => { :class => 'title' }, :label => false, :hint => true, :required => true %>
     <%= f.input :excerpt, :as => :text, :input_html => { :class => 'autogrow', :rows => 4, :cols => 50, :maxlength => 255 } %>
     <%= f.input :body, :as => :text, :input_html => { :class => 'autogrow', :rows => 8, :cols => 50 } %>
-    <%= f.input :slug, :hint => "gov.uk/guide-title/slug-name", :required => true, :hint => true %>
+    <%= f.input :slug, :input_html => { :class => 'slug' }, :hint => true, :required => true, :hint => true %>
     <%= f.input :order, :as => :hidden, :input_html => { :class => 'order' } %>
     <li><%= f.remove_link "Remove this part" %></li>
   <% end %>

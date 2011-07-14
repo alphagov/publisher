@@ -2,3 +2,16 @@
   <%= f.inputs :title, :for => :editions %>
   <%= render :partial => 'inputs', :locals => {:f => f} %>
 <% end %>
+
+<% content_for :extra_javascript do %>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    $('#guide_editions_attributes_0_title').change(function () {
+      if ($('#guide_slug').text() == '') {
+        var title = $('#guide_editions_attributes_0_title').val();
+        $('#guide_slug').val(GovUKGuideUtils.convertToSlug(title));
+      }
+    });
+  });
+</script>
+<% end %>
