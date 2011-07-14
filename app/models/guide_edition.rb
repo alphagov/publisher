@@ -1,6 +1,5 @@
 class GuideEdition < Edition
-  
-  embedded_in :guide, :as => :publication
+  embedded_in :guide
   embeds_many :parts
   
   accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank

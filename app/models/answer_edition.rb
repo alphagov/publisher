@@ -1,5 +1,5 @@
 class AnswerEdition < Edition
-  embedded_in :answer, :as => :publication
+  embedded_in :answer
   
   field :title, :type => String
   field :body, :type => String
