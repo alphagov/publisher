@@ -43,6 +43,10 @@ gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
-  gem "factory_girl_rails", "~> 1.1.rc1"
+  # gem "factory_girl_rails", "~> 1.1.rc1"
+  gem 'fabrication'
   gem "timecop"
+  gem 'capybara', '~> 1.0.0'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
