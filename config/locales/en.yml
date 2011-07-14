@@ -3,3 +3,11 @@
 
 en:
   hello: "Hello world"
+  formtastic:
+    hints:
+      guide:
+        slug: "Something along the lines of 'title-of-guide' (no spaces, apostrophes, etc)."
+        tags: A comma separated list of key words/phrases
+      part:
+        slug: "Something along the lines of title-of-part (no spaces, apostrophes, etc)."
+        title: Enter text to rename this part
