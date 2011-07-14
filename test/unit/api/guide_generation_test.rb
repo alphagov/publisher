@@ -4,7 +4,7 @@ class GuideGenerationTest < ActiveSupport::TestCase
   def setup
     @updated_time = Time.now
     @guide = Guide.new(slug: 'test_slug', tags: 'tag, other')
-    @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', introduction: 'Look now', updated_at: @updated_time}
+    @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', updated_at: @updated_time}
     @edition = @guide.editions.first
     @edition.parts.build(order: 1, title: 'Part 1 title', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
     @edition.parts.build(order: 2, title: 'Part 2 title', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
@@ -26,9 +26,6 @@ class GuideGenerationTest < ActiveSupport::TestCase
     assert_equal "Test guide", generated['title']
   end
 
-  def test_api_hash_generation_has_edition_introduction
-    assert_equal "Look now", generated['introduction']
-  end
   # TO DO - we need to add updated_at to editions...
   # def test_api_hash_generation_has_edition_updated_at
   #   assert_equal @updated_time, generated['updated_at']
