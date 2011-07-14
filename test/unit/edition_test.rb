@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-class EditionTest < ActiveSupport::TestCase
+class GuideEditionTest < ActiveSupport::TestCase
 
   def template_edition
     g = Guide.new(:slug=>"childcare")
