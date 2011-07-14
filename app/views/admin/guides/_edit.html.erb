@@ -3,7 +3,9 @@
     <%= f.input :title, :label => "Name of guide" %>
   <% end %>
 
-  <%= f.buttons %>
+  <%= f.buttons do %>
+    <%= f.commit_button 'Save' %>
+  <% end %>
 
   <h2 class="visuallyhidden">Parts</h2>
 
