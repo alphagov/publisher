@@ -1,17 +1,22 @@
-<%= semantic_form_for [:admin, @answer] do |f| %>
-  <%= f.inputs :title, :for => :editions %>
-  <%= render :partial => '/admin/guides/inputs', :locals => {:f => f} %>
-<% end %>
+<div id="guide-nav" class="ui-tabs ui-widget-content">
 
-<% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
-  $(function () {
-    $('#answer_editions_attributes_0_title').change(function () {
-      if ($('#answer_slug').text() == '') {
-        var title = $('#answer_editions_attributes_0_title').val();
-        $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
-      }
+  <p class="intro">New guide intro paragraph goes here. Rich should probably write it.</p>
+
+  <%= semantic_form_for [:admin, @answer] do |f| %>
+    <%= f.inputs :title, :for => :editions %>
+    <%= render :partial => '/admin/guides/inputs', :locals => {:f => f} %>
+  <% end %>
+
+  <% content_for :extra_javascript do %>
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+      $('#answer_editions_attributes_0_title').change(function () {
+        if ($('#answer_slug').text() == '') {
+          var title = $('#answer_editions_attributes_0_title').val();
+          $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
+        }
+      });
     });
-  });
-</script>
-<% end %>
+  </script>
+  <% end %>
+</div>
