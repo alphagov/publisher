@@ -9,7 +9,7 @@ module GuidesFrontEnd
     end
 
     def guide
-      edition = Guide.where(:slug => params[:slug]).first.editions.first { |e| e.version_number == preview_edition_id.to_i }
+      edition = Guide.where(:slug => params[:slug]).first.editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
       Api::Client::Guide.from_hash(Api::Generator::Guide.edition_to_hash(edition))
     end
   end

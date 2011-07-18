@@ -1,9 +1,9 @@
 module Admin::GuidesHelper
   def preview_edition_path(edition)
     if edition.respond_to?(:guide)
-      preview_edition_prefix_path(edition) + "/#{edition.guide.slug}"
+      preview_edition_prefix_path(edition.version_number) + "/#{edition.guide.slug}"
     else
-      preview_edition_prefix_path(edition) + "/#{edition.answer.slug}"
+      preview_edition_prefix_path(edition.version_number) + "/#{edition.answer.slug}"
     end
   rescue => e
     Rails.logger.warn e.inspect
