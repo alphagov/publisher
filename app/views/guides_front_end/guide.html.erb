@@ -1,69 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <title><%= guide.title %> | alpha.gov.uk</title>
+  <meta charset="utf-8" />
+  <title><%= guide.title %> - gov.uk</title>
 </head>
 <body>
-  <header>AlphaGov</header>
-  <article>
-    <div id="page">
-      <div id="content-container">
-          <div id="content">
-              <div class="text-content">
-                <div id="task-name" class="page_heading article-heading">
-                  <figure>
-                  <h1>
-                    <%= guide.title %>
-                  </h1>
-                  </figure>
-                </div>
-                <div class="two-third-col">
-                  <div class="paginated clear">
-                    <%- if guide.has_previous_part?(part) -%>
-                    <p class="paginated-prev"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous</a></p>
-                    <%- end -%>
-                    <p class="paginated-pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
-                    <%- if guide.has_next_part?(part) -%>
-                    <p class="paginated-next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next &rarr;</a></p>
-                    <%- end -%>
-                  </div>
-                  <small class="modified-date">Last updated: <%= "guide.updated_at" %></small>
-                  <div class="article-text guides-introduction">
-                    <%= Govspeak::Document.new(part.body).to_html %>
-                  </div>
-                </div>
-                <div class="paginated clear bottom">
-                  <%- if guide.has_previous_part?(part) -%>
-                  <p class="paginated-prev"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous</a></p>
-                  <%- end -%>
-                  <p class="paginated-pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
-                  <%- if guide.has_next_part?(part) -%>
-                  <p class="paginated-next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next &rarr;</a></p>
-                  <%- end -%>
-                </div>
-              </div>
-              <div class="one-third-col right with-definitions">
-                <ol class="helpers">
-                  <% guide.parts.each do |nav_part| %>
-                  <li <% if part == nav_part %>class="active"<% end %>>
-                    <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
-                      <p class="step-label">
-                        <span class="step-number"><%= nav_part.number %></span>
-                      </p>
-                      <h3><%= nav_part.title %></h3>
-                    </a>
-                  </li>
-                  <% end %>
-                </ol>
-              </div>
-            </div>
-          </div>
-      </div>
+
+<div id="wrapper" class="wrapper">
+
+  <header role="banner">
+    <hgroup>
+      <h1>Gov.uk</h1>
+      <h2>The government website for UK citizens and visitors</h2>
+    </hgroup>
+
+    <div role="search">
+			<form class="site-search" action="/" method="get" role="search">
+			  <fieldset>
+			    <legend>Search</legend>
+    				<label for="s">
+    					<span>Search</span>
+    					<input type="search" name="s" id="s" placeholder="Search" />
+    				</label>
+    				<input type="submit" value="Go" />
+    			</fieldset>
+			</form>
     </div>
-  </article>
+  </header>
+
+  <section role="main" class="group">
+
+    <article>
+      <header>
+        <hgroup>
+          <h1><a href="#" rel="bookmark" title="Permanent link to <%= guide.title %>"><%= guide.title %></a></h1>
+          <p class="modified-date">Last updated: <%= "guide.updated_at" %></p>
+        </hgroup>
+
+        <div class="related">
+          <h2>Related tools &amp; topics</h2>
+          <ul>
+            <li><a href="#">Lorem ipsum</a></li>
+            <li><a href="#">Lorem ipsum</a></li>
+            <li><a href="#">Lorem ipsum</a></li>
+            <li><a href="#">Lorem ipsum</a></li>
+          </ul>
+        </div>
+
+      </header>
+
+      <h1><a href="#" rel="bookmark" title="Permanent link to part.title">Part.title</a></h1>
+
+      <nav class="pagination">
+        <%- if guide.has_previous_part?(part) -%>
+        <p class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous section</a></p>
+        <%- end -%>
+        <p class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
+        <%- if guide.has_next_part?(part) -%>
+        <p class="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next section &rarr;</a></p>
+        <%- end -%>
+      </nav>
+
+      <%= Govspeak::Document.new(part.body).to_html %>
+
+      <footer>
+        <div class="pagination">
+          <%- if guide.has_previous_part?(part) -%>
+          <p class="paginated-prev"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous section</a></p>
+          <%- end -%>
+          <p class="paginated-pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
+          <%- if guide.has_next_part?(part) -%>
+          <p class="paginated-next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next section &rarr;</a></p>
+          <%- end -%>
+        </div>
+      </footer>
+
+    </article>
+
+    <aside>
+      <nav>
+        <ol>
+          <% guide.parts.each do |nav_part| %>
+          <li <% if part == nav_part %>class="active"<% end %>>
+            <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
+              <p class="step">
+                <span><%= nav_part.number %></span>
+              </p>
+              <h3><%= nav_part.title %></h3>
+            </a>
+          </li>
+          <% end %>
+        </ol>
+      </nav>
+    </aside>
+
+  </section>
+
   <footer>
   </footer>
+
+</div> <!-- end wrapper -->
+
+
+<footer>
+</footer>
+
 </body>
 </html>
 
