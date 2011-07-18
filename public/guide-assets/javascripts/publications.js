@@ -5,6 +5,15 @@ $(function () {
     return false;
   });
   
+  $('input.title').
+    live('change', function () {
+      var title_field = $(this);
+      var slug_field = title_field.closest('.part').find('.slug');
+      if (slug_field.text() == '') {
+        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
+      }
+    });
+    
   $('#edition_title')[0].focus();
   
   var submitted_main_form = false;
