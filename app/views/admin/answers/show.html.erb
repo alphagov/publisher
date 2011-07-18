@@ -40,6 +40,12 @@
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript" charset="utf-8">
-$(function () { $('#answer-nav').tabs(); });
+$(function () { 
+  $('#answer-nav').tabs(); 
+  $('#save-edition').submit(function () {
+    $('form.edition').trigger('submit');
+    return false;
+  })
+});
 </script>
 <% end %>
