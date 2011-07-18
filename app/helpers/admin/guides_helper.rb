@@ -92,6 +92,12 @@ module Admin::GuidesHelper
     }.join("\n").html_safe
   end
   
+  def preview_button(edition)
+    form_tag(preview_edition_path(edition), :method => :get, :class => 'button_to also_save_edition') do
+      submit_tag 'Preview'
+    end
+  end
+  
   def friendly_date(date)
 #    .strftime("%d/%m/%Y %R")
     if Time.now - date < 2.days
