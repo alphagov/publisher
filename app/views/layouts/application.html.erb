@@ -17,7 +17,11 @@
           <%= flash[k] %>
         </p>
       <% end %>
-      
+
+      <% unless current_page?(admin_root_path) %>
+        <p><%= link_to 'Return to dashboard', admin_root_path %></p>
+      <% end %>
+
       <%= yield %>
 
       <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
