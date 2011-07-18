@@ -46,5 +46,5 @@ form.formtastic fieldset > ol > li.search input[size] { width:auto; max-width:10
 
 /* TEXTAREA OVERRIDES
 --------------------------------------------------------------------------------------------------*/
-form.formtastic fieldset > ol > li.text textarea { width: 100%; font-size: 1.6em; line-height: 1.4; }
+form.formtastic fieldset > ol > li.text textarea { width: 100%; font-size: 1em; line-height: 1.4; }
 form.formtastic fieldset > ol > li.text textarea[cols] { width: auto; max-width: 100%; }

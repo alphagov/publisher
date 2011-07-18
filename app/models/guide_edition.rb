@@ -24,4 +24,8 @@ class GuideEdition < Edition
      self.guide.publish(edition,notes)
    end
   
+   def container
+     return self.guide
+   end
+  
 end

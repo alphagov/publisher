@@ -31,7 +31,7 @@ class Admin::GuidesController < InheritedResources::Base
   def progress
     @guide = resource
     @latest_edition = resource.latest_edition
-    notes = ''
+    notes = params[:comment] || ''
 
     case params[:activity]
     when 'request_review'

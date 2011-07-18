@@ -3,15 +3,8 @@
     <%= f.input :title, :label => "Name of answer" %>
     <%= f.input :body, :as => :text %>
   <% end %>
-
-  <%= f.buttons do %>
-    <%= f.commit_button 'Save' %>
-  <% end %>
 <% end %>
 
-<nav role="secondary" class="group">
-<%= progress_buttons(@guide,@latest_edition) %>
-</nav>
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript">

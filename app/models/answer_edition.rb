@@ -17,4 +17,8 @@ class AnswerEdition < Edition
    def publish(edition,notes)
      self.answer.publish(edition,notes)
    end
+   
+   def container
+      return self.answer
+    end
 end

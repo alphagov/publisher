@@ -3,6 +3,7 @@
     Guide: <%= guide.title %>
   </td>
   <td>
+    <%= button_to 'Create new edition', admin_guide_editions_path(guide) %>
     <%= link_to 'Edit', [:admin, guide] %>
     <%= link_to 'Preview', preview_edition_path(guide.latest_edition) %>
   </td>

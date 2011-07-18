@@ -13,7 +13,7 @@ class User
 
   def record_action(edition,type,comment=nil)
     action = edition.new_action(self, type, comment)
-    NoisyWorkflow.make_noise(edition.guide,action).deliver
+    NoisyWorkflow.make_noise(edition.container,action).deliver
   end
   
   def create_guide(attributes = {})

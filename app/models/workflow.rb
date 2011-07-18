@@ -12,6 +12,10 @@ module Workflow
      latest_action.request_type != Action::PUBLISHED
    end
 
+   def in_review?
+     can_review? && can_okay?
+   end
+
    def can_review?
      latest_action && Action::REVIEW_REQUESTED == latest_action.request_type
    end
