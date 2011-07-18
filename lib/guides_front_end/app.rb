@@ -12,8 +12,31 @@ module GuidesFrontEnd
       set :api_host, api_host
     end
 
+    def guide_response(slug)
+      HTTParty.get("http://#{settings.api_host}/guides/#{slug}.json")
+    end
+
+    def answer_response(slug)
+      HTTParty.get("http://#{settings.api_host}/answers/#{slug}.json")
+    end
+
+    def router(slug)
+      if guide_response(slug).code == 200
+        :guide
+      elsif answer_response(slug).code == 200
+        :answer
+      else
+        nil
+      end
+    end
+
+    def answer
+      response = answer_response(params[:slug]).to_hash
+      Api::Client::Answer.from_hash(response)
+    end
+
     def guide
-      response = HTTParty.get("http://#{settings.api_host}/guides/#{params[:slug]}.json").to_hash
+      response = guide_response(params[:slug]).to_hash
       Api::Client::Guide.from_hash(response)
     end
   end

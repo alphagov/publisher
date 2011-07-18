@@ -30,7 +30,7 @@ module Admin::GuidesHelper
     html_options.merge!("type" => "submit", "value" => name,:style=>"width:auto")
 
     ("<form id=\"#{id}\" method=\"post\" action=\"#{html_escape(url)}\"
-       class=\"button_to\" style=\"display:none\">" + comment_field  + 
+       class=\"button_to also_save_edition\" style=\"display:none\">" + comment_field  + 
       cancel_button + tag("input", html_options)  + request_token_tag + "</form>").html_safe
   end
 
@@ -90,6 +90,12 @@ module Admin::GuidesHelper
     ].map{ |title,activity|
       progress_form(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition)
     }.join("\n").html_safe
+  end
+  
+  def preview_button(edition)
+    form_tag(preview_edition_path(edition), :method => :get, :class => 'button_to also_save_edition') do
+      submit_tag 'Preview'
+    end
   end
   
   def friendly_date(date)

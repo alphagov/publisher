@@ -1,6 +1,8 @@
 class Answer < Publication
   embeds_many :editions, :class_name => 'AnswerEdition', :inverse_of => :answer
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
+
+  field :body,        :type => String
   
   def build_edition(title)
     version_number = self.editions.length + 1
