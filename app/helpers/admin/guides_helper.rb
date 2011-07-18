@@ -30,7 +30,7 @@ module Admin::GuidesHelper
     html_options.merge!("type" => "submit", "value" => name,:style=>"width:auto")
 
     ("<form id=\"#{id}\" method=\"post\" action=\"#{html_escape(url)}\"
-       class=\"button_to\" style=\"display:none\">" + comment_field  + 
+       class=\"button_to also_save_edition\" style=\"display:none\">" + comment_field  + 
       cancel_button + tag("input", html_options)  + request_token_tag + "</form>").html_safe
   end
 

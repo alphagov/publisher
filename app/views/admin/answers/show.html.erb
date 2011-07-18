@@ -18,10 +18,10 @@
   </form>
 
   <%= progress_buttons(@answer,@latest_edition) %>
-   </span>
-   <%= progress_forms(@answer,@latest_edition) %></div>
+  </span>
+  <%= progress_forms(@answer,@latest_edition) %></div>
 
-<div id="answer-nav">
+<div id="answer-nav" class="publication-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
@@ -38,14 +38,4 @@
   </div>
 </div>
 
-<% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
-$(function () { 
-  $('#answer-nav').tabs(); 
-  $('#save-edition').submit(function () {
-    $('form.edition').trigger('submit');
-    return false;
-  })
-});
-</script>
-<% end %>
+<% content_for :extra_javascript, javascript_include_tag('/guide-assets/javascripts/publications') %>

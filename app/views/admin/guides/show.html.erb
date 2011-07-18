@@ -22,7 +22,7 @@
   <%= progress_forms(@guide,@latest_edition) %>
 </div>
 
-<div id="guide-nav">
+<div id="guide-nav" class="publication-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
@@ -39,33 +39,4 @@
   </div>
 </div>
 
-<% content_for :extra_javascript do %>
-<script type="text/javascript" charset="utf-8">
-$(function () {
-  $('#guide-nav').tabs();
-  $('#save-edition').submit(function () {
-    $('form.edition').trigger('submit');
-    return false;
-  })
-  $('#edition_title')[0].focus();
-  
-  var submitted_main_form = false;
-  
-  $('#request_review_form').submit(function () {
-    var main_form = $('#edition_edit');
-
-    if (! submitted_main_form) {
-      $.post(
-        main_form.attr('action'), 
-        main_form.serialize(), 
-        function (data, textStatus, jqXHR) {
-          submitted_main_form = true;
-          $('#request_review_form').trigger('submit');
-        }
-      );
-    }
-    
-  });
-});
-</script>
-<% end %>
+<% content_for :extra_javascript, javascript_include_tag('/guide-assets/javascripts/publications') %>
