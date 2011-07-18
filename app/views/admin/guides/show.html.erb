@@ -48,6 +48,24 @@ $(function () {
     return false;
   })
   $('#edition_title')[0].focus();
+  
+  var submitted_main_form = false;
+  
+  $('#request_review_form').submit(function () {
+    var main_form = $('#edition_edit');
+
+    if (! submitted_main_form) {
+      $.post(
+        main_form.attr('action'), 
+        main_form.serialize(), 
+        function (data, textStatus, jqXHR) {
+          submitted_main_form = true;
+          $('#request_review_form').trigger('submit');
+        }
+      );
+    }
+    
+  });
 });
 </script>
 <% end %>
