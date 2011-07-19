@@ -16,7 +16,7 @@ class Action
   def friendly_description
     case request_type
     when CREATED
-      "Guide created by #{requester.name}."
+      "#{edition.container.class} created by #{requester.name}."
     when NEW_VERSION
       "New version \"#{edition.title}\" created by #{requester.name}."
     when REVIEW_REQUESTED
