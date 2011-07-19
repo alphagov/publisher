@@ -16,16 +16,22 @@ class User
     NoisyWorkflow.make_noise(edition.container,action).deliver
   end
   
+  def create_publication(kind_class, attributes = {})
+    item = kind_class.new(attributes)
+    record_action item.editions.first, Action::CREATED
+    item
+  end
+  
+  def create_transaction(attributes = {})
+    create_publication(Transaction, attributes)
+  end
+      
   def create_guide(attributes = {})
-    guide = Guide.new(attributes)
-    record_action guide.editions.first, Action::CREATED
-    guide
+    create_publication(Guide, attributes)
   end
 
   def create_answer(attributes = {})
-     answer = Answer.new(attributes)
-     record_action answer.editions.first, Action::CREATED
-     answer
+    create_publication(Answer, attributes)
    end
 
   def new_version(edition)
