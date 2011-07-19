@@ -1,7 +1,7 @@
 class Admin::EditionsController < InheritedResources::Base
   before_filter :authenticate_user!
   defaults :route_prefix => 'admin'
-  polymorphic_belongs_to :guide, :answer
+  polymorphic_belongs_to :guide, :answer, :transaction
  
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
@@ -20,6 +20,13 @@ class Admin::EditionsController < InheritedResources::Base
     # I think we can get this via InheritedResources' "parent" method, but that wasn't
     # working for our create method and I can't see where it's initialised
     def edition_parent
-      @edition_parent ||= params[:answer_id] ? Answer.find(params[:answer_id]) : Guide.find(params[:guide_id])
+      @edition_parent ||= 
+        if params[:answer_id]
+          Answer.find(params[:answer_id]) 
+        elsif params[:guide_id]
+          Guide.find(params[:guide_id])
+        elsif params[:transaction_id]
+          Transaction.find(params[:transaction_id])
+        end
     end
 end
