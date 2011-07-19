@@ -9,47 +9,49 @@
 
 <div id="wrapper">
 
-  <section role="main" class="group">
+  <section role="main">
 
-    <article>
-      <header class="group">
-        <hgroup>
-          <h1><a href="#" rel="bookmark" title="Permanent link to <%= guide.title %>"><%= guide.title %></a></h1>
-          <p class="modified-date">Last updated: <%= guide.updated_at %></p>
-        </hgroup>
+    <header>
+      <hgroup>
+        <h1><a href="#" rel="bookmark" title="Permanent link to <%= guide.title %>"><%= guide.title %></a></h1>
+        <p class="modified-date">Last updated: <%= guide.updated_at %></p>
+      </hgroup>
 
-        <div class="related">
-          <h2>Related tools &amp; topics</h2>
-          <ul>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-          </ul>
-        </div>
+      <div class="related">
+        <h2>Related tools &amp; topics</h2>
+        <ul>
+          <li><a href="#">Lorem ipsum</a></li>
+          <li><a href="#">Lorem ipsum</a></li>
+          <li><a href="#">Lorem ipsum</a></li>
+          <li><a href="#">Lorem ipsum</a></li>
+        </ul>
+      </div>
+    </header>
 
+    <aside role="navigation">
+      <nav>
+        <ol>
+          <% guide.parts.each do |nav_part| %>
+          <li <% if part == nav_part %>class="active"<% end %>>
+            <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
+              <p class="step">
+                <span><%= nav_part.number %></span>
+              </p>
+              <h3><%= nav_part.title %></h3>
+            </a>
+          </li>
+          <% end %>
+        </ol>
+      </nav>
+    </aside>
+
+    <article role="article">
+
+      <header>
+        <h1><a href="#" rel="bookmark" title="Permanent link to part.title">Part.title</a></h1>
       </header>
 
-	    <aside>
-	      <nav>
-	        <ol>
-	          <% guide.parts.each do |nav_part| %>
-	          <li <% if part == nav_part %>class="active"<% end %>>
-	            <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
-	              <p class="step">
-	                <span><%= nav_part.number %></span>
-	              </p>
-	              <h3><%= nav_part.title %></h3>
-	            </a>
-	          </li>
-	          <% end %>
-	        </ol>
-	      </nav>
-	    </aside>
-
-      <h2><a href="#" rel="bookmark" title="Permanent link to part.title">Part.title</a></h2>
-
-      <nav class="pagination">
+      <nav class="pagination" role="navigation">
         <%- if guide.has_previous_part?(part) -%>
         <p class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous section</a></p>
         <%- end -%>
@@ -62,7 +64,7 @@
       <%= Govspeak::Document.new(part.body).to_html %>
 
       <footer>
-	      <nav class="pagination">
+	      <nav class="pagination" role="navigation">
 	        <%- if guide.has_previous_part?(part) -%>
 	        <p class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous section</a></p>
 	        <%- end -%>
