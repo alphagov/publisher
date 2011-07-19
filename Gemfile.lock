@@ -18,14 +18,14 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: 23123dc359f335dd6e58b0e7b0f3b48ac53ffb3c
+  revision: 6fb6400cbb2c1cf080865cb9ec28c899857aedcd
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
 
 GIT
   remote: git@github.com:alphagov/slimmer.git
-  revision: 5c1bccf7f9fe33ec040ed4c283aa75dbed1ede3b
+  revision: 83e2c34927040005eaf4fde8f190f524cb62433a
   specs:
     slimmer (0.7.10)
       nokogiri (~> 1.4.0)
