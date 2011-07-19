@@ -1,0 +1,21 @@
+<div id="transaction-nav" class="ui-tabs ui-widget-content">
+
+  <p class="intro">New transaction intro paragraph goes here. Rich should probably write it.</p>
+
+  <%= semantic_form_for [:admin, @transaction] do |f| %>
+    <%= render :partial => 'inputs', :locals => {:f => f} %>
+  <% end %>
+
+  <% content_for :extra_javascript do %>
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+      $('#transaction_name').change(function () {
+        if ($('#transaction_slug').text() == '') {
+          var title = $('#transaction_name').val();
+          $('#transaction_slug').val(GovUKGuideUtils.convertToSlug(title));
+        }
+      });
+    });
+  </script>
+  <% end %>
+</div>
