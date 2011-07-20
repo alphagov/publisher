@@ -10,14 +10,14 @@
     <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
 
     <%= f.semantic_fields_for :parts do |part| %>
-      <%= render :partial => 'part', :locals => {:f => part} %>
+      <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
     <% end %>
 
   </section>
 
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts" role="button">Add new part</a></p>
 
-  <%= f.add_associated_jquery_template :parts %>
+  <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
 <% end %>
 
 <% content_for :extra_javascript do %>

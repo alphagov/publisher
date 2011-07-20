@@ -13,7 +13,16 @@ class Admin::EditionsController < InheritedResources::Base
   end
 
   def update
-    update! { [:admin, parent] }
+    update! do |success, failure| 
+      success.html { redirect_to [:admin, parent] }
+      failure.html { 
+        tmpl_folder = parent.class.to_s.pluralize.downcase
+        instance_variable_set("@#{parent.class.to_s.downcase}".to_sym, parent)
+        @latest_edition = parent.latest_edition
+        flash.now[:alert] = "We had some problems saving. Please check the form below."
+        render :template => "admin/#{tmpl_folder}/show"
+      } 
+    end
   end
   
   protected
