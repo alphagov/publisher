@@ -67,7 +67,7 @@ module Formtastic #:nodoc:
       associated_name = extract_option_or_class_name(opts, :name, object)
       partial = opts.delete(:partial) || associated_name
       
-      form = render_associated_form(object, :partial => partial)
+      form = render_associated_form(object, :partial => partial, :associated_name => associated_name)
       form.gsub!(/attributes_(\d+)/, 'attributes_{{index}}')
       form.gsub!(/\[(\d+)\]/, '[{{index}}]')
       
@@ -156,13 +156,18 @@ module Formtastic #:nodoc:
       unless associated.empty?
         name = extract_option_or_class_name(opts, :name, associated.first)
         partial = opts[:partial] || name
+        associated_name = opts[:associated_name] || opts[:partial]
         local_assign_name = partial.split('/').last.split('.').first
 
         index = -1
-        index_variable_name = "#{partial}_counter".to_sym
+        index_variable_name = "#{associated_name}_counter".to_sym
         output = associated.map do |element|
           fields_for(association_name(name), element, (opts[:fields_for] || {}).merge(:name => name)) do |f|
-            local_assignments = {index_variable_name => index += 1, local_assign_name.to_sym => element, :f => f}.merge(opts[:locals])
+            local_assignments = {
+              index_variable_name => index += 1, 
+              local_assign_name.to_sym => element, 
+              :f => f
+            }.merge(opts[:locals])
             template.render({:partial => "#{partial}", :locals => local_assignments}.merge(opts[:render]))
           end
         end
