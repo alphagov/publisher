@@ -7,6 +7,17 @@ module GuidesFrontEnd
     set :public, File.expand_path('../../../public', __FILE__)
    
     helpers do
+      def asset_host
+        case ENV['RACK_ENV']
+          when ('development' or 'test')
+            ""
+          when 'production'
+            "alpha.gov.uk"
+          else
+            "#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
+        end
+      end
+
       def base_path(guide_slug, part_slug)
         "/#{guide_slug}/#{part_slug}"
       end
