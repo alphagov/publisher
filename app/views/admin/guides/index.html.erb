@@ -1,3 +1,5 @@
+<%= render :partial => 'buttons' %>
+
 <div id="guide-nav">
   <ul>
     <li><a href="#new">New</a></li>
@@ -57,9 +59,7 @@
   </div>
 </div>
 
-<p class="button" role="button"><%= link_to 'Add new guide', new_admin_guide_path %></p>
-<p class="button" role="button"><%= link_to 'Add new answer', new_admin_answer_path %></p>
-<p class="button" role="button"><%= link_to 'Add new transaction', new_admin_transaction_path %></p>
+<%= render :partial => 'buttons' %>
 
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
