@@ -5,6 +5,10 @@
   <td>
     <%= button_to 'Create new edition', admin_guide_editions_path(guide) %>
     <%= link_to 'Edit', [:admin, guide] %>
-    <%= link_to 'Preview', preview_edition_path(guide.latest_edition) %>
+    <% if guide.latest_edition.parts.any? and guide.latest_edition.parts.first.slug.present? %>
+      <%= link_to 'Preview', preview_edition_path(guide.latest_edition) %>
+    <% else %>
+      Preview
+    <% end %>
   </td>
 </tr>
