@@ -39,7 +39,11 @@ module GuidesFrontEnd
       halt(404) if route.nil? 
       case route
         when :guide
-          redirect to(base_path(params[:slug], guide.parts.first.slug))
+          if guide.parts.any? and guide.parts.first.slug and guide.parts.first.slug != ''
+            redirect to(base_path(params[:slug], guide.parts.first.slug))
+          else
+            halt(404)
+          end
         when :answer
           erubis :"answer.html", :locals => {:answer => answer}
       end
