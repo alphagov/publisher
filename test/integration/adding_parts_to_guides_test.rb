@@ -11,13 +11,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
     DatabaseCleaner.clean
   end
   
-  test "google smoke test" do
-    visit "http://www.google.com"
-    fill_in 'q', :with => "Hello"
-    click_on 'Google Search'
-  end
-  
-  test "adding parts to a guide doesn't " do
+  # test "adding parts to a guide doesn't " do
   #   visit    "/"
   #  click_on 'Add new guide'
   #  fill_in  'Title', :with => 'Test guide'
@@ -44,5 +38,5 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
   #   within(:css, '#edit') { click_on 'Save' }
   # 
   #   assert_equal 3, all(:css, '#parts > div.part').length
-  end
+  # end
 end
