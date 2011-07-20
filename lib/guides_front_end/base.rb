@@ -12,9 +12,9 @@ module GuidesFrontEnd
           when ('development' or 'test')
             ""
           when 'production'
-            "alpha.gov.uk"
+            "http://alpha.gov.uk"
           else
-            "#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
+            "http://#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
         end
       end
 
