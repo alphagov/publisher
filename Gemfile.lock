@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: 877dd27f8837faa0af3901731231c8de572b6190
+  revision: 040f44bece6ee6f12d199c32da5f3eab70fb303f
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
@@ -72,7 +72,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 0.2.0)
       xpath (~> 0.1.4)
-    childprocess (0.1.9)
+    childprocess (0.2.0)
       ffi (~> 1.0.6)
     crack (0.1.8)
     database_cleaner (0.6.7)
