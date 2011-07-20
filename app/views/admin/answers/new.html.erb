@@ -3,7 +3,13 @@
   <p class="intro">New guide intro paragraph goes here. Rich should probably write it.</p>
 
   <%= semantic_form_for [:admin, @answer] do |f| %>
-    <%= render :partial => '/admin/guides/inputs', :locals => {:f => f} %>
+    <%= f.inputs do %>
+      <%= f.input :name, :hint => true %>
+      <%= f.input :slug, :hint => true %>
+      <%= f.input :tags, :hint => true %>
+    <% end %>
+
+    <%= f.buttons %>
   <% end %>
 
   <% content_for :extra_javascript do %>
