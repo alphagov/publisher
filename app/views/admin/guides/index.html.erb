@@ -2,10 +2,10 @@
 
 <div id="guide-nav">
   <ul>
-    <li><a href="#new">New</a></li>
-    <li><a href="#published">Published</a></li>
+    <li><a href="#new">In Progress (<%= @drafts.length %>)</a></li>
+    <li><a href="#review-requested">Review Requested (<%= @review_requested.length %>)</a></li>
+    <li><a href="#published">Published (<%= @published.length %>)</a></li>
     <li><a href="#archive">Archive</a></li>
-    <li><a href="#review-requested">Review Requested</a></li>
   </ul>
 
   <div id="new">
@@ -20,7 +20,18 @@
       </tbody>
     </table>
   </div>
-
+  <div id="review-requested">
+     <table class="formats" cellspacing="0">
+       <thead>
+         <tr>
+           <th colspan="2">Title</th>
+         </tr>
+       </thead>
+       <tbody>
+         <%= render @review_requested %>
+       </tbody>
+     </table>
+   </div>
   <div id="published">
     <table class="formats" cellspacing="0">
       <thead>
@@ -45,18 +56,7 @@
       </tbody>
     </table>
   </div>
-  <div id="review-requested">
-    <table class="formats" cellspacing="0">
-      <thead>
-        <tr>
-          <th colspan="2">Title</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render @review_requested %>
-      </tbody>
-    </table>
-  </div>
+ 
 </div>
 
 <%= render :partial => 'buttons' %>
