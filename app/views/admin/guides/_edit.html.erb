@@ -8,7 +8,8 @@
   <section id="parts" class="group">
 
     <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
-
+    <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
+    
     <%= f.semantic_fields_for :parts do |part| %>
       <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
     <% end %>

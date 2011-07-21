@@ -11,7 +11,8 @@ class GuideEdition < Edition
    end
 
    def order_parts
-     parts.each_with_index do |obj, i|
+     ordered_parts = parts.sort_by(&:order)
+     ordered_parts.each_with_index do |obj, i|
        obj.order = i + 1
      end
    end
