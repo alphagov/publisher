@@ -7,44 +7,54 @@
 </head>
 <body>
 
-<div id="wrapper">
+<div id="wrapper" class="guide">
 
-  <section role="main">
+  <section role="main" class="group">
 
-    <header>
-      <hgroup>
-        <h1><a href="<%= guide.slug %>" rel="bookmark" title="Permanent link to <%= guide.title %>"><%= guide.title %></a></h1>
-        <p class="modified-date">Last updated: <%= guide.updated_at %></p>
-      </hgroup>
+    <header class="group">
+      <div class="inner">
 
-      <div class="related">
-        <h2>Related tools &amp; topics</h2>
-        <nav role="navigation">
-          <ul>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-          </ul>
-        </nav>
+        <hgroup>
+          <h1><a href="#" rel="bookmark" title="Permanent link to <%= guide.title %>"><%= guide.title %></a></h1>
+          <p class="modified-date">Last updated: <%= guide.updated_at %></p>
+        </hgroup>
+
+        <div class="related">
+          <div class="inner" class="group">
+            <h2>Related tools &amp; topics</h2>
+            <nav role="navigation">
+              <ul>
+                <li><a href="#" title="">Lorem ipsum</a></li>
+                <li><a href="#" title="">Lorem ipsum</a></li>
+                <li><a href="#" title="">Lorem ipsum</a></li>
+                <li><a href="#" title="">Lorem ipsum</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div><!-- end .related -->
+
       </div>
     </header>
 
     <aside role="navigation">
-      <nav>
-        <ol>
-          <% guide.parts.each do |nav_part| %>
-          <li <% if part == nav_part %>class="active"<% end %>>
-            <a href="<%= guide_path(guide.slug, nav_part.slug) %>">
-              <h3>Part <%= nav_part.number %>: <%= nav_part.title %></h3>
-            </a>
-          </li>
-          <% end %>
-        </ol>
-      </nav>
+      <div class="inner">
+
+        <nav>
+          <ol>
+            <% guide.parts.each do |nav_part| %>
+            <li <% if part == nav_part %>class="active"<% end %>>
+              <a href="<%= guide_path(guide.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
+                Part <%= nav_part.number %>: <%= nav_part.title %>
+              </a>
+            </li>
+            <% end %>
+          </ol>
+        </nav>
+
+      </div>
     </aside>
 
-    <article role="article">
+    <article role="article" class="group">
       <div class="inner">
 
         <header>
@@ -52,25 +62,28 @@
         </header>
 
         <nav class="pagination" role="navigation">
-          <%- if guide.has_previous_part?(part) -%>
-          <p class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></p>
-          <%- end -%>
-          <p class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
-          <%- if guide.has_next_part?(part) -%>
-          <p class="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next part &rarr;</a></p>
-          <%- end -%>
+          <ul>
+            <%- if guide.has_previous_part?(part) -%>
+            <li class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></li>
+            <%- end -%>
+            <li class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</li>
+            <%- if guide.has_next_part?(part) -%>
+            <li class="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next part &rarr;</a></li>
+            <%- end -%>
+          </ul>
         </nav>
 
         <%= Govspeak::Document.new(part.body).to_html %>
 
         <footer>
   	      <nav class="pagination" role="navigation">
+            <ul>
   	        <%- if guide.has_previous_part?(part) -%>
-  	        <p class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></p>
+  	          <li class="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></li>
   	        <%- end -%>
-  	        <p class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</p>
+  	          <li class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</li>
   	        <%- if guide.has_next_part?(part) -%>
-  	        <p class="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>">Next part &rarr;</a></p>
+  	          <li class="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
   	        <%- end -%>
   	      </nav>
         </footer>
