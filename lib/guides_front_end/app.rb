@@ -19,15 +19,26 @@ module GuidesFrontEnd
     def answer_response(slug)
       HTTParty.get("http://#{settings.api_host}/answers/#{slug}.json")
     end
+    
+     def transaction_response(slug)
+        HTTParty.get("http://#{settings.api_host}/transaction/#{slug}.json")
+      end
 
     def router(slug)
       if guide_response(slug).code == 200
         :guide
       elsif answer_response(slug).code == 200
         :answer
+      elsif transaction_response(slug).code == 200
+        :transaction
       else
         nil
       end
+    end
+
+    def transaction
+       response = transaction_response(params[:slug]).to_hash
+       Api::Client::Transaction.from_hash(response)
     end
 
     def answer

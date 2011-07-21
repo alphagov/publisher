@@ -46,6 +46,8 @@ module GuidesFrontEnd
           end
         when :answer
           erubis :"answer.html", :locals => {:answer => answer}
+        when :transaction
+          erubis :"transaction.html", :locals => {:transaction => transaction}
       end
     end
   end

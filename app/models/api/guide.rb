@@ -17,12 +17,26 @@ module Api
         attrs.merge!(edition.as_json(:only => [:title,:body]))
       end
     end
+    
+    module Transaction
+      def self.edition_to_hash(edition)
+        attrs = edition.transaction.as_json(:only => [:slug, :tags, :updated_at])
+        attrs.merge!(edition.as_json(:only => [:title,:more_information,:will_continue_on,:link]))
+      end
+    end
+    
   end
 
   module Client
     class Answer < OpenStruct
       def self.from_hash(hash)
-        answer = new(hash)
+        new(hash)
+      end
+    end
+    
+    class Transaction < OpenStruct
+      def self.from_hash(hash)
+        new(hash)
       end
     end
     
