@@ -48,22 +48,3 @@ form.formtastic fieldset > ol > li.search input[size] { width:auto; max-width:10
 --------------------------------------------------------------------------------------------------*/
 form.formtastic fieldset > ol > li.text textarea { width: 100%; font-size: 1em; line-height: 1.4; }
 form.formtastic fieldset > ol > li.text textarea[cols] { width: auto; max-width: 100%; }
-
-.formats td.transaction, .formats td.answer, .formats td.guide {
-  background: url(/images/index/homepage-topicons.gif) no-repeat;
-  padding-left: 50px;
-}
-
-.formats td.transaction {
-  background-position: 0 -8px;
-}
-
-.formats td.answer {
-  background-position: 0 -128px;
-}
-
-.formats td.guide {
-  background-position: 0 -248px;
-}
-
-
