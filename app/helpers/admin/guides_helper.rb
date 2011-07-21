@@ -1,10 +1,6 @@
 module Admin::GuidesHelper
   def preview_edition_path(edition)
-    if edition.respond_to?(:guide)
-      preview_edition_prefix_path(edition.version_number) + "/#{edition.guide.slug}"
-    else
-      preview_edition_prefix_path(edition.version_number) + "/#{edition.answer.slug}"
-    end
+    preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
   rescue => e
     Rails.logger.warn e.inspect
     return '#'
@@ -37,15 +33,16 @@ module Admin::GuidesHelper
   def progress_form(opts)
     title,guide,edition,activity = opts[:title],opts[:guide],opts[:edition],opts[:activity]
     check_method = "can_#{activity}?".to_sym
-    if edition.respond_to?(:guide)
-      activity_form title, activity+"_form", 
-                    progress_admin_guide_path(guide, :activity => activity, :edition_id => edition), 
-                    :disabled => !edition.send(check_method)
-    else
-      activity_form title, activity+"_form", 
-                    progress_admin_answer_path(guide, :activity => activity, :edition_id => edition), 
-                    :disabled => !edition.send(check_method)
+    path = case edition.container.class
+    when Answer
+      progress_admin_answer_path(guide, :activity => activity, :edition_id => edition)
+    when Guide
+      progress_admin_guide_path(guide, :activity => activity, :edition_id => edition)
+    when Transaction
+      progress_admin_transaction_path(guide, :activity => activity, :edition_id => edition)
     end
+    
+    activity_form title, activity+"_form", path, :disabled => !edition.send(check_method)
   end
   
   def review_buttons(guide,edition)

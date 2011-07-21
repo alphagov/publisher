@@ -29,6 +29,6 @@ class Admin::TransactionsController < InheritedResources::Base
     current_user = self.current_user
     notes = params[:comment] || ''
     resource.latest_edition.progress(params[:activity],current_user,notes)    
-    redirect_to admin_answer_path(resource), :notice => 'Transaction updated'
+    redirect_to admin_transaction_path(resource), :notice => 'Transaction updated'
   end
 end
