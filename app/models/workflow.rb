@@ -38,4 +38,20 @@ module Workflow
    def latest_action
      self.actions.sort_by(&:created_at).last
    end
+   
+   def progress(activity,current_user,notes)
+     case activity
+     when 'request_review'
+       current_user.request_review(self, notes)
+     when 'review'
+       current_user.review(self, notes)
+     when 'okay'
+       current_user.okay(self, notes)
+     when 'publish'
+       current_user.publish(self, notes)
+     end
+
+     self.container.save
+   end
+   
 end

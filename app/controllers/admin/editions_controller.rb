@@ -37,5 +37,6 @@ class Admin::EditionsController < InheritedResources::Base
         elsif params[:transaction_id]
           Transaction.find(params[:transaction_id])
         end
+      @edition_parent
     end
 end

@@ -4,18 +4,19 @@ require 'test_helper'
 class GuideTest < ActiveSupport::TestCase
 
   def template_guide
-    g = Guide.new(:slug=>"childcare")
+    g = Guide.new(:slug=>"childcare",:name=>"Something")
     edition = g.editions.first
     edition.title = 'One'
     g.build_edition("Two")
     g
   end
-  
-  test 'guides assume the title of their latest edition' do
-    assert_equal template_guide.title, 'Two'
-  end
-  
-  test 'a new guide has drafts but isn\'t published' do
+
+  # No longer relevant, since name is now a required field
+  # test 'guides assume the title of their latest edition' do
+  #     assert_equal template_guide.title, 'Two'
+  #   end
+   
+    test 'a new guide has drafts but isn\'t published' do
     g = Guide.new(:slug=>"childcare")
     assert g.has_drafts
     assert !g.has_published
@@ -52,6 +53,40 @@ class GuideTest < ActiveSupport::TestCase
     assert !guide.has_reviewables
     user.request_review(guide.editions.first,"Review this guide please.")
     assert guide.has_reviewables
+  end
+  
+  test "A guide should have workflow scope flags set on saving edition" do
+    guide = template_guide
+    assert guide.has_drafts
+    assert !guide.has_published
+       
+    assert !Publication.published.to_a.include?(guide)
+    
+    
+    guide.publish guide.editions.first, "Publishing this"
+    
+    assert guide.has_drafts
+    assert guide.has_published
+    
+    assert guide.editions.first.save
+    
+    assert Publication.published.to_a.include? guide
+   end
+  
+  test "A guide should have workflow scope flags set on save" do
+    guide = template_guide
+    assert guide.has_drafts
+    assert !guide.has_published
+        
+    assert !Publication.published.to_a.include?(guide)    
+    
+    guide.publish guide.editions.first, "Publishing this"
+    
+    assert guide.has_drafts
+    assert guide.has_published
+    assert guide.save
+    
+    assert Publication.published.to_a.include? guide
   end
   
   test "guide workflow" do

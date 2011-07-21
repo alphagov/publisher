@@ -21,23 +21,9 @@ class Admin::AnswersController < InheritedResources::Base
   end
   
   def progress
-    @answer = resource
-    @latest_edition = resource.latest_edition
-    notes = ''
-
-    case params[:activity]
-    when 'request_review'
-      current_user.request_review(@latest_edition, notes)
-    when 'review'
-      current_user.review(@latest_edition, notes)
-    when 'okay'
-      current_user.okay(@latest_edition, notes)
-    when 'publish'
-      current_user.publish(@latest_edition, notes)
-    end
-
-    @latest_edition.save
-    
-    redirect_to admin_answer_path(@answer), :notice => 'Answer updated'
+    current_user = self.current_user
+    notes = params[:comment] || ''
+    resource.latest_edition.progress(params[:activity],current_user,notes)    
+    redirect_to admin_answer_path(resource), :notice => 'Answer updated'
   end
 end

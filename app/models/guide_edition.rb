@@ -5,7 +5,7 @@ class GuideEdition < Edition
   accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
 
    def build_clone
-     new_edition = self.guide.build_edition(self.title)
+     new_edition = super
      new_edition.parts = self.parts.map {|p| p.dup }
      new_edition
    end
@@ -16,16 +16,8 @@ class GuideEdition < Edition
      end
    end
   
-   def calculate_statuses
-     self.guide.calculate_statuses
-   end
-  
-   def publish(edition,notes)
-     self.guide.publish(edition,notes)
-   end
-  
    def container
-     return self.guide
+     self.guide
    end
   
 end
