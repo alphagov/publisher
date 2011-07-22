@@ -1,12 +1,14 @@
 class AudiencesController < ApplicationController
   def show
-    @guides = Publication.any_in(audiences: [params[:id]]).collect(&:published_edition).compact
-    render :json => @guides.collect do |g|
+    publications = Publication.any_in(audiences: [params[:id]]).collect(&:published_edition).compact
+    details = publications.to_a.collect do |g|
       {
         :title => g.title,
-        :tags => g.tags,
-        :url => admin_guide_url(g)
+        :tags => g.container.tags,
+        :url => guide_url(:id => g.container.slug, :format => :json)
       }
     end
+      
+    render :json => details
   end
 end
