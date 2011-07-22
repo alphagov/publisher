@@ -11,7 +11,10 @@
     <ul class="history">
       <% edition.actions.each do |action| %>
       <li>
-        <p><%= action.request_type %> by <%= action.requester %></p>
+        <p>
+          <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
+          <%= action.to_s %>
+        </p>
         <p class="action-time"><%= action.created_at.strftime("%d/%m/%Y %R") %></p>
         <% if action.comment.present? %>
         <blockquote><%= action.comment %></blockquote>
