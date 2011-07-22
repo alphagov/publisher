@@ -35,4 +35,8 @@ class Action
   rescue
     nil
   end
+  
+  def to_s
+    request_type.humanize.capitalize
+  end
 end
