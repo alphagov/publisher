@@ -90,20 +90,50 @@ class GuideTest < ActiveSupport::TestCase
   end
   
   test "guide workflow" do
-    user = User.new(:name=>"Ben")
-    user.save
+    user = User.create(:name => "Ben")
+    other_user = User.create(:name => "James")
+    
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
     user.request_review(edition,"Review this guide please.")
     assert !edition.can_request_review?
     assert edition.can_review?
-    user.review(edition,"I've reviewed it")
+    other_user.review(edition,"I've reviewed it")
     assert !edition.can_review?
     user.request_review(edition,"Review this guide please.")
     assert edition.can_okay?
-    user.okay(edition,"Looks good to me")
+    other_user.okay(edition,"Looks good to me")
     assert edition.can_publish?
+  end
+  
+  test "user should not be able to review a guide they requested review for" do
+    user = User.create(:name => "Ben")
+
+    guide = user.create_guide
+    edition = guide.editions.first
+    assert edition.can_request_review?
+    user.request_review(edition,"Review this guide please.")
+    assert ! user.review(edition, "Well Done, but work harder")
+  end
+  
+  test "user should not be able to okay a guide they requested review for" do
+    user = User.create(:name => "Ben")
+
+    guide = user.create_guide
+    edition = guide.editions.first
+    assert edition.can_request_review?
+    user.request_review(edition,"Review this guide please.")
+    assert ! user.okay(edition, '')
+  end
+  
+  test "you can only create a new edition from a published edition" do
+    user = User.create(:name => "Ben")
+
+    guide = user.create_guide
+    edition = guide.editions.first
+    assert ! edition.is_published?
+    assert ! user.new_version(edition)
   end
   
 end

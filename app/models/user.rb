@@ -35,6 +35,8 @@ class User
    end
 
   def new_version(edition)
+    return false unless edition.is_published?
+
     new_edition = edition.build_clone
     record_action new_edition, Action::NEW_VERSION
     new_edition
@@ -46,11 +48,15 @@ class User
   end
 
   def review(edition,comment)
+    return false if edition.latest_action.requester_id == self.id
+
     record_action edition, Action::REVIEWED, comment
     edition
   end
 
   def okay(edition,comment)
+    return false if edition.latest_action.requester_id == self.id
+    
     record_action edition, Action::OKAYED, comment
     edition
   end
