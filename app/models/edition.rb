@@ -19,4 +19,7 @@ class Edition
     self.container.publish(edition,notes)
   end
   
+  def is_published?
+    container.publishings.any? { |p| p.version_number == self.version_number }
+  end
 end

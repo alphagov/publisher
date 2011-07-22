@@ -1,10 +1,13 @@
 <div class="part group">
  <h3><a href="#"><%= f.object.title.present? ? f.object.title : 'Untitled part' %></a></h3>
   <%= f.inputs do %>
-    <%= f.input :title, :input_html => { :class => 'title' }, :hint => true, :required => true %>
-    <%= f.input :body, :as => :text, :required => true %>
-    <%= f.input :slug, :input_html => { :class => 'slug' }, :hint => true, :required => true, :hint => true %>
-    <%= f.input :order, :as => :hidden, :input_html => { :class => 'order' } %>
-    <li><%= f.remove_link "Remove this part" %></li>
+    <%= f.input :title, :input_html => { :class => 'title', :disabled => @latest_edition.is_published? }, :hint => true, :required => true %>
+    <%= f.input :body, :as => :text, :required => true, :input_html => {:disabled => @latest_edition.is_published?} %>
+    <%= f.input :slug, :input_html => { :class => 'slug', :disabled => @latest_edition.is_published? }, :hint => true, :required => true, :hint => true %>
+    <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => @latest_edition.is_published? } %>
+    
+    <% unless @latest_edition.is_published? %>
+      <li><%= f.remove_link "Remove this part" %></li>
+    <% end %>
   <% end %>
 </div>
