@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= render @drafts %>
+        <%= render :collection => @drafts, :partial => 'publication', :locals => {:tab => :drafts} %>
       </tbody>
     </table>
   </div>
@@ -28,7 +28,7 @@
          </tr>
        </thead>
        <tbody>
-         <%= render @review_requested %>
+         <%= render :collection => @review_requested, :partial => 'publication', :locals => {:tab => :review_requested}  %>
        </tbody>
      </table>
    </div>
@@ -40,7 +40,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= render @published %>
+        <%= render :collection => @published, :partial => 'publication', :locals => {:tab => :published}  %>        
       </tbody>
     </table>
   </div>
@@ -52,7 +52,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= render @archive %>
+        <%= render :collection => @archived, :partial => 'publication', :locals => {:tab => :archived}  %>        
       </tbody>
     </table>
   </div>

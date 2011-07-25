@@ -1,0 +1,36 @@
+<tr>
+  <td class="<%= publication.class.name.downcase %>">
+    <%= publication.title %><br />
+    <% if tab && tab == :published %>
+      v.<%= publication.published_edition.version_number %>
+      <% if publication.has_drafts %>
+        (v.<%= publication.latest_edition.version_number %> in draft)
+      <% end%>
+    <% else %>
+      v.<%= publication.latest_edition.version_number %>
+    <% end %>
+  </td>
+  <td>
+    
+     <% if publication.can_create_new_edition? %>
+        <%= button_to 'Create new edition', admin_editions_path(publication) %>
+      <% elsif tab && tab == :published %>
+        <%= link_to 'Edit in-progress draft', [:admin, publication]%>
+      <% else %>
+        <%= link_to 'Edit', [:admin, publication] %>
+      <% end %>
+    
+    <% if publication.class == Guide %>    
+    
+      <% if publication.latest_edition.parts.any? and publication.latest_edition.parts.first.slug.present? %>
+        <%= link_to 'Preview', preview_edition_path(publication.latest_edition), :class => "preview" %>
+      <% else %>
+        Preview
+      <% end %>
+    
+    <% else %>
+      <%= link_to 'Preview',  preview_edition_path(publication.latest_edition),:class => "preview" %>
+    <% end %>
+    
+  </td>
+</tr>

@@ -70,6 +70,10 @@ class Publication
     end
   end
 
+  def can_create_new_edition?
+    return !self.has_drafts
+  end
+
   def latest_edition
     self.editions.sort_by(&:created_at).last
   end

@@ -104,4 +104,15 @@ module Admin::GuidesHelper
     end
   end
   
+  def admin_editions_path(publication)
+    case publication.class
+    when Guide
+      admin_guide_editions_path(publication)
+    when Transaction
+      admin_transaction_editions_path(publication)
+    when Answer
+      admin_answer_editions_path(publication)
+    end
+  end
+  
 end
