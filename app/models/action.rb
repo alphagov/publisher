@@ -22,7 +22,7 @@ class Action
     when REVIEW_REQUESTED
       "A review and publish was requested by #{requester.name}."
     when REVIEWED
-      "Reviewed by #{requester.name}. Not OK'd for published."
+      "Reviewed by #{requester.name}. Not OK'd for publication."
     when OKAYED
       "OK'd for publication by #{requester.name}."
     when PUBLISHED
