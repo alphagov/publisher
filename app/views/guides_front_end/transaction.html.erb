@@ -48,7 +48,15 @@
         </div>
       </header>
 
+      <div>
+      <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
+      </div>
+      <p><a href="<%= transaction.link %>">Get started</a></p>
+      <p>This will continue on <%= transaction.will_continue_on %></p>
+      <h2>More about this service</h2>
+      <div>
       <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
+      </div>
 
     </article>
 

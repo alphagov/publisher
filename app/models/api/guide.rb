@@ -21,7 +21,7 @@ module Api
     module Transaction
       def self.edition_to_hash(edition)
         attrs = edition.transaction.as_json(:only => [:slug, :tags, :updated_at])
-        attrs.merge!(edition.as_json(:only => [:title,:more_information,:will_continue_on,:link]))
+        attrs.merge!(edition.as_json(:only => [:title,:introduction,:more_information,:will_continue_on,:link]))
       end
     end
     
