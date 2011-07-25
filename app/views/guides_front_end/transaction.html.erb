@@ -39,18 +39,33 @@
     <article role="article" class="group">
       <div class="inner">
 
-        <div>
-        <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
+        <div class="intro">
+          <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
+          <h2 class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started</a></h2>
         </div>
-        <p><a href="<%= transaction.link %>">Get started</a></p>
-        <p>This will continue on <%= transaction.will_continue_on %></p>
-        <h2>More about this service</h2>
-        <div>
-        <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
+
+        <div class="continue">
+          <p>This will continue on http://<%= transaction.will_continue_on %></p>
+        </div>
+
+        <div class="more">
+          <h2>More about this service</h2>
+          <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
         </div>
 
       </div>
     </article>
+
+    <aside>
+      <ul class="helpers">
+      <li id="helper-steps-in-page">
+            <strong>3 steps</strong> on this page
+          </li>
+          <li id="helper-time">
+            Online task takes <br><strong>5 minutes</strong>
+          </li>
+        </ul>
+    </aside>
 
   </section>
 
