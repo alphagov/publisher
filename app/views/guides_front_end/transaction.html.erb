@@ -2,75 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= transaction.title %> - gov.uk</title>
+  <title><%= transaction.title %> - Gov.uk</title>
+  <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
 </head>
 <body>
 
-<div id="wrapper" class="wrapper">
-
-  <header role="banner">
-    <hgroup>
-      <h1>Gov.uk</h1>
-      <h2>The government website for UK citizens and visitors</h2>
-    </hgroup>
-
-    <div role="search">
-			<form class="site-search" action="/" method="get" role="search">
-			  <fieldset>
-			    <legend>Search</legend>
-    				<label for="s">
-    					<span>Search</span>
-    					<input type="search" name="s" id="s" placeholder="Search" />
-    				</label>
-    				<input type="submit" value="Go" />
-    			</fieldset>
-			</form>
-    </div>
-  </header>
+<div id="wrapper" class="transaction">
 
   <section role="main" class="group">
 
-    <article>
-      <header>
+    <header class="group">
+      <div class="inner">
+
         <hgroup>
           <h1><a href="#" rel="bookmark" title="Permanent link to <%= transaction.title %>"><%= transaction.title %></a></h1>
           <p class="modified-date">Last updated: <%= transaction.updated_at %></p>
         </hgroup>
 
         <div class="related">
-          <h2>Related tools &amp; topics</h2>
-          <ul>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-            <li><a href="#">Lorem ipsum</a></li>
-          </ul>
+          <div class="inner" class="group">
+            <h2>Related tools &amp; topics</h2>
+            <nav role="navigation">
+              <ul>
+                <li><a href="#">Lorem ipsum</a></li>
+                <li><a href="#">Lorem ipsum</a></li>
+                <li><a href="#">Lorem ipsum</a></li>
+                <li><a href="#">Lorem ipsum</a></li>
+              </ul>
+            </nav>
+          </div>
         </div>
-      </header>
 
-      <div>
-      <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
       </div>
-      <p><a href="<%= transaction.link %>">Get started</a></p>
-      <p>This will continue on <%= transaction.will_continue_on %></p>
-      <h2>More about this service</h2>
-      <div>
-      <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
-      </div>
+    </header>
 
+    <article role="article" class="group">
+      <div class="inner">
+
+        <div>
+        <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
+        </div>
+        <p><a href="<%= transaction.link %>">Get started</a></p>
+        <p>This will continue on <%= transaction.will_continue_on %></p>
+        <h2>More about this service</h2>
+        <div>
+        <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
+        </div>
+
+      </div>
     </article>
 
   </section>
 
-  <footer>
-  </footer>
-
 </div> <!-- end wrapper -->
-
-
-<footer>
-</footer>
 
 </body>
 </html>
-
