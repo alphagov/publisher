@@ -5,6 +5,6 @@
   <td>
     <%= button_to 'Create new edition', admin_answer_editions_path(answer) %>
     <%= link_to 'Edit', [:admin, answer] %>
-    <%= link_to 'Preview', preview_edition_path(answer.latest_edition) %>
+    <%= link_to 'Preview',  preview_edition_path(answer.latest_edition),:class => "preview" %>
   </td>
 </tr>

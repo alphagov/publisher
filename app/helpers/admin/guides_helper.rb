@@ -90,7 +90,7 @@ module Admin::GuidesHelper
   end
   
   def preview_button(edition)
-    form_tag(preview_edition_path(edition), :method => :get, :class => 'button_to also_save_edition') do
+    form_tag(preview_edition_path(edition), :method => :get, :class => 'preview button_to also_save_edition') do
       submit_tag 'Preview'
     end
   end
