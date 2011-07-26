@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: 040f44bece6ee6f12d199c32da5f3eab70fb303f
+  revision: 7e0bb454987c0b4dcf9887d26bed7eca1ad717a9
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
@@ -111,7 +111,7 @@ GEM
       tzinfo (~> 0.3.22)
     multi_json (1.0.3)
     multi_xml (0.2.2)
-    multipart-post (1.1.2)
+    multipart-post (1.1.3)
     nokogiri (1.4.7)
     oa-core (0.2.6)
     oa-oauth (0.2.6)
