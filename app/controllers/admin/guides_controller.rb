@@ -3,6 +3,8 @@ class Admin::GuidesController < InheritedResources::Base
   before_filter :authenticate_user!
   defaults :route_prefix => 'admin'
   
+  respond_to :html, :json
+  
   def index
     @drafts = Publication.in_draft
     @published = Publication.published
@@ -23,9 +25,12 @@ class Admin::GuidesController < InheritedResources::Base
       render :action => 'new'
     end
   end
-
+  
   def update
-    update! { admin_guide_url(@guide, :anchor => 'metadata') }
+    update! do |s,f| 
+      s.json { render :json => @guide }
+      f.json { render :json => @guide.errors, :status => 406 }
+    end
   end
   
   def progress

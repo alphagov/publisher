@@ -22,7 +22,10 @@ class Admin::TransactionsController < InheritedResources::Base
   end
 
   def update
-    update! { admin_transaction_url(@transaction, :anchor => 'metadata') }
+    update! do |s,f| 
+      s.json { render :json => @transaction }
+      f.json { render :json => @transaction.errors, :status => 406 }
+    end
   end
   
   def progress

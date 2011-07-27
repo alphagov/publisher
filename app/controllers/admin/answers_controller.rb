@@ -20,6 +20,13 @@ class Admin::AnswersController < InheritedResources::Base
     @latest_edition = resource.latest_edition
   end
   
+  def update
+    update! do |s,f| 
+      s.json { render :json => @answer }
+      f.json { render :json => @answer.errors, :status => 406 }
+    end
+  end
+  
   def progress
     current_user = self.current_user
     notes = params[:comment] || ''

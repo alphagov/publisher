@@ -14,12 +14,19 @@ gem 'httparty'
 gem 'inherited_resources'
 gem 'formtastic'
 gem 'has_scope'
+
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
 else
   gem 'gds-sso', :git => 'git@github.com:alphagov/gds-sso.git'
 end
-gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
+
+if ENV['SLIMMER_DEV']
+  gem 'slimmer', :path => '../slimmer'
+else
+  gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
+end
+
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
 
 gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'

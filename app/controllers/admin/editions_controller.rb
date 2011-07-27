@@ -22,6 +22,8 @@ class Admin::EditionsController < InheritedResources::Base
         flash.now[:alert] = "We had some problems saving. Please check the form below."
         render :template => "admin/#{tmpl_folder}/show"
       } 
+      success.json { render :json => resource }
+      failure.json { render :json => resource.errors, :status=>406 }
     end
   end
   

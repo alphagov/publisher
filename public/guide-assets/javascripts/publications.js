@@ -1,8 +1,35 @@
 $(function () {
   $('.publication-nav').tabs();
+  
+  var submit_form = function(form,success) {
+     var jq = $.post(
+         form.attr('action')+".json",
+         form.serialize(),
+         success
+     ).error( function(data) {
+         var errors = $.parseJSON(data.responseText);
+         var messages = "There were problems saving this edition: ";
+         errors = $.map(errors, function(v,k) {
+             return k + " " + v.join(", ");
+         });
+         messages = messages + errors.join("; ") + ".";
+         $("<p class=\"flash-alert\">"+messages+"</p>").insertBefore("#wrapper:first");
+     });
+   }
+  
+  var saved = false;
+  
   $('#save-edition').submit(function () {
-    $('form.edition').trigger('submit');
-    return false;
+      var edition_form = $('form.edition');
+      var publication_form = $('form.publication');
+      if (! saved) {
+          submit_form(publication_form,function() {
+              saved = true;
+              edition_form.trigger('submit');
+          });
+      }
+      
+      return saved;
   });
   
   $('input.title').
@@ -16,21 +43,23 @@ $(function () {
     
   $('#edition_title')[0].focus();
   
-  var submitted_main_form = false;
+  var submitted_forms = false;
   
   $('.also_save_edition').submit(function () {
-    var main_form = $('#edition_edit');
+    var edition_form = $('form.edition');
+    var publication_form = $('form.publication');
+    
     var this_form = $(this);
 
-    if (! submitted_main_form) {
-      $.post(
-        main_form.attr('action'), 
-        main_form.serialize(), 
-        function (data, textStatus, jqXHR) {
-          submitted_main_form = true;
-          this_form.trigger('submit');
-        }
-      );
+    if (! submitted_forms) {
+        submit_form(edition_form,function(data) {
+            console.log(data);
+            submit_form(publication_form,function(data) {
+                submitted_forms = true;
+                this_form.trigger("submit");
+            })
+        });
     }
+    return submitted_forms;
   });
 });
