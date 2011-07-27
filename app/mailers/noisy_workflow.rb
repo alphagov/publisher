@@ -6,7 +6,7 @@ class NoisyWorkflow < ActionMailer::Base
   def make_noise(guide,action)
     @guide = guide
     @action = action
-    mail(:to => "dev@alphagov.co.uk",
+    mail(:to => "eds@alphagov.co.uk",
          :subject => "[GUIDES/ANSWERS] " + @action.friendly_description)
   end
 end
