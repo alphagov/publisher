@@ -43,7 +43,7 @@ module Api
     class Guide < OpenStruct
       def self.from_hash(hash)
         guide = new(hash)
-        guide.parts = guide.parts.collect { |p| Part.from_hash(p) }
+        guide.parts = guide.parts.collect { |p| Part.from_hash(p) }.sort_by {|p| p.order }
         guide
       end
 
