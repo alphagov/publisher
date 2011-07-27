@@ -12,7 +12,8 @@
     <table class="formats" cellspacing="0">
       <thead class="visuallyhidden">
         <tr>
-          <th colspan="2">Title</th>
+          <th>Title</th>
+          <th>Tools</th>
         </tr>
       </thead>
       <tbody>
@@ -24,7 +25,8 @@
      <table class="formats" cellspacing="0">
        <thead class="visuallyhidden">
          <tr>
-           <th colspan="2">Title</th>
+           <th>Title</th>
+           <th>Tools</th>
          </tr>
        </thead>
        <tbody>
@@ -36,11 +38,12 @@
     <table class="formats" cellspacing="0">
       <thead class="visuallyhidden">
         <tr>
-          <th colspan="2">Title</th>
+          <th>Title</th>
+          <th>Tools</th>
         </tr>
       </thead>
       <tbody>
-        <%= render :collection => @published, :partial => 'publication', :locals => {:tab => :published}  %>        
+        <%= render :collection => @published, :partial => 'publication', :locals => {:tab => :published}  %>
       </tbody>
     </table>
   </div>
@@ -48,11 +51,12 @@
     <table class="formats" cellspacing="0">
       <thead class="visuallyhidden">
         <tr>
-          <th colspan="2">Title</th>
+          <th>Title</th>
+          <th>Tools</th>
         </tr>
       </thead>
       <tbody>
-        <%= render :collection => @archived, :partial => 'publication', :locals => {:tab => :archived}  %>        
+        <%= render :collection => @archived, :partial => 'publication', :locals => {:tab => :archived}  %>
       </tbody>
     </table>
   </div>
