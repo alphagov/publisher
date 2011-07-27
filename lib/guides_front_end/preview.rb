@@ -14,43 +14,27 @@ module GuidesFrontEnd
       self.class.preview_edition_id(request.env)
     end
     
-    def get_guide(slug)
-      Guide.where(:slug => slug).first
+    def get_publication
+      @this_publication ||= Publication.where(:slug => params[:slug]).first
     end
     
-    def get_answer(slug)
-      Answer.where(:slug => slug).first
-    end
-    
-    def get_transaction(slug)
-      Transaction.where(:slug => slug).first
-    end
-    
-    def router(slug)
-      if get_guide(slug)
-        :guide
-      elsif get_answer(slug)
-        :answer
-      elsif get_transaction(slug)
-        :transaction
+    def router
+      publication = get_publication
+      if publication
+        publication.class.to_s.underscore.to_sym
       else
         nil
       end
     end
-
-    def transaction
-      transaction = get_transaction(params[:slug]).editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
-      Api::Client::Transaction.from_hash(Api::Generator::Transaction.edition_to_hash(transaction))
+    
+    def setup_publication
+      publication = get_publication.editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
+      hashed_publication = Api::Generator.edition_to_hash(publication)
+      Api::Client.from_hash(hashed_publication)      
     end
-
-    def answer
-      answer = get_answer(params[:slug]).editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
-      Api::Client::Answer.from_hash(Api::Generator::Answer.edition_to_hash(answer))
-    end
-
-    def guide
-      edition = get_guide(params[:slug]).editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
-      Api::Client::Guide.from_hash(Api::Generator::Guide.edition_to_hash(edition))
+    
+    def publication
+      @publication ||= setup_publication
     end
   end
 end

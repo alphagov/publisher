@@ -5,23 +5,17 @@ Guides::Application.routes.draw do
 
   namespace :admin do
     resources :transactions do
-      member do
-        post :progress
-      end
+      post :progress, :on => :member
       resources :editions
     end
     
     resources :answers do
-      member do
-        post :progress
-      end
+      post :progress, :on => :member
       resources :editions
     end
     
     resources :guides do
-      member do
-        post :progress
-      end
+      post :progress, :on => :member
       resources :editions
     end
     
@@ -30,4 +24,6 @@ Guides::Application.routes.draw do
   
   resources :audiences
   resources :guides, :only => [:show]
+  
+  match '/:path(/:part)', :to => GuidesFrontEnd::App
 end

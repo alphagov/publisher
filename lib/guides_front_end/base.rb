@@ -28,26 +28,26 @@ module GuidesFrontEnd
     end
     
     get '/:slug/:part_slug' do
-      halt(404) if guide.nil? # 404 if guide not found
-      part = guide.find_part(params[:part_slug])
+      halt(404) if publication.nil? # 404 if guide not found
+      part = publication.find_part(params[:part_slug])
       halt(404) if part.nil? # 404 if part not found
-      erubis :"guide.html", :locals => {:guide => guide, :part => part}
+      erubis :"guide.html", :locals => {:guide => publication, :part => part}
     end
         
     get '/:slug' do
-      route = router(params[:slug])
+      route = router
       halt(404) if route.nil? 
       case route
         when :guide
-          if guide.parts.any? and guide.parts.first.slug and guide.parts.first.slug != ''
-            redirect to(base_path(params[:slug], guide.parts.first.slug))
+          if publication.parts.any? and publication.parts.first.slug and publication.parts.first.slug != ''
+            redirect to(base_path(params[:slug], publication.parts.first.slug))
           else
             halt(404)
           end
         when :answer
-          erubis :"answer.html", :locals => {:answer => answer}
+          erubis :"answer.html", :locals => {:answer => publication}
         when :transaction
-          erubis :"transaction.html", :locals => {:transaction => transaction}
+          erubis :"transaction.html", :locals => {:transaction => publication}
       end
     end
   end
