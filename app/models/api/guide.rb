@@ -2,11 +2,20 @@ require 'ostruct'
 
 module Api
   module Generator
+    def self.edition_to_hash(edition)
+      case edition.container.class.to_s
+        when 'Transaction' then Api::Generator::Transaction.edition_to_hash(edition)
+        when 'Guide' then Api::Generator::Guide.edition_to_hash(edition)
+        when 'Answer' then Api::Generator::Guide.edition_to_hash(edition)
+      end
+    end
+
     module Guide
       def self.edition_to_hash(edition)
         attrs = edition.guide.as_json(:only => [:audiences, :slug, :tags, :updated_at])
         attrs.merge!(edition.as_json(:only => [:title]))
         attrs['parts'] = edition.parts.collect { |p| p.as_json(:only => [:slug, :title, :body]).merge('number' => p.order) }
+        attrs['type'] = 'guide'
         attrs
       end
     end
@@ -14,6 +23,7 @@ module Api
     module Answer
       def self.edition_to_hash(edition)
         attrs = edition.answer.as_json(:only => [:audiences, :slug, :tags, :updated_at])
+        attrs['type'] = 'answer'
         attrs.merge!(edition.as_json(:only => [:title,:body]))
       end
     end
@@ -21,6 +31,7 @@ module Api
     module Transaction
       def self.edition_to_hash(edition)
         attrs = edition.transaction.as_json(:only => [:audiences, :slug, :tags, :updated_at])
+        attrs['type'] = 'transaction'
         attrs.merge!(edition.as_json(:only => [:title,:introduction,:more_information,:will_continue_on,:link]))
       end
     end
@@ -28,6 +39,14 @@ module Api
   end
 
   module Client
+    def self.from_hash(response)
+      case response['type']
+      when 'guide' then Api::Client::Guide.from_hash(response)
+      when 'transaction' then Api::Client::Transaction.from_hash(response)
+      when 'answer' then Api::Client::Answer.from_hash(response)
+      end
+    end
+    
     class Answer < OpenStruct
       def self.from_hash(hash)
         new(hash)
