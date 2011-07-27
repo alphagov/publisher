@@ -6,7 +6,7 @@ module Api
       case edition.container.class.to_s
         when 'Transaction' then Api::Generator::Transaction.edition_to_hash(edition)
         when 'Guide' then Api::Generator::Guide.edition_to_hash(edition)
-        when 'Answer' then Api::Generator::Guide.edition_to_hash(edition)
+        when 'Answer' then Api::Generator::Answer.edition_to_hash(edition)
       end
     end
 
