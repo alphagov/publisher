@@ -31,7 +31,7 @@ gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v
 gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 
 group :development, :test do
-  gem 'passenger'
+  # gem 'passenger'
   gem 'fabrication'
   gem "timecop"
   gem 'capybara', '~> 1.0.0'

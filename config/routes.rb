@@ -26,6 +26,5 @@ Guides::Application.routes.draw do
   
   resources :audiences
   resources :guides, :only => [:show]
-
-  match '/:path(/:part)', :to => GuidesFrontEnd::App, :constraints => {:path => /[^(auth)]/}
+  # match '/:path(/:part)', :to => GuidesFrontEnd::App, :constraints => {:path => /[^(auth)]/}
 end

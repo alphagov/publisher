@@ -74,7 +74,6 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.2.0)
       ffi (~> 1.0.6)
-    daemon_controller (0.2.6)
     database_cleaner (0.6.7)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -83,7 +82,6 @@ GEM
       addressable (~> 2.2.4)
       multipart-post (~> 1.1.0)
       rack (< 2, >= 1.1.0)
-    fastthread (1.0.7)
     ffi (1.0.9)
     formtastic (1.2.4)
       actionpack (>= 2.3.7)
@@ -124,11 +122,6 @@ GEM
     oauth2 (0.4.1)
       faraday (~> 0.6.1)
       multi_json (>= 0.0.5)
-    passenger (3.0.7)
-      daemon_controller (>= 0.2.5)
-      fastthread (>= 1.0.1)
-      rack
-      rake (>= 0.8.1)
     polyglot (0.3.2)
     rack (1.2.3)
     rack-mount (0.6.14)
@@ -189,7 +182,6 @@ DEPENDENCIES
   has_scope
   inherited_resources
   mongoid (~> 2.0)
-  passenger
   rails (~> 3.0.7)
   selenium-webdriver
   sinatra
