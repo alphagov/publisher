@@ -8,6 +8,8 @@ class TransactionEdition < Edition
   
   field :expectation_ids, :type => Array, :default => []
   
+  @@fields_to_clone = [:introduction, :will_continue_on, :link, :more_information, :expectation_ids]
+  
   def expectations
     Expectation.criteria.in(:_id => self.expectation_ids)
   end  

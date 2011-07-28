@@ -3,6 +3,8 @@ class AnswerEdition < Edition
   
   field :body, :type => String
    
+  @@fields_to_clone = [:body]
+
   def container
     self.answer
   end

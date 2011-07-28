@@ -7,12 +7,20 @@ class Edition
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   
+  @@fields_to_clone = []
+  
   def calculate_statuses
     self.container.calculate_statuses
   end
   
   def build_clone
-    self.container.build_edition(self.title)
+    new_edition = self.container.build_edition(self.title)
+
+    @@fields_to_clone.each do |attr|
+      new_edition.send("#{attr}=", self.send(attr))
+    end
+     	
+    new_edition
   end
   
   def publish(edition,notes)
