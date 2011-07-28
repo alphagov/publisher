@@ -45,6 +45,10 @@ $(function () {
   
   var submitted_forms = false;
   
+  $('form.edition,form.publication').change(function () {
+  	submitted_forms = false;
+  });
+  
   $('.also_save_edition').submit(function () {
     var edition_form = $('form.edition');
     var publication_form = $('form.publication');
@@ -53,13 +57,13 @@ $(function () {
 
     if (! submitted_forms) {
         submit_form(edition_form,function(data) {
-            console.log(data);
             submit_form(publication_form,function(data) {
                 submitted_forms = true;
                 this_form.trigger("submit");
             })
         });
     }
+    
     return submitted_forms;
   });
 });
