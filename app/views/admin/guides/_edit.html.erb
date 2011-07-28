@@ -54,6 +54,11 @@
         accordion(my_opts).sortable(sortable_opts);
       $('#parts .part:last-child').find('input.order').val(active_index);
     });
+    $('body').bind('associated-removed', function () {
+      $('#parts').sortable('destroy').accordion("destroy").
+        accordion(accordion_opts).sortable(sortable_opts);
+      return false;
+    });
   });
 </script>
 <% end %>
