@@ -9,6 +9,12 @@ class Edition
   
   @@fields_to_clone = []
   
+  validate :not_editing_published_item
+  
+  def not_editing_published_item
+  	errors.add(:base, "Published editions can't be edited") if is_published?
+  end
+  
   def calculate_statuses
     self.container.calculate_statuses
   end

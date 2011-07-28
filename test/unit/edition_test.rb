@@ -53,6 +53,15 @@ class GuideEditionTest < ActiveSupport::TestCase
     assert_not_nil guide.published_edition
   end
   
+  test "a published edition can't be edited" do
+    edition = template_edition
+    guide = template_edition.guide
+    guide.publish edition,"Published because I did"
+	edition.title = "My New Title"
+	assert ! edition.save
+	assert_equal ["Published editions can't be edited"], edition.errors[:base]
+  end
+  
   test "publish history is recorded" do
     edition = template_edition
     guide = template_edition.guide
