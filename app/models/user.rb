@@ -34,7 +34,7 @@ class User
 
   def create_answer(attributes = {})
     create_publication(Answer, attributes)
-   end
+  end
 
   def new_version(edition)
     return false unless edition.is_published?

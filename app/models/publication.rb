@@ -74,6 +74,10 @@ class Publication
     return !self.has_drafts
   end
 
+  def can_destroy?
+    return !self.has_published
+  end
+
   def latest_edition
     self.editions.sort_by(&:created_at).last
   end

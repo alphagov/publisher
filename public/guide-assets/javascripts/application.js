@@ -15,4 +15,8 @@ $(function () {
   $('a.preview').attr("target","_preview");
   $('form.preview').attr("target","_preview");
   
+  $('.confirm form').submit(function(){
+      return confirm('Woah. Scary action, cannot be undone. Continue?');
+  });
+  
 })

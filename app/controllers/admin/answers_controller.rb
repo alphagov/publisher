@@ -27,6 +27,14 @@ class Admin::AnswersController < InheritedResources::Base
     end
   end
   
+  def destroy
+    if resource.can_destroy?
+      destroy! { redirect_to admin_root_url, :notice => "Answer destroyed" and return }
+    else
+      redirect_to admin_answer_path(resource), :notice => 'Cannot delete a answer that has ever been published.' and return
+    end
+  end
+  
   def progress
     current_user = self.current_user
     notes = params[:comment] || ''

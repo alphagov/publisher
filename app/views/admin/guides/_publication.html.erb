@@ -13,6 +13,11 @@
     </span>
   </td>
   <td>
+     <% if publication.can_destroy? %>
+        <span class="confirm">
+        <%= button_to "Delete", [:admin,publication], :confirm => "Woah. Scary action, cannot be undone. Continue?", :method => :delete %>
+        </span>
+     <% end %>
 
      <% if publication.can_create_new_edition? %>
         <%= form_tag admin_editions_path(publication) do %>

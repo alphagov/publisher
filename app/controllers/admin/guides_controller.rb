@@ -17,6 +17,14 @@ class Admin::GuidesController < InheritedResources::Base
     @latest_edition = resource.latest_edition
   end
   
+  def destroy
+    if resource.can_destroy?
+      destroy! { redirect_to admin_root_url, :notice => "Guide destroyed" and return }
+    else
+      redirect_to admin_guide_path(resource), :notice => 'Cannot delete a guide that has ever been published.' and return
+    end
+  end
+  
   def create
     @guide = current_user.create_guide(params[:guide])
     if @guide.save
