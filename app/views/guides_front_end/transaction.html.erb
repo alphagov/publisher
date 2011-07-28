@@ -58,12 +58,11 @@
 
     <aside>
       <ul class="helpers">
-      <li id="helper-steps-in-page">
-            <strong>3 steps</strong> on this page
-          </li>
-          <li id="helper-time">
-            Online task takes <br><strong>5 minutes</strong>
-          </li>
+        <% transaction.expectations.each do |e| %>
+            <li class="<%= e['css_class'] %>">
+              <%= e['text'] %>
+            </li>
+        <% end %>
         </ul>
     </aside>
 

@@ -1,3 +1,5 @@
+require 'net/http'
+
 module GuidesFrontEnd
   class App < GuidesFrontEnd::Base
     configure do

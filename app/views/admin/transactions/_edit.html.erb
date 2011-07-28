@@ -5,5 +5,6 @@
     <%= f.input :will_continue_on %>
     <%= f.input :link %>
     <%= f.input :more_information, :as => :text %>
+    <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => TransactionEdition.expectation_choices %>
   <% end %>
 <% end %>
