@@ -1,14 +1,16 @@
 <tr>
   <td class="<%= publication.class.name.downcase %>">
-    <%= publication.title %><br />
+    <%= publication.title %>
+    <span class="version">
     <% if tab && tab == :published %>
-      v.<%= publication.published_edition.version_number %>
+      (v.<%= publication.published_edition.version_number %>)
       <% if publication.has_drafts %>
         (v.<%= publication.latest_edition.version_number %> in draft)
       <% end%>
     <% else %>
       v.<%= publication.latest_edition.version_number %>
     <% end %>
+    </span>
   </td>
   <td>
 
@@ -18,7 +20,7 @@
         <% end %>
       <% elsif tab && tab == :published %>
         <%= link_to [:admin, publication] do %>
-        'Edit in-progress draft'
+        <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this draft publication', :title => 'Edit this draft publication' %>
         <% end %>
       <% else %>
         <%= link_to [:admin, publication] do %>
@@ -33,7 +35,7 @@
           <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
         <% end %>
       <% else %>
-        Preview
+      <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview disabled for this publication', :title => 'Preview disabled for this publication', :class => 'disabled' %>
       <% end %>
 
     <% else %>
