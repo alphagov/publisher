@@ -24,10 +24,9 @@
             <h2>Related tools &amp; topics</h2>
             <nav role="navigation">
               <ul>
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">Lorem ipsum</a></li>
-                <li><a href="#">Lorem ipsum</a></li>
+                <li><a href="#">Know my rights about my payslip</a></li>
+                <li><a href="#">The age children can start work</a></li>
+                <li><a href="#">When you can start work</a></li>
               </ul>
             </nav>
           </div>
@@ -41,7 +40,7 @@
 
         <div class="intro">
           <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
-          <h2 class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started</a></h2>
+          <h2 class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></h2>
         </div>
 
         <div class="continue">
