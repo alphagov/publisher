@@ -7,7 +7,8 @@ class Edition
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   
-  @@fields_to_clone = []
+  class << self; attr_accessor :fields_to_clone end
+  @fields_to_clone = []
   
   validate :not_editing_published_item
   
