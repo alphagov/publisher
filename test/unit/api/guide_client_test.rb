@@ -2,7 +2,7 @@ require 'test_helper'
 
 class GuideClientTest < ActiveSupport::TestCase
   def setup
-    @guide_client = Api::Client::Guide.from_hash('slug' => 'test_slug', 'tags' => 'tag, other', 'title' => 'Test guide', 'introduction' => 'Look now', 'parts' => [
+    @guide_client = Api::Client::Guide.from_hash('slug' => 'test_slug', 'tags' => 'tag, other', 'title' => 'Test guide', 'parts' => [
       {'number' => 1, 'title' => 'Part 1 title', 'body' => 'Body text', 'slug' => 'part_one'},
       {'number' => 1, 'title' => 'Part 2 title', 'body' => 'Body text', 'slug' => 'part_two'}
     ])
@@ -18,10 +18,6 @@ class GuideClientTest < ActiveSupport::TestCase
 
   def test_api_client_has_edition_title
     assert_equal "Test guide", @guide_client.title
-  end
-
-  def test_api_client_has_edition_introduction
-    assert_equal "Look now", @guide_client.introduction
   end
 
   def test_api_client_has_parts
