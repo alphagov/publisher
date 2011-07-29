@@ -15,7 +15,9 @@
   <td>
      <% if publication.can_destroy? %>
         <span class="confirm">
-        <%= button_to "Delete", [:admin,publication], :confirm => "Woah. Scary action, cannot be undone. Continue?", :method => :delete %>
+        <%= form_tag [:admin,publication], :method => :delete do %>
+          <%= image_submit_tag '/images/icon-publisher-delete.png', :alt => 'Delete this publication', :title => 'Delete this publication' %>
+        <% end %>
         </span>
      <% end %>
 
