@@ -39,7 +39,7 @@
       <div class="inner">
 
         <div class="intro">
-          <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
+          <p><%= transaction.introduction %></p>
           <h2 class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></h2>
         </div>
 
