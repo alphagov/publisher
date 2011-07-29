@@ -1,6 +1,10 @@
 <tr>
   <td class="<%= publication.class.name.downcase %>">
-    <%= publication.title %>
+    <% if tab && tab == :published %>
+      <%= publication.published_edition.title %>
+    <% else %>
+      <%= publication.latest_edition.title %>
+    <% end %>
     <span class="version">
     <% if tab && tab == :published %>
       (v.<%= publication.published_edition.version_number %>)
