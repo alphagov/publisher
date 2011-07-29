@@ -1,5 +1,11 @@
 require 'guides_front_end'
 
+class NonAuthConstraint
+  def matches?(request)
+    ! request.path.match(/^\/auth/)
+  end
+end
+
 Guides::Application.routes.draw do
   authenticate :user do
     match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
@@ -26,5 +32,6 @@ Guides::Application.routes.draw do
   
   resources :audiences
   resources :guides, :only => [:show]
-  # match '/:path(/:part)', :to => GuidesFrontEnd::App, :constraints => {:path => /[^(auth)]/}
+
+  match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end
