@@ -77,6 +77,7 @@ GEM
     database_cleaner (0.6.7)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    exception_notification (2.4.1)
     fabrication (1.0.1)
     faraday (0.6.1)
       addressable (~> 2.2.4)
@@ -175,6 +176,7 @@ DEPENDENCIES
   cdn_helpers!
   database_cleaner
   erubis
+  exception_notification (~> 2.4.1)
   fabrication
   formtastic
   gds-sso!

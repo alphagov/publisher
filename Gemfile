@@ -30,6 +30,8 @@ gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v
 
 gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 
+gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
+
 group :development, :test do
   # gem 'passenger'
   gem 'fabrication'
