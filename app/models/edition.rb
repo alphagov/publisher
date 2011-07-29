@@ -13,7 +13,7 @@ class Edition
   validate :not_editing_published_item
   
   def not_editing_published_item
-  	errors.add(:base, "Published editions can't be edited") if is_published?
+	  errors.add(:base, "Published editions can't be edited") if changed? and is_published?
   end
   
   def calculate_statuses
@@ -23,7 +23,7 @@ class Edition
   def build_clone
     new_edition = self.container.build_edition(self.title)
 
-    @@fields_to_clone.each do |attr|
+    self.class.fields_to_clone.each do |attr|
       new_edition.send("#{attr}=", self.send(attr))
     end
      	

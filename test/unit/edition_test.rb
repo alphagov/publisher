@@ -4,10 +4,10 @@ require 'test_helper'
 class GuideEditionTest < ActiveSupport::TestCase
 
   def template_edition
-    g = Guide.new(:slug=>"childcare")
+    g = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
     edition = g.editions.first
-    edition.parts.build(:body=>"This is some version text.")
-    edition.parts.build(:body=>"This is some more version text.")
+    edition.parts.build(:title => 'PART !', :body=>"This is some version text.", :slug => 'part-one')
+    edition.parts.build(:title => 'PART !!', :body=>"This is some more version text.", :slug => 'part-two')
     edition
   end
 
@@ -15,7 +15,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     g = Guide.new(:slug=>"childcare")
     assert_equal 1, g.editions.length 
   end
-
+  
   test "new edition should have an incremented version number" do
     g = Guide.new(:slug=>"childcare")
     edition = g.editions.first
@@ -55,11 +55,16 @@ class GuideEditionTest < ActiveSupport::TestCase
   
   test "a published edition can't be edited" do
     edition = template_edition
-    guide = template_edition.guide
-    guide.publish edition,"Published because I did"
-	edition.title = "My New Title"
-	assert ! edition.save
-	assert_equal ["Published editions can't be edited"], edition.errors[:base]
+    guide = template_edition.container
+    guide.publish edition, "Published because I did"
+    assert guide.save
+
+    guide.reload
+    edition = guide.editions.last
+    edition.title = "My New Title"
+
+    assert ! edition.save
+    assert_equal ["Published editions can't be edited"], edition.errors[:base]
   end
   
   test "publish history is recorded" do
