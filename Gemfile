@@ -33,7 +33,7 @@ gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
 group :development, :test do
-  # gem 'passenger'
+  gem 'passenger'
   gem 'fabrication'
   gem "timecop"
   gem 'capybara', '~> 1.0.0'
