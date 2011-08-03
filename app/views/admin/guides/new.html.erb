@@ -1,27 +1,31 @@
-<div id="guide-nav" class="ui-tabs ui-widget-content">
+<div class="ui-widget-content new">
+  <div class="inner">
 
-  <p class="intro">Explanatory intro paragraph goes here. Rich should probably write it to explain what this page should do...</p>
+    <h1>Create new guide</h1>
 
-  <%= semantic_form_for [:admin, @guide] do |f| %>
-    <%= f.inputs do %>
-      <%= f.input :name, :hint => true %>
-      <%= f.input :slug, :hint => true %>
-      <%= f.input :tags, :hint => true %>
+    <%= semantic_form_for [:admin, @guide] do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :name, :hint => true %>
+        <%= f.input :slug, :hint => true %>
+        <%= f.input :tags, :hint => true %>
+      <% end %>
+
+      <%= f.buttons %>
     <% end %>
 
-    <%= f.buttons %>
-  <% end %>
-
-  <% content_for :extra_javascript do %>
-  <script type="text/javascript" charset="utf-8">
-    $(function () {
-      $('#guide_name').change(function () {
-        if ($('#guide_slug').text() == '') {
-          var title = $('#guide_name').val();
-          $('#guide_slug').val(GovUKGuideUtils.convertToSlug(title));
-        }
+    <% content_for :extra_javascript do %>
+    <script type="text/javascript" charset="utf-8">
+      $(function () {
+        $('#guide_name').change(function () {
+          if ($('#guide_slug').text() == '') {
+            var title = $('#guide_name').val();
+            $('#guide_slug').val(GovUKGuideUtils.convertToSlug(title));
+          }
+        });
       });
-    });
-  </script>
-  <% end %>
+    </script>
+    <% end %>
+  </div>
 </div>
+
+<% content_for :page_title, "Create new guide" %>

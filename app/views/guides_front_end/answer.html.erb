@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= answer.title %> - Gov.uk</title>
+  <title><%= answer.title %> - Beta.Gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
 </head>
 <body>
@@ -15,8 +15,8 @@
       <div class="inner">
 
         <hgroup>
-          <h1><a href="#" rel="bookmark" title="Permanent link to <%= answer.title %>"><%= answer.title %></a></h1>
-          <p class="modified-date">Last updated: <%= answer.updated_at %></p>
+          <h1><%= answer.title %></h1>
+          <p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
         </hgroup>
 
         <div class="related">

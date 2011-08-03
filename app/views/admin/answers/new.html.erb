@@ -1,27 +1,31 @@
-<div id="guide-nav" class="ui-tabs ui-widget-content">
+<div class="ui-widget-content new">
+  <div class="inner">
 
-  <p class="intro">New guide intro paragraph goes here. Rich should probably write it.</p>
+    <h1>Create new answer</h1>
 
-  <%= semantic_form_for [:admin, @answer] do |f| %>
-    <%= f.inputs do %>
-      <%= f.input :name, :hint => true %>
-      <%= f.input :slug, :hint => true %>
-      <%= f.input :tags, :hint => true %>
+    <%= semantic_form_for [:admin, @answer] do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :name, :hint => true %>
+        <%= f.input :slug, :hint => true %>
+        <%= f.input :tags, :hint => true %>
+      <% end %>
+
+      <%= f.buttons %>
     <% end %>
 
-    <%= f.buttons %>
-  <% end %>
-
-  <% content_for :extra_javascript do %>
-  <script type="text/javascript" charset="utf-8">
-  $(function () {
-    $('#answer_name').change(function () {
-      if ($('#answer_slug').text() == '') {
-        var title = $('#answer_name').val();
-        $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
-      }
-    });
-  });
-  </script>
-  <% end %>
+    <% content_for :extra_javascript do %>
+    <script type="text/javascript" charset="utf-8">
+      $(function () {
+        $('#answer_name').change(function () {
+          if ($('#answer_slug').text() == '') {
+            var title = $('#answer_name').val();
+            $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
+          }
+        });
+      });
+    </script>
+    <% end %>
+  </div>
 </div>
+
+<% content_for :page_title, "Create new answer" %>
