@@ -2,7 +2,7 @@
 <html>
 <head>
   <title><%= yield :page_title %> - Beta.Gov.uk Publisher</title>
-  <%= stylesheet_link_tag '/guide-assets/stylesheets/formtastic.css', '/guide-assets/stylesheets/formtastic_changes.css', '/stylesheets/admin/jquery-ui-1.8.14.css' %>
+  <%= stylesheet_link_tag '/stylesheets/formtastic.css', '/stylesheets/formtastic_changes.css', '/stylesheets/admin/jquery-ui-1.8.14.css' %>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
 </head>
@@ -25,7 +25,7 @@
       <%= yield %>
 
       <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-      <%= javascript_include_tag '/guide-assets/javascripts/application.js', '/guide-assets/javascripts/jquery.mustache.js', '/guide-assets/javascripts/jquery-ui-1.8.14.custom.min.js', '/guide-assets/javascripts/form-tools.js' %>
+      <%= javascript_include_tag '/guide-assets/javascripts/application.js', '/javascripts/jquery.mustache.js', '/javascripts/jquery-ui-1.8.14.custom.min.js', '/guide-assets/javascripts/form-tools.js' %>
       <%= yield :extra_javascript %>
 
     </div>
