@@ -56,10 +56,10 @@ class GuideEditionTest < ActiveSupport::TestCase
   test "a published edition can't be edited" do
     edition = template_edition
     guide = template_edition.container
+    guide.save
     guide.publish edition, "Published because I did"
-    assert guide.save
-
     guide.reload
+
     edition = guide.editions.last
     edition.title = "My New Title"
 
