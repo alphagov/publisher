@@ -11,6 +11,8 @@ Guides::Application.routes.draw do
     match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
   # end
 
+  
+
   namespace :admin do
     resources :transactions do
       post :progress, :on => :member
@@ -26,6 +28,8 @@ Guides::Application.routes.draw do
       post :progress, :on => :member
       resources :editions
     end
+    
+    match 'google_insight' => 'seo#google_insight'
     
     root :to => 'guides#index'
   end
