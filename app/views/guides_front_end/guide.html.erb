@@ -9,6 +9,28 @@
 
 <div id="wrapper" class="guide">
 
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2><span class="arrow"></span>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+			           <li><a href="#">Know my rights about my payslip</a></li>
+			           <li><a href="#">The age children can start work</a></li>
+			           <li><a href="#">When you can start work</a></li>
+								<li class="related-topic"><a href="#">More in transport&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
   <section role="main" class="group">
 
     <header class="group">
@@ -21,20 +43,6 @@
     </header>
 
 		<div class="article-and-navigation group">
-
-	    <div class="related">
-	      <div class="inner" class="group">
-	        <h2><span class="arrow"></span>Related tools &amp; topics</h2>
-	        <nav role="navigation">
-	          <ul>
-	            <li><a href="#">Know my rights about my payslip</a></li>
-	            <li><a href="#">The age children can start work</a></li>
-	            <li><a href="#">When you can start work</a></li>
-							<li class="related-topic"><a href="#">More in transport&hellip;<span class="arrow"></span></a></li>
-	          </ul>
-	        </nav>
-	      </div>
-	    </div><!-- end .related -->
 
 	    <aside role="navigation">
 	      <div class="inner">
@@ -67,7 +75,7 @@
 	  	      <nav class="pagination" role="navigation">
 	            <ul>
 	  	        <%- if guide.has_previous_part?(part) -%>
-	  	          <li class="previous" rel="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></li>
+	  	          <a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></li>
 	  	        <%- end -%>
 	  	          <li class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</li>
 	  	        <%- if guide.has_next_part?(part) -%>
