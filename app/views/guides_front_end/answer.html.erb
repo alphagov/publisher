@@ -9,6 +9,28 @@
 
 <div id="wrapper" class="answer">
 
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2><span class="arrow"></span>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+			           <li><a href="#">Know my rights about my payslip</a></li>
+			           <li><a href="#">The age children can start work</a></li>
+			           <li><a href="#">When you can start work</a></li>
+								<li class="related-topic"><a href="#">More in transport&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
   <section role="main" class="group">
 
     <header class="group">
@@ -19,27 +41,18 @@
           <p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
         </hgroup>
 
-        <div class="related">
-          <div class="inner" class="group">
-            <h2>Related tools &amp; topics</h2>
-            <nav role="navigation">
-              <ul>
-                <li><a href="#">Know my rights about my payslip</a></li>
-                <li><a href="#">The age children can start work</a></li>
-                <li><a href="#">When you can start work</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-
       </div>
     </header>
 
-    <article role="article" class="group">
-      <div class="inner">
-        <%= Govspeak::Document.new(answer.body || "").to_html %>
-      </div>
-    </article>
+		<div class="article-and-navigation group">
+
+	    <article role="article" class="group">
+	      <div class="inner">
+	        <%= Govspeak::Document.new(answer.body || "").to_html %>
+	      </div>
+	    </article>
+	
+		</div>
 
   </section>
 
