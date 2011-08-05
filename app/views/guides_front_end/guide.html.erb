@@ -72,7 +72,7 @@
 	        <%= Govspeak::Document.new(part.body).to_html %>
 
 	        <footer>
-	  	      <nav class="pagination" role="navigation">
+	  	      <!-- <nav class="pagination" role="navigation">
 	            <ul>
 	  	        <%- if guide.has_previous_part?(part) -%>
 	  	          <a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>">&larr; Previous part</a></li>
@@ -80,6 +80,16 @@
 	  	          <li class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</li>
 	  	        <%- if guide.has_next_part?(part) -%>
 	  	          <li class="next" rel="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
+	  	        <%- end -%>
+	  	      </nav> -->
+	  	      <nav class="pagination" role="navigation">
+	            <ul>
+	  	        <%- if guide.has_next_part?(part) -%>
+								<li class="next" rel="next"><a href="<%= guide_path(guide.slug, guide.part_after(part).slug) %>" title="Navigate to next part"><span class="pagination-label">Next part - </span><%= (guide.part_after(part).title) %> &rarr;</a></li>
+	  	        <%- end -%>
+	  	          <!-- <li class="pages">Part <%= part.number %> of <%= guide.parts.length %> in this guide.</li> -->
+	  	        <%- if guide.has_previous_part?(part) -%>
+	  	          <li class="previous" rel="previous"><a href="<%= guide_path(guide.slug, guide.part_before(part).slug) %>"><span class="pagination-label">&larr; Previous part - </span><%= (guide.part_before(part).title) %></a></li>
 	  	        <%- end -%>
 	  	      </nav>
 	        </footer>
