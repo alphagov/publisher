@@ -23,7 +23,11 @@ class User
     record_action item.editions.first, Action::CREATED
     item
   end
-  
+
+  def create_place(attributes = {})
+    create_publication(Place, attributes)
+  end
+    
   def create_transaction(attributes = {})
     create_publication(Transaction, attributes)
   end

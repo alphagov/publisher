@@ -1,0 +1,8 @@
+<%= semantic_form_for @latest_edition, :url => admin_place_edition_path(@place, @latest_edition), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :title, :label => "Name of place thing" %>
+    <%= f.input :place_type %>
+    <%= f.input :introduction, :as => :text, :input_html => {:rows => 2} %>
+    <%= f.input :more_information, :as => :text %>
+  <% end %>
+<% end %>

@@ -19,6 +19,11 @@ Guides::Application.routes.draw do
       resources :editions
     end
     
+    resources :places do
+      post :progress, :on => :member
+      resources :editions
+    end
+    
     resources :answers do
       post :progress, :on => :member
       resources :editions
