@@ -39,4 +39,5 @@ group :development, :test do
   gem 'capybara', '~> 1.0.0'
   gem 'selenium-webdriver'
   gem 'database_cleaner'
+  gem 'mocha'
 end

@@ -1,0 +1,8 @@
+<%= semantic_form_for @latest_edition, :url => admin_local_transaction_edition_path(@local_transaction, @latest_edition), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :title, :label => "Name of Local Transaction" %>
+    <%= f.input :introduction, :as => :text, :input_html => {:rows => 2} %>
+    <%= f.input :more_information, :as => :text %>
+    <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => LocalTransactionEdition.expectation_choices %>
+  <% end %>
+<% end %>

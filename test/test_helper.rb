@@ -16,6 +16,11 @@ class ActiveSupport::TestCase
   # fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  
+  def clean_db
+    DatabaseCleaner.clean
+  end
+  set_callback :teardown, :before, :clean_db
 end
 
 
