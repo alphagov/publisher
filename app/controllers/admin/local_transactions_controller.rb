@@ -1,2 +1,2 @@
-class Admin::LocalTransactionsController < ApplicationController
+class Admin::LocalTransactionsController < Admin::BaseController
 end

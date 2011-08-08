@@ -1,16 +1,5 @@
-class Admin::GuidesController < InheritedResources::Base
-
-  before_filter :authenticate_user!
-  defaults :route_prefix => 'admin'
-  
+class Admin::GuidesController <  Admin::BaseController
   respond_to :html, :json
-  
-  def index
-    @drafts = Publication.in_draft
-    @published = Publication.published
-    @archive = Publication.archive
-    @review_requested = Publication.review_requested
-  end
 
   def show
     @guide = resource
