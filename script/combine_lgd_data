@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'csv'
+
+service_providers_csv_path =    ARGV[0]
+service_list_csv_path =         ARGV[1]
+council_name_to_snac_csv_path = ARGV[2]
+
+council_name_to_snac = {}
+CSV.open(council_name_to_snac_csv_path) do |csv|
+  council_name_to_snac = Hash[csv.collect { |row| row[1..2] }]
+end
+
+service_list_by_names = {}
+CSV.open(service_list_csv_path) do |csv|
+  service_list_by_names = Hash[csv.collect { |row| [row[3], row[1..2]] }]
+end
+
+service_providers = []
+CSV.foreach(service_providers_csv_path, :headers => true) do |row|
+  snac = council_name_to_snac[row[0]]
+  unless snac.nil?
+    service = service_list_by_names[row[1]]
+    unless service.nil?
+      lgsl = service[0]
+      lgil = service[1]
+      service_providers << {snac: snac, lgsl: lgsl, lgil: lgil, link: row[2].strip}
+    else
+      puts "service not found: #{row.inspect}"
+    end
+  else
+    puts "Council not found: #{row[0]}"
+  end
+end
+
+CSV.open('local_transactions.csv', 'w', headers: ['snac', 'lgsl', 'lgil', 'link'], write_headers: true) do |csv|
+  service_providers.each do |entry|
+    csv << [entry[:snac], entry[:lgsl], entry[:lgil], entry[:link]]
+  end
+end
