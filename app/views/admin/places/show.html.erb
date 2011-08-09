@@ -27,10 +27,10 @@
     <%= render '/admin/places/edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => '/admin/guides/metadata', :locals => {:publication => @place} %>
+    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @place} %>
   </div>
   <div id="history">
-    <%= render :partial => '/admin/guides/history', :locals => {:publication => @place} %>
+    <%= render :partial => '/admin/shared/history', :locals => {:publication => @place} %>
   </div>
 </div>
 
