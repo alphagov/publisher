@@ -1,6 +1,5 @@
 require 'test_helper'
 
-
 class GuideTest < ActiveSupport::TestCase
 
   def template_guide
@@ -13,8 +12,8 @@ class GuideTest < ActiveSupport::TestCase
 
   # No longer relevant, since name is now a required field
   # test 'guides assume the title of their latest edition' do
-  #     assert_equal template_guide.title, 'Two'
-  #   end
+  #   assert_equal template_guide.title, 'Two'
+  # end
    
     test 'a new guide has drafts but isn\'t published' do
     g = Guide.new(:slug=>"childcare")
