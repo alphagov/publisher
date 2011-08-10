@@ -49,7 +49,7 @@
 	            <% guide.parts.each do |nav_part| %>
 	            <li <% if part == nav_part %>class="active"<% end %>>
 	              <a href="<%= guide_path(guide.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
-	                <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> <span class="part-title"><%= nav_part.title %></span>
+	                <!-- <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> --> <span class="part-title"><%= nav_part.title %></span>
 	              </a>
 	            </li>
 	            <% end %>
