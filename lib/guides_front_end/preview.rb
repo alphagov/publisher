@@ -1,4 +1,7 @@
-require File.expand_path('../../../app/models/api/guide', __FILE__)
+# require File.expand_path('../../../app/models/api/guide', __FILE__)
+require 'api/generator'
+require 'api/client'
+
 module GuidesFrontEnd
   class Preview < GuidesFrontEnd::Base
     def self.preview_edition_id(env)

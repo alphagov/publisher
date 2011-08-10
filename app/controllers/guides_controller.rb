@@ -1,4 +1,4 @@
-require 'api/guide'
+require 'api/generator'
 
 class GuidesController < ApplicationController
   def show

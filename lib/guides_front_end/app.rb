@@ -1,4 +1,6 @@
 require 'net/http'
+require 'api/generator'
+require 'api/client'
 
 module GuidesFrontEnd
   class App < GuidesFrontEnd::Base

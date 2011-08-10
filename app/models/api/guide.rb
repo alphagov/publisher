@@ -2,14 +2,6 @@ require 'ostruct'
 
 module Api
   module Generator
-    def self.edition_to_hash(edition)
-      case edition.container.class.to_s
-        when 'Transaction' then Api::Generator::Transaction.edition_to_hash(edition)
-        when 'Guide' then Api::Generator::Guide.edition_to_hash(edition)
-        when 'Answer' then Api::Generator::Answer.edition_to_hash(edition)
-      end
-    end
-
     module Guide
       def self.edition_to_hash(edition)
         attrs = edition.guide.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
@@ -40,18 +32,6 @@ module Api
   end
 
   module Client
-    def self.from_hash(response)
-      response = case response['type']
-      when 'guide' then Api::Client::Guide.from_hash(response)
-      when 'transaction' then Api::Client::Transaction.from_hash(response)
-      when 'answer' then Api::Client::Answer.from_hash(response)
-      end
-      if response.updated_at.class == String
-        response.updated_at = Time.parse(response.updated_at)
-      end
-      response
-    end
-    
     class Answer < OpenStruct
       def self.from_hash(hash)
         new(hash)
