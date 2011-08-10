@@ -17,6 +17,10 @@
     </span>
   </td>
   <td>
+    <% if tab && tab == :published %>
+    <%= link_to 'View', "/#{publication.slug}" %>
+    <% end %>
+    
      <% if publication.can_destroy? %>
         <span class="confirm">
         <%= form_tag [:admin,publication], :method => :delete do %>
