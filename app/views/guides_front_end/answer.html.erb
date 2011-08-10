@@ -37,7 +37,7 @@
 
         <hgroup>
           <h1><%= answer.title %></h1>
-          <p class="modified-date">Last updated: <%= answer.updated_at %></p>
+          <p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
         </hgroup>
 
     </header>
