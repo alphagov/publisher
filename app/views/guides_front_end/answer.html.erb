@@ -37,7 +37,6 @@
 
         <hgroup>
           <h1><%= answer.title %></h1>
-          <p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
         </hgroup>
 
     </header>
@@ -49,6 +48,10 @@
 	        <%= Govspeak::Document.new(answer.body || "").to_html %>
 	      </div>
 	    </article>
+	
+			<div class="meta-data">
+				<p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
+			</div>
 	
 		</div>
 
