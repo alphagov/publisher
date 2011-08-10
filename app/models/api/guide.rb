@@ -41,11 +41,15 @@ module Api
 
   module Client
     def self.from_hash(response)
-      case response['type']
+      response = case response['type']
       when 'guide' then Api::Client::Guide.from_hash(response)
       when 'transaction' then Api::Client::Transaction.from_hash(response)
       when 'answer' then Api::Client::Answer.from_hash(response)
       end
+      if response.updated_at.class == String
+        response.updated_at = Time.parse(response.updated_at)
+      end
+      response
     end
     
     class Answer < OpenStruct
