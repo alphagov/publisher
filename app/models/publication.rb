@@ -12,6 +12,9 @@ class Publication
   field :has_reviewables, :type => Boolean
   field :archived,        :type => Boolean
 
+  field :category,        :type => String
+  field :related_items,   :type => String
+  
   embeds_many :publishings
 
   scope :in_draft,         where(has_drafts: true)
