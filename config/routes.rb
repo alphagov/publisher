@@ -47,5 +47,6 @@ Guides::Application.routes.draw do
   resources :audiences
   resources :guides, :only => [:show]
 
+  root :to => 'root#index'
   match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end
