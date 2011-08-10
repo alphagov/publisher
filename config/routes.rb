@@ -19,6 +19,11 @@ Guides::Application.routes.draw do
       resources :editions
     end
     
+    resources :places do
+      post :progress, :on => :member
+      resources :editions
+    end
+    
     resources :answers do
       post :progress, :on => :member
       resources :editions
@@ -29,9 +34,14 @@ Guides::Application.routes.draw do
       resources :editions
     end
     
+    resources :local_transactions do
+      post :progress, :on => :member
+      resources :editions
+    end
+    
     match 'google_insight' => 'seo#google_insight'
     
-    root :to => 'guides#index'
+    root :to => 'root#index'
   end
   
   resources :audiences

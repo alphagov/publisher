@@ -1,6 +1,4 @@
-class Admin::EditionsController < InheritedResources::Base
-  before_filter :authenticate_user!
-  defaults :route_prefix => 'admin'
+class Admin::EditionsController <  Admin::BaseController
   polymorphic_belongs_to :guide, :answer, :transaction
  
   def create

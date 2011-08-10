@@ -13,7 +13,7 @@ class GuideEdition < Edition
   end
   
   def order_parts
-    ordered_parts = parts.sort_by(&:order)
+    ordered_parts = parts.sort_by { |p| p.order ? p.order : 99999 }
     ordered_parts.each_with_index do |obj, i|
       obj.order = i + 1
     end

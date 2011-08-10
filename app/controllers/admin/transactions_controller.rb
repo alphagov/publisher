@@ -1,12 +1,4 @@
-class Admin::TransactionsController < InheritedResources::Base
-
-  before_filter :authenticate_user!
-  defaults :route_prefix => 'admin'
-  
-  def index
-    redirect_to admin_transactions_url
-  end
-
+class Admin::TransactionsController < Admin::BaseController
   def show
     @transaction = resource
     @latest_edition = resource.latest_edition

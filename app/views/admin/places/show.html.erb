@@ -1,4 +1,4 @@
-<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @transaction.title %>&rdquo;</h2>
+<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @place.title %>&rdquo;</h2>
 <% if @latest_edition.in_review? %>
   <%= render '/admin/guides/review' %>
 <% end %>
@@ -11,26 +11,26 @@
   <input type="submit" value="Save" class="update">
   </form>
   
-  <%= progress_buttons(@transaction,@latest_edition) %>
+  <%= progress_buttons(@place,@latest_edition) %>
   <%= preview_button(@latest_edition) %>
   </span>
-  <%= progress_forms(@transaction,@latest_edition) %>
+  <%= progress_forms(@place,@latest_edition) %>
 </div>
 
-<div id="transaction-nav" class="publication-nav">
+<div id="place-nav" class="publication-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
     <li><a href="#history">History</a></li>
   </ul>
   <div id="edit">
-    <%= render '/admin/transactions/edit' %>
+    <%= render '/admin/places/edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @transaction} %>
+    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @place} %>
   </div>
   <div id="history">
-    <%= render :partial => '/admin/shared/history', :locals => {:publication => @transaction} %>
+    <%= render :partial => '/admin/shared/history', :locals => {:publication => @place} %>
   </div>
 </div>
 

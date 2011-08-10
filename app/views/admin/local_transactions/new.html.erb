@@ -1,0 +1,32 @@
+<div class="ui-widget-content new">
+  <div class="inner">
+
+    <h1>Create new Local Transaction</h1>
+
+    <%= semantic_form_for [:admin, @local_transaction] do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :name,      :hint => true %>
+        <%= f.input :lgsl_code, :hint => true, :label => "LGSL code" %>
+        <%= f.input :slug,      :hint => true %>
+        <%= f.input :tags,      :hint => true %>
+      <% end %>
+
+      <%= f.buttons %>
+    <% end %>
+
+    <% content_for :extra_javascript do %>
+    <script type="text/javascript" charset="utf-8">
+      $(function () {
+        $('#local_transaction_name').change(function () {
+          if ($('#local_transaction_slug').text() == '') {
+            var title = $('#local_transaction_name').val();
+            $('#local_transaction_slug').val(GovUKGuideUtils.convertToSlug(title));
+          }
+        });
+      });
+    </script>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :page_title, "Create new Local Transaction" %>
