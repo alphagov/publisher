@@ -15,7 +15,7 @@
 			<div class="related-container-two naughty">
 	   		<div class="related">
 			     <div class="inner" class="group">
-			       <h2><span class="arrow"></span>More tools &amp; topics</h2>
+			       <h2><span class="arrow"></span>Related tools &amp; topics</h2>
 			       <nav role="navigation">
 			         <ul>
 			           <li><a href="#">Know my rights about my payslip</a></li>
@@ -36,7 +36,7 @@
     <header class="group">
 
         <hgroup>
-          <h1><span>Guide to</span><%= guide.title %></h1>
+          <h1><span>Guide to </span><%= guide.title %></h1>
         </hgroup>
 
     </header>
@@ -51,7 +51,7 @@
 	            <% guide.parts.each do |nav_part| %>
 	            <li <% if part == nav_part %>class="active"<% end %>>
 	              <a href="<%= guide_path(guide.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
-	                <span class="part-label">Part <%= nav_part.number %></span> <span class="part-title"><%= nav_part.title %></span>
+	                <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> <span class="part-title"><%= nav_part.title %></span>
 	              </a>
 	            </li>
 	            <% end %>
@@ -69,7 +69,7 @@
 	      <div class="inner">
 
 	        <header>
-	          <h1><%= part.title %></h1>
+	          <h1><span>Part <%= part.number %><span class="visuallyhidden">:</span> </span><%= part.title %></h1>
 	        </header>
 
 	        <%= Govspeak::Document.new(part.body).to_html %>

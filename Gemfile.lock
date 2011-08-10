@@ -18,17 +18,17 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: 5d7aa1a70290fd87845e70abf4f66b7b49850255
+  revision: 610544e6d2a82eb8f26ed48b335db64abfcc8938
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
 
 GIT
   remote: git@github.com:alphagov/slimmer.git
-  revision: f7c334968a05a5bf42c1fee4de0228d7549ae7ba
+  revision: fd789453c5e1a206d502c63e25a16cbba3da2b2c
   specs:
     slimmer (0.7.10)
-      nokogiri (~> 1.4.0)
+      nokogiri
 
 GEM
   remote: http://rubygems.org/
@@ -106,14 +106,14 @@ GEM
     mocha (0.9.12)
     mongo (1.3.1)
       bson (>= 1.3.1)
-    mongoid (2.1.5)
+    mongoid (2.1.7)
       activemodel (~> 3.0)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
     multi_json (1.0.3)
     multi_xml (0.2.2)
     multipart-post (1.1.3)
-    nokogiri (1.4.7)
+    nokogiri (1.5.0)
     oa-core (0.2.6)
     oa-oauth (0.2.6)
       faraday (~> 0.6.1)
