@@ -22,6 +22,7 @@
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
     <li><a href="#history">History</a></li>
+    <li><a href="#providers">Service providers</a></li>
   </ul>
   <div id="edit">
     <%= render '/admin/local_transactions/edit' %>
@@ -31,6 +32,13 @@
   </div>
   <div id="history">
     <%= render :partial => '/admin/shared/history', :locals => {:publication => @local_transaction} %>
+  </div>
+  <div id="providers">
+    <ul>
+    <%- @local_transaction.lgsl.authorities.each do |authority| -%>
+      <li><%= authority.name %></li>
+    <%- end -%>
+    </ul>
   </div>
 </div>
 

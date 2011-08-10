@@ -27,6 +27,8 @@ class LocalTransactionsSource
         begin
           lgsl = source.lgsls.find_or_create_by(code: row['lgsl'].to_s)
           authority = lgsl.authorities.find_or_initialize_by(snac: row['snac'])
+          source_authority = Authority.where(snac: row['snac']).first
+          authority.name = source_authority.name unless source_authority.nil?
           authority.lgils.build(code: row['lgil'].to_s, url: row['link'])
           lgsl.save!
         rescue => e
