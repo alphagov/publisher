@@ -1,9 +1,9 @@
 <tr>
   <td class="<%= publication.class.name.downcase %>">
     <% if tab && tab == :published %>
-      <%= publication.published_edition.title %>
+      <%= publication.published_edition.admin_list_title %>
     <% else %>
-      <%= publication.latest_edition.title %>
+      <%= publication.latest_edition.admin_list_title %>
     <% end %>
     <span class="version">
     <% if tab && tab == :published %>

@@ -1,5 +1,6 @@
 <%= semantic_form_for @latest_edition, :url => admin_local_transaction_edition_path(@local_transaction, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
+    <li><p>LGSL code</p><p><%= @local_transaction.lgsl_code %></p></li>
     <%= f.input :title, :label => "Name of Local Transaction" %>
     <%= f.input :introduction, :as => :text, :input_html => {:rows => 2} %>
     <%= f.input :more_information, :as => :text %>

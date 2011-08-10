@@ -11,6 +11,10 @@ class GuideEditionTest < ActiveSupport::TestCase
     edition
   end
 
+  test "editions, by default, return their title for use in the admin-interface lists of publications" do
+    assert_equal template_edition.title, template_edition.admin_list_title
+  end
+
   test "guides have at least one edition" do
     g = Guide.new(:slug=>"childcare")
     assert_equal 1, g.editions.length 

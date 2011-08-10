@@ -11,6 +11,9 @@ class LocalTransactionEdition < Edition
   @fields_to_clone = [:introduction, :more_information, :lgsl, :expectation_ids]
 
   # alias_method :code, :lgsl_id
+  def admin_list_title
+    "#{title} (LGSL #{local_transaction.lgsl_code}) [#{local_transaction.lgsl.authorities.count}]"
+  end
 
   def expectations
     Expectation.criteria.in(_id: self.expectation_ids)
