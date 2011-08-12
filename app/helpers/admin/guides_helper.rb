@@ -33,15 +33,7 @@ module Admin::GuidesHelper
   def progress_form(opts)
     title,guide,edition,activity = opts[:title],opts[:guide],opts[:edition],opts[:activity]
     check_method = "can_#{activity}?".to_sym
-    path = case edition.container.class
-    when Answer
-      progress_admin_answer_path(guide, :activity => activity, :edition_id => edition)
-    when Guide
-      progress_admin_guide_path(guide, :activity => activity, :edition_id => edition)
-    when Transaction
-      progress_admin_transaction_path(guide, :activity => activity, :edition_id => edition)
-    end
-    
+    path = send("progress_admin_#{guide.class.to_s.underscore}_path", guide, :activity => activity, :edition_id => edition)
     activity_form title, activity+"_form", path, :disabled => !edition.send(check_method)
   end
   
@@ -105,14 +97,7 @@ module Admin::GuidesHelper
   end
   
   def admin_editions_path(publication)
-    case publication.class
-    when Guide
-      admin_guide_editions_path(publication)
-    when Transaction
-      admin_transaction_editions_path(publication)
-    when Answer
-      admin_answer_editions_path(publication)
-    end
+    send("admin_#{publication.class.to_s.underscore}_path", publication)
   end
   
 end
