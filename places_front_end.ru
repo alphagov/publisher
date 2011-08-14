@@ -14,6 +14,6 @@ case ENV['RACK_ENV']
     static_dir = "/data/vhost/static.#{ENV['RACK_ENV']}.alphagov.co.uk/current/public"
 end
 
-
+use Rack::Geo
 use Slimmer::App, :template_host => static_dir + "/templates"
 run PlacesFrontEnd::App

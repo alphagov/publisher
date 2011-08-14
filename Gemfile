@@ -26,6 +26,12 @@ else
   gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 end
 
+if ENV['GEO_DEV']
+  gem 'rack-geo', :path => '../rack-geo'
+else
+  gem 'rack-geo', :git => 'git@github.com:alphagov/rack-geo.git'
+end
+
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
 
 gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'

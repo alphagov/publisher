@@ -24,6 +24,15 @@ GIT
       kramdown (~> 0.13.3)
 
 GIT
+  remote: git@github.com:alphagov/rack-geo.git
+  revision: 00b45f4f79260a82ec7585a3c415d2bce72fb2bc
+  specs:
+    rack-geo (0.6.0)
+      geogov
+      json
+      rack (~> 1.2.0)
+
+GIT
   remote: git@github.com:alphagov/slimmer.git
   revision: fd789453c5e1a206d502c63e25a16cbba3da2b2c
   specs:
@@ -90,11 +99,13 @@ GEM
       actionpack (>= 2.3.7)
       activesupport (>= 2.3.7)
       i18n (~> 0.4)
+    geogov (0.0.1)
     has_scope (0.5.1)
     i18n (0.5.0)
     inherited_resources (1.2.2)
       has_scope (~> 0.5.0)
       responders (~> 0.6.0)
+    json (1.5.3)
     json_pure (1.5.3)
     kramdown (0.13.3)
     mail (2.2.19)
@@ -194,6 +205,7 @@ DEPENDENCIES
   mocha
   mongoid (~> 2.0)
   passenger
+  rack-geo!
   rails (~> 3.0.7)
   selenium-webdriver
   sinatra

@@ -4,11 +4,16 @@
   <meta charset="utf-8" />
   <title><%= place.title %> - Beta.Gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
+
+  <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script type="text/javascript" src="/javascripts/jquery.base64.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/javascripts/core.js"></script>
+  <script type="text/javascript" src="/javascripts/geo.js"></script>
 </head>
 <body>
 
 <div id="wrapper" class="place">
-
+  <%= partial :'_location_header.html' %>
   <section role="main" class="group">
 
     <header class="group">
@@ -46,11 +51,129 @@
           <h2>More about this service</h2>
           <%= Govspeak::Document.new(place.more_information || "").to_html %>
         </div>
+        
+
+        <% if options.any? %>
+
+          <h3>Your Options Are...</h3>
+
+<ol>
+          <% options.each do |option| %>
+          <li>
+            <h4><%= option.slice('name', 'address', 'town', 'postcode').values.compact.join(', ') %></h4>
+            <p><a href="<%= Geogov.map_href(option['location'][0], option['location'][1]) %>" title="Link to location in google maps">
+              <img src="<%= Geogov.map_img(option['location'][0], option['location'][1], {:marker_lat => option['location'][1], :marker_lon => option['location'][0], :w => 200, :h => 200}) %>" alt="map">
+            </a></p>
+            
+            <% if option['url'] %>
+            <p><a href="<%= option['url'] %>"><%= option['url'] %></a></p>
+            <% end %>
+          </li>
+          <% end %>
+</ol>
+        <% end %>
+        
 
       </div>
     </article>
 
+    <% if place.expectations.any? %>
+    <aside>
+      <ul class="helpers">
+        <% place.expectations.each do |e| %>
+            <li class="<%= e['css_class'] %>">
+              <%= e['text'] %>
+            </li>
+        <% end %>
+        </ul>
+    </aside>
+    <% end %>
+
   </section>
+
+  <%= partial :'_locator.html' %>
+  <script>
+
+  $(document).ready(function() {
+
+      $('#global-locator-form').locator ({
+          ignore_location_known_on_page_load: true, 
+          error_area_selector: '#global-locator-error'
+      });
+
+      var show_known_location = function(current_location) {
+        //show correct message
+        $('#location-set-message').show();
+        $('#location-unset-message').hide();
+        $("#location-name").html(current_location.locality);
+      };
+
+      var show_unknown_location = function() {
+        var location_dom = $("#global-user-location");
+
+        location_dom.addClass('removing');
+        location_dom.removeClass('set');
+        $("#location-name").html("");
+        //show correct message
+        $('#location-set-message').hide();
+        $('#location-unset-message').show();
+
+        //delete cookie
+      }
+
+      var open_location_dialog = function() {
+        $('#global-locator').show();
+        $('#global-locator-form').trigger('reset-locator-form');
+      };
+
+      $('#global-locator .close').click(function() {
+        $('#global-locator').hide();
+        return false;
+      });
+
+      // Event handlers
+      $('#global-user-location .change-location').click(function() {
+        open_location_dialog();
+        return false;
+      });
+
+      $('#global-user-location .explain-location').click(function() {
+        open_location_dialog();
+        return false;
+      });
+
+      $('#forget-location').click(function() {
+        $(document).trigger('location-removed');
+        $('#global-locator').hide();
+        return false;
+      });
+
+      $(document).bind('location-removed', function(e, message) {
+        show_unknown_location();
+        AlphaGeo.deleteGeoCookie();
+      });
+
+      $(document).bind('location-known', function(e, data) {
+        $("#global-user-location").addClass('set');
+
+        show_known_location(data.current_location);
+      });
+
+      $(document).bind('location-changed', function(e, data) {
+        $('#global-locator').hide();
+        $("#global-user-location").addClass('set');
+
+        show_known_location(data.current_location);
+      });
+
+      var located = AlphaGeo.locationName();
+      if (located) {
+        $(document).trigger('location-known', {current_location: AlphaGeo.locator_object()});    
+      } else {
+        show_unknown_location();
+      }
+    });
+    </script>
 
 </div> <!-- end wrapper -->
 
