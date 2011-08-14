@@ -29,25 +29,33 @@ module PlacesFrontEnd
       end
     end
 
-    def get_places(type, lon, lat, limit = 5)
+    def get_options(type, lon, lat, limit = 5)
       url = "http://#{settings.imminence_api_host}/places/#{type}.json?limit=#{limit}&lat=#{lat}&lng=#{lon}"
       response = open(url).read
       JSON.parse(response)
     end
     
-    get '/places/:slug' do
+    def show_place
       halt(404) if publication.nil? # 404 if place not found
       
       if env['HTTP_X_GOVGEO_STACK'] and env['HTTP_X_GOVGEO_STACK'] != ''
         location_data = decode_stack(env['HTTP_X_GOVGEO_STACK'])
         if location_data['fuzzy_point'] and location_data['fuzzy_point']['accuracy'] != 'planet'
-          options = get_places(publication.place_type, location_data['fuzzy_point']['lon'], location_data['fuzzy_point']['lat'])
+          options = get_options(publication.place_type, location_data['fuzzy_point']['lon'], location_data['fuzzy_point']['lat'])
         end        
       end
       
       options ||= []
       
       erubis :"place.html", :locals => {:place => publication, :options => options}
+    end
+    
+    get '/places/:slug' do
+      return show_place
+    end
+    
+    get '/:slug' do
+      return show_place
     end
   end
 end

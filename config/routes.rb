@@ -9,6 +9,7 @@ end
 
 Guides::Application.routes.draw do
   # authenticate :user do
+    match '/preview/places/:edition_id' => PlacesFrontEnd::Preview, :anchor => false, :as => :places_preview_edition_prefix
     match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
   # end
 
