@@ -1,4 +1,5 @@
 require 'guides_front_end'
+require 'places_front_end'
 
 class NonAuthConstraint
   def matches?(request)
@@ -10,8 +11,6 @@ Guides::Application.routes.draw do
   # authenticate :user do
     match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
   # end
-
-  
 
   namespace :admin do
     resources :transactions do
@@ -47,6 +46,8 @@ Guides::Application.routes.draw do
   resources :audiences
   resources :guides, :only => [:show]
 
+  match '/places/*path' => PlacesFrontEnd::App
+  
   root :to => 'root#index'
-  match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
+  # match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end

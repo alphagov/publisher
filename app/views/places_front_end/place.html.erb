@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title><%= place.title %> - Beta.Gov.uk</title>
+  <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
+</head>
+<body>
+
+<div id="wrapper" class="place">
+
+  <section role="main" class="group">
+
+    <header class="group">
+      <div class="inner">
+
+        <hgroup>
+          <h1><%= place.title %></h1>
+          <p class="modified-date">Last updated: <%= place.updated_at.strftime("%m/%d/%Y") %></p>
+        </hgroup>
+
+        <div class="related">
+          <div class="inner" class="group">
+            <h2>Related tools &amp; topics</h2>
+            <nav role="navigation">
+              <ul>
+                <li><a href="#">Know my rights about my payslip</a></li>
+                <li><a href="#">The age children can start work</a></li>
+                <li><a href="#">When you can start work</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <article role="article" class="group">
+      <div class="inner">
+
+        <div class="intro">
+          <p><%= place.introduction %></p>
+        </div>
+
+        <div class="more">
+          <h2>More about this service</h2>
+          <%= Govspeak::Document.new(place.more_information || "").to_html %>
+        </div>
+
+      </div>
+    </article>
+
+  </section>
+
+</div> <!-- end wrapper -->
+
+</body>
+</html>
