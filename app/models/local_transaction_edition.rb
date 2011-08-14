@@ -7,10 +7,8 @@ class LocalTransactionEdition < Edition
   field :more_information,  type: String
   field :expectation_ids,   type: Array, default: []
 
-  # @fields_to_clone = [:introduction, :will_continue_on, :link, :more_information, :expectation_ids]
   @fields_to_clone = [:introduction, :more_information, :lgsl, :expectation_ids]
 
-  # alias_method :code, :lgsl_id
   def admin_list_title
     "#{title} (LGSL #{local_transaction.lgsl_code}) [#{local_transaction.lgsl.authorities.count}]"
   end

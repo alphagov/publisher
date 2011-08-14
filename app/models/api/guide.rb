@@ -83,11 +83,11 @@ module Api
         return nil if previous_index < 0
         parts[previous_index]
       end
-    end
 
-    class Part < OpenStruct
-      def self.from_hash(hash)
-        new(hash)
+      class Part < OpenStruct
+        def self.from_hash(hash)
+          new(hash)
+        end
       end
     end
   end
