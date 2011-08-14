@@ -1,5 +1,4 @@
-require 'guides_front_end'
-require 'places_front_end'
+require 'preview_dispatcher'
 
 class NonAuthConstraint
   def matches?(request)
@@ -9,8 +8,7 @@ end
 
 Publisher::Application.routes.draw do
   # authenticate :user do
-    match '/preview/places/:edition_id' => PlacesFrontEnd::Preview, :anchor => false, :as => :places_preview_edition_prefix
-    match '/preview/:edition_id' => GuidesFrontEnd::Preview, :anchor => false, :as => :preview_edition_prefix
+    match '/preview/:edition_id' => PreviewDispatcher.new, :anchor => false, :as => :preview_edition_prefix
   # end
 
   namespace :admin do
