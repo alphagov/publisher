@@ -7,6 +7,6 @@ class NoisyWorkflow < ActionMailer::Base
     @guide = guide
     @action = action
     mail(:to => "eds@alphagov.co.uk",
-         :subject => "[GUIDES/ANSWERS] " + @action.friendly_description)
+         :subject => "[PUBLISHER] " + @action.friendly_description)
   end
 end

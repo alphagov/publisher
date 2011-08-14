@@ -1,6 +1,6 @@
 unless Rails.env.development? or Rails.env.test?
-  Guides::Application.config.middleware.use ExceptionNotifier,
-    :email_prefix => "[Guides] ",
+  Publisher::Application.config.middleware.use ExceptionNotifier,
+    :email_prefix => "[Publisher] ",
     :sender_address => %{"Winston Smith-Churchill" <winston@alphagov.co.uk>},
     :exception_recipients => %w{dev@alphagov.co.uk}
 end
