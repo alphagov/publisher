@@ -18,45 +18,37 @@
   </td>
   <td>
     <% if tab && tab == :published %>
-    <%= link_to 'View', "/#{publication.slug}" %>
+      <%= link_to 'View', publication_front_end_path(publication) %>
     <% end %>
     
-     <% if publication.can_destroy? %>
-        <span class="confirm">
-        <%= form_tag [:admin,publication], :method => :delete do %>
-          <%= image_submit_tag '/images/icon-publisher-delete.png', :alt => 'Delete this publication', :title => 'Delete this publication' %>
-        <% end %>
-        </span>
-     <% end %>
+    <% if publication.can_destroy? %>
+    <span class="confirm">
+      <%= form_tag [:admin,publication], :method => :delete do %>
+        <%= image_submit_tag '/images/icon-publisher-delete.png', :alt => 'Delete this publication', :title => 'Delete this publication' %>
+      <% end %>
+    </span>
+    <% end %>
 
-     <% if publication.can_create_new_edition? %>
-        <%= form_tag admin_editions_path(publication) do %>
-          <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication' %>
-        <% end %>
-      <% elsif tab && tab == :published %>
-        <%= link_to [:admin, publication] do %>
+    <% if publication.can_create_new_edition? %>
+      <%= form_tag admin_editions_path(publication) do %>
+        <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication' %>
+      <% end %>
+    <% elsif tab && tab == :published %>
+      <%= link_to [:admin, publication] do %>
         <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this draft publication', :title => 'Edit this draft publication' %>
-        <% end %>
-      <% else %>
-        <%= link_to [:admin, publication] do %>
-        <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this publication', :title => 'Edit this publication' %>
-        <% end %>
       <% end %>
-
-    <% if publication.class == Guide %>
-
-      <% if publication.latest_edition.parts.any? and publication.latest_edition.parts.first.slug.present? %>
-        <%= link_to preview_edition_path(publication.latest_edition) do %>
-          <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
-        <% end %>
-      <% else %>
-      <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview disabled for this publication', :title => 'Preview disabled for this publication', :class => 'disabled' %>
-      <% end %>
-
     <% else %>
+      <%= link_to [:admin, publication] do %>
+        <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this publication', :title => 'Edit this publication' %>
+      <% end %>
+    <% end %>
+
+    <% if safe_to_preview?(publication) %>
       <%= link_to preview_edition_path(publication.latest_edition) do %>
         <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
       <% end %>
+    <% else %>
+      <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview disabled for this publication', :title => 'Preview disabled for this publication', :class => 'disabled' %>
     <% end %>
 
   </td>

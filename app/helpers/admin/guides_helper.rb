@@ -1,6 +1,23 @@
 module Admin::GuidesHelper
+  def safe_to_preview?(publication)
+    return true unless publication.is_a?(Guide)
+    return (publication.latest_edition.parts.any? and publication.latest_edition.parts.first.slug.present?)
+  end
+
+  def publication_front_end_path(publication)
+    if publication.is_a?(Place)
+      "/places/#{publication.slug}"
+    else
+      "/#{publication.slug}"
+    end
+  end
+
   def preview_edition_path(edition)
-    preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
+    if edition.is_a?(PlaceEdition)
+      places_preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
+    else
+      preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
+    end
   rescue => e
     Rails.logger.warn e.inspect
     return '#'
