@@ -49,5 +49,5 @@ Guides::Application.routes.draw do
   match '/places/*path' => PlacesFrontEnd::App
   
   root :to => 'root#index'
-  # match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
+  match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end
