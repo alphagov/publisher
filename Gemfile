@@ -28,6 +28,7 @@ end
 
 if ENV['GEO_DEV']
   gem 'rack-geo', :path => '../rack-geo'
+  gem 'geogov', :path => '../geogov'
 else
   gem 'rack-geo', :git => 'git@github.com:alphagov/rack-geo.git'
 end

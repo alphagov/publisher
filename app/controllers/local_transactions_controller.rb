@@ -14,7 +14,7 @@ class LocalTransactionsController < ApplicationController
     head 404 and return if publication.nil?
 
     edition = publication.published_edition
-    head 404 and return unless edition.verify_snac(params[:snac])
+    head 404 and return unless publication.verify_snac(params[:snac])
 
     render :json => Api::Generator.edition_to_hash(edition, params[:snac])
   end

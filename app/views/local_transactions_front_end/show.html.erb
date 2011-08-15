@@ -43,11 +43,7 @@
 
         <div class="intro">
           <p><%= local_transaction.introduction %></p>
-          <h2 class="button"><a href="<%= "local_transaction.link" %>" rel="external" title="Begin <%= local_transaction.title %> in a new browser window">Get started &rarr;</a></h2>
-        </div>
-
-        <div class="continue">
-          <p>This will continue on http://<%= "transaction.will_continue_on" %></p>
+          <h2 class="button"><form action="<%= publication_path(local_transaction.slug) %>" method="POST"><label for="postcode">Enter your postcode <input id="postcode" name="postcode" type="text"></label> <input type="submit" value="Get started"></form></h2>
         </div>
 
         <div class="more">
@@ -61,8 +57,8 @@
     <aside>
       <ul class="helpers">
         <% local_transaction.expectations.each do |e| %>
-            <li class="<%= e['css_class'] %>">
-              <%= e['text'] %>
+            <li class="<%= e.css_class %>">
+              <%= e.text %>
             </li>
         <% end %>
         </ul>
