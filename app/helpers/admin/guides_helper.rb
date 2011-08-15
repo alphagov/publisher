@@ -114,7 +114,7 @@ module Admin::GuidesHelper
   end
   
   def admin_editions_path(publication)
-    send("admin_#{publication.class.to_s.underscore}_path", publication)
+    send("admin_#{publication.class.to_s.underscore}_editions_path", publication)
   end
   
 end
