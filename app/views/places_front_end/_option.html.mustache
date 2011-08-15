@@ -1,20 +1,20 @@
 {{#options}}
-<li>
-  <h4>
+<li class="vcard">
+  <h4 class="adr">
   {{#name}}
-    {{name}}, 
+    <span class="fn">{{name}}</span>, 
   {{/name}}
-  
+
   {{#address}}
-    {{address}}, 
+    <span class="street-address">{{address}}</span>, 
   {{/address}}
   
   {{#town}}
-    {{town}}, 
+    <span class="locality">{{town}}</span>, 
   {{/town}}
   
   {{#postcode}}
-    {{postcode}}
+    <span class="postal-code">{{postcode}}</span>
   {{/postcode}}
   </h4>
   
@@ -28,7 +28,7 @@
 
   {{#url}}
   <p>
-    <a href="{{url}}">{{url}}</a>
+    <a class="url" href="{{url}}">{{url}}</a>
   </p>
   {{/url}}
 </li>
