@@ -5,7 +5,7 @@ module Api
     module Guide
       def self.edition_to_hash(edition)
         attrs = edition.guide.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
-        attrs.merge!(edition.as_json(:only => [:title]))
+        attrs.merge!(edition.as_json(:only => [:title, :alternative_title, :overview]))
         attrs['parts'] = edition.parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]).merge('number' => p.order) }
         attrs['type'] = 'guide'
         attrs
@@ -16,7 +16,7 @@ module Api
       def self.edition_to_hash(edition)
         attrs = edition.answer.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
         attrs['type'] = 'answer'
-        attrs.merge!(edition.as_json(:only => [:title,:body]))
+        attrs.merge!(edition.as_json(:only => [:title,:body, :alternative_title, :overview]))
       end
     end
     
@@ -25,7 +25,7 @@ module Api
         attrs = edition.transaction.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
         attrs['type'] = 'transaction'
         attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
-        attrs.merge!(edition.as_json(:only => [:title,:introduction,:more_information,:will_continue_on,:link]))
+        attrs.merge!(edition.as_json(:only => [:title,:introduction,:more_information,:will_continue_on,:link, :alternative_title, :overview]))
       end
     end
     

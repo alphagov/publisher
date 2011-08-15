@@ -1,6 +1,8 @@
 <%= semantic_form_for @latest_edition, :url => admin_guide_edition_path(@guide, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= f.input :title, :label => "Edition Title", :input_html => {:disabled => @latest_edition.is_published?} %>
+    <%= f.input :alternative_title, :input_html => {:disabled => @latest_edition.is_published?} %>
+    <%= f.input :overview, :as => :text, :input_html => {:rows => 3, :disabled => @latest_edition.is_published?} %>
   <% end %>
 
   <h2 class="visuallyhidden">Parts</h2>

@@ -6,6 +6,8 @@ class Edition
   field :version_number, :type => Integer, :default => 1
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
+  field :overview, :type => String
+  field :alternative_title, :type => String
 
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []

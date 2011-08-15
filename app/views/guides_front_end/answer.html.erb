@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <title><%= answer.title %> - Beta.Gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
+  <% if answer.overview and answer.overview != '' %>
+  <meta name="description" content="<%= answer.overview %>">
+  <% end %>
 </head>
 <body>
 
