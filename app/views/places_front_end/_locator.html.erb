@@ -10,10 +10,10 @@
     <div id="global-set-location">
       <h2>Set your location</h2>
       <div id="global-locator-error" class="app-error hidden"></div>
-      <form id="global-locator-form" class="app-form" action="/locator.json">
+      <form id="global-locator-form" class="app-form" action="#">
         <fieldset class="postcode">
           <label class="legend" for="postcode_box">Enter a UK postcode</label>
-          <div class="ask_location">
+          <div class="ask_location_postcode">
             <div>
               <input name="postcode" type="text" value="" placeholder="e.g. SW1A 2AA"><input type="submit" name="find_me" value="Go">
             </div>
@@ -26,7 +26,7 @@
           </div>
 
           <p id="forget-location">
-            <a class="form-button" href="#">Forget my location</a>
+            <a class="form-button" href="<%= reset_geo_url %>">Forget my location</a>
           </p>
         </fieldset>
       </form>

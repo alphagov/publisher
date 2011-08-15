@@ -11,6 +11,7 @@
   <script type="text/javascript" src="/javascripts/jquery.base64.js" charset="utf-8"></script>
   <script type="text/javascript" src="/javascripts/core.js"></script>
   <script type="text/javascript" src="/javascripts/geo.js"></script>
+  <script type="text/javascript" src="/javascripts/jquery.mustache.js"></script>
 </head>
 <body>
 
@@ -54,28 +55,35 @@
           <%= Govspeak::Document.new(place.more_information || "").to_html %>
         </div>
         
-
-        <% if options.any? %>
-
-          <h3>Your Options Are...</h3>
-
-<ol>
-          <% options.each do |option| %>
-          <li>
-            <h4><%= option.slice('name', 'address', 'town', 'postcode').values.compact.join(', ') %></h4>
-            <p><a href="<%= Geogov.map_href(option['location'][0], option['location'][1]) %>" title="Link to location in google maps">
-              <img src="<%= Geogov.map_img(option['location'][0], option['location'][1], {:marker_lat => option['location'][1], :marker_lon => option['location'][0], :w => 200, :h => 200}) %>" alt="map">
-            </a></p>
-            
-            <% if option['url'] %>
-            <p><a href="<%= option['url'] %>"><%= option['url'] %></a></p>
-            <% end %>
-          </li>
-          <% end %>
-</ol>
-        <% end %>
+        <form class="app-form" method="get">
+        <fieldset class="postcode">
+          <div class="ask_location <%= geo_known_to_at_least?('ward') ? 'removing' : '' %>">
+            <label class="legend" for="user-postcode">Enter a UK postcode</label>    
+            <div>
+              <input name="postcode" id="user-postcode" type="text" value="" placeholder="e.g. SW1A 2AA">
+              <input type="submit" name="submit" value="Go">
+            </div>
+          </div>
+          <div class="finding_location hidden">
+            <p>Locating you&hellip;<input type="hidden" name="lon" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lon'] : '' %>"><input type="hidden" name="lat" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lat'] : '' %>"></p>
+          </div>
+          <div class="found_location <%= geo_known_to_at_least?('ward') ? '' : 'hidden' %>">
+            <h3 class="friendly-name"><%= geo_header['friendly_name'] if geo_known_to_at_least?('ward') %></h3>
+            <p><a class="change-location" href="#"><%= "Not in <span class=\"friendly-name\">#{geo_header['friendly_name']}</span>?" if geo_known_to_at_least?('ward') %></a></p>
+          </div>
+        </fieldset>
+        </form> 
         
+        
+        <h3>Your Options Are...</h3>
 
+        <ol id="options">
+          <% if options.any? %>
+          <%= mustache_partial '_option.html', {'options' => options} %>
+          <% else %>
+          <li>Loaded once we know your location...</li>
+          <% end %>
+        </ol>
       </div>
     </article>
 
@@ -94,28 +102,37 @@
   </section>
 
   <%= partial :'_locator.html' %>
+
+  <script id="option-template" type="text/x-mustache-template">
+  <%= File.read(File.expand_path('_option.html.mustache', File.dirname(__FILE__))) %>
+  </script>
+
   <script>
 
   $(document).ready(function() {
 
       $('#global-locator-form').locator ({
-          ignore_location_known_on_page_load: true, 
+          ignore_location_known_on_page_load: false, 
           error_area_selector: '#global-locator-error'
       });
 
+      var remove_existing_location_data = function() {
+        $("#options").html('<li>Dependent on your location!</li>');
+      }
+
       var show_known_location = function(current_location) {
         //show correct message
+        $(".found_location").addClass('set').removeClass('removing').show();
+        $(".ask_location").addClass('removing').removeClass('set').hide();
         $('#location-set-message').show();
         $('#location-unset-message').hide();
-        $("#location-name").html(current_location.locality);
+        $(".friendly-name").html(current_location.locality);
       };
 
       var show_unknown_location = function() {
-        var location_dom = $("#global-user-location");
-
-        location_dom.addClass('removing');
-        location_dom.removeClass('set');
-        $("#location-name").html("");
+        $(".found_location").addClass('removing').removeClass('set').hide();
+        $(".ask_location").addClass('set').removeClass('removing').show();
+        $(".friendly-name").html("");
         //show correct message
         $('#location-set-message').hide();
         $('#location-unset-message').show();
@@ -127,6 +144,13 @@
         $('#global-locator').show();
         $('#global-locator-form').trigger('reset-locator-form');
       };
+      
+      var load_new_locations = function() {
+        var the_href = window.location.origin + window.location.pathname + ".json"
+        $.getJSON(the_href, function (data) {
+          $('#options').html($.mustache($('#option-template').html(), {options: data}));
+        });
+      }
 
       $('#global-locator .close').click(function() {
         $('#global-locator').hide();
@@ -134,49 +158,45 @@
       });
 
       // Event handlers
-      $('#global-user-location .change-location').click(function() {
+      $('.change-location').click(function() {
         open_location_dialog();
         return false;
       });
 
-      $('#global-user-location .explain-location').click(function() {
+      $('.explain-location').click(function() {
         open_location_dialog();
         return false;
       });
 
       $('#forget-location').click(function() {
         $(document).trigger('location-removed');
-        $('#global-locator').hide();
         return false;
       });
 
       $(document).bind('location-removed', function(e, message) {
         show_unknown_location();
+        remove_existing_location_data();
         AlphaGeo.deleteGeoCookie();
       });
 
       $(document).bind('location-known', function(e, data) {
-        $("#global-user-location").addClass('set');
-
+        load_new_locations();
         show_known_location(data.current_location);
       });
 
       $(document).bind('location-changed', function(e, data) {
         $('#global-locator').hide();
         $("#global-user-location").addClass('set');
-
         show_known_location(data.current_location);
+        remove_existing_location_data();
       });
-
-      var located = AlphaGeo.locationName();
-      if (located) {
-        $(document).trigger('location-known', {current_location: AlphaGeo.locator_object()});    
-      } else {
-        show_unknown_location();
-      }
+      
+      $("#global-locator-form").attr('action', '/locator.json');
     });
     </script>
-
+    <style type="text/css" media="screen">
+      .removing { display: none; }
+    </style>
 </div> <!-- end wrapper -->
 
 </body>
