@@ -31,5 +31,23 @@
     <a class="url" href="{{url}}">{{url}}</a>
   </p>
   {{/url}}
+  
+  {{#phone}}
+  <p>
+    Phone: <a class="tel" href="tel://{{phone}}">{{phone}}</a>
+  </p>
+  {{/phone}}
+  
+  {{#fax}}
+  <p>
+    Fax: <a class="tel" href="tel://{{fax}}">{{fax}}</a>
+  </p>
+  {{/fax}}
+  
+  {{#text_phone}}
+  <p>
+    Text Phone: <a class="tel" href="tel://{{text_phone}}">{{text_phone}}</a>
+  </p>
+  {{/fax}}
 </li>
 {{/options}}
