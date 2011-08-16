@@ -34,7 +34,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/slimmer.git
-  revision: fd789453c5e1a206d502c63e25a16cbba3da2b2c
+  revision: 2fe052078ea6cd61da3d69dcd9040b0114f12392
   specs:
     slimmer (0.7.10)
       nokogiri
@@ -117,7 +117,7 @@ GEM
     mocha (0.9.12)
     mongo (1.3.1)
       bson (>= 1.3.1)
-    mongoid (2.1.7)
+    mongoid (2.1.8)
       activemodel (~> 3.0)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
