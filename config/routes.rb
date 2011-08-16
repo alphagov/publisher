@@ -44,6 +44,12 @@ Publisher::Application.routes.draw do
   
   resources :audiences
   resources :guides, :only => [:show]
+  resources :local_transactions, :only => :show do
+    member do
+      get '/:snac(.:format)', :to => :snac
+      post :verify_snac
+    end
+  end
 
   match '/places/*path' => PlacesFrontEnd::App
   

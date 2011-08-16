@@ -43,7 +43,6 @@ module LocalTransactionsFrontEnd
           snac_codes = location_data['council'].collect do |council|
             council['ons']
           end.compact
-          puts snac_codes.inspect
           chosen_snac_code = provider_snac_code(snac_codes)
           if chosen_snac_code
             redirect to(publication_path(publication.slug, chosen_snac_code))

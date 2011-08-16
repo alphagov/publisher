@@ -31,6 +31,7 @@ if ENV['GEO_DEV']
   gem 'geogov', :path => '../geogov'
 else
   gem 'rack-geo', :git => 'git@github.com:alphagov/rack-geo.git'
+  gem 'geogov', :git => 'git@github.com:alphagov/geogov.git'
 end
 
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'

@@ -10,11 +10,11 @@ module LocalTransactionsFrontEnd
     end
 
     def get_publication
-      LocalTransaction.where(:slug => params[:slug]).first
+      @publication ||= LocalTransaction.where(:slug => params[:slug]).first
     end
 
     def get_edition
-      get_publication.editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
+      @edition ||= get_publication.editions.select { |e| e.version_number.to_i == preview_edition_id.to_i }.first
     end
 
     def publication_hash(*args)
