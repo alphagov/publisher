@@ -1,3 +1,60 @@
+// Javascript that may be used on every publication show/edit page
+
+(function($) {
+  $.fn.hasSlugField = function(opts) {
+
+    var update_slug_notice = function(slug_field, available) {
+      var container = slug_field.parent();
+      var elem = container.find('.slug-status');
+      if (elem.length == 0) {
+        elem = $('<p class="inline-hints slug-status"></p>');
+        container.append(elem)
+      }
+
+      if (available) {
+        elem.css('color', 'green').text('That slug is currently available');
+      } else {
+        elem.css('color', 'red').text('That slug is already taken');
+      }
+    }
+    
+    return this.each(function() {
+      var title_field = $(this);
+      var slug_field = opts.field;
+      
+      $(this).change(function () {  
+        if (slug_field.text() == '') {
+          slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
+          slug_field.trigger('change');
+        }
+      });
+      
+      $(slug_field).change(function () {
+        $.ajax({
+          url: panoption_host + "/slugs/" + $(this).val() + "?jsoncallback=panopticon",
+          dataType: "jsonp",
+          jsonpCallback: "panopticon",
+          cache: false,
+          method: "get",
+          success: function(data) { update_slug_notice(slug_field, false); },
+          error: function(jqXHR, textStatus, errorThrown) { update_slug_notice(slug_field, true); }
+        });
+      })
+    });
+  };
+  
+  $.fn.hasBasicSlugs = function() {
+    $(this).live('change', function () {
+      var title_field = $(this);
+      var slug_field = title_field.closest('.part').find('.slug');
+      if (slug_field.text() == '') {
+        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
+      }
+    });
+  }
+  
+})(jQuery);
+
 $(function () {
   $('.publication-nav').tabs();
   
@@ -37,16 +94,9 @@ $(function () {
         $('body').append('<iframe id="popup" src="/admin/google_insight?search_term='+encodeURIComponent(search_term)+'" height="410" scrolling="NO" width="400" style="position:absolute; z-index: 5; top: 50%; margin-top: -205px; left: 50%; margin-left: -200px; box-shadow: 0 0 15px rgba(0,0,0,0.4)"></iframe>');
   });
   
-  $('input.title').
-    live('change', function () {
-      var title_field = $(this);
-      var slug_field = title_field.closest('.part').find('.slug');
-      if (slug_field.text() == '') {
-        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
-      }
-    });
-    
-  $('#edition_title')[0].focus();
+  if (! 'autofocus' in document.createElement('input')) {
+    $('*[autofocus]').focus();
+  }
   
   var submitted_forms = false;
   

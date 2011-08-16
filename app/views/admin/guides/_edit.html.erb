@@ -1,6 +1,6 @@
 <%= semantic_form_for @latest_edition, :url => admin_guide_edition_path(@guide, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
-    <%= f.input :title, :label => "Edition Title", :input_html => {:disabled => @latest_edition.is_published?} %>
+    <%= f.input :title, :label => "Edition Title", :input_html => {:disabled => @latest_edition.is_published?, :autofocus => true} %>
     <%= f.input :alternative_title, :input_html => {:disabled => @latest_edition.is_published?} %>
     <%= f.input :overview, :as => :text, :input_html => {:rows => 3, :disabled => @latest_edition.is_published?} %>
   <% end %>
@@ -21,47 +21,4 @@
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts" role="button">Add new part</a></p>
 
   <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
-<% end %>
-
-<% content_for :extra_javascript do %>
-<script type="text/javascript">
-  $(function () {
-    var accordion_opts = {
-      header: "> div > h3",
-			collapsible: true,
-			active: false
-    }
-    var sortable_opts = {
-      axis: "y",
-			handle: "h3",
-			stop: function() {
-				$('.part').each(function (i, elem) {
-				  $(elem).find('input.order').val(i + 1);
-				});
-			}
-    }
-
-    $('input.title').
-      live('change', function () {
-        var elem = $(this);
-        var header = elem.closest('fieldset').prev('h3').find('a');
-        header.text(elem.val());
-      });
-
-    $("#parts").accordion(accordion_opts).sortable(sortable_opts);
-    $('.add-associated').bind('associated-added', function () {
-      var active_index = $('#parts div.part').length;
-      var my_opts = accordion_opts;
-      my_opts.active = active_index - 1;
-      $('#parts').sortable('destroy').accordion("destroy").
-        accordion(my_opts).sortable(sortable_opts);
-      $('#parts .part:last-child').find('input.order').val(active_index);
-    });
-    $('body').bind('associated-removed', function () {
-      $('#parts').sortable('destroy').accordion("destroy").
-        accordion(accordion_opts).sortable(sortable_opts);
-      return false;
-    });
-  });
-</script>
 <% end %>

@@ -1,6 +1,6 @@
 <%= semantic_form_for @latest_edition, :url => admin_place_edition_path(@place, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
-    <%= f.input :title, :label => "Name of place thing" %>
+    <%= f.input :title, :label => "Name of place thing", :input_html => {:autofocus => true} %>
     <%= f.input :alternative_title %>
     <%= f.input :overview, :as => :text, :input_html => {:rows => 3} %>
     <%= f.input :place_type %>

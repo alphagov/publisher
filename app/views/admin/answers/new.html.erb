@@ -12,20 +12,15 @@
 
       <%= f.buttons %>
     <% end %>
-
-    <% content_for :extra_javascript do %>
-    <script type="text/javascript" charset="utf-8">
-      $(function () {
-        $('#answer_name').change(function () {
-          if ($('#answer_slug').text() == '') {
-            var title = $('#answer_name').val();
-            $('#answer_slug').val(GovUKGuideUtils.convertToSlug(title));
-          }
-        });
-      });
-    </script>
-    <% end %>
   </div>
 </div>
 
 <% content_for :page_title, "Create new answer" %>
+<% content_for :extra_javascript do %>
+  <%= javascript_include_tag('/guide-assets/javascripts/publications') %>
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+      $('#answer_name').hasSlugField({field: $('#answer_slug')});
+    })
+  </script>
+<% end %>

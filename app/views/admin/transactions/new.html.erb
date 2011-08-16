@@ -5,27 +5,22 @@
 
     <%= semantic_form_for [:admin, @transaction] do |f| %>
       <%= f.inputs do %>
-        <%= f.input :name, :hint => true %>
+        <%= f.input :name, :hint => true, :input_html => {:autofocus => true} %>
         <%= f.input :slug, :hint => true %>
         <%= f.input :tags, :hint => true %>
       <% end %>
 
       <%= f.buttons %>
     <% end %>
-
-    <% content_for :extra_javascript do %>
-    <script type="text/javascript" charset="utf-8">
-      $(function () {
-        $('#transaction_name').change(function () {
-          if ($('#transaction_slug').text() == '') {
-            var title = $('#transaction_name').val();
-            $('#transaction_slug').val(GovUKGuideUtils.convertToSlug(title));
-          }
-        });
-      });
-    </script>
-    <% end %>
   </div>
 </div>
 
 <% content_for :page_title, "Create new transaction" %>
+<% content_for :extra_javascript do %>
+<%= javascript_include_tag('/guide-assets/javascripts/publications') %>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    $('#transaction_name').hasSlugField({field: $('#transaction_slug')});
+  });
+</script>
+<% end %>

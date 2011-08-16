@@ -1,14 +1,9 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
+// System wide behaviours
 var GovUKGuideUtils = {
   convertToSlug: function(title) {
-      return title
-      .toLowerCase()
-      .replace(/[^\w ]+/g,'')
-      .replace(/ +/g,'-');
+    return title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
   }
 }
-
 $(function () {
   $('.flash-notice').delay(3000).slideUp(300).one('click', function () { $(this).slideUp(300); });
   
