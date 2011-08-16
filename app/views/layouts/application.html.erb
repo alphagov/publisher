@@ -8,8 +8,10 @@
 </head>
 <body>
 
-  <div id="wrapper" class="wrapper">
+  <h2 id="site-title">Publisher</h2>
 
+  <div id="wrapper" class="wrapper">
+    
     <div class="content" role="main">
 
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
