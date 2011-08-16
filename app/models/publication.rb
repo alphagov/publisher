@@ -27,7 +27,7 @@ class Publication
   before_save :calculate_statuses
 
   validates_presence_of :name
-  validates_presence_of :slug
+  validates :slug, :presence => true, :uniqueness => true, :panopticon_slug => { :if => proc { |p| p.slug_changed? } }
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
