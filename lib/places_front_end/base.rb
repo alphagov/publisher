@@ -69,8 +69,13 @@ module PlacesFrontEnd
       if geo_known_to_at_least?('ward')
         options_data = get_options(publication.place_type, geo_header['fuzzy_point']['lon'], geo_header['fuzzy_point']['lat'])
         my_opts = JSON.parse(options_data)
-        return my_opts.map { |o| o['latitude'] = o['location'][0]; o['longitude'] = o['location'][1]; o }
-      end
+        return my_opts.map do |o| 
+          o['latitude'] = o['location'][0]
+          o['longitude'] = o['location'][1]
+          o['address'] = [o['address1'], o['address2']].reject { |a| a.nil? or a == '' }.map { |a| a.strip }.join(', ')
+          o
+        end
+    end
       
       return []
     end
