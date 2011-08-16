@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= yield :page_title %> - Beta.Gov.uk Publisher</title>
+  <title><%= yield :page_title %> - gov.uk Publisher</title>
   <%= stylesheet_link_tag '/stylesheets/formtastic.css', '/stylesheets/formtastic_changes.css', '/stylesheets/admin/jquery-ui-1.8.14.css' %>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
@@ -11,7 +11,7 @@
   <h2 id="site-title">Publisher</h2>
 
   <div id="wrapper" class="wrapper">
-    
+
     <div class="content" role="main">
 
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
