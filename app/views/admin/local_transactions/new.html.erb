@@ -1,7 +1,9 @@
 <div class="ui-widget-content new">
   <div class="inner">
 
-    <h1>Create new Local Transaction</h1>
+    <h1>Create new local transaction</h1>
+
+    <p class="intro">Required fields are <strong>bold</strong>.</p>
 
     <%= semantic_form_for [:admin, @local_transaction] do |f| %>
       <%= f.inputs do %>
@@ -29,4 +31,4 @@
   </div>
 </div>
 
-<% content_for :page_title, "Create new Local Transaction" %>
+<% content_for :page_title, "Create new local transaction" %>
