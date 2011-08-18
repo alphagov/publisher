@@ -13,14 +13,7 @@ module Admin::GuidesHelper
   end
 
   def preview_edition_path(edition)
-    if edition.is_a?(PlaceEdition)
-      places_preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
-    else
-      preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
-    end
-  rescue => e
-    Rails.logger.warn e.inspect
-    return '#'
+    preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
   end
 
   def activity_form(name, id, url, html_options = {})
