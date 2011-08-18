@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class LocalTransactionTest < ActiveSupport::TestCase
+  def setup
+    PanopticonSlugValidator.any_instance.stubs(:validate).returns(true)
+  end
+
   def lgsl
     @lgsl ||= LocalTransactionsSource::Lgsl.create(code: "1")
   end
@@ -11,18 +15,22 @@ class LocalTransactionTest < ActiveSupport::TestCase
   alias_method :authority, :create_authority
 
   test "looks up the LGSL before validating a new record" do
-    LocalTransactionsSource.expects(:find_current_lgsl).with("1").returns(lgsl)
+    without_panopticon_validation do
+      LocalTransactionsSource.expects(:find_current_lgsl).with("1").returns(lgsl)
 
-    lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
-    assert lt.valid?
+      lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
+      assert lt.valid?
+    end
   end
 
   test "doesn't bother looking up the LGSL before validating an existing record" do
-    LocalTransactionsSource.expects(:find_current_lgsl).never
+    without_panopticon_validation do
+      LocalTransactionsSource.expects(:find_current_lgsl).never
 
-    lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
-    lt.save(validate: false)
-    assert lt.valid?
+      lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
+      lt.save(validate: false)
+      assert lt.valid?
+    end
   end
 
   test "can verify whether an authority provides the transaction service, given its SNAC" do

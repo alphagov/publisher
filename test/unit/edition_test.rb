@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-class GuideEditionTest < ActiveSupport::TestCase
+class EditionTest < ActiveSupport::TestCase
 
   def template_edition
     g = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
@@ -45,11 +45,13 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
   
   test "a new guide has no published edition" do
-    guide = template_edition.guide
-    guide.save
-    assert_nil guide.published_edition
+    without_panopticon_validation do
+      guide = template_edition.guide
+      guide.save
+      assert_nil guide.published_edition
+    end
   end
-    
+
   test "an edition of a guide can be published" do
     edition = template_edition
     guide = template_edition.guide
@@ -58,33 +60,37 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
   
   test "a published edition can't be edited" do
-    edition = template_edition
-    guide = template_edition.container
-    guide.save
-    guide.publish edition, "Published because I did"
-    guide.reload
+    without_panopticon_validation do
+      edition = template_edition
+      guide = template_edition.container
+      guide.save
+      guide.publish edition, "Published because I did"
+      guide.reload
 
-    edition = guide.editions.last
-    edition.title = "My New Title"
+      edition = guide.editions.last
+      edition.title = "My New Title"
 
-    assert ! edition.save
-    assert_equal ["Published editions can't be edited"], edition.errors[:base]
+      assert ! edition.save
+      assert_equal ["Published editions can't be edited"], edition.errors[:base]
+    end
   end
-  
+
   test "publish history is recorded" do
-    edition = template_edition
-    guide = template_edition.guide
-    guide.save
+    without_panopticon_validation do
+      edition = template_edition
+      guide = template_edition.guide
+      guide.save
     
-    guide.publish edition, "First publication"
-    guide.publish edition, "Second publication"
+      guide.publish edition, "First publication"
+      guide.publish edition, "Second publication"
     
-    new_edition = edition.build_clone
-    new_edition.parts.first.body = "Some other version text"
+      new_edition = edition.build_clone
+      new_edition.parts.first.body = "Some other version text"
     
-    guide.publish new_edition, "Third publication"
+      guide.publish new_edition, "Third publication"
     
-    assert_equal 3, guide.publishings.length
-  end
+      assert_equal 3, guide.publishings.length
+    end
   
+  end
 end
