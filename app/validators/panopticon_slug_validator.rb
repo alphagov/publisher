@@ -16,11 +16,18 @@ class PanopticonSlugValidator < ActiveModel::EachValidator
 
   # implement the method called during validation
   def validate_each(record, attribute, value)
+    the_slug = record.send(attribute)
+
+    if the_slug.length < 4 or the_slug.length > 32
+      record.errors[attribute] << "must be between 4 and 32 characters"
+      return
+    end
+    
     endpoint_url = "#{PANOPTICON_HOST}/slugs"
     attributes_to_send = {
       'slug[kind]' => record.class.to_s,
       'slug[owning_app]' => 'publisher',
-      'slug[name]' => record.send(attribute)
+      'slug[name]' => the_slug
     }
     
     record.errors[attribute] << 'must be unique across Gov.UK' unless claim_slug(endpoint_url, attributes_to_send)
