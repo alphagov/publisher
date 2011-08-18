@@ -10,10 +10,10 @@ rm /var/lib/jenkins/jobs/Guides/workspace/public/javascripts
 rm /var/lib/jenkins/jobs/Guides/workspace/public/templates
 rm /var/lib/jenkins/jobs/Guides/workspace/public/stylesheets
 
-ln -s /var/lib/jenkins/jobs/Guides/workspace/public/images /var/lib/jenkins/jobs/Static/workspace/public/images
-ln -s /var/lib/jenkins/jobs/Guides/workspace/public/javascripts /var/lib/jenkins/jobs/Static/workspace/public/javascripts
-ln -s /var/lib/jenkins/jobs/Guides/workspace/public/templates /var/lib/jenkins/jobs/Static/workspace/public/templates
-ln -s /var/lib/jenkins/jobs/Guides/workspace/public/stylesheets /var/lib/jenkins/jobs/Static/workspace/public/stylesheets
+ln -s /var/lib/jenkins/jobs/Static/workspace/public/images /var/lib/jenkins/jobs/Guides/workspace/public/images
+ln -s /var/lib/jenkins/jobs/Static/workspace/public/javascripts /var/lib/jenkins/jobs/Guides/workspace/public/javascripts
+ln -s /var/lib/jenkins/jobs/Static/workspace/public/templates /var/lib/jenkins/jobs/Guides/workspace/public/templates
+ln -s /var/lib/jenkins/jobs/Static/workspace/public/stylesheets /var/lib/jenkins/jobs/Guides/workspace/public/stylesheets
 
 export DISPLAY=:99
 /etc/init.d/xvfb start
