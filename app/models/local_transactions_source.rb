@@ -23,13 +23,29 @@ class LocalTransactionsSource
     last_row = nil
     begin
       CSV.new(io, :headers => true).each do |row|
-        last_row = row
+        source_authority_cache = {}
+        authority_cache = {}
+        lgsl_cache = {}
         begin
-          lgsl = source.lgsls.find_or_create_by(code: row['lgsl'].to_s)
-          authority = lgsl.authorities.find_or_initialize_by(snac: row['snac'])
-          source_authority = Authority.where(snac: row['snac']).first
+          
+          unless lgsl = lgsl_cache[row['lgsl'].to_s]
+            lgsl = source.lgsls.find_or_create_by(code: row['lgsl'].to_s)
+            lgsl_cache[row['lgsl'].to_s] = lgsl
+          end
+          
+          unless authority = authority_cache[row['snac']]
+            authority = lgsl.authorities.find_or_initialize_by(snac: row['snac'])
+            authority_cache[row['snac']] = authority
+          end
+          
+          unless source_authority = source_authority_cache[row['snac']]
+            source_authority = ::Authority.where(snac: row['snac']).first
+            source_authority_cache[row['snac']] = source_authority
+          end
+          
           authority.name = source_authority.name unless source_authority.nil?
           authority.lgils.build(code: row['lgil'].to_s, url: row['link'])
+          
           lgsl.save!
         rescue => e
           puts "Failure at row:"
