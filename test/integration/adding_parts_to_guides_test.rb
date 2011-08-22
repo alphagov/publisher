@@ -3,7 +3,6 @@ require 'capybara/rails'
 
 Capybara.default_driver = :selenium
 
-
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   

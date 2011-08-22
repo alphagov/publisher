@@ -17,7 +17,7 @@ module GuidesFrontEnd
     end
 
     def fetch_publication
-      url = URI.parse("http://#{settings.api_host}/guides/#{params[:slug]}.json")
+      url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json")
       Net::HTTP.start(url.host, url.port) do |http|
         http.get(url.path)
       end

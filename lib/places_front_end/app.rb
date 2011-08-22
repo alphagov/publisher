@@ -8,7 +8,7 @@ module PlacesFrontEnd
       case ENV['RACK_ENV']
         when ('development' or 'test')
           api_host = "local.alphagov.co.uk:3000"
-          imminence_api_host = "local.alphagov.co.uk:3001"
+          imminence_api_host = "local.alphagov.co.uk:3002"
         when 'production'
           api_host = "api.alpha.gov.uk"
           imminence_api_host = "imminence.alpha.gov.uk"
@@ -21,7 +21,7 @@ module PlacesFrontEnd
     end
 
     def fetch_publication
-      url = URI.parse("http://#{settings.api_host}/guides/#{params[:slug]}.json")
+      url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json")
       Net::HTTP.start(url.host, url.port) do |http|
         http.get(url.path)
       end
