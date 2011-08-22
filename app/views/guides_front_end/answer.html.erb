@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title><%= answer.title %> - Beta.Gov.uk</title>
-  <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/guides.css" />
+  <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if answer.overview and answer.overview != '' %>
   <meta name="description" content="<%= answer.overview %>">
   <% end %>
@@ -49,11 +49,11 @@
 	        <%= Govspeak::Document.new(answer.body || "").to_html %>
 	      </div>
 	    </article>
-	
+
 			<div class="meta-data">
 				<p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
 			</div>
-	
+
 		</div>
 
   </section>
