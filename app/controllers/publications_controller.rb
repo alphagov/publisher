@@ -1,6 +1,6 @@
 require 'api/generator'
 
-class GuidesController < ApplicationController
+class PublicationsController < ApplicationController
   def show
     publication = Publication.first(conditions: {slug: params[:id]})
     head 404 and return if publication.nil?

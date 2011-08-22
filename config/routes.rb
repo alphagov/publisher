@@ -43,7 +43,7 @@ Publisher::Application.routes.draw do
   end
   
   resources :audiences
-  resources :guides, :only => [:show]
+  resources :publications, :only => [:show]
   resources :local_transactions, :only => :show do
     member do
       get '/:snac(.:format)', :to => :snac
