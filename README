@@ -1,6 +1,18 @@
 == In the absence of reliable local transaction data feeds ==
 
-Here's how to do initial setup for the local transactions data:
+There are a set of already cooked transaction feeds in the Dropbox/AlphaShare/data/betatransactions
+
+open a Rails console and:
+
+# Add headers to council_name_to_snac.csv agency_id,agency_name,snac
+f = File.open('council_name_to_snac.csv', 'r:Windows-1252:UTF-8')
+Authority.populate_from_source!!(f)
+
+f = File.open('local_transactions.csv', 'r:Windows-1252:UTF-8')
+LocalTransactionsSource.populate_from_source!(f)
+
+
+== to make a new set of feeds ==
 
 * grab the .xls from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1523569.xls
   and extract the second sheet to a CSV, named 'service_list.csv'
@@ -14,13 +26,3 @@ run script/combine_lgd_data as follows:
 
 This will create a file called 'local_transactions.csv'
 
-open a Rails console and:
-
-# Add headers to council_name_to_snac.csv agency_id,agency_name,snac
-f = File.open('council_name_to_snac.csv', 'r:Windows-1252:UTF-8')
-Authority.populate_from_source!(f)
-
-f = File.open('local_transactions.csv', 'r:Windows-1252:UTF-8')
-LocalTransactionsSource.populate_from_source(f)
-
-Be warned, that last step took a couple of hours on my machine.
