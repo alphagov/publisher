@@ -16,8 +16,8 @@
     <% end %>
     </span>
   </td>
-  <td>
-    <%= publication.updated_at %>
+  <td class="updated">
+    <%= publication.updated_at.strftime("%m/%d/%Y %H:%M") %>
   </td>
   <td>
     <%= publication.latest_edition.created_by %>
