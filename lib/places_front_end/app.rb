@@ -37,14 +37,6 @@ module PlacesFrontEnd
       end
     end
 
-    def router
-      if publication_response.code.to_i == 200
-        return publication_hash['type'].to_sym
-      else
-        nil
-      end
-    end
-
     def publication
       @publication ||= Api::Client.from_hash(publication_hash)
     end

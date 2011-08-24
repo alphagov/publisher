@@ -4,6 +4,18 @@ require 'api/client'
 
 module PlacesFrontEnd
   class Preview < PlacesFrontEnd::Base
+    configure do
+      case ENV['RACK_ENV']
+        when ('development' or 'test')
+          imminence_api_host = "local.alphagov.co.uk:3002"
+        when 'production'
+          imminence_api_host = "imminence.alpha.gov.uk"
+        else
+          imminence_api_host = "imminence.staging.alphagov.co.uk:8080"
+      end
+      set :imminence_api_host, imminence_api_host
+    end
+
     def self.preview_edition_id(env)
       env['action_dispatch.request.path_parameters'][:edition_id]
     end
@@ -14,15 +26,6 @@ module PlacesFrontEnd
 
     def get_publication
       @this_publication ||= Publication.where(:slug => params[:slug]).first
-    end
-
-    def router
-      publication = get_publication
-      if publication
-        publication.class.to_s.underscore.to_sym
-      else
-        nil
-      end
     end
 
     def setup_publication
