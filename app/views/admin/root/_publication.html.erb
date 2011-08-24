@@ -16,7 +16,18 @@
     <% end %>
     </span>
   </td>
+  <td>
+    <%= publication.updated_at %>
+  </td>
+  <td>
+    <%= publication.latest_edition.created_by %>
+  </td>
+
+  <!-- <th scope="col">Published By</th> -->
     <% if tab && tab == :published %>
+    <td>
+      <%= publication.published_edition.published_by %>
+    </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
     </td>
