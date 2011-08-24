@@ -32,6 +32,11 @@ Publisher::Application.routes.draw do
       resources :editions
     end
     
+    resources :schemes do
+      post :progress, :on => :member
+      resources :editions
+    end
+
     resources :local_transactions do
       post :progress, :on => :member
       resources :editions

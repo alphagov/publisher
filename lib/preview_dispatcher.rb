@@ -1,6 +1,7 @@
 require 'local_transactions_front_end'
 require 'places_front_end'
 require 'guides_front_end'
+require 'schemes_front_end'
 
 class PreviewDispatcher
   attr_reader :dispatcher_map
@@ -8,6 +9,7 @@ class PreviewDispatcher
   def initialize(app = nil)
     @dispatcher_map = {
       "Guide" => GuidesFrontEnd::Preview,
+      "Scheme" => SchemesFrontEnd::Preview,
       "Transaction" => GuidesFrontEnd::Preview,
       "Answer" => GuidesFrontEnd::Preview,
       "Place" => PlacesFrontEnd::Preview,

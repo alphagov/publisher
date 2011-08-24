@@ -40,6 +40,10 @@ class User
     create_publication(Guide, attributes)
   end
 
+  def create_scheme(attributes = {})
+    create_publication(Scheme, attributes)
+  end
+
   def create_answer(attributes = {})
     create_publication(Answer, attributes)
   end

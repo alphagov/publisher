@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>scheme to <%= scheme.title %> - www.gov.uk</title>
+  <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
+  <% if scheme.overview and scheme.overview != '' %>
+  <meta name="description" content="<%= scheme.overview %>">
+  <% end %>
+</head>
+<body>
+
+<div id="wrapper" class="scheme">
+
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+                 <%= scheme.related_items %>
+								 <li class="related-topic"><a href="#">More in <span><%= scheme.category %></span>&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
+  <section role="main" class="group">
+
+    <header class="group">
+
+        <hgroup>
+          <h1><span>scheme to </span><%= scheme.title %></h1>
+        </hgroup>
+
+    </header>
+
+		<div class="article-and-navigation group">
+
+	    <aside role="navigation">
+	      <div class="inner">
+
+	        <nav>
+	          <ol>
+	            <% scheme.parts.each do |nav_part| %>
+	            <li <% if part == nav_part %>class="active"<% end %>>
+	              <a href="<%= scheme_path(scheme.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
+	                <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> <span class="part-title"><%= nav_part.title %></span>
+	              </a>
+	            </li>
+	            <% end %>
+	          </ol>
+	        </nav>
+
+					<div class="meta-data">
+						<p class="modified-date">Last updated: <%= scheme.updated_at.strftime("%m/%d/%Y") %></p>
+					</div>
+
+	      </div>
+	    </aside>
+
+	    <article role="article" class="group">
+	      <div class="inner">
+
+	        <header>
+	          <h1><span>Part <%= part.number %><span class="visuallyhidden">:</span> </span><%= part.title %></h1>
+	        </header>
+
+	        <%= Govspeak::Document.new(part.body).to_html %>
+
+	        <footer>
+	  	      <!-- <nav class="pagination" role="navigation">
+	            <ul>
+	  	        <%- if scheme.has_previous_part?(part) -%>
+	  	          <a href="<%= scheme_path(scheme.slug, scheme.part_before(part).slug) %>">&larr; Previous part</a></li>
+	  	        <%- end -%>
+	  	          <li class="pages">Part <%= part.number %> of <%= scheme.parts.length %> in this scheme.</li>
+	  	        <%- if scheme.has_next_part?(part) -%>
+	  	          <li class="next" rel="next"><a href="<%= scheme_path(scheme.slug, scheme.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
+	  	        <%- end -%>
+	  	      </nav> -->
+	  	      <nav class="pagination" role="navigation">
+	            <ul class="group">
+	  	        <%- if scheme.has_previous_part?(part) -%>
+	  	          <li class="previous" rel="previous">
+									<a href="<%= scheme_path(scheme.slug, scheme.part_before(part).slug) %>" title="Navigate to previous part"><span class="pagination-label">&larr; Part <%= scheme.part_before(part).number %></span> <%= (scheme.part_before(part).title) %></a>
+								</li>
+	  	        <%- end -%>
+	  	        <%- if scheme.has_next_part?(part) -%>
+								<li class="next" rel="next">
+									<a href="<%= scheme_path(scheme.slug, scheme.part_after(part).slug) %>" title="Navigate to next part"><span class="pagination-label">Next part (<%= scheme.part_after(part).number %> of <%= scheme.parts.length %>) &rarr;</span> <%= (scheme.part_after(part).title) %></a>
+								</li>
+	  	        <%- end -%>
+	  	      </nav>
+	        </footer>
+
+	      </div>
+	    </article>
+
+		</div>
+
+  </section>
+
+</div> <!-- end wrapper -->
+
+</body>
+</html>

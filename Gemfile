@@ -49,4 +49,5 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'database_cleaner'
   gem 'mocha', :require => false
+  gem 'ruby-debug19'
 end
