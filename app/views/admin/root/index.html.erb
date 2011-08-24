@@ -12,6 +12,7 @@
     <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
       <thead>
         <tr>
+          <th scope="col">Format</th>
           <th scope="col">Title</th>
           <th scope="col">Last Updated</th>
           <th scope="col">Created By</th>
@@ -29,6 +30,7 @@
      <table class="formats" summary="List of &ldquo;Review Requested&rdquo; content">
        <thead>
          <tr>
+           <th scope="col">Format</th>
            <th scope="col">Title</th>
            <th scope="col">Last Updated</th>
            <th scope="col">Created By</th>
@@ -44,8 +46,8 @@
    </div>
   <div id="published">
     <table class="formats" summary="List of &ldquo;Published&rdquo; content">
-
         <tr>
+          <th scope="col">Format</th>
           <th scope="col">Title</th>
           <th scope="col">Last Updated</th>
           <th scope="col">Created By</th>
@@ -64,6 +66,7 @@
     <table class="formats" summary="List of &ldquo;Local&rdquo; content">
       <thead>
         <tr>
+          <th scope="col">Format</th>
           <th scope="col">Title</th>
           <th scope="col">Last Updated</th>
           <th scope="col">Created By</th>
@@ -85,6 +88,28 @@
 <% content_for :extra_javascript do %>
 <script type="text/javascript">
 $(function () { $('#guide-nav').tabs(); });
+
+var myTextExtraction = function(node) {
+  var the_node = $(node);
+  var image = the_node.find('img');
+  if (image.length > 0) {
+    return image.attr('alt');
+  } else {
+    return the_node.text();
+  }
+}
+
+$(document).ready(function() {
+  $(".formats").tablesorter({
+    textExtraction: myTextExtraction,
+    headers: {
+      // disable sorting for last three columns
+      4: { sorter: false },
+      5: { sorter: false },
+      6: { sorter: false }
+     }
+   });
+ });
 </script>
 <% end %>
 <% content_for :page_title, "Publications dashboard" %>

@@ -1,4 +1,7 @@
 <tr>
+  <td>
+    <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
+  </td>
   <td class="<%= publication.class.name.downcase %>">
     <% if tab && tab == :published %>
       <%= publication.published_edition.admin_list_title %>
@@ -17,7 +20,7 @@
     </span>
   </td>
   <td class="updated">
-    <%= publication.updated_at.strftime("%m/%d/%Y %H:%M") %>
+    <%= publication.updated_at.strftime("%d/%m/%Y %H:%M") %>
   </td>
   <td>
     <%= publication.latest_edition.created_by %>

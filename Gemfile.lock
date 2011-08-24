@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/rack-geo.git
-  revision: a5bb9d682a2b89ea04bf4c072142912ba3d94588
+  revision: 712fbcfe9508746e5fd9826d53c8f59f779f5596
   specs:
     rack-geo (0.6.0)
       geogov
