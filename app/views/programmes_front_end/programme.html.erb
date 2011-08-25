@@ -21,19 +21,17 @@
   <section role="main" class="group">
 
     <header class="group">
-
-        <hgroup>
-          <h1><span>programme to </span><%= programme.title %></h1>
-        </hgroup>
-
+      <hgroup>
+        <h1><span>programme to </span><%= programme.title %></h1>
+      </hgroup>
     </header>
 
 		<div class="article-and-navigation group">
 
 			<nav class="programme-switcher group" role="navigation">
 				<ul>
-					<li class="active"><a href="<%= programme_path(programme.slug) %>">About and how to claim</a></li>
-					<li><a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a></li>
+          <li<%= ' class="active"' if part == programme.parts.first %>><a href="<%= programme_path(programme.slug) %>">About and how to claim</a></li>
+					<li<%= ' class="active"' if part == programme.parts.last %>><a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a></li>
 				</ul>
 			</nav>
 
