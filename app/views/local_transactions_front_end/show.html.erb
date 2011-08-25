@@ -43,7 +43,7 @@
 
         <div class="intro">
           <p><%= local_transaction.introduction %></p>
-          <h2 class="button"><form action="<%= publication_path(local_transaction.slug) %>" method="POST"><label for="postcode">Enter your postcode <input id="postcode" name="postcode" type="text"></label> <input type="submit" value="Get started"></form></h2>
+          <h2 class="button"><form action="<%= form_action_path(local_transaction.slug) %>" method="POST"><label for="postcode">Enter your postcode <input id="postcode" name="postcode" type="text"></label> <input type="submit" value="Get started"></form></h2>
         </div>
 
         <div class="more">

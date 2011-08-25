@@ -20,6 +20,10 @@ module LocalTransactionsFrontEnd
       def base_path(slug)
         "/#{slug}"
       end
+
+      def form_action_path(slug)
+        publication_path(slug)
+      end
     end
 
     get '/:slug' do
