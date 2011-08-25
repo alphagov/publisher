@@ -32,7 +32,7 @@ Publisher::Application.routes.draw do
       resources :editions
     end
     
-    resources :schemes do
+    resources :programmes do
       post :progress, :on => :member
       resources :editions
     end

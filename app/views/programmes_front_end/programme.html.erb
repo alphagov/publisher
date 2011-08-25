@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>scheme to <%= scheme.title %> - www.gov.uk</title>
+  <title>programme to <%= programme.title %> - www.gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
-  <% if scheme.overview and scheme.overview != '' %>
-  <meta name="description" content="<%= scheme.overview %>">
+  <% if programme.overview and programme.overview != '' %>
+  <meta name="description" content="<%= programme.overview %>">
   <% end %>
 </head>
 <body>
 
-<div id="wrapper" class="scheme">
+<div id="wrapper" class="programme">
 
 	<!-- naughty related position hack -->
 	<div class="related-positioning naughty">
@@ -21,8 +21,8 @@
 			       <h2>Related tools &amp; topics</h2>
 			       <nav role="navigation">
 			         <ul>
-                 <%= scheme.related_items %>
-								 <li class="related-topic"><a href="#">More in <span><%= scheme.category %></span>&hellip;<span class="arrow"></span></a></li>
+                 <%= programme.related_items %>
+								 <li class="related-topic"><a href="#">More in <span><%= programme.category %></span>&hellip;<span class="arrow"></span></a></li>
 			         </ul>
 			       </nav>
 			     </div>
@@ -37,7 +37,7 @@
     <header class="group">
 
         <hgroup>
-          <h1><span>scheme to </span><%= scheme.title %></h1>
+          <h1><span>programme to </span><%= programme.title %></h1>
         </hgroup>
 
     </header>
@@ -49,9 +49,9 @@
 
 	        <nav>
 	          <ol>
-	            <% scheme.parts.each do |nav_part| %>
+	            <% programme.parts.each do |nav_part| %>
 	            <li <% if part == nav_part %>class="active"<% end %>>
-	              <a href="<%= scheme_path(scheme.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
+	              <a href="<%= programme_path(programme.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
 	                <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> <span class="part-title"><%= nav_part.title %></span>
 	              </a>
 	            </li>
@@ -60,7 +60,7 @@
 	        </nav>
 
 					<div class="meta-data">
-						<p class="modified-date">Last updated: <%= scheme.updated_at.strftime("%m/%d/%Y") %></p>
+						<p class="modified-date">Last updated: <%= programme.updated_at.strftime("%m/%d/%Y") %></p>
 					</div>
 
 	      </div>
@@ -78,24 +78,24 @@
 	        <footer>
 	  	      <!-- <nav class="pagination" role="navigation">
 	            <ul>
-	  	        <%- if scheme.has_previous_part?(part) -%>
-	  	          <a href="<%= scheme_path(scheme.slug, scheme.part_before(part).slug) %>">&larr; Previous part</a></li>
+	  	        <%- if programme.has_previous_part?(part) -%>
+	  	          <a href="<%= programme_path(programme.slug, programme.part_before(part).slug) %>">&larr; Previous part</a></li>
 	  	        <%- end -%>
-	  	          <li class="pages">Part <%= part.number %> of <%= scheme.parts.length %> in this scheme.</li>
-	  	        <%- if scheme.has_next_part?(part) -%>
-	  	          <li class="next" rel="next"><a href="<%= scheme_path(scheme.slug, scheme.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
+	  	          <li class="pages">Part <%= part.number %> of <%= programme.parts.length %> in this programme.</li>
+	  	        <%- if programme.has_next_part?(part) -%>
+	  	          <li class="next" rel="next"><a href="<%= programme_path(programme.slug, programme.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
 	  	        <%- end -%>
 	  	      </nav> -->
 	  	      <nav class="pagination" role="navigation">
 	            <ul class="group">
-	  	        <%- if scheme.has_previous_part?(part) -%>
+	  	        <%- if programme.has_previous_part?(part) -%>
 	  	          <li class="previous" rel="previous">
-									<a href="<%= scheme_path(scheme.slug, scheme.part_before(part).slug) %>" title="Navigate to previous part"><span class="pagination-label">&larr; Part <%= scheme.part_before(part).number %></span> <%= (scheme.part_before(part).title) %></a>
+									<a href="<%= programme_path(programme.slug, programme.part_before(part).slug) %>" title="Navigate to previous part"><span class="pagination-label">&larr; Part <%= programme.part_before(part).number %></span> <%= (programme.part_before(part).title) %></a>
 								</li>
 	  	        <%- end -%>
-	  	        <%- if scheme.has_next_part?(part) -%>
+	  	        <%- if programme.has_next_part?(part) -%>
 								<li class="next" rel="next">
-									<a href="<%= scheme_path(scheme.slug, scheme.part_after(part).slug) %>" title="Navigate to next part"><span class="pagination-label">Next part (<%= scheme.part_after(part).number %> of <%= scheme.parts.length %>) &rarr;</span> <%= (scheme.part_after(part).title) %></a>
+									<a href="<%= programme_path(programme.slug, programme.part_after(part).slug) %>" title="Navigate to next part"><span class="pagination-label">Next part (<%= programme.part_after(part).number %> of <%= programme.parts.length %>) &rarr;</span> <%= (programme.part_after(part).title) %></a>
 								</li>
 	  	        <%- end -%>
 	  	      </nav>

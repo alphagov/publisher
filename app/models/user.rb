@@ -40,8 +40,8 @@ class User
     create_publication(Guide, attributes)
   end
 
-  def create_scheme(attributes = {})
-    create_publication(Scheme, attributes)
+  def create_programme(attributes = {})
+    create_publication(Programme, attributes)
   end
 
   def create_answer(attributes = {})

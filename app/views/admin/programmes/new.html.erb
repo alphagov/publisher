@@ -1,9 +1,9 @@
 <div class="ui-widget-content new">
   <div class="inner">
 
-    <h1>Create new scheme</h1>
+    <h1>Create new programme</h1>
 
-    <%= semantic_form_for [:admin, @scheme] do |f| %>
+    <%= semantic_form_for [:admin, @programme] do |f| %>
       <%= f.inputs do %>
         <%= f.input :name, :hint => true, :input_html => {:autofocus => true} %>
         <%= f.input :slug, :hint => true %>
@@ -15,12 +15,12 @@
   </div>
 </div>
 
-<% content_for :page_title, "Create new scheme" %>
+<% content_for :page_title, "Create new programme" %>
 <% content_for :extra_javascript do %>
   <%= javascript_include_tag('/guide-assets/javascripts/publications') %>
   <script type="text/javascript" charset="utf-8">
     $(function () {
-      $('#scheme_name').hasSlugField({field: $('#scheme_slug')});
+      $('#programme_name').hasSlugField({field: $('#programme_slug')});
     })
   </script>
 <% end %>

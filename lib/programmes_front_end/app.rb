@@ -2,8 +2,8 @@ require 'net/http'
 require 'api/generator'
 require 'api/client'
 
-module SchemesFrontEnd
-  class App < SchemesFrontEnd::Base
+module ProgrammesFrontEnd
+  class App < ProgrammesFrontEnd::Base
     configure do
       case ENV['RACK_ENV']
         when ('development' or 'test')
@@ -11,7 +11,7 @@ module SchemesFrontEnd
         when 'production'
           api_host = "api.alpha.gov.uk"
         else
-          api_host = "schemes.#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
+          api_host = "programmes.#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
       end
       set :api_host, api_host
     end

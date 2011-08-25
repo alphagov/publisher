@@ -2,12 +2,12 @@ require 'ostruct'
 
 module Api
   module Generator
-    module Scheme
+    module Programme
       def self.edition_to_hash(edition)
-        attrs = edition.scheme.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
+        attrs = edition.programme.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
         attrs.merge!(edition.as_json(:only => [:title, :alternative_title, :overview]))
         attrs['parts'] = edition.parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]).merge('number' => p.order) }
-        attrs['type'] = 'scheme'
+        attrs['type'] = 'programme'
         attrs
       end
     end
@@ -15,11 +15,11 @@ module Api
   end
 
   module Client
-    class Scheme < OpenStruct
+    class Programme < OpenStruct
       def self.from_hash(hash)
-        scheme = new(hash)
-        scheme.parts = scheme.parts.collect { |p| Part.from_hash(p) }.sort_by {|p| p.order }
-        scheme
+        programme = new(hash)
+        programme.parts = programme.parts.collect { |p| Part.from_hash(p) }.sort_by {|p| p.order }
+        programme
       end
 
       def part_index(slug)

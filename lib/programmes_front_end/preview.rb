@@ -1,15 +1,15 @@
 require 'api/generator'
 require 'api/client'
 
-module SchemesFrontEnd
-  class Preview < SchemesFrontEnd::Base
+module ProgrammesFrontEnd
+  class Preview < ProgrammesFrontEnd::Base
     def self.preview_edition_id(env)
       env['action_dispatch.request.path_parameters'][:edition_id]
     end
 
     helpers do
-      def scheme_path(scheme_slug, part_slug)
-        "/preview/#{preview_edition_id}#{base_path(scheme_slug,part_slug)}"
+      def programme_path(programme_slug, part_slug)
+        "/preview/#{preview_edition_id}#{base_path(programme_slug,part_slug)}"
       end
     end
 

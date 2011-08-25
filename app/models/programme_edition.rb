@@ -1,5 +1,5 @@
-class SchemeEdition < Edition
-  embedded_in :scheme
+class ProgrammeEdition < Edition
+  embedded_in :programme
   embeds_many :parts
   
   accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
@@ -20,7 +20,7 @@ class SchemeEdition < Edition
   end
   
   def container
-    self.scheme
+    self.programme
   end
   
 end
