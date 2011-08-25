@@ -5,19 +5,8 @@ require 'api/client'
 module PlacesFrontEnd
   class App < PlacesFrontEnd::Base
     configure do
-      case ENV['RACK_ENV']
-        when ('development' or 'test')
-          api_host = "local.alphagov.co.uk:3000"
-          imminence_api_host = "local.alphagov.co.uk:3002"
-        when 'production'
-          api_host = "api.alpha.gov.uk"
-          imminence_api_host = "imminence.alpha.gov.uk"
-        else
-          api_host = "guides.#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
-          imminence_api_host = "imminence.staging.alphagov.co.uk:8080"
-      end
-      set :api_host, api_host
-      set :imminence_api_host, imminence_api_host
+      set :api_host, FrontEndEnvironment.api_host
+      set :imminence_api_host, FrontEndEnvironment.imminence_api_host
     end
 
     def fetch_publication

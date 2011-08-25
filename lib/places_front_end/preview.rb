@@ -5,15 +5,7 @@ require 'api/client'
 module PlacesFrontEnd
   class Preview < PlacesFrontEnd::Base
     configure do
-      case ENV['RACK_ENV']
-        when ('development' or 'test')
-          imminence_api_host = "local.alphagov.co.uk:3002"
-        when 'production'
-          imminence_api_host = "imminence.alpha.gov.uk"
-        else
-          imminence_api_host = "imminence.staging.alphagov.co.uk:8080"
-      end
-      set :imminence_api_host, imminence_api_host
+      set :imminence_api_host, FrontEndEnvironment.imminence_api_host
     end
 
     def self.preview_edition_id(env)

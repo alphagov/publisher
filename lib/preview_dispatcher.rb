@@ -1,6 +1,7 @@
 require 'local_transactions_front_end'
 require 'places_front_end'
 require 'guides_front_end'
+require 'front_end_environment'
 
 class PreviewDispatcher
   attr_reader :dispatcher_map

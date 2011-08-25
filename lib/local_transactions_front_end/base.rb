@@ -10,14 +10,7 @@ module LocalTransactionsFrontEnd
 
     helpers do
       def asset_host
-        case ENV['RACK_ENV']
-          when ('development' or 'test')
-            ""
-          when 'production'
-            "http://alpha.gov.uk"
-          else
-            "http://#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
-        end
+        FrontEndEnvironment.asset_host
       end
 
       def publication_path(slug, snac = nil)
