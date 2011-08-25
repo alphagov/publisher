@@ -18,37 +18,26 @@ module ProgrammesFrontEnd
         end
       end
 
-      def base_path(programme_slug, part_slug)
+      def base_path(programme_slug, part_slug=nil)
         "/#{programme_slug}/#{part_slug}"
       end
-      
-      def programme_path(programme_slug, part_slug)
-        base_path(programme_slug,part_slug)
+
+      def programme_path(programme_slug, part_slug=nil)
+        base_path(programme_slug, part_slug)
       end
     end
-    
-    get '/:slug/:part_slug' do
+
+    get '/:slug/further-information' do
       halt(404) if publication.nil? # 404 if guide not found
-      part = publication.find_part(params[:part_slug])
+      part = publication.find_part('further-information')
       halt(404) if part.nil? # 404 if part not found
       erubis :"programme.html", :locals => {:programme => publication, :part => part}
     end
-        
+
     get '/:slug' do
       route = router
-      halt(404) if route.nil? 
-      case route
-        when :programme
-          if publication.parts.any? and publication.parts.first.slug and publication.parts.first.slug != ''
-            redirect to(base_path(params[:slug], publication.parts.first.slug))
-          else
-            halt(404)
-          end
-        when :answer
-          erubis :"answer.html", :locals => {:answer => publication}
-        when :transaction
-          erubis :"transaction.html", :locals => {:transaction => publication}
-      end
+      halt(404) if route.nil?
+      erubis :"programme.html", :locals => {:programme => publication, :part => publication.parts.first}
     end
   end
 end

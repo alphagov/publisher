@@ -8,8 +8,8 @@ module ProgrammesFrontEnd
     end
 
     helpers do
-      def programme_path(programme_slug, part_slug)
-        "/preview/#{preview_edition_id}#{base_path(programme_slug,part_slug)}"
+      def programme_path(programme_slug, part_slug=nil)
+        "/preview/#{preview_edition_id}#{base_path(programme_slug, part_slug)}"
       end
     end
 

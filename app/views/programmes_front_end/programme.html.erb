@@ -24,7 +24,7 @@
 
 		<div class="article-and-navigation group">
 
-      <a href="<%= programme_path(programme.slug, programme.parts.first.slug) %>"><%= programme.parts.first.title %></a>
+      <a href="<%= programme_path(programme.slug) %>"><%= programme.parts.first.title %></a>
       <a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a>
 
         <article role="article" class="group">
