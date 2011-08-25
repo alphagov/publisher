@@ -24,29 +24,36 @@
 
 		<div class="article-and-navigation group">
 
-      <a href="<%= programme_path(programme.slug) %>"><%= programme.parts.first.title %></a>
-      <a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a>
+			<nav class="programme-switcher group" role="navigation">
+				<ul>
+					<li class="active"><a href="<%= programme_path(programme.slug) %>">About and how to claim</a></li>
+					<li><a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a></li>
+				</ul>
+			</nav>
 
-        <article role="article" class="group">
-	      <div class="inner">
-
-        <% if part == programme.parts.last %>
-            <h2><%= programme.parts.last.title %></h2>
-            <%= Govspeak::Document.new(programme.parts.last.body).to_html %>
-        <% elsif part == programme.parts.first %>
-          <% programme.parts.each do |part| %>
-            <% unless part == programme.parts.last %>
-              <h2><%= part.title %></h2>
-              <%= Govspeak::Document.new(part.body).to_html %>
-            <% end %>
-          <% end %>
-        <% else %>
-          <h2><%= part.title %></h2>
-          <%= Govspeak::Document.new(part.body).to_html %>
-        <% end %>
-
-	      </div>
-	    </article>
+			<% if part == programme.parts.last %>
+			<article role="article" class="group">
+				<div class="inner">
+					<header>	
+				   	<h1><%= programme.parts.last.title %></h1>
+					</header>
+				   <%= Govspeak::Document.new(programme.parts.last.body).to_html %>
+				</div>
+			</article>
+			 <% elsif part == programme.parts.first %>
+			   <% programme.parts.each do |part| %>
+			     <% unless part == programme.parts.last %>
+					<article role="article" class="group">
+						<div class="inner">
+							<header>
+			       		<h1><%= part.title %></h1>
+							</header>
+			       <%= Govspeak::Document.new(part.body).to_html %>
+						</div>
+					</article>
+			     <% end %>
+			   <% end %>
+			 <% end %>
 
 		</div>
 
