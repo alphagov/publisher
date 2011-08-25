@@ -3,11 +3,10 @@ class Programme < Publication
 
   DEFAULT_PARTS = [
 	{:title => "Overview", :slug => "overview"},
+	{:title => "Rates", :slug => "rates"},
+	{:title => "Who is elegible?", :slug => "who-is-eligible"},
 	{:title => "How to claim", :slug => "how-to-claim"},
-	{:title => "What you'll get", :slug => "what-youll-get"},
-	{:title => "Eligibility", :slug => "eligibility"},
-	{:title => "How your claim is worked out", :slug => "how-your-claim-is-worked-out"},
-	{:title => "What can affect your benefit", :slug => "what-can-affect-your-benefit"},
+	{:title => "Further information", :slug => "further-information"},
   ]
 
   def self.edition_class
