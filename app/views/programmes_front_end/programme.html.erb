@@ -12,26 +12,6 @@
 
 <div id="wrapper" class="programme">
 
-	<!-- naughty related position hack -->
-	<div class="related-positioning naughty">
-		<div class="related-container naughty">
-			<div class="related-container-two naughty">
-	   		<div class="related">
-			     <div class="inner" class="group">
-			       <h2>Related tools &amp; topics</h2>
-			       <nav role="navigation">
-			         <ul>
-                 <%= programme.related_items %>
-								 <li class="related-topic"><a href="#">More in <span><%= programme.category %></span>&hellip;<span class="arrow"></span></a></li>
-			         </ul>
-			       </nav>
-			     </div>
-			   </div><!-- end .related -->
-			</div>
-		</div>
-	</div>
-	<!-- end naughty related position hack -->
-
   <section role="main" class="group">
 
     <header class="group">
@@ -44,62 +24,26 @@
 
 		<div class="article-and-navigation group">
 
-	    <aside role="navigation">
+      <a href="<%= programme_path(programme.slug, programme.parts.first.slug) %>"><%= programme.parts.first.title %></a>
+      <a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a>
+
+        <article role="article" class="group">
 	      <div class="inner">
 
-	        <nav>
-	          <ol>
-	            <% programme.parts.each do |nav_part| %>
-	            <li <% if part == nav_part %>class="active"<% end %>>
-	              <a href="<%= programme_path(programme.slug, nav_part.slug) %>" title="Part <%= nav_part.number %>: <%= nav_part.title %>">
-	                <span class="part-label">Part <%= nav_part.number %><span class="visuallyhidden">:</span></span> <span class="part-title"><%= nav_part.title %></span>
-	              </a>
-	            </li>
-	            <% end %>
-	          </ol>
-	        </nav>
-
-					<div class="meta-data">
-						<p class="modified-date">Last updated: <%= programme.updated_at.strftime("%m/%d/%Y") %></p>
-					</div>
-
-	      </div>
-	    </aside>
-
-	    <article role="article" class="group">
-	      <div class="inner">
-
-	        <header>
-	          <h1><span>Part <%= part.number %><span class="visuallyhidden">:</span> </span><%= part.title %></h1>
-	        </header>
-
-	        <%= Govspeak::Document.new(part.body).to_html %>
-
-	        <footer>
-	  	      <!-- <nav class="pagination" role="navigation">
-	            <ul>
-	  	        <%- if programme.has_previous_part?(part) -%>
-	  	          <a href="<%= programme_path(programme.slug, programme.part_before(part).slug) %>">&larr; Previous part</a></li>
-	  	        <%- end -%>
-	  	          <li class="pages">Part <%= part.number %> of <%= programme.parts.length %> in this programme.</li>
-	  	        <%- if programme.has_next_part?(part) -%>
-	  	          <li class="next" rel="next"><a href="<%= programme_path(programme.slug, programme.part_after(part).slug) %>" title="Navigate to next part">Next part &rarr;</a></li>
-	  	        <%- end -%>
-	  	      </nav> -->
-	  	      <nav class="pagination" role="navigation">
-	            <ul class="group">
-	  	        <%- if programme.has_previous_part?(part) -%>
-	  	          <li class="previous" rel="previous">
-									<a href="<%= programme_path(programme.slug, programme.part_before(part).slug) %>" title="Navigate to previous part"><span class="pagination-label">&larr; Part <%= programme.part_before(part).number %></span> <%= (programme.part_before(part).title) %></a>
-								</li>
-	  	        <%- end -%>
-	  	        <%- if programme.has_next_part?(part) -%>
-								<li class="next" rel="next">
-									<a href="<%= programme_path(programme.slug, programme.part_after(part).slug) %>" title="Navigate to next part"><span class="pagination-label">Next part (<%= programme.part_after(part).number %> of <%= programme.parts.length %>) &rarr;</span> <%= (programme.part_after(part).title) %></a>
-								</li>
-	  	        <%- end -%>
-	  	      </nav>
-	        </footer>
+        <% if part == programme.parts.last %>
+            <h2><%= programme.parts.last.title %></h2>
+            <%= Govspeak::Document.new(programme.parts.last.body).to_html %>
+        <% elsif part == programme.parts.first %>
+          <% programme.parts.each do |part| %>
+            <% unless part == programme.parts.last %>
+              <h2><%= part.title %></h2>
+              <%= Govspeak::Document.new(part.body).to_html %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <h2><%= part.title %></h2>
+          <%= Govspeak::Document.new(part.body).to_html %>
+        <% end %>
 
 	      </div>
 	    </article>
