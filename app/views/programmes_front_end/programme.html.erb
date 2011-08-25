@@ -22,7 +22,7 @@
 
     <header class="group">
       <hgroup>
-        <h1><span>programme to </span><%= programme.title %></h1>
+        <h1><%= programme.title %></h1>
       </hgroup>
     </header>
 
@@ -62,6 +62,12 @@
 			       		  <h1><%= part.title %></h1>
 							  </header>
 			          <%= Govspeak::Document.new(part.body).to_html %>
+								<nav class="part-pagination" role="navigation">
+									<ul>
+										<li><a href="#">Read about what you'll get</a></li>
+										<li><a href="#">Read about what you'll get</a></li>
+									</ul>
+								</nav>
 						  </div>
 					  </article>
 			    <% end %>
