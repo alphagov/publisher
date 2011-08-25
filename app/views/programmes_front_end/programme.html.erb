@@ -56,7 +56,7 @@
   			</nav>
 			  <% programme.parts.each do |part| %>
 			    <% unless part == programme.parts.last %>
-					  <article role="article" class="group" id="<%= part.slug %>">
+					  <article role="article" class="with-parts-nav group" id="<%= part.slug %>">
 						  <div class="inner">
 							  <header>
 			       		  <h1><%= part.title %></h1>
