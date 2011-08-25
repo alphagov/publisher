@@ -3,8 +3,8 @@ class Programme < Publication
 
   DEFAULT_PARTS = [
 	{:title => "Overview", :slug => "overview"},
-	{:title => "Rates", :slug => "rates"},
-	{:title => "Who is elegible?", :slug => "who-is-eligible"},
+	{:title => "What you'll get", :slug => "what-youll-get"},
+	{:title => "Eligibility", :slug => "eligibility"},
 	{:title => "How to claim", :slug => "how-to-claim"},
 	{:title => "Further information", :slug => "further-information"},
   ]
