@@ -18,6 +18,10 @@ module ProgrammesFrontEnd
         end
       end
 
+      def partial (template, locals = {})
+        erubis template, :layout => false, :locals => locals
+      end
+
       def base_path(programme_slug, part_slug=nil)
         "/#{programme_slug}/#{part_slug}"
       end
@@ -31,13 +35,13 @@ module ProgrammesFrontEnd
       halt(404) if publication.nil? # 404 if guide not found
       part = publication.find_part('further-information')
       halt(404) if part.nil? # 404 if part not found
-      erubis :"programme.html", :locals => {:programme => publication, :part => part}
+      erubis :"programme.html", :locals => {:programme => publication, :part => part, :overview => false}
     end
 
     get '/:slug' do
       route = router
       halt(404) if route.nil?
-      erubis :"programme.html", :locals => {:programme => publication, :part => publication.parts.first}
+      erubis :"programme.html", :locals => {:programme => publication, :part => publication.parts.first, :overview => true}
     end
   end
 end
