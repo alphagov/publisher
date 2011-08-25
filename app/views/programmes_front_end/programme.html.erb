@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Programme to <%= programme.title %> - www.gov.uk</title>
+  <title><%= programme.title %> - www.gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if programme.overview and programme.overview != '' %>
   <meta name="description" content="<%= programme.overview %>">
@@ -30,12 +30,12 @@
 
 			<nav class="programme-switcher group" role="navigation">
 				<ul>
-          <li<%= ' class="active"' if overview %>><a href="<%= programme_path(programme.slug) %>">About and how to claim</a></li>
-					<li<%= ' class="active"' unless overview %>><a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a></li>
+          <li<%= ' class="active"' if programme.overview %>><a href="<%= programme_path(programme.slug) %>">About and how to claim</a></li>
+					<li<%= ' class="active"' unless programme.overview %>><a href="<%= programme_path(programme.slug, programme.parts.last.slug) %>"><%= programme.parts.last.title %></a></li>
 				</ul>
 			</nav>
 
-			<% unless overview %>
+			<% unless programme.overview %>
 			  <article role="article" class="group">
           <div class="inner">
             <%= partial(:"_part.html", :part => programme.parts.last) %>
@@ -62,6 +62,9 @@
                     <li><a href="#">No thanks, I'd like to know how to claim</a></li>
                   </ul>
                 </nav>
+								<nav class="return-to-top" role="navigation">
+									<a href="#top">Return to top &uarr;</a>
+								</nav>
               </div>
 					  </article>
 			    <% end %>
