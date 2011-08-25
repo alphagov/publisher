@@ -22,7 +22,7 @@
 
     <header class="group">
       <hgroup>
-        <h1><span>programme to </span><%= programme.title %></h1>
+        <h1><%= programme.title %></h1>
       </hgroup>
     </header>
 
@@ -37,7 +37,9 @@
 
 			<% unless overview %>
 			  <article role="article" class="group">
-          <%= partial(:"_part.html", :part => programme.parts.last) %>
+          <div class="inner">
+            <%= partial(:"_part.html", :part => programme.parts.last) %>
+          </div>
 			  </article>
       <% else %>
         <nav class="programme-progression group" role="navigation">
@@ -51,8 +53,16 @@
   			</nav>
 			  <% programme.parts.each do |part| %>
 			    <% if programme.has_next_part?(part) %>
-					  <article role="article" class="group" id="<%= part.slug %>">
-              <%= partial(:"_part.html", :part => part) %>
+					  <article role="article" class="with-parts-nav group" id="<%= part.slug %>">
+              <div class="inner">
+                <%= partial(:"_part.html", :part => part) %>
+                <nav class="part-pagination group" role="navigation">
+                  <ul>
+                    <li><a href="#">Read about what you'll get<span class="progressor"></span></a></li>
+                    <li><a href="#">No thanks, I'd like to know how to claim</a></li>
+                  </ul>
+                </nav>
+              </div>
 					  </article>
 			    <% end %>
 			  <% end %>
