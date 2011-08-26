@@ -38,7 +38,7 @@
       <div class="inner">
 
         <hgroup>
-          <h1><%= transaction.title %></h1>
+          <h1><span>Services</span> <%= transaction.title %></h1>
         </hgroup>
 
       </div>
@@ -49,12 +49,14 @@
 
         <div class="intro">
           <p><%= transaction.introduction %></p>
-          <p class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></p>
+          <p class="get-started"><a href="<%= transaction.link %>" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></p>
         </div>
 
         <div class="continue">
-          <p>This will continue on http://<%= transaction.will_continue_on %></p>
+          <p>This will continue on <a href="<%= transaction.will_continue_on %>" title="Begin <%= transaction.will_continue_on %>"><%= transaction.will_continue_on %></a>.</p>
         </div>
+
+
 
         <div class="more">
           <h2>More about this service</h2>
