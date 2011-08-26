@@ -10,7 +10,27 @@
 </head>
 <body>
 
-<div id="wrapper" class="transaction">
+<div id="wrapper" class="local-transaction">
+
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+                 <%= local_transaction.related_items %>
+								 <li class="related-topic"><a href="#">More in <span><%= local_transaction.category %></span>&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
 
   <section role="main" class="group">
 
@@ -18,22 +38,8 @@
       <div class="inner">
 
         <hgroup>
-          <h1><%= local_transaction.title %></h1>
-          <p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+          <h1><span>Transaction</span> <%= local_transaction.title %></h1>
         </hgroup>
-
-        <div class="related">
-          <div class="inner" class="group">
-            <h2>Related tools &amp; topics</h2>
-            <nav role="navigation">
-              <ul>
-                <li><a href="#">Know my rights about my payslip</a></li>
-                <li><a href="#">The age children can start work</a></li>
-                <li><a href="#">When you can start work</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
 
       </div>
     </header>
@@ -52,6 +58,9 @@
         </div>
 
       </div>
+
+      <p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+
     </article>
 
     <aside>
