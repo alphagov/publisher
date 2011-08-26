@@ -59,7 +59,7 @@ class Publication
     true
   end
 
-  def publish(edition,notes)
+  def publish(edition, notes)
     self.publishings << Publishing.new(:version_number=>edition.version_number,:change_notes=>notes)
     calculate_statuses
   end
