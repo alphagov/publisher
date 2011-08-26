@@ -1,5 +1,5 @@
 <div class="part group">
- <h3><%= f.object.title.present? ? f.object.title : 'Untitled part' %></h3>
+  <h3><a href=#"><%= f.object.title.present? %></a></h3>
   <%= f.inputs do %>
     <%= f.input :title, :input_html => { :class => 'title', :disabled => true }, :required => true %>
     <%= f.input :body, :as => :text, :required => true, :input_html => {:disabled => @latest_edition.is_published?} %>
