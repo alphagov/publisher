@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div id="wrapper" class="transaction">
+<div id="wrapper" class="transaction local">
 
 	<!-- naughty related position hack -->
 	<div class="related-positioning naughty">
@@ -38,8 +38,7 @@
       <div class="inner">
 
         <hgroup>
-          <h1><%= local_transaction.title %></h1>
-          <p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%m/%d/%Y") %></p>
+          <h1><span>Local Services</span> <%= local_transaction.title %></h1>
         </hgroup>
       </div>
     </header>
@@ -48,14 +47,26 @@
       <div class="inner">
 
         <div class="intro">
-          <p><%= local_transaction.introduction %></p>
-          <p>We think this service is provided to you by <%= local_transaction.authority.name %> site.</p>
-          <h2 class="button"><a href="<%= local_transaction.authority.lgils.last.url %>" rel="external" title="Begin <%= local_transaction.title %> in a new browser window">Get started &rarr;</a></h2>
+
+          <p>We think this service is provided to you by the <strong><%= local_transaction.authority.name %></strong> site.</p>
+
+          <p class="get-started"><a href="<%= local_transaction.authority.lgils.last.url %>" rel="external" title="Begin <%= local_transaction.title %> in a new browser window">Get started &rarr;</a></p>
         </div>
 
         <div class="continue">
-          <p>This will continue on <%= local_transaction.authority.lgils.last.url %>. How this service works may vary from council to council./p>
+          <p>This will continue
+            on <a href="<%= local_transaction.authority.lgils.last.url %>" title="Begin <%= local_transaction.title %>"><%= local_transaction.authority.lgils.last.url %></a>.</p>
+          <p><em>How this service works may vary from council to council.</em></p>
         </div>
+
+        <h2>You will need:</h2>
+        <ul class="helpers">
+        <% local_transaction.expectations.each do |e| %>
+          <li class="<%= e.css_class %>">
+            <%= e.text %>
+          </li>
+        <% end %>
+        </ul>
 
         <div class="more">
           <h2>More about this service</h2>
@@ -63,17 +74,12 @@
         </div>
 
       </div>
-    </article>
 
-    <aside>
-      <ul class="helpers">
-        <% local_transaction.expectations.each do |e| %>
-            <li class="<%= e.css_class %>">
-              <%= e.text %>
-            </li>
-        <% end %>
-        </ul>
-    </aside>
+			<div class="meta-data">
+				<p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+			</div>
+
+    </article>
 
   </section>
 

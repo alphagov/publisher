@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div id="wrapper" class="local-transaction">
+<div id="wrapper" class="transaction local">
 
 	<!-- naughty related position hack -->
 	<div class="related-positioning naughty">
@@ -38,7 +38,7 @@
       <div class="inner">
 
         <hgroup>
-          <h1><span>Transaction</span> <%= local_transaction.title %></h1>
+          <h1><span>Local Services</span> <%= local_transaction.title %></h1>
         </hgroup>
 
       </div>
@@ -47,31 +47,45 @@
     <article role="article" class="group">
       <div class="inner">
 
-        <div class="intro">
-          <p><%= local_transaction.introduction %></p>
-          <h2 class="button"><form action="<%= form_action_path(local_transaction.slug) %>" method="POST"><label for="postcode">Enter your postcode <input id="postcode" name="postcode" type="text"></label> <input type="submit" value="Get started"></form></h2>
+        <div class="find-nearest">
+
+          <p class="intro"><%= local_transaction.introduction %></p>
+
+          <form action="<%= form_action_path(local_transaction.slug) %>" method="POST">
+
+            <fieldset>
+              <legend class="visuallyhidden">Postcode lookup</legend>
+              <label for="postcode">Enter your postcode <input id="postcode" name="postcode" type="text" placeholder="Postcode"></label>
+              <input type="submit" value="Get started →">
+            </fieldset>
+
+          </form>
         </div>
+
+        <h2>You will need:</h2>
+
+        <ul class="helpers group">
+          <% local_transaction.expectations.each do |e| %>
+              <li class="<%= e.css_class %>">
+                <%= e.text %>
+              </li>
+          <% end %>
+          </ul>
 
         <div class="more">
           <h2>More about this service</h2>
+
           <%= Govspeak::Document.new(local_transaction.more_information || "").to_html %>
+
         </div>
 
       </div>
 
-      <p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+			<div class="meta-data">
+				<p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+			</div>
 
     </article>
-
-    <aside>
-      <ul class="helpers">
-        <% local_transaction.expectations.each do |e| %>
-            <li class="<%= e.css_class %>">
-              <%= e.text %>
-            </li>
-        <% end %>
-        </ul>
-    </aside>
 
   </section>
 
