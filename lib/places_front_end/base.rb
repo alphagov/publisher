@@ -6,9 +6,9 @@ module PlacesFrontEnd
   class Base < Sinatra::Base
     set :views, File.expand_path('../../../app/views/places_front_end', __FILE__)
     set :public, File.expand_path('../../../public', __FILE__)
-        
+
     include Rack::Geo::Utils
-        
+
     helpers do
       def geo_known_to_at_least?(accuracy)
         options = ['point', 'postcode', 'postcode_district', 'ward', 'council', 'nation', 'country', 'planet']
@@ -28,7 +28,7 @@ module PlacesFrontEnd
         end
         @geo_header
       end
-      
+
       def asset_host
         FrontEndEnvironment.asset_host
       end
@@ -46,39 +46,68 @@ module PlacesFrontEnd
       def partial(page, options={})
         erubis page, options.merge!(:layout => false)
       end
-      
+
       def mustache_partial(page, options)
         file_path = File.join(settings.views, page + '.mustache')
         Mustache.render(File.read(file_path), options)
       end
     end
 
-    def get_options(type, lon, lat, limit = 5)
-      url = "http://#{settings.imminence_api_host}/places/#{type}.json?limit=#{limit}&lat=#{lat}&lng=#{lon}"
-      open(url).read
+#    def get_options(type, lon, lat, limit = 5)
+##      url = "http://#{settings.imminence_api_host}/places/#{type}.json?limit=#{limit}&lat=#{lat}&lng=#{lon}"
+#      open(url).read
+#    end
+
+    def get_options(type,lon,lat,limit=5)
+      %*[{"name": "Place1",
+        "address1": "46 My street",
+        "address2": "Village",
+        "town": "Town",
+        "postcode": "AN12 3df",
+        "access_notes": "Access notes",
+        "general_notes": "General notes",
+        "url": "http://www.google.com",
+        "phone": "01231 4324234",
+        "fax": "01231 123123",
+        "text_phone": "",
+        "location": [50,0]
+      },
+      {"name": "Place2",
+          "address1": "56 My street",
+          "address2": "B Village",
+          "town": "Town2",
+          "postcode": "A34 3df",
+          "access_notes": "Access notes",
+          "general_notes": "General notes",
+          "url": "http://www.google.com",
+          "phone": "01231 43123234",
+          "fax": "01231 11123",
+          "text_phone": "",
+          "location": [49,0]
+      }]*
     end
-    
+
     def setup_options
       if geo_known_to_at_least?('ward')
         options_data = get_options(publication.place_type, geo_header['fuzzy_point']['lon'], geo_header['fuzzy_point']['lat'])
         my_opts = JSON.parse(options_data)
-        return my_opts.map do |o| 
+        return my_opts.map do |o|
           o['latitude'] = o['location'][0]
           o['longitude'] = o['location'][1]
           o['address'] = [o['address1'], o['address2']].reject { |a| a.nil? or a == '' }.map { |a| a.strip }.join(', ')
           o
         end
     end
-      
+
       return []
     end
 
     def show_place
       halt(404) if publication.nil? # 404 if place not found
-      options = setup_options      
+      options = setup_options
       erubis :"place.html", :locals => {:place => publication, :options => options}
     end
-    
+
     get '/places/:slug.json' do
       content_type :json
       if geo_known_to_at_least?('ward')
@@ -91,7 +120,7 @@ module PlacesFrontEnd
     get '/places/:slug' do
       return show_place
     end
-    
+
     get '/:slug' do
       return show_place
     end

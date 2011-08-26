@@ -15,30 +15,39 @@
 </head>
 <body>
 
-<div id="wrapper" class="place">
+<div id="wrapper" class="transaction nearest">
   <%= partial :'_location_header.html' %>
-  <section role="main" class="group">
+
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+                 <li><a href="#" class="guide">Know my rights about my payslip</a></li>
+                 <li><a href="#" class="answer">The age children can start work</a></li>
+                 <li><a href="#" class="answer">When you can start work</a></li>
+								 <li class="related-topic"><a href="#">More in <span>Cow-Tipping</span>&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
+	<section role="main" class="group">
 
     <header class="group">
       <div class="inner">
 
         <hgroup>
-          <h1><%= place.title %></h1>
-          <p class="modified-date">Last updated: <%= place.updated_at.strftime("%d %B %Y") %></p>
+          <h1><span>Find My Nearest</span> <%= place.title %></h1>
         </hgroup>
-
-        <div class="related">
-          <div class="inner" class="group">
-            <h2>Related tools &amp; topics</h2>
-            <nav role="navigation">
-              <ul>
-                <li><a href="#">Know my rights about my payslip</a></li>
-                <li><a href="#">The age children can start work</a></li>
-                <li><a href="#">When you can start work</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
 
       </div>
     </header>
@@ -46,58 +55,59 @@
     <article role="article" class="group">
       <div class="inner">
 
-        <div class="intro">
-          <p><%= place.introduction %></p>
+        <div class="find-nearest">
+          <% unless options.any? %>
+          <p class="intro"><%= place.introduction %></p>
+          <% end %>
+
+          <form method="get">
+          <fieldset>
+            <legend class="visuallyhidden">Postcode lookup</legend>
+
+            <div class="ask_location <%= geo_known_to_at_least?('ward') ? 'removing' : '' %>">
+              <label for="user-postcode">Enter a UK postcode <input id="user-postcode" name="postcode" type="text" placeholder="e.g. SW1A 2AA"></label>
+              <input type="submit" value="Get started →">
+            </div>
+
+            <div class="finding_location hidden">
+              <p>Locating you&hellip;<input type="hidden" name="lon" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lon'] : '' %>"><input type="hidden" name="lat" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lat'] : '' %>"></p>
+            </div>
+            <div class="found_location <%= geo_known_to_at_least?('ward') ? '' : 'hidden' %>">
+              <p class="friendly-name">We think you&rsquo;re in <strong><%= geo_header['friendly_name'] if geo_known_to_at_least?('ward') %></strong>. <a class="change-location" href="#"><%= "Not in <span class=\"friendly-name\">#{geo_header['friendly_name']}</span>?" if geo_known_to_at_least?('ward') %></a></p>
+            </div>
+          </fieldset>
+          </form>
         </div>
+
+        <% if options.any? %>
+        <h3>Your nearest options are...</h3>
+        <ol id="options">
+          <%= mustache_partial '_option.html', {'options' => options} %>
+        <% end %>
+        </ol>
+
+        <% if place.expectations.any? %>
+          <h3>You will need:</h3>
+          <ul class="helpers group">
+          <% place.expectations.each do |e| %>
+            <li class="<%= e['css_class'] %>">
+              <%= e['text'] %>
+            </li>
+          <% end %>
+          </ul>
+        <% end %>
 
         <div class="more">
           <h2>More about this service</h2>
           <%= Govspeak::Document.new(place.more_information || "").to_html %>
         </div>
 
-        <form class="app-form" method="get">
-        <fieldset class="postcode">
-          <div class="ask_location <%= geo_known_to_at_least?('ward') ? 'removing' : '' %>">
-            <label class="legend" for="user-postcode">Enter a UK postcode</label>
-            <div>
-              <input name="postcode" id="user-postcode" type="text" value="" placeholder="e.g. SW1A 2AA">
-              <input type="submit" name="submit" value="Go">
-            </div>
-          </div>
-          <div class="finding_location hidden">
-            <p>Locating you&hellip;<input type="hidden" name="lon" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lon'] : '' %>"><input type="hidden" name="lat" value="<%= geo_known_to_at_least?('ward') ? geo_header['fuzzy_point']['lat'] : '' %>"></p>
-          </div>
-          <div class="found_location <%= geo_known_to_at_least?('ward') ? '' : 'hidden' %>">
-            <h3 class="friendly-name"><%= geo_header['friendly_name'] if geo_known_to_at_least?('ward') %></h3>
-            <p><a class="change-location" href="#"><%= "Not in <span class=\"friendly-name\">#{geo_header['friendly_name']}</span>?" if geo_known_to_at_least?('ward') %></a></p>
-          </div>
-        </fieldset>
-        </form>
+  			<div class="meta-data">
+          <p class="modified-date">Last updated: <%= place.updated_at.strftime("%d %B %Y") %></p>
+  			</div>
 
-
-        <h3>Your Options Are...</h3>
-
-        <ol id="options">
-          <% if options.any? %>
-          <%= mustache_partial '_option.html', {'options' => options} %>
-          <% else %>
-          <li>Loaded once we know your location...</li>
-          <% end %>
-        </ol>
       </div>
     </article>
-
-    <% if place.expectations.any? %>
-    <aside>
-      <ul class="helpers">
-        <% place.expectations.each do |e| %>
-            <li class="<%= e['css_class'] %>">
-              <%= e['text'] %>
-            </li>
-        <% end %>
-        </ul>
-    </aside>
-    <% end %>
 
   </section>
 
