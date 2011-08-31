@@ -18,11 +18,31 @@
 
 <div id="wrapper" class="programme">
 
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+                 
+								 <li class="related-topic"><a href="#">More in <span><%= programme.category %></span>&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
   <section role="main" class="group">
 
     <header class="group">
       <hgroup>
-        <h1><%= programme.title %></h1>
+        <h1><span>Benefits &amp; schemes </span><%= programme.title %></h1>
       </hgroup>
     </header>
 
