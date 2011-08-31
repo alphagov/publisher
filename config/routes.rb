@@ -56,8 +56,8 @@ Publisher::Application.routes.draw do
     end
   end
 
+  root :to => 'root#index'
   match '/places/*path' => PlacesFrontEnd::App
   
-  root :to => 'root#index'
   match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end
