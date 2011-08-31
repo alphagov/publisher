@@ -5,12 +5,23 @@ module LocalTransactionsFrontEnd
       env['action_dispatch.request.path_parameters'][:edition_id]
     end
 
+    helpers do
+      def publication_path(slug, snac = nil)
+         base_path(slug) + (snac.nil? ? "" : "/#{snac}")
+      end
+
+      def form_action_path(slug)
+        "/preview/#{preview_edition_id}"+base_path(slug)
+      end
+
+    end
+
     def preview_edition_id
       self.class.preview_edition_id(request.env)
     end
 
     def get_publication
-      @publication ||= LocalTransaction.where(:slug => params[:slug]).first
+      LocalTransaction.where(:slug => params[:slug]).first
     end
 
     def get_edition

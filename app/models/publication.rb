@@ -31,35 +31,35 @@ class Publication
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
-   def build_edition(title)
-     version_number = self.editions.length + 1
-     edition = self.class.edition_class.new(:title=> title, :version_number=>version_number)
-     self.editions << edition
-     calculate_statuses
-     edition
-   end
+  def build_edition(title)
+    version_number = self.editions.length + 1
+    edition = self.class.edition_class.new(:title=> title, :version_number=>version_number)
+    self.editions << edition
+    calculate_statuses
+    edition
+  end
 
-   def create_first_edition
-     unless self.persisted? or self.editions.any?
-       self.editions << self.class.edition_class.new(:title => self.name)
-       calculate_statuses
-     end
+  def create_first_edition
+    unless self.persisted? or self.editions.any?
+      self.editions << self.class.edition_class.new(:title => self.name)
+      calculate_statuses
+    end
   end
 
   def calculate_statuses
-     self.has_published = self.publishings.any? && ! self.archived
+    self.has_published = self.publishings.any? && ! self.archived
 
-     published_versions = ::Set.new(publishings.map(&:version_number))
-     all_versions = ::Set.new(editions.map(&:version_number))
-     drafts = (all_versions - published_versions)
-     self.has_drafts = drafts.any?
+    published_versions = ::Set.new(publishings.map(&:version_number))
+    all_versions = ::Set.new(editions.map(&:version_number))
+    drafts = (all_versions - published_versions)
+    self.has_drafts = drafts.any?
 
-     self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
+    self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
 
-     true
+    true
   end
 
-  def publish(edition,notes)
+  def publish(edition, notes)
     self.publishings << Publishing.new(:version_number=>edition.version_number,:change_notes=>notes)
     calculate_statuses
   end

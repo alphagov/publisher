@@ -1,4 +1,7 @@
 <tr>
+  <td>
+    <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
+  </td>
   <td class="<%= publication.class.name.downcase %>">
     <% if tab && tab == :published %>
       <%= publication.published_edition.admin_list_title %>
@@ -16,7 +19,18 @@
     <% end %>
     </span>
   </td>
+  <td class="updated">
+    <%= publication.updated_at.strftime("%d/%m/%Y %H:%M") %>
+  </td>
+  <td>
+    <%= publication.latest_edition.created_by %>
+  </td>
+
+  <!-- <th scope="col">Published By</th> -->
     <% if tab && tab == :published %>
+    <td>
+      <%= publication.published_edition.published_by %>
+    </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
     </td>
@@ -33,7 +47,7 @@
   <td>
     <% if publication.can_create_new_edition? %>
       <%= form_tag admin_editions_path(publication) do %>
-        <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication' %>
+        <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
       <% end %>
     <% elsif tab && tab == :published %>
       <%= link_to [:admin, publication] do %>
@@ -47,7 +61,7 @@
   </td>
   <td>
     <% if safe_to_preview?(publication) %>
-      <%= link_to preview_edition_path(publication.latest_edition) do %>
+      <%= link_to preview_edition_path(publication.latest_edition), {:class => 'preview'} do %>
         <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
       <% end %>
     <% else %>

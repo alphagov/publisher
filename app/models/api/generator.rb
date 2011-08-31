@@ -1,6 +1,7 @@
 require 'active_support/inflector'
 
 require 'api/guide'
+require 'api/programme'
 require 'api/place'
 require 'api/local_transaction'
 

@@ -2,10 +2,18 @@ require 'net/http'
 require 'api/generator'
 require 'api/client'
 
-module GuidesFrontEnd
-  class App < GuidesFrontEnd::Base
+module ProgrammesFrontEnd
+  class App < ProgrammesFrontEnd::Base
     configure do
-      set :api_host, FrontEndEnvironment.api_host
+      case ENV['RACK_ENV']
+        when ('development' or 'test')
+          api_host = "local.alphagov.co.uk:3000"
+        when 'production'
+          api_host = "api.alpha.gov.uk"
+        else
+          api_host = "programmes.#{ENV['RACK_ENV']}.alphagov.co.uk:8080"
+      end
+      set :api_host, api_host
     end
 
     def fetch_publication

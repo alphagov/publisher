@@ -41,4 +41,14 @@ class Edition
   def is_published?
     container.publishings.any? { |p| p.version_number == self.version_number }
   end
+  
+  def created_by
+    creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
+    creation.requester if creation
+  end
+  
+  def published_by
+    publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
+    publication.requester if publication
+  end
 end

@@ -1,15 +1,16 @@
-# require File.expand_path('../../../app/models/api/guide', __FILE__)
 require 'api/generator'
 require 'api/client'
 
-module PlacesFrontEnd
-  class Preview < PlacesFrontEnd::Base
-    configure do
-      set :imminence_api_host, FrontEndEnvironment.imminence_api_host
-    end
-
+module ProgrammesFrontEnd
+  class Preview < ProgrammesFrontEnd::Base
     def self.preview_edition_id(env)
       env['action_dispatch.request.path_parameters'][:edition_id]
+    end
+
+    helpers do
+      def programme_path(programme_slug, part_slug=nil)
+        "/preview/#{preview_edition_id}#{base_path(programme_slug, part_slug)}"
+      end
     end
 
     def preview_edition_id
@@ -18,6 +19,15 @@ module PlacesFrontEnd
 
     def get_publication
       @this_publication ||= Publication.where(:slug => params[:slug]).first
+    end
+
+    def router
+      publication = get_publication
+      if publication
+        publication.class.to_s.underscore.to_sym
+      else
+        nil
+      end
     end
 
     def setup_publication

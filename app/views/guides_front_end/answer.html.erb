@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= answer.title %> - Beta.Gov.uk</title>
+  <title><%= answer.title %> - www.gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if answer.overview and answer.overview != '' %>
   <meta name="description" content="<%= answer.overview %>">
@@ -51,7 +51,7 @@
 	    </article>
 
 			<div class="meta-data">
-				<p class="modified-date">Last updated: <%= answer.updated_at.strftime("%m/%d/%Y") %></p>
+				<p class="modified-date">Last updated: <%= answer.updated_at.strftime("%d %B %Y") %></p>
 			</div>
 
 		</div>

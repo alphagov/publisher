@@ -17,18 +17,18 @@
         elem.css('color', 'red').text('That slug is already taken');
       }
     }
-    
+
     return this.each(function() {
       var title_field = $(this);
       var slug_field = opts.field;
-      
-      $(this).change(function () {  
+
+      $(this).change(function () {
         if (slug_field.text() == '') {
           slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
           slug_field.trigger('change');
         }
       });
-      
+
       $(slug_field).change(function () {
         $.ajax({
           url: panoption_host + "/slugs/" + $(this).val() + "?jsoncallback=panopticon",
@@ -42,7 +42,7 @@
       })
     });
   };
-  
+
   $.fn.hasBasicSlugs = function() {
     $(this).live('change', function () {
       var title_field = $(this);
@@ -52,12 +52,12 @@
       }
     });
   }
-  
+
 })(jQuery);
 
 $(function () {
   $('.publication-nav').tabs();
-  
+
   var submit_form = function(form,success) {
      var jq = $.post(
          form.attr('action')+".json",
@@ -73,9 +73,9 @@ $(function () {
          $("<p class=\"flash-alert\">"+messages+"</p>").insertBefore("#wrapper:first");
      });
    }
-  
+
   var saved = false;
-  
+
   $('#save-edition').submit(function () {
       var edition_form = $('form.edition');
       var publication_form = $('form.publication');
@@ -85,29 +85,29 @@ $(function () {
               edition_form.trigger('submit');
           });
       }
-      
+
       return saved;
   });
-  
-  $('<a style="padding-left: 5px">[gi]</a>').appendTo('label[for=edition_title]').click(function () {
+
+  $('<a class="insights"><img src="/images/icon-insights.gif" title="launch Google Insights for this title in a pop-up window" /></a>').appendTo('label[for=edition_title]').click(function () {
         var search_term = $('#edition_title').val();
-        $('body').append('<iframe id="popup" src="/admin/google_insight?search_term='+encodeURIComponent(search_term)+'" height="410" scrolling="NO" width="400" style="position:absolute; z-index: 5; top: 50%; margin-top: -205px; left: 50%; margin-left: -200px; box-shadow: 0 0 15px rgba(0,0,0,0.4)"></iframe>');
+        $('body').append('<iframe id="popup" src="/admin/google_insight?search_term='+encodeURIComponent(search_term)+'" height="410" scrolling="NO" width="330"></iframe>');
   });
-  
+
   if (! 'autofocus' in document.createElement('input')) {
     $('*[autofocus]').focus();
   }
-  
+
   var submitted_forms = false;
-  
+
   $('form.edition,form.publication').change(function () {
   	submitted_forms = false;
   });
-  
+
   $('.also_save_edition').submit(function () {
     var edition_form = $('form.edition');
     var publication_form = $('form.publication');
-    
+
     var this_form = $(this);
 
     if (! submitted_forms) {
@@ -118,7 +118,7 @@ $(function () {
             })
         });
     }
-    
+
     return submitted_forms;
   });
 });

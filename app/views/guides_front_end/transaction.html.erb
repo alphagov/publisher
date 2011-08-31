@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= transaction.title %> - Beta.Gov.uk</title>
+  <title><%= transaction.title %> - www.gov.uk</title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if transaction.overview and transaction.overview != '' %>
   <meta name="description" content="<%= transaction.overview %>">
@@ -12,28 +12,34 @@
 
 <div id="wrapper" class="transaction">
 
+	<!-- naughty related position hack -->
+	<div class="related-positioning naughty">
+		<div class="related-container naughty">
+			<div class="related-container-two naughty">
+	   		<div class="related">
+			     <div class="inner" class="group">
+			       <h2>Related tools &amp; topics</h2>
+			       <nav role="navigation">
+			         <ul>
+                 <%= transaction.related_items %>
+								 <li class="related-topic"><a href="#">More in <span><%= transaction.category %></span>&hellip;<span class="arrow"></span></a></li>
+			         </ul>
+			       </nav>
+			     </div>
+			   </div><!-- end .related -->
+			</div>
+		</div>
+	</div>
+	<!-- end naughty related position hack -->
+
   <section role="main" class="group">
 
     <header class="group">
       <div class="inner">
 
         <hgroup>
-          <h1><%= transaction.title %></h1>
-          <p class="modified-date">Last updated: <%= transaction.updated_at.strftime("%m/%d/%Y") %></p>
+          <h1><span>Services</span> <%= transaction.title %></h1>
         </hgroup>
-
-        <div class="related">
-          <div class="inner" class="group">
-            <h2>Related tools &amp; topics</h2>
-            <nav role="navigation">
-              <ul>
-                <li><a href="#">Know my rights about my payslip</a></li>
-                <li><a href="#">The age children can start work</a></li>
-                <li><a href="#">When you can start work</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
 
       </div>
     </header>
@@ -43,12 +49,14 @@
 
         <div class="intro">
           <p><%= transaction.introduction %></p>
-          <h2 class="button"><a href="<%= transaction.link %>" rel="external" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></h2>
+          <p class="get-started"><a href="<%= transaction.link %>" title="Begin <%= transaction.title %> in a new browser window">Get started &rarr;</a></p>
         </div>
 
         <div class="continue">
-          <p>This will continue on http://<%= transaction.will_continue_on %></p>
+          <p>This will continue on <a href="<%= transaction.will_continue_on %>" title="Begin <%= transaction.will_continue_on %>"><%= transaction.will_continue_on %></a>.</p>
         </div>
+
+
 
         <div class="more">
           <h2>More about this service</h2>
@@ -56,6 +64,11 @@
         </div>
 
       </div>
+
+  		<div class="meta-data">
+  			<p class="modified-date">Last updated: <%= transaction.updated_at.strftime("%d %B %Y") %></p>
+  		</div>
+
     </article>
 
     <aside>
