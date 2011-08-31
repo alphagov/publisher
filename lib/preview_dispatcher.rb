@@ -2,6 +2,7 @@ require 'local_transactions_front_end'
 require 'places_front_end'
 require 'guides_front_end'
 require 'programmes_front_end'
+require 'front_end_environment'
 
 class PreviewDispatcher
   attr_reader :dispatcher_map
@@ -22,7 +23,11 @@ class PreviewDispatcher
     while slug = segments.shift
       unless slug.empty?
         publication = Publication.where(slug: slug).first
-        return dispatcher_map[publication.class.name].call(env)
+        if publication
+          return dispatcher_map[publication.class.name].call(env)
+        else
+          return [404, {'Content-Type' => 'text/html'}, 'Page not found']
+        end  
       end
     end
   end

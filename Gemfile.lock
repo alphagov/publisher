@@ -24,14 +24,14 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: 610544e6d2a82eb8f26ed48b335db64abfcc8938
+  revision: c3a8e0b9b081a28c62740f159f1ecfb088ff568f
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
 
 GIT
   remote: git@github.com:alphagov/rack-geo.git
-  revision: 00b45f4f79260a82ec7585a3c415d2bce72fb2bc
+  revision: 712fbcfe9508746e5fd9826d53c8f59f779f5596
   specs:
     rack-geo (0.6.0)
       geogov
@@ -173,7 +173,7 @@ GEM
       rdoc (~> 3.4)
       thor (~> 0.14.4)
     rake (0.9.2)
-    rdoc (3.9.2)
+    rdoc (3.9.3)
     responders (0.6.4)
     ruby-debug-base19 (0.11.25)
       columnize (>= 0.3.1)
@@ -186,7 +186,7 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
-    selenium-webdriver (2.4.0)
+    selenium-webdriver (2.5.0)
       childprocess (>= 0.2.1)
       ffi (>= 1.0.7)
       json_pure
