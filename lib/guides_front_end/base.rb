@@ -5,6 +5,7 @@ module GuidesFrontEnd
   class Base < Sinatra::Base
     set :views, File.expand_path('../../../app/views/guides_front_end', __FILE__)
     set :public, File.expand_path('../../../public', __FILE__)
+    set :api_host, FrontEndEnvironment.api_host
    
     helpers do
       def asset_host

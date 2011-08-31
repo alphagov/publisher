@@ -4,10 +4,6 @@ require 'api/client'
 
 module GuidesFrontEnd
   class App < GuidesFrontEnd::Base
-    configure do
-      set :api_host, FrontEndEnvironment.api_host
-    end
-
     def fetch_publication
       url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json")
       Net::HTTP.start(url.host, url.port) do |http|
