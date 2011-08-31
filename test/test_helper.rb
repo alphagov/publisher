@@ -1,8 +1,9 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-
+require 'mocha'
 require 'database_cleaner'
+
 DatabaseCleaner.strategy = :truncation
 # initial clean
 DatabaseCleaner.clean
@@ -29,15 +30,7 @@ class ActiveSupport::TestCase
   end
 end
 
+def login_as_stub_user
+  request.env['warden'] = stub(:authenticate! => true)
+end
 
-# FactoryGirl.define do
-#   factory :user do
-#     uid 'a1b2c3d4'
-#     email  'matt@alphagov.co.uk'
-#     version 1
-#     name 'Matt P'
-#   end
-# end
-# 
-
-require 'mocha'

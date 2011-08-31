@@ -1,0 +1,20 @@
+<%= semantic_form_for @latest_edition, :url => admin_programme_edition_path(@programme, @latest_edition), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :title, :label => "Edition Title", :input_html => {:disabled => @latest_edition.is_published?, :autofocus => true} %>
+    <%= f.input :alternative_title, :input_html => {:disabled => @latest_edition.is_published?} %>
+    <%= f.input :overview, :as => :text, :input_html => {:rows => 3, :disabled => @latest_edition.is_published?} %>
+  <% end %>
+
+  <h2 class="visuallyhidden">Parts</h2>
+
+  <section id="parts" class="group">
+
+    <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
+
+    <%= f.semantic_fields_for :parts do |part| %>
+      <%= render :partial => '/admin/programmes/part', :locals => {:f => part} %>
+    <% end %>
+
+  </section>
+
+<% end %>
