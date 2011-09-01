@@ -54,7 +54,7 @@
           <th scope="col">Published By</th>
           <th scope="col">View</th>
           <th scope="col">Delete</th>
-          <th scope="col">Edit</th>
+          <th scope="col">New Edition</th>
           <th scope="col">Preview</th>
         </tr>
       </thead>
@@ -112,13 +112,13 @@ $(document).ready(function() {
    });
 
   var tabbable = $('#guide-nav'),
-  var tab_a_selector = 'ul.ui-tabs-nav a';
+    tab_links = tabbable.find('ul.ui-tabs-nav a');
   
   if ('pushState' in window.history) {
     // Define our own click handler for the tabs, overriding the default.
     tabbable.tabs({ event: 'change' }); 
     
-    tabbable.find(tab_a_selector).click(function() {
+    tab_links.click(function() {
       var the_element = $(this),
         state = {},
         // Get the id of this tab widget.
@@ -130,19 +130,15 @@ $(document).ready(function() {
 
       // Set the state!
       state[id] = idx;
-      
       window.history.pushState(state, title, document.location.pathname + anchor);
       $(window).trigger('hashchange');
     });
 
-    // Bind an event to window.onhashchange that, when the history state changes,
-    // iterates over all tab widgets, changing the current tab as necessary.
+    // Bind an event to window.onhashchange that, when the history state changes, 
+    // change the current tab as necessary.
     $(window).bind('hashchange', function(e) {
-      // Iterate over all tab widgets.
-      tabs.each(function(i, e){
-        var idx = history.state[$(e).attr('id')];
-        $(this).find( tab_a_selector ).eq( idx ).triggerHandler( 'change' );
-      });
+      correct = tabbable.find('ul.ui-tabs-nav a[href=' + document.location.hash + ']');
+      correct.triggerHandler('change');
     })
 
     // Since the event is only triggered when the hash changes, we need to trigger

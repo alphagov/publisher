@@ -89,7 +89,7 @@ $(function () {
       return saved;
   });
 
-  $('<a class="insights"><img src="/images/icon-insights.gif" title="launch Google Insights for this title in a pop-up window" /></a>').appendTo('label[for=edition_title]').click(function () {
+  $('<a class="insights"><img src="/guide-assets/images/icon-insights.gif" title="launch Google Insights for this title in a pop-up window" /></a>').appendTo('label[for=edition_title]').click(function () {
         var search_term = $('#edition_title').val();
         $('body').append('<iframe id="popup" src="/admin/google_insight?search_term='+encodeURIComponent(search_term)+'" height="410" scrolling="NO" width="330"></iframe>');
   });
