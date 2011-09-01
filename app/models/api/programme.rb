@@ -4,7 +4,7 @@ module Api
   module Generator
     module Programme
       def self.edition_to_hash(edition)
-        attrs = edition.programme.as_json(:only => [:audiences, :slug, :tags, :updated_at, :category, :related_items])
+        attrs = edition.programme.as_json(:only => [:audiences, :slug, :tags, :updated_at, :section, :related_items])
         attrs.merge!(edition.as_json(:only => [:title, :alternative_title, :overview]))
         attrs['parts'] = edition.parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]).merge('number' => p.order) }
         attrs['type'] = 'programme'

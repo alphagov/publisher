@@ -1,8 +1,8 @@
 <%= semantic_form_for @latest_edition, :url => admin_answer_edition_path(@answer, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
-    <%= f.input :title, :label => "Name of answer", :input_html => {:autofocus => true} %>
-    <%= f.input :alternative_title %>
-    <%= f.input :overview, :as => :text, :input_html => {:rows => 3} %>
+    <%= f.input :title, :input_html => {:autofocus => true} %>
+    <%= f.input :alternative_title, :label => raw("Alternative title <small>(use this where longer title is needed for SEO purposes)</small>") %>
+    <%= f.input :overview, :as => :text, :input_html => {:rows => 3}, :label => raw('Meta Tag Description <small>(some search engines will display this if they can\'t find what they need in the main text)</small>') %>
     <%= f.input :body, :as => :text %>
   <% end %>
 <% end %>
