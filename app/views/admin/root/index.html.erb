@@ -137,10 +137,8 @@ $(document).ready(function() {
     // Bind an event to window.onhashchange that, when the history state changes, 
     // change the current tab as necessary.
     $(window).bind('hashchange', function(e) {
-      if (history.state) {
-        var idx = history.state[tabbable.attr('id')];
-        tab_links.eq( idx ).triggerHandler( 'change' );
-      }
+      correct = tabbable.find('ul.ui-tabs-nav a[href=' + document.location.hash + ']');
+      correct.triggerHandler('change');
     })
 
     // Since the event is only triggered when the hash changes, we need to trigger
