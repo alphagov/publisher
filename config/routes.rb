@@ -56,7 +56,7 @@ Publisher::Application.routes.draw do
       post :verify_snac
     end
   end
-
+  match "/help", :to => "root#help"
   root :to => 'root#index'
   match '/places/*path' => PlacesFrontEnd::App
   
