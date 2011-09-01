@@ -36,6 +36,8 @@ class Admin::EditionsController <  Admin::BaseController
           Guide.find(params[:guide_id])
         elsif params[:transaction_id]
           Transaction.find(params[:transaction_id])
+        elsif params[:programme_id]
+          Programme.find(params[:programme_id])
         end
       @edition_parent
     end
