@@ -34,4 +34,5 @@ Publisher::Application.configure do
   config.active_support.deprecation = :stderr
   
   config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
+  config.action_mailer.default_url_options = { :host => "example.com" }
 end

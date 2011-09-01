@@ -52,4 +52,6 @@ Publisher::Application.configure do
   else
     config.middleware.insert 0,  Slimmer::App, :template_host => "/data/vhost/static.#{Rails.env}.alphagov.co.uk/current/public/templates"
   end
+  
+  config.action_mailer.default_url_options = { :host => "www.gov.uk" }
 end

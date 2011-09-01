@@ -6,5 +6,9 @@
   <body>
     <p><%= @guide.title %></p>
     <p><%= @action.friendly_description %></p>
+    <p>
+      <a href="<%= preview_edition_prefix_url(@action.edition.version_number) + "/#{@action.edition.container.slug}" %>">Preview it now</a>
+    </p>
+    
   </body>
 </html>
