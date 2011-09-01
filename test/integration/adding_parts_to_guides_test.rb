@@ -1,7 +1,29 @@
 require 'test_helper'
 require 'capybara/rails'
 
+class MockPanopticon
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    if env['PATH_INFO'] == '/publications/slugs.json'
+      return [ 404, {}, "Slug Not Found" ]
+    else
+      @app.call(env)
+    end
+  end
+end
+
 Capybara.default_driver = :selenium
+Capybara.server_port = 3000
+Capybara.app = Rack::Builder.new do 
+  map "/" do
+    use MockPanopticon
+    run Capybara.app
+  end
+end
 
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
