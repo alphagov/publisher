@@ -11,6 +11,14 @@ class LocalTransactionsController < ApplicationController
     render :json => Api::Generator.edition_to_hash(edition)
   end
 
+  def all
+    publication = Publication.first(conditions: {slug: params[:id]})
+    head 404 and return if publication.nil?
+
+    edition = publication.published_edition
+    render :json => Api::Generator::LocalTransaction.edition_to_hash_with_data(edition)
+  end
+
   def verify_snac
     publication = Publication.first(conditions: {slug: params[:id]})
     head 404 and return if publication.nil?

@@ -11,6 +11,15 @@ module Api
         end
         attrs
       end
+      
+      def self.edition_to_hash_with_data(edition)
+        attrs = edition.local_transaction.as_json(:only => [:audiences, :slug, :tags, :updated_at, :section, :related_items])
+        attrs.merge!(edition.as_json(:only => [:title, :introduction, :more_information, :alternative_title, :overview]))
+        attrs['type'] = 'local_transaction'
+        attrs['expectations'] = edition.expectations.map { |e| e.as_json(:only => [:css_class, :text]) }
+        attrs['authorities'] = edition.local_transaction.lgsl.authorities.all.as_json(:only => [:snac, :name], :include => {:lgils => {:only => [:url, :code]}})
+        attrs
+      end
     end
   end
   module Client

@@ -89,6 +89,9 @@
 
 			<div class="meta-data">
 				<p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+				<ul class="api-links">
+          <li class="json"><a href="http://<%= settings.api_host %>/<%= local_transaction.slug %>/all.json">JSON</a></li>
+        </ul>
 			</div>
 
     </article>

@@ -2,9 +2,6 @@ require 'net/http'
 
 module LocalTransactionsFrontEnd
   class App < LocalTransactionsFrontEnd::Base
-    configure do
-      set :api_host, FrontEndEnvironment.api_host
-    end
 
     def fetch_publication(snac = nil)
       if !snac.nil? && !snac.empty?

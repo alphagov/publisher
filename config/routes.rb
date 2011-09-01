@@ -51,6 +51,7 @@ Publisher::Application.routes.draw do
   resources :publications, :only => [:show,:index]
   resources :local_transactions, :only => :show do
     member do
+      get '/all(.:format)', :to => :all
       get '/:snac(.:format)', :to => :snac
       post :verify_snac
     end

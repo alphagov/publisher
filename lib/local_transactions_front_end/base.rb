@@ -5,7 +5,8 @@ module LocalTransactionsFrontEnd
   class Base < Sinatra::Base
     set :views, File.expand_path('../../../app/views/local_transactions_front_end', __FILE__)
     set :public, File.expand_path('../../../public', __FILE__)
-
+    set :api_host, FrontEndEnvironment.api_host
+    
     include Rack::Geo::Utils
 
     helpers do
