@@ -52,6 +52,11 @@
 
 			<div class="meta-data">
 				<p class="modified-date">Last updated: <%= answer.updated_at.strftime("%d %B %Y") %></p>
+        <p>Re-use this data:</p>
+				<ul class="api-links">
+          <li class="json"><a href="<%= settings.api_host %>/<%= answer.slug %>.json">JSON</a></li>
+        </ul>
+        
 			</div>
 
 		</div>

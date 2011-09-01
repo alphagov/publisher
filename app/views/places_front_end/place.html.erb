@@ -104,6 +104,12 @@
 
   			<div class="meta-data">
           <p class="modified-date">Last updated: <%= place.updated_at.strftime("%d %B %Y") %></p>
+          <p>Re-use this data:</p>
+          <ul class="api-links">
+            <li class="kml"><a href="<%= settings.imminence_api_host %>/<%= place.place_type %>.kml">KML</a></li>
+            <li class="json"><a href="<%= settings.imminence_api_host %>/<%= place.place_type %>.json">JSON</a></li>
+            <li class="csv"><a href="<%= settings.imminence_api_host %>/<%= place.place_type %>.csv">CSV</a></li>
+          </ul>
   			</div>
 
       </div>

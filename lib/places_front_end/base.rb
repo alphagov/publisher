@@ -53,38 +53,9 @@ module PlacesFrontEnd
       end
     end
 
-#    def get_options(type, lon, lat, limit = 5)
-##      url = "http://#{settings.imminence_api_host}/places/#{type}.json?limit=#{limit}&lat=#{lat}&lng=#{lon}"
-#      open(url).read
-#    end
-
-    def get_options(type,lon,lat,limit=5)
-      %*[{"name": "Place1",
-        "address1": "46 My street",
-        "address2": "Village",
-        "town": "Town",
-        "postcode": "AN12 3df",
-        "access_notes": "Access notes",
-        "general_notes": "General notes",
-        "url": "http://www.google.com",
-        "phone": "01231 4324234",
-        "fax": "01231 123123",
-        "text_phone": "",
-        "location": [50,0]
-      },
-      {"name": "Place2",
-          "address1": "56 My street",
-          "address2": "B Village",
-          "town": "Town2",
-          "postcode": "A34 3df",
-          "access_notes": "Access notes",
-          "general_notes": "General notes",
-          "url": "http://www.google.com",
-          "phone": "01231 43123234",
-          "fax": "01231 11123",
-          "text_phone": "",
-          "location": [49,0]
-      }]*
+    def get_options(type, lon, lat, limit = 5)
+      url = "http://#{settings.imminence_api_host}/places/#{type}.json?limit=#{limit}&lat=#{lat}&lng=#{lon}"
+      open(url).read
     end
 
     def setup_options
