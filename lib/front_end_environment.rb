@@ -6,7 +6,7 @@ module FrontEndEnvironment
 
   def api_host
     case environment 
-    when ('development' or 'test')
+    when 'development','test'
       "local.alphagov.co.uk:3000"
     when 'production'
        "api.alpha.gov.uk"
@@ -17,7 +17,7 @@ module FrontEndEnvironment
 
   def asset_host
     case environment
-    when ('development' or 'test')
+    when 'development','test'
       ""
     when 'production'
       "http://alpha.gov.uk"
@@ -28,7 +28,7 @@ module FrontEndEnvironment
 
   def imminence_api_host
     case environment
-    when ('development' or 'test')
+    when 'development','test'
       "local.alphagov.co.uk:3002"
     when 'production'
       "imminence.alpha.gov.uk"
