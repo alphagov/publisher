@@ -3,10 +3,10 @@ class Admin::EditionsController <  Admin::BaseController
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
-    if new_edition.save
+    if new_edition and new_edition.save
       redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else
-      redirect_to [:admin, edition_parent], :notice => 'Failed to create new edition'
+      redirect_to [:admin, edition_parent], :alert => 'Failed to create new edition'
     end
   end
 

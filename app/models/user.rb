@@ -52,8 +52,12 @@ class User
     return false unless edition.is_published?
 
     new_edition = edition.build_clone
-    record_action new_edition, Action::NEW_VERSION
-    new_edition
+    if new_edition
+      record_action new_edition, Action::NEW_VERSION
+      new_edition
+    else
+      false
+    end
   end
 
   def request_review(edition, comment)
