@@ -36,7 +36,11 @@ end
 
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
 
-gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
+if ENV['GOVSPEAK_DEV']
+  gem 'govspeak', :path => '../govspeak'
+else
+  gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
+end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 gem 'mustache'
