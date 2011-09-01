@@ -126,5 +126,22 @@ class Publication
     "Widows",
     "Young people"
   ]
+  SECTIONS = [
+    'Rights',
+    'Justice',
+    'Education and skills',
+    'Work',
+    'Family',
+    'Money',
+    'Taxes',
+    'Benefits and schemes',
+    'Driving', 
+    'Housing',
+    'Communities',
+    'Pensions',
+    'Disabled people',
+    'Travel',
+    'Citizenship'
+  ]
 
 end
