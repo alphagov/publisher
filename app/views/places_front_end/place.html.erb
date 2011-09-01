@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= place.title %> - www.gov.uk</title>
+  <title>
+    <%= place.alternative_title.nil? ? place.alternative_title : place.title %> |
+    <% unless place.section.nil? or place.section == ''%>
+    <%= place.section %> |
+    <% end %>
+    Beta.gov.uk
+  </title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if place.overview and place.overview != '' %>
   <meta name="description" content="<%= place.overview %>">

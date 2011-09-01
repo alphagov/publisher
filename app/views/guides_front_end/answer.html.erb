@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= answer.title %> - www.gov.uk</title>
+  <title>
+    <%= answer.alternative_title.nil? ? answer.alternative_title : answer.title %> |
+    <% unless answer.section.nil? or answer.section == ''%>
+    <%= answer.section %> |
+    <% end %>
+    Beta.gov.uk
+  </title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if answer.overview and answer.overview != '' %>
   <meta name="description" content="<%= answer.overview %>">

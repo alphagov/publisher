@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title><%= local_transaction.title %> - www.gov.uk</title>
+  <title>
+    <%= local_transaction.alternative_title.nil? ? local_transaction.alternative_title : local_transaction.title %> |
+    <% unless local_transaction.section.nil? or local_transaction.section == ''%>
+    <%= local_transaction.section %> |
+    <% end %>
+    Beta.gov.uk
+  </title>
   <link rel="stylesheet" type="text/css" href="<%= asset_host %>/stylesheets/publisher.css" />
   <% if local_transaction.overview and local_transaction.overview != '' %>
   <meta name="description" content="<%= local_transaction.overview %>">
