@@ -38,6 +38,10 @@ class Admin::EditionsController <  Admin::BaseController
           Transaction.find(params[:transaction_id])
         elsif params[:programme_id]
           Programme.find(params[:programme_id])
+        elsif params[:local_transaction_id]
+          LocalTransaction.find(params[:local_transaction_id])
+        elsif params[:place_id]
+          Place.find(params[:place_id])
         end
       @edition_parent
     end
