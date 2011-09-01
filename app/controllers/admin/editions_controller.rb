@@ -3,10 +3,10 @@ class Admin::EditionsController <  Admin::BaseController
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
-    if new_edition.save
+    if new_edition and new_edition.save
       redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else
-      redirect_to [:admin, edition_parent], :notice => 'Failed to create new edition'
+      redirect_to [:admin, edition_parent], :alert => 'Failed to create new edition'
     end
   end
 
@@ -36,6 +36,12 @@ class Admin::EditionsController <  Admin::BaseController
           Guide.find(params[:guide_id])
         elsif params[:transaction_id]
           Transaction.find(params[:transaction_id])
+        elsif params[:programme_id]
+          Programme.find(params[:programme_id])
+        elsif params[:local_transaction_id]
+          LocalTransaction.find(params[:local_transaction_id])
+        elsif params[:place_id]
+          Place.find(params[:place_id])
         end
       @edition_parent
     end

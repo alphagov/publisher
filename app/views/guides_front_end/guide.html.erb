@@ -61,6 +61,10 @@
 
 					<div class="meta-data">
 						<p class="modified-date">Last updated: <%= guide.updated_at.strftime("%d %B %Y") %></p>
+						<p>Re-use this data:</p>
+    				<ul class="api-links">
+              <li class="json"><a href="<%= settings.api_host %>/publications/<%= guide.slug %>.json">JSON</a></li>
+            </ul>
 					</div>
 
 	      </div>
