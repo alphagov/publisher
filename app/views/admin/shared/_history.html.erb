@@ -10,6 +10,7 @@
     </div>
     <ul class="history">
       <% edition.actions.each do |action| %>
+      <% if action.requester %>
       <li>
         <p>
           <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
@@ -21,6 +22,7 @@
         <blockquote><%= action.comment %></blockquote>
         <% end %>
       </li>
+      <% end %>
       <% end %>
     </ul>
   </div>
