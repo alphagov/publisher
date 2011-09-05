@@ -3,6 +3,6 @@
 
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
-require 'ci/reporter/rake/test_unit'
+require 'ci/reporter/rake/test_unit' if Rails.env.development?
 
 Publisher::Application.load_tasks
