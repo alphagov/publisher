@@ -56,7 +56,7 @@
         <div class="intro">
           <%= Govspeak::Document.new(transaction.introduction || "").to_html %>
 
-          <p class="get-started"><a href="<%= transaction.link %>" title="Begin <%= transaction.title %> in a new browser window" rel="external" class="button">Get started &rarr;</a></p>
+          <p class="get-started"><a href="<%= transaction.link %>" title="Begin <%= transaction.title %> on the <%= transaction.will_continue_on %> site in a new browser window" rel="external" class="button">Get started &rarr;</a></p>
 
           <% if transaction.will_continue_on != '' %>
             <p>This will continue on <%= transaction.will_continue_on %>.</p>
