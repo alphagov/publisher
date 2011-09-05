@@ -4,3 +4,5 @@ db/*.sqlite3
 log/*.log
 tmp/
 .autotest
+coverage
+test/reports
