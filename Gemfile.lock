@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/govspeak.git
-  revision: c3a8e0b9b081a28c62740f159f1ecfb088ff568f
+  revision: 4e7be4bd5dcd4614de59a6b71fb1d52c035db05b
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
@@ -192,6 +192,11 @@ GEM
       ffi (>= 1.0.7)
       json_pure
       rubyzip
+    simplecov (0.4.2)
+      simplecov-html (~> 0.4.4)
+    simplecov-html (0.4.5)
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (< 2.0, >= 1.2.2)
@@ -233,6 +238,8 @@ DEPENDENCIES
   rails (~> 3.0.7)
   ruby-debug19
   selenium-webdriver
+  simplecov
+  simplecov-rcov
   sinatra
   slimmer!
   timecop
