@@ -55,7 +55,7 @@
 
         <div class="find-nearest">
 
-          <p class="intro"><%= local_transaction.introduction %></p>
+          <%= Govspeak::Document.new(local_transaction.introduction || "").to_html %>
 
           <form action="<%= form_action_path(local_transaction.slug) %>" method="POST">
 
@@ -68,21 +68,18 @@
           </form>
         </div>
 
-        <h2>You will need:</h2>
+        <h2>About this service</h2>
 
-        <ul class="helpers group">
+        <div class="more">
+          <ul class="helpers group">
           <% local_transaction.expectations.each do |e| %>
-              <li class="<%= e.css_class %>">
-                <%= e.text %>
-              </li>
+            <li class="<%= e.css_class %>">
+              <%= e.text %>
+            </li>
           <% end %>
           </ul>
 
-        <div class="more">
-          <h2>More about this service</h2>
-
           <%= Govspeak::Document.new(local_transaction.more_information || "").to_html %>
-
         </div>
 
       </div>
