@@ -15,6 +15,6 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     
     post :create, :guide_id => @guide.id
     assert_response 302
-    assert_equal "Failed to create new edition", flash[:alert]
+    assert_equal "Failed to create new edition: couldn't initialise", flash[:alert]
   end
 end

@@ -46,7 +46,6 @@
         <hgroup>
           <h1><span>Local Services</span> <%= local_transaction.title %></h1>
         </hgroup>
-
       </div>
     </header>
 
@@ -55,7 +54,7 @@
 
         <div class="find-nearest">
 
-          <p class="intro"><%= local_transaction.introduction %></p>
+          <%= Govspeak::Document.new(local_transaction.introduction || "").to_html %>
 
           <form action="<%= form_action_path(local_transaction.slug) %>" method="POST">
 
@@ -68,13 +67,14 @@
           </form>
         </div>
 
-        <h2>You will need:</h2>
+        <h2>What you need to know</h2>
 
-        <ul class="helpers group">
+        <div class="more">
+          <ul class="helpers group">
           <% local_transaction.expectations.each do |e| %>
-              <li class="<%= e.css_class %>">
-                <%= e.text %>
-              </li>
+            <li class="<%= e.css_class %>">
+              <%= e.text %>
+            </li>
           <% end %>
           </ul>
 
@@ -91,6 +91,7 @@
 
 			<div class="meta-data">
 				<p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+  			<p>Re-use this data:</p>
 				<ul class="api-links">
           <li class="json"><a href="http://<%= settings.api_host %>/<%= local_transaction.slug %>/all.json">JSON</a></li>
         </ul>
