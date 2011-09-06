@@ -25,7 +25,7 @@ module Api
         attrs = edition.transaction.as_json(:only => [:audiences, :slug, :tags, :updated_at, :section, :related_items])
         attrs['type'] = 'transaction'
         attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
-        attrs.merge!(edition.as_json(:only => [:title,:introduction,:more_information,:will_continue_on,:link, :alternative_title, :overview]))
+        attrs.merge!(edition.as_json(:only => [:title, :introduction, :more_information, :will_continue_on,:link, :alternative_title, :overview, :minutes_to_complete, :uses_government_gateway]))
       end
     end
     

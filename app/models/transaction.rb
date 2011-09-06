@@ -4,9 +4,5 @@ class Transaction < Publication
   def self.edition_class
     TransactionEdition
   end
-  
+
 end
-
-
-
-

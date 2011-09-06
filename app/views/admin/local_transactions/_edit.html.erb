@@ -1,11 +1,10 @@
 <%= semantic_form_for @latest_edition, :url => admin_local_transaction_edition_path(@local_transaction, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
     <li><p>LGSL code</p><p><%= @local_transaction.lgsl_code %></p></li>
-    <%= f.input :title, :label => "Name of Local Transaction", :input_html => {:autofocus => true} %>
-    <%= f.input :alternative_title %>
-    <%= f.input :overview, :as => :text, :input_html => {:rows => 3} %>
-    <%= f.input :introduction, :as => :text, :input_html => {:rows => 2} %>
+    <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+    <%= f.input :introduction, :label => 'Introductory paragraph', :hint => 'Set the scene for the user. Explain that it\'s the responsibility of the local council and that we\'ll take you there.', :as => :text, :input_html => {:rows => 2} %>
     <%= f.input :more_information, :as => :text %>
+    <%= f.input :minutes_to_complete %>
     <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => LocalTransactionEdition.expectation_choices %>
   <% end %>
 <% end %>
