@@ -8,7 +8,7 @@ class TransactionEdition < Edition
   field :link,              :type => String
   field :more_information,  :type => String
 
-  @fields_to_clone = [:introduction, :will_continue_on, :link, :more_information, :expectation_ids]
+  @fields_to_clone = [:introduction, :will_continue_on, :link, :more_information, :minutes_to_complete, :uses_government_gateway, :expectation_ids]
 
   def container
     self.transaction

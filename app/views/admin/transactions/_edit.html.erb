@@ -7,6 +7,8 @@
     <%= f.input :will_continue_on, :hint => 'text to follow the statement "This will continue on". eg. "the HMRC website"' %>
     <%= f.input :link %>
     <%= f.input :more_information, :as => :text %>
+    <%= f.input :minutes_to_complete %>
+    <%= f.input :uses_government_gateway, :as => :boolean %>
     <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => TransactionEdition.expectation_choices %>
   <% end %>
 <% end %>

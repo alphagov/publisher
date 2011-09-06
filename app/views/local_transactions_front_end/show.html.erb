@@ -80,10 +80,12 @@
 
         <div class="more">
           <h2>More about this service</h2>
-
           <%= Govspeak::Document.new(local_transaction.more_information || "").to_html %>
-
         </div>
+
+        <% if local_transaction.minutes_to_complete %>
+          <p>This is probably going to take you <%= local_transaction.minutes_to_complete %> minutes</p>
+        <% end %>
 
       </div>
 
