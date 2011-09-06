@@ -1,7 +1,4 @@
-require 'local_transactions_front_end'
 require 'places_front_end'
-require 'guides_front_end'
-require 'programmes_front_end'
 require 'front_end_environment'
 
 class PreviewDispatcher
@@ -9,12 +6,7 @@ class PreviewDispatcher
 
   def initialize(app = nil)
     @dispatcher_map = {
-      "Guide" => GuidesFrontEnd::Preview,
-      "Programme" => ProgrammesFrontEnd::Preview,
-      "Transaction" => GuidesFrontEnd::Preview,
-      "Answer" => GuidesFrontEnd::Preview,
       "Place" => PlacesFrontEnd::Preview,
-      "LocalTransaction" => LocalTransactionsFrontEnd::Preview
     }
   end
 

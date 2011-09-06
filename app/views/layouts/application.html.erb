@@ -3,9 +3,7 @@
 <head>
   <title>
     <%= yield :page_title %>
-    <% unless current_page?(root_path) %>
      | Publisher | beta.gov.uk
-    <% end %>
   </title>
   <%= stylesheet_link_tag '/stylesheets/formtastic.css', '/stylesheets/formtastic_changes.css' %>
   <%= csrf_meta_tag %>
@@ -25,7 +23,7 @@
         </p>
       <% end %>
 
-      <% unless current_page?(admin_root_path) or current_page?(root_path) %>
+      <% unless current_page?(admin_root_path)%>
         <p class="return"><%= link_to 'Return to dashboard', admin_root_path %></p>
       <% end %>
 

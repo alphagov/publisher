@@ -1,15 +1,6 @@
 require 'preview_dispatcher'
 
-class NonAuthConstraint
-  def matches?(request)
-    ! request.path.match(/^\/auth/)
-  end
-end
-
 Publisher::Application.routes.draw do
-  # authenticate :user do
-    match '/preview/:edition_id' => PreviewDispatcher.new, :anchor => false, :as => :preview_edition_prefix
-  # end
 
   namespace :admin do
     resources :transactions do
@@ -56,9 +47,7 @@ Publisher::Application.routes.draw do
       post :verify_snac
     end
   end
-  match "/help", :to => "root#help"
-  root :to => 'root#index'
+
+  match '/preview/:edition_id' => PreviewDispatcher.new, :anchor => false, :as => :preview_edition_prefix
   match '/places/*path' => PlacesFrontEnd::App
-  
-  match "*path", :to => GuidesFrontEnd::App, :constraints => NonAuthConstraint.new
 end

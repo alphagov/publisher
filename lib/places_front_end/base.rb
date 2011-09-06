@@ -92,8 +92,5 @@ module PlacesFrontEnd
       return show_place
     end
 
-    get '/:slug' do
-      return show_place
-    end
   end
 end

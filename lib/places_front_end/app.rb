@@ -1,6 +1,5 @@
 require 'net/http'
 require 'api/generator'
-require 'api/client'
 
 module PlacesFrontEnd
   class App < PlacesFrontEnd::Base

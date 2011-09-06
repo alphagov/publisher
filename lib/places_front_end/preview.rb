@@ -1,6 +1,5 @@
 # require File.expand_path('../../../app/models/api/guide', __FILE__)
 require 'api/generator'
-require 'api/client'
 
 module PlacesFrontEnd
   class Preview < PlacesFrontEnd::Base
