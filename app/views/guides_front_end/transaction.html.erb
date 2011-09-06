@@ -61,10 +61,9 @@
           <% if transaction.will_continue_on != '' %>
             <p>This will continue on <%= transaction.will_continue_on %>.</p>
           <% end %>
-
         </div>
 
-        <h2>About this service</h2>
+        <h2>What you need to know</h2>
 
         <div class="more">
           <ul class="helpers">
@@ -78,6 +77,12 @@
           <%= Govspeak::Document.new(transaction.more_information || "").to_html %>
         </div>
 
+        <% if transaction.uses_government_gateway %>
+          <p>Uses Government Gateway. Oh No!</p>
+        <% end %>
+        <% if transaction.minutes_to_complete %>
+          <p>This is probably going to take you <%= transaction.minutes_to_complete %> minutes</p>
+        <% end %>
       </div>
 
   		<div class="meta-data">

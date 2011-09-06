@@ -46,7 +46,6 @@
         <hgroup>
           <h1><span>Local Services</span> <%= local_transaction.title %></h1>
         </hgroup>
-
       </div>
     </header>
 
@@ -68,7 +67,7 @@
           </form>
         </div>
 
-        <h2>About this service</h2>
+        <h2>What you need to know</h2>
 
         <div class="more">
           <ul class="helpers group">
@@ -79,13 +78,20 @@
           <% end %>
           </ul>
 
+        <div class="more">
+          <h2>More about this service</h2>
           <%= Govspeak::Document.new(local_transaction.more_information || "").to_html %>
         </div>
+
+        <% if local_transaction.minutes_to_complete %>
+          <p>This is probably going to take you <%= local_transaction.minutes_to_complete %> minutes</p>
+        <% end %>
 
       </div>
 
 			<div class="meta-data">
 				<p class="modified-date">Last updated: <%= local_transaction.updated_at.strftime("%d %B %Y") %></p>
+  			<p>Re-use this data:</p>
 				<ul class="api-links">
           <li class="json"><a href="http://<%= settings.api_host %>/<%= local_transaction.slug %>/all.json">JSON</a></li>
         </ul>
