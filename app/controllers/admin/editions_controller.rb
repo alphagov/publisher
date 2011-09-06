@@ -6,7 +6,9 @@ class Admin::EditionsController <  Admin::BaseController
     if new_edition and new_edition.save
       redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else
-      redirect_to [:admin, edition_parent], :alert => 'Failed to create new edition'
+      alert = 'Failed to create new edition'
+      alert += new_edition ? ": #{new_edition.errors.inspect}" : ": couldn't initialise"
+      redirect_to [:admin, edition_parent], :alert => alert
     end
   end
 
