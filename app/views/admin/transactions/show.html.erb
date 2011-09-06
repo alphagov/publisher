@@ -10,7 +10,7 @@
   <form id="save-edition" class="button_to">
   <input type="submit" value="Save" class="update">
   </form>
-  
+
   <%= progress_buttons(@transaction,@latest_edition) %>
   <%= preview_button(@latest_edition) %>
   </span>
@@ -35,3 +35,4 @@
 </div>
 
 <% content_for :extra_javascript, javascript_include_tag('/guide-assets/javascripts/publications') %>
+<% content_for :page_title, "Editing #{@transaction.title}" %>
