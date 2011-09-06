@@ -14,6 +14,8 @@ module GeoHelper
       @geo_header ||= JSON.parse(Base64.decode64(request.env['HTTP_X_GOVGEO_STACK']))
       @geo_friendly_name = @geo_header['friendly_name']
       @district_postcode = @geo_header['postcode'] if @geo_header['postcode'].present?
+    else
+      @geo_header ||= {}
     end
     @geo_header
   end
