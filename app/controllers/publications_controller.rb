@@ -12,10 +12,17 @@ class PublicationsController < ApplicationController
       # At some point this should require special authentication.
       edition = publication.editions.select { |e| e.version_number.to_i == params[:edition].to_i }.first
     else
-      edition = publication.published_edition
+      edition = publication.editions.last #published_edition
     end
     head 404 and return if edition.nil?
-    render :json => Api::Generator.edition_to_hash(edition)
+
+    options = {}
+
+    if params[:snac]
+      options[:snac] = params[:snac]
+    end
+    
+    render :json => Api::Generator.edition_to_hash(edition, options)
   end
 
   def index

@@ -1,7 +1,8 @@
 module Api
   module Generator
     module LocalTransaction
-      def self.edition_to_hash(edition, snac = nil)
+      def self.edition_to_hash(edition, options = {})
+        snac = options[:snac]
         attrs = edition.local_transaction.as_json(:only => [:audiences, :slug, :tags, :updated_at, :section, :related_items])
         attrs.merge!(edition.as_json(:only => [:title, :introduction, :more_information, :alternative_title, :overview, :minutes_to_complete]))
         attrs['type'] = 'local_transaction'

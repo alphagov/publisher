@@ -5,9 +5,9 @@ module LocalTransactionsFrontEnd
 
     def fetch_publication(snac = nil)
       if !snac.nil? && !snac.empty?
-        url = URI.parse("http://#{settings.api_host}/local_transactions/#{params[:slug]}/#{snac}.json")
+        url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json?snac=/#{snac}")
       else
-        url = URI.parse("http://#{settings.api_host}/local_transactions/#{params[:slug]}.json")
+        url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json")
       end
       Net::HTTP.start(url.host, url.port) do |http|
         http.get(url.path)
