@@ -5,7 +5,7 @@ module LocalTransactionsFrontEnd
 
     def fetch_publication(snac = nil)
       if !snac.nil? && !snac.empty?
-        url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json?snac=/#{snac}")
+        url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json?snac=#{snac}")
       else
         url = URI.parse("http://#{settings.api_host}/publications/#{params[:slug]}.json")
       end

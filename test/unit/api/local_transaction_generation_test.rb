@@ -38,22 +38,22 @@ class LocalTransactionGenerationTest < ActiveSupport::TestCase
   end
 
   test "generated hash for result page has the authority" do
-    assert generated("00BC").has_key?('authority')
+    assert generated(:snac => "00BC").has_key?('authority')
   end
 
   test "generated hash for result page has the authorities' name" do
-    assert "Authority", generated("00BC")['authority']['name']
+    assert "Authority", generated(:snac => "00BC")['authority']['name']
   end
 
   test "generated hash for result page has the authorities' snac code" do
-    assert "00BC", generated("00BC")['authority']['snac']
+    assert "00BC", generated(:snac => "00BC")['authority']['snac']
   end
 
   test "generated hash for result page has an lgil code for the authority" do
-    assert "8", generated("00BC")['authority']['lgils'].first['code']
+    assert "8", generated(:snac => "00BC")['authority']['lgils'].first['code']
   end
 
   test "generated hash for result page has an lgil url for the authority" do
-    assert "http://authority.gov.uk/service", generated("00BC")['authority']['lgils'].first['url']
+    assert "http://authority.gov.uk/service", generated(:snac => "00BC")['authority']['lgils'].first['url']
   end
 end
