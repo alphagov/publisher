@@ -6,12 +6,17 @@ class PublicationsController < ApplicationController
   
   def show
     section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
-    show_collection('section', section_name) and return if section_name
-    
     audience_name = Publication::AUDIENCES.detect { |s| s.parameterize.to_s == params[:id] }
-    show_collection('audience', audience_name) and return if audience_name      
-
-    show_publication(params[:id], params[:edition], params[:snac])
+    
+    if section_name
+      data = show_collection('section', section_name) and return if section_name
+    elsif audience_name
+      data = show_collection('audience', audience_name) and return 
+    else
+      data = show_publication(params[:id], params[:edition], params[:snac])
+    end
+    
+    respond_with data
   end
 
   def show_collection(type, name)
@@ -30,13 +35,7 @@ class PublicationsController < ApplicationController
       }
     end
     
-    details = {
-      :name => name,
-      :type => type,
-      :publications => publications
-    }
-    
-    respond_with details
+    return { :name => name, :type => type, :publications => publications }
   end
 
   def show_publication(slug, edition, snac)
@@ -58,7 +57,7 @@ class PublicationsController < ApplicationController
       options[:snac] = snac
     end
     
-    respond_with Api::Generator.edition_to_hash(edition, options)
+    Api::Generator.edition_to_hash(edition, options)
   end
 
   def index
