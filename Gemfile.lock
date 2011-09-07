@@ -17,26 +17,11 @@ GIT
       warden
 
 GIT
-  remote: git@github.com:alphagov/geogov.git
-  revision: 6867aedacda13fa8c050f706c3a351864eff0752
-  specs:
-    geogov (0.0.1)
-
-GIT
   remote: git@github.com:alphagov/govspeak.git
   revision: 4e7be4bd5dcd4614de59a6b71fb1d52c035db05b
   specs:
     govspeak (0.8.3)
       kramdown (~> 0.13.3)
-
-GIT
-  remote: git@github.com:alphagov/rack-geo.git
-  revision: cbe1036e663c833835cf68032dd8b9b38ab167d0
-  specs:
-    rack-geo (0.6.0)
-      geogov
-      json
-      rack (~> 1.2.0)
 
 GIT
   remote: git@github.com:alphagov/slimmer.git
@@ -114,7 +99,6 @@ GEM
     inherited_resources (1.3.0)
       has_scope (~> 0.5.0)
       responders (~> 0.6.0)
-    json (1.5.4)
     json_pure (1.5.4)
       spruz (~> 0.2.8)
     kramdown (0.13.3)
@@ -138,7 +122,6 @@ GEM
     multi_json (1.0.3)
     multi_xml (0.2.2)
     multipart-post (1.1.3)
-    mustache (0.99.4)
     nokogiri (1.5.0)
     oa-core (0.2.6)
     oa-oauth (0.2.6)
@@ -201,13 +184,9 @@ GEM
     simplecov-html (0.4.5)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    sinatra (1.2.6)
-      rack (~> 1.1)
-      tilt (< 2.0, >= 1.2.2)
     spruz (0.2.13)
     test-unit (2.3.2)
     thor (0.14.6)
-    tilt (1.3.3)
     timecop (0.3.5)
     treetop (1.4.10)
       polyglot
@@ -232,21 +211,17 @@ DEPENDENCIES
   fabrication
   formtastic
   gds-sso!
-  geogov!
   govspeak!
   has_scope
   inherited_resources
   mocha
   mongoid (~> 2.0)
-  mustache
   passenger
-  rack-geo!
   rails (~> 3.0.7)
   ruby-debug19
   selenium-webdriver
   simplecov
   simplecov-rcov
-  sinatra
   slimmer!
   test-unit
   timecop

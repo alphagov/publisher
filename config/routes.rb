@@ -1,5 +1,3 @@
-require 'preview_dispatcher'
-
 Publisher::Application.routes.draw do
 
   namespace :admin do
@@ -46,7 +44,4 @@ Publisher::Application.routes.draw do
       post :verify_snac
     end
   end
-
-  match '/preview/:edition_id' => PreviewDispatcher.new, :anchor => false, :as => :preview_edition_prefix
-  match '/places/*path' => PlacesFrontEnd::App
 end

@@ -2,14 +2,6 @@ require 'active_support/inflector'
 
 module Api
 
-  module Client
-    class Place < OpenStruct
-      def self.from_hash(hash)
-        new(hash)
-      end
-    end
-  end
-
   module Generator
     def self.generator_class(edition)
       "Api::Generator::#{edition.container.class.to_s}".constantize

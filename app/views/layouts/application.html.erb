@@ -16,7 +16,6 @@
   <div id="wrapper" class="wrapper">
 
     <div class="content" role="main">
-		<%= render :partial => 'places_front_end/location_header' %>
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
         <p class="flash-<%= k %>">
           <%= flash[k] %>

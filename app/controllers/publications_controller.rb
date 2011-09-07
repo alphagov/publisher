@@ -84,11 +84,7 @@ class PublicationsController < ApplicationController
   protected
   # TODO - find a better way to do this. cf. Admin::GuidesHelper
   def publication_front_end_path(publication)
-    if publication.is_a?(Place)
-      "/places/#{publication.slug}"
-    else
       "/#{publication.slug}"
-    end
   end
 
 end

@@ -7,7 +7,6 @@ gem 'rails', '~> 3.0.7'
 
 gem "mongoid", "~> 2.0"
 gem "bson_ext", "~> 1.3"
-gem 'sinatra'
 gem 'erubis'
 
 gem 'inherited_resources'
@@ -26,14 +25,6 @@ else
   gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 end
 
-if ENV['GEO_DEV']
-  gem 'rack-geo', :path => '../rack-geo'
-  gem 'geogov', :path => '../geogov'
-else
-  gem 'rack-geo', :git => 'git@github.com:alphagov/rack-geo.git'
-  gem 'geogov', :git => 'git@github.com:alphagov/geogov.git'
-end
-
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
 
 if ENV['GOVSPEAK_DEV']
@@ -43,7 +34,6 @@ else
 end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
-gem 'mustache'
 
 group :development, :test do
   gem 'passenger'

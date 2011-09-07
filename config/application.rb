@@ -49,8 +49,5 @@ module Publisher
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-
-    # Rack-Geo!
-    config.middleware.use Rack::Geo
   end
 end

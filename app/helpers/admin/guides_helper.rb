@@ -7,19 +7,11 @@ module Admin::GuidesHelper
   end
 
   def publication_front_end_path(publication)
-    if publication.is_a?(Place)
-      "/places/#{publication.slug}"
-    else
       "#{ExternalServices.front_end_host}/#{publication.slug}"
-    end
   end
 
   def preview_edition_path(edition)
-    if edition.container.is_a?(Place)
-      preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
-    else
       publication_front_end_path(edition.container)+"?edition=#{edition.version_number}"
-    end
   end
 
   def activity_form(name, id, url, html_options = {})
