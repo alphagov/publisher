@@ -38,7 +38,8 @@ Publisher::Application.routes.draw do
     root :to => 'root#index'
   end
   
-  resources :audiences
+  resources :audiences, :sections, :only => [:show, :index]
+  
   resources :publications, :only => [:show,:index]
   resources :local_transactions, :only => :show do
     member do
