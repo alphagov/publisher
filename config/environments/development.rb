@@ -21,5 +21,5 @@ Publisher::Application.configure do
   
   config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
   
-  config.action_mailer.default_url_options = { :host => "localhost:3000" }
+  config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
 end

@@ -4,5 +4,5 @@ GDS::SSO.config do |config|
   config.oauth_id     = ENV['OAUTH_ID']
   config.oauth_secret = ENV['OAUTH_SECRET']
   # optional config for location of sign-on-o-tron
-  config.oauth_root_url = "http://localhost:3001"
+  config.oauth_root_url = "http://signonotron.dev.gov.uk"
 end
