@@ -7,19 +7,19 @@ class PublicationsController < ApplicationController
   def show
     section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
     audience_name = Publication::AUDIENCES.detect { |s| s.parameterize.to_s == params[:id] }
-    
+
     if section_name
-      data = show_collection('section', section_name) and return if section_name
+      data = show_collection('section', section_name)
     elsif audience_name
-      data = show_collection('audience', audience_name) and return 
+      data = show_collection('audience', audience_name)
     else
       data = show_publication(params[:id], params[:edition], params[:snac])
     end
     
     if data
-      respond_with data
+      respond_with(data)
     else
-      head 404
+      head 404 and return
     end
   end
 
