@@ -18,7 +18,7 @@ module ExternalServices
   def front_end_host
     case local_environment
     when 'development','test'
-      "local.alphagov.co.uk:3005"
+      "http://local.alphagov.co.uk:3005"
     when 'production'
       "http://frontend.alpha.gov.uk"
     else

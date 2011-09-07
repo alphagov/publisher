@@ -1,3 +1,5 @@
+require 'external_services'
+
 module Admin::GuidesHelper
   def safe_to_preview?(publication)
     return true unless publication.is_a?(Guide)
@@ -8,12 +10,16 @@ module Admin::GuidesHelper
     if publication.is_a?(Place)
       "/places/#{publication.slug}"
     else
-      "/#{publication.slug}"
+      "#{ExternalServices.front_end_host}/#{publication.slug}"
     end
   end
 
   def preview_edition_path(edition)
-    preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
+    if edition.container.is_a?(Place)
+      preview_edition_prefix_path(edition.version_number) + "/#{edition.container.slug}"
+    else
+      publication_front_end_path(edition.container)+"?edition=#{edition.version_number}"
+    end
   end
 
   def activity_form(name, id, url, html_options = {})
