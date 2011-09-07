@@ -4,8 +4,8 @@ require 'api/generator'
 module PlacesFrontEnd
   class App < PlacesFrontEnd::Base
     configure do
-      set :api_host, FrontEndEnvironment.api_host
-      set :imminence_api_host, FrontEndEnvironment.imminence_api_host
+      set :api_host, ExternalServices.api_host
+      set :imminence_api_host, ExternalServices.imminence_api_host
     end
 
     def fetch_publication

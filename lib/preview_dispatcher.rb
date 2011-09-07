@@ -1,5 +1,5 @@
 require 'places_front_end'
-require 'front_end_environment'
+require 'external_services'
 
 class PreviewDispatcher
   attr_reader :dispatcher_map

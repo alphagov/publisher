@@ -4,7 +4,7 @@ require 'api/generator'
 module PlacesFrontEnd
   class Preview < PlacesFrontEnd::Base
     configure do
-      set :imminence_api_host, FrontEndEnvironment.imminence_api_host
+      set :imminence_api_host, ExternalServices.imminence_api_host
     end
 
     def self.preview_edition_id(env)

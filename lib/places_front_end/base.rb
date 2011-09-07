@@ -30,7 +30,7 @@ module PlacesFrontEnd
       end
 
       def asset_host
-        FrontEndEnvironment.asset_host
+        ExternalServices.asset_host
       end
 
       def base_path(guide_slug)
