@@ -61,6 +61,7 @@ class PublicationsController < ApplicationController
   end
 
   def index
+
     published_editions = Publication.published.collect(&:published_edition).compact
     details = published_editions.collect do |g|
       {
@@ -69,8 +70,11 @@ class PublicationsController < ApplicationController
         :url => publication_front_end_path(g.container)
       }
     end
-      
-    respond_with details
+    if params[:callback]  
+      render :json=> details.to_json, :callback => params[:callback]
+    else
+      respond_with details 
+    end
   end
 
   protected
