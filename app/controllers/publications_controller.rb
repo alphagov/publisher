@@ -34,7 +34,7 @@ class PublicationsController < ApplicationController
       {
         :title => g.title,
         :tags => g.container.tags,
-        :url => guide_url(:id => g.container.slug, :format => :json),
+        :slug => g.container.slug,
         :type => g.class.underscore
       }
     end
