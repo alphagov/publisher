@@ -52,11 +52,11 @@ class PublicationsController < ApplicationController
     head 404 and return if edition.nil?
 
     options = {}
-
-    if snac
-      options[:snac] = snac
+    allowed_options = [:snac,:all]
+    allowed_options.each do |a|
+      options[a] = params[a] if params[a]
     end
-    
+
     Api::Generator.edition_to_hash(edition, options)
   end
 
