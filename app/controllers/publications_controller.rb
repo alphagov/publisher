@@ -16,7 +16,11 @@ class PublicationsController < ApplicationController
       data = show_publication(params[:id], params[:edition], params[:snac])
     end
     
-    respond_with data
+    if data
+      respond_with data
+    else
+      head 404
+    end
   end
 
   def show_collection(type, name)
@@ -40,7 +44,7 @@ class PublicationsController < ApplicationController
 
   def show_publication(slug, edition, snac)
     publication = Publication.where(slug: slug).first
-    head 404 and return if publication.nil?
+    return nil if publication.nil?
     
     if edition
       # This is used for previewing yet-to-be-published editions. 
@@ -49,7 +53,7 @@ class PublicationsController < ApplicationController
     else
       edition = publication.published_edition
     end
-    head 404 and return if edition.nil?
+    return nil if edition.nil?
 
     options = {}
     allowed_options = [:snac,:all]
