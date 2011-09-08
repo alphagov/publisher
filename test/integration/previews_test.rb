@@ -17,7 +17,7 @@ class MockImminence
 end
 
 Capybara.default_driver = :selenium
-Capybara.server_port = 3000
+Capybara.server_port = 4000
 Capybara.app = Rack::Builder.new do 
   map "/" do
     use MockImminence

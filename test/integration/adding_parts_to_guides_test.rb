@@ -2,7 +2,6 @@ require 'test_helper'
 require 'capybara/rails'
 
 class MockPanopticon
-
   def initialize(app)
     @app = app
   end
@@ -17,7 +16,7 @@ class MockPanopticon
 end
 
 Capybara.default_driver = :selenium
-Capybara.server_port = 3000
+Capybara.server_port = 4000
 Capybara.app = Rack::Builder.new do 
   map "/" do
     use MockPanopticon
