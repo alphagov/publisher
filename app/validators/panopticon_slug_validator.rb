@@ -1,3 +1,5 @@
+require 'net/http'
+
 class PanopticonSlugValidator < ActiveModel::EachValidator
   def claim_slug(endpoint_url, attributes_to_send)
     uri = URI.parse(endpoint_url)
