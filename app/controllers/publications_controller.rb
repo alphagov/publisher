@@ -65,13 +65,12 @@ class PublicationsController < ApplicationController
   end
 
   def index
-
     published_editions = Publication.published.collect(&:published_edition).compact
     details = published_editions.collect do |g|
       {
         :title => g.title,
         :tags => g.container.tags,
-        :url => publication_front_end_path(g.container)
+        :slug => g.container.slug
       }
     end
     if params[:callback]  
@@ -80,11 +79,4 @@ class PublicationsController < ApplicationController
       respond_with details 
     end
   end
-
-  protected
-  # TODO - find a better way to do this. cf. Admin::GuidesHelper
-  def publication_front_end_path(publication)
-      "/#{publication.slug}"
-  end
-
 end
