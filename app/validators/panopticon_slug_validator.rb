@@ -24,14 +24,14 @@ class PanopticonSlugValidator < ActiveModel::EachValidator
       record.errors[attribute] << "must be between 4 and 60 characters"
       return
     end
-    
+
     endpoint_url = "#{PANOPTICON_HOST}/slugs"
     attributes_to_send = {
       'slug[kind]' => record.class.to_s,
       'slug[owning_app]' => 'publisher',
       'slug[name]' => the_slug
     }
-    
+
     record.errors[attribute] << 'must be unique across Gov.UK' unless claim_slug(endpoint_url, attributes_to_send)
   rescue Errno::ECONNREFUSED
     record.errors[attribute] << 'panopticon seems to be unavailable'
