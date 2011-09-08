@@ -217,7 +217,7 @@ DEPENDENCIES
   mocha
   mongoid (~> 2.0)
   passenger
-  rails (~> 3.0.7)
+  rails (~> 3.0.10)
   ruby-debug19
   selenium-webdriver
   simplecov
