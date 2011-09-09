@@ -65,7 +65,7 @@ class Publication
   end
 
   def published_edition
-    latest_publishing = self.publishings.first
+    latest_publishing = self.publishings.sort_by(&:version_number).last
     if latest_publishing
       self.editions.first {|s| s.version_number == latest_publishing.version_number }
     else
