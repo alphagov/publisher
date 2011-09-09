@@ -44,7 +44,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'mocha', :require => false
   gem 'ruby-debug19'
-  gem 'simplecov'
+  gem 'simplecov', '0.4.2'
   gem 'simplecov-rcov'
   gem 'ci_reporter'
   gem 'test-unit'
