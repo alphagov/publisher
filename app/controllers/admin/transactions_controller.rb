@@ -6,7 +6,7 @@ class Admin::TransactionsController < Admin::BaseController
   
   def create
     @transaction = current_user.create_transaction(params[:transaction])
-    if @transaction.save!
+    if @transaction.save
       redirect_to admin_transaction_path(@transaction), :notice => 'Transaction successfully created' and return
     else
       render :action => 'new'
