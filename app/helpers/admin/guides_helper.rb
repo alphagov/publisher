@@ -91,7 +91,7 @@ module Admin::GuidesHelper
   
   def preview_button(edition)
     form_tag(preview_edition_path(edition), :method => :get, :class => 'preview button_to also_save_edition') do
-      submit_tag 'Preview'
+      hidden_field_tag('edition', edition.version_number) + submit_tag('Preview')
     end
   end
   
