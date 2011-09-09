@@ -5,10 +5,13 @@
   </head>
   <body>
     <p><%= @guide.title %></p>
-    <p><%= @action.friendly_description %></p>
+    <p><%= @action.friendly_description %> by <%= @action.requester %></p>
     <p>
-    <a href="<%= "#{ExternalServices.front_end_host}/#{@action.edition.container.slug}?edition=#{@action.edition.container.slug}" %>">Preview it now</a>
+    <% if @action.friendly_description == 'Published.' %>
+      <a href="<%= "#{ExternalServices.front_end_host}/#{@action.edition.container.slug}" %>">View it live</a>
+    <% else %>
+      <a href="<%= "#{ExternalServices.front_end_host}/#{@action.edition.container.slug}?edition=#{@action.edition.version_number}" %>">Preview it</a>
+    <% end %>
     </p>
-    
   </body>
 </html>
