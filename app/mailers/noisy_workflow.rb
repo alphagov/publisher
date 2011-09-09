@@ -14,7 +14,7 @@ class NoisyWorkflow < ActionMailer::Base
     end
 
     mail(:to => email_address,
-         :subject => "[PUBLISHER] " + @action.friendly_description)
+         :subject => "[PUBLISHER] #{@action.friendly_description}: #{@action.edition.title}")
   end
   
 end
