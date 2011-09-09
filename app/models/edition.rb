@@ -51,4 +51,14 @@ class Edition
     publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
     publication.requester if publication
   end
+
+  def unpublish!
+    self.container.publishings.detect { |p| p.version_number == self.version_number }.destroy
+    self.actions.each do |a| 
+      unless a.request_type == Action::NEW_VERSION or a.request_type == Action::CREATED
+        a.destroy
+      end
+    end
+    self.container.save
+  end
 end
