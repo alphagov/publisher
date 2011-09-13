@@ -35,7 +35,7 @@ class PublicationsController < ApplicationController
         :title => g.title,
         :tags => g.container.tags,
         :slug => g.container.slug,
-        :type => g.class.to_s.underscore
+        :type => g.container.class.to_s.underscore
       }
     end
     
