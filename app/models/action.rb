@@ -16,17 +16,17 @@ class Action
   def friendly_description
     case request_type
     when CREATED
-      "#{edition.container.class} created by #{requester.name}."
+      "#{edition.container.class} created by #{requester.name}"
     when NEW_VERSION
-      "New version \"#{edition.title}\" created by #{requester.name}."
+      "New version \"#{edition.title}\" created by #{requester.name}"
     when REVIEW_REQUESTED
-      "A review and publish was requested by #{requester.name}."
+      "A review and publish was requested by #{requester.name}"
     when REVIEWED
-      "Reviewed by #{requester.name}. Not OK'd for publication."
+      "Reviewed by #{requester.name}. Not OK'd for publication"
     when OKAYED
-      "OK'd for publication by #{requester.name}."
+      "OK'd for publication by #{requester.name}"
     when PUBLISHED
-      "Published."
+      "Published"
     end
   end
   
