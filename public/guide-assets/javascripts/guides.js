@@ -38,7 +38,9 @@ $(function() {
     my_opts.active = active_index - 1;
     $('#parts').sortable('destroy').accordion("destroy").
       accordion(my_opts).sortable(sortable_opts);
-    $('#parts .part:last-child').find('input.order').val(active_index);
+    var new_part = $('#parts .part:last-child');
+    new_part.find('input.order').val(active_index);
+    new_part.find('.title').focus();
   });
   $('body').bind('associated-removed', function () {
     $('#parts').sortable('destroy').accordion("destroy").
