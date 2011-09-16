@@ -15,7 +15,7 @@ class GuideTest < ActiveSupport::TestCase
   #   assert_equal template_guide.title, 'Two'
   # end
    
-    test 'a new guide has drafts but isn\'t published' do
+  test 'a new guide has drafts but isn\'t published' do
     g = Guide.new(:slug=>"childcare")
     assert g.has_drafts
     assert !g.has_published

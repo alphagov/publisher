@@ -29,7 +29,7 @@
       <%= yield %>
 
       <script type="text/javascript" charset="utf-8">
-        var panoption_host = '<%= PANOPTICON_HOST %>';
+        var panoption_host = '<%= PanopticonAdapter.endpoint %>';
       </script>
       <%= javascript_include_tag '/guide-assets/javascripts/application.js', '/javascripts/jquery.mustache.js', '/guide-assets/javascripts/form-tools.js', '/guide-assets/javascripts/jquery.tablesorter.min.js', '/javascripts/publisher-tabs.js' %>
       <%= yield :extra_javascript %>
