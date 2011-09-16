@@ -25,16 +25,19 @@ class ActiveSupport::TestCase
   # fixtures :all
 
   # Add more helper methods to be used by all tests here...
-  
+
   def clean_db
     DatabaseCleaner.clean
   end
   set_callback :teardown, :before, :clean_db
-  
+
   def without_panopticon_validation(&block)
-    PanopticonSlugValidator.any_instance.stubs(:validate).returns(true)
     yield
-    PanopticonSlugValidator.any_instance.unstub(:validate)
+  end
+
+  teardown do
+    WebMock.reset!
+    DatabaseCleaner.clean
   end
 end
 
