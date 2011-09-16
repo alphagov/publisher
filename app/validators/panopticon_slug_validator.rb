@@ -12,8 +12,11 @@ class PanopticonSlugValidator < ActiveModel::EachValidator
     end
 
     adapter = PanopticonApi.new({:kind => record.class.to_s, :owning_app => 'publisher', :slug => the_slug})
-    record.errors[attribute] << 'must be unique across Gov.UK' unless adapter.save
-  rescue Errno::ECONNREFUSED
-    record.errors[attribute] << 'panopticon seems to be unavailable'
+    if adapter.save
+      return true
+    else
+      adapter.errors[:base].each { |msg| record.errors[attribute] << msg }
+      return false
+    end
   end
 end

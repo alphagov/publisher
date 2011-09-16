@@ -25,31 +25,29 @@ class PanopticonApi
     when Net::HTTPCreated
       return true
     when Net::HTTPNotAcceptable
-      errors.base.add("slug already taken")
+      errors['base'] << "must be unique across Gov.UK"
       return false
     else
-      errors.base.add("Panopticon communications error: #{res.inspect}")
+      errors['base'] << "Panopticon communications error: #{res.inspect}"
       return false
     end
+  rescue Errno::ECONNREFUSED
+    errors['base'] << "Panopticon communications error"
+    return false
   end
   
   def destroy
-    n = Net::HTTP.start(self.class.endpoint)
-    res = n.delete("/slugs/#{self.slug}")
+    uri = URI.parse("#{self.class.endpoint}/slugs/#{self.slug}")
+    n = Net::HTTP.start(uri.host)
+    res = n.delete(uri.path)
     return res.is_a?(Net::HTTPOK)
   end
   
   class <<self
     def find(slug)
-      res = Net::HTTP.get("#{endpoint}/slugs/#{slug}")
-      case res
-      when Net::HTTPCreated
-        JSON.parse(res.body)
-      when Net::HTTPNotFound
-        false
-      else
-        false
-      end
+      uri = URI.parse("#{endpoint}/slugs/#{slug}")
+      res = Net::HTTP.get(uri)
+      res.present? ? JSON.parse(res) : false
     end
   end
 end

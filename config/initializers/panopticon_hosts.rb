@@ -1,3 +1,5 @@
+require 'panopticon_api'
+
 PanopticonApi.endpoint = case Rails.env.to_s
 when 'development' then 'http://panopticon.dev.gov.uk'
 when 'test' then 'http://panopticon.dev.gov.uk'

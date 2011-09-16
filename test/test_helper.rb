@@ -9,6 +9,8 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'mocha'
 require 'database_cleaner'
+require 'webmock/test_unit'
+WebMock.disable_net_connect!(:allow_localhost => true)
 
 DatabaseCleaner.strategy = :truncation
 # initial clean

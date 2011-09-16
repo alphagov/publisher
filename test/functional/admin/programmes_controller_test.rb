@@ -4,6 +4,7 @@ require 'test_helper'
 class Admin::ProgrammesControllerTest < ActionController::TestCase
 
   setup do
+    stub_request(:delete, "http://panopticon.dev.gov.uk/slugs/test").to_return(:status => 200)
     login_as_stub_user
     without_panopticon_validation do
       @programme = Programme.create(:name => "test", :slug=>"test")

@@ -47,5 +47,6 @@ group :development, :test do
   gem 'simplecov', '0.4.2'
   gem 'simplecov-rcov'
   gem 'ci_reporter'
+  gem 'webmock'
   gem 'test-unit'
 end

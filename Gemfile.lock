@@ -78,6 +78,7 @@ GEM
     ci_reporter (1.6.5)
       builder (>= 2.1.2)
     columnize (0.3.4)
+    crack (0.1.8)
     daemon_controller (0.2.6)
     database_cleaner (0.6.7)
     erubis (2.6.6)
@@ -194,6 +195,9 @@ GEM
     tzinfo (0.3.29)
     warden (1.0.5)
       rack (>= 1.0)
+    webmock (1.7.6)
+      addressable (~> 2.2, > 2.2.5)
+      crack (>= 0.1.7)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -225,3 +229,4 @@ DEPENDENCIES
   slimmer!
   test-unit
   timecop
+  webmock
