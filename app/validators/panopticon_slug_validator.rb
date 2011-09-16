@@ -15,7 +15,7 @@ class PanopticonSlugValidator < ActiveModel::EachValidator
     if adapter.save
       return true
     else
-      adapter.errors[:base].each { |msg| record.errors[attribute] << msg }
+      adapter.errors['base'].each { |msg| record.errors[attribute] << msg }
       return false
     end
   end
