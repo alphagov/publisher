@@ -12,7 +12,7 @@ class RelatedItemsAreAnArrayOfSlugs < Mongoid::Migration
 
     def each
       items = doc.css "li"
-      items.to_a.each do |li|
+      items.to_a.each_with_index do |li, index|
 	publication_type = li['class'].to_s.strip
 	slug = li.css("a").to_a[0]['href'].to_s.strip
 	name = li.css("a").to_a[0].text.to_s.strip
@@ -21,7 +21,7 @@ class RelatedItemsAreAnArrayOfSlugs < Mongoid::Migration
           slug = SlugGenerator.new(name).execute
         end
 	item = OpenStruct.new :publication_type => publication_type,
-	  :slug => slug, :name => name
+	  :slug => slug, :name => name, :index => index
 	def item.exists?
 	  Slug.new(self.slug).exists?
 	end
@@ -33,9 +33,6 @@ class RelatedItemsAreAnArrayOfSlugs < Mongoid::Migration
 	  new_pub = user.send "create_#{self.publication_type}", :name => self.name, :slug => self.slug
           new_pub.save!
 	end
-        def item.to_s
-          [ publication_type, name, slug ].join ' '
-        end
 
 	yield item
       end
@@ -48,7 +45,7 @@ class RelatedItemsAreAnArrayOfSlugs < Mongoid::Migration
         if !item.exists?
           item.create_for publication.editions.last.created_by
         end
-        publication.related_items << item.slug
+        publication.related_items << [ item.index, item.slug ]
       end
 
       publication.save!
