@@ -1,4 +1,4 @@
-require 'net/http'
+require 'panopticon_api'
 
 class PanopticonSlugValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
@@ -11,7 +11,7 @@ class PanopticonSlugValidator < ActiveModel::EachValidator
       return
     end
 
-    adapter = PanopticonApi.new({:kind => record.class.to_s, :owning_app => 'publisher', :name => the_slug})
+    adapter = PanopticonApi.new({:kind => record.class.to_s, :owning_app => 'publisher', :slug => the_slug})
     record.errors[attribute] << 'must be unique across Gov.UK' unless adapter.save
   rescue Errno::ECONNREFUSED
     record.errors[attribute] << 'panopticon seems to be unavailable'

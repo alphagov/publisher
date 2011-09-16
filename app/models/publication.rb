@@ -91,7 +91,7 @@ class Publication
   end
   
   def release_slug
-    PanopticonApi.new(:name => self.slug).destroy
+    PanopticonApi.new(:slug => self.slug).destroy
   end
 
   AUDIENCES = [
