@@ -25,7 +25,7 @@ class Publication
   after_initialize :create_first_edition
 
   before_save :calculate_statuses
-  after_destroy :release_slug
+  before_destroy :release_slug
   
   validates_presence_of :name
   validates :slug, :presence => true, :uniqueness => true, :panopticon_slug => { :if => proc { |p| p.slug_changed? } }
@@ -91,7 +91,7 @@ class Publication
   end
   
   def release_slug
-    PanopticonAdapter.new(:name => self.slug).destroy
+    PanopticonApi.new(:name => self.slug).destroy
   end
 
   AUDIENCES = [

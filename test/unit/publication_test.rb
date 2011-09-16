@@ -2,11 +2,11 @@ require 'test_helper'
 
 class PublicationTest < ActiveSupport::TestCase
   setup do
-    PanopticonAdapter.any_instance.stubs(:save).returns(true)
+    PanopticonApi.any_instance.stubs(:save).returns(true)
   end
 
   test "when another validation error occurs we should not claim a slug" do
-    PanopticonAdapter.expects(:new).never
+    PanopticonApi.expects(:new).never
     g = Guide.new
     g.save
     assert ! g.errors['slug'].empty?
@@ -22,7 +22,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
   
   test "when a publication is deleted its slug should be released" do
-    PanopticonAdapter.any_instance.expects(:destroy).returns(true)
+    PanopticonApi.any_instance.expects(:destroy).returns(true)
     
     g = Guide.new(:name => 'Another Test Guide', :slug => 'another-test-guide')
     assert g.save

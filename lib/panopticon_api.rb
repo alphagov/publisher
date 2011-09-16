@@ -1,4 +1,4 @@
-class PanopticonAdapter
+class PanopticonApi
   cattr_accessor :endpoint
   attr_accessor :kind, :owning_app, :name
   
