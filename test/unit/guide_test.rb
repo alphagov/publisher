@@ -46,6 +46,7 @@ class GuideTest < ActiveSupport::TestCase
     user.save
     assert !guide.has_reviewables
     user.request_review(guide.editions.first,"Review this guide please.")
+    guide.calculate_statuses
     assert guide.has_reviewables
   end
   
@@ -71,13 +72,13 @@ class GuideTest < ActiveSupport::TestCase
     stub_mailer = stub('mailer', :deliver => true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
-
+  
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_fact_check?
     user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
   end
-
+  
   test "user should not be able to request review for a guide that's being fact checked" do
     user = User.create(:name => "Ben")
   
@@ -115,5 +116,27 @@ class GuideTest < ActiveSupport::TestCase
     assert ! edition.is_published?
     assert ! user.new_version(edition)
   end
+
+  def publisher_and_guide
+    user = User.create(:name => "Ben")
+    other_user = User.create(:name => "James")
     
+    guide = user.create_guide
+    edition = guide.editions.first
+    user.request_review(edition,"Review this guide please.")
+    other_user.review(edition,"I've reviewed it")
+    user.request_review(edition,"Review this guide please.")
+    other_user.okay(edition,"Looks good to me")
+    user.publish(edition, "PUBLISHED!")
+    return user, guide
+  end
+
+  test "a guide should not send an email if creating a new edition fails" do
+    
+    user, guide = publisher_and_guide
+    edition = guide.published_edition
+    NoisyWorkflow.expects(:make_noise).never
+    edition.expects(:build_clone).returns(false)
+    assert ! user.new_version(edition)
+  end 
 end
