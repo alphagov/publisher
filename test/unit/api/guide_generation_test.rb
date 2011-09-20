@@ -11,7 +11,7 @@ class GuideGenerationTest < ActiveSupport::TestCase
   end
 
   def generated
-    Api::Generator::Guide.edition_to_hash(@guide.editions.first)
+    Api::Generator.edition_to_hash(@guide.editions.first)
   end
 
   def test_api_hash_generation_has_slug
@@ -26,21 +26,12 @@ class GuideGenerationTest < ActiveSupport::TestCase
     assert_equal "Test guide", generated['title']
   end
 
-  # TO DO - we need to add updated_at to editions...
-  # def test_api_hash_generation_has_edition_updated_at
-  #   assert_equal @updated_time, generated['updated_at']
-  # end
-
   def test_api_hash_generation_has_parts
     assert_equal 2, generated['parts'].length
   end
 
   def test_api_hash_generation_has_part_slug
     assert_equal 'part_one', generated['parts'][0]['slug']
-  end
-
-  def test_api_hash_generation_has_part_number
-    assert_equal 1, generated['parts'][0]['number']
   end
 
   def test_api_hash_generation_has_part_title

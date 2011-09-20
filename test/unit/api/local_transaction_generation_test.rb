@@ -18,7 +18,7 @@ class LocalTransactionGenerationTest < ActiveSupport::TestCase
   end
 
   def generated(*args)
-    Api::Generator::LocalTransaction.edition_to_hash(@edition, *args)
+    Api::Generator::edition_to_hash(@edition, *args)
   end
 
   test "generated hash has slug" do
