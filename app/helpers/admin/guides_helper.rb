@@ -23,7 +23,7 @@ module Admin::GuidesHelper
       request_token_tag = tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token)
     end
     
-    comment_field =  tag(:input,:name=>'comment',:placeholder=>"Please enter a comment")
+    comment_field =  tag(:input,:name=>'comment',:placeholder=>html_options['placeholder'] || "Please enter a comment")
     cancel_button =  tag(:input,:type=>"submit",
                          :class=>"button_to",
                          :style=>"width:auto",
@@ -39,10 +39,10 @@ module Admin::GuidesHelper
   end
 
   def progress_form(opts)
-    title,guide,edition,activity = opts[:title],opts[:guide],opts[:edition],opts[:activity]
+    title,guide,edition,activity,placeholder = opts[:title],opts[:guide],opts[:edition],opts[:activity],opts[:placeholder]
     check_method = "can_#{activity}?".to_sym
     path = send("progress_admin_#{guide.class.to_s.underscore}_path", guide, :activity => activity, :edition_id => edition)
-    activity_form title, activity+"_form", path, :disabled => !edition.send(check_method)
+    activity_form title, activity+"_form", path, :disabled => !edition.send(check_method), :placeholder => placeholder
   end
   
   def review_buttons(guide,edition)
@@ -69,8 +69,9 @@ module Admin::GuidesHelper
   
   def progress_buttons(guide,edition)
     [
-        ["2nd pair of eyes","request_review"],
-        ["Publish","publish"]
+      ["Fact check", "request_fact_check"],
+      ["2nd pair of eyes","request_review"],
+      ["Publish","publish"]
     ].map{ |title,activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
@@ -82,10 +83,11 @@ module Admin::GuidesHelper
   
   def progress_forms(guide,edition)
     [
+      ["Fact check", "request_fact_check", "Enter email addresses"],
       ["2nd pair of eyes","request_review"],
       ["Publish","publish"]
-    ].map{ |title,activity|
-      progress_form(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition)
+    ].map { |title,activity, placeholder|
+      progress_form(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition,:placeholder=>placeholder)
     }.join("\n").html_safe
   end
   
@@ -96,7 +98,6 @@ module Admin::GuidesHelper
   end
   
   def friendly_date(date)
-#    .strftime("%d/%m/%Y %R")
     if Time.now - date < 2.days
       time_ago_in_words(date) + " ago."
     else

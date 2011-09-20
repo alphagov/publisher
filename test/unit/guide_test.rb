@@ -9,11 +9,6 @@ class GuideTest < ActiveSupport::TestCase
     g.build_edition("Two")
     g
   end
-
-  # No longer relevant, since name is now a required field
-  # test 'guides assume the title of their latest edition' do
-  #   assert_equal template_guide.title, 'Two'
-  # end
    
   test 'a new guide has drafts but isn\'t published' do
     g = Guide.new(:slug=>"childcare")
@@ -54,41 +49,6 @@ class GuideTest < ActiveSupport::TestCase
     assert guide.has_reviewables
   end
   
-  # test "A guide should have workflow scope flags set on saving edition" do
-  #   guide = template_guide
-  #   assert guide.has_drafts
-  #   assert !guide.has_published
-  #      
-  #   assert !Publication.published.to_a.include?(guide)
-  #   
-  #   
-  #   guide.publish guide.editions.first, "Publishing this"
-  #   
-  #   assert guide.has_drafts
-  #   assert guide.has_published
-  #   
-  #   assert guide.editions.first.save
-  #   assert guide.editions.first.save
-  #   
-  #   assert Publication.published.to_a.include? guide
-  #  end
-  # 
-  # test "A guide should have workflow scope flags set on save" do
-  #   guide = template_guide
-  #   assert guide.has_drafts
-  #   assert !guide.has_published
-  #       
-  #   assert !Publication.published.to_a.include?(guide)    
-  #   
-  #   guide.publish guide.editions.first, "Publishing this"
-  #   
-  #   assert guide.has_drafts
-  #   assert guide.has_published
-  #   assert guide.save
-  #   
-  #   assert Publication.published.to_a.include? guide
-  # end
-  
   test "guide workflow" do
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
@@ -107,9 +67,29 @@ class GuideTest < ActiveSupport::TestCase
     assert edition.can_publish?
   end
   
-  test "user should not be able to review a guide they requested review for" do
+  test "user should be able to have an email sent for fact checking" do
+    stub_mailer = stub('mailer', :deliver => true)
+    NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
 
+    guide = user.create_guide
+    edition = guide.editions.first
+    assert edition.can_request_fact_check?
+    user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
+  end
+
+  test "user should not be able to request review for a guide that's being fact checked" do
+    user = User.create(:name => "Ben")
+  
+    guide = user.create_guide
+    edition = guide.editions.first
+    user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
+    assert ! edition.can_request_review?
+  end
+  
+  test "user should not be able to review a guide they requested review for" do
+    user = User.create(:name => "Ben")
+  
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
@@ -119,7 +99,7 @@ class GuideTest < ActiveSupport::TestCase
   
   test "user should not be able to okay a guide they requested review for" do
     user = User.create(:name => "Ben")
-
+  
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
@@ -129,11 +109,11 @@ class GuideTest < ActiveSupport::TestCase
   
   test "you can only create a new edition from a published edition" do
     user = User.create(:name => "Ben")
-
+  
     guide = user.create_guide
     edition = guide.editions.first
     assert ! edition.is_published?
     assert ! user.new_version(edition)
   end
-  
+    
 end

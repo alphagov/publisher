@@ -8,6 +8,7 @@ class Publication
   field :audiences,       :type => Array
 
   field :has_drafts,      :type => Boolean
+  field :has_fact_checking, :type => Boolean
   field :has_published,   :type => Boolean
   field :has_reviewables, :type => Boolean
   field :archived,        :type => Boolean
@@ -18,6 +19,7 @@ class Publication
   embeds_many :publishings
 
   scope :in_draft,         where(has_drafts: true)
+  scope :fact_checking,    where(has_fact_checking: true)
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
   scope :archive,          where(archived: true)
@@ -54,6 +56,8 @@ class Publication
     all_versions = ::Set.new(editions.map(&:version_number))
     drafts = (all_versions - published_versions)
     self.has_drafts = drafts.any?
+    
+    self.has_fact_checking = editions.any? { |e| e.latest_action && e.latest_action.request_type == Action::FACT_CHECK_REQUESTED }
 
     self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
 

@@ -1,8 +1,8 @@
 class Action
   include Mongoid::Document
   
-  CREATED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED = 
-      "created", "review_requested", "published", "new_version", "okayed", "reviewed"
+  CREATED, FACT_CHECK_REQUESTED, FACT_CHECK_RECEIVED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED = 
+      "created", "fact_check_requested", "fact_check_received", "review_requested", "published", "new_version", "okayed", "reviewed"
 
   embedded_in :edition
   
@@ -12,13 +12,17 @@ class Action
   field :comment,      :type => String
   field :request_type, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
-  
+
   def friendly_description
     case request_type
     when CREATED
       "#{edition.container.class} created by #{requester.name}"
     when NEW_VERSION
       "New version \"#{edition.title}\" created by #{requester.name}"
+    when FACT_CHECK_REQUESTED
+      "A fact check for \"#{edition.title}\" was requested by #{requester.name}"
+    when FACT_CHECK_RECEIVED
+      "A fact check response for \"#{edition.title}\" was entered"
     when REVIEW_REQUESTED
       "A review and publish was requested by #{requester.name}"
     when REVIEWED

@@ -3,8 +3,8 @@
 class NoisyWorkflow < ActionMailer::Base
   default :from => "winston@alphagov.co.uk"
   
-  def make_noise(guide,action)
-    @guide = guide
+  def make_noise(publication,action)
+    @publication = publication
     @action = action
     
     email_address = case action.request_type
@@ -15,6 +15,12 @@ class NoisyWorkflow < ActionMailer::Base
 
     mail(:to => email_address,
          :subject => "[PUBLISHER] #{@action.friendly_description}: #{@action.edition.title}")
+  end
+  
+  def request_fact_check(edition, email_addresses)
+    @edition = edition
+    mail(:to => email_addresses,
+         :subject => "[FACT CHECK REQUESTED] #{@edition.title}")
   end
   
 end

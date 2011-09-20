@@ -6,5 +6,6 @@ class Admin::RootController < Admin::BaseController
     @published = Publication.published
     @archive = Publication.archive
     @review_requested = Publication.review_requested
+    @fact_checking = Publication.fact_checking
   end
 end

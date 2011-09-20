@@ -3,10 +3,6 @@ class Edition
 
   include Workflow
 
-  def in_fact_checking?
-    false
-  end
-
   field :version_number, :type => Integer, :default => 1
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }

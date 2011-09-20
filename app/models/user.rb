@@ -60,10 +60,22 @@ class User
     end
   end
 
+  def request_fact_check(edition, email_addresses)
+    record_action edition, Action::FACT_CHECK_REQUESTED, email_addresses
+    NoisyWorkflow.request_fact_check(edition, email_addresses).deliver
+    edition
+  end
+
   def request_review(edition, comment)
     record_action edition, Action::REVIEW_REQUESTED, comment
     edition
   end
+  
+  def receive_fact_check(edition, comment)
+    record_action edition, Action::FACT_CHECK_RECEIVED, comment
+    edition
+  end
+    
 
   def review(edition,comment)
     return false if edition.latest_action.requester_id == self.id
