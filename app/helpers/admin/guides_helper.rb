@@ -25,10 +25,9 @@ module Admin::GuidesHelper
     
     comment_field =  tag(:input,:name=>'comment',:placeholder=>html_options['placeholder'] || "Please enter a comment")
     cancel_button =  tag(:input,:type=>"submit",
-                         :class=>"button_to",
+                         :class=>"button_to cancel_button",
                          :style=>"width:auto",
-                         :value=>"Cancel",
-                         :onclick=>"$('.workflow_buttons').show();$('##{id}').hide();return false;")
+                         :value=>"Cancel")
     
     html_options = convert_options_to_data_attributes({}, html_options)
     html_options.merge!("type" => "submit", "value" => name,:style=>"width:auto")
@@ -52,7 +51,7 @@ module Admin::GuidesHelper
     ].map{ |title,activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled" 
-     "<form id=\"#{activity}_toggle\" class=\"button_to\" onsubmit=\"$('##{activity}_form').toggle();$('.workflow_buttons').hide();return false;\">
+     "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
      <input type=\"submit\" value=\"#{title}\"  #{disabled}>
      </form>"
    }.join("\n").html_safe
@@ -75,7 +74,7 @@ module Admin::GuidesHelper
     ].map{ |title,activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
-     "<form id=\"#{activity}_toggle\" class=\"button_to\" onsubmit=\"$('##{activity}_form').toggle();$('.workflow_buttons').hide();return false;\">
+     "<form id=\"#{activity}_toggle\" class=\"button_to progress_button\">
      <input type=\"submit\" value=\"#{title}\"  #{disabled}>
      </form>"
    }.join("\n").html_safe
