@@ -6,7 +6,7 @@ open a Rails console and:
 
 # Add headers to council_name_to_snac.csv agency_id,agency_name,snac
 f = File.open('council_name_to_snac.csv', 'r:Windows-1252:UTF-8')
-Authority.populate_from_source!!(f)
+Authority.populate_from_source!(f)
 
 f = File.open('local_transactions.csv', 'r:Windows-1252:UTF-8')
 LocalTransactionsSource.populate_from_source!(f)
