@@ -39,4 +39,4 @@ guides$ script/console
 panopticon$ rackup
 
 # Run the guides app setting env variable to point at your panopticon instance
-guides$ PANOPTICON_URI="http://localhost:9292" be rails server
+guides$ PANOPTICON_URI="http://localhost:9292" bundle exec rails server
