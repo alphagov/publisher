@@ -60,6 +60,14 @@ class Publication
     PublicationMetadata.new self
   end
 
+  def panopticon_uri
+    Plek.current.panopticon + '/artefacts/' + (panopticon_id || slug).to_s
+  end
+
+  def metadata
+    PublicationMetadata.new self
+  end
+
   def build_edition(title)
     version_number = self.editions.length + 1
     edition = self.class.edition_class.new(:title=> title, :version_number=>version_number)
