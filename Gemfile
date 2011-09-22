@@ -35,8 +35,11 @@ end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
-group :development, :test do
+group :development do
   gem 'passenger'
+end
+
+group :test do
   gem 'fabrication'
   gem "timecop"
   gem 'capybara', '~> 1.0.0'
