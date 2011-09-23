@@ -20,7 +20,7 @@ class NoisyWorkflow < ActionMailer::Base
   def request_fact_check(edition, email_addresses)
     @edition = edition
     mail(:to => email_addresses,
-         :subject => "[FACT CHECK REQUESTED] #{@edition.title}")
+      :reply_to => 'eds@alphagov.co.uk', :subject => "[FACT CHECK REQUESTED] #{@edition.title}")
   end
   
 end
