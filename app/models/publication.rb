@@ -64,7 +64,7 @@ class Publication
     Plek.current.panopticon + '/artefacts/' + (panopticon_id || slug).to_s
   end
 
-  def metadata
+  def meta_data
     PublicationMetadata.new self
   end
 
