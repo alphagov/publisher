@@ -1,3 +1,17 @@
-We want some fact checking! Please! On <%= @edition.title %>
+Hello - thank you for fact-checking the beta version of www.gov.uk
+
+Please read this content and check it's factually correct.
+
+If you spot something that's incorrect, please let us know by:
+
+- replying to this email with your comments
+- directing us to any specific instances, e.g. part 2, subheading 3
+- explaining what the problem is, e.g. the text implies a legal obligation, when there isn't one
+
+Please don't rewrite the text - just point out any factual errors. We will rewrite accordingly.
+
+Beta editorial team
+
+<%= @edition.title %>
 
 <%= "#{ExternalServices.front_end_host}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
