@@ -56,7 +56,8 @@ module Api
           :will_continue_on,
           :link, 
           :minutes_to_complete, 
-          :uses_government_gateway]
+          :uses_government_gateway,
+          :alternate_methods]
       end
     end
 
