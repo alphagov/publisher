@@ -1,4 +1,3 @@
-# TODO: Pull this out into Plek
 module ExternalServices
 
   def local_environment

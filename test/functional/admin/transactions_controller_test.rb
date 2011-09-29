@@ -3,11 +3,10 @@ require 'test_helper'
 class Admin::TransactionsControllerTest < ActionController::TestCase
 
   setup do
-    stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
-    stub_request(:get, "#{Plek.current.find("arbiter")}/artefacts/test.js").to_return(:status => 200, :body => '{"name":"FOOOO"}')
+    stub_request(:delete, "http://panopticon.dev.gov.uk/slugs/test").to_return(:status => 200)
     login_as_stub_user
     without_panopticon_validation do
-      @transaction = Transaction.create!(:name => "test", :slug=>"test")
+      @transaction = Transaction.create(:name => "test", :slug=>"test")
     end
   end
 

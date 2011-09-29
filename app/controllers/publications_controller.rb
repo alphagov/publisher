@@ -49,11 +49,7 @@ class PublicationsController < ApplicationController
     if edition
       # This is used for previewing yet-to-be-published editions. 
       # At some point this should require special authentication.
-      if edition == "latest"
-        edition = publication.editions.order_by(:created_at => :desc).first
-      else
-        edition = publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
-      end
+      edition = publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
     else
       edition = publication.published_edition
     end

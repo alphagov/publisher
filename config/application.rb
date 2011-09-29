@@ -51,8 +51,3 @@ module Publisher
     config.filter_parameters += [:password]
   end
 end
-
-require 'external_services'
-require 'open-uri'
-require 'builder'
-require 'initialize_definition'

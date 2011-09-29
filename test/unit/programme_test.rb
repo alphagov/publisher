@@ -2,20 +2,15 @@ require 'test_helper'
 
 class ProgrammeTest < ActiveSupport::TestCase
 
-  setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/987353.js").
-      to_return(:status => 200, :body => "{}", :headers => {})
-  end
-
   def template_programme
-    p = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
+    p = Programme.new(:slug=>"childcare", :name=>"Something")
     edition = p.editions.first
     edition.title = 'One'
     p
   end
 
   test 'a new programme has drafts but isn\'t published' do
-    p = Programme.new(:slug=>"childcare", :name => "Children", :panopticon_id => 987353)
+    p = Programme.new(:slug=>"childcare")
     assert p.has_drafts
     assert !p.has_published
   end

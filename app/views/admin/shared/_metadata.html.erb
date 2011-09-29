@@ -1,3 +1,10 @@
-<%= publication.meta_data.to_html %>
-
-<%= link_to "Edit in Panopticon", publication.panopticon_uri + '/edit', :class => "button" %>
+<%= semantic_form_for([:admin, publication], :html => { :class => 'publication'}) do |f| %>
+  <%= f.inputs do %>
+    <%= f.input :name, :label => raw("Internal name <small>(for internal tracking, not displayed on site)</small>") %>
+    <%= f.input :slug, :hint => true %>
+    <%= f.input :tags, :hint => true %>
+    <%= f.input :section, :as => :select, :collection => Guide::SECTIONS %>
+    <%= f.input :related_items, :as => :text, :label => "Related items", :input_html => {:rows => 4} %>
+    <%= f.input :audiences, :as => :check_boxes, :collection => Guide::AUDIENCES %>
+  <% end %>
+<% end %>
