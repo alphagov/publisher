@@ -1,0 +1,24 @@
+#! /usr/bin/env ruby
+
+require File.expand_path('../../config/environment', __FILE__)
+
+email = Mail.read_from_string STDIN.read
+publication_id, edition_id = email.subject.scan(/id:(\w+)\/(\w+)/)[0]
+if publication_id.blank? || edition_id.blank?
+  puts "Couldn't get the ID from the email subject"
+  exit 1
+end
+
+publication = Publication.where(_id: publication_id).first
+unless publication.present?
+  puts "Couldn't find publication with ID #{publication_id}"
+  exit 2
+end
+
+edition = publication.editions.where(_id: edition_id).first
+unless edition.present?
+  puts "Couldn't find edition with id #{edition_id} for publication #{publication_id}"
+  exit 3
+end
+
+puts edition.inspect

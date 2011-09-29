@@ -17,7 +17,7 @@ class Edition
   alias_method :admin_list_title, :title
 
   def fact_check_id
-    id.to_s
+    [ container.id.to_s, id.to_s, version_number ].join '/'
   end
 
   def not_editing_published_item
