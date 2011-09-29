@@ -16,6 +16,10 @@ class Edition
 
   alias_method :admin_list_title, :title
 
+  def fact_check_id
+    id.to_s
+  end
+
   def not_editing_published_item
     errors.add(:base, "Published editions can't be edited") if changed? and is_published?
   end

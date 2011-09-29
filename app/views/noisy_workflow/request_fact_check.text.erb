@@ -10,8 +10,12 @@ If you spot something that's incorrect, please let us know by:
 
 Please don't rewrite the text - just point out any factual errors. We will rewrite accordingly.
 
-Beta editorial team
-
 <%= @edition.title %>
 
 <%= "#{ExternalServices.front_end_host}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
+
+Thanks,
+Beta editorial team
+--
+Please leave this footer intact when you reply - we use it to help us track your
+feedback. id:<%= @edition.fact_check_id %>
