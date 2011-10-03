@@ -28,7 +28,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
     
   test "when panopticon says a slug is taken validation should fail" do
-    stub_request(:post, "panopticon.dev.gov.uk/slugs").to_return(:status => 406)
+    stub_request(:post, "panopticon.dev.gov.uk/slugs").to_return(:status => 409)
     g = Guide.new(:name => 'My Test Guide', :slug => 'my-test-guide')
     assert ! g.save
     assert g.errors['slug'].any?
