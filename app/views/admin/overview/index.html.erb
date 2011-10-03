@@ -1,0 +1,4 @@
+<% @overviews.each do |title, rows| %>
+  <h2><%= title.capitalize %></h2>
+  <%= render :partial => "row", :locals => {:rows => rows } %>
+<% end %>

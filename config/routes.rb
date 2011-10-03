@@ -5,22 +5,22 @@ Publisher::Application.routes.draw do
       post :progress, :on => :member
       resources :editions
     end
-    
+
     resources :places do
       post :progress, :on => :member
       resources :editions
     end
-    
+
     resources :answers do
       post :progress, :on => :member
       resources :editions
     end
-    
+
     resources :guides do
       post :progress, :on => :member
       resources :editions
     end
-    
+
     resources :programmes do
       post :progress, :on => :member
       resources :editions
@@ -30,12 +30,14 @@ Publisher::Application.routes.draw do
       post :progress, :on => :member
       resources :editions
     end
-    
+
     match 'google_insight' => 'seo#google_insight'
-    
+
+    match 'overview' => 'overview#index'
+
     root :to => 'root#index'
   end
-  
+
   resources :publications, :only => [:show,:index]
   resources :local_transactions, :only => :show do
     member do

@@ -98,6 +98,38 @@ class Publication
     PanopticonApi.new(:slug => self.slug).destroy
   end
 
+  FORMAT = "this._type"
+  SECTION = "this.section"
+
+  def self.count_by(type = FORMAT) 
+
+    map = <<EOF
+      function() {
+        function truthy(value) {
+          return (value == true) ? 1 : 0;
+        }
+        emit(#{type}, {type: #{type}, count: 1, draft: truthy(this.has_drafts), review: truthy(this.has_reviewables), published: truthy(this.has_published), fact_check: truthy(this.has_fact_checking)})
+      }
+EOF
+    reduce = <<EOF
+      function(key, values) {
+        var count = 0; draft = 0; review = 0; published = 0; fact_check = 0;
+        values.forEach(function(doc) { 
+          count += parseInt(doc.count);
+          draft += parseInt(doc.draft);
+          published += parseInt(doc.published);
+          review += parseInt(doc.review);
+          fact_check += parseInt(doc.fact_check);
+          type = doc.type
+        });
+        return {type: type, count: count, draft: draft, review: review, published: published, fact_check: fact_check}
+      }
+EOF
+
+    collection.mapreduce(map, reduce).find()
+
+  end
+
   AUDIENCES = [
     "Age-related audiences",
     "Carers",

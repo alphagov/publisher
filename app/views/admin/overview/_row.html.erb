@@ -1,0 +1,28 @@
+<table>
+<thead>
+  <tr>
+    <th scope="col">Format</th>
+    <th scope="col">Total</th>
+    <th scope="col">Draft</th>
+    <th scope="col">Fact check</th>
+    <th scope="col">Review</th>
+    <th scope="col">Published</th>
+  </tr>
+</thead>
+<tbody>
+
+<% rows.each do |row| %>
+  <% unless row.values[0].blank? %>
+  <tr>
+    <th scope="row"><%= row.values[0] %></th>
+    <th scope="row"><%= row.values[1]['count'] %></th>
+    <th scope="row"><%= row.values[1]['draft'] %></th>
+    <th scope="row"><%= row.values[1]['fact_check'] %></th>
+    <th scope="row"><%= row.values[1]['review'] %></th>
+    <th scope="row"><%= row.values[1]['published'] %></th>
+  </tr>
+  <% end %>
+<% end %>
+
+</tbody>
+</table>
