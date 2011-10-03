@@ -2,6 +2,8 @@ class Publication
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :panopticon_id,   :type => Integer
+
   field :name,            :type => String
   field :slug,            :type => String
   field :tags,            :type => String
@@ -13,9 +15,9 @@ class Publication
   field :has_reviewables, :type => Boolean
   field :archived,        :type => Boolean
 
-  field :section,        :type => String
+  field :section,         :type => String
   field :related_items,   :type => String
-  
+
   embeds_many :publishings
 
   scope :in_draft,         where(has_drafts: true)
@@ -27,12 +29,36 @@ class Publication
   after_initialize :create_first_edition
 
   before_save :calculate_statuses
-  before_destroy :release_slug
-  
+
   validates_presence_of :name
-  validates :slug, :presence => true, :uniqueness => true, :panopticon_slug => { :if => proc { |p| p.slug_changed? } }
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
+
+  def self.import panopticon_id, importing_user
+    uri = Plek.current.find("arbiter") + '/artefacts/' + panopticon_id + '.js'
+    data = open(uri).read
+    json = JSON.parse data
+    publication = Publication.where(slug: json['slug']).first
+    if publication.present?
+      return publication if publication.panopticon_id
+      publication.panopticon_id = json['id']
+      publication.save!
+      return publication
+    end
+
+    kind = json['kind']
+    publication = importing_user.send "create_#{kind}", :panopticon_id => json['id'], :name => json['name']
+    publication.save!
+    publication
+  end
+
+  def panopticon_uri
+    Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
+  end
+
+  def meta_data
+    PublicationMetadata.new self
+  end
 
   def build_edition(title)
     version_number = self.editions.length + 1
@@ -56,7 +82,7 @@ class Publication
     all_versions = ::Set.new(editions.map(&:version_number))
     drafts = (all_versions - published_versions)
     self.has_drafts = drafts.any?
-    
+
     self.has_fact_checking = editions.any? { |e| e.latest_action && e.latest_action.request_type == Action::FACT_CHECK_REQUESTED }
 
     self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
@@ -65,9 +91,15 @@ class Publication
   end
 
   def publish(edition, notes)
+    denormalise_metadata
     self.publishings << Publishing.new(:version_number=>edition.version_number,:change_notes=>notes)
     calculate_statuses
   end
+
+  def denormalise_metadata
+    meta_data.apply_to self
+  end
+  private :denormalise_metadata
 
   def published_edition
     latest_publishing = self.publishings.sort_by(&:version_number).last
@@ -92,10 +124,6 @@ class Publication
 
   def title
     self.name || latest_edition.title
-  end
-  
-  def release_slug
-    PanopticonApi.new(:slug => self.slug).destroy
   end
 
   FORMAT = "this._type"
@@ -176,7 +204,7 @@ EOF
     'Money',
     'Taxes',
     'Benefits and schemes',
-    'Driving', 
+    'Driving',
     'Housing',
     'Communities',
     'Pensions',
@@ -184,5 +212,4 @@ EOF
     'Travel',
     'Citizenship'
   ]
-
 end

@@ -1,7 +1,6 @@
 require 'active_support/inflector'
 
 module Api
-
   module Generator
     def self.generator_class(edition)
       "Api::Generator::#{edition.container.class.to_s}".constantize
@@ -14,13 +13,13 @@ module Api
 
       attrs = edition.container.as_json(:only => publication_fields)
       attrs.merge!(edition.as_json(:only => edition_fields))
-      
+
       if edition.respond_to?(:parts)
          attrs['parts'] = edition.parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]) }
       end
-      
+
       if edition.respond_to?(:expectations)
-        attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }        
+        attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
       end
 
       attrs['type'] = edition.container.class.to_s.underscore
@@ -31,7 +30,7 @@ module Api
       def self.extra_fields
         []
       end
-      
+
       def self.edition_to_hash(attrs,guide,options={})
         attrs
       end
@@ -48,14 +47,14 @@ module Api
         [:body]
       end
     end
-    
+
     class Transaction < Base
       def self.extra_fields
-        [ :introduction, 
-          :more_information, 
+        [ :introduction,
+          :more_information,
           :will_continue_on,
-          :link, 
-          :minutes_to_complete, 
+          :link,
+          :minutes_to_complete,
           :uses_government_gateway,
           :alternate_methods]
       end
@@ -63,8 +62,8 @@ module Api
 
     class LocalTransaction < Base
       def self.extra_fields
-        [ :introduction, 
-          :more_information, 
+        [ :introduction,
+          :more_information,
           :minutes_to_complete]
       end
 
@@ -89,12 +88,11 @@ module Api
 
     class Place < Base
       def self.extra_fields
-        [ :introduction, 
-          :more_information, 
+        [ :introduction,
+          :more_information,
           :place_type]
       end
 
     end
-    
   end
 end

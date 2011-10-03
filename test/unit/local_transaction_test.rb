@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class LocalTransactionTest < ActiveSupport::TestCase
-  def setup
-    PanopticonSlugValidator.any_instance.stubs(:validate).returns(true)
-  end
-
   def lgsl
     @lgsl ||= LocalTransactionsSource::Lgsl.create(code: "1")
   end
