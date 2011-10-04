@@ -1,63 +1,36 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'lockfile'
-
-# PATCH - make Lockfile gem work in ruby 1.9
-require 'lockfile'
-class Lockfile
-    alias_method :old_load_lock_id, :load_lock_id
-    def load_lock_id buf
-      def buf.each(&block)
-        self.split($/).each(&block)
-      end
-      old_load_lock_id buf
-    end
-end
+# Check all emails in the gmail inbox. Find any sent to an address matching the pattern
+# factcheck+{rails_environment}-#{publication_id}@alphagov.co.uk
+#
+# Any messages successfully processed will be moved out of the inbox. Others are left
+# there, so we can review that messages are getting processed properly by going into the
+# gmail account and having a look.
+#
+require File.expand_path("../../lib/lockfile", __FILE__)
 
 begin
- Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
-   
-   require File.expand_path('../../config/environment',  __FILE__)
-   require 'mail'
-   require 'external_services'
-   require Rails.root.join("config/fact_check_account")
+  Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
 
-   Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
- 
-   Mail.all.each do |message|
-     # TODO: What do we do if an email is for the current environment but doesn't match a publication?
-     # TODO: What happens if an email isn't for any real environment?
-     if message.to.any? { |to| to.match(/factcheck\+#{Rails.env}-(.+?)@alphagov.co.uk/) }
-       Rails.logger.info "Looking for: #{$1}"
-       begin
-         publication = Publication.find($1)
-         if publication
-           edition = publication.latest_edition
+    require File.expand_path('../../config/environment',  __FILE__)
+    require 'mail'
+    require 'external_services'
+    require Rails.root.join("config/fact_check_account")
+    require 'fact_check_message_processor'
 
-           if message.parts.any?
-             character_set = message.text_part.content_type_parameters['charset']
-             messy_notes = message.text_part.body.to_s
-           else
-             character_set = message.body.charset
-             messy_notes = message.body.to_s
-           end
+    Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
-           notes = messy_notes.force_encoding(character_set).encode('UTF-8')
+    Mail.all(:delete_after_find => true) do |message, imap, message_id|
+      if message.to.any? { |to| to.match(/factcheck\+#{Rails.env}-(.+?)@alphagov.co.uk/) }
+        processor = FactCheckMessageProcessor.new(message, imap, message_id)
+        next if processor.process($1)
+      end
 
-           # TODO: We will be setting a user_id on the action of 'nil' - make sure the front end handles that okay
-           dummy_user = User.new
-           action = edition.new_action(dummy_user, 'fact_check_received', notes)
-           NoisyWorkflow.make_noise(edition.container,action).deliver
-         end
-       rescue BSON::InvalidObjectId
-         Rails.logger.info "#{$1} is not a valid mongo id"
-       end
-     end
-   end
- 
-   Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
- end
+      message.skip_deletion
+    end
+
+    Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
+  end
 rescue Lockfile::MaxTriesLockError => e
   Rails.logger.info "Another email fetcher is already running. Exiting."
 end
