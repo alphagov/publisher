@@ -19,6 +19,12 @@ class EditionTest < ActiveSupport::TestCase
     g = Guide.new(:slug=>"childcare")
     assert_equal 1, g.editions.length 
   end
+
+  test "editions can have notes stored for the history tab" do
+    edition = template_edition
+    user = User.new
+    assert edition.new_action(user, 'note', 'Something important')
+  end
   
   test "new edition should have an incremented version number" do
     g = Guide.new(:slug=>"childcare")

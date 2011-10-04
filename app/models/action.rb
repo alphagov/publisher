@@ -1,7 +1,7 @@
 class Action
   include Mongoid::Document
   
-  CREATED, FACT_CHECK_REQUESTED, FACT_CHECK_RECEIVED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED = 
+  CREATED, FACT_CHECK_REQUESTED, FACT_CHECK_RECEIVED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED, NOTE = 
       "created", "fact_check_requested", "fact_check_received", "review_requested", "published", "new_version", "okayed", "reviewed"
 
   embedded_in :edition
@@ -31,6 +31,8 @@ class Action
       "OK'd for publication by #{requester.name}"
     when PUBLISHED
       "Published"
+    when NOTE
+      "Made a note"
     end
   end
   

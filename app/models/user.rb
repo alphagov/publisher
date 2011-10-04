@@ -17,6 +17,10 @@ class User
     action = edition.new_action(self, type, comment)
     NoisyWorkflow.make_noise(edition.container,action).deliver
   end
+  
+  def record_note(edition, comment)
+    edition.new_action(self, 'note', comment)
+  end
 
   def create_publication(kind_class, attributes = {})
     item = kind_class.new(attributes)
