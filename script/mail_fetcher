@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'lockfile'
+
+# PATCH - make Lockfile gem work in ruby 1.9
+require 'lockfile'
+class Lockfile
+    alias_method :old_load_lock_id, :load_lock_id
+    def load_lock_id buf
+      def buf.each(&block)
+        self.split($/).each(&block)
+      end
+      old_load_lock_id buf
+    end
+end
+
+begin
+ Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
+   
+   require File.expand_path('../../config/environment',  __FILE__)
+   require 'mail'
+   require 'external_services'
+   require Rails.root.join("config/fact_check_account")
+
+   Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+ 
+   Mail.all.each do |message|
+     # TODO: What do we do if an email is for the current environment but doesn't match a publication?
+     # TODO: What happens if an email isn't for any real environment?
+     if message.to.any? { |to| to.match(/factcheck\+#{Rails.env}-(.+?)@alphagov.co.uk/) }
+       Rails.logger.info "Looking for: #{$1}"
+       begin
+         publication = Publication.find($1)
+         if publication
+           edition = publication.latest_edition
+
+           # TODO: Test this with multipart emails
+           notes = message.body
+
+           # TODO: We will be setting a user_id on the action of 'nil' - make sure the front end handles that okay
+           dummy_user = User.new
+           action = edition.new_action(dummy_user, 'fact_check_received', notes)
+           NoisyWorkflow.make_noise(edition.container,action).deliver
+           
+           
+         end
+       rescue BSON::InvalidObjectId
+         Rails.logger.info "#{$1} is not a valid mongo id"
+       end
+     end
+   end
+ 
+   Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
+ end
+rescue Lockfile::MaxTriesLockError => e
+  Rails.logger.info "Another email fetcher is already running. Exiting."
+end
