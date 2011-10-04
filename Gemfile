@@ -35,6 +35,9 @@ end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
+gem 'lockfile'
+gem 'whenever'
+
 group :development do
   gem 'passenger'
 end
