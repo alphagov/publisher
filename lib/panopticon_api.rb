@@ -24,7 +24,7 @@ class PanopticonApi
     case res
     when Net::HTTPCreated
       return true
-    when Net::HTTPNotAcceptable
+    when Net::HTTPConflict, Net::HTTPNotAcceptable
       errors['base'] << "must be unique across Gov.UK"
       return false
     else

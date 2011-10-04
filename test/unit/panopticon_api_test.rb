@@ -9,12 +9,20 @@ class PanopticonApiTest < ActiveSupport::TestCase
   end
   
   test "when saving, it registers an error on the object if the slug is already taken" do
+    stub_request(:post, "panopticon.dev.gov.uk/slugs").to_return(:status => 409)
+    a = PanopticonApi.new(:slug => 'james', :kind => 'answer', :owning_app => 'publisher')
+    assert ! a.save
+    assert_equal "must be unique across Gov.UK", a.errors[:base].first
+  end
+  
+  test "when saving, it registers an error on the object if the slug is already taken (using the old API)" do
     stub_request(:post, "panopticon.dev.gov.uk/slugs").to_return(:status => 406)
     a = PanopticonApi.new(:slug => 'james', :kind => 'answer', :owning_app => 'publisher')
     assert ! a.save
     assert_equal "must be unique across Gov.UK", a.errors[:base].first
   end
   
+
   test "save returns true once the slug is claimed" do
     stub_request(:post, "panopticon.dev.gov.uk/slugs").to_return(:status => 201)
     a = PanopticonApi.new(:slug => 'james', :kind => 'answer', :owning_app => 'publisher')
