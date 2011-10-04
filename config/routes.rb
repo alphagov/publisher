@@ -1,6 +1,8 @@
 Publisher::Application.routes.draw do
 
   namespace :admin do
+    resources :notes
+    
     resources :transactions do
       post :progress, :on => :member
       resources :editions
