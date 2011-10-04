@@ -14,7 +14,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     guide = template_guide
     edition = guide.editions.first
     email = NoisyWorkflow.request_fact_check edition, 'jys@ketlai.co.uk'
-    assert_equal ["eds@alphagov.co.uk"], email.reply_to
+    assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.reply_to
     assert_match /\bid:#{edition.fact_check_id}\b/, email.subject
     assert_match /\bid:#{edition.fact_check_id}\b/, email.body
   end
