@@ -92,7 +92,16 @@ class EditionTest < ActiveSupport::TestCase
     guide.publish edition,"Published because I did"
     assert_not_nil guide.published_edition
   end
-
+  
+  test "when an edition is published, a status message is sent on the message bus" do
+    edition = template_edition
+    guide = template_edition.guide
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+    Messenger.any_instance.expects(:published).with(edition).once
+    guide.publish edition, "Published because I did"
+  end
+  
   test "a published edition can't be edited" do
     without_metadata_denormalisation(Guide) do
       edition = template_edition

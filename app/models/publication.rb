@@ -112,11 +112,14 @@ class Publication
     denormalise_metadata
     self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
     calculate_statuses
+    Messenger.new.published edition
   end
 
   def denormalise_metadata
     meta_data.apply_to self
   end
+
+  delegate :need_id, :to => :meta_data
 
   def published_edition
     latest_publishing = self.publishings.sort_by(&:version_number).last

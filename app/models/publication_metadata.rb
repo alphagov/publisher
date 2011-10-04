@@ -90,6 +90,10 @@ class PublicationMetadata
     data = JSON.parse open(uri).read
     data.except('updated_at', 'created_at', 'id', 'owning_app', 'kind', 'active')
   end
+  
+  def need_id
+    attributes['need_id']
+  end
 
   def attributes
     load_attributes
