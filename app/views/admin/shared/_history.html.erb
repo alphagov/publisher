@@ -10,19 +10,23 @@
     </div>
     <ul class="history">
       <% edition.actions.each do |action| %>
-      <% if action.requester %>
       <li>
-        <p>
-          <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
-          <%= action.to_s %>
-        </p>
-        <p><%= mail_to action.requester.email, action.requester.name %></p>
+        <% if action.requester %>
+          <p>
+            <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
+            <%= action.to_s %>
+          </p>
+          <p><%= mail_to action.requester.email, action.requester.name %></p>
+        <% else %>
+          <p><%= action.to_s %></p>
+          <p>gov.uk bot</p>
+        <% end %>
         <p class="action-time"><%= action.created_at.strftime("%d/%m/%Y %R") %></p>
         <% if action.comment.present? %>
         <blockquote><%= action.comment %></blockquote>
         <% end %>
       </li>
-      <% end %>
+      
       <% end %>
     </ul>
   </div>
