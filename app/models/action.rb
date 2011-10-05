@@ -14,11 +14,13 @@ class Action
 
   NON_STATUS_ACTIONS = [
     NOTE                 = "note",
+    ASSIGNED             = "assigned",
   ]
 
   embedded_in :edition
 
   field :requester_id, :type => Integer
+  field :recipient_id, :type => Integer
   field :approver_id,  :type => Integer
   field :approved,     :type => DateTime
   field :comment,      :type => String
@@ -45,11 +47,22 @@ class Action
       "Published"
     when NOTE
       "Made a note"
+    when ASSIGNED
+      "#{requester.name} assigned \"#{edition.title}\" to #{recipient.name}"
     end
   end
 
   def requester
     @requester ||= User.first(conditions: {_id: self.requester_id})
+  end
+
+  def recipient
+    @recipient ||= User.first(conditions: {recipient_id: self.recipient_id})
+  end
+
+  def recipient=(user)
+    @recipient = user
+    self.recipient_id = user.id
   end
 
   def status_action?

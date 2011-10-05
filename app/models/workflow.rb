@@ -42,12 +42,21 @@ module Workflow
   end
 
   def latest_status_action
-    self.actions.sort_by(&:created_at).reverse.find{ |a| a.status_action? }
+    most_recent_action(&:status_action?)
   end
 
   def status_is?(*kinds)
     action = latest_status_action
     action && kinds.include?(action.request_type)
+  end
+
+  def assigned_to
+    assignment = most_recent_action { |a| Action::ASSIGNED == a.request_type }
+    assignment && assignment.recipient
+  end
+
+  def most_recent_action(&blk)
+    self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
 
   def progress(activity,current_user,notes)
