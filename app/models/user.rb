@@ -13,13 +13,13 @@ class User
     first(conditions: {uid: uid})
   end
 
-  def record_action(edition,type,comment=nil)
-    action = edition.new_action(self, type, comment)
+  def record_action(edition, type, options={})
+    action = edition.new_action(self, type, options)
     NoisyWorkflow.make_noise(edition.container,action).deliver
   end
   
   def record_note(edition, comment)
-    edition.new_action(self, 'note', comment)
+    edition.new_action(self, 'note', comment: comment)
   end
 
   def create_publication(kind_class, attributes = {})
@@ -65,7 +65,7 @@ class User
   end
 
   def request_fact_check(edition, email_addresses)
-    record_action edition, Action::FACT_CHECK_REQUESTED, email_addresses
+    record_action edition, Action::FACT_CHECK_REQUESTED, comment: email_addresses
     NoisyWorkflow.request_fact_check(edition, email_addresses).deliver
     edition
   end
@@ -73,12 +73,12 @@ class User
   def request_review(edition, comment)
     return false if edition.status_is?(Action::REVIEW_REQUESTED)
     
-    record_action edition, Action::REVIEW_REQUESTED, comment
+    record_action edition, Action::REVIEW_REQUESTED, comment: comment
     edition
   end
   
   def receive_fact_check(edition, comment)
-    record_action edition, Action::FACT_CHECK_RECEIVED, comment
+    record_action edition, Action::FACT_CHECK_RECEIVED, comment: comment
     edition
   end
     
@@ -86,14 +86,14 @@ class User
   def review(edition,comment)
     return false if edition.latest_status_action.requester_id == self.id
 
-    record_action edition, Action::REVIEWED, comment
+    record_action edition, Action::REVIEWED, comment: comment
     edition
   end
 
   def okay(edition,comment)
     return false if edition.latest_status_action.requester_id == self.id
 
-    record_action edition, Action::OKAYED, comment
+    record_action edition, Action::OKAYED, comment: comment
     edition
   end
 

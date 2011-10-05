@@ -34,8 +34,8 @@ module Workflow
     status_is?(Action::REVIEW_REQUESTED)
   end
 
-  def new_action(user,type,comment)
-    action = Action.new(:requester_id=>user.id,:request_type=>type,:comment=>comment)
+  def new_action(user, type, options={})
+    action = Action.new(options.merge(:requester_id=>user.id, :request_type=>type))
     self.actions << action
     self.calculate_statuses
     action
@@ -64,6 +64,8 @@ module Workflow
       current_user.okay(self, notes)
     when 'publish'
       current_user.publish(self, notes)
+    else
+      raise "Unknown progress activity: #{activity}"
     end
 
     self.container.save
