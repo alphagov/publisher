@@ -1,8 +1,15 @@
 class Action
   include Mongoid::Document
   
-  CREATED, FACT_CHECK_REQUESTED, FACT_CHECK_RECEIVED, REVIEW_REQUESTED, PUBLISHED, NEW_VERSION, OKAYED, REVIEWED, NOTE = 
-      "created", "fact_check_requested", "fact_check_received", "review_requested", "published", "new_version", "okayed", "reviewed"
+  CREATED              = "created"
+  NEW_VERSION          = "new_version"
+  FACT_CHECK_REQUESTED = "fact_check_requested"
+  FACT_CHECK_RECEIVED  = "fact_check_received"
+  REVIEW_REQUESTED     = "review_requested"
+  REVIEWED             = "reviewed"
+  OKAYED               = "okayed"
+  PUBLISHED            = "published"
+  NOTE                 = "note"
 
   embedded_in :edition
   
