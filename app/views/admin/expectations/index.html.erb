@@ -1,0 +1,32 @@
+<div>
+  <h2>Existing Expectations</h2>
+  <ul>
+    <% @expectations.each do |expectation| %>
+    <li><%= expectation.text %></li>
+    <% end %>
+  </ul>
+
+  <h2>Add Expectation</h2>
+  <%= semantic_form_for([:admin, @expectation]) do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :text %>
+      <%= f.input :css_class, :label => 'CSS Class', :hint => 'If in doubt about what to use here, ask a front end developer' %>
+    <% end %>
+    <%= f.buttons %>
+  <% end %>
+</div>
+<%= javascript_include_tag '/guide-assets/javascripts/publications.js' %>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    $('#expectation_text').change(function () {
+      var title_field = $(this);
+              console.log(title_field);
+      var slug_field = $('#expectation_css_class');
+              console.log(slug_field);
+      if (slug_field.text() == '') {
+        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
+      }
+    })
+  })
+</script>
+<% content_for :page_title, "Expectations dashboard" %>

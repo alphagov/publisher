@@ -103,6 +103,10 @@ class User
     edition
   end
 
+  def assign(edition, recipient)
+    record_action edition, Action::ASSIGNED, recipient: recipient
+  end
+
   def to_s
     name
   end

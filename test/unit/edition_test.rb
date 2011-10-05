@@ -39,6 +39,19 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal Action::OKAYED, edition.latest_status_action.request_type
   end
 
+  test "should have no assignee by default" do
+    edition = template_edition
+    assert_nil edition.assigned_to
+  end
+
+  test "should be assigned to the last assigned recipient" do
+    alice = User.create(:name => "alice")
+    bob   = User.create(:name => "bob")
+    edition = template_edition
+    alice.assign(edition, bob)
+    assert_equal bob, edition.assigned_to
+  end
+
   test "new edition should have an incremented version number" do
     g = Guide.new(:slug=>"childcare")
     edition = g.editions.first
