@@ -49,9 +49,7 @@ class Action
   end
 
   def requester
-    @requester ||= User.find(self.requester_id)
-  rescue
-    nil
+    @requester ||= User.first(conditions: {_id: self.requester_id})
   end
 
   def status_action?
