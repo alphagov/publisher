@@ -7,7 +7,7 @@ module Workflow
   end
 
   def can_request_review?
-    not latest_action_is(Action::FACT_CHECK_REQUESTED, Action::REVIEW_REQUESTED, Action::PUBLISHED)
+    not status_is?(Action::FACT_CHECK_REQUESTED, Action::REVIEW_REQUESTED, Action::PUBLISHED)
   end
 
   def in_review?
@@ -15,23 +15,23 @@ module Workflow
   end
 
   def in_fact_checking?
-    latest_action_is(Action::FACT_CHECK_REQUESTED)
+    status_is?(Action::FACT_CHECK_REQUESTED)
   end
 
   def can_review?
-    latest_action_is(Action::REVIEW_REQUESTED)
+    status_is?(Action::REVIEW_REQUESTED)
   end
 
   def can_request_fact_check?
-    not latest_action_is(Action::FACT_CHECK_REQUESTED, Action::PUBLISHED)
+    not status_is?(Action::FACT_CHECK_REQUESTED, Action::PUBLISHED)
   end
 
   def can_publish?
-    latest_action_is(Action::OKAYED)
+    status_is?(Action::OKAYED)
   end
 
   def can_okay?
-    latest_action_is(Action::REVIEW_REQUESTED)
+    status_is?(Action::REVIEW_REQUESTED)
   end
 
   def new_action(user,type,comment)
@@ -41,12 +41,12 @@ module Workflow
     action
   end
 
-  def latest_action
-    self.actions.sort_by(&:created_at).last
+  def latest_status_action
+    self.actions.sort_by(&:created_at).reverse.find{ |a| a.status_action? }
   end
 
-  def latest_action_is(*kinds)
-    action = latest_action
+  def status_is?(*kinds)
+    action = latest_status_action
     action && kinds.include?(action.request_type)
   end
 

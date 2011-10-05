@@ -25,7 +25,20 @@ class EditionTest < ActiveSupport::TestCase
     user = User.new
     assert edition.new_action(user, 'note', 'Something important')
   end
-  
+
+  test "status should not be affected by notes" do
+    user = User.create(:name => "bob")
+    edition = template_edition
+    t0 = Time.now
+    Timecop.freeze(t0) do
+      edition.new_action(user, Action::OKAYED, '')
+    end
+    Timecop.freeze(t0 + 1) do
+      edition.new_action(user, Action::NOTE, 'Something important')
+    end
+    assert_equal Action::OKAYED, edition.latest_status_action.request_type
+  end
+
   test "new edition should have an incremented version number" do
     g = Guide.new(:slug=>"childcare")
     edition = g.editions.first

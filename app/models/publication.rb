@@ -83,9 +83,9 @@ class Publication
     drafts = (all_versions - published_versions)
     self.has_drafts = drafts.any?
 
-    self.has_fact_checking = editions.any? { |e| e.latest_action_is(Action::FACT_CHECK_REQUESTED) }
+    self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
 
-    self.has_reviewables = editions.any? {|e| e.latest_action_is(Action::REVIEW_REQUESTED) }
+    self.has_reviewables = editions.any? {|e| e.status_is?(Action::REVIEW_REQUESTED) }
 
     true
   end

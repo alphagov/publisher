@@ -1,15 +1,20 @@
 class Action
   include Mongoid::Document
 
-  CREATED              = "created"
-  NEW_VERSION          = "new_version"
-  FACT_CHECK_REQUESTED = "fact_check_requested"
-  FACT_CHECK_RECEIVED  = "fact_check_received"
-  REVIEW_REQUESTED     = "review_requested"
-  REVIEWED             = "reviewed"
-  OKAYED               = "okayed"
-  PUBLISHED            = "published"
-  NOTE                 = "note"
+  STATUS_ACTIONS = [
+    CREATED              = "created",
+    NEW_VERSION          = "new_version",
+    FACT_CHECK_REQUESTED = "fact_check_requested",
+    FACT_CHECK_RECEIVED  = "fact_check_received",
+    REVIEW_REQUESTED     = "review_requested",
+    REVIEWED             = "reviewed",
+    OKAYED               = "okayed",
+    PUBLISHED            = "published",
+  ]
+
+  NON_STATUS_ACTIONS = [
+    NOTE                 = "note",
+  ]
 
   embedded_in :edition
 
@@ -47,6 +52,10 @@ class Action
     @requester ||= User.find(self.requester_id)
   rescue
     nil
+  end
+
+  def status_action?
+    STATUS_ACTIONS.include?(request_type)
   end
 
   def to_s

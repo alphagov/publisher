@@ -71,7 +71,7 @@ class User
   end
 
   def request_review(edition, comment)
-    return false if edition.latest_action_is(Action::REVIEW_REQUESTED)
+    return false if edition.status_is?(Action::REVIEW_REQUESTED)
     
     record_action edition, Action::REVIEW_REQUESTED, comment
     edition
@@ -84,14 +84,14 @@ class User
     
 
   def review(edition,comment)
-    return false if edition.latest_action.requester_id == self.id
+    return false if edition.latest_status_action.requester_id == self.id
 
     record_action edition, Action::REVIEWED, comment
     edition
   end
 
   def okay(edition,comment)
-    return false if edition.latest_action.requester_id == self.id
+    return false if edition.latest_status_action.requester_id == self.id
 
     record_action edition, Action::OKAYED, comment
     edition
