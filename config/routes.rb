@@ -2,6 +2,7 @@ Publisher::Application.routes.draw do
 
   namespace :admin do
     resources :notes
+    resources :expectations, :except => [:edit, :update, :destroy]
     
     resources :transactions do
       post :progress, :on => :member
