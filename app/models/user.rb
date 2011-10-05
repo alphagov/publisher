@@ -71,7 +71,7 @@ class User
   end
 
   def request_review(edition, comment)
-    return false if edition.latest_action and edition.latest_action.request_type == Action::REVIEW_REQUESTED
+    return false if edition.latest_action_is(Action::REVIEW_REQUESTED)
     
     record_action edition, Action::REVIEW_REQUESTED, comment
     edition
