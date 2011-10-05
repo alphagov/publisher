@@ -5,7 +5,8 @@ class Admin::OverviewController < InheritedResources::Base
   def index
     @overviews = {
       :format =>  Publication.count_by(Publication::FORMAT),
-      :section => Publication.count_by(Publication::SECTION)
+      :section => Publication.count_by(Publication::SECTION),
+      :department => Publication.count_by(Publication::DEPARTMENT)
     }
   end
 end

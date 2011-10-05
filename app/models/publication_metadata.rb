@@ -64,6 +64,7 @@ class PublicationMetadata
       publication.audiences = attributes['audiences'].map { |a| a['name'] }
     end
     publication.section = attributes['section']
+    publication.department = attributes['department']
 
     if attributes['related_items'].present?
       slugs = attributes['related_items'].map do |i|
