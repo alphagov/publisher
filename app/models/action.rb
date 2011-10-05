@@ -1,6 +1,6 @@
 class Action
   include Mongoid::Document
-  
+
   CREATED              = "created"
   NEW_VERSION          = "new_version"
   FACT_CHECK_REQUESTED = "fact_check_requested"
@@ -12,13 +12,13 @@ class Action
   NOTE                 = "note"
 
   embedded_in :edition
-  
+
   field :requester_id, :type => Integer
   field :approver_id,  :type => Integer
   field :approved,     :type => DateTime
   field :comment,      :type => String
   field :request_type, :type => String
-  field :created_at, :type => DateTime, :default => lambda { Time.now }
+  field :created_at,   :type => DateTime, :default => lambda { Time.now }
 
   def friendly_description
     case request_type
@@ -42,13 +42,13 @@ class Action
       "Made a note"
     end
   end
-  
+
   def requester
     @requester ||= User.find(self.requester_id)
   rescue
     nil
   end
-  
+
   def to_s
     request_type.humanize.capitalize
   end
