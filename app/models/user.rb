@@ -13,13 +13,13 @@ class User
     first(conditions: {uid: uid})
   end
 
-  def record_action(edition,type,comment=nil)
-    action = edition.new_action(self, type, comment)
+  def record_action(edition, type, comment=nil)
+    action = edition.new_action(self, type, comment: comment)
     NoisyWorkflow.make_noise(edition.container,action).deliver
   end
   
   def record_note(edition, comment)
-    edition.new_action(self, 'note', comment)
+    edition.new_action(self, 'note', comment: comment)
   end
 
   def create_publication(kind_class, attributes = {})
