@@ -7,10 +7,7 @@ module Workflow
   end
   
   def can_request_review?
-     latest_action &&  
-     latest_action.request_type != Action::REVIEW_REQUESTED && 
-     latest_action.request_type != Action::FACT_CHECK_REQUESTED &&
-     latest_action.request_type != Action::PUBLISHED
+     not latest_action_is(Action::FACT_CHECK_REQUESTED, Action::REVIEW_REQUESTED, Action::PUBLISHED)
    end
 
    def in_review?
@@ -18,25 +15,23 @@ module Workflow
    end
    
    def in_fact_checking?
-     latest_action && Action::FACT_CHECK_REQUESTED == latest_action.request_type
+     latest_action_is(Action::FACT_CHECK_REQUESTED)
    end
 
    def can_review?
-     latest_action && Action::REVIEW_REQUESTED == latest_action.request_type
+     latest_action_is(Action::REVIEW_REQUESTED)
    end
    
    def can_request_fact_check?
-     latest_action &&  
-     latest_action.request_type != Action::FACT_CHECK_REQUESTED &&
-     latest_action.request_type != Action::PUBLISHED
+     not latest_action_is(Action::FACT_CHECK_REQUESTED, Action::PUBLISHED)
    end
 
    def can_publish?
-     latest_action && Action::OKAYED == latest_action.request_type
+     latest_action_is(Action::OKAYED)
    end
 
    def can_okay?
-     latest_action && Action::REVIEW_REQUESTED == latest_action.request_type
+     latest_action_is(Action::REVIEW_REQUESTED)
    end
 
    def new_action(user,type,comment)
@@ -48,6 +43,11 @@ module Workflow
 
    def latest_action
      self.actions.sort_by(&:created_at).last
+   end
+
+   def latest_action_is(*kinds)
+     action = latest_action
+     action && kinds.include?(action.request_type)
    end
    
    def progress(activity,current_user,notes)
