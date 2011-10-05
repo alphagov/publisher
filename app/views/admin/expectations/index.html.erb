@@ -20,9 +20,7 @@
   $(function () {
     $('#expectation_text').change(function () {
       var title_field = $(this);
-              console.log(title_field);
       var slug_field = $('#expectation_css_class');
-              console.log(slug_field);
       if (slug_field.text() == '') {
         slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
       }
