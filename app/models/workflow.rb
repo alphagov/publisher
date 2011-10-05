@@ -64,6 +64,8 @@ module Workflow
       current_user.okay(self, notes)
     when 'publish'
       current_user.publish(self, notes)
+    else
+      raise "Unknown progress activity: #{activity}"
     end
 
     self.container.save
