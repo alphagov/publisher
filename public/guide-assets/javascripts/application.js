@@ -1,11 +1,5 @@
 // System wide behaviours
 $(function () {
-  var GovUKGuideUtils = {
-    convertToSlug: function(title) {
-      return title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
-    }
-  }
-
   $('.flash-notice').delay(3000).slideUp(300).one('click', function () { $(this).slideUp(300); });
 
   $('a.preview').attr("target","_blank");
@@ -15,3 +9,10 @@ $(function () {
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
 })
+
+// System wide library functions
+var GovUKGuideUtils = {
+  convertToSlug: function(title) {
+    return title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+  }
+}

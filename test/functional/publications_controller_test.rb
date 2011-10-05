@@ -10,6 +10,6 @@ class PublicationsControllerTest < ActionController::TestCase
   test "when given an audience it should return its details" do
     section_slug = Publication::AUDIENCES.first.parameterize
     get :show, :id => section_slug, :format => :json
-    assert_equal Publication::Publication::AUDIENCES.first, JSON.parse(@response.body)['name']
+    assert_equal Publication::AUDIENCES.first, JSON.parse(@response.body)['name']
   end
 end

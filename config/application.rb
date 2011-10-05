@@ -52,7 +52,6 @@ module Publisher
   end
 end
 
-require 'external_services'
 require 'open-uri'
 require 'builder'
 require 'initialize_definition'

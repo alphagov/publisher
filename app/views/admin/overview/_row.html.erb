@@ -1,28 +1,28 @@
-<table>
-<thead>
-  <tr>
-    <th scope="col">Format</th>
-    <th scope="col">Total</th>
-    <th scope="col">Draft</th>
-    <th scope="col">Fact check</th>
-    <th scope="col">Review</th>
-    <th scope="col">Published</th>
-  </tr>
-</thead>
-<tbody>
+<table class="formats" summary="Overview of Formats">
+	<thead>
+	  <tr>
+	    <th scope="col">Format</th>
+	    <th scope="col">Total</th>
+	    <th scope="col">Draft</th>
+	    <th scope="col">Fact check</th>
+	    <th scope="col">Review</th>
+	    <th scope="col">Published</th>
+	  </tr>
+	</thead>
+	<tbody>
 
-<% rows.each do |row| %>
-  <% unless row.values[0].blank? %>
-  <tr>
-    <th scope="row"><%= row.values[0] %></th>
-    <th scope="row"><%= row.values[1]['count'] %></th>
-    <th scope="row"><%= row.values[1]['draft'] %></th>
-    <th scope="row"><%= row.values[1]['fact_check'] %></th>
-    <th scope="row"><%= row.values[1]['review'] %></th>
-    <th scope="row"><%= row.values[1]['published'] %></th>
-  </tr>
-  <% end %>
-<% end %>
+	<% rows.each do |row| %>
+	  <% unless row.values[0].blank? %>
+	  <tr>
+	    <th scope="row"><%= row.values[0] %></th>
+	    <td><%= row.values[1]['count'] %></td>
+	    <td><%= row.values[1]['draft'] %></td>
+	    <td><%= row.values[1]['fact_check'] %></td>
+	    <td><%= row.values[1]['review'] %></td>
+	    <td><%= row.values[1]['published'] %></td>
+	  </tr>
+	  <% end %>
+	<% end %>
 
-</tbody>
+	</tbody>
 </table>

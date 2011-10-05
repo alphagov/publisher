@@ -52,6 +52,23 @@ class Publication
     publication.save!
     publication
   end
+  
+  def self.find_and_identify_edition(slug, edition)
+    publication = where(slug: slug).first
+    return nil if publication.nil?
+    
+    if edition.present?
+      # This is used for previewing yet-to-be-published editions. 
+      # At some point this should require special authentication.
+      if edition == "latest"
+        publication.editions.order_by(:created_at => :desc).first
+      else
+        publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
+      end
+    else
+      publication.published_edition
+    end
+  end
 
   def panopticon_uri
     Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s

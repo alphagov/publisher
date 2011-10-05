@@ -2,6 +2,7 @@ Publisher::Application.routes.draw do
 
   namespace :admin do
     resources :notes
+    resources :expectations, :except => [:edit, :update, :destroy]
     
     resources :transactions do
       post :progress, :on => :member
@@ -35,7 +36,6 @@ Publisher::Application.routes.draw do
 
     resources :publications
     match 'overview' => 'overview#index'
-
     root :to => 'root#index'
   end
 
