@@ -34,6 +34,7 @@ Publisher::Application.routes.draw do
     end
 
     resources :publications
+    match 'overview' => 'overview#index'
 
     root :to => 'root#index'
   end
