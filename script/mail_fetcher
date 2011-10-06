@@ -7,12 +7,11 @@
 # there, so we can review that messages are getting processed properly by going into the
 # gmail account and having a look.
 #
-require File.expand_path("../../lib/lockfile", __FILE__)
+require File.expand_path('../../config/environment',  __FILE__)
+require File.expand_path("../../lib/lockfile_ext", __FILE__)
 
 begin
   Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
-
-    require File.expand_path('../../config/environment',  __FILE__)
     require 'mail'
     require 'external_services'
     require Rails.root.join("config/fact_check_account")
