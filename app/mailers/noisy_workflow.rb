@@ -24,7 +24,7 @@ class NoisyWorkflow < ActionMailer::Base
       :to => email_addresses,
       :reply_to => fact_check_address,
       :from => "Gov.UK Editors <#{fact_check_address}>",
-      :subject => "[FACT CHECK REQUESTED] #{edition.title} (id:#{edition.fact_check_id})") unless email_addresses.blank?
+      :subject => "[FACT CHECK REQUESTED] #{edition.title}") unless email_addresses.blank?
   end
   
 end
