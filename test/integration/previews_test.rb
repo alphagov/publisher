@@ -84,7 +84,7 @@ class PreviewsTest < ActionDispatch::IntegrationTest
 
     visit "/admin"
     click_on 'Edit this publication'
-    within(:css, '#guide-controls') {
+    within(:css, '#publication-controls') {
       click_on 'Preview'
     }
     assert page.has_content? random_name

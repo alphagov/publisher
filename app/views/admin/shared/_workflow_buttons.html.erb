@@ -1,0 +1,19 @@
+<div id="publication-controls" class="format-controls">
+  <!-- <p><a href="#" class="external">Formatting help</a></p> -->
+  <% if @latest_edition.is_published? %>
+    Published items can't be changed.
+    <%= preview_button(@latest_edition) %>
+    <%= button_to 'Create new edition', url_for([:admin, @latest_edition.container, :editions]) %>
+  <% else %>
+    <span class="workflow_buttons">
+      <!-- Fake save button -->
+      <form id="save-edition" class="button_to">
+      <input type="submit" value="Save" class="update">
+      </form>
+
+      <%= progress_buttons(@latest_edition) %>
+      <%= preview_button(@latest_edition) %>
+    </span>
+    <%= progress_forms(@latest_edition) %>
+  <% end %>
+</div>

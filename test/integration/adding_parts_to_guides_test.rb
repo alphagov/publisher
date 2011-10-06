@@ -46,7 +46,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
        fill_in 'Body', :with => 'Body text'
        fill_in 'Slug', :with => 'part-two'
      end
-     within(:css, '#guide-controls') { click_on 'Save' }
+     within(:css, '#publication-controls') { click_on 'Save' }
 
      click_on 'Add new part'
      within :css, '#parts div.part:nth-of-type(3)' do
@@ -54,7 +54,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
        fill_in 'Body', :with => 'Body text'
        fill_in 'Slug', :with => 'part-three'
      end
-     within(:css, '#guide-controls') { click_on 'Save' }
+     within(:css, '#publication-controls') { click_on 'Save' }
 
      assert_equal 3, all(:css, '#parts > div.part').length
 

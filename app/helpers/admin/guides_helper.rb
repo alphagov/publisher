@@ -67,7 +67,8 @@ module Admin::GuidesHelper
     }.join("\n").html_safe
   end
 
-  def progress_buttons(guide,edition)
+  def progress_buttons(edition)
+    guide = edition.container
     [
       ["Fact check",       "request_fact_check"],
       ["2nd pair of eyes", "request_review"],
@@ -81,7 +82,8 @@ module Admin::GuidesHelper
     }.join("\n").html_safe
   end
 
-  def progress_forms(guide,edition)
+  def progress_forms(edition)
+    guide = edition.container
     [
       ["Fact check",       "request_fact_check", "Enter email addresses"],
       ["2nd pair of eyes", "request_review"],

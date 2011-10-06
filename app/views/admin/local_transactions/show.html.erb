@@ -2,21 +2,7 @@
 <p>Status: <%= @latest_edition.latest_status_action %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
-
-<div id="guide-controls">
-  <!-- <p><a href="#" class="external">Formatting help</a></p> -->
-  <span class="workflow_buttons">
-
-  <!-- Fake save button -->
-  <form id="save-edition" class="button_to">
-  <input type="submit" value="Save" class="update">
-  </form>
-
-  <%= progress_buttons(@local_transaction,@latest_edition) %>
-  <%= preview_button(@latest_edition) %>
-  </span>
-  <%= progress_forms(@local_transaction,@latest_edition) %>
-</div>
+<%= render 'admin/shared/workflow_buttons' %>
 
 <div id="local_transaction-nav" class="publication-nav">
   <ul>
