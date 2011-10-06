@@ -15,15 +15,34 @@
 
   <div id="wrapper" class="wrapper">
 
+		<nav class="admin-nav group" role="navigation">
+			<ul>
+				<li><a href="#">Overview</a></li>
+				<li class="publications-nav">
+					<ul>
+						<li>
+							<form>
+								<fieldset>
+									<label for="user-filter" class="visuallyhidden">View a user's publications</label><input type="text" placeholder="My publications" id="user-filter"><input type="submit" value="Filter">
+								</fieldset>
+							</form>
+						</li>
+						<li><%= link_to 'All publications', admin_root_path %></li>
+					</ul>
+				</li>
+				<li class="rarer-nav">
+					<ul>
+						<li><small><%= link_to 'Manage expectations', admin_expectations_path %></small></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+
     <div class="content" role="main">
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
         <p class="flash-<%= k %>">
           <%= flash[k] %>
         </p>
-      <% end %>
-
-      <% unless current_page?(admin_root_path)%>
-        <p class="return"><%= link_to 'Return to dashboard', admin_root_path %></p>
       <% end %>
 
       <%= yield %>
