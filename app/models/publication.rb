@@ -14,6 +14,7 @@ class Publication
   field :has_published,   :type => Boolean
   field :has_reviewables, :type => Boolean
   field :archived,        :type => Boolean
+  field :lined_up,        :type => Boolean
 
   field :section,         :type => String
   field :department,      :type => String
@@ -22,6 +23,7 @@ class Publication
   embeds_many :publishings
 
   scope :in_draft,         where(has_drafts: true)
+  scope :lined_up,         where(lined_up: true)
   scope :fact_checking,    where(has_fact_checking: true)
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
@@ -29,7 +31,7 @@ class Publication
 
   after_initialize :create_first_edition
 
-  before_save :calculate_statuses, :denormalise_metadata
+  before_save :calculate_statuses, :denormalise_metadata, :mark_as_started
 
   validates_presence_of :name
 
@@ -52,11 +54,10 @@ class Publication
     publication.save!
     publication
   end
-  
+
   def self.find_and_identify_edition(slug, edition)
     publication = where(slug: slug).first
     return nil if publication.nil?
-    
     if edition.present?
       # This is used for previewing yet-to-be-published editions. 
       # At some point this should require special authentication.
@@ -90,7 +91,13 @@ class Publication
     unless self.persisted? or self.editions.any?
       self.editions << self.class.edition_class.new(:title => self.name)
       calculate_statuses
+      self.lined_up = true
     end
+  end
+
+  def mark_as_started
+    self.lined_up = false unless self.created_at.blank?
+    true
   end
 
   def calculate_statuses
@@ -99,6 +106,7 @@ class Publication
     published_versions = ::Set.new(publishings.map(&:version_number))
     all_versions = ::Set.new(editions.map(&:version_number))
     drafts = (all_versions - published_versions)
+
     self.has_drafts = drafts.any?
 
     self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
@@ -109,7 +117,6 @@ class Publication
   end
 
   def publish(edition, notes)
-    denormalise_metadata
     self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
     calculate_statuses
     Messenger.new.published edition
@@ -155,21 +162,23 @@ class Publication
         function truthy(value) {
           return (value == true) ? 1 : 0;
         }
-        emit(#{type}, {type: #{type}, count: 1, draft: truthy(this.has_drafts), review: truthy(this.has_reviewables), published: truthy(this.has_published), fact_check: truthy(this.has_fact_checking)})
+        emit(#{type}, {type: #{type}, count: 1, draft: truthy(this.has_drafts), lined_up: truthy(this.lined_up), review: truthy(this.has_reviewables), published: truthy(this.has_published), fact_check: truthy(this.has_fact_checking), archived: truthy(this.archived)})
       }
 EOF
     reduce = <<EOF
       function(key, values) {
-        var count = 0; draft = 0; review = 0; published = 0; fact_check = 0;
+        var count = 0; draft = 0; lined_up =0 ;review = 0; published = 0; fact_check = 0; archived = 0;
         values.forEach(function(doc) { 
           count += parseInt(doc.count);
           draft += parseInt(doc.draft);
+          lined_up += parseInt(doc.lined_up);
           published += parseInt(doc.published);
           review += parseInt(doc.review);
           fact_check += parseInt(doc.fact_check);
+          archived += parseInt(doc.archived);
           type = doc.type
         });
-        return {type: type, count: count, draft: draft, review: review, published: published, fact_check: fact_check}
+        return {type: type, count: count, draft: draft, lined_up: lined_up, review: review, published: published, fact_check: fact_check, archived: archived}
       }
 EOF
 

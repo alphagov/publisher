@@ -59,7 +59,7 @@ module Workflow
     self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
 
-  def progress(activity,current_user,notes)
+  def progress(activity, current_user,notes)
     case activity
     when 'request_fact_check'
       current_user.request_fact_check(self, notes)
@@ -77,7 +77,7 @@ module Workflow
       raise "Unknown progress activity: #{activity}"
     end
 
-    self.container.save
+    self.container.save!
   end
 
 end
