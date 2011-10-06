@@ -16,6 +16,7 @@ class Publication
   field :archived,        :type => Boolean
 
   field :section,         :type => String
+  field :department,      :type => String
   field :related_items,   :type => String
 
   embeds_many :publishings
@@ -28,7 +29,7 @@ class Publication
 
   after_initialize :create_first_edition
 
-  before_save :calculate_statuses
+  before_save :calculate_statuses, :denormalise_metadata
 
   validates_presence_of :name
 
@@ -109,14 +110,14 @@ class Publication
 
   def publish(edition, notes)
     denormalise_metadata
-    self.publishings << Publishing.new(:version_number=>edition.version_number,:change_notes=>notes)
+    self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
     calculate_statuses
+    Messenger.new.published edition
   end
 
   def denormalise_metadata
     meta_data.apply_to self
   end
-  private :denormalise_metadata
 
   def published_edition
     latest_publishing = self.publishings.sort_by(&:version_number).last
@@ -145,6 +146,7 @@ class Publication
 
   FORMAT = "this._type"
   SECTION = "this.section"
+  DEPARTMENT = "this.department"
 
   def self.count_by(type = FORMAT) 
 

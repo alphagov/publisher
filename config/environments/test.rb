@@ -36,3 +36,8 @@ Publisher::Application.configure do
   config.middleware.insert 0,  Slimmer::App, :template_host => "#{config.root}/public/templates"
   config.action_mailer.default_url_options = { :host => "example.com" }
 end
+
+require 'messenger'
+Messenger.client = Class.new do
+  def self.publish *args; end
+end

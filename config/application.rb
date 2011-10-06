@@ -18,7 +18,7 @@ module Publisher
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{config.root}/lib)
 
     config.generators do |g|
         g.orm :mongoid
@@ -54,4 +54,5 @@ end
 
 require 'open-uri'
 require 'builder'
-require 'initialize_definition'
+
+Object.send :include, Pethau::InitializeWith

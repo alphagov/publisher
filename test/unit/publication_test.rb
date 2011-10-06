@@ -12,7 +12,7 @@ class PublicationTest < ActiveSupport::TestCase
       g
     end
   end
-  
+
   test "edition finder should return the published edition when given an empty edition parameter" do
     dummy_publication = template_published_answer
     assert dummy_publication.published_edition

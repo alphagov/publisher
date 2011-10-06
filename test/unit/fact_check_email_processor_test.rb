@@ -2,26 +2,22 @@ require 'test_helper'
 require 'fact_check_message_processor'
 
 class FactCheckMessageProcessorTest < ActiveSupport::TestCase
-  setup do
-    stub_request(:post, "http://panopticon.dev.gov.uk/slugs").to_return(:status => 201, :body => "", :headers => {})
-  end
 
   def multipart_message
-Mail.new do
-  to      'nicolas@test.lindsaar.net.au'
-  from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
-  subject 'First multipart email sent with Mail'
+    Mail.new do
+      to      'nicolas@test.lindsaar.net.au'
+      from    'Mikel Lindsaar <mikel@test.lindsaar.net.au>'
+      subject 'First multipart email sent with Mail'
 
-  text_part do
-    body 'This is plain text'
-  end
+      text_part do
+        body 'This is plain text'
+      end
 
-  html_part do
-    content_type 'text/html; charset=UTF-8'
-    body '<h1>This is HTML</h1>'
-  end
-end
-    
+      html_part do
+        content_type 'text/html; charset=UTF-8'
+        body '<h1>This is HTML</h1>'
+      end
+    end
   end
 
   def sample_processor(body_text = "I approve")
@@ -39,10 +35,12 @@ end
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
-    windows_string = "hello umlat".encode("Windows-1252")
-    message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
-    f =  FactCheckMessageProcessor.new(message, false, false)
-    f.process(sample_publication.id)
+    without_metadata_denormalisation(Guide) do
+      windows_string = "hello umlat".encode("Windows-1252")
+      message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
+      f =  FactCheckMessageProcessor.new(message, false, false)
+      f.process(sample_publication.id)
+    end
   end
 
   test "it takes the text part of multipart emails" do
