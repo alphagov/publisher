@@ -15,6 +15,6 @@ ln -s /var/lib/jenkins/jobs/Static/workspace/public/templates /var/lib/jenkins/j
 ln -s /var/lib/jenkins/jobs/Static/workspace/public/stylesheets /var/lib/jenkins/jobs/Guides/workspace/public/stylesheets
 
 export DISPLAY=:99
-bundle exec rake ci:setup:testunit test:units test:functionals test:integration
+bundle exec rake ci:setup:testunit test:units test:functionals
 RESULT=$?
 exit $RESULT
