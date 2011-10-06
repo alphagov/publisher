@@ -13,6 +13,7 @@ gem 'plek'
 gem 'inherited_resources'
 gem 'formtastic'
 gem 'has_scope'
+gem 'stomp', '1.1.9'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'

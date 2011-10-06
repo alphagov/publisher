@@ -60,6 +60,7 @@ class PublicationMetadata
     publication.name = attributes['name']
     publication.slug = attributes['slug']
     publication.tags = attributes['tags']
+    publication.need_id = attributes['need_id']
     if attributes['audiences'].present?
       publication.audiences = attributes['audiences'].map { |a| a['name'] }
     end
@@ -89,6 +90,10 @@ class PublicationMetadata
   def load_attributes
     data = JSON.parse open(uri).read
     data.except('updated_at', 'created_at', 'id', 'owning_app', 'kind', 'active')
+  end
+  
+  def need_id
+    attributes['need_id']
   end
 
   def attributes

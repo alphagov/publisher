@@ -3,6 +3,7 @@ class Publication
   include Mongoid::Timestamps
 
   field :panopticon_id,   :type => Integer
+  field :need_id,         :type => Integer
 
   field :name,            :type => String
   field :slug,            :type => String
@@ -112,6 +113,7 @@ class Publication
     denormalise_metadata
     self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
     calculate_statuses
+    Messenger.new.published edition
   end
 
   def denormalise_metadata
