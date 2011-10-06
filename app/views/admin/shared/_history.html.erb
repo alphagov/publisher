@@ -34,7 +34,7 @@
           <% end %>
           <% if action.comment.present? %>
           <blockquote>
-            <span><%= action.comment %></span>
+            <span><%= simple_format action.comment %></span>
           </blockquote>
           <% end %>
         </div>
