@@ -22,6 +22,8 @@ module ExternalServices
       "http://local.alphagov.co.uk:3005"
     when 'production'
       "http://frontend.alpha.gov.uk"
+    when 'staging'
+      "http://demo.alphagov.co.uk"
     else
       "http://frontend.#{local_environment}.alphagov.co.uk:8080"
     end
