@@ -9,10 +9,12 @@ gem "mongoid", "~> 2.0"
 gem "bson_ext", "~> 1.3"
 gem 'erubis'
 gem 'plek'
+gem 'pethau'
 
 gem 'inherited_resources'
 gem 'formtastic'
 gem 'has_scope'
+gem 'stomp', '1.1.9'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'

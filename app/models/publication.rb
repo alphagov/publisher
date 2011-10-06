@@ -119,6 +119,7 @@ class Publication
   def publish(edition, notes)
     self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
     calculate_statuses
+    Messenger.new.published edition
   end
 
   def denormalise_metadata
