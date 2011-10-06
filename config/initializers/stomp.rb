@@ -4,5 +4,6 @@
 # that client connections get copied when passenger forks a process but the mutexes
 # protecting those connections do not. 
 STOMP_CONFIGURATION = {
-  hosts: [{login: "", passcode: "", host: "remotehost1", port: 61613, :ssl => false}]
+  hosts: [{host: "localhost", port: 61613, :ssl => false}],
+  max_reconnect_attempts: 10
 }
