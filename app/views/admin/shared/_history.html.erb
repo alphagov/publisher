@@ -1,4 +1,3 @@
-<% publication.editions.reverse.each do |edition| %>
 <%= semantic_form_for(:note, :url=> admin_notes_path) do |f| %>
   <%= f.inputs do %>
     <%= hidden_field_tag :publication_id, publication.id %>
@@ -8,13 +7,17 @@
     <%= f.commit_button 'Add Note' %>
   <% end %>
 <% end %>
+
+<hr >
+
+<% publication.editions.reverse.each do |edition| %>
   <div class="edition">
     <div class="buttons group">
       <h3>Version <%= edition.version_number %></h3>
     </div>
     <ul class="history">
       <% edition.actions.reverse.each do |action| %>
-      <li>
+      <li class="<%= action.request_type.parameterize %> group">
         <div class="action-time">
           <p><span class="visuallyhidden">Version created on</span> <span class="time"><%= action.created_at.strftime("%d/%m/%Y") %></span> <span class="visuallyhidden">at</span> <%= action.created_at.strftime("%R") %></p>
         </div>
