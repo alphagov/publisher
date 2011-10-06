@@ -39,5 +39,5 @@ end
 
 require 'messenger'
 Messenger.client = Class.new do
-  def publish *args; end
+  def self.publish *args; end
 end
