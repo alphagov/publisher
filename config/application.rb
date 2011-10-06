@@ -55,4 +55,4 @@ end
 require 'open-uri'
 require 'builder'
 
-Object.include Pethau::InitializeWith
+Object.send :include, Pethau::InitializeWith

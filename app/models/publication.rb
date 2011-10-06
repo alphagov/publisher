@@ -3,7 +3,6 @@ class Publication
   include Mongoid::Timestamps
 
   field :panopticon_id,   :type => Integer
-  field :need_id,         :type => Integer
 
   field :name,            :type => String
   field :slug,            :type => String
