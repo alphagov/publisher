@@ -64,42 +64,41 @@ class User
     end
   end
 
-  def request_fact_check(edition, email_addresses)
-    record_action edition, Action::FACT_CHECK_REQUESTED, comment: email_addresses
-    NoisyWorkflow.request_fact_check(edition, email_addresses).deliver
+  def request_fact_check(edition, details)
+    record_action edition, Action::FACT_CHECK_REQUESTED, details
+    NoisyWorkflow.request_fact_check(edition, details).deliver
     edition
   end
 
-  def request_review(edition, comment)
+  def request_review(edition, details)
     return false if edition.status_is?(Action::REVIEW_REQUESTED)
     
-    record_action edition, Action::REVIEW_REQUESTED, comment: comment
+    record_action edition, Action::REVIEW_REQUESTED, details
     edition
   end
   
-  def receive_fact_check(edition, comment)
-    record_action edition, Action::FACT_CHECK_RECEIVED, comment: comment
+  def receive_fact_check(edition, details)
+    record_action edition, Action::FACT_CHECK_RECEIVED, details
     edition
   end
-    
 
-  def review(edition,comment)
+  def review(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
 
-    record_action edition, Action::REVIEWED, comment: comment
+    record_action edition, Action::REVIEWED, details
     edition
   end
 
-  def okay(edition,comment)
+  def okay(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
 
-    record_action edition, Action::OKAYED, comment: comment
+    record_action edition, Action::OKAYED, details
     edition
   end
 
-  def publish(edition,notes)
+  def publish(edition, details)
     record_action edition, Action::PUBLISHED
-    edition.publish(edition,notes)
+    edition.publish(edition, details[:comment])
     edition
   end
 

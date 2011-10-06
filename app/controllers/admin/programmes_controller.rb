@@ -31,9 +31,7 @@ class Admin::ProgrammesController <  Admin::BaseController
   end
 
   def progress
-    current_user = self.current_user
-    notes = params[:comment] || ''
-    resource.latest_edition.progress(params[:activity], current_user,notes)
+    resource.latest_edition.progress(params[:activity], current_user)
     redirect_to admin_programme_path(resource), :notice => 'Programme updated'
   end
 end

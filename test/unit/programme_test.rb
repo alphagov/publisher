@@ -48,7 +48,7 @@ class ProgrammeTest < ActiveSupport::TestCase
     user = User.new(:name=>"Bob")
     user.save
     assert !programme.has_reviewables
-    user.request_review(programme.editions.first,"Review this programme please.")
+    user.request_review(programme.editions.first,{:comment => "Review this programme please."})
     assert programme.has_reviewables
   end
 
@@ -59,14 +59,14 @@ class ProgrammeTest < ActiveSupport::TestCase
     programme = user.create_programme
     edition = programme.editions.first
     assert edition.can_request_review?
-    user.request_review(edition, "Review this programme please.")
+    user.request_review(edition, {:comment => "Review this programme please."})
     assert !edition.can_request_review?
     assert edition.can_review?
-    other_user.review(edition, "I've reviewed it")
+    other_user.review(edition, {:comment => "I've reviewed it"})
     assert !edition.can_review?
-    user.request_review(edition, "Review this programme please.")
+    user.request_review(edition, {:comment => "Review this programme please."})
     assert edition.can_okay?
-    other_user.okay(edition, "Looks good to me")
+    other_user.okay(edition, {:comment => "Looks good to me"})
     assert edition.can_publish?
   end
 
@@ -76,8 +76,8 @@ class ProgrammeTest < ActiveSupport::TestCase
     programme = user.create_programme
     edition = programme.editions.first
     assert edition.can_request_review?
-    user.request_review(edition,"Review this programme please.")
-    assert ! user.review(edition, "Well Done, but work harder")
+    user.request_review(edition,{:comment => "Review this programme please."})
+    assert ! user.review(edition, {:comment => "Well Done, but work harder"})
   end
 
   test "user should not be able to okay a programme they requested review for" do
@@ -86,7 +86,7 @@ class ProgrammeTest < ActiveSupport::TestCase
     programme = user.create_programme
     edition = programme.editions.first
     assert edition.can_request_review?
-    user.request_review(edition,"Review this programme please.")
+    user.request_review(edition,{:comment => "Review this programme please."})
     assert ! user.okay(edition, '')
   end
 

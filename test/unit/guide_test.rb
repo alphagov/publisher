@@ -50,7 +50,7 @@ class GuideTest < ActiveSupport::TestCase
     user = User.new(:name=>"Ben")
     user.save
     assert !guide.has_reviewables
-    user.request_review(guide.editions.first,"Review this guide please.")
+    user.request_review(guide.editions.first,{:comment => "Review this guide please."})
     guide.calculate_statuses
     assert guide.has_reviewables
   end
@@ -62,14 +62,14 @@ class GuideTest < ActiveSupport::TestCase
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
-    user.request_review(edition,"Review this guide please.")
+    user.request_review(edition,{:comment => "Review this guide please."})
     assert !edition.can_request_review?
     assert edition.can_review?
-    other_user.review(edition,"I've reviewed it")
+    other_user.review(edition, {:comment => "I've reviewed it"})
     assert !edition.can_review?
-    user.request_review(edition,"Review this guide please.")
+    user.request_review(edition,{:comment => "Review this guide please."})
     assert edition.can_okay?
-    other_user.okay(edition,"Looks good to me")
+    other_user.okay(edition, {:comment => "Looks good to me"})
     assert edition.can_publish?
   end
 
@@ -81,7 +81,7 @@ class GuideTest < ActiveSupport::TestCase
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_fact_check?
-    user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
+    user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
   end
 
   test "user should not be able to request review for a guide that's being fact checked" do
@@ -89,7 +89,7 @@ class GuideTest < ActiveSupport::TestCase
 
     guide = user.create_guide
     edition = guide.editions.first
-    user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
+    user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
     assert ! edition.can_request_review?
   end
 
@@ -99,8 +99,8 @@ class GuideTest < ActiveSupport::TestCase
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
-    user.request_review(edition,"Review this guide please.")
-    assert ! user.review(edition, "Well Done, but work harder")
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert ! user.review(edition, {:comment => "Well Done, but work harder"})
   end
 
   test "user should not be able to okay a guide they requested review for" do
@@ -109,7 +109,7 @@ class GuideTest < ActiveSupport::TestCase
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_review?
-    user.request_review(edition,"Review this guide please.")
+    user.request_review(edition,{:comment => "Review this guide please."})
     assert ! user.okay(edition, '')
   end
 
@@ -128,11 +128,11 @@ class GuideTest < ActiveSupport::TestCase
 
     guide = user.create_guide :panopticon_id => 1234574
     edition = guide.editions.first
-    user.request_review(edition,"Review this guide please.")
-    other_user.review(edition,"I've reviewed it")
-    user.request_review(edition,"Review this guide please.")
-    other_user.okay(edition,"Looks good to me")
-    user.publish(edition, "PUBLISHED!")
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.review(edition, {:comment => "I've reviewed it"})
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.okay(edition, {:comment => "Looks good to me"})
+    user.publish(edition, {:comment => "PUBLISHED!"})
     return user, guide
   end
 
