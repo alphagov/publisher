@@ -31,6 +31,12 @@ class Admin::EditionsController <  Admin::BaseController
     end
   end
 
+  def progress
+    resource.progress(params[:activity], current_user)
+    redirect_to [:admin, edition_parent],
+      :notice => "#{edition_parent.class.to_s.underscore.humanize} updated"
+  end
+
   protected
     # I think we can get this via InheritedResources' "parent" method, but that wasn't
     # working for our create method and I can't see where it's initialised

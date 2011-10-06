@@ -63,4 +63,6 @@ group :test do
   gem 'webmock'
   gem 'test-unit'
   gem 'launchy'
+  gem 'factory_girl_rails'
+  gem 'faker'
 end

@@ -27,9 +27,4 @@ class Admin::AnswersController < Admin::BaseController
       redirect_to admin_answer_path(resource), :notice => 'Cannot delete an answer that has ever been published.' and return
     end
   end
-
-  def progress
-    resource.latest_edition.progress(params[:activity], current_user)
-    redirect_to admin_answer_path(resource), :notice => 'Answer updated'
-  end
 end

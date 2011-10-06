@@ -27,9 +27,4 @@ class Admin::TransactionsController < Admin::BaseController
       f.json { render :json => @transaction.errors, :status => 406 }
     end
   end
-  
-  def progress
-    resource.latest_edition.progress(params[:activity], current_user)  
-    redirect_to admin_transaction_path(resource), :notice => 'Transaction updated'
-  end
 end

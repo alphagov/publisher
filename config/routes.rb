@@ -4,34 +4,18 @@ Publisher::Application.routes.draw do
     resources :notes
     resources :expectations, :except => [:edit, :update, :destroy]
     
-    resources :transactions do
-      post :progress, :on => :member
-      resources :editions
-    end
-
-    resources :places do
-      post :progress, :on => :member
-      resources :editions
-    end
-
-    resources :answers do
-      post :progress, :on => :member
-      resources :editions
-    end
-
-    resources :guides do
-      post :progress, :on => :member
-      resources :editions
-    end
-
-    resources :programmes do
-      post :progress, :on => :member
-      resources :editions
-    end
-
-    resources :local_transactions do
-      post :progress, :on => :member
-      resources :editions
+    [ :transactions,
+      :places,
+      :answers,
+      :guides,
+      :programmes,
+      :local_transactions,
+    ].each do |r|
+      resources r do
+        resources :editions do
+          post :progress, :on => :member
+        end
+      end
     end
 
     resources :publications

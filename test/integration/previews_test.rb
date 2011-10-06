@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class PreviewsTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
 
   def setup_users
     @author ||= User.create(:name=>"Author",:email=>"test@example.com")

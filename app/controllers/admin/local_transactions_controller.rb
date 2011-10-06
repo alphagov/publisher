@@ -27,9 +27,4 @@ class Admin::LocalTransactionsController < Admin::BaseController
       f.json { render :json => @local_transaction.errors, :status => 406 }
     end
   end
-  
-  def progress
-    resource.latest_edition.progress(params[:activity], current_user)
-    redirect_to admin_local_transaction_path(resource), :notice => 'Local Transaction updated'
-  end
 end

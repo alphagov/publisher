@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
 
   test "Publishing a guide" do
      without_metadata_denormalisation Guide do

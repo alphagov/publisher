@@ -29,9 +29,4 @@ class Admin::GuidesController <  Admin::BaseController
       f.json { render :json => @guide.errors, :status => 406 }
     end
   end
-  
-  def progress
-    resource.latest_edition.progress(params[:activity], current_user)
-    redirect_to admin_guide_path(resource), :notice => 'Guide updated'
-  end
 end

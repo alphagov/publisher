@@ -25,18 +25,22 @@ module Admin::GuidesHelper
       ["Fact check",       "request_fact_check", "Enter email addresses"],
       ["2nd pair of eyes", "request_review"],
       ["Publish",          "publish"]
-    ].map { |title,activity, placeholder|
-      progress_form(:title=>title,:activity=>activity,:edition=>edition,:placeholder=>placeholder)
-    }.join("\n").html_safe
+    ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
-  def progress_form(opts)
-    title,edition,activity,placeholder = opts[:title],opts[:edition],opts[:activity],opts[:placeholder]
+  def progress_form(edition, title, activity, placeholder=nil)
+    container    = edition.container.class.to_s.underscore
+    path_method  = "progress_admin_#{container}_edition_path".to_sym
+    path         = send(path_method, edition, "#{container}_id".to_sym => edition.container)
     check_method = "can_#{activity}?".to_sym
-    path = send("progress_admin_#{edition.container.class.to_s.underscore}_path", edition.container)
 
-    render(:partial => 'admin/shared/activity_form', :locals => { :url => path, :title => title, :id => activity+"_form", 
-      :disabled => !edition.send(check_method), :activity => activity })
+    render(
+      :partial => 'admin/shared/activity_form',
+      :locals => {
+        :url => path, :title => title, :id => activity+"_form",
+        :disabled => !edition.send(check_method), :activity => activity
+      }
+    )
   end
 
   def review_buttons(guide,edition)
@@ -56,9 +60,7 @@ module Admin::GuidesHelper
     [
       ["Needs more work",    "review"],
       ["OK for publication", "okay"]
-    ].map{ |title,activity|
-      progress_form(:title=>title, :guide=>guide, :activity=>activity, :edition=>edition)
-    }.join("\n").html_safe
+    ].map{ |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
   def progress_buttons(edition)
