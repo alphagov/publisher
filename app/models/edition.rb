@@ -16,6 +16,8 @@ class Edition
 
   alias_method :admin_list_title, :title
 
+  before_save :update_container_timestamp
+
   def fact_check_id
     [ container.id.to_s, id.to_s, version_number ].join '/'
   end
@@ -45,15 +47,20 @@ class Edition
   def is_published?
     container.publishings.any? { |p| p.version_number == self.version_number }
   end
-  
+
   def created_by
     creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
     creation.requester if creation
   end
-  
+
   def published_by
     publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
     publication.requester if publication
+  end
+
+  def update_container_timestamp
+    self.container.updated_at = Time.now if self.container.created_at
+    self.container.save!
   end
 
   def unpublish!

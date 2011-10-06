@@ -2,12 +2,32 @@
 
 <div id="guide-nav" class="tabs">
   <ul>
+    <li><a href="#lined-up">Lined Up (<%= @lined_up.length %>)</a></li>
     <li><a href="#new">In Progress (<%= @drafts.length %>)</a></li>
     <li><a href="#fact-check">Out For Fact Check (<%= @fact_checking.length %>)</a></li>
     <li><a href="#review-requested">Review Requested (<%= @review_requested.length %>)</a></li>
     <li><a href="#published">Published (<%= @published.length %>)</a></li>
     <li><a href="#archive">Archive</a></li>
   </ul>
+
+  <div id="lined-up">
+    <table class="formats" summary="List of &ldquo;Lined Up&rdquo; content">
+      <thead>
+        <tr>
+          <th scope="col">Format</th>
+          <th scope="col">Title</th>
+          <th scope="col">Last Updated</th>
+          <th scope="col">Created By</th>
+          <th scope="col">Delete</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Preview</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render :collection => @lined_up, :partial => 'publication', :locals => {:tab => :lined_up} %>
+      </tbody>
+    </table>
+  </div>
 
   <div id="new">
     <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
