@@ -3,6 +3,7 @@ class Publication
   include Mongoid::Timestamps
 
   field :panopticon_id,   :type => Integer
+  field :need_id,         :type => Integer
 
   field :name,            :type => String
   field :slug,            :type => String
@@ -118,8 +119,6 @@ class Publication
   def denormalise_metadata
     meta_data.apply_to self
   end
-
-  delegate :need_id, :to => :meta_data
 
   def published_edition
     latest_publishing = self.publishings.sort_by(&:version_number).last

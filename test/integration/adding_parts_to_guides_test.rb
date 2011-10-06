@@ -17,7 +17,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
   end
 
   test "Publishing a guide" do
-     without_panopticon_validation do
+     without_metadata_denormalisation Guide do
 
        # This isn't right, really need a way to run actions when
      # logged in as particular users without having Signonotron running.
