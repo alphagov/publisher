@@ -73,6 +73,29 @@ class GuideTest < ActiveSupport::TestCase
     assert edition.can_publish?
   end
 
+  test "check counting reviews" do
+    user = User.create(:name => "Ben")
+    other_user = User.create(:name => "James")
+
+    guide = user.create_guide
+    edition = guide.editions.first
+
+    assert_equal 0, guide.rejected_count
+    assert_equal 0, guide.edition_rejected_count
+
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.review(edition, {:comment => "I've reviewed it"})
+
+    assert_equal 1, guide.rejected_count
+    assert_equal 1, guide.edition_rejected_count
+
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.okay(edition, {:comment => "Looks good to me"})
+
+    assert_equal 1, guide.rejected_count
+    assert_equal 0, guide.edition_rejected_count
+  end
+
   test "user should be able to have an email sent for fact checking" do
     stub_mailer = stub('mailer', :deliver => true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
