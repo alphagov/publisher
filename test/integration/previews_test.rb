@@ -36,7 +36,7 @@ class PreviewsTest < ActionDispatch::IntegrationTest
   def setup_place_thing(random_name)
     setup_users
 
-    without_panopticon_validation do
+    without_metadata_denormalisation(Place) do
       @place = @author.create_place(:name => random_name, :slug => 'test-place')
       @place.editions.first.title = random_name
       @place.editions.first.introduction = 'Body text'
@@ -52,20 +52,17 @@ class PreviewsTest < ActionDispatch::IntegrationTest
   def publish_answer(random_name)
     setup_users
 
-    without_panopticon_validation do
-      stub_request(:get, "http://panopticon.test.gov.uk/artefacts/15328.js").
-        to_return(:status => 200, :body => "{}", :headers => {})
-
+    without_metadata_denormalisation(Answer) do
       @answer = @author.create_answer(:name => random_name, :slug => 'test-answer', :panopticon_id => 15328)
       @answer.editions.first.title = random_name
       @answer.editions.first.body = 'Body text'
-      @answer.save
+      @answer.save!
 
       @author.request_review(@answer.editions.first, '')
       @reviewer.okay(@answer.editions.first, '')
       @author.publish(@answer.editions.first, 'Done')
       @answer.calculate_statuses
-      @answer.save
+      @answer.save!
     end
 
     return @answer
