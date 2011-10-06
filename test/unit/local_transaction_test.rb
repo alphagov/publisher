@@ -11,16 +11,13 @@ class LocalTransactionTest < ActiveSupport::TestCase
   alias_method :authority, :create_authority
 
   test "looks up the LGSL before validating a new record" do
-    without_panopticon_validation do
-      LocalTransactionsSource.expects(:find_current_lgsl).with("1").returns(lgsl)
-
-      lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
-      assert lt.valid?
-    end
+    LocalTransactionsSource.expects(:find_current_lgsl).with("1").returns(lgsl)
+    lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
+    assert lt.valid?
   end
 
   test "doesn't bother looking up the LGSL before validating an existing record" do
-    without_panopticon_validation do
+    without_metadata_denormalisation(LocalTransaction) do
       LocalTransactionsSource.expects(:find_current_lgsl).never
 
       lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")

@@ -6,7 +6,7 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
     stub_request(:get, "#{Plek.current.find("arbiter")}/artefacts/test.js").to_return(:status => 200, :body => '{"name":"FOOOO"}')
     login_as_stub_user
-    without_panopticon_validation do
+    without_metadata_denormalisation(Transaction) do
       @transaction = Transaction.create!(:name => "test", :slug=>"test")
     end
   end
@@ -32,11 +32,13 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
   end
 
   test "can't destroy published transaction" do
-    @transaction.publish(@transaction.editions.first, "test note")
-    assert !@transaction.can_destroy?
-    @transaction.save!
-    assert_difference('Transaction.count', 0) do
-      delete :destroy, :id => @transaction.id
+    without_metadata_denormalisation(Transaction) do
+      @transaction.publish(@transaction.editions.first, "test note")
+      assert !@transaction.can_destroy?
+      @transaction.save!
+      assert_difference('Transaction.count', 0) do
+        delete :destroy, :id => @transaction.id
+      end
     end
   end
 
