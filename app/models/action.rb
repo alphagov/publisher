@@ -25,6 +25,8 @@ class Action
   field :approved,     :type => DateTime
   field :comment,      :type => String
   field :request_type, :type => String
+  field :email_addresses, :type => String
+  field :customised_message, :type => String
   field :created_at,   :type => DateTime, :default => lambda { Time.now }
 
   def friendly_description

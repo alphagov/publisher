@@ -36,6 +36,10 @@ else
   gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 end
 
+if ENV['DEBUG']
+  gem 'ruby-debug19'
+end
+
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
 gem 'lockfile'
@@ -49,13 +53,14 @@ group :test do
   gem 'fabrication'
   gem "timecop"
   gem 'capybara', '~> 1.0.0'
+  gem "capybara-webkit"
   gem 'selenium-webdriver'
   gem 'database_cleaner'
   gem 'mocha', :require => false
-  gem 'ruby-debug19'
   gem 'simplecov', '0.4.2'
   gem 'simplecov-rcov'
   gem 'ci_reporter'
   gem 'webmock'
   gem 'test-unit'
+  gem 'launchy'
 end

@@ -67,8 +67,10 @@ class Edition
   end
 
   def update_container_timestamp
-    self.container.updated_at = Time.now if self.container.created_at
-    self.container.save!
+    if self.container.created_at
+      container.updated_at = Time.now
+      container.save!
+    end
   end
 
   def unpublish!

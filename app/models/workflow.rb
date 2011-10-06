@@ -59,20 +59,22 @@ module Workflow
     self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
 
-  def progress(activity, current_user,notes)
+  def progress(activity_details, current_user)
+    activity = activity_details.delete(:request_type)                                                                                                               
+    
     case activity
     when 'request_fact_check'
-      current_user.request_fact_check(self, notes)
+      current_user.request_fact_check(self, activity_details)
     when 'fact_check_received'
-      current_user.receive_fact_check(self, notes)
+      current_user.receive_fact_check(self, activity_details)
     when 'request_review'
-      current_user.request_review(self, notes)
+      current_user.request_review(self, activity_details)
     when 'review'
-      current_user.review(self, notes)
+      current_user.review(self, activity_details)
     when 'okay'
-      current_user.okay(self, notes)
+      current_user.okay(self, activity_details)
     when 'publish'
-      current_user.publish(self, notes)
+      current_user.publish(self, activity_details)
     else
       raise "Unknown progress activity: #{activity}"
     end

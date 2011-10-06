@@ -46,24 +46,26 @@ $(function () {
     var this_form = $(this);
 
     if (! submitted_forms) {
-        submit_form(edition_form, function () {
-            submitted_forms = true;
-            this_form.trigger("submit");
-        });
+      submit_form(edition_form, function () {
+        submitted_forms = true;
+        this_form.trigger("submit");
+      });
     }
 
     return submitted_forms;
   });
   
   $('.cancel_button').click(function () {
-    $('.workflow_buttons').show();
-    $(this).closest('form').hide();
+    $(this).closest('form').dialog( "close" );
     return false;
-  })
+  });
+
   $(".review_button, .progress_button").submit(function () {
     var activity = this.id.replace('_toggle', '_form');
-    $('#' + activity).toggle();
-    $('.workflow_buttons').hide();
+    $('#' + activity).dialog({
+      modal: true,
+      width: 700
+    });
     return false;
   });
 });

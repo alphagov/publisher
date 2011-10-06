@@ -1,29 +1,4 @@
-require 'test_helper'
-require 'capybara/rails'
-
-class MockImminence
-
-  def initialize(app)
-    @app = app
-  end
-
-  def call(env)
-    if env['PATH_INFO'] == '/places/registry-offices.json'
-      return [ 200, {}, "[]" ]
-    else
-      @app.call(env)
-    end
-  end
-end
-
-Capybara.default_driver = :selenium
-Capybara.server_port = 4000
-Capybara.app = Rack::Builder.new do
-  map "/" do
-    use MockImminence
-    run Capybara.app
-  end
-end
+require 'integration_test_helper'
 
 class PreviewsTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
@@ -42,7 +17,6 @@ class PreviewsTest < ActionDispatch::IntegrationTest
       @place.editions.first.introduction = 'Body text'
       @place.editions.first.more_information = 'More body text'
       @place.editions.first.place_type = 'registry-offices'
-
       @place.save
     end
 
@@ -64,7 +38,6 @@ class PreviewsTest < ActionDispatch::IntegrationTest
       @answer.calculate_statuses
       @answer.save!
     end
-
     return @answer
   end
 
@@ -81,7 +54,7 @@ class PreviewsTest < ActionDispatch::IntegrationTest
 
     visit "/admin"
     click_on 'Edit this publication'
-    within(:css, '#guide-controls') {
+    within(:css, '#publication-controls') {
       click_on 'Preview'
     }
     assert page.has_content? random_name

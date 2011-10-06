@@ -29,9 +29,7 @@ class Admin::LocalTransactionsController < Admin::BaseController
   end
   
   def progress
-    current_user = self.current_user
-    notes = params[:comment] || ''
-    resource.latest_edition.progress(params[:activity],current_user,notes)    
+    resource.latest_edition.progress(params[:activity], current_user)
     redirect_to admin_local_transaction_path(resource), :notice => 'Local Transaction updated'
   end
 end

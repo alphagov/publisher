@@ -1,20 +1,7 @@
-require 'test_helper'
-require 'capybara/rails'
-
-Capybara.default_driver = :selenium
-Capybara.server_port = 4000
-Capybara.app = Rack::Builder.new do
-  map "/" do
-    run Capybara.app
-  end
-end
+require 'integration_test_helper'
 
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
-
-  def teardown
-    DatabaseCleaner.clean
-  end
 
   test "Publishing a guide" do
      without_metadata_denormalisation Guide do
@@ -40,13 +27,14 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
        fill_in 'Body', :with => 'Body text'
        fill_in 'Slug', :with => 'part-one'
      end
+
      click_on 'Add new part'
      within :css, '#parts div.part:nth-of-type(2)' do
        fill_in 'Title' , :with => 'Part Two'
        fill_in 'Body', :with => 'Body text'
        fill_in 'Slug', :with => 'part-two'
      end
-     within(:css, '#guide-controls') { click_on 'Save' }
+     within(:css, '#publication-controls') { click_on 'Save' }
 
      click_on 'Add new part'
      within :css, '#parts div.part:nth-of-type(3)' do
@@ -54,7 +42,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
        fill_in 'Body', :with => 'Body text'
        fill_in 'Slug', :with => 'part-three'
      end
-     within(:css, '#guide-controls') { click_on 'Save' }
+     within(:css, '#publication-controls') { click_on 'Save' }
 
      assert_equal 3, all(:css, '#parts > div.part').length
 

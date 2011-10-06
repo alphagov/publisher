@@ -64,9 +64,9 @@ class User
     end
   end
 
-  def request_fact_check(edition, email_addresses)
-    record_action edition, Action::FACT_CHECK_REQUESTED, comment: email_addresses
-    NoisyWorkflow.request_fact_check(edition, email_addresses).deliver
+  def request_fact_check(edition, details)
+    record_action edition, Action::FACT_CHECK_REQUESTED, details
+    NoisyWorkflow.request_fact_check(edition, details).deliver
     edition
   end
 
@@ -85,8 +85,7 @@ class User
     #return false if edition.latest_status_action.requester_id == self.id
 
     edition.container.mark_as_rejected
-
-    record_action edition, Action::REVIEWED, comment: comment
+    record_action edition, Action::REVIEWED, details
     edition
   end
 
@@ -100,7 +99,7 @@ class User
 
   def publish(edition, notes)
     record_action edition, Action::PUBLISHED
-    edition.publish(edition,notes)
+    edition.publish(edition, details[:comment])
     edition
   end
 
