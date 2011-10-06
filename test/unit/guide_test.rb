@@ -77,13 +77,13 @@ class GuideTest < ActiveSupport::TestCase
     stub_mailer = stub('mailer', :deliver => true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
-  
+
     guide = user.create_guide
     edition = guide.editions.first
     assert edition.can_request_fact_check?
     user.request_fact_check(edition, "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk")
   end
-  
+
   test "user should not be able to request review for a guide that's being fact checked" do
     user = User.create(:name => "Ben")
 
