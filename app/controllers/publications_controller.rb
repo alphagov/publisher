@@ -43,22 +43,9 @@ class PublicationsController < ApplicationController
   end
 
   def show_publication(slug, edition, snac)
-    publication = Publication.where(slug: slug).first
-    return nil if publication.nil?
-    
-    if edition
-      # This is used for previewing yet-to-be-published editions. 
-      # At some point this should require special authentication.
-      if edition == "latest"
-        edition = publication.editions.order_by(:created_at => :desc).first
-      else
-        edition = publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
-      end
-    else
-      edition = publication.published_edition
-    end
+    edition = Publication.find_and_identify_edition(slug, edition)
     return nil if edition.nil?
-
+    
     options = {}
     allowed_options = [:snac,:all]
     allowed_options.each do |a|
