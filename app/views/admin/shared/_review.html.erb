@@ -3,10 +3,6 @@
 
   <% if @latest_edition.latest_status_action.requester == current_user %>
     <p>That's you! You'll get an email when it has been reviewed.</p>
-    <div class="workflow_buttons">      
-      <%= review_buttons(@latest_edition.container, @latest_edition)%>
-    </div>
-    <%= review_forms(@latest_edition.container, @latest_edition)%>
   <% else %>
     <div class="workflow_buttons">      
       <%= review_buttons(@latest_edition.container, @latest_edition)%>
