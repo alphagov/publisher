@@ -2,6 +2,11 @@ require 'external_services'
 
 module Admin::GuidesHelper
 
+  def produce_fact_check_request_text
+    @edition = @latest_edition
+    render :partial => '/noisy_workflow/request_fact_check'
+  end
+
   def safe_to_preview?(publication)
     return true unless publication.is_a?(Guide)
     return (publication.latest_edition.parts.any? and publication.latest_edition.parts.first.slug.present?)
@@ -15,34 +20,23 @@ module Admin::GuidesHelper
     publication_front_end_path(edition.container)+"?edition=#{edition.version_number}"
   end
 
-  def activity_form(name, id, url, html_options = {})
-    html_options = html_options.stringify_keys
-    convert_boolean_attributes!(html_options, ["disabled"] )
-
-    request_token_tag = ''
-    if protect_against_forgery?
-      request_token_tag = tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token)
-    end
-
-    comment_field =  tag(:input,:name=>'comment',:placeholder=>html_options['placeholder'] || "Please enter a comment")
-    cancel_button =  tag(:input,:type=>"submit",
-                         :class=>"button_to cancel_button",
-                         :style=>"width:auto",
-                         :value=>"Cancel")
-
-    html_options = convert_options_to_data_attributes({}, html_options)
-    html_options.merge!("type" => "submit", "value" => name,:style=>"width:auto")
-
-    ("<form id=\"#{id}\" method=\"post\" action=\"#{html_escape(url)}\"
-       class=\"button_to also_save_edition\" style=\"display:none\">" + comment_field  + 
-       cancel_button + tag("input", html_options)  + request_token_tag + "</form>").html_safe
+  def progress_forms(edition)
+    [
+      ["Fact check",       "request_fact_check", "Enter email addresses"],
+      ["2nd pair of eyes", "request_review"],
+      ["Publish",          "publish"]
+    ].map { |title,activity, placeholder|
+      progress_form(:title=>title,:activity=>activity,:edition=>edition,:placeholder=>placeholder)
+    }.join("\n").html_safe
   end
 
   def progress_form(opts)
-    title,guide,edition,activity,placeholder = opts[:title],opts[:guide],opts[:edition],opts[:activity],opts[:placeholder]
+    title,edition,activity,placeholder = opts[:title],opts[:edition],opts[:activity],opts[:placeholder]
     check_method = "can_#{activity}?".to_sym
-    path = send("progress_admin_#{guide.class.to_s.underscore}_path", guide, :activity => activity, :edition_id => edition)
-    activity_form title, activity+"_form", path, :disabled => !edition.send(check_method), :placeholder => placeholder
+    path = send("progress_admin_#{edition.container.class.to_s.underscore}_path", edition.container)
+
+    render(:partial => 'admin/shared/activity_form', :locals => { :url => path, :name => title, :id => activity+"_form", 
+      :disabled => !edition.send(check_method), :activity => activity })
   end
 
   def review_buttons(guide,edition)
@@ -79,17 +73,6 @@ module Admin::GuidesHelper
       "<form id=\"#{activity}_toggle\" class=\"button_to progress_button\">
       <input type=\"submit\" value=\"#{title}\"  #{disabled}>
       </form>"
-    }.join("\n").html_safe
-  end
-
-  def progress_forms(edition)
-    guide = edition.container
-    [
-      ["Fact check",       "request_fact_check", "Enter email addresses"],
-      ["2nd pair of eyes", "request_review"],
-      ["Publish",          "publish"]
-    ].map { |title,activity, placeholder|
-      progress_form(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition,:placeholder=>placeholder)
     }.join("\n").html_safe
   end
 
