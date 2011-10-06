@@ -71,33 +71,34 @@ class User
   end
 
   def request_review(edition, comment)
-    return false if edition.status_is?(Action::REVIEW_REQUESTED)
-    
+    #return false if edition.status_is?(Action::REVIEW_REQUESTED)
     record_action edition, Action::REVIEW_REQUESTED, comment: comment
     edition
   end
-  
+
   def receive_fact_check(edition, comment)
     record_action edition, Action::FACT_CHECK_RECEIVED, comment: comment
     edition
   end
-    
 
-  def review(edition,comment)
-    return false if edition.latest_status_action.requester_id == self.id
+  def review(edition, comment)
+    #return false if edition.latest_status_action.requester_id == self.id
+
+    edition.container.mark_as_rejected
 
     record_action edition, Action::REVIEWED, comment: comment
     edition
   end
 
-  def okay(edition,comment)
-    return false if edition.latest_status_action.requester_id == self.id
+  def okay(edition, comment)
+    #return false if edition.latest_status_action.requester_id == self.id
 
+    edition.container.mark_as_accepted
     record_action edition, Action::OKAYED, comment: comment
     edition
   end
 
-  def publish(edition,notes)
+  def publish(edition, notes)
     record_action edition, Action::PUBLISHED
     edition.publish(edition,notes)
     edition

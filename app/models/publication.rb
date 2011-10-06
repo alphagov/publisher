@@ -20,9 +20,11 @@ class Publication
   field :department,      :type => String
   field :related_items,   :type => String
 
+  field :rejected_count,  :type => Integer, default: 0
+
   embeds_many :publishings
 
-  scope :in_draft,         where(has_drafts: true)
+  scope :in_draft,         where(has_drafts: true).order_by(:rejected_count => :desc)
   scope :lined_up,         where(lined_up: true)
   scope :fact_checking,    where(has_fact_checking: true)
   scope :published,        where(has_published: true)
@@ -98,6 +100,14 @@ class Publication
   def mark_as_started
     self.lined_up = false unless self.created_at.blank?
     true
+  end
+
+  def mark_as_rejected
+    self.rejected_count += 1
+  end
+
+  def mark_as_accepted
+    self.rejected_count = 0
   end
 
   def calculate_statuses
