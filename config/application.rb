@@ -54,4 +54,5 @@ end
 
 require 'open-uri'
 require 'builder'
-require 'initialize_definition'
+
+Object.include Pethau::InitializeWith
