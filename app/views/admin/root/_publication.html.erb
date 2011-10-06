@@ -25,7 +25,10 @@
   <td>
     <%= publication.latest_edition.created_by %>
   </td>
-
+  <td>
+    <%= publication.rejected_count %> /
+    <%= publication.edition_rejected_count %>
+  </td>
     <% if tab && tab == :published %>
     <td>
       <%= publication.published_edition.published_by %>
