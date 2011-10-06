@@ -6,7 +6,7 @@
   </ul>
 	
 	<% @overviews.each do |title, rows| %>
-		<div id="#<%= title %>">
+		<div id="<%= title %>">
 		  <%= render :partial => "row", :locals => {:rows => rows } %>
 		</div>
 	<% end %>
