@@ -143,6 +143,7 @@ GEM
       fastthread (>= 1.0.1)
       rack
       rake (>= 0.8.1)
+    pethau (0.0.1)
     plek (0.1.0)
     polyglot (0.3.2)
     rack (1.2.3)
@@ -229,6 +230,7 @@ DEPENDENCIES
   mocha
   mongoid (~> 2.0)
   passenger
+  pethau
   plek
   rails (~> 3.0.10)
   ruby-debug19

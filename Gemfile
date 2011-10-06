@@ -9,6 +9,7 @@ gem "mongoid", "~> 2.0"
 gem "bson_ext", "~> 1.3"
 gem 'erubis'
 gem 'plek'
+gem 'pethau'
 
 gem 'inherited_resources'
 gem 'formtastic'

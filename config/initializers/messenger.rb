@@ -3,4 +3,6 @@
 # TODO: Check if this is thread/forked process safe under passenger. Possible risk
 # that client connections get copied when passenger forks a process but the mutexes
 # protecting those connections do not. 
-Messenger.client = Stomp::Client.new('', '', 'localhost', 61613, true)
+STOMP_CONFIGURATION = {
+  hosts: [{login: "", passcode: "", host: "remotehost1", port: 61613, :ssl => false}]
+}
