@@ -19,6 +19,17 @@
     <% end %>
     </span>
   </td>
+  <td>
+    <% if tab && tab == :published %>
+      <% if publication.is_a?(Guide) && publication.published_edition.video_url %>
+        <%= image_tag "/images/icon-publisher-video.png", :alt => "Has video"  %>
+      <% end %>
+    <% else %>
+      <% if publication.is_a?(Guide) && publication.latest_edition.video_url %>
+        <%= image_tag "/images/icon-publisher-video.png", :alt => "Has video"  %>
+      <% end %>
+    <% end %>
+  </td>
   <td class="updated">
     <%= publication.updated_at.strftime("%d/%m/%Y %H:%M") %>
   </td>
