@@ -33,9 +33,9 @@ class PreviewsTest < ActionDispatch::IntegrationTest
     @answer.editions.first.body = 'Body text'
     @answer.save
 
-    @author.request_review(@answer.editions.first, '')
-    @reviewer.okay(@answer.editions.first, '')
-    @author.publish(@answer.editions.first, 'Done')
+    @author.request_review(@answer.editions.first, {comment: ''})
+    @reviewer.okay(@answer.editions.first, {comment: ''})
+    @author.publish(@answer.editions.first, {comment: 'Done'})
     @answer.calculate_statuses
     @answer.save
 
