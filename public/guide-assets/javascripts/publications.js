@@ -64,8 +64,7 @@ $(function () {
     var activity = this.id.replace('_toggle', '_form');
     $('#' + activity).dialog({
       modal: true,
-			width: 600,
-			title: "I am an important title"
+			width: 600
     });
     return false;
   });

@@ -35,7 +35,7 @@ module Admin::GuidesHelper
     check_method = "can_#{activity}?".to_sym
     path = send("progress_admin_#{edition.container.class.to_s.underscore}_path", edition.container)
 
-    render(:partial => 'admin/shared/activity_form', :locals => { :url => path, :name => title, :id => activity+"_form", 
+    render(:partial => 'admin/shared/activity_form', :locals => { :url => path, :title => title, :id => activity+"_form", 
       :disabled => !edition.send(check_method), :activity => activity })
   end
 

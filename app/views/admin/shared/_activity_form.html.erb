@@ -1,8 +1,8 @@
-<%= semantic_form_for(:activity, :url => url, :html => {:class => 'button_to also_save_edition', :style => 'display: none', :id => id}) do |f| %>
+<%= semantic_form_for(:activity, :url => url, :html => {:title => title, :class => 'button_to also_save_edition', :style => 'display: none', :id => id}) do |f| %>
   <%= f.inputs do %>
     <input type="hidden" value="<%= activity %>" name="activity[request_type]">
     <%= f.input :comment, :as => :text, :input_html => {:cols => 60, :rows => 3} %>
-    <% if name == "Fact check" %>
+    <% if title == "Fact check" %>
       <%= f.input :email_addresses  %>
 
       <li id="activity_customised_message_input" class="text required">
