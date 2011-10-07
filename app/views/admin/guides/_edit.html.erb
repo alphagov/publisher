@@ -1,6 +1,8 @@
 <%= semantic_form_for @latest_edition, :url => admin_guide_edition_path(@guide, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
+
   <% end %>
 
   <h2 class="visuallyhidden">Parts</h2>
@@ -17,6 +19,9 @@
   </section>
 
   <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts" role="button">Add new part</a></p>
+    
+
+
 
   <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
 <% end %>
