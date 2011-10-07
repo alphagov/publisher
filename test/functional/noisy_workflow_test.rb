@@ -10,10 +10,33 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     g
   end
 
-  test "fact checking" do
+  test "fact checking emails should go from appropriate email addresses" do
     guide = template_guide
-    edition = guide.editions.first
-    email = NoisyWorkflow.request_fact_check edition, {:email_addresses => 'jys@ketlai.co.uk', :customised_message => "Blah"}
+    email = NoisyWorkflow.request_fact_check guide.editions.first, {:email_addresses => 'jys@ketlai.co.uk', :customised_message => "Blah"}
     assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.reply_to
+  end
+  
+  test "news of publications should go to the whole team + franchise editors" do
+    guide = template_guide
+    requester = User.new(:name => 'Testing Person')
+    action = Action.new(:request_type => Action::PUBLISHED, :requester => requester, :edition => guide.editions.first)
+    email = NoisyWorkflow.make_noise(guide, action)
+    assert_equal email.to, ['team@alphagov.co.uk', 'freds@alphagov.co.uk']
+  end
+  
+  test "review request emails should go to the editors, franchise editors, and the SEO team" do
+    guide = template_guide
+    requester = User.new(:name => 'Testing Person')
+    action = Action.new(:request_type => Action::REVIEW_REQUESTED, :requester => requester, :edition => guide.editions.first)
+    email = NoisyWorkflow.make_noise(guide, action)
+    assert_equal email.to, ['eds@alphagov.co.uk', 'seo@alphagov.co.uk', 'freds@alphagov.co.uk']
+  end
+  
+  test "other workflow emails should go to editors and franchise editors" do
+    guide = template_guide
+    requester = User.new(:name => 'Testing Person')
+    action = Action.new(:request_type => Action::REVIEWED, :requester => requester, :edition => guide.editions.first)
+    email = NoisyWorkflow.make_noise(guide, action)
+    assert_equal email.to, ['eds@alphagov.co.uk', 'freds@alphagov.co.uk']
   end
 end
