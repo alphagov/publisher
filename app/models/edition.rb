@@ -48,6 +48,14 @@ class Edition
     container.publishings.any? { |p| p.version_number == self.version_number }
   end
 
+  def has_been_reviewed?
+    latest_status_action.request_type == "reviewed" if latest_status_action
+  end
+
+  def has_been_okayed?
+    latest_status_action.request_type == "okayed" if latest_status_action
+  end
+
   def created_by
     creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
     creation.requester if creation

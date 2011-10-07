@@ -57,7 +57,7 @@ module Admin::GuidesHelper
       ["Needs more work",    "review"],
       ["OK for publication", "okay"]
     ].map{ |title,activity|
-      progress_form(:title=>title,:guide=>guide,:activity=>activity,:edition=>edition)
+      progress_form(:title=>title, :guide=>guide, :activity=>activity, :edition=>edition)
     }.join("\n").html_safe
   end
 

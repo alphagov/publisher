@@ -37,6 +37,10 @@ module Api
     end
 
     class Guide < Base
+      def self.extra_fields
+        [ :video_url,
+          :video_summary]
+      end
     end
 
     class Programme < Base

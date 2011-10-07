@@ -1,4 +1,4 @@
-<tr>
+<tr class="<%= status_class_for(publication) %>">
   <td>
     <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
@@ -25,7 +25,10 @@
   <td>
     <%= publication.latest_edition.created_by %>
   </td>
-
+  <td>
+    <%= publication.rejected_count %> /
+    <%= publication.edition_rejected_count %>
+  </td>
     <% if tab && tab == :published %>
     <td>
       <%= publication.published_edition.published_by %>

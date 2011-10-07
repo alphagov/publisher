@@ -3,8 +3,11 @@ class GuideEdition < Edition
   embeds_many :parts
   
   accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
+  
+  field :video_url,	:type => String
+  field :video_summary, :type => String
 
-  @fields_to_clone = []
+  @fields_to_clone = [:video_url, :video_summary]
 
   def build_clone
     new_edition = super
