@@ -53,6 +53,7 @@ group :test do
   gem 'fabrication'
   gem "timecop"
   gem 'capybara', '~> 1.0.0'
+  gem "capybara-webkit"
   gem 'selenium-webdriver'
   gem 'database_cleaner'
   gem 'mocha', :require => false
@@ -61,4 +62,5 @@ group :test do
   gem 'ci_reporter'
   gem 'webmock'
   gem 'test-unit'
+  gem 'launchy'
 end
