@@ -7,7 +7,6 @@ class ActionDispatch::IntegrationTest
   end
 end
 
-
 class MockImminence
 
   def initialize(app)
@@ -24,7 +23,6 @@ class MockImminence
 end
 
 Capybara.default_driver = :webkit
-# Capybara.server_port = 4000
 Capybara.app = Rack::Builder.new do
  map "/" do
    run Capybara.app
