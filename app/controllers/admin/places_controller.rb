@@ -2,14 +2,14 @@ class Admin::PlacesController < Admin::BaseController
   respond_to :html, :json
 
   def show
-    @place = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @place = current_user.create_place(params[:place])
-    if @place.save
-      redirect_to admin_place_path(@place), :notice => 'Place successfully created' and return
+    @resource = current_user.create_place(params[:place])
+    if @resource.save
+      redirect_to admin_place_path(@resource), :notice => 'Place successfully created' and return
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::PlacesController < Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @place }
-      f.json { render :json => @place.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end

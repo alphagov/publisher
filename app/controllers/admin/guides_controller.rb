@@ -2,14 +2,14 @@ class Admin::GuidesController <  Admin::BaseController
   respond_to :html, :json
 
   def show
-    @guide = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @guide = current_user.create_guide(params[:guide])
-    if @guide.save
-      redirect_to admin_guide_path(@guide), :notice => 'Guide successfully created' and return
+    @resource = current_user.create_guide(params[:guide])
+    if @resource.save
+      redirect_to admin_guide_path(@resource), :notice => 'Guide successfully created' and return
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::GuidesController <  Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @guide }
-      f.json { render :json => @guide.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end

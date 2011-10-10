@@ -1,4 +1,4 @@
-<%= semantic_form_for @latest_edition, :url => admin_place_edition_path(@place, @latest_edition), :as => :edition do |f| %>
+<%= semantic_form_for @latest_edition, :url => admin_place_edition_path(@resource, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= f.input :place_type, :hint => "This is the 'slug' assigned in the imminence app" %>

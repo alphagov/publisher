@@ -1,4 +1,4 @@
-<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @programme.title %>&rdquo;</h2>
+<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
 <p>Status: <%= @latest_edition.latest_status_action %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
@@ -14,10 +14,10 @@
     <%= render '/admin/programmes/edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @programme} %>
+    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
   </div>
   <div id="history">
-    <%= render :partial => '/admin/shared/history', :locals => {:publication => @programme} %>
+    <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
   </div>
 </div>
 

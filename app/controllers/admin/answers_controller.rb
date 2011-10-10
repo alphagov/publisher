@@ -2,14 +2,14 @@ class Admin::AnswersController < Admin::BaseController
   respond_to :html, :json
 
   def show
-    @answer = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @answer = current_user.create_answer(params[:answer])
-    if @answer.save
-      redirect_to admin_answer_path(@answer)
+    @resource = current_user.create_answer(params[:answer])
+    if @resource.save
+      redirect_to admin_answer_path(@resource)
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::AnswersController < Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @answer }
-      f.json { render :json => @answer.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end

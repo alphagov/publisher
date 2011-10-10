@@ -2,14 +2,14 @@ class Admin::ProgrammesController <  Admin::BaseController
   respond_to :html, :json
 
   def show
-    @programme = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @programme = current_user.create_programme(params[:programme])
-    if @programme.save
-      redirect_to admin_programme_path(@programme), :notice => 'Programme successfully created' and return
+    @resource = current_user.create_programme(params[:programme])
+    if @resource.save
+      redirect_to admin_programme_path(@resource), :notice => 'Programme successfully created' and return
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::ProgrammesController <  Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @programme }
-      f.json { render :json => @programme.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end

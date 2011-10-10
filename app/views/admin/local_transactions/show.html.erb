@@ -1,4 +1,4 @@
-<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @local_transaction.title %>&rdquo;</h2>
+<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
 <p>Status: <%= @latest_edition.latest_status_action %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
@@ -15,14 +15,14 @@
     <%= render '/admin/local_transactions/edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @local_transaction} %>
+    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
   </div>
   <div id="history">
-    <%= render :partial => '/admin/shared/history', :locals => {:publication => @local_transaction} %>
+    <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
   </div>
   <div id="providers">
     <ul>
-    <%- @local_transaction.lgsl.authorities.each do |authority| -%>
+    <%- @resource.lgsl.authorities.each do |authority| -%>
       <li><%= authority.name %></li>
     <%- end -%>
     </ul>
@@ -30,4 +30,4 @@
 </div>
 
 <% content_for :extra_javascript, javascript_include_tag('/guide-assets/javascripts/publications') %>
-<% content_for :page_title, "Editing #{@local_transaction.title}" %>
+<% content_for :page_title, "Editing #{@resource.title}" %>

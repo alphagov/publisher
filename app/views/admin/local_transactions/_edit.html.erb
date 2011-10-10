@@ -1,6 +1,6 @@
-<%= semantic_form_for @latest_edition, :url => admin_local_transaction_edition_path(@local_transaction, @latest_edition), :as => :edition do |f| %>
+<%= semantic_form_for @latest_edition, :url => admin_local_transaction_edition_path(@resource, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
-    <li><p>LGSL code</p><p><%= @local_transaction.lgsl_code %></p></li>
+    <li><p>LGSL code</p><p><%= @resource.lgsl_code %></p></li>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= f.input :introduction, :label => 'Introductory paragraph', :hint => 'Set the scene for the user. Explain that it\'s the responsibility of the local council and that we\'ll take you there.', :as => :text, :input_html => {:rows => 2} %>
     <%= f.input :more_information, :as => :text %>

@@ -2,14 +2,14 @@ class Admin::LocalTransactionsController < Admin::BaseController
   respond_to :html, :json
 
   def show
-    @local_transaction = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @local_transaction = current_user.create_local_transaction(params[:local_transaction])
-    if @local_transaction.save
-      redirect_to admin_local_transaction_path(@local_transaction), :notice => 'Local Transaction successfully created' and return
+    @resource = current_user.create_local_transaction(params[:local_transaction])
+    if @resource.save
+      redirect_to admin_local_transaction_path(@resource), :notice => 'Local Transaction successfully created' and return
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::LocalTransactionsController < Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @local_transaction }
-      f.json { render :json => @local_transaction.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end

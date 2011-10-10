@@ -2,14 +2,14 @@ class Admin::TransactionsController < Admin::BaseController
   respond_to :html, :json
 
   def show
-    @transaction = resource
+    @resource = resource
     @latest_edition = resource.latest_edition
   end
 
   def create
-    @transaction = current_user.create_transaction(params[:transaction])
-    if @transaction.save
-      redirect_to admin_transaction_path(@transaction), :notice => 'Transaction successfully created' and return
+    @resource = current_user.create_transaction(params[:transaction])
+    if @resource.save
+      redirect_to admin_transaction_path(@resource), :notice => 'Transaction successfully created' and return
     else
       render :action => 'new'
     end
@@ -25,8 +25,8 @@ class Admin::TransactionsController < Admin::BaseController
 
   def update
     update! do |s,f|
-      s.json { render :json => @transaction }
-      f.json { render :json => @transaction.errors, :status => 406 }
+      s.json { render :json => @resource }
+      f.json { render :json => @resource.errors, :status => 406 }
     end
   end
 end
