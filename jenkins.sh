@@ -4,7 +4,7 @@ bundle install --path "/home/jenkins/bundles/${JOB_NAME}" --deployment
 bundle exec rake stats
 
 # DELETE STATIC SYMLINKS AND RECONNECT...
-cd /var/lib/jenkins/jobs/Guides/workspace/public
+cd public
 for d in images javascript templates stylesheets; do
   rm -f $d
   ln -s ../../../Static/$d .
