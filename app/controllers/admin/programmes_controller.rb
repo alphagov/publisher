@@ -6,14 +6,6 @@ class Admin::ProgrammesController <  Admin::BaseController
     @latest_edition = resource.latest_edition
   end
 
-  def destroy
-    if resource.can_destroy?
-      destroy! { redirect_to admin_root_url, :notice => "Programme destroyed" and return }
-    else
-      redirect_to admin_programme_path(resource), :notice => 'Cannot delete a programme that has ever been published.' and return
-    end
-  end
-
   def create
     @programme = current_user.create_programme(params[:programme])
     if @programme.save
@@ -23,8 +15,16 @@ class Admin::ProgrammesController <  Admin::BaseController
     end
   end
 
+  def destroy
+    if resource.can_destroy?
+      destroy! { redirect_to admin_root_url, :notice => "Programme destroyed" and return }
+    else
+      redirect_to admin_programme_path(resource), :notice => 'Cannot delete a programme that has ever been published.' and return
+    end
+  end
+
   def update
-    update! do |s,f| 
+    update! do |s,f|
       s.json { render :json => @programme }
       f.json { render :json => @programme.errors, :status => 406 }
     end

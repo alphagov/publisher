@@ -1,9 +1,11 @@
 class Admin::TransactionsController < Admin::BaseController
+  respond_to :html, :json
+
   def show
     @transaction = resource
     @latest_edition = resource.latest_edition
   end
-  
+
   def create
     @transaction = current_user.create_transaction(params[:transaction])
     if @transaction.save
@@ -22,7 +24,7 @@ class Admin::TransactionsController < Admin::BaseController
   end
 
   def update
-    update! do |s,f| 
+    update! do |s,f|
       s.json { render :json => @transaction }
       f.json { render :json => @transaction.errors, :status => 406 }
     end

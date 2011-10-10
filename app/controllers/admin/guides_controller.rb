@@ -5,15 +5,7 @@ class Admin::GuidesController <  Admin::BaseController
     @guide = resource
     @latest_edition = resource.latest_edition
   end
-  
-  def destroy
-    if resource.can_destroy?
-      destroy! { redirect_to admin_root_url, :notice => "Guide destroyed" and return }
-    else
-      redirect_to admin_guide_path(resource), :notice => 'Cannot delete a guide that has ever been published.' and return
-    end
-  end
-  
+
   def create
     @guide = current_user.create_guide(params[:guide])
     if @guide.save
@@ -22,9 +14,17 @@ class Admin::GuidesController <  Admin::BaseController
       render :action => 'new'
     end
   end
-  
+
+  def destroy
+    if resource.can_destroy?
+      destroy! { redirect_to admin_root_url, :notice => "Guide destroyed" and return }
+    else
+      redirect_to admin_guide_path(resource), :notice => 'Cannot delete a guide that has ever been published.' and return
+    end
+  end
+
   def update
-    update! do |s,f| 
+    update! do |s,f|
       s.json { render :json => @guide }
       f.json { render :json => @guide.errors, :status => 406 }
     end
