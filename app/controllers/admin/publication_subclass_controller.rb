@@ -37,6 +37,14 @@ class Admin::PublicationSubclassController < Admin::BaseController
   end
 
 private
+  def resource_path(r)
+    __send__("admin_#{identifier}_path", r)
+  end
+
+  def create_new
+    current_user.__send__("create_#{identifier}", params[identifier])
+  end
+
   def description(r)
     r.class.to_s.underscore.humanize
   end
