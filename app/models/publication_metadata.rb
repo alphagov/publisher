@@ -56,19 +56,19 @@ class PublicationMetadata
   end
 
   def apply_to publication
-    my_attributes = attributes.dup
-    publication.name = my_attributes['name']
-    publication.slug = my_attributes['slug']
-    publication.tags = my_attributes['tags']
+    attributes = load_attributes
+    publication.name = attributes['name']
+    publication.slug = attributes['slug']
+    publication.tags = attributes['tags']
 
     if attributes['audiences'].present?
-      publication.audiences = my_attributes['audiences'].map { |a| a['name'] }
+      publication.audiences = attributes['audiences'].map { |a| a['name'] }
     end
-    publication.section = my_attributes['section']
-    publication.department = my_attributes['department']
+    publication.section = attributes['section']
+    publication.department = attributes['department']
 
-    if my_attributes['related_items'].present?
-      slugs = my_attributes['related_items'].map do |i|
+    if attributes['related_items'].present?
+      slugs = attributes['related_items'].map do |i|
         a = i['artefact']
         [ i['sort_key'], a['slug'], a['name'], a['kind'] ]
       end
@@ -91,7 +91,7 @@ class PublicationMetadata
     data = JSON.parse open(uri).read
     data.except('updated_at', 'created_at', 'id', 'owning_app', 'kind', 'active')
   end
-
+  
   def need_id
     attributes['need_id']
   end
