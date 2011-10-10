@@ -1,5 +1,11 @@
-<p>Assigning this task to other people does not currently work. It will soon!</p>
 <%= hidden_field_tag "return_to", params[:return_to] if params[:return_to] %>
-<label for="abcd">Assignee</label><select id="abcd" name="FOOOO"><option value="123532">editor-2@alphagov.co.uk</option></select>
+<li class="optional">
+  <p style="color:#c00;">Assigning this task to other people does not currently work. It will soon!</p>
+
+  <label for="abcd">Assignee</label>
+  <select id="abcd" name="FOOOO">
+    <option value="123532">editor-2@alphagov.co.uk</option>
+  </select>
+</li><!-- Remove the list item when you replace this with the real select box -->
 <%= f.input :alternative_title, :label => "Alternative title", :hint => 'Use this where longer title is needed for SEO purposes', :input_html => {:autofocus => true} %>
 <%= f.input :overview, :as => :text, :input_html => {:rows => 3}, :label => 'Meta tag description', :hint =>'Some search engines will display this if they can\'t find what they need in the main text' %>
