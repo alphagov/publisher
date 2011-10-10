@@ -6,7 +6,7 @@ bundle exec rake stats
 # DELETE STATIC SYMLINKS AND RECONNECT...
 for d in images javascripts templates stylesheets; do
   rm -f public/$d
-  ln -s ../../../Static/$d public/
+  ln -s ../../../Static/workspace/public/$d public/
 done
 
 export DISPLAY=:99
