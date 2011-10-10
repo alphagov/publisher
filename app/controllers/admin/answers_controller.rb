@@ -7,9 +7,11 @@ class Admin::AnswersController < Admin::BaseController
   end
 
   def create
-    @resource = current_user.create_answer(params[:answer])
+    @resource = create_new
     if @resource.save
-      redirect_to admin_answer_path(@resource)
+      redirect_to resource_path(@resource),
+        :notice => "#{description(@resource)} successfully created"
+      return
     else
       render :action => 'new'
     end
@@ -17,9 +19,14 @@ class Admin::AnswersController < Admin::BaseController
 
   def destroy
     if resource.can_destroy?
-      destroy! { redirect_to admin_root_url, :notice => "Answer destroyed" and return }
+      destroy! do
+        redirect_to admin_root_url, :notice => "#{description(resource)} destroyed"
+        return
+      end
     else
-      redirect_to admin_answer_path(resource), :notice => 'Cannot delete an answer that has ever been published.' and return
+      redirect_to resource_path(resource),
+        :notice => "Cannot delete a #{description(resource).downcase} that has ever been published."
+      return
     end
   end
 
@@ -28,5 +35,18 @@ class Admin::AnswersController < Admin::BaseController
       s.json { render :json => @resource }
       f.json { render :json => @resource.errors, :status => 406 }
     end
+  end
+
+private
+  def resource_path(r)
+    admin_answer_path(r)
+  end
+
+  def description(r)
+    r.class.to_s.underscore.humanize
+  end
+
+  def create_new
+    current_user.create_answer(params[:answer])
   end
 end
