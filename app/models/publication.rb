@@ -150,11 +150,15 @@ class Publication
   end
 
   def can_create_new_edition?
-    return !self.has_drafts
+    !self.has_drafts
   end
 
   def can_destroy?
-    return !self.has_published
+    !self.has_published
+  end
+  
+  def has_video?
+    false 
   end
 
   def latest_edition

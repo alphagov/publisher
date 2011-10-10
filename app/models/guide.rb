@@ -4,5 +4,10 @@ class Guide < Publication
   def self.edition_class
     GuideEdition
   end
+  
+  def has_video?
+    latest_edition.video_url.present?
+  end
+  
 
 end

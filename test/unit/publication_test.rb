@@ -19,4 +19,9 @@ class PublicationTest < ActiveSupport::TestCase
     Publication.stubs(:where).returns([dummy_publication])
     assert_equal Publication.find_and_identify_edition('register-offices', ''), dummy_publication.published_edition
   end
+  
+  test 'a publication should not have a video' do
+    g = Answer.create(:slug=>"childcare")
+    assert !g.has_video?
+  end
 end

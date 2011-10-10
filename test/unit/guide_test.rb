@@ -20,6 +20,17 @@ class GuideTest < ActiveSupport::TestCase
     assert g.has_drafts
     assert !g.has_published
   end
+  
+  test 'a guide without a video url should not have a video' do
+    g = Guide.new(:slug=>"childcare")
+    assert !g.has_video?
+  end
+  
+  test 'a guide with a video url should have a video' do
+    g = Guide.new(:slug=>"childcare") 
+    g.editions.last.video_url = "http://www.youtube.com/watch?v=QH2-TGUlwu4"
+    assert g.has_video?
+  end
 
   test 'a guide with all versions published should not have drafts' do
     guide = template_guide
