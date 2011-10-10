@@ -60,7 +60,7 @@ module Workflow
   end
 
   def progress(activity_details, current_user)
-    activity = activity_details.delete(:request_type)                                                                                                               
+    activity = activity_details.delete(:request_type)
     
     case activity
     when 'request_fact_check'
