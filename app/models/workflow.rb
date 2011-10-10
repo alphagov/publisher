@@ -2,7 +2,7 @@ module Workflow
 
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     embeds_many :actions
   end
 
@@ -61,7 +61,7 @@ module Workflow
 
   def progress(activity_details, current_user)
     activity = activity_details.delete(:request_type)
-    
+
     case activity
     when 'request_fact_check'
       current_user.request_fact_check(self, activity_details)
