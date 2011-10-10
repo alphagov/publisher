@@ -22,8 +22,12 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       post :progress,
         :guide_id => @guide.id,
         :id       => @guide.editions.last.id,
-        :activity => 'request_fact_check',
-        :comment  => 'just because'
+        :activity => {
+          "request_type"       => "request_fact_check",
+          "comment"            => "Blah",
+          "email_addresses"    => "user@example.com",
+          "customised_message" => "Hello"
+        }
     end
 
     assert_redirected_to :controller => "admin/guides", :action => "show", :id => @guide.id
