@@ -1,13 +1,8 @@
 class Admin::PublicationSubclassesController < Admin::BaseController
 
-  def new
-    render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'new'
-  end
-
   def show
     @resource = resource
     @latest_edition = resource.latest_edition
-    render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'show'
   end
 
   def create
@@ -17,7 +12,7 @@ class Admin::PublicationSubclassesController < Admin::BaseController
         :notice => "#{description(@resource)} successfully created"
       return
     else
-      render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'new'
+      render :action => "new"
     end
   end
 
