@@ -55,6 +55,11 @@ module Workflow
     assignment && assignment.recipient
   end
 
+  def assigned_to_id
+    a = assigned_to
+    a && a.id
+  end
+
   def most_recent_action(&blk)
     self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
