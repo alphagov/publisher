@@ -46,9 +46,8 @@ class ActiveSupport::TestCase
     WebMock.reset!
     DatabaseCleaner.clean
   end
-end
 
-def login_as_stub_user
-  request.env['warden'] = stub(:authenticate! => true, :authenticated? => true)
+  def login_as_stub_user
+    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true)
+  end
 end
-

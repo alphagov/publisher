@@ -35,4 +35,80 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     @guide.reload
     assert @guide.editions.last.status_is?(Action::FACT_CHECK_REQUESTED)
   end
+
+  test "should assign after creation" do
+    bob = User.create
+    @guide.editions.each do |e|
+       @guide.publish e, "Publishing this"
+    end
+
+    without_metadata_denormalisation(Guide) do
+      post :create,
+        :guide_id       => @guide.id,
+        :assigned_to_id => bob.id
+    end
+
+    @guide.reload
+    assert_equal bob, @guide.editions.last.assigned_to
+  end
+
+  test "should not assign after creation if assignment is blank" do
+    bob = User.create
+    @guide.editions.each do |e|
+       @guide.publish e, "Publishing this"
+    end
+
+    without_metadata_denormalisation(Guide) do
+      post :create,
+        :guide_id       => @guide.id,
+        :assigned_to_id => ""
+    end
+
+    @guide.reload
+    assert_nil @guide.editions.last.assigned_to
+  end
+
+  test "should update assignment" do
+    bob = User.create
+
+    without_metadata_denormalisation(Guide) do
+      post :update,
+        :guide_id       => @guide.id,
+        :id             => @guide.editions.last.id,
+        :assigned_to_id => bob.id
+    end
+
+    @guide.reload
+    assert_equal bob, @guide.editions.last.assigned_to
+  end
+
+  test "should not create a new action if the assignment is unchanged" do
+    bob = User.create
+    @user.assign(@guide.editions.last, bob)
+
+    without_metadata_denormalisation(Guide) do
+      post :update,
+        :guide_id       => @guide.id,
+        :id             => @guide.editions.last.id,
+        :assigned_to_id => bob.id
+    end
+
+    @guide.reload
+    assert_equal 1, @guide.editions.last.actions.select{ |a| a.request_type == Action::ASSIGNED }.length
+  end
+
+  test "should not update assignment if the assignment is blank" do
+    bob = User.create
+    @user.assign(@guide.editions.last, bob)
+
+    without_metadata_denormalisation(Guide) do
+      post :update,
+        :guide_id       => @guide.id,
+        :id             => @guide.editions.last.id,
+        :assigned_to_id => ""
+    end
+
+    @guide.reload
+    assert_equal bob, @guide.editions.last.assigned_to
+  end
 end

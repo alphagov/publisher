@@ -3,7 +3,9 @@ class Admin::EditionsController <  Admin::BaseController
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
+    assigned_to_id = params.delete(:assigned_to_id)
     if new_edition and new_edition.save
+      update_assignment new_edition, assigned_to_id
       redirect_to params[:return_to] and return if params[:return_to]
       redirect_to [:admin, edition_parent], :notice => 'New edition created'
     else
@@ -14,7 +16,10 @@ class Admin::EditionsController <  Admin::BaseController
   end
 
   def update
+    assigned_to_id = params.delete(:assigned_to_id)
     update! do |success, failure|
+      update_assignment resource, assigned_to_id
+
       success.html {
         redirect_to params[:return_to] and return if params[:return_to]
         redirect_to [:admin, parent]
@@ -38,6 +43,13 @@ class Admin::EditionsController <  Admin::BaseController
   end
 
   protected
+    def update_assignment(edition, assigned_to_id)
+      return if assigned_to_id.blank?
+      assigned_to = User.find(assigned_to_id)
+      return if edition.assigned_to == assigned_to
+      current_user.assign(edition, assigned_to)
+    end
+
     # I think we can get this via InheritedResources' "parent" method, but that wasn't
     # working for our create method and I can't see where it's initialised
     def edition_parent
