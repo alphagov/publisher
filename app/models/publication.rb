@@ -83,9 +83,8 @@ class Publication
   end
 
   def build_edition(title)
-    version_number = self.editions.length + 1
-    edition = self.class.edition_class.new(:title=> title, :version_number=>version_number)
-    self.editions << edition
+    version_number = editions.length + 1
+    edition = editions.create(:title=> title, :version_number=>version_number)
     calculate_statuses
     edition
   end
