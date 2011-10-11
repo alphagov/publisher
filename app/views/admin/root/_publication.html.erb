@@ -2,7 +2,7 @@
   <td>
     <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
-  <td class="<%= publication.class.name.downcase %>">
+  <td class="title">
     <% if tab && tab == :published %>
       <%= publication.published_edition.admin_list_title %>
     <% else %>
