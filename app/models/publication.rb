@@ -36,7 +36,7 @@ class Publication
 
   before_save :calculate_statuses, :denormalise_metadata, :mark_as_started
 
-  validates_presence_of :name
+  # validates_presence_of :panopticon_id
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
@@ -62,7 +62,7 @@ class Publication
     publication = where(slug: slug).first
     return nil if publication.nil?
     if edition.present?
-      # This is used for previewing yet-to-be-published editions. 
+      # This is used for previewing yet-to-be-published editions.
       # At some point this should require special authentication.
       if edition == "latest"
         publication.editions.order_by(:created_at => :desc).first
@@ -145,6 +145,8 @@ class Publication
     else
       nil
     end
+  rescue
+    nil
   end
 
   def can_create_new_edition?
@@ -167,7 +169,7 @@ class Publication
   SECTION = "this.section"
   DEPARTMENT = "this.department"
 
-  def self.count_by(type = FORMAT) 
+  def self.count_by(type = FORMAT)
 
     map = <<EOF
       function() {
@@ -180,7 +182,7 @@ EOF
     reduce = <<EOF
       function(key, values) {
         var count = 0; draft = 0; lined_up =0 ;review = 0; published = 0; fact_check = 0; archived = 0;
-        values.forEach(function(doc) { 
+        values.forEach(function(doc) {
           count += parseInt(doc.count);
           draft += parseInt(doc.draft);
           lined_up += parseInt(doc.lined_up);
