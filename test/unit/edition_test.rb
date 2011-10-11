@@ -11,6 +11,11 @@ class EditionTest < ActiveSupport::TestCase
     edition
   end
 
+  setup do
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+  end
+
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
     assert_equal template_edition.title, template_edition.admin_list_title
   end
