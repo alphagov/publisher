@@ -21,7 +21,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
   
   test 'a publication should not have a video' do
-    g = Answer.create(:slug=>"childcare")
-    assert !g.has_video?
+    dummy_publication = template_published_answer
+    assert !dummy_publication.has_video?
   end
 end
