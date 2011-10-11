@@ -159,6 +159,8 @@ class Publication
 
   def latest_edition
     self.editions.sort_by(&:created_at).last
+  rescue
+    nil
   end
 
   def title
