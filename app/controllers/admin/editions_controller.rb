@@ -3,7 +3,7 @@ class Admin::EditionsController <  Admin::BaseController
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
-    assigned_to_id = params.delete(:assigned_to_id)
+    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
     if new_edition and new_edition.save
       update_assignment new_edition, assigned_to_id
       redirect_to params[:return_to] and return if params[:return_to]
@@ -16,7 +16,7 @@ class Admin::EditionsController <  Admin::BaseController
   end
 
   def update
-    assigned_to_id = params.delete(:assigned_to_id)
+    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
     update! do |success, failure|
       update_assignment resource, assigned_to_id
 

@@ -44,8 +44,8 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     without_metadata_denormalisation(Guide) do
       post :create,
-        :guide_id       => @guide.id,
-        :assigned_to_id => bob.id
+        :guide_id => @guide.id,
+        :edition  => { :assigned_to_id => bob.id }
     end
 
     @guide.reload
@@ -60,8 +60,8 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     without_metadata_denormalisation(Guide) do
       post :create,
-        :guide_id       => @guide.id,
-        :assigned_to_id => ""
+        :guide_id => @guide.id,
+        :edition  => { :assigned_to_id => "" }
     end
 
     @guide.reload
@@ -73,9 +73,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     without_metadata_denormalisation(Guide) do
       post :update,
-        :guide_id       => @guide.id,
-        :id             => @guide.editions.last.id,
-        :assigned_to_id => bob.id
+        :guide_id => @guide.id,
+        :id       => @guide.editions.last.id,
+        :edition  => { :assigned_to_id => bob.id }
     end
 
     @guide.reload
@@ -88,9 +88,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     without_metadata_denormalisation(Guide) do
       post :update,
-        :guide_id       => @guide.id,
-        :id             => @guide.editions.last.id,
-        :assigned_to_id => bob.id
+        :guide_id => @guide.id,
+        :id       => @guide.editions.last.id,
+        :edition  => { :assigned_to_id => bob.id }
     end
 
     @guide.reload
@@ -103,9 +103,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     without_metadata_denormalisation(Guide) do
       post :update,
-        :guide_id       => @guide.id,
-        :id             => @guide.editions.last.id,
-        :assigned_to_id => ""
+        :guide_id => @guide.id,
+        :id       => @guide.editions.last.id,
+        :edition  => { :assigned_to_id => "" }
     end
 
     @guide.reload
