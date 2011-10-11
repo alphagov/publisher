@@ -1,7 +1,2 @@
-class Admin::PlacesController < Admin::PublicationSubclassController
-
-private
-  def identifier
-    :place
-  end
+class Admin::PlacesController < Admin::PublicationSubclassesController
 end

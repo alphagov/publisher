@@ -1,7 +1,2 @@
-class Admin::LocalTransactionsController < Admin::PublicationSubclassController
-
-private
-  def identifier
-    :local_transaction
-  end
+class Admin::LocalTransactionsController < Admin::PublicationSubclassesController
 end

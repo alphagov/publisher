@@ -1,7 +1,2 @@
-class Admin::AnswersController < Admin::PublicationSubclassController
-
-private
-  def identifier
-    :answer
-  end
+class Admin::AnswersController < Admin::PublicationSubclassesController
 end

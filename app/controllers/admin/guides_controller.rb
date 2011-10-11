@@ -1,7 +1,2 @@
-class Admin::GuidesController <  Admin::PublicationSubclassController
-
-private
-  def identifier
-    :guide
-  end
+class Admin::GuidesController <  Admin::PublicationSubclassesController
 end

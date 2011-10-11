@@ -1,8 +1,13 @@
-class Admin::PublicationSubclassController < Admin::BaseController
+class Admin::PublicationSubclassesController < Admin::BaseController
+
+  def new
+    render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'new'
+  end
 
   def show
     @resource = resource
     @latest_edition = resource.latest_edition
+    render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'show'
   end
 
   def create
@@ -12,7 +17,7 @@ class Admin::PublicationSubclassController < Admin::BaseController
         :notice => "#{description(@resource)} successfully created"
       return
     else
-      render :action => 'new'
+      render :controller => "admin/#{class_identifier.to_s.pluralize}", :action => 'new'
     end
   end
 
@@ -38,14 +43,19 @@ class Admin::PublicationSubclassController < Admin::BaseController
 
 private
   def resource_path(r)
-    __send__("admin_#{identifier}_path", r)
+    __send__("admin_#{class_identifier}_path", r)
   end
 
   def create_new
-    current_user.__send__("create_#{identifier}", params[identifier])
+    current_user.__send__("create_#{class_identifier}", params[class_identifier])
   end
 
   def description(r)
     r.class.to_s.underscore.humanize
+  end
+
+  def class_identifier
+    @class_identifier ||=
+      self.class.to_s[/::(.*?)Controller$/, 1].underscore.singularize.to_sym
   end
 end
