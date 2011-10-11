@@ -11,7 +11,7 @@ class Admin::PublicationSubclassesController < Admin::BaseController
   end
 
   def create
-    @resource = create_new
+    @resource = current_user.create_publication(class_identifier, params[class_identifier])
     if @resource.save
       redirect_to resource_path(@resource),
         :notice => "#{description(@resource)} successfully created"
@@ -44,10 +44,6 @@ class Admin::PublicationSubclassesController < Admin::BaseController
 private
   def resource_path(r)
     __send__("admin_#{class_identifier}_path", r)
-  end
-
-  def create_new
-    current_user.__send__("create_#{class_identifier}", params[class_identifier])
   end
 
   def description(r)

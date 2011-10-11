@@ -70,7 +70,7 @@ class GuideTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -88,7 +88,7 @@ class GuideTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
 
     assert_equal 0, guide.rejected_count
@@ -112,7 +112,7 @@ class GuideTest < ActiveSupport::TestCase
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     assert edition.can_request_fact_check?
     user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
@@ -121,7 +121,7 @@ class GuideTest < ActiveSupport::TestCase
   test "user should not be able to request review for a guide that's being fact checked" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
     assert ! edition.can_request_review?
@@ -130,7 +130,7 @@ class GuideTest < ActiveSupport::TestCase
   test "user should not be able to review a guide they requested review for" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -140,7 +140,7 @@ class GuideTest < ActiveSupport::TestCase
   test "user should not be able to okay a guide they requested review for" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -150,7 +150,7 @@ class GuideTest < ActiveSupport::TestCase
   test "you can only create a new edition from a published edition" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_guide
+    guide = user.create_publication(:guide)
     edition = guide.editions.first
     assert ! edition.is_published?
     assert ! user.new_version(edition)
@@ -160,7 +160,7 @@ class GuideTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_guide :panopticon_id => 1234574
+    guide = user.create_publication(:guide, :panopticon_id => 1234574)
     edition = guide.editions.first
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.review(edition, {:comment => "I've reviewed it"})

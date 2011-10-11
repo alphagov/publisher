@@ -56,7 +56,7 @@ class ProgrammeTest < ActiveSupport::TestCase
     user = User.create(:name => "Bob")
     other_user = User.create(:name => "James")
 
-    programme = user.create_programme
+    programme = user.create_publication(:programme)
     edition = programme.editions.first
     assert edition.can_request_review?
     user.request_review(edition, {:comment => "Review this programme please."})
@@ -73,7 +73,7 @@ class ProgrammeTest < ActiveSupport::TestCase
   test "user should not be able to review a programme they requested review for" do
     user = User.create(:name => "Bob")
 
-    programme = user.create_programme
+    programme = user.create_publication(:programme)
     edition = programme.editions.first
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this programme please."})
@@ -83,7 +83,7 @@ class ProgrammeTest < ActiveSupport::TestCase
   test "user should not be able to okay a programme they requested review for" do
     user = User.create(:name => "Bob")
 
-    programme = user.create_programme
+    programme = user.create_publication(:programme)
     edition = programme.editions.first
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this programme please."})
@@ -93,7 +93,7 @@ class ProgrammeTest < ActiveSupport::TestCase
   test "you can only create a new edition from a published edition" do
     user = User.create(:name => "Bob")
 
-    programme = user.create_programme
+    programme = user.create_publication(:programme)
     edition = programme.editions.first
     assert ! edition.is_published?
     assert ! user.new_version(edition)
