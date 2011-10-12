@@ -41,7 +41,7 @@ class Publication
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
   def self.import panopticon_id, importing_user
-    uri = Plek.current.find("arbiter") + '/artefacts/' + panopticon_id + '.js'
+    uri = "#{Plek.current.find("arbiter")}/artefacts/#{panopticon_id}.js"
     data = open(uri).read
     json = JSON.parse data
     publication = Publication.where(slug: json['slug']).first

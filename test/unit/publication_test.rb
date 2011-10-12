@@ -3,13 +3,14 @@ require 'test_helper'
 class PublicationTest < ActiveSupport::TestCase
   def template_published_answer
     without_metadata_denormalisation(Answer) do
-      g = Answer.create(:slug=>"childcare",:name=>"Something")
-      edition = g.editions.first
+      answer = Answer.create(:slug=>"childcare",:name=>"Something")
+      edition = answer.editions.first
       edition.title = 'One'
       edition.body = 'Lots of info'
-      g.save
+      answer.save
       edition.publish(edition, 'Testing')
-      g
+
+      answer
     end
   end
 
@@ -23,5 +24,24 @@ class PublicationTest < ActiveSupport::TestCase
   test 'a publication should not have a video' do
     dummy_publication = template_published_answer
     assert !dummy_publication.has_video?
+  end
+
+  test "should create a publication based on data imported from panopticon" do
+    json = JSON.dump(
+      "id"   => 2356,
+      "slug" => "foo-bar",
+      "kind" => "answer",
+      "name" => "Foo bar"
+    )
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
+     to_return(:status => 200, :body => json, :headers => {})
+    user = User.create
+
+    publication = Publication.import 2356, user
+
+    assert_kind_of Answer, publication
+    assert_equal "Foo bar", publication.name
+    assert_equal "foo-bar", publication.slug
+    assert_equal 2356,      publication.panopticon_id
   end
 end
