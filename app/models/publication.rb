@@ -31,6 +31,18 @@ class Publication
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
   scope :archive,          where(archived: true)
+  scope :assigned_to,      lambda{ |user| where("$where" => %{
+    function(){
+      if (this.editions.length < 1) { return false; }
+      var edition = this.editions[this.editions.length - 1];
+      var user_id = "#{user.id}";
+      var assignments = edition.actions.filter(function(a){
+        return a.request_type == "assigned";
+      });
+      if (assignments.length < 1) { return false; }
+      return assignments[assignments.length - 1].recipient_id == user_id;
+    }
+  })}
 
   after_initialize :create_first_edition
 

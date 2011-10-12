@@ -44,4 +44,19 @@ class PublicationTest < ActiveSupport::TestCase
     assert_equal "foo-bar", publication.slug
     assert_equal 2356,      publication.panopticon_id
   end
+
+  test "should scope publications by assignee" do
+    stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js}).
+     to_return(:status => 200, :body => "{}", :headers => {})
+
+    a, b = 2.times.map { FactoryGirl.create(:guide) }
+    alice, bob, charlie = %w[ alice bob charlie ].map{ |s|
+      FactoryGirl.create(:user, name: s)
+    }
+    alice.assign(a.editions.first, bob)
+    alice.assign(a.editions.first, charlie)
+    alice.assign(b.editions.first, bob)
+
+    assert_equal [b], Publication.assigned_to(bob).to_a
+  end
 end
