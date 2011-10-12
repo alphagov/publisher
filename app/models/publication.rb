@@ -31,7 +31,7 @@ class Publication
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
   scope :archive,          where(archived: true)
-  scope :assigned_to,      lambda{ |user| where("$where" => %{
+  scope :assigned_to,      lambda{ |user| where(%{
     function(){
       if (this.editions.length < 1) { return false; }
       var edition = this.editions[this.editions.length - 1];
