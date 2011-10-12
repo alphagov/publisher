@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class GuideTest < ActiveSupport::TestCase
+class GuideEditionTest < ActiveSupport::TestCase
   def template_guide
     g = Guide.new(:slug=>"childcare",:name=>"Something")
     edition = g.editions.first
