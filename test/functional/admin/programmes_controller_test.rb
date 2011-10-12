@@ -15,6 +15,11 @@ class Admin::ProgrammesControllerTest < ActionController::TestCase
     assert_redirected_to(:controller => "root", "action" => "index")
   end
 
+  test "requesting a publication that doesn't exist returns a 404" do
+    get :show, :id => '4e663834e2ba80480a0000e6'
+    assert_response 404
+  end
+
   test "we can view a programme" do
     get :show, :id => @programme.id
     assert_response :success
