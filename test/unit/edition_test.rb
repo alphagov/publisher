@@ -1,6 +1,5 @@
 require 'test_helper'
 
-
 class EditionTest < ActiveSupport::TestCase
 
   def template_edition
