@@ -30,7 +30,7 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
       within "#request_fact_check_form" do
         fill_in "Comment",       with: "Blah"
         fill_in "Email address", with: "user@example.com"
-        click_on "Save"
+        click_on "Send"
       end
 
       wait_until { page.has_content? "Status: Fact check requested" }
