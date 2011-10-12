@@ -53,7 +53,7 @@ class Publication
     end
 
     kind = json['kind']
-    publication = importing_user.send "create_#{kind}", :panopticon_id => json['id'], :name => json['name']
+    publication = importing_user.create_publication kind.to_sym, :panopticon_id => json['id'], :name => json['name']
     publication.save!
     publication
   end
