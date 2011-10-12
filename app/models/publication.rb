@@ -229,7 +229,7 @@ class Publication
       }
     EOF
 
-    collection.mapreduce(map, reduce, out: "mr_publication_count_by").find()
+    collection.mapreduce(map, reduce, out: "mr_publications_count_by_#{type}").find()
   end
 
   AUDIENCES = [
