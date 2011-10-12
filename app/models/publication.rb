@@ -176,30 +176,58 @@ class Publication
 
   def self.count_by(type = FORMAT)
 
-    map = <<EOF
+    map = <<-EOF
       function() {
-        function truthy(value) {
+        var truthy = function(value) {
           return (value == true) ? 1 : 0;
-        }
-        emit(#{type}, {type: #{type}, count: 1, draft: truthy(this.has_drafts), lined_up: truthy(this.lined_up), review: truthy(this.has_reviewables), published: truthy(this.has_published), fact_check: truthy(this.has_fact_checking), archived: truthy(this.archived)})
+        };
+
+        emit(#{type}, {
+          type:   #{type},
+          count:      1,
+          draft:      truthy(this.has_drafts),
+          lined_up:   truthy(this.lined_up),
+          review:     truthy(this.has_reviewables),
+          published:  truthy(this.has_published),
+          fact_check: truthy(this.has_fact_checking),
+          archived:   truthy(this.archived)
+        });
       }
-EOF
-    reduce = <<EOF
+    EOF
+
+    reduce = <<-EOF
       function(key, values) {
-        var count = 0; draft = 0; lined_up =0 ;review = 0; published = 0; fact_check = 0; archived = 0;
+        var count      = 0,
+            draft      = 0,
+            lined_up   = 0,
+            review     = 0,
+            published  = 0,
+            fact_check = 0,
+            archived   = 0;
+
         values.forEach(function(doc) {
-          count += parseInt(doc.count);
-          draft += parseInt(doc.draft);
-          lined_up += parseInt(doc.lined_up);
-          published += parseInt(doc.published);
-          review += parseInt(doc.review);
+          count      += parseInt(doc.count);
+          draft      += parseInt(doc.draft);
+          lined_up   += parseInt(doc.lined_up);
+          published  += parseInt(doc.published);
+          review     += parseInt(doc.review);
           fact_check += parseInt(doc.fact_check);
-          archived += parseInt(doc.archived);
+          archived   += parseInt(doc.archived);
           type = doc.type
         });
-        return {type: type, count: count, draft: draft, lined_up: lined_up, review: review, published: published, fact_check: fact_check, archived: archived}
+
+        return {
+          type:       type,
+          count:      count,
+          draft:      draft,
+          lined_up:   lined_up,
+          review:     review,
+          published:  published,
+          fact_check: fact_check,
+          archived:   archived
+        };
       }
-EOF
+    EOF
 
     collection.mapreduce(map, reduce).find()
 
