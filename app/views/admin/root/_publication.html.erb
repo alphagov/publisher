@@ -28,7 +28,11 @@
     <%= publication.updated_at.strftime("%d/%m/%Y %H:%M") %>
   </td>
   <td>
-    <%= publication.latest_edition.created_by %>
+    <% if tab && tab == :lined_up %>
+      <%= publication.latest_edition.assigned_to %>
+    <% else %>
+      <%= publication.latest_edition.created_by %>
+    <% end %>
   </td>
   <td>
     <%= publication.rejected_count %> /
