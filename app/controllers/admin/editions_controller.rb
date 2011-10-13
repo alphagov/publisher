@@ -1,5 +1,6 @@
 class Admin::EditionsController <  Admin::BaseController
   polymorphic_belongs_to :guide, :answer, :transaction, :local_transaction, :place, :programme
+  actions :create, :update
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)
@@ -18,9 +19,8 @@ class Admin::EditionsController <  Admin::BaseController
   def update
     assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
     update! do |success, failure|
-      update_assignment resource, assigned_to_id
-
       success.html {
+        update_assignment resource, assigned_to_id
         redirect_to params[:return_to] and return if params[:return_to]
         redirect_to [:admin, parent]
       }
@@ -31,7 +31,10 @@ class Admin::EditionsController <  Admin::BaseController
         flash.now[:alert] = "We had some problems saving. Please check the form below."
         render :template => "admin/#{tmpl_folder}/show"
       }
-      success.json { render :json => resource }
+      success.json {
+        update_assignment resource, assigned_to_id
+        render :json => resource
+      }
       failure.json { render :json => resource.errors, :status=>406 }
     end
   end

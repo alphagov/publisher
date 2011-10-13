@@ -31,6 +31,7 @@ class Publication
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
   scope :archive,          where(archived: true)
+  scope :assigned_to,      lambda{ |user| assignment_filter(user) }
 
   after_initialize :create_first_edition
 
@@ -72,6 +73,25 @@ class Publication
     else
       publication.published_edition
     end
+  end
+
+  def self.assignment_filter(user)
+    expr = if user
+      %{assignment && assignment.recipient_id == "#{user.id}"}
+    else
+      %{!assignment}
+    end
+    where(%{
+      function(){
+        var last = function(a){ return a && a[a.length - 1]; }
+        var edition = last(this.editions);
+        if (!edition) { return false; }
+        var assignment = last((edition.actions || []).filter(function(a){
+          return a.request_type == "#{Action::ASSIGNED}";
+        }));
+        return #{expr};
+      }
+    })
   end
 
   def panopticon_uri
@@ -128,7 +148,7 @@ class Publication
   end
 
   def publish(edition, notes)
-    self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
+    publishings.create version_number: edition.version_number, change_notes: notes
     calculate_statuses
     Messenger.new.published edition
   end
