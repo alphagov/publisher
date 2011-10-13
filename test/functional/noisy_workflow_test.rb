@@ -10,10 +10,16 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     g
   end
 
-  test "fact checking emails should go from appropriate email addresses" do
+  test "fact checking emails should set appropriate reply-to address" do
     guide = template_guide
     email = NoisyWorkflow.request_fact_check guide.editions.first, {:email_addresses => 'jys@ketlai.co.uk', :customised_message => "Blah"}
     assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.reply_to
+  end
+  
+  test "fact checking emails should go from appropriate email addresses" do
+    guide = template_guide
+    email = NoisyWorkflow.request_fact_check guide.editions.first, {:email_addresses => 'jys@ketlai.co.uk', :customised_message => "Blah"}
+    assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.from
   end
   
   test "news of publications should go to the whole team + franchise editors" do
