@@ -33,14 +33,12 @@ class Publication
   scope :archive,          where(archived: true)
   scope :assigned_to,      lambda{ |user| where(%{
     function(){
-      if (this.editions.length < 1) { return false; }
-      var edition = this.editions[this.editions.length - 1];
-      var user_id = "#{user.id}";
-      var assignments = edition.actions.filter(function(a){
-        return a.request_type == "assigned";
-      });
-      if (assignments.length < 1) { return false; }
-      return assignments[assignments.length - 1].recipient_id == user_id;
+      var edition = this.editions && this.editions[this.editions.length - 1];
+      if (!edition) { return false; }
+      var assignment = edition.actions.filter(function(a){
+        return a.request_type == "#{Action::ASSIGNED}";
+      }).pop();
+      return assignment && assignment.recipient_id == "#{user.id}";
     }
   })}
 
