@@ -2,11 +2,13 @@ class Admin::RootController < Admin::BaseController
   respond_to :html, :json
 
   def index
-    @drafts = Publication.in_draft
-    @published = Publication.published
-    @archive = Publication.archive
-    @review_requested = Publication.review_requested
-    @fact_checking = Publication.fact_checking
-    @lined_up = Publication.lined_up
+    presenter = AdminRootPresenter.new(:all)
+
+    @drafts           = presenter.in_draft
+    @published        = presenter.published
+    @archive          = presenter.archive
+    @review_requested = presenter.review_requested
+    @fact_checking    = presenter.fact_checking
+    @lined_up         = presenter.lined_up
   end
 end
