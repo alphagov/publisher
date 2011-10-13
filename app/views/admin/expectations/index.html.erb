@@ -1,19 +1,26 @@
-<div>
-  <h2>Existing Expectations</h2>
+<div id="guide-nav" class="tabs">
+
   <ul>
-    <% @expectations.each do |expectation| %>
-    <li><%= expectation.text %></li>
-    <% end %>
+    <li><a href="#expectations">Expectations</a></li>
   </ul>
 
-  <h2>Add Expectation</h2>
-  <%= semantic_form_for([:admin, @expectation]) do |f| %>
-    <%= f.inputs do %>
-      <%= f.input :text %>
-      <%= f.input :css_class, :label => 'CSS Class', :hint => 'If in doubt about what to use here, ask a front end developer' %>
+  <div id="expectations">
+    <h2>Existing expectations</h2>
+    <ul>
+      <% @expectations.each do |expectation| %>
+      <li><%= expectation.text %></li>
+      <% end %>
+    </ul>
+
+    <h2>Add new expectation</h2>
+    <%= semantic_form_for([:admin, @expectation]) do |f| %>
+      <%= f.inputs do %>
+        <%= f.input :text %>
+        <%= f.input :css_class, :label => 'CSS Class', :hint => 'If in doubt about what to use here, ask a front end developer' %>
+      <% end %>
+      <%= f.buttons %>
     <% end %>
-    <%= f.buttons %>
-  <% end %>
+  </div>
 </div>
 <%= javascript_include_tag '/guide-assets/javascripts/publications.js' %>
 <script type="text/javascript" charset="utf-8">
