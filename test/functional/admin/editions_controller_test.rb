@@ -129,4 +129,15 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       assert_response 200
     end
   end
+  
+  test "should not progress to fact check if the email addresses were blank" do
+    without_metadata_denormalisation(Guide) do
+      post :progress, {
+        :guide_id => @guide.id.to_s,
+        :id       => @guide.editions.last.id.to_s,
+        :activity => { 'request_type' => "request_fact_check" }
+      }
+      assert_equal "Couldn't request fact check for guide", flash[:alert]
+    end
+  end
 end

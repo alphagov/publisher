@@ -41,9 +41,11 @@ class Admin::EditionsController <  Admin::BaseController
   end
 
   def progress
-    resource.progress(params[:activity], current_user)
-    redirect_to [:admin, edition_parent],
-      :notice => "#{edition_parent.class.to_s.underscore.humanize} updated"
+    if resource.progress(params[:activity].dup, current_user)
+      redirect_to [:admin, edition_parent], :notice => "#{edition_parent.class.to_s.underscore.humanize} updated"
+    else
+      redirect_to [:admin, edition_parent], :alert => "Couldn't #{params[:activity][:request_type].to_s.humanize.downcase} for #{edition_parent.class.to_s.underscore.humanize.downcase}"
+    end
   end
 
   protected

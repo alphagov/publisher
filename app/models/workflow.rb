@@ -67,7 +67,7 @@ module Workflow
   def progress(activity_details, current_user)
     activity = activity_details.delete(:request_type)
 
-    case activity
+    result = case activity
     when 'request_fact_check'
       current_user.request_fact_check(self, activity_details)
     when 'fact_check_received'
@@ -84,7 +84,11 @@ module Workflow
       raise "Unknown progress activity: #{activity}"
     end
 
-    self.container.save!
+    if result
+      self.container.save! 
+    else
+      result
+    end
   end
 
 end

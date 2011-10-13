@@ -145,7 +145,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert b.has_drafts
 
     presenter = AdminRootPresenter.new(:all)
-    assert_equal [a, b], presenter.in_draft.to_a
+    assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.in_draft.to_a.collect { |i| i.id.to_s }.sort
   end
 
   test "should select and filter" do
