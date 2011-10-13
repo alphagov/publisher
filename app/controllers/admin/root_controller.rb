@@ -2,7 +2,18 @@ class Admin::RootController < Admin::BaseController
   respond_to :html, :json
 
   def index
-    presenter = AdminRootPresenter.new(:all)
+    @filter = params[:filter]
+
+    if @filter.blank?
+      @filter = current_user.uid
+      user = current_user
+    elsif %w[ all nobody ].include?(@filter)
+      user = @filter.to_sym
+    else
+      user = User.where(uid: @filter).first
+    end
+
+    presenter = AdminRootPresenter.new(user)
 
     @drafts           = presenter.in_draft
     @published        = presenter.published

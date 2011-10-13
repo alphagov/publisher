@@ -20,9 +20,16 @@
 				<li class="publications-nav">
 					<ul>
 						<li>
-							<form>
+							<form method="GET" action="/admin">
 								<fieldset>
-									<label for="user-filter" class="visuallyhidden">View a user's publications</label><input type="text" placeholder="My publications" id="user-filter"><input type="submit" value="Filter">
+                  <label for="user-filter" class="visuallyhidden">Filter by user</label>
+                  <%=
+                    select_tag("filter", options_for_select(
+                      [["All", "all"], ["Nobody", "nobody"]] +
+                      User.all.map{ |u| [u.name, u.uid] }, @filter
+                    ), id: "user-filter")
+                  %>
+                  <input type="submit" value="Filter">
 								</fieldset>
 							</form>
 						</li>
