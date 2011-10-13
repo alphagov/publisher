@@ -31,16 +31,24 @@ class Publication
   scope :published,        where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
   scope :archive,          where(archived: true)
-  scope :assigned_to,      lambda{ |user| where(%{
-    function(){
-      var edition = this.editions && this.editions[this.editions.length - 1];
-      if (!edition) { return false; }
-      var assignment = edition.actions.filter(function(a){
-        return a.request_type == "#{Action::ASSIGNED}";
-      }).pop();
-      return assignment && assignment.recipient_id == "#{user.id}";
-    }
-  })}
+  scope :assigned_to,      lambda{ |user|
+    expr = if user
+      %{assignment && assignment.recipient_id == "#{user.id}"}
+    else
+      %{!assignment}
+    end
+    where(%{
+      function(){
+        var last = function(a){ return a && a[a.length - 1]; }
+        var edition = last(this.editions);
+        if (!edition) { return false; }
+        var assignment = last((edition.actions || []).filter(function(a){
+          return a.request_type == "#{Action::ASSIGNED}";
+        }));
+        return #{expr};
+      }
+    })
+  }
 
   after_initialize :create_first_edition
 
