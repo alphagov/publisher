@@ -51,7 +51,7 @@ class User
 
   def request_fact_check(edition, details)
     record_action edition, Action::FACT_CHECK_REQUESTED, details
-    NoisyWorkflow.request_fact_check(edition, details).deliver
+    NoisyWorkflow.request_fact_check(edition, details).deliver unless details[:email_addresses].blank?
     edition
   end
 
