@@ -148,7 +148,7 @@ class Publication
   end
 
   def publish(edition, notes)
-    self.publishings << Publishing.new(:version_number=>edition.version_number, :change_notes=>notes)
+    publishings.create version_number: edition.version_number, change_notes: notes
     calculate_statuses
     Messenger.new.published edition
   end
