@@ -26,7 +26,7 @@
                   <%=
                     select_tag("filter", options_for_select(
                       [["All", "all"], ["Nobody", "nobody"]] +
-                      User.all.map{ |u| [u.name, u.uid] }, @filter
+                      User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
                     ), id: "user-filter")
                   %>
                   <input type="submit" value="Filter">

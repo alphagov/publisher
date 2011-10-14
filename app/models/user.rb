@@ -9,6 +9,8 @@ class User
   field  :version, :type => Integer
   field  :name, :type => String
 
+  scope :alphabetized, order_by(name: :asc)
+
   def self.find_by_uid(uid)
     first(conditions: {uid: uid})
   end
@@ -94,7 +96,7 @@ class User
   end
 
   def to_s
-    name
+    name || ""
   end
 
   def gravatar_url(opts = {})
