@@ -8,6 +8,15 @@ GIT
       nokogiri
 
 GIT
+  remote: git@github.com:alphagov/gds-sso.git
+  revision: a536263c3bff7a1e4990ae0c7012ef542d4b3808
+  specs:
+    gds-sso (0.0.1)
+      oa-oauth
+      rails (>= 3.0.0)
+      warden
+
+GIT
   remote: git@github.com:alphagov/govspeak.git
   revision: 4e7be4bd5dcd4614de59a6b71fb1d52c035db05b
   specs:
@@ -20,14 +29,6 @@ GIT
   specs:
     slimmer (0.7.13)
       nokogiri
-
-PATH
-  remote: ../gds-sso
-  specs:
-    gds-sso (0.0.1)
-      oa-oauth
-      rails (>= 3.0.0)
-      warden
 
 GEM
   remote: http://rubygems.org/
