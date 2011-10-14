@@ -12,7 +12,11 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
 
     a = Guide.create
+    a.save
     assert a.has_drafts
+    assert ! a.lined_up
+    assert ! a.has_fact_checking
+    assert ! a.has_reviewables
 
     b = Guide.create
     b.publish b.editions.first, "Publishing this"
@@ -97,7 +101,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal [a], presenter.lined_up.to_a
   end
 
-  test "should select publications assigned to a user" do
+  test "should select in progress publications assigned to a user" do
     alice = User.create
     bob   = User.create
 
@@ -106,19 +110,22 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert a.has_drafts
 
     b = Guide.create
+    b.save
     alice.assign(b.editions.first, bob)
     assert_equal bob, b.editions.first.assigned_to
     assert b.has_drafts
+    assert ! b.lined_up
 
     presenter = AdminRootPresenter.new(bob)
     assert_equal [b], presenter.in_draft.to_a
   end
 
-  test "should select publications assigned to nobody" do
+  test "should select in progress publications assigned to nobody" do
     alice = User.create
     bob   = User.create
 
     a = Guide.create
+    a.save
     assert_nil a.editions.first.assigned_to
     assert a.has_drafts
 
@@ -131,15 +138,17 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal [a], presenter.in_draft.to_a
   end
 
-  test "should select all publications" do
+  test "should select all in progress publications" do
     alice = User.create
     bob   = User.create
 
     a = Guide.create
+    a.save
     assert_nil a.editions.first.assigned_to
     assert a.has_drafts
 
     b = Guide.create
+    b.save
     alice.assign(b.editions.first, bob)
     assert_equal bob, b.editions.first.assigned_to
     assert b.has_drafts
@@ -153,10 +162,12 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     bob   = User.create
 
     a = Guide.create
+    a.save
     assert_nil a.editions.first.assigned_to
     assert a.has_drafts
 
     b = Guide.create
+    b.save
     alice.assign(b.editions.first, bob)
     assert_equal bob, b.editions.first.assigned_to
     assert b.has_drafts

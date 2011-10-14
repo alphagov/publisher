@@ -25,7 +25,7 @@ class Publication
 
   embeds_many :publishings
 
-  scope :in_draft,         where(has_drafts: true).order_by(:edition_rejected_count => :desc).order_by(:name => :desc)
+  scope :in_draft,         where(has_drafts: true, lined_up: false, has_fact_checking: false, has_reviewables: false).order_by(:edition_rejected_count => :desc).order_by(:name => :desc)
   scope :lined_up,         where(lined_up: true)
   scope :fact_checking,    where(has_fact_checking: true)
   scope :published,        where(has_published: true)
