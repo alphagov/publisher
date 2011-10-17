@@ -8,14 +8,6 @@ class AnswerTest < ActiveSupport::TestCase
       assert g.lined_up
     end
   end
-  
-  test 'a new answer is lined up after save' do
-    without_metadata_denormalisation(Answer) do
-      lined_up_answer = Answer.create!(:slug=>"childcare")
-      assert Publication.lined_up.include?(lined_up_answer)
-      assert ! Publication.in_draft.include?(lined_up_answer)
-    end
-  end
 
   test 'an answer is not lined up once edited' do
     without_metadata_denormalisation(Answer) do
