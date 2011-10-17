@@ -2,7 +2,7 @@ class Admin::RootController < Admin::BaseController
   respond_to :html, :json
 
   def index
-    @filter = params[:filter]
+    @filter = params[:filter] || session[:filter]
 
     if @filter.blank?
       @filter = current_user.uid
@@ -12,6 +12,8 @@ class Admin::RootController < Admin::BaseController
     else
       user = User.where(uid: @filter).first
     end
+
+    session[:filter] = @filter
 
     presenter = AdminRootPresenter.new(user)
 

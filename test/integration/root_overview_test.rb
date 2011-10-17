@@ -11,10 +11,10 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
       # This isn't right, really need a way to run actions when
       # logged in as particular users without having Signonotron running.
       #
-      alice   = FactoryGirl.create(:user, name: "Alice")
+      alice   = FactoryGirl.create(:user, name: "Alice", uid: "alice")
 
-      bob     = FactoryGirl.create(:user, name: "Bob")
-      charlie = FactoryGirl.create(:user, name: "Charlie")
+      bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
+      charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
       x, y, z = %w[ XXX YYY ZZZ ].map.with_index { |name, i|
         Guide.create(
@@ -28,11 +28,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
       bob.assign(y.editions.first, charlie)
 
       visit "/admin"
-
-      # Should see only my assigned items by default
-      assert page.has_content?("XXX")
-      assert page.has_no_content?("YYY")
-      assert page.has_no_content?("ZZZ")
 
       select "All", from: "Filter by user"
       click_on "Filter"
@@ -51,6 +46,14 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
       select "Charlie", from: "Filter by user"
       click_on "Filter"
 
+      assert page.has_no_content?("XXX")
+      assert page.has_content?("YYY")
+      assert page.has_no_content?("ZZZ")
+
+      visit "/admin"
+
+      # Should remember last selection in session
+      assert_equal charlie.uid, page.find_field("Filter by user").value
       assert page.has_no_content?("XXX")
       assert page.has_content?("YYY")
       assert page.has_no_content?("ZZZ")
