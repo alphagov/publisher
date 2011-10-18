@@ -6,9 +6,9 @@ module ExternalServices
   end
 
   def api_host
-    case local_environment 
+    case local_environment
     when 'development','test'
-      "local.alphagov.co.uk:3000"
+      "publisher.dev.gov.uk"
     when 'production'
        "api.alpha.gov.uk"
     else
@@ -19,7 +19,7 @@ module ExternalServices
   def front_end_host
     case local_environment
     when 'development','test'
-      "http://local.alphagov.co.uk:3005"
+      "http://www.dev.gov.uk"
     when 'production'
       "http://frontend.alpha.gov.uk"
     when 'staging'
@@ -43,7 +43,7 @@ module ExternalServices
   def imminence_api_host
     case local_environment
     when 'development','test'
-      "local.alphagov.co.uk:3002"
+      "imminence.dev.gov.uk"
     when 'production'
       "imminence.alpha.gov.uk"
     else
