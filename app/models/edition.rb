@@ -31,10 +31,10 @@ class Edition
   end
 
   def build_clone
-    new_edition = self.container.build_edition(self.title)
+    new_edition = container.build_edition(self.title)
 
     self.class.fields_to_clone.each do |attr|
-      new_edition.send("#{attr}=", self.send(attr))
+      new_edition.send("#{attr}=", read_attribute(attr))
     end
 
     new_edition
