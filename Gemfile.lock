@@ -219,7 +219,7 @@ DEPENDENCIES
   fabrication
   factory_girl_rails
   faker
-  formtastic
+  formtastic (~> 2.0.0)
   gds-sso!
   govspeak!
   has_scope

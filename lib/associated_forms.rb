@@ -1,6 +1,6 @@
 module Formtastic #:nodoc:
 
-  class SemanticFormBuilder < ActionView::Helpers::FormBuilder
+  class FormBuilder < ActionView::Helpers::FormBuilder
     
     def association_name(class_name)
       @object.respond_to?("#{class_name}_attributes=") ? class_name : class_name.pluralize

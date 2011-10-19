@@ -16,7 +16,7 @@ gem 'plek'
 gem 'pethau'
 
 gem 'inherited_resources'
-gem 'formtastic'
+gem 'formtastic', '~> 2.0.0'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
 
