@@ -69,7 +69,7 @@ class Edition
   def update_container_timestamp
     if self.container.created_at
       container.updated_at = Time.now
-      container.save!
+      container.save
     end
   end
 

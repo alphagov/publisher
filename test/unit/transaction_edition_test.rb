@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EditionTest < ActiveSupport::TestCase
+class TransactionEditionTest < ActiveSupport::TestCase
   def template_user_and_published_transaction
     without_metadata_denormalisation(Transaction) do
       user = User.create(:name => "Ben")
@@ -10,6 +10,8 @@ class EditionTest < ActiveSupport::TestCase
       transaction = user.create_publication(:transaction)
       edition = transaction.editions.first
       edition.expectation_ids = [expectation.id]
+      transaction.save
+    
       user.request_review(edition, {:comment => "Review this guide please."})
       other_user.okay(edition, {:comment => "I've reviewed it"})
       user.publish(edition, {:comment => "Let's go"})
@@ -17,11 +19,24 @@ class EditionTest < ActiveSupport::TestCase
     end
   end
   
-  test "permits the creation of new editions" do
+  # test "permits the creation of new editions" do
+  #   user, transaction = template_user_and_published_transaction
+  #   assert transaction.persisted?
+  #   assert transaction.latest_edition.is_published?
+  # 
+  #   reloaded_transaction = Transaction.find(transaction.id)
+  #   new_edition = user.new_version(reloaded_transaction.latest_edition)
+  #   assert new_edition.save
+  # end
+  
+  test "fails gracefully when creating new edition fails" do
     user, transaction = template_user_and_published_transaction
+    assert transaction.persisted?
     assert transaction.latest_edition.is_published?
 
-    new_edition = user.new_version(transaction.latest_edition)
-    assert new_edition.save
+    reloaded_transaction = Transaction.find(transaction.id)
+    new_edition = user.new_version(reloaded_transaction.latest_edition)
+    reloaded_transaction.editions.first.expectation_ids = [1,2,3]
+    assert ! new_edition.save
   end
 end
