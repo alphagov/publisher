@@ -4,7 +4,12 @@ gem 'oauth2', '0.4.1'
 gem 'oa-core', '0.2.6'
 gem 'oa-oauth', '0.2.6'
 
-gem 'rails', '~> 3.0.10'
+group :passenger_compatibility do
+  gem 'rack', '1.3.5'
+  gem 'rake', '0.9.2'
+end
+
+gem 'rails', '3.1.1'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -32,7 +37,7 @@ else
   gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 end
 
-gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git', :tag => 'v0.8.3'
+gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git'
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', :path => '../govspeak'
@@ -40,7 +45,7 @@ else
   gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 end
 
-if ENV['DEBUG']
+if ENV['RUBY_DEBUG']
   gem 'ruby-debug19'
 end
 
