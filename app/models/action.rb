@@ -38,7 +38,7 @@ class Action
     when FACT_CHECK_REQUESTED
       "A fact check for \"#{edition.title}\" was requested by #{requester.name}"
     when FACT_CHECK_RECEIVED
-      "A fact check response for \"#{edition.title}\" was entered"
+      "A fact check response for \"#{edition.title}\" has been received"
     when REVIEW_REQUESTED
       "A review and publish was requested by #{requester.name}"
     when REVIEWED
