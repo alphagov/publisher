@@ -1,7 +1,7 @@
 <div id="guide-nav" class="tabs">
   <ul>
 		<% @overviews.each do |title, rows| %>
-	    <li><a href="#<%= title %>"><%= title.capitalize %></a></li>
+	    <li><a href="#<%= title %>"><%= title.to_s.humanize.capitalize %></a></li>
 		<% end %>
   </ul>
 	
