@@ -10,6 +10,7 @@
     <li><a href="#metadata">Metadata</a></li>
     <li><a href="#history">History &amp; Notes</a></li>
     <li><a href="#providers">Service Providers</a></li>
+    <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
     <%= render '/admin/local_transactions/edit' %>
@@ -26,6 +27,11 @@
       <li><%= authority.name %></li>
     <%- end -%>
     </ul>
+  </div>
+  <div id="admin">
+    <%- if ! @latest_edition.is_published? -%>
+    <%= button_to 'Destroy edition', admin_local_transaction_edition_path(@latest_edition.container,@latest_edition), :method => :delete %> !! Only use when edition is broken !!
+    <%- end -%>
   </div>
 </div>
 

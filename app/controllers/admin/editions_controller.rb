@@ -1,6 +1,6 @@
 class Admin::EditionsController <  Admin::BaseController
   polymorphic_belongs_to :guide, :answer, :transaction, :local_transaction, :place, :programme
-  actions :create, :update
+  actions :create, :update, :destroy
 
   def create
     new_edition = current_user.new_version(edition_parent.latest_edition)

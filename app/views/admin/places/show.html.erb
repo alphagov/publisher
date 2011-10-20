@@ -10,6 +10,7 @@
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
     <li><a href="#history">History &amp; Notes</a></li>
+    <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
     <%= render '/admin/places/edit' %>
@@ -19,6 +20,11 @@
   </div>
   <div id="history">
     <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
+  </div>
+  <div id="admin">
+    <%- if ! @latest_edition.is_published? -%>
+    <%= button_to 'Destroy edition', admin_place_edition_path(@latest_edition.container,@latest_edition), :method => :delete %> !! Only use when edition is broken !!
+    <%- end -%>
   </div>
 </div>
 

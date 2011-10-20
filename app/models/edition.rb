@@ -17,6 +17,8 @@ class Edition
   alias_method :admin_list_title, :title
 
   before_save :update_container_timestamp
+  
+  before_destroy :do_not_delete_if_published
 
   def fact_check_id
     [ container.id.to_s, id.to_s, version_number ].join '/'
@@ -64,6 +66,14 @@ class Edition
   def published_by
     publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
     publication.requester if publication
+  end
+  
+  def do_not_delete_if_published
+    if self.is_published?
+      false
+    else
+      true
+    end
   end
 
   def update_container_timestamp

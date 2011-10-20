@@ -12,7 +12,7 @@ Publisher::Application.routes.draw do
       :local_transactions,
     ].each do |r|
       resources r do
-        resources :editions, :only => [:create, :update] do
+        resources :editions, :only => [:create, :update, :destroy] do
           post :progress, :on => :member
         end
       end
