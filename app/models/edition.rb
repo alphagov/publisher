@@ -57,6 +57,10 @@ class Edition
   def has_been_okayed?
     latest_status_action.request_type == "okayed" if latest_status_action
   end
+  
+  def has_been_fact_checked?
+    latest_status_action.request_type == "fact_check_requested" if latest_status_action
+  end
 
   def created_by
     creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
