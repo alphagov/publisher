@@ -53,6 +53,8 @@ class User
 
   def request_fact_check(edition, details)
     return false if details[:email_addresses].blank?
+    note_text = "\n\nResponses should be sent to: " + edition.fact_check_email_address
+    details[:comment] += note_text
     record_action edition, Action::FACT_CHECK_REQUESTED, details
     NoisyWorkflow.request_fact_check(edition, details).deliver
     edition
