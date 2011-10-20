@@ -47,7 +47,7 @@ Publisher::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   
-  config.middleware.use Slimmer::App, :template_host => "/data/vhost/static.production.alphagov.co.uk/current/public/templates"
+  config.middleware.use Slimmer::App, :asset_host => "http://static.production.alphagov.co.uk"
   
   config.action_mailer.default_url_options = { :host => "www.gov.uk" }
 end
