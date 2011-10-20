@@ -46,9 +46,9 @@ class Action
     when OKAYED
       "OK'd for publication by #{requester.name}"
     when PUBLISHED
-      "Published"
+      "Published by #{requester.name}"
     when NOTE
-      "Made a note"
+      "#{requester.name} made a note"
     when ASSIGNED
       "#{requester.name} assigned \"#{edition.title}\" to #{recipient.name}"
     end

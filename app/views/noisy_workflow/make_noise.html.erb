@@ -5,7 +5,7 @@
   </head>
   <body>
     <p><%= @publication.title %></p>
-    <p><%= @action.friendly_description %> by <%= @action.requester %></p>
+    <p><%= @action.friendly_description %></p>
     <p>
     <% if @action.friendly_description == 'Published.' %>
       <a href="<%= "#{ExternalServices.front_end_host}/#{@action.edition.container.slug}" %>">View it live</a>
