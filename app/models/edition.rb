@@ -59,7 +59,7 @@ class Edition
   end
   
   def has_been_fact_checked?
-    latest_status_action.request_type == "fact_check_requested" if latest_status_action
+    latest_status_action.request_type == "fact_check_received" if latest_status_action
   end
 
   def created_by
@@ -70,6 +70,10 @@ class Edition
   def published_by
     publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
     publication.requester if publication
+  end
+  
+  def fact_check_email_address
+    "factcheck+#{Rails.env}-#{container.id}@alphagov.co.uk"
   end
   
   def do_not_delete_if_published
