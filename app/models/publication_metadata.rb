@@ -58,6 +58,9 @@ class PublicationMetadata
   def apply_to publication
     attributes = load_attributes
     publication.name = attributes['name']
+    if ! publication.latest_edition.is_published?
+      publication.latest_edition.title = attributes['name']
+    end
     publication.slug = attributes['slug']
     publication.tags = attributes['tags']
 

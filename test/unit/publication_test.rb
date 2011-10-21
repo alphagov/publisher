@@ -14,6 +14,12 @@ class PublicationTest < ActiveSupport::TestCase
     end
   end
 
+  def panopticon_has_metadata(metadata)
+    json = JSON.dump(metadata)
+    url = "http://panopticon.test.gov.uk/artefacts/#{metadata['id']}.js"
+    stub_request(:get, url).to_return(:status => 200, :body => json, :headers => {})
+  end
+  
   test "edition finder should return the published edition when given an empty edition parameter" do
     dummy_publication = template_published_answer
     assert dummy_publication.published_edition
@@ -27,14 +33,13 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "should create a publication based on data imported from panopticon" do
-    json = JSON.dump(
+    panopticon_has_metadata(
       "id"   => 2356,
       "slug" => "foo-bar",
       "kind" => "answer",
       "name" => "Foo bar"
     )
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-     to_return(:status => 200, :body => json, :headers => {})
+
     user = User.create
 
     publication = Publication.import 2356, user
@@ -44,7 +49,50 @@ class PublicationTest < ActiveSupport::TestCase
     assert_equal "foo-bar", publication.slug
     assert_equal 2356,      publication.panopticon_id
   end
+  
+  test "changes to name in panopticon should be reflected in the title of the latest edition on save" do
+    guide = without_metadata_denormalisation(Guide) do
+      Factory(:guide,
+        panopticon_id: 2356,
+        name: "Original title",
+        slug: "original-title"
+      )
+    end
+    panopticon_has_metadata(
+      "id"   => 2356,
+      "slug" => "foo-bar",
+      "kind" => "guide",
+      "name" => "New title"
+    )
+    guide.save!
 
+    assert_equal "New title", guide.reload.latest_edition.title
+  end
+  
+  test "should not change edition name if published" do
+    guide = nil
+    without_metadata_denormalisation(Guide) do
+      guide = Factory(:guide,
+        panopticon_id: 2356,
+        name: "Original title",
+        slug: "original-title"
+      )
+      guide.latest_edition.title = guide.name
+      guide.save!
+      guide.publish(guide.latest_edition, 'testing')
+    end
+    
+    panopticon_has_metadata(
+      "id"   => 2356,
+      "slug" => "foo-bar",
+      "kind" => "guide",
+      "name" => "New title"
+    )
+    guide.save!
+
+    assert_equal "Original title", guide.reload.latest_edition.title
+  end
+  
   test "should scope publications by assignee" do
     stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js}).
      to_return(:status => 200, :body => "{}", :headers => {})
