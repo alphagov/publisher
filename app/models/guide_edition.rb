@@ -2,7 +2,8 @@ class GuideEdition < Edition
   embedded_in :guide
   embeds_many :parts
   
-  accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
+  accepts_nested_attributes_for :parts, :allow_destroy => true,
+    :reject_if => proc { |attrs| attrs['title'].blank? and attrs['body'].blank? }
   
   field :video_url,	:type => String
   field :video_summary, :type => String
