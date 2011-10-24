@@ -26,7 +26,7 @@ end
 
 Capybara.default_driver = :webkit
 Capybara.app = Rack::Builder.new do
- map "/" do
-   run Capybara.app
- end
+  map "/" do
+    run Capybara.app
+  end
 end
