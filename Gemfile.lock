@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/plek.git
-  revision: 3738d8207effc672daf3e80cbd9580a4e3fe2f11
+  revision: 1b11f648331744df5f0f81cb41dadd1ad04876f2
   specs:
     plek (0.1.3)
 
