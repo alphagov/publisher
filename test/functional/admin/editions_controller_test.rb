@@ -140,4 +140,18 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       assert_equal "Couldn't request fact check for guide", flash[:alert]
     end
   end
+
+  test "should show the edit page after starting work" do
+    without_metadata_denormalisation(Guide) do
+      post :start_work, {
+        :guide_id => @guide.id.to_s,
+        :id       => @guide.editions.last.id.to_s
+      }
+    end
+    assert_redirected_to :controller => "admin/guides", :action => "show", :id => @guide.id
+  
+    @guide.reload
+    assert ! @guide.lined_up
+    assert @guide.latest_edition.status_is?(Action::WORK_STARTED)
+  end
 end

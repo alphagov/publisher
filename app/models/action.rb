@@ -3,6 +3,7 @@ class Action
 
   STATUS_ACTIONS = [
     CREATED              = "created",
+    WORK_STARTED         = "work_started",
     NEW_VERSION          = "new_version",
     FACT_CHECK_REQUESTED = "fact_check_requested",
     FACT_CHECK_RECEIVED  = "fact_check_received",
@@ -33,6 +34,8 @@ class Action
     case request_type
     when CREATED
       "#{edition.container.class} created by #{requester.name}"
+    when WORK_STARTED
+      "#{requester.name} started work on #{edition.container.class} '#{edition.title}'"
     when NEW_VERSION
       "New version \"#{edition.title}\" created by #{requester.name}"
     when FACT_CHECK_REQUESTED

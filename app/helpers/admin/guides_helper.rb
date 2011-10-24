@@ -95,4 +95,9 @@ module Admin::GuidesHelper
   def admin_editions_path(publication)
     send("admin_#{publication.class.to_s.underscore}_editions_path", publication)
   end
+
+  def start_work_path(edition)
+    publication = edition.container
+    send("start_work_admin_#{edition.class.to_s.underscore}_path", publication, edition)
+  end
 end

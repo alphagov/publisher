@@ -14,6 +14,7 @@ Publisher::Application.routes.draw do
       resources r do
         resources :editions, :only => [:create, :update, :destroy] do
           post :progress, :on => :member
+          post :start_work, :on => :member
         end
       end
     end

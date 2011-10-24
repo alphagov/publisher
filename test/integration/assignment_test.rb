@@ -74,5 +74,31 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "a guide is lined up until work starts on it" do
+    without_metadata_denormalisation Guide do
+      stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
+        to_return(status: 200, body: "{}", headers: {})
+        
+      alice   = FactoryGirl.create(:user, name: "Alice")
+
+      guide = FactoryGirl.create(:guide, panopticon_id: 2356)
+
+      visit "/admin/guides/#{guide.to_param}"
+
+      select "Alice", from: "Assigned to"
+      click_on "Save"
+      wait_until { page.has_content? "successfully updated" }
+      guide.reload
+      assert guide.lined_up
+      
+      visit "/admin"
+      click_on "Start work"
+      wait_until { page.has_content? "Work started" }
+      guide.reload
+      assert ! guide.lined_up
+      
+    end
+  end
+
 end
 

@@ -68,6 +68,8 @@ module Workflow
     activity = activity_details.delete(:request_type)
 
     result = case activity
+    when 'start_work'
+      current_user.start_work(self)
     when 'request_fact_check'
       current_user.request_fact_check(self, activity_details)
     when 'fact_check_received'

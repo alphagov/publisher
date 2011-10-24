@@ -40,6 +40,14 @@ class Admin::EditionsController <  Admin::BaseController
     end
   end
 
+  def start_work
+    if resource.progress({request_type: 'start_work'}, current_user)
+      redirect_to [:admin, edition_parent], :notice => "Work started on #{edition_parent.class.to_s.underscore.humanize}"
+    else
+      redirect_to [:admin, edition_parent], :alert => "Couldn't start work on #{edition_parent.class.to_s.underscore.humanize.downcase}"
+    end
+  end
+  
   def progress
     if resource.progress(params[:activity].dup, current_user)
       redirect_to [:admin, edition_parent], :notice => "#{edition_parent.class.to_s.underscore.humanize} updated"

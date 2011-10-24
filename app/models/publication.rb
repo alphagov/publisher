@@ -35,7 +35,7 @@ class Publication
 
   after_initialize :create_first_edition
 
-  before_save :calculate_statuses, :denormalise_metadata, :mark_as_started
+  before_save :calculate_statuses, :denormalise_metadata
 
   # validates_presence_of :panopticon_id
 
@@ -118,7 +118,7 @@ class Publication
   end
 
   def mark_as_started
-    self.lined_up = false unless self.created_at.blank?
+    self.lined_up = false
     true
   end
 

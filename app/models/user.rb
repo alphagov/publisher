@@ -51,6 +51,12 @@ class User
     end
   end
 
+  def start_work(edition)
+    edition.container.mark_as_started
+    record_action edition, Action::WORK_STARTED
+    true
+  end
+
   def request_fact_check(edition, details)
     return false if details[:email_addresses].blank?
     note_text = "\n\nResponses should be sent to: " + edition.fact_check_email_address
