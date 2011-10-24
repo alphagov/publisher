@@ -21,11 +21,11 @@ module ExternalServices
     when 'development','test'
       "http://www.dev.gov.uk"
     when 'production'
-      "http://frontend.alpha.gov.uk"
+      "http://www.production.alphagov.co.uk"
     when 'staging'
       "http://demo.alphagov.co.uk"
     else
-      "http://frontend.#{local_environment}.alphagov.co.uk:8080"
+      "http://www..#{local_environment}.alphagov.co.uk"
     end
   end
 
@@ -34,7 +34,7 @@ module ExternalServices
     when 'development','test'
       ""
     when 'production'
-      "http://alpha.gov.uk"
+      "http://static.production.alphagov.co.uk"
     else
       "http://#{local_environment}.alphagov.co.uk:8080"
     end
@@ -45,7 +45,7 @@ module ExternalServices
     when 'development','test'
       "imminence.dev.gov.uk"
     when 'production'
-      "imminence.alpha.gov.uk"
+      "imminence.production.alpha.gov.uk"
     else
       "imminence.#{local_environment}.alphagov.co.uk:8080"
     end

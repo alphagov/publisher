@@ -24,10 +24,9 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/plek.git
-  revision: 2e32580ccfd4ec1653d6f51d3bd8875af021c7ac
-  tag: 0.1.0
+  revision: 3738d8207effc672daf3e80cbd9580a4e3fe2f11
   specs:
-    plek (0.0.3)
+    plek (0.1.3)
 
 GIT
   remote: git@github.com:alphagov/slimmer.git
