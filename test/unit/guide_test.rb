@@ -118,13 +118,13 @@ class GuideTest < ActiveSupport::TestCase
     user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
   end
 
-  test "user should not be able to request review for a guide that's being fact checked" do
+  test "user should be able to request review for a guide that's being fact checked" do
     user = User.create(:name => "Ben")
 
     guide = user.create_publication(:guide)
     edition = guide.editions.first
     user.request_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
-    assert ! edition.can_request_review?
+    assert edition.can_request_review?
   end
 
   test "user should not be able to review a guide they requested review for" do

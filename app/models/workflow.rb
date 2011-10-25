@@ -7,7 +7,7 @@ module Workflow
   end
 
   def can_request_review?
-    not status_is?(Action::FACT_CHECK_REQUESTED, Action::REVIEW_REQUESTED, Action::PUBLISHED)
+    not status_is?(Action::REVIEW_REQUESTED, Action::PUBLISHED)
   end
 
   def in_review?
