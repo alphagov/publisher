@@ -1,7 +1,5 @@
 Publisher::Application.routes.draw do
 
-  match "/" => redirect("/admin")
-
   namespace :admin do
     resources :notes
     resources :expectations, :except => [:edit, :update, :destroy]
