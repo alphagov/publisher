@@ -46,7 +46,7 @@ Publisher::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_controller.asset_host = Proc.new { |source|
-    source =~ /guide-assets/ ? nil : "http://static.production.alphagov.co.uk"
+    source =~ /publisher-assets/ ? nil : "http://static.production.alphagov.co.uk"
   }
   config.middleware.use Slimmer::App, :asset_host => "http://static.production.alphagov.co.uk"
 
