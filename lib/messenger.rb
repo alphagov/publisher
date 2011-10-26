@@ -1,17 +1,12 @@
 class Messenger
-  class_attribute :client
+  include Singleton
+  cattr_accessor :transport
 
-  def published(edition)
-    container = edition.container
-    message = { panopticon_id: container.panopticon_id }
-    Timeout.timeout(5) do
-      client.publish '/queue/need_satisfied', message.to_json
-    end
-  rescue => e
-    Rails.logger.error("Unable to send message due to #{e}")
+  def method_missing *args
+    client.send *args
   end
-  
+
   def client
-    self.class.client ||= Stomp::Client.new(STOMP_CONFIGURATION)
+    @client ||= Marples::Client.new self.class.transport, "publisher", Rails.logger
   end
 end

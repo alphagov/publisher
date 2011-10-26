@@ -102,7 +102,7 @@ class EditionTest < ActiveSupport::TestCase
     guide = template_edition.guide
     stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
       to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
-    Messenger.any_instance.expects(:published).with(edition).once
+    Messenger.instance.expects(:published).with(edition.container).once
     guide.publish edition, "Published because I did"
   end
   
