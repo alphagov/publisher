@@ -1,12 +1,12 @@
 <div id="guide-nav" class="tabs">
   <ul>
 		<% @overviews.each do |title, rows| %>
-	    <li><a href="#<%= title %>"><%= title.capitalize %></a></li>
+	    <li><a href="#<%= title.parameterize %>"><%= title.capitalize %></a></li>
 		<% end %>
   </ul>
 	
 	<% @overviews.each do |title, rows| %>
-		<div id="<%= title %>">
+		<div id="<%= title.parameterize %>">
       <%= render :partial => "row", :locals => {:rows => rows, :title => title } %>
 		</div>
 	<% end %>
