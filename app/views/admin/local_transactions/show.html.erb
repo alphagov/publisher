@@ -29,7 +29,7 @@
     </ul>
   </div>
   <div id="admin">
-    <%- if ! @latest_edition.is_published? -%>
+    <%- if edition_can_be_deleted?(@latest_edition) -%>
     <%= button_to 'Destroy edition', admin_local_transaction_edition_path(@latest_edition.container,@latest_edition), :method => :delete %> !! Only use when edition is broken !!
     <%- end -%>
   </div>

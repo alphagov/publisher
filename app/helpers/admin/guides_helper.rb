@@ -2,6 +2,10 @@ require 'external_services'
 
 module Admin::GuidesHelper
 
+  def edition_can_be_deleted?(edition)
+    edition.container.editions.size > 1 and ! edition.is_published? 
+  end
+
   def produce_fact_check_request_text
     @edition = @latest_edition
     render :partial => '/noisy_workflow/request_fact_check'
