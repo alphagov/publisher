@@ -1,0 +1,9 @@
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+  cd /data/vhost/publisher.*.alphagov.co.uk/current
+  exec sudo -u deploy \
+    env RAILS_ENV=production \
+        deploy bundle exec ./script/metadata_sync
+end script
