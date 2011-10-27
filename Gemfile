@@ -47,9 +47,6 @@ else
   gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
 end
 
-if ENV['RUBY_DEBUG']
-  gem 'ruby-debug19'
-end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
@@ -58,6 +55,9 @@ gem 'whenever'
 
 group :development do
   gem 'passenger'
+  if ENV['RUBY_DEBUG']
+    gem 'ruby-debug19'
+  end
 end
 
 group :test do
