@@ -248,6 +248,7 @@ DEPENDENCIES
   marples
   mocha
   mongoid (~> 2.3)
+  null_logger
   oa-core (= 0.2.6)
   oa-oauth (= 0.2.6)
   oauth2 (= 0.4.1)

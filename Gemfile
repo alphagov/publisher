@@ -20,6 +20,7 @@ gem 'erubis'
 gem 'plek', :git => 'git@github.com:alphagov/plek.git'
 gem 'pethau'
 gem 'marples'
+gem 'null_logger'
 
 gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'

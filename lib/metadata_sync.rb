@@ -1,12 +1,16 @@
 class MetadataSync
+  include Pethau::InitializeWith
+  include Pethau::DefaultValueOf
+  
   initialize_with :logger
   default_value_of :logger, NullLogger.instance
 
   def run
-    client.when 'panopticon', 'artefact', 'updated' do |artefact|
-      remote_id = artefact['panopticon_id']
+    client.when 'panopticon', 'artefacts', 'updated' do |artefact|
+      remote_id = artefact['id']
       logger.debug "Finding artefact with panopticon id #{remote_id}"
-      publication = Publication.find panopticon_id: remote_id
+      publications = Publication.where panopticon_id: remote_id
+      publication = publications.first
       if publication
         logger.debug "Denormalising metadata for publication #{publication.id}"
         publication.denormalise_metadata
@@ -15,6 +19,7 @@ class MetadataSync
         logger.error "Couldn't find publication, bit odd. Ignoring message."
       end
     end
+    logger.info "Started MetadataSync client..."
     client.join
   end
 
