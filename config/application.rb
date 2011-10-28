@@ -60,8 +60,5 @@ require 'builder'
 # that client connections get copied when passenger forks a process but the mutexes
 # protecting those connections do not. 
 require 'messenger'
-if File.basename($0) != "rake" && !Rails.env.test?
-  Messenger.transport = Stomp::Client.new "stomp://localhost:61613"
-end
 
 Object.send :include, Pethau::InitializeWith
