@@ -17,7 +17,7 @@ gem 'rails', '3.1.1'
 gem "mongoid", "~> 2.3"
 gem "bson_ext", "~> 1.4"
 gem 'erubis'
-gem 'plek'
+gem 'plek', :git => 'git@github.com:alphagov/plek.git'
 gem 'pethau'
 gem 'marples'
 gem 'null_logger'
