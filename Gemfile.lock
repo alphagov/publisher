@@ -122,7 +122,7 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    marples (0.0.17)
+    marples (0.0.19)
       activesupport
       null_logger
       pethau (>= 0.0.2)
@@ -245,7 +245,7 @@ DEPENDENCIES
   inherited_resources
   launchy
   lockfile
-  marples
+  marples (= 0.0.19)
   mocha
   mongoid (~> 2.3)
   null_logger

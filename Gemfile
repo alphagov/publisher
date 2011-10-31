@@ -19,7 +19,7 @@ gem "bson_ext", "~> 1.4"
 gem 'erubis'
 gem 'plek', :git => 'git@github.com:alphagov/plek.git'
 gem 'pethau'
-gem 'marples'
+gem 'marples', '0.0.19'
 gem 'null_logger'
 
 gem 'inherited_resources'
