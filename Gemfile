@@ -18,8 +18,8 @@ gem "mongoid", "~> 2.3"
 gem "bson_ext", "~> 1.4"
 gem 'erubis'
 gem 'plek', :git => 'git@github.com:alphagov/plek.git'
-gem 'pethau'
-gem 'marples'
+gem 'pethau', '0.0.3'
+gem 'marples', '0.0.19'
 gem 'null_logger'
 
 gem 'inherited_resources'
@@ -36,7 +36,7 @@ end
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
-  gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
+  gem 'slimmer', '0.8.0'
 end
 
 gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git'
@@ -44,9 +44,8 @@ gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git'
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', :path => '../govspeak'
 else
-  gem 'govspeak', :git => 'git@github.com:alphagov/govspeak.git'
+  gem 'govspeak', '0.8.4'
 end
-
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
 
