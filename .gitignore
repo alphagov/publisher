@@ -6,3 +6,4 @@ tmp/
 .autotest
 coverage
 test/reports
+.generators

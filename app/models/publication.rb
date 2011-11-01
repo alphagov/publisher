@@ -2,44 +2,103 @@ class Publication
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :panopticon_id,   :type => Integer
+  class CannotDeletePublishedPublication < RuntimeError;
+  end
 
-  field :name,            :type => String
-  field :slug,            :type => String
-  field :tags,            :type => String
-  field :audiences,       :type => Array
+  field :panopticon_id, :type => Integer
 
-  field :has_drafts,      :type => Boolean
+  field :name, :type => String
+  field :slug, :type => String
+  field :tags, :type => String
+  field :audiences, :type => Array
+
+  field :has_drafts, :type => Boolean
   field :has_fact_checking, :type => Boolean
-  field :has_published,   :type => Boolean
+  field :has_published, :type => Boolean
   field :has_reviewables, :type => Boolean
-  field :archived,        :type => Boolean
-  field :lined_up,        :type => Boolean
+  field :archived, :type => Boolean
+  field :lined_up, :type => Boolean
 
-  field :section,         :type => String
-  field :department,      :type => String
-  field :related_items,   :type => String
+  field :section, :type => String
+  field :department, :type => String
+  field :related_items, :type => String
 
-  field :rejected_count,  :type => Integer, default: 0
-  field :edition_rejected_count,  :type => Integer, default: 0
+  field :rejected_count, :type => Integer, default: 0
+  field :edition_rejected_count, :type => Integer, default: 0
 
   embeds_many :publishings
 
-  scope :in_draft,         where(has_drafts: true).order_by(:edition_rejected_count => :desc).order_by(:name => :desc)
-  scope :lined_up,         where(lined_up: true)
-  scope :fact_checking,    where(has_fact_checking: true)
-  scope :published,        where(has_published: true)
+  scope :in_draft, where(has_drafts: true).order_by(:edition_rejected_count => :desc).order_by(:name => :desc)
+  scope :lined_up, where(lined_up: true)
+  scope :fact_checking, where(has_fact_checking: true)
+  scope :published, where(has_published: true)
   scope :review_requested, where(has_reviewables: true)
-  scope :archive,          where(archived: true)
-  scope :assigned_to,      lambda{ |user| assignment_filter(user) }
+  scope :archive, where(archived: true)
+  scope :assigned_to, lambda { |user| assignment_filter(user) }
 
   after_initialize :create_first_edition
 
   before_save :calculate_statuses, :denormalise_metadata
+  before_destroy :do_not_delete_if_published
 
   # validates_presence_of :panopticon_id
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
+
+  AUDIENCES = [
+      "Age-related audiences",
+      "Carers",
+      "Civil partnerships",
+      "Crime and justice-related audiences",
+      "Disabled people",
+      "Employment-related audiences",
+      "Family-related audiences",
+      "Graduates",
+      "Gypsies and travellers",
+      "Horse owners",
+      "Intermediaries",
+      "International audiences",
+      "Long-term sick",
+      "Members of the Armed Forces",
+      "Nationality-related audiences",
+      "Older people",
+      "Partners of people claiming benefits",
+      "Partners of students",
+      "People of working age",
+      "People on a low income",
+      "Personal representatives (for a deceased person)",
+      "Property-related audiences",
+      "Road users",
+      "Same-sex couples",
+      "Single people",
+      "Smallholders",
+      "Students",
+      "Terminally ill",
+      "Trustees",
+      "Veterans",
+      "Visitors to the UK",
+      "Volunteers",
+      "Widowers",
+      "Widows",
+      "Young people"
+  ]
+  SECTIONS = [
+      'Rights',
+      'Justice',
+      'Education and skills',
+      'Work',
+      'Family',
+      'Money',
+      'Taxes',
+      'Benefits and schemes',
+      'Driving',
+      'Housing',
+      'Communities',
+      'Pensions',
+      'Disabled people',
+      'Travel',
+      'Citizenship'
+  ]
 
   def self.import panopticon_id, importing_user
     uri = "#{Plek.current.find("arbiter")}/artefacts/#{panopticon_id}.js"
@@ -77,10 +136,10 @@ class Publication
 
   def self.assignment_filter(user)
     expr = if user
-      %{assignment && assignment.recipient_id == "#{user.id}"}
-    else
-      %{!assignment}
-    end
+             %{assignment && assignment.recipient_id == "#{user.id}"}
+           else
+             %{!assignment}
+           end
     where(%{
       function(){
         var last = function(a){ return a && a[a.length - 1]; }
@@ -132,7 +191,7 @@ class Publication
   end
 
   def calculate_statuses
-    self.has_published = self.publishings.any? && ! self.archived
+    self.has_published = self.publishings.any? && !self.archived
 
     published_versions = ::Set.new(publishings.map(&:version_number))
     all_versions = ::Set.new(editions.map(&:version_number))
@@ -142,7 +201,7 @@ class Publication
 
     self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
 
-    self.has_reviewables = editions.any? {|e| e.status_is?(Action::REVIEW_REQUESTED) }
+    self.has_reviewables = editions.any? { |e| e.status_is?(Action::REVIEW_REQUESTED) }
 
     true
   end
@@ -160,7 +219,7 @@ class Publication
   def published_edition
     latest_publishing = self.publishings.sort_by(&:version_number).last
     if latest_publishing
-      self.editions.detect {|s| s.version_number == latest_publishing.version_number }
+      self.editions.detect { |s| s.version_number == latest_publishing.version_number }
     else
       nil
     end
@@ -175,9 +234,9 @@ class Publication
   def can_destroy?
     !self.has_published
   end
-  
+
   def has_video?
-    false 
+    false
   end
 
   def latest_edition
@@ -252,58 +311,11 @@ class Publication
     collection.mapreduce(map, reduce, out: "mr_publications_count_by_#{type}").find()
   end
 
-  AUDIENCES = [
-    "Age-related audiences",
-    "Carers",
-    "Civil partnerships",
-    "Crime and justice-related audiences",
-    "Disabled people",
-    "Employment-related audiences",
-    "Family-related audiences",
-    "Graduates",
-    "Gypsies and travellers",
-    "Horse owners",
-    "Intermediaries",
-    "International audiences",
-    "Long-term sick",
-    "Members of the Armed Forces",
-    "Nationality-related audiences",
-    "Older people",
-    "Partners of people claiming benefits",
-    "Partners of students",
-    "People of working age",
-    "People on a low income",
-    "Personal representatives (for a deceased person)",
-    "Property-related audiences",
-    "Road users",
-    "Same-sex couples",
-    "Single people",
-    "Smallholders",
-    "Students",
-    "Terminally ill",
-    "Trustees",
-    "Veterans",
-    "Visitors to the UK",
-    "Volunteers",
-    "Widowers",
-    "Widows",
-    "Young people"
-  ]
-  SECTIONS = [
-    'Rights',
-    'Justice',
-    'Education and skills',
-    'Work',
-    'Family',
-    'Money',
-    'Taxes',
-    'Benefits and schemes',
-    'Driving',
-    'Housing',
-    'Communities',
-    'Pensions',
-    'Disabled people',
-    'Travel',
-    'Citizenship'
-  ]
+  private
+  def do_not_delete_if_published
+    if !self.can_destroy?
+      raise CannotDeletePublishedPublication
+    end
+  end
+
 end
