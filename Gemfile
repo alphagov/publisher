@@ -30,7 +30,7 @@ gem 'stomp', '1.1.9'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
 else
-  gem 'gds-sso', :git => 'git@github.com:alphagov/gds-sso.git'
+  gem 'gds-sso', '0.1.0'
 end
 
 if ENV['SLIMMER_DEV']
@@ -39,7 +39,7 @@ else
   gem 'slimmer', '0.8.0'
 end
 
-gem 'cdn_helpers', :git => 'git@github.com:alphagov/cdn_helpers.git'
+gem 'cdn_helpers', '0.9'
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', :path => '../govspeak'

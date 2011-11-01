@@ -1,21 +1,4 @@
 GIT
-  remote: git@github.com:alphagov/cdn_helpers.git
-  revision: 31e684761119d01b3accafd3f4652da8a9d026af
-  specs:
-    cdn_helpers (0.9)
-      actionpack
-      nokogiri
-
-GIT
-  remote: git@github.com:alphagov/gds-sso.git
-  revision: a9ec013c6d3bbbfbd1bafdfde0aa0384a129d03f
-  specs:
-    gds-sso (0.0.1)
-      oa-oauth
-      rails (>= 3.0.0)
-      warden
-
-GIT
   remote: git@github.com:alphagov/plek.git
   revision: 5a89792b65b35dd8fc4bdfc98fe9181baff470e8
   specs:
@@ -66,6 +49,9 @@ GEM
       xpath (~> 0.1.4)
     capybara-webkit (0.7.2)
       capybara (>= 1.0.0, < 1.2)
+    cdn_helpers (0.9)
+      actionpack
+      nokogiri
     childprocess (0.2.2)
       ffi (~> 1.0.6)
     chronic (0.6.4)
@@ -92,6 +78,10 @@ GEM
     ffi (1.0.9)
     formtastic (2.0.2)
       rails (~> 3.0)
+    gds-sso (0.1.0)
+      oa-oauth
+      rails (>= 3.0.0)
+      warden
     govspeak (0.8.4)
       kramdown (~> 0.13.3)
     has_scope (0.5.1)
@@ -220,7 +210,7 @@ DEPENDENCIES
   bson_ext (~> 1.4)
   capybara (~> 1.0.0)
   capybara-webkit
-  cdn_helpers!
+  cdn_helpers (= 0.9)
   ci_reporter
   database_cleaner
   erubis
@@ -229,7 +219,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic (~> 2.0.0)
-  gds-sso!
+  gds-sso (= 0.1.0)
   govspeak (= 0.8.4)
   has_scope
   inherited_resources
