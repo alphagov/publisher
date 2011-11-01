@@ -39,7 +39,11 @@ else
   gem 'slimmer', '0.8.0'
 end
 
-gem 'cdn_helpers', '0.9'
+if ENV['CDN_DEV']
+  gem 'cdn_helpers', :path => '../cdn_helpers'
+else
+  gem 'cdn_helpers', '0.9'
+end
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', :path => '../govspeak'
