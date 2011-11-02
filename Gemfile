@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
 else
+  gem 'warden', '1.0.6'
   gem 'gds-sso', '0.1.1'
 end
 
