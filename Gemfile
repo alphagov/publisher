@@ -1,8 +1,10 @@
 source 'http://rubygems.org'
 
-gem 'oauth2', '0.4.1'
-gem 'oa-core', '0.2.6'
-gem 'oa-oauth', '0.2.6'
+if ENV['BUNDLE_DEV']
+  gem 'gds-sso', :path => '../gds-sso'
+else
+  gem 'gds-sso', '0.1.1'
+end
 
 group :passenger_compatibility do
   gem 'rack', '1.3.5'
@@ -26,12 +28,6 @@ gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
-
-if ENV['BUNDLE_DEV']
-  gem 'gds-sso', :path => '../gds-sso'
-else
-  gem 'gds-sso', '0.1.0'
-end
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
