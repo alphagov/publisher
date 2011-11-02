@@ -1,6 +1,12 @@
 require 'test_helper'
 
 class PublicationTest < ActiveSupport::TestCase
+  
+  setup do
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+      to_return(:status => 200, :body => '{"name":"Something","slug":"childcare"}', :headers => {})
+  end
+  
   def template_published_answer
     without_metadata_denormalisation(Answer) do
       answer = Answer.create(:slug=>"childcare", :name=>"Something")
@@ -167,6 +173,35 @@ class PublicationTest < ActiveSupport::TestCase
     assert_raise (Publication::CannotDeletePublishedPublication) do
       dummy_answer.destroy
     end
+  end
+  
+  test "cannot delete a published publication with a new draft edition" do
+    without_metadata_denormalisation(Answer) do
+      dummy_answer = template_published_answer
+    
+      edition = dummy_answer.editions.first
+      new_edition = edition.build_clone
+      new_edition.body = 'Two'
+      dummy_answer.save
+      
+      assert_raise (Publication::CannotDeletePublishedPublication) do
+        dummy_answer.destroy
+      end
+
+    end
+  end
+  
+  test "can delete a publication that has not been published" do
+    dummy_answer = template_unpublished_answer
+    loaded_answer = Answer.first(conditions: {:slug=>"unpublished"})
+
+    assert_equal loaded_answer, dummy_answer
+    
+    dummy_answer.destroy
+    
+    loaded_answer = Answer.first(conditions: {:slug=>"unpublished"})
+    assert_nil loaded_answer
+    
   end
 
   test "should scope publications assigned to nobody" do
