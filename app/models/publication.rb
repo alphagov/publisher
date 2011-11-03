@@ -319,8 +319,9 @@ class Publication
 
   def search_index
     {
-      "title" => name,
+      "title" => title,
       "link" => "/#{slug}",
+      "format" => _type.downcase,
       "description" => published_edition ? published_edition.overview : "",
       "indexable_content" => indexable_content,
     }

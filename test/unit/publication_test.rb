@@ -41,21 +41,22 @@ class PublicationTest < ActiveSupport::TestCase
   test "struct for search index" do
     dummy_publication = template_published_answer
     out = dummy_publication.search_index
-    assert_equal ["title", "link", "description", "indexable_content"], out.keys
+    assert_equal ["title", "link", "format", "description", "indexable_content"], out.keys
   end
 
   test "json struct for search index" do
     dummy_publication = template_published_answer
     json = JSON.parse(dummy_publication.search_index_json)
-    assert_equal ["title", "link", "description", "indexable_content"], json.keys
-    assert_equal json['title'], dummy_publication.name
+    assert_equal ["title", "link", "format", "description", "indexable_content"], json.keys
+    assert_equal json['title'], dummy_publication.title
+    assert_equal json['format'], "answer"
   end
 
   test "search index for all publications" do
     dummy_publication = template_published_answer
     out = Publication.search_index_all
     assert_equal 1, out.count
-    assert_equal ["title", "link", "description", "indexable_content"], out.first.keys
+    assert_equal ["title", "link", "format", "description", "indexable_content"], out.first.keys
   end
 
   test "reindex all publications" do
