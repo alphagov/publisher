@@ -26,6 +26,8 @@ gem 'pethau', '0.0.3'
 gem 'marples', '0.0.19'
 gem 'null_logger'
 
+gem 'rest-client'
+
 gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
 gem 'has_scope'
