@@ -1,4 +1,15 @@
 GIT
+  remote: git@github.com:alphagov/gds-sso.git
+  revision: 394b7778f60dc1cb31c58c4e5427304fc01db50b
+  specs:
+    gds-sso (0.1.1)
+      oa-core (= 0.2.6)
+      oa-oauth (= 0.2.6)
+      oauth2 (= 0.4.1)
+      rails (>= 3.0.0)
+      warden
+
+GIT
   remote: git@github.com:alphagov/plek.git
   revision: 5a89792b65b35dd8fc4bdfc98fe9181baff470e8
   specs:
@@ -78,12 +89,6 @@ GEM
     ffi (1.0.9)
     formtastic (2.0.2)
       rails (~> 3.0)
-    gds-sso (0.1.1)
-      oa-core (= 0.2.6)
-      oa-oauth (= 0.2.6)
-      oauth2 (= 0.4.1)
-      rails (>= 3.0.0)
-      warden
     govspeak (0.8.4)
       kramdown (~> 0.13.3)
     has_scope (0.5.1)
@@ -194,7 +199,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.30)
-    warden (1.1.0)
+    warden (1.0.6)
       rack (>= 1.0)
     webmock (1.7.7)
       addressable (> 2.2.5, ~> 2.2)
@@ -221,7 +226,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic (~> 2.0.0)
-  gds-sso (= 0.1.1)
+  gds-sso!
   govspeak (= 0.8.4)
   has_scope
   inherited_resources
