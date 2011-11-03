@@ -1,3 +1,5 @@
+require 'rest_client'
+
 class Publication
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -309,6 +311,36 @@ class Publication
     EOF
 
     collection.mapreduce(map, reduce, out: "mr_publications_count_by_#{type}").find()
+  end
+
+  def indexable_content
+    published_edition ? published_edition.alternative_title : ""
+  end
+
+  def search_index
+    {
+      "title" => name,
+      "link" => "/#{slug}",
+      "description" => published_edition ? published_edition.overview : "",
+      "indexable_content" => indexable_content,
+    }
+  end
+
+  def search_index_json
+    JSON(search_index)
+  end
+
+  def self.search_index_all
+    output = []
+    Publication.all.each do |publication|
+      output << publication.search_index
+    end
+    output
+  end
+
+  def self.reindex_all
+    url = Plek.current.find("search") + "/documents"
+    RestClient.post url, self.search_index_all.to_json, :content_type => :json, :accept => :json
   end
 
   private

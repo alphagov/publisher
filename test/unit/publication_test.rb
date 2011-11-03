@@ -38,6 +38,44 @@ class PublicationTest < ActiveSupport::TestCase
     assert_equal Publication.find_and_identify_edition('register-offices', ''), dummy_publication.published_edition
   end
 
+  test "struct for search index" do
+    dummy_publication = template_published_answer
+    out = dummy_publication.search_index
+    assert_equal ["title", "link", "description", "indexable_content"], out.keys
+  end
+
+  test "json struct for search index" do
+    dummy_publication = template_published_answer
+    json = JSON.parse(dummy_publication.search_index_json)
+    assert_equal ["title", "link", "description", "indexable_content"], json.keys
+    assert_equal json['title'], dummy_publication.name
+  end
+
+  test "search index for all publications" do
+    dummy_publication = template_published_answer
+    out = Publication.search_index_all
+    assert_equal 1, out.count
+    assert_equal ["title", "link", "description", "indexable_content"], out.first.keys
+  end
+
+  test "reindex all publications" do
+    stub_request(:post, "http://search.test.gov.uk/documents").
+      with(:body => "[]",
+      :headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>'2', 'Content-Type'=>'application/json', 'User-Agent'=>'Ruby'}).
+        to_return(:status => 200, :body => "", :headers => {})
+    Publication.reindex_all
+  end
+
+  test "reindex all publications with document" do
+    dummy_publication = template_published_answer
+    json = Publication.search_index_all.to_json
+    stub_request(:post, "http://search.test.gov.uk/documents").
+      with(:body => json,
+      :headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>json.size, 'Content-Type'=>'application/json', 'User-Agent'=>'Ruby'}).
+        to_return(:status => 200, :body => "", :headers => {})
+    Publication.reindex_all
+  end
+
   test 'a publication should not have a video' do
     dummy_publication = template_published_answer
     assert !dummy_publication.has_video?
