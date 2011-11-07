@@ -41,7 +41,7 @@ class Publication
   after_initialize :create_first_edition
 
   before_save :calculate_statuses, :denormalise_metadata
-  before_destroy :do_not_delete_if_published
+  before_destroy :check_can_delete_and_notify
 
   # validates_presence_of :panopticon_id
 
@@ -345,9 +345,12 @@ class Publication
   end
 
   private
-  def do_not_delete_if_published
+  def check_can_delete_and_notify
     if !self.can_destroy?
       raise CannotDeletePublishedPublication
+      false
+    else
+      Messenger.instance.deleted self
     end
   end
 
