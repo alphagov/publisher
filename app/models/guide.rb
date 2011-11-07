@@ -4,10 +4,21 @@ class Guide < Publication
   def self.edition_class
     GuideEdition
   end
-  
+
   def has_video?
     latest_edition.video_url.present?
   end
-  
+
+  def indexable_content
+    content = super
+    latest_edition.parts.each do |part|
+      content = "#{content} #{part.title} #{part.body}"
+    end
+    content.strip
+  end
+
+  def search_index
+    super
+  end
 
 end
