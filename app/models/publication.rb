@@ -332,11 +332,7 @@ class Publication
   end
 
   def self.search_index_all
-    output = []
-    Publication.all.each do |publication|
-      output << publication.search_index
-    end
-    output
+    all.map(&:search_index)
   end
 
   def self.reindex_all
