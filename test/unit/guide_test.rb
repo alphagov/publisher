@@ -24,7 +24,7 @@ class GuideTest < ActiveSupport::TestCase
   test "json struct for search index" do
     guide = template_guide
     json = JSON.parse(guide.search_index_json)
-    assert_equal ["title", "link", "format", "description", "indexable_content"], json.keys
+    assert_equal ["title", "link", "format", "description", "indexable_content", "additional_links"], json.keys
     assert_equal json['title'], guide.title
     assert_equal json['format'], "guide"
   end
@@ -40,11 +40,11 @@ class GuideTest < ActiveSupport::TestCase
 
   test "json index contains parts as additional links" do
     guide = template_guide
-    edition = guide.editions.first
-    edition.parts.build(:body => "ONE", :title => "ONE")
-    edition.parts.build(:body => "TWO", :title => "TWO")
+    edition = guide.latest_edition
+    edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
+    edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
     json = JSON.parse(guide.search_index_json)
-    assert_equal json['format'], "guide"
+    assert_equal 2, json['additional_links'].count
   end
 
   test 'a guide without a video url should not have a video' do

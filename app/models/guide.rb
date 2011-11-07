@@ -18,7 +18,15 @@ class Guide < Publication
   end
 
   def search_index
-    super
+    output = super
+    output['additional_links'] = []
+    latest_edition.parts.each do |part|
+      output['additional_links'] << {
+        'title' => part.title,
+        'link' => "#{Plek.current.find('frontend')}/#{slug}/#{part.slug}"
+      }
+    end
+    output
   end
 
 end
