@@ -338,6 +338,7 @@ class Publication
   def self.reindex_all
     url = Plek.current.find("search") + "/documents"
     RestClient.post url, self.search_index_all.to_json, :content_type => :json, :accept => :json
+    RestClient.post Plek.current.find("search") + "/commit", "", :content_type => :json, :accept => :json
   end
 
   private
