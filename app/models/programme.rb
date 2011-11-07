@@ -1,6 +1,8 @@
 class Programme < Publication
   embeds_many :editions, :class_name => 'ProgrammeEdition', :inverse_of => :programme
 
+  include Parted
+
   DEFAULT_PARTS = [
 	{:title => "Overview", :slug => "overview"},
 	{:title => "What you'll get", :slug => "what-youll-get"},
