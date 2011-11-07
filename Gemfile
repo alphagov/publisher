@@ -25,6 +25,7 @@ gem 'plek', :git => 'git@github.com:alphagov/plek.git'
 gem 'pethau', '0.0.3'
 gem 'marples', '0.0.19'
 gem 'null_logger'
+gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 
 gem 'rest-client'
 

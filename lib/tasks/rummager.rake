@@ -1,7 +1,7 @@
 namespace :rummager do
   desc "Reindex search engine"
   task :index => :environment do
-    Publication.reindex_all
+    Rummageable.index Publication.search_index_all
   end
   desc "Show the output being sent to the search engine API"
   task :show_index => :environment do

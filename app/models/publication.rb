@@ -327,18 +327,8 @@ class Publication
     }
   end
 
-  def search_index_json
-    JSON(search_index)
-  end
-
   def self.search_index_all
     all.map(&:search_index)
-  end
-
-  def self.reindex_all
-    url = Plek.current.find("search") + "/documents"
-    RestClient.post url, self.search_index_all.to_json, :content_type => :json, :accept => :json
-    RestClient.post Plek.current.find("search") + "/commit", "", :content_type => :json, :accept => :json
   end
 
   private

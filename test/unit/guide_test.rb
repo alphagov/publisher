@@ -21,30 +21,30 @@ class GuideTest < ActiveSupport::TestCase
     assert !g.has_published
   end
 
-  test "json struct for search index" do
+  test "struct for search index" do
     guide = template_guide
-    json = JSON.parse(guide.search_index_json)
-    assert_equal ["title", "link", "format", "description", "indexable_content", "additional_links"], json.keys
-    assert_equal json['title'], guide.title
-    assert_equal json['format'], "guide"
+    data = guide.search_index
+    assert_equal ["title", "link", "format", "description", "indexable_content", "additional_links"], data.keys
+    assert_equal data['title'], guide.title
+    assert_equal data['format'], "guide"
   end
 
-  test "json indexable content contains parts for search index" do
+  test "indexable content contains parts for search index" do
     guide = template_guide
     edition = guide.latest_edition
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
-    json = JSON.parse(guide.search_index_json)
-    assert_equal json['indexable_content'], "ONE ONE TWO TWO"
+    data = guide.search_index
+    assert_equal data['indexable_content'], "ONE ONE TWO TWO"
   end
 
-  test "json index contains parts as additional links" do
+  test "index contains parts as additional links" do
     guide = template_guide
     edition = guide.latest_edition
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
-    json = JSON.parse(guide.search_index_json)
-    assert_equal 2, json['additional_links'].count
+    data = guide.search_index
+    assert_equal 2, data['additional_links'].count
   end
 
   test 'a guide without a video url should not have a video' do
