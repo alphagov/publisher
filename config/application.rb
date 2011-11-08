@@ -62,7 +62,7 @@ require 'builder'
 require 'messenger'
 
 if File.basename($0) != "rake" && !Rails.env.test?
-  Messenger.transport = Stomp::Client.new "stomp://localhost:61613"  	
+  Messenger.transport = Stomp::Client.new "stomp://support.cluster:61613"
 end
 
 Object.send :include, Pethau::InitializeWith
