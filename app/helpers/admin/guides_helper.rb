@@ -2,6 +2,10 @@ require 'external_services'
 
 module Admin::GuidesHelper
 
+  def path_for_edition(edition)
+    send("admin_#{edition.container.class.to_s.underscore}_edition_path", edition.container, edition)
+  end
+
   def edition_can_be_deleted?(edition)
     edition.container.editions.size > 1 and ! edition.is_published? 
   end
