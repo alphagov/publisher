@@ -21,7 +21,7 @@ gem "mongoid", "~> 2.3"
 gem "mongo", "1.4"
 gem "bson_ext", " 1.4"
 gem 'erubis'
-gem 'plek', :git => 'git@github.com:alphagov/plek.git'
+gem 'plek', '0.1.5'
 gem 'pethau', '0.0.3'
 gem 'marples', '0.0.19'
 gem 'null_logger'
