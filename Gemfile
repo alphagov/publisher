@@ -26,6 +26,7 @@ gem 'pethau', '0.0.3'
 gem 'marples', '0.0.19'
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
+gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
 
 gem 'rest-client'
 

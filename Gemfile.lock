@@ -1,4 +1,10 @@
 GIT
+  remote: git@github.com:alphagov/daemonette.git
+  revision: 85e34ce4faa78e863f974a0f211765afd56bb264
+  specs:
+    daemonette (0.1.0)
+
+GIT
   remote: git@github.com:alphagov/gds-sso.git
   revision: 394b7778f60dc1cb31c58c4e5427304fc01db50b
   specs:
@@ -226,6 +232,7 @@ DEPENDENCIES
   capybara-webkit
   cdn_helpers (= 0.9)
   ci_reporter
+  daemonette!
   database_cleaner
   erubis
   exception_notification (~> 2.4.1)
