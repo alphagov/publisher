@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:alphagov/daemonette.git
-  revision: 85e34ce4faa78e863f974a0f211765afd56bb264
+  revision: 36ec7177c9d6d5c44b2ec772bf3daab69152b254
   specs:
     daemonette (0.1.0)
 
