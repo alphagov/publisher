@@ -33,27 +33,27 @@ class Action
   def friendly_description
     case request_type
     when CREATED
-      "#{edition.container.class} created by #{requester.name}"
+      "Created #{edition.container.class}: \"#{edition.title}\" (by #{requester.name})"
     when WORK_STARTED
-      "#{requester.name} started work on #{edition.container.class} '#{edition.title}'"
+      "Work started: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when NEW_VERSION
-      "New version \"#{edition.title}\" created by #{requester.name}"
+      "New version: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when FACT_CHECK_REQUESTED
-      "A fact check for \"#{edition.title}\" was requested by #{requester.name}"
+      "Fact check requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when FACT_CHECK_RECEIVED
-      "A fact check response for \"#{edition.title}\" has been received"
+      "Fact check response: \"#{edition.title}\" (#{edition.container.class})"
     when REVIEW_REQUESTED
-      "A review and publish was requested by #{requester.name}"
+      "Review requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when REVIEWED
-      "Reviewed by #{requester.name}. Not OK'd for publication"
+      "Amends needed: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when OKAYED
-      "OK'd for publication by #{requester.name}"
+      "Okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when PUBLISHED
-      "Published by #{requester.name}"
+      "Published: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when NOTE
-      "#{requester.name} made a note"
+      "Note added by #{requester.name}"
     when ASSIGNED
-      "#{requester.name} assigned \"#{edition.title}\" to #{recipient.name}"
+      "Assigned: \"#{edition.title}\" (#{edition.container.class}) to #{recipient.name}"
     end
   end
 
