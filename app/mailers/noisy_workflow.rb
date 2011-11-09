@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class NoisyWorkflow < ActionMailer::Base
-  default :from => "winston@alphagov.co.uk"
+  default :from => "Winston (Gov.UK Publisher) <winston@alphagov.co.uk>"
   
   def make_noise(publication,action)
     @publication = publication
@@ -12,9 +12,9 @@ class NoisyWorkflow < ActionMailer::Base
     when Action::REVIEW_REQUESTED then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
     else "eds@alphagov.co.uk, freds@alphagov.co.uk"
     end
-
+    
     mail(:to => email_address,
-         :subject => "[PUBLISHER] #{@action.friendly_description}: #{@action.edition.title}")
+         :subject => "[PUBLISHER] #{@action.friendly_description}: #{@action.edition.title}") 
   end
   
   def request_fact_check(edition, details)
