@@ -1,6 +1,7 @@
 module Parted
   def indexable_content
     content = super
+    return content unless latest_edition
     latest_edition.parts.each do |part|
       content = "#{content} #{part.title} #{part.body}"
     end
