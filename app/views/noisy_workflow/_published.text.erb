@@ -1,0 +1,3 @@
+<%= @action.requester.name %> published "<%= @publication.title %>" (<%= @publication.class.to_s.humanize %>) at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+
+<%= "#{Plek.current.find("frontend")}/#{@action.edition.container.slug}" %>

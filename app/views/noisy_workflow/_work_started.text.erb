@@ -1,0 +1,3 @@
+Work was started on "<%= @publication.title %>" (<%= @publication.class.to_s.humanize %>) by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+
+<%= "#{Plek.current.find("frontend")}/#{@action.edition.container.slug}?edition=#{@action.edition.version_number}" %>

@@ -1,0 +1,6 @@
+"<%= @publication.title %>" (<%= @publication.class.to_s.humanize %>) reviewed by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+
+Further amends required:
+<%= @action.comment %>
+
+<%= "#{Plek.current.find("frontend")}/#{@action.edition.container.slug}?edition=#{@action.edition.version_number}" %>
