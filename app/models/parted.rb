@@ -10,6 +10,7 @@ module Parted
 
   def search_index
     output = super
+    return output unless latest_edition
     output['additional_links'] = []
     latest_edition.parts.each do |part|
       output['additional_links'] << {
