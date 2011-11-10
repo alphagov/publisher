@@ -4,6 +4,7 @@ require 'marples/active_record'
 class Publication
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Marples::ModelActionBroadcast
 
   class CannotDeletePublishedPublication < RuntimeError;
   end
