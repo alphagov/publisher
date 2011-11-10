@@ -61,7 +61,7 @@ require 'builder'
 # protecting those connections do not. 
 require 'messenger'
 
-if File.basename($0) != "rake" && !Rails.env.test?
+unless Rails.env.test?
   Messenger.transport = Stomp::Client.new "stomp://support.cluster:61613"
 end
 
