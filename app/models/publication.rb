@@ -1,4 +1,5 @@
 require 'rest_client'
+require 'marples/active_record'
 
 class Publication
   include Mongoid::Document
@@ -211,7 +212,6 @@ class Publication
   def publish(edition, notes)
     publishings.create version_number: edition.version_number, change_notes: notes
     calculate_statuses
-    Messenger.instance.published edition.container
   end
 
   def denormalise_metadata
@@ -336,8 +336,6 @@ class Publication
     if !self.can_destroy?
       raise CannotDeletePublishedPublication
       false
-    else
-      Messenger.instance.deleted self
     end
   end
 

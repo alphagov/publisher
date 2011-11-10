@@ -17,6 +17,8 @@ class User
 
   def record_action(edition, type, options={})
     action = edition.new_action(self, type, options)
+    messenger_topic = action.to_s.downcase
+    Messenger.instance.messenger_topic edition.container
     NoisyWorkflow.make_noise(edition.container,action).deliver
   end
   
