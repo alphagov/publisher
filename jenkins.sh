@@ -9,6 +9,7 @@ for d in images javascripts templates stylesheets; do
 done
 
 export DISPLAY=:99
+export RAILS_ENV=test
 bundle exec rake ci:setup:testunit test:units test:functionals test:integration
 RESULT=$?
 exit $RESULT
