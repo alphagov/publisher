@@ -3,7 +3,7 @@ Hello,
 Please check the following item for factual accuracy:
 
 Title: <%= @edition.title %>
-<%= "#{ExternalServices.front_end_host}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
+<%= "#{Plek.current.find("frontend")}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
 
 If you spot something that's factually incorrect reply to this email with your comments:
 
@@ -17,6 +17,7 @@ Please respond within five working days.  If we don't hear from you, we will ass
 If you've forgotten your username and password, please email accounts@alphagov.co.uk.
 
 PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: <%= @edition.fact_check_email_address %>
+
 
 Thanks,
 Gov.UK editorial team

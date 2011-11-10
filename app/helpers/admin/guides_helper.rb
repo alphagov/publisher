@@ -1,5 +1,3 @@
-require 'external_services'
-
 module Admin::GuidesHelper
 
   def path_for_edition(edition)
@@ -21,7 +19,7 @@ module Admin::GuidesHelper
   end
 
   def publication_front_end_path(publication)
-    "#{ExternalServices.front_end_host}/#{publication.slug}"
+    "#{Plek.current.find("frontend")}/#{publication.slug}"
   end
 
   def preview_edition_path(edition)

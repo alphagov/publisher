@@ -73,7 +73,7 @@ class Edition
   end
   
   def fact_check_email_address
-    "factcheck+#{Rails.env}-#{container.id}@alphagov.co.uk"
+    "factcheck+#{Plek.current.environment}-#{container.id}@alphagov.co.uk"
   end
   
   def do_not_delete_if_published
