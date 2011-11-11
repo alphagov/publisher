@@ -37,4 +37,20 @@ class UserTest < ActiveSupport::TestCase
       assert ! user.review(trans.editions.last, {comment: "Hello"})
     end
   end
+  
+  test "when an user publishes a guide, a status message is sent on the message bus" do
+    user = User.create(:name => "bob")
+    second_user = User.create(:name => "dave")
+    
+    without_panopticon_validation do
+      trans = user.create_publication(:transaction, :name => "test", :slug => "test")
+      user.request_review(trans.editions.last, {comment: "Hello"})
+      second_user.okay(trans.editions.last, {comment: "Hello"})
+      
+      Messenger.instance.expects(:published).with(trans).once
+      user.publish trans.editions.last, {comment: "Published because I did"}
+      
+    end
+  end
+
 end
