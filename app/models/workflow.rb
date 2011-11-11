@@ -67,25 +67,14 @@ module Workflow
   def progress(activity_details, current_user)
     activity = activity_details.delete(:request_type)
 
-    result = case activity
-    when 'start_work'
-      current_user.start_work(self)
-    when 'request_fact_check'
-      current_user.request_fact_check(self, activity_details)
-    when 'fact_check_received'
-      current_user.receive_fact_check(self, activity_details)
-    when 'request_review'
-      current_user.request_review(self, activity_details)
-    when 'review'
-      current_user.review(self, activity_details)
-    when 'okay'
-      current_user.okay(self, activity_details)
-    when 'publish'
-      current_user.publish(self, activity_details)
+    if ['request_fact_check', 'fact_check_received', 'request_review', 'review', 'okay', 'publish'].include?(activity)
+      result = current_user.send(activity, self, activity_details)
+    elsif activity == 'start_work'
+      result = current_user.start_work(self)
     else
       raise "Unknown progress activity: #{activity}"
     end
-
+    
     if result
       self.container.save! 
     else

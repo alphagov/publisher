@@ -78,7 +78,7 @@ class User
     edition
   end
 
-  def receive_fact_check(edition, details)
+  def fact_check_received(edition, details)
     record_action edition, Action::FACT_CHECK_RECEIVED, details 
     edition
   end
