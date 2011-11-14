@@ -1,5 +1,5 @@
 require 'rest_client'
-require 'marples/active_record'
+require 'marples/model_action_broadcast'
 
 class Publication
   include Mongoid::Document
