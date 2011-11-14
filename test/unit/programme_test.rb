@@ -3,7 +3,7 @@ require 'test_helper'
 class ProgrammeTest < ActiveSupport::TestCase
 
   setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/987353.js").
+    stub_request(:get, /.*panopticon\.test\.gov\.uk\/artefacts\/.*\.js/).
       to_return(:status => 200, :body => "{}", :headers => {})
   end
 
