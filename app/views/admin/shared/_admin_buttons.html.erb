@@ -4,4 +4,7 @@
 <%- end -%>
 <%- if @latest_edition.container.can_destroy? -%>
 <%= button_to "Destroy #{@latest_edition.container.class.to_s.humanize}", admin_publication_path(@latest_edition.container), :method => :delete %>
+<%- end -%>   
+<%- if @latest_edition.in_fact_checking? -%>
+<%= button_to "Skip Fact Check", skip_fact_check_for_edition(@latest_edition), :method => :post %>
 <%- end -%>

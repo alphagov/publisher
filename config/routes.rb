@@ -14,10 +14,13 @@ Publisher::Application.routes.draw do
         resources :editions, :only => [:create, :update, :destroy] do
           post :progress, :on => :member
           post :start_work, :on => :member
+          member do
+            post 'skip_fact_check'
+          end
         end
       end
-    end
-
+    end     
+    
     resources :publications
     match 'overview' => 'overview#index'
     root :to => 'root#index'

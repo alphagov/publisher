@@ -2,6 +2,10 @@ module Admin::GuidesHelper
 
   def path_for_edition(edition)
     send("admin_#{edition.container.class.to_s.underscore}_edition_path", edition.container, edition)
+  end  
+  
+  def skip_fact_check_for_edition(edition)
+    send("skip_fact_check_admin_#{edition.container.class.to_s.underscore}_edition_path", edition.container, edition)
   end
 
   def edition_can_be_deleted?(edition)

@@ -54,7 +54,15 @@ class Admin::EditionsController <  Admin::BaseController
     else
       redirect_to [:admin, edition_parent], :alert => "Couldn't #{params[:activity][:request_type].to_s.humanize.downcase} for #{edition_parent.class.to_s.underscore.humanize.downcase}"
     end
-  end
+  end          
+                                
+  def skip_fact_check 
+    if resource.progress({request_type: 'fact_check_received', comment: "Fact check skipped by request."}, current_user)
+      redirect_to [:admin, edition_parent], :notice => "The fact check has been skipped for this publication."
+    else
+      redirect_to [:admin, edition_parent], :alert => "Could not skip fact check for this publication."    
+    end
+  end            
 
   protected
     def update_assignment(edition, assigned_to_id)
