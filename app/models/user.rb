@@ -94,7 +94,9 @@ class User
   def okay(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
 
-    edition.container.mark_as_accepted
+    edition.container.mark_as_accepted              
+    self.assign(edition, self.id)
+    
     record_action edition, Action::OKAYED, details
     edition
   end
