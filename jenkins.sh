@@ -9,7 +9,7 @@ bundle exec rake stats
 # DELETE STATIC SYMLINKS AND RECONNECT...
 for d in images javascripts templates stylesheets; do
   rm -f public/$d
-  ln -s ../../../Static/workspace/public/$d public/
+  ln -s ../../Static/public/$d public/
 done
 
 bundle exec rake ci:setup:testunit test
