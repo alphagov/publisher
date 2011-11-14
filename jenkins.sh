@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 export RAILS_ENV=test
-export DISPLAY=:99
+export DISPLAY=":99"
 
 bundle install --path "${HOME}/bundles/${JOB_NAME}" --deployment
 bundle exec rake stats
@@ -12,6 +12,6 @@ for d in images javascripts templates stylesheets; do
   ln -s ../../../Static/workspace/public/$d public/
 done
 
-bundle exec rake ci:setup:testunit test:units test:functionals test:integration
+bundle exec rake ci:setup:testunit test
 RESULT=$?
 exit $RESULT
