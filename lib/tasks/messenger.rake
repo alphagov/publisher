@@ -1,7 +1,8 @@
 namespace :messenger do
   desc "Run queue consumer"
-  task :listen => :environment do
+  task :listen  do
     Daemonette.run("publisher_metadata_sync") do
+      Rake::Task["environment"].invoke
       MetadataSync.new.run
     end
   end
