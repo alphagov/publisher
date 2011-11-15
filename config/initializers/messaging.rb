@@ -8,7 +8,7 @@ require 'messenger'
 unless Rails.env.test?
   Publication.marples_client_name = 'publisher'
   Publication.marples_logger = Rails.logger
-  stomp_url = "stomp://support.cluster:61613"
+  stomp_url = "failover://(stomp://support.cluster:61613)"
 
   if defined?(PhusionPassenger)
     PhusionPassenger.on_event(:starting_worker_process) do |forked|
