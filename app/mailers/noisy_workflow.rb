@@ -7,10 +7,15 @@ class NoisyWorkflow < ActionMailer::Base
     @publication = publication
     @action = action
     
-    email_address = case action.request_type
-    when Action::PUBLISHED then "team@alphagov.co.uk, freds@alphagov.co.uk"
-    when Action::REVIEW_REQUESTED then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
-    else "eds@alphagov.co.uk, freds@alphagov.co.uk"
+    case Plek.current.environment
+    when 'preview' 
+      email_address = 'dev@alphagov.co.uk'
+    else
+      email_address = case action.request_type
+      when Action::PUBLISHED then "team@alphagov.co.uk, freds@alphagov.co.uk"
+      when Action::REVIEW_REQUESTED then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
+      else "eds@alphagov.co.uk, freds@alphagov.co.uk"
+      end
     end
     
     mail(:to => email_address,
