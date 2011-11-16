@@ -28,7 +28,9 @@ gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
 
-gem 'rest-client'
+gem 'rest-client'         
+                                           
+gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
