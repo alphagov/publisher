@@ -53,11 +53,11 @@ module Admin::GuidesHelper
     )
   end
 
-  def review_buttons(guide,edition)
+  def review_buttons(guide, edition)
     [
       ["Needs more work",    "review"],
       ["OK for publication", "okay"]
-    ].map{ |title,activity|
+    ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled" 
       "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
@@ -66,7 +66,7 @@ module Admin::GuidesHelper
     }.join("\n").html_safe
   end
 
-  def review_forms(guide,edition)
+  def review_forms(guide, edition)
     [
       ["Needs more work",    "review"],
       ["OK for publication", "okay"]
@@ -79,7 +79,7 @@ module Admin::GuidesHelper
       ["Fact check",       "request_fact_check"],
       ["2nd pair of eyes", "request_review"],
       ["Publish",          "publish"]
-    ].map{ |title,activity|
+    ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
       "<form id=\"#{activity}_toggle\" class=\"button_to progress_button\">

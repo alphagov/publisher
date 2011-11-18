@@ -30,7 +30,7 @@ class Admin::PublicationSubclassesController < Admin::BaseController
   end
 
   def update
-    update! do |s,f|
+    update! do |s, f|
       s.json { render :json => @resource }
       f.json { render :json => @resource.errors, :status => 406 }
     end

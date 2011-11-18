@@ -23,7 +23,7 @@ module Api
       end
 
       attrs['type'] = edition.container.class.to_s.underscore
-      generator.edition_to_hash(attrs,edition,*args)
+      generator.edition_to_hash(attrs, edition,*args)
     end
 
     class Base
@@ -31,7 +31,7 @@ module Api
         []
       end
 
-      def self.edition_to_hash(attrs,guide,options={})
+      def self.edition_to_hash(attrs, guide, options={})
         attrs
       end
     end
@@ -75,7 +75,7 @@ module Api
         la.as_json(:only => [:snac, :name], :include => {:lgils => {:only => [:url, :code]}})
       end
 
-      def self.edition_to_hash(attrs,edition,options = {})
+      def self.edition_to_hash(attrs, edition, options = {})
         snac = options[:snac]
         all  = options[:all]
         if snac || all

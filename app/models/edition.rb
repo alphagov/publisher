@@ -42,8 +42,8 @@ class Edition
     new_edition
   end
 
-  def publish(edition,notes)
-    self.container.publish(edition,notes)
+  def publish(edition, notes)
+    self.container.publish(edition, notes)
   end
 
   def is_published?

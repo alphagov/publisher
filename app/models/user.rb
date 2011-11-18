@@ -18,8 +18,8 @@ class User
   def record_action(edition, type, options={})
     action = edition.new_action(self, type, options)
     messenger_topic = action.to_s.downcase
-    Messenger.instance.send messenger_topic,edition.container unless messenger_topic == "created"
-    NoisyWorkflow.make_noise(edition.container,action).deliver
+    Messenger.instance.send messenger_topic, edition.container unless messenger_topic == "created"
+    NoisyWorkflow.make_noise(edition.container, action).deliver
   end
   
   def record_note(edition, comment)

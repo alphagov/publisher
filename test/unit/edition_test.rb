@@ -68,7 +68,7 @@ class EditionTest < ActiveSupport::TestCase
     new_edition = edition.build_clone
     original_text = edition.parts.map {|p| p.body }.join(" ")
     new_text = new_edition.parts.map  {|p| p.body }.join(" ")
-    assert_equal original_text,new_text
+    assert_equal original_text, new_text
   end
 
   test "changing text in a new edition should not change text in old edition" do
@@ -77,7 +77,7 @@ class EditionTest < ActiveSupport::TestCase
     new_edition.parts.first.body = "Some other version text"
     original_text = edition.parts.map     {|p| p.body }.join(" ")
     new_text =      new_edition.parts.map {|p| p.body }.join(" ")
-    assert_not_equal original_text,new_text
+    assert_not_equal original_text, new_text
   end
 
   test "a new guide has no published edition" do

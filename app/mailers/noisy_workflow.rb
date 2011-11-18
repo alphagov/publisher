@@ -3,7 +3,7 @@
 class NoisyWorkflow < ActionMailer::Base
   default :from => "Winston (Gov.UK Publisher) <winston@alphagov.co.uk>"
   
-  def make_noise(publication,action)
+  def make_noise(publication, action)
     @publication = publication
     @action = action
                                                   
