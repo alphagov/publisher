@@ -8,12 +8,12 @@ namespace :messenger do
 
     Daemonette.run("publisher_publication_listener") do
       Rake::Task["environment"].invoke
-      PublicationListener.new.listen
+      PublicationListener.new(Messenger.transport, Rails.logger).listen
     end
 
     Daemonette.run("publisher_destruction_listener") do
       Rake::Task["environment"].invoke
-      DestructionListener.new.listen
+      DestructionListener.new(Messenger.transport, Rails.logger).listen
     end
   end
 end
