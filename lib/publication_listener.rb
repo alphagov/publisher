@@ -20,5 +20,6 @@ class PublicationListener
       logger.info "Finished processing message #{message}"
     end
     logger.info "Listening for published objects in Publisher"
+    client.join
   end
 end

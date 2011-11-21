@@ -19,6 +19,7 @@ class DestructionListener
       end
       logger.info "Finished processing message #{message}"
     end
-    logger.info "Listening for published objects in Publisher"
+    logger.info "Listening for destroyed objects in Publisher"
+    client.join
   end
 end
