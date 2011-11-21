@@ -14,9 +14,8 @@ class DestructionListener
         link = "#{ Plek.current.find("frontend") }/#{ message["slug"] }"
         Rummageable.delete link
       rescue => e
-        logger.error("Unable to process message #{message}")
+        logger.error "Unable to process message #{message}"
         logger.error [e.message, e.backtrace].flatten.join("\n")
-        raise e
       end
       logger.info "Finished processing message #{message}"
     end

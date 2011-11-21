@@ -14,7 +14,7 @@ class PublicationListener
         publication = Publication.find(message["_id"])
         Rummageable.index publication.search_index
       rescue => e
-        logger.error("Unable to process message #{message}")
+        logger.error "Unable to process message #{message}"
         logger.error [e.message, e.backtrace].flatten.join("\n")
       end
       logger.info "Finished processing message #{message}"
