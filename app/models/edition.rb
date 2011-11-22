@@ -7,7 +7,45 @@ class Edition
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   field :overview, :type => String
-  field :alternative_title, :type => String
+  field :alternative_title, :type => String      
+  field :state, :type => String
+                      
+  state_machine :initial => :lined_up do
+    
+    event :start_work do
+      transition :lined_up => :draft
+    end                             
+    
+    event :submit_for_review do
+      transition [:draft, :amends_needed] => :in_review
+    end                                                
+    
+    event :approve do
+      transition [:fact_check_received, :in_review] => :ready
+    end                              
+    
+    event :reject do
+      transition [:fact_check_received, :in_review] => :amends_needed
+    end                                      
+    
+    event :send_fact_check do
+      transition :ready => :fact_check
+    end                               
+    
+    event :receive_fact_check do
+      transition :fact_check => :fact_check_received
+    end
+    
+    event :publish do            
+      # allow draft to be published as emergency, but do not expose in UI for now
+      transition [:draft, :ready] => :published
+    end                              
+    
+    event :archive do
+      transition :ready => :archived
+    end
+    
+  end
 
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []
