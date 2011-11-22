@@ -42,6 +42,11 @@ class ActiveSupport::TestCase
     result
   end
 
+  setup do
+    Rummageable.stubs :index
+    Rummageable.stubs :delete
+  end
+
   teardown do
     WebMock.reset!
     DatabaseCleaner.clean

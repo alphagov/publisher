@@ -44,6 +44,7 @@ class Publication
 
   before_save :calculate_statuses, :denormalise_metadata
   before_destroy :check_can_delete_and_notify
+  after_destroy :remove_from_search_index
 
   # validates_presence_of :panopticon_id
 
@@ -213,6 +214,7 @@ class Publication
   def publish(edition, notes)
     publishings.create version_number: edition.version_number, change_notes: notes
     calculate_statuses
+    update_in_search_index
   end
 
   def denormalise_metadata
@@ -338,6 +340,14 @@ class Publication
       raise CannotDeletePublishedPublication
       false
     end
+  end
+
+  def update_in_search_index
+    Rummageable.index self.search_index
+  end
+
+  def remove_from_search_index
+    Rummageable.delete "/#{slug}"
   end
 
 end
