@@ -2,10 +2,9 @@ module Parted
   def indexable_content
     content = super
     return content unless latest_edition
-    latest_edition.parts.each do |part|
-      content = "#{content} #{part.title} #{part.body}"
-    end
-    content.strip
+    latest_edition.parts.inject([content]) { |acc, part|
+      acc.concat([part.title, part.body])
+    }.compact.join(" ").strip
   end
 
   def search_index
