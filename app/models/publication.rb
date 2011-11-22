@@ -321,7 +321,7 @@ class Publication
   def search_index
     {
       "title" => title,
-      "link" => Plek.current.find("frontend") + "/#{slug}",
+      "link" => "/#{slug}",
       "format" => _type.downcase,
       "description" => (published_edition && published_edition.overview) || "",
       "indexable_content" => indexable_content,

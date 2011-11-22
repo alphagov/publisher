@@ -14,7 +14,7 @@ module Parted
     latest_edition.parts.each do |part|
       output['additional_links'] << {
         'title' => part.title,
-        'link' => "#{Plek.current.find('frontend')}/#{slug}/#{part.slug}"
+        'link' => "/#{slug}/#{part.slug}"
       }
     end
     output
