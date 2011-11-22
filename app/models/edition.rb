@@ -50,11 +50,11 @@ class Edition
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []
 
-  validate :not_editing_published_item
+  #validate :not_editing_published_item
 
   alias_method :admin_list_title, :title
 
-  before_save :update_container_timestamp
+  #before_save :update_container_timestamp
   
   before_destroy :do_not_delete_if_published
 
@@ -86,20 +86,8 @@ class Edition
 
   def is_published?
     container.publishings.any? { |p| p.version_number == self.version_number }
-  end
-
-  def has_been_reviewed?
-    latest_status_action.request_type == "reviewed" if latest_status_action
-  end
-
-  def has_been_okayed?
-    latest_status_action.request_type == "okayed" if latest_status_action
-  end
+  end            
   
-  def has_been_fact_checked?
-    latest_status_action.request_type == "fact_check_received" if latest_status_action
-  end
-
   def created_by
     creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
     creation.requester if creation

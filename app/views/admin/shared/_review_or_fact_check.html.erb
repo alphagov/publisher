@@ -1,5 +1,5 @@
 <% if @latest_edition.in_review? %>
   <%= render '/admin/shared/review' %>
-<% elsif @latest_edition.in_fact_checking? %>
+<% elsif @latest_edition.fact_check? %>
   <%= render '/admin/shared/fact_check' %>
 <% end %>
