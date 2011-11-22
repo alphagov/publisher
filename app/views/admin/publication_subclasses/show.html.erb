@@ -12,7 +12,7 @@
     <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
-    <%= render "/admin/#{resource.class.to_s.underscore.downcase.pluralize}/edit" %>
+    <%= render resource_edit_view %>
   </div>
   <div id="metadata">
     <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
