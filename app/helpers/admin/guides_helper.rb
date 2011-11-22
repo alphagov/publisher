@@ -33,7 +33,7 @@ module Admin::GuidesHelper
   def progress_forms(edition)
     [
       ["Fact check",       "send_fact_check", "Enter email addresses"],
-      ["2nd pair of eyes", "submit_for_review"],
+      ["2nd pair of eyes", "request_review"],
       ["Publish",          "publish"]
     ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
@@ -55,8 +55,8 @@ module Admin::GuidesHelper
 
   def review_buttons(guide, edition)
     [
-      ["Needs more work",    "amend"],
-      ["OK for publication", "approve"]
+      ["Needs more work",    "request_amendments"],
+      ["OK for publication", "approve_review"]
     ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled" 
@@ -68,8 +68,8 @@ module Admin::GuidesHelper
 
   def review_forms(guide, edition)
     [
-      ["Needs more work",    "review"],
-      ["OK for publication", "accept"]
+      ["Needs more work",    "request_amendments"],
+      ["OK for publication", "approve_review"]
     ].map{ |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
@@ -77,7 +77,7 @@ module Admin::GuidesHelper
     guide = edition.container
     [
       ["Fact check",       "send_fact_check"],
-      ["2nd pair of eyes", "submit_for_review"],
+      ["2nd pair of eyes", "request_review"],
       ["Publish",          "publish"]
     ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym

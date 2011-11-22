@@ -57,7 +57,7 @@ class Admin::EditionsController <  Admin::BaseController
   end          
                                 
   def skip_fact_check 
-    if resource.progress({request_type: 'fact_check_received', comment: "Fact check skipped by request."}, current_user)
+    if resource.progress({request_type: 'receive_fact_check', comment: "Fact check skipped by request."}, current_user)
       redirect_to [:admin, edition_parent], :notice => "The fact check has been skipped for this publication."
     else
       redirect_to [:admin, edition_parent], :alert => "Could not skip fact check for this publication."    

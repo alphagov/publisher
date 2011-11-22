@@ -9,7 +9,7 @@ module Workflow
   def new_action(user, type, options={})
     action = Action.new(options.merge(:requester_id=>user.id, :request_type=>type))
     self.actions << action
-    self.calculate_statuses
+    #self.calculate_statuses
     action
   end
 
@@ -23,7 +23,7 @@ module Workflow
   end
 
   def assigned_to
-    assignment = most_recent_action { |a| Action::ASSIGNED == a.request_type }
+    assignment = most_recent_action { |a| Action::ASSIGN == a.request_type }
     assignment && assignment.recipient
   end
 
@@ -39,7 +39,7 @@ module Workflow
   def progress(activity_details, current_user)
     activity = activity_details.delete(:request_type)
 
-    if ['request_fact_check', 'fact_check_received', 'request_review', 'review', 'okay', 'publish'].include?(activity)
+    if ['request_review','approve_review','approve_fact_check','request_amendments','send_fact_check','receive_fact_check','publish','archive','new_version'].include?(activity)
       result = current_user.send(activity, self, activity_details)
     elsif activity == 'start_work'
       result = current_user.start_work(self)
@@ -52,6 +52,6 @@ module Workflow
     else
       result
     end
-  end
+  end              
 
 end

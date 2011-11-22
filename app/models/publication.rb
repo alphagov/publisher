@@ -42,7 +42,8 @@ class Publication
 
   after_initialize :create_first_edition
 
-  before_save :calculate_statuses, :denormalise_metadata
+  #before_save :calculate_statuses
+  before_save :denormalise_metadata
   before_destroy :check_can_delete_and_notify
 
   # validates_presence_of :panopticon_id
@@ -212,7 +213,6 @@ class Publication
 
   def publish(edition, notes)
     publishings.create version_number: edition.version_number, change_notes: notes
-    calculate_statuses
   end
 
   def denormalise_metadata

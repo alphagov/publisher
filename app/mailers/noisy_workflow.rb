@@ -12,8 +12,8 @@ class NoisyWorkflow < ActionMailer::Base
       email_address = 'dev@alphagov.co.uk'                   
     else
       email_address = case action.request_type
-      when Action::PUBLISHED then "team@alphagov.co.uk, freds@alphagov.co.uk"
-      when Action::REVIEW_REQUESTED then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
+      when Action::PUBLISH then "team@alphagov.co.uk, freds@alphagov.co.uk"
+      when Action::REQUEST_REVIEW then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
       else "eds@alphagov.co.uk, freds@alphagov.co.uk"
       end
     end                                           

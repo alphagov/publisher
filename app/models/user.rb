@@ -15,9 +15,10 @@ class User
     first(conditions: {uid: uid})
   end
 
-  def record_action(edition, type, options={})
+  def record_action(edition, type, options={})     
+    type = Action.const_get(type.to_s.upcase)
     action = edition.new_action(self, type, options)
-    messenger_topic = action.to_s.downcase
+    messenger_topic = edition.state.to_s.downcase             
     Messenger.instance.send messenger_topic, edition.container unless messenger_topic == "created"
     NoisyWorkflow.make_noise(edition.container, action).deliver
   end
@@ -37,7 +38,7 @@ class User
 
   def create_publication(kind, attributes = {})
     item = PUBLICATION_CLASSES[kind].new(attributes)
-    record_action item.editions.first, Action::CREATED
+    record_action item.editions.first, Action::CREATE
     item
   end
 
@@ -55,11 +56,11 @@ class User
 
   def start_work(edition)
     edition.container.mark_as_started
-    record_action edition, Action::WORK_STARTED
+    record_action edition, __method__
     true
   end
 
-  def request_fact_check(edition, details)
+  def send_fact_check(edition, details)
     return false if details[:email_addresses].blank?
     note_text = "\n\nResponses should be sent to: " + edition.fact_check_email_address
     if details[:comment].blank?
@@ -67,48 +68,51 @@ class User
     else
       details[:comment] += note_text
     end
-    record_action edition, Action::FACT_CHECK_REQUESTED, details
+    record_action edition, __method__, details
     NoisyWorkflow.request_fact_check(edition, details).deliver
     edition
   end
 
   def request_review(edition, details)
-    return false if edition.status_is?(Action::REVIEW_REQUESTED)
-    record_action edition, Action::REVIEW_REQUESTED, details
+    return false if edition.in_review?
+    edition.request_review
+    record_action edition, __method__, details
     edition
   end
 
-  def fact_check_received(edition, details)
-    record_action edition, Action::FACT_CHECK_RECEIVED, details 
+  def receive_fact_check(edition, details)
+    edition.receive_fact_check
+    record_action edition, __method__, details 
     edition
   end
 
-  def review(edition, details)
+  def request_amendments(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
 
-    edition.container.mark_as_rejected
-    record_action edition, Action::REVIEWED, details
+    edition.request_amendments
+    record_action edition, __method__, details
     edition
   end
 
-  def okay(edition, details)
+  def approve_review(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
 
-    edition.container.mark_as_accepted              
+    edition.approve_review              
     self.assign(edition, self.id)
     
-    record_action edition, Action::OKAYED, details
+    record_action edition, __method__, details
     edition
   end
 
   def publish(edition, details)
-    record_action edition, Action::PUBLISHED, details
-    edition.publish(edition, details[:comment])
+    edition.publish            
+    record_action edition, __method__, details 
+    edition.container.publish(edition, details)
     edition
   end
 
   def assign(edition, recipient)
-    record_action edition, Action::ASSIGNED, recipient: recipient
+    record_action edition, __method__, recipient: recipient
   end
 
   def to_s
