@@ -1,7 +1,7 @@
 module Admin::GuidesHelper
 
   def resource_edit_view
-    "/admin/#{resource.class.to_s.underscore.downcase.pluralize}/edit"
+    "/admin/#{@latest_edition.container.class.to_s.underscore.downcase.pluralize}/edit"
   end
   def path_for_edition(edition)
     send("admin_#{edition.container.class.to_s.underscore}_edition_path", edition.container, edition)
