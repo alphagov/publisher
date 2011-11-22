@@ -2,9 +2,9 @@
 <p>Status: <%= @latest_edition.latest_status_action %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
-<%= render 'admin/shared/workflow_buttons' %>
+<%= render :partial => 'admin/shared/workflow_buttons' %>
 
-<div id="programme-nav" class="publication-nav">
+<div id="answer-nav" class="publication-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
@@ -12,7 +12,7 @@
     <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
-    <%= render '/admin/programmes/edit' %>
+    <%= render "/admin/#{resource.class.to_s.underscore.downcase.pluralize}/edit" %>
   </div>
   <div id="metadata">
     <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
@@ -25,4 +25,5 @@
   </div>
 </div>
 
-<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications', '/publisher-assets/javascripts/programmes') %>
+<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications') %>
+<% content_for :page_title, "Editing #{@resource.title}" %>
