@@ -10,21 +10,25 @@ class Edition
   field :alternative_title, :type => String      
   field :state, :type => String
                       
-  state_machine :initial => :lined_up do
+  state_machine :initial => :lined_up do      
     
     event :start_work do
       transition :lined_up => :draft
     end                             
     
-    event :submit_for_review do
+    event :request_review do
       transition [:draft, :amends_needed] => :in_review
     end                                                
     
-    event :approve do
-      transition [:fact_check_received, :in_review] => :ready
-    end                              
+    event :approve_review do
+      transition :in_review => :ready
+    end 
     
-    event :reject do
+    event :approve_review do
+      transition :fact_check_received => :ready
+    end                             
+    
+    event :request_amendments do
       transition [:fact_check_received, :in_review] => :amends_needed
     end                                      
     
@@ -66,10 +70,6 @@ class Edition
     errors.add(:base, "Published editions can't be edited") if changed? and is_published?
   end
 
-  def calculate_statuses
-    self.container.calculate_statuses
-  end
-
   def build_clone
     new_edition = container.build_edition(self.title)
 
@@ -78,11 +78,7 @@ class Edition
     end
 
     new_edition
-  end
-
-  def publish(edition, notes)
-    self.container.publish(edition, notes)
-  end
+  end     
 
   def is_published?
     container.publishings.any? { |p| p.version_number == self.version_number }
@@ -93,13 +89,17 @@ class Edition
   end
   
   def created_by
-    creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
+    creation = actions.detect { |a| a.request_type == Action::CREATE || a.request_type == Action::NEW_VERSION }
     creation.requester if creation
   end
 
   def published_by
-    publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
+    publication = actions.detect { |a| a.request_type == Action::PUBLISH }
     publication.requester if publication
+  end     
+  
+  def latest_status_action
+    self.actions.last
   end
   
   def fact_check_email_address

@@ -1,21 +1,23 @@
 class Action
   include Mongoid::Document
 
-  STATUS_ACTIONS = [
-    CREATED              = "created",
-    WORK_STARTED         = "work_started",
-    NEW_VERSION          = "new_version",
-    FACT_CHECK_REQUESTED = "fact_check_requested",
-    FACT_CHECK_RECEIVED  = "fact_check_received",
-    REVIEW_REQUESTED     = "review_requested",
-    REVIEWED             = "reviewed",
-    OKAYED               = "okayed",
-    PUBLISHED            = "published",
+  STATUS_ACTIONS = [ 
+    CREATE              = "create",
+    START_WORK          = "start_work",
+    REQUEST_REVIEW      = "request_review",
+    APPROVE_REVIEW      = "approve_review",
+    APPROVE_FACT_CHECK  = "approve_fact_check",
+    REQUEST_AMENDMENTS  = "request_amendments",
+    SEND_FACT_CHECK     = "send_fact_check",
+    RECEIVE_FACT_CHECK  = "receive_fact_check",
+    PUBLISH             = "publish",
+    ARCHIVE             = "archive", 
+    NEW_VERSION         = "new_version",
   ]
 
   NON_STATUS_ACTIONS = [
     NOTE                 = "note",
-    ASSIGNED             = "assigned",
+    ASSIGN               = "assign",
   ]
 
   embedded_in :edition
@@ -32,27 +34,31 @@ class Action
 
   def friendly_description
     case request_type
-    when CREATED
+    when CREATE
       "Created #{edition.container.class}: \"#{edition.title}\" (by #{requester.name})"
-    when WORK_STARTED
+    when START_WORK
       "Work started: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when REQUEST_REVIEW
+      "Review requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when APPROVE_REVIEW
+      "Okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when APPROVE_FACT_CHECK
+      "Fact check okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when REQUEST_AMENDMENTS
+      "Amends needed: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when SEND_FACT_CHECK
+      "Fact check requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when RECEIVE_FACT_CHECK
+      "Fact check response: \"#{edition.title}\" (#{edition.container.class})"
+    when PUBLISH
+      "Published: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+    when ARCHIVE
+      "Archived: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when NEW_VERSION
       "New version: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
-    when FACT_CHECK_REQUESTED
-      "Fact check requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
-    when FACT_CHECK_RECEIVED
-      "Fact check response: \"#{edition.title}\" (#{edition.container.class})"
-    when REVIEW_REQUESTED
-      "Review requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
-    when REVIEWED
-      "Amends needed: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
-    when OKAYED
-      "Okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
-    when PUBLISHED
-      "Published: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
     when NOTE
       "Note added by #{requester.name}"
-    when ASSIGNED
+    when ASSIGN
       "Assigned: \"#{edition.title}\" (#{edition.container.class}) to #{recipient.name}"
     end
   end
