@@ -86,7 +86,11 @@ class Edition
 
   def is_published?
     container.publishings.any? { |p| p.version_number == self.version_number }
-  end            
+  end                              
+  
+  def capitalized_state_name
+    self.human_state_name.capitalize
+  end
   
   def created_by
     creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
