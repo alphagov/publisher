@@ -40,7 +40,7 @@ gem 'stomp', '1.1.9'
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
-  gem 'slimmer', '0.8.0'
+  gem 'slimmer', '~> 0', :git => 'git@github.com:alphagov/slimmer.git'
 end
 
 if ENV['CDN_DEV']
