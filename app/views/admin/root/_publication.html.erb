@@ -65,7 +65,7 @@
         <%= hidden_field_tag :start_work, 1 %>
         <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => 'Start work on this publication', :title => 'Start work on this publication', :class => 'start-work' %>
       <% end %>
-    <% elsif publication.can_create_new_edition? %>
+    <% elsif tab and tab == :published and publication.can_create_new_edition? %>
       <%= form_tag admin_editions_path(publication) do %>
         <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
       <% end %>
