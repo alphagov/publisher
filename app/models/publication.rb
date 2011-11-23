@@ -171,7 +171,7 @@ class Publication
 
   def build_edition(title)
     version_number = editions.length + 1
-    edition = editions.create(:title=> title, :version_number=>version_number)
+    edition = editions.create(:title=> title, :version_number=>version_number, :state=>'draft')
     edition
   end
 
