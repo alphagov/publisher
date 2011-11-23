@@ -55,7 +55,7 @@ class User
   end
 
   def start_work(edition)
-    edition.container.mark_as_started
+    edition.start_work
     record_action edition, __method__
     true
   end
@@ -67,7 +67,8 @@ class User
       details[:comment] = "Fact check requested" + note_text
     else
       details[:comment] += note_text
-    end
+    end                                    
+    edition.send_fact_check
     record_action edition, __method__, details
     NoisyWorkflow.request_fact_check(edition, details).deliver
     edition
