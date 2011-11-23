@@ -107,7 +107,14 @@ class Publication
       'Disabled people',
       'Travel',
       'Citizenship'
-  ]
+  ]                            
+     
+  # map each edition state to a "has_{state}?" method
+  Edition.state_machine.states.map(&:name).each do |state|
+    define_method "has_#{state}?" do 
+      (self.editions.where(state: state).count < 1) ? false : true
+    end                                                 
+  end
 
   def self.import panopticon_id, importing_user
     uri = "#{Plek.current.find("arbiter")}/artefacts/#{panopticon_id}.js"
@@ -204,8 +211,6 @@ class Publication
     all_versions = ::Set.new(editions.map(&:version_number))
     drafts = (all_versions - published_versions)
 
-    self.has_drafts = drafts.any?
-
     self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
 
     self.has_reviewables = editions.any? { |e| e.status_is?(Action::REVIEW_REQUESTED) }
@@ -234,12 +239,12 @@ class Publication
   end
 
   def can_create_new_edition?
-    !self.has_drafts
+    !self.has_draft?
   end
 
   def can_destroy?
     !self.has_published
-  end
+  end             
 
   def has_video?
     false
