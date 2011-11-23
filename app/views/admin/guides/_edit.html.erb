@@ -25,3 +25,5 @@
 
   <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
 <% end %>
+
+<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/guides') %>

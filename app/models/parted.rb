@@ -2,10 +2,9 @@ module Parted
   def indexable_content
     content = super
     return content unless latest_edition
-    latest_edition.parts.each do |part|
-      content = "#{content} #{part.title} #{part.body}"
-    end
-    content.strip
+    latest_edition.parts.inject([content]) { |acc, part|
+      acc.concat([part.title, part.body])
+    }.compact.join(" ").strip
   end
 
   def search_index
@@ -15,7 +14,7 @@ module Parted
     latest_edition.parts.each do |part|
       output['additional_links'] << {
         'title' => part.title,
-        'link' => "#{Plek.current.find('frontend')}/#{slug}/#{part.slug}"
+        'link' => "/#{slug}/#{part.slug}"
       }
     end
     output

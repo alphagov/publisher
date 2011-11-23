@@ -25,8 +25,8 @@ class GuideTest < ActiveSupport::TestCase
     guide = template_guide
     data = guide.search_index
     assert_equal ["title", "link", "format", "description", "indexable_content", "additional_links"], data.keys
-    assert_equal data['title'], guide.title
-    assert_equal data['format'], "guide"
+    assert_equal guide.title, data['title']
+    assert_equal "guide", data['format']
   end
 
   test "indexable content contains parts for search index" do
@@ -35,7 +35,7 @@ class GuideTest < ActiveSupport::TestCase
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
     data = guide.search_index
-    assert_equal data['indexable_content'], "ONE ONE TWO TWO"
+    assert_equal "ONE ONE TWO TWO", data['indexable_content']
   end
 
   test "index contains parts as additional links" do

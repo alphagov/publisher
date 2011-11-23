@@ -5,15 +5,5 @@ namespace :messenger do
       Rake::Task["environment"].invoke
       MetadataSync.new.run
     end
-
-    Daemonette.run("publisher_publication_listener") do
-      Rake::Task["environment"].invoke
-      PublicationListener.new(Messenger.transport, Rails.logger).listen
-    end
-
-    Daemonette.run("publisher_destruction_listener") do
-      Rake::Task["environment"].invoke
-      DestructionListener.new(Messenger.transport, Rails.logger).listen
-    end
   end
 end

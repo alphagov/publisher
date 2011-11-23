@@ -191,4 +191,28 @@ class PublicationTest < ActiveSupport::TestCase
 
     assert_equal [b], Publication.assigned_to(nil).to_a
   end
+
+  test "should update Rummager on publication" do
+    without_metadata_denormalisation(Guide) do
+      publication = FactoryGirl.create(:guide)
+      edition = publication.editions.first
+      publication.save
+
+      Rummageable.expects(:index).with(publication.search_index)
+
+      edition.publish(edition, 'Testing')
+      publication.save
+    end
+  end
+
+  test "should update Rummager on deletion" do
+    without_metadata_denormalisation(Guide) do
+      publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
+      publication.save
+
+      Rummageable.expects(:delete).with("/hedgehog-topiary")
+
+      publication.destroy
+    end
+  end
 end

@@ -2,7 +2,7 @@
 <p>Status: <%= @latest_edition.capitalized_state_name %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
-<%= render :partial => 'admin/shared/workflow_buttons' %>
+<%= render 'admin/shared/workflow_buttons' %>
 
 <div id="answer-nav" class="publication-nav">
   <ul>
@@ -12,7 +12,7 @@
     <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
-    <%= render '/admin/answers/edit' %>
+    <%= render resource_edit_view %>
   </div>
   <div id="metadata">
     <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>

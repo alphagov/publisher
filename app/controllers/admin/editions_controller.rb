@@ -25,12 +25,18 @@ class Admin::EditionsController <  Admin::BaseController
         redirect_to [:admin, parent]
       }
       failure.html {
+        
         tmpl_folder = parent.class.to_s.pluralize.downcase
+        prepend_view_path "app/views/admin/publication_subclasses"  
+        prepend_view_path "app/views/admin/#{tmpl_folder}"  
+
         instance_variable_set("@#{parent.class.to_s.downcase}".to_sym, parent)
         @resource = parent
         @latest_edition = parent.latest_edition
         flash.now[:alert] = "We had some problems saving. Please check the form below."
-        render :template => "admin/#{tmpl_folder}/show"
+
+        render :template => "show"
+
       }
       success.json {
         update_assignment resource, assigned_to_id
