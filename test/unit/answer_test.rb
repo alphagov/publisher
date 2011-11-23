@@ -15,7 +15,7 @@ class AnswerTest < ActiveSupport::TestCase
       g.save!
       user = User.create(:name => "Ben")
       user.start_work(g.latest_edition)
-      assert_equal false, g.lined_up
+      assert_equal false, g.has_lined_up?
     end
   end
 

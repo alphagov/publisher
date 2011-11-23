@@ -23,7 +23,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
         :guide_id => @guide.id,
         :id       => @guide.editions.last.id,
         :activity => {
-          "request_type"       => "request_fact_check",
+          "request_type"       => "send_fact_check",
           "comment"            => "Blah",
           "email_addresses"    => "user@example.com",
           "customised_message" => "Hello"
@@ -94,7 +94,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     end
   
     @guide.reload
-    assert_equal 1, @guide.editions.last.actions.select{ |a| a.request_type == Action::ASSIGNED }.length
+    assert_equal 1, @guide.editions.last.actions.select{ |a| a.request_type == Action::ASSIGN }.length
   end
   
   test "should not update assignment if the assignment is blank" do

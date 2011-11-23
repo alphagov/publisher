@@ -20,8 +20,7 @@ class Programme < Publication
       self.editions << self.class.edition_class.new(:title => self.name)
      DEFAULT_PARTS.each { |part|
         self.editions.first.parts.build(:title => part[:title],:slug => part[:slug], :body => " ")
-      }
-      calculate_statuses
+      }                    
     end
   end
 end

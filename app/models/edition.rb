@@ -54,11 +54,9 @@ class Edition
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []
 
-  #validate :not_editing_published_item
-
+  validate :not_editing_published_item
   alias_method :admin_list_title, :title
-
-  #before_save :update_container_timestamp
+  before_save :update_container_timestamp
   
   before_destroy :do_not_delete_if_published
 
@@ -67,7 +65,7 @@ class Edition
   end
 
   def not_editing_published_item
-    errors.add(:base, "Published editions can't be edited") if changed? and is_published?
+    errors.add(:base, "Published editions can't be edited") if changed? and !state_changed? and published?
   end
 
   def build_clone
@@ -111,11 +109,7 @@ class Edition
   end
   
   def do_not_delete_if_published
-    if self.is_published?
-      false
-    else
-      true
-    end
+    (!self.published?)
   end
 
   def update_container_timestamp

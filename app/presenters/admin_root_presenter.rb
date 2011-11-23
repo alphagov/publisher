@@ -4,10 +4,10 @@ class AdminRootPresenter
     @scope = case user
     when :all
       Publication
-    #when :nobody
-    #  Publication.assigned_to(nil)
-    #else
-    #  Publication.assigned_to(user)
+    when :nobody
+      Publication.assigned_to(nil)
+    else
+      Publication.assigned_to(user)
     end
   end
 

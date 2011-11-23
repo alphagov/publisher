@@ -35,12 +35,12 @@ class EditionTest < ActiveSupport::TestCase
     edition = template_edition
     t0 = Time.now
     Timecop.freeze(t0) do
-      edition.new_action(user, Action::OKAYED)
+      edition.new_action(user, Action::APPROVE_REVIEW)
     end
     Timecop.freeze(t0 + 1) do
       edition.new_action(user, Action::NOTE, comment: 'Something important')
     end
-    assert_equal Action::OKAYED, edition.latest_status_action.request_type
+    assert_equal Action::APPROVE_REVIEW, edition.latest_status_action.request_type
   end
 
   test "should have no assignee by default" do
@@ -93,7 +93,8 @@ class EditionTest < ActiveSupport::TestCase
     guide = template_edition.guide
     stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
       to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
-    guide.publish edition,"Published because I did"
+    guide.editions.first.update_attribute :state, 'ready'
+    guide.editions.first.publish
     assert_not_nil guide.published_edition
   end
   
@@ -106,7 +107,7 @@ class EditionTest < ActiveSupport::TestCase
       stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
         to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
 
-      guide.publish edition, "Published because I did"
+      guide.editions.first.update_attribute :state, 'published'
       guide.reload
 
       edition = guide.editions.last
