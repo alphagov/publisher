@@ -17,11 +17,15 @@ class Admin::RootController < Admin::BaseController
 
     presenter = AdminRootPresenter.new(user)
 
-    @drafts           = presenter.in_draft
-    @published        = presenter.published
-    @archive          = presenter.archive
-    @review_requested = presenter.review_requested
-    @fact_checking    = presenter.fact_checking
-    @lined_up         = presenter.lined_up
+    @lined_up             = presenter.lined_up
+    @draft                = presenter.draft
+    @amends_needed        = presenter.amends_needed
+    @in_review            = presenter.in_review
+    @fact_check           = presenter.fact_check
+    @fact_check_received  = presenter.fact_check_received
+    @ready                = presenter.ready
+    @published            = presenter.published
+    @archived             = presenter.archived
+
   end
 end

@@ -1,14 +1,17 @@
 <div id="guide-nav" class="tabs">
   <ul>
-    <li><a href="#lined-up">Lined up (<%= @lined_up.length %>)</a></li>
-    <li><a href="#new">In progress (<%= @drafts.length %>)</a></li>
-    <li><a href="#fact-check">Out for fact check (<%= @fact_checking.length %>)</a></li>
-    <li><a href="#review-requested">Review requested (<%= @review_requested.length %>)</a></li>
+    <li><a href="#lined_up">Lined up (<%= @lined_up.length %>)</a></li>
+    <li><a href="#draft">Drafts (<%= @draft.length %>)</a></li>
+    <li><a href="#in_review">In review (<%= @in_review.length %>)</a></li>
+    <li><a href="#amends_needed">Amends needed (<%= @amends_needed.length %>)</a></li>
+    <li><a href="#fact_check">Out for fact check (<%= @fact_check.length %>)</a></li>
+    <li><a href="#fact_check_received">Fact check received (<%= @fact_check_received.length %>)</a></li>
+    <li><a href="#ready">Ready (<%= @ready.length %>)</a></li>
     <li><a href="#published">Published (<%= @published.length %>)</a></li>
-    <li><a href="#archive">Archive</a></li>
+    <li><a href="#archived">Archived</a></li>
   </ul>
 
-  <div id="lined-up">
+  <div id="lined_up">
     <table class="formats" summary="List of &ldquo;Lined Up&rdquo; content">
       <thead>
         <tr>
@@ -29,7 +32,7 @@
     </table>
   </div>
 
-  <div id="new">
+  <div id="draft">
     <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
       <thead>
         <tr>
@@ -46,11 +49,56 @@
         </tr>
       </thead>
       <tbody>
-        <%= render :collection => @drafts, :partial => 'publication', :locals => {:tab => :drafts} %>
+        <%= render :collection => @draft, :partial => 'publication', :locals => {:tab => :draft} %>
       </tbody>
     </table>
   </div>
-  <div id="fact-check">
+  
+  <div id="in_review">
+      <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
+        <thead>
+          <tr>
+            <th scope="col">Format</th>
+            <th scope="col" class="title">Title</th>
+            <th scope="col">Video</td>
+            <th scope="col" class="datetime">Last updated</th>
+            <th scope="col">Assigned to</th>
+            <th scope="col">Created by</th>
+            <th scope="col">Section</th>
+            <th scope="col">Reviews</th>
+            <th scope="col" class="nosort">Edit</th>
+            <th scope="col" class="nosort">Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render :collection => @in_review, :partial => 'publication', :locals => {:tab => :in_review} %>
+        </tbody>
+      </table>
+    </div>
+          
+  <div id="amends_needed">
+    <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
+      <thead>
+        <tr>
+          <th scope="col">Format</th>
+          <th scope="col" class="title">Title</th>
+          <th scope="col">Video</td>
+          <th scope="col" class="datetime">Last updated</th>
+          <th scope="col">Assigned to</th>
+          <th scope="col">Created by</th>
+          <th scope="col">Section</th>
+          <th scope="col">Reviews</th>
+          <th scope="col" class="nosort">Edit</th>
+          <th scope="col" class="nosort">Preview</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render :collection => @amends_needed, :partial => 'publication', :locals => {:tab => :amends_needed} %>
+      </tbody>
+    </table>
+  </div>  
+  
+  <div id="fact_check">
     <table class="formats" summary="List of &ldquo;Fact Check Requested&rdquo; content">
       <thead>
         <tr>
@@ -67,11 +115,12 @@
         </tr>
       </thead>
       <tbody>
-        <%= render :collection => @fact_checking, :partial => 'publication', :locals => {:tab => :drafts} %>
+        <%= render :collection => @fact_check, :partial => 'publication', :locals => {:tab => :fact_check} %>
       </tbody>
     </table>
-  </div>
-  <div id="review-requested">
+  </div>         
+  
+  <div id="fact_check_received">
      <table class="formats" summary="List of &ldquo;Review Requested&rdquo; content">
        <thead>
          <tr>
@@ -88,10 +137,33 @@
          </tr>
        </thead>
        <tbody>
-         <%= render :collection => @review_requested, :partial => 'publication', :locals => {:tab => :review_requested}  %>
+         <%= render :collection => @fact_check_received, :partial => 'publication', :locals => {:tab => :fact_check_received}  %>
        </tbody>
      </table>
-   </div>
+   </div>                                              
+   
+   <div id="ready">
+       <table class="formats" summary="List of &ldquo;In Progress&rdquo; content">
+         <thead>
+           <tr>
+             <th scope="col">Format</th>
+             <th scope="col" class="title">Title</th>
+             <th scope="col">Video</td>
+             <th scope="col" class="datetime">Last updated</th>
+             <th scope="col">Assigned to</th>
+             <th scope="col">Created by</th>
+             <th scope="col">Section</th>
+             <th scope="col">Reviews</th>
+             <th scope="col" class="nosort">Edit</th>
+             <th scope="col" class="nosort">Preview</th>
+           </tr>
+         </thead>
+         <tbody>
+           <%= render :collection => @ready, :partial => 'publication', :locals => {:tab => :ready} %>
+         </tbody>
+       </table>
+     </div> 
+   
   <div id="published">
     <table class="formats" summary="List of &ldquo;Published&rdquo; content">
       <thead>
@@ -116,7 +188,7 @@
       </tbody>
     </table>
   </div>
-  <div id="archive">
+  <div id="archived">
     <table class="formats" summary="List of &ldquo;Local&rdquo; content">
       <thead>
         <tr>

@@ -31,13 +31,16 @@ class Publication
   field :edition_rejected_count, :type => Integer, default: 0
 
   embeds_many :publishings
-
-  scope :in_draft, where(has_drafts: true).order_by(:edition_rejected_count => :desc).order_by(:name => :desc)
-  scope :lined_up, where(lined_up: true)
-  scope :fact_checking, where(has_fact_checking: true)
-  scope :published, where(has_published: true)
-  scope :review_requested, where(has_reviewables: true)
-  scope :archive, where(archived: true)
+                                   
+  scope :lined_up,            where('editions.state' => 'lined_up')
+  scope :draft,               where('editions.state' => 'draft')
+  scope :amends_needed,       where('editions.state' => 'amends_needed')
+  scope :in_review,           where('editions.state' => 'in_review')
+  scope :fact_check,          where('editions.state' => 'fact_check')
+  scope :fact_check_received, where('editions.state' => 'fact_check_received')
+  scope :ready,               where('editions.state' => 'ready')
+  scope :published,           where('editions.state' => 'published')
+  scope :archived,            where('editions.state' => 'archived')
   scope :assigned_to, lambda { |user| assignment_filter(user) }
 
   after_initialize :create_first_edition
@@ -151,7 +154,7 @@ class Publication
         var edition = last(this.editions);
         if (!edition) { return false; }
         var assignment = last((edition.actions || []).filter(function(a){
-          return a.request_type == "#{Action::ASSIGNED}";
+          return a.request_type == "#{Action::ASSIGN}";
         }));
         return #{expr};
       }
@@ -169,14 +172,12 @@ class Publication
   def build_edition(title)
     version_number = editions.length + 1
     edition = editions.create(:title=> title, :version_number=>version_number)
-    calculate_statuses
     edition
   end
 
   def create_first_edition
     unless self.persisted? or self.editions.any?
       self.editions << self.class.edition_class.new(:title => self.name)
-      calculate_statuses
       self.lined_up = true
     end
   end
@@ -220,7 +221,7 @@ class Publication
   end
 
   def published_edition
-    latest_publishing = self.publishings.sort_by(&:version_number).last
+    latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
     if latest_publishing
       self.editions.detect { |s| s.version_number == latest_publishing.version_number }
     else

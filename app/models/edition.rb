@@ -8,8 +8,8 @@ class Edition
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   field :overview, :type => String
   field :alternative_title, :type => String      
-  field :state, :type => String
-                      
+  field :state, :type => String     
+                        
   state_machine :initial => :lined_up do      
     
     event :start_work do

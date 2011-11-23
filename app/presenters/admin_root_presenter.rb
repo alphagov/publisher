@@ -4,37 +4,19 @@ class AdminRootPresenter
     @scope = case user
     when :all
       Publication
-    when :nobody
-      Publication.assigned_to(nil)
-    else
-      Publication.assigned_to(user)
+    #when :nobody
+    #  Publication.assigned_to(nil)
+    #else
+    #  Publication.assigned_to(user)
     end
   end
 
   attr_accessor :scope
   private :scope
 
-  def in_draft
-    scope.in_draft
-  end
-
-  def published
-    scope.published
-  end
-
-  def archive
-    scope.archive
-  end
-
-  def review_requested
-    scope.review_requested
-  end
-
-  def fact_checking
-    scope.fact_checking
-  end
-
-  def lined_up
-    scope.lined_up
-  end
+  [ :lined_up, :draft, :amends_needed, :in_review, :fact_check, :fact_check_received, :ready, :published, :archived].each do |state|
+    define_method state do 
+      scope.send(state.to_s)
+    end     
+  end                 
 end
