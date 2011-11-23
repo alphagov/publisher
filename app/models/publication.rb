@@ -112,7 +112,7 @@ class Publication
   # map each edition state to a "has_{state}?" method
   Edition.state_machine.states.map(&:name).each do |state|
     define_method "has_#{state}?" do 
-      (self.editions.where(state: state).count < 1) ? false : true
+      (self.editions.where(state: state).count > 0)
     end                                                 
   end
 
