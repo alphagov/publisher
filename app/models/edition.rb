@@ -24,7 +24,7 @@ class Edition
       transition :in_review => :ready
     end 
     
-    event :approve_review do
+    event :approve_fact_check do
       transition :fact_check_received => :ready
     end                             
     
@@ -78,11 +78,7 @@ class Edition
     end
 
     new_edition
-  end     
-
-  def is_published?
-    container.publishings.any? { |p| p.version_number == self.version_number }
-  end                              
+  end                                
   
   def capitalized_state_name
     self.human_state_name.capitalize
@@ -104,6 +100,14 @@ class Edition
   
   def fact_check_email_address
     "factcheck+#{Plek.current.environment}-#{container.id}@alphagov.co.uk"
+  end
+                                            
+  def is_published?
+    self.published?
+  end
+  
+  def fact_checked?
+    (self.actions.where(request_type: Action::APPROVE_FACT_CHECK).count > 0)
   end
   
   def do_not_delete_if_published

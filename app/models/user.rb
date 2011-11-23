@@ -87,7 +87,7 @@ class User
   end
 
   def request_amendments(edition, details)
-    return false if edition.latest_status_action.requester_id == self.id
+    return false if edition.latest_status_action.requester_id == self.id and edition.state = 'in_review'
 
     edition.request_amendments
     record_action edition, __method__, details
@@ -99,6 +99,13 @@ class User
 
     edition.approve_review              
     self.assign(edition, self.id)
+    
+    record_action edition, __method__, details
+    edition
+  end
+     
+  def approve_fact_check(edition, details)                                
+    edition.approve_fact_check
     
     record_action edition, __method__, details
     edition

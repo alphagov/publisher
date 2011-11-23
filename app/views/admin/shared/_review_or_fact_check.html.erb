@@ -2,4 +2,6 @@
   <%= render '/admin/shared/review' %>
 <% elsif @latest_edition.fact_check? %>
   <%= render '/admin/shared/fact_check' %>
+<% elsif @latest_edition.fact_check_received? %>
+  <%= render '/admin/shared/fact_check_received' %>  
 <% end %>
