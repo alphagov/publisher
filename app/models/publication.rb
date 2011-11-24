@@ -196,12 +196,12 @@ class Publication
   end
 
   def mark_as_rejected
-    self.edition_rejected_count += 1
-    self.rejected_count += 1
+    self.inc(:edition_rejected_count, 1)
+    self.inc(:rejected_count, 1)
   end
 
   def mark_as_accepted
-    self.edition_rejected_count = 0
+    self.update_attribute(:edition_rejected_count, 0)
   end
 
   def calculate_statuses
@@ -229,11 +229,6 @@ class Publication
 
   def published_edition
     latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
-    if latest_publishing
-      self.editions.detect { |s| s.version_number == latest_publishing.version_number }
-    else
-      nil
-    end
   rescue
     nil
   end
@@ -243,7 +238,7 @@ class Publication
   end
 
   def can_destroy?
-    !self.has_published
+    !self.has_published?
   end             
 
   def has_video?

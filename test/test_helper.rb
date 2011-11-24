@@ -35,10 +35,10 @@ class ActiveSupport::TestCase
     yield
   end
   
-  def without_metadata_denormalisation(klass, &block)
-    klass.any_instance.stubs(:denormalise_metadata).returns(true)
+  def without_metadata_denormalisation(*klasses, &block)
+    klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
     result = yield
-    klass.any_instance.unstub(:denormalise_metadata)
+    klasses.each {|klass| klass.any_instance.unstub(:denormalise_metadata) }
     result
   end
 

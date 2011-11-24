@@ -11,9 +11,10 @@ class TransactionEditionTest < ActiveSupport::TestCase
       edition = transaction.editions.first
       edition.expectation_ids = [expectation.id]
       transaction.save
-    
+                               
+      edition.start_work
       user.request_review(edition, {:comment => "Review this guide please."})
-      other_user.okay(edition, {:comment => "I've reviewed it"})
+      other_user.approve_review(edition, {:comment => "I've reviewed it"})
       user.publish(edition, {:comment => "Let's go"})
       return user, transaction
     end
@@ -22,7 +23,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
   test "permits the creation of new editions" do
     user, transaction = template_user_and_published_transaction
     assert transaction.persisted?
-    assert transaction.latest_edition.is_published?
+    assert transaction.latest_edition.published?
   
     reloaded_transaction = Transaction.find(transaction.id)
     new_edition = user.new_version(reloaded_transaction.latest_edition)
@@ -34,7 +35,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
   test "fails gracefully when creating new edition fails" do
     user, transaction = template_user_and_published_transaction
     assert transaction.persisted?
-    assert transaction.latest_edition.is_published?
+    assert transaction.latest_edition.published?
   
     reloaded_transaction = Transaction.find(transaction.id)
     new_edition = user.new_version(reloaded_transaction.latest_edition)

@@ -13,8 +13,9 @@ class PublicationTest < ActiveSupport::TestCase
       edition = answer.editions.first
       edition.title = 'One'
       edition.body = 'Lots of info'
-      answer.save
-      edition.publish(edition, 'Testing')
+      answer.save    
+      edition.state = 'ready'
+      edition.publish
       answer.save
       answer
     end
@@ -107,9 +108,11 @@ class PublicationTest < ActiveSupport::TestCase
                       name: "Original title",
                       slug: "original-title"
       )
-      guide.latest_edition.title = guide.name
-      guide.save!
-      guide.publish(guide.latest_edition, 'testing')
+      guide.latest_edition.title = guide.name            
+      guide.latest_edition.state = 'ready'
+      guide.latest_edition.save!
+      guide.save!                                        
+      User.create(:name => "Winston").publish(guide.latest_edition, comment: 'testing')
     end
 
     panopticon_has_metadata(
@@ -200,7 +203,7 @@ class PublicationTest < ActiveSupport::TestCase
 
       Rummageable.expects(:index).with(publication.search_index)
 
-      edition.publish(edition, 'Testing')
+      User.create(:name => 'Winston').publish(edition, comment: 'Testing')
       publication.save
     end
   end

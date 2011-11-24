@@ -10,7 +10,14 @@ class Edition
   field :alternative_title, :type => String      
   field :state, :type => String     
                         
-  state_machine :initial => :lined_up do      
+  state_machine :initial => :lined_up do        
+    
+    after_transition :on => :request_amendments do |edition, transition|
+      edition.container.mark_as_rejected
+    end                                 
+    after_transition :on => :approve_review do |edition, transition|
+      edition.container.mark_as_accepted
+    end
     
     event :start_work do
       transition :lined_up => :draft
@@ -93,7 +100,7 @@ class Edition
   end     
   
   def latest_status_action
-    self.actions.last
+    self.actions.where(:request_type.ne => 'note').last
   end
   
   def fact_check_email_address
