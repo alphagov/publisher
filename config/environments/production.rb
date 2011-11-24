@@ -47,7 +47,7 @@ Publisher::Application.configure do
   config.action_controller.asset_host = Proc.new { |source|
     source =~ /publisher-assets/ ? nil : Plek.current.find('assets')
   }
-  config.middleware.use Slimmer::App, :asset_host => Plek.current.find('assets')
+  config.middleware.use Slimmer::App
 
   config.action_mailer.default_url_options = { :host => "www.gov.uk" }
 end
