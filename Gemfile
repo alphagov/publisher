@@ -21,7 +21,7 @@ gem "mongoid", "~> 2.3"
 gem "mongo", "1.4"
 gem "bson_ext", " 1.4"
 gem 'erubis'
-gem 'plek', '0.1.7'
+gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
 gem 'marples', '0.0.21'
 gem 'null_logger'
@@ -40,7 +40,7 @@ gem 'stomp', '1.1.9'
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
-  gem 'slimmer', '~> 0', :git => 'git@github.com:alphagov/slimmer.git'
+  gem 'slimmer', '~> 1.1'
 end
 
 if ENV['CDN_DEV']
