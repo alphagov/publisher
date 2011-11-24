@@ -14,6 +14,7 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
       FactoryGirl.create :user
 
       guide = FactoryGirl.create(:guide, panopticon_id: 2356)
+      guide.editions.first.update_attribute(:state, 'ready')
 
       visit "/admin/guides/#{guide.to_param}"
 
@@ -27,17 +28,17 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
 
       click_on "Fact check"
 
-      within "#request_fact_check_form" do
+      within "#send_fact_check_form" do
         fill_in "Comment",       with: "Blah"
         fill_in "Email address", with: "user@example.com"
         click_on "Send"
       end
 
-      wait_until { page.has_content? "Status: Fact check requested" }
+      wait_until { page.has_content? "Status: Fact check" }
 
       guide.reload
 
-      assert guide.editions.first.status_is?(Action::FACT_CHECK_REQUESTED)
+      assert guide.editions.first.fact_check?
     end
   end
 end

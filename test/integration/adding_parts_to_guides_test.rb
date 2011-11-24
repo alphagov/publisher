@@ -47,7 +47,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
       visit "/admin?filter=all"
 
-      within(:css, '#draft') {
+      within(:css, '#lined_up') {
         assert page.has_content? random_name
       }
 

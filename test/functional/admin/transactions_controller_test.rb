@@ -33,7 +33,8 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
 
   test "can't destroy published transaction" do
     without_metadata_denormalisation(Transaction) do
-      @transaction.publish(@transaction.editions.first, "test note")
+      @transaction.editions.first.state = 'ready'
+      @transaction.editions.first.publish
       assert !@transaction.can_destroy?
       @transaction.save!
       assert_difference('Transaction.count', 0) do

@@ -33,20 +33,22 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_redirected_to :controller => "admin/guides", :action => "show", :id => @guide.id
   
     @guide.reload
-    assert @guide.editions.last.status_is?(Action::FACT_CHECK_REQUESTED)
+    assert @guide.editions.last.status_is?(Action::SEND_FACT_CHECK)
   end
   
   test "should assign after creation" do
     bob = User.create
-    @guide.editions.each do |e|
-       @guide.publish e, "Publishing this"
-    end
   
     without_metadata_denormalisation(Guide) do
+      @guide.editions.each do |e| 
+        e.state = 'ready'
+        User.create(:name => 'test').publish e, comment: "Publishing this"
+      end
+      
       post :create,
         :guide_id => @guide.id,
         :edition  => { :assigned_to_id => bob.id }
-    end
+    end                                      
   
     @guide.reload
     assert_equal bob, @guide.editions.last.assigned_to
@@ -135,9 +137,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       post :progress, {
         :guide_id => @guide.id.to_s,
         :id       => @guide.editions.last.id.to_s,
-        :activity => { 'request_type' => "request_fact_check" }
+        :activity => { 'request_type' => "send_fact_check" }
       }
-      assert_equal "Couldn't request fact check for guide", flash[:alert]
+      assert_equal "Couldn't send fact check for guide", flash[:alert]
     end
   end
 
@@ -151,7 +153,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_redirected_to :controller => "admin/guides", :action => "show", :id => @guide.id
   
     @guide.reload
-    assert ! @guide.lined_up
-    assert @guide.latest_edition.status_is?(Action::WORK_STARTED)
+    assert !@guide.has_lined_up?
+    assert @guide.latest_edition.draft?
   end
 end

@@ -35,7 +35,8 @@ class Admin::ProgrammesControllerTest < ActionController::TestCase
   end
 
   test "can't destroy published programme" do
-    @programme.publish(@programme.editions.first, "test note")
+    @programme.editions.first.state = 'ready'
+    @programme.editions.first.publish
     assert !@programme.can_destroy?
     @programme.save!
     assert_difference('Programme.count', 0) do

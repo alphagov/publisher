@@ -89,13 +89,13 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
       click_on "Save"
       wait_until { page.has_content? "successfully updated" }
       guide.reload
-      assert guide.lined_up
+      assert guide.has_lined_up?
       
       visit "/admin"
       click_on "Start work"
       wait_until { page.has_content? "Work started" }
       guide.reload
-      assert ! guide.lined_up
+      assert !guide.has_lined_up?
       
     end
   end
