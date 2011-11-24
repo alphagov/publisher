@@ -19,7 +19,7 @@ Publisher::Application.configure do
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
-  config.middleware.use Slimmer::App, :template_path => "#{config.root}/public/templates"
+  config.middleware.use Slimmer::App
   
   config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
 end
