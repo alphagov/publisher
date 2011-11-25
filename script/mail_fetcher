@@ -13,7 +13,6 @@ require File.expand_path("../../lib/lockfile_ext", __FILE__)
 begin
   Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
     require 'mail'
-    require 'external_services'
     require Rails.root.join("config/fact_check_account")
     require 'fact_check_message_processor'
 
