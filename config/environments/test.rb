@@ -36,3 +36,5 @@ Publisher::Application.configure do
   config.middleware.use Slimmer::App, :asset_host => "http://static.preview.alphagov.co.uk"
   config.action_mailer.default_url_options = { :host => "example.com" }
 end
+
+require Rails.root.join('test/support/skip_slimmer')
