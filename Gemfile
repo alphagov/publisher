@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
@@ -23,7 +24,7 @@ gem "bson_ext", " 1.4"
 gem 'erubis'
 gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
-gem 'marples', '0.0.21'
+gem 'marples', '1.0.2'
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
@@ -36,6 +37,9 @@ gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
+gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
+gem 'null_logger'
+gem 'router-client', require: 'router/client'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'

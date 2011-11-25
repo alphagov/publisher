@@ -8,7 +8,10 @@ require 'messenger'
 Publication.marples_client_name = 'publisher'
 Publication.marples_logger = Rails.logger
 
-unless Rails.env.test?
+if Rails.env.test?
+  Messenger.transport = Marples::NullTransport.instance
+  Publication.marples_transport = Marples::NullTransport.instance
+else
   stomp_url = "failover://(stomp://support.cluster:61613,stomp://support.cluster:61613)"
 
   if defined?(PhusionPassenger)
