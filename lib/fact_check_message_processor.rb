@@ -29,7 +29,7 @@ class FactCheckMessageProcessor
     NoisyWorkflow.make_noise(edition.container, action).deliver
   end
   
-  def process(publication_id)
+  def process_for_publication(publication_id)
     publication = Publication.find(publication_id)
     edition = publication.latest_edition
     progress_publication_edition(edition)
@@ -37,6 +37,10 @@ class FactCheckMessageProcessor
   rescue BSON::InvalidObjectId, Mongoid::Errors::DocumentNotFound
     Rails.logger.info "#{publication_id} is not a valid mongo id"
     return false
+  end
+  
+  def self.process(message, imap, message_id, publication_id)
+    message_processor.new(message, imap, message_id).process_for_publication(publication_id)
   end
 end
 
