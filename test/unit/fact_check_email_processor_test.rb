@@ -31,7 +31,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
 
   test "processing returns false if the publication isn't found" do
     f = sample_processor
-    assert ! f.process('4e1dac78e2ba80076000000ea')
+    assert ! f.process_for_publication('4e1dac78e2ba80076000000ea')
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
@@ -39,7 +39,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
       windows_string = "hello umlat".encode("Windows-1252")
       message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
       f =  FactCheckMessageProcessor.new(message)
-      f.process(sample_publication.id)
+      f.process_for_publication(sample_publication.id)
     end
   end
 
