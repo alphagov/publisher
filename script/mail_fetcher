@@ -18,13 +18,29 @@ begin
 
     Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
+    errors = []
+    
     Mail.all(:delete_after_find => true) do |message, imap, message_id|
-      if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
-        processor = FactCheckMessageProcessor.new(message, imap, message_id)
-        next if processor.process($1)
+      begin
+        if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
+          processor = FactCheckMessageProcessor.new(message, imap, message_id)
+          next if processor.process($1)
+        end
+
+        message.skip_deletion
+      rescue => e
+        errors << "Failed to process message #{message.subject}: #{e.message}"
       end
 
-      message.skip_deletion
+    end
+    
+    if errors.any?
+      Mail.deliver do
+        from    'winston@alphagov.co.uk'
+        to      'dev@alphagov.co.uk'
+        subject 'Errors in fact check email processing'
+        body    errors.join("\n")
+      end
     end
 
     Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"
