@@ -10,6 +10,31 @@
 require File.expand_path('../../config/environment',  __FILE__)
 require File.expand_path("../../lib/lockfile_ext", __FILE__)
 
+class FactCheckEmailHandler
+  attr_accessor :errors
+  attr_accessor :message_processor
+
+  def initialize(processor = FactCheckMessageProcessor)
+    errors = []
+    message_processor = processor
+  end
+  
+  def process(message, imap, message_id)
+    Mail.all(:delete_after_find => true) do |message, imap, message_id|
+      begin
+        if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
+          processor = message_processor.new(message, imap, message_id)
+          next if processor.process($1)
+        end
+
+        message.skip_deletion
+      rescue => e
+        errors << "Failed to process message #{message.subject}: #{e.message}"
+      end
+    end
+  end
+end
+
 begin
   Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
     require 'mail'
@@ -18,23 +43,10 @@ begin
 
     Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
-    errors = []
+    handler = FactCheckEmailHandler.new
+    handler.process
     
-    Mail.all(:delete_after_find => true) do |message, imap, message_id|
-      begin
-        if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
-          processor = FactCheckMessageProcessor.new(message, imap, message_id)
-          next if processor.process($1)
-        end
-
-        message.skip_deletion
-      rescue => e
-        errors << "Failed to process message #{message.subject}: #{e.message}"
-      end
-
-    end
-    
-    if errors.any?
+    if handler.errors.any?
       Mail.deliver do
         from    'winston@alphagov.co.uk'
         to      'dev@alphagov.co.uk'
