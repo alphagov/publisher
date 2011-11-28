@@ -1,6 +1,12 @@
 require 'test_helper'
 require 'capybara/rails'
 
+class ActionController::Base
+  before_filter do
+    response.headers[Slimmer::SKIP_HEADER] = true
+  end
+end
+
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
 
