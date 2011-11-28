@@ -22,7 +22,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
 
   def sample_processor(body_text = "I approve")
     basic_message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => "I approve")
-    FactCheckMessageProcessor.new(basic_message, false, false)
+    FactCheckMessageProcessor.new(basic_message)
   end
 
   def sample_publication
@@ -38,7 +38,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     without_metadata_denormalisation(Guide) do
       windows_string = "hello umlat".encode("Windows-1252")
       message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
-      f =  FactCheckMessageProcessor.new(message, false, false)
+      f =  FactCheckMessageProcessor.new(message)
       f.process(sample_publication.id)
     end
   end
@@ -46,14 +46,14 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it takes the text part of multipart emails" do
     message = multipart_message
     message.text_part.content_type = 'text/plain; charset=UTF-8'
-    f =  FactCheckMessageProcessor.new(message, false, false)
+    f =  FactCheckMessageProcessor.new(message)
     assert_equal f.body_as_utf8, 'This is plain text'
   end
 
   
   test "it assumes text is utf8 if no encoding is specified" do
     message = multipart_message
-    f =  FactCheckMessageProcessor.new(message, false, false)
+    f =  FactCheckMessageProcessor.new(message)
     assert_equal f.body_as_utf8, 'This is plain text'
   end
 
