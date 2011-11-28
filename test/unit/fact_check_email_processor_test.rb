@@ -2,7 +2,6 @@ require 'test_helper'
 require 'fact_check_message_processor'
 
 class FactCheckMessageProcessorTest < ActiveSupport::TestCase
-
   def multipart_message
     Mail.new do
       to      'nicolas@test.lindsaar.net.au'
@@ -59,4 +58,9 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_equal f.body_as_utf8, 'This is plain text'
   end
 
+  test "it handles windows-1252 email wrongly declared as iso-8859-1" do
+    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/pound_symbol.txt", __FILE__))
+    f = FactCheckMessageProcessor.new(message)
+    assert f.process_for_publication(sample_publication.id)
+  end
 end

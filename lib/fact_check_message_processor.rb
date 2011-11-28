@@ -19,6 +19,8 @@ class FactCheckMessageProcessor
     else
       messy_notes.force_encoding(character_set).encode('UTF-8')
     end
+  rescue Encoding::InvalidByteSequenceError
+    messy_notes.force_encoding('Windows-1252').encode('UTF-8')
   end
   
   def progress_publication_edition(edition)
