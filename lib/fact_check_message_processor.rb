@@ -1,10 +1,8 @@
 class FactCheckMessageProcessor
-  attr_accessor :message, :imap, :message_id
+  attr_accessor :message
 
-  def initialize(message, imap, message_id)
+  def initialize(message)
     self.message = message
-    self.imap = imap
-    self.message_id = message_id
   end
   
   def body_as_utf8
@@ -39,8 +37,8 @@ class FactCheckMessageProcessor
     return false
   end
   
-  def self.process(message, imap, message_id, publication_id)
-    message_processor.new(message, imap, message_id).process_for_publication(publication_id)
+  def self.process(message, publication_id)
+    message_processor.new(message).process_for_publication(publication_id)
   end
 end
 

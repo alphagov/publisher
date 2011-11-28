@@ -18,9 +18,9 @@ class FactCheckEmailHandler
     message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
   end
     
-  def process_message(message, imap, message_id)
+  def process_message(message)
     if is_relevant_message?(message)
-      return message_processor.process(message, imap, message_id, $1)
+      return message_processor.process(message, $1)
     end
 
     return false
@@ -30,7 +30,7 @@ class FactCheckEmailHandler
   
   def process(message, imap, message_id)
     Mail.all(:delete_after_find => true) do |message, imap, message_id|
-      message.skip_deletion unless process_message(message, imap, message_id)
+      message.skip_deletion unless process_message(message)
     end
   end
 end
