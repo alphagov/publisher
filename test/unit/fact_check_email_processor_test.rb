@@ -26,7 +26,9 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   def sample_publication
-    Guide.create!(:name => 'Hello', :slug => "hello-#{Time.now.to_i}")
+    without_metadata_denormalisation(Guide) do
+      Guide.create!(:name => 'Hello', :slug => "hello-#{Time.now.to_i}")
+    end
   end
 
   test "processing returns false if the publication isn't found" do
