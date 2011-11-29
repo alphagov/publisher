@@ -5,12 +5,6 @@ GIT
     daemonette (0.1.0)
 
 GIT
-  remote: git@github.com:alphagov/daemonette.git
-  revision: 5183f28ba0c0a201a8639af1b4ad454c185ef4bf
-  specs:
-    daemonette (0.1.0)
-
-GIT
   remote: git@github.com:alphagov/gds-sso.git
   revision: df5d2fc33d1d0dfcf18a92465102d62aa0824065
   specs:
@@ -206,7 +200,7 @@ GEM
     simplecov-html (0.4.5)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    slimmer (1.1.3)
+    slimmer (1.1.4beta5)
       nokogiri (~> 1.5.0)
       plek (>= 0.1.8)
       rack (~> 1.3.5)
@@ -276,7 +270,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov (= 0.4.2)
   simplecov-rcov
-  slimmer (~> 1.1)
+  slimmer (= 1.1.4beta5)
   state_machine
   stomp (= 1.1.9)
   test-unit
