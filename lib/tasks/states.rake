@@ -65,6 +65,7 @@ namespace :states do
     Publication.all.each do |p|
       p.editions.each do |e|                 
         e.actions.where('request_type' => 'assigned').update_all('request_type' => 'assign')
+        e.actions.where('request_type' => 'created').update_all('request_type' => 'create')
         puts "Updated edition #{e.id}"
       end  
 
