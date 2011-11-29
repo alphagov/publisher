@@ -1,7 +1,7 @@
 namespace :states do
   
   desc "Migrate states to state machine and publishings to edition actions"
-  task :migrate => :environment do
+  task :migrate_states => :environment do
                                                               
     @state_migrations = {                        
       'created' => 'lined_up',  
@@ -58,6 +58,18 @@ namespace :states do
         end
       end
     end    
+  end
+  
+  task :migrate_assigned => :environment do
+                                                              
+    Publication.all.each do |p|
+      p.editions.each do |e|                 
+        e.actions.where('request_type' => 'assigned').update_all('request_type' => 'assign')
+        puts "Updated edition #{e.id}"
+      end  
+
+    end    
+
   end  
   
 end
