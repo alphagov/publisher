@@ -53,7 +53,7 @@ class ProgrammeTest < ActiveSupport::TestCase
     user.save
     assert !programme.has_in_review?
     user.request_review(programme.editions.first,{:comment => "Review this programme please."})
-    assert programme.has_in_review?
+    assert programme.has_in_review?, "A review was not requested for this programme."
   end
 
   test "programme workflow" do
