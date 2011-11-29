@@ -10,7 +10,7 @@ class ProgrammeTest < ActiveSupport::TestCase
   def template_programme
     p = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
     edition = p.editions.first
-    edition.title = 'One'    
+    edition.title = 'One'
     edition.start_work
     p
   end
@@ -23,8 +23,8 @@ class ProgrammeTest < ActiveSupport::TestCase
   end
 
   test 'a programme with all versions published should not have drafts' do
-    programme = template_programme 
-    
+    programme = template_programme
+
     assert programme.has_draft?
     assert !programme.has_published?
     programme.editions.each do |e|
@@ -40,7 +40,7 @@ class ProgrammeTest < ActiveSupport::TestCase
     programme = template_programme
     programme.build_edition("Two")
     assert programme.has_draft?
-    assert !programme.has_published?     
+    assert !programme.has_published?
     programme.editions.first.state = 'ready'
     User.create(:name => 'bob').publish(programme.editions.first, comment: "Publishing this")
     assert programme.has_draft?
@@ -82,7 +82,7 @@ class ProgrammeTest < ActiveSupport::TestCase
 
     without_metadata_denormalisation(Programme, Publication) do
       programme = user.create_publication(:programme)
-      edition = programme.editions.first                         
+      edition = programme.editions.first
       user.start_work(edition)
       assert edition.can_request_review?
       user.request_review(edition,{:comment => "Review this programme please."})
@@ -95,7 +95,7 @@ class ProgrammeTest < ActiveSupport::TestCase
 
     programme = user.create_publication(:programme)
     without_metadata_denormalisation(Programme, Publication) do
-      edition = programme.editions.first              
+      edition = programme.editions.first
       user.start_work(edition)
       assert edition.can_request_review?
       user.request_review(edition,{:comment => "Review this programme please."})
