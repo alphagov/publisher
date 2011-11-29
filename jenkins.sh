@@ -13,6 +13,7 @@ for d in images javascripts templates stylesheets; do
   ln -s ../../Static/public/$d public/
 done
 
+bundle exec rake db:mongoid:drop
 bundle exec rake ci:setup:testunit test
 RESULT=$?
 exit $RESULT

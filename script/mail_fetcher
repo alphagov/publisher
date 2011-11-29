@@ -14,17 +14,20 @@ begin
   Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
     require 'mail'
     require Rails.root.join("config/fact_check_account")
-    require 'fact_check_message_processor'
+    require 'fact_check_email_handler'
 
     Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
-    Mail.all(:delete_after_find => true) do |message, imap, message_id|
-      if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
-        processor = FactCheckMessageProcessor.new(message, imap, message_id)
-        next if processor.process($1)
+    handler = FactCheckEmailHandler.new
+    handler.process
+    
+    if handler.errors.any?
+      Mail.deliver do
+        from    'winston@alphagov.co.uk'
+        to      'dev@alphagov.co.uk'
+        subject 'Errors in fact check email processing'
+        body    errors.join("\n")
       end
-
-      message.skip_deletion
     end
 
     Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"

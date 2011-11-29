@@ -1,5 +1,7 @@
 require 'simplecov'
 require 'simplecov-rcov'
+require 'slimmer/skin'
+require 'slimmer/test'
 
 SimpleCov.start 'rails'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter

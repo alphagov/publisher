@@ -1,10 +1,8 @@
 class FactCheckMessageProcessor
-  attr_accessor :message, :imap, :message_id
+  attr_accessor :message
 
-  def initialize(message, imap, message_id)
+  def initialize(message)
     self.message = message
-    self.imap = imap
-    self.message_id = message_id
   end
   
   def body_as_utf8
@@ -21,6 +19,8 @@ class FactCheckMessageProcessor
     else
       messy_notes.force_encoding(character_set).encode('UTF-8')
     end
+  rescue Encoding::InvalidByteSequenceError
+    messy_notes.force_encoding('Windows-1252').encode('UTF-8')
   end
   
   def progress_publication_edition(edition)
@@ -29,7 +29,7 @@ class FactCheckMessageProcessor
     NoisyWorkflow.make_noise(edition.container, action).deliver
   end
   
-  def process(publication_id)
+  def process_for_publication(publication_id)
     publication = Publication.find(publication_id)
     edition = publication.latest_edition
     progress_publication_edition(edition)
@@ -37,6 +37,10 @@ class FactCheckMessageProcessor
   rescue BSON::InvalidObjectId, Mongoid::Errors::DocumentNotFound
     Rails.logger.info "#{publication_id} is not a valid mongo id"
     return false
+  end
+  
+  def self.process(message, publication_id)
+    message_processor.new(message).process_for_publication(publication_id)
   end
 end
 

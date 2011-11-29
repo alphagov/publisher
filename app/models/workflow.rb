@@ -46,12 +46,12 @@ module Workflow
     else
       raise "Unknown progress activity: #{activity}"
     end
-    
+
     if result
-      self.container.save! 
+      self.container.save!
     else
       result
     end
-  end              
+  end
 
 end
