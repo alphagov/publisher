@@ -6,7 +6,9 @@ class MetadataSync
   default_value_of :logger, NullLogger.instance
 
   def run
-    client.when 'panopticon', 'artefacts', 'updated' do |artefact|
+    @marples = client
+    
+    @marples.when 'panopticon', 'artefacts', 'updated' do |artefact|
       remote_id = artefact['id']
       logger.debug "Finding artefact with panopticon id #{remote_id}"
       publications = Publication.where panopticon_id: remote_id
@@ -20,7 +22,7 @@ class MetadataSync
       end
     end
     logger.info "Started MetadataSync client..."
-    client.join
+    @marples.join
   end
 
   def client
