@@ -7,7 +7,9 @@ namespace :messenger do
     task :metadata_sync do
       Daemonette.run("publisher_metadata_sync") do
         Rake::Task["environment"].invoke
-        MetadataSync.new(Rails.logger).run
+        logger = Logger.new File.join(Rails.root, "publisher_metadata_sync.log")
+        logger.level = 0
+        MetadataSync.new(logger).run
       end
     end
 
