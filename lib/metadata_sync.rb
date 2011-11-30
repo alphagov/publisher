@@ -19,7 +19,7 @@ class MetadataSync
         logger.debug "Denormalised metadata, saving publication"
         success = publication.save
         if success
-          logger.into "Updated metadata for publication #{publication.id}"
+          logger.info "Updated metadata for publication #{publication.id}"
         else
           logger.error "Couldn't save updated metadata for publication #{publication.id}"
         end
