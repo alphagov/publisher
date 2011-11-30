@@ -1,7 +1,7 @@
 class MetadataSync
   include Pethau::InitializeWith
   include Pethau::DefaultValueOf
-  
+
   initialize_with :logger
   default_value_of :logger, NullLogger.instance
 
