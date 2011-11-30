@@ -7,7 +7,7 @@ class MetadataSync
 
   def run
     @marples = client
-    
+
     @marples.when 'panopticon', 'artefacts', 'updated' do |artefact|
       remote_id = artefact['id']
       logger.debug "Finding artefact with panopticon id #{remote_id}"
@@ -16,7 +16,13 @@ class MetadataSync
       if publication
         logger.debug "Denormalising metadata for publication #{publication.id}"
         publication.denormalise_metadata
-        logger.debug "Denormalised metadata"
+        logger.debug "Denormalised metadata, saving publication"
+        success = publication.save
+        if success
+          logger.into "Updated metadata for publication #{publication.id}"
+        else
+          logger.error "Couldn't save updated metadata for publication #{publicaiton.id}"
+        end
       else
         logger.error "Couldn't find publication, bit odd. Ignoring message."
       end
