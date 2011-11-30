@@ -21,7 +21,7 @@ class MetadataSync
         if success
           logger.into "Updated metadata for publication #{publication.id}"
         else
-          logger.error "Couldn't save updated metadata for publication #{publicaiton.id}"
+          logger.error "Couldn't save updated metadata for publication #{publication.id}"
         end
       else
         logger.error "Couldn't find publication, bit odd. Ignoring message."
