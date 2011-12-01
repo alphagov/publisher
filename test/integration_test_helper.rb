@@ -1,6 +1,14 @@
 require 'test_helper'
 require 'capybara/rails'
 
+SimpleCov.at_exit do
+  result = SimpleCov.result
+  result.format!
+  coverage = (result.covered_percent * 100).to_i.to_f / 100
+  puts "C0 code coverage: #{coverage}%"
+  @exit_status = 100 if coverage != 62.96
+end
+
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
 
