@@ -5,7 +5,7 @@ class RouterBridge
     logger = options[:logger] || NullLogger.instance
     self.router = options[:router] || Router::Client.new(:logger => logger)
     self.logger = logger
-    self.marples = options[:marples_client] ||  Marples::Client.new(transport: transport, logger: logger
+    self.marples = options[:marples_client] || Marples::Client.new(transport: Messenger.transport, logger: logger
 )
   end
 
