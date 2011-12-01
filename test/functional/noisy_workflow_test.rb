@@ -27,7 +27,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     requester = User.new(:name => 'Testing Person')
     action = Action.new(:request_type => Action::PUBLISH, :requester => requester, :edition => guide.editions.first)
     email = NoisyWorkflow.make_noise(guide, action)
-    assert_equal email.to, ['team@alphagov.co.uk', 'freds@alphagov.co.uk']
+    assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
   end
   
   test "review request emails should go to the editors, franchise editors, and the SEO team" do
@@ -35,7 +35,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     requester = User.new(:name => 'Testing Person')
     action = Action.new(:request_type => Action::REQUEST_REVIEW, :requester => requester, :edition => guide.editions.first)
     email = NoisyWorkflow.make_noise(guide, action)
-    assert_equal email.to, ['eds@alphagov.co.uk', 'seo@alphagov.co.uk', 'freds@alphagov.co.uk']
+    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'seo@alphagov.co.uk', 'freds@alphagov.co.uk']
   end
   
   test "other workflow emails should go to editors and franchise editors" do

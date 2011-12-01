@@ -22,7 +22,7 @@ begin
     handler.process
     
     if handler.errors.any?
-      NoisyWorkflow.report_errors(handler_errors).deliver
+      NoisyWorkflow.report_errors(handler.errors).deliver
     end
 
     Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"
