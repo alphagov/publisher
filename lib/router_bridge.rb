@@ -22,17 +22,17 @@ class RouterBridge
   def register_publication publication
     register_route(
       :application_id => 'frontend',
-      :incoming_path  => "/#{publication[:slug]}",
+      :incoming_path  => "/#{publication['slug']}",
       :route_type     => :full
     )
     register_route(
       :application_id => 'frontend',
-      :incoming_path  => "/#{publication[:slug]}.json",
+      :incoming_path  => "/#{publication['slug']}.json",
       :route_type     => :full
     )
     register_route(
       :application_id => 'frontend',
-      :incoming_path  => "/#{publication[:slug]}.xml",
+      :incoming_path  => "/#{publication['slug']}.xml",
       :route_type     => :full
     )
   end
