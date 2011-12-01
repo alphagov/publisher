@@ -45,7 +45,7 @@ class RouterBridgeTest < ActiveSupport::TestCase
       incoming_path: "/#{publication[:slug]}",
       route_type: :full
     )
-    RouterBridge.new(@router_client, env: @env).run(@marples_client)
+    RouterBridge.new(:router => @router_client).run
     @marples_client.publish("publisher", "guide", "published", publication)
   end
 end
