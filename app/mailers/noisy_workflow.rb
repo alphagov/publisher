@@ -33,4 +33,9 @@ class NoisyWorkflow < ActionMailer::Base
          
   end
   
+  def report_errors(error_list)
+    @errors = error_list
+    mail(:to => 'dev@alphagov.co.uk', :subject => 'Errors in fact check email processing')
+  end
+  
 end

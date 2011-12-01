@@ -22,12 +22,7 @@ begin
     handler.process
     
     if handler.errors.any?
-      Mail.deliver do
-        from    'winston@alphagov.co.uk'
-        to      'dev@alphagov.co.uk'
-        subject 'Errors in fact check email processing'
-        body    errors.join("\n")
-      end
+      NoisyWorkflow.report_errors(handler_errors).deliver
     end
 
     Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"
