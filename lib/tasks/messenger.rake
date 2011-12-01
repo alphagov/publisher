@@ -17,7 +17,9 @@ namespace :messenger do
     task :router_bridge do
       Daemonette.run("publisher_router_bridge") do
         Rake::Task["environment"].invoke
-        RouterBridge.instance.listen
+        router = Router::Client.new :logger => Rails.logger
+        bridge = RouterBridge.new :router => router, :logger => Rails.logger
+        bridge.run
       end
     end
   end
