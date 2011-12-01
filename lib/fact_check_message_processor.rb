@@ -38,7 +38,7 @@ class FactCheckMessageProcessor
   end
   
   def self.process(message, publication_id)
-    message_processor.new(message).process_for_publication(publication_id)
+    new(message).process_for_publication(publication_id)
   end
 end
 
