@@ -34,21 +34,21 @@ class RouterBridgeTest < ActiveSupport::TestCase
 
   test "when marples receives a published message, create a route" do
     publication = {
-      slug: 'my-test-slug'
+      'slug' => 'my-test-slug'
     }
     @router_client.routes.expects(:update).with(
       application_id: "frontend",
-      incoming_path: "/#{publication[:slug]}",
+      incoming_path: "/#{publication['slug']}",
       route_type: :full
     )
     @router_client.routes.expects(:update).with(
       application_id: "frontend",
-      incoming_path: "/#{publication[:slug]}.json",
+      incoming_path: "/#{publication['slug']}.json",
       route_type: :full
     )
     @router_client.routes.expects(:update).with(
       application_id: "frontend",
-      incoming_path: "/#{publication[:slug]}.xml",
+      incoming_path: "/#{publication['slug']}.xml",
       route_type: :full
     )
     RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
