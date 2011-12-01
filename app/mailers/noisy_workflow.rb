@@ -3,18 +3,26 @@
 class NoisyWorkflow < ActionMailer::Base
   default :from => "Winston (Gov.UK Publisher) <winston@alphagov.co.uk>"
   
+  EMAIL_GROUPS = {
+    'team' => 'govuk-team@digital.cabinet-office.gov.uk',
+    'dev' => 'govuk-dev@digital.cabinet-office.gov.uk',
+    'freds' => 'freds@alphagov.co.uk',
+    'seo' => 'seo@alphagov.co.uk',
+    'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk'
+  }
+
   def make_noise(publication, action)
     @publication = publication
     @action = action
                                                   
     case Plek.current.environment
     when 'preview' 
-      email_address = 'dev@alphagov.co.uk'                   
+      email_address = EMAIL_GROUPS['dev']
     else
       email_address = case action.request_type
-      when Action::PUBLISH then "team@alphagov.co.uk, freds@alphagov.co.uk"
-      when Action::REQUEST_REVIEW then "eds@alphagov.co.uk, seo@alphagov.co.uk, freds@alphagov.co.uk"
-      else "eds@alphagov.co.uk, freds@alphagov.co.uk"
+      when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
+      when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['seo']}, #{EMAIL_GROUPS['freds']}"
+      else "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
       end
     end                                           
     
@@ -35,7 +43,7 @@ class NoisyWorkflow < ActionMailer::Base
   
   def report_errors(error_list)
     @errors = error_list
-    mail(:to => 'dev@alphagov.co.uk', :subject => 'Errors in fact check email processing')
+    mail(:to => EMAIL_GROUPS['dev'], :subject => 'Errors in fact check email processing')
   end
   
 end
