@@ -9,9 +9,9 @@ class FactCheckEmailHandler
   attr_accessor :errors
   attr_accessor :message_processor
 
-  def initialize(processor = FactCheckMessageProcessor)
+  def initialize
     self.errors = []
-    self.message_processor = processor
+    self.message_processor = FactCheckMessageProcessor
   end
   
   def is_relevant_message?(message)
@@ -26,6 +26,7 @@ class FactCheckEmailHandler
     return false
   rescue => e
     errors << "Failed to process message #{message.subject}: #{e.message}"
+    return false
   end
   
   def process()
