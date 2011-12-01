@@ -331,8 +331,8 @@ class Publication
     }
   end
 
-  def self.search_index_all
-    all.map(&:search_index)
+  def self.search_index_published
+    published.map(&:search_index)
   end
 
   private
