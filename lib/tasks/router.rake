@@ -1,7 +1,7 @@
 namespace :router do
   desc "Register homepage and all publications with router"
   task :register => %w{register:homepage register:publications}
-  
+
   namespace :register do
     desc "Register homepage with router"
     task :homepage => :environment do
