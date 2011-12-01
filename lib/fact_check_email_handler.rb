@@ -28,7 +28,7 @@ class FactCheckEmailHandler
     errors << "Failed to process message #{message.subject}: #{e.message}"
   end
   
-  def process(message, imap, message_id)
+  def process()
     Mail.all(:delete_after_find => true) do |message, imap, message_id|
       message.skip_deletion unless process_message(message)
     end
