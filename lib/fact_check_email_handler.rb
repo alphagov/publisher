@@ -7,11 +7,9 @@ require 'fact_check_message_processor'
 # initializer and is typically called from the mail_fetcher script
 class FactCheckEmailHandler
   attr_accessor :errors
-  attr_accessor :message_processor
 
   def initialize
     self.errors = []
-    self.message_processor = FactCheckMessageProcessor
   end
   
   def is_relevant_message?(message)
@@ -20,7 +18,7 @@ class FactCheckEmailHandler
     
   def process_message(message)
     if is_relevant_message?(message)
-      return message_processor.process(message, $1)
+      return FactCheckMessageProcessor.process(message, $1)
     end
 
     return false
