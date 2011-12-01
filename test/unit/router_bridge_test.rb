@@ -1,7 +1,5 @@
 require 'test_helper'
 
-require 'stomp'
-
 class MarplesTestDouble
   def initialize
     @listeners = []
@@ -29,10 +27,8 @@ end
 
 class RouterBridgeTest < ActiveSupport::TestCase
   def setup
-    @routes = stub("routes")
-    @applications = stub("applications")
-    @applications.stubs(:create)
-    @router_client = stub("router", routes: @routes, applications: @applications)
+    routes = stub("routes")
+    @router_client = stub("router", routes: routes)
     @marples_client = MarplesTestDouble.new
   end
 
@@ -40,12 +36,22 @@ class RouterBridgeTest < ActiveSupport::TestCase
     publication = {
       slug: 'my-test-slug'
     }
-    @router_client.routes.expects(:create).with(
+    @router_client.routes.expects(:update).with(
       application_id: "frontend",
       incoming_path: "/#{publication[:slug]}",
       route_type: :full
     )
-    RouterBridge.new(:router => @router_client).run
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      incoming_path: "/#{publication[:slug]}.json",
+      route_type: :full
+    )
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      incoming_path: "/#{publication[:slug]}.xml",
+      route_type: :full
+    )
+    RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
     @marples_client.publish("publisher", "guide", "published", publication)
   end
 end

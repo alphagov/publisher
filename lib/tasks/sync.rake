@@ -3,7 +3,7 @@ namespace :sync do
   task :broadcast => :environment do
     Publication.all.each do |pub|
       print '.'
-      Messenger.instance.broadcast pub
+      Messenger.instance.published pub
     end
   end
 
