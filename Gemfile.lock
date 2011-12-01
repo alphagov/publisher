@@ -186,7 +186,7 @@ GEM
     responders (0.6.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    router-client (1.0.0)
+    router-client (2.0.3)
       builder
       null_logger
     rubyzip (0.9.4)
@@ -265,7 +265,7 @@ DEPENDENCIES
   rails (= 3.1.1)
   rake (= 0.9.2)
   rest-client
-  router-client
+  router-client (= 2.0.3)
   rummageable!
   selenium-webdriver
   simplecov (= 0.4.2)
