@@ -11,13 +11,9 @@ class FactCheckEmailHandler
   def initialize
     self.errors = []
   end
-  
-  def is_relevant_message?(message)
-    message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
-  end
     
   def process_message(message)
-    if is_relevant_message?(message)
+    if message.to.any? { |to| to.match(/factcheck\+#{Plek.current.environment}-(.+?)@alphagov.co.uk/) }
       return FactCheckMessageProcessor.process(message, $1)
     end
 
