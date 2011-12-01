@@ -10,8 +10,8 @@ class FactCheckEmailHandler
   attr_accessor :message_processor
 
   def initialize(processor = FactCheckMessageProcessor)
-    errors = []
-    message_processor = processor
+    self.errors = []
+    self.message_processor = processor
   end
   
   def is_relevant_message?(message)
