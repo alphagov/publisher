@@ -3,7 +3,7 @@ class RouterBridge
 
   def initialize options = {}
     logger = options[:logger] || NullLogger.instance
-    self.router = options[:router] || Router::Client.new :logger => logger
+    self.router = options[:router] || Router::Client.new(:logger => logger)
     self.logger = logger
   end
 
