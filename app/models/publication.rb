@@ -31,7 +31,7 @@ class Publication
   field :edition_rejected_count, :type => Integer, default: 0
 
   embeds_many :publishings
-                                   
+
   scope :lined_up,            where('editions.state' => 'lined_up')
   scope :draft,               where('editions.state' => 'draft')
   scope :amends_needed,       where('editions.state' => 'amends_needed')
@@ -107,13 +107,13 @@ class Publication
       'Disabled people',
       'Travel',
       'Citizenship'
-  ]                            
-     
+  ]
+
   # map each edition state to a "has_{state}?" method
   Edition.state_machine.states.map(&:name).each do |state|
-    define_method "has_#{state}?" do 
+    define_method "has_#{state}?" do
       (self.editions.where(state: state).count > 0)
-    end                                                 
+    end
   end
 
   def self.import panopticon_id, importing_user
@@ -239,7 +239,7 @@ class Publication
 
   def can_destroy?
     !self.has_published?
-  end             
+  end
 
   def has_video?
     false
