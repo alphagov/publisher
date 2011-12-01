@@ -24,9 +24,7 @@ class FactCheckMessageProcessor
   end
   
   def progress_publication_edition(edition)
-    dummy_user = User.new
-    action = edition.new_action(dummy_user, 'receive_fact_check', comment: body_as_utf8)
-    NoisyWorkflow.make_noise(edition.container, action).deliver
+    User.new.receive_fact_check(edition, comment: body_as_utf8)
   end
   
   def process_for_publication(publication_id)
