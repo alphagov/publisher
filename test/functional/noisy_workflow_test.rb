@@ -43,6 +43,6 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     requester = User.new(:name => 'Testing Person')
     action = Action.new(:request_type => Action::APPROVE_REVIEW, :requester => requester, :edition => guide.editions.first)
     email = NoisyWorkflow.make_noise(guide, action)
-    assert_equal email.to, ['eds@alphagov.co.uk', 'freds@alphagov.co.uk']
+    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
   end
 end
