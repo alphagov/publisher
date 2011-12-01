@@ -4,22 +4,22 @@ require 'stomp'
 
 class MarplesTestDouble
   def initialize
-    @runers = []
+    @listeners = []
   end
 
   def when(application, object_type, action, &block)
-    @runers << [application, object_type, action, block]
+    @listeners << [application, object_type, action, block]
   end
 
   def publish(application, object_type, action, object)
-    @runers
-      .select { |runer| runer_matches?(runer, [application, object_type, action]) }
-      .each { |runer| runer[3].call(object) }
+    @listeners
+      .select { |listener| listener_matches?(listener, [application, object_type, action]) }
+      .each { |listener| listener[3].call(object) }
   end
 
-  def runer_matches?(runer, message)
+  def listener_matches?(listener, message)
     message.each_index.all? do |i|
-      runer[i] == '*' || runer[i] == message[i]
+      listener[i] == '*' || listener[i] == message[i]
     end
   end
 
