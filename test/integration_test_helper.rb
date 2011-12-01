@@ -2,11 +2,19 @@ require 'test_helper'
 require 'capybara/rails'
 
 SimpleCov.at_exit do
+  coverage_file = File.absolute_path(File.join(Rails.root, 'coverage.txt'))
+  expected_coverage = File.read(coverage_file).to_f
   result = SimpleCov.result
   result.format!
   coverage = (result.covered_percent * 100).to_i.to_f / 100
   puts "C0 code coverage: #{coverage}%"
-  @exit_status = 100 if coverage != 62.96
+  if coverage != expected_coverage
+    puts "Expected integration tests coverage of #{expected_coverage}%"
+    if coverage > expected_coverage
+      puts "You can increase the coverage in #{coverage_file}"
+    end
+    @exit_status = 100
+  end
 end
 
 class ActionDispatch::IntegrationTest
