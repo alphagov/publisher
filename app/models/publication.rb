@@ -114,6 +114,10 @@ class Publication
     define_method "has_#{state}?" do 
       (self.editions.where(state: state).count > 0)
     end                                                 
+  end                 
+  
+  def format_type
+    self.class.name.to_s
   end
 
   def self.import panopticon_id, importing_user
@@ -232,6 +236,16 @@ class Publication
   rescue
     nil
   end
+        
+  def archived_editions
+    self.editions.where(state: 'archived').sort_by(&:version_number)
+  end
+
+  def last_archived_edition
+    last_archived_edition = archived_editions.last
+  rescue
+    nil
+  end
 
   def can_create_new_edition?
     !self.has_draft?
@@ -246,7 +260,7 @@ class Publication
   end
 
   def latest_edition
-    self.editions.sort_by(&:created_at).last
+    self.editions.sort_by(&:version_number).last
   rescue
     nil
   end

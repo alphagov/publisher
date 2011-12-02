@@ -189,25 +189,28 @@
     </table>
   </div>
   <div id="archived">
-    <table class="formats" summary="List of &ldquo;Local&rdquo; content">
-      <thead>
-        <tr>
-          <th scope="col">Format</th>
-          <th scope="col" class="title">Title</th>
-          <th scope="col">Video</td>
-          <th scope="col" class="datetime">Last updated</th>
-          <th scope="col">Assigned to</th>
-          <th scope="col">Created by</th>
-          <th scope="col">Section</th>
-          <th scope="col">Reviews</th>
-          <th scope="col" class="nosort">Edit</th>
-          <th scope="col" class="nosort">Preview</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render :collection => @archived, :partial => 'publication', :locals => {:tab => :archived}  %>
-      </tbody>
-    </table>
+      <table class="formats" summary="List of &ldquo;Published&rdquo; content">
+        <thead>
+          <tr>
+            <th scope="col">Format</th>
+            <th scope="col" class="title">Title</th>
+            <th scope="col">Video</td>
+            <th scope="col" class="datetime">Last updated</th>
+            <th scope="col">Assigned to</th>
+            <th scope="col">Created by</th>
+            <th scope="col">Section</th>
+            <th scope="col">Reviews</th>
+            <th scope="col">Archived by</th>
+            <th scope="col" class="nosort">View</th>
+            <th scope="col" class="nosort">Edit</th>
+            <th scope="col" class="nosort">New edition</th>
+            <th scope="col" class="nosort">Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render :collection => @archived, :partial => 'publication', :locals => {:tab => :archived}  %>
+        </tbody>
+      </table>
   </div>
 
 </div>

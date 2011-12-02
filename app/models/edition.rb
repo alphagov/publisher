@@ -14,9 +14,12 @@ class Edition
 
     after_transition :on => :request_amendments do |edition, transition|
       edition.container.mark_as_rejected
-    end
+    end 
     after_transition :on => :approve_review do |edition, transition|
       edition.container.mark_as_accepted
+    end 
+    before_transition :on => :publish do |edition, transition|
+      edition.container.editions.where(state: 'published').all.each{|e| e.archive }
     end
 
     event :start_work do
@@ -53,7 +56,7 @@ class Edition
     end
 
     event :archive do
-      transition :ready => :archived
+      transition :published => :archived
     end
 
   end
@@ -96,6 +99,11 @@ class Edition
 
   def published_by
     publication = actions.detect { |a| a.request_type == Action::PUBLISH }
+    publication.requester if publication
+  end
+
+  def archived_by
+    publication = actions.detect { |a| a.request_type == Action::ARCHIVE }
     publication.requester if publication
   end
 

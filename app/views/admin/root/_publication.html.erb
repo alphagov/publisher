@@ -3,14 +3,14 @@
     <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
   <td class="title">
-    <% if tab && tab == :published %>
+    <% if tab && tab == :published || tab == :archived %>
       <%= publication.published_edition.admin_list_title %>
     <% else %>
       <%= publication.latest_edition.admin_list_title %>
     <% end %>
     <span class="version">
-    <% if tab && tab == :published %>
-      (v.<%= publication.published_edition.version_number %>)
+    <% if tab && tab == :published || tab == :archived %>
+      (v.<%= (tab == :published) ? publication.published_edition.version_number : publication.archived_editions.map(&:version_number).join(', ') %>)
       <% if publication.has_drafts %>
         (v.<%= publication.latest_edition.version_number %> in draft)
       <% end%>
@@ -46,9 +46,9 @@
     <%= publication.rejected_count %> /
     <%= publication.edition_rejected_count %>
   </td>
-    <% if tab && tab == :published %>
+    <% if tab && tab == :published || tab == :archived %>
     <td>
-      <%= publication.published_edition.published_by %>
+      <%= (tab == :published) ? publication.published_edition.published_by : publication.last_archived_edition.archived_by %>
     </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
@@ -65,7 +65,7 @@
         <%= hidden_field_tag :start_work, 1 %>
         <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => 'Start work on this #{publication.class.to_s.humanize)}', :class => 'start-work' %>
       <% end %>
-    <% elsif tab and tab == :published and publication.can_create_new_edition? %>
+    <% elsif tab and (tab == :published or tab == :archived) and publication.can_create_new_edition? %>
       <%= form_tag admin_editions_path(publication) do %>
         <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
       <% end %>
