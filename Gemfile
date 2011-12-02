@@ -39,7 +39,7 @@ gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
 gem 'null_logger'
-gem 'router-client', require: 'router/client'
+gem 'router-client', '2.0.3', require: 'router/client'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
