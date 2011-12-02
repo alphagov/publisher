@@ -96,6 +96,28 @@ class EditionTest < ActiveSupport::TestCase
     guide.editions.first.update_attribute :state, 'ready'
     guide.editions.first.publish
     assert_not_nil guide.published_edition
+  end              
+  
+  test "when an edition of a guide is published, all other published editions are archived" do
+    without_metadata_denormalisation(Guide) do
+      stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+        to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+                            
+      guide = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
+      
+      first_edition = guide.editions.create(version_number: 1)
+      first_edition.update_attribute(:state, 'published')                              
+      
+      second_edition = guide.editions.create(version_number: 2)
+      second_edition.update_attribute(:state, 'published')
+      
+      new_edition = guide.editions.create(version_number: 3)
+      new_edition.update_attribute(:state, 'ready')         
+      assert new_edition.publish
+      
+      assert_equal guide.editions.where(state: 'published').count, 1
+      assert_equal guide.editions.where(state: 'archived').count, 2
+    end
   end
   
   test "a published edition can't be edited" do

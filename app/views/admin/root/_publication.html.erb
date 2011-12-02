@@ -11,7 +11,7 @@
     <span class="version">
     <% if tab && tab == :published || tab == :archived %>
       (v.<%= (tab == :published) ? publication.published_edition.version_number : publication.archived_editions.map(&:version_number).join(', ') %>)
-      <% if publication.has_drafts %>
+      <% if publication.has_draft? %>
         (v.<%= publication.latest_edition.version_number %> in draft)
       <% end%>
     <% else %>

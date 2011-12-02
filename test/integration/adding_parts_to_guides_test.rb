@@ -14,6 +14,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
       guide = Guide.new :name => random_name, :slug => 'test-guide', :panopticon_id => 2356
       guide.save!
+      guide.editions.first.update_attribute(:state, 'draft')
 
       stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
         to_return(:status => 200, :body => "{}", :headers => {})
@@ -25,7 +26,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
         fill_in 'Title', :with => 'Part One'
         fill_in 'Body',  :with => 'Body text'
         fill_in 'Slug',  :with => 'part-one'
-      end
+      end           
 
       click_on 'Add new part'
       within :css, '#parts div.part:nth-of-type(2)' do
@@ -47,7 +48,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
       visit "/admin?filter=all"
 
-      within(:css, '#lined_up') {
+      within(:css, '#draft') {
         assert page.has_content? random_name
       }
 
