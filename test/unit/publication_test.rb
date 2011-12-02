@@ -217,5 +217,23 @@ class PublicationTest < ActiveSupport::TestCase
 
       publication.destroy
     end
+  end   
+  
+  test "given multiple editions, can return the most recent published edition" do
+    without_metadata_denormalisation(Guide) do
+      publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
+      publication.save
+
+      first_edition = publication.editions.create(version_number: 1)
+      first_edition.update_attribute(:state, 'archived')                              
+      
+      second_edition = publication.editions.create(version_number: 2)
+      second_edition.update_attribute(:state, 'published')
+      
+      third_edition = publication.editions.create(version_number: 3)
+      third_edition.update_attribute(:state, 'draft')
+               
+      assert_equal publication.published_edition, second_edition
+    end
   end
 end
