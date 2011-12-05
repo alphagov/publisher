@@ -1,0 +1,7 @@
+<%= semantic_form_for([:admin, @publication]) do |f| %>
+  <%= f.inputs :lgsl_code %>
+  <%= f.inputs do %>
+    <%= f.input :panopticon_id, :as => :hidden %>
+  <% end %>
+  <%= f.buttons %>
+<% end %>

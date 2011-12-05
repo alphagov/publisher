@@ -122,16 +122,12 @@ class Publication
     json = JSON.parse data
     publication = Publication.where(slug: json['slug']).first
     if publication.present?
-      return publication if publication.panopticon_id
-      publication.panopticon_id = json['id']
-      publication.save!
+      publication.panopticon_id ||= json['id']
       return publication
     end
 
     kind = json['kind']
-    publication = importing_user.create_publication kind.to_sym, :panopticon_id => json['id'], :name => json['name']
-    publication.save!
-    publication
+    importing_user.create_publication(kind.to_sym, :panopticon_id => json['id'], :name => json['name'])
   end
 
   def self.find_and_identify_edition(slug, edition)
@@ -202,20 +198,6 @@ class Publication
 
   def mark_as_accepted
     self.update_attribute(:edition_rejected_count, 0)
-  end
-
-  def calculate_statuses
-    self.has_published = self.publishings.any? && !self.archived
-
-    published_versions = ::Set.new(publishings.map(&:version_number))
-    all_versions = ::Set.new(editions.map(&:version_number))
-    drafts = (all_versions - published_versions)
-
-    self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
-
-    self.has_reviewables = editions.any? { |e| e.status_is?(Action::REVIEW_REQUESTED) }
-
-    true
   end
 
   def publish(edition, notes)
