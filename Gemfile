@@ -24,7 +24,7 @@ gem "bson_ext", " 1.4"
 gem 'erubis'
 gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
-gem 'marples', '1.0.2'
+gem 'marples', '1.0.4'
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'

@@ -33,6 +33,6 @@ class MetadataSync
 
   def client
     transport = Messenger.transport
-    Marples::Client.new transport, 'metadata-sync', logger
+    Marples::Client.new transport: transport, logger: logger
   end
 end
