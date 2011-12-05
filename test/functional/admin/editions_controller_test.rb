@@ -11,7 +11,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   test "should be able to create a folder path for a given publication" do
     l = LocalTransaction.new
     assert_equal "app/views/admin/local_transactions", @controller.admin_template_folder_for(l)
-
+    
     g = Guide.new
     assert_equal "app/views/admin/guides", @controller.admin_template_folder_for(g)
   end
