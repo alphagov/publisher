@@ -45,11 +45,8 @@ class Publication
 
   after_initialize :create_first_edition
 
-  #before_save :calculate_statuses
   before_destroy :check_can_delete_and_notify
   after_destroy :remove_from_search_index
-
-  # validates_presence_of :panopticon_id
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
