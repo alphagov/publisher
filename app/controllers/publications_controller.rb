@@ -30,7 +30,7 @@ class PublicationsController < ApplicationController
       }
     end
     
-    return { :name => name, :type => type, :publications => publications }
+    return { :name => name, :type => 'section', :publications => publications }
   end
 
   def show_publication(slug, edition, snac)
