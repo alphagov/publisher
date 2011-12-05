@@ -25,9 +25,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   def sample_publication
-    without_metadata_denormalisation(Guide) do
-      Guide.create!(:name => 'Hello', :slug => "hello-#{Time.now.to_i}")
-    end
+    Guide.create!(:name => 'Hello', :slug => "hello-#{Time.now.to_i}")
   end
 
   test "processing returns false if the publication isn't found" do
@@ -36,12 +34,10 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
-    without_metadata_denormalisation(Guide) do
-      windows_string = "hello umlat".encode("Windows-1252")
-      message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
-      f =  FactCheckMessageProcessor.new(message)
-      f.process_for_publication(sample_publication.id)
-    end
+    windows_string = "hello umlat".encode("Windows-1252")
+    message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
+    f =  FactCheckMessageProcessor.new(message)
+    f.process_for_publication(sample_publication.id)
   end
 
   test "it takes the text part of multipart emails" do

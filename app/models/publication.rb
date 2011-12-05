@@ -223,10 +223,6 @@ class Publication
     update_in_search_index
   end
 
-  def denormalise_metadata
-    meta_data.apply_to self
-  end
-
   def published_edition
     latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
   rescue

@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
       assert trans.valid?
     end
   end
-  
+
   test "it doesn't try to send a fact check email if no addresses were given" do
     user = User.create(:name => "bob")
     NoisyWorkflow.expects(:request_fact_check).never
@@ -17,7 +17,7 @@ class UserTest < ActiveSupport::TestCase
       assert ! user.send_fact_check(trans.editions.last, {comment: "Hello"})
     end
   end
-  
+
   test "user can't okay a publication they've sent for review" do
     user = User.create(:name => "bob")
 
@@ -27,32 +27,27 @@ class UserTest < ActiveSupport::TestCase
       assert ! user.approve_review(trans.editions.last, {comment: "Hello"})
     end
   end
-  
+
   test "user can't send back a publication they've sent for review" do
     user = User.create(:name => "bob")
 
-    without_metadata_denormalisation(Transaction, Publication) do
-      trans = user.create_publication(:transaction, :name => "test", :slug => "test")  
-      user.start_work(trans.editions.last)
-      user.request_review(trans.editions.last, {comment: "Hello"})
-      assert ! user.request_amendments(trans.editions.last, {comment: "Hello"})
-    end
+    trans = user.create_publication(:transaction, :name => "test", :slug => "test")
+    user.start_work(trans.editions.last)
+    user.request_review(trans.editions.last, {comment: "Hello"})
+    assert ! user.request_amendments(trans.editions.last, {comment: "Hello"})
   end
-  
+
   test "when an user publishes a guide, a status message is sent on the message bus" do
     user = User.create(:name => "bob")
     second_user = User.create(:name => "dave")
-    
-     without_metadata_denormalisation(Transaction, Publication) do
-      trans = user.create_publication(:transaction, :name => "test", :slug => "test") 
-      user.start_work(trans.editions.last)
-      user.request_review(trans.editions.last, {comment: "Hello"})
-      second_user.approve_review(trans.editions.last, {comment: "Hello"})
-      
-      Messenger.instance.expects(:published).with(trans).once
-      user.publish trans.editions.last, {comment: "Published because I did"}
-      
-    end
+
+    trans = user.create_publication(:transaction, :name => "test", :slug => "test")
+    user.start_work(trans.editions.last)
+    user.request_review(trans.editions.last, {comment: "Hello"})
+    second_user.approve_review(trans.editions.last, {comment: "Hello"})
+
+    Messenger.instance.expects(:published).with(trans).once
+    user.publish trans.editions.last, {comment: "Published because I did"}
   end
 
 end

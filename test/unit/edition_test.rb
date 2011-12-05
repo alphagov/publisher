@@ -81,11 +81,9 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a new guide has no published edition" do
-    without_metadata_denormalisation(Guide) do
-      guide = template_edition.guide
-      guide.save
-      assert_nil guide.published_edition
-    end
+    guide = template_edition.guide
+    guide.save
+    assert_nil guide.published_edition
   end
 
   test "an edition of a guide can be published" do
@@ -96,66 +94,59 @@ class EditionTest < ActiveSupport::TestCase
     guide.editions.first.update_attribute :state, 'ready'
     guide.editions.first.publish
     assert_not_nil guide.published_edition
-  end              
-  
-  test "when an edition of a guide is published, all other published editions are archived" do
-    without_metadata_denormalisation(Guide) do
-      stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-        to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
-                            
-      guide = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
-      
-      first_edition = guide.editions.create(version_number: 1)
-      first_edition.update_attribute(:state, 'published')                              
-      
-      second_edition = guide.editions.create(version_number: 2)
-      second_edition.update_attribute(:state, 'published')
-      
-      new_edition = guide.editions.create(version_number: 3)
-      new_edition.update_attribute(:state, 'ready')         
-      assert new_edition.publish
-      
-      assert_equal guide.editions.where(state: 'published').count, 1
-      assert_equal guide.editions.where(state: 'archived').count, 2
-    end
   end
-  
+
+  test "when an edition of a guide is published, all other published editions are archived" do
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+
+    guide = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
+
+    first_edition = guide.editions.create(version_number: 1)
+    first_edition.update_attribute(:state, 'published')
+
+    second_edition = guide.editions.create(version_number: 2)
+    second_edition.update_attribute(:state, 'published')
+
+    new_edition = guide.editions.create(version_number: 3)
+    new_edition.update_attribute(:state, 'ready')
+    assert new_edition.publish
+
+    assert_equal guide.editions.where(state: 'published').count, 1
+    assert_equal guide.editions.where(state: 'archived').count, 2
+  end
+
   test "a published edition can't be edited" do
-    without_metadata_denormalisation(Guide) do
-      edition = template_edition
-      guide = template_edition.container
-      guide.save
+    edition = template_edition
+    guide = template_edition.container
+    guide.save
 
-      stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-        to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
+      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
 
-      guide.editions.first.update_attribute :state, 'published'
-      guide.reload
+    guide.editions.first.update_attribute :state, 'published'
+    guide.reload
 
-      edition = guide.editions.last
-      edition.title = "My New Title"
+    edition = guide.editions.last
+    edition.title = "My New Title"
 
-      assert ! edition.save
-      assert_equal ["Published editions can't be edited"], edition.errors[:base]
-    end
+    assert ! edition.save
+    assert_equal ["Published editions can't be edited"], edition.errors[:base]
   end
 
   test "publish history is recorded" do
-    without_metadata_denormalisation(Guide) do
-      edition = template_edition
-      guide = template_edition.guide
-      guide.save
+    edition = template_edition
+    guide = template_edition.guide
+    guide.save
 
-      guide.publish edition, "First publication"
-      guide.publish edition, "Second publication"
+    guide.publish edition, "First publication"
+    guide.publish edition, "Second publication"
 
-      new_edition = edition.build_clone
-      new_edition.parts.first.body = "Some other version text"
+    new_edition = edition.build_clone
+    new_edition.parts.first.body = "Some other version text"
 
-      guide.publish new_edition, "Third publication"
+    guide.publish new_edition, "Third publication"
 
-      assert_equal 3, guide.publishings.length
-    end
-
+    assert_equal 3, guide.publishings.length
   end
 end

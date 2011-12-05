@@ -8,34 +8,24 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   def template_published_answer
-    without_metadata_denormalisation(Answer) do
-      answer = Answer.create(:slug=>"childcare", :name=>"Something")
-      edition = answer.editions.first
-      edition.title = 'One'
-      edition.body = 'Lots of info'
-      answer.save
-      edition.state = 'ready'
-      edition.publish
-      answer.save
-      answer
-    end
+    answer = Answer.create(:slug=>"childcare", :name=>"Something")
+    edition = answer.editions.first
+    edition.title = 'One'
+    edition.body = 'Lots of info'
+    answer.save
+    edition.state = 'ready'
+    edition.publish
+    answer.save
+    answer
   end
 
   def template_unpublished_answer
-    without_metadata_denormalisation(Answer) do
-      answer = Answer.create(:slug=>"unpublished", :name=>"Nothing")
-      edition = answer.editions.first
-      edition.title = 'One'
-      edition.body = 'Lots of info'
-      answer.save
-      answer
-    end
-  end
-
-  def panopticon_has_metadata(metadata)
-    json = JSON.dump(metadata)
-    url = "http://panopticon.test.gov.uk/artefacts/#{metadata['id']}.js"
-    stub_request(:get, url).to_return(:status => 200, :body => json, :headers => {})
+    answer = Answer.create(:slug=>"unpublished", :name=>"Nothing")
+    edition = answer.editions.first
+    edition.title = 'One'
+    edition.body = 'Lots of info'
+    answer.save
+    answer
   end
 
   test "edition finder should return the published edition when given an empty edition parameter" do
@@ -77,24 +67,20 @@ class PublicationTest < ActiveSupport::TestCase
 
     assert_kind_of Answer, publication
     assert_equal "Foo bar", publication.name
-    assert_equal "foo-bar", publication.slug
     assert_equal 2356, publication.panopticon_id
   end
 
   test "should not change edition name if published" do
-    guide = nil
-    without_metadata_denormalisation(Guide) do
-      guide = Factory(:guide,
-                      panopticon_id: 2356,
-                      name: "Original title",
-                      slug: "original-title"
-      )
-      guide.latest_edition.title = guide.name
-      guide.latest_edition.state = 'ready'
-      guide.latest_edition.save!
-      guide.save!
-      User.create(:name => "Winston").publish(guide.latest_edition, comment: 'testing')
-    end
+    guide = Factory(:guide,
+                    panopticon_id: 2356,
+                    name: "Original title",
+                    slug: "original-title"
+    )
+    guide.latest_edition.title = guide.name
+    guide.latest_edition.state = 'ready'
+    guide.latest_edition.save!
+    guide.save!
+    User.create(:name => "Winston").publish(guide.latest_edition, comment: 'testing')
 
     panopticon_has_metadata(
         "id" => 2356,
@@ -134,18 +120,15 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "cannot delete a published publication with a new draft edition" do
-    without_metadata_denormalisation(Answer) do
-      dummy_answer = template_published_answer
+    dummy_answer = template_published_answer
 
-      edition = dummy_answer.editions.first
-      new_edition = edition.build_clone
-      new_edition.body = 'Two'
-      dummy_answer.save
+    edition = dummy_answer.editions.first
+    new_edition = edition.build_clone
+    new_edition.body = 'Two'
+    dummy_answer.save
 
-      assert_raise (Publication::CannotDeletePublishedPublication) do
-        dummy_answer.destroy
-      end
-
+    assert_raise (Publication::CannotDeletePublishedPublication) do
+      dummy_answer.destroy
     end
   end
 
@@ -159,7 +142,6 @@ class PublicationTest < ActiveSupport::TestCase
 
     loaded_answer = Answer.first(conditions: {:slug=>"unpublished"})
     assert_nil loaded_answer
-
   end
 
   test "should scope publications assigned to nobody" do
@@ -177,44 +159,38 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "should update Rummager on publication" do
-    without_metadata_denormalisation(Guide) do
-      publication = FactoryGirl.create(:guide)
-      edition = publication.editions.first
-      publication.save
+    publication = FactoryGirl.create(:guide)
+    edition = publication.editions.first
+    publication.save
 
-      Rummageable.expects(:index).with(publication.search_index)
+    Rummageable.expects(:index).with(publication.search_index)
 
-      User.create(:name => 'Winston').publish(edition, comment: 'Testing')
-      publication.save
-    end
+    User.create(:name => 'Winston').publish(edition, comment: 'Testing')
+    publication.save
   end
 
   test "should update Rummager on deletion" do
-    without_metadata_denormalisation(Guide) do
-      publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
-      publication.save
+    publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
+    publication.save
 
-      Rummageable.expects(:delete).with("/hedgehog-topiary")
+    Rummageable.expects(:delete).with("/hedgehog-topiary")
 
-      publication.destroy
-    end
-  end   
-  
+    publication.destroy
+  end
+
   test "given multiple editions, can return the most recent published edition" do
-    without_metadata_denormalisation(Guide) do
-      publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
-      publication.save
+    publication = FactoryGirl.create(:guide, :slug => "hedgehog-topiary")
+    publication.save
 
-      first_edition = publication.editions.create(version_number: 1)
-      first_edition.update_attribute(:state, 'archived')                              
-      
-      second_edition = publication.editions.create(version_number: 2)
-      second_edition.update_attribute(:state, 'published')
-      
-      third_edition = publication.editions.create(version_number: 3)
-      third_edition.update_attribute(:state, 'draft')
-               
-      assert_equal publication.published_edition, second_edition
-    end
+    first_edition = publication.editions.create(version_number: 1)
+    first_edition.update_attribute(:state, 'archived')
+
+    second_edition = publication.editions.create(version_number: 2)
+    second_edition.update_attribute(:state, 'published')
+
+    third_edition = publication.editions.create(version_number: 3)
+    third_edition.update_attribute(:state, 'draft')
+
+    assert_equal publication.published_edition, second_edition
   end
 end

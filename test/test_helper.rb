@@ -36,13 +36,6 @@ class ActiveSupport::TestCase
     yield
   end
 
-  def without_metadata_denormalisation(*klasses, &block)
-    klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
-    result = yield
-    klasses.each {|klass| klass.any_instance.unstub(:denormalise_metadata) }
-    result
-  end
-
   setup do
     Rummageable.stubs :index
     Rummageable.stubs :delete
@@ -55,5 +48,11 @@ class ActiveSupport::TestCase
 
   def login_as_stub_user
     request.env['warden'] = stub(:authenticate! => true, :authenticated? => true)
+  end
+
+  def panopticon_has_metadata(metadata)
+    json = JSON.dump metadata
+    url = "http://panopticon.test.gov.uk/artefacts/#{metadata['id']}.js"
+    stub_request(:get, url).to_return(:status => 200, :body => json, :headers => {})
   end
 end

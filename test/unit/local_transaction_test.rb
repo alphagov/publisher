@@ -17,13 +17,11 @@ class LocalTransactionTest < ActiveSupport::TestCase
   end
 
   test "doesn't bother looking up the LGSL before validating an existing record" do
-    without_metadata_denormalisation(LocalTransaction) do
-      LocalTransactionsSource.expects(:find_current_lgsl).never
+    LocalTransactionsSource.expects(:find_current_lgsl).never
 
-      lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
-      lt.save(validate: false)
-      assert lt.valid?
-    end
+    lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
+    lt.save(validate: false)
+    assert lt.valid?
   end
 
   test "can verify whether an authority provides the transaction service, given its SNAC" do

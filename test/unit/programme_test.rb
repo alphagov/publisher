@@ -62,45 +62,39 @@ class ProgrammeTest < ActiveSupport::TestCase
 
     programme = user.create_publication(:programme)
     edition = programme.editions.first
-    without_metadata_denormalisation(Programme, Publication) do
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert !edition.can_request_review?
-      assert edition.can_request_amendments?
-      other_user.request_amendments(edition, {:comment => "I've reviewed it"})
-      assert !edition.can_request_amendments?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert edition.can_approve_review?
-      other_user.approve_review(edition, {:comment => "Looks good to me"})
-      assert edition.can_publish?
-    end
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert !edition.can_request_review?
+    assert edition.can_request_amendments?
+    other_user.request_amendments(edition, {:comment => "I've reviewed it"})
+    assert !edition.can_request_amendments?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert edition.can_approve_review?
+    other_user.approve_review(edition, {:comment => "Looks good to me"})
+    assert edition.can_publish?
   end
 
   test "user should not be able to review a programme they requested review for" do
     user = User.create(:name => "Bob")
 
-    without_metadata_denormalisation(Programme, Publication) do
-      programme = user.create_publication(:programme)
-      edition = programme.editions.first
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this programme please."})
-      assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
-    end
+    programme = user.create_publication(:programme)
+    edition = programme.editions.first
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this programme please."})
+    assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
   end
 
   test "user should not be able to okay a programme they requested review for" do
     user = User.create(:name => "Bob")
 
     programme = user.create_publication(:programme)
-    without_metadata_denormalisation(Programme, Publication) do
-      edition = programme.editions.first
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this programme please."})
-      assert ! user.approve_review(edition, '')
-    end
+    edition = programme.editions.first
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this programme please."})
+    assert ! user.approve_review(edition, '')
   end
 
   test "you can only create a new edition from a published edition" do

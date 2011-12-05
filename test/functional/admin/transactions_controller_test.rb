@@ -6,9 +6,7 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
     stub_request(:get, "#{Plek.current.find("arbiter")}/artefacts/test.js").to_return(:status => 200, :body => '{"name":"FOOOO"}')
     login_as_stub_user
-    without_metadata_denormalisation(Transaction) do
-      @transaction = Transaction.create!(:name => "test", :slug=>"test")
-    end
+    @transaction = Transaction.create!(:name => "test", :slug=>"test")
   end
 
   test "transactions index redirects to root" do
@@ -32,15 +30,12 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
   end
 
   test "can't destroy published transaction" do
-    without_metadata_denormalisation(Transaction) do
-      @transaction.editions.first.state = 'ready'
-      @transaction.editions.first.publish
-      assert !@transaction.can_destroy?
-      @transaction.save!
-      assert_difference('Transaction.count', 0) do
-        delete :destroy, :id => @transaction.id
-      end
+    @transaction.editions.first.state = 'ready'
+    @transaction.editions.first.publish
+    assert !@transaction.can_destroy?
+    @transaction.save!
+    assert_difference('Transaction.count', 0) do
+      delete :destroy, :id => @transaction.id
     end
   end
-
 end
