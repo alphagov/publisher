@@ -8,7 +8,7 @@ require 'messenger'
 Publication.marples_client_name = 'publisher'
 Publication.marples_logger = Rails.logger
 
-if Rails.env.test?
+if Rails.env.test? or ENV['NO_MESSENGER'].present?
   Messenger.transport = Marples::NullTransport.instance
   Publication.marples_transport = Marples::NullTransport.instance
 else
