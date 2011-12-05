@@ -30,7 +30,7 @@ module Admin::GuidesHelper
   end
 
   def preview_edition_path(edition)
-    publication_front_end_path(edition.container)+"?edition=#{edition.version_number}"
+    publication_front_end_path(edition.container)+"?edition=#{edition.version_number}&cache=#{Time.now().to_i}"
   end
 
   def progress_forms(edition)

@@ -5,6 +5,12 @@ GIT
     daemonette (0.1.0)
 
 GIT
+  remote: git@github.com:alphagov/daemonette.git
+  revision: 5183f28ba0c0a201a8639af1b4ad454c185ef4bf
+  specs:
+    daemonette (0.1.0)
+
+GIT
   remote: git@github.com:alphagov/gds-sso.git
   revision: df5d2fc33d1d0dfcf18a92465102d62aa0824065
   specs:
