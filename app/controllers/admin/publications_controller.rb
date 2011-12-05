@@ -15,10 +15,6 @@ class Admin::PublicationsController < Admin::BaseController
   end
 
   protected
-    def import_publication(panopticon_id)
-      Publication.import(panopticon_id, current_user)
-    end
-
     def render_new_form(publication)
       @publication = publication
       prepend_view_path "app/views/admin/publication_subclasses"
