@@ -25,10 +25,8 @@ class Admin::EditionsController <  Admin::BaseController
         redirect_to [:admin, parent]
       }
       failure.html {
-
-        tmpl_folder = parent.class.to_s.pluralize.downcase
         prepend_view_path "app/views/admin/publication_subclasses"
-        prepend_view_path "app/views/admin/#{tmpl_folder}"
+        prepend_view_path admin_template_folder_for(parent)
 
         instance_variable_set("@#{parent.class.to_s.downcase}".to_sym, parent)
         @resource = parent
