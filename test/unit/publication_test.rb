@@ -81,25 +81,6 @@ class PublicationTest < ActiveSupport::TestCase
     assert_equal 2356, publication.panopticon_id
   end
 
-  test "changes to name in panopticon should be reflected in the title of the latest edition on save" do
-    guide = without_metadata_denormalisation(Guide) do
-      Factory(:guide,
-              panopticon_id: 2356,
-              name: "Original title",
-              slug: "original-title"
-      )
-    end
-    panopticon_has_metadata(
-        "id" => 2356,
-        "slug" => "foo-bar",
-        "kind" => "guide",
-        "name" => "New title"
-    )
-    guide.save!
-
-    assert_equal "New title", guide.reload.latest_edition.title
-  end
-
   test "should not change edition name if published" do
     guide = nil
     without_metadata_denormalisation(Guide) do
