@@ -46,7 +46,6 @@ class Publication
   after_initialize :create_first_edition
 
   #before_save :calculate_statuses
-  before_save :denormalise_metadata
   before_destroy :check_can_delete_and_notify
   after_destroy :remove_from_search_index
 
@@ -113,11 +112,11 @@ class Publication
   Edition.state_machine.states.map(&:name).each do |state|
     define_method "has_#{state}?" do
       (self.editions.where(state: state).count > 0)
-    end                                                 
-  end                 
-  
+    end
+  end
+
   def format_type
-    self.class.name.to_s                           
+    self.class.name.to_s
   end
 
   def self.import panopticon_id, importing_user
@@ -236,7 +235,7 @@ class Publication
   rescue
     nil
   end
-        
+
   def archived_editions
     self.editions.where(state: 'archived').sort_by(&:version_number)
   end
@@ -364,5 +363,4 @@ class Publication
   def remove_from_search_index
     Rummageable.delete "/#{slug}"
   end
-
 end
