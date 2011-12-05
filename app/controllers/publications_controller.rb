@@ -6,7 +6,7 @@ class PublicationsController < ApplicationController
   
   def show
     if section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
-      data = show_section('section', section_name)
+      data = show_section(section_name)
     else
       data = show_publication(params[:id], params[:edition], params[:snac])
     end
