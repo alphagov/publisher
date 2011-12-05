@@ -71,12 +71,12 @@ class PublicationMetadata
     publication.department = attributes['department']
 
     if attributes['related_items'].present?
-      slugs = attributes['related_items'].map do |i|                         
+      slugs = attributes['related_items'].map do |i|
         a = i['artefact']
         [ i['sort_key'], a['slug'], a['name'], a['kind'] ] rescue [ false ] # catch items which don't exist
-      end          
+      end
       slugs.delete([false])
-      
+
       related_items = StringIO.new
       html = Builder::XmlMarkup.new :target => related_items
       slugs.sort_by { |order, slug, name, format| order }.each do |order, slug, name, format|
@@ -96,7 +96,7 @@ class PublicationMetadata
     data = JSON.parse open(uri).read
     data.except('updated_at', 'created_at', 'id', 'owning_app', 'kind', 'active')
   end
-  
+
   def need_id
     attributes['need_id']
   end
