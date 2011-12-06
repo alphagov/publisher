@@ -26,7 +26,7 @@ module Admin::GuidesHelper
   end
 
   def publication_front_end_path(publication)
-    "#{Plek.current.find("frontend")}/#{publication.slug}"
+    "#{Plek.current.find("publication-preview")}/#{publication.slug}"
   end
 
   def preview_edition_path(edition)
