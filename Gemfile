@@ -37,7 +37,6 @@ gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
-gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
 gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
 
