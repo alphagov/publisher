@@ -20,13 +20,11 @@ class GuideTest < ActiveSupport::TestCase
     g = Guide.new(:slug=>"childcare")
     assert g.has_lined_up?
     assert !g.has_published?
-  end                    
-  
+  end
+
   test 'when work started a new guide has draft but isn\'t published' do
     g = Guide.new(:slug=>"childcare")
-    without_metadata_denormalisation(Guide, Publication) do
-      g.editions.first.start_work
-    end
+    g.editions.first.start_work
     assert g.has_draft?
     assert !g.has_published?
   end
@@ -63,7 +61,7 @@ class GuideTest < ActiveSupport::TestCase
   end
 
   test 'a guide with a video url should have a video' do
-    g = Guide.new(:slug=>"childcare") 
+    g = Guide.new(:slug=>"childcare")
     g.editions.last.video_url = "http://www.youtube.com/watch?v=QH2-TGUlwu4"
     assert g.has_video?
   end
@@ -73,7 +71,7 @@ class GuideTest < ActiveSupport::TestCase
     assert guide.has_draft?
     assert !guide.has_published?
     user = User.create :name => "Winston"
-    
+
     guide.editions.each do |e|
        e.state = 'ready' #force ready state so that we can publish
        user.publish e, { comment: "Publishing this" }
@@ -87,9 +85,9 @@ class GuideTest < ActiveSupport::TestCase
     guide = template_guide
     assert guide.has_draft?
     assert !guide.has_published?
-                                
+
     guide.editions.first.state = 'ready'
-    User.create(:name => "test").publish guide.editions.first, { comment: "Publishing this" }  
+    User.create(:name => "test").publish guide.editions.first, { comment: "Publishing this" }
 
     assert guide.has_draft?
     assert guide.has_published?
@@ -98,7 +96,7 @@ class GuideTest < ActiveSupport::TestCase
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
     user = User.create(:name=>"Ben")
-    assert !guide.has_in_review?                                     
+    assert !guide.has_in_review?
     user.request_review(guide.editions.first,{:comment => "Review this guide please."})
     assert guide.has_in_review?
   end
@@ -109,19 +107,17 @@ class GuideTest < ActiveSupport::TestCase
 
     guide = user.create_publication(:guide)
     edition = guide.editions.first
-    without_metadata_denormalisation(Guide, Publication) do
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert !edition.can_request_review?
-      assert edition.can_request_amendments?
-      other_user.request_amendments(edition, {:comment => "I've reviewed it"})
-      assert !edition.can_request_amendments?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert edition.can_approve_review?
-      other_user.approve_review(edition, {:comment => "Looks good to me"})
-      assert edition.can_publish?
-    end
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert !edition.can_request_review?
+    assert edition.can_request_amendments?
+    other_user.request_amendments(edition, {:comment => "I've reviewed it"})
+    assert !edition.can_request_amendments?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert edition.can_approve_review?
+    other_user.approve_review(edition, {:comment => "Looks good to me"})
+    assert edition.can_publish?
   end
 
   test "check counting reviews" do
@@ -134,17 +130,15 @@ class GuideTest < ActiveSupport::TestCase
     assert_equal 0, guide.rejected_count
     assert_equal 0, guide.edition_rejected_count
 
-    without_metadata_denormalisation(Guide, Publication) do
-      user.start_work(edition)
-      user.request_review(edition,{:comment => "Review this guide please."})
-      other_user.request_amendments(edition, {:comment => "I've reviewed it"})
-    
-      assert_equal 1, guide.rejected_count
-      assert_equal 1, guide.edition_rejected_count
+    user.start_work(edition)
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.request_amendments(edition, {:comment => "I've reviewed it"})
 
-      user.request_review(edition,{:comment => "Review this guide please."})
-      other_user.approve_review(edition, {:comment => "Looks good to me"})
-    end
+    assert_equal 1, guide.rejected_count
+    assert_equal 1, guide.edition_rejected_count
+
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.approve_review(edition, {:comment => "Looks good to me"})
 
     assert_equal 1, guide.rejected_count
     assert_equal 0, guide.edition_rejected_count
@@ -155,40 +149,34 @@ class GuideTest < ActiveSupport::TestCase
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
 
-    without_metadata_denormalisation(Guide, Publication) do
-      guide = user.create_publication(:guide)
-      edition = guide.editions.first
-      edition.state = 'ready'
-      assert edition.can_send_fact_check?
-      user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
-    end
+    guide = user.create_publication(:guide)
+    edition = guide.editions.first
+    edition.state = 'ready'
+    assert edition.can_send_fact_check?
+    user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
   end
 
 
   test "user should not be able to review a guide they requested review for" do
     user = User.create(:name => "Ben")
 
-    without_metadata_denormalisation(Guide, Publication) do
-      guide = user.create_publication(:guide)
-      edition = guide.editions.first
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
-    end
+    guide = user.create_publication(:guide)
+    edition = guide.editions.first
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
   end
 
   test "user should not be able to okay a guide they requested review for" do
     user = User.create(:name => "Ben")
-    
-    without_metadata_denormalisation(Guide, Publication) do
-      guide = user.create_publication(:guide)
-      edition = guide.editions.first                       
-      user.start_work(edition)
-      assert edition.can_request_review?
-      user.request_review(edition,{:comment => "Review this guide please."})
-      assert ! user.approve_review(edition, '')
-    end
+
+    guide = user.create_publication(:guide)
+    edition = guide.editions.first
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this guide please."})
+    assert ! user.approve_review(edition, '')
   end
 
   test "you can only create a new edition from a published edition" do
@@ -205,20 +193,20 @@ class GuideTest < ActiveSupport::TestCase
     other_user = User.create(:name => "James")
 
     guide = user.create_publication(:guide, :panopticon_id => 1234574)
-    edition = guide.editions.first               
+    edition = guide.editions.first
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.approve_review(edition, {:comment => "I've reviewed it"})
     user.send_fact_check(edition,{:comment => "Review this guide please.", :email_addresses => 'test@test.com'})
     user.receive_fact_check(edition, {:comment => "No changes needed, this is all correct"})
-    other_user.approve_fact_check(edition, {:comment => "Looks good to me"}) 
+    other_user.approve_fact_check(edition, {:comment => "Looks good to me"})
     user.publish(edition, {:comment => "PUBLISHED!"})
     return user, guide
   end
 
   test "a guide should not send an email if creating a new edition fails" do
     user, guide = publisher_and_guide
-    edition = guide.published_edition      
+    edition = guide.published_edition
     NoisyWorkflow.expects(:make_noise).never
     edition.expects(:build_clone).returns(false)
     assert ! user.new_version(edition)

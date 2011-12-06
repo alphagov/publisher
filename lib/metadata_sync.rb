@@ -5,27 +5,22 @@ class MetadataSync
   initialize_with :logger
   default_value_of :logger, NullLogger.instance
 
+  def sync artefact
+    update = UpdatePublicationMetadata.new artefact, :logger => logger
+    update.execute
+  end
+
   def run
     @marples = client
 
+    @marples.when 'publisher', '*', 'created' do |publication|
+      logger.info "Publisher created publication #{publication['id']}"
+      artefact = { 'id' => publication['panopticon_id'] }
+      sync artefact
+    end
     @marples.when 'panopticon', 'artefacts', 'updated' do |artefact|
-      remote_id = artefact['id']
-      logger.debug "Finding artefact with panopticon id #{remote_id}"
-      publications = Publication.where panopticon_id: remote_id
-      publication = publications.first
-      if publication
-        logger.debug "Denormalising metadata for publication #{publication.id}"
-        publication.denormalise_metadata
-        logger.debug "Denormalised metadata, saving publication"
-        success = publication.save
-        if success
-          logger.info "Updated metadata for publication #{publication.id}"
-        else
-          logger.error "Couldn't save updated metadata for publication #{publication.id}"
-        end
-      else
-        logger.error "Couldn't find publication, bit odd. Ignoring message."
-      end
+      logger.info "Panopticon updated artefact #{artefact['id']}"
+      sync artefact
     end
     logger.info "Started MetadataSync client..."
     @marples.join
@@ -33,6 +28,6 @@ class MetadataSync
 
   def client
     transport = Messenger.transport
-    Marples::Client.new transport, 'metadata-sync', logger
+    Marples::Client.new transport: transport, logger: logger
   end
 end

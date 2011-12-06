@@ -5,4 +5,10 @@ class Transaction < Publication
     TransactionEdition
   end
 
+  def indexable_content
+    content = super
+    return content unless latest_edition
+    "#{content} #{latest_edition.introduction} #{latest_edition.more_information}".strip
+  end
+
 end

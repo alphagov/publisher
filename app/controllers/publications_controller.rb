@@ -5,13 +5,8 @@ class PublicationsController < ApplicationController
   respond_to :json, :html
   
   def show
-    section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
-    audience_name = Publication::AUDIENCES.detect { |s| s.parameterize.to_s == params[:id] }
-
-    if section_name
-      data = show_collection('section', section_name)
-    elsif audience_name
-      data = show_collection('audience', audience_name)
+    if section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
+      data = show_section(section_name)
     else
       data = show_publication(params[:id], params[:edition], params[:snac])
     end
@@ -23,12 +18,8 @@ class PublicationsController < ApplicationController
     end
   end
 
-  def show_collection(type, name)
-    if type == 'section'
-      publications = Publication.where(section: name).collect(&:published_edition).compact
-    else
-      publications = Publication.any_in(audiences: [params[:id]]).collect(&:published_edition).compact
-    end
+  def show_section(name)
+    publications = Publication.where(section: name).collect(&:published_edition).compact
       
     publications = publications.to_a.collect do |g|
       {
@@ -39,7 +30,7 @@ class PublicationsController < ApplicationController
       }
     end
     
-    return { :name => name, :type => type, :publications => publications }
+    return { :name => name, :type => 'section', :publications => publications }
   end
 
   def show_publication(slug, edition, snac)

@@ -9,7 +9,6 @@ module Workflow
   def new_action(user, type, options={})
     action = Action.new(options.merge(:requester_id=>user.id, :request_type=>type))
     self.actions << action
-    #self.calculate_statuses
     action
   end
 

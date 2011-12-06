@@ -35,7 +35,7 @@ class ActiveSupport::TestCase
   def without_panopticon_validation(&block)
     yield
   end
-
+  
   def without_metadata_denormalisation(*klasses, &block)
     klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
     result = yield
@@ -53,6 +53,13 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true)
+    temp_user = User.create!(:name => 'Stub User')
+    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => temp_user)
+  end
+
+  def panopticon_has_metadata(metadata)
+    json = JSON.dump metadata
+    url = "http://panopticon.test.gov.uk/artefacts/#{metadata['id']}.js"
+    stub_request(:get, url).to_return(:status => 200, :body => json, :headers => {})
   end
 end

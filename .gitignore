@@ -7,3 +7,5 @@ tmp/
 coverage
 test/reports
 .generators
+.rakeTasks
+*iml

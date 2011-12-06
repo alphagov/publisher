@@ -45,52 +45,11 @@ class Publication
 
   after_initialize :create_first_edition
 
-  #before_save :calculate_statuses
-  before_save :denormalise_metadata
   before_destroy :check_can_delete_and_notify
   after_destroy :remove_from_search_index
 
-  # validates_presence_of :panopticon_id
-
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
-  AUDIENCES = [
-      "Age-related audiences",
-      "Carers",
-      "Civil partnerships",
-      "Crime and justice-related audiences",
-      "Disabled people",
-      "Employment-related audiences",
-      "Family-related audiences",
-      "Graduates",
-      "Gypsies and travellers",
-      "Horse owners",
-      "Intermediaries",
-      "International audiences",
-      "Long-term sick",
-      "Members of the Armed Forces",
-      "Nationality-related audiences",
-      "Older people",
-      "Partners of people claiming benefits",
-      "Partners of students",
-      "People of working age",
-      "People on a low income",
-      "Personal representatives (for a deceased person)",
-      "Property-related audiences",
-      "Road users",
-      "Same-sex couples",
-      "Single people",
-      "Smallholders",
-      "Students",
-      "Terminally ill",
-      "Trustees",
-      "Veterans",
-      "Visitors to the UK",
-      "Volunteers",
-      "Widowers",
-      "Widows",
-      "Young people"
-  ]
   SECTIONS = [
       'Rights',
       'Justice',
@@ -113,9 +72,9 @@ class Publication
   Edition.state_machine.states.map(&:name).each do |state|
     define_method "has_#{state}?" do
       (self.editions.where(state: state).count > 0)
-    end                                                 
-  end                 
-  
+    end
+  end
+
   def format_type
     self.class.name.to_s
   end
@@ -126,16 +85,12 @@ class Publication
     json = JSON.parse data
     publication = Publication.where(slug: json['slug']).first
     if publication.present?
-      return publication if publication.panopticon_id
-      publication.panopticon_id = json['id']
-      publication.save!
+      publication.panopticon_id ||= json['id']
       return publication
     end
 
     kind = json['kind']
-    publication = importing_user.create_publication kind.to_sym, :panopticon_id => json['id'], :name => json['name']
-    publication.save!
-    publication
+    importing_user.create_publication(kind.to_sym, :panopticon_id => json['id'], :name => json['name'])
   end
 
   def self.find_and_identify_edition(slug, edition)
@@ -208,27 +163,9 @@ class Publication
     self.update_attribute(:edition_rejected_count, 0)
   end
 
-  def calculate_statuses
-    self.has_published = self.publishings.any? && !self.archived
-
-    published_versions = ::Set.new(publishings.map(&:version_number))
-    all_versions = ::Set.new(editions.map(&:version_number))
-    drafts = (all_versions - published_versions)
-
-    self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
-
-    self.has_reviewables = editions.any? { |e| e.status_is?(Action::REVIEW_REQUESTED) }
-
-    true
-  end
-
   def publish(edition, notes)
     publishings.create version_number: edition.version_number, change_notes: notes
     update_in_search_index
-  end
-
-  def denormalise_metadata
-    meta_data.apply_to self
   end
 
   def published_edition
@@ -236,7 +173,7 @@ class Publication
   rescue
     nil
   end
-        
+
   def archived_editions
     self.editions.where(state: 'archived').sort_by(&:version_number)
   end
@@ -302,5 +239,4 @@ class Publication
   def remove_from_search_index
     Rummageable.delete "/#{slug}"
   end
-
 end
