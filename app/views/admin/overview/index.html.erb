@@ -7,7 +7,7 @@
 	
 	<% @overviews.each do |title, rows| %>
 		<div id="<%= title.parameterize %>">
-      <%= render :partial => "row", :locals => {:rows => rows, :title => title } %>
+      <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
 		</div>
 	<% end %>
 </div>

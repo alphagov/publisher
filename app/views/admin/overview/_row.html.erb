@@ -1,33 +1,15 @@
-
-<table class="formats" summary="The number of publications broken down by <%= title %>">
-	<thead>
-	  <tr>
-      <th scope="col"><%= title.capitalize %></th>
-	    <th scope="col">Total</th>
-	    <th scope="col">Lined up</th>
-	    <th scope="col">Draft</th>
-	    <th scope="col">Fact check</th>
-	    <th scope="col">Review</th>
-	    <th scope="col">Published</th>
-      <th scope="col">Archived</th>
-	  </tr>
-	</thead>
-	<tbody>
-
-	<% rows.each do |row| %>
-	  <% unless row.values[0].blank? %>
-	  <tr>
-	    <th scope="row"><%= row.values[0] %></th>
-	    <td><%= row.values[1]['count'] %></td>
-	    <td><%= row.values[1]['lined_up'] %></td>
-	    <td><%= row.values[1]['draft'] %></td>
-	    <td><%= row.values[1]['fact_check'] %></td>
-	    <td><%= row.values[1]['review'] %></td>
-	    <td><%= row.values[1]['published'] %></td>
-	    <td><%= row.values[1]['archived'] %></td>
-	  </tr>
-	  <% end %>
-	<% end %>
-
-	</tbody>
-</table>
+<% if (!row.nil?) %>
+    <tr class="<%= (is_total_row?(row)) ? 'total_row' : '' %>">
+        <th scope="row"><%= format_group_name row[:group_name] %></th>
+        <td><%= row[:count] %></td>
+        <td><%= row[:lined_up] %></td>
+        <td><%= row[:draft] %></td>
+        <td><%= row[:amends_needed] %></td>
+        <td><%= row[:in_review] %></td>
+        <td><%= row[:ready] %></td>
+        <td><%= row[:fact_check_received] %></td>
+        <td><%= row[:fact_check] %></td>
+        <td><%= row[:published] %></td>
+        <td><%= row[:archived] %></td>
+    </tr>
+<% end %>

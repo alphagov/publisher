@@ -117,7 +117,7 @@ class Publication
   end                 
   
   def format_type
-    self.class.name.to_s                           
+    self.class.name.to_s
   end
 
   def self.import panopticon_id, importing_user
@@ -267,68 +267,6 @@ class Publication
 
   def title
     self.name || latest_edition.title
-  end
-
-  FORMAT = "this._type"
-  SECTION = "this.section"
-  DEPARTMENT = "this.department"
-
-  def self.count_by(type = FORMAT)
-
-    map = <<-EOF
-      function() {
-        var truthy = function(value) {
-          return (value == true) ? 1 : 0;
-        };
-
-        emit(#{type}, {
-          type:   #{type},
-          count:      1,
-          draft:      truthy(this.has_drafts),
-          lined_up:   truthy(this.lined_up),
-          review:     truthy(this.has_reviewables),
-          published:  truthy(this.has_published),
-          fact_check: truthy(this.has_fact_checking),
-          archived:   truthy(this.archived)
-        });
-      }
-    EOF
-
-    reduce = <<-EOF
-      function(key, values) {
-        var count      = 0,
-            draft      = 0,
-            lined_up   = 0,
-            review     = 0,
-            published  = 0,
-            fact_check = 0,
-            archived   = 0;
-
-        values.forEach(function(doc) {
-          count      += parseInt(doc.count);
-          draft      += parseInt(doc.draft);
-          lined_up   += parseInt(doc.lined_up);
-          published  += parseInt(doc.published);
-          review     += parseInt(doc.review);
-          fact_check += parseInt(doc.fact_check);
-          archived   += parseInt(doc.archived);
-          type = doc.type
-        });
-
-        return {
-          type:       type,
-          count:      count,
-          draft:      draft,
-          lined_up:   lined_up,
-          review:     review,
-          published:  published,
-          fact_check: fact_check,
-          archived:   archived
-        };
-      }
-    EOF
-
-    collection.mapreduce(map, reduce, out: "mr_publications_count_by_#{type}").find()
   end
 
   def indexable_content

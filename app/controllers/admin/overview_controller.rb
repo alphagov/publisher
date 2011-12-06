@@ -4,9 +4,9 @@ class Admin::OverviewController < InheritedResources::Base
 
   def index
     @overviews = {
-      'Format' =>  Publication.count_by(Publication::FORMAT),
-      'Section' => Publication.count_by(Publication::SECTION),
-      'Writing Department' => Publication.count_by(Publication::DEPARTMENT)
+      'Format' =>  OverviewDashboard.where(:dashboard_type => "Format"),
+      'Section' => OverviewDashboard.where(:dashboard_type => "Section").order_by([['result_group','ASC']]),
+      'Writing Department' => OverviewDashboard.where(:dashboard_type => "Writing Department")
     }
   end
 end

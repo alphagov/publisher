@@ -50,7 +50,6 @@ class ActiveSupport::TestCase
 
   teardown do
     WebMock.reset!
-    DatabaseCleaner.clean
   end
 
   def login_as_stub_user

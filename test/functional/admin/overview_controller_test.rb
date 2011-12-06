@@ -11,5 +11,4 @@ class Admin::OverviewControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:overviews)
   end
-
 end
