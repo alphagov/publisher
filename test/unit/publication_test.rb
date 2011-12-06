@@ -19,6 +19,16 @@ class PublicationTest < ActiveSupport::TestCase
     answer
   end
 
+  def template_transaction
+    trans = Transaction.create(:slug=>"childcare", :name=>"Something")
+    edition = trans.editions.first
+    edition.title = 'One'
+    edition.introduction = 'introduction'
+    edition.more_information = 'more info'
+    trans.save
+    trans
+  end
+
   def template_unpublished_answer
     answer = Answer.create(:slug=>"unpublished", :name=>"Nothing")
     edition = answer.editions.first
@@ -46,6 +56,16 @@ class PublicationTest < ActiveSupport::TestCase
     out = Publication.search_index_published
     assert_equal 1, out.count
     assert_equal ["title", "link", "format", "description", "indexable_content"], out.first.keys
+  end
+
+  test "search indexable content for answer" do
+    dummy_publication = template_published_answer
+    assert_equal dummy_publication.indexable_content, "Lots of info"
+  end
+
+  test "search indexable content for transaction" do
+    dummy_publication = template_transaction
+    assert_equal dummy_publication.indexable_content, "introduction more info"
   end
 
   test 'a publication should not have a video' do
