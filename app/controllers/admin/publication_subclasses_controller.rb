@@ -6,10 +6,10 @@ class Admin::PublicationSubclassesController < Admin::BaseController
   end
 
   def create
-    @resource = current_user.create_publication(class_identifier, params[class_identifier])
-    if @resource.save
-      redirect_to resource_path(@resource),
-        :notice => "#{description(@resource)} successfully created"
+    @publication = current_user.create_publication(class_identifier, params[class_identifier])
+    if @publication.save
+      redirect_to resource_path(@publication),
+        :notice => "#{description(@publication)} successfully created"
       return
     else
       render :action => "new"
