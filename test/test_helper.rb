@@ -35,6 +35,13 @@ class ActiveSupport::TestCase
   def without_panopticon_validation(&block)
     yield
   end
+  
+  def without_metadata_denormalisation(*klasses, &block)
+    klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
+    result = yield
+    klasses.each {|klass| klass.any_instance.unstub(:denormalise_metadata) }
+    result
+  end
 
   setup do
     Rummageable.stubs :index
@@ -47,7 +54,8 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true)
+    temp_user = User.create!(:name => 'Stub User')
+    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => temp_user)
   end
 
   def panopticon_has_metadata(metadata)

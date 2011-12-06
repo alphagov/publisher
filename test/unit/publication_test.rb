@@ -30,12 +30,14 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   def template_unpublished_answer
-    answer = Answer.create(:slug=>"unpublished", :name=>"Nothing")
-    edition = answer.editions.first
-    edition.title = 'One'
-    edition.body = 'Lots of info'
-    answer.save
-    answer
+    without_metadata_denormalisation(Answer) do
+      answer = Answer.create(:slug=>"unpublished", :name=>"Nothing")
+      edition = answer.editions.first
+      edition.title = 'One'
+      edition.body = 'Lots of info'
+      answer.save
+      answer
+    end
   end
 
   test "edition finder should return the published edition when given an empty edition parameter" do

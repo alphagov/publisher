@@ -50,43 +50,6 @@ class Publication
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
-  AUDIENCES = [
-      "Age-related audiences",
-      "Carers",
-      "Civil partnerships",
-      "Crime and justice-related audiences",
-      "Disabled people",
-      "Employment-related audiences",
-      "Family-related audiences",
-      "Graduates",
-      "Gypsies and travellers",
-      "Horse owners",
-      "Intermediaries",
-      "International audiences",
-      "Long-term sick",
-      "Members of the Armed Forces",
-      "Nationality-related audiences",
-      "Older people",
-      "Partners of people claiming benefits",
-      "Partners of students",
-      "People of working age",
-      "People on a low income",
-      "Personal representatives (for a deceased person)",
-      "Property-related audiences",
-      "Road users",
-      "Same-sex couples",
-      "Single people",
-      "Smallholders",
-      "Students",
-      "Terminally ill",
-      "Trustees",
-      "Veterans",
-      "Visitors to the UK",
-      "Volunteers",
-      "Widowers",
-      "Widows",
-      "Young people"
-  ]
   SECTIONS = [
       'Rights',
       'Justice',
@@ -122,16 +85,12 @@ class Publication
     json = JSON.parse data
     publication = Publication.where(slug: json['slug']).first
     if publication.present?
-      return publication if publication.panopticon_id
-      publication.panopticon_id = json['id']
-      publication.save!
+      publication.panopticon_id ||= json['id']
       return publication
     end
 
     kind = json['kind']
-    publication = importing_user.create_publication kind.to_sym, :panopticon_id => json['id'], :name => json['name']
-    publication.save!
-    publication
+    importing_user.create_publication(kind.to_sym, :panopticon_id => json['id'], :name => json['name'])
   end
 
   def self.find_and_identify_edition(slug, edition)
@@ -202,20 +161,6 @@ class Publication
 
   def mark_as_accepted
     self.update_attribute(:edition_rejected_count, 0)
-  end
-
-  def calculate_statuses
-    self.has_published = self.publishings.any? && !self.archived
-
-    published_versions = ::Set.new(publishings.map(&:version_number))
-    all_versions = ::Set.new(editions.map(&:version_number))
-    drafts = (all_versions - published_versions)
-
-    self.has_fact_checking = editions.any? { |e| e.status_is?(Action::FACT_CHECK_REQUESTED) }
-
-    self.has_reviewables = editions.any? { |e| e.status_is?(Action::REVIEW_REQUESTED) }
-
-    true
   end
 
   def publish(edition, notes)

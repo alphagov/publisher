@@ -8,7 +8,7 @@ class LocalTransaction < Publication
   validates_presence_of :lgsl, :on => :create
 
   set_callback :validation, :before do |local_transaction|
-    unless local_transaction.persisted?
+    unless local_transaction.persisted? or lgsl_code.blank?
       local_transaction.lgsl = LocalTransactionsSource.find_current_lgsl(local_transaction.lgsl_code)
     end
   end
