@@ -6,6 +6,11 @@
   <%= f.inputs :lgsl_code %>
   <%= f.inputs do %>
     <%= f.input :panopticon_id, :as => :hidden %>
+    <%= f.input :title, :as => :hidden %>
+    <%= f.input :slug, :as => :hidden %>
+    <%= f.input :section, :as => :hidden %>
+    <%= f.input :department, :as => :hidden %>
+    <%= f.input :related_items, :as => :hidden %>
   <% end %>
   <%= f.buttons %>
 <% end %>
