@@ -181,7 +181,6 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test "should update Rummager on publication" do
-<<<<<<< HEAD
     publication = FactoryGirl.create(:guide)
     edition = publication.editions.first
     edition.update_attribute(:state, 'ready') 
