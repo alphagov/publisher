@@ -79,18 +79,18 @@ class Publication
     self.class.name.to_s
   end
 
-  def self.import panopticon_id, importing_user
-    uri = "#{Plek.current.find("arbiter")}/artefacts/#{panopticon_id}.js"
-    data = open(uri).read
-    json = JSON.parse data
-    publication = Publication.where(slug: json['slug']).first
-    if publication.present?
-      publication.panopticon_id ||= json['id']
-      return publication
+  def self.import(panopticon_id, importing_user)
+    require 'gds_api/panopticon'
+    api = GdsApi::Panopticon.new(Plek.current.environment)
+    metadata = api.artefact_for_slug(panopticon_id)
+
+    existing_publication = Publication.where(slug: metadata.slug).first
+    if existing_publication.present?
+      existing_publication.panopticon_id ||= metadata.id
+      return existing_publication
     end
 
-    kind = json['kind']
-    importing_user.create_publication(kind.to_sym, :panopticon_id => json['id'], :name => json['name'])
+    importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name)
   end
 
   def self.find_and_identify_edition(slug, edition)
