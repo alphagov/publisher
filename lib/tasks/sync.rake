@@ -1,11 +1,9 @@
 namespace :sync do
   desc "Broadcast all current publications states"
   task :broadcast => :environment do
-    Publication.all.each do |pub|
-      if pub.has_published?
-        print '.'
-        Messenger.instance.published pub
-      end
+    Publication.published.each do |pub|
+      print '.'
+      Messenger.instance.published pub
     end
   end
 
