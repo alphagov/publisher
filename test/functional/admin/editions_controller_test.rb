@@ -109,9 +109,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should show the edit page again if updating fails" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/test.js").
-      with(:headers => {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-      to_return(:status => 200, :body => "{}", :headers => {})
+    panopticon_has_metadata(
+      "id" => "test"
+    )
 
     Guide.expects(:find).returns(@guide)
     @guide.editions.last.stubs(:update_attributes).returns(false)

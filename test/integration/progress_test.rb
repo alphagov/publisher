@@ -3,8 +3,7 @@ require 'integration_test_helper'
 class GuideProgressTest < ActionDispatch::IntegrationTest
 
   test "should update progress of a guide" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-      to_return(status: 200, body: "{}", headers: {})
+    panopticon_has_metadata("id" => '2356')
 
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.

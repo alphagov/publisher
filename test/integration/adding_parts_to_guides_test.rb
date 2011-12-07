@@ -14,8 +14,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
     guide.save!
     guide.editions.first.update_attribute(:state, 'draft')
 
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-      to_return(:status => 200, :body => "{}", :headers => {})
+    panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/guides/#{guide.to_param}"
 

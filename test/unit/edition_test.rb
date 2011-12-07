@@ -11,8 +11,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+    panopticon_has_metadata("id" => '2356', "slug" => 'childcare',"name" => "Childcare")
   end
 
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
@@ -89,17 +88,12 @@ class EditionTest < ActiveSupport::TestCase
   test "an edition of a guide can be published" do
     edition = template_edition
     guide = template_edition.guide
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
     guide.editions.first.update_attribute :state, 'ready'
     guide.editions.first.publish
     assert_not_nil guide.published_edition
   end
 
   test "when an edition of a guide is published, all other published editions are archived" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
-
     guide = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
 
     first_edition = guide.editions.create(version_number: 1)
@@ -120,9 +114,6 @@ class EditionTest < ActiveSupport::TestCase
     edition = template_edition
     guide = template_edition.container
     guide.save
-
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
 
     guide.editions.first.update_attribute :state, 'published'
     guide.reload

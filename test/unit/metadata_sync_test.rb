@@ -10,18 +10,16 @@ class MetadataSyncTest < ActiveSupport::TestCase
   end
 
   test "denormalises data from Panopticon" do
+    panopticon_url = panopticon_has_metadata(
+      "id" => 123,
+      "name" => "New title"
+    )
+    
     publication = Guide.create! :panopticon_id => 123, :title => "Old title"
 
     updated_artefact = {
       'id' => publication.panopticon_id
     }
-
-    panopticon_url = 'http://panopticon.test.gov.uk/artefacts/123.js'
-
-    panopticon_has_metadata(
-      "id" => publication.panopticon_id,
-      "name" => "New title"
-    )
 
     @metadata.sync updated_artefact
     assert_equal "New title", publication.reload.latest_edition.title
@@ -44,7 +42,11 @@ class MetadataSyncTest < ActiveSupport::TestCase
 
     @metadata.sync updated_artefact
     assert_equal "New title 2", publication.reload.latest_edition.title
-    panopticon_url = 'http://panopticon.test.gov.uk/artefacts/123.js'
+    panopticon_url = panopticon_has_metadata(
+      "id" => '123',
+      "name" => "New title"
+    )
+
     assert_not_requested :get, panopticon_url
   end
 

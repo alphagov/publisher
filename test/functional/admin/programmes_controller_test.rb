@@ -3,8 +3,11 @@ require 'test_helper'
 class Admin::ProgrammesControllerTest < ActionController::TestCase
 
   setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/12345.js").
-      to_return(:status => 200, :body => '{"name":"Test","slug":"test"}', :headers => {})
+    panopticon_has_metadata(
+      "id" => "12345",
+      "name" => "Test",
+      "slug" => "test"
+    )
     login_as_stub_user
     @programme = Programme.create(:name => "test", :slug=>"test", :panopticon_id => 12345)
   end
