@@ -17,13 +17,6 @@ namespace :router do
   end
 
   task :register_routes => [ :router_environment, :environment ] do
-    @logger.info "Registering homepage at /"
-   @router.routes.update application_id: "frontend", route_type: :full,
-     incoming_path: "/"
-
-    @logger.info "Registering asset path /publisher-assets"
-    @router.routes.update application_id: "frontend", route_type: :prefix,
-      incoming_path: "/publisher-assets"
   end
 
   desc "Register publisher application and routes with the router (run this task on server in cluster)"
