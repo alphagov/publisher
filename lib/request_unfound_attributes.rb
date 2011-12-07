@@ -1,9 +1,8 @@
+require 'gds_api/panopticon'
+
 class RequestUnfoundAttributes
   attr_accessor :attributes
   private :attributes=, :attributes
-
-  attr_accessor :remote_url
-  private :remote_url=, :remote_url
 
   attr_accessor :loaded
   private :loaded=, :loaded
@@ -11,14 +10,13 @@ class RequestUnfoundAttributes
   attr_accessor :logger
   private :logger=, :logger
 
-  def initialize attributes, remote_url, options = {}
+  def initialize attributes, options = {}
     self.attributes = attributes
-    self.remote_url = remote_url
     self.logger = options[:logger] || NullLogger.instance
   end
 
   def inspect
-    "<RequestUnfoundAttributes:#{hash} @attributes=#{attributes.inspect}, @remote_url=#{remote_url.inspect}>"
+    "<RequestUnfoundAttributes:#{hash} @attributes=#{attributes.inspect}>"
   end
 
   def [] key
@@ -40,10 +38,12 @@ class RequestUnfoundAttributes
   private :load_attribute
 
   def load_attributes_and_return key
-    logger.debug "Loading attributes from #{remote_url}"
-    loaded_attributes = JSON.parse open(remote_url).read
+    logger.debug "Loading attributes for #{attributes['id']}"
+    api = GdsApi::Panopticon.new(Plek.current.environment)
+    loaded_attributes = api.artefact_for_slug(attributes['id'], :as_hash => true)
+
     logger.debug "Merging #{loaded_attributes.inspect} into #{attributes.inspect}"
-    attributes.merge! loaded_attributes
+    attributes.merge!(loaded_attributes)
     self.loaded = true
     logger.debug "Returning #{key} which is #{attributes[key].inspect}"
     attributes[key]

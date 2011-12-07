@@ -2,10 +2,11 @@ require 'integration_test_helper'
 
 class GuideAssignmentTest < ActionDispatch::IntegrationTest
 
+  setup do
+    panopticon_has_metadata("id" => '2356')
+  end
+  
   test "should show and update a guide's assigned person" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-      to_return(status: 200, body: "{}", headers: {})
-
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
@@ -46,9 +47,6 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
   end
 
   test "can assign a new guide without editing the part" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-      to_return(status: 200, body: "{}", headers: {})
-
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
@@ -70,9 +68,6 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
   end
 
   test "a guide is lined up until work starts on it" do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/2356.js").
-      to_return(status: 200, body: "{}", headers: {})
-
     alice   = FactoryGirl.create(:user, name: "Alice")
 
     guide = FactoryGirl.create(:guide, panopticon_id: 2356)

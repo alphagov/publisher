@@ -3,8 +3,7 @@ require 'test_helper'
 class PublicationTest < ActiveSupport::TestCase
 
   setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/childcare.js").
-      to_return(:status => 200, :body => '{"name":"Something","slug":"childcare"}', :headers => {})
+    panopticon_has_metadata("id" => '2356', "slug" => 'childcare',"name" => "Childcare")
   end
 
   def template_published_answer

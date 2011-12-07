@@ -3,8 +3,7 @@ require 'test_helper'
 class GuideTest < ActiveSupport::TestCase
 
   setup do
-    stub_request(:get, "http://panopticon.test.gov.uk/artefacts/1234574.js").
-      to_return(:status => 200, :body => '{"name":"Childcare","slug":"childcare"}', :headers => {})
+    panopticon_has_metadata("id" => '1234574', "name" => "Childcare", "slug" => "childcare")
   end
 
   def template_guide

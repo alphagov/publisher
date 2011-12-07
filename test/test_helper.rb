@@ -58,8 +58,10 @@ class ActiveSupport::TestCase
   end
 
   def panopticon_has_metadata(metadata)
-    json = JSON.dump metadata
-    url = "http://panopticon.test.gov.uk/artefacts/#{metadata['id']}.js"
-    stub_request(:get, url).to_return(:status => 200, :body => json, :headers => {})
+    json = JSON.dump(metadata)
+    url = "http://panopticon.test.alphagov.co.uk/artefacts/#{metadata['id']}.json"
+    stub_request(:get, url).
+      to_return(:status => 200, :body => json, :headers => {})
+    return url
   end
 end

@@ -7,8 +7,7 @@ class UpdatePublicationMetadata
 
   def initialize artefact, options = {}
     logger = options[:logger] || NullLogger.instance
-    panopticon_url = "#{Plek.current.find("panopticon")}/artefacts/#{artefact['id']}.js"
-    self.artefact = RequestUnfoundAttributes.new artefact, panopticon_url, :logger => logger
+    self.artefact = RequestUnfoundAttributes.new artefact, :logger => logger
     self.logger = logger
   end
 
