@@ -4,7 +4,10 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
 
   setup do
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
-    stub_request(:get, "#{Plek.current.find("arbiter")}/artefacts/test.js").to_return(:status => 200, :body => '{"name":"FOOOO"}')
+    panopticon_has_metadata(
+      "id" => "test",
+      "name" => "FOOOO"
+    )
     login_as_stub_user
     @transaction = Transaction.create!(:name => "test", :slug=>"test")
   end
