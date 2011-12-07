@@ -17,7 +17,7 @@ class User
 
   def record_action(edition, type, options={})     
     type = Action.const_get(type.to_s.upcase)
-    action = edition.new_action(self, type, options)
+    action = edition.new_action(self, type, options)           
     messenger_topic = edition.state.to_s.downcase             
     Messenger.instance.send messenger_topic, edition.container unless messenger_topic == "created"
     NoisyWorkflow.make_noise(edition.container, action).deliver
@@ -110,7 +110,6 @@ class User
   def publish(edition, details)
     edition.publish            
     record_action edition, __method__, details 
-    edition.container.publish(edition, details)
     edition
   end
 

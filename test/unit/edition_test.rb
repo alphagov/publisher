@@ -135,18 +135,38 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "publish history is recorded" do
-    edition = template_edition
-    guide = template_edition.guide
-    guide.save
+    without_metadata_denormalisation(Guide) do
+      edition = template_edition                                     
+      guide = template_edition.guide
+      
+      user = User.create :name => 'bob'
+      guide.save                
+                         
+      edition = guide.editions.first
+      edition.update_attribute(:state, 'ready')
+      user.publish edition, comment: "First publication"      
 
-    guide.publish edition, "First publication"
-    guide.publish edition, "Second publication"
+      second_edition = guide.editions.build
+      second_edition.save!
+      second_edition.update_attribute(:state, 'ready')
+      user.publish second_edition, comment: "Second publication"  
 
-    new_edition = edition.build_clone
-    new_edition.parts.first.body = "Some other version text"
+      third_edition = guide.editions.build
+      third_edition.save!
+      third_edition.update_attribute(:state, 'ready')                 
+      user.publish third_edition, comment: "Third publication"
 
-    guide.publish new_edition, "Third publication"
-
-    assert_equal 3, guide.publishings.length
+      guide.reload
+                                       
+      action_count = 0
+      guide.editions.each do |e|                        
+        actions = e.actions.where('request_type' => 'publish')
+        action_count += actions.count   
+      end
+      
+      assert_equal 3, action_count
+      assert_equal 1, guide.editions.where(state: 'published').count
+      assert_equal 2, guide.editions.where(state: 'archived').count
+    end
   end
 end

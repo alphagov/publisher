@@ -172,6 +172,10 @@ class Publication
     latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
   rescue
     nil
+  end          
+  
+  def actions
+    self.editions.all.map{ |edition| edition.actions }
   end
 
   def archived_editions
@@ -231,6 +235,7 @@ class Publication
       false
     end
   end
+
 
   def update_in_search_index
     Rummageable.index self.search_index

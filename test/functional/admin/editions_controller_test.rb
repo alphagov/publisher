@@ -57,9 +57,9 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should not assign after creation if assignment is blank" do
-    bob = User.create
+    @bob = User.create
     @guide.editions.each do |e|
-       @guide.publish e, "Publishing this"
+       @bob.publish e, comment: "Publishing this"
     end
 
     post :create,

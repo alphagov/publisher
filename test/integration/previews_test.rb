@@ -36,4 +36,9 @@ class PreviewsTest < ActionDispatch::IntegrationTest
 
     return @answer
   end
+
+  def random_string(length, suffix="")
+    random_name = (0...length).map{65.+(rand(25)).chr}.join + suffix
+  end
+
 end

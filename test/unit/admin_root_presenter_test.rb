@@ -10,13 +10,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by draft state" do
     presenter = AdminRootPresenter.new(:all)
-
+    
     a = Guide.create
     a.editions.first.update_attribute(:state,'draft')
     assert a.has_draft?
 
     b = Guide.create
-    b.publish b.editions.first, "Publishing this"
+    b.editions.first.update_attribute(:state,'published')
     b.save
     b.reload
     assert !b.has_draft?

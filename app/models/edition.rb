@@ -19,7 +19,10 @@ class Edition
       edition.container.mark_as_accepted
     end 
     before_transition :on => :publish do |edition, transition|
-      edition.container.editions.where(state: 'published').all.each{|e| e.archive }
+      edition.container.editions.where(state: 'published').all.each{|e| e.archive }    
+    end                                                                                
+    after_transition :on => :publish do |edition, transition|
+      edition.container.update_in_search_index
     end
 
     event :start_work do
@@ -105,7 +108,7 @@ class Edition
   def archived_by
     publication = actions.detect { |a| a.request_type == Action::ARCHIVE }
     publication.requester if publication
-  end
+  end                                     
 
   def latest_status_action
     self.actions.where(:request_type.ne => 'note').last
