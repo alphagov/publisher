@@ -1,10 +1,6 @@
 require 'simplecov'
-require 'simplecov-rcov'
 require 'slimmer/skin'
 require 'slimmer/test'
-
-SimpleCov.start 'rails'
-SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
