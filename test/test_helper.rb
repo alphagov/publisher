@@ -8,6 +8,8 @@ require 'rails/test_help'
 require 'mocha'
 require 'database_cleaner'
 require 'webmock/test_unit'
+require 'gds_api/test_helpers/panopticon'
+
 WebMock.disable_net_connect!(:allow_localhost => true)
 
 DatabaseCleaner.strategy = :truncation
@@ -53,11 +55,5 @@ class ActiveSupport::TestCase
     request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => temp_user)
   end
 
-  def panopticon_has_metadata(metadata)
-    json = JSON.dump(metadata)
-    url = "http://panopticon.test.alphagov.co.uk/artefacts/#{metadata['id']}.json"
-    stub_request(:get, url).
-      to_return(:status => 200, :body => json, :headers => {})
-    return url
-  end
+  include GdsApi::TestHelpers::Panopticon
 end
