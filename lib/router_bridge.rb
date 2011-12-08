@@ -31,6 +31,12 @@ class RouterBridge
     end
   end
   
+  def register_programme(default_route_params, publication)
+    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/print"))
+    
+    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/further-information"))
+  end
+  
   def register_local_transaction(default_route_params, publication)
     register_route(default_route_params.merge(:incoming_path => "/#{publication['slug']}/not_found"))
   end
@@ -41,8 +47,10 @@ class RouterBridge
     register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}.json"))
     register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}.xml"))
     
-    if publication.is_a?(Guide) or publication.is_a?(Programme)
+    if publication.is_a?(Guide)
       register_multi_part_publication(default_route_params, publication)
+    elsif publication.is_a?(Programme)
+      register_programme(default_route_params, publication)
     elsif publication.is_a?(LocalTransaction)
       register_local_transaction(default_route_params, publication)
     end
