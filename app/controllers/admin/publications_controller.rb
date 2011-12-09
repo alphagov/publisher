@@ -3,8 +3,8 @@ class Admin::PublicationsController < Admin::BaseController
     publication = Publication.where(panopticon_id: params[:id]).first
 
     unless publication.present?
-      publication = Publication.import(params[:id], current_user)
-      unless publication.save
+      publication = Publication.create_from_panopticon_data(params[:id], current_user)
+      unless publication.persisted?
         render_new_form(publication) and return
       end
     end

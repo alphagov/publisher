@@ -37,8 +37,8 @@ class User
   }
 
   def create_publication(kind, attributes = {})
-    item = PUBLICATION_CLASSES[kind].new(attributes)
-    record_action item.editions.first, Action::CREATE
+    item = PUBLICATION_CLASSES[kind].create(attributes)
+    record_action(item.editions.first, Action::CREATE) if item.persisted?
     item
   end
 

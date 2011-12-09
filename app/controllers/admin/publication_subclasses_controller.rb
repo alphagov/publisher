@@ -7,7 +7,7 @@ class Admin::PublicationSubclassesController < Admin::BaseController
 
   def create
     @publication = current_user.create_publication(class_identifier, params[class_identifier])
-    if @publication.save
+    if @publication.persisted?
       redirect_to resource_path(@publication),
         :notice => "#{description(@publication)} successfully created"
       return

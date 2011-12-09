@@ -84,7 +84,7 @@ class PublicationTest < ActiveSupport::TestCase
 
     user = User.create
 
-    publication = Publication.import 2356, user
+    publication = Publication.create_from_panopticon_data(2356, user)
 
     assert_kind_of Answer, publication
     assert_equal "Foo bar", publication.name
