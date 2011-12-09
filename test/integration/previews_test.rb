@@ -2,11 +2,6 @@ require 'integration_test_helper'
 
 class PreviewsTest < ActionDispatch::IntegrationTest
 
-  def setup_users
-    @author ||= User.create(:name=>"Author",:email=>"test@example.com")
-    @reviewer ||= User.create(:name=>"Reviewer",:email=>"test@example.com")
-  end
-
   def setup_place_thing(random_name)
     setup_users
 

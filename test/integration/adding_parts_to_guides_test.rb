@@ -3,10 +3,7 @@ require 'integration_test_helper'
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
   test "Publishing a guide" do
-    # This isn't right, really need a way to run actions when
-    # logged in as particular users without having Signonotron running.
-    #
-    User.create(:uid=>"ADADS",:name=>"T Est",:email=>"test@example.com")
+    setup_users
 
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 

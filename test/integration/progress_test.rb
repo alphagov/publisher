@@ -4,11 +4,7 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
 
   test "should update progress of a guide" do
     panopticon_has_metadata("id" => '2356')
-
-    # This isn't right, really need a way to run actions when
-    # logged in as particular users without having Signonotron running.
-    #
-    FactoryGirl.create :user
+    setup_users
 
     guide = FactoryGirl.create(:guide, panopticon_id: 2356)
     guide.editions.first.update_attribute(:state, 'ready')
