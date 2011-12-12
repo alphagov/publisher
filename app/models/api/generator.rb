@@ -15,7 +15,11 @@ module Api
       attrs.merge!(edition.as_json(:only => edition_fields))
 
       if edition.respond_to?(:parts)
-         attrs['parts'] = edition.parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]) }
+        non_blank_parts = []
+        edition.parts.each do |part|
+          non_blank_parts << part unless part.body.blank?
+        end
+        attrs['parts'] = non_blank_parts.sort_by(&:order).collect { |p| p.as_json(:only => [:slug, :title, :body]) }
       end
 
       if edition.respond_to?(:expectations)

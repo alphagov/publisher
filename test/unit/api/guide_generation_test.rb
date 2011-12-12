@@ -8,6 +8,8 @@ class GuideGenerationTest < ActiveSupport::TestCase
     @edition = @guide.editions.first
     @edition.parts.build(order: 1, title: 'Part 1 title', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
     @edition.parts.build(order: 2, title: 'Part 2 title', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
+    # blank part, not to be included
+    @edition.parts.build(order: 3, title: 'Part 3 title', body: '', slug: 'part_three', updated_at: @updated_time)
   end
 
   def generated
