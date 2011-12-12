@@ -36,6 +36,14 @@ class ProgrammeTest < ActiveSupport::TestCase
     assert programme.has_published?
   end
 
+  test 'a programme correctly formats the additional links' do
+    programme = template_programme
+    out = programme.search_index
+    assert_equal 5, out['additional_links'].count
+    assert_equal '/childcare#overview', out['additional_links'].first['link']
+    assert_equal '/childcare/further-information', out['additional_links'].last['link']
+  end
+
   test 'a programme with one published and one draft edition is marked as having drafts and having published' do
     programme = template_programme
     programme.build_edition("Two")
