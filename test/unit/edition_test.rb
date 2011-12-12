@@ -108,6 +108,21 @@ class EditionTest < ActiveSupport::TestCase
 
     assert_equal guide.editions.where(state: 'published').count, 1
     assert_equal guide.editions.where(state: 'archived').count, 2
+  end    
+  
+  test "edition can return latest status action of a specified request type" do
+    edition = template_edition         
+    user = User.create(:name => 'George')
+    guide = template_edition.container
+    guide.save
+
+    guide.editions.first.update_attribute :state, 'draft'
+    guide.reload                                         
+    
+    user.request_review guide.editions.first, comment: "Requesting review" 
+    
+    assert_equal guide.editions.first.actions.size, 1
+    assert guide.editions.first.latest_status_action(Action::REQUEST_REVIEW).present?
   end
 
   test "a published edition can't be edited" do

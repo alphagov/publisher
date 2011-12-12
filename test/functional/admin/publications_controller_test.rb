@@ -14,5 +14,5 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
     )
     get :show, :id => 2357
     assert_response :success
-  end
+  end     
 end

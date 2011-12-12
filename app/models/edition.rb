@@ -110,8 +110,12 @@ class Edition
     publication.requester if publication
   end                                     
 
-  def latest_status_action
-    self.actions.where(:request_type.ne => 'note').last
+  def latest_status_action(type = nil)
+    if type
+      self.actions.where(:request_type => type).last
+    else
+      self.actions.where(:request_type.ne => 'note').last
+    end
   end
 
   def fact_check_email_address
