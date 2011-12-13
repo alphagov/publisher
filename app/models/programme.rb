@@ -18,7 +18,7 @@ class Programme < Publication
   def create_first_edition
     unless self.persisted? or self.editions.any?
       self.editions << self.class.edition_class.new(:title => self.name)
-     DEFAULT_PARTS.each { |part|
+      DEFAULT_PARTS.each { |part|
         self.editions.first.parts.build(:title => part[:title],:slug => part[:slug], :body => " ")
       }                    
     end
