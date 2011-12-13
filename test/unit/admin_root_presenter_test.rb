@@ -42,7 +42,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
 
     a = Guide.create
-    assert !a.archived?
+    assert ! a.has_archived?
 
     b = Guide.create
     b.editions.create!(state: 'archived')
