@@ -28,7 +28,7 @@ gem 'marples', '1.0.4'
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
-gem 'gds-api-adapters', '~> 0.0.6'
+gem 'gds-api-adapters', '~> 0.0.7'
 
 gem 'rest-client'
 
