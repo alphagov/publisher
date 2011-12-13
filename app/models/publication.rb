@@ -48,21 +48,21 @@ class Publication
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
   SECTIONS = [
-      'Rights',
-      'Justice',
-      'Education and skills',
-      'Work',
-      'Family',
-      'Money',
-      'Taxes',
-      'Benefits and schemes',
-      'Driving',
-      'Housing',
-      'Communities',
-      'Pensions',
-      'Disabled people',
-      'Travel',
-      'Citizenship'
+    'Rights',
+    'Justice',
+    'Education and skills',
+    'Work',
+    'Family',
+    'Money',
+    'Taxes',
+    'Benefits and schemes',
+    'Driving',
+    'Housing',
+    'Communities',
+    'Pensions',
+    'Disabled people',
+    'Travel',
+    'Citizenship'
   ]
 
   # map each edition state to a "has_{state}?" method
