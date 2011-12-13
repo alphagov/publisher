@@ -203,6 +203,7 @@ class Publication
     {
       "title" => title,
       "link" => "/#{slug}",
+      "section" => section ? section.parameterize : nil,
       "format" => _type.downcase,
       "description" => (published_edition && published_edition.overview) || "",
       "indexable_content" => indexable_content,

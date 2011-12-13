@@ -31,7 +31,7 @@ class GuideTest < ActiveSupport::TestCase
   test "struct for search index" do
     guide = template_guide
     data = guide.search_index
-    assert_equal ["title", "link", "format", "description", "indexable_content", "additional_links"], data.keys
+    assert_equal ["title", "link", "section", "format", "description", "indexable_content", "additional_links"], data.keys
     assert_equal guide.title, data['title']
     assert_equal "guide", data['format']
   end

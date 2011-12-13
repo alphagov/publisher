@@ -49,14 +49,14 @@ class PublicationTest < ActiveSupport::TestCase
   test "struct for search index" do
     dummy_publication = template_published_answer
     out = dummy_publication.search_index
-    assert_equal ["title", "link", "format", "description", "indexable_content"], out.keys
+    assert_equal ["title", "link","section", "format", "description", "indexable_content"], out.keys
   end
 
   test "search index for all publications" do
     dummy_publication = template_published_answer
     out = Publication.search_index_published
     assert_equal 1, out.count
-    assert_equal ["title", "link", "format", "description", "indexable_content"], out.first.keys
+    assert_equal ["title", "link", "section", "format", "description", "indexable_content"], out.first.keys
   end
 
   test "search indexable content for answer" do
