@@ -155,7 +155,6 @@ class GuideTest < ActiveSupport::TestCase
     user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
   end
 
-
   test "user should not be able to review a guide they requested review for" do
     user = User.create(:name => "Ben")
 
@@ -193,6 +192,10 @@ class GuideTest < ActiveSupport::TestCase
 
     guide = user.create_publication(:guide, :panopticon_id => 1234574)
     edition = guide.editions.first
+    edition.overview = 'My Overview'
+    edition.alternative_title = 'My Other Title'
+    edition.save
+
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.approve_review(edition, {:comment => "I've reviewed it"})
@@ -209,5 +212,17 @@ class GuideTest < ActiveSupport::TestCase
     NoisyWorkflow.expects(:make_noise).never
     edition.expects(:build_clone).returns(false)
     assert ! user.new_version(edition)
+  end
+
+  test "duplicating a guide should duplicate overview and alt title" do
+    user, guide = publisher_and_guide
+    edition = guide.published_edition
+
+    assert ! edition.alternative_title.blank?
+    assert ! edition.overview.blank?
+
+    new_edition = user.new_version(edition)
+    assert_equal edition.alternative_title, new_edition.alternative_title
+    assert_equal edition.overview, new_edition.overview
   end
 end

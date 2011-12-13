@@ -83,8 +83,9 @@ class Edition
 
   def build_clone
     new_edition = container.build_edition(self.title)
+    real_fields_to_merge = self.class.fields_to_clone + [:overview, :alternative_title]
 
-    self.class.fields_to_clone.each do |attr|
+    real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
     end
 
