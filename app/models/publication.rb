@@ -143,14 +143,8 @@ class Publication
 
   def create_first_edition
     unless self.persisted? or self.editions.any?
-      self.editions << self.class.edition_class.new(:title => self.name)
-      self.lined_up = true
+      self.editions << self.class.edition_class.new(:title => self.name, :state => 'lined_up')
     end
-  end
-
-  def mark_as_started
-    self.lined_up = false
-    true
   end
 
   def mark_as_rejected
