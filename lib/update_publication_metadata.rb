@@ -53,8 +53,6 @@ class UpdatePublicationMetadata
     end
     logger.debug "Setting slug = #{artefact['slug'].inspect}"
     publication.slug = artefact['slug']
-    logger.debug "Setting tags = #{artefact['tags'].inspect}"
-    publication.tags = artefact['tags']
 
     logger.debug "Setting section = #{artefact['section'].inspect}"
     publication.section = artefact['section']

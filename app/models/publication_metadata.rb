@@ -34,7 +34,7 @@ class PublicationMetadata
   end
 
   def attributes
-    publication.attributes.select { |k,v| ['slug', 'tags', 'section', 'department', 'need_id', 'kind'].include? k }
+    publication.attributes.select { |k,v| ['slug', 'section', 'department', 'need_id', 'kind'].include? k }
   end
 
   def need_id

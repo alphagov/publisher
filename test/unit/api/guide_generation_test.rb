@@ -20,10 +20,6 @@ class GuideGenerationTest < ActiveSupport::TestCase
     assert_equal "test_slug", generated['slug']
   end
 
-  def test_api_hash_generation_has_tags
-    assert_equal "tag, other", generated['tags']
-  end
-
   def test_api_hash_generation_has_edition_title
     assert_equal "Test guide", generated['title']
   end

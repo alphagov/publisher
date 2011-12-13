@@ -25,10 +25,6 @@ class LocalTransactionGenerationTest < ActiveSupport::TestCase
     assert_equal "test_slug", generated['slug']
   end
 
-  test "generated hash has tags" do
-    assert_equal "tag, other", generated['tags']
-  end
-
   test "generated hash has the edition's title" do
     assert_equal "Test local transaction", generated['title']
   end

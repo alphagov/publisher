@@ -23,7 +23,6 @@ class PublicationsController < ApplicationController
     publications = publications.to_a.collect do |g|
       {
         :title => g.title,
-        :tags => g.container.tags,
         :slug => g.container.slug,
         :type => g.container.class.to_s.underscore
       }
@@ -50,7 +49,6 @@ class PublicationsController < ApplicationController
     details = published_editions.collect do |g|
       {
         :title => g.title,
-        :tags => g.container.tags,
         :slug => g.container.slug
       }
     end

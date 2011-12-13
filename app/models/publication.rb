@@ -13,7 +13,6 @@ class Publication
 
   field :name, :type => String
   field :slug, :type => String
-  field :tags, :type => String
 
   field :has_drafts, :type => Boolean
   field :has_fact_checking, :type => Boolean
