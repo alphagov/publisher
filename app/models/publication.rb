@@ -13,14 +13,6 @@ class Publication
 
   field :name, :type => String
   field :slug, :type => String
-
-  field :has_drafts, :type => Boolean
-  field :has_fact_checking, :type => Boolean
-  field :has_published, :type => Boolean
-  field :has_reviewables, :type => Boolean
-  field :archived, :type => Boolean
-  field :lined_up, :type => Boolean
-
   field :section, :type => String
   field :department, :type => String
 
