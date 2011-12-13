@@ -10,17 +10,6 @@ class PublicationMetadata
     private :html
   end
 
-  class AudienceList
-    include HTMLGenerator
-    initialize_with :audiences
-
-    def to_html
-      html do |html|
-        html.text! audiences.map { |a| a['name'] }.sort.join ', '
-      end
-    end
-  end
-
   class RelatedItemList
     include HTMLGenerator
     initialize_with :related_items
@@ -56,7 +45,7 @@ class PublicationMetadata
   end
 
   def attributes
-    publication.attributes.select { |k,v| ['slug', 'tags', 'section', 'audiences', 'department', 'need_id', 'kind', 'related_items'].include? k }
+    publication.attributes.select { |k,v| ['slug', 'tags', 'section', 'department', 'need_id', 'kind', 'related_items'].include? k }
   end
 
   def need_id

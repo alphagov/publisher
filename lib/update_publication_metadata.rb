@@ -56,11 +56,6 @@ class UpdatePublicationMetadata
     logger.debug "Setting tags = #{artefact['tags'].inspect}"
     publication.tags = artefact['tags']
 
-    if artefact['audiences'].present?
-      audiences = artefact['audiences'].map { |a| a['name'] }
-      logger.debug "Setting audiences = #{audiences.inspect}"
-      publication.audiences = audiences
-    end
     logger.debug "Setting section = #{artefact['section'].inspect}"
     publication.section = artefact['section']
     logger.debug "Setting department = #{artefact['department'].inspect}"
