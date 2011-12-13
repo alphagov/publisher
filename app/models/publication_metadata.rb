@@ -10,17 +10,6 @@ class PublicationMetadata
     private :html
   end
 
-  class RelatedItemList
-    include HTMLGenerator
-    initialize_with :related_items
-
-    def to_html
-      html do |html|
-        html.text! related_items.map { |i| i['artefact']['name'] }.sort.join ', '
-      end
-    end
-  end
-
   include HTMLGenerator
 
   initialize_with :publication
@@ -45,7 +34,7 @@ class PublicationMetadata
   end
 
   def attributes
-    publication.attributes.select { |k,v| ['slug', 'tags', 'section', 'department', 'need_id', 'kind', 'related_items'].include? k }
+    publication.attributes.select { |k,v| ['slug', 'tags', 'section', 'department', 'need_id', 'kind'].include? k }
   end
 
   def need_id

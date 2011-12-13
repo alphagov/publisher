@@ -24,7 +24,6 @@ class Publication
 
   field :section, :type => String
   field :department, :type => String
-  field :related_items, :type => String
 
   field :rejected_count, :type => Integer, default: 0
   field :edition_rejected_count, :type => Integer, default: 0

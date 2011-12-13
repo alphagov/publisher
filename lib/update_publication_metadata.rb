@@ -60,29 +60,5 @@ class UpdatePublicationMetadata
     publication.section = artefact['section']
     logger.debug "Setting department = #{artefact['department'].inspect}"
     publication.department = artefact['department']
-
-    if artefact['related_items'].present?
-      logger.debug "Setting related items to #{artefact['related_items'].inspect}"
-      slugs = artefact['related_items'].map do |i|
-        a = i['artefact']
-        [ i['sort_key'], a['slug'], a['name'], a['kind'] ] rescue [ false ] # catch items which don't exist
-      end
-      slugs.delete([false])
-
-      related_items = StringIO.new
-      html = Builder::XmlMarkup.new :target => related_items
-      slugs.sort_by { |order, slug, name, format| order }.each do |order, slug, name, format|
-        related_item_class = [ format, 'related_item' ].join ' '
-        html.li class: format do |item|
-          item.a href: '/' + slug do |a|
-            a.text! name
-          end
-        end
-      end
-      related_items.rewind
-      related_items_html = related_items.string
-      logger.debug "Related items HTML = #{related_items_html}"
-      publication.related_items = related_items_html
-    end
   end
 end

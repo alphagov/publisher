@@ -8,7 +8,7 @@ module Api
 
     def self.edition_to_hash(edition, *args)
       generator = generator_class(edition)
-      publication_fields =  [:slug, :tags, :updated_at, :section, :department, :related_items]
+      publication_fields =  [:slug, :tags, :updated_at, :section, :department]
       edition_fields     =  [:title, :alternative_title, :overview] + generator.extra_fields
 
       attrs = edition.container.as_json(:only => publication_fields)
