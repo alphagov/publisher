@@ -18,13 +18,6 @@ class PublicationMetadata
     html do |metadata|
       metadata.dl do |dl|
         attributes.each_pair do |name, value|
-          presenter_name = name.classify
-          presenter_name += 'List' if value.kind_of? Array
-          if self.class.const_defined? presenter_name
-            presenter = self.class.const_get presenter_name
-            instance = presenter.new value
-            value = instance.to_html
-          end
           next if value.to_s.blank?
           dl.dt { |term| term.text! name.humanize }
           dl.dd { |definition| definition.text! value.to_s }
