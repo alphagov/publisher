@@ -50,4 +50,16 @@ class UserTest < ActiveSupport::TestCase
     user.publish trans.editions.last, {comment: "Published because I did"}
   end
 
+  test "Edition becomes assigned to user when user is assigned an edition" do
+    boss_user = User.create(:name => "Mat")
+    worker_user = User.create(:name => "Grunt")
+
+    publication = boss_user.create_publication(:answer, :name => "test answer", :slug => "test")
+    boss_user.assign(publication.latest_edition, worker_user)
+    publication.save
+    publication.reload
+
+    assert_equal(worker_user, publication.latest_edition.assigned_to)
+  end
+
 end

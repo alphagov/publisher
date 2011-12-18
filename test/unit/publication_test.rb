@@ -3,7 +3,7 @@ require 'test_helper'
 class PublicationTest < ActiveSupport::TestCase
 
   setup do
-    panopticon_has_metadata("id" => '2356', "slug" => 'childcare',"name" => "Childcare")
+    panopticon_has_metadata("id" => '2356', "slug" => 'childcare', "name" => "Childcare")
   end
 
   def template_published_answer
@@ -49,7 +49,7 @@ class PublicationTest < ActiveSupport::TestCase
   test "struct for search index" do
     dummy_publication = template_published_answer
     out = dummy_publication.search_index
-    assert_equal ["title", "link","section", "format", "description", "indexable_content"], out.keys
+    assert_equal ["title", "link", "section", "format", "description", "indexable_content"], out.keys
   end
 
   test "search index for all publications" do
@@ -119,6 +119,7 @@ class PublicationTest < ActiveSupport::TestCase
         to_return(:status => 200, :body => "{}", :headers => {})
 
     a, b = 2.times.map { FactoryGirl.create(:guide) }
+
     alice, bob, charlie = %w[ alice bob charlie ].map { |s|
       FactoryGirl.create(:user, name: s)
     }
@@ -170,19 +171,23 @@ class PublicationTest < ActiveSupport::TestCase
         to_return(:status => 200, :body => "{}", :headers => {})
 
     a, b = 2.times.map { FactoryGirl.create(:guide) }
+
     alice, bob, charlie = %w[ alice bob charlie ].map { |s|
       FactoryGirl.create(:user, name: s)
     }
+
     alice.assign(a.editions.first, bob)
     alice.assign(a.editions.first, charlie)
 
+    assert_equal([], Publication.assigned_to(bob))
+    assert_equal([a], Publication.assigned_to(charlie))
     assert_equal [b], Publication.assigned_to(nil).to_a
   end
 
   test "should update Rummager on publication" do
     publication = FactoryGirl.create(:guide)
     edition = publication.editions.first
-    edition.update_attribute(:state, 'ready') 
+    edition.update_attribute(:state, 'ready')
 
     Rummageable.expects(:index).with(publication.search_index)
 

@@ -3,6 +3,8 @@ class Edition
 
   include Workflow
 
+  belongs_to :assigned_to, :class_name => 'User'
+
   field :version_number, :type => Integer, :default => 1
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }

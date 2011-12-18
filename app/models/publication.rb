@@ -30,7 +30,9 @@ class Publication
   scope :ready,               where('editions.state' => 'ready')
   scope :published,           where('editions.state' => 'published')
   scope :archived,            where('editions.state' => 'archived')
-  scope :assigned_to, lambda { |user| assignment_filter(user) }
+  scope :assigned_to,         lambda { |user| user.nil? ? where(:"editions.assigned_to_id".exists => false) : where('editions.assigned_to_id' => user.id) }
+
+  index "editions.assigned_to_id"
 
   after_initialize :create_first_edition
 
@@ -100,24 +102,7 @@ class Publication
     end
   end
 
-  def self.assignment_filter(user)
-    expr = if user
-             %{assignment && assignment.recipient_id == "#{user.id}"}
-           else
-             %{!assignment}
-           end
-    where(%{
-      function(){
-        var last = function(a){ return a && a[a.length - 1]; }
-        var edition = last(this.editions);
-        if (!edition) { return false; }
-        var assignment = last((edition.actions || []).filter(function(a){
-          return a.request_type == "#{Action::ASSIGN}";
-        }));
-        return #{expr};
-      }
-    })
-  end
+
 
   def panopticon_uri
     Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
