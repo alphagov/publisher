@@ -1,4 +1,4 @@
-class Admin::EditionsController <  Admin::BaseController
+class Admin::EditionsController < Admin::BaseController
   polymorphic_belongs_to :guide, :answer, :transaction, :local_transaction, :place, :programme
   actions :create, :update, :destroy
 

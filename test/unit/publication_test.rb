@@ -54,7 +54,7 @@ class PublicationTest < ActiveSupport::TestCase
 
   test "search index for all publications" do
     dummy_publication = template_published_answer
-    out = Publication.search_index_published
+    out = Publication.search_index_all
     assert_equal 1, out.count
     assert_equal ["title", "link", "section", "format", "description", "indexable_content"], out.first.keys
   end

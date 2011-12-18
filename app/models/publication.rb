@@ -41,24 +41,6 @@ class Publication
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
-  SECTIONS = [
-    'Rights',
-    'Justice',
-    'Education and skills',
-    'Work',
-    'Family',
-    'Money',
-    'Taxes',
-    'Benefits and schemes',
-    'Driving',
-    'Housing',
-    'Communities',
-    'Pensions',
-    'Disabled people',
-    'Travel',
-    'Citizenship'
-  ]
-
   # map each edition state to a "has_{state}?" method
   Edition.state_machine.states.map(&:name).each do |state|
     define_method "has_#{state}?" do
@@ -195,8 +177,8 @@ class Publication
     }
   end
 
-  def self.search_index_published
-    published.map(&:search_index)
+  def self.search_index_all
+    all.map(&:search_index)
   end
 
   private
