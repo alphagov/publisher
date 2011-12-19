@@ -1,5 +1,4 @@
-class TransactionEdition < Edition
-  embedded_in :transaction
+class TransactionEdition < WholeEdition
 
   include Expectant
 
@@ -11,7 +10,9 @@ class TransactionEdition < Edition
 
   @fields_to_clone = [:introduction, :will_continue_on, :link, :more_information, :alternate_methods, :minutes_to_complete, :uses_government_gateway, :expectation_ids]
 
-  def container
-    self.transaction
+  def indexable_content
+    content = super
+    return content unless latest_edition
+    "#{content} #{latest_edition.introduction} #{latest_edition.more_information}".strip
   end
 end

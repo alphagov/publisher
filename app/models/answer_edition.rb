@@ -1,12 +1,12 @@
-class AnswerEdition < Edition
+class AnswerEdition < WholeEdition
   embedded_in :answer
 
   field :body, :type => String
 
   @fields_to_clone = [:body]
 
-  def container
-    self.answer
+   def indexable_content
+    content = super
+    return content
   end
-
 end
