@@ -84,8 +84,6 @@ class Publication
     end
   end
 
-
-
   def panopticon_uri
     Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
   end
@@ -152,6 +150,10 @@ class Publication
     false
   end
 
+  def safe_to_preview?
+    true
+  end
+
   def latest_edition
     self.editions.sort_by(&:version_number).last
   rescue
@@ -188,7 +190,6 @@ class Publication
       false
     end
   end
-
 
   def update_in_search_index
     Rummageable.index self.search_index
