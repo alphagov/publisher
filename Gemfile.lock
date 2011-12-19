@@ -251,7 +251,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic (~> 2.0.0)
-  gds-api-adapters (~> 0.0.12)
+  gds-api-adapters (~> 0)
   gds-sso!
   govspeak (= 0.8.4)
   has_scope
