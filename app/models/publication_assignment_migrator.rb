@@ -22,6 +22,8 @@ class PublicationAssignmentMigrator
       end
     end
 
+    ActionMailer::Base.delivery_method = :test
+
     User.all.each do |user|
       puts "Migrating editions for user #{user.name}"
 
