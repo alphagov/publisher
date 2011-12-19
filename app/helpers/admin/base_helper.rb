@@ -1,5 +1,19 @@
 module Admin::BaseHelper
 
+  def publication_tab_list(*statuses)
+    output = statuses.collect do |status|
+      content_tag(:li) do
+        scope = status.downcase.gsub(' ', '_')
+        url = admin_root_path(:filter => params[:filter], :list => scope)
+
+        content_tag(:a, :href => url) do
+          "#{status} (#{@presenter.send(scope).length})"
+        end
+      end
+    end
+    safe_join(output)
+  end
+
   def resource_edit_view
     "/admin/#{@latest_edition.container.class.to_s.underscore.downcase.pluralize}/edit"
   end

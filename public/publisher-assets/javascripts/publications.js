@@ -1,7 +1,10 @@
 // Javascript that may be used on every publication show/edit page
 
 $(function () {
-  $('.publication-nav').tabs();
+  $('.publication-nav').tabs(
+    spinner: 'Retrieving data...',
+    cache: true
+  );
 
   var submit_form = function(form,success) {
      var jq = $.post(
