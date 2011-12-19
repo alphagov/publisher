@@ -20,7 +20,7 @@ class Action
     ASSIGN               = "assign",
   ]
 
-  embedded_in :edition
+  embedded_in :whole_edition
   belongs_to :recipient, :class_name => "User"
   belongs_to :requester, :class_name => "User"
 
@@ -39,31 +39,31 @@ class Action
   def friendly_description
     case request_type
     when CREATE
-      "Created #{container_class_name(edition)}: \"#{edition.title}\" (by #{requester.name})"
+      "Created #{edition.kind}: \"#{edition.title}\" (by #{requester.name})"
     when START_WORK
-      "Work started: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Work started: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when REQUEST_REVIEW
-      "Review requested: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Review requested: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when APPROVE_REVIEW
-      "Okayed for publication: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Okayed for publication: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when APPROVE_FACT_CHECK
-      "Fact check okayed for publication: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Fact check okayed for publication: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when REQUEST_AMENDMENTS
-      "Amends needed: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Amends needed: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when SEND_FACT_CHECK
-      "Fact check requested: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Fact check requested: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when RECEIVE_FACT_CHECK
-      "Fact check response: \"#{edition.title}\" (#{container_class_name(edition)})"
+      "Fact check response: \"#{edition.title}\" (#{edition.kind})"
     when PUBLISH
-      "Published: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Published: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when ARCHIVE
-      "Archived: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "Archived: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when NEW_VERSION
-      "New version: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
+      "New version: \"#{edition.title}\" (#{edition.kind}) by #{requester.name}"
     when NOTE
       "Note added by #{requester.name}"
     when ASSIGN
-      "Assigned: \"#{edition.title}\" (#{container_class_name(edition)}) to #{recipient.name}"
+      "Assigned: \"#{edition.title}\" (#{edition.kind}) to #{recipient.name}"
     end
   end
 
@@ -74,9 +74,15 @@ class Action
   def to_s
     request_type.humanize.capitalize
   end
+<<<<<<< HEAD
   
   def is_fact_check_request?
     #SEND_FACT_CHECK is now a state - in older publications it isn't
     request_type == SEND_FACT_CHECK || request_type == 'fact_check_requested' ? true : false
+=======
+
+  def edition
+    whole_edition
+>>>>>>> Update admin presenter and action models and related tests. Most of these tests pass now
   end
 end

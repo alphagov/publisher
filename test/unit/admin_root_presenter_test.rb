@@ -10,16 +10,15 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by draft state" do
     presenter = AdminRootPresenter.new(:all)
+    a = GuideEdition.create
+    a.update_attribute(:state, 'draft')
+    assert a.draft?
 
-    a = Guide.create
-    a.editions.first.update_attribute(:state,'draft')
-    assert a.has_draft?
-
-    b = Guide.create
-    b.editions.first.update_attribute(:state,'published')
+    b = GuideEdition.create
+    b.update_attribute(:state, 'published')
     b.save
     b.reload
-    assert !b.has_draft?
+    assert !b.draft?
 
     assert_equal [a], presenter.draft.to_a
   end
@@ -27,13 +26,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by published state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = Guide.create
-    assert !a.has_published?
+    a = GuideEdition.create
+    assert !a.published?
 
-    b = Guide.create
-    b.editions.first.update_attribute(:state, 'published')
+    b = GuideEdition.create                                      
+    b.update_attribute(:state, 'published')
     b.reload
-    assert b.has_published?
+    assert b.published?
 
     assert_equal [b], presenter.published.to_a
   end
@@ -41,12 +40,12 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by archived state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = Guide.create
-    assert ! a.has_archived?
+    a = GuideEdition.create
+    assert ! a.archived?
 
-    b = Guide.create
+    b = GuideEdition.create
     b.editions.create!(state: 'archived')
-    assert b.has_archived?
+    assert b.archived?
 
     assert_equal [b], presenter.archived.to_a
   end
@@ -55,13 +54,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
     user = User.create
 
-    a = Guide.create
-    assert !a.has_in_review?
+    a = GuideEdition.create
+    assert !a.in_review?
 
-    b = Guide.create
-    b.editions.first.update_attribute(:state, 'in_review')
+    b = GuideEdition.create
+    b.update_attribute(:state, 'in_review')
     b.reload
-    assert b.has_in_review?
+    assert b.in_review?
 
     assert_equal [b], presenter.in_review.to_a
   end
@@ -70,13 +69,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
     user = User.create
 
-    a = Guide.create
-    assert !a.has_fact_check?
+    a = GuideEdition.create
+    assert !a.fact_check?
 
-    b = Guide.create
-    b.editions.first.update_attribute(:state, 'fact_check')
+    b = GuideEdition.create
+    b.update_attribute(:state, 'fact_check')
     b.reload
-    assert b.has_fact_check?
+    assert b.fact_check?
 
     assert_equal [b], presenter.fact_check.to_a
   end
@@ -84,14 +83,14 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by lined up state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = Guide.create
-    a.editions.first.update_attribute(:state, "lined_up")
-    assert a.has_lined_up?
+    a = GuideEdition.create 
+    a.update_attribute(:state, "lined_up")
+    assert a.lined_up?
 
-    b = Guide.create
-    b.editions.first.update_attribute(:state, "draft")
+    b = GuideEdition.create  
+    b.update_attribute(:state, "draft")
     b.reload
-    assert !b.has_lined_up?
+    assert !b.lined_up?
 
     assert_equal [a], presenter.lined_up.to_a
   end
@@ -100,14 +99,14 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     alice = User.create
     bob   = User.create
 
-    a = Guide.create
-    assert_nil a.editions.first.assigned_to
-    assert a.has_lined_up?
+    a = GuideEdition.create
+    assert_nil a.assigned_to
+    assert a.lined_up?
 
-    b = Guide.create
-    alice.assign(b.editions.first, bob)
-    assert_equal bob, b.editions.first.assigned_to
-    assert b.has_lined_up?
+    b = GuideEdition.create
+    alice.assign(b, bob)
+    assert_equal bob, b.assigned_to
+    assert b.lined_up?
 
     presenter = AdminRootPresenter.new(bob)
     assert_equal [b], presenter.lined_up.to_a
@@ -117,14 +116,14 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     alice = User.create
     bob   = User.create
 
-    a = Guide.create
-    assert_nil a.editions.first.assigned_to
-    assert a.has_lined_up?
+    a = GuideEdition.create!(title: 'My First Guide', panopticon_id: 1)
+    assert_nil a.assigned_to
+    assert a.lined_up?
 
-    b = Guide.create
-    alice.assign(b.editions.first, bob)
-    assert_equal bob, b.editions.first.assigned_to
-    assert b.has_lined_up?
+    b = GuideEdition.create!(title: 'My Second Guide', panopticon_id: 2)
+    alice.assign(b, bob)
+    assert_equal bob, b.assigned_to
+    assert b.lined_up?
 
     presenter = AdminRootPresenter.new(:nobody)
     assert_equal [a], presenter.lined_up.to_a
@@ -134,14 +133,14 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     alice = User.create
     bob   = User.create
 
-    a = Guide.create
-    assert_nil a.editions.first.assigned_to
-    assert a.has_lined_up?
+    a = GuideEdition.create!(title: 'My First Guide')
+    assert_nil a.assigned_to
+    assert a.lined_up?
 
-    b = Guide.create
-    alice.assign(b.editions.first, bob)
-    assert_equal bob, b.editions.first.assigned_to
-    assert b.has_lined_up?
+    b = GuideEdition.create!(title: 'My Second Guide')
+    alice.assign(b, bob)
+    assert_equal bob, b.assigned_to
+    assert b.lined_up?
 
     presenter = AdminRootPresenter.new(:all)
     assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.lined_up.to_a.collect { |i| i.id.to_s }.sort
@@ -151,20 +150,20 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     alice = User.create
     bob   = User.create
 
-    a = Guide.create
-    assert_nil a.editions.first.assigned_to
-    assert a.has_lined_up?
+    a = GuideEdition.create
+    assert_nil a.assigned_to
+    assert a.lined_up?
 
-    b = Guide.create
-    alice.assign(b.editions.first, bob)
-    assert_equal bob, b.editions.first.assigned_to
-    assert b.has_lined_up?
+    b = GuideEdition.create
+    alice.assign(b, bob)
+    assert_equal bob, b.assigned_to
+    assert b.lined_up?
 
-    c = Guide.create
-    c.editions.first.update_attribute :state, 'published'
-    alice.assign(c.editions.first, bob)
-    assert_equal bob, c.editions.first.assigned_to
-    assert !c.has_lined_up?
+    c = GuideEdition.create
+    c.update_attribute :state, 'published'
+    alice.assign(c, bob)
+    assert_equal bob, c.assigned_to
+    assert !c.lined_up?
 
     presenter = AdminRootPresenter.new(bob)
     assert_equal [b], presenter.lined_up.to_a
