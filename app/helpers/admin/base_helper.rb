@@ -1,4 +1,4 @@
-module Admin::GuidesHelper
+module Admin::BaseHelper
 
   def resource_edit_view
     "/admin/#{@latest_edition.container.class.to_s.underscore.downcase.pluralize}/edit"
