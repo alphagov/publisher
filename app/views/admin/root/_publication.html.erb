@@ -80,7 +80,7 @@
     <% end %>
   </td>
   <td>
-    <% if safe_to_preview?(publication) %>
+    <% if publication.safe_to_preview? %>
       <%= link_to preview_edition_path(publication.latest_edition), {:class => 'preview'} do %>
         <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
       <% end %>

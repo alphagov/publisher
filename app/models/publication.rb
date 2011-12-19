@@ -150,6 +150,10 @@ class Publication
     false
   end
 
+  def safe_to_preview?
+    true
+  end
+
   def latest_edition
     self.editions.sort_by(&:version_number).last
   rescue

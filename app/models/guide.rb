@@ -11,4 +11,7 @@ class Guide < Publication
     latest_edition.video_url.present?
   end
 
+  def safe_to_preview?
+    return (latest_edition.parts.any? and latest_edition.parts.first.slug.present?)
+  end
 end
