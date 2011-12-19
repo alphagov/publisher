@@ -104,9 +104,7 @@ module Workflow
   end
 
   def new_action(user, type, options={})
-    action = Action.new(options.merge(:requester_id=>user.id, :request_type=>type))
-    self.actions << action
-    action
+    actions.create!(options.merge(requester_id: user.id, request_type: type))
   end
 
   def status_is?(*kinds)

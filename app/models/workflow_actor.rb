@@ -1,28 +1,28 @@
 module WorkflowActor
   PUBLICATION_CLASSES = {
-    :place => Place,
-    :local_transaction => LocalTransaction,
-    :transaction => Transaction,
-    :guide => Guide,
-    :programme => Programme,
-    :answer => Answer,
+    :place => PlaceEdition,
+    :local_transaction => LocalTransactionEdition,
+    :transaction => TransactionEdition,
+    :guide => GuideEdition,
+    :programme => ProgrammeEdition,
+    :answer => AnswerEdition,
   }
 
   def record_action(edition, type, options={})
     type = Action.const_get(type.to_s.upcase)
     action = edition.new_action(self, type, options)
     messenger_topic = edition.state.to_s.downcase
-    Messenger.instance.send messenger_topic, edition.container unless messenger_topic == "created"
-    NoisyWorkflow.make_noise(edition.container, action).deliver
+    Messenger.instance.send messenger_topic, edition unless messenger_topic == "created"
+    NoisyWorkflow.make_noise(edition, action).deliver
   end
 
   def record_note(edition, comment)
     edition.new_action(self, 'note', comment: comment)
   end
 
-  def create_publication(kind, attributes = {})
+  def create_whole_edition(kind, attributes = {})
     item = PUBLICATION_CLASSES[kind].create(attributes)
-    record_action(item.editions.first, Action::CREATE) if item.persisted?
+    record_action(item, Action::CREATE) if item.persisted?
     item
   end
 
@@ -101,7 +101,7 @@ module WorkflowActor
     edition.assigned_to= recipient
     # We're saving the edition here as the controller treats assignment as a special case.
     # The controller saves the publication, then updates assignment.
-    edition.save
+    edition.save!
     record_action edition, __method__, recipient: recipient
   end
 end
