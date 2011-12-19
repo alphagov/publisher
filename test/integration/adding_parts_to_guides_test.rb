@@ -40,10 +40,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
     assert_equal 3, all(:css, '#parts > div.part').length
 
-    visit "/admin?filter=all"
-    click_on 'Draft (1)'
-    within(:css, '#draft') {
-      assert page.has_content? random_name
-    }
+    visit "/admin?filter=all&list=drafts"
+    assert page.has_content? random_name
   end
 end
