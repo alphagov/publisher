@@ -3,17 +3,16 @@ require 'test_helper'
 class GuideGenerationTest < ActiveSupport::TestCase
   def setup
     @updated_time = Time.now
-    @guide = Guide.new(slug: 'test_slug', tags: 'tag, other')
-    @guide.editions.first.attributes = {version_number: 1, title: 'Test guide', updated_at: @updated_time}
-    @edition = @guide.editions.first
-    @edition.parts.build(order: 1, title: 'Part 1 title', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
-    @edition.parts.build(order: 2, title: 'Part 2 title', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
+    @guide = FactoryGirl.create(:guide_edition, slug: 'test_slug', tags: 'tag, other')
+    @guide.attributes = {version_number: 1, title: 'Test guide', updated_at: @updated_time}
+    @guide.parts.build(order: 1, title: 'Part 1 title', body: 'Body text', slug: 'part_one', updated_at: @updated_time)
+    @guide.parts.build(order: 2, title: 'Part 2 title', body: 'Body text', slug: 'part_two', updated_at: @updated_time)
     # blank part, not to be included
-    @edition.parts.build(order: 3, title: 'Part 3 title', body: '', slug: 'part_three', updated_at: @updated_time)
+    @guide.parts.build(order: 3, title: 'Part 3 title', body: '', slug: 'part_three', updated_at: @updated_time)
   end
 
   def generated
-    Api::Generator.edition_to_hash(@guide.editions.first)
+    Api::Generator.edition_to_hash(@guide)
   end
 
   def test_api_hash_generation_has_slug

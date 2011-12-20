@@ -5,6 +5,7 @@ class AnswerEdition < WholeEdition
 
    def indexable_content
     content = super
-    return content
+    return content unless latest_edition?
+    "#{content} #{body}".strip
   end
 end

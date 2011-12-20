@@ -1,6 +1,7 @@
 development:
   host: localhost
   database: mguides_development2
+  persist_in_safe_mode: true
 
 test:
   host: localhost

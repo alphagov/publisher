@@ -15,19 +15,21 @@ class MetadataSyncTest < ActiveSupport::TestCase
       "name" => "New title"
     )
 
-    publication = Guide.create! :panopticon_id => 123, :title => "Old title"
+    publication = FactoryGirl.create(:guide_edition, :panopticon_id => 123, :title => "Old title")
+
 
     updated_artefact = {
       'id' => publication.panopticon_id
     }
 
     @metadata.sync updated_artefact
-    assert_equal "New title", publication.reload.latest_edition.title
+    publication.reload
+    assert_equal "New title", publication.title
     assert_requested :get, panopticon_url
   end
 
   test "doesn't needlessly hit Panopticon if it has the data available" do
-    publication = Guide.create! :panopticon_id => 124, :title => "Old title 2"
+    publication = FactoryGirl.create(:guide_edition, :panopticon_id => 124, :title => "Old title 2")
 
     updated_artefact = {
       'id' => publication.panopticon_id,
@@ -41,7 +43,8 @@ class MetadataSyncTest < ActiveSupport::TestCase
     }
 
     @metadata.sync updated_artefact
-    assert_equal "New title 2", publication.reload.latest_edition.title
+    publication.reload
+    assert_equal "New title 2", publication.title
     panopticon_url = panopticon_has_metadata(
       "id" => '123',
       "name" => "New title"

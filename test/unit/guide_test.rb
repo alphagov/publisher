@@ -7,25 +7,23 @@ class GuideTest < ActiveSupport::TestCase
   end
 
   def template_guide
-    g = Guide.new :slug=>"childcare", :name=>"Something", :panopticon_id => 1234574
-    edition = g.editions.first
-    edition.title = 'One'
+    edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: 1234574)
     edition.start_work
-    g.build_edition("Two")
-    g
+    edition.save
+    edition
   end
 
   test 'a new guide has lined_up but isn\'t published' do
-    g = Guide.new(:slug=>"childcare")
-    assert g.has_lined_up?
-    assert !g.has_published?
+    g = FactoryGirl.create(:guide_edition)
+    assert g.lined_up?
+    assert !g.published?
   end
 
   test 'when work started a new guide has draft but isn\'t published' do
-    g = Guide.new(:slug=>"childcare")
-    g.editions.first.start_work
-    assert g.has_draft?
-    assert !g.has_published?
+    g = FactoryGirl.create(:guide_edition)
+    g.start_work
+    assert g.draft?
+    assert !g.published?
   end
 
   test "search_index structure is correct" do
@@ -52,75 +50,46 @@ class GuideTest < ActiveSupport::TestCase
   end
   
   test "indexable content contains parts for search index" do
-    guide = template_guide
-    edition = guide.latest_edition
+    edition = template_guide
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
-    data = guide.search_index
+    data = edition.search_index
     assert_equal "ONE ONE TWO TWO", data['indexable_content']
   end
 
   test "index contains parts as additional links" do
-    guide = template_guide
-    edition = guide.latest_edition
-    edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
-    edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
-    data = guide.search_index
+    edition = template_guide
+    edition.parts.build(:body => "ONE", :title => "ONE", :slug => "one")
+    edition.parts.build(:body => "TWO", :title => "TWO", :slug => "two")
+    data = edition.search_index
     assert_equal 2, data['additional_links'].count
   end
 
   test 'a guide without a video url should not have a video' do
-    g = Guide.new(:slug=>"childcare")
+    g = FactoryGirl.create(:guide_edition)
     assert !g.has_video?
   end
 
   test 'a guide with a video url should have a video' do
-    g = Guide.new(:slug=>"childcare")
-    g.editions.last.video_url = "http://www.youtube.com/watch?v=QH2-TGUlwu4"
+    g = FactoryGirl.create(:guide_edition)
+    g.video_url = "http://www.youtube.com/watch?v=QH2-TGUlwu4"
     assert g.has_video?
-  end
-
-  test 'a guide with all versions published should not have drafts' do
-    guide = template_guide
-    assert guide.has_draft?
-    assert !guide.has_published?
-    user = User.create :name => "Winston"
-
-    guide.editions.each do |e|
-       e.state = 'ready' #force ready state so that we can publish
-       user.publish e, { comment: "Publishing this" }
-    end
-
-    assert !guide.has_draft?
-    assert guide.has_published?
-  end
-
-  test 'a guide with one published and one draft edition is marked as having drafts and having published' do
-    guide = template_guide
-    assert guide.has_draft?
-    assert !guide.has_published?
-
-    guide.editions.first.state = 'ready'
-    User.create(:name => "test").publish guide.editions.first, { comment: "Publishing this" }
-
-    assert guide.has_draft?
-    assert guide.has_published?
   end
 
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
     user = User.create(:name=>"Ben")
-    assert !guide.has_in_review?
-    user.request_review(guide.editions.first,{:comment => "Review this guide please."})
-    assert guide.has_in_review?
+    assert !guide.in_review?
+    user.request_review(guide, {:comment => "Review this guide please."})
+    assert guide.in_review?
   end
 
   test "guide workflow" do
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
     user.start_work(edition)
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -138,24 +107,21 @@ class GuideTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
 
     assert_equal 0, guide.rejected_count
-    assert_equal 0, guide.edition_rejected_count
 
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.request_amendments(edition, {:comment => "I've reviewed it"})
 
     assert_equal 1, guide.rejected_count
-    assert_equal 1, guide.edition_rejected_count
 
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.approve_review(edition, {:comment => "Looks good to me"})
 
     assert_equal 1, guide.rejected_count
-    assert_equal 0, guide.edition_rejected_count
   end
 
   test "user should be able to have an email sent for fact checking" do
@@ -163,8 +129,8 @@ class GuideTest < ActiveSupport::TestCase
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
     edition.state = 'ready'
     assert edition.can_send_fact_check?
     user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
@@ -173,8 +139,8 @@ class GuideTest < ActiveSupport::TestCase
   test "user should not be able to review a guide they requested review for" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
     user.start_work(edition)
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -184,8 +150,8 @@ class GuideTest < ActiveSupport::TestCase
   test "user should not be able to okay a guide they requested review for" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
     user.start_work(edition)
     assert edition.can_request_review?
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -195,8 +161,8 @@ class GuideTest < ActiveSupport::TestCase
   test "you can only create a new edition from a published edition" do
     user = User.create(:name => "Ben")
 
-    guide = user.create_publication(:guide)
-    edition = guide.editions.first
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
     assert ! edition.published?
     assert ! user.new_version(edition)
   end
@@ -205,12 +171,8 @@ class GuideTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_publication(:guide, :panopticon_id => 1234574)
-    edition = guide.editions.first
-    edition.overview = 'My Overview'
-    edition.alternative_title = 'My Other Title'
-    edition.save
-
+    guide = user.create_whole_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    edition = guide
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.approve_review(edition, {:comment => "I've reviewed it"})

@@ -86,7 +86,7 @@ module Api
 
       def self.edition_to_hash(attrs, edition, options = {})
         if options[:snac]
-          service = edition.container.service
+          service = edition.service
           interaction = service.preferred_interaction(options[:snac])
           attrs['interaction'] = interaction_to_json(interaction)
         end

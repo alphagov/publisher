@@ -1,10 +1,12 @@
 module Workflow
-
+  class CannotDeletePublishedPublication < RuntimeError; end
   extend ActiveSupport::Concern
 
   included do
     validate :not_editing_published_item
-    before_destroy :can_destroy?
+    before_destroy :check_can_delete_and_notify
+    after_destroy :remove_from_search_index
+    
     field :state, :type => String
     belongs_to :assigned_to, :class_name => 'User'
     embeds_many :actions
@@ -14,15 +16,12 @@ module Workflow
         edition.mark_as_rejected
       end
 
-      after_transition :on => :approve_review do |edition, transition|
-        edition.mark_as_accepted
-      end
-
-      before_transition :on => :publish do |edition, transition|
-        edition.previous_siblings.all.each(&:archive)
-      end
+      # after_transition :on => :approve_review do |edition, transition|
+      #   edition.mark_as_accepted
+      # end
 
       after_transition :on => :publish do |edition, transition|
+        edition.previous_siblings.all.each(&:archive)
         edition.update_in_search_index
       end
 
@@ -118,10 +117,6 @@ module Workflow
     a && a.id
   end
 
-  def mark_as_accepted
-    self.update_attribute(:edition_rejected_count, 0)
-  end
-
   def most_recent_action(&blk)
     self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
@@ -152,5 +147,21 @@ module Workflow
 
   def can_destroy?
     ! published? and ! archived?
+  end
+  
+  def check_can_delete_and_notify
+    raise CannotDeletePublishedPublication unless self.can_destroy?
+  end
+  
+  def update_in_search_index
+    Rummageable.index(search_index)
+  end
+
+  def remove_from_search_index
+    Rummageable.delete "/#{slug}"
+  end
+  
+  def mark_as_rejected
+    self.inc(:rejected_count, 1)
   end
 end

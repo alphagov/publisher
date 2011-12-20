@@ -20,7 +20,7 @@ class LocalTransactionTest < ActiveSupport::TestCase
   context "a local transaction for the 'bins' service" do
     setup do
       @lgsl_code = 'bins'
-      @bins_transaction = LocalTransaction.new(lgsl_code: @lgsl_code, name: "Transaction", slug: "slug")
+      @bins_transaction = LocalTransactionEdition.new(lgsl_code: @lgsl_code, name: "Transaction", slug: "slug")
     end
     
     context "an authority exists providing the 'housing-benefit' service" do
@@ -52,11 +52,11 @@ class LocalTransactionTest < ActiveSupport::TestCase
     should "validate that a LocalService exists for that lgsl_code" do
       s = LocalService.create!(lgsl_code: 'bins', providing_tier: %w{county unitary})
 
-      lt = LocalTransaction.new(lgsl_code: 'nonexistent', name: "Foo", slug: "foo")
+      lt = LocalTransactionEdition.new(lgsl_code: 'nonexistent', name: "Foo", slug: "foo")
       lt.save
       assert !lt.valid?
       
-      lt = LocalTransaction.new(lgsl_code: s.lgsl_code, name: "Bar", slug: "bar")
+      lt = LocalTransactionEdition.new(lgsl_code: s.lgsl_code, name: "Bar", slug: "bar")
       lt.save
       assert lt.valid?
       assert lt.persisted?

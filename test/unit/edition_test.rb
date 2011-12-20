@@ -3,11 +3,10 @@ require 'test_helper'
 class EditionTest < ActiveSupport::TestCase
 
   def template_edition
-    g = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
-    edition = g.editions.first
-    edition.parts.build(:title => 'PART !', :body=>"This is some version text.", :slug => 'part-one')
-    edition.parts.build(:title => 'PART !!', :body=>"This is some more version text.", :slug => 'part-two')
-    edition
+    g = FactoryGirl.create(:guide_edition)
+    g.parts.build(:title => 'PART !', :body=>"This is some version text.", :slug => 'part-one')
+    g.parts.build(:title => 'PART !!', :body=>"This is some more version text.", :slug => 'part-two')
+    g
   end
 
   setup do
@@ -15,12 +14,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
-    assert_equal template_edition.title, template_edition.admin_list_title
-  end
-
-  test "guides have at least one edition" do
-    g = Guide.new(:slug=>"childcare")
-    assert_equal 1, g.editions.length
+    my_edition = template_edition
+    assert_equal my_edition.title, my_edition.admin_list_title
   end
 
   test "editions can have notes stored for the history tab" do
@@ -56,8 +51,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "new edition should have an incremented version number" do
-    g = Guide.new(:slug=>"childcare")
-    edition = g.editions.first
+    edition = FactoryGirl.create(:guide_edition)
     new_edition = edition.build_clone
     assert_equal edition.version_number + 1, new_edition.version_number
   end
@@ -80,9 +74,9 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a new guide has no published edition" do
-    guide = template_edition.guide
+    guide = template_edition
     guide.save
-    assert_nil guide.published_edition
+    assert_nil GuideEdition.where(state: 'published', panopticon_id: guide.panopticon_id).first
   end
 
   test "a draft edition cannot be published" do
@@ -103,92 +97,97 @@ class EditionTest < ActiveSupport::TestCase
 
   test "an edition of a guide can be published" do
     edition = template_edition
-    guide = template_edition.guide
-    guide.editions.first.update_attribute :state, 'ready'
-    guide.editions.first.publish
-    assert_not_nil guide.published_edition
+    edition.update_attribute :state, 'ready'
+    edition.publish
+    assert_not_nil GuideEdition.where(state: 'published', panopticon_id: edition.panopticon_id).first
   end
 
   test "when an edition of a guide is published, all other published editions are archived" do
-    guide = Guide.new(:name => "CHILDCARE", :slug=>"childcare")
+    without_metadata_denormalisation(GuideEdition) do
+      edition = template_edition
+      
+      user = User.create :name => 'bob'
+      edition.save                
 
-    first_edition = guide.editions.create(version_number: 1)
-    first_edition.update_attribute(:state, 'published')
+      edition.update_attribute(:state, 'ready')
+      user.publish edition, comment: "First publication"      
 
-    second_edition = guide.editions.create(version_number: 2)
-    second_edition.update_attribute(:state, 'published')
+      second_edition = edition.build_clone
+      second_edition.save!
+      second_edition.update_attribute(:state, 'ready')
+      user.publish second_edition, comment: "Second publication"  
 
-    new_edition = guide.editions.create(version_number: 3)
-    new_edition.update_attribute(:state, 'ready')
-    assert new_edition.publish
+      third_edition = second_edition.build_clone
+      third_edition.save!
+      third_edition.update_attribute(:state, 'ready')                 
+      user.publish third_edition, comment: "Third publication"
 
-    assert_equal guide.editions.where(state: 'published').count, 1
-    assert_equal guide.editions.where(state: 'archived').count, 2
-  end
-
+      edition.reload
+      assert edition.archived?
+      
+      second_edition.reload
+      assert second_edition.archived?
+      
+      assert_equal 2, GuideEdition.where(panopticon_id: edition.panopticon_id, state: 'archived').count
+    end
+  end    
+  
   test "edition can return latest status action of a specified request type" do
     edition = template_edition
     user = User.create(:name => 'George')
-    guide = template_edition.container
-    guide.save
+    edition.save
 
-    guide.editions.first.update_attribute :state, 'draft'
-    guide.reload
-
-    user.request_review guide.editions.first, comment: "Requesting review"
-
-    assert_equal guide.editions.first.actions.size, 1
-    assert guide.editions.first.latest_status_action(Action::REQUEST_REVIEW).present?
+    edition.update_attribute :state, 'draft'
+    edition.reload                                         
+    
+    user.request_review edition, comment: "Requesting review" 
+    
+    assert_equal edition.actions.size, 1
+    assert edition.latest_status_action(Action::REQUEST_REVIEW).present?
   end
 
   test "a published edition can't be edited" do
-    edition = template_edition
-    guide = template_edition.container
+    guide = template_edition
     guide.save
 
-    guide.editions.first.update_attribute :state, 'published'
+    guide.update_attribute :state, 'published'
     guide.reload
 
-    edition = guide.editions.last
-    edition.title = "My New Title"
+    guide.title = "My New Title"
 
-    assert ! edition.save
-    assert_equal ["Published editions can't be edited"], edition.errors[:base]
+    assert ! guide.save
+    assert_equal ["Published editions can't be edited"], guide.errors[:base]
   end
 
   test "publish history is recorded" do
-    without_metadata_denormalisation(Guide) do
+    without_metadata_denormalisation(GuideEdition) do
       edition = template_edition
-      guide = template_edition.guide
-
+      
       user = User.create :name => 'bob'
-      guide.save
+      edition.save                
 
-      edition = guide.editions.first
       edition.update_attribute(:state, 'ready')
       user.publish edition, comment: "First publication"
 
-      second_edition = guide.editions.build
+      second_edition = edition.build_clone
       second_edition.save!
       second_edition.update_attribute(:state, 'ready')
       user.publish second_edition, comment: "Second publication"
 
-      third_edition = guide.editions.build
+      third_edition = second_edition.build_clone
       third_edition.save!
       third_edition.update_attribute(:state, 'ready')
       user.publish third_edition, comment: "Third publication"
 
-      guide.reload
+      edition.reload
+      assert edition.actions.where('request_type' => 'publish')
 
-      action_count = 0
-      guide.editions.each do |e|
-        actions = e.actions.where('request_type' => 'publish')
-        action_count += actions.count
-      end
-
-      assert_equal 3, action_count
-      assert_equal 1, guide.editions.where(state: 'published').count
-      assert_equal 2, guide.editions.where(state: 'archived').count
+      second_edition.reload
+      assert second_edition.actions.where('request_type' => 'publish')
+      
+      third_edition.reload
+      assert third_edition.actions.where('request_type' => 'publish')
+      assert third_edition.published?
     end
   end
 end

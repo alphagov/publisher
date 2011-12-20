@@ -1,7 +1,6 @@
 require 'marples/model_action_broadcast'
 
 class WholeEdition
-  class CannotDeletePublishedPublication < RuntimeError; end
 
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -19,6 +18,7 @@ class WholeEdition
   field :department, :type => String
   field :rejected_count, :type => Integer, default: 0
   field :panopticon_id, :type => Integer
+  field :tags, :type => String
 
   scope :lined_up,            where(state: 'lined_up')
   scope :draft,               where(state: 'draft')
@@ -29,10 +29,10 @@ class WholeEdition
   scope :ready,               where(state: 'ready')
   scope :published,           where(state: 'published')
   scope :archived,            where(state: 'archived')
-  scope :assigned_to,         lambda { |user| user.nil? ? where(:assigned_to_id.exists => false) : where('editions.assigned_to_id' => user.id) }
+  scope :assigned_to,         lambda { |user| user.nil? ? where(:assigned_to_id.exists => false) : where(:assigned_to_id => user.id) }
 
   validates :title, presence: true
-  validates :version_number, presence: true
+  validates :version_number, presence: true, uniqueness: {:scope => :panopticon_id}
   validates :panopticon_id, presence: true
 
   index "assigned_to_id"
@@ -43,16 +43,20 @@ class WholeEdition
 
   alias_method :admin_list_title, :title
 
+  def series
+    WholeEdition.where(:panopticon_id => panopticon_id)
+  end
+
   def siblings
-    Edition.where(:panopticon_id => panopticon_id, :id.ne => id)
+    series.excludes(:id => id)
   end
 
   def previous_siblings
-    siblings.where(:created_at.lte => self.created_at)
+    siblings.where(:version_number.lt => version_number)
   end
 
   def subsequent_siblings
-    siblings.where(:created_at.gte => self.created_at)
+    siblings.where(:version_number.gt => version_number)
   end
 
   def latest_edition?
@@ -116,10 +120,14 @@ class WholeEdition
       "title" => title,
       "link" => "/#{slug}",
       "section" => section ? section.parameterize : nil,
-      "format" => _type.downcase,
+      "format" => kind.underscore.downcase,
       "description" => (published? && overview) || "",
       "indexable_content" => indexable_content,
     }
+  end
+  
+  def self.search_index_all
+    all.map(&:search_index)
   end
 
   def kind
@@ -129,12 +137,8 @@ class WholeEdition
   def has_video?
     false
   end
- 
-  def update_in_search_index
-    Rummageable.index self.search_index
+  
+  def published_edition
+    series.where(state: 'published').order(version_number: 'desc').first
   end
-
-  def remove_from_search_index
-    Rummageable.delete "/#{slug}"
-  end 
 end

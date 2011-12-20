@@ -2,15 +2,11 @@ require 'test_helper'
 
 class GuideEditionTest < ActiveSupport::TestCase
   def template_guide
-    g = Guide.new(:slug=>"childcare",:name=>"Something")
-    edition = g.editions.first
-    edition.title = 'One'
-    g
+    FactoryGirl.create(:guide_edition, title: 'One')
   end
 
   test "order parts shouldn't fail if one part's order attribute is nil" do
-    g = template_guide
-    edition = g.editions.first
+    edition = template_guide
     edition.parts.build
     edition.parts.build(:order => 1)
     assert edition.order_parts

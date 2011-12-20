@@ -14,12 +14,10 @@ class UpdatePublicationMetadata
   def execute
     return no_panopticon_id unless panopticon_id
     logger.debug "Finding artefact with panopticon id #{panopticon_id}"
-    return no_publication unless publication.present?
-    logger.debug "Denormalising metadata for publication #{publication.id}"
+    return no_publication unless publications.any?
+    logger.debug "Denormalising metadata for publications #{publications.collect(&:id).to_sentence}"
     denormalise_metadata
-    logger.debug "Denormalised metadata, saving publication"
-    return failed_to_save unless publication.save
-    logger.info "Updated metadata for publication #{publication.id}"
+    logger.info "Updated metadata for publications #{publications.collect(&:id).to_sentence}"
     true
   end
 
@@ -27,7 +25,7 @@ class UpdatePublicationMetadata
     logger.error "No Panopticon ID provided: #{artefact.inspect}"
   end
 
-  def failed_to_save
+  def failed_to_save(publication)
     logger.error "Couldn't save updated metadata for publication #{publication.id}"
   end
 
@@ -36,8 +34,8 @@ class UpdatePublicationMetadata
     false
   end
 
-  def publication
-    @publication ||= Publication.first conditions: { panopticon_id: panopticon_id }
+  def publications
+    @publications ||= WholeEdition.where(panopticon_id: panopticon_id)
   end
 
   def panopticon_id
@@ -46,17 +44,14 @@ class UpdatePublicationMetadata
 
   def denormalise_metadata
     logger.debug "Setting name = #{artefact['name'].inspect}"
-    if !publication.latest_edition.published?
-      publication.name = artefact['name']
-      logger.debug "Updating latest edition title = #{artefact['name'].inspect}"
-      publication.latest_edition.title = artefact['name']
+    publications.each do |publication|
+      publication.title = artefact['name'] unless publication.published?
+      publication.slug = artefact['slug']
+      publication.section = artefact['section']
+      publication.department = artefact['department']
+      unless publication.save
+        failed_to_save(publication)
+      end
     end
-    logger.debug "Setting slug = #{artefact['slug'].inspect}"
-    publication.slug = artefact['slug']
-
-    logger.debug "Setting section = #{artefact['section'].inspect}"
-    publication.section = artefact['section']
-    logger.debug "Setting department = #{artefact['department'].inspect}"
-    publication.department = artefact['department']
   end
 end

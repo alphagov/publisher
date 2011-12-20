@@ -6,7 +6,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
     other_user = User.create(:name => "James")
     expectation = Expectation.create :css_class=>"card_payment",  :text=>"Credit card required"
 
-    transaction = user.create_whole_edition(:transaction)
+    transaction = user.create_whole_edition(:transaction, title: 'My title', slug: 'my-title', panopticon_id: 123)
     transaction.expectation_ids = [expectation.id]
     transaction.save
 
@@ -30,16 +30,5 @@ class TransactionEditionTest < ActiveSupport::TestCase
     new_edition = user.new_version(reloaded_transaction)
 
     assert new_edition.save
-  end
-
-  test "fails gracefully when creating new edition fails" do
-    user, transaction = template_user_and_published_transaction
-    assert transaction.persisted?
-    assert transaction.published?
-
-    reloaded_transaction = TransactionEdition.find(transaction.id)
-    new_edition = user.new_version(reloaded_transaction)
-    reloaded_transaction.expectation_ids = [1,2,3]
-    assert ! new_edition.save
   end
 end

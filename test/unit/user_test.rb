@@ -4,7 +4,7 @@ class UserTest < ActiveSupport::TestCase
   test "creating a transaction with the initial details creates a valid transaction" do
     user = User.create(:name => "bob")
     without_panopticon_validation do
-      trans = user.create_whole_edition(:transaction, :name => "test", :slug => "test")
+      trans = user.create_whole_edition(:transaction, title: "test", slug: "test", panopticon_id: 1234)
       assert trans.valid?
     end
   end
@@ -13,7 +13,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.create(:name => "bob")
     NoisyWorkflow.expects(:request_fact_check).never
     without_panopticon_validation do
-      trans = user.create_whole_edition(:transaction, :name => "test", :slug => "test")
+      trans = user.create_whole_edition(:transaction, title: "test answer", slug: "test", panopticon_id: 123)
       assert ! user.send_fact_check(trans, {comment: "Hello"})
     end
   end
@@ -22,7 +22,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.create(:name => "bob")
 
     without_panopticon_validation do
-      trans = user.create_whole_edition(:transaction, :name => "test", :slug => "test")
+      trans = user.create_whole_edition(:transaction, title: "test answer", slug: "test", panopticon_id: 123)
       user.request_review(trans, {comment: "Hello"})
       assert ! user.approve_review(trans, {comment: "Hello"})
     end
@@ -31,7 +31,7 @@ class UserTest < ActiveSupport::TestCase
   test "user can't send back a publication they've sent for review" do
     user = User.create(:name => "bob")
 
-    trans = user.create_whole_edition(:transaction, :name => "test", :slug => "test")
+    trans = user.create_whole_edition(:transaction, title: "test answer", slug: "test", panopticon_id: 123)
     user.start_work(trans)
     user.request_review(trans, {comment: "Hello"})
     assert ! user.request_amendments(trans, {comment: "Hello"})
@@ -41,7 +41,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.create(:name => "bob")
     second_user = User.create(:name => "dave")
 
-    trans = user.create_whole_edition(:transaction, :name => "test", :slug => "test")
+    trans = user.create_whole_edition(:transaction, title: "test answer", slug: "test", panopticon_id: 123)
     user.start_work(trans)
     user.request_review(trans, {comment: "Hello"})
     second_user.approve_review(trans, {comment: "Hello"})
@@ -54,12 +54,12 @@ class UserTest < ActiveSupport::TestCase
     boss_user = User.create(:name => "Mat")
     worker_user = User.create(:name => "Grunt")
 
-    publication = boss_user.create_whole_edition(:answer, :name => "test answer", :slug => "test")
-    boss_user.assign(publication.latest_edition, worker_user)
+    publication = boss_user.create_whole_edition(:answer, title: "test answer", slug: "test", panopticon_id: 123)
+    boss_user.assign(publication, worker_user)
     publication.save
     publication.reload
 
-    assert_equal(worker_user, publication.latest_edition.assigned_to)
+    assert_equal(worker_user, publication.assigned_to)
   end
 
 end

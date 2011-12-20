@@ -6,7 +6,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
   
   def local_transaction_edition
     make_service(149, %w{county unitary})
-    lt = LocalTransaction.new(:name => "Transaction", :slug=>"transaction", :lgsl_code => "149")
+    lt = LocalTransactionEdition.new(:name => "Transaction", :slug=>"transaction", :lgsl_code => "149")
     edition = lt.editions.first
     edition
   end

@@ -55,21 +55,21 @@ class RouterBridge
   def register_local_transaction(default_route_params, publication)
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/not_found"))
   end
-
-  def register_publication publication
+ 
+  def register_publication(publication)
     logger.info("pub #{publication.inspect}")
-    logger.info("Registering publication #{publication['name']} with router as #{publication.class.to_s}")
+    logger.info("Registering publication #{publication.name} with router as #{publication.class.to_s}")
 
     default_route_params = {:application_id => 'frontend', :route_type => :full}
-    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}"))
-    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}.json"))
-    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}.xml"))
-
-    if publication.is_a?(Guide)
+    register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}"))
+    register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}.json"))
+    register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}.xml"))
+    
+    if publication.is_a?(GuideEdition)
       register_multi_part_publication(default_route_params, publication)
-    elsif publication.is_a?(Programme)
+    elsif publication.is_a?(ProgrammeEdition)
       register_programme(default_route_params, publication)
-    elsif publication.is_a?(LocalTransaction)
+    elsif publication.is_a?(LocalTransactionEdition)
       register_local_transaction(default_route_params, publication)
     end
   end
