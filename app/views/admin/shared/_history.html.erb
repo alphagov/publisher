@@ -8,48 +8,47 @@
 
 <hr />
 
-<% publication.editions.reverse.each do |edition| %>
-  <div class="edition">
-    <div class="buttons group">
-      <h3>Version <%= edition.version_number %></h3>
-    </div>
-    <ul class="history">
-      <% edition.actions.reverse.each do |action| %>
-      <li class="<%= action.request_type.parameterize %> group">
-        <div class="action-time">
-          <p><span class="visuallyhidden">Version created on</span> <span class="time"><%= action.created_at.strftime("%d/%m/%Y") %></span> <span class="visuallyhidden">at</span> <%= action.created_at.strftime("%R") %></p>
-        </div>
-
-        <div>
-          <p><span class="action-by"><%= action.to_s %></span> by
-          <% if action.requester %>
-            <%= mail_to action.requester.email, action.requester.name %></p>
-          <% else %>
-            GOV.UK Bot
-          <% end %>
-        </div>
-
-        <div class="action-comment">
-          <% if action.requester %>
-            <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
-          <% end %>
-          <% if action.comment.present? || action.is_fact_check_request? || action.request_type == "assign" %>
-          <blockquote>
-            <% if action.comment.present? %>
-              <span><%= simple_format action.comment %></span>
-            <% end %>
-            <% if action.is_fact_check_request? && action.email_addresses.present? %>
-              <span><p><strong>Request Sent To:</strong> <%= mail_to action.email_addresses %></p></span>
-            <% end %>
-            <% if action.recipient_id.present? %>
-              <span><p><strong>Assigned To:</strong> <%= mail_to action.recipient.email, action.recipient.name %></p></span>
-            <% end %>
-          </blockquote>
-          <% end %>
-
-        </div>
-      </li>
-      <% end %>
-    </ul>
+<div class="edition">
+  <div class="buttons group">
+    <h3>Version <%= @resource.version_number %></h3>
   </div>
+  <ul class="history">
+    <% @resource.actions.reverse.each do |action| %>
+    <li class="<%= action.request_type.parameterize %> group">
+      <div class="action-time">
+        <p><span class="visuallyhidden">Version created on</span> <span class="time"><%= action.created_at.strftime("%d/%m/%Y") %></span> <span class="visuallyhidden">at</span> <%= action.created_at.strftime("%R") %></p>
+      </div>
+
+      <div>
+        <p><span class="action-by"><%= action.to_s %></span> by
+        <% if action.requester %>
+          <%= mail_to action.requester.email, action.requester.name %></p>
+        <% else %>
+          GOV.UK Bot
+        <% end %>
+      </div>
+
+      <div class="action-comment">
+        <% if action.requester %>
+          <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
+        <% end %>
+        <% if action.comment.present? || action.is_fact_check_request? || action.request_type == "assign" %>
+        <blockquote>
+          <% if action.comment.present? %>
+            <span><%= simple_format action.comment %></span>
+          <% end %>
+          <% if action.is_fact_check_request? && action.email_addresses.present? %>
+            <span><p><strong>Request Sent To:</strong> <%= mail_to action.email_addresses %></p></span>
+          <% end %>
+          <% if action.recipient_id.present? %>
+            <span><p><strong>Assigned To:</strong> <%= mail_to action.recipient.email, action.recipient.name %></p></span>
+          <% end %>
+        </blockquote>
+        <% end %>
+
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
 <% end %>

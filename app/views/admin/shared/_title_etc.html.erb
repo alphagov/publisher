@@ -8,9 +8,9 @@
 <%= f.input :alternative_title,
       :label => "Alternative title",
       :hint => 'Use this where longer title is needed for SEO purposes',
-      :input_html => {:autofocus => true, :disabled => @latest_edition.is_published? } %>
+      :input_html => {:autofocus => true, :disabled => @resource.published? } %>
 <%= f.input :overview,
       :as => :text,
-      :input_html => {:rows => 3, :disabled => @latest_edition.is_published? },
+      :input_html => {:rows => 3, :disabled => @resource.published? },
       :label => 'Meta tag description',
       :hint =>'Some search engines will display this if they can’t find what they need in the main text' %>

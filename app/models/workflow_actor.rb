@@ -13,7 +13,7 @@ module WorkflowActor
     action = edition.new_action(self, type, options)
     messenger_topic = edition.state.to_s.downcase
     Messenger.instance.send messenger_topic, edition unless messenger_topic == "created"
-    NoisyWorkflow.make_noise(edition, action).deliver
+    NoisyWorkflow.make_noise(action).deliver
   end
 
   def record_note(edition, comment)
@@ -21,16 +21,19 @@ module WorkflowActor
   end
 
   def create_whole_edition(kind, attributes = {})
+    kind = kind.to_s.gsub('_edition', '').to_sym
     item = PUBLICATION_CLASSES[kind].create(attributes)
     record_action(item, Action::CREATE) if item.persisted?
     item
   end
 
   def new_version(edition)
-    return false unless edition.is_published?
+    return false unless edition.published?
 
     new_edition = edition.build_clone
     if new_edition
+      new_edition.actions = []
+      new_edition.state = 'lined_up'
       record_action new_edition, Action::NEW_VERSION
       new_edition
     else
@@ -95,6 +98,11 @@ module WorkflowActor
     edition.publish
     record_action edition, __method__, details
     edition
+  end
+
+  def can_request_review?(edition)
+    most_recent_request = edition.most_recent_action { |a| a.request_type == Action::STATUS_ACTIONS[REQUEST_REVIEW]}
+    edition.can_request_review? and (most_recent_request.nil? or most_recent_request.requester != self)
   end
 
   def assign(edition, recipient)

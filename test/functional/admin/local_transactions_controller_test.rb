@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::LocalTransactionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @guide = Guide.create(:name => "test", :slug=>"test")
+    @guide = FactoryGirl.create(:guide_edition)
     @user = User.create
     @controller.stubs(:current_user).returns(@user)
   end

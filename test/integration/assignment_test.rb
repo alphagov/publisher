@@ -15,7 +15,7 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob")
     charlie = FactoryGirl.create(:user, name: "Charlie")
 
-    guide = FactoryGirl.create(:guide, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/guides/#{guide.to_param}"
 
@@ -55,7 +55,7 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob")
     charlie = FactoryGirl.create(:user, name: "Charlie")
 
-    guide = FactoryGirl.create(:guide, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/guides/#{guide.to_param}"
 
@@ -70,7 +70,7 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
   test "a guide is lined up until work starts on it" do
     alice   = FactoryGirl.create(:user, name: "Alice")
 
-    guide = FactoryGirl.create(:guide, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/guides/#{guide.to_param}"
 

@@ -11,6 +11,6 @@ class Admin::NotesController < Admin::BaseController
   end
 
   def resource
-    parent.latest_edition
+    parent
   end
 end

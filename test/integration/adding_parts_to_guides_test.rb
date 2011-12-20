@@ -7,14 +7,14 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 
-    guide = Guide.new :name => random_name, :slug => 'test-guide', :panopticon_id => 2356
+    guide = GuideEdition.new :title => random_name, :slug => 'test-guide', :panopticon_id => 2356
     guide.save!
-    guide.editions.first.update_attribute(:state, 'draft')
+    guide.update_attribute(:state, 'draft')
 
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/guides/#{guide.to_param}"
-
+    
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'

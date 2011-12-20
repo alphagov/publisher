@@ -1,10 +1,7 @@
 <h2 style="color:#f00;">!! <a href="mailto:dev@alphagov.co.uk">Talk to a dev</a> before using any buttons on this tab !!</h2>
-<%- if edition_can_be_deleted?(@latest_edition) -%>
-<%= button_to 'Destroy Edition', path_for_edition(@latest_edition), :method => :delete %>
+<%- if @resource.can_destroy? -%>
+<%= button_to "Delete #{@edition.class.to_s.underscore.humanize}", path_for_edition(@resource), :method => :delete %>
 <%- end -%>
-<%- if @latest_edition.container.can_destroy? -%>
-<%= button_to "Destroy #{@latest_edition.container.class.to_s.underscore.humanize}", admin_publication_path(@latest_edition.container), :method => :delete %>
-<%- end -%>
-<%- if @latest_edition.fact_check? -%>
-<%= button_to "Skip Fact Check", skip_fact_check_for_edition(@latest_edition), :method => :post %>
+<%- if @resource.fact_check? -%>
+<%= button_to "Skip Fact Check", skip_fact_check_for_edition(@resource), :method => :post %>
 <%- end -%>

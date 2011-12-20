@@ -6,38 +6,40 @@ class TransactionEditionTest < ActiveSupport::TestCase
     other_user = User.create(:name => "James")
     expectation = Expectation.create :css_class=>"card_payment",  :text=>"Credit card required"
 
-    transaction = user.create_publication(:transaction)
-    edition = transaction.editions.first
-    edition.expectation_ids = [expectation.id]
+    transaction = user.create_whole_edition(:transaction)
+    transaction.expectation_ids = [expectation.id]
     transaction.save
 
-    edition.start_work
-    user.request_review(edition, {:comment => "Review this guide please."})
-    other_user.approve_review(edition, {:comment => "I've reviewed it"})
-    user.publish(edition, {:comment => "Let's go"})
+    transaction.start_work
+    transaction.save
+    user.request_review(transaction, {:comment => "Review this guide please."})
+    transaction.save
+    other_user.approve_review(transaction, {:comment => "I've reviewed it"})
+    transaction.save
+    user.publish(transaction, {:comment => "Let's go"})
+    transaction.save
     return user, transaction
   end
 
   test "permits the creation of new editions" do
     user, transaction = template_user_and_published_transaction
     assert transaction.persisted?
-    assert transaction.latest_edition.published?
+    assert transaction.published?
 
-    reloaded_transaction = Transaction.find(transaction.id)
-    new_edition = user.new_version(reloaded_transaction.latest_edition)
+    reloaded_transaction = TransactionEdition.find(transaction.id)
+    new_edition = user.new_version(reloaded_transaction)
 
-    assert new_edition.container.editions.first.changed.empty?
     assert new_edition.save
   end
 
   test "fails gracefully when creating new edition fails" do
     user, transaction = template_user_and_published_transaction
     assert transaction.persisted?
-    assert transaction.latest_edition.published?
+    assert transaction.published?
 
-    reloaded_transaction = Transaction.find(transaction.id)
-    new_edition = user.new_version(reloaded_transaction.latest_edition)
-    reloaded_transaction.editions.first.expectation_ids = [1,2,3]
+    reloaded_transaction = TransactionEdition.find(transaction.id)
+    new_edition = user.new_version(reloaded_transaction)
+    reloaded_transaction.expectation_ids = [1,2,3]
     assert ! new_edition.save
   end
 end

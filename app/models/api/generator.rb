@@ -3,16 +3,14 @@ require 'active_support/inflector'
 module Api
   module Generator
     def self.generator_class(edition)
-      "Api::Generator::#{edition.container.class.to_s}".constantize
+      "Api::Generator::#{edition.class.to_s.gsub('Edition', '')}".constantize
     end
 
     def self.edition_to_hash(edition, *args)
       generator = generator_class(edition)
-      publication_fields =  [:slug, :updated_at]
-      edition_fields     =  [:title, :alternative_title, :overview] + generator.extra_fields
-
-      attrs = edition.container.as_json(:only => publication_fields)
-      attrs.merge!(edition.as_json(:only => edition_fields))
+      edition_fields     =  [:slug, :updated_at, :title, :alternative_title, :overview] + generator.extra_fields
+      
+      attrs = edition.as_json(:only => edition_fields)
 
       if edition.respond_to?(:parts)
         non_blank_parts = []
@@ -26,7 +24,7 @@ module Api
         attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
       end
 
-      attrs['type'] = edition.container.class.to_s.underscore
+      attrs['type'] = edition.class.to_s.gsub('Edition', '').underscore
       generator.edition_to_hash(attrs, edition,*args)
     end
 

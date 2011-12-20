@@ -4,7 +4,7 @@ class LocalTransactionsController < ApplicationController
   respond_to :json
 
   def verify_snac
-    publication = Publication.where(slug: params[:id]).first
+    publication = WholeEdition.find_and_identify(params[:id], params[:edition])
     head 404 and return if publication.nil?
     
     matching_code = params[:snac_codes].detect { |snac| publication.service_provided_by?(snac) }

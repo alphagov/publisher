@@ -9,7 +9,7 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
       "name" => "FOOOO"
     )
     login_as_stub_user
-    @transaction = Transaction.create!(:name => "test", :slug=>"test")
+    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: '123')
   end
 
   test "transactions index redirects to root" do
@@ -26,18 +26,18 @@ class Admin::TransactionsControllerTest < ActionController::TestCase
 
   test "destroy transaction" do
     assert @transaction.can_destroy?
-    assert_difference('Transaction.count', -1) do
+    assert_difference('TransactionEdition.count', -1) do
       delete :destroy, :id => @transaction.id
     end
     assert_redirected_to(:controller => "root", "action" => "index")
   end
 
   test "can't destroy published transaction" do
-    @transaction.editions.first.state = 'ready'
-    @transaction.editions.first.publish
+    @transaction.state = 'ready'
+    @transaction.publish
     assert !@transaction.can_destroy?
     @transaction.save!
-    assert_difference('Transaction.count', 0) do
+    assert_difference('TransactionEdition.count', 0) do
       delete :destroy, :id => @transaction.id
     end
   end

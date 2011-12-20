@@ -10,14 +10,13 @@ Publisher::Application.routes.draw do
       :programmes,
       :local_transactions,
     ].each do |r|
-      resources r do
-        resources :editions, :only => [:create, :update, :destroy] do
-          post :progress, :on => :member
-          post :start_work, :on => :member
-          member do
-            post 'skip_fact_check'
-          end
-        end
+      resources r
+    end 
+    resources :editions, :only => [:create, :update, :destroy] do
+      post :progress, :on => :member
+      post :start_work, :on => :member
+      member do
+        post 'skip_fact_check'
       end
     end
 

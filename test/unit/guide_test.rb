@@ -197,7 +197,7 @@ class GuideTest < ActiveSupport::TestCase
 
     guide = user.create_publication(:guide)
     edition = guide.editions.first
-    assert ! edition.is_published?
+    assert ! edition.published?
     assert ! user.new_version(edition)
   end
 

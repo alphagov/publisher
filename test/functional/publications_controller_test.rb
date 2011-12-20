@@ -2,23 +2,18 @@ require 'test_helper'
 
 class PublicationsControllerTest < ActionController::TestCase
   def build_publication
-    Guide.new(:slug=>"childcare").tap { |p|
-      edition = p.editions.first
-      edition.title = "Something distinctive"
-      p.save!
-    }
+    GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: 1)
   end
 
   def build_published_publication
     build_publication.tap { |p|
-      edition = p.editions.first
-      edition.state = 'ready'
-      edition.publish
+      p.state = 'ready'
+      p.publish
     }
   end
 
   test "returns a 404 if the publication isn't found" do
-    Publication.expects(:find_and_identify_edition).returns(nil)
+    WholeEdition.expects(:find_and_identify).returns(nil)
     get :show, :id => 'fake-slug', :format => :json
     assert_response :not_found
   end
@@ -27,7 +22,7 @@ class PublicationsControllerTest < ActionController::TestCase
     publication = build_published_publication
     get :show, :id => publication.slug, :format => :json
     assert_response 200
-    assert_match publication.published_edition.title, response.body
+    assert_match publication.title, response.body
   end
 
   test "should return 404 for an unpublished publication" do
@@ -48,6 +43,6 @@ class PublicationsControllerTest < ActionController::TestCase
     publication = build_publication
     get :show, :id => publication.slug, :edition => 1, :format => :json
     assert_response 200
-    assert_match publication.editions.first.title, response.body
+    assert_match publication.title, response.body
   end
 end

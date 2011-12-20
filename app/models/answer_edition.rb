@@ -1,6 +1,4 @@
 class AnswerEdition < WholeEdition
-  embedded_in :answer
-
   field :body, :type => String
 
   @fields_to_clone = [:body]

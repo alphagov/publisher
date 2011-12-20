@@ -11,8 +11,7 @@ class NoisyWorkflow < ActionMailer::Base
     'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk'
   }
 
-  def make_noise(publication, action)
-    @publication = publication
+  def make_noise(action)
     @action = action
 
     case Plek.current.environment

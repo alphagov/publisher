@@ -1,6 +1,8 @@
 require 'marples/model_action_broadcast'
 
 class WholeEdition
+  class CannotDeletePublishedPublication < RuntimeError; end
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Marples::ModelActionBroadcast
@@ -18,7 +20,6 @@ class WholeEdition
   field :rejected_count, :type => Integer, default: 0
   field :panopticon_id, :type => Integer
 
-
   scope :lined_up,            where(state: 'lined_up')
   scope :draft,               where(state: 'draft')
   scope :amends_needed,       where(state: 'amends_needed')
@@ -30,6 +31,10 @@ class WholeEdition
   scope :archived,            where(state: 'archived')
   scope :assigned_to,         lambda { |user| user.nil? ? where(:assigned_to_id.exists => false) : where('editions.assigned_to_id' => user.id) }
 
+  validates :title, presence: true
+  validates :version_number, presence: true
+  validates :panopticon_id, presence: true
+
   index "assigned_to_id"
   index "panopticon_id"
 
@@ -38,17 +43,33 @@ class WholeEdition
 
   alias_method :admin_list_title, :title
 
-  def fact_check_id
-    [ container.id.to_s, id.to_s, version_number ].join '/'
+  def siblings
+    Edition.where(:panopticon_id => panopticon_id, :id.ne => id)
+  end
+
+  def previous_siblings
+    siblings.where(:created_at.lte => self.created_at)
+  end
+
+  def subsequent_siblings
+    siblings.where(:created_at.gte => self.created_at)
+  end
+
+  def latest_edition?
+    subsequent_siblings.empty?
+  end
+
+  def meta_data
+    PublicationMetadata.new self
   end
 
   def fact_check_email_address
-    "factcheck+#{Plek.current.environment}-#{container.id}@alphagov.co.uk"
+    "factcheck+#{Plek.current.environment}-#{id}@alphagov.co.uk"
   end
 
   def build_clone
-    new_edition = container.build_edition(self.title)
-    real_fields_to_merge = self.class.fields_to_clone + [:overview, :alternative_title]
+    new_edition = self.class.new(title: self.title, version_number: self.version_number + 1)
+    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title]
 
     real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
@@ -64,10 +85,10 @@ class WholeEdition
     raise "Artefact not found" if metadata.nil?
 
     existing_publication = Edition.where(panopticon_id: panopticon_id).first
-    return existing_publication existing_publication.present?
+    return existing_publication if existing_publication
 
     importing_user.create_whole_edition(metadata.kind.to_sym, :panopticon_id => metadata.id, 
-      :slug => metadata.slug, :title => metadata.title)
+      :slug => metadata.slug, :title => metadata.name)
   end
 
   def self.find_and_identify(slug, edition)
@@ -87,7 +108,7 @@ class WholeEdition
   end
 
   def indexable_content
-    published_edition ? published_edition.alternative_title : ""
+    published? ? alternative_title : ""
   end
 
   def search_index
@@ -105,7 +126,10 @@ class WholeEdition
     self.class.to_s.gsub('Edition', '')
   end
 
-private 
+  def has_video?
+    false
+  end
+ 
   def update_in_search_index
     Rummageable.index self.search_index
   end

@@ -1,6 +1,8 @@
 class LocalTransactionEdition < WholeEdition
   include Expectant
 
+  referenced_in :lgsl,      class_name: "LocalTransactionsSource::Lgsl"
+
   field :lgsl_code,         type: String
   field :introduction,      type: String
   field :more_information,  type: String
@@ -17,6 +19,6 @@ class LocalTransactionEdition < WholeEdition
   end
 
   def verify_snac(snac)
-    !lgsl.authorities.where(snac: snac).empty?
+    lgsl.authorities.where(snac: snac).any?
   end
 end

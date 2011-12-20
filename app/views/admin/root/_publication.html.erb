@@ -3,19 +3,16 @@
     <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
   <td class="title">
-    <% if tab && tab == :published || tab == :archived %>
-      <%= publication.published_edition.admin_list_title %>
-    <% else %>
-      <%= publication.latest_edition.admin_list_title %>
-    <% end %>
+    <%= publication.admin_list_title %>
+    
     <span class="version">
-    <% if tab && tab == :published || tab == :archived %>
-      (v.<%= (tab == :published) ? publication.published_edition.version_number : publication.archived_editions.map(&:version_number).join(', ') %>)
+    <% if tab && (tab == :published || tab == :archived) %>
+      (v.<%= publication.version_number %>)
       <% if publication.has_draft? %>
-        (v.<%= publication.latest_edition.version_number %> in draft)
+        (v.<%= publication.latest_publication.version_number %> in draft)
       <% end%>
     <% else %>
-      v.<%= publication.latest_edition.version_number %>
+      v.<%= publication.version_number %>
     <% end %>
     </span>
   </td>
@@ -33,15 +30,15 @@
   </td>
   <% end %>
   <td>
-    <%= publication.latest_edition.assigned_to %>
-
+    <%= publication.assigned_to %>
+    
     <% if tab && tab == :lined_up %>
-    <%= link_to publication.latest_edition.assigned_to ? ' (change)' : 'assign', [:admin, publication] %>
+    <%= link_to publication.assigned_to ? ' (change)' : 'assign', edit_edition_path(publication) %>
     <% end %>
   </td>
     <% unless tab && tab == :lined_up %>
     <td>
-      <%= publication.latest_edition.created_by %>
+      <%= publication.created_by %>
     </td>
     <% end %>
     <td>
@@ -49,11 +46,11 @@
     </td>
   <td>
     <%= publication.rejected_count %> /
-    <%= publication.edition_rejected_count %>
+    <%= publication.rejected_count %>
   </td>
     <% if tab && tab == :published || tab == :archived %>
     <td>
-      <%= (tab == :published) ? publication.published_edition.published_by : publication.last_archived_edition.archived_by %>
+      <%= (tab == :published) ? publication.published_by : publication.archived_by %>
     </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
@@ -66,13 +63,13 @@
     <% end %>
   <td>
     <% if tab && tab == :lined_up %>
-      <%= form_tag start_work_path(publication.latest_edition) do %>
+      <%= form_tag start_work_path(publication) do %>
         <%= hidden_field_tag :start_work, 1 %>
         <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => 'Start work on this #{publication.class.to_s.humanize)}', :class => 'start-work' %>
       <% end %>
     <% elsif tab and (tab == :published or tab == :archived) and publication.can_create_new_edition? %>
       <%= form_tag admin_editions_path(publication) do %>
-        <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
+        <%= image_submit_tag '/images/icon-publisher-create-new-publication.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
       <% end %>
     <% elsif tab && tab == :published %>
       <%= link_to [:admin, publication] do %>
@@ -86,7 +83,7 @@
   </td>
   <td>
     <% if publication.safe_to_preview? %>
-      <%= link_to preview_edition_path(publication.latest_edition), {:class => 'preview'} do %>
+      <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
         <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
       <% end %>
     <% else %>

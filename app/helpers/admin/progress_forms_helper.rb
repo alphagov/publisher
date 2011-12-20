@@ -8,9 +8,8 @@ module Admin::ProgressFormsHelper
   end
 
   def progress_form(edition, title, activity, placeholder=nil)
-    container    = edition.container.class.to_s.underscore
-    path_method  = "progress_admin_#{container}_edition_path".to_sym
-    path         = send(path_method, edition, "#{container}_id".to_sym => edition.container)
+    path_method  = "progress_admin_edition_path".to_sym
+    path         = send(path_method, edition)
     check_method = "can_#{activity}?".to_sym
 
     render(
@@ -63,7 +62,6 @@ module Admin::ProgressFormsHelper
   end
 
   def progress_buttons(edition)
-    guide = edition.container
     [
       ["Fact check",       "send_fact_check"],
       ["2nd pair of eyes", "request_review"],

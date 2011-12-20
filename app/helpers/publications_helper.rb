@@ -1,7 +1,7 @@
 module PublicationsHelper
 
   def status_class_for(publication)
-    return 'factchecked' if publication.latest_edition.fact_checked?
+    return 'factchecked' if publication.fact_checked?
   end
 
   def timestamp(time)

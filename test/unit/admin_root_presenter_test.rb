@@ -8,13 +8,20 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
       to_return(:status => 200, :body => json, :headers => {})
   end
 
+  def setup_users
+    alice = User.create
+    bob   = User.create
+    return alice, bob
+  end
+
   test "should filter by draft state" do
     presenter = AdminRootPresenter.new(:all)
-    a = GuideEdition.create
+    
+    a = FactoryGirl.create(:guide_edition)
     a.update_attribute(:state, 'draft')
     assert a.draft?
 
-    b = GuideEdition.create
+    b = FactoryGirl.create(:guide_edition)
     b.update_attribute(:state, 'published')
     b.save
     b.reload
@@ -26,10 +33,10 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by published state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert !a.published?
 
-    b = GuideEdition.create                                      
+    b = FactoryGirl.create(:guide_edition)
     b.update_attribute(:state, 'published')
     b.reload
     assert b.published?
@@ -40,11 +47,15 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by archived state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert ! a.archived?
 
-    b = GuideEdition.create
-    b.editions.create!(state: 'archived')
+    b = FactoryGirl.create(:guide_edition)
+    b.start_work
+    b.publish
+    b.archive
+    b.save
+    
     assert b.archived?
 
     assert_equal [b], presenter.archived.to_a
@@ -54,10 +65,10 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
     user = User.create
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert !a.in_review?
 
-    b = GuideEdition.create
+    b = FactoryGirl.create(:guide_edition)
     b.update_attribute(:state, 'in_review')
     b.reload
     assert b.in_review?
@@ -69,10 +80,10 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter = AdminRootPresenter.new(:all)
     user = User.create
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert !a.fact_check?
 
-    b = GuideEdition.create
+    b = FactoryGirl.create(:guide_edition)
     b.update_attribute(:state, 'fact_check')
     b.reload
     assert b.fact_check?
@@ -83,11 +94,11 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by lined up state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = GuideEdition.create 
+    a = FactoryGirl.create(:guide_edition)
     a.update_attribute(:state, "lined_up")
     assert a.lined_up?
 
-    b = GuideEdition.create  
+    b = FactoryGirl.create(:guide_edition)
     b.update_attribute(:state, "draft")
     b.reload
     assert !b.lined_up?
@@ -96,14 +107,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should select publications assigned to a user" do
-    alice = User.create
-    bob   = User.create
+    alice, bob = setup_users
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.lined_up?
 
-    b = GuideEdition.create
+    b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.lined_up?
@@ -113,8 +123,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should select publications assigned to nobody" do
-    alice = User.create
-    bob   = User.create
+    alice, bob = setup_users
 
     a = GuideEdition.create!(title: 'My First Guide', panopticon_id: 1)
     assert_nil a.assigned_to
@@ -130,14 +139,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should select all publications" do
-    alice = User.create
-    bob   = User.create
+    alice, bob = setup_users
 
-    a = GuideEdition.create!(title: 'My First Guide')
+    a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.lined_up?
 
-    b = GuideEdition.create!(title: 'My Second Guide')
+    b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.lined_up?
@@ -147,20 +155,19 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should select and filter" do
-    alice = User.create
-    bob   = User.create
+    alice, bob = setup_users
 
-    a = GuideEdition.create
+    a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.lined_up?
 
-    b = GuideEdition.create
+    b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    c = GuideEdition.create
-    c.update_attribute :state, 'published'
+    c = FactoryGirl.create(:guide_edition)
+    c.start_work
     alice.assign(c, bob)
     assert_equal bob, c.assigned_to
     assert !c.lined_up?

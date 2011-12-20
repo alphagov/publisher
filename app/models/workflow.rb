@@ -4,26 +4,26 @@ module Workflow
 
   included do
     validate :not_editing_published_item
-    before_destroy :do_not_delete_if_published
+    before_destroy :can_destroy?
     field :state, :type => String
     belongs_to :assigned_to, :class_name => 'User'
     embeds_many :actions
 
     state_machine :initial => :lined_up do
       after_transition :on => :request_amendments do |edition, transition|
-        edition.container.mark_as_rejected
+        edition.mark_as_rejected
       end
 
       after_transition :on => :approve_review do |edition, transition|
-        edition.container.mark_as_accepted
+        edition.mark_as_accepted
       end
 
       before_transition :on => :publish do |edition, transition|
-        edition.container.editions.where(state: 'published').all.each{|e| e.archive }
+        edition.previous_siblings.all.each(&:archive)
       end
 
       after_transition :on => :publish do |edition, transition|
-        edition.container.update_in_search_index
+        edition.update_in_search_index
       end
 
       event :start_work do
@@ -66,10 +66,6 @@ module Workflow
         transition :published => :archived
       end
     end
-  end
-
-  def is_published?
-    self.published?
   end
 
   def fact_checked?
@@ -122,12 +118,18 @@ module Workflow
     a && a.id
   end
 
+  def mark_as_accepted
+    self.update_attribute(:edition_rejected_count, 0)
+  end
+
   def most_recent_action(&blk)
     self.actions.sort_by(&:created_at).reverse.find(&blk)
   end
 
   def not_editing_published_item
-    errors.add(:base, "Published editions can't be edited") if changed? and !state_changed? and published?
+    if changed? and published? and ! state_changed?
+      errors.add(:base, "Published editions can't be edited") 
+    end
   end
 
   def progress(activity_details, current_user)
@@ -142,23 +144,13 @@ module Workflow
     end
 
     if result
-      self.container.save!
+      save!
     else
       result
     end
   end
 
-  def do_not_delete_if_published
-    (!self.published?)
-  end
-
-  def unpublish!
-    self.container.publishings.detect { |p| p.version_number == self.version_number }.destroy
-    self.actions.each do |a|
-      unless a.request_type == Action::NEW_VERSION or a.request_type == Action::CREATED
-        a.destroy
-      end
-    end
-    self.container.save
+  def can_destroy?
+    ! published? and ! archived?
   end
 end

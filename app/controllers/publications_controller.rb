@@ -20,17 +20,13 @@ class PublicationsController < ApplicationController
   end
 
   def compose_publication(slug, edition_number, snac)
-    Rails.logger.info("pubctrl: compose #{slug} #{edition_number}")
     edition_number = nil unless allow_preview?
-    Rails.logger.info("pubctrl: finding publication edition #{Time.now.to_f}")
-    edition = Publication.find_and_identify_edition(slug, edition_number)
-    Rails.logger.info("pubctrl: found edition #{Time.now.to_f}")
+    edition = WholeEdition.find_and_identify_edition(slug, edition_number)
+
     return nil if edition.nil?
 
     options = {:snac => params[:snac], :all => params[:all]}.select { |k, v| v.present? }
-    Rails.logger.info("pubctrl: generating hash #{Time.now.to_f}")
     result = Api::Generator.edition_to_hash(edition, options)
-    Rails.logger.info("pubctr: exit compose #{Time.now.to_f}")
     result
   end
 end

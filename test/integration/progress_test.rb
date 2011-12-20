@@ -6,8 +6,8 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
     panopticon_has_metadata("id" => '2356')
     setup_users
 
-    guide = FactoryGirl.create(:guide, panopticon_id: 2356)
-    guide.editions.first.update_attribute(:state, 'ready')
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide.update_attribute(:state, 'ready')
 
     visit "/admin/guides/#{guide.to_param}"
 
@@ -31,6 +31,6 @@ class GuideProgressTest < ActionDispatch::IntegrationTest
 
     guide.reload
 
-    assert guide.editions.first.fact_check?
+    assert guide.fact_check?
   end
 end

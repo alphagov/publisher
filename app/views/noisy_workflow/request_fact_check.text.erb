@@ -3,7 +3,7 @@ Hello,
 Please check the following item for factual accuracy:
 
 Title: <%= @edition.title %>
-<%= "#{Plek.current.find("publication-preview")}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
+<%= "#{Plek.current.find("publication-preview")}/#{@edition.slug}?edition=#{@edition.version_number}" %>
 
 If you spot something that's factually incorrect reply to this email with your comments:
 

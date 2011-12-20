@@ -5,8 +5,9 @@ FactoryGirl.define do
     email { Faker::Internet.email }
   end
 
-  factory :guide do
-    name  { Faker::Company.bs }
+  factory :guide_edition do |ge|
+  	ge.sequence(:panopticon_id) { |n| n }
+    title  { Faker::Company.bs }
     slug  { Faker::Company.bs.downcase.gsub(/[^a-z]+/, "-") }
   end
 end

@@ -49,7 +49,7 @@ class RouterBridgeTest < ActiveSupport::TestCase
         route_type: :full
     )
     RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
-    @marples_client.publish("publisher", "guide", "published", publication)
+    @marples_client.publish("publisher", "guide_edition", "published", publication)
   end
 
   private
