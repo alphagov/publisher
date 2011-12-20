@@ -2,51 +2,63 @@ class RouterBridge
   attr_accessor :router, :logger, :marples
 
   def initialize options = {}
-    logger = options[:logger] || NullLogger.instance
+    logger = options[:logger] || Logger.new(STDOUT)
+    logger.info("Initializing router bridge")
     self.router = options[:router] || Router::Client.new(:logger => logger)
     self.logger = logger
-    self.marples = options[:marples_client] || Marples::Client.new(transport: Messenger.transport, logger: logger
-)
+    self.marples = options[:marples_client] || Marples::Client.new(transport: Messenger.transport, logger: logger)
+    logger.info("Done")
   end
 
   def run
-    transport = Messenger.transport
+    marples.when 'publisher', '*', 'published' do |publication_hash|
+      publication_id = publication_hash['_id']
+      logger.info("Recieved message for #{publication_hash['name']} #{publication_id}")
+      publication = Publication.find(publication_id)
 
-    marples.when 'publisher', '*', 'published' do |publication|
-      register_publication publication
+      if(publication.nil?)
+        logger.warn("Could not find publication #{publication_id}")
+      else
+        register_publication(publication)
+      end
     end
 
     marples.join
   end
 
+  private
   def register_multi_part_publication(default_route_params, publication)
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/print"))
+    logger.info(" Registering publication parts for #{publication['name']}")
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/print"))
 
     publication.published_edition.parts.each do |part|
-      register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/#{part['slug']}"))
+      logger.info(" Registering part #{part.slug}")
+      register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part['slug']}"))
     end
-    
+
     if publication.has_video?
-      register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/video"))
+      register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/video"))
     end
   end
-  
+
   def register_programme(default_route_params, publication)
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/print"))
-    
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}/further-information"))
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/print"))
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/further-information"))
   end
-  
+
   def register_local_transaction(default_route_params, publication)
-    register_route(default_route_params.merge(:incoming_path => "/#{publication['slug']}/not_found"))
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/not_found"))
   end
-    
+
   def register_publication publication
+    logger.info("pub #{publication.inspect}")
+    logger.info("Registering publication #{publication['name']} with router as #{publication.class.to_s}")
+
     default_route_params = {:application_id => 'frontend', :route_type => :full}
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}"))
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}.json"))
-    register_route(default_route_params.merge(:incoming_path  => "/#{publication['slug']}.xml"))
-    
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}"))
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}.json"))
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}.xml"))
+
     if publication.is_a?(Guide)
       register_multi_part_publication(default_route_params, publication)
     elsif publication.is_a?(Programme)
@@ -57,8 +69,7 @@ class RouterBridge
   end
 
   def register_route route
-    logger.debug "Registering route #{route.inspect}"
+    logger.info "Registering route #{route.inspect}"
     router.routes.update(route)
-    logger.info "Registered #{route.inspect}"
   end
 end

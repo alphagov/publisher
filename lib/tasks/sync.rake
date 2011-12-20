@@ -2,7 +2,7 @@ namespace :sync do
   desc "Broadcast all current publications states"
   task :broadcast => :environment do
     Publication.published.each do |pub|
-      print '.'
+      puts "Syncing #{pub.name}"
       Messenger.instance.published pub
     end
   end

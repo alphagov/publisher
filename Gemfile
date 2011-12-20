@@ -21,7 +21,13 @@ gem "bson_ext", " 1.4"
 gem 'erubis'
 gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
-gem 'marples', '1.0.4'
+
+if ENV['MARPLES_DEV']
+  gem 'marples', :path => '../marples'
+else
+  gem 'marples', '~> 0'
+end
+
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
