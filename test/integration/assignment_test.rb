@@ -29,21 +29,21 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_nil guide.editions.last.assigned_to
+    assert_nil guide.assigned_to
 
     select "Bob", from: "Assigned to"
     click_on "Save"
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal bob, guide.editions.last.assigned_to
+    assert_equal bob, guide.assigned_to
 
     select "Charlie", from: "Assigned to"
     click_on "Save"
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal charlie, guide.editions.last.assigned_to
+    assert_equal charlie, guide.assigned_to
   end
 
   test "can assign a new guide without editing the part" do
@@ -64,7 +64,7 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal bob, guide.editions.last.assigned_to
+    assert_equal bob, guide.assigned_to
   end
 
   test "a guide is lined up until work starts on it" do
@@ -79,13 +79,13 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
 
     wait_until { page.has_content? "successfully updated" }
     guide.reload
-    assert guide.has_lined_up?
+    assert guide.lined_up?
 
     visit "/admin"
     click_on "Lined up (1)"
     click_on "Start work"
     wait_until { page.has_content? "Work started" }
     guide.reload
-    assert !guide.has_lined_up?
+    assert !guide.lined_up?
   end
 end

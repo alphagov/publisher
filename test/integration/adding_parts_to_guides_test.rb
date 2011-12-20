@@ -7,7 +7,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 
-    guide = GuideEdition.new :title => random_name, :slug => 'test-guide', :panopticon_id => 2356
+    guide = GuideEdition.new(:title => random_name, :slug => 'test-guide', :panopticon_id => 2356)
     guide.save!
     guide.update_attribute(:state, 'draft')
 

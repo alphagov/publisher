@@ -24,6 +24,12 @@ class Admin::BaseController < InheritedResources::Base
   def admin_guide_edition_url(edition)
     "/admin/guides/#{edition.to_param}"
   end
+
+  def admin_guide_edition_path(edition)
+    admin_edition_path(edition)
+  end
+
+  helper_method :admin_guide_edition_path
   helper_method :admin_guide_edition_url
   helper_method :admin_local_transaction_editions_path
   helper_method :admin_local_transaction_edition_path
