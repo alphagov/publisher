@@ -25,7 +25,7 @@ gem 'pethau', '0.0.3'
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'
 else
-  gem 'marples', '~> 0'
+  gem 'marples', '~> 1'
 end
 
 gem 'null_logger'
