@@ -59,4 +59,12 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     f = FactCheckMessageProcessor.new(message)
     assert f.process_for_publication(sample_publication.id)
   end
+  
+  test "it handles an email with wrongly declared character set after base 64 encoding" do
+    pending "it should handle these emails"
+    # message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/base64.txt", __FILE__))
+    # f = FactCheckMessageProcessor.new(message)
+    # assert f.process_for_publication(sample_publication.id)
+  end
+  
 end
