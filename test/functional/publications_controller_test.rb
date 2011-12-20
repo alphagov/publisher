@@ -36,16 +36,15 @@ class PublicationsControllerTest < ActionController::TestCase
     assert_response 404
   end
 
-  test "when request is not local, should return 404 when a specific edition is requested" do
-    request.stubs(:local?).returns(false)
+  test "when not in preview mode, should return 404 when a specific edition is requested" do
+    @controller.stubs(:allow_preview?).returns(false)
     publication = build_publication
     get :show, :id => publication.slug, :edition => 1, :format => :json
     assert_response 404
   end
 
-  test "when request is local, should emit a specific edition" do
-    request.stubs(:local?).returns(true)
-    @controller.stubs(:preview_mode?).returns(true)
+  test "when in preview mode, should emit a specific edition" do
+    @controller.stubs(:allow_preview?).returns(true)
     publication = build_publication
     get :show, :id => publication.slug, :edition => 1, :format => :json
     assert_response 200

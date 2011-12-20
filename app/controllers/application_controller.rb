@@ -3,8 +3,13 @@ class ApplicationController < ActionController::Base
   
   include GDS::SSO::ControllerMethods
 
+  def self.local_ip_addresses
+    @local_ip_addresses ||= Socket.ip_address_list.map(&:ip_address)
+  end
+
 protected
-  def allow_preview?
-    request.local?
+
+  def local_request?
+    self.class.local_ip_addresses.include?(request.ip)
   end
 end

@@ -14,6 +14,10 @@ class PublicationsController < ApplicationController
   end
 
 protected
+  def allow_preview?
+    local_request?
+  end
+
   def compose_publication(slug, edition_number, snac)
     edition_number = nil unless allow_preview?
     edition = Publication.find_and_identify_edition(slug, edition_number)
