@@ -10,9 +10,7 @@ class MarplesTestDouble
   end
 
   def publish(application, object_type, action, object)
-    @listeners
-      .select { |listener| listener_matches?(listener, [application, object_type, action]) }
-      .each { |listener| listener[3].call(object) }
+    @listeners.select { |listener| listener_matches?(listener, [application, object_type, action]) }.each { |listener| listener[3].call(object) }
   end
 
   def listener_matches?(listener, message)
@@ -33,25 +31,37 @@ class RouterBridgeTest < ActiveSupport::TestCase
   end
 
   test "when marples receives a published message, create a route" do
-    publication = {
-      'slug' => 'my-test-slug'
-    }
+    publication = create_publication()
+
     @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      incoming_path: "/#{publication['slug']}",
-      route_type: :full
+        application_id: "frontend",
+        incoming_path: "/#{publication['slug']}",
+        route_type: :full
     )
     @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      incoming_path: "/#{publication['slug']}.json",
-      route_type: :full
+        application_id: "frontend",
+        incoming_path: "/#{publication['slug']}.json",
+        route_type: :full
     )
     @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      incoming_path: "/#{publication['slug']}.xml",
-      route_type: :full
+        application_id: "frontend",
+        incoming_path: "/#{publication['slug']}.xml",
+        route_type: :full
     )
     RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
     @marples_client.publish("publisher", "guide", "published", publication)
+  end
+
+  private
+  def create_publication
+    answer = Answer.create(:slug=>"childcare", :name=>"Something")
+    edition = answer.editions.first
+    edition.title = 'One'
+    edition.body = 'Lots of info'
+    answer.save
+    edition.state = 'ready'
+    edition.publish
+    answer.save
+    Answer.first(conditions: { slug: "childcare"})
   end
 end
