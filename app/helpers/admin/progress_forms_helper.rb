@@ -28,7 +28,7 @@ module Admin::ProgressFormsHelper
       ["OK for publication", "approve_review"]
     ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled" 
+      disabled = edition.send(check_method) ? "" : "disabled"
       "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
       <input type=\"submit\" value=\"#{title}\"  #{disabled}>
       </form>"
@@ -41,14 +41,14 @@ module Admin::ProgressFormsHelper
       ["OK for publication", "approve_review"]
     ].map{ |args| progress_form(edition, *args) }.join("\n").html_safe
   end
-     
+
   def fact_check_buttons(guide, edition)
     [
       ["Needs major changes",    "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
     ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled" 
+      disabled = edition.send(check_method) ? "" : "disabled"
       "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
       <input type=\"submit\" value=\"#{title}\"  #{disabled}>
       </form>"

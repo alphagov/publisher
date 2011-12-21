@@ -14,7 +14,7 @@ class MetadataSyncTest < ActiveSupport::TestCase
       "id" => 123,
       "name" => "New title"
     )
-    
+
     publication = Guide.create! :panopticon_id => 123, :title => "Old title"
 
     updated_artefact = {

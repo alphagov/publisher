@@ -10,7 +10,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by draft state" do
     presenter = AdminRootPresenter.new(:all)
-    
+
     a = Guide.create
     a.editions.first.update_attribute(:state,'draft')
     assert a.has_draft?
@@ -30,7 +30,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     a = Guide.create
     assert !a.has_published?
 
-    b = Guide.create                                      
+    b = Guide.create
     b.editions.first.update_attribute(:state, 'published')
     b.reload
     assert b.has_published?
@@ -84,11 +84,11 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should filter by lined up state" do
     presenter = AdminRootPresenter.new(:all)
 
-    a = Guide.create 
+    a = Guide.create
     a.editions.first.update_attribute(:state, "lined_up")
     assert a.has_lined_up?
 
-    b = Guide.create  
+    b = Guide.create
     b.editions.first.update_attribute(:state, "draft")
     b.reload
     assert !b.has_lined_up?

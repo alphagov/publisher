@@ -11,8 +11,8 @@ $(function() {
 
   var accordion_opts = {
     header: "> div > h3",
-		collapsible: true,
-		active: false
+    collapsible: true,
+    active: false
   }
 
 

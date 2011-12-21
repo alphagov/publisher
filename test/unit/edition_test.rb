@@ -108,19 +108,19 @@ class EditionTest < ActiveSupport::TestCase
 
     assert_equal guide.editions.where(state: 'published').count, 1
     assert_equal guide.editions.where(state: 'archived').count, 2
-  end    
-  
+  end
+
   test "edition can return latest status action of a specified request type" do
-    edition = template_edition         
+    edition = template_edition
     user = User.create(:name => 'George')
     guide = template_edition.container
     guide.save
 
     guide.editions.first.update_attribute :state, 'draft'
-    guide.reload                                         
-    
-    user.request_review guide.editions.first, comment: "Requesting review" 
-    
+    guide.reload
+
+    user.request_review guide.editions.first, comment: "Requesting review"
+
     assert_equal guide.editions.first.actions.size, 1
     assert guide.editions.first.latest_status_action(Action::REQUEST_REVIEW).present?
   end
@@ -142,34 +142,34 @@ class EditionTest < ActiveSupport::TestCase
 
   test "publish history is recorded" do
     without_metadata_denormalisation(Guide) do
-      edition = template_edition                                     
+      edition = template_edition
       guide = template_edition.guide
-      
+
       user = User.create :name => 'bob'
-      guide.save                
-                         
+      guide.save
+
       edition = guide.editions.first
       edition.update_attribute(:state, 'ready')
-      user.publish edition, comment: "First publication"      
+      user.publish edition, comment: "First publication"
 
       second_edition = guide.editions.build
       second_edition.save!
       second_edition.update_attribute(:state, 'ready')
-      user.publish second_edition, comment: "Second publication"  
+      user.publish second_edition, comment: "Second publication"
 
       third_edition = guide.editions.build
       third_edition.save!
-      third_edition.update_attribute(:state, 'ready')                 
+      third_edition.update_attribute(:state, 'ready')
       user.publish third_edition, comment: "Third publication"
 
       guide.reload
-                                       
+
       action_count = 0
-      guide.editions.each do |e|                        
+      guide.editions.each do |e|
         actions = e.actions.where('request_type' => 'publish')
-        action_count += actions.count   
+        action_count += actions.count
       end
-      
+
       assert_equal 3, action_count
       assert_equal 1, guide.editions.where(state: 'published').count
       assert_equal 2, guide.editions.where(state: 'archived').count

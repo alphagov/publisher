@@ -19,7 +19,7 @@ module Workflow
       end
 
       before_transition :on => :publish do |edition, transition|
-        edition.container.editions.where(state: 'published').all.each{|e| e.archive }    
+        edition.container.editions.where(state: 'published').all.each{|e| e.archive }
       end
 
       after_transition :on => :publish do |edition, transition|

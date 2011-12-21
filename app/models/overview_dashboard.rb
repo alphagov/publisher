@@ -18,4 +18,3 @@ class OverviewDashboard
   field :published, :type => Integer
   field :archived, :type => Integer
 end
-

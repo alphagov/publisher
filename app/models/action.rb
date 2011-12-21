@@ -1,7 +1,7 @@
 class Action
   include Mongoid::Document
 
-  STATUS_ACTIONS = [ 
+  STATUS_ACTIONS = [
     CREATE              = "create",
     START_WORK          = "start_work",
     REQUEST_REVIEW      = "request_review",
@@ -11,7 +11,7 @@ class Action
     SEND_FACT_CHECK     = "send_fact_check",
     RECEIVE_FACT_CHECK  = "receive_fact_check",
     PUBLISH             = "publish",
-    ARCHIVE             = "archive", 
+    ARCHIVE             = "archive",
     NEW_VERSION         = "new_version",
   ]
 

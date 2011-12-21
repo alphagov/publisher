@@ -4,9 +4,5 @@ class Place < Publication
   def self.edition_class
     PlaceEdition
   end
-  
+
 end
-
-
-
-

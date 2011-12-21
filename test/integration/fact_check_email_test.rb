@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class FactCheckEmailTest < ActionDispatch::IntegrationTest  
+class FactCheckEmailTest < ActionDispatch::IntegrationTest
   def prepare_answer(random_name)
     setup_users
 
@@ -22,16 +22,16 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   test "should pick up emails and update the relevant publication" do
     pending "a good way to stub Mail.all or provide a test IMAP/POP server"
     # answer = prepare_answer("some name")
-    #   
+    #
     # first_email = Mail.new do
     #   from    'mikel@test.lindsaar.net'
     #   to      "#{answer.editions.first.fact_check_email_address}"
     #   subject 'This is a fact check response'
     #   body    'I like it. Good work!'
     # end
-    # 
+    #
     # Mail.stubs(:all).yields { [first_email] }
-    #   
+    #
     # handler = FactCheckEmailHandler.new
     # assert handler.process
   end

@@ -4,7 +4,7 @@ class FactCheckMessageProcessor
   def initialize(message)
     self.message = message
   end
-  
+
   def body_as_utf8
     if message.parts.any?
       character_set = @message.text_part.content_type_parameters['charset']
@@ -22,11 +22,11 @@ class FactCheckMessageProcessor
   rescue Encoding::InvalidByteSequenceError
     messy_notes.force_encoding('Windows-1252').encode('UTF-8')
   end
-  
+
   def progress_publication_edition(edition)
     User.new.receive_fact_check(edition, comment: body_as_utf8)
   end
-  
+
   def process_for_publication(publication_id)
     publication = Publication.find(publication_id)
     edition = publication.latest_edition
@@ -36,9 +36,8 @@ class FactCheckMessageProcessor
     Rails.logger.info "#{publication_id} is not a valid mongo id"
     return false
   end
-  
+
   def self.process(message, publication_id)
     new(message).process_for_publication(publication_id)
   end
 end
-

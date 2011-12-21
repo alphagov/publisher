@@ -20,6 +20,6 @@ Publisher::Application.configure do
   config.active_support.deprecation = :log
 
   config.middleware.use Slimmer::App
-  
+
   config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
 end

@@ -4,7 +4,7 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
   end
-  
+
   test "when saving publication fails we show a page" do
     panopticon_has_metadata(
         "id" => 2357,
@@ -14,5 +14,5 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
     )
     get :show, :id => 2357
     assert_response :success
-  end     
+  end
 end

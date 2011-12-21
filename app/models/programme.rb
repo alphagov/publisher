@@ -4,11 +4,11 @@ class Programme < Publication
   include Parted
 
   DEFAULT_PARTS = [
-	{:title => "Overview", :slug => "overview"},
-	{:title => "What you'll get", :slug => "what-youll-get"},
-	{:title => "Eligibility", :slug => "eligibility"},
-	{:title => "How to claim", :slug => "how-to-claim"},
-	{:title => "Further information", :slug => "further-information"},
+  {:title => "Overview", :slug => "overview"},
+  {:title => "What you'll get", :slug => "what-youll-get"},
+  {:title => "Eligibility", :slug => "eligibility"},
+  {:title => "How to claim", :slug => "how-to-claim"},
+  {:title => "Further information", :slug => "further-information"},
   ]
 
   def self.edition_class
@@ -20,7 +20,7 @@ class Programme < Publication
       self.editions << self.class.edition_class.new(:title => self.name)
       DEFAULT_PARTS.each { |part|
         self.editions.first.parts.build(:title => part[:title],:slug => part[:slug], :body => " ")
-      }                    
+      }
     end
   end
 end

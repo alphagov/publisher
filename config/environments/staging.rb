@@ -8,6 +8,6 @@ Publisher::Application.configure do
 
   config.middleware.delete Slimmer::App
   config.middleware.use Slimmer::App
-  
+
   config.action_mailer.default_url_options = { :host => "guides.staging.alphagov.co.uk:8080" }
 end

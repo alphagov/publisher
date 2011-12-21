@@ -5,7 +5,7 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
   setup do
     panopticon_has_metadata("id" => '2356')
   end
-  
+
   test "should show and update a guide's assigned person" do
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
@@ -87,4 +87,3 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
     assert !guide.has_lined_up?
   end
 end
-

@@ -3,11 +3,11 @@ class Admin::BaseController < InheritedResources::Base
   defaults :route_prefix => 'admin'
 
   rescue_from Mongoid::Errors::DocumentNotFound, :with => :record_not_found
-  
+
   def index
     redirect_to admin_root_url
   end
-  
+
   def admin_template_folder_for(publication)
     tmpl_folder = publication.class.to_s.underscore.pluralize.downcase
     "app/views/admin/#{tmpl_folder}"

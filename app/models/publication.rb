@@ -64,7 +64,7 @@ class Publication
       return existing_publication
     end
 
-    importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name, 
+    importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name,
       :slug => metadata.slug, :title => metadata.title)
   end
 
@@ -122,8 +122,8 @@ class Publication
     latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
   rescue
     nil
-  end          
-  
+  end
+
   def actions
     self.editions.all.map{ |edition| edition.actions }
   end

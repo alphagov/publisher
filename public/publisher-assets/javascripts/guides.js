@@ -11,17 +11,17 @@ $(function() {
 
   var accordion_opts = {
     header: "> div > h3",
-		collapsible: true,
-		active: false
+    collapsible: true,
+    active: false
   }
   var sortable_opts = {
     axis: "y",
-		handle: "h3",
-		stop: function() {
-			$('.part').each(function (i, elem) {
-			  $(elem).find('input.order').val(i + 1);
-			});
-		}
+    handle: "h3",
+    stop: function() {
+      $('.part').each(function (i, elem) {
+        $(elem).find('input.order').val(i + 1);
+      });
+    }
   }
 
   $('input.title').

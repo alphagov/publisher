@@ -29,7 +29,7 @@
   </td>
   <td>
     <%= publication.latest_edition.assigned_to %>
-    
+
     <% if tab && tab == :lined_up %>
     <%= link_to publication.latest_edition.assigned_to ? ' (change)' : 'assign', [:admin, publication] %>
     <% end %>

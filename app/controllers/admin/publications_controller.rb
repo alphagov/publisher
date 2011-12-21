@@ -8,7 +8,7 @@ class Admin::PublicationsController < Admin::BaseController
         render_new_form(publication) and return
       end
     end
-    
+
     destination = '/admin/' + publication.class.name.tableize + '/' + publication.id.to_s
     destination += '?return_to=' + params[:return_to] if params[:return_to]
     redirect_to destination

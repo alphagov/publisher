@@ -54,7 +54,7 @@ $(function () {
 
     return submitted_forms;
   });
-  
+
   $('.cancel_button').click(function () {
     $(this).closest('form').dialog( "close" );
     return false;
@@ -64,7 +64,7 @@ $(function () {
     var activity = this.id.replace('_toggle', '_form');
     $('#' + activity).dialog({
       modal: true,
-			width: 600
+      width: 600
     });
     return false;
   });

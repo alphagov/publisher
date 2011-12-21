@@ -9,7 +9,7 @@ class Admin::NotesController < Admin::BaseController
     end
     redirect_to url_for([:admin, parent]) + '#history'
   end
-  
+
   def resource
     parent.latest_edition
   end
