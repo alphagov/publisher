@@ -55,7 +55,7 @@ private
     encodings.each do |encoding|
       begin
         return s.force_encoding(encoding).
-          encode(Encoding::UTF_32).
+          encode(Encoding::UTF_32BE).
           encode(Encoding::UTF_8)
       rescue EncodingError
       end
