@@ -1,4 +1,4 @@
-"<%= @action.edition.title %>" (<%= @action.edition.kind %>) reviewed by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+"<%= @action.edition.title %>" (<%= @action.edition.format %>) reviewed by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
 
 Further amends required:
 <%= @action.comment %>

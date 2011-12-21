@@ -1,3 +1,3 @@
-"<%= @action.edition.title %>" (<%= @action.edition.kind %>) created by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+"<%= @action.edition.title %>" (<%= @action.edition.format %>) created by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
 
 <%= "#{Plek.current.find("publication-preview")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>

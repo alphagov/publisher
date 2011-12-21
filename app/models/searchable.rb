@@ -22,7 +22,7 @@ module Searchable
       "title" => title,
       "link" => "/#{slug}",
       "section" => section ? section.parameterize : nil,
-      "format" => kind.underscore.downcase,
+      "format" => format.underscore.downcase,
       "description" => (published? && overview) || "",
       "indexable_content" => indexable_content,
     }

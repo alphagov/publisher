@@ -28,7 +28,6 @@ class Admin::EditionsController < Admin::BaseController
         prepend_view_path "app/views/admin/publication_subclasses"
         prepend_view_path admin_template_folder_for(resource)
         @resource = resource
-        # instance_variable_set("@#{resource.class.to_s.gsub('Edition', '').downcase}".to_sym, resource)
         
         flash.now[:alert] = "We had some problems saving. Please check the form below."
 

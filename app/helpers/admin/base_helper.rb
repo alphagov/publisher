@@ -15,11 +15,11 @@ module Admin::BaseHelper
   end
 
   def resource_edit_view
-    "/admin/#{@resource.class.to_s.gsub('Edition', '').underscore.downcase.pluralize}/edit"
+    "/admin/#{@resource.format.underscore.downcase.pluralize}/edit"
   end
 
   def skip_fact_check_for_edition(edition)
-    send("skip_fact_check_admin_#{edition.class.to_s.gsub('Edition', '').underscore}_edition_path", edition)
+    send("skip_fact_check_admin_#{edition.format.underscore}_edition_path", edition)
   end
 
   def edition_can_be_deleted?(edition)

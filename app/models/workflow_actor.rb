@@ -20,9 +20,9 @@ module WorkflowActor
     edition.new_action(self, 'note', comment: comment)
   end
 
-  def create_whole_edition(kind, attributes = {})
-    kind = kind.to_s.gsub('_edition', '').to_sym
-    item = PUBLICATION_CLASSES[kind].create(attributes)
+  def create_whole_edition(format, attributes = {})
+    format = format.to_s.gsub('_edition', '').to_sym
+    item = PUBLICATION_CLASSES[format].create(attributes)
     record_action(item, Action::CREATE) if item.persisted?
     item
   end

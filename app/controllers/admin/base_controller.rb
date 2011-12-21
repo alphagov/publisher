@@ -34,6 +34,6 @@ class Admin::BaseController < InheritedResources::Base
     end
 
     def description(r)
-      r.class.to_s.gsub('Edition', '').underscore.humanize
+      r.format.underscore.humanize
     end
 end

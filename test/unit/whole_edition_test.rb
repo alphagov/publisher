@@ -28,6 +28,11 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
   end
 
+  test "it should give a friendly (legacy supporting) description of its format" do
+    a = LocalTransactionEdition.new
+    assert_equal 'LocalTransaction', a.format
+  end
+
   test "it should be able to find its siblings" do
   	g1 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 1)
   	g2 = FactoryGirl.create(:guide_edition, :panopticon_id => 2, :version_number => 1)

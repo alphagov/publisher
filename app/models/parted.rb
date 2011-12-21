@@ -20,7 +20,7 @@ module Parted
     output['additional_links'] = []
 
     parts.each do |part|
-      if kind.downcase == 'programme' && part.slug != 'further-information'
+      if format.downcase == 'programme' && part.slug != 'further-information'
         link = "/#{slug}\##{part.slug}"
       else
         link = "/#{slug}/#{part.slug}"

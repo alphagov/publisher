@@ -3,7 +3,7 @@ require 'active_support/inflector'
 module Api
   module Generator
     def self.generator_class(edition)
-      "Api::Generator::#{edition.class.to_s.gsub('Edition', '')}".constantize
+      "Api::Generator::#{edition.format}".constantize
     end
 
     def self.edition_to_hash(edition, *args)
@@ -24,7 +24,7 @@ module Api
         attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
       end
 
-      attrs['type'] = edition.class.to_s.gsub('Edition', '').underscore
+      attrs['type'] = edition.format.underscore
       generator.edition_to_hash(attrs, edition,*args)
     end
 

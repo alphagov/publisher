@@ -22,6 +22,6 @@ module Admin::PathsHelper
 
 protected
   def path_from_edition_class(edition)
-    edition.kind.underscore.pluralize
+    edition.format.underscore.pluralize
   end
 end

@@ -35,7 +35,7 @@ class WholeEdition
   scope :assigned_to,         lambda { |user| user.nil? ? where(:assigned_to_id.exists => false) : where(:assigned_to_id => user.id) }
 
   validates :title, presence: true
-  validates :version_number, presence: true, uniqueness: {:scope => :panopticon_id}
+  validates :version_number, presence: true #, uniqueness: {:scope => :panopticon_id}
   validates :panopticon_id, presence: true
 
   index "assigned_to_id"
@@ -118,7 +118,7 @@ class WholeEdition
     Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
   end
 
-  def kind
+  def format
     self.class.to_s.gsub('Edition', '')
   end
 
