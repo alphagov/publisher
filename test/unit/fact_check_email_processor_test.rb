@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'test_helper'
 require 'fact_check_message_processor'
 
@@ -34,9 +36,14 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
-    windows_string = "hello umlat".encode("Windows-1252")
-    message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => windows_string, :content_type => 'text/plain; charset=Windows-1252')
-    f =  FactCheckMessageProcessor.new(message)
+    windows_string = "Hallo Umläute".encode("Windows-1252")
+    message = Mail.new(
+      to:           'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk',
+      subject:      'Fact Checked',
+      body:         windows_string,
+      content_type: 'text/plain; charset=Windows-1252'
+    )
+    f = FactCheckMessageProcessor.new(message)
     f.process_for_publication(sample_publication.id)
   end
 
@@ -46,7 +53,6 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     f =  FactCheckMessageProcessor.new(message)
     assert_equal f.body_as_utf8, 'This is plain text'
   end
-
 
   test "it assumes text is utf8 if no encoding is specified" do
     message = multipart_message
@@ -64,6 +70,26 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/base64.txt", __FILE__))
     f = FactCheckMessageProcessor.new(message)
     assert f.process_for_publication(sample_publication.id)
+  end
+
+  test "it should turn each paragraph to UTF-8, even if they have different encodings" do
+    utf_8 = "Breatainn Mhòr"
+    iso = utf_8.encode(Encoding::ISO_8859_15)
+    expected = [utf_8, utf_8].join("\n\n")
+    body = [
+      utf_8.force_encoding(Encoding::ASCII_8BIT),
+      iso.force_encoding(Encoding::ASCII_8BIT)
+    ].join("\n\n")
+    message = Mail.new(body: body)
+    f = FactCheckMessageProcessor.new(message)
+    assert_equal expected, f.body_as_utf8
+  end
+
+  test "it should extract ASCII when a paragraph is totally borked" do
+    body = [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0xe2, 0x86, 0x90, 0xa3, 0x0a].pack("C*")
+    message = Mail.new(body: body)
+    f = FactCheckMessageProcessor.new(message)
+    assert_match /Hello/, f.body_as_utf8
   end
 
 end
