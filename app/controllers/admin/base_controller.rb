@@ -13,26 +13,20 @@ class Admin::BaseController < InheritedResources::Base
     "app/views/admin/#{tmpl_folder}"
   end
 
+  %W[local_transaction transaction place guide programme answer].each do |type|
+    define_method("admin_#{type}_edition_path") do |edition|
+      __send__("admin_#{type}_path", edition)
+    end
+    define_method("admin_#{type}_edition_url") do |edition|
+      __send__("admin_#{type}_url", edition)
+    end
+    helper_method "admin_#{type}_edition_path".to_sym
+    helper_method "admin_#{type}_edition_url".to_sym
+  end
+
   def admin_local_transaction_editions_path(*args)
     admin_editions_path
   end
-
-  def admin_local_transaction_edition_path(edition)
-    admin_edition_path(edition)
-  end
-
-  def admin_guide_edition_url(edition)
-    "/admin/guides/#{edition.to_param}"
-  end
-
-  def admin_guide_edition_path(edition)
-    admin_edition_path(edition)
-  end
-
-  helper_method :admin_guide_edition_path
-  helper_method :admin_guide_edition_url
-  helper_method :admin_local_transaction_editions_path
-  helper_method :admin_local_transaction_edition_path
 
   protected
     def record_not_found
