@@ -14,13 +14,9 @@ class FactCheckMessageProcessor
       messy_notes = @message.body.to_s
     end
 
-    if character_set.nil? or character_set == 'UTF-8'
-      messy_notes
-    else
-      messy_notes.force_encoding(character_set).encode('UTF-8')
-    end
-  rescue Encoding::InvalidByteSequenceError
-    messy_notes.force_encoding('Windows-1252').encode('UTF-8')
+    normalize_line_endings(messy_notes).scan(/\n+|[^\n]+/).map { |part|
+      try_decode(part, *encoding_stack(character_set))
+    }.join("")
   end
 
   def progress_publication_edition(edition)
@@ -39,5 +35,31 @@ class FactCheckMessageProcessor
 
   def self.process(message, publication_id)
     new(message).process_for_publication(publication_id)
+  end
+
+private
+  def encoding_stack(expected)
+    [
+      expected,
+      Encoding::UTF_8,
+      Encoding::ISO_8859_15,
+      Encoding::Windows_1252
+    ].compact.uniq
+  end
+
+  def normalize_line_endings(s)
+    s.gsub(/\r\n|\r/, "\n")
+  end
+
+  def try_decode(s, *encodings)
+    encodings.each do |encoding|
+      begin
+        return s.force_encoding(encoding).
+          encode(Encoding::UTF_32).
+          encode(Encoding::UTF_8)
+      rescue EncodingError
+      end
+    end
+    s.encode(Encoding::US_ASCII, invalid: :replace)
   end
 end
