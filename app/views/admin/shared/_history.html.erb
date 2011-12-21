@@ -33,11 +33,20 @@
           <% if action.requester %>
             <%= image_tag action.requester.gravatar_url, :alt => action.requester.to_s %>
           <% end %>
-          <% if action.comment.present? %>
+          <% if action.comment.present? || action.is_fact_check_request? || action.request_type == "assign" %>
           <blockquote>
-            <span><%= simple_format action.comment %></span>
+            <% if action.comment.present? %>
+              <span><%= simple_format action.comment %></span>
+            <% end %>
+            <% if action.is_fact_check_request? && action.email_addresses.present? %>
+              <span><p><strong>Request Sent To:</strong> <%= mail_to action.email_addresses %></p></span>
+            <% end %>
+            <% if action.recipient_id.present? %>
+              <span><p><strong>Assigned To:</strong> <%= mail_to action.recipient.email, action.recipient.name %></p></span>
+            <% end %>
           </blockquote>
           <% end %>
+
         </div>
       </li>
       <% end %>
