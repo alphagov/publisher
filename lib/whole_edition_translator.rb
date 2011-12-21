@@ -1,3 +1,5 @@
+require_relative '../app/models/expectant'
+
 class Publication; 
   include Mongoid::Document
   field :panopticon_id, :type => Integer
@@ -72,21 +74,28 @@ class TransitionalLocalTransactionEdition < TransitionalEdition
 end
 
 class WholeEditionTranslator
-  attr_accessor :original_edition, :whole_edition
+  attr_accessor :original_edition, :whole_edition, :original_publication
   
-  def initialize(original_edition)
+  def initialize(original_publication, original_edition)
+    self.original_publication = original_publication
     self.original_edition = original_edition
   end
   
   def build_whole_edition
-    basic_attributes = { _type: "#{original_edition.container.class}Edition" }
-    publication = original_edition.container
-    basic_attributes.merge!(slug: publication.slug, panopticon_id: publication.panopticon_id)
-    basic_attributes[:lgsl_code] = publication.lgsl_code if publication.respond_to?(:lgsl_code)
+    unless self.original_edition.class.to_s.match(/^Transitional/)
+      new_class = "Transitional#{self.original_edition.class}".constantize
+      self.original_edition = self.original_edition.becomes(new_class)
+    end
+
+    raise "No publication for #{original_edition.inspect}" unless original_publication
+
+    basic_attributes = { _type: "#{original_publication.class}Edition" }
+    basic_attributes.merge!(slug: original_publication.slug, panopticon_id: original_publication.panopticon_id)
+    basic_attributes[:lgsl_code] = original_publication.lgsl_code if original_publication.respond_to?(:lgsl_code)
     
     full_attribute_set = basic_attributes.merge(original_edition.attributes)
     parts = full_attribute_set.delete(:parts) || {}
-    klass = "#{publication.class}Edition".constantize
+    klass = "#{original_publication.class}Edition".constantize
     self.whole_edition = klass.new(full_attribute_set)
     if parts.any?
       parts.each { |p| self.whole_edition.parts.build(p) }
