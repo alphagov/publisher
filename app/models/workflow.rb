@@ -5,7 +5,6 @@ module Workflow
   included do
     validate :not_editing_published_item
     before_destroy :check_can_delete_and_notify
-    after_destroy :remove_from_search_index
     
     field :state, :type => String
     belongs_to :assigned_to, :class_name => 'User'
@@ -150,15 +149,7 @@ module Workflow
   end
   
   def check_can_delete_and_notify
-    raise CannotDeletePublishedPublication unless self.can_destroy?
-  end
-  
-  def update_in_search_index
-    Rummageable.index(search_index)
-  end
-
-  def remove_from_search_index
-    Rummageable.delete "/#{slug}"
+    raise CannotDeletePublishedPublication unless can_destroy?
   end
   
   def mark_as_rejected

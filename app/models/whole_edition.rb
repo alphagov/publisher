@@ -6,6 +6,7 @@ class WholeEdition
   include Mongoid::Timestamps
   include Marples::ModelActionBroadcast
   include Workflow
+  include Searchable
 
 	field :panopticon_id, :type => Integer
   field :version_number, :type => Integer, :default => 1
@@ -111,25 +112,6 @@ class WholeEdition
 
   def panopticon_uri
     Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
-  end
-
-  def indexable_content
-    published? ? alternative_title : ""
-  end
-
-  def search_index
-    {
-      "title" => title,
-      "link" => "/#{slug}",
-      "section" => section ? section.parameterize : nil,
-      "format" => kind.underscore.downcase,
-      "description" => (published? && overview) || "",
-      "indexable_content" => indexable_content,
-    }
-  end
-  
-  def self.search_index_all
-    all.map(&:search_index)
   end
 
   def kind
