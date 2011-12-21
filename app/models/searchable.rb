@@ -28,7 +28,9 @@ module Searchable
     }
   end
   
-  def self.search_index_all
-    all.map(&:search_index)
+  module ClassMethods
+    def search_index_all
+      all.map(&:search_index)
+    end
   end
 end
