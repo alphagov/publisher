@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AnswerTest < ActiveSupport::TestCase
+class AnswerEditionTest < ActiveSupport::TestCase
 
   test 'a new answer is lined up' do
     g = AnswerEdition.new(slug: "childcare", panopticon_id: '123', title: 'My new answer')
