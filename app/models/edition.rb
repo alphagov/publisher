@@ -21,6 +21,11 @@ class Edition
   def fact_check_email_address
     "factcheck+#{Plek.current.environment}-#{container.id}@alphagov.co.uk"
   end
+  
+  def last_fact_checked_at
+    last_fact_check = actions.reverse.find(&:is_fact_check_request?)
+    last_fact_check ? last_fact_check.created_at : NullTimestamp.new
+  end
 
   def build_clone
     new_edition = container.build_edition(self.title)
