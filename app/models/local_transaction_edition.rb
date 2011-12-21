@@ -6,10 +6,10 @@ class LocalTransactionEdition < WholeEdition
   field :lgsl_code,         type: String
   field :introduction,      type: String
   field :more_information,  type: String
-  validates_presence_of :lgsl_code
  
   @fields_to_clone = [:introduction, :more_information, :minutes_to_complete, :expectation_ids]
 
+  validates_presence_of :lgsl_code
   validates_presence_of :lgsl, :on => :create
 
   set_callback :validation, :before do |local_transaction|
