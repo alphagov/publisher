@@ -66,6 +66,10 @@ class WholeEdition
     subsequent_siblings.empty?
   end
 
+  def published_edition
+    series.where(state: 'published').order(version_number: 'desc').first
+  end
+
   def meta_data
     PublicationMetadata.new self
   end
@@ -122,7 +126,7 @@ class WholeEdition
     false
   end
   
-  def published_edition
-    series.where(state: 'published').order(version_number: 'desc').first
+  def safe_to_preview?
+    true
   end
 end

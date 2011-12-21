@@ -80,12 +80,12 @@ module Workflow
   end
 
   def published_by
-    publication = actions.detect { |a| a.request_type == Action::PUBLISH }
+    publication = actions.where(request_type: Action::PUBLISH).first
     publication.requester if publication
   end
 
   def archived_by
-    publication = actions.detect { |a| a.request_type == Action::ARCHIVE }
+    publication = actions.where(request_type: Action::ARCHIVE).first
     publication.requester if publication
   end
 
@@ -102,18 +102,7 @@ module Workflow
   end
 
   def status_is?(*kinds)
-    action = latest_status_action
-    action && kinds.include?(action.request_type)
-  end
-
-  def assigned_to
-    assignment = most_recent_action { |a| Action::ASSIGN == a.request_type }
-    assignment && assignment.recipient
-  end
-
-  def assigned_to_id
-    a = assigned_to
-    a && a.id
+    kinds.include?(state)
   end
 
   def most_recent_action(&blk)
