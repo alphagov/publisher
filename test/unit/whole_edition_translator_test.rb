@@ -66,7 +66,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
   test "it builds a whole edition from an answer" do
     answer = multi_edition_answer
-    translator = WholeEditionTranslator.new(answer.editions.last)
+    translator = WholeEditionTranslator.new(answer, answer.editions.last)
     new_edition = translator.run
 
     assert new_edition.valid?
@@ -80,7 +80,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
   test "it captures a guide's parts" do
     guide = sample_guide
-    translator = WholeEditionTranslator.new(guide.editions.last)
+    translator = WholeEditionTranslator.new(guide, guide.editions.last)
     new_edition = translator.run
 
     assert new_edition.valid?
@@ -91,7 +91,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
   test "it captures the introduction for a transaction" do
     t = sample_transaction
-    translator = WholeEditionTranslator.new(t.editions.last)
+    translator = WholeEditionTranslator.new(t, t.editions.last)
     new_edition = translator.run
     assert new_edition.introduction.present?
     assert_equal t.editions.last.introduction, new_edition.introduction
@@ -100,7 +100,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
   test "it captures the expectations for a transaction" do
     t = sample_transaction
     t.editions.last.expectation_ids = [1, 2, 3]
-    translator = WholeEditionTranslator.new(t.editions.last)
+    translator = WholeEditionTranslator.new(t, t.editions.last)
     new_edition = translator.run
     assert_equal [1, 2, 3], new_edition.expectation_ids
   end
@@ -108,7 +108,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
   test "it handles publications with no panopticon ID" do
     t = sample_transaction
     t.panopticon_id = nil
-    translator = WholeEditionTranslator.new(t.editions.last)
+    translator = WholeEditionTranslator.new(t, t.editions.last)
     new_edition = translator.run
     assert ! new_edition.valid?
   end
@@ -124,7 +124,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     assert local_transaction.save
     
     assert ! LocalTransactionsSource.find_current_lgsl('1').nil?
-    translator = WholeEditionTranslator.new(local_transaction.editions.last)
+    translator = WholeEditionTranslator.new(local_transaction, local_transaction.editions.last)
     new_edition = translator.run
 
     assert new_edition.valid?    
