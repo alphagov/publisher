@@ -6,7 +6,7 @@
 <p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
 <% end %>
 
-<%= semantic_form_for([:admin, @publication]) do |f| %>
+<%= semantic_form_for(@publication, :url => admin_editions_path) do |f| %>
   <%= f.inputs :lgsl_code %>
   <%= f.inputs do %>
     <%= f.input :panopticon_id, :as => :hidden %>

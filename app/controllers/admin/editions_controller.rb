@@ -8,11 +8,11 @@ class Admin::EditionsController < Admin::BaseController
     if new_edition and new_edition.save
       update_assignment new_edition, assigned_to_id
       redirect_to params[:return_to] and return if params[:return_to]
-      redirect_to [:admin, new_edition], :notice => 'New edition created'
+      redirect_to admin_edition_path(new_edition), :notice => 'New edition created'
     else
       alert = 'Failed to create new edition'
       alert += new_edition ? ": #{new_edition.errors.inspect}" : ": couldn't initialise"
-      redirect_to [:admin, resource], :alert => alert
+      redirect_to admin_edition_path(resource), :alert => alert
     end
   end
 
@@ -44,25 +44,25 @@ class Admin::EditionsController < Admin::BaseController
 
   def start_work
     if resource.progress({request_type: 'start_work'}, current_user)
-      redirect_to [:admin, resource], :notice => "Work started on #{description(resource)}"
+      redirect_to admin_edition_path(resource), :notice => "Work started on #{description(resource)}"
     else
-      redirect_to [:admin, resource], :alert => "Couldn't start work on #{description(resource).downcase}"
+      redirect_to admin_edition_path(resource), :alert => "Couldn't start work on #{description(resource).downcase}"
     end
   end
 
   def progress
     if resource.progress(params[:activity].dup, current_user)
-      redirect_to [:admin, resource], :notice => "#{description(resource)} updated"
+      redirect_to admin_edition_path(resource), :notice => "#{description(resource)} updated"
     else
-      redirect_to [:admin, resource], :alert => "Couldn't #{params[:activity][:request_type].to_s.humanize.downcase} for #{description(resource).downcase}"
+      redirect_to admin_edition_path(resource), :alert => "Couldn't #{params[:activity][:request_type].to_s.humanize.downcase} for #{description(resource).downcase}"
     end
   end
 
   def skip_fact_check
     if resource.progress({request_type: 'receive_fact_check', comment: "Fact check skipped by request."}, current_user)
-      redirect_to [:admin, resource], :notice => "The fact check has been skipped for this publication."
+      redirect_to admin_edition_path(resource), :notice => "The fact check has been skipped for this publication."
     else
-      redirect_to [:admin, resource], :alert => "Could not skip fact check for this publication."
+      redirect_to admin_edition_path(resource), :alert => "Could not skip fact check for this publication."
     end
   end
 

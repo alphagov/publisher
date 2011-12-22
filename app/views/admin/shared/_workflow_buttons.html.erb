@@ -3,7 +3,7 @@
   <% if @resource.published? %>
     Published items can't be changed.
     <%= preview_button(@resource) %>
-    <%# button_to 'Create new edition', url_for([:admin, @resource, :editions]) %>
+    <%= button_to 'Create new edition', duplicate_admin_edition_path(@resource) %>
   <% else %>
     <span class="workflow_buttons">
       <!-- Fake save button -->
