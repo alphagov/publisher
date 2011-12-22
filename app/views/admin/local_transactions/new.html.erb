@@ -6,9 +6,10 @@
 <p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
 <% end %>
 
-<%= semantic_form_for(@publication, :url => admin_editions_path) do |f| %>
+<%= semantic_form_for(@publication, :url => admin_editions_path, :as => :edition) do |f| %>
   <%= f.inputs :lgsl_code %>
   <%= f.inputs do %>
+    <input type="hidden" name="edition[kind]" value="local_transaction">
     <%= f.input :panopticon_id, :as => :hidden %>
     <%= f.input :name, :as => :hidden %>
     <%= f.input :slug, :as => :hidden %>

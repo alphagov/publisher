@@ -46,4 +46,22 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
     assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
     assert_match /Created Local transaction: "Foo bar"/, ActionMailer::Base.deliveries.last.subject
   end
+
+  test "creating a local transaction with a bad LGSL code displays an appropriate error" do
+    visit "/admin/publications/2357"
+    assert page.has_content? "We need a bit more information to create your local transaction."
+
+    fill_in "Lgsl code", :with => "2"
+    click_on 'Create Local transaction edition'
+    assert page.has_content? "Lgsl not recognised"
+  end
+
+  test "creating a local transaction from panopticon requests an LGSL code" do
+    visit "/admin/publications/2357"
+    assert page.has_content? "We need a bit more information to create your local transaction."
+
+    fill_in "Lgsl code", :with => "1"
+    click_on 'Create Local transaction edition'
+    assert page.has_content? "Local transaction successfully created"
+  end
 end
