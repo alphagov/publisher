@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
-
   test "Publishing a guide" do
     setup_users
 
@@ -13,7 +12,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
 
     panopticon_has_metadata("id" => '2356')
 
-    visit    "/admin/guides/#{guide.to_param}"
+    visit    "/admin/editions/#{guide.to_param}"
     
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do

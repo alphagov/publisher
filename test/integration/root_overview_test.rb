@@ -23,15 +23,15 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
     x, y, z = %w[ XXX YYY ZZZ ].map.with_index { |name, i|
-      GuideEdition.create(
+      Guide.create(
         panopticon_id: i + 1,
-        title: name,
+        name: name,
         slug: name.downcase
       )
     }
 
-    bob.assign(x, alice)
-    bob.assign(y, charlie)
+    bob.assign(x.editions.first, alice)
+    bob.assign(y.editions.first, charlie)
 
     filter_by("All")
 
