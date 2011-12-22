@@ -49,12 +49,14 @@ module WorkflowActor
 
   def send_fact_check(edition, details)
     return false if details[:email_addresses].blank?
+
     note_text = "\n\nResponses should be sent to: " + edition.fact_check_email_address
     if details[:comment].blank?
       details[:comment] = "Fact check requested" + note_text
     else
       details[:comment] += note_text
     end
+
     edition.send_fact_check
     record_action edition, __method__, details
     NoisyWorkflow.request_fact_check(edition, details).deliver

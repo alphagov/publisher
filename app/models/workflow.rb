@@ -122,11 +122,7 @@ module Workflow
       raise "Unknown progress activity: #{activity}"
     end
 
-    if result
-      save!
-    else
-      result
-    end
+    save if result
   end
 
   def can_destroy?
