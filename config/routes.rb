@@ -3,18 +3,11 @@ Publisher::Application.routes.draw do
   namespace :admin do
     resources :notes
     resources :expectations, :except => [:edit, :update, :destroy]
-    [ :transactions,
-      :places,
-      :answers,
-      :guides,
-      :programmes,
-      :local_transactions,
-    ].each do |r|
-      resources r
-    end 
-    resources :editions, :only => [:create, :update, :destroy] do
+
+    resources :editions do
       post :progress, :on => :member
       post :start_work, :on => :member
+      post :duplicate, :on => :member
       member do
         post 'skip_fact_check'
       end
