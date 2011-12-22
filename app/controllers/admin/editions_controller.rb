@@ -1,8 +1,36 @@
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
   defaults :resource_class => WholeEdition, :collection_name => 'editions', :instance_name => 'edition'
+  before_filter :setup_view_paths, :except => [:index, :new, :create]
+
+  def index
+    redirect_to admin_root_path
+  end
+
+  def show
+    @resource = resource
+    render :template => 'show'
+  end
+
+  def new
+    @publication = build_resource
+    setup_view_paths_for(@publication)
+  end
 
   def create
+    class_identifier = params[:edition].delete(:kind).to_sym
+    @publication = current_user.create_whole_edition(class_identifier, params[:edition])
+    setup_view_paths_for(@publication)
+    if @publication.persisted?
+      redirect_to admin_edition_path(@publication),
+        :notice => "#{description(@publication)} successfully created"
+      return
+    else
+      render :action => "new"
+    end
+  end
+
+  def duplicate
     new_edition = current_user.new_version(resource)
     assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
     if new_edition and new_edition.save
@@ -22,23 +50,31 @@ class Admin::EditionsController < Admin::BaseController
       success.html {
         update_assignment resource, assigned_to_id
         redirect_to params[:return_to] and return if params[:return_to]
-        redirect_to [:admin, resource]
+        redirect_to admin_edition_path(resource)
       }
       failure.html {
-        prepend_view_path "app/views/admin/publication_subclasses"
-        prepend_view_path admin_template_folder_for(resource)
         @resource = resource
-        
         flash.now[:alert] = "We had some problems saving. Please check the form below."
-
         render :template => "show"
-
       }
       success.json {
         update_assignment resource, assigned_to_id
         render :json => resource
       }
       failure.json { render :json => resource.errors, :status=>406 }
+    end
+  end
+
+  def destroy
+    if resource.can_destroy?
+      destroy! do
+        redirect_to admin_root_url, :notice => "#{description(resource)} destroyed"
+        return
+      end
+    else
+      redirect_to admin_edition_path(resource),
+        :notice => "Cannot delete a #{description(resource).downcase} that has ever been published."
+      return
     end
   end
 
@@ -72,5 +108,9 @@ class Admin::EditionsController < Admin::BaseController
       assigned_to = User.find(assigned_to_id)
       return if edition.assigned_to == assigned_to
       current_user.assign(edition, assigned_to)
+    end
+
+    def setup_view_paths
+      setup_view_paths_for(resource)
     end
 end

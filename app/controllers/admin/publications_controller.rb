@@ -10,8 +10,8 @@ class Admin::PublicationsController < Admin::BaseController
 
   protected
     def render_new_form(publication)
-      prepend_view_path "app/views/admin/publication_subclasses"
-      prepend_view_path admin_template_folder_for(publication)
+      @publication = publication
+      setup_view_paths_for(publication)
       render template: 'new'
     end
 end
