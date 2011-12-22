@@ -17,16 +17,6 @@ class Admin::RootController < Admin::BaseController
 
     @presenter = AdminRootPresenter.new(user)
 
-    @lined_up             = @presenter.lined_up
-    @draft                = @presenter.draft
-    @amends_needed        = @presenter.amends_needed
-    @in_review            = @presenter.in_review
-    @fact_check           = @presenter.fact_check
-    @fact_check_received  = @presenter.fact_check_received
-    @ready                = @presenter.ready
-    @published            = @presenter.published
-    @archived             = @presenter.archived
-
     if params[:list]
       headers['X-Slimmer-Skip'] = '1'
       render partial: params[:list], layout: false and return

@@ -15,6 +15,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :collection => @fact_check, :partial => 'publication', :locals => {:tab => :fact_check} %>
+    <%= render :collection => @presenter.fact_check, :partial => 'publication', :locals => {:tab => :fact_check} %>
   </tbody>
 </table>

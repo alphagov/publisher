@@ -13,6 +13,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :collection => @lined_up, :partial => 'publication', :locals => {:tab => :lined_up} %>
+    <%= render :collection => @presenter.lined_up, :partial => 'publication', :locals => {:tab => :lined_up} %>
   </tbody>
 </table>

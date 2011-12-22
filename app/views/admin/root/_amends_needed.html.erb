@@ -14,6 +14,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :collection => @amends_needed, :partial => 'publication', :locals => {:tab => :amends_needed} %>
+    <%= render :collection => @presenter.amends_needed, :partial => 'publication', :locals => {:tab => :amends_needed} %>
   </tbody>
 </table>
