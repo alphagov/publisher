@@ -52,8 +52,8 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    temp_user = User.create!(:name => 'Stub User')
-    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => temp_user)
+    @user = User.create!(:name => 'Stub User')
+    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => @user)
   end
 
   include GdsApi::TestHelpers::Panopticon
