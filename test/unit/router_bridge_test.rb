@@ -54,14 +54,9 @@ class RouterBridgeTest < ActiveSupport::TestCase
 
   private
   def create_publication
-    answer = Answer.create(:slug=>"childcare", :name=>"Something")
-    edition = answer.editions.first
-    edition.title = 'One'
-    edition.body = 'Lots of info'
+    answer = AnswerEdition.create(:slug=>"childcare", :title=>"Something", :body => 'Lots of info', :state => 'ready', :panopticon_id => 123)
+    answer.publish
     answer.save
-    edition.state = 'ready'
-    edition.publish
-    answer.save
-    Answer.first(conditions: { slug: "childcare"})
+    AnswerEdition.where(slug: 'childcare').first
   end
 end

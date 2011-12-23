@@ -14,8 +14,8 @@ class RouterBridge
     marples.when 'publisher', '*', 'published' do |publication_hash|
       begin
         publication_id = publication_hash['_id']
-        logger.info("Recieved message for #{publication_hash['name']} #{publication_id}")
-        publication = Publication.find(publication_id)
+        logger.info("Recieved message for #{publication_hash['title']} #{publication_id}")
+        publication = WholeEdition.find(publication_id)
 
         if (publication.nil?)
           logger.warn("Could not find publication #{publication_id}")
@@ -35,9 +35,9 @@ class RouterBridge
     logger.info(" Registering publication parts for #{publication['name']}")
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/print"))
 
-    publication.published_edition.parts.each do |part|
+    publication.parts.each do |part|
       logger.info(" Registering part #{part.slug}")
-      register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part['slug']}"))
+      register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part.slug}"))
     end
 
     # end
