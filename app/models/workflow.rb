@@ -114,10 +114,8 @@ module Workflow
   def progress(activity_details, current_user)
     activity = activity_details.delete(:request_type)
 
-    if ['request_review','approve_review','approve_fact_check','request_amendments','send_fact_check','receive_fact_check','publish','archive','new_version'].include?(activity)
+    if ['start_work', 'request_review','approve_review','approve_fact_check','request_amendments','send_fact_check','receive_fact_check','publish','archive','new_version'].include?(activity)
       result = current_user.send(activity, self, activity_details)
-    elsif activity == 'start_work'
-      result = current_user.start_work(self)
     else
       raise "Unknown progress activity: #{activity}"
     end
