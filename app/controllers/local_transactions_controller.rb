@@ -8,7 +8,6 @@ class LocalTransactionsController < ApplicationController
     head 404 and return if publication.nil?
     
     matching_code = params[:snac_codes].detect { |snac| publication.service_provided_by?(snac) }
-
     if matching_code
       render :json => { snac: matching_code }
     else
