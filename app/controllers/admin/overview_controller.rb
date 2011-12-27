@@ -1,7 +1,4 @@
-class Admin::OverviewController < InheritedResources::Base
-  before_filter :authenticate_user!
-  defaults :route_prefix => 'admin'
-
+class Admin::OverviewController < Admin::BaseController
   def index
     @overviews = {
       'Format' =>  OverviewDashboard.where(:dashboard_type => "Format"),
