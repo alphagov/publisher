@@ -7,6 +7,7 @@ class Admin::EditionsController < Admin::BaseController
     redirect_to admin_root_path
   end
 
+  # TODO: Clean this up via better use of instance var names here and in admin/publications_controller.rb
   def new
     @publication = build_resource
     setup_view_paths_for(@publication)
@@ -83,6 +84,7 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   protected
+    # TODO: This could probably live in the i18n layer?
     def failure_message(activity)
       case activity
       when 'skip_fact_check' then "Could not skip fact check for this publication."
@@ -91,6 +93,7 @@ class Admin::EditionsController < Admin::BaseController
       end
     end
 
+    # TODO: This could probably live in the i18n layer?
     def success_message(activity)
       case activity
       when 'start_work' then "Work started on #{description(resource)}"
