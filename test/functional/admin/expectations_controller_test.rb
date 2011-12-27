@@ -5,6 +5,11 @@ class Admin::ExpectationsControllerTest < ActionController::TestCase
     login_as_stub_user
   end
 
+  test "viewing the expectations index assigns a new expectation" do
+    get :index
+    assert assigns[:expectation]
+  end
+
   test "creating an expectation works" do
     post :create, :expectation => {:text => 'It will cost money', :css_class => 'it-will-cost-money'}
     assert_response 302
