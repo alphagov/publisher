@@ -6,7 +6,7 @@ module Workflow
     validate :not_editing_published_item
     before_destroy :check_can_delete_and_notify
     
-    field :state, :type => String
+    field :state, :type => String, :default => 'lined_up'
     belongs_to :assigned_to, :class_name => 'User'
     embeds_many :actions
 

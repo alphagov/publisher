@@ -287,6 +287,12 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal edition.version_number + 1, new_edition.version_number
   end
 
+  test "new edition should have an empty list of actions" do
+    edition = FactoryGirl.create(:guide_edition)
+    new_edition = edition.build_clone
+    assert_equal [], new_edition.actions
+  end
+
   test "new editions should have the same text when created" do
     edition = template_edition
     new_edition = edition.build_clone

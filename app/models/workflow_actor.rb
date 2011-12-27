@@ -24,8 +24,6 @@ module WorkflowActor
 
     new_edition = edition.build_clone
     if new_edition
-      new_edition.actions = []
-      new_edition.state = 'lined_up'
       record_action new_edition, Action::NEW_VERSION
       new_edition
     else
