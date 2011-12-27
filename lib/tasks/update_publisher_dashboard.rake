@@ -11,7 +11,7 @@ task :update_publisher_dashboard => :environment do
   end
 
   def filter_empty_values(attribute_value)
-    (attribute_value.nil? || attribute_value.empty?) ? OverviewDashboard::UNASSIGNED_KEY : attribute_value
+    attribute_value.empty? ? OverviewDashboard::UNASSIGNED_KEY : attribute_value
   end
 
   @output = {}
