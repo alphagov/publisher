@@ -106,11 +106,11 @@ class WholeEdition
     scope = where(slug: slug)
 
     if edition.present? and edition == 'latest'
-      scope.order_by(:created_at => :desc).first
+      scope.order_by(:version_number).last
     elsif edition.present?
       scope.where(version_number: edition).first
     else
-      scope.order_by(:created_at => :desc).where(state: 'published').first
+      scope.where(state: 'published').order_by(:created_at).last
     end
   end
 

@@ -71,6 +71,15 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal dummy_publication, WholeEdition.find_and_identify('childcare', '')
   end
 
+  test "edition finder should return the latest edition when asked" do
+    dummy_publication = template_published_answer
+    second_publication = template_unpublished_answer(2)
+
+    assert_equal 2, WholeEdition.where(slug: dummy_publication.slug).count
+    found_edition = WholeEdition.find_and_identify('childcare', 'latest')
+    assert_equal second_publication.version_number, found_edition.version_number
+  end
+
   test "struct for search index" do
     dummy_publication = template_published_answer
     out = dummy_publication.search_index
