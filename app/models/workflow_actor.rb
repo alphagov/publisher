@@ -7,6 +7,12 @@ module WorkflowActor
     NoisyWorkflow.make_noise(action).deliver
   end
 
+  def take_action(edition, action, details = {})
+    edition.send(action)
+    record_action edition, action, details
+    edition
+  end
+
   def record_note(edition, comment)
     edition.new_action(self, 'note', comment: comment)
   end
@@ -32,9 +38,7 @@ module WorkflowActor
   end
 
   def start_work(edition)
-    edition.start_work
-    record_action edition, __method__
-    true
+    take_action(edition, __method__)
   end
 
   def send_fact_check(edition, details)
@@ -55,41 +59,29 @@ module WorkflowActor
 
   def request_review(edition, details)
     return false if edition.in_review?
-    edition.request_review
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def receive_fact_check(edition, details)
-    edition.receive_fact_check
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def request_amendments(edition, details)
     return false if edition.latest_status_action.requester_id == self.id and edition.state == 'in_review'
-    edition.request_amendments
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def approve_review(edition, details)
     return false if edition.latest_status_action.requester_id == self.id
-    edition.approve_review
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def approve_fact_check(edition, details)
-    edition.approve_fact_check
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def publish(edition, details)
-    edition.publish
-    record_action edition, __method__, details
-    edition
+    take_action(edition, __method__, details)
   end
 
   def can_request_review?(edition)
