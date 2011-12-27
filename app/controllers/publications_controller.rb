@@ -14,7 +14,7 @@ class PublicationsController < ApplicationController
     end
   end
 
-  protected
+protected
   def allow_preview?
     local_request?
   end

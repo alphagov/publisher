@@ -20,12 +20,9 @@ Publisher::Application.routes.draw do
     root :to => 'root#index'
   end
 
-  resources :publications, :only => :show
-  resources :local_transactions, :only => :show do
-    member do
-      get '/all(.:format)', :to => :all
-      get '/:snac(.:format)', :to => :snac
-      post :verify_snac
-    end
+  resources :publications, :only => :show do
+    post :verify_snac, :on => :member
   end
+
+  post "/local_transactions/verify_snac", :to => "publications#verify_snac"
 end
