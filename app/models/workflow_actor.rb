@@ -1,13 +1,4 @@
 module WorkflowActor
-  PUBLICATION_CLASSES = {
-    :place => PlaceEdition,
-    :local_transaction => LocalTransactionEdition,
-    :transaction => TransactionEdition,
-    :guide => GuideEdition,
-    :programme => ProgrammeEdition,
-    :answer => AnswerEdition,
-  }
-
   def record_action(edition, type, options={})
     type = Action.const_get(type.to_s.upcase)
     action = edition.new_action(self, type, options)
@@ -21,8 +12,9 @@ module WorkflowActor
   end
 
   def create_whole_edition(format, attributes = {})
-    format = format.to_s.gsub('_edition', '').to_sym
-    item = PUBLICATION_CLASSES[format].create(attributes)
+    format = "#{format}_edition" unless format.to_s.match(/edition$/)
+    publication_class = format.to_s.camelize.constantize
+    item = publication_class.create(attributes)
     record_action(item, Action::CREATE) if item.persisted?
     item
   end
