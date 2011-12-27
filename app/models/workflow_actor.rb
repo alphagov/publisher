@@ -8,9 +8,14 @@ module WorkflowActor
   end
 
   def take_action(edition, action, details = {})
-    edition.send(action)
-    record_action edition, action, details
-    edition
+    apply_guards = respond_to?(:"can_#{action}?") ? __send__(:"can_#{action}?", edition) : true
+
+    if apply_guards and transition = edition.send(action)
+      record_action(edition, action, details)
+      edition
+    else
+      false
+    end
   end
 
   def record_note(edition, comment)
@@ -58,7 +63,6 @@ module WorkflowActor
   end
 
   def request_review(edition, details)
-    return false if edition.in_review?
     take_action(edition, __method__, details)
   end
 
@@ -67,12 +71,10 @@ module WorkflowActor
   end
 
   def request_amendments(edition, details)
-    return false if edition.latest_status_action.requester_id == self.id and edition.state == 'in_review'
     take_action(edition, __method__, details)
   end
 
   def approve_review(edition, details)
-    return false if edition.latest_status_action.requester_id == self.id
     take_action(edition, __method__, details)
   end
 
@@ -84,10 +86,10 @@ module WorkflowActor
     take_action(edition, __method__, details)
   end
 
-  def can_request_review?(edition)
-    most_recent_request = edition.most_recent_action { |a| a.request_type == Action::STATUS_ACTIONS[REQUEST_REVIEW]}
-    edition.can_request_review? and (most_recent_request.nil? or most_recent_request.requester != self)
+  def can_approve_review?(edition)
+    edition.latest_status_action.requester_id != self.id
   end
+  alias :can_request_amendments? :can_approve_review?
 
   def assign(edition, recipient)
     edition.assigned_to_id = recipient.id
