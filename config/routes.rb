@@ -5,11 +5,13 @@ Publisher::Application.routes.draw do
     resources :expectations, :except => [:edit, :update, :destroy]
 
     resources :editions do
-      post :progress, :on => :member
-      post :start_work, :on => :member
-      post :duplicate, :on => :member
       member do
-        post 'skip_fact_check'
+        post 'duplicate'
+        post 'progress'
+        post 'start_work', to: 'editions#progress',
+          activity: { request_type: 'start_work' }
+        post 'skip_fact_check', to: 'editions#progress',
+          activity: { request_type: 'receive_fact_check', comment: "Fact check skipped by request."}
       end
     end
 

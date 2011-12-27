@@ -1,15 +1,10 @@
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
-  defaults :resource_class => WholeEdition, :collection_name => 'editions', :instance_name => 'edition'
+  defaults :resource_class => WholeEdition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create]
 
   def index
     redirect_to admin_root_path
-  end
-
-  def show
-    @resource = resource
-    render :template => 'show'
   end
 
   def new
@@ -20,12 +15,13 @@ class Admin::EditionsController < Admin::BaseController
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
     @publication = current_user.create_whole_edition(class_identifier, params[:edition])
-    setup_view_paths_for(@publication)
+
     if @publication.persisted?
       redirect_to admin_edition_path(@publication),
         :notice => "#{description(@publication)} successfully created"
       return
     else
+      setup_view_paths_for(@publication)
       render :action => "new"
     end
   end
@@ -78,31 +74,31 @@ class Admin::EditionsController < Admin::BaseController
     end
   end
 
-  def start_work
-    if resource.progress({request_type: 'start_work'}, current_user)
-      redirect_to admin_edition_path(resource), :notice => "Work started on #{description(resource)}"
-    else
-      redirect_to admin_edition_path(resource), :alert => "Couldn't start work on #{description(resource).downcase}"
-    end
-  end
-
   def progress
-    if resource.progress(params[:activity].dup, current_user)
-      redirect_to admin_edition_path(resource), :notice => "#{description(resource)} updated"
+    if current_user.progress(resource, params[:activity].dup)
+      redirect_to admin_edition_path(resource), :notice => success_message(params[:activity][:request_type])
     else
-      redirect_to admin_edition_path(resource), :alert => "Couldn't #{params[:activity][:request_type].to_s.humanize.downcase} for #{description(resource).downcase}"
-    end
-  end
-
-  def skip_fact_check
-    if resource.progress({request_type: 'receive_fact_check', comment: "Fact check skipped by request."}, current_user)
-      redirect_to admin_edition_path(resource), :notice => "The fact check has been skipped for this publication."
-    else
-      redirect_to admin_edition_path(resource), :alert => "Could not skip fact check for this publication."
+      redirect_to admin_edition_path(resource), :alert => failure_message(params[:activity][:request_type])
     end
   end
 
   protected
+    def failure_message(activity)
+      case activity
+      when 'skip_fact_check' then "Could not skip fact check for this publication."
+      when 'start_work' then "Couldn't start work on #{description(resource).downcase}"
+      else "Couldn't #{activity.to_s.humanize.downcase} for #{description(resource).downcase}"
+      end
+    end
+
+    def success_message(activity)
+      case activity
+      when 'start_work' then "Work started on #{description(resource)}"
+      when 'skip_fact_check' then "The fact check has been skipped for this publication."
+      else "#{description(resource)} updated"
+      end
+    end
+
     def update_assignment(edition, assigned_to_id)
       return if assigned_to_id.blank?
       assigned_to = User.find(assigned_to_id)

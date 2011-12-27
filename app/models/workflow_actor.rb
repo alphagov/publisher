@@ -1,4 +1,7 @@
 module WorkflowActor
+  SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review receive_fact_check request_amendments approve_review
+    approve_fact_check publish]
+
   def record_action(edition, type, options={})
     type = Action.const_get(type.to_s.upcase)
     action = edition.new_action(self, type, options)
@@ -17,6 +20,18 @@ module WorkflowActor
     else
       false
     end
+  end
+
+  def take_action!(edition, action, details = {})
+    edition = take_action(edition, action, details)
+    edition.save if edition
+  end
+
+  def progress(edition, activity_details)
+    activity = activity_details.delete(:request_type)
+
+    edition = send(activity, edition, activity_details)
+    edition.save if edition
   end
 
   def record_note(edition, comment)
@@ -52,7 +67,7 @@ module WorkflowActor
     take_action(edition, __method__, details)
   end
 
-  %W[start_work request_review receive_fact_check request_amendments approve_review approve_fact_check publish].each do |method|
+  SIMPLE_WORKFLOW_ACTIONS.each do |method|
     define_method(method) do |edition, details = {}|
       take_action(edition, __method__, details)
     end

@@ -111,18 +111,6 @@ module Workflow
     end
   end
 
-  def progress(activity_details, current_user)
-    activity = activity_details.delete(:request_type)
-
-    if ['start_work', 'request_review','approve_review','approve_fact_check','request_amendments','send_fact_check','receive_fact_check','publish','archive','new_version'].include?(activity)
-      result = current_user.send(activity, self, activity_details)
-    else
-      raise "Unknown progress activity: #{activity}"
-    end
-
-    save if result
-  end
-
   def can_destroy?
     ! published? and ! archived?
   end

@@ -136,9 +136,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should show the edit page after starting work" do
-    post :start_work, {
-      :id => @guide.id.to_s
-    }
+    post :progress, { id: @guide.id.to_s, activity: {request_type: 'start_work'} }
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
 
     @guide.reload
