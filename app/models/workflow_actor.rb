@@ -42,10 +42,6 @@ module WorkflowActor
     end
   end
 
-  def start_work(edition)
-    take_action(edition, __method__)
-  end
-
   def send_fact_check(edition, details)
     return false if details[:email_addresses].blank?
 
@@ -62,28 +58,10 @@ module WorkflowActor
     edition
   end
 
-  def request_review(edition, details)
-    take_action(edition, __method__, details)
-  end
-
-  def receive_fact_check(edition, details)
-    take_action(edition, __method__, details)
-  end
-
-  def request_amendments(edition, details)
-    take_action(edition, __method__, details)
-  end
-
-  def approve_review(edition, details)
-    take_action(edition, __method__, details)
-  end
-
-  def approve_fact_check(edition, details)
-    take_action(edition, __method__, details)
-  end
-
-  def publish(edition, details)
-    take_action(edition, __method__, details)
+  %W[start_work request_review receive_fact_check request_amendments approve_review approve_fact_check publish].each do |method|
+    define_method(method) do |edition, details = {}|
+      take_action(edition, __method__, details)
+    end
   end
 
   def can_approve_review?(edition)
