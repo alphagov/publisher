@@ -29,13 +29,13 @@ class NoisyWorkflow < ActionMailer::Base
          :subject => "[PUBLISHER] #{@action.friendly_description}")
   end
 
-  def request_fact_check(edition, details)
-    @edition = edition
-    fact_check_address = edition.fact_check_email_address
-    mail(:to => details[:email_addresses], :reply_to => fact_check_address,
+  def request_fact_check(action)
+    @edition = action.edition
+    fact_check_address = @edition.fact_check_email_address
+    mail(:to => action.email_addresses, :reply_to => fact_check_address,
       :from => "Beta Editorial Team <#{fact_check_address}>",
-      :subject => "[FACT CHECK REQUESTED] #{edition.title}") do |format|
-     format.text { render :text => details[:customised_message] }
+      :subject => "[FACT CHECK REQUESTED] #{@edition.title}") do |format|
+     format.text { render :text => action.customised_message }
    end
 
   end

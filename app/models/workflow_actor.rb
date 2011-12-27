@@ -54,7 +54,7 @@ module WorkflowActor
 
     edition.send_fact_check
     record_action edition, __method__, details
-    NoisyWorkflow.request_fact_check(edition, details).deliver
+    NoisyWorkflow.request_fact_check(action).deliver
     edition
   end
 
