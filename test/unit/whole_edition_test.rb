@@ -7,32 +7,30 @@ class WholeEditionTest < ActiveSupport::TestCase
   
   def template_edition
     g = FactoryGirl.create(:guide_edition)
-    g.parts.build(:title => 'PART !', :body=>"This is some version text.", :slug => 'part-one')
-    g.parts.build(:title => 'PART !!', :body=>"This is some more version text.", :slug => 'part-two')
+    g.parts.build(title: 'PART !', body: "This is some version text.", slug: 'part-one')
+    g.parts.build(title: 'PART !!', body: "This is some more version text.", slug: 'part-two')
     g
   end
 
+  def template_answer(version_number = 1)
+    AnswerEdition.create(state: 'ready', slug: "childcare", panopticon_id: 1,
+      title: 'Child care stuff', body: 'Lots of info', version_number: version_number)
+  end
+
   def template_published_answer(version_number = 1)
-    answer = AnswerEdition.create(slug: "childcare", panopticon_id: 1, title: 'Child care stuff', body: 'Lots of info', version_number: version_number)
-    answer.state = 'ready'
+    answer = template_answer(version_number)
     answer.publish
     answer.save
     answer
   end
 
   def template_transaction
-    transaction = TransactionEdition.create(panopticon_id: 2, slug: "childcare")
-    transaction.title = 'One'
-    transaction.introduction = 'introduction'
-    transaction.more_information = 'more info'
-    transaction.save
-    transaction
+    TransactionEdition.create(title: 'One', introduction: 'introduction',
+      more_information: 'more info', panopticon_id: 2, slug: "childcare")
   end
 
   def template_unpublished_answer(version_number = 1)
-    without_metadata_denormalisation(AnswerEdition) do
-      AnswerEdition.create(panopticon_id: 3, slug: "unpublished", title: "One", body: "Lots of info", version_number: version_number)
-    end
+    template_answer(version_number)
   end
 
   test "it must have a title" do
@@ -187,13 +185,9 @@ class WholeEditionTest < ActiveSupport::TestCase
 
   test "can delete a publication that has not been published" do
     dummy_answer = template_unpublished_answer
-    loaded_answer = AnswerEdition.first(conditions: {:slug=>"unpublished"})
-
-    assert_equal loaded_answer, dummy_answer
-
     dummy_answer.destroy
 
-    loaded_answer = AnswerEdition.first(conditions: {:slug=>"unpublished"})
+    loaded_answer = AnswerEdition.where(slug: dummy_answer.slug).first
     assert_nil loaded_answer
   end
 
