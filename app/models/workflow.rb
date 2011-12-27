@@ -15,10 +15,6 @@ module Workflow
         edition.mark_as_rejected
       end
 
-      # after_transition :on => :approve_review do |edition, transition|
-      #   edition.mark_as_accepted
-      # end
-
       after_transition :on => :publish do |edition, transition|
         edition.previous_siblings.all.each(&:archive)
         edition.update_in_search_index
