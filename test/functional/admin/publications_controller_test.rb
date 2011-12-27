@@ -6,13 +6,15 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
   end
 
   test "when saving publication fails we show a page" do
+    panopticon_id = 2357
+    assert WholeEdition.where(panopticon_id: panopticon_id).first.nil?
+
     panopticon_has_metadata(
-        "id" => 2357,
-        "slug" => "foo-bar",
-        "kind" => "local_transaction",
-        "name" => "Foo bar"
+      "id" => panopticon_id,
+      "kind" => "local_transaction"
     )
     get :show, :id => 2357
+    assert WholeEdition.where(panopticon_id: panopticon_id).first.nil?
     assert_response :success
   end
 end

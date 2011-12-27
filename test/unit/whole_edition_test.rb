@@ -35,6 +35,12 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
   end
 
+  test "it must have a title" do
+    a = LocalTransactionEdition.new
+    assert ! a.valid?
+    assert a.errors[:title].any?
+  end
+
   test "it should give a friendly (legacy supporting) description of its format" do
     a = LocalTransactionEdition.new
     assert_equal 'LocalTransaction', a.format

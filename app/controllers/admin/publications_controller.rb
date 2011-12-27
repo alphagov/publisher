@@ -1,18 +1,19 @@
 class Admin::PublicationsController < Admin::BaseController
   def show
     publication = WholeEdition.create_from_panopticon_data(params[:id], current_user)
+
     if publication.persisted?
-      render_new_form(publication) and return
+      redirect_with_return_to(publication) and return
     else
-      redirect_to(return_to_destination(publication)) and return
+      render_new_form(publication) and return
     end
   end
 
   protected
-    def return_to_destination(publication)
+    def redirect_with_return_to(publication)
       destination = "/admin/#{publication.class.name.tableize}/#{publication.id}"
       destination += '?return_to=' + params[:return_to] if params[:return_to]
-      destination
+      redirect_to destination
     end
 
     def render_new_form(publication)
