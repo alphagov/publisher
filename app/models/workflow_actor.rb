@@ -1,6 +1,6 @@
 module WorkflowActor
-  SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review receive_fact_check request_amendments approve_review
-    approve_fact_check publish]
+  SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review receive_fact_check
+    request_amendments approve_review approve_fact_check publish]
 
   def record_action(edition, type, options={})
     type = Action.const_get(type.to_s.upcase)
