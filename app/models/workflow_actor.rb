@@ -5,6 +5,7 @@ module WorkflowActor
     messenger_topic = edition.state.to_s.downcase
     Messenger.instance.send messenger_topic, edition unless messenger_topic == "created"
     NoisyWorkflow.make_noise(action).deliver
+    NoisyWorkflow.request_fact_check(action).deliver if type == "send_fact_check"
   end
 
   def take_action(edition, action, details = {})
@@ -45,17 +46,10 @@ module WorkflowActor
   def send_fact_check(edition, details)
     return false if details[:email_addresses].blank?
 
-    note_text = "\n\nResponses should be sent to: " + edition.fact_check_email_address
-    if details[:comment].blank?
-      details[:comment] = "Fact check requested" + note_text
-    else
-      details[:comment] += note_text
-    end
+    details[:comment] ||= "Fact check requested"
+    details[:comment] += "\n\nResponses should be sent to: " + edition.fact_check_email_address
 
-    edition.send_fact_check
-    record_action edition, __method__, details
-    NoisyWorkflow.request_fact_check(action).deliver
-    edition
+    take_action(edition, __method__, details)
   end
 
   %W[start_work request_review receive_fact_check request_amendments approve_review approve_fact_check publish].each do |method|
