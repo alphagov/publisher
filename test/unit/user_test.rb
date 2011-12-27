@@ -28,15 +28,6 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  test "user can't send back a publication they've sent for review" do
-    user = User.create(:name => "bob")
-
-    trans = user.create_whole_edition(:transaction, title: "test answer", slug: "test", panopticon_id: 123)
-    user.start_work(trans)
-    user.request_review(trans, {comment: "Hello"})
-    assert ! user.request_amendments(trans, {comment: "Hello"})
-  end
-
   test "when an user publishes a guide, a status message is sent on the message bus" do
     user = User.create(:name => "bob")
     second_user = User.create(:name => "dave")

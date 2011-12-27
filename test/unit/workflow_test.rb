@@ -217,19 +217,6 @@ class WorkflowTest < ActiveSupport::TestCase
     assert edition.can_publish?
   end
 
-  test "user should not be able to review a programme they requested review for" do
-    user, other_user = template_users
-
-    edition = user.create_whole_edition(:programme, panopticon_id: 123, title: 'My title', slug: 'my-slug')
-    user.start_work(edition)
-    edition.save
-    
-    assert edition.can_request_review?
-
-    user.request_review(edition, {:comment => "Review this programme please."})
-    assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
-  end
-
   test "user should not be able to okay a programme they requested review for" do
     user, other_user = template_users
 
