@@ -2,47 +2,35 @@ require 'api/generator'
 
 class PublicationsController < ApplicationController
   respond_to :json
-  before_filter :find_publication
 
   def show
     Rails.logger.info("pubctrl: enter #{Time.now.to_f}")
     data = compose_publication(params[:id], params[:edition], params[:snac])
-    head 404 and return unless data
 
-    data = compose_publication(params[:id], params[:edition], params[:snac])
-    respond_with(data)
-  end
-
-  def verify_snac
-    head 404 and return unless @edition
-    matching_code = params[:snac_codes].detect { |snac| publication.verify_snac(snac) }
-
-    if matching_code
-      render :json => { snac: matching_code }
+    if data
+      respond_with(data)
     else
-      render :text => '', :status => 422
+      head 404 and return
     end
   end
 
-protected
+  protected
   def allow_preview?
     local_request?
   end
 
-  def find_publication
+  def compose_publication(slug, edition_number, snac)
+    Rails.logger.info("pubctrl: compose #{slug} #{edition_number}")
     edition_number = nil unless allow_preview?
+    Rails.logger.info("pubctrl: finding publication edition #{Time.now.to_f}")
     edition = WholeEdition.find_and_identify_edition(slug, edition_number)
-
+    Rails.logger.info("pubctrl: found edition #{Time.now.to_f}")
     return nil if edition.nil?
 
     options = {:snac => params[:snac], :all => params[:all]}.select { |k, v| v.present? }
+    Rails.logger.info("pubctrl: generating hash #{Time.now.to_f}")
     result = Api::Generator.edition_to_hash(edition, options)
+    Rails.logger.info("pubctr: exit compose #{Time.now.to_f}")
     result
-    @edition = WholeEdition.find_and_identify(slug, edition_number)
-  end
-
-  def compose_publication(slug, edition_number, snac)
-    options = {:snac => params[:snac], :all => params[:all] }.select { |k, v| v.present? }
-    Api::Generator.edition_to_hash(@edition, options)
   end
 end
