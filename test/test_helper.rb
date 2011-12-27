@@ -31,10 +31,6 @@ class ActiveSupport::TestCase
   end
   set_callback :teardown, :before, :clean_db
 
-  def without_panopticon_validation(&block)
-    yield
-  end
-
   def without_metadata_denormalisation(*klasses, &block)
     klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
     result = yield
