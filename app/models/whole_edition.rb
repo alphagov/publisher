@@ -90,13 +90,13 @@ class WholeEdition
   end
 
   def self.create_from_panopticon_data(panopticon_id, importing_user)
+    existing_publication = WholeEdition.where(panopticon_id: panopticon_id).first
+    return existing_publication if existing_publication
+
     require 'gds_api/panopticon'
     api = GdsApi::Panopticon.new(Plek.current.environment)
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
-
-    existing_publication = WholeEdition.where(panopticon_id: panopticon_id).first
-    return existing_publication if existing_publication
 
     importing_user.create_whole_edition(metadata.kind.to_sym, :panopticon_id => metadata.id, 
       :slug => metadata.slug, :title => metadata.name)
