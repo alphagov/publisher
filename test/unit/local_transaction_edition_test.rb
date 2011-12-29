@@ -8,7 +8,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     edition
   end
 
-  test "editions, return their title + LGSL + number of providers for use in the publications admin-interface lists" do
-    assert_equal "Transaction (LGSL 149) [0]", local_transaction_edition.admin_list_title
+  test "editions, return their title for use in the publications admin-interface lists" do
+    assert_equal "Transaction", local_transaction_edition.admin_list_title
   end
 end
