@@ -101,7 +101,7 @@ GEM
     ffi (1.0.11)
     formtastic (2.0.2)
       rails (~> 3.0)
-    gds-api-adapters (0.0.15)
+    gds-api-adapters (0.0.16)
       null_logger
       plek
     govspeak (0.8.4)
@@ -255,7 +255,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic (~> 2.0.0)
-  gds-api-adapters (~> 0.0.15)
+  gds-api-adapters (~> 0.0.16)
   gds-sso!
   govspeak (= 0.8.4)
   has_scope
