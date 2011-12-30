@@ -1,6 +1,15 @@
 require 'integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
+  def filter_by(option)
+    visit "/admin"
+
+    select option, from: "Filter by user"
+    click_on "Filter"
+
+    click_on "Lined up"
+  end
+
   test "filtering by assigned user" do
     stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
       to_return(status: 200, body: "{}", headers: {})
@@ -24,24 +33,19 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob.assign(x.editions.first, alice)
     bob.assign(y.editions.first, charlie)
 
-    visit "/admin"
-
-    select "All", from: "Filter by user"
-    click_on "Filter"
+    filter_by("All")
 
     assert page.has_content?("XXX")
     assert page.has_content?("YYY")
     assert page.has_content?("ZZZ")
 
-    select "Nobody", from: "Filter by user"
-    click_on "Filter"
+    filter_by("Nobody")
 
     assert page.has_no_content?("XXX")
     assert page.has_no_content?("YYY")
     assert page.has_content?("ZZZ")
 
-    select "Charlie", from: "Filter by user"
-    click_on "Filter"
+    filter_by("Charlie")
 
     assert page.has_no_content?("XXX")
     assert page.has_content?("YYY")
@@ -51,6 +55,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     # Should remember last selection in session
     assert_equal charlie.uid, page.find_field("Filter by user").value
+
+    click_on "Lined up"
     assert page.has_no_content?("XXX")
     assert page.has_content?("YYY")
     assert page.has_no_content?("ZZZ")
