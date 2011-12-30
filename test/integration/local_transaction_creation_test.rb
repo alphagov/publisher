@@ -36,14 +36,15 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
       "name" => "Foo bar"
     )
 
+    email_count_before_start = ActionMailer::Base.deliveries.count
+
     visit "/admin/publications/2357"
-    assert_equal 0, ActionMailer::Base.deliveries.count
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
     assert page.has_content? "Viewing Edition 1 of “Foo bar”"
 
-    assert_equal 1, ActionMailer::Base.deliveries.count
+    assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
     assert_match /Created Local transaction: "Foo bar"/, ActionMailer::Base.deliveries.last.subject
   end
 end
