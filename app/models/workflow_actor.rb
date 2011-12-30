@@ -20,7 +20,7 @@ module WorkflowActor
     edition.new_action(self, 'note', comment: comment)
   end
 
-    def create_publication(kind, attributes = {})
+  def create_publication(kind, attributes = {})
     item = PUBLICATION_CLASSES[kind].create(attributes)
     record_action(item.editions.first, Action::CREATE) if item.persisted?
     item
