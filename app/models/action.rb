@@ -32,34 +32,38 @@ class Action
   field :customised_message, :type => String
   field :created_at,   :type => DateTime, :default => lambda { Time.now }
 
+  def container_class_name(edition)
+    edition.container.class.name.underscore.humanize
+  end
+
   def friendly_description
     case request_type
     when CREATE
-      "Created #{edition.container.class}: \"#{edition.title}\" (by #{requester.name})"
+      "Created #{container_class_name(edition)}: \"#{edition.title}\" (by #{requester.name})"
     when START_WORK
-      "Work started: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Work started: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when REQUEST_REVIEW
-      "Review requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Review requested: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when APPROVE_REVIEW
-      "Okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Okayed for publication: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when APPROVE_FACT_CHECK
-      "Fact check okayed for publication: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Fact check okayed for publication: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when REQUEST_AMENDMENTS
-      "Amends needed: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Amends needed: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when SEND_FACT_CHECK
-      "Fact check requested: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Fact check requested: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when RECEIVE_FACT_CHECK
-      "Fact check response: \"#{edition.title}\" (#{edition.container.class})"
+      "Fact check response: \"#{edition.title}\" (#{container_class_name(edition)})"
     when PUBLISH
-      "Published: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Published: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when ARCHIVE
-      "Archived: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "Archived: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when NEW_VERSION
-      "New version: \"#{edition.title}\" (#{edition.container.class}) by #{requester.name}"
+      "New version: \"#{edition.title}\" (#{container_class_name(edition)}) by #{requester.name}"
     when NOTE
       "Note added by #{requester.name}"
     when ASSIGN
-      "Assigned: \"#{edition.title}\" (#{edition.container.class}) to #{recipient.name}"
+      "Assigned: \"#{edition.title}\" (#{container_class_name(edition)}) to #{recipient.name}"
     end
   end
 
