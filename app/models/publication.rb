@@ -53,16 +53,16 @@ class Publication
   end
 
   def self.create_from_panopticon_data(panopticon_id, importing_user)
+    require 'gds_api/panopticon'
+    api = GdsApi::Panopticon.new(Plek.current.environment)
+    metadata = api.artefact_for_slug(panopticon_id)
+    raise "Artefact not found" if metadata.nil?
+
     existing_publication = Publication.where(slug: metadata.slug).first
     if existing_publication.present?
       existing_publication.update_attribute(:panopticon_id, metadata.id)
       return existing_publication
     end
-
-    require 'gds_api/panopticon'
-    api = GdsApi::Panopticon.new(Plek.current.environment)
-    metadata = api.artefact_for_slug(panopticon_id)
-    raise "Artefact not found" if metadata.nil?
 
     importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name,
       :slug => metadata.slug, :title => metadata.title)
