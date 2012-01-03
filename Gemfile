@@ -14,6 +14,7 @@ group :passenger_compatibility do
 end
 
 gem 'rails', '3.1.3'
+gem 'aws-ses', :require => 'aws/ses'
 
 gem "mongoid", "~> 2.3"
 gem "mongo", "1.5.2"
