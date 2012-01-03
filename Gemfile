@@ -23,6 +23,7 @@ gem "bson", "1.5.2"
 gem 'erubis'
 gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
+gem 'gelf'
 
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'

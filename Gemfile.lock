@@ -109,6 +109,8 @@ GEM
     gds-api-adapters (0.0.16)
       null_logger
       plek
+    gelf (1.3.2)
+      json
     govspeak (0.8.4)
       kramdown (~> 0.13.3)
     has_scope (0.5.1)
@@ -264,6 +266,7 @@ DEPENDENCIES
   formtastic (~> 2.0.0)
   gds-api-adapters (~> 0.0.16)
   gds-sso!
+  gelf
   govspeak (= 0.8.4)
   has_scope
   inherited_resources
