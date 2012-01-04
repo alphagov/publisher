@@ -113,6 +113,8 @@ GEM
       json
     govspeak (0.8.4)
       kramdown (~> 0.13.3)
+    graylog2_exceptions (0.5.3)
+      gelf
     has_scope (0.5.1)
     hike (1.2.1)
     i18n (0.6.0)
@@ -268,6 +270,7 @@ DEPENDENCIES
   gds-sso!
   gelf
   govspeak (= 0.8.4)
+  graylog2_exceptions
   has_scope
   inherited_resources
   launchy

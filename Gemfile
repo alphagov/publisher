@@ -24,6 +24,7 @@ gem 'erubis'
 gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
 gem 'gelf'
+gem 'graylog2_exceptions'
 
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'
