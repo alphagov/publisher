@@ -167,7 +167,7 @@ GEM
       rack
       rake (>= 0.8.1)
     pethau (0.0.3)
-    plek (0.1.15)
+    plek (0.1.19)
       builder
     polyglot (0.3.3)
     rack (1.3.5)
