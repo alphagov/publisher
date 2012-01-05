@@ -55,8 +55,11 @@ module Workflow
       end
 
       event :publish do
-        # allow draft to be published as emergency, but do not expose in UI for now
-        transition [:draft, :ready] => :published
+        transition :ready => :published
+      end
+
+      event :emergency_publish do
+        transition :draft => :published
       end
 
       event :archive do

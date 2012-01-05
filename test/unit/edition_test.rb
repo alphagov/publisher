@@ -85,6 +85,22 @@ class EditionTest < ActiveSupport::TestCase
     assert_nil guide.published_edition
   end
 
+  test "a draft edition cannot be published" do
+    edition = template_edition
+    guide = template_edition.guide
+    guide.editions.first.update_attribute :state, 'draft'
+
+    assert_false guide.editions.first.can_publish?
+  end
+
+  test "a draft edition can be emergency published" do
+    edition = template_edition
+    guide = template_edition.guide
+    guide.editions.first.update_attribute :state, 'draft'
+
+    assert guide.editions.first.can_emergency_publish?
+  end
+
   test "an edition of a guide can be published" do
     edition = template_edition
     guide = template_edition.guide
