@@ -214,7 +214,7 @@ GEM
     simplecov-html (0.4.5)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    slimmer (1.1.12)
+    slimmer (1.1.17)
       json
       nokogiri (~> 1.5.0)
       null_logger
@@ -292,7 +292,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov (= 0.4.2)
   simplecov-rcov
-  slimmer (= 1.1.12)
+  slimmer (~> 1.1.17)
   state_machine
   stomp (= 1.1.9)
   test-unit

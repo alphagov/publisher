@@ -51,7 +51,7 @@ gem 'router-client', '2.0.3', require: 'router/client'
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
-  gem 'slimmer', '1.1.12'
+  gem 'slimmer', '~> 1.1.17'
 end
 
 if ENV['CDN_DEV']
