@@ -6,14 +6,14 @@ GIT
 
 GIT
   remote: git@github.com:alphagov/gds-sso.git
-  revision: 9262d94221a46ad9329a5a4040cb71cbe5fdc1f7
+  revision: 22efb5d3650286ac3bad8fdeb7287befeb8b8b59
   specs:
-    gds-sso (0.2.0)
+    gds-sso (0.2.1)
       oa-core (= 0.2.6)
       oa-oauth (= 0.2.6)
       oauth2 (= 0.4.1)
       rails (>= 3.0.0)
-      warden
+      warden (= 1.0.6)
 
 GIT
   remote: git@github.com:alphagov/rummageable.git
@@ -297,6 +297,5 @@ DEPENDENCIES
   stomp (= 1.1.9)
   test-unit
   timecop
-  warden (= 1.0.6)
   webmock
   whenever
