@@ -2,7 +2,12 @@ source 'http://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 # GDS specific gems
-gem 'gds-rails-config', :git => 'git@github.com:alphagov/gds-rails-config.git'
+
+if ENV['GDS_RAILS_CONFIG_DEV']
+  gem 'gds-rails-config', :path => '../gds-rails-config'
+else
+  gem 'gds-rails-config', :git => 'git@github.com:alphagov/gds-rails-config.git'
+end
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
