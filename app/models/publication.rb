@@ -54,7 +54,7 @@ class Publication
 
   def self.create_from_panopticon_data(panopticon_id, importing_user)
     require 'gds_api/panopticon'
-    api = GdsApi::Panopticon.new(Plek.current.environment)
+    api = GdsApi::Panopticon.new(Plek.current.environment, PANOPTICON_API_CREDENTIALS)
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
 
