@@ -34,7 +34,7 @@ end
 gem 'null_logger'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
-gem 'gds-api-adapters', '~> 0.0.16'
+gem 'gds-api-adapters', '~> 0.0.23'
 
 gem 'rest-client'
 

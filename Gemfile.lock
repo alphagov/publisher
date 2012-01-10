@@ -266,7 +266,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic (~> 2.0.0)
-  gds-api-adapters (~> 0.0.16)
+  gds-api-adapters (~> 0.0.23)
   gds-sso!
   gelf
   govspeak (= 0.8.4)

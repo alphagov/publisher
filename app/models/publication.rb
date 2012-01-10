@@ -65,7 +65,7 @@ class Publication
     end
 
     importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name,
-      :slug => metadata.slug, :title => metadata.title)
+      :slug => metadata.slug, :title => metadata.name)
   end
 
   def self.find_and_identify_edition(slug, edition)
