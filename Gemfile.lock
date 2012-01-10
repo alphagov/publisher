@@ -106,7 +106,7 @@ GEM
     ffi (1.0.11)
     formtastic (2.0.2)
       rails (~> 3.0)
-    gds-api-adapters (0.0.20)
+    gds-api-adapters (0.0.23)
       null_logger
       plek
     gelf (1.1.3)
