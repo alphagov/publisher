@@ -22,8 +22,8 @@ class RouterBridge
         else
           register_publication(publication)
         end
-      rescue e
-        logger.error("Exception caused while processing message for #{publication_hash.inspect} #{e.inspect}")
+      rescue => e
+        logger.error("Exception caused while processing message for #{publication_hash.inspect} #{e.message}")
       end
     end
 
