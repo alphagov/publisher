@@ -12,14 +12,18 @@ class RouterBridge
 
   def run
     marples.when 'publisher', '*', 'published' do |publication_hash|
-      publication_id = publication_hash['_id']
-      logger.info("Recieved message for #{publication_hash['name']} #{publication_id}")
-      publication = Publication.find(publication_id)
+      begin
+        publication_id = publication_hash['_id']
+        logger.info("Recieved message for #{publication_hash['name']} #{publication_id}")
+        publication = Publication.find(publication_id)
 
-      if (publication.nil?)
-        logger.warn("Could not find publication #{publication_id}")
-      else
-        register_publication(publication)
+        if (publication.nil?)
+          logger.warn("Could not find publication #{publication_id}")
+        else
+          register_publication(publication)
+        end
+      rescue e
+        logger.error("Exception caused while processing message for #{publication_hash.inspect} #{e.inspect}")
       end
     end
 
