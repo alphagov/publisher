@@ -39,4 +39,9 @@ class LocalTransactionTest < ActiveSupport::TestCase
 
     assert !lt.verify_snac("00BC")
   end
+
+  test "local transaction reports itself as a transaction for search" do
+    lt = LocalTransaction.new(lgsl_code: "1", name: "Transaction", slug: "slug")
+    assert_equal "transaction", lt.search_format
+  end
 end

@@ -17,6 +17,10 @@ class LocalTransaction < Publication
     LocalTransactionEdition
   end
 
+  def search_format
+    "transaction"
+  end
+
   def verify_snac(snac)
     !lgsl.authorities.where(snac: snac).empty?
   end

@@ -170,12 +170,16 @@ class Publication
     published_edition ? published_edition.alternative_title : ""
   end
 
+  def search_format
+    _type.downcase
+  end
+
   def search_index
     {
       "title" => title,
       "link" => "/#{slug}",
       "section" => section ? section.parameterize : nil,
-      "format" => _type.downcase,
+      "format" => search_format,
       "description" => (published_edition && published_edition.overview) || "",
       "indexable_content" => indexable_content,
     }
