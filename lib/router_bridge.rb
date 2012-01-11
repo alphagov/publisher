@@ -16,7 +16,7 @@ class RouterBridge
       logger.info("Recieved message for #{publication_hash['name']} #{publication_id}")
       publication = Publication.find(publication_id)
 
-      if(publication.nil?)
+      if (publication.nil?)
         logger.warn("Could not find publication #{publication_id}")
       else
         register_publication(publication)
@@ -31,10 +31,19 @@ class RouterBridge
     logger.info(" Registering publication parts for #{publication['name']}")
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/print"))
 
-    publication.published_edition.parts.each do |part|
+    # TODO: MatW: This code is only here temporarily while we are running all content as live.
+    # The original is here:
+    #publication.published_edition.parts.each do |part|
+    #      logger.info(" Registering part #{part.slug}")
+    #      register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part['slug']}"))
+    #    end
+
+    publication.latest_edition.parts.each do |part|
       logger.info(" Registering part #{part.slug}")
       register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part['slug']}"))
     end
+
+    # end
 
     if publication.has_video?
       register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/video"))
