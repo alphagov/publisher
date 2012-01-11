@@ -10,7 +10,7 @@ class PublicationTest < ActiveSupport::TestCase
     answer = Answer.create(:slug=>"childcare", :name=>"Something")
     edition = answer.editions.first
     edition.title = 'One'
-    edition.body = 'Lots of info'
+    edition.body = '*Lots of info*'
     answer.save
     edition.state = 'ready'
     edition.publish
@@ -22,8 +22,8 @@ class PublicationTest < ActiveSupport::TestCase
     trans = Transaction.create(:slug=>"childcare", :name=>"Something")
     edition = trans.editions.first
     edition.title = 'One'
-    edition.introduction = 'introduction'
-    edition.more_information = 'more info'
+    edition.introduction = '*introduction*'
+    edition.more_information = '*more info*'
     trans.save
     trans
   end

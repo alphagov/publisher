@@ -6,8 +6,12 @@ class Answer < Publication
   end
 
   def indexable_content
-    content = super
-    return content unless latest_edition
-    "#{content} #{latest_edition.body}".strip
+    if latest_edition
+      [ super,
+        govspeak_to_text(latest_edition.body)
+      ].join(" ").strip
+    else
+      super
+    end
   end
 end

@@ -189,7 +189,7 @@ class Publication
     all.map(&:search_index)
   end
 
-  private
+private
   def check_can_delete_and_notify
     if !self.can_destroy?
       raise CannotDeletePublishedPublication
@@ -203,5 +203,9 @@ class Publication
 
   def remove_from_search_index
     Rummageable.delete "/#{slug}"
+  end
+
+  def govspeak_to_text(s)
+    Govspeak::Document.new(s).to_text
   end
 end

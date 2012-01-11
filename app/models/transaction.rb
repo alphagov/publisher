@@ -6,9 +6,14 @@ class Transaction < Publication
   end
 
   def indexable_content
-    content = super
-    return content unless latest_edition
-    "#{content} #{latest_edition.introduction} #{latest_edition.more_information}".strip
+    if latest_edition
+      [ super,
+        govspeak_to_text(latest_edition.introduction),
+        govspeak_to_text(latest_edition.more_information)
+      ].join(" ").strip
+    else
+      super
+    end
   end
 
 end

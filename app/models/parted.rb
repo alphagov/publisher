@@ -1,10 +1,12 @@
 module Parted
   def indexable_content
-    content = super
-    return content unless latest_edition
-    latest_edition.parts.inject([content]) { |acc, part|
-      acc.concat([part.title, part.body])
-    }.compact.join(" ").strip
+    if latest_edition
+      latest_edition.parts.inject([super]) { |acc, part|
+        acc.concat([part.title, govspeak_to_text(part.body)])
+      }.compact.join(" ").strip
+    else
+      super
+    end
   end
 
   def search_index
