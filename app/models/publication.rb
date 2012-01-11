@@ -58,7 +58,7 @@ class Publication
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
 
-    existing_publication = Publication.where(slug: metadata.slug).first
+    existing_publication = Publication.where(panopticon_id: metadata.id).first
     if existing_publication.present?
       existing_publication.update_attribute(:panopticon_id, metadata.id)
       return existing_publication
