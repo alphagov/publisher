@@ -18,6 +18,17 @@ namespace :sync do
     puts "Total records pushed to queue: #{count}"
   end
 
+  desc "Pretend that everything in publisher is published and put it on the published msg queue"
+  task :publish_everything => :environment do
+    count = 0
+    Publication.all.each do |pub|
+      Messenger.instance.published pub
+      count += 1
+      puts "[#{count}] #{pub.name} pushed to queue"
+    end
+    puts "Total records pushed to queue: #{count}"
+  end
+
   desc "Finds panopticon IDs for publications without them"
   task :ids => :environment do
     @without_id = Publication.where(:panopticon_id.exists => false)
