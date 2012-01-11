@@ -80,7 +80,9 @@ class Publication
         publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
       end
     else
-      publication.published_edition
+      # Shows any editions, regardless of state
+      # To show only published editions, change the following line to `publication.published_edition`
+      publication.latest_edition
     end
   end
 
