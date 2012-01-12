@@ -13,7 +13,7 @@ module Parted
     output = super
     return output unless latest_edition
     output['additional_links'] = []
-    latest_edition.parts.each do |part|
+    latest_edition.parts.each_with_index do |part, index|
       if _type.downcase == 'programme' && part.slug != 'further-information'
         link = "/#{slug}\##{part.slug}"
       else
@@ -21,7 +21,8 @@ module Parted
       end
       output['additional_links'] << {
         'title' => part.title,
-        'link' => link
+        'link' => link,
+        'link_order' => index
       }
     end
     output
