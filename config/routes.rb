@@ -23,7 +23,6 @@ Publisher::Application.routes.draw do
 
     resources :publications
     match 'overview' => 'overview#index'
-    match 'sign_out' => 'root#sign_out'
     root :to => 'root#index'
   end
 
