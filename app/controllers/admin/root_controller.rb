@@ -32,4 +32,11 @@ class Admin::RootController < Admin::BaseController
       render partial: params[:list], layout: false and return
     end
   end
+
+  def sign_out
+    cookie_key = Publisher::Application.config.session_options[:key]
+    cookies.delete(cookie_key)
+    reset_session
+    redirect_to Plek.current.find('signonotron') + "/users/sign_out"
+  end
 end
