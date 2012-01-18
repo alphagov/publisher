@@ -4,8 +4,10 @@ source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
 else
-  gem 'gds-sso', :git => 'git@github.com:alphagov/gds-sso.git'
+  gem 'gds-sso', '~> 0.4.1'
 end
+
+gem 'gds-warmup-controller'
 
 group :passenger_compatibility do
   gem 'rack', '1.3.5'
