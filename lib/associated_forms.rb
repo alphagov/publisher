@@ -1,7 +1,7 @@
 module Formtastic #:nodoc:
 
-  class SemanticFormBuilder < ActionView::Helpers::FormBuilder
-    
+  class FormBuilder < ActionView::Helpers::FormBuilder
+
     def association_name(class_name)
       @object.respond_to?("#{class_name}_attributes=") ? class_name : class_name.pluralize
     end
@@ -9,7 +9,7 @@ module Formtastic #:nodoc:
     def extract_option_or_class_name(hash, option, object)
       (hash.delete(option) || object.class.name.split('::').last.underscore)
     end
-    
+
     #  Dynamically add and remove nested forms for a has_many relation.
     #
     #  Add a link to remove the associated partial
@@ -61,19 +61,19 @@ module Formtastic #:nodoc:
       output = hidden_field(:_destroy) + link.html_safe
       output
     end
-    
+
     def add_associated_jquery_template(association, opts = {})
       object = @object.send(association).build
       associated_name = extract_option_or_class_name(opts, :name, object)
       partial = opts.delete(:partial) || associated_name
-      
+
       form = render_associated_form(object, :partial => partial, :associated_name => associated_name)
       form.gsub!(/attributes_(\d+)/, 'attributes_{{index}}')
       form.gsub!(/\[(\d+)\]/, '[{{index}}]')
-      
+
       "<script id='tmpl-#{association}' type='text/x-jquery-tmpl'>#{form}</script>".html_safe
     end
-    
+
     # Render associated form
     #
     # Example:
@@ -149,7 +149,7 @@ module Formtastic #:nodoc:
       elsif opts[:new_in_edit] and @object.new_record? == false
         opts[:new_in_edit].times { associated.build }
       end
-      
+
       opts[:locals] ||= {}
       opts[:render] ||= {}
 
@@ -164,8 +164,8 @@ module Formtastic #:nodoc:
         output = associated.map do |element|
           fields_for(association_name(name), element, (opts[:fields_for] || {}).merge(:name => name)) do |f|
             local_assignments = {
-              index_variable_name => index += 1, 
-              local_assign_name.to_sym => element, 
+              index_variable_name => index += 1,
+              local_assign_name.to_sym => element,
               :f => f
             }.merge(opts[:locals])
             template.render({:partial => "#{partial}", :locals => local_assignments}.merge(opts[:render]))

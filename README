@@ -6,7 +6,7 @@ open a Rails console and:
 
 # Add headers to council_name_to_snac.csv agency_id,agency_name,snac
 f = File.open('council_name_to_snac.csv', 'r:Windows-1252:UTF-8')
-Authority.populate_from_source!!(f)
+Authority.populate_from_source!(f)
 
 f = File.open('local_transactions.csv', 'r:Windows-1252:UTF-8')
 LocalTransactionsSource.populate_from_source!(f)
@@ -16,7 +16,7 @@ LocalTransactionsSource.populate_from_source!(f)
 
 * grab the .xls from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1523569.xls
   and extract the second sheet to a CSV, named 'service_list.csv'
-* grab the CSV (which currently claims to be a .xls) from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1963339 
+* grab the CSV (which currently claims to be a .xls) from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1963339
   and save it as council_name_to_snac.csv
 * grab the CSV from http://local.direct.gov.uk/Data/local_authority_service_details.csv
 
@@ -26,3 +26,17 @@ run script/combine_lgd_data as follows:
 
 This will create a file called 'local_transactions.csv'
 
+== Running in development ==
+
+If you're just interested in running the Publisher locally, with a minimum of interaction with other apps, here's how.
+
+# Create a user
+
+guides$ script/console
+>> User.create :name => "Your name", :email => "youremail@govuk.com", :uid => Time.now.to_i, :version => 1
+
+# Run panopticon using rackup or similar
+panopticon$ rackup
+
+# Run the guides app setting env variable to point at your panopticon instance
+guides$ PANOPTICON_URI="http://localhost:9292" bundle exec rails server

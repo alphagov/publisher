@@ -2,7 +2,7 @@ module Expectant
 
   module ClassMethods
     def expectation_choices
-      Hash[Expectation.all.map {|e| [e.text,e._id.to_s] }]
+      Hash[Expectation.all.order_by(:text => :asc).map {|e| [e.text, e._id.to_s] }]
     end
   end
 

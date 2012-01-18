@@ -1,0 +1,10 @@
+Fact check requested for "<%= @publication.title %>" (<%= @publication.class.to_s.humanize %>) by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+
+Sent to: <%= @action.email_addresses %>
+2nd eyes: <%= @action.requester.name %>
+Response expected by: <%= ((Date.today)+7).to_s %>
+
+Comment: <%= @action.comment %>
+
+View:
+<%= "#{Plek.current.find("publication-preview")}/#{@action.edition.container.slug}?edition=#{@action.edition.version_number}" %>

@@ -1,4 +1,4 @@
-<%= semantic_form_for @latest_edition, :url => admin_programme_edition_path(@programme, @latest_edition), :as => :edition do |f| %>
+<%= semantic_form_for @latest_edition, :url => admin_programme_edition_path(@resource, @latest_edition), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
   <% end %>
@@ -16,3 +16,5 @@
   </section>
 
 <% end %>
+
+<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/programmes') %>

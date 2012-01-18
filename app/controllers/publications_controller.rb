@@ -1,21 +1,12 @@
 require 'api/generator'
 
 class PublicationsController < ApplicationController
-  caches_page :index
-  respond_to :json, :html
-  
-  def show
-    section_name = Publication::SECTIONS.detect { |s| s.parameterize.to_s == params[:id] }
-    audience_name = Publication::AUDIENCES.detect { |s| s.parameterize.to_s == params[:id] }
+  respond_to :json
 
-    if section_name
-      data = show_collection('section', section_name)
-    elsif audience_name
-      data = show_collection('audience', audience_name)
-    else
-      data = show_publication(params[:id], params[:edition], params[:snac])
-    end
-    
+  def show
+    Rails.logger.info("pubctrl: enter #{Time.now.to_f}")
+    data = compose_publication(params[:id], params[:edition], params[:snac])
+
     if data
       respond_with(data)
     else
@@ -23,60 +14,23 @@ class PublicationsController < ApplicationController
     end
   end
 
-  def show_collection(type, name)
-    if type == 'section'
-      publications = Publication.where(section: name).collect(&:published_edition).compact
-    else
-      publications = Publication.any_in(audiences: [params[:id]]).collect(&:published_edition).compact
-    end
-      
-    publications = publications.to_a.collect do |g|
-      {
-        :title => g.title,
-        :tags => g.container.tags,
-        :slug => g.container.slug,
-        :type => g.class.to_s.underscore
-      }
-    end
-    
-    return { :name => name, :type => type, :publications => publications }
+  protected
+  def allow_preview?
+    local_request?
   end
 
-  def show_publication(slug, edition, snac)
-    publication = Publication.where(slug: slug).first
-    return nil if publication.nil?
-    
-    if edition
-      # This is used for previewing yet-to-be-published editions. 
-      # At some point this should require special authentication.
-      edition = publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
-    else
-      edition = publication.published_edition
-    end
+  def compose_publication(slug, edition_number, snac)
+    Rails.logger.info("pubctrl: compose #{slug} #{edition_number}")
+    edition_number = nil unless allow_preview?
+    Rails.logger.info("pubctrl: finding publication edition #{Time.now.to_f}")
+    edition = Publication.find_and_identify_edition(slug, edition_number)
+    Rails.logger.info("pubctrl: found edition #{Time.now.to_f}")
     return nil if edition.nil?
 
-    options = {}
-    allowed_options = [:snac,:all]
-    allowed_options.each do |a|
-      options[a] = params[a] if params[a]
-    end
-
-    Api::Generator.edition_to_hash(edition, options)
-  end
-
-  def index
-    published_editions = Publication.published.collect(&:published_edition).compact
-    details = published_editions.collect do |g|
-      {
-        :title => g.title,
-        :tags => g.container.tags,
-        :slug => g.container.slug
-      }
-    end
-    if params[:callback]  
-      render :json=> details.to_json, :callback => params[:callback]
-    else
-      respond_with details 
-    end
+    options = {:snac => params[:snac], :all => params[:all]}.select { |k, v| v.present? }
+    Rails.logger.info("pubctrl: generating hash #{Time.now.to_f}")
+    result = Api::Generator.edition_to_hash(edition, options)
+    Rails.logger.info("pubctr: exit compose #{Time.now.to_f}")
+    result
   end
 end

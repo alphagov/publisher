@@ -1,0 +1,20 @@
+<table class="formats" summary="List of &ldquo;Fact Check Requested&rdquo; content">
+  <thead>
+    <tr>
+      <th scope="col">Format</th>
+      <th scope="col" class="title">Title</th>
+      <th scope="col">Video</td>
+      <th scope="col" class="datetime">Last updated</th>
+      <th scope="col" class="datetime">Sent Out</th>
+      <th scope="col">Assigned to</th>
+      <th scope="col">Created by</th>
+      <th scope="col">Section</th>
+      <th scope="col">Reviews</th>
+      <th scope="col" class="nosort">Edit</th>
+      <th scope="col" class="nosort">Preview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render :collection => @fact_check, :partial => 'publication', :locals => {:tab => :fact_check} %>
+  </tbody>
+</table>

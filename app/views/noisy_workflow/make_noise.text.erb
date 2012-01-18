@@ -1,0 +1,12 @@
+<%= [ "Yo", "Hi", "Hello", "Salutations", "Greetings", "Salut", "Shwmae", "Master", "Once upon a time", "Molo", "!hoi ca", "Thobela", "G'day", "Hallo", "Dumela", "Makadi", "Sawubona", "guten tag", "Shlama", "Hej", "Hoi", "Torova", "Haileo", "Salaam", "Ti nâu", "Óla" ].sort_by{rand}[0] %>,
+
+
+<%= render :partial => "/noisy_workflow/#{@action.request_type.to_s}", :locals => {:publication => @publication, :action => @action} %>
+
+<% if ! @publication.latest_edition.assigned_to.blank? %>
+Assigned to: <%= @publication.latest_edition.assigned_to %>
+<% end %>
+
+Regards,
+
+Winston (the Gov.UK Publisher)

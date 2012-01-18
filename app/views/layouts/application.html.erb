@@ -15,6 +15,38 @@
 
   <div id="wrapper" class="wrapper">
 
+    <nav class="admin-nav group" role="navigation">
+      <ul>
+        <li class="publications-nav">
+          <ul>
+            <li>
+              <form method="GET" action="/admin">
+                <fieldset>
+                  <label for="user-filter" class="visuallyhidden">Filter by user</label>
+                  <%=
+                    select_tag("filter", options_for_select(
+                      [["All", "all"], ["Nobody", "nobody"]] +
+                      User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
+                    ), id: "user-filter")
+                  %>
+                  <input type="submit" value="Filter">
+                </fieldset>
+              </form>
+            </li>
+            <li><%= link_to 'All publications', admin_root_path %></li>
+            <li><%= link_to 'Sign out', gds_sign_out_path %></li>
+          </ul>
+        </li>
+        <li class="rarer-nav">
+          <ul>
+            <li><small><%= link_to 'Overview', admin_overview_path %></small></li>
+            <li><small><%= link_to 'Manage expectations', admin_expectations_path %></small></li>
+            <li><small><%= link_to 'View analytics', 'https://www.google.com/analytics/web/#dashboard/default/a26179049w50705554p51337955/' %></small></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
     <div class="content" role="main">
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
         <p class="flash-<%= k %>">
@@ -22,16 +54,15 @@
         </p>
       <% end %>
 
-      <% unless current_page?(admin_root_path)%>
-        <p class="return"><%= link_to 'Return to dashboard', admin_root_path %></p>
-      <% end %>
-
       <%= yield %>
 
-      <script type="text/javascript" charset="utf-8">
-        var panoption_host = '<%= PANOPTICON_HOST %>';
-      </script>
-      <%= javascript_include_tag '/guide-assets/javascripts/application.js', '/javascripts/libs/jquery/plugins/jquery.mustache.js', '/guide-assets/javascripts/form-tools.js', '/guide-assets/javascripts/jquery.tablesorter.min.js', '/javascripts/publisher-tabs.js' %>
+      <%= javascript_include_tag(
+            '/publisher-assets/javascripts/application.js',
+            '/javascripts/libs/jquery/plugins/jquery.mustache.js',
+            '/publisher-assets/javascripts/form-tools.js',
+            '/javascripts/libs/jquery/plugins/jquery.tablesorter.min.js',
+            '/javascripts/publisher-tabs.js'
+          ) %>
       <%= yield :extra_javascript %>
 
     </div>

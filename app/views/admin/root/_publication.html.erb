@@ -1,17 +1,17 @@
-<tr>
+<tr class="<%= status_class_for(publication) %>">
   <td>
     <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
-  <td class="<%= publication.class.name.downcase %>">
-    <% if tab && tab == :published %>
+  <td class="title">
+    <% if tab && tab == :published || tab == :archived %>
       <%= publication.published_edition.admin_list_title %>
     <% else %>
       <%= publication.latest_edition.admin_list_title %>
     <% end %>
     <span class="version">
-    <% if tab && tab == :published %>
-      (v.<%= publication.published_edition.version_number %>)
-      <% if publication.has_drafts %>
+    <% if tab && tab == :published || tab == :archived %>
+      (v.<%= (tab == :published) ? publication.published_edition.version_number : publication.archived_editions.map(&:version_number).join(', ') %>)
+      <% if publication.has_draft? %>
         (v.<%= publication.latest_edition.version_number %> in draft)
       <% end%>
     <% else %>
@@ -19,16 +19,41 @@
     <% end %>
     </span>
   </td>
-  <td class="updated">
-    <%= publication.updated_at.strftime("%d/%m/%Y %H:%M") %>
-  </td>
   <td>
-    <%= publication.latest_edition.created_by %>
+    <% if publication.has_video? %>
+      <%= image_tag "/images/icon-publisher-video.png", :alt => "Has video"  %>
+    <% end %>
   </td>
+  <td class="updated">
+    <%= timestamp(publication.updated_at) %>
+  </td>
+  <% if tab && tab == :fact_check %>
+  <td>
+    <%= timestamp(publication.latest_edition.last_fact_checked_at) %>
+  </td>
+  <% end %>
+  <td>
+    <%= publication.latest_edition.assigned_to %>
 
-    <% if tab && tab == :published %>
+    <% if tab && tab == :lined_up %>
+    <%= link_to publication.latest_edition.assigned_to ? ' (change)' : 'assign', [:admin, publication] %>
+    <% end %>
+  </td>
+    <% unless tab && tab == :lined_up %>
     <td>
-      <%= publication.published_edition.published_by %>
+      <%= publication.latest_edition.created_by %>
+    </td>
+    <% end %>
+    <td>
+      <%= publication.section %>
+    </td>
+  <td>
+    <%= publication.rejected_count %> /
+    <%= publication.edition_rejected_count %>
+  </td>
+    <% if tab && tab == :published || tab == :archived %>
+    <td>
+      <%= (tab == :published) ? publication.published_edition.published_by : publication.last_archived_edition.archived_by %>
     </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
@@ -40,16 +65,12 @@
     </td>
     <% end %>
   <td>
-    <% if publication.can_destroy? %>
-    <span class="confirm">
-      <%= form_tag [:admin,publication], :method => :delete do %>
-        <%= image_submit_tag '/images/icon-publisher-delete.png', :alt => 'Delete this publication', :title => 'Delete this publication' %>
+    <% if tab && tab == :lined_up %>
+      <%= form_tag start_work_path(publication.latest_edition) do %>
+        <%= hidden_field_tag :start_work, 1 %>
+        <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => 'Start work on this #{publication.class.to_s.humanize)}', :class => 'start-work' %>
       <% end %>
-    </span>
-    <% end %>
-  </td>
-  <td>
-    <% if publication.can_create_new_edition? %>
+    <% elsif tab and (tab == :published or tab == :archived) and publication.can_create_new_edition? %>
       <%= form_tag admin_editions_path(publication) do %>
         <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
       <% end %>
@@ -64,7 +85,7 @@
     <% end %>
   </td>
   <td>
-    <% if safe_to_preview?(publication) %>
+    <% if publication.safe_to_preview? %>
       <%= link_to preview_edition_path(publication.latest_edition), {:class => 'preview'} do %>
         <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
       <% end %>

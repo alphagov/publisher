@@ -1,46 +1,37 @@
-<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @local_transaction.title %>&rdquo;</h2>
-<% if @latest_edition.in_review? %>
-  <%= render '/admin/guides/review' %>
-<% end %>
-<div id="guide-controls">
-  <!-- <p><a href="#" class="external">Formatting help</a></p> -->
-  <span class="workflow_buttons">
+<h2>Viewing Edition <%= @latest_edition.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
+<p>Status: <%= @latest_edition.capitalized_state_name %></p>
 
-  <!-- Fake save button -->
-  <form id="save-edition" class="button_to">
-  <input type="submit" value="Save" class="update">
-  </form>
-
-  <%= progress_buttons(@local_transaction,@latest_edition) %>
-  <%= preview_button(@latest_edition) %>
-  </span>
-  <%= progress_forms(@local_transaction,@latest_edition) %>
-</div>
+<%= render 'admin/shared/review_or_fact_check' %>
+<%= render 'admin/shared/workflow_buttons' %>
 
 <div id="local_transaction-nav" class="publication-nav">
   <ul>
     <li><a href="#edit">Edit</a></li>
     <li><a href="#metadata">Metadata</a></li>
-    <li><a href="#history">History</a></li>
+    <li><a href="#history">History &amp; Notes</a></li>
     <li><a href="#providers">Service Providers</a></li>
+    <li><a href="#admin">Admin</a></li>
   </ul>
   <div id="edit">
     <%= render '/admin/local_transactions/edit' %>
   </div>
   <div id="metadata">
-    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @local_transaction} %>
+    <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
   </div>
   <div id="history">
-    <%= render :partial => '/admin/shared/history', :locals => {:publication => @local_transaction} %>
+    <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
   </div>
   <div id="providers">
     <ul>
-    <%- @local_transaction.lgsl.authorities.each do |authority| -%>
+    <%- @resource.lgsl.authorities.each do |authority| -%>
       <li><%= authority.name %></li>
     <%- end -%>
     </ul>
   </div>
+  <div id="admin">
+    <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+  </div>
 </div>
 
-<% content_for :extra_javascript, javascript_include_tag('/guide-assets/javascripts/publications') %>
-<% content_for :page_title, "Editing #{@local_transaction.title}" %>
+<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications') %>
+<% content_for :page_title, "Editing #{@resource.title}" %>

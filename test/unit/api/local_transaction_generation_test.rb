@@ -18,15 +18,11 @@ class LocalTransactionGenerationTest < ActiveSupport::TestCase
   end
 
   def generated(*args)
-    Api::Generator::LocalTransaction.edition_to_hash(@edition, *args)
+    Api::Generator::edition_to_hash(@edition, *args)
   end
 
   test "generated hash has slug" do
     assert_equal "test_slug", generated['slug']
-  end
-
-  test "generated hash has tags" do
-    assert_equal "tag, other", generated['tags']
   end
 
   test "generated hash has the edition's title" do

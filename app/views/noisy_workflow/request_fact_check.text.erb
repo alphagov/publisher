@@ -1,0 +1,23 @@
+Hello,
+
+Please check the following item for factual accuracy:
+
+Title: <%= @edition.title %>
+<%= "#{Plek.current.find("publication-preview")}/#{@edition.container.slug}?edition=#{@edition.version_number}" %>
+
+If you spot something that's factually incorrect reply to this email with your comments:
+
+- directing us to any specific instances, e.g. part 2, subheading 3
+- explaining what the problem is, e.g. the text implies a legal obligation, when there isn't one
+
+Please don't rewrite the text - just point out any factual errors.  We will rewrite accordingly.
+
+Please respond within five working days.  If we don't hear from you, we will assume you are happy with the content's accuracy.
+
+If you've forgotten your username and password, please email accounts@alphagov.co.uk.
+
+PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: <%= @edition.fact_check_email_address %>
+
+
+Thanks,
+Gov.UK editorial team

@@ -1,0 +1,15 @@
+<% if (!row.nil?) %>
+    <tr class="<%= (is_total_row?(row)) ? 'total_row' : '' %>">
+        <th scope="row"><%= format_group_name row[:result_group] %></th>
+        <td><%= row[:lined_up] %></td>
+        <td><%= row[:draft] %></td>
+        <td><%= row[:amends_needed] %></td>
+        <td><%= row[:in_review] %></td>
+        <td><%= row[:ready] %></td>
+        <td><%= row[:fact_check_received] %></td>
+        <td><%= row[:fact_check] %></td>
+        <td><%= row[:published] %></td>
+        <td><%= row[:archived] %></td>
+        <td class="total"><%= row[:count] %></td>
+    </tr>
+<% end %>

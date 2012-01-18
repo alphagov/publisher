@@ -6,3 +6,7 @@ tmp/
 .autotest
 coverage
 test/reports
+.generators
+.rakeTasks
+*iml
+*.daemonette-dump

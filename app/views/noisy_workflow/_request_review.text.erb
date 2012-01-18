@@ -1,0 +1,8 @@
+Please review "<%= @publication.title %>" (<%= @publication.class.to_s.humanize %>)
+
+Comment: <%= @action.comment %>
+
+Requested by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+
+View:
+<%= "#{Plek.current.find("publication-preview")}/#{@action.edition.container.slug}?edition=#{@action.edition.version_number}" %>

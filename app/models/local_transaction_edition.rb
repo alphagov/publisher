@@ -8,10 +8,6 @@ class LocalTransactionEdition < Edition
 
   @fields_to_clone = [:introduction, :more_information, :minutes_to_complete, :expectation_ids]
 
-  def admin_list_title
-    "#{title} (LGSL #{local_transaction.lgsl_code}) [#{local_transaction.lgsl.authorities.count}]"
-  end
-
   def container
     self.local_transaction
   end

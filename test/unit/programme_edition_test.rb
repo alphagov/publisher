@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProgrammeTest < ActiveSupport::TestCase
+class ProgrammeEditionTest < ActiveSupport::TestCase
   def template_programme
     g = Programme.new(:slug=>"childcare", :name=>"Something")
     edition = g.editions.first

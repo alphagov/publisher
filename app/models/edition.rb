@@ -1,6 +1,5 @@
 class Edition
   include Mongoid::Document
-
   include Workflow
 
   field :version_number, :type => Integer, :default => 1
@@ -12,43 +11,37 @@ class Edition
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []
 
-  validate :not_editing_published_item
-
   alias_method :admin_list_title, :title
+  before_save :update_container_timestamp
 
-  def not_editing_published_item
-    errors.add(:base, "Published editions can't be edited") if changed? and is_published?
+  def fact_check_id
+    [ container.id.to_s, id.to_s, version_number ].join '/'
   end
 
-  def calculate_statuses
-    self.container.calculate_statuses
+  def fact_check_email_address
+    "factcheck+#{Plek.current.environment}-#{container.id}@alphagov.co.uk"
+  end
+  
+  def last_fact_checked_at
+    last_fact_check = actions.reverse.find(&:is_fact_check_request?)
+    last_fact_check ? last_fact_check.created_at : NullTimestamp.new
   end
 
   def build_clone
-    new_edition = self.container.build_edition(self.title)
+    new_edition = container.build_edition(self.title)
+    real_fields_to_merge = self.class.fields_to_clone + [:overview, :alternative_title]
 
-    self.class.fields_to_clone.each do |attr|
-      new_edition.send("#{attr}=", self.send(attr))
+    real_fields_to_merge.each do |attr|
+      new_edition.send("#{attr}=", read_attribute(attr))
     end
 
     new_edition
   end
 
-  def publish(edition,notes)
-    self.container.publish(edition,notes)
-  end
-
-  def is_published?
-    container.publishings.any? { |p| p.version_number == self.version_number }
-  end
-  
-  def created_by
-    creation = actions.detect { |a| a.request_type == Action::CREATED || a.request_type == Action::NEW_VERSION }
-    creation.requester if creation
-  end
-  
-  def published_by
-    publication = actions.detect { |a| a.request_type == Action::PUBLISHED }
-    publication.requester if publication
+  def update_container_timestamp
+    if self.container.created_at
+      container.updated_at = Time.now
+      container.save
+    end
   end
 end

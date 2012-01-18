@@ -1,31 +1,19 @@
-<div class="ui-widget-content new">
-  <div class="inner">
+<h2>New Local Transaction</h2>
 
-    <h1>Create new local transaction</h1>
+<p>We need a bit more information to create your local transaction.</p>
 
-    <p class="intro">Required fields are <strong>bold</strong>.</p>
-
-    <%= semantic_form_for [:admin, @local_transaction] do |f| %>
-      <%= f.inputs do %>
-        <%= f.input :name,      :hint => true, :input_html => {:autofocus => true} %>
-        <%= f.input :lgsl_code, :hint => true, :label => "LGSL code" %>
-        <%= f.input :slug,      :hint => true %>
-        <%= f.input :tags,      :hint => true %>
-      <% end %>
-
-      <%= f.buttons %>
-    <% end %>
-
-    
-  </div>
-</div>
-
-<% content_for :extra_javascript do %>
-<%= javascript_include_tag('/guide-assets/javascripts/publications') %>
-<script type="text/javascript" charset="utf-8">
-  $(function () {
-    $('#local_transaction_name').hasSlugField({field: $('#local_transaction_slug')});
-  });
-</script>
+<% if @publication.errors.any? %>
+<p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
 <% end %>
-<% content_for :page_title, "Create new Local Transaction" %>
+
+<%= semantic_form_for([:admin, @publication]) do |f| %>
+  <%= f.inputs :lgsl_code %>
+  <%= f.inputs do %>
+    <%= f.input :panopticon_id, :as => :hidden %>
+    <%= f.input :name, :as => :hidden %>
+    <%= f.input :slug, :as => :hidden %>
+    <%= f.input :section, :as => :hidden %>
+    <%= f.input :department, :as => :hidden %>
+  <% end %>
+  <%= f.buttons %>
+<% end %>

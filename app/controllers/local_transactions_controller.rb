@@ -4,15 +4,13 @@ class LocalTransactionsController < ApplicationController
   respond_to :json
 
   def verify_snac
-    publication = Publication.first(conditions: {slug: params[:id]})
+    publication = Publication.where(slug: params[:id]).first
     head 404 and return if publication.nil?
 
-    snac_codes = params[:snac_codes]
-    verified_codes = snac_codes.collect do |snac|
-      snac if publication.verify_snac(snac)
-    end.compact
-    if verified_codes.first
-      render :json => {'snac' => verified_codes.first}
+    matching_code = params[:snac_codes].detect { |snac| publication.verify_snac(snac) }
+
+    if matching_code
+      render :json => { snac: matching_code }
     else
       render :text => '', :status => 422
     end

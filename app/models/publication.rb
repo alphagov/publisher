@@ -1,147 +1,211 @@
+require 'rest_client'
+require 'marples/model_action_broadcast'
+
 class Publication
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Marples::ModelActionBroadcast
 
-  field :name,            :type => String
-  field :slug,            :type => String
-  field :tags,            :type => String
-  field :audiences,       :type => Array
+  class CannotDeletePublishedPublication < RuntimeError;
+  end
 
-  field :has_drafts,      :type => Boolean
-  field :has_published,   :type => Boolean
-  field :has_reviewables, :type => Boolean
-  field :archived,        :type => Boolean
+  field :panopticon_id, :type => Integer
 
-  field :section,        :type => String
-  field :related_items,   :type => String
-  
+  field :name, :type => String
+  field :slug, :type => String
+  field :section, :type => String
+  field :department, :type => String
+
+  field :rejected_count, :type => Integer, default: 0
+  field :edition_rejected_count, :type => Integer, default: 0
+
   embeds_many :publishings
 
-  scope :in_draft,         where(has_drafts: true)
-  scope :published,        where(has_published: true)
-  scope :review_requested, where(has_reviewables: true)
-  scope :archive,          where(archived: true)
+  scope :lined_up,            where('editions.state' => 'lined_up')
+  scope :draft,               where('editions.state' => 'draft')
+  scope :amends_needed,       where('editions.state' => 'amends_needed')
+  scope :in_review,           where('editions.state' => 'in_review')
+  scope :fact_check,          where('editions.state' => 'fact_check')
+  scope :fact_check_received, where('editions.state' => 'fact_check_received')
+  scope :ready,               where('editions.state' => 'ready')
+  scope :published,           where('editions.state' => 'published')
+  scope :archived,            where('editions.state' => 'archived')
+  scope :assigned_to,         lambda { |user| user.nil? ? where(:"editions.assigned_to_id".exists => false) : where('editions.assigned_to_id' => user.id) }
+
+  index "editions.assigned_to_id"
 
   after_initialize :create_first_edition
 
-  before_save :calculate_statuses
-
-  validates_presence_of :name
-  validates :slug, :presence => true, :uniqueness => true, :panopticon_slug => { :if => proc { |p| p.slug_changed? } }
+  before_destroy :check_can_delete_and_notify
+  after_destroy :remove_from_search_index
 
   accepts_nested_attributes_for :editions, :reject_if => proc { |a| a['title'].blank? }
 
+  # map each edition state to a "has_{state}?" method
+  Edition.state_machine.states.map(&:name).each do |state|
+    define_method "has_#{state}?" do
+      (self.editions.where(state: state).count > 0)
+    end
+  end
+
+  def format_type
+    self.class.name.to_s
+  end
+
+  def self.create_from_panopticon_data(panopticon_id, importing_user)
+    require 'gds_api/panopticon'
+    api = GdsApi::Panopticon.new(Plek.current.environment, PANOPTICON_API_CREDENTIALS)
+    metadata = api.artefact_for_slug(panopticon_id)
+    raise "Artefact not found" if metadata.nil?
+
+    existing_publication = Publication.where(panopticon_id: metadata.id).first
+    if existing_publication.present?
+      existing_publication.update_attribute(:panopticon_id, metadata.id)
+      return existing_publication
+    end
+
+    importing_user.create_publication(metadata.kind.to_sym, :panopticon_id => metadata.id, :name => metadata.name,
+      :slug => metadata.slug, :title => metadata.name)
+  end
+
+  def self.find_and_identify_edition(slug, edition)
+    publication = where(slug: slug).first
+    return nil if publication.nil?
+    if edition.present?
+      # This is used for previewing yet-to-be-published editions.
+      # At some point this should require special authentication.
+      if edition == "latest"
+        publication.editions.order_by(:created_at => :desc).first
+      else
+        publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
+      end
+    else
+      # Shows any editions, regardless of state
+      # To show only published editions, change the following line to `publication.published_edition`
+      publication.latest_edition
+    end
+  end
+
+  def panopticon_uri
+    Plek.current.find("arbiter") + '/artefacts/' + (panopticon_id || slug).to_s
+  end
+
+  def meta_data
+    PublicationMetadata.new self
+  end
+
   def build_edition(title)
-    version_number = self.editions.length + 1
-    edition = self.class.edition_class.new(:title=> title, :version_number=>version_number)
-    self.editions << edition
-    calculate_statuses
+    version_number = editions.length + 1
+    edition = editions.create(:title=> title, :version_number=>version_number, :state=>'draft')
     edition
   end
 
   def create_first_edition
     unless self.persisted? or self.editions.any?
-      self.editions << self.class.edition_class.new(:title => self.name)
-      calculate_statuses
+      self.editions << self.class.edition_class.new(:title => self.name, :state => 'lined_up')
     end
   end
 
-  def calculate_statuses
-    self.has_published = self.publishings.any? && ! self.archived
+  def mark_as_rejected
+    self.inc(:edition_rejected_count, 1)
+    self.inc(:rejected_count, 1)
+  end
 
-    published_versions = ::Set.new(publishings.map(&:version_number))
-    all_versions = ::Set.new(editions.map(&:version_number))
-    drafts = (all_versions - published_versions)
-    self.has_drafts = drafts.any?
-
-    self.has_reviewables = editions.any? {|e| e.latest_action && e.latest_action.request_type == Action::REVIEW_REQUESTED }
-
-    true
+  def mark_as_accepted
+    self.update_attribute(:edition_rejected_count, 0)
   end
 
   def publish(edition, notes)
-    self.publishings << Publishing.new(:version_number=>edition.version_number,:change_notes=>notes)
-    calculate_statuses
+    publishings.create version_number: edition.version_number, change_notes: notes
+    update_in_search_index
   end
 
   def published_edition
-    latest_publishing = self.publishings.first
-    if latest_publishing
-      self.editions.first {|s| s.version_number == latest_publishing.version_number }
-    else
-      nil
-    end
+    latest_publishing = self.editions.where(state: 'published').sort_by(&:version_number).last
+  rescue
+    nil
+  end
+
+  def actions
+    self.editions.all.map{ |edition| edition.actions }
+  end
+
+  def archived_editions
+    self.editions.where(state: 'archived').sort_by(&:version_number)
+  end
+
+  def last_archived_edition
+    last_archived_edition = archived_editions.last
+  rescue
+    nil
   end
 
   def can_create_new_edition?
-    return !self.has_drafts
+    !self.has_draft?
   end
 
   def can_destroy?
-    return !self.has_published
+    !self.has_published?
+  end
+
+  def has_video?
+    false
+  end
+
+  def safe_to_preview?
+    true
   end
 
   def latest_edition
-    self.editions.sort_by(&:created_at).last
+    self.editions.sort_by(&:version_number).last
+  rescue
+    nil
   end
 
   def title
     self.name || latest_edition.title
   end
 
-  AUDIENCES = [
-    "Age-related audiences",
-    "Carers",
-    "Civil partnerships",
-    "Crime and justice-related audiences",
-    "Disabled people",
-    "Employment-related audiences",
-    "Family-related audiences",
-    "Graduates",
-    "Gypsies and travellers",
-    "Horse owners",
-    "Intermediaries",
-    "International audiences",
-    "Long-term sick",
-    "Members of the Armed Forces",
-    "Nationality-related audiences",
-    "Older people",
-    "Partners of people claiming benefits",
-    "Partners of students",
-    "People of working age",
-    "People on a low income",
-    "Personal representatives (for a deceased person)",
-    "Property-related audiences",
-    "Road users",
-    "Same-sex couples",
-    "Single people",
-    "Smallholders",
-    "Students",
-    "Terminally ill",
-    "Trustees",
-    "Veterans",
-    "Visitors to the UK",
-    "Volunteers",
-    "Widowers",
-    "Widows",
-    "Young people"
-  ]
-  SECTIONS = [
-    'Rights',
-    'Justice',
-    'Education and skills',
-    'Work',
-    'Family',
-    'Money',
-    'Taxes',
-    'Benefits and schemes',
-    'Driving', 
-    'Housing',
-    'Communities',
-    'Pensions',
-    'Disabled people',
-    'Travel',
-    'Citizenship'
-  ]
+  def indexable_content
+    published_edition ? published_edition.alternative_title : ""
+  end
 
+  def search_format
+    _type.downcase
+  end
+
+  def search_index
+    {
+      "title" => title,
+      "link" => "/#{slug}",
+      "section" => section ? section.parameterize : nil,
+      "format" => search_format,
+      "description" => (published_edition && published_edition.overview) || "",
+      "indexable_content" => indexable_content,
+    }
+  end
+
+  def self.search_index_all
+    all.map(&:search_index)
+  end
+
+private
+  def check_can_delete_and_notify
+    if !self.can_destroy?
+      raise CannotDeletePublishedPublication
+      false
+    end
+  end
+
+  def update_in_search_index
+    Rummageable.index self.search_index
+  end
+
+  def remove_from_search_index
+    Rummageable.delete "/#{slug}"
+  end
+
+  def govspeak_to_text(s)
+    Govspeak::Document.new(s).to_text
+  end
 end

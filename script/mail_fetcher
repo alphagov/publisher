@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+# Check all emails in the gmail inbox. Find any sent to an address matching the pattern
+# factcheck+{rails_environment}-#{publication_id}@alphagov.co.uk
+#
+# Any messages successfully processed will be moved out of the inbox. Others are left
+# there, so we can review that messages are getting processed properly by going into the
+# gmail account and having a look.
+#
+require File.expand_path('../../config/environment',  __FILE__)
+require File.expand_path("../../lib/lockfile_ext", __FILE__)
+
+begin
+  Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
+    require 'mail'
+    require Rails.root.join("config/fact_check_account")
+    require 'fact_check_email_handler'
+
+    Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+
+    handler = FactCheckEmailHandler.new
+    handler.process
+    
+    if handler.errors.any?
+      NoisyWorkflow.report_errors(handler.errors).deliver
+    end
+
+    Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"
+  end
+rescue Lockfile::MaxTriesLockError => e
+  Rails.logger.info "Another email fetcher is already running. Exiting."
+end
