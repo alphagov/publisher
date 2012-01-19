@@ -76,11 +76,13 @@ class GuideAssignmentTest < ActionDispatch::IntegrationTest
 
     select "Alice", from: "Assigned to"
     click_on "Save"
+
     wait_until { page.has_content? "successfully updated" }
     guide.reload
     assert guide.has_lined_up?
 
     visit "/admin"
+    click_on "Lined up (1)"
     click_on "Start work"
     wait_until { page.has_content? "Work started" }
     guide.reload
