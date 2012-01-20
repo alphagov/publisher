@@ -28,14 +28,29 @@ class GuideTest < ActiveSupport::TestCase
     assert !g.has_published?
   end
 
-  test "struct for search index" do
+  test "search_index structure is correct" do
     guide = template_guide
     data = guide.search_index
-    assert_equal ["title", "link", "section", "format", "description", "indexable_content", "additional_links"], data.keys
+    assert_equal [
+      "title", "link", "section", "subsection", "format", 
+      "description", "indexable_content", "additional_links"].sort, data.keys.sort
     assert_equal guide.title, data['title']
     assert_equal "guide", data['format']
   end
 
+  test "section name is normalized" do
+    guide = template_guide
+    guide.section = "Cats and Dogs"
+    assert_equal "cats-and-dogs", guide.search_index['section']
+  end
+
+  test "subsection field of search_index is populated by splitting section on colon" do
+    guide = template_guide
+    guide.section = "Crime and Justice:Prison"
+    assert_equal 'crime-and-justice', guide.search_index['section']
+    assert_equal 'prison', guide.search_index['subsection']
+  end
+  
   test "indexable content contains parts for search index" do
     guide = template_guide
     edition = guide.latest_edition
