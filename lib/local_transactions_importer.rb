@@ -45,9 +45,10 @@ class LocalTransactionsImporter
 
   def run
     source = LocalTransactionsSource.create
-
+    puts "Starting import"
     CSV.new(io, headers: true).each do |row|
       begin
+        puts "Processing SNAC #{row['SNAC']}, LGSL #{row['LGSL']}, LGIL #{row['LGIL']} (LA: #{row['Authority Name']})"
         unless seen_authorities.include?(row['SNAC'])
           ensure_authority(row)
           seen_authorities << row['SNAC']
