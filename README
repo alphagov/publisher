@@ -32,4 +32,4 @@ The source data can be found at http://local.direct.gov.uk/Data/local_authority_
 
 They can be imported using a rake task:
 
-  bundle exec rake local_transactions:import FILE=/path/to/local_authority_service_details.CSV
+  bundle exec rake local_transactions:import SOURCE=/path/to/local_authority_service_details.CSV
