@@ -27,20 +27,20 @@ class LocalTransactionsSource
         authority_cache = {}
         lgsl_cache = {}
         begin
-          unless lgsl = lgsl_cache[row['lgsl'].to_s]
-            lgsl = source.lgsls.find_or_create_by(code: row['lgsl'].to_s)
-            lgsl_cache[row['lgsl'].to_s] = lgsl
+          unless lgsl = lgsl_cache[row['LGSL'].to_s]
+            lgsl = source.lgsls.find_or_create_by(code: row['LGSL'].to_s)
+            lgsl_cache[row['LGSL'].to_s] = lgsl
           end
-          unless authority = authority_cache[row['snac']]
-            authority = lgsl.authorities.find_or_initialize_by(snac: row['snac'])
-            authority_cache[row['snac']] = authority
+          unless authority = authority_cache[row['SNAC']]
+            authority = lgsl.authorities.find_or_initialize_by(snac: row['SNAC'])
+            authority_cache[row['SNAC']] = authority
           end
-          unless source_authority = source_authority_cache[row['snac']]
-            source_authority = ::Authority.where(snac: row['snac']).first
-            source_authority_cache[row['snac']] = source_authority
+          unless source_authority = source_authority_cache[row['SNAC']]
+            source_authority = ::Authority.where(snac: row['SNAC']).first
+            source_authority_cache[row['SNAC']] = source_authority
           end
           authority.name = source_authority.name unless source_authority.nil?
-          authority.lgils.build(code: row['lgil'].to_s, url: row['link'])
+          authority.lgils.build(code: row['LGIL'].to_s, url: row['Service URL'])
           lgsl.save!
         rescue => e
           puts "Failure at row:"

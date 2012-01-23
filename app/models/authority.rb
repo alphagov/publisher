@@ -11,18 +11,17 @@ class Authority
   validates_presence_of :snac, :agency_id, :name
 
   def self.populate_from_source!(io)
-    begin
-      CSV.new(io, headers: true).each do |row|
-        puts row
-        authority = Authority.find_or_initialize_by(snac: row['snac'])
-        authority.name = row['agency_name']
-        authority.agency_id = row['agency_id']
+    CSV.new(io, headers: true).each do |row|
+      begin
+        authority = Authority.find_or_initialize_by(snac: row['SNAC'])
+        authority.name = row['Authority Name']
+        authority.agency_id = row['LAid']
         authority.save!
+      rescue => e
+        puts "Failure at row:"
+        puts " * #{row.inspect}"
+        puts " * #{e.message}"
       end
-    rescue => e
-      puts "Failure at row:"
-      puts " * #{row.inspect}"
-      puts " * #{e.message}"
     end
   end
 end
