@@ -4,10 +4,7 @@ namespace :local_transactions do
 
     file = File.open(ENV['SOURCE'], 'r:Windows-1252:UTF-8')
 
-    puts "Importing authorities"
-    Authority.populate_from_source!(file)
-
-    puts "Importing sources"
-    LocalTransactionsSource.populate_from_source!(file)
+    l = LocalTransactionsImporter.new(file)
+    l.run
   end
 end
