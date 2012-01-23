@@ -33,18 +33,3 @@ The source data can be found at http://local.direct.gov.uk/Data/local_authority_
 They can be imported using a rake task:
 
   bundle exec rake local_transactions:import FILE=/path/to/local_authority_service_details.CSV
-
-== to make a new set of feeds ==
-
-* grab the .xls from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1523569.xls
-  and extract the second sheet to a CSV, named 'service_list.csv'
-* grab the CSV (which currently claims to be a .xls) from http://www.communities.gov.uk/documents/507390/localdirectgov/xls/1963339
-  and save it as council_name_to_snac.csv
-* grab the CSV from http://local.direct.gov.uk/Data/local_authority_service_details.csv
-
-run script/combine_lgd_data as follows:
-
-./script/combine_lgd_data local_authority_service_details.csv service_list.csv council_name_to_snac.csv
-
-This will create a file called 'local_transactions.csv'
-
