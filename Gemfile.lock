@@ -91,7 +91,7 @@ GEM
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (0.4.2)
+    gds-sso (0.4.3)
       oa-core (= 0.2.6)
       oa-oauth (= 0.2.6)
       oauth2 (= 0.4.1)
