@@ -80,9 +80,7 @@ class Publication
         publication.editions.select { |e| e.version_number.to_i == edition.to_i }.first
       end
     else
-      # Shows any editions, regardless of state
-      # To show only published editions, change the following line to `publication.published_edition`
-      publication.latest_edition
+      publication.published_edition
     end
   end
 
@@ -193,7 +191,7 @@ class Publication
   end
   
   def self.search_index_all
-    all.map(&:search_index)
+    published.map(&:search_index)
   end
 
 private
