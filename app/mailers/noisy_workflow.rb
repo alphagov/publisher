@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class NoisyWorkflow < ActionMailer::Base
-  default :from => "Winston (Gov.UK Publisher) <winston@alphagov.co.uk>"
+  default :from => "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   EMAIL_GROUPS = {
     'team' => 'govuk-team@digital.cabinet-office.gov.uk',
