@@ -64,7 +64,7 @@ end
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', :path => '../govspeak'
 else
-  gem 'govspeak', '0.8.7'
+  gem 'govspeak', '~> 0.8.7'
 end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
