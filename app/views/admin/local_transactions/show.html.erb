@@ -23,7 +23,7 @@
   </div>
   <div id="providers">
     <ul>
-    <%- @resource.lgsl.authorities.each do |authority| -%>
+    <%- @resource.service.provided_by.each do |authority| -%>
       <li><%= authority.name %></li>
     <%- end -%>
     </ul>

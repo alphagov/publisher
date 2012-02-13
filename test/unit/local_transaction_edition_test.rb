@@ -1,9 +1,12 @@
 require 'test_helper'
+require_relative 'helpers/local_services_helper'
 
 class LocalTransactionEditionTest < ActiveSupport::TestCase
+  include LocalServicesHelper
+  
   def local_transaction_edition
-    lgsl = LocalTransactionsSource::Lgsl.new()
-    lt = LocalTransaction.new(:name => "Transaction", :slug=>"transaction", :lgsl_code => "149", :lgsl => lgsl)
+    make_service(149, %w{county unitary})
+    lt = LocalTransaction.new(:name => "Transaction", :slug=>"transaction", :lgsl_code => "149")
     edition = lt.editions.first
     edition
   end

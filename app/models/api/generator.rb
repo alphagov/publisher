@@ -75,20 +75,21 @@ module Api
           :minutes_to_complete]
       end
 
-      def self.authority_to_json(la)
-        la.as_json(:only => [:snac, :name], :include => {:lgils => {:only => [:url, :code]}})
+      def self.authority_to_json(authority)
+        authority
+      end
+      
+      def self.interaction_to_json(interaction)
+        json = interaction.as_json(:only => [:lgsl_code, :lgil_code, :url])
+        json['authority'] = interaction.local_authority.as_json(:only => [:snac, :name, :tier])
+        json
       end
 
       def self.edition_to_hash(attrs, edition, options = {})
-        snac = options[:snac]
-        all  = options[:all]
-        if snac || all
-          las = edition.local_transaction.lgsl.authorities
-          if snac
-            attrs['authority'] = authority_to_json(las.where(snac: snac).first)
-          elsif all
-            attrs['authorities'] = authority_to_json(las.all)
-          end
+        if options[:snac]
+          service = edition.container.service
+          interaction = service.preferred_interaction(options[:snac])
+          attrs['interaction'] = interaction_to_json(interaction)
         end
         attrs
       end

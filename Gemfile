@@ -26,6 +26,7 @@ gem 'plek', '~> 0'
 gem 'pethau', '0.0.3'
 gem 'gelf'
 gem 'graylog2_exceptions'
+gem 'rest-client'
 
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'
@@ -96,4 +97,5 @@ group :test do
   gem 'launchy'
   gem 'factory_girl_rails'
   gem 'faker'
+  gem 'shoulda'
 end

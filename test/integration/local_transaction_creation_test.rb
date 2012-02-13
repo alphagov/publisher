@@ -3,9 +3,8 @@ require 'integration_test_helper'
 
 class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
   setup do
-    current = LocalTransactionsSource.create
-    current_lgsl = current.lgsls.create(code: "1")
-    current_lgsl.authorities.create(snac: 'ABCDE')
+    LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
+    LocalAuthority.create(snac: 'ABCDE')
   end
 
   test "creating a local transaction from panopticon requests an LGSL code" do

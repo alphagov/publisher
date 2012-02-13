@@ -1,17 +1,10 @@
 class LocalTransaction < Publication
   embeds_many   :editions,  class_name: 'LocalTransactionEdition', inverse_of: :local_transaction
-  referenced_in :lgsl,      class_name: "LocalTransactionsSource::Lgsl"
 
-  field         :lgsl_code, type: String
+  field         :lgsl_code, type: Integer
 
   validates_presence_of :lgsl_code
-  validates_presence_of :lgsl, :on => :create
-
-  set_callback :validation, :before do |local_transaction|
-    unless local_transaction.persisted? or lgsl_code.blank?
-      local_transaction.lgsl = LocalTransactionsSource.find_current_lgsl(local_transaction.lgsl_code)
-    end
-  end
+  validate      :valid_lgsl_code
 
   def self.edition_class
     LocalTransactionEdition
@@ -20,8 +13,19 @@ class LocalTransaction < Publication
   def search_format
     "transaction"
   end
+  
+  def service
+    LocalService.find_by_lgsl_code(lgsl_code)
+  end
 
-  def verify_snac(snac)
-    !lgsl.authorities.where(snac: snac).empty?
+  def service_provided_by?(snac)
+    authority = LocalAuthority.find_by_snac(snac)
+    authority && authority.provides_service?(lgsl_code)
+  end
+  
+  def valid_lgsl_code
+    if ! LocalService.find_by_lgsl_code(lgsl_code)
+      errors.add(:lgsl_code, "Invalid LGSL Code: '#{lgsl_code}'")
+    end
   end
 end

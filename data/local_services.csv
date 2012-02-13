@@ -1,0 +1,254 @@
+LGSL,Description,Providing Tier
+1,Find out about educating your child at home,county/unitary
+2,Find out about help with school clothing costs,county/unitary
+3,Find out about home to school travel support,county/unitary
+4,Find out about free school meals,county/unitary
+9,Find out about an assessment of special educational needs,county/unitary
+11,Find out about disabled students allowance,county/unitary
+12,Find out about nursery school places,county/unitary
+13,Find out about primary school places,county/unitary
+14,Find out about secondary school places,county/unitary
+18,Find out about school holiday schemes,all
+19,Find out about after/before school childcare,county/unitary
+25,Find out more about student loans,county/unitary
+29,Find out about school governors,county/unitary
+34,Find out about pupil exclusions from school,county/unitary
+35,Find out about school truancy,county/unitary
+36,Find out school term dates,county/unitary
+37,Find out more about school meals,county/unitary
+40,Find out abut school transport for a child with special educational needs,county/unitary
+47,Find out about local organisations for students,county/unitary
+48,Find out about performance/stage licences for school age children,county/unitary
+51,Find out about instrumental tuition in schools,county/unitary
+57,Find out more about  council tax,district/unitary
+58,Find out about your council tax account,district/unitary
+59,Find out about discounts on council tax,district/unitary
+60,Find out about exemptions from council tax,district/unitary
+61,Find out about council tax band reductions,district/unitary
+62,Find out about backdating of council tax benefit claims,district/unitary
+63,Find out about council tax benefit,district/unitary
+64,Find out about changes in circumstances which affect council tax benefit claims,district/unitary
+65,Find out about appeals relating to council tax benefit decisions,district/unitary
+68,Find out about backdating of housing benefit claims,district/unitary
+69,Find out about housing benefit,district/unitary
+70,Find out about changes in circumstances which affect housing benefit claims,district/unitary
+72,Find out about appeals relating to housing benefit decisions,district/unitary
+85,Find out about 'Hard to Let' council properties,district/unitary
+87,Find out about Housing Association homes,district/unitary
+88,Find out about mutual council home exchange,district/unitary
+90,Find out about appealing against  a rehousing decision,district/unitary
+92,Find out about applying for a council home,district/unitary
+97,Find out about support for council tenants who are victims of crime,district/unitary
+98,Find out about support for council tenants who are victims of nuisance,district/unitary
+99,Find out about community safety on council estates,district/unitary
+101,Find out about squatters and unauthorised occupants in council property,district/unitary
+108,Find out about help from the council for private tenants,district/unitary
+109,Find out about advice for council tenants,district/unitary
+112,Find out about advice for homeless people,district/unitary
+114,Find out about parking on council estates,district/unitary
+115,Find out about renting a council garage,district/unitary
+116,Find out about rent arrears on a council tenancy,district/unitary
+117,Find out about eviction from council housing,district/unitary
+120,Find out about council housing rents,district/unitary
+122,Find out about communal heating charges for council properties,district/unitary
+123,Find out about home insurance for council tenants,district/unitary
+124,Find out about making insurance claims against the council,district/unitary
+129,Find out about the modernisation of council properties,district/unitary
+130,Find out about adaptions to council properties for people with mobility problems,district/unitary
+135,Find out about home improvement renovation grants,district/unitary
+137,Find out about the Disability Facility Grant,district/unitary
+139,Find out about emergency out of hours repairs to council homes,district/unitary
+140,Find out about repairs to communal areas of council properties,district/unitary
+141,Find out about repairs to council properties,district/unitary
+143,Find out about decoration and disturbance allowances for council tenants,district/unitary
+146,Find out about council home repairs,district/unitary
+147,Find out about garden maintenance for elderly or disabled council tenants,district/unitary
+149,Find out about council rent inspections of shared accommodation,district/unitary
+150,Find out about council safety inspections of homes in multiple occupation,district/unitary
+151,Find out about the right to buy scheme,district/unitary
+156,Find out about council repairs of communal areas (for leaseholders),district/unitary
+159,Find out about fostering a child,county/unitary
+160,Find out about adopting a child,county/unitary
+169,Find out about the council's interpreting and translation service,all
+175,Find out about parenting orders,county/unitary
+178,Find out about equipment and adaptions to the home for disabled people,county/unitary
+204,Find out about rehabilitation  to help recovery following illness or injury,county/unitary
+209,Find out about a needs assessment by social services,county/unitary
+225,Find out about advice and support for adult carers,county/unitary
+227,Find out about short term breaks for carers,county/unitary
+230,Find out about sheltered and supported housing,all
+242,Find out about care in your own home,county/unitary
+260,Find out about short term breaks for carers of children,county/unitary
+263,Find out about residential care for children,county/unitary
+269,Find out about the keeping warm in winter service,county/unitary
+272,Find out about community transport schemes,district/unitary
+273,Find out about older person's bus pass,all
+274,Find out about parking bays for registered disabled drivers,county/unitary
+279,Find out about Blue Badge parking permits,county/unitary
+280,Find out about the disabled person's bus pass,all
+287,Find out about direct payments,county/unitary
+292,Find out more about residential care,county/unitary
+296,Find out about day centres,county/unitary
+297,Find out about local support groups and organisations,all
+298,Find out about local carer support groups and organisations,all
+300,Find out about advice and support for young carers,county/unitary
+313,Find out about community alarm services,district/unitary
+315,Find out about mobile meals service,county/unitary
+317,Find out about civil marriage ceremonies,county/unitary
+319,Find out about registering a birth,county/unitary
+322,Find out about registering a still birth,county/unitary
+323,Find out about searching for a birth certificate,county/unitary
+324,Find out about searching for a death certificate,county/unitary
+328,Find out about the bereavement service,district/unitary
+329,Find out about a community funeral service,district/unitary
+330,Find out about cremation,district/unitary
+331,Find out about funeral expenses,district/unitary
+333,Find out about buying a grave plot,district/unitary
+335,Find out about burial and grave details,district/unitary
+337,Find out about jobs at your local council,all
+353,Find out about complaints procedure,all
+354,"Search council minutes, agendas and reports",all
+355,Find out about councillors declaration of interest,all
+357,Find out about councillor advice surgeries,all
+358,Find out about your local councillors,all
+359,Find out local council news,all
+361,Find out about proxy votes,district/unitary
+362,Find out about elections,district/unitary
+364,Find out more about the electoral register,district/unitary
+372,Find out about abandoned vehicles,district/unitary
+399,Find out about illegal street trading,district/unitary
+412,Find out about noise nuisance,district/unitary
+413,Find out about local air  pollution,district/unitary
+415,Find out about asbestos removal,district/unitary
+418,Find out about contaminated land,district/unitary
+428,Find out about removal and disposal of syringes,district/unitary
+431,Find out about pest control,district/unitary
+432,Find out about the dog warden service,district/unitary
+433,Find out about renovation grants,district/unitary
+435,Find out about infectious diseases,district/unitary
+437,Find out about library services,county/unitary
+438,Find out about joining a library,county/unitary
+439,Search the library catalogue,county/unitary
+440,Find out about library loans,county/unitary
+442,Find out about internet access in a library,county/unitary
+443,Find out about library fines,county/unitary
+444,Find out about mobile libraries,county/unitary
+445,Find out about the historical search service in a library,county/unitary
+448,Find out about archives,county/unitary
+456,Find out about leisure passes,district/unitary
+461,Find out about local parks,all
+471,Find out about parking fines,all
+474,Find out about parking permits,all
+477,Find out how to apply for a dropped kerb,county/unitary
+478,Find out about council car parks,district/unitary
+485,Find out about planning permission,district/unitary
+493,Find out about local transport policy,county/unitary
+497,Find out about crime prevention in town centres,district/unitary
+499,Find out about building regulations,district/unitary
+508,Find out about tree preservation orders,district/unitary
+510,Find out about allotments,district/unitary
+512,Find out about carrying out works on a property in a conservation area,district/unitary
+513,Find out about street naming and numbering,district/unitary
+514,Find out about listed buildings,district/unitary
+516,Search the register of planning decisions,district/unitary
+521,Find out about skip permits,county/unitary
+524,Find out which day the refuse is collected,district/unitary
+526,Find out about domestic bins,district/unitary
+528,Find out about special collections for large items,district/unitary
+530,Find out about disposing of garden waste,district/unitary
+533,Find out more about recycling collections,district/unitary
+534,Find your nearest recycling centre,all
+536,Find out more about blocked pavements,county/unitary
+537,Find out more about pavement problems,county/unitary
+541,Find out about street name plates,district/unitary
+546,Find out more about safe routes to school,county/unitary
+550,Find out more about road obstructions,county/unitary
+555,Find out more about road flooding,county/unitary
+557,Find out about potholes,county/unitary
+558,Find out personal injury caused by damage and/or hazards on roads and pavements,county/unitary
+559,Find out about street furniture,county/unitary
+561,Find out about road gritting,county/unitary
+562,Find out about the snow clearing service,county/unitary
+564,Find out about street lights,county/unitary
+567,Find out about traffic lights,county/unitary
+568,Find out about pedestrian crossings,county/unitary
+569,Find out about road works in your area,county/unitary
+570,Find out about road closures and diversions,county/unitary
+571,Find out about speed limits,county/unitary
+576,Find out about dead animal removal,district/unitary
+577,Find out about dog fouling,district/unitary
+580,Find out about street cleaning,district/unitary
+584,Find out about graffiti problems,district/unitary
+586,Find out about vandalism,district/unitary
+587,Find out about flytipping,district/unitary
+588,Find out about flyposting,district/unitary
+591,Find out about spillages on the roads,all
+600,Find out about dangerous buildings and structures,district/unitary
+603,Find out about nuisance caused by demolition work,district/unitary
+610,Find out about personal searches of local land charges,district/unitary
+615,Find out about grants to local voluntary organisations,all
+623,Find a tourist information centre,district/unitary
+629,Find out about volunteering for young people,county/unitary
+630,Find out how to complain about a school,county/unitary
+631,Find out about the chaperone service,county/unitary
+640,Find out about leisure activities for older people,district/unitary
+641,Find out about sports clubs,all
+642,Find out about youth clubs,all
+643,Find out about activities for young people,all
+644,Find out about sports facilities,district/unitary
+649,Find out about common land and village greens,all
+650,Find out about properties which are not fit to live in,district/unitary
+651,Find out about debt counselling,all
+652,Find out about advice for tenants and landlords in the private sector,district/unitary
+654,Find out about improving a council property,district/unitary
+655,Find out about gypsy and traveller sites,all
+657,Find out about alley gating,all
+663,Find out about copy certificates,county/unitary
+664,Find out about blocked drains,district/unitary
+665,Find out about supported tenancies,district/unitary
+670,Find out about play facilities in the community,district/unitary
+671,Find out about a council funeral,district/unitary
+684,Find out about open and derelict properties,district/unitary
+698,Find out about historical searches on marriages,county/unitary
+700,Find advice for young people,county/unitary
+701,Find out about road adoption by the council,county/unitary
+703,Find out about emergency planning for a major incident,all
+705,Find out about the schools admissions appeals process,county/unitary
+711,Find out about changing a council tenancy,district/unitary
+719,Find out about local council meetings,all
+721,Find out about election results,all
+722,Find out about freedom of information requests,all
+734,Find out about holiday accommodation,district/unitary
+750,Find out about countryside volunteering,all
+780,Find out about the use and mooring of houseboats,district/unitary
+787,Find advice to consumers,county/unitary
+788,Find out about animal health and welfare,county/unitary
+802,Find out about fire safety,county/unitary
+828,Find out about council contracts and tenders over £500,all
+831,"Find out about local support groups for children, young people and families",all
+838,Find out about local arts events,all
+840,Find out about support for looked after children,county/unitary
+850,Find out about hazardous waste collection,district/unitary
+851,Find out about recycling,all
+852,Find out about citizenship ceremonies,county/unitary
+856,Find out about Local Development Frameworks,district/unitary
+859,Find out about collection of clinical waste,district/unitary
+860,Find out about liquor licences,district/unitary
+867,Find out about local consultations,all
+870,Find out about community safety,all
+873,Find out about naming ceremonies,county/unitary
+874,Find out about marriage renewal ceremonies,county/unitary
+876,Find out about civil partnerships,county/unitary
+1116,Find out about Youth Opportunity Funding,county/unitary
+1135,Find out about transport for 16-19 year olds in education,county/unitary
+1140,Find out about emergency school closures,county/unitary
+1145,Find your local 14-19 prospectus,county/unitary
+1150,Find out about your Local Area Network (LINk),county/unitary
+1287,Get local information about swine flu,all
+1307,Get information on services dsirupted by severe weather,all
+1465,Find out about details of council expenditure,all
+1573,Find out about senior salary details at your council,all
+1574,Find out about councillor allowances and expenses at your council,all
+1579,Find out about family information services,county/unitary
+1580,Find out how to hold a street party,all
+1584,Find out when you can check the accounts at your council,all
