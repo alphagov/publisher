@@ -4,15 +4,17 @@ require_relative '../helpers/local_services_helper'
 class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
   include LocalServicesHelper
 
+  def local_transaction_edition_for(lgsl_code)
+    LocalService.create!(lgsl_code: lgsl_code, providing_tier: %w{county unitary})
+    local_transaction = LocalTransaction.new(slug: 'test_slug', tags: 'tag, other', :lgsl_code => lgsl_code)
+    local_transaction.editions.first.attributes = {version_number: 1, title: 'Test local transaction', updated_at: Time.now}
+    local_transaction.editions.first
+  end
+  
   setup do
-    @updated_time = Time.now
     @lgsl_code = 149
-    @service = LocalService.create!(lgsl_code: @lgsl_code, providing_tier: %w{county unitary})
     @county_council = make_authority('county', snac: 'AA00', lgsl: @lgsl_code)
-    
-    @local_transaction = LocalTransaction.new(slug: 'test_slug', tags: 'tag, other', :lgsl_code => @lgsl_code)
-    @local_transaction.editions.first.attributes = {version_number: 1, title: 'Test local transaction', updated_at: @updated_time}
-    @edition = @local_transaction.editions.first
+    @edition = local_transaction_edition_for(@lgsl_code)
   end
 
   def only_keys(hash, keys)
@@ -52,6 +54,18 @@ class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
       }
 
       assert_equal expected_interaction_description, @generated['interaction']
+    end
+  end
+
+  context "snac exists but doesn't have that interaction" do
+    setup do
+      @edition2 = local_transaction_edition_for(@lgsl_code + 1)
+    end
+    
+    should "an empty interaction" do
+      generated = Api::Generator::edition_to_hash(@edition2, :snac => @county_council.snac)
+
+      assert_equal nil, generated['interaction']
     end
   end
   

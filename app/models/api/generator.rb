@@ -80,6 +80,7 @@ module Api
       end
       
       def self.interaction_to_json(interaction)
+        return nil unless interaction
         json = interaction.as_json(:only => [:lgsl_code, :lgil_code, :url])
         json['authority'] = interaction.local_authority.as_json(:only => [:snac, :name, :tier])
         json
