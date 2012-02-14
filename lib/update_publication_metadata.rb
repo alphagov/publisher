@@ -46,8 +46,8 @@ class UpdatePublicationMetadata
 
   def denormalise_metadata
     logger.debug "Setting name = #{artefact['name'].inspect}"
-    publication.name = artefact['name']
     if !publication.latest_edition.published?
+      publication.name = artefact['name']
       logger.debug "Updating latest edition title = #{artefact['name'].inspect}"
       publication.latest_edition.title = artefact['name']
     end
