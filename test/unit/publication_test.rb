@@ -154,6 +154,16 @@ class PublicationTest < ActiveSupport::TestCase
     end
   end
 
+  test "a published publication with a draft edition is has an edition in progress" do
+    dummy_answer = template_published_answer
+    assert !dummy_answer.has_in_progress?
+
+    edition = dummy_answer.build_edition("Two")
+    edition.save
+    
+    assert dummy_answer.has_in_progress?
+  end
+
   test "can delete a publication that has not been published" do
     dummy_answer = template_unpublished_answer
     loaded_answer = Answer.first(conditions: {:slug=>"unpublished"})

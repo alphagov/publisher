@@ -47,6 +47,10 @@ class Publication
       (self.editions.where(state: state).count > 0)
     end
   end
+  
+  def has_in_progress?
+    self.editions.where(:state.nin => [:published, :archived]).count > 0
+  end
 
   def format_type
     self.class.name.to_s
