@@ -8,10 +8,20 @@ class ProgrammeTest < ActiveSupport::TestCase
   end
 
   def template_programme
+    p = unpublished_template_programme
+    edition = p.editions.first
+    edition.state = :ready
+    edition.save
+    User.create(:name => 'dai').publish(edition, comment: "Publishing this")
+    p
+  end
+  
+  def unpublished_template_programme
     p = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
     edition = p.editions.first
     edition.title = 'One'
     edition.start_work
+    edition.save
     p
   end
 
@@ -24,13 +34,6 @@ class ProgrammeTest < ActiveSupport::TestCase
 
   test 'a programme with all versions published should not have drafts' do
     programme = template_programme
-
-    assert programme.has_draft?
-    assert !programme.has_published?
-    programme.editions.each do |e|
-       e.state = 'ready'
-       User.create(:name => 'bob').publish(e, comment: "Publishing this")
-    end
 
     assert !programme.has_draft?
     assert programme.has_published?
@@ -47,16 +50,13 @@ class ProgrammeTest < ActiveSupport::TestCase
   test 'a programme with one published and one draft edition is marked as having drafts and having published' do
     programme = template_programme
     programme.build_edition("Two")
-    assert programme.has_draft?
-    assert !programme.has_published?
-    programme.editions.first.state = 'ready'
-    User.create(:name => 'bob').publish(programme.editions.first, comment: "Publishing this")
+    
     assert programme.has_draft?
     assert programme.has_published?
   end
 
   test "a programme should be marked as having reviewables if requested for review" do
-    programme = template_programme
+    programme = unpublished_template_programme
     user = User.new(:name=>"Bob")
     user.save
     assert !programme.has_in_review?

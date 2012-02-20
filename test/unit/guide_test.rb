@@ -7,11 +7,20 @@ class GuideTest < ActiveSupport::TestCase
   end
 
   def template_guide
+    g = unpublished_template_guide
+    edition = g.editions.first
+    edition.state = :ready
+    edition.save
+    User.create(:name => 'dai').publish(edition, comment: "Publishing this")
+    g
+  end
+  
+  def unpublished_template_guide
     g = Guide.new :slug=>"childcare", :name=>"Something", :panopticon_id => 1234574
     edition = g.editions.first
     edition.title = 'One'
     edition.start_work
-    g.build_edition("Two")
+    edition.save
     g
   end
 
@@ -81,7 +90,7 @@ class GuideTest < ActiveSupport::TestCase
   end
 
   test 'a guide with all versions published should not have drafts' do
-    guide = template_guide
+    guide = unpublished_template_guide
     assert guide.has_draft?
     assert !guide.has_published?
     user = User.create :name => "Winston"
@@ -97,18 +106,14 @@ class GuideTest < ActiveSupport::TestCase
 
   test 'a guide with one published and one draft edition is marked as having drafts and having published' do
     guide = template_guide
-    assert guide.has_draft?
-    assert !guide.has_published?
-
-    guide.editions.first.state = 'ready'
-    User.create(:name => "test").publish guide.editions.first, { comment: "Publishing this" }
-
+    guide.build_edition("TWO")
+    
     assert guide.has_draft?
     assert guide.has_published?
   end
 
   test "a guide should be marked as having reviewables if requested for review" do
-    guide = template_guide
+    guide = unpublished_template_guide
     user = User.create(:name=>"Ben")
     assert !guide.has_in_review?
     user.request_review(guide.editions.first,{:comment => "Review this guide please."})

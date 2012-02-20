@@ -188,7 +188,6 @@ class PublicationTest < ActiveSupport::TestCase
     publication = FactoryGirl.create(:guide)
     edition = publication.editions.first
     edition.update_attribute(:state, 'ready')
-
     Rummageable.expects(:index).with(publication.search_index)
 
     User.create(:name => 'Winston').publish(edition, comment: 'Testing')
