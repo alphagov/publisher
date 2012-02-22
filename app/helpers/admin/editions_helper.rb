@@ -12,4 +12,8 @@ module Admin::EditionsHelper
       opts[:new_in_edit].times { associated.build }
     end
   end
+
+  def format_content_diff( body )
+    ContentDiffFormatter.new(body).to_html
+  end
 end

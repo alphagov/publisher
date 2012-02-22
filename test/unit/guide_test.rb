@@ -245,4 +245,32 @@ class GuideTest < ActiveSupport::TestCase
     assert_equal edition.alternative_title, new_edition.alternative_title
     assert_equal edition.overview, new_edition.overview
   end
+
+  test "a new edition with multiple parts creates a full diff when published" do
+    without_metadata_denormalisation(Guide) do
+      guide = Guide.new(:name => "One", :slug=>"one")
+      guide.save!
+
+      user = User.create :name => 'Roland'
+
+      edition_one = guide.editions.first
+      edition_one.parts.build :title => 'Part One', :body=>"Never gonna give you up", :slug => 'part-one'
+      edition_one.parts.build :title => 'Part Two', :body=>"NYAN NYAN NYAN NYAN", :slug => 'part-two'
+      edition_one.save!
+
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
+
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.parts.first.update_attribute :title, "Changed Title"
+      edition_two.parts.first.update_attribute :body, "Never gonna let you down"
+      edition_two.state = :ready
+      user.publish edition_two, comment: "Second edition"
+
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal "{\"# Part One\" >> \"# Changed Title\"}\n\n{\"Never gonna give you up\" >> \"Never gonna let you down\"}\n\n# Part Two\n\nNYAN NYAN NYAN NYAN", publish_action.diff
+    end
+  end
 end

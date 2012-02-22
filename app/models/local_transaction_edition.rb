@@ -11,4 +11,8 @@ class LocalTransactionEdition < Edition
   def container
     self.local_transaction
   end
+
+  def whole_body
+    self.introduction
+  end
 end

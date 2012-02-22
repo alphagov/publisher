@@ -69,6 +69,7 @@ GEM
     crack (0.3.1)
     daemon_controller (0.2.6)
     database_cleaner (0.7.0)
+    differ (0.1.2)
     erubis (2.7.0)
     exception_notification (2.4.1)
     fabrication (1.2.0)
@@ -263,6 +264,7 @@ DEPENDENCIES
   colorize (~> 0.5.8)
   daemonette!
   database_cleaner
+  differ
   erubis
   exception_notification (~> 2.4.1)
   fabrication

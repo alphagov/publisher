@@ -4,6 +4,8 @@ class ProgrammeEdition < Edition
 
   accepts_nested_attributes_for :parts, :allow_destroy => true, :reject_if => :all_blank
 
+  include PartedEdition
+  
   @fields_to_clone = []
 
   def build_clone

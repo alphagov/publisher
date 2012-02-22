@@ -27,6 +27,7 @@ gem 'pethau', '0.0.3'
 gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
+gem 'differ'
 
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'

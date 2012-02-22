@@ -14,4 +14,8 @@ class TransactionEdition < Edition
   def container
     self.transaction
   end
+
+  def whole_body
+    [ self.link, self.introduction, self.more_information ].join("\n\n")
+  end
 end

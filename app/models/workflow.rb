@@ -154,6 +154,14 @@ module Workflow
     (!self.published?)
   end
 
+  def previous_edition
+    self.container.published_edition || false
+  end
+
+  def edition_changes
+    self.whole_body.empty? ? false : Differ.diff_by_line( self.whole_body, self.previous_edition.whole_body )
+  end
+
   def unpublish!
     self.container.publishings.detect { |p| p.version_number == self.version_number }.destroy
     self.actions.each do |a|

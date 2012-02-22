@@ -9,4 +9,8 @@ class AnswerEdition < Edition
     self.answer
   end
 
+  def whole_body
+    self.body
+  end
+
 end

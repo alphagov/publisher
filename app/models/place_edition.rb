@@ -12,4 +12,8 @@ class PlaceEdition < Edition
   def container
     self.place
   end
+
+  def whole_body
+    self.introduction
+  end
 end

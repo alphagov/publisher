@@ -191,4 +191,29 @@ class EditionTest < ActiveSupport::TestCase
       assert_equal 2, guide.editions.where(state: 'archived').count
     end
   end
+
+  test "a new edition contains a diff when published" do
+    without_metadata_denormalisation(Guide) do
+      guide = Guide.new(:name => "One", :slug=>"one")
+      guide.save!
+
+      user = User.create :name => 'Silvia'
+
+      edition_one = guide.editions.first
+      edition_one.parts.build :title => 'Part One', :body=>"It was on a cold day in March", :slug => 'part-one'
+      edition_one.save!
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
+
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.parts.first.update_attribute :body, "It was on a cold day in April"
+      edition_two.state = :ready
+      user.publish edition_two, comment: "Second edition"
+
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal '{"It was on a cold day in March" >> "It was on a cold day in April"}', publish_action.diff
+    end
+  end
 end

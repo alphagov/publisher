@@ -127,4 +127,33 @@ class ProgrammeTest < ActiveSupport::TestCase
     }
   end
 
+  test "a new edition with multiple parts creates a full diff when published" do
+    without_metadata_denormalisation(Programme) do
+      programme = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
+      programme.save!
+
+      user = User.create :name => 'Bob'
+
+      edition_one = programme.editions.first
+      edition_one.parts.delete_all # remove default parts
+      edition_one.parts.build :title => 'Part One', :body=>"Content for part one", :slug => 'part-one'
+      edition_one.parts.build :title => 'Part Two', :body=>"Content for part two", :slug => 'part-two'
+      edition_one.save!
+
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
+
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.parts.first.update_attribute :body, "Some other content"
+      edition_two.state = :ready
+      
+      user.publish edition_two, comment: "Second edition"
+
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal "# Part One\n\n{\"Content for part one\" >> \"Some other content\"}\n\n# Part Two\n\nContent for part two", publish_action.diff
+    end
+  end
+
 end

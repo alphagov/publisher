@@ -2,6 +2,8 @@ class GuideEdition < Edition
   embedded_in :guide
   embeds_many :parts
 
+  include PartedEdition
+
   accepts_nested_attributes_for :parts, :allow_destroy => true,
     :reject_if => proc { |attrs| attrs['title'].blank? and attrs['body'].blank? }
 
