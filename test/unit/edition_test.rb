@@ -213,7 +213,7 @@ class EditionTest < ActiveSupport::TestCase
 
       publish_action = edition_two.actions.where(request_type: "publish").last
 
-      assert_equal '{"It was on a cold day in March" >> "It was on a cold day in April"}', publish_action.diff
+      assert_equal "# Part One\n\n{\"It was on a cold day in March\" >> \"It was on a cold day in April\"}", publish_action.diff
     end
   end
 end
