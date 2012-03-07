@@ -120,6 +120,4 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     assert guide.fact_check?
   end
-
->>>>>>> Rearrange integration tests and update paths to new controller approach
 end

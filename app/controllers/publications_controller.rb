@@ -23,7 +23,7 @@ class PublicationsController < ApplicationController
     Rails.logger.info("pubctrl: compose #{slug} #{edition_number}")
     edition_number = nil unless allow_preview?
     Rails.logger.info("pubctrl: finding publication edition #{Time.now.to_f}")
-    edition = WholeEdition.find_and_identify_edition(slug, edition_number)
+    edition = WholeEdition.find_and_identify(slug, edition_number)
     Rails.logger.info("pubctrl: found edition #{Time.now.to_f}")
     return nil if edition.nil?
 

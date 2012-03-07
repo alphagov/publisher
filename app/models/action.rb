@@ -74,15 +74,13 @@ class Action
   def to_s
     request_type.humanize.capitalize
   end
-<<<<<<< HEAD
   
   def is_fact_check_request?
     #SEND_FACT_CHECK is now a state - in older publications it isn't
     request_type == SEND_FACT_CHECK || request_type == 'fact_check_requested' ? true : false
-=======
+  end
 
   def edition
     whole_edition
->>>>>>> Update admin presenter and action models and related tests. Most of these tests pass now
   end
 end
