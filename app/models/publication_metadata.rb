@@ -12,7 +12,12 @@ class PublicationMetadata
 
   include HTMLGenerator
 
-  initialize_with :publication
+  attr_accessor :publication
+  private :publication, :publication=
+
+  def initialize(publication = Nullpublication.instance)
+    self.publication = publication
+  end
 
   def to_html
     html do |metadata|

@@ -1,9 +1,10 @@
 class MetadataSync
-  include Pethau::InitializeWith
-  include Pethau::DefaultValueOf
+  attr_accessor :logger
+  private :logger, :logger=
 
-  initialize_with :logger
-  default_value_of :logger, NullLogger.instance
+  def initialize(logger = NullLogger.instance)
+    self.logger = logger
+  end
 
   def sync artefact
     update = UpdatePublicationMetadata.new artefact, :logger => logger
