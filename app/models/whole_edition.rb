@@ -18,7 +18,6 @@ class WholeEdition
   field :section, :type => String
   field :department, :type => String
   field :rejected_count, :type => Integer, default: 0
-  field :panopticon_id, :type => Integer
   field :tags, :type => String
 
   belongs_to :assigned_to, class_name: 'User'
@@ -79,6 +78,8 @@ class WholeEdition
   end
 
   def build_clone
+    # TODO: need to make version number safer here
+    # possible factor out to get_new_version_number
     new_edition = self.class.new(title: self.title, version_number: self.version_number + 1)
     real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title]
 

@@ -16,6 +16,8 @@ module Workflow
       end
 
       after_transition :on => :publish do |edition, transition|
+        #maybe edition.previous_siblings.where(:published).each would work better
+        #additionally may need transitions from each state to archived
         edition.previous_siblings.all.each(&:archive)
         edition.update_in_search_index
       end
@@ -114,6 +116,8 @@ module Workflow
   def check_can_delete_and_notify
     raise CannotDeletePublishedPublication unless can_destroy?
   end
+  
+  #missing edition_changes (diff)
   
   def mark_as_rejected
     self.inc(:rejected_count, 1)
