@@ -15,4 +15,8 @@ class TransactionEdition < WholeEdition
     return content unless latest_edition?
     "#{content} #{introduction} #{more_information}".strip
   end
+
+  def whole_body
+    [ self.link, self.introduction, self.more_information ].join("\n\n")
+  end
 end

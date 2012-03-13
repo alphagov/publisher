@@ -1,7 +1,9 @@
 class ProgrammeEdition < WholeEdition
-  include Parted
+  #include Parted
+  include PartedEdition
 
   before_save :setup_default_parts, :on => :create
+
   @fields_to_clone = []
 
   DEFAULT_PARTS = [

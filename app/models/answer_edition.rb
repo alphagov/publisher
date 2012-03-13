@@ -8,4 +8,9 @@ class AnswerEdition < WholeEdition
     return content unless latest_edition?
     "#{content} #{body}".strip
   end
+
+  def whole_body
+    self.body
+  end
+
 end

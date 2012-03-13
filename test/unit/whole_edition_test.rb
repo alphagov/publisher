@@ -389,6 +389,8 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal ["Published editions can't be edited"], guide.errors[:base]
   end
 
+  #TODO Merge Conflict - these (below) have been brought over from merge
+
   test "publish history is recorded" do
     without_metadata_denormalisation(GuideEdition) do
       edition = template_edition
@@ -420,4 +422,139 @@ class WholeEditionTest < ActiveSupport::TestCase
       assert third_edition.published?
     end
   end
+  
+  test "search_index structure is correct" do
+    guide = template_guide
+    data = guide.search_index
+    assert_equal [
+      "title", "link", "section", "subsection", "format", 
+      "description", "indexable_content", "additional_links"].sort, data.keys.sort
+    assert_equal guide.title, data['title']
+    assert_equal "guide", data['format']
+  end
+
+  test "section name is normalized" do
+    guide = template_guide
+    guide.section = "Cats and Dogs"
+    assert_equal "cats-and-dogs", guide.search_index['section']
+  end
+
+  test "subsection field of search_index is populated by splitting section on colon" do
+    guide = template_guide
+    guide.section = "Crime and Justice:Prison"
+    assert_equal 'crime-and-justice', guide.search_index['section']
+    assert_equal 'prison', guide.search_index['subsection']
+  end
+  
+
+  test 'a guide with all versions published should not have drafts' do
+    guide = unpublished_template_guide
+    assert guide.has_draft?
+    assert !guide.has_published?
+    user = User.create :name => "Winston"
+
+    guide.editions.each do |e|
+       e.state = 'ready' #force ready state so that we can publish
+       user.publish e, { comment: "Publishing this" }
+    end
+
+    assert !guide.has_draft?
+    assert guide.has_published?
+  end
+  
+  test "a new guide edition with multiple parts creates a full diff when published" do
+    without_metadata_denormalisation(Guide) do
+      guide = Guide.new(:name => "One", :slug=>"one")
+      guide.save!
+
+      user = User.create :name => 'Roland'
+
+      edition_one = guide.editions.first
+      edition_one.parts.build :title => 'Part One', :body=>"Never gonna give you up", :slug => 'part-one'
+      edition_one.parts.build :title => 'Part Two', :body=>"NYAN NYAN NYAN NYAN", :slug => 'part-two'
+      edition_one.save!
+
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
+
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.parts.first.update_attribute :title, "Changed Title"
+      edition_two.parts.first.update_attribute :body, "Never gonna let you down"
+      edition_two.state = :ready
+      user.publish edition_two, comment: "Second edition"
+
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal "{\"# Part One\" >> \"# Changed Title\"}\n\n{\"Never gonna give you up\" >> \"Never gonna let you down\"}\n\n# Part Two\n\nNYAN NYAN NYAN NYAN", publish_action.diff
+    end
+  end
+  
+  test 'a programme with all versions published should not have drafts' do
+    programme = template_programme
+
+    assert !programme.has_draft?
+    assert programme.has_published?
+  end
+  
+  test 'a programme with one published and one draft edition is marked as having drafts and having published' do
+    programme = template_programme
+    programme.build_edition("Two")
+    
+    assert programme.has_draft?
+    assert programme.has_published?
+  end
+
+  test "user should not be able to review a programme they requested review for" do
+    user = User.create(:name => "Bob")
+
+    programme = user.create_publication(:programme)
+    edition = programme.editions.first
+    user.start_work(edition)
+    assert edition.can_request_review?
+    user.request_review(edition,{:comment => "Review this programme please."})
+    assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
+  end
+  
+
+  test "a new programme edition with multiple parts creates a full diff when published" do
+    without_metadata_denormalisation(Programme) do
+      programme = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
+      programme.save!
+
+      user = User.create :name => 'Bob'
+
+      edition_one = programme.editions.first
+      edition_one.parts.delete_all # remove default parts
+      edition_one.parts.build :title => 'Part One', :body=>"Content for part one", :slug => 'part-one'
+      edition_one.parts.build :title => 'Part Two', :body=>"Content for part two", :slug => 'part-two'
+      edition_one.save!
+
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
+
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.parts.first.update_attribute :body, "Some other content"
+      edition_two.state = :ready
+      
+      user.publish edition_two, comment: "Second edition"
+
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal "# Part One\n\n{\"Content for part one\" >> \"Some other content\"}\n\n# Part Two\n\nContent for part two", publish_action.diff
+    end
+  end
+  
+  test "a published publication with a draft edition is in progress" do
+    dummy_answer = template_published_answer
+    assert !dummy_answer.has_in_progress?
+
+    edition = dummy_answer.build_edition("Two")
+    edition.save
+    
+    assert dummy_answer.has_in_progress?
+  end
+
+  
 end

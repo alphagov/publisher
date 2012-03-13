@@ -7,16 +7,15 @@ module Parted
 
   def indexable_content
     content = super
-    return content unless latest_edition?
+    return content unless published_edition?
     parts.inject([content]) { |acc, part|
-      acc.concat([part.title, part.body])
+      acc.concat([part.title, govspeak_to_text(part.body)])
     }.compact.join(" ").strip
-
   end
 
   def search_index
     output = super
-    return output unless latest_edition?
+    return output unless published_edition?
     output['additional_links'] = []
 
     parts.each do |part|

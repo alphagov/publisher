@@ -1,6 +1,6 @@
 module WorkflowActor
   SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review receive_fact_check
-    request_amendments approve_review approve_fact_check publish]
+    request_amendments approve_review approve_fact_check]
 
   def record_action(edition, type, options={})
     type = Action.const_get(type.to_s.upcase)
@@ -71,6 +71,11 @@ module WorkflowActor
     define_method(method) do |edition, details = {}|
       take_action(edition, __method__, details)
     end
+  end
+  
+  def publish(edition, details)
+    details.merge!({ :diff => edition.edition_changes }) if edition.previous_edition
+    take_action(edition, __method__, details)
   end
 
   def can_approve_review?(edition)

@@ -116,10 +116,16 @@ module Workflow
   def check_can_delete_and_notify
     raise CannotDeletePublishedPublication unless can_destroy?
   end
-  
-  #missing edition_changes (diff)
-  
+    
   def mark_as_rejected
     self.inc(:rejected_count, 1)
+
+  def previous_edition
+    self.container.published_edition || false
   end
+
+  def edition_changes
+    self.whole_body.empty? ? false : Differ.diff_by_line( self.whole_body, self.previous_edition.whole_body )
+  end
+
 end

@@ -8,8 +8,8 @@
     <span class="version">
     <% if tab && (tab == :published || tab == :archived) %>
       (v.<%= publication.version_number %>)
-      <% if publication.has_draft? %>
-        (v.<%= publication.latest_publication.version_number %> in draft)
+      <% if publication.has_sibling_in_progress? %>
+        (v.<%= publication.latest_publication.version_number %> in <%= publication.latest_edition.state.humanize.downcase %>)
       <% end%>
     <% else %>
       v.<%= publication.version_number %>

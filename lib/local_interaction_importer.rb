@@ -62,8 +62,9 @@ private
     case mapit_type
     when 'DIS' then 'district'
     when 'CTY' then 'county'
+    when 'LBO','MTD','UTA' then 'unitary'
     else 
-      'unitary'
+      'county'
     end
   end
 end

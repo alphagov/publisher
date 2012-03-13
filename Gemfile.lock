@@ -69,6 +69,7 @@ GEM
     crack (0.3.1)
     daemon_controller (0.2.6)
     database_cleaner (0.7.0)
+    differ (0.1.2)
     erubis (2.7.0)
     exception_notification (2.4.1)
     fabrication (1.2.0)
@@ -162,7 +163,6 @@ GEM
       fastthread (>= 1.0.1)
       rack
       rake (>= 0.8.1)
-    pethau (0.0.3)
     plek (0.1.20)
       builder
     polyglot (0.3.3)
@@ -263,6 +263,7 @@ DEPENDENCIES
   colorize (~> 0.5.8)
   daemonette!
   database_cleaner
+  differ
   erubis
   exception_notification (~> 2.4.1)
   fabrication
@@ -285,7 +286,6 @@ DEPENDENCIES
   mongoid (~> 2.3)
   null_logger
   passenger
-  pethau (= 0.0.3)
   plek (~> 0)
   rack (= 1.3.5)
   rails (= 3.1.3)

@@ -6,4 +6,9 @@ class PlaceEdition < WholeEdition
   field :place_type,        :type => String
 
   @fields_to_clone = [:introduction, :more_information, :place_type, :expectation_ids]
+
+  def whole_body
+    self.introduction
+  end
+
 end

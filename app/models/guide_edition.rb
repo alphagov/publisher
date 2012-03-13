@@ -1,5 +1,10 @@
 class GuideEdition < WholeEdition
-  include Parted
+  #include Parted
+  include PartedEdition
+
+  #TODO: Merge Conflict (do we need this?)
+  #accepts_nested_attributes_for :parts, :allow_destroy => true,
+  #  :reject_if => proc { |attrs| attrs['title'].blank? and attrs['body'].blank? }
 
   field :video_url,  :type => String
   field :video_summary, :type => String

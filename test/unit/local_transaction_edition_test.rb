@@ -15,43 +15,30 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     assert_equal "Transaction", local_transaction_edition.admin_list_title
   end
 
-  def create_authority(snac = "00BC")
-    @authority ||= lgsl.authorities.create(snac: snac)
-  end
-  alias_method :authority, :create_authority
+  test "a new edition of a local transaction creates a diff between the introduction when published" do
+    without_metadata_denormalisation(LocalTransaction) do
+      local_transaction = local_transaction_edition.container
+      local_transaction.save!
 
-  def basic_new_local_transaction
-    LocalTransactionEdition.new(lgsl_code: "1", title: "Transaction", slug: "slug", panopticon_id: 1243)
-  end
-  
-  test "looks up the LGSL before validating a new record" do
-    LocalTransactionsSource.expects(:find_current_lgsl).with("1").returns(lgsl)
-    lt = basic_new_local_transaction
-    assert lt.valid?
-  end
+      user = User.create :name => 'Thomas'
 
-  test "doesn't bother looking up the LGSL before validating an existing record" do
-    LocalTransactionsSource.expects(:find_current_lgsl).never
+      edition_one = local_transaction.editions.first
+      edition_one.introduction = 'Test'
+      edition_one.save!
 
-    lt = basic_new_local_transaction
-    lt.save(validate: false)
-    assert lt.valid?
-  end
+      edition_one.state = :ready
+      user.publish edition_one, comment: "First edition"
 
-  test "can verify whether an authority provides the transaction service, given its SNAC" do
-    lt = basic_new_local_transaction
-    lt.stubs(:lgsl).returns(lgsl)
-    create_authority("45UB")
+      edition_two = edition_one.build_clone
+      edition_two.save!
+      edition_two.introduction = "Testing"
+      edition_two.state = :ready
+      user.publish edition_two, comment: "Second edition"
 
-    assert lt.verify_snac("45UB")
+      publish_action = edition_two.actions.where(request_type: "publish").last
+
+      assert_equal "{\"Test\" >> \"Testing\"}", publish_action.diff
+    end
   end
 
-  test "can verify that an authority does not provide the transaction service" do
-    lt = basic_new_local_transaction
-    lt.stubs(:lgsl).returns(lgsl)
-    create_authority("45UB")
-
-    assert !lt.verify_snac("00BC")
-  end
-  
 end

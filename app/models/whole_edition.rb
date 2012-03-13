@@ -130,4 +130,8 @@ class WholeEdition
   def safe_to_preview?
     true
   end
+  
+  def has_sibling_in_progress?
+    subsequent_siblings.where(:state.nin => [:published, :archived]).count > 0
+  end
 end
