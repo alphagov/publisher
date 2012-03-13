@@ -18,3 +18,5 @@ Expectation.create :css_class=>"over_16",       :text=>"You must be over 16"
 Expectation.create :css_class=>"england_only",  :text=>"Available in England only"
 Expectation.create :css_class=>"england_wales", :text=>"Available in England and Wales only"
 Expectation.create :css_class=>"not_ni",        :text=>"Not available in Northern Ireland"
+
+User.create :name => 'Winston', :uid => 'winston', :version => 1, :email => 'winston@alphagov.co.uk'
