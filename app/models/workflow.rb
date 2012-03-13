@@ -119,6 +119,7 @@ module Workflow
     
   def mark_as_rejected
     self.inc(:rejected_count, 1)
+  end
 
   def previous_edition
     self.container.published_edition || false
