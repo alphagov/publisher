@@ -21,7 +21,7 @@ module Admin::ProgressFormsHelper
     )
   end
 
-  def review_buttons(guide, edition)
+  def review_buttons(edition)
     [
       ["Needs more work",    "request_amendments"],
       ["OK for publication", "approve_review"]
@@ -34,14 +34,14 @@ module Admin::ProgressFormsHelper
     }.join("\n").html_safe
   end
 
-  def review_forms(guide, edition)
+  def review_forms(edition)
     [
       ["Needs more work",    "request_amendments"],
       ["OK for publication", "approve_review"]
     ].map{ |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
-  def fact_check_buttons(guide, edition)
+  def fact_check_buttons(edition)
     [
       ["Needs major changes",    "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
@@ -54,7 +54,7 @@ module Admin::ProgressFormsHelper
     }.join("\n").html_safe
   end
 
-  def fact_check_forms(guide, edition)
+  def fact_check_forms(edition)
     [
       ["Needs major changes",    "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
