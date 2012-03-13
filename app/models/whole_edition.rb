@@ -32,6 +32,7 @@ class WholeEdition
   scope :ready,               where(state: 'ready')
   scope :published,           where(state: 'published')
   scope :archived,            where(state: 'archived')
+  scope :in_progress,         where(:state.nin => ['archived', 'published'])
   scope :assigned_to,         lambda { |user| user.nil? ? where(:assigned_to_id.exists => false) : where(:assigned_to_id => user.id) }
 
   validates :title, presence: true
@@ -68,6 +69,10 @@ class WholeEdition
 
   def published_edition
     series.where(state: 'published').order(version_number: 'desc').first
+  end
+
+  def can_create_new_edition?
+    subsequent_siblings.in_progress.empty?
   end
 
   def meta_data
