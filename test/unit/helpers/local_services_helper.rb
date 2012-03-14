@@ -22,4 +22,9 @@ module LocalServicesHelper
   def make_service(lgsl_code, providing_tier)
     LocalService.create!(lgsl_code: lgsl_code, providing_tier: providing_tier)
   end
+
+  def make_authority_providing(lgsl_code)
+    council = make_authority('county',{:snac=>'00AA', :lgsl=>lgsl_code})
+    council
+  end
 end

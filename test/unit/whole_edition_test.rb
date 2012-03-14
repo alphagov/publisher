@@ -391,8 +391,6 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal ["Published editions can't be edited"], guide.errors[:base]
   end
 
-  #TODO Merge Conflict - these (below) have been brought over from merge
-
   test "publish history is recorded" do
     without_metadata_denormalisation(GuideEdition) do
       edition = template_edition

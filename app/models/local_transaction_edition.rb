@@ -1,13 +1,33 @@
 class LocalTransactionEdition < WholeEdition
   include Expectant
 
-  referenced_in :lgsl,      class_name: "LocalTransactionsSource::Lgsl"
-
-  field :lgsl_code,         type: String
+  field :lgsl_code,         type: Integer
   field :introduction,      type: String
   field :more_information,  type: String
- 
-  @fields_to_clone = [:introduction, :more_information, :minutes_to_complete, :expectation_ids, :lgsl_code, :lgsl]
+  @fields_to_clone = [:lgsl_code, :introduction, :more_information, :minutes_to_complete, :expectation_ids]
+
+  validates_presence_of :lgsl_code
+  validate              :valid_lgsl_code
+
+
+  def valid_lgsl_code
+    if ! self.service
+      errors.add(:lgsl_code, "Invalid LGSL Code: '#{lgsl_code}'")
+    end
+  end
+
+  def search_format
+    "transaction"
+  end
+
+  def service
+    LocalService.find_by_lgsl_code(lgsl_code)
+  end
+
+  def service_provided_by?(snac)
+    authority = LocalAuthority.find_by_snac(snac)
+    authority && authority.provides_service?(lgsl_code)
+  end
 
   def whole_body
     self.introduction
