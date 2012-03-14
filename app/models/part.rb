@@ -1,8 +1,8 @@
 class Part
   include Mongoid::Document
 
-  embedded_in :guide
-  embedded_in :programme
+  embedded_in :guide_edition
+  embedded_in :programme_edition
 
   field :order, :type => Integer
   field :title, :type => String

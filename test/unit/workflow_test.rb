@@ -238,23 +238,25 @@ class WorkflowTest < ActiveSupport::TestCase
   
 
   test "a new edition of an answer creates a diff when published" do
-    without_metadata_denormalisation(Answer) do
-      answer = Answer.new(:name => "How much wood would a woodchuck chuck if a woodchuck could chuck wood?", :slug=>"woodchuck")
-      answer.save!
-
-      user = User.create :name => 'Michael'
-
-      edition_one = answer.editions.first
+    without_metadata_denormalisation(AnswerEdition) do
+      edition_one = AnswerEdition.new(
+        :name => "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
+        :slug => "woodchuck",
+        :panopticon_id => 1,
+        :title => "Chucking wood"
+      )
       edition_one.body = 'A woodchuck would chuck all the wood he could chuck if a woodchuck could chuck wood.'
+      edition_one.state = :ready
       edition_one.save!
 
-      edition_one.state = :ready
+      user = User.create :name => 'Michael'
       user.publish edition_one, comment: "First edition"
 
       edition_two = edition_one.build_clone
-      edition_two.save!
       edition_two.body = "A woodchuck would chuck all the wood he could chuck if a woodchuck could chuck wood.\nAlthough no more than 361 cubic centimetres per day."
       edition_two.state = :ready
+      edition_two.save!
+
       user.publish edition_two, comment: "Second edition"
 
       publish_action = edition_two.actions.where(request_type: "publish").last

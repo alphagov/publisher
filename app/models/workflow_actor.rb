@@ -74,7 +74,7 @@ module WorkflowActor
   end
   
   def publish(edition, details)
-    details.merge!({ :diff => edition.edition_changes }) if edition.previous_edition
+    details.merge!({ :diff => edition.edition_changes }) if edition.published_edition
     take_action(edition, __method__, details)
   end
 

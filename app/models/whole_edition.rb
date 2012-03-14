@@ -5,6 +5,7 @@ class WholeEdition
   include Mongoid::Document
   include Mongoid::Timestamps
   include Marples::ModelActionBroadcast
+  include Admin::BaseHelper
   include Workflow
   include Searchable
 
@@ -68,6 +69,11 @@ class WholeEdition
   def published_edition
     series.where(state: 'published').order(version_number: 'desc').first
   end
+  
+  def previous_published_edition
+    series.where(state: 'published').order(version_number: 'desc').second
+  end
+
 
   def meta_data
     PublicationMetadata.new self
@@ -80,13 +86,12 @@ class WholeEdition
   def build_clone
     # TODO: need to make version number safer here
     # possible factor out to get_new_version_number
+    # also not cloning the correct fields
     new_edition = self.class.new(title: self.title, version_number: self.version_number + 1)
-    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title]
-
+    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug]
     real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
     end
-
     new_edition
   end
 

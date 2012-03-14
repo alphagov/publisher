@@ -81,14 +81,14 @@ class WholeEditionTest < ActiveSupport::TestCase
   test "struct for search index" do
     dummy_publication = template_published_answer
     out = dummy_publication.search_index
-    assert_equal ["title", "link", "section", "format", "description", "indexable_content"], out.keys
+    assert_equal ["title", "link", "format", "description", "indexable_content", "section", "subsection"], out.keys
   end
 
   test "search index for all publications" do
     dummy_publication = template_published_answer
     out = WholeEdition.search_index_all
     assert_equal 1, out.count
-    assert_equal ["title", "link", "section", "format", "description", "indexable_content"], out.first.keys
+    assert_equal ["title", "link", "format", "description", "indexable_content", "section", "subsection"], out.first.keys
   end
 
   test "search indexable content for answer" do
@@ -217,16 +217,18 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal [a], WholeEdition.assigned_to(charlie).to_a
   end
 
-  test "should update Rummager on publication" do
+#TODO: Need a test of a *thing* that has multiple parts ensure Rummager is updated accordingly
+  test "should update Rummager on publication with no parts" do
     user = FactoryGirl.create(:user, name: 'Winston')
     
-    publication = FactoryGirl.create(:guide_edition)
-    publication.update_attribute(:state, 'ready')
+    edition = FactoryGirl.create(:guide_edition)
+    edition.save!
+    edition.update_attribute(:state, 'ready')
+    edition.save!
 
-    Rummageable.expects(:index).with(publication.search_index).returns(true)
-
-    user.publish(publication, comment: 'Testing')
-    publication.save
+    Rummageable.expects(:index).with(edition.search_index)
+    user.publish(edition, comment: 'Testing')
+    edition.save!
   end
 
   test "should update Rummager on deletion" do
@@ -423,53 +425,29 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
   end
   
-  test "search_index structure is correct" do
-    guide = template_guide
-    data = guide.search_index
-    assert_equal [
-      "title", "link", "section", "subsection", "format", 
-      "description", "indexable_content", "additional_links"].sort, data.keys.sort
-    assert_equal guide.title, data['title']
-    assert_equal "guide", data['format']
-  end
 
-  test "section name is normalized" do
-    guide = template_guide
-    guide.section = "Cats and Dogs"
-    assert_equal "cats-and-dogs", guide.search_index['section']
-  end
-
-  test "subsection field of search_index is populated by splitting section on colon" do
-    guide = template_guide
-    guide.section = "Crime and Justice:Prison"
-    assert_equal 'crime-and-justice', guide.search_index['section']
-    assert_equal 'prison', guide.search_index['subsection']
-  end
-  
-
-  test 'a guide with all versions published should not have drafts' do
-    guide = unpublished_template_guide
-    assert guide.has_draft?
-    assert !guide.has_published?
-    user = User.create :name => "Winston"
-
-    guide.editions.each do |e|
-       e.state = 'ready' #force ready state so that we can publish
-       user.publish e, { comment: "Publishing this" }
-    end
-
-    assert !guide.has_draft?
-    assert guide.has_published?
-  end
+ # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
+ # test 'a guide with all versions published should not have drafts' do
+ #   
+ #   guide = unpublished_template_guide
+ #   assert guide.has_draft?
+ #   assert !guide.has_published?
+ #   user = User.create :name => "Winston"
+ # 
+ #    guide.editions.each do |e|
+ #       e.state = 'ready' #force ready state so that we can publish
+ #       user.publish e, { comment: "Publishing this" }
+ #    end
+ # 
+ #    assert !guide.has_draft?
+ #    assert guide.has_published?
+ #  end
   
   test "a new guide edition with multiple parts creates a full diff when published" do
-    without_metadata_denormalisation(Guide) do
-      guide = Guide.new(:name => "One", :slug=>"one")
-      guide.save!
-
+    without_metadata_denormalisation(GuideEdition) do
       user = User.create :name => 'Roland'
 
-      edition_one = guide.editions.first
+      edition_one = GuideEdition.new(:name => "One", :slug => "one", :panopticon_id => 1, :title => "One")
       edition_one.parts.build :title => 'Part One', :body=>"Never gonna give you up", :slug => 'part-one'
       edition_one.parts.build :title => 'Part Two', :body=>"NYAN NYAN NYAN NYAN", :slug => 'part-two'
       edition_one.save!
@@ -481,6 +459,7 @@ class WholeEditionTest < ActiveSupport::TestCase
       edition_two.save!
       edition_two.parts.first.update_attribute :title, "Changed Title"
       edition_two.parts.first.update_attribute :body, "Never gonna let you down"
+
       edition_two.state = :ready
       user.publish edition_two, comment: "Second edition"
 
@@ -490,42 +469,40 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
   end
   
-  test 'a programme with all versions published should not have drafts' do
-    programme = template_programme
+  # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
+  # test 'a programme with all versions published should not have drafts' do
+  #   programme = template_programme
+  # 
+  #   assert !programme.has_draft?
+  #   assert programme.has_published?
+  # end
+  # 
+  # test 'a programme with one published and one draft edition is marked as having drafts and having published' do
+  #   programme = template_programme
+  #   programme.build_edition("Two")
+  #   
+  #   assert programme.has_draft?
+  #   assert programme.has_published?
+  # end
 
-    assert !programme.has_draft?
-    assert programme.has_published?
-  end
-  
-  test 'a programme with one published and one draft edition is marked as having drafts and having published' do
-    programme = template_programme
-    programme.build_edition("Two")
-    
-    assert programme.has_draft?
-    assert programme.has_published?
-  end
+  test "user should not be able to review an edition they requested review for" do
+    without_metadata_denormalisation(ProgrammeEdition) do
+      user = User.create(:name => "Mary")
 
-  test "user should not be able to review a programme they requested review for" do
-    user = User.create(:name => "Bob")
-
-    programme = user.create_publication(:programme)
-    edition = programme.editions.first
-    user.start_work(edition)
-    assert edition.can_request_review?
-    user.request_review(edition,{:comment => "Review this programme please."})
-    assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
+      edition = ProgrammeEdition.new(:name => "Childcare", :slug => "childcare", :panopticon_id => 1, :title => "Children")
+      user.start_work(edition)
+      assert edition.can_request_review?
+      user.request_review(edition,{:comment => "Review this programme please."})
+      assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
+    end
   end
   
 
   test "a new programme edition with multiple parts creates a full diff when published" do
-    without_metadata_denormalisation(Programme) do
-      programme = Programme.new(:slug=>"childcare", :name=>"Children", :panopticon_id => 987353)
-      programme.save!
+    without_metadata_denormalisation(ProgrammeEdition) do
+      user = User.create :name => 'Mazz'
 
-      user = User.create :name => 'Bob'
-
-      edition_one = programme.editions.first
-      edition_one.parts.delete_all # remove default parts
+      edition_one = ProgrammeEdition.new(:name => "Childcare", :slug => "childcare", :panopticon_id => 1, :title => "Children")
       edition_one.parts.build :title => 'Part One', :body=>"Content for part one", :slug => 'part-one'
       edition_one.parts.build :title => 'Part Two', :body=>"Content for part two", :slug => 'part-two'
       edition_one.save!
@@ -537,7 +514,6 @@ class WholeEditionTest < ActiveSupport::TestCase
       edition_two.save!
       edition_two.parts.first.update_attribute :body, "Some other content"
       edition_two.state = :ready
-      
       user.publish edition_two, comment: "Second edition"
 
       publish_action = edition_two.actions.where(request_type: "publish").last
@@ -548,13 +524,28 @@ class WholeEditionTest < ActiveSupport::TestCase
   
   test "a published publication with a draft edition is in progress" do
     dummy_answer = template_published_answer
-    assert !dummy_answer.has_in_progress?
+    assert !dummy_answer.has_sibling_in_progress?
 
-    edition = dummy_answer.build_edition("Two")
+    edition = dummy_answer.build_clone
     edition.save
     
-    assert dummy_answer.has_in_progress?
+    assert dummy_answer.has_sibling_in_progress?
   end
 
-  
+
+  test "a draft edition cannot be published" do
+    edition = template_edition
+    edition.save!
+    edition.start_work
+
+    assert_false edition.can_publish?
+  end
+
+  test "a draft edition can be emergency published" do
+    edition = template_edition
+    edition.save!
+    edition.start_work
+
+    assert edition.can_emergency_publish?
+  end
 end

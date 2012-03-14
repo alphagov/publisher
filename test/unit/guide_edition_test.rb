@@ -36,23 +36,26 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
   
   test "struct for search index" do
-    guide = template_guide
-    data = guide.search_index
-    assert_equal ["title", "link", "section", "format", "description", "indexable_content", "additional_links"], data.keys
-    assert_equal guide.title, data['title']
+    edition = template_guide
+    edition.update_attribute(:state, 'published')
+    data = edition.search_index
+    assert_equal ["title", "link", "format", "description", "indexable_content", "section", "subsection", "additional_links"], data.keys
+    assert_equal edition.title, data['title']
     assert_equal "guide", data['format']
   end
 
   test "indexable content contains parts for search index" do
     edition = template_guide
+    edition.update_attribute(:state, 'published')
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "/one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "/two")
     data = edition.search_index
     assert_equal "ONE ONE TWO TWO", data['indexable_content']
   end
 
-  test "index contains parts as additional links" do
+  test "index contains parts as additional links on published guide" do
     edition = template_guide
+    edition.update_attribute(:state, 'published')
     edition.parts.build(:body => "ONE", :title => "ONE", :slug => "one")
     edition.parts.build(:body => "TWO", :title => "TWO", :slug => "two")
     data = edition.search_index

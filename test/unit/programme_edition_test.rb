@@ -23,6 +23,9 @@ class ProgrammeEditionTest < ActiveSupport::TestCase
 
   test 'a programme correctly formats the additional links' do
     programme = template_programme
+    programme.update_attribute(:state,'published')
+    programme.save
+
     out = programme.search_index
     assert_equal 5, out['additional_links'].count
     assert_equal '/childcare#overview', out['additional_links'].first['link']

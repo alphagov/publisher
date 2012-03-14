@@ -30,33 +30,33 @@ class RouterBridgeTest < ActiveSupport::TestCase
     @marples_client = MarplesTestDouble.new
   end
 
+  def create_answer_edition
+    answer = AnswerEdition.create(:slug => "childcare", :name => "Something", :title => "Something", :body => 'Lots of info', :state => 'ready', :panopticon_id => 123)
+    answer.publish
+    answer.save
+    answer
+  end
+
   test "when marples receives a published message, create a route" do
-    publication = create_publication()
+    edition = create_answer_edition()
 
     @router_client.routes.expects(:update).with(
         application_id: "frontend",
-        incoming_path: "/#{publication['slug']}",
+        incoming_path: "/#{edition['slug']}",
         route_type: :full
     )
     @router_client.routes.expects(:update).with(
         application_id: "frontend",
-        incoming_path: "/#{publication['slug']}.json",
+        incoming_path: "/#{edition['slug']}.json",
         route_type: :full
     )
     @router_client.routes.expects(:update).with(
         application_id: "frontend",
-        incoming_path: "/#{publication['slug']}.xml",
+        incoming_path: "/#{edition['slug']}.xml",
         route_type: :full
     )
     RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
-    @marples_client.publish("publisher", "guide_edition", "published", publication)
+    @marples_client.publish("publisher", "guide_edition", "published", edition)
   end
 
-  private
-  def create_publication
-    answer = AnswerEdition.create(:slug=>"childcare", :title=>"Something", :body => 'Lots of info', :state => 'ready', :panopticon_id => 123)
-    answer.publish
-    answer.save
-    AnswerEdition.where(slug: 'childcare').first
-  end
 end

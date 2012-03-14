@@ -7,7 +7,7 @@ class LocalTransactionEdition < WholeEdition
   field :introduction,      type: String
   field :more_information,  type: String
  
-  @fields_to_clone = [:introduction, :more_information, :minutes_to_complete, :expectation_ids]
+  @fields_to_clone = [:introduction, :more_information, :minutes_to_complete, :expectation_ids, :lgsl_code, :lgsl]
 
   def whole_body
     self.introduction

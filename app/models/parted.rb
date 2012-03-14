@@ -7,7 +7,7 @@ module Parted
 
   def indexable_content
     content = super
-    return content unless published_edition?
+    return content unless published_edition
     parts.inject([content]) { |acc, part|
       acc.concat([part.title, govspeak_to_text(part.body)])
     }.compact.join(" ").strip
@@ -15,10 +15,10 @@ module Parted
 
   def search_index
     output = super
-    return output unless published_edition?
     output['additional_links'] = []
+    return output unless published_edition
 
-    parts.each do |part|
+    parts.each_with_index do |part, index|
       if format.downcase == 'programme' && part.slug != 'further-information'
         link = "/#{slug}\##{part.slug}"
       else
@@ -44,5 +44,9 @@ module Parted
     ordered_parts.each_with_index do |obj, i|
       obj.order = i + 1
     end
+  end
+  
+  def whole_body
+    self.parts.map {|i| %Q{\# #{i.title}\n\n#{i.body}} }.join("\n\n")
   end
 end

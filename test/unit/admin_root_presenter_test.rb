@@ -51,8 +51,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert ! a.archived?
 
     b = FactoryGirl.create(:guide_edition)
-    b.start_work
-    b.publish
+    b.update_attribute(:state, 'published')
     b.archive
     b.save
     

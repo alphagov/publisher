@@ -21,10 +21,17 @@ module Searchable
     {
       "title" => title,
       "link" => "/#{slug}",
-      "section" => section ? section.parameterize : nil,
       "format" => format.underscore.downcase,
       "description" => (published? && overview) || "",
       "indexable_content" => indexable_content,
+    }.merge(split_section(section))
+  end
+  
+  def split_section(section)
+    section, subsection = (section || "").split(':', 2).map { |s| s.parameterize }
+    {
+      "section" => section,
+      "subsection" => subsection
     }
   end
   
