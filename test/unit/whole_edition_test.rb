@@ -337,43 +337,43 @@ class WholeEditionTest < ActiveSupport::TestCase
   test "when an edition of a guide is published, all other published editions are archived" do
     without_metadata_denormalisation(GuideEdition) do
       edition = template_edition
-      
+
       user = User.create :name => 'bob'
-      edition.save                
+      edition.save
 
       edition.update_attribute(:state, 'ready')
-      user.publish edition, comment: "First publication"      
+      user.publish edition, comment: "First publication"
 
       second_edition = edition.build_clone
       second_edition.save!
       second_edition.update_attribute(:state, 'ready')
-      user.publish second_edition, comment: "Second publication"  
+      user.publish second_edition, comment: "Second publication"
 
       third_edition = second_edition.build_clone
       third_edition.save!
-      third_edition.update_attribute(:state, 'ready')                 
+      third_edition.update_attribute(:state, 'ready')
       user.publish third_edition, comment: "Third publication"
 
       edition.reload
       assert edition.archived?
-      
+
       second_edition.reload
       assert second_edition.archived?
-      
+
       assert_equal 2, GuideEdition.where(panopticon_id: edition.panopticon_id, state: 'archived').count
     end
-  end    
-  
+  end
+
   test "edition can return latest status action of a specified request type" do
-    edition = template_edition         
+    edition = template_edition
     user = User.create(:name => 'George')
     edition.save
 
     edition.update_attribute :state, 'draft'
-    edition.reload                                         
-    
-    user.request_review edition, comment: "Requesting review" 
-    
+    edition.reload
+
+    user.request_review edition, comment: "Requesting review"
+
     assert_equal edition.actions.size, 1
     assert edition.latest_status_action(Action::REQUEST_REVIEW).present?
   end
@@ -396,21 +396,21 @@ class WholeEditionTest < ActiveSupport::TestCase
   test "publish history is recorded" do
     without_metadata_denormalisation(GuideEdition) do
       edition = template_edition
-      
+
       user = User.create :name => 'bob'
-      edition.save                
+      edition.save
 
       edition.update_attribute(:state, 'ready')
-      user.publish edition, comment: "First publication"      
+      user.publish edition, comment: "First publication"
 
       second_edition = edition.build_clone
       second_edition.save!
       second_edition.update_attribute(:state, 'ready')
-      user.publish second_edition, comment: "Second publication"  
+      user.publish second_edition, comment: "Second publication"
 
       third_edition = second_edition.build_clone
       third_edition.save!
-      third_edition.update_attribute(:state, 'ready')                 
+      third_edition.update_attribute(:state, 'ready')
       user.publish third_edition, comment: "Third publication"
 
       edition.reload
@@ -418,31 +418,31 @@ class WholeEditionTest < ActiveSupport::TestCase
 
       second_edition.reload
       assert second_edition.actions.where('request_type' => 'publish')
-      
+
       third_edition.reload
       assert third_edition.actions.where('request_type' => 'publish')
       assert third_edition.published?
     end
   end
-  
+
 
  # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
  # test 'a guide with all versions published should not have drafts' do
- #   
+ #
  #   guide = unpublished_template_guide
  #   assert guide.has_draft?
  #   assert !guide.has_published?
  #   user = User.create :name => "Winston"
- # 
+ #
  #    guide.editions.each do |e|
  #       e.state = 'ready' #force ready state so that we can publish
  #       user.publish e, { comment: "Publishing this" }
  #    end
- # 
+ #
  #    assert !guide.has_draft?
  #    assert guide.has_published?
  #  end
-  
+
   test "a new guide edition with multiple parts creates a full diff when published" do
     without_metadata_denormalisation(GuideEdition) do
       user = User.create :name => 'Roland'
@@ -468,19 +468,19 @@ class WholeEditionTest < ActiveSupport::TestCase
       assert_equal "{\"# Part One\" >> \"# Changed Title\"}\n\n{\"Never gonna give you up\" >> \"Never gonna let you down\"}\n\n# Part Two\n\nNYAN NYAN NYAN NYAN", publish_action.diff
     end
   end
-  
+
   # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
   # test 'a programme with all versions published should not have drafts' do
   #   programme = template_programme
-  # 
+  #
   #   assert !programme.has_draft?
   #   assert programme.has_published?
   # end
-  # 
+  #
   # test 'a programme with one published and one draft edition is marked as having drafts and having published' do
   #   programme = template_programme
   #   programme.build_edition("Two")
-  #   
+  #
   #   assert programme.has_draft?
   #   assert programme.has_published?
   # end
@@ -547,5 +547,35 @@ class WholeEditionTest < ActiveSupport::TestCase
     edition.start_work
 
     assert edition.can_emergency_publish?
+  end
+
+  test "an edition with an assigned user and action requesters can be denormalised" do
+    @user1 = FactoryGirl.create(:user, :name => "Morwenna")
+    @user2 = FactoryGirl.create(:user, :name => "John")
+    @user3 = FactoryGirl.create(:user, :name => "Nick")
+
+    edition = FactoryGirl.create(:guide_edition, :state => 'archived', :assigned_to_id => @user1.id)
+    edition.actions.create :request_type => Action::CREATE, :requester => @user2
+    edition.actions.create :request_type => Action::PUBLISH, :requester => @user3
+    edition.actions.create :request_type => Action::ARCHIVE, :requester => @user1
+    edition.save! and edition.reload
+
+    edition.denormalise_users!
+
+    assert_equal @user1.name, edition.assignee
+    assert_equal @user2.name, edition.creator
+    assert_equal @user3.name, edition.publisher
+    assert_equal @user1.name, edition.archiver
+  end
+
+  test "an assignee's name should be denormalised when an edition is assigned" do
+    @user1 = FactoryGirl.create(:user)
+    @user2 = FactoryGirl.create(:user)
+
+    edition = FactoryGirl.create(:guide_edition, :state => 'lined_up')
+    @user1.assign edition, @user2
+
+    assert_equal @user2, edition.assigned_to
+    assert_equal @user2.name, edition.assignee
   end
 end

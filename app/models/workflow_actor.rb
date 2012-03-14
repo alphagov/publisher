@@ -85,6 +85,10 @@ module WorkflowActor
 
   def assign(edition, recipient)
     edition.assigned_to_id = recipient.id
+
+    # denormalise the assignee name
+    edition.assignee = recipient.name
+
     # We're saving the edition here as the controller treats assignment as a special case.
     # The controller saves the publication, then updates assignment.
     edition.save!

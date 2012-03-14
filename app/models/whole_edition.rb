@@ -21,6 +21,11 @@ class WholeEdition
   field :rejected_count, :type => Integer, default: 0
   field :tags, :type => String
 
+  field :assignee, :type => String
+  field :creator, :type => String
+  field :publisher, :type => String
+  field :archiver, :type => String
+
   belongs_to :assigned_to, class_name: 'User'
 
   scope :lined_up,            where(state: 'lined_up')

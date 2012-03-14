@@ -18,4 +18,17 @@ namespace :editions do
       end
     end
   end
+
+  desc "denormalise associated users"
+  task :denormalise => :environment do
+    WholeEdition.all.each do |edition|
+      begin
+        puts "Processing #{edition.class} #{edition.id}"
+        edition.denormalise_users!
+        puts "   Done!"
+      rescue Exception => e
+        puts "   [Err] Could not denormalise edition: #{e}"
+      end
+    end
+  end
 end

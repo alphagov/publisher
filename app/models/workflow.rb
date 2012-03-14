@@ -62,6 +62,10 @@ module Workflow
         transition :published => :archived
       end
     end
+
+    # alias_method :created_by, :creator
+    # alias_method :published_by, :publisher
+    # alias_method :archived_by, :archiver
   end
 
   def fact_checked?
@@ -70,6 +74,19 @@ module Workflow
 
   def capitalized_state_name
     self.human_state_name.capitalize
+  end
+
+  def denormalise_users!
+    create_action = actions.where(:request_type.in => [Action::CREATE, Action::NEW_VERSION]).first
+    publish_action = actions.where(:request_type => Action::PUBLISH).first
+    archive_action = actions.where(:request_type => Action::ARCHIVE).first
+
+    self.assignee = assigned_to.name if assigned_to
+    self.creator = create_action.requester.name if create_action and create_action.requester
+    self.publisher = publish_action.requester.name if publish_action and publish_action.requester
+    self.archiver = archive_action.requester.name if archive_action and archive_action.requester
+
+    save!(:validate => false) and reload
   end
 
   def created_by

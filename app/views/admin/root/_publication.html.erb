@@ -30,15 +30,15 @@
   </td>
   <% end %>
   <td>
-    <%= publication.assigned_to %>
-    
+    <%= publication.assignee %>
+
     <% if tab && tab == :lined_up %>
-    <%= link_to publication.assigned_to ? ' (change)' : 'assign', edit_edition_path(publication) %>
+    <%= link_to publication.assignee ? ' (change)' : 'assign', edit_edition_path(publication) %>
     <% end %>
   </td>
     <% unless tab && tab == :lined_up %>
     <td>
-      <%= publication.created_by %>
+      <%= publication.creator %>
     </td>
     <% end %>
     <td>
@@ -47,9 +47,9 @@
   <td>
     <%= publication.rejected_count %>
   </td>
-    <% if tab && tab == :published || tab == :archived %>
+    <% if tab && tab == :archived %>
     <td>
-      <%= (tab == :published) ? publication.published_by : publication.archived_by %>
+      <%= publication.archiver %>
     </td>
     <td>
       <%= link_to 'View', publication_front_end_path(publication) %>
@@ -66,13 +66,9 @@
         <%= hidden_field_tag :start_work, 1 %>
         <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => 'Start work on this #{publication.class.to_s.humanize)}', :class => 'start-work' %>
       <% end %>
-    <% elsif tab and (tab == :published or tab == :archived) and publication.can_create_new_edition? %>
+    <% elsif tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_admin_edition_path(publication) do %>
         <%= image_submit_tag '/images/icon-publisher-create-new-publication.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
-      <% end %>
-    <% elsif tab && tab == :published %>
-      <%= link_to admin_edition_path(publication) do %>
-        <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this draft publication', :title => 'Edit this draft publication' %>
       <% end %>
     <% else %>
       <%= link_to admin_edition_path(publication) do %>
