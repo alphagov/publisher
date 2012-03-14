@@ -9,7 +9,7 @@
     <% if tab && (tab == :published || tab == :archived) %>
       (v.<%= publication.version_number %>)
       <% if publication.has_sibling_in_progress? %>
-        (v.<%= publication.latest_publication.version_number %> in <%= publication.latest_edition.state.humanize.downcase %>)
+        (v.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
       <% end%>
     <% else %>
       v.<%= publication.version_number %>
