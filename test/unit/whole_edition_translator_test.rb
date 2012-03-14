@@ -16,26 +16,30 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     a = Answer.new(section: 'work', department: 'MOJ', slug: "get-a-criminal-records-bureau-check", panopticon_id: '123')
     edition = a.editions.build(
       assigned_to: @author,
-      version_number: 1, title: 'Get a CRB check', 
-      body: "##Your employer will give you a paper application form, or they might ask you to get one by calling"
+      version_number: 1, title: 'Get a CRB check',
+      body: "##Your employer will give you a paper application form, or they might ask you to get one by calling",
+      overview: "Test excerpt",
+      alternative_title: "Am I a convicted criminal?"
     )
     edition.actions.build(requester: @author, comment: 'Hello!', request_type: 'create', state: 'draft')
     second_edition = a.editions.build(
       assigned_to: @editor,
       version_number: 2,
       title: 'Blah',
-      body: "##Your employer will give you a paper application form, or they might ask you to get one by calling"
+      body: "##Your employer will give you a paper application form, or they might ask you to get one by calling",
+      overview: "Test excerpt 2",
+      alternative_title: "Bleh?"
     )
     second_edition.actions.build(requester: @author, comment: 'Hello!', request_type: 'publish', state: 'draft')
     a.save!
     a
   end
-  
+
   def sample_guide
     g = Guide.new(section: 'work', department: 'MOJ', slug: "get-a-criminal-records-bureau-check", panopticon_id: '123')
     edition = g.editions.build(
       assigned_to: @author,
-      version_number: 1, title: 'Get a CRB check', 
+      version_number: 1, title: 'Get a CRB check',
     )
     edition.parts.build(
       title: "my TITLE",
@@ -52,12 +56,12 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     g.save!
     g
   end
-  
+
   def sample_transaction
     t = Transaction.new(section: 'work', department: 'MOJ', slug: "get-a-criminal-records-bureau-check", panopticon_id: '123')
     edition = t.editions.build(
       assigned_to: @author,
-      version_number: 1, title: 'Get a CRB check', 
+      version_number: 1, title: 'Get a CRB check',
       introduction: 'Some form of intro',
       will_continue_on: 'a website',
       link: 'http://a.web.site/',
@@ -118,20 +122,34 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     assert ! new_edition.valid?
   end
 
+  test "it captures metadata for an answer" do
+    a = multi_edition_answer
+
+    translator = WholeEditionTranslator.new(a, a.editions.last)
+    new_edition = translator.run
+    assert_equal a.slug, new_edition.slug
+    assert_equal a.editions.last.title, new_edition.title
+    assert_equal a.section, new_edition.section
+    assert_equal a.editions.last.overview, new_edition.overview
+    assert_equal a.department, new_edition.department
+    assert_equal a.editions.last.alternative_title, new_edition.alternative_title
+  end
+
+
   test "it handles LGSL data for local transactions" do
     pending "need to rewrite all local transaction tests for branch"
     # council = make_authority('county', snac: '00BC', lgsl: 1)
     # service = make_service(1, %w{county unitary})
-    # 
+    #
     # local_transaction = LocalTransaction.new(lgsl_code: "1", name: "Local Transaction", slug: "slug", panopticon_id: 1243)
     # local_transaction.editions.build(introduction: 'Something local', title: 'A local transaction')
     # assert local_transaction.save
-    # 
+    #
     # assert LocalAuthority.find_by_snac('00BC').provides_service?("1")
     # translator = WholeEditionTranslator.new(local_transaction, local_transaction.editions.last)
     # new_edition = translator.run
-    # 
-    # assert new_edition.valid?    
+    #
+    # assert new_edition.valid?
     # assert_equal '1', new_edition.lgsl_code
     # assert_equal '00BC', new_edition.services.provided_by.first.snac
   end

@@ -90,7 +90,12 @@ class WholeEditionTranslator
     raise "No publication for #{original_edition.inspect}" unless original_publication
 
     basic_attributes = { _type: "#{original_publication.class}Edition" }
-    basic_attributes.merge!(slug: original_publication.slug, panopticon_id: original_publication.panopticon_id)
+    basic_attributes.merge!({
+      slug: original_publication.slug, 
+      panopticon_id: original_publication.panopticon_id,
+      section: original_publication.section,
+      department: original_publication.department
+    })
     basic_attributes[:lgsl_code] = original_publication.lgsl_code if original_publication.respond_to?(:lgsl_code)
     
     full_attribute_set = basic_attributes.merge(original_edition.attributes)
