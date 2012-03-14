@@ -137,20 +137,19 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
 
   test "it handles LGSL data for local transactions" do
-    pending "need to rewrite all local transaction tests for branch"
-    # council = make_authority('county', snac: '00BC', lgsl: 1)
-    # service = make_service(1, %w{county unitary})
-    #
-    # local_transaction = LocalTransaction.new(lgsl_code: "1", name: "Local Transaction", slug: "slug", panopticon_id: 1243)
-    # local_transaction.editions.build(introduction: 'Something local', title: 'A local transaction')
-    # assert local_transaction.save
-    #
-    # assert LocalAuthority.find_by_snac('00BC').provides_service?("1")
-    # translator = WholeEditionTranslator.new(local_transaction, local_transaction.editions.last)
-    # new_edition = translator.run
-    #
-    # assert new_edition.valid?
-    # assert_equal '1', new_edition.lgsl_code
-    # assert_equal '00BC', new_edition.services.provided_by.first.snac
+    council = make_authority('county', snac: '00BC', lgsl: 1)
+    service = make_service(1, %w{county unitary})
+
+    local_transaction = LocalTransaction.new(lgsl_code: "1", name: "Local Transaction", slug: "slug", panopticon_id: 1243)
+    local_transaction.editions.build(introduction: 'Something local', title: 'A local transaction')
+    assert local_transaction.save
+
+    assert LocalAuthority.find_by_snac('00BC').provides_service?("1")
+    translator = WholeEditionTranslator.new(local_transaction, local_transaction.editions.last)
+    new_edition = translator.run
+
+    assert new_edition.valid?
+    assert_equal 1, new_edition.lgsl_code
+    assert_equal '00BC', new_edition.service.provided_by.first.snac
   end
 end
