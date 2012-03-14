@@ -1,6 +1,6 @@
 <tr class="<%= status_class_for(publication) %>">
   <td>
-    <%= image_tag "/images/icon-publisher-#{publication.class.name.downcase}.png", :alt => publication.class.name.humanize  %>
+    <%= image_tag "/images/icon-publisher-#{publication.format.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
   <td class="title">
     <%= publication.admin_list_title %>

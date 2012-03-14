@@ -1,7 +1,12 @@
 require 'test_helper'
+require_relative 'helpers/local_services_helper'
+
 require 'whole_edition_translator'
 
 class WholeEditionTranslatorTest < ActiveSupport::TestCase
+
+  include LocalServicesHelper
+
   setup do
     @author = FactoryGirl.create(:user)
     @editor = FactoryGirl.create(:user)
@@ -115,21 +120,19 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
   test "it handles LGSL data for local transactions" do
     pending "need to rewrite all local transaction tests for branch"
-    # lts = LocalTransactionsSource.create!
-    #     
-    # lgsl = lts.lgsls.create!(code: "1")
-    # lgsl.authorities.create(snac: '00BC')
+    # council = make_authority('county', snac: '00BC', lgsl: 1)
+    # service = make_service(1, %w{county unitary})
     # 
     # local_transaction = LocalTransaction.new(lgsl_code: "1", name: "Local Transaction", slug: "slug", panopticon_id: 1243)
     # local_transaction.editions.build(introduction: 'Something local', title: 'A local transaction')
     # assert local_transaction.save
     # 
-    # assert ! LocalTransactionsSource.find_current_lgsl('1').nil?
+    # assert LocalAuthority.find_by_snac('00BC').provides_service?("1")
     # translator = WholeEditionTranslator.new(local_transaction, local_transaction.editions.last)
     # new_edition = translator.run
     # 
     # assert new_edition.valid?    
     # assert_equal '1', new_edition.lgsl_code
-    # assert_equal '00BC', new_edition.lgsl.authorities.first.snac
+    # assert_equal '00BC', new_edition.services.provided_by.first.snac
   end
 end
