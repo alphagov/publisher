@@ -6,7 +6,6 @@ class LocalTransactionEdition < WholeEdition
   field :more_information,  type: String
   @fields_to_clone = [:lgsl_code, :introduction, :more_information, :minutes_to_complete, :expectation_ids]
 
-  validates_presence_of :lgsl_code
   validate              :valid_lgsl_code
 
 
