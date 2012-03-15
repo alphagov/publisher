@@ -19,4 +19,18 @@ FactoryGirl.define do
       getp.parts.build(title: 'PART !!', body: "This is some more version text.", slug: 'part-two')
     end
   end
+
+  factory :local_transaction_edition do |lte|
+    lte.sequence(:panopticon_id) { |n| n }
+    title  { 'Test title' }
+    lte.sequence(:slug) { |ns| "slug-#{ns}"}
+    lte.sequence(:lgsl_code) { |nlgsl| nlgsl }
+    introduction { 'Test introduction' }
+    more_information { 'This is more information' }
+  end
+
+  factory :local_service do |ls|
+    ls.sequence(:lgsl_code) { |nlgsl| nlgsl }
+    providing_tier { %w{district unitary county} }
+  end
 end
