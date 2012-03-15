@@ -13,9 +13,14 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     panopticon_has_metadata("id" => "12345", "name" => "Test", "slug" => "test")
   end
 
-  test "it renders the new template successfully if creation fails" do
-    LocalTransactionsSource.stubs(:find_current_lgsl).returns(nil)
-    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>"801", "panopticon_id"=>"827"}
+  test "it renders the lgsl edit form successfully if creation fails" do
+    lgsl_code = 800
+    local_service = FactoryGirl.create(:local_service, :lgsl_code=>lgsl_code)
+
+    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code, "panopticon_id"=>"827", "title"=>"a title"}
+    assert_equal '302', response.code
+
+    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code+1, "panopticon_id"=>"827", "title"=>"a title"}
     assert_equal '200', response.code
   end
 
@@ -143,7 +148,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert !@guide.lined_up?
     assert @guide.draft?
   end
-  
+
   test "destroy transaction" do
     assert @transaction.can_destroy?
     assert_difference('TransactionEdition.count', -1) do
