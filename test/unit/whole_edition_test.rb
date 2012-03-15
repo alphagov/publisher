@@ -5,13 +5,6 @@ class WholeEditionTest < ActiveSupport::TestCase
     panopticon_has_metadata("id" => '2356', "slug" => 'childcare', "name" => "Childcare")
   end
 
-  def template_edition
-    g = FactoryGirl.create(:guide_edition)
-    g.parts.build(title: 'PART !', body: "This is some version text.", slug: 'part-one')
-    g.parts.build(title: 'PART !!', body: "This is some more version text.", slug: 'part-two')
-    g
-  end
-
   def template_answer(version_number = 1)
     AnswerEdition.create(state: 'ready', slug: "childcare", panopticon_id: 1,
       title: 'Child care stuff', body: 'Lots of info', version_number: version_number)
@@ -218,7 +211,7 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "should update Rummager on publication with no parts" do
-    edition = FactoryGirl.create(:guide_edition, state: 'ready')
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     edition.stubs(:search_index).returns("stuff for search index")
 
     Rummageable.expects(:index).with("stuff for search index")
@@ -227,7 +220,7 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "search_index for a single part thing should have the normalised content of that part" do
-    edition = FactoryGirl.create(:guide_edition, :state=>'ready', :title=>'one part thing', :alternative_title=>'alternative one part thing', :section=>'test:subsection test')
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready', :title => 'one part thing', :alternative_title => 'alternative one part thing')
     edition.publish
     generated_search_content = edition.search_index
     assert_equal generated_search_content['indexable_content'], "alternative one part thing"
@@ -235,27 +228,21 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "search_index for a multi part thing should have the normalised content of all parts" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state=>'ready')
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'ready')
     edition.publish
     generated_search_content = edition.search_index
     assert_equal generated_search_content['indexable_content'], "PART ! This is some version text. PART !! This is some more version text."
-    assert generated_search_content['additional_links'][1].has_value?("/slug-22/part-two")
+    assert generated_search_content['additional_links'][1].has_value?("/#{edition.slug}/part-two")
   end
 
   test "should update Rummager on deletion" do
     publication = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary")
-    publication.save
-
     Rummageable.expects(:delete).with("/hedgehog-topiary")
-
     publication.destroy
   end
 
   test "given multiple editions, can return the most recent published edition" do
-    publication = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary")
-    publication.save
-
-    publication.update_attribute(:state, 'archived')
+    publication = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary", :state => 'archived')
 
     second_edition = publication.build_clone
     second_edition.update_attribute(:state, 'published')
@@ -267,19 +254,19 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
-    my_edition = template_edition
-    assert_equal my_edition.title, my_edition.admin_list_title
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+    assert_equal edition.title, edition.admin_list_title
   end
 
   test "editions can have notes stored for the history tab" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     user = User.new
     assert edition.new_action(user, 'note', comment: 'Something important')
   end
 
   test "status should not be affected by notes" do
     user = User.create(:name => "bob")
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     t0 = Time.now
     Timecop.freeze(t0) do
       edition.new_action(user, Action::APPROVE_REVIEW)
@@ -291,14 +278,14 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "should have no assignee by default" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     assert_nil edition.assigned_to
   end
 
   test "should be assigned to the last assigned recipient" do
     alice = User.create(:name => "alice")
-    bob   = User.create(:name => "bob")
-    edition = template_edition
+    bob = User.create(:name => "bob")
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     alice.assign(edition, bob)
     assert_equal bob, edition.assigned_to
   end
@@ -316,53 +303,48 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "new editions should have the same text when created" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'ready')
     new_edition = edition.build_clone
     original_text = edition.parts.map {|p| p.body }.join(" ")
-    new_text = new_edition.parts.map  {|p| p.body }.join(" ")
+    new_text = new_edition.parts.map {|p| p.body }.join(" ")
     assert_equal original_text, new_text
   end
 
   test "changing text in a new edition should not change text in old edition" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'ready')
     new_edition = edition.build_clone
     new_edition.parts.first.body = "Some other version text"
-    original_text = edition.parts.map     {|p| p.body }.join(" ")
-    new_text =      new_edition.parts.map {|p| p.body }.join(" ")
+    original_text = edition.parts.map {|p| p.body }.join(" ")
+    new_text = new_edition.parts.map {|p| p.body }.join(" ")
     assert_not_equal original_text, new_text
   end
 
   test "a new guide has no published edition" do
-    guide = template_edition
-    guide.save
+    guide = FactoryGirl.create(:guide_edition, :state => 'ready')
     assert_nil GuideEdition.where(state: 'published', panopticon_id: guide.panopticon_id).first
   end
 
   test "an edition of a guide can be published" do
-    edition = template_edition
-    edition.update_attribute :state, 'ready'
+    edition = FactoryGirl.create(:guide_edition, :state => 'ready')
     edition.publish
     assert_not_nil GuideEdition.where(state: 'published', panopticon_id: edition.panopticon_id).first
   end
 
   test "when an edition of a guide is published, all other published editions are archived" do
     without_metadata_denormalisation(GuideEdition) do
-      edition = template_edition
+      edition = FactoryGirl.create(:guide_edition, :state => 'ready')
 
       user = User.create :name => 'bob'
-      edition.save
-
-      edition.update_attribute(:state, 'ready')
       user.publish edition, comment: "First publication"
 
       second_edition = edition.build_clone
-      second_edition.save!
       second_edition.update_attribute(:state, 'ready')
+      second_edition.save!
       user.publish second_edition, comment: "Second publication"
 
       third_edition = second_edition.build_clone
-      third_edition.save!
       third_edition.update_attribute(:state, 'ready')
+      third_edition.save!
       user.publish third_edition, comment: "Third publication"
 
       edition.reload
@@ -376,13 +358,8 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "edition can return latest status action of a specified request type" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition, :state => 'draft')
     user = User.create(:name => 'George')
-    edition.save
-
-    edition.update_attribute :state, 'draft'
-    edition.reload
-
     user.request_review edition, comment: "Requesting review"
 
     assert_equal edition.actions.size, 1
@@ -390,36 +367,28 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "a published edition can't be edited" do
-    guide = template_edition
-    guide.save
+    edition = FactoryGirl.create(:guide_edition, :state => 'published')
+    edition.title = "My New Title"
 
-    guide.update_attribute :state, 'published'
-    guide.reload
-
-    guide.title = "My New Title"
-
-    assert ! guide.save
-    assert_equal ["Published editions can't be edited"], guide.errors[:base]
+    assert ! edition.save
+    assert_equal ["Published editions can't be edited"], edition.errors[:base]
   end
 
-  test "publish history is recorded" do
+  test "edition's publish history is recorded" do
     without_metadata_denormalisation(GuideEdition) do
-      edition = template_edition
+      edition = FactoryGirl.create(:guide_edition, :state => 'ready')
 
       user = User.create :name => 'bob'
-      edition.save
-
-      edition.update_attribute(:state, 'ready')
       user.publish edition, comment: "First publication"
 
       second_edition = edition.build_clone
-      second_edition.save!
       second_edition.update_attribute(:state, 'ready')
+      second_edition.save!
       user.publish second_edition, comment: "Second publication"
 
       third_edition = second_edition.build_clone
-      third_edition.save!
       third_edition.update_attribute(:state, 'ready')
+      third_edition.save!
       user.publish third_edition, comment: "Third publication"
 
       edition.reload
@@ -506,7 +475,6 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
   end
 
-
   test "a new programme edition with multiple parts creates a full diff when published" do
     without_metadata_denormalisation(ProgrammeEdition) do
       user = User.create :name => 'Mazz'
@@ -541,17 +509,14 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert dummy_answer.has_sibling_in_progress?
   end
 
-
   test "a draft edition cannot be published" do
-    edition = template_edition
-    edition.save!
+    edition = FactoryGirl.create(:guide_edition, :state => 'draft')
     edition.start_work
-
     assert_false edition.can_publish?
   end
 
   test "a draft edition can be emergency published" do
-    edition = template_edition
+    edition = FactoryGirl.create(:guide_edition, :state => 'draft')
     edition.start_work
     assert edition.can_emergency_publish?
   end
@@ -560,6 +525,8 @@ class WholeEditionTest < ActiveSupport::TestCase
     @user1 = FactoryGirl.create(:user, :name => "Morwenna")
     @user2 = FactoryGirl.create(:user, :name => "John")
     @user3 = FactoryGirl.create(:user, :name => "Nick")
+
+    edition = FactoryGirl.create(:guide_edition, :state => 'archived')
 
     edition = FactoryGirl.create(:guide_edition, :state => 'archived', :assigned_to_id => @user1.id)
     edition.actions.create :request_type => Action::CREATE, :requester => @user2

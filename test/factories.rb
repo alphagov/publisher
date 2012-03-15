@@ -7,8 +7,9 @@ FactoryGirl.define do
 
   factory :guide_edition do |ge|
     ge.sequence(:panopticon_id) { |n| n }
-    title  { Faker::Company.bs }
+    title  { 'Test title' }
     ge.sequence(:slug) { |ns| "slug-#{ns}"}
+    section { 'test:subsection test' }
   end
 
   factory :guide_edition_with_two_parts, :parent => :guide_edition do
