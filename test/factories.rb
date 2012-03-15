@@ -6,8 +6,16 @@ FactoryGirl.define do
   end
 
   factory :guide_edition do |ge|
-  	ge.sequence(:panopticon_id) { |n| n }
+    ge.sequence(:panopticon_id) { |n| n }
     title  { Faker::Company.bs }
-    slug  { Faker::Company.bs.downcase.gsub(/[^a-z]+/, "-") }
+    ge.sequence(:slug) { |ns| "slug-#{ns}"}
+  end
+
+  factory :guide_edition_with_two_parts, :parent => :guide_edition do
+    title 'a title'
+    after_build do |getp|
+      getp.parts.build(title: 'PART !', body: "This is some version text.", slug: 'part-one')
+      getp.parts.build(title: 'PART !!', body: "This is some more version text.", slug: 'part-two')
+    end
   end
 end

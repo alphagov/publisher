@@ -4,7 +4,7 @@ class WholeEditionTest < ActiveSupport::TestCase
   setup do
     panopticon_has_metadata("id" => '2356', "slug" => 'childcare', "name" => "Childcare")
   end
-  
+
   def template_edition
     g = FactoryGirl.create(:guide_edition)
     g.parts.build(title: 'PART !', body: "This is some version text.", slug: 'part-one')
@@ -45,20 +45,20 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "it should be able to find its siblings" do
-  	g1 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 1)
-  	g2 = FactoryGirl.create(:guide_edition, :panopticon_id => 2, :version_number => 1)
-  	g3 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 2)
-  	assert_equal [], g2.siblings.to_a
-  	assert_equal [g3], g1.siblings.to_a
+    g1 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 1)
+    g2 = FactoryGirl.create(:guide_edition, :panopticon_id => 2, :version_number => 1)
+    g3 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 2)
+    assert_equal [], g2.siblings.to_a
+    assert_equal [g3], g1.siblings.to_a
   end
 
   test "it should be able to find its previous siblings" do
-  	g1 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 1)
-  	g2 = FactoryGirl.create(:guide_edition, :panopticon_id => 2, :version_number => 1)
-  	g3 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 2)
-  	
-  	assert_equal [], g1.previous_siblings.to_a
-  	assert_equal [g1], g3.previous_siblings.to_a
+    g1 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 1)
+    g2 = FactoryGirl.create(:guide_edition, :panopticon_id => 2, :version_number => 1)
+    g3 = FactoryGirl.create(:guide_edition, :panopticon_id => 1, :version_number => 2)
+
+    assert_equal [], g1.previous_siblings.to_a
+    assert_equal [g1], g3.previous_siblings.to_a
   end
 
   test "edition finder should return the published edition when given an empty edition parameter" do
@@ -198,7 +198,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     Rails.logger.warn "MONGODB: ABout to create two guides"
     a, b = 2.times.map { |i| GuideEdition.create!(panopticon_id: i, title: "Guide #{i}", slug: "guide-#{i}") }
     Rails.logger.warn "MONGODB: Done creating two guides"
-    
+
     alice, bob, charlie = %w[ alice bob charlie ].map { |s|
       FactoryGirl.create(:user, name: s)
     }
@@ -206,7 +206,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     alice.assign(a, bob)
     a.reload
     assert_equal bob, a.assigned_to
-    
+
     alice.assign(a, charlie)
     a.reload
     assert_equal charlie, a.assigned_to
@@ -217,18 +217,29 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal [a], WholeEdition.assigned_to(charlie).to_a
   end
 
-#TODO: Need a test of a *thing* that has multiple parts ensure Rummager is updated accordingly
   test "should update Rummager on publication with no parts" do
-    user = FactoryGirl.create(:user, name: 'Winston')
-    
-    edition = FactoryGirl.create(:guide_edition)
-    edition.save!
-    edition.update_attribute(:state, 'ready')
-    edition.save!
+    edition = FactoryGirl.create(:guide_edition, state: 'ready')
+    edition.stubs(:search_index).returns("stuff for search index")
 
-    Rummageable.expects(:index).with(edition.search_index)
+    Rummageable.expects(:index).with("stuff for search index")
+    user = FactoryGirl.create(:user)
     user.publish(edition, comment: 'Testing')
-    edition.save!
+  end
+
+  test "search_index for a single part thing should have the normalised content of that part" do
+    edition = FactoryGirl.create(:guide_edition, :state=>'ready', :title=>'one part thing', :alternative_title=>'alternative one part thing', :section=>'test:subsection test')
+    edition.publish
+    generated_search_content = edition.search_index
+    assert_equal generated_search_content['indexable_content'], "alternative one part thing"
+    assert_equal generated_search_content['additional_links'].length, 0
+  end
+
+  test "search_index for a multi part thing should have the normalised content of all parts" do
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state=>'ready')
+    edition.publish
+    generated_search_content = edition.search_index
+    assert_equal generated_search_content['indexable_content'], "PART ! This is some version text. PART !! This is some more version text."
+    assert generated_search_content['additional_links'][1].has_value?("/slug-22/part-two")
   end
 
   test "should update Rummager on deletion" do
@@ -254,7 +265,7 @@ class WholeEditionTest < ActiveSupport::TestCase
 
     assert_equal publication.published_edition, second_edition
   end
-  
+
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
     my_edition = template_edition
     assert_equal my_edition.title, my_edition.admin_list_title
@@ -494,7 +505,7 @@ class WholeEditionTest < ActiveSupport::TestCase
       assert ! user.request_amendments(edition, {:comment => "Well Done, but work harder"})
     end
   end
-  
+
 
   test "a new programme edition with multiple parts creates a full diff when published" do
     without_metadata_denormalisation(ProgrammeEdition) do
@@ -519,14 +530,14 @@ class WholeEditionTest < ActiveSupport::TestCase
       assert_equal "# Part One\n\n{\"Content for part one\" >> \"Some other content\"}\n\n# Part Two\n\nContent for part two", publish_action.diff
     end
   end
-  
+
   test "a published publication with a draft edition is in progress" do
     dummy_answer = template_published_answer
     assert !dummy_answer.has_sibling_in_progress?
 
     edition = dummy_answer.build_clone
     edition.save
-    
+
     assert dummy_answer.has_sibling_in_progress?
   end
 
@@ -541,9 +552,7 @@ class WholeEditionTest < ActiveSupport::TestCase
 
   test "a draft edition can be emergency published" do
     edition = template_edition
-    edition.save!
     edition.start_work
-
     assert edition.can_emergency_publish?
   end
 
