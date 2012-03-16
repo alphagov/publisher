@@ -17,7 +17,7 @@ module Admin::PathsHelper
   end
 
   def edit_edition_path(edition)
-    "/admin/#{path_from_edition_class(edition)}/#{edition.to_param}"
+    "/admin/editions/#{edition.to_param}"
   end
 
 protected

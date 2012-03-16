@@ -539,8 +539,6 @@ class WholeEditionTest < ActiveSupport::TestCase
       edition.actions.create :request_type => Action::ARCHIVE, :requester => @user1
       edition.save! and edition.reload
 
-      edition.denormalise_users!
-
       assert_equal @user1.name, edition.assignee
       assert_equal @user2.name, edition.creator
       assert_equal @user3.name, edition.publisher

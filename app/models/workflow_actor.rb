@@ -6,6 +6,7 @@ module WorkflowActor
     type = Action.const_get(type.to_s.upcase)
     action = edition.new_action(self, type, options)
     messenger_topic = edition.state.to_s.downcase
+    edition.save! # force callbacks for denormalisation
     Messenger.instance.send messenger_topic, edition unless messenger_topic == "created"
     NoisyWorkflow.make_noise(action).deliver
     NoisyWorkflow.request_fact_check(action).deliver if type == "send_fact_check"
@@ -41,7 +42,7 @@ module WorkflowActor
   def create_whole_edition(format, attributes = {})
     format = "#{format}_edition" unless format.to_s.match(/edition$/)
     publication_class = format.to_s.camelize.constantize
-    attributes.merge!({ :creator => name })
+
     item = publication_class.create(attributes)
     record_action(item, Action::CREATE) if item.persisted?
     item
@@ -77,9 +78,6 @@ module WorkflowActor
   def publish(edition, details)
     details.merge!({ :diff => edition.edition_changes }) if edition.published_edition
 
-    # denormalise the publisher name
-    edition.publisher = name
-
     take_action(edition, __method__, details)
   end
 
@@ -91,12 +89,9 @@ module WorkflowActor
   def assign(edition, recipient)
     edition.assigned_to_id = recipient.id
 
-    # denormalise the assignee name
-    edition.assignee = recipient.name
-
     # We're saving the edition here as the controller treats assignment as a special case.
     # The controller saves the publication, then updates assignment.
-    edition.save!
+    edition.save! and edition.reload
     record_action edition, __method__, recipient: recipient
   end
 end

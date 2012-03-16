@@ -24,7 +24,7 @@ namespace :editions do
     WholeEdition.all.each do |edition|
       begin
         puts "Processing #{edition.class} #{edition.id}"
-        edition.denormalise_users!
+        edition.denormalise_users and edition.save!
         puts "   Done!"
       rescue Exception => e
         puts "   [Err] Could not denormalise edition: #{e}"

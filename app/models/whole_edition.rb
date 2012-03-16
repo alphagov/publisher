@@ -76,7 +76,7 @@ class WholeEdition
   def published_edition
     series.where(state: 'published').order(version_number: 'desc').first
   end
-  
+
   def previous_published_edition
     series.where(state: 'published').order(version_number: 'desc').second
   end
@@ -115,7 +115,7 @@ class WholeEdition
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
 
-    importing_user.create_whole_edition(metadata.kind.to_sym, :panopticon_id => metadata.id, 
+    importing_user.create_whole_edition(metadata.kind.to_sym, :panopticon_id => metadata.id,
       :slug => metadata.slug, :title => metadata.name)
   end
 
@@ -142,11 +142,11 @@ class WholeEdition
   def has_video?
     false
   end
-  
+
   def safe_to_preview?
     true
   end
-  
+
   def has_sibling_in_progress?
     subsequent_siblings.where(:state.nin => [:published, :archived]).count > 0
   end

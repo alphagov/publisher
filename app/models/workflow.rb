@@ -5,7 +5,9 @@ module Workflow
   included do
     validate :not_editing_published_item
     before_destroy :check_can_delete_and_notify
-    
+
+    before_save :denormalise_users
+
     field :state, :type => String, :default => 'lined_up'
     belongs_to :assigned_to, :class_name => 'User'
     embeds_many :actions
@@ -76,7 +78,7 @@ module Workflow
     self.human_state_name.capitalize
   end
 
-  def denormalise_users!
+  def denormalise_users
     create_action = actions.where(:request_type.in => [Action::CREATE, Action::NEW_VERSION]).first
     publish_action = actions.where(:request_type => Action::PUBLISH).first
     archive_action = actions.where(:request_type => Action::ARCHIVE).first
@@ -86,7 +88,7 @@ module Workflow
     self.publisher = publish_action.requester.name if publish_action and publish_action.requester
     self.archiver = archive_action.requester.name if archive_action and archive_action.requester
 
-    save!(:validate => false) and reload
+    return self
   end
 
   def created_by
@@ -112,6 +114,11 @@ module Workflow
     end
   end
 
+  def last_fact_checked_at
+    last_fact_check = actions.reverse.find(&:is_fact_check_request?)
+    last_fact_check ? last_fact_check.created_at : NullTimestamp.new
+  end
+
   def new_action(user, type, options={})
     actions.create!(options.merge(requester_id: user.id, request_type: type))
   end
@@ -122,18 +129,18 @@ module Workflow
 
   def not_editing_published_item
     if changed? and published? and ! state_changed?
-      errors.add(:base, "Published editions can't be edited") 
+      errors.add(:base, "Published editions can't be edited")
     end
   end
 
   def can_destroy?
     ! published? and ! archived?
   end
-  
+
   def check_can_delete_and_notify
     raise CannotDeletePublishedPublication unless can_destroy?
   end
-    
+
   def mark_as_rejected
     self.inc(:rejected_count, 1)
   end

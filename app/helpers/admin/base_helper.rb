@@ -19,11 +19,11 @@ module Admin::BaseHelper
   end
 
   def skip_fact_check_for_edition(edition)
-    send("skip_fact_check_admin_#{edition.format.underscore}_edition_path", edition)
+    send("skip_fact_check_admin_edition_path", edition)
   end
 
   def edition_can_be_deleted?(edition)
-    ! edition.published? 
+    ! edition.published?
   end
 
   def produce_fact_check_request_text
