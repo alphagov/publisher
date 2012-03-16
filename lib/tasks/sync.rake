@@ -1,4 +1,5 @@
 namespace :sync do
+  #TODO fix for branch
   desc "Broadcast all current publications states"
   task :broadcast => :environment do
     Publication.published.each do |pub|

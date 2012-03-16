@@ -1,5 +1,6 @@
 namespace :editors do
   desc "Generate editors work report"
+  #TODO broken functionality in WholeEdition - may need a rethink
   task :work_report => :environment do
     puts "Format type,Publication name,Slug,Editor name"
 
