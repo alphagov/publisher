@@ -150,6 +150,6 @@ class WholeEdition
   end
 
   def has_sibling_in_progress?
-    subsequent_siblings.where(:state.nin => [:published, :archived]).count > 0
+    latest_version_number > version_number
   end
 end

@@ -506,6 +506,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     edition = dummy_answer.build_clone
     edition.save
 
+    dummy_answer.reload
     assert dummy_answer.has_sibling_in_progress?
   end
 
