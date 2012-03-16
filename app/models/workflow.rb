@@ -7,6 +7,7 @@ module Workflow
     before_destroy :check_can_delete_and_notify
 
     before_save :denormalise_users
+    after_create :notify_siblings_of_new_edition
 
     field :state, :type => String, :default => 'lined_up'
     belongs_to :assigned_to, :class_name => 'User'
@@ -153,4 +154,7 @@ module Workflow
     self.whole_body.empty? ? false : Differ.diff_by_line( self.whole_body, self.published_edition.whole_body )
   end
 
+  def notify_siblings_of_new_edition
+    siblings.update_all(latest_version_number: self.version_number)
+  end
 end

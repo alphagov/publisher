@@ -574,4 +574,25 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
 
   end
+
+  context "tracking status of siblings" do
+    setup do
+      @user = FactoryGirl.create(:user)
+      @edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+    end
+
+    should "set the latest version number to current number for new editions" do
+      assert_equal 1, @edition.version_number
+      assert_equal @edition.version_number, @edition.latest_version_number
+    end
+
+    should "update previous editions when new edition is added" do
+      @new_edition = @edition.build_clone
+      @new_edition.save
+      @edition.reload
+
+      assert_equal 2, @new_edition.version_number
+      assert_equal 2, @edition.latest_version_number
+    end
+  end
 end

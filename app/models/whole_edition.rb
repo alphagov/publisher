@@ -11,6 +11,8 @@ class WholeEdition
 
   field :panopticon_id, :type => Integer
   field :version_number, :type => Integer, :default => 1
+  field :latest_version_number, :type => Integer, :default => 1
+
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
   field :overview, :type => String
