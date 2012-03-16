@@ -23,11 +23,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
     x, y, z = %w[ XXX YYY ZZZ ].map.with_index { |name, i|
-      Guide.create(
-        panopticon_id: i + 1,
-        name: name,
-        slug: name.downcase
-      )
+      Guide.create(:panopticon_id => i + 1, :title => name, :slug => name.downcase)
     }
 
     bob.assign(x.editions.first, alice)

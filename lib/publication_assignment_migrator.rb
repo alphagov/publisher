@@ -1,5 +1,6 @@
 class PublicationAssignmentMigrator
-
+  #this migration will not work after move to WholeEdition branch
+  #fix commented out below in case needed
   def self.migrate_all
     class << Publication
       def legacy_assignment_filter(user)
@@ -33,6 +34,7 @@ class PublicationAssignmentMigrator
         latest_edition.actions.find_all { |a| a.request_type == "assign" }.each do |assignment_action|
           requester = User.find(assignment_action.requester_id)
           recipient = User.find(assignment_action.recipient_id)
+          #puts "#{requester.name} Assigning '#{publication.title}' to #{recipient.name}"
           puts "#{requester.name} Assigning '#{publication.name}' to #{recipient.name}"
 
           requester.assign(latest_edition, recipient)

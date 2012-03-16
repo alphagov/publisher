@@ -425,7 +425,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     without_metadata_denormalisation(GuideEdition) do
       user = User.create :name => 'Roland'
 
-      edition_one = GuideEdition.new(:name => "One", :slug => "one", :panopticon_id => 1, :title => "One")
+      edition_one = GuideEdition.new(:title => "One", :slug => "one", :panopticon_id => 1)
       edition_one.parts.build :title => 'Part One', :body=>"Never gonna give you up", :slug => 'part-one'
       edition_one.parts.build :title => 'Part Two', :body=>"NYAN NYAN NYAN NYAN", :slug => 'part-two'
       edition_one.save!
@@ -467,7 +467,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     without_metadata_denormalisation(ProgrammeEdition) do
       user = User.create(:name => "Mary")
 
-      edition = ProgrammeEdition.new(:name => "Childcare", :slug => "childcare", :panopticon_id => 1, :title => "Children")
+      edition = ProgrammeEdition.new(:title => "Childcare", :slug => "childcare", :panopticon_id => 1)
       user.start_work(edition)
       assert edition.can_request_review?
       user.request_review(edition,{:comment => "Review this programme please."})
@@ -479,7 +479,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     without_metadata_denormalisation(ProgrammeEdition) do
       user = User.create :name => 'Mazz'
 
-      edition_one = ProgrammeEdition.new(:name => "Childcare", :slug => "childcare", :panopticon_id => 1, :title => "Children")
+      edition_one = ProgrammeEdition.new(:title => "Childcare", :slug => "childcare", :panopticon_id => 1)
       edition_one.parts.build :title => 'Part One', :body=>"Content for part one", :slug => 'part-one'
       edition_one.parts.build :title => 'Part Two', :body=>"Content for part two", :slug => 'part-two'
       edition_one.save!
