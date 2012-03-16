@@ -31,4 +31,22 @@ namespace :editions do
       end
     end
   end
+
+  desc "cache latest version number against editions"
+  task :cache_version_numbers => :environment do
+     WholeEdition.all.each do |edition|
+      begin
+        puts "Processing #{edition.class} #{edition.id}"
+        if edition.subsequent_siblings.any?
+          edition.latest_version_number = edition.subsequent_siblings.sort_by(&:version_number).last.version_number
+        else
+          edition.latest_version_number = edition.version_number
+        end
+        edition.save
+        puts "   Done!"
+      rescue Exception => e
+        puts "   [Err] Could not denormalise edition: #{e}"
+      end
+    end
+  end
 end
