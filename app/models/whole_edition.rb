@@ -46,6 +46,7 @@ class WholeEdition
 
   index "assigned_to_id"
   index "panopticon_id"
+  index "state"
 
   class << self; attr_accessor :fields_to_clone end
   @fields_to_clone = []
