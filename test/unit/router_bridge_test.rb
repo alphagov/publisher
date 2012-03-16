@@ -31,7 +31,7 @@ class RouterBridgeTest < ActiveSupport::TestCase
   end
 
   def create_answer_edition
-    answer = AnswerEdition.create(:slug => "childcare", :name => "Something", :title => "Something", :body => 'Lots of info', :state => 'ready', :panopticon_id => 123)
+    answer = AnswerEdition.create(:slug => "childcare", :title => "Something", :body => 'Lots of info', :state => 'ready', :panopticon_id => 123)
     answer.publish
     answer.save
     answer

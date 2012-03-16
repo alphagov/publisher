@@ -5,7 +5,7 @@ class PreviewsTest < ActionDispatch::IntegrationTest
   def setup_place_thing(random_name)
     setup_users
 
-    @place = @author.create_publication(:place, :name => random_name, :slug => 'test-place')
+    @place = @author.create_publication(:place, :title => random_name, :slug => 'test-place')
     @place.editions.first.title = random_name
     @place.editions.first.introduction = 'Body text'
     @place.editions.first.more_information = 'More body text'
@@ -18,7 +18,7 @@ class PreviewsTest < ActionDispatch::IntegrationTest
   def publish_answer(random_name)
     setup_users
 
-    @answer = @author.create_publication(:answer, :name => random_name, :slug => 'test-answer', :panopticon_id => 15328)
+    @answer = @author.create_publication(:answer, :title => random_name, :slug => 'test-answer', :panopticon_id => 15328)
     @answer.editions.first.title = random_name
     @answer.editions.first.body = 'Body text'
     @answer.save!

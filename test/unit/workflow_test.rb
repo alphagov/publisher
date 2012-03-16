@@ -80,7 +80,7 @@ class WorkflowTest < ActiveSupport::TestCase
     user.start_work(g)
     assert_equal false, g.lined_up?
   end
-  
+
   test 'a new guide has lined_up but isn\'t published' do
     g = FactoryGirl.create(:guide_edition)
     assert g.lined_up?
@@ -93,7 +93,7 @@ class WorkflowTest < ActiveSupport::TestCase
     assert g.draft?
     assert !g.published?
   end
-  
+
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
     user = User.create(:name=>"Ben")
@@ -120,8 +120,8 @@ class WorkflowTest < ActiveSupport::TestCase
     other_user.approve_review(edition, {:comment => "Looks good to me"})
     assert edition.can_publish?
   end
-  
-  
+
+
   test "check counting reviews" do
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
@@ -184,13 +184,13 @@ class WorkflowTest < ActiveSupport::TestCase
     edition.expects(:build_clone).returns(false)
     assert ! user.new_version(edition)
   end
-  
+
   test 'a new programme has drafts but isn\'t published' do
     p = template_programme
     assert p.draft?
     assert ! p.published?
   end
-  
+
   test "a programme should be marked as having reviewables if requested for review" do
     programme = template_programme
     user, other_user = template_users
@@ -234,17 +234,12 @@ class WorkflowTest < ActiveSupport::TestCase
     assert ! edition.published?
     assert ! user.new_version(edition)
   end
-  
-  
+
+
 
   test "a new edition of an answer creates a diff when published" do
     without_metadata_denormalisation(AnswerEdition) do
-      edition_one = AnswerEdition.new(
-        :name => "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
-        :slug => "woodchuck",
-        :panopticon_id => 1,
-        :title => "Chucking wood"
-      )
+      edition_one = AnswerEdition.new(:title => "Chucking wood", :slug => "woodchuck", :panopticon_id => 1)
       edition_one.body = 'A woodchuck would chuck all the wood he could chuck if a woodchuck could chuck wood.'
       edition_one.state = :ready
       edition_one.save!

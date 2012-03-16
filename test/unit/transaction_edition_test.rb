@@ -4,7 +4,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
 
   def transaction_edition
     expectation = Expectation.create :css_class => "card_payment",  :text => "Credit card required"
-    edition = TransactionEdition.new(:name => "Transaction", :slug => "transaction", :panopticon_id => 1, :title => "Transaction")
+    edition = TransactionEdition.new(:title => "Transaction", :slug => "transaction", :panopticon_id => 1)
     edition.expectation_ids = [expectation.id]
     edition.update_attributes(:introduction => "Example", :link => 'http://example.com', :more_information => 'More information')
     edition.save!
@@ -32,5 +32,4 @@ class TransactionEditionTest < ActiveSupport::TestCase
 
     end
   end
-  
 end

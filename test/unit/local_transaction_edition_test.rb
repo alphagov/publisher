@@ -7,7 +7,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
   context "a local transaction for the 'bins' service" do
     setup do
       @lgsl_code = 'bins'
-      @bins_transaction = LocalTransactionEdition.new(lgsl_code: @lgsl_code, name: "Transaction", slug: "slug", panopticon_id: 1, title: "Transaction")
+      @bins_transaction = LocalTransactionEdition.new(:lgsl_code => @lgsl_code, :title => "Transaction", :slug => "slug", :panopticon_id => 1)
     end
 
     context "an authority exists providing the 'housing-benefit' service" do
@@ -39,11 +39,11 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     should "validate that a LocalService exists for that lgsl_code" do
       s = LocalService.create!(lgsl_code: 'bins', providing_tier: %w{county unitary})
 
-      lt = LocalTransactionEdition.new(lgsl_code: 'nonexistent', name: "Foo", slug: "foo", panopticon_id: 1, title: "Foo")
+      lt = LocalTransactionEdition.new(:lgsl_code => 'nonexistent', :title => "Foo", :slug => "foo", :panopticon_id => 1)
       lt.save
       assert !lt.valid?
 
-      lt = LocalTransactionEdition.new(lgsl_code: s.lgsl_code, name: "Bar", slug: "bar", panopticon_id: 1, title: "Foo")
+      lt = LocalTransactionEdition.new(:lgsl_code => s.lgsl_code, :title => "Bar", :slug => "bar", :panopticon_id => 1)
       lt.save
       assert lt.valid?
       assert lt.persisted?
@@ -53,7 +53,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
   context "when publishing a new version" do
     setup do
       make_service(149, %w{county unitary})
-      @edition_one = LocalTransactionEdition.new(:name => "Transaction", :slug => "transaction", :lgsl_code => "149", :panopticon_id => 1, :title => "Transaction")
+      @edition_one = LocalTransactionEdition.new(:title => "Transaction", :slug => "transaction", :lgsl_code => "149", :panopticon_id => 1)
       @user = User.create :name => 'Thomas'
     end
 
