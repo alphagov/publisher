@@ -267,13 +267,9 @@ class WholeEditionTest < ActiveSupport::TestCase
   test "status should not be affected by notes" do
     user = User.create(:name => "bob")
     edition = FactoryGirl.create(:guide_edition, :state => 'ready')
-    t0 = Time.now
-    Timecop.freeze(t0) do
-      edition.new_action(user, Action::APPROVE_REVIEW)
-    end
-    Timecop.freeze(t0 + 1) do
-      edition.new_action(user, Action::NOTE, comment: 'Something important')
-    end
+    edition.new_action(user, Action::APPROVE_REVIEW)
+    edition.new_action(user, Action::NOTE, comment: 'Something important')
+
     assert_equal Action::APPROVE_REVIEW, edition.latest_status_action.request_type
   end
 

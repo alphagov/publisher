@@ -82,20 +82,22 @@ group :development do
 end
 
 group :test do
-  gem 'fabrication'
-  gem "timecop"
+  gem 'test-unit'
+  gem 'shoulda'
+  gem 'database_cleaner'
+
   gem 'capybara', '~> 1.0.0'
   gem "capybara-webkit"
-  gem 'selenium-webdriver'
-  gem 'database_cleaner'
+  gem 'launchy'
+
+  gem 'webmock'
   gem 'mocha', :require => false
+  gem 'factory_girl_rails'
+  gem 'faker'
+
+  gem "timecop"
+
   gem 'simplecov', '0.4.2'
   gem 'simplecov-rcov'
   gem 'ci_reporter'
-  gem 'webmock'
-  gem 'test-unit'
-  gem 'launchy'
-  gem 'factory_girl_rails'
-  gem 'faker'
-  gem 'shoulda'
 end
