@@ -2,7 +2,7 @@ require 'test_helper'
 
 class WholeEditionTest < ActiveSupport::TestCase
   setup do
-    panopticon_has_metadata("id" => '2356', "slug" => 'childcare', "name" => "Childcare")
+    panopticon_has_metadata("id" => '2356', "kind" => "answer", "slug" => 'childcare', "name" => "Childcare")
   end
 
   def template_answer(version_number = 1)
@@ -521,35 +521,59 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert edition.can_emergency_publish?
   end
 
-  test "an edition with an assigned user and action requesters can be denormalised" do
-    @user1 = FactoryGirl.create(:user, :name => "Morwenna")
-    @user2 = FactoryGirl.create(:user, :name => "John")
-    @user3 = FactoryGirl.create(:user, :name => "Nick")
 
-    edition = FactoryGirl.create(:guide_edition, :state => 'archived')
+  # test denormalisation
 
-    edition = FactoryGirl.create(:guide_edition, :state => 'archived', :assigned_to_id => @user1.id)
-    edition.actions.create :request_type => Action::CREATE, :requester => @user2
-    edition.actions.create :request_type => Action::PUBLISH, :requester => @user3
-    edition.actions.create :request_type => Action::ARCHIVE, :requester => @user1
-    edition.save! and edition.reload
+  context "denormalising users" do
 
-    edition.denormalise_users!
+    should "denormalise an edition with an assigned user and action requesters" do
+      @user1 = FactoryGirl.create(:user, :name => "Morwenna")
+      @user2 = FactoryGirl.create(:user, :name => "John")
+      @user3 = FactoryGirl.create(:user, :name => "Nick")
 
-    assert_equal @user1.name, edition.assignee
-    assert_equal @user2.name, edition.creator
-    assert_equal @user3.name, edition.publisher
-    assert_equal @user1.name, edition.archiver
-  end
+      edition = FactoryGirl.create(:guide_edition, :state => 'archived')
 
-  test "an assignee's name should be denormalised when an edition is assigned" do
-    @user1 = FactoryGirl.create(:user)
-    @user2 = FactoryGirl.create(:user)
+      edition = FactoryGirl.create(:guide_edition, :state => 'archived', :assigned_to_id => @user1.id)
+      edition.actions.create :request_type => Action::CREATE, :requester => @user2
+      edition.actions.create :request_type => Action::PUBLISH, :requester => @user3
+      edition.actions.create :request_type => Action::ARCHIVE, :requester => @user1
+      edition.save! and edition.reload
 
-    edition = FactoryGirl.create(:guide_edition, :state => 'lined_up')
-    @user1.assign edition, @user2
+      edition.denormalise_users!
 
-    assert_equal @user2, edition.assigned_to
-    assert_equal @user2.name, edition.assignee
+      assert_equal @user1.name, edition.assignee
+      assert_equal @user2.name, edition.creator
+      assert_equal @user3.name, edition.publisher
+      assert_equal @user1.name, edition.archiver
+    end
+
+    should "denormalise an assignee's name when an edition is assigned" do
+      @user1 = FactoryGirl.create(:user)
+      @user2 = FactoryGirl.create(:user)
+
+      edition = FactoryGirl.create(:guide_edition, :state => 'lined_up')
+      @user1.assign edition, @user2
+
+      assert_equal @user2, edition.assigned_to
+      assert_equal @user2.name, edition.assignee
+    end
+
+    should "denormalise a creator's name when an edition is created" do
+      @user = FactoryGirl.create(:user)
+
+      edition = AnswerEdition.create_from_panopticon_data('2356', @user)
+
+      assert_equal @user.name, edition.creator
+    end
+
+    should "denormalise a publishing user's name when an edition is published" do
+      @user = FactoryGirl.create(:user)
+
+      edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+      @user.publish edition, { }
+
+      assert_equal @user.name, edition.publisher
+    end
+
   end
 end
