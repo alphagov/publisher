@@ -104,7 +104,9 @@ class WholeEditionTest < ActiveSupport::TestCase
         "id" => 2356,
         "slug" => "foo-bar",
         "kind" => "answer",
-        "name" => "Foo bar"
+        "name" => "Foo bar",
+        "section" => "Test section",
+        "department" => "Test dept"
     )
 
     user = User.create
@@ -114,6 +116,8 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_kind_of AnswerEdition, publication
     assert_equal "Foo bar", publication.title
     assert_equal 2356, publication.panopticon_id
+    assert_equal "Test section", publication.section
+    assert_equal "Test dept", publication.department
   end
 
   test "should not change edition name if published" do
