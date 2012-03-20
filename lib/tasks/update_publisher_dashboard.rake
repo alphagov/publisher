@@ -3,7 +3,7 @@ task :update_publisher_dashboard => :environment do
 
   def initialize_states
     @hash = {:count => 0}
-    Edition.state_machine.states.map(&:name).each do |state|
+      ['lined_up', 'draft', 'amends_needed', 'in_review', 'fact_check', 'fact_check_received', 'ready', 'published', 'archived'].each do |state|
       @hash[state] = 0
     end
 
@@ -11,27 +11,30 @@ task :update_publisher_dashboard => :environment do
   end
 
   def filter_empty_values(attribute_value)
-    attribute_value.empty? ? OverviewDashboard::UNASSIGNED_KEY : attribute_value
+    (attribute_value.nil? || attribute_value.empty?) ? OverviewDashboard::UNASSIGNED_KEY : attribute_value
   end
 
   @output = {}
-  {'Format' => 'format_type', 'Section' => 'section', 'Writing Department' => 'department'}.each do |view, attribute|
+
+  {'Format' => '_type', 'Section' => 'section', 'Writing Department' => 'department'}.each do |view, attribute|
     @index = {}
     @index[OverviewDashboard::TOTAL_KEY] = initialize_states
 
-    Publication.all.each do |publication|
-      latest_edition = publication.latest_edition
-      state = latest_edition.state_name
-      attribute_value = filter_empty_values(publication.send(attribute))
+    WholeEdition.all.each do |edition|
+      if edition.latest_edition?
+        state = edition.state
+        attribute_value = filter_empty_values(edition.send(attribute))
+        attribute_value.sub!("Edition","") if attribute == "_type"
 
-      if @index[attribute_value].nil?
-        @index[attribute_value] = initialize_states
+        if @index[attribute_value].nil?
+          @index[attribute_value] = initialize_states
+        end
+
+        @index[attribute_value][state] += 1
+        @index[attribute_value][:count] += 1
+        @index[OverviewDashboard::TOTAL_KEY][state] += 1
+        @index[OverviewDashboard::TOTAL_KEY][:count] += 1
       end
-
-      @index[attribute_value][state] += 1
-      @index[attribute_value][:count] += 1
-      @index[OverviewDashboard::TOTAL_KEY][state] += 1
-      @index[OverviewDashboard::TOTAL_KEY][:count] += 1
     end
 
     @output[view.to_sym] = @index
