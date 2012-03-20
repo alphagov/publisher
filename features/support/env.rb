@@ -1,5 +1,7 @@
 require 'cucumber/rails'
 
+require Rails.root.join('test', 'test_helper')
+
 Capybara.default_selector = :css
 
 ActionController::Base.allow_rescue = false

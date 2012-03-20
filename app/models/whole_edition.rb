@@ -117,8 +117,12 @@ class WholeEdition
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
 
-    importing_user.create_whole_edition(metadata.kind.to_sym, :panopticon_id => metadata.id,
-      :slug => metadata.slug, :title => metadata.name)
+    importing_user.create_whole_edition(metadata.kind.to_sym,
+      :panopticon_id => metadata.id,
+      :slug => metadata.slug,
+      :title => metadata.name,
+      :section => metadata.section,
+      :department => metadata.department)
   end
 
   def self.find_and_identify(slug, edition)
