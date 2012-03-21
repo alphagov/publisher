@@ -54,6 +54,20 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal [g1], g3.previous_siblings.to_a
   end
 
+  test "cloning from an earlier edition should give you a safe version number" do
+    edition = FactoryGirl.create(:guide_edition,
+                                  :state => 'published',
+                                  :panopticon_id => 1,
+                                  :version_number => 1)
+    edition_two = FactoryGirl.create(:guide_edition,
+                                  :state => 'published',
+                                  :panopticon_id => 1,
+                                  :version_number => 2)
+
+    clone1 = edition.build_clone
+    assert_equal clone1.version_number, 3
+  end
+
   test "edition finder should return the published edition when given an empty edition parameter" do
     dummy_publication = template_published_answer
     second_publication = template_unpublished_answer(2)

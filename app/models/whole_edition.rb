@@ -96,12 +96,15 @@ class WholeEdition
     "factcheck+#{Plek.current.environment}-#{id}@alphagov.co.uk"
   end
 
+  def get_next_version_number
+    latest_version = series.order(version_number: 'desc').first.version_number
+    latest_version + 1
+  end
+
   def build_clone
-    # TODO: need to make version number safer here
-    # possible factor out to get_new_version_number
     # also not cloning the correct fields
-    new_edition = self.class.new(title: self.title, version_number: self.version_number + 1)
     real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug]
+    new_edition = self.class.new(title: self.title, version_number: get_next_version_number)
     real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
     end
