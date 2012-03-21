@@ -102,9 +102,8 @@ class WholeEdition
   end
 
   def build_clone
-    # also not cloning the correct fields
-    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug]
     new_edition = self.class.new(title: self.title, version_number: get_next_version_number)
+    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug, :section, :department]
     real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
     end

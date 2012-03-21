@@ -54,6 +54,22 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal [g1], g3.previous_siblings.to_a
   end
 
+  test "it should build a clone" do
+    edition = FactoryGirl.create(:guide_edition,
+                                  :state => 'published',
+                                  :panopticon_id => 1,
+                                  :version_number => 1,
+                                  :department => 'Test dept',
+                                  :overview => 'I am a test overview',
+                                  :alternative_title => 'Alternative test title')
+    clone_edition = edition.build_clone
+    assert_equal clone_edition.department, 'Test dept'
+    assert_equal clone_edition.section, 'test:subsection test'
+    assert_equal clone_edition.overview, 'I am a test overview'
+    assert_equal clone_edition.alternative_title, 'Alternative test title'
+    assert_equal clone_edition.version_number, 2
+  end
+
   test "cloning from an earlier edition should give you a safe version number" do
     edition = FactoryGirl.create(:guide_edition,
                                   :state => 'published',
