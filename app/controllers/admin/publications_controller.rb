@@ -19,6 +19,6 @@ class Admin::PublicationsController < Admin::BaseController
     def render_new_form(edition)
       @publication = edition
       setup_view_paths_for(edition)
-      render template: 'edition'
+      render template: 'new'
     end
 end
