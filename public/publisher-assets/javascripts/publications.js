@@ -42,7 +42,7 @@ $(function () {
   });
 
   $('.also_save_edition').submit(function () {
-    var edition_form = $('form.edition');
+    var edition_form = $('form.whole_edition');
     var this_form = $(this);
 
     if (! submitted_forms) {

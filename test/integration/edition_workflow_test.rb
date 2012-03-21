@@ -94,7 +94,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     setup_users
 
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
-    guide.update_attribute(:state, 'draft')
+    guide.update_attribute(:state, 'ready')
 
     visit "/admin/editions/#{guide.to_param}"
 
