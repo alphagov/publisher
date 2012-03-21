@@ -70,6 +70,15 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal clone_edition.version_number, 2
   end
 
+  test "cloning can only occur from a published edition" do
+    edition = FactoryGirl.create(:guide_edition,
+                                  :panopticon_id => 1,
+                                  :version_number => 1)
+    assert_raise (RuntimeError) do
+      edition.build_clone
+    end
+  end
+
   test "cloning from an earlier edition should give you a safe version number" do
     edition = FactoryGirl.create(:guide_edition,
                                   :state => 'published',
@@ -276,15 +285,16 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "given multiple editions, can return the most recent published edition" do
-    publication = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary", :state => 'archived')
+    edition = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary", :state => 'published')
 
-    second_edition = publication.build_clone
+    second_edition = edition.build_clone
+    edition.update_attribute(:state, 'archived')
     second_edition.update_attribute(:state, 'published')
 
     third_edition = second_edition.build_clone
     third_edition.update_attribute(:state, 'draft')
 
-    assert_equal publication.published_edition, second_edition
+    assert_equal edition.published_edition, second_edition
   end
 
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
@@ -321,19 +331,19 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "new edition should have an incremented version number" do
-    edition = FactoryGirl.create(:guide_edition)
+    edition = FactoryGirl.create(:guide_edition, :state => 'published')
     new_edition = edition.build_clone
     assert_equal edition.version_number + 1, new_edition.version_number
   end
 
   test "new edition should have an empty list of actions" do
-    edition = FactoryGirl.create(:guide_edition)
+    edition = FactoryGirl.create(:guide_edition, :state => 'published')
     new_edition = edition.build_clone
     assert_equal [], new_edition.actions
   end
 
   test "new editions should have the same text when created" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'ready')
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'published')
     new_edition = edition.build_clone
     original_text = edition.parts.map {|p| p.body }.join(" ")
     new_text = new_edition.parts.map {|p| p.body }.join(" ")
@@ -341,7 +351,7 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
   test "changing text in a new edition should not change text in old edition" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'ready')
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'published')
     new_edition = edition.build_clone
     new_edition.parts.first.body = "Some other version text"
     original_text = edition.parts.map {|p| p.body }.join(" ")
@@ -610,6 +620,7 @@ class WholeEditionTest < ActiveSupport::TestCase
     setup do
       @user = FactoryGirl.create(:user)
       @edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+      @published_edition = FactoryGirl.create(:guide_edition, :state => 'published')
     end
 
     should "set siblings in progress to nil for new editions" do
@@ -618,24 +629,24 @@ class WholeEditionTest < ActiveSupport::TestCase
     end
 
     should "update previous editions when new edition is added" do
-      @new_edition = @edition.build_clone
+      @new_edition = @published_edition.build_clone
       @new_edition.save
-      @edition.reload
+      @published_edition.reload
 
       assert_equal 2, @new_edition.version_number
-      assert_equal 2, @edition.sibling_in_progress
+      assert_equal 2, @published_edition.sibling_in_progress
     end
 
     should "update previous editions when new edition is published" do
-      @new_edition = @edition.build_clone
+      @new_edition = @published_edition.build_clone
       @new_edition.save
       @new_edition.update_attribute(:state, 'ready')
       @user.publish(@new_edition, comment: "Publishing this")
-      @edition.reload
+      @published_edition.reload
 
       assert_equal 2, @new_edition.version_number
       assert_nil @new_edition.sibling_in_progress
-      assert_nil @edition.sibling_in_progress
+      assert_nil @published_edition.sibling_in_progress
     end
 
   end
