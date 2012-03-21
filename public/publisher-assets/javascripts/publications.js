@@ -22,7 +22,7 @@ $(function () {
   var saved = false;
 
   $('#save-edition').submit(function () {
-      var edition_form = $('form.edition');
+      var edition_form = $('form.whole_edition');
       if (! saved) {
           saved = true;
           edition_form.trigger('submit');
