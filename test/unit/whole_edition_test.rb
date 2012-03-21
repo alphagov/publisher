@@ -444,22 +444,41 @@ class WholeEditionTest < ActiveSupport::TestCase
   end
 
 
- # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
- # test 'a guide with all versions published should not have drafts' do
- #
- #   guide = unpublished_template_guide
- #   assert guide.has_draft?
- #   assert !guide.has_published?
- #   user = User.create :name => "Winston"
- #
- #    guide.editions.each do |e|
- #       e.state = 'ready' #force ready state so that we can publish
- #       user.publish e, { comment: "Publishing this" }
- #    end
- #
- #    assert !guide.has_draft?
- #    assert guide.has_published?
- #  end
+ test 'a series with all editions published should not have siblings in progress' do
+   without_metadata_denormalisation(GuideEdition) do
+     edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+
+     user = User.create :name => 'bob'
+     user.publish edition, comment: "First publication"
+
+     new_edition = edition.build_clone
+     new_edition.state = 'ready'
+     new_edition.save!
+     user.publish new_edition, comment: "Second publication"
+
+     edition = edition.reload
+
+     assert_nil edition.sibling_in_progress
+   end
+  end
+
+  test 'a series with one published and one draft edition should have a sibling in progress' do
+    without_metadata_denormalisation(GuideEdition) do
+      edition = FactoryGirl.create(:guide_edition, :state => 'ready')
+      edition.save!
+
+      user = User.create :name => 'bob'
+      user.publish edition, comment: "First publication"
+
+      new_edition = edition.build_clone
+      new_edition.save!
+
+      edition = edition.reload
+
+      assert_not_nil edition.sibling_in_progress
+      assert_equal new_edition.version_number, edition.sibling_in_progress
+    end
+  end
 
   test "a new guide edition with multiple parts creates a full diff when published" do
     without_metadata_denormalisation(GuideEdition) do
@@ -486,22 +505,6 @@ class WholeEditionTest < ActiveSupport::TestCase
       assert_equal "{\"# Part One\" >> \"# Changed Title\"}\n\n{\"Never gonna give you up\" >> \"Never gonna let you down\"}\n\n# Part Two\n\nNYAN NYAN NYAN NYAN", publish_action.diff
     end
   end
-
-  # TODO: has_draft? no longer exists. needs rewriting once this has been worked out
-  # test 'a programme with all versions published should not have drafts' do
-  #   programme = template_programme
-  #
-  #   assert !programme.has_draft?
-  #   assert programme.has_published?
-  # end
-  #
-  # test 'a programme with one published and one draft edition is marked as having drafts and having published' do
-  #   programme = template_programme
-  #   programme.build_edition("Two")
-  #
-  #   assert programme.has_draft?
-  #   assert programme.has_published?
-  # end
 
   test "user should not be able to review an edition they requested review for" do
     without_metadata_denormalisation(ProgrammeEdition) do
