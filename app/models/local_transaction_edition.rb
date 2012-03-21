@@ -11,8 +11,12 @@ class LocalTransactionEdition < WholeEdition
 
   def valid_lgsl_code
     if ! self.service
-      errors.add(:lgsl_code, "Invalid LGSL Code: '#{lgsl_code}'")
+      errors.add(:lgsl_code, "#{lgsl_code} not recognised")
     end
+  end
+
+  def format_name
+    "Local transaction"
   end
 
   def search_format

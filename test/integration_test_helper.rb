@@ -29,8 +29,8 @@ class ActionDispatch::IntegrationTest
     # This may not be the right way to do things. We rely on the gds-sso
     # having a strategy that uses the first user. We probably want some
     # tests that cover the oauth interaction properly
-    @author ||= User.create(:name=>"Author",:email=>"test@example.com")
-    @reviewer ||= User.create(:name=>"Reviewer",:email=>"test@example.com")
+    @author = User.create!(:name=>"Author",:email=>"test@example.com")
+    @reviewer = User.create!(:name=>"Reviewer",:email=>"test@example.com")
   end
 end
 

@@ -5,10 +5,6 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
   setup do
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
     LocalAuthority.create(snac: 'ABCDE')
-  end
-
-  test "creating a local transaction sends the right emails" do
-    setup_users
 
     panopticon_has_metadata(
       "id" => 2357,
@@ -16,6 +12,12 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
       "kind" => "local_transaction",
       "name" => "Foo bar"
     )
+
+    setup_users
+  end
+
+  test "creating a local transaction sends the right emails" do
+
 
     email_count_before_start = ActionMailer::Base.deliveries.count
 
@@ -30,24 +32,18 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
   end
 
   test "creating a local transaction with a bad LGSL code displays an appropriate error" do
+
     visit "/admin/publications/2357"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in "Lgsl code", :with => "2"
     click_on 'Create Local transaction edition'
-    assert page.has_content? "Lgsl not recognised"
+
+    assert page.has_content? "Lgsl code 2 not recognised"
   end
 
 
   test "creating a local transaction from panopticon requests an LGSL code" do
-    setup_users
-
-    panopticon_has_metadata(
-      "id" => 2357,
-      "slug" => "foo-bar",
-      "kind" => "local_transaction",
-      "name" => "Foo bar"
-    )
 
     visit "/admin/publications/2357"
     assert page.has_content? "We need a bit more information to create your local transaction."

@@ -149,6 +149,10 @@ class WholeEdition
     self.class.to_s.gsub('Edition', '')
   end
 
+  def format_name
+    format
+  end
+
   def has_video?
     false
   end
