@@ -5,9 +5,19 @@ FactoryGirl.define do
     email { Faker::Internet.email }
   end
 
+  factory :edition, :class => AnswerEdition do
+    sequence(:panopticon_id)
+    sequence(:slug) { |n| "slug-#{n}" }
+
+    title { Faker::Name.name }
+    section 'test:subsection test'
+
+    association :assigned_to, :factory => :user
+  end
+
   factory :guide_edition do |ge|
     ge.sequence(:panopticon_id) { |n| n }
-    title  { 'Test title' }
+    ge.sequence(:title)  { |n| "Test guide #{n}" }
     ge.sequence(:slug) { |ns| "slug-#{ns}"}
     section { 'test:subsection test' }
   end
