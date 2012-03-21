@@ -38,11 +38,12 @@ namespace :editions do
       begin
         puts "Processing #{edition.class} #{edition.id}"
         if edition.subsequent_siblings.any?
-          edition.latest_version_number = edition.subsequent_siblings.sort_by(&:version_number).last.version_number
-        else
-          edition.latest_version_number = edition.version_number
+          latest_edition = edition.subsequent_siblings.sort_by(&:version_number).last
+          if latest_edition.in_progress?
+            edition.update_sibling_in_progress(latest_edition.version_number)
+          end
         end
-        edition.save
+        edition.save!
         puts "   Done!"
       rescue Exception => e
         puts "   [Err] Could not denormalise edition: #{e}"

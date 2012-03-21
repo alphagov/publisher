@@ -23,6 +23,7 @@ module Workflow
         #additionally may need transitions from each state to archived
         edition.previous_siblings.all.each(&:archive)
         edition.update_in_search_index
+        edition.notify_siblings_of_published_edition
       end
 
       event :start_work do
@@ -155,6 +156,18 @@ module Workflow
   end
 
   def notify_siblings_of_new_edition
-    siblings.update_all(latest_version_number: self.version_number)
+    siblings.update_all(sibling_in_progress: self.version_number)
+  end
+
+  def notify_siblings_of_published_edition
+    siblings.update_all(sibling_in_progress: nil)
+  end
+
+  def update_sibling_in_progress(version_number_or_nil)
+    update_attribute(:sibling_in_progress, version_number_or_nil)
+  end
+
+  def in_progress?
+    ! ['archived','published'].include? self.state
   end
 end

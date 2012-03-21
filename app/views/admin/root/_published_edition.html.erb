@@ -9,7 +9,7 @@
 
       (v.<%= publication.version_number %>)
       <% if publication.has_sibling_in_progress? %>
-        (v.<%= publication.latest_version_number %> in draft)
+        (v.<%= publication.sibling_in_progress %> in draft)
       <% end %>
     </span>
   </td>

@@ -11,7 +11,7 @@ class WholeEdition
 
   field :panopticon_id, :type => Integer
   field :version_number, :type => Integer, :default => 1
-  field :latest_version_number, :type => Integer, :default => 1
+  field :sibling_in_progress, :type => Integer, :default => nil
 
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
@@ -154,6 +154,6 @@ class WholeEdition
   end
 
   def has_sibling_in_progress?
-    latest_version_number > version_number
+    ! sibling_in_progress.nil?
   end
 end
