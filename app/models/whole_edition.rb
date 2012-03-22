@@ -59,6 +59,10 @@ class WholeEdition
     WholeEdition.where(:panopticon_id => panopticon_id)
   end
 
+  def history
+    series.order([:version_number, :desc])
+  end
+
   def siblings
     series.excludes(:id => id)
   end
