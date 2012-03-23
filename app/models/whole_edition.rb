@@ -121,7 +121,7 @@ class WholeEdition
     return existing_publication if existing_publication
 
     require 'gds_api/panopticon'
-    api = GdsApi::Panopticon.new(Plek.current.environment)
+    api = GdsApi::Panopticon.new(Plek.current.environment, PANOPTICON_API_CREDENTIALS)
     metadata = api.artefact_for_slug(panopticon_id)
     raise "Artefact not found" if metadata.nil?
 
