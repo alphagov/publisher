@@ -41,6 +41,8 @@ namespace :editions do
           latest_edition = edition.subsequent_siblings.sort_by(&:version_number).last
           if latest_edition.in_progress?
             edition.update_sibling_in_progress(latest_edition.version_number)
+          else
+            edition.update_sibling_in_progress(nil)
           end
         end
         edition.save!
