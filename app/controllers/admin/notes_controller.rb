@@ -1,5 +1,7 @@
 class Admin::NotesController < Admin::BaseController
-  belongs_to :publication
+  belongs_to :whole_edition
+
+  include Admin::PathsHelper
 
   def create
     if current_user.record_note(resource, params[:note][:comment])
@@ -7,7 +9,7 @@ class Admin::NotesController < Admin::BaseController
     else
       flash[:notice] = "Note failed to save"
     end
-    redirect_to url_for([:admin, parent]) + '#history'
+    redirect_to edit_edition_path(parent) + '#history'
   end
 
   def resource
