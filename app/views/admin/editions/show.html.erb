@@ -1,4 +1,5 @@
 <h2>Viewing Edition <%= @resource.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
+<% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
 <p>Status: <%= @resource.capitalized_state_name %></p>
 
 <%= render 'admin/shared/review_or_fact_check' %>
