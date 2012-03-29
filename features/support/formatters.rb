@@ -1,5 +1,5 @@
 def format_state(state)
-  state.sub(' ', '_')
+  state.sub(' ', '_') unless state.nil?
 end
 
 def format_value(value)

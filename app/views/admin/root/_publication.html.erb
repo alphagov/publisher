@@ -2,7 +2,7 @@
   <td>
     <%= image_tag "/images/icon-publisher-#{publication.format.downcase}.png", :alt => publication.class.name.humanize  %>
   </td>
-  <td>
+  <td class="business">
     <%= publication.business_proposition ? 'Y' : 'N' %>
   </td>
   <td class="title">
