@@ -12,6 +12,7 @@ class WholeEdition
   field :panopticon_id, :type => Integer
   field :version_number, :type => Integer, :default => 1
   field :sibling_in_progress, :type => Integer, :default => nil
+  field :business_proposition, :type => Boolean, :default => false
 
   field :title, :type => String
   field :created_at, :type => DateTime, :default => lambda { Time.now }
@@ -130,7 +131,8 @@ class WholeEdition
       :slug => metadata.slug,
       :title => metadata.name,
       :section => metadata.section,
-      :department => metadata.department)
+      :department => metadata.department,
+      :business_proposition => metadata.business_proposition ? metadata.business_proposition : false)
   end
 
   def self.find_and_identify(slug, edition)

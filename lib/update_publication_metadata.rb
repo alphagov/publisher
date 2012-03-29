@@ -49,6 +49,7 @@ class UpdatePublicationMetadata
       publication.slug = artefact['slug']
       publication.section = artefact['section']
       publication.department = artefact['department']
+      publication.business_proposition = artefact['business_proposition']
       unless publication.save
         failed_to_save(publication)
       end

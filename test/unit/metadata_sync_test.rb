@@ -39,7 +39,8 @@ class MetadataSyncTest < ActiveSupport::TestCase
       'audiences' => [],
       'section' => 'Driving',
       'department' => 'BIS',
-      'related_items' => []
+      'related_items' => [],
+      'business_proposition' => false
     }
 
     @metadata.sync updated_artefact

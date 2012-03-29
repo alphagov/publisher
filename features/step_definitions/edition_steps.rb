@@ -1,11 +1,22 @@
 include GdsApi::TestHelpers::Panopticon
 
+# Convert business-ness to a Boolean flag
+Transform /^for business $/ do |business|
+  true
+end
+
 Given /I am signed in to Publisher/ do
   User.create! :name => 'Example User', :email => 'test@gov.uk', :version => 1, :uid => 't3st1ng'
 end
 
-Given /(.*) editions exist in Publisher/ do |state|
-  @editions = FactoryGirl.create_list(:edition, 10, :state => format_state(state) )
+Given /(.*?) editions (for business )?exist in Publisher/ do |state, business|
+  puts business
+  @editions = FactoryGirl.create_list(
+    :edition,
+    10,
+    :state => format_state(state),
+    :business_proposition => business || false
+  )
 end
 
 Given /I have an artefact in Panopticon/ do
@@ -42,7 +53,12 @@ When /select the (.*) tab/ do |state|
 end
 
 Then /I should see each (.*) edition in the list/ do |state|
-  check_editions_appear_in_list @editions, format_state(state)
+  check_editions_appear_in_list @editions
+end
+
+Then /each edition should (not )?be marked as a business edition/ do |negate|
+  business = negate.nil?
+  check_editions_appear_in_list @editions, :business => business
 end
 
 When /I update fields for an edition/ do

@@ -21,7 +21,7 @@ def check_form_values_appear_for(edition)
   end
 end
 
-def check_editions_appear_in_list(editions, state)
+def check_editions_appear_in_list(editions, options={})
   wait_until { page.has_selector? ".formats tr" }
   editions.each do |edition|
     xpath = '//td[@class="title"][contains(., "' + edition.title + '")]/..'
@@ -32,6 +32,10 @@ def check_editions_appear_in_list(editions, state)
     assert row.has_content? edition.title
     assert row.has_content? "v.#{edition.version_number}"
     assert row.has_content? (edition.assignee || "")
+    if options.include? :business
+      business_cell = row.find('.business')
+      assert business_cell.has_content? (options[:business] ? 'Y' : 'N')
+    end
   end
 end
 

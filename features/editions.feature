@@ -19,8 +19,17 @@ Feature: Managing editions
       And filter by everyone
       And select the lined up tab
     Then I should see each lined up edition in the list
+      And each edition should not be marked as a business edition
 
   Scenario: Edit edition
     Given draft editions exist in Publisher
     When I update fields for an edition
     Then the edition form should show the fields
+  
+  Scenario: Business editions
+    Given lined up editions for business exist in Publisher
+    When I visit the editions list
+      And filter by everyone
+      And select the lined up tab
+    Then I should see each lined up edition in the list
+      And each edition should be marked as a business edition
