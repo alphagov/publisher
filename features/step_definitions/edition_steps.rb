@@ -53,7 +53,7 @@ When /select the (.*) tab/ do |state|
 end
 
 Then /I should see each (.*) edition in the list/ do |state|
-  check_editions_appear_in_list @editions, :state => format_state(state)
+  check_editions_appear_in_list @editions
 end
 
 Then /each edition should be marked as a business edition/ do
