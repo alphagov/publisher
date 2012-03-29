@@ -19,6 +19,7 @@ Feature: Managing editions
       And filter by everyone
       And select the lined up tab
     Then I should see each lined up edition in the list
+      And each edition should not be marked as a business edition
 
   Scenario: Edit edition
     Given draft editions exist in Publisher

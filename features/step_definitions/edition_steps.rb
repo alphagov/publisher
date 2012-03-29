@@ -56,8 +56,9 @@ Then /I should see each (.*) edition in the list/ do |state|
   check_editions_appear_in_list @editions
 end
 
-Then /each edition should be marked as a business edition/ do
-  check_editions_appear_in_list @editions, :business => true
+Then /each edition should (not )?be marked as a business edition/ do |negate|
+  business = negate.nil?
+  check_editions_appear_in_list @editions, :business => business
 end
 
 When /I update fields for an edition/ do
