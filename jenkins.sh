@@ -14,6 +14,6 @@ for d in images javascripts templates stylesheets; do
 done
 
 bundle exec rake db:mongoid:drop
-bundle exec rake ci:setup:testunit test
+bundle exec rake ci:setup:testunit test cucumber
 RESULT=$?
 exit $RESULT
