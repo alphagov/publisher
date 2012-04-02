@@ -3,19 +3,22 @@ require 'test_helper'
 class NoisyWorkflowTest < ActionMailer::TestCase
   tests NoisyWorkflow
 
-  def template_guide
-    FactoryGirl.create(:guide_edition)
-  end
-
   def fact_check_email
-    guide = template_guide
+    guide = FactoryGirl.create(:guide_edition)
     action = guide.actions.create!(:email_addresses => 'jys@ketlai.co.uk', :customised_message => "Blah")
     email = NoisyWorkflow.request_fact_check(action)
     return guide, email
   end
 
   def action_email(action)
-    guide = template_guide
+    guide = FactoryGirl.create(:guide_edition)
+    requester = User.new(:name => 'Testing Person')
+    action = guide.actions.create(:request_type => action, :requester => requester)
+    NoisyWorkflow.make_noise(action)
+  end
+
+  def business_action_email(action)
+    guide = FactoryGirl.create(:guide_edition, :business_proposition => true, :title => 'Test Guide 1')
     requester = User.new(:name => 'Testing Person')
     action = guide.actions.create(:request_type => action, :requester => requester)
     NoisyWorkflow.make_noise(action)
@@ -45,4 +48,17 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     email = action_email(Action::APPROVE_REVIEW)
     assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
   end
+
+  test "publish business proposition email" do
+    email = business_action_email(Action::PUBLISH)
+    assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'publisher-alerts-business@digital.cabinet-office.gov.uk']
+    assert_equal email.subject, "[PUBLISHER]-BUSINESS Published: \"Test Guide 1\" (Guide) by Testing Person"
+  end
+
+  test "review business proposition email" do
+    email = business_action_email(Action::REQUEST_REVIEW)
+    assert_equal email.to, ['publisher-alerts-business@digital.cabinet-office.gov.uk']
+    assert_equal email.subject, "[PUBLISHER]-BUSINESS Review requested: \"Test Guide 1\" (Guide) by Testing Person"
+  end
+
 end

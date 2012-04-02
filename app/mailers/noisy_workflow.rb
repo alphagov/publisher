@@ -8,7 +8,8 @@ class NoisyWorkflow < ActionMailer::Base
     'dev' => 'govuk-dev@digital.cabinet-office.gov.uk',
     'freds' => 'freds@alphagov.co.uk',
     'seo' => 'seo@alphagov.co.uk',
-    'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk'
+    'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk',
+    'biz' => 'publisher-alerts-business@digital.cabinet-office.gov.uk'
   }
 
   def make_noise(action)
@@ -18,15 +19,25 @@ class NoisyWorkflow < ActionMailer::Base
     when 'preview'
       email_address = EMAIL_GROUPS['dev']
     else
-      email_address = case action.request_type
-      when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
-      when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['seo']}, #{EMAIL_GROUPS['freds']}"
-      else "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
+      if action.edition.business_proposition
+        subject = "[PUBLISHER]-BUSINESS #{@action.friendly_description}"
+        if action.request_type == Action::PUBLISH
+          email_address = "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['biz']}"
+        else
+          email_address = "#{EMAIL_GROUPS['biz']}"
+        end
+      else
+        subject = "[PUBLISHER] #{@action.friendly_description}"
+        email_address = case action.request_type
+        when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
+        when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['seo']}, #{EMAIL_GROUPS['freds']}"
+        else "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
+        end
       end
     end
-
+    
     mail(:to => email_address,
-         :subject => "[PUBLISHER] #{@action.friendly_description}")
+         :subject => subject)
   end
 
   def request_fact_check(action)
