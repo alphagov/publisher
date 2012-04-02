@@ -4,17 +4,17 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
   setup do
     panopticon_has_metadata("id" => '2356')
+    %w(Alice Bob Charlie).each do |name|
+      FactoryGirl.create(:user, name: name)
+    end
+  end
+
+  # Get a single user by their name. If the user doesn't exist, return nil.
+  def get_user(name)
+    User.where(name: name).first
   end
 
   test "should show and update a guide's assigned person" do
-    # This isn't right, really need a way to run actions when
-    # logged in as particular users without having Signonotron running.
-    #
-    alice   = FactoryGirl.create(:user)
-
-    bob     = FactoryGirl.create(:user, name: "Bob")
-    charlie = FactoryGirl.create(:user, name: "Charlie")
-
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/editions/#{guide.to_param}"
@@ -36,25 +36,17 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal bob, guide.assigned_to
+    assert_equal guide.assigned_to, get_user("Bob")
 
     select "Charlie", from: "Assigned to"
     click_on "Save"
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal charlie, guide.assigned_to
+    assert_equal guide.assigned_to, get_user("Charlie")
   end
 
   test "can assign a new guide without editing the part" do
-    # This isn't right, really need a way to run actions when
-    # logged in as particular users without having Signonotron running.
-    #
-    alice   = FactoryGirl.create(:user)
-
-    bob     = FactoryGirl.create(:user, name: "Bob")
-    charlie = FactoryGirl.create(:user, name: "Charlie")
-
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/editions/#{guide.to_param}"
@@ -64,12 +56,10 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
-    assert_equal bob, guide.assigned_to
+    assert_equal guide.assigned_to, get_user("Bob")
   end
 
   test "a guide is lined up until work starts on it" do
-    alice   = FactoryGirl.create(:user, name: "Alice")
-
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
     visit "/admin/editions/#{guide.to_param}"
@@ -90,8 +80,6 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   end
 
   test "should update progress of a guide" do
-    panopticon_has_metadata("id" => '2356')
-    setup_users
 
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     guide.update_attribute(:state, 'ready')
