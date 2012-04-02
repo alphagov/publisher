@@ -37,7 +37,7 @@ module Searchable
   
   module ClassMethods
     def search_index_all
-      all.map(&:search_index)
+      published.map(&:search_index)
     end
   end
 end
