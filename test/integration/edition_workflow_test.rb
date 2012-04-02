@@ -28,9 +28,8 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     guide.reload
   end
 
-  test "should show and update a guide's assigned person" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
-
+  # Fill in some sample sections for a guide
+  def fill_in_parts(guide)
     visit "/admin/editions/#{guide.to_param}"
 
     click_on 'Untitled part'
@@ -43,6 +42,11 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
+  end
+
+  test "should show and update a guide's assigned person" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    fill_in_parts guide
     assert_nil guide.assigned_to
 
     assign guide, "Bob"
@@ -77,16 +81,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     guide.update_attribute(:state, 'ready')
-
-    visit "/admin/editions/#{guide.to_param}"
-
-    click_on 'Untitled part'
-    within :css, '#parts div.part:first-of-type' do
-      fill_in 'Title', with: 'Part One'
-      fill_in 'Body',  with: 'Body text'
-      fill_in 'Slug',  with: 'part-one'
-    end
-    click_on "Save"
+    fill_in_parts guide
 
     click_on "Fact check"
 
