@@ -14,6 +14,20 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     User.where(name: name).first
   end
 
+  # Assign a guide to a user. The user parameter can be a User or a name
+  def assign(guide, user)
+    if user.is_a? User
+      user = user.name
+    end
+    visit "/admin/editions/#{guide.to_param}"
+
+    select user, from: "Assigned to"
+    click_on "Save"
+
+    wait_until { page.has_content? "successfully updated" }
+    guide.reload
+  end
+
   test "should show and update a guide's assigned person" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
@@ -31,44 +45,24 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     guide.reload
     assert_nil guide.assigned_to
 
-    select "Bob", from: "Assigned to"
-    click_on "Save"
-    wait_until { page.has_content? "successfully updated" }
-
-    guide.reload
+    assign guide, "Bob"
     assert_equal guide.assigned_to, get_user("Bob")
 
-    select "Charlie", from: "Assigned to"
-    click_on "Save"
-    wait_until { page.has_content? "successfully updated" }
-
-    guide.reload
+    assign guide, "Charlie"
     assert_equal guide.assigned_to, get_user("Charlie")
   end
 
   test "can assign a new guide without editing the part" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
-    visit "/admin/editions/#{guide.to_param}"
-
-    select "Bob", from: "Assigned to"
-    click_on "Save"
-    wait_until { page.has_content? "successfully updated" }
-
-    guide.reload
+    assign guide, "Bob"
     assert_equal guide.assigned_to, get_user("Bob")
   end
 
   test "a guide is lined up until work starts on it" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
 
-    visit "/admin/editions/#{guide.to_param}"
-
-    select "Alice", from: "Assigned to"
-    click_on "Save"
-
-    wait_until { page.has_content? "successfully updated" }
-    guide.reload
+    assign guide, "Alice"
     assert guide.lined_up?
 
     visit "/admin"
