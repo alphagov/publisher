@@ -25,6 +25,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
       user = get_user(user)
     end
     GDS::SSO.test_user = user
+    Capybara.current_session.driver.browser.clear_cookies
   end
 
   def visit_guide(guide)
@@ -70,6 +71,44 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "successfully updated" }
 
     guide.reload
+  end
+
+  def button_selector(text)
+    "//input[@type='submit' and @value='#{text}']"
+  end
+
+  def find_button(text)
+    find(:xpath, button_selector(text))
+  end
+
+  def has_button(text)
+    page.has_xpath? button_selector(text)
+  end
+
+  def submit_for_review(guide, options={message: "I think this is done"})
+    visit_guide guide
+    review_button = find_button "2nd pair of eyes"
+    assert (not review_button['disabled'])
+    review_button.click
+    fill_in "Comment", with: options[:message]
+    click_on "Send"
+    wait_until { page.has_content? "updated" }
+
+    guide.reload
+  end
+
+  def filter_for(user)
+    visit "/admin"
+    select "All", :from => 'filter'
+    click_button "Filter"
+    wait_until { page.has_content? "All publications" }
+  end
+
+  def view_tab(tab_name)
+    visit "/admin"
+    tab_link = find(:xpath, "//a[contains(., '#{tab_name}')]")
+    tab_link.click
+    wait_until { page.has_selector? "#{tab_link['href']} table" }
   end
 
   test "should show and update a guide's assigned person" do
@@ -133,21 +172,42 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assign guide, "Alice"
     start_work_on guide
     fill_in_parts guide
-
-    review_button = find(:xpath, "//input[@type='submit' and @value='2nd pair of eyes']")
-    assert (not review_button['disabled'])
-    review_button.click
-    fill_in "Comment", with: "I think this is done"
-    click_on "Send"
-    wait_until { page.has_content? "updated" }
+    submit_for_review guide
 
     login_as "Bob"
-    visit "/admin"
-
-    review_link = find(:xpath, "//a[contains(., 'In review')]")
-    review_link.click
-    wait_until { page.has_selector? "#{review_link['href']} table" }
+    filter_for "All"
+    view_tab "In review"
 
     assert page.has_content? guide.title
   end
+
+  test "cannot review own guide" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    login_as "Alice"
+
+    assign guide, "Alice"
+    start_work_on guide
+    fill_in_parts guide
+    submit_for_review guide
+
+    visit_guide guide
+    wait_until { page.has_selector? ".notification" }
+    assert (not has_button? "OK for publication")
+  end
+
+  test "can review another's guide" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    login_as "Alice"
+
+    assign guide, "Alice"
+    start_work_on guide
+    fill_in_parts guide
+    submit_for_review guide
+
+    login_as "Bob"
+    visit_guide guide
+    wait_until { page.has_selector? ".notification" }
+    assert has_button? "OK for publication"
+  end
+
 end
