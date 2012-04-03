@@ -136,5 +136,18 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     review_button = find(:xpath, "//input[@type='submit' and @value='2nd pair of eyes']")
     assert (not review_button['disabled'])
+    review_button.click
+    fill_in "Comment", with: "I think this is done"
+    click_on "Send"
+    wait_until { page.has_content? "updated" }
+
+    login_as "Bob"
+    visit "/admin"
+
+    review_link = find(:xpath, "//a[contains(., 'In review')]")
+    review_link.click
+    wait_until { page.has_selector? "#{review_link['href']} table" }
+
+    assert page.has_content? guide.title
   end
 end
