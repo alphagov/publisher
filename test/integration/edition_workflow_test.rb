@@ -14,12 +14,16 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     User.where(name: name).first
   end
 
+  def visit_guide(guide)
+    visit "/admin/editions/#{guide.to_param}"
+  end
+
   # Assign a guide to a user. The user parameter can be a User or a name
   def assign(guide, user)
     if user.is_a? User
       user = user.name
     end
-    visit "/admin/editions/#{guide.to_param}"
+    visit_guide guide
 
     select user, from: "Assigned to"
     click_on "Save"
@@ -30,7 +34,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
   # Fill in some sample sections for a guide
   def fill_in_parts(guide)
-    visit "/admin/editions/#{guide.to_param}"
+    visit_guide guide
 
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
