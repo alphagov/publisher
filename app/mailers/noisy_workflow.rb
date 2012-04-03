@@ -7,7 +7,6 @@ class NoisyWorkflow < ActionMailer::Base
     'team' => 'govuk-team@digital.cabinet-office.gov.uk',
     'dev' => 'govuk-dev@digital.cabinet-office.gov.uk',
     'freds' => 'freds@alphagov.co.uk',
-    'seo' => 'seo@alphagov.co.uk',
     'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk',
     'biz' => 'publisher-alerts-business@digital.cabinet-office.gov.uk'
   }
@@ -30,12 +29,12 @@ class NoisyWorkflow < ActionMailer::Base
         subject = "[PUBLISHER] #{@action.friendly_description}"
         email_address = case action.request_type
         when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
-        when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['seo']}, #{EMAIL_GROUPS['freds']}"
+        when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
         else "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
         end
       end
     end
-    
+
     mail(:to => email_address,
          :subject => subject)
   end

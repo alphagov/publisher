@@ -41,7 +41,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
 
   test "review request emails should go to the editors, franchise editors, and the SEO team" do
     email = action_email(Action::REQUEST_REVIEW)
-    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'seo@alphagov.co.uk', 'freds@alphagov.co.uk']
+    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
   end
 
   test "other workflow emails should go to editors and franchise editors" do
