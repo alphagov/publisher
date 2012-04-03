@@ -67,7 +67,7 @@
     <% if tab && tab == :lined_up %>
       <%= form_tag start_work_path(publication) do %>
         <%= hidden_field_tag :start_work, 1 %>
-        <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => "Start work on this #{publication.class.to_s.humanize)}", :class => 'start-work' %>
+        <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => "Start work on this #{publication.class.to_s.humanize}", :class => 'start-work' %>
       <% end %>
     <% elsif tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_admin_edition_path(publication) do %>
