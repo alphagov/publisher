@@ -14,19 +14,23 @@ class NoisyWorkflow < ActionMailer::Base
   def make_noise(action)
     @action = action
 
+    if action.edition.business_proposition
+      subject = "[PUBLISHER]-BUSINESS #{@action.friendly_description}"
+    else
+      subject = "[PUBLISHER] #{@action.friendly_description}"
+    end
+
     case Plek.current.environment
     when 'preview'
       email_address = EMAIL_GROUPS['dev']
     else
       if action.edition.business_proposition
-        subject = "[PUBLISHER]-BUSINESS #{@action.friendly_description}"
         if action.request_type == Action::PUBLISH
           email_address = "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['biz']}"
         else
           email_address = "#{EMAIL_GROUPS['biz']}"
         end
       else
-        subject = "[PUBLISHER] #{@action.friendly_description}"
         email_address = case action.request_type
         when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
         when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
