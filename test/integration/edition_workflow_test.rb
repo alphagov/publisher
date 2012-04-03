@@ -9,9 +9,22 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     end
   end
 
+  teardown do
+    GDS::SSO.test_user = nil
+  end
+
   # Get a single user by their name. If the user doesn't exist, return nil.
   def get_user(name)
     User.where(name: name).first
+  end
+
+  # Set the given user to be the current user
+  # Accepts either a User object or a user's name
+  def login_as(user)
+    if not user.is_a? User
+      user = get_user(user)
+    end
+    GDS::SSO.test_user = user
   end
 
   def visit_guide(guide)
@@ -30,6 +43,17 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     wait_until { page.has_content? "successfully updated" }
     guide.reload
+  end
+
+  # Transfer a guide from lined-up state to draft state
+  def start_work_on(guide)
+    visit "/admin"
+    click_on "Lined up"
+    wait_until { page.has_content? guide.title }
+    within :xpath, "//form[contains(@action, '#{guide.id}/start_work')]" do
+      click_on "Start work"
+    end
+    wait_until { page.has_content? "Work started" }
   end
 
   # Fill in some sample sections for a guide
@@ -100,5 +124,17 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     guide.reload
 
     assert guide.fact_check?
+  end
+
+  test "can flag guide for review" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    login_as "Alice"
+
+    assign guide, "Alice"
+    start_work_on guide
+    fill_in_parts guide
+
+    review_button = find(:xpath, "//input[@type='submit' and @value='2nd pair of eyes']")
+    assert (not review_button['disabled'])
   end
 end
