@@ -85,16 +85,19 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     page.has_xpath? button_selector(text)
   end
 
-  def submit_for_review(guide, options={message: "I think this is done"})
+  def send_action(guide, button_text, message)
     visit_guide guide
-    review_button = find_button "2nd pair of eyes"
-    assert (not review_button['disabled'])
-    review_button.click
-    fill_in "Comment", with: options[:message]
+    action_button = find_button button_text
+    assert (not action_button['disabled'])
+    action_button.click
+    fill_in "Comment", with: message
     click_on "Send"
     wait_until { page.has_content? "updated" }
-
     guide.reload
+  end
+
+  def submit_for_review(guide, options={message: "I think this is done"})
+    send_action guide, "2nd pair of eyes", "I think this is done"
   end
 
   def filter_for(user)
@@ -195,19 +198,45 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert (not has_button? "OK for publication")
   end
 
-  test "can review another's guide" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
-    login_as "Alice"
-
-    assign guide, "Alice"
+  # Given a guide and an owner, take the guide to review stage
+  def get_to_review(guide, owner)
+    login_as owner
+    assign guide, owner
     start_work_on guide
     fill_in_parts guide
     submit_for_review guide
+  end
+
+  test "can review another's guide" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    get_to_review guide, "Alice"
 
     login_as "Bob"
     visit_guide guide
     wait_until { page.has_selector? ".notification" }
+    assert has_button? "Needs more work"
     assert has_button? "OK for publication"
+  end
+
+  test "review failed" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    get_to_review guide, "Alice"
+
+    login_as "Bob"
+    send_action guide, "Needs more work", "You need to fix some stuff"
+    filter_for "All"
+    view_tab "Amends needed"
+    assert page.has_content? guide.title
+  end
+
+  test "review passed" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    get_to_review guide, "Alice"
+
+    login_as "Bob"
+    send_action guide, "OK for publication", "Yup, looks good"
+    filter_for "All"
+    assert page.has_content? guide.title
   end
 
 end
