@@ -236,6 +236,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     login_as "Bob"
     send_action guide, "OK for publication", "Yup, looks good"
     filter_for "All"
+    view_tab "Ready"
     assert page.has_content? guide.title
   end
 
