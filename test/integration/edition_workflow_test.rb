@@ -113,11 +113,25 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert (not tab_link.nil?), "Tab link #{tab_name} not found"
     assert (not tab_link['href'].nil?), "Tab link #{tab_name} has no target"
 
-    puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
-    puts "Tab link: #{tab_link.inspect}"
+    # puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
+    # puts "Tab link: #{tab_link.inspect}"
 
     tab_link.click
-    wait_until { page.has_selector? "#{tab_link['href']} table" }
+
+    # If the JavaScript is working happily, the link's target gets rewritten to
+    # a target tab, and the table will be loaded in as a child of this target.
+    # If the JavaScript is broken in some way, the table will just be loaded in
+    # a new page, so we can safely look for a table with a class of 'formats',
+    # which we can't safely do when the JavaScript works, because there can be
+    # several such tables on the page.
+    if tab_link['href'].starts_with? '#'
+      expected_selector = "#{tab_link['href']} table"
+    else
+      puts 'WARNING: the tab JavaScript on this page is b0rked'
+      expected_selector = 'table.formats'
+    end
+
+    wait_until { page.has_selector? expected_selector }
   end
 
   test "should show and update a guide's assigned person" do
