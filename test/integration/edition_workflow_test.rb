@@ -110,6 +110,12 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   def view_tab(tab_name)
     visit "/admin"
     tab_link = find(:xpath, "//a[contains(., '#{tab_name}')]")
+    assert (not tab_link.nil?), "Tab link #{tab_name} not found"
+    assert (not tab_link['href'].nil?), "Tab link #{tab_name} has no target"
+
+    puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
+    puts "Tab link: #{tab_link.inspect}"
+
     tab_link.click
     wait_until { page.has_selector? "#{tab_link['href']} table" }
   end
