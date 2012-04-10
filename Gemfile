@@ -73,6 +73,7 @@ gem 'state_machine'
 
 gem 'lockfile'
 gem 'whenever'
+gem 'newrelic_rpm'
 
 group :development do
   gem 'passenger'
