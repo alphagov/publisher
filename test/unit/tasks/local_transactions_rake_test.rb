@@ -22,18 +22,24 @@ class LocalTransactionsRakeTest < ActiveSupport::TestCase
     setup do
       @task_name = "local_transactions:fetch"
       @rake["local_transactions:import"].clear
+
+      @saved_file = Rails.root.join('data', 'test_local_interactions.csv')
     end
 
     should "download the CSV file and write to disk" do
       stub_request(:get, "http://local.direct.gov.uk/Data/local_authority_service_details.csv").
         to_return(:status => 200, :body => "Example CSV Content")
-      saved_file = Rails.root.join("tmp","local_services","local_services.csv")
 
+      ENV['FILENAME'] = @saved_file.to_s
       Rake::Task[@task_name].execute
 
-      assert File.exists?(saved_file)
-      assert_equal "Example CSV Content", File.open(saved_file).read
-      assert_equal saved_file.to_s, ENV["SOURCE"]
+      assert File.exists?(@saved_file)
+      assert_equal "Example CSV Content", File.open(@saved_file).read
+      assert_equal @saved_file.to_s, ENV["SOURCE"]
+    end
+
+    teardown do
+      File.delete(@saved_file)
     end
   end
 
