@@ -12,3 +12,7 @@ end
 every :hour do
   rake "rummager:index"
 end
+
+every 1.day, :at => '5am' do
+  rake "local_transactions:fetch"
+end
