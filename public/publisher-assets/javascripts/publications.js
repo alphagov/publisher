@@ -3,6 +3,13 @@
 $(function () {
   $('.publication-nav').tabs();
 
+  /*
+    Pre-submit a form, invoking a callback if the submission succeeds.
+
+    This is mainly used for the action buttons other than "Save", where it
+    makes sense to save the edition and perform the requested action if there
+    aren't any errors.
+  */
   var submit_form = function(form,success) {
      var jq = $.post(
          form.attr('action')+".json",
@@ -19,6 +26,7 @@ $(function () {
      });
    }
 
+  /* Apparently a lock variable to prevent multiple form submissions */
   var saved = false;
 
   $('#save-edition').submit(function () {
@@ -35,6 +43,7 @@ $(function () {
     $('*[autofocus]').focus();
   }
 
+  /* Apparently a lock variable to prevent multiple form submissions */
   var submitted_forms = false;
 
   $('form.edition').change(function () {
