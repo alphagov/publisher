@@ -170,4 +170,10 @@ class WholeEdition
   def has_sibling_in_progress?
     ! sibling_in_progress.nil?
   end
+
+  # stop broadcasting a delete message unless there are no siblings
+  def broadcast_action(callback_action)
+    super(callback_action) unless (callback_action == "destroyed" and self.siblings.any?)
+  end
+
 end
