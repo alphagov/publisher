@@ -10,3 +10,4 @@ test/reports
 .rakeTasks
 *iml
 *.daemonette-dump
+data/local_interactions.csv
