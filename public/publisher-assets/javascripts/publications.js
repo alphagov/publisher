@@ -3,6 +3,13 @@
 $(function () {
   $('.publication-nav').tabs();
 
+  /*
+    Pre-submit a form, invoking a callback if the submission succeeds.
+
+    This is mainly used for the action buttons other than "Save", where it
+    makes sense to save the edition and perform the requested action if there
+    aren't any errors.
+  */
   var submit_form = function(form,success) {
      var jq = $.post(
          form.attr('action')+".json",
@@ -19,6 +26,7 @@ $(function () {
      });
    }
 
+  /* Apparently a lock variable to prevent multiple form submissions */
   var saved = false;
 
   $('#save-edition').submit(function () {
@@ -35,10 +43,29 @@ $(function () {
     $('*[autofocus]').focus();
   }
 
+  /* Apparently a lock variable to prevent multiple form submissions */
   var submitted_forms = false;
+  
+  /*
+    Mark the edition form as dirty to prevent accidental navigation away from
+    the edition form (such as by clicking the "Edit in Panopticon" link)
+  */
+  var edition_form_dirty = false;
 
-  $('form.edition').change(function () {
+  $('form.whole_edition').change(function () {
     submitted_forms = false;
+    edition_form_dirty = true;
+  });
+
+  $('form.whole_edition').submit(function() {
+    edition_form_dirty = false;
+    return true;
+  });
+  
+  $(window).bind('beforeunload', function() {
+      if (edition_form_dirty) {
+          return 'You have unsaved changes to this edition.';
+      }
   });
 
   $('.also_save_edition').submit(function () {
@@ -48,6 +75,11 @@ $(function () {
     if (! submitted_forms) {
       submit_form(edition_form, function () {
         submitted_forms = true;
+        /*
+          Need to clear the dirty flag manually, as the form hasn't officially
+          been submitted
+        */
+        edition_form_dirty = false;
         this_form.trigger("submit");
       });
     }
