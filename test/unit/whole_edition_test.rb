@@ -98,6 +98,39 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal clone1.version_number, 3
   end
 
+  test "Cloning into a different edition type" do
+    edition = FactoryGirl.create(
+        :guide_edition,
+        :state => 'published',
+        :panopticon_id => 1,
+        :version_number => 1,
+        :department => 'Test dept',
+        :overview => 'I am a test overview',
+        :alternative_title => 'Alternative test title',
+        :video_url => 'http://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    )
+    new_edition = edition.build_clone AnswerEdition
+
+    assert_equal new_edition.class, AnswerEdition
+    assert_equal new_edition.version_number, 2
+    assert_equal new_edition.panopticon_id, 1
+    assert_equal new_edition.state, 'lined_up'
+    assert_equal new_edition.department, 'Test dept'
+    assert_equal new_edition.overview, 'I am a test overview'
+    assert_equal new_edition.alternative_title, 'Alternative test title'
+  end
+
+  test "Cloning between types with parts" do
+    edition = FactoryGirl.create(:programme_edition,
+                                 :state => 'published',
+                                 :version_number => 1,
+                                 :overview => 'I am a shiny programme')
+    new_edition = edition.build_clone GuideEdition
+
+    assert_equal(new_edition.parts.map {|part| part.title },
+                 edition.parts.map {|part| part.title })
+  end
+
   test "edition finder should return the published edition when given an empty edition parameter" do
     dummy_publication = template_published_answer
     second_publication = template_unpublished_answer(2)
