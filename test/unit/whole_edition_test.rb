@@ -54,6 +54,11 @@ class WholeEditionTest < ActiveSupport::TestCase
     assert_equal [g1], g3.previous_siblings.to_a
   end
 
+  test "A programme should have default parts" do
+    programme = FactoryGirl.create(:programme_edition)
+    assert_equal programme.parts.count, ProgrammeEdition::DEFAULT_PARTS.length
+  end
+
   test "it should build a clone" do
     edition = FactoryGirl.create(:guide_edition,
                                   :state => 'published',
