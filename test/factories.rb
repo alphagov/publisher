@@ -22,6 +22,13 @@ FactoryGirl.define do
     section { 'test:subsection test' }
   end
 
+  factory :programme_edition do |edition|
+    edition.sequence(:panopticon_id) { |n| n }
+    edition.sequence(:title)  { |n| "Test programme #{n}" }
+    edition.sequence(:slug) { |ns| "slug-#{ns}"}
+    section { 'test:subsection test' }
+  end
+
   factory :guide_edition_with_two_parts, :parent => :guide_edition do
     title 'a title'
     after_build do |getp|

@@ -32,10 +32,16 @@ module Parted
     end
     output
   end
-  
-  def build_clone
+
+  def build_clone(edition_class=nil)
     new_edition = super
-    new_edition.parts = self.parts.map {|p| p.dup }
+
+    # If the new edition is of the same type or another type that has parts,
+    # copy over the parts from this edition
+    if edition_class.nil? or edition_class.include? Parted
+      new_edition.parts = self.parts.map {|p| p.dup }
+    end
+
     new_edition
   end
 
@@ -45,7 +51,7 @@ module Parted
       obj.order = i + 1
     end
   end
-  
+
   def whole_body
     self.parts.map {|i| %Q{\# #{i.title}\n\n#{i.body}} }.join("\n\n")
   end
