@@ -106,11 +106,22 @@ class WholeEdition
     latest_version + 1
   end
 
-  def build_clone
+  def build_clone(edition_class=nil)
     raise "Cloning of non published edition not allowed" if self.state != 'published'
 
-    new_edition = self.class.new(title: self.title, version_number: get_next_version_number)
-    real_fields_to_merge = self.class.fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug, :section, :department]
+    edition_class = self.class if edition_class.nil?
+    new_edition = edition_class.new(title: self.title, version_number: get_next_version_number)
+
+    # If the new clone is of the same type, we can copy all its fields over; if
+    # we are changing the type of the edition, any fields other than the base
+    # fields will likely be meaningless.
+    if edition_class == self.class
+      fields_to_clone = self.class.fields_to_clone
+    else
+      fields_to_clone = []
+    end
+
+    real_fields_to_merge = fields_to_clone + [:panopticon_id, :overview, :alternative_title, :slug, :section, :department]
     real_fields_to_merge.each do |attr|
       new_edition.send("#{attr}=", read_attribute(attr))
     end
