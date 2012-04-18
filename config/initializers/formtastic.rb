@@ -80,3 +80,6 @@ require 'associated_forms'
 # You can add custom inputs or override parts of Formtastic by subclassing SemanticFormBuilder and
 # specifying that class here.  Defaults to SemanticFormBuilder.
 # Formtastic::SemanticFormHelper.builder = MyCustomBuilder
+
+# Use formtastic-bootstrap
+Formtastic::Helpers::FormHelper.builder = FormtasticBootstrap::FormBuilder

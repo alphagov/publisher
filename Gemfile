@@ -45,6 +45,7 @@ gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
 gem 'formtastic', '~> 2.0.0'
+gem 'formtastic-bootstrap'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'null_logger'
