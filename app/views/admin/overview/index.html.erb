@@ -1,13 +1,20 @@
-<div id="guide-nav" class="tabs">
-  <ul>
-    <% @overviews.each do |title, rows| %>
-      <li><a href="#<%= title.parameterize %>"><%= title.capitalize %></a></li>
-    <% end %>
-  </ul>
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="nav nav-tabs">
+      <% @overviews.each do |title, rows| %>
+        <li><a href="#<%= title.parameterize %>" data-toggle="tab"><%= title.capitalize %></a></li>
+      <% end %>
+    </ul>
 
-  <% @overviews.each do |title, rows| %>
-    <div id="<%= title.parameterize %>">
-      <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
+    <div class="tab-content">
+
+      <div class="tab-pane active">
+        <% @overviews.each do |title, rows| %>
+          <div id="<%= title.parameterize %>">
+            <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
+          </div>
+        <% end %>
+      </div>
     </div>
-  <% end %>
+  </div>
 </div>
