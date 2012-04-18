@@ -53,26 +53,32 @@
       </div>
     </header>
 
-    <div class="content" role="main">
+    <section class="container-fluid" role="main">
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
-        <p class="flash-<%= k %>">
+        <div class="alert <%= k %>">
           <%= flash[k] %>
-        </p>
+        </div>
       <% end %>
 
       <%= yield %>
 
-      <%= javascript_include_tag(
-            '/publisher-assets/javascripts/application.js',
-            '/javascripts/libs/jquery/plugins/jquery.mustache.js',
-            '/publisher-assets/javascripts/form-tools.js',
-            '/javascripts/libs/jquery/plugins/jquery.tablesorter.min.js',
-            '/javascripts/publisher-tabs.js'
-          ) %>
-      <%= yield :extra_javascript %>
+      <hr>
 
-    </div>
-  </div>
+      <footer>
+        <p>&copy; GDS. <span class="pull-right">Publisher version 2.0</span></p>
+      </footer>
+
+    </section><!--/.container-fluid -->
+  </div><!--/#wrapper -->
+
+  <%= javascript_include_tag(
+    '/publisher-assets/javascripts/application.js',
+    '/javascripts/libs/jquery/plugins/jquery.mustache.js',
+    '/publisher-assets/javascripts/form-tools.js',
+    '/javascripts/libs/jquery/plugins/jquery.tablesorter.min.js',
+    '/javascripts/publisher-tabs.js'
+  ) %>
+  <%= yield :extra_javascript %>
 
 </body>
 </html>
