@@ -9,41 +9,49 @@
 </head>
 <body>
 
-  <h2 id="site-title">Publisher</h2>
+  <div id="wrapper" >
 
-  <div id="wrapper" class="wrapper">
-
-    <nav class="admin-nav group" role="navigation">
-      <ul>
-        <li class="publications-nav">
-          <ul>
-            <li>
-              <form method="GET" action="/admin">
-                <fieldset>
-                  <label for="user-filter" class="visuallyhidden">Filter by user</label>
-                  <%=
-                    select_tag("filter", options_for_select(
-                      [["All", "all"], ["Nobody", "nobody"]] +
-                      User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
-                    ), id: "user-filter")
-                  %>
-                  <input type="submit" value="Filter">
-                </fieldset>
-              </form>
-            </li>
-            <li><%= link_to 'All publications', admin_root_path %></li>
-            <li><%= link_to 'Sign out', gds_sign_out_path %></li>
-          </ul>
-        </li>
-        <li class="rarer-nav">
-          <ul>
-            <li><small><%= link_to 'Overview', admin_overview_path %></small></li>
-            <li><small><%= link_to 'Manage expectations', admin_expectations_path %></small></li>
-            <li><small><%= link_to 'View analytics', 'https://www.google.com/analytics/web/#dashboard/default/a26179049w50705554p51337955/' %></small></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
+    <header class="navbar navbar-fixed-top" role="banner">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <%= link_to 'GOV.UK Publisher', admin_root_path, :class => "brand" %>
+          <nav role="navigation" class="nav-collapse">
+            <ul class="nav">
+              <li><%= link_to 'All publications', admin_root_path %></li>
+              <li><%= link_to 'Overview', admin_overview_path %></li>
+              <li><%= link_to 'Manage expectations', admin_expectations_path %></li>
+              <li class="divider-vertical"></li>
+              <li><a href="#" title="[Not yet implemented]">My publications</a></li>
+            </ul>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#"
+                  class="dropdown-toggle"
+                  data-toggle="dropdown">
+                  Services
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="http://digital.cabinetoffice.gov.uk/">GDS blog</a></li>
+                  <li><a href="http://wiki.digital.cabinet-office.gov.uk/">GDS wiki</a></li>
+                  <li class="divider"></li>
+                  <li><%= link_to 'Analytics', 'https://www.google.com/analytics/web/#dashboard/default/a26179049w50705554p51337955/'%></li>
+                  <li><a href="#" title="[Not yet implemented]">Need-o-tron</a></li>
+                  <li class="divider"></li>
+                  <li><%= link_to 'Sign out', gds_sign_out_path %></li>
+                </ul>
+              </li>
+            </ul>
+            <p class="navbar-text pull-right">Signed in as <a href="#">Joshua Marshall</a></p>
+          </nav><!--/.nav-collapse -->
+        </div>
+      </div>
+    </header>
 
     <div class="content" role="main">
       <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
