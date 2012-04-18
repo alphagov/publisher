@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Viewing Edition <%= @resource.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h1>
+  <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
 </div>
 <% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
 <div class="alert alert-info">
@@ -10,6 +10,7 @@
 <%= render 'admin/shared/workflow_buttons' %>
 
 <div class="row-fluid">
+
   <ul class="nav nav-tabs">
     <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
     <li><a href="#metadata" data-toggle="tab">Metadata</a></li>
@@ -18,19 +19,21 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane active" id="edit">
-      <%= render resource_edit_view %>
-    </div>
-    <div class="tab-pane" id="metadata">
-      <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
-    </div>
-    <div class="tab-pane" id="history">
-      <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
-    </div>
-    <div class="tab-pane" id="admin">
-      <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
-    </div>
-  </div>
+    <div class="well">
+      <div class="tab-pane active" id="edit">
+        <%= render resource_edit_view %>
+      </div>
+      <div class="tab-pane" id="metadata">
+        <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
+      </div>
+      <div class="tab-pane" id="history">
+        <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
+      </div>
+      <div class="tab-pane" id="admin">
+        <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+      </div>
+    </div><!--/.well -->
+  </div><!--/.tab-content -->
 </div><!--./row-fluid -->
 
 <% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications') %>
