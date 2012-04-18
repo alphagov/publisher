@@ -1,6 +1,7 @@
 <div class="page-header">
   <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
 </div>
+
 <% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
 <div class="alert alert-info">
   Status: <strong><%= @resource.capitalized_state_name %></strong>
@@ -11,30 +12,35 @@
 
 <div class="row-fluid">
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
-    <li><a href="#metadata" data-toggle="tab">Metadata</a></li>
-    <li><a href="#history" data-toggle="tab">History &amp; Notes</a></li>
-    <li><a href="#admin" data-toggle="tab">Admin</a></li>
-  </ul>
+  <div class="tabbable">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
+      <li><a href="#metadata" data-toggle="tab">Metadata</a></li>
+      <li><a href="#history" data-toggle="tab">History &amp; Notes</a></li>
+      <li><a href="#admin" data-toggle="tab">Admin</a></li>
+    </ul>
 
-  <div class="tab-content">
-    <div class="well">
-      <div class="tab-pane active" id="edit">
-        <%= render resource_edit_view %>
-      </div>
-      <div class="tab-pane" id="metadata">
-        <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
-      </div>
-      <div class="tab-pane" id="history">
-        <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
-      </div>
-      <div class="tab-pane" id="admin">
-        <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
-      </div>
-    </div><!--/.well -->
-  </div><!--/.tab-content -->
+    <div class="tab-content">
+      <div class="well">
+        <div class="tab-pane" id="edit">
+          <%= render resource_edit_view %>
+        </div>
+        <div class="tab-pane" id="metadata">
+          <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
+        </div>
+        <div class="tab-pane" id="history">
+          <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
+        </div>
+        <div class="tab-pane" id="admin">
+          <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+        </div>
+      </div><!--/.well -->
+    </div><!--/.tab-content -->
+  </div><!--/.tabbable -->
+
 </div><!--./row-fluid -->
 
 <% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications') %>
 <% content_for :page_title, "Editing #{@resource.title}" %>
+
+<%= javascript_include_tag('/publisher-assets/javascripts/bootstrap.min.js') %>
