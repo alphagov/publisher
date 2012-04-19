@@ -51,12 +51,6 @@ gem 'stomp', '1.1.9'
 gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
 
-if ENV['SLIMMER_DEV']
-  gem 'slimmer', :path => '../slimmer'
-else
-  gem 'slimmer', '~> 1.1'
-end
-
 if ENV['CDN_DEV']
   gem 'cdn_helpers', :path => '../cdn_helpers'
 else
