@@ -11,7 +11,6 @@
   <style type="text/css">
     body {
       padding-top: 40px;
-      padding-bottom: 40px;
     }
   </style>
 
@@ -33,9 +32,9 @@
         <%= link_to 'GOV.UK Publisher', admin_root_path, :class => "brand" %>
         <nav role="navigation" class="nav-collapse">
           <ul class="nav">
-            <li><%= link_to 'All publications', admin_root_path %></li>
-            <li><%= link_to 'Overview', admin_overview_path %></li>
-            <li><%= link_to 'Manage expectations', admin_expectations_path %></li>
+            <li><%= nav_link 'All publications', admin_root_path %></li>
+            <li><%= nav_link 'Overview', admin_overview_path %>
+            <li><%= nav_link 'Manage expectations', admin_expectations_path %></li>
             <li class="divider-vertical"></li>
             <li><a href="#" title="[Not yet implemented]">My publications</a></li>
           </ul>
