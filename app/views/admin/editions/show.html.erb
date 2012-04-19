@@ -1,16 +1,16 @@
-<div class="page-header">
-  <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
-</div>
-
-<% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
-<div class="alert alert-info">
-  Status: <strong><%= @resource.capitalized_state_name %></strong>
-</div>
-
-<%= render 'admin/shared/review_or_fact_check' %>
-<%= render 'admin/shared/workflow_buttons' %>
-
 <div class="row-fluid">
+
+  <div class="page-header">
+    <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
+  </div>
+
+  <% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
+  <div class="alert alert-info">
+    Status: <strong><%= @resource.capitalized_state_name %></strong>
+  </div>
+
+  <%= render 'admin/shared/review_or_fact_check' %>
+  <%= render 'admin/shared/workflow_buttons' %>
 
   <div class="tabbable">
     <ul class="nav nav-tabs">
