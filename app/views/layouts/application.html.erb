@@ -6,7 +6,7 @@
   </title>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
-  <%= stylesheet_link_tag '_publisher/bootstrap.min', '_publisher/bootstrap-responsive.min' %>
+  <%= stylesheet_link_tag 'bootstrap.min.css', 'bootstrap-responsive.min.css' %>
 
   <style type="text/css">
     body {
@@ -23,7 +23,6 @@
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
 
@@ -97,6 +96,9 @@
     # '/javascripts/publisher-tabs.js'
   ) %>
   <%= yield :extra_javascript %>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <%= javascript_include_tag('bootstrap.min.js') %>
 
 </body>
 </html>
