@@ -15,7 +15,9 @@
       <div class="tab-content">
         <% @overviews.each do |title, rows| %>
           <div class="tab-pane<% if title.parameterize == "format"%> active<% end %>" id="<%= title.parameterize %>">
-            <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
+            <div class="well">
+              <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
+            </div>
           </div>
         <% end %>
       </div>
