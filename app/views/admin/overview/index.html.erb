@@ -1,20 +1,28 @@
+<div class="page-header">
+  <h1>Publications overview</h1>
+</div>
+
 <div class="row-fluid">
   <div class="span12">
-    <ul class="nav nav-tabs">
-      <% @overviews.each do |title, rows| %>
-        <li><a href="#<%= title.parameterize %>" data-toggle="tab"><%= title.capitalize %></a></li>
-      <% end %>
-    </ul>
 
-    <div class="tab-content">
-
-      <div class="tab-pane active">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
         <% @overviews.each do |title, rows| %>
-          <div id="<%= title.parameterize %>">
+          <li<% if title.parameterize == "format" %> class="active"<% end %>><a href="#<%= title.parameterize %>" data-toggle="tab"><%= title.capitalize %></a></li>
+        <% end %>
+      </ul>
+
+      <div class="tab-content">
+
+        <% @overviews.each do |title, rows| %>
+          <div class="tab-pane<% if title.parameterize == "format"%> active<% end %>" id="<%= title.parameterize %>">
             <%= render :partial => "dashboard", :locals => {:rows => rows, :title => title } %>
           </div>
         <% end %>
       </div>
-    </div>
-  </div>
-</div>
+
+    </div><!--./tabbable -->
+  </div><!--./span12 -->
+</div><!--./row-fluid -->
+
+<% content_for :page_title, "Publications overview" %>
