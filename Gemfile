@@ -70,6 +70,11 @@ gem 'lockfile'
 gem 'whenever'
 gem 'newrelic_rpm'
 
+group :assets do
+  gem "therubyracer", "~> 0.9.4"
+  gem 'uglifier'
+end
+
 group :development do
   gem 'passenger'
   if ENV['RUBY_DEBUG']

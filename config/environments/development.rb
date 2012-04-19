@@ -20,4 +20,10 @@ Publisher::Application.configure do
   config.active_support.deprecation = :log
 
   config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
+
+  # Do not compress assets
+  config.assets.compress = false
+
+  # Expands the lines which load the assets
+  config.assets.debug = true
 end
