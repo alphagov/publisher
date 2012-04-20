@@ -1,3 +1,7 @@
-<%= publication.meta_data.to_html %>
+<% publication.meta_data.attributes.each do |key, value| %>
 
-<%= link_to "Edit in Panopticon", publication.panopticon_uri + '/edit', :class => "btn btn-primary" %>
+<%= content_tag :label, key.humanize, for: key %>
+<%= text_field_tag key, value, class: "span7 uneditable-input" %>
+<% end %>
+
+<%= link_to "Edit in Panopticon", publication.panopticon_uri + '/edit', :class => "btn btn-primary btn-large" %>
