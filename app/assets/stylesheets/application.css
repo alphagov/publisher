@@ -1,1 +1,20 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+.sidebar-nav {
+  padding: 9px 0;
+}
+.navbar-fixed-bottom {
+  text-align: center;
+}
+.navbar-fixed-bottom form {
+  display: inline-block;
+  margin: 5px 0;
+}
+form.send_fact_check {
+  /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
+  margin-left: 70px;
+}
+
 *= require formtastic-bootstrap
