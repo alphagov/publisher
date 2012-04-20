@@ -6,16 +6,7 @@
   </title>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
-  <%= stylesheet_link_tag 'bootstrap.min.css', 'bootstrap-responsive.min.css' %>
-
-  <style type="text/css">
-    body {
-      padding-top: 40px;
-    }
-    .sidebar-nav {
-      padding: 9px 0;
-    }
-  </style>
+  <%= stylesheet_link_tag 'bootstrap.min.css', 'bootstrap-responsive.min.css', 'application.css' %>
 
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
@@ -98,7 +89,6 @@
   <script type="text/javascript">
     $('.icon-question-sign').popover()
   </script>
-
 
 </body>
 </html>
