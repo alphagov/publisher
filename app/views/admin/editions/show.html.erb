@@ -6,7 +6,7 @@
 
   <div class="alert alert-info">
     Status: <strong><%= @resource.capitalized_state_name %></strong>
-    <% if !@resource.business_proposition %>
+    <% if @resource.business_proposition %>
       <span class="pull-right"><strong>! BUSINESS PROPOSITION CONTENT !</strong></span>
     <% end %>
   </div>
