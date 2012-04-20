@@ -4,9 +4,11 @@
     <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
   </div>
 
-  <% if @resource.business_proposition %><p><strong>! BUSINESS PROPOSITION CONTENT !</strong></p><% end %>
   <div class="alert alert-info">
     Status: <strong><%= @resource.capitalized_state_name %></strong>
+    <% if !@resource.business_proposition %>
+      <span class="pull-right"><strong>! BUSINESS PROPOSITION CONTENT !</strong></span>
+    <% end %>
   </div>
 
   <%= render 'admin/shared/review_or_fact_check' %>
@@ -21,24 +23,36 @@
     </ul>
 
     <div class="tab-content">
-      <div class="well">
-        <div class="tab-pane" id="edit">
-          <%= render resource_edit_view %>
+        <div class="tab-pane active" id="edit">
+          <div class="well">
+            <%= render resource_edit_view %>
+          </div><!--/.well -->
         </div>
         <div class="tab-pane" id="metadata">
-          <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
+          <div class="well">
+            <%= render :partial => '/admin/shared/metadata', :locals => {:publication => @resource} %>
+          </div><!--/.well -->
         </div>
         <div class="tab-pane" id="history">
-          <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
+          <div class="well">
+            <%= render :partial => '/admin/shared/history', :locals => {:publication => @resource} %>
+          </div><!--/.well -->
         </div>
         <div class="tab-pane" id="admin">
-          <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+          <div class="well">
+            <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+          </div><!--/.well -->
         </div>
-      </div><!--/.well -->
     </div><!--/.tab-content -->
   </div><!--/.tabbable -->
 
 </div><!--./row-fluid -->
 
-<% content_for :extra_javascript, javascript_include_tag('publications.js') %>
+<%# content_for :extra_javascript, javascript_include_tag('publications.js') %>
 <% content_for :page_title, "Editing #{@resource.title}" %>
+
+<style type="text/css">
+  body {
+    padding-bottom: 60px;
+  }
+</style>
