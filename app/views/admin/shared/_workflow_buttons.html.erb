@@ -1,19 +1,22 @@
-<div id="publication-controls" class="format-controls">
-  <!-- <p><a href="#" class="external">Formatting help</a></p> -->
-  <% if @resource.published? %>
-    Published items can't be changed.
-    <%= preview_button(@resource) %>
-    <%= button_to 'Create new edition', duplicate_admin_edition_path(@resource) %>
-  <% else %>
-    <span class="workflow_buttons">
-      <!-- Fake save button -->
-      <form id="save-edition" class="button_to">
-      <input type="submit" value="Save" class="update">
-      </form>
+<div class="navbar navbar-fixed-bottom">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <% if @resource.published? %>
+        Published items can't be changed.
+        <%= preview_button(@resource) %>
+        <%= button_to 'Create new edition', duplicate_admin_edition_path(@resource) %>
+      <% else %>
+        <span class="workflow_buttons">
+          <!-- Fake save button -->
+          <form id="save-edition" class="button_to">
+          <input type="submit" value="Save" class="btn btn-success btn-large">
+          </form>
 
-      <%= preview_button(@resource) %>
-      <%= progress_buttons(@resource) %>
-    </span>
-    <%= progress_forms(@resource) %>
-  <% end %>
+          <%= preview_button(@resource) %>
+          <%= progress_buttons(@resource) %>
+        </span>
+        <%= progress_forms(@resource) %>
+      <% end %>
+    </div>
+  </div>
 </div>
