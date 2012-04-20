@@ -7,7 +7,7 @@ module Admin::BaseHelper
         url = admin_root_path(:filter => params[:filter], :list => scope)
 
         content_tag(:a, :href => url) do
-          "#{status} (#{@presenter.send(scope).length})"
+          h(status + " ") + content_tag(:span, @presenter.send(scope).length, class: "label pull-right")
         end
       end
     end
