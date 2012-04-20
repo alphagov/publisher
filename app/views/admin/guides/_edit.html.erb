@@ -2,28 +2,24 @@
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
-
   <% end %>
 
-  <h2 class="visuallyhidden">Parts</h2>
+  <hr>
 
-  <section id="parts" class="group">
+  <h3>Parts</h3>
 
+  <section class="accordion" id="parts">
     <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
     <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
     <%= f.semantic_fields_for :parts do |part| %>
       <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
     <% end %>
-
   </section>
 
-  <p class="button"><a href="#" class="add-associated" data-target="parts" data-tmpl_id="tmpl-parts" role="button">Add new part</a></p>
-
-
-
+  <button class="btn btn-success add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</button>
 
   <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
 <% end %>
 
-<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/guides') %>
+<% content_for :extra_javascript, javascript_include_tag('/guides') %>
