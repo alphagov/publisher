@@ -52,7 +52,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       context "For a business edition" do
         should "send to 'biz' and 'team' for publish action" do
           email = business_action_email(Action::PUBLISH)
-          assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'publisher-alerts-business@digital.cabinet-office.gov.uk']
+          assert_equal email.to.sort, ['govuk-team@digital.cabinet-office.gov.uk', 'publisher-alerts-business@digital.cabinet-office.gov.uk'].sort
         end
 
         should "send to 'biz' for all non-publish actions" do
@@ -66,14 +66,14 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       context "For a non-business edition" do
         should "send to 'freds' and 'team' for publish action" do
           email = action_email(Action::PUBLISH)
-          assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
+          assert_equal email.to.sort, ['govuk-team@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
         end
 
         should "send to 'eds' and 'freds' for publish action" do
           email = action_email(Action::REQUEST_REVIEW)
-          assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
+          assert_equal email.to.sort, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
           email = action_email(Action::APPROVE_REVIEW)
-          assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
+          assert_equal email.to.sort, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
         end
       end
 

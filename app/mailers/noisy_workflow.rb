@@ -4,11 +4,11 @@ class NoisyWorkflow < ActionMailer::Base
   default :from => "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   EMAIL_GROUPS = {
-    'team' => 'govuk-team@digital.cabinet-office.gov.uk',
-    'dev' => 'govuk-dev@digital.cabinet-office.gov.uk',
-    'freds' => 'freds@alphagov.co.uk',
-    'eds' => 'govuk-content-designers@digital.cabinet-office.gov.uk',
-    'biz' => 'publisher-alerts-business@digital.cabinet-office.gov.uk'
+    :team => 'govuk-team@digital.cabinet-office.gov.uk',
+    :dev => 'govuk-dev@digital.cabinet-office.gov.uk',
+    :franchise_editors => 'freds@alphagov.co.uk',
+    :editors => 'govuk-content-designers@digital.cabinet-office.gov.uk',
+    :business => 'publisher-alerts-business@digital.cabinet-office.gov.uk',
   }
 
   def make_noise(action)
@@ -20,26 +20,26 @@ class NoisyWorkflow < ActionMailer::Base
       subject = "[PUBLISHER] #{@action.friendly_description}"
     end
 
-    case Plek.current.environment
-    when 'preview'
-      email_address = EMAIL_GROUPS['dev']
+    recipient_emails = []
+    if Plek.current.environment == 'preview'
+      recipient_emails << EMAIL_GROUPS[:dev]
     else
       if action.edition.business_proposition
+        recipient_emails << EMAIL_GROUPS[:business]
         if action.request_type == Action::PUBLISH
-          email_address = "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['biz']}"
-        else
-          email_address = "#{EMAIL_GROUPS['biz']}"
+          recipient_emails << EMAIL_GROUPS[:team]
         end
       else
-        email_address = case action.request_type
-        when Action::PUBLISH then "#{EMAIL_GROUPS['team']}, #{EMAIL_GROUPS['freds']}"
-        when Action::REQUEST_REVIEW then "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
-        else "#{EMAIL_GROUPS['eds']}, #{EMAIL_GROUPS['freds']}"
+        recipient_emails << EMAIL_GROUPS[:franchise_editors]
+        if action.request_type == Action::PUBLISH
+          recipient_emails << EMAIL_GROUPS[:team]
+        else
+          recipient_emails << EMAIL_GROUPS[:editors]
         end
       end
     end
 
-    mail(:to => email_address,
+    mail(:to => recipient_emails.join(', '),
          :subject => subject)
   end
 
