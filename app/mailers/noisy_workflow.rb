@@ -4,11 +4,10 @@ class NoisyWorkflow < ActionMailer::Base
   default :from => "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   EMAIL_GROUPS = {
-    :team => 'govuk-team@digital.cabinet-office.gov.uk',
     :dev => 'govuk-dev@digital.cabinet-office.gov.uk',
     :franchise_editors => 'freds@alphagov.co.uk',
-    :editors => 'govuk-content-designers@digital.cabinet-office.gov.uk',
     :business => 'publisher-alerts-business@digital.cabinet-office.gov.uk',
+    :citizen => 'publisher-alerts-citizen@digital.cabinet-office.gov.uk'
   }
 
   def make_noise(action)
@@ -26,16 +25,8 @@ class NoisyWorkflow < ActionMailer::Base
     else
       if action.edition.business_proposition
         recipient_emails << EMAIL_GROUPS[:business]
-        if action.request_type == Action::PUBLISH
-          recipient_emails << EMAIL_GROUPS[:team]
-        end
       else
-        recipient_emails << EMAIL_GROUPS[:franchise_editors]
-        if action.request_type == Action::PUBLISH
-          recipient_emails << EMAIL_GROUPS[:team]
-        else
-          recipient_emails << EMAIL_GROUPS[:editors]
-        end
+        recipient_emails << EMAIL_GROUPS[:citizen] << EMAIL_GROUPS[:franchise_editors]
       end
     end
 
