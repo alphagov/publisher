@@ -11,7 +11,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   end
 
   def action_email(action)
-    guide = FactoryGirl.create(:guide_edition)
+    guide = FactoryGirl.create(:guide_edition, :business_proposition => false, :title => 'Test Guide 2')
     requester = User.new(:name => 'Testing Person')
     action = guide.actions.create(:request_type => action, :requester => requester)
     NoisyWorkflow.make_noise(action)
@@ -34,31 +34,44 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.from
   end
 
-  test "news of publications should go to the whole team + franchise editors" do
-    email = action_email(Action::PUBLISH)
-    assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
-  end
+  context "make_noise" do
+    context "Setting the subject" do
 
-  test "review request emails should go to the editors, franchise editors, and the SEO team" do
-    email = action_email(Action::REQUEST_REVIEW)
-    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
-  end
+      should "set a subject containing the description and business prefix for business" do
+        email = business_action_email(Action::PUBLISH)
+        assert_equal email.subject, "[PUBLISHER]-BUSINESS Published: \"Test Guide 1\" (Guide) by Testing Person"
+      end
 
-  test "other workflow emails should go to editors and franchise editors" do
-    email = action_email(Action::APPROVE_REVIEW)
-    assert_equal email.to, ['govuk-content-designers@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk']
-  end
+      should "set a subject containing the description and non-business prefix for non-business" do
+        email = action_email(Action::APPROVE_REVIEW)
+        assert_equal email.subject, "[PUBLISHER] Okayed for publication: \"Test Guide 2\" (Guide) by Testing Person"
+      end
+    end
 
-  test "publish business proposition email" do
-    email = business_action_email(Action::PUBLISH)
-    assert_equal email.to, ['govuk-team@digital.cabinet-office.gov.uk', 'publisher-alerts-business@digital.cabinet-office.gov.uk']
-    assert_equal email.subject, "[PUBLISHER]-BUSINESS Published: \"Test Guide 1\" (Guide) by Testing Person"
-  end
+    context "Setting the recipients" do
+      should "send to 'publisher-alerts-business' for a business edition" do
+        email = business_action_email(Action::PUBLISH)
+        assert_equal email.to.sort, ['publisher-alerts-business@digital.cabinet-office.gov.uk'].sort
+        email = business_action_email(Action::APPROVE_REVIEW)
+        assert_equal email.to, ['publisher-alerts-business@digital.cabinet-office.gov.uk']
+      end
 
-  test "review business proposition email" do
-    email = business_action_email(Action::REQUEST_REVIEW)
-    assert_equal email.to, ['publisher-alerts-business@digital.cabinet-office.gov.uk']
-    assert_equal email.subject, "[PUBLISHER]-BUSINESS Review requested: \"Test Guide 1\" (Guide) by Testing Person"
-  end
+      should "send to 'publisher-alerts-citizen' and 'freds' for a non-business edition" do
+        email = action_email(Action::PUBLISH)
+        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
+        email = action_email(Action::REQUEST_REVIEW)
+        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
+      end
 
+      should "send to 'devs' when in 'preview' environment" do
+        plek_current = Plek.current
+        plek_current.stubs(:environment).returns('preview')
+        Plek.stubs(:current).returns( plek_current )
+        email = business_action_email(Action::PUBLISH)
+        assert_equal email.to, ['govuk-dev@digital.cabinet-office.gov.uk']
+        email = action_email(Action::REQUEST_REVIEW)
+        assert_equal email.to, ['govuk-dev@digital.cabinet-office.gov.uk']
+      end
+    end
+  end
 end
