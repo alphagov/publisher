@@ -42,7 +42,7 @@
 
       </div>
 
-      <div class="span10">
+      <div id="publication-list-container" class="span10">
 
         <h2>Lined up publications</h2>
 
@@ -73,3 +73,15 @@
 </div><!--./row-fluid -->
 
 <% content_for :page_title, "Publications dashboard" %>
+<% content_for :extra_javascript do%>
+  <script type="text/javascript" charset="utf-8">
+  $(function () {
+    $('.status-option a').click(function () {
+      $('#publication-list-container').load($(this).attr('href'));
+      $(this).closest('ul').find('li').removeClass('active');
+      $(this).closest('li').addClass('active');
+      return false;
+    });
+  });
+  </script>
+<% end %>

@@ -2,7 +2,7 @@ module Admin::BaseHelper
 
   def publication_tab_list(*statuses)
     output = statuses.collect do |status|
-      content_tag(:li) do
+      content_tag(:li, class: 'status-option') do
         scope = status.downcase.gsub(' ', '_')
         url = admin_root_path(:filter => params[:filter], :list => scope)
 
