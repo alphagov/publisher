@@ -14,6 +14,8 @@ FactoryGirl.define do
 
     association :assigned_to, :factory => :user
   end
+  factory :answer_edition, :parent => :edition do
+  end
 
   factory :guide_edition do |ge|
     ge.sequence(:panopticon_id) { |n| n }
