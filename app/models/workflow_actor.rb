@@ -1,5 +1,5 @@
 module WorkflowActor
-  SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review receive_fact_check
+  SIMPLE_WORKFLOW_ACTIONS = %W[start_work request_review
     request_amendments approve_review approve_fact_check]
 
   def record_action(edition, type, options={})
@@ -67,6 +67,13 @@ module WorkflowActor
     details[:comment] += "\n\nResponses should be sent to: " + edition.fact_check_email_address
 
     take_action(edition, __method__, details)
+  end
+
+  # Advances state if possible (i.e. if in 'fact_check' state)
+  # Always records the action.
+  def receive_fact_check(edition, details)
+    edition.receive_fact_check
+    record_action(edition, :receive_fact_check, details)
   end
 
   SIMPLE_WORKFLOW_ACTIONS.each do |method|
