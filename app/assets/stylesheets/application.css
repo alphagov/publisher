@@ -2,6 +2,15 @@ body {
   padding-top: 40px;
   padding-bottom: 60px;
 }
+
+.navbar .brand {
+  background-image: url("/images/header-crown.png");
+  background-position: 0 4px;
+  background-repeat: no-repeat;
+  margin-left: 0;
+  padding-left: 1.9em;
+}
+
 .sidebar-nav {
   padding: 9px 0;
 }
@@ -15,6 +24,11 @@ body {
 form.send_fact_check {
   /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
   margin-left: 70px;
+}
+
+td.icon {
+  /* change alignment of publication table cells that just have icons in them  */
+  text-align: center;
 }
 
 *= require formtastic-bootstrap
