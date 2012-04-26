@@ -102,7 +102,7 @@ GEM
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (0.5.1)
+    gds-sso (0.5.2)
       oa-core (~> 0.3.2)
       oa-oauth (~> 0.3.2)
       oauth2 (= 0.5.2)
@@ -286,7 +286,7 @@ DEPENDENCIES
   faker
   formtastic (~> 2.0.0)
   gds-api-adapters (~> 0.0.23)
-  gds-sso (~> 0.5.1)
+  gds-sso (~> 0.5.2)
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.7)
