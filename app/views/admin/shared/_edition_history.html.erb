@@ -6,25 +6,27 @@
         <%= action.created_at.strftime("%d/%m/%Y") %> <%= action.created_at.strftime("%R") %>
       </dt>
       <dd>
-        <%= action.to_s %> by
+        <strong><%= action.to_s %></strong> by
         <% if action.requester %>
           <%= mail_to action.requester.email, action.requester.name %>
         <% else %>
           GOV.UK Bot
         <% end %>
         <% if action.comment.present? || action.is_fact_check_request? || action.diff || action.request_type == "assign" %>
+          <q>
           <% if action.comment.present? %>
-            &ldquo;<%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>&rdquo;
+            <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
           <% end %>
           <% if action.is_fact_check_request? && action.email_addresses.present? %>
-            <p><strong>Request Sent To:</strong> <%= mail_to action.email_addresses %></p></span>
+            <strong>request sent to:</strong> <%= mail_to action.email_addresses %>
           <% end %>
           <% if action.recipient_id.present? %>
-            <span><p><strong>Assigned To:</strong> <%= mail_to action.recipient.email, action.recipient.name %></p></span>
+            <strong>assigned to &rarr;</strong> <%= mail_to action.recipient.email, action.recipient.name %>
           <% end %>
           <% if action.diff %>
             <%= format_content_diff(action.diff) %>
           <% end %>
+          </q>
       <% end %>
       </dd>
     <% end %>
