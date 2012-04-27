@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/cgunther/formtastic-bootstrap.git
+  revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
+  branch: bootstrap-2
+  specs:
+    formtastic-bootstrap (1.2.0)
+      formtastic
+      rails (>= 3.1.0)
+
+GIT
   remote: git://github.com/justinfrench/formtastic.git
   revision: 7b7428fa4a6a44aea1e8278523f4f45f2570a33d
   branch: 2.1-stable
@@ -106,9 +115,6 @@ GEM
       rack (>= 1.1.0, < 2)
     fastthread (1.0.7)
     ffi (1.0.11)
-    formtastic-bootstrap (1.2.0)
-      formtastic
-      rails (~> 3.1.0)
     gds-api-adapters (0.0.44)
       lrucache (~> 0.1.1)
       null_logger
@@ -295,7 +301,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   formtastic!
-  formtastic-bootstrap
+  formtastic-bootstrap!
   gds-api-adapters (~> 0.0.23)
   gds-sso (~> 0.4.2)
   gds-warmup-controller

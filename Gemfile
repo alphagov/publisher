@@ -45,7 +45,7 @@ gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
 gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
-gem 'formtastic-bootstrap'
+gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'null_logger'
