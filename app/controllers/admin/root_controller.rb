@@ -3,7 +3,7 @@ class Admin::RootController < Admin::BaseController
 
   def index
     @filter = params[:filter] || session[:filter]
-    @list = params[:list] || 'lined_up'
+    @list = params[:list].blank? ? 'lined_up' : params[:list]
 
     if @filter.blank?
       @filter = current_user.uid
