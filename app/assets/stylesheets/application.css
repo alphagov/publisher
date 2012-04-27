@@ -1,3 +1,6 @@
+# app/assets/stylesheets/application.css
+*= require formtastic-bootstrap
+
 body {
   padding-top: 40px;
   padding-bottom: 60px;
@@ -8,7 +11,7 @@ body {
   background-position: 0 4px;
   background-repeat: no-repeat;
   margin-left: 0;
-  padding-left: 1.9em;
+  padding-left: 2em;
 }
 
 .sidebar-nav {
@@ -30,5 +33,3 @@ td.icon {
   /* change alignment of publication table cells that just have icons in them  */
   text-align: center;
 }
-
-*= require formtastic-bootstrap
