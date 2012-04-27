@@ -44,7 +44,7 @@ gem 'rest-client'
 gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
-gem 'formtastic', '~> 2.0.0'
+gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
