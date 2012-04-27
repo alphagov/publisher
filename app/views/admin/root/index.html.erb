@@ -24,7 +24,7 @@
             <li><a href="#">Smart Answers <span class="label pull-right">4</span></a></li> -->
 
             <li class="nav-header">Filter by Status</li>
-            <%= publication_tab_list 'Lined up', 'Drafts', 'In review', 'Amends needed', 'Out for fact check', 'Fact check received', 'Ready', 'Published', 'Archived' %>
+            <%= publication_tab_list 'Lined up', 'Drafts', 'In review', 'Amends needed', 'Out for fact check', 'Fact check received', 'Ready', 'Published', 'Archived', :current => @list %>
           </ul>
 
         </div><!--/.well -->
@@ -44,7 +44,7 @@
 
       <div id="publication-list-container" class="span10">
 
-        <%= render "lined_up" %>
+        <%= render @list %>
 
       </div><!--./span10 -->
 
@@ -53,15 +53,3 @@
 </div><!--./row-fluid -->
 
 <% content_for :page_title, "Publications" %>
-<% content_for :extra_javascript do %>
-  <script type="text/javascript" charset="utf-8">
-  $(function () {
-    $('.status-option a').click(function () {
-      $('#publication-list-container').load($(this).attr('href'));
-      $(this).closest('ul').find('li').removeClass('active');
-      $(this).closest('li').addClass('active');
-      return false;
-    });
-  });
-  </script>
-<% end %>

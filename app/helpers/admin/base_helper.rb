@@ -1,9 +1,19 @@
 module Admin::BaseHelper
 
   def publication_tab_list(*statuses)
+    # Allow passing :current => 'something' as the last argument
+    if statuses[-1].is_a? Hash
+      options = statuses.pop
+    else
+      options = {}
+    end
+
     output = statuses.collect do |status|
-      content_tag(:li, class: 'status-option') do
-        scope = status.downcase.gsub(' ', '_')
+      scope = status.downcase.gsub(' ', '_')
+      li_classes = ['status-option']
+      li_classes << 'active' if scope == options[:current]
+
+      content_tag(:li, class: li_classes.join(' ')) do
         url = admin_root_path(:filter => params[:filter], :list => scope)
 
         content_tag(:a, :href => url) do
