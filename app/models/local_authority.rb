@@ -9,7 +9,7 @@ class LocalAuthority
   field :snac, type: String
   field :local_directgov_id, type: Integer
   field :tier, type: String
-  field :contact_address, type: String
+  field :contact_address, type: Array
   field :contact_url, type: String
   field :contact_phone, type: String
   field :contact_email, type: String
