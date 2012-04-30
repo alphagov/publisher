@@ -16,6 +16,7 @@ class LocalTransactionsRakeTest < ActiveSupport::TestCase
 
       LocalServiceImporter.stubs(:update)
       LocalInteractionImporter.stubs(:update)
+      LocalContactImporter.stubs(:update)
     end
 
     should "call LocalServiceImporter.update" do
@@ -31,5 +32,13 @@ class LocalTransactionsRakeTest < ActiveSupport::TestCase
         @rake[@task_name].invoke
       end
     end
+
+    should "call LocalContactImporter.update" do
+      LocalContactImporter.expects(:update)
+      silence_stream(STDERR) do
+        @rake[@task_name].invoke
+      end
+    end
+
   end
 end

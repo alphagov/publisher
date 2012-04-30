@@ -4,5 +4,6 @@ namespace :local_transactions do
   task :fetch => :environment do
     LocalServiceImporter.update
     LocalInteractionImporter.update
+    LocalContactImporter.update
   end
 end
