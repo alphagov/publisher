@@ -19,6 +19,44 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       to_return(status: 404, body: '{}')
   end
   
+  context "update" do
+    setup do
+      LocalInteractionImporter.stubs(:new).returns(stub(:run))
+    end
+
+    should "download the data" do
+      LocalInteractionImporter.expects(:fetch_data).returns(stub(:close))
+      LocalInteractionImporter.update
+    end
+
+    should "pass the download filehandle to a new instance of self, and run self" do
+      stub_fh = stub(:close)
+      LocalInteractionImporter.stubs(:fetch_data).returns(stub_fh)
+      LocalInteractionImporter.expects(:new).with(stub_fh).returns(stub(:run))
+      LocalInteractionImporter.update
+    end
+
+    should "close the filehandle when done" do
+      stub_fh = stub()
+      LocalInteractionImporter.stubs(:fetch_data).returns(stub_fh)
+      stub_fh.expects(:close)
+      LocalInteractionImporter.update
+    end
+  end
+
+  context "fetch_data" do
+    should "download the csv file and return a filehandle containing the data" do
+      stub_request(:get, "http://local.direct.gov.uk/Data/local_authority_service_details.csv").
+        to_return(:status => 200, :body => "Example Interactions CSV Content")
+
+      filehandle = LocalInteractionImporter.fetch_data
+      data = filehandle.read
+      assert_equal "Example Interactions CSV Content", data
+
+      filehandle.close
+    end
+  end
+
   context "CSV of interaction definitions with one row" do
     setup do
       @source = File.open(fixture_file('local_interactions_sample.csv'))

@@ -1,6 +1,32 @@
 require 'csv'
 
 class LocalInteractionImporter
+  INTERACTIONS_LIST_URL = "http://local.direct.gov.uk/Data/local_authority_service_details.csv"
+
+  def self.fetch_data
+    tmp = Tempfile.new(['local_interactions', '.csv'])
+
+    uri = URI.parse(INTERACTIONS_LIST_URL)
+    response = Net::HTTP.get_response(uri)
+
+    # This will read the data in a chuncked fasion, and
+    # will avoid buffering a large amount of data in memory
+    response.read_body do |data|
+      tmp.write data
+    end
+    tmp.rewind
+    tmp
+  end
+
+  def self.update
+    io = fetch_data
+    begin
+      new(io).run
+    ensure
+      io.close
+    end
+  end
+
   def initialize(io, options = {})
     @io = io
     @authorities = {}

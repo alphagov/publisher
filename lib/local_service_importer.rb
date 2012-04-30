@@ -1,6 +1,15 @@
 require 'csv'
 
 class LocalServiceImporter
+  def self.update
+    file = File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
+    begin
+      new(file).run
+    ensure
+      file.close
+    end
+  end
+
   def initialize(io, options = {})
     @io = io
     @logger = options[:logger] || NullLogger.instance
