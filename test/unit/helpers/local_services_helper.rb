@@ -1,22 +1,12 @@
 module LocalServicesHelper
   def make_authority(tier, options)
-    @next_id ||= 1 
-    @next_id += 1
-    authority = LocalAuthority.create!(
-      name: "Some #{tier.capitalize} Council", 
-      snac: options[:snac], 
-      local_directgov_id: @next_id, 
-      tier: tier
-    )
+    authority = FactoryGirl.create(:local_authority_with_contact, snac: options[:snac], tier: tier)
     add_service_interaction(authority, options[:lgsl]) if options[:lgsl]
     authority
   end
-  
+
   def add_service_interaction(existing_authority, lgsl_code)
-    existing_authority.local_interactions.create!(
-      url: "http://some.#{existing_authority.tier}.council.gov/do-#{lgsl_code}.html",
-      lgsl_code: lgsl_code,
-      lgil_code: 0)
+    FactoryGirl.create(:local_interaction, local_authority: existing_authority, lgsl_code: lgsl_code)
   end
   
   def make_service(lgsl_code, providing_tier)
@@ -24,7 +14,8 @@ module LocalServicesHelper
   end
 
   def make_authority_providing(lgsl_code)
-    council = make_authority('county',{:snac=>'00AA', :lgsl=>lgsl_code})
+    council = FactoryGirl.create(:local_authority, snac: '00AA', tier: 'county')
+    FactoryGirl.create(:local_interaction, local_authority: council, lgsl_code: lgsl_code)
     council
   end
 end

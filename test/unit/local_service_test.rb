@@ -19,9 +19,12 @@ class LocalServiceTest < ActiveSupport::TestCase
     LocalAuthority.delete_all
     @lgsl_code = 123
     @snac_code = 'AA00'
-    @county_council = make_authority('county', snac: 'AA00', lgsl: @lgsl_code)
-    @district_council = make_authority('district', snac: 'AA', lgsl: @lgsl_code)
-    @unitary_authority = make_authority('unitary', snac: 'BB00', lgsl: @lgsl_code)
+    @county_council = FactoryGirl.create(:local_authority, tier: 'county', snac: 'AA00')
+    FactoryGirl.create(:local_interaction, local_authority: @county_council, lgsl_code: @lgsl_code, url: "http://some.county.council.gov/do-123.html")
+    @district_council = FactoryGirl.create(:local_authority, tier: 'district', snac: 'AA')
+    FactoryGirl.create(:local_interaction, local_authority: @district_council, lgsl_code: @lgsl_code, url: "http://some.district.council.gov/do-123.html")
+    @unitary_authority = FactoryGirl.create(:local_authority, tier: 'unitary', snac: 'BB00')
+    FactoryGirl.create(:local_interaction, local_authority: @unitary_authority, lgsl_code: @lgsl_code, url: "http://some.unitary.council.gov/do-123.html")
   end
 
   context "service is provided by county/unitary authority" do
@@ -56,9 +59,13 @@ class LocalServiceTest < ActiveSupport::TestCase
     context "listing all providers" do
       setup do
         other_service = @service.lgsl_code.to_i + 1
-        add_service_interaction(@county_council, other_service)
-        make_authority('county', snac: 'CC00', lgsl: other_service)
-        make_authority('unitary', snac: 'CC01', lgsl: other_service)
+        FactoryGirl.create(:local_interaction, local_authority: @county_council, lgsl_code: other_service)
+
+        authority = FactoryGirl.create(:local_authority, tier: 'county', snac: 'CC00')
+        FactoryGirl.create(:local_interaction, local_authority: authority, lgsl_code: other_service)
+
+        authority = FactoryGirl.create(:local_authority, tier: 'unitary', snac: 'CC01')
+        FactoryGirl.create(:local_interaction, local_authority: authority, lgsl_code: other_service)
       end
       
       should "exclude county and unitary authorities providing other services, but not this one" do

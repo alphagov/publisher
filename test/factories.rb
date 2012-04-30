@@ -42,6 +42,7 @@ FactoryGirl.define do
   factory :local_transaction_edition do |lte|
     lte.sequence(:panopticon_id) { |n| n }
     title  { 'Test title' }
+    version_number 1
     lte.sequence(:slug) { |ns| "slug-#{ns}"}
     lte.sequence(:lgsl_code) { |nlgsl| nlgsl }
     introduction { 'Test introduction' }
@@ -52,4 +53,26 @@ FactoryGirl.define do
     ls.sequence(:lgsl_code) { |nlgsl| nlgsl }
     providing_tier { %w{district unitary county} }
   end
+
+  factory :local_authority do
+    name "Some Council"
+    sequence(:snac) {|n| "AA0#{n}" }
+    sequence(:local_directgov_id)
+    tier "county"
+  end
+
+  factory :local_authority_with_contact, :parent => :local_authority do
+    contact_address ["line one", "line two", "line three"]
+    contact_url "http://www.magic.com/contact"
+    contact_phone '0206778654'
+    contact_email 'contact@local.authority.gov.uk'
+  end
+
+  factory :local_interaction do
+    association :local_authority
+    url "http://some.council.gov/do.html"
+    sequence(:lgsl_code) {|n| 120 + n }
+    lgil_code 0
+  end
+
 end

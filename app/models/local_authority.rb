@@ -9,6 +9,10 @@ class LocalAuthority
   field :snac, type: String
   field :local_directgov_id, type: Integer
   field :tier, type: String
+  field :contact_address, type: String
+  field :contact_url, type: String
+  field :contact_phone, type: String
+  field :contact_email, type: String
 
   validates_uniqueness_of :snac, :local_directgov_id
   validates_presence_of :snac, :local_directgov_id, :name, :tier
