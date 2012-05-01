@@ -6,10 +6,9 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
     fetch_http_to_file(INTERACTIONS_LIST_URL, tmp)
   end
 
-  def initialize(fh, options = {})
-    super(fh)
+  def initialize(fh)
+    super
     @authorities = {}
-    @logger = options[:logger] || NullLogger.instance
   end
 
   private
@@ -38,7 +37,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   end
 
   def create_authority(row)
-    @logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
+    Rails.logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
     authority_tier = identify_tier(row['SNAC'])
     LocalAuthority.create!(
       name: row['Authority Name'],
@@ -54,7 +53,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
 
   def authority_type_from_mapit(snac)
     url = "http://mapit.mysociety.org/area/#{snac}"
-    @logger.debug("Finding authority type from mapit, url #{url}")
+    Rails.logger.debug("Finding authority type from mapit, url #{url}")
     raw_response = RestClient.get(url)
     response = JSON.parse(raw_response.body)
     response['type']

@@ -11,7 +11,10 @@ class LocalContactImporter < LocalAuthorityDataImporter
   def process_row(row)
     return if row['SNAC Code'].blank?
     authority = LocalAuthority.where(:snac => row['SNAC Code']).first
-    return unless authority
+    unless authority
+      Rails.logger.warn "LocalContactImporter: failed to find LocalAuthority with SNAC #{row['SNAC Code']}"
+      return
+    end
     authority.name = decode_broken_entities( row['Name'] )
     authority.contact_address = parse_address(row)
     authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )

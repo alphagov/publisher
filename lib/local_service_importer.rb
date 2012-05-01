@@ -3,16 +3,11 @@ class LocalServiceImporter < LocalAuthorityDataImporter
     File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
   end
 
-  def initialize(fh, options = {})
-    super(fh)
-    @logger = options[:logger] || NullLogger.instance
-  end
-  
   private
 
   def process_row(row)
     return if LocalService.find_by_lgsl_code(row['LGSL'])
-    @logger.info("Import service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
+    Rails.logger.info("Import service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
     LocalService.create!(
       lgsl_code: row['LGSL'],
       description: row['Description'],
