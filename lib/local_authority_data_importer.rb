@@ -2,6 +2,12 @@ require 'csv'
 
 class LocalAuthorityDataImporter
 
+  def self.update_all
+    LocalServiceImporter.update
+    LocalInteractionImporter.update
+    LocalContactImporter.update
+  end
+
   def self.update
     fh = fetch_data
     begin
