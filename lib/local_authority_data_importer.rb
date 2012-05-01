@@ -17,16 +17,15 @@ class LocalAuthorityDataImporter
     end
   end
 
-  def self.fetch_http_to_file(url, fh)
-    uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
+  def self.fetch_http_to_file(url)
+    fh = Tempfile.new(['local_authority_data', 'csv'])
+    fh.set_encoding('ascii-8bit')
 
-    # This will read the data in a chunked fasion, and
-    # will avoid buffering a large amount of data in memory
-    response.read_body do |data|
-      fh.write data
-    end
+    uri = URI.parse(url)
+    fh.write Net::HTTP.get(uri)
+
     fh.rewind
+    fh.set_encoding('windows-1252', 'UTF-8')
     fh
   end
 

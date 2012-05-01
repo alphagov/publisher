@@ -1,3 +1,4 @@
+# encoding: utf-8
 
 require 'test_helper'
 require 'local_interaction_importer'
@@ -52,6 +53,21 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       assert_equal "Example Interactions CSV Content", data
 
       filehandle.close
+    end
+
+    should "handle the strange character encodings correctly" do
+      fh = File.open(fixture_file('local_interactions_encoding_samples.csv'))
+      fh.set_encoding('ascii-8bit')
+      stub_request(:get, "http://local.direct.gov.uk/Data/local_authority_service_details.csv").
+        to_return(:status => 200, :body => fh)
+
+      filehandle = LocalInteractionImporter.fetch_data
+      data = filehandle.read
+      assert_equal 'UTF-8', data.encoding.to_s
+      lines = data.split("\r\n")
+      assert_equal "Adur District Council,45UB,1,Find out about  cooling tower registration  ,707,8,http://www.adur.gov.uk/licences/", lines[1]
+      assert_equal "Adur District Council,45UB,1,Find out about details of council expenditure over £500,1465,8,http://www.adur.gov.uk/finance/payments-to-suppliers.htm", lines[2]
+      assert_equal "Buckinghamshire County Council,11,45,Apply to join a library,438,0,http://buckinghamshire.spydus.co.uk/cgi-bin/spydus.exe/MSGTRN/OPAC/JOIN ", lines[3]
     end
   end
 

@@ -2,8 +2,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   INTERACTIONS_LIST_URL = "http://local.direct.gov.uk/Data/local_authority_service_details.csv"
 
   def self.fetch_data
-    tmp = Tempfile.new(['local_interactions', '.csv'])
-    fetch_http_to_file(INTERACTIONS_LIST_URL, tmp)
+    fetch_http_to_file(INTERACTIONS_LIST_URL)
   end
 
   def initialize(fh)

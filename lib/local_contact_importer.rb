@@ -2,8 +2,7 @@ class LocalContactImporter < LocalAuthorityDataImporter
   CONTACTS_LIST_URL = "http://local.direct.gov.uk/Data/local_authority_contact_details.csv"
 
   def self.fetch_data
-    tmp = Tempfile.new(['local_contacts', '.csv'])
-    fetch_http_to_file(CONTACTS_LIST_URL, tmp)
+    fetch_http_to_file(CONTACTS_LIST_URL)
   end
 
   private
