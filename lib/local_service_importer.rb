@@ -1,20 +1,20 @@
-require 'csv'
-
-class LocalServiceImporter
-  def self.update
-    file = File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
-    begin
-      new(file).run
-    ensure
-      file.close
-    end
+class LocalServiceImporter < LocalAuthorityDataImporter
+  def self.fetch_data
+    File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
   end
 
-  def initialize(io, options = {})
-    @io = io
-    @logger = options[:logger] || NullLogger.instance
+  private
+
+  def process_row(row)
+    return if LocalService.find_by_lgsl_code(row['LGSL'])
+    Rails.logger.info("Import service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
+    LocalService.create!(
+      lgsl_code: row['LGSL'],
+      description: row['Description'],
+      providing_tier: providing_tier(row),
+      )
   end
-  
+
   def providing_tier(row)
     value = row['Providing Tier']
     case value
@@ -26,16 +26,4 @@ class LocalServiceImporter
       raise "Illegal 'Providing Tier' '#{value}'"
     end
   end
-  
-  def run
-    CSV.new(@io, headers: true).each do |row|
-      next if LocalService.find_by_lgsl_code(row['LGSL'])
-      @logger.info("Import service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
-      LocalService.create!(
-        lgsl_code: row['LGSL'], 
-        description: row['Description'],
-        providing_tier: providing_tier(row),
-        )
-    end
-  end  
 end

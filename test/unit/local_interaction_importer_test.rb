@@ -1,10 +1,8 @@
 
 require 'test_helper'
 require 'local_interaction_importer'
-require_relative 'helpers/local_services_helper'
 
 class LocalInteractionImporterTest < ActiveSupport::TestCase
-  include LocalServicesHelper
   
   def fixture_file(file)
     File.expand_path("fixtures/" + file, File.dirname(__FILE__))
@@ -64,7 +62,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
     
     context "Local authority already known" do
       setup do
-        @authority = make_authority('county', snac: '45UB')
+        @authority = FactoryGirl.create(:local_authority, :snac => '45UB')
       end
       
       should "Add one interaction to that authority" do

@@ -1,51 +1,27 @@
-require 'csv'
-
-class LocalContactImporter
+class LocalContactImporter < LocalAuthorityDataImporter
   CONTACTS_LIST_URL = "http://local.direct.gov.uk/Data/local_authority_contact_details.csv"
 
   def self.fetch_data
     tmp = Tempfile.new(['local_contacts', '.csv'])
-
-    uri = URI.parse(CONTACTS_LIST_URL)
-    response = Net::HTTP.get_response(uri)
-
-    # This will read the data in a chuncked fasion, and
-    # will avoid buffering a large amount of data in memory
-    response.read_body do |data|
-      tmp.write data
-    end
-    tmp.rewind
-    tmp
-  end
-
-  def self.update
-    io = fetch_data
-    begin
-      new(io).run
-    ensure
-      io.close
-    end
-  end
-
-  def initialize(io)
-    @io = io
-  end
-
-  def run
-    CSV.new(@io, headers: true).each do |row|
-      next if row['SNAC Code'].blank?
-      authority = LocalAuthority.where(:snac => row['SNAC Code']).first
-      next unless authority
-      authority.name = decode_broken_entities( row['Name'] )
-      authority.contact_address = parse_address(row)
-      authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )
-      authority.contact_url = row['Contact page URL']
-      authority.contact_email = row['Main Contact Email']
-      authority.save!
-    end
+    fetch_http_to_file(CONTACTS_LIST_URL, tmp)
   end
 
   private
+
+  def process_row(row)
+    return if row['SNAC Code'].blank?
+    authority = LocalAuthority.where(:snac => row['SNAC Code']).first
+    unless authority
+      Rails.logger.warn "LocalContactImporter: failed to find LocalAuthority with SNAC #{row['SNAC Code']}"
+      return
+    end
+    authority.name = decode_broken_entities( row['Name'] )
+    authority.contact_address = parse_address(row)
+    authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )
+    authority.contact_url = row['Contact page URL']
+    authority.contact_email = row['Main Contact Email']
+    authority.save!
+  end
 
   def parse_address(row)
     [row['Address Line 1'], row['Address Line 2'], row['Town'], row['City'], row['County'], row['Postcode']].reject(&:blank?)
