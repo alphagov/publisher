@@ -34,4 +34,25 @@ class LocalTransactionsRakeTest < ActiveSupport::TestCase
       @rake[@task_name].invoke
     end
   end
+
+  context "local_transactions:update_contacts" do
+    should "call LocalContactImporter.update" do
+      LocalContactImporter.expects(:update)
+      @rake['local_transactions:update_contacts'].invoke
+    end
+  end
+
+  context "local_transactions:update_interactions" do
+    should "call LocalInteractionImporter.update" do
+      LocalInteractionImporter.expects(:update)
+      @rake['local_transactions:update_interactions'].invoke
+    end
+  end
+
+  context "local_transactions:update_services" do
+    should "call LocalServiceImporter.update" do
+      LocalServiceImporter.expects(:update)
+      @rake['local_transactions:update_services'].invoke
+    end
+  end
 end
