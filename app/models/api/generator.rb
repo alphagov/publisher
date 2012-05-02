@@ -74,13 +74,7 @@ module Api
       end
 
       def self.authority_to_json(authority)
-        {
-          name: authority.name,
-          contact_address: authority.contact_address,
-          contact_url: authority.contact_url,
-          contact_phone: authority.contact_phone,
-          contact_email: authority.contact_email
-        }
+        auhority.as_json(only: [:name, :contact_address, :contact_url, :contact_phone, :contact_email])
       end
 
       def self.interaction_to_json(interaction)
