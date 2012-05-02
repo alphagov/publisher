@@ -56,42 +56,47 @@ class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
     should "also include description of service interaction and authority" do
       assert @generated.has_key?('interaction')
 
+
+      expected_authority = {
+        'name'    => @county_council.name,
+        'snac'    => @county_council.snac,
+        'tier'    => @county_council.tier,
+        'contact_address' => @county_council.contact_address,
+        'contact_url'     => @county_council.contact_url,
+        'contact_phone'   => @county_council.contact_phone,
+        'contact_email'   => @county_council.contact_email
+      }
       expected_interaction_description = {
         'url' => "http://some.council.gov/do.html",
         'lgil_code' => 0,
         'lgsl_code' => @interaction.lgsl_code,
-        'authority' => {
-          'name'    => @county_council.name,
-          'snac'    => @county_council.snac,
-          'tier'    => @county_council.tier,
-          'contact_address' => @county_council.contact_address,
-          'contact_url'     => @county_council.contact_url,
-          'contact_phone'   => @county_council.contact_phone,
-          'contact_email'   => @county_council.contact_email
-        }
+        'authority' => expected_authority
       }
 
       assert_equal expected_interaction_description, @generated['interaction']
+      assert_equal expected_authority, @generated['authority']
     end
 
     should "include description of service interaction and authority even if no contact information is available" do[]
       set_up_edition_with_interaction(:local_authority)
       @generated = Api::Generator::edition_to_hash(@edition, :snac => @county_council.snac)
+      expected_authority = {
+        'name'    => @county_council.name,
+        'snac'    => @county_council.snac,
+        'tier'    => @county_council.tier,
+        'contact_address' => nil,
+        'contact_url'     => nil,
+        'contact_phone'   => nil,
+        'contact_email'   => nil
+      }
       expected_interaction_description = {
         'url' => "http://some.council.gov/do.html",
         'lgil_code' => 0,
         'lgsl_code' => @interaction.lgsl_code,
-        'authority' => {
-          'name'    => @county_council.name,
-          'snac'    => @county_council.snac,
-          'tier'    => @county_council.tier,
-          'contact_address' => nil,
-          'contact_url'     => nil,
-          'contact_phone'   => nil,
-          'contact_email'   => nil
-        }
+        'authority' => expected_authority
       }
       assert_equal expected_interaction_description, @generated['interaction']
+      assert_equal expected_authority, @generated['authority']
     end
   end
 
@@ -103,9 +108,18 @@ class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
     should "an empty interaction" do
       generated = Api::Generator::edition_to_hash(@edition2, :snac => @county_council.snac)
 
-      #assert_nil generated['interaction']['lgil_code']
+      expected_authority = {
+        'name'    => @county_council.name,
+        'snac'    => @county_council.snac,
+        'tier'    => @county_council.tier,
+        'contact_address' => @county_council.contact_address,
+        'contact_url'     => @county_council.contact_url,
+        'contact_phone'   => @county_council.contact_phone,
+        'contact_email'   => @county_council.contact_email
+      }
 
       assert_equal nil, generated['interaction']
+      assert_equal expected_authority, generated['authority']
     end
   end
 
