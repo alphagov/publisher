@@ -192,7 +192,7 @@ class WholeEditionTest < ActiveSupport::TestCase
 
     assert_kind_of AnswerEdition, publication
     assert_equal "Foo bar", publication.title
-    assert_equal 2356, publication.panopticon_id
+    assert_equal "2356", publication.panopticon_id.to_s
     assert_equal "Test section", publication.section
     assert_equal "Test dept", publication.department
   end

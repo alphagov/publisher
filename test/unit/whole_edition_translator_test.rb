@@ -79,7 +79,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     new_edition = translator.run
 
     assert new_edition.valid?
-    assert_equal answer.panopticon_id, new_edition.panopticon_id
+    assert_equal answer.panopticon_id.to_s, new_edition.panopticon_id.to_s
     assert_equal answer.editions.last.body, new_edition.body
     assert_equal answer.editions.last.version_number, new_edition.version_number
     assert_equal answer.editions.last.title, new_edition.title
