@@ -113,7 +113,7 @@ class WholeEditionTest < ActiveSupport::TestCase
 
     assert_equal new_edition.class, AnswerEdition
     assert_equal new_edition.version_number, 2
-    assert_equal new_edition.panopticon_id, 1
+    assert_equal new_edition.panopticon_id.to_s, "1"
     assert_equal new_edition.state, 'lined_up'
     assert_equal new_edition.department, 'Test dept'
     assert_equal new_edition.overview, 'I am a test overview'
