@@ -9,7 +9,7 @@ class WholeEdition
   include Workflow
   include Searchable
 
-  field :panopticon_id, :type => Integer
+  field :panopticon_id, :type => String
   field :version_number, :type => Integer, :default => 1
   field :sibling_in_progress, :type => Integer, :default => nil
   field :business_proposition, :type => Boolean, :default => false
