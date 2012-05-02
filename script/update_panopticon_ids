@@ -6,8 +6,6 @@ end
 
 panopticon_ids = JSON.parse($stdin.read)
 
-puts panopticon_ids
-
 editions_by_panopticon_id = Hash[panopticon_ids.map do |old, new|
   [
     old.to_s, 
