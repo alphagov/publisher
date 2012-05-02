@@ -74,13 +74,14 @@ module Api
       end
 
       def self.authority_to_json(authority)
-        auhority.as_json(only: [:name, :contact_address, :contact_url, :contact_phone, :contact_email])
+        authority.as_json(only: [:name, :snac, :tier, :contact_address, :contact_url, :contact_phone, :contact_email])
       end
 
       def self.interaction_to_json(interaction)
         return nil unless interaction
         json = interaction.as_json(:only => [:lgsl_code, :lgil_code, :url])
         only = [:snac, :name, :tier, :contact_address, :contact_url, :contact_phone, :contact_email]
+        # DEPRECATED: This is now located at the top level.
         json['authority'] = interaction.local_authority.as_json(:only => only)
         json
       end
