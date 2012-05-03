@@ -19,7 +19,11 @@ Publisher::Application.configure do
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
-  config.slimmer.asset_host = ENV["STATIC_DEV"] || Plek.new("preview").find("assets")
-
   config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
+
+  # Do not compress assets
+  config.assets.compress = false
+
+  # Expands the lines which load the assets
+  config.assets.debug = true
 end

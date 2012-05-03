@@ -1,0 +1,40 @@
+/*
+  # app/assets/stylesheets/application.css
+  *= require formtastic-bootstrap
+*/
+
+body {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.navbar .brand {
+  background-image: url("/assets/header-crown.png");
+  background-position: 0 0.25em;
+  background-repeat: no-repeat;
+  font-family: "GillSans", "Gill Sans", "Helvetica Neue", Helvetica, sans-serif;
+  margin-left: 0;
+  padding-left: 2em;
+}
+
+.sidebar-nav {
+  padding: 9px 0;
+}
+.navbar-fixed-bottom {
+  text-align: center;
+}
+
+.workflow_buttons form {
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+form.send_fact_check {
+  /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
+  margin-left: 70px;
+}
+
+td.icon {
+  /* change alignment of publication table cells that just have icons in them  */
+  text-align: center;
+}

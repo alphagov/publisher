@@ -3,6 +3,7 @@ class Admin::RootController < Admin::BaseController
 
   def index
     @filter = params[:filter] || session[:filter]
+    @list = params[:list].blank? ? 'lined_up' : params[:list]
 
     if @filter.blank?
       @filter = current_user.uid
@@ -16,10 +17,5 @@ class Admin::RootController < Admin::BaseController
     session[:filter] = @filter
 
     @presenter = AdminRootPresenter.new(user)
-
-    if params[:list]
-      headers['X-Slimmer-Skip'] = '1'
-      render partial: params[:list], layout: false and return
-    end
   end
 end

@@ -57,7 +57,7 @@ module Formtastic #:nodoc:
     def remove_link(name, *args)
       options = args.extract_options!
       css_selector = options.delete(:selector) || ".#{@object.class.name.split("::").last.underscore}"
-      link = '<a href="#" class="remove-associated" data-selector="' + css_selector + '">Remove</a>'
+      link = '<a href="#" class="btn btn-danger pull-right remove-associated" data-selector="' + css_selector + '">Remove part</a>'
       output = hidden_field(:_destroy) + link.html_safe
       output
     end

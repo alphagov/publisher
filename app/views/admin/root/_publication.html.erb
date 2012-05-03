@@ -1,30 +1,27 @@
-<tr class="<%= status_class_for(publication) %>">
-  <td>
-    <%= image_tag "/images/icon-publisher-#{publication.format.downcase}.png", :alt => publication.class.name.humanize  %>
+<tr>
+  <td class="icon">
+    <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
   </td>
-  <td class="business">
+  <td>
     <%= publication.business_proposition ? 'Y' : 'N' %>
   </td>
-  <td class="title">
+  <td>
     <%= publication.admin_list_title %>
 
-    <span class="version">
     <% if tab && (tab == :published || tab == :archived) %>
-      (v.<%= publication.version_number %>)
+      (Ed.<%= publication.version_number %>)
       <% if publication.has_sibling_in_progress? %>
-        (v.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
+        (Ed.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
       <% end%>
     <% else %>
-      v.<%= publication.version_number %>
+      (Ed. <%= publication.version_number %>)
     <% end %>
-    </span>
+
+    <% if publication.has_video? %>
+      <i class="icon-film" alt="Has video"></i>
+    <% end %>
   </td>
   <td>
-    <% if publication.has_video? %>
-      <%= image_tag "/images/icon-publisher-video.png", :alt => "Has video"  %>
-    <% end %>
-  </td>
-  <td class="updated">
     <%= timestamp(publication.updated_at) %>
   </td>
   <% if tab && tab == :fact_check %>
@@ -47,27 +44,27 @@
     <td>
       <%= publication.section %>
     </td>
-  <td>
-    <%= publication.rejected_count %>
-  </td>
     <% if tab && tab == :archived %>
     <td>
       <%= publication.archiver %>
     </td>
-    <td>
-      <%= link_to 'View', publication_front_end_path(publication) %>
+    <td class="icon">
+      <%= link_to publication_front_end_path(publication) do %>
+        <i class="icon-share-alt" title="View this publication"></i>
+      <% end %>
     </td>
-    <td>
+    <td class="icon">
+      <%#admin_edition_path(publication) %>
       <%= link_to admin_edition_path(publication) do %>
-        <%= image_tag '/images/icon-publisher-preview-locked.png', :alt => 'Locked edit view for this publication', :title => 'Locked edit view for this publication' %>
+        <i class="icon-lock" title="Locked view for this publication"></i>
       <% end %>
     </td>
     <% end %>
-  <td>
+  <td class="icon">
     <% if tab && tab == :lined_up %>
       <%= form_tag start_work_path(publication) do %>
         <%= hidden_field_tag :start_work, 1 %>
-        <%= image_submit_tag '/images/icon-publisher-start-work.png', :alt => "Start work on this #{publication.class.to_s.humanize}", :title => "Start work on this #{publication.class.to_s.humanize}", :class => 'start-work' %>
+        <i class="icon-play-circle" title="Start work on this publication"></i>
       <% end %>
     <% elsif tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_admin_edition_path(publication) do %>
@@ -75,14 +72,14 @@
       <% end %>
     <% else %>
       <%= link_to admin_edition_path(publication) do %>
-        <%= image_tag '/images/icon-publisher-edit.png', :alt => 'Edit this publication', :title => 'Edit this publication' %>
+        <i class="icon-edit" title="Edit this publication"></i>
       <% end %>
     <% end %>
   </td>
-  <td>
+  <td class="icon">
     <% if publication.safe_to_preview? %>
       <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
-        <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
+        <i class="icon-eye-open" title="Preview this publication"></i>
       <% end %>
     <% else %>
       <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview disabled for this publication', :title => 'Preview disabled for this publication', :class => 'disabled' %>

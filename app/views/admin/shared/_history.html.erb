@@ -1,11 +1,17 @@
-<%= semantic_form_for(:note, :url=> admin_notes_path) do |f| %>
-  <%= f.inputs do %>
-    <%= hidden_field_tag :whole_edition_id, resource.id %>
-    <%= f.input :comment, :label => 'Note', :as => :text, :input_html => { :rows => 3, :cols => 120 }, :hint => 'Don&rsquo;t forget to save your note when you have finished!' %>
-    <li id="note_comment_update"><input class="update" name="commit" type="submit" value="Save Note"></li>
-  <% end %>
-<% end %>
+<div class="row-fluid">
 
-<hr />
+  <div class="span6">
+    <%= semantic_form_for(:note, :url=> admin_notes_path) do |f| %>
+      <%= f.inputs do %>
+        <%= hidden_field_tag :whole_edition_id, resource.id %>
+        <%= f.input :comment, :label => 'Note', :as => :text, :input_html => { :class=> 'span6', :rows => 6, :cols => 120 } %>
+        <p class="help-block">Don&rsquo;t forget to save your note when you have finished!</p>
 
-<%= render collection: @resource.history, partial: '/admin/shared/edition_history', as: 'edition' %>
+        <button class="btn btn-success" name="commit"><i class="icon-comment icon-white"></i> Add Note</button>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="span6">
+    <%= render collection: @resource.history, partial: '/admin/shared/edition_history', as: 'edition' %>
+  </div>
+</div>

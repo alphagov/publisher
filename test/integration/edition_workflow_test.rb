@@ -160,7 +160,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert guide.lined_up?
 
     visit "/admin"
-    click_on "Lined up (1)"
+    click_on "Lined up"
     click_on "Start work"
     wait_until { page.has_content? "Work started" }
     guide.reload

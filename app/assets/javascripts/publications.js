@@ -1,8 +1,6 @@
 // Javascript that may be used on every publication show/edit page
 
 $(function () {
-  $('.publication-nav').tabs();
-
   /*
     Pre-submit a form, invoking a callback if the submission succeeds.
 

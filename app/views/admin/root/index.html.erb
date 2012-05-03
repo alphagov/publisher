@@ -1,7 +1,55 @@
-<div id="guide-nav" class="tabs">
-  <ul>
-    <%= publication_tab_list 'Lined up', 'Drafts', 'In review', 'Amends needed', 'Out for fact check', 'Fact check received', 'Ready', 'Published', 'Archived' %>
-  </ul>
-</div>
+<div class="row-fluid">
+  <div class="span12">
 
-<% content_for :page_title, "Publications dashboard" %>
+    <div class="page-header">
+      <h1>Publications dashboard</h1>
+    </div>
+
+    <div class="row-fluid">
+
+      <div class="span2">
+
+        <div class="well sidebar-nav">
+          <ul class="nav nav-list">
+
+            <!-- <li class="nav-header">Filter by Context</li>
+            <li><a href="#" rel="popover" data-content="Not implemented yet" data-original-title="Soon!">Biz</a></li>
+            <li class="active"><a href="#">Citizen</a></li>
+
+            <li class="nav-header">Filter by Format</li>
+            <li><a href="#">Quick Answers <span class="label pull-right">7</span></a></li>
+            <li><a href="#">Guides <span class="label pull-right">29</span></a></li>
+            <li><a href="#">Transactions <span class="label pull-right">38</span></a></li>
+            <li><a href="#">Local Transactions <span class="label pull-right">3</span></a></li>
+            <li><a href="#">Smart Answers <span class="label pull-right">4</span></a></li> -->
+
+            <li class="nav-header">Filter by Status</li>
+            <%= publication_tab_list 'Lined up', 'Drafts', 'In review', 'Amends needed', 'Out for fact check', 'Fact check received', 'Ready', 'Published', 'Archived', :current => @list %>
+          </ul>
+
+        </div><!--/.well -->
+
+        <form method="GET" action="/admin">
+          <label for="user-filter" class="visuallyhidden">Filter by user</label>
+          <%=
+            select_tag("filter", options_for_select(
+              [["All", "all"], ["Nobody", "nobody"]] +
+              User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
+            ), id: "user-filter", :class => "span2")
+          %>
+          <input class="btn btn-primary" type="submit" value="Filter">
+        </form>
+
+      </div>
+
+      <div id="publication-list-container" class="span10">
+
+        <%= render @list %>
+
+      </div><!--./span10 -->
+
+    </div><!--./row-fluid -->
+  </div><!--./span12 -->
+</div><!--./row-fluid -->
+
+<% content_for :page_title, "Publications" %>
