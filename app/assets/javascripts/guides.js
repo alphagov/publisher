@@ -1,5 +1,11 @@
 // Javascript specific to guide admin
 $(function() {
+  // collapse the parts using the bootstrap accordion
+  $(".collapse").collapse();
+
+  // simulate a click on the first part to open it
+  $('#parts .accordion-toggle').first().trigger('click')
+
   $('input.title').
     live('change', function () {
       var title_field = $(this);
