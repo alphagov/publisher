@@ -19,19 +19,6 @@
             <p class="help-block"><i class="icon-info-sign"></i> Eg. title-of-part (no spaces, apostrophes, etc).</p>
 
             <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => @resource.published? } %>
-
-          <!--
-          <label>Title</label>
-          <input type="text" class="span7" placeholder="" value="After you apply">
-          <i class="icon-question-sign" rel="popover" data-content="Edit this text to rename this part" data-original-title="Help"></i>
-
-          <label>Body</label>
-          <textarea class="input-xlarge span7" rows="12"></textarea>
-
-          <label>Slug</label>
-          <input type="text" class="span7" placeholder="" value="after-you-apply">
-          <i class="icon-question-sign" rel="popover" data-content="Eg. title-of-part (no spaces, apostrophes, etc)." data-original-title="Help"></i>
-          -->
         </div>
         <div class="span4">
           <%= render "../shared/govspeak_help" %>
