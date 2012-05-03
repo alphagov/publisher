@@ -64,7 +64,7 @@
     <% if tab && tab == :lined_up %>
       <%= form_tag start_work_path(publication) do %>
         <%= hidden_field_tag :start_work, 1 %>
-        <i class="icon-play-circle" title="Start work on this publication"></i>
+        <%= submit_tag 'Start work' %>
       <% end %>
     <% elsif tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_admin_edition_path(publication) do %>
