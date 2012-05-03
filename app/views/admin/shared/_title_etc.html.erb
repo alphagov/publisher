@@ -5,11 +5,11 @@
 
 <%= f.input :alternative_title,
       :label => 'Alternative title',
+      :hint => 'Use this where longer title is needed for SEO purposes',
       :input_html => { :class => "span7", :autofocus => true, :disabled => @resource.published? } %>
-<i class="icon-question-sign" rel="popover" data-content="Use this where longer title is needed for SEO purposes" data-original-title="Help"></i>
 
 <%= f.input :overview,
       :as => :text,
       :label => 'Meta tag description',
+      :hint => 'Some search engines will display this if they can&rsquo;t find what they need in the main text',
       :input_html => { :class => "span7", :rows => 3, :disabled => @resource.published? } %>
-<i class="icon-question-sign" rel="popover" data-content="Some search engines will display this if they can&rsquo;t find what they need in the main text" data-original-title="Help"></i>
