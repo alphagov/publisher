@@ -17,7 +17,7 @@ end
 gem 'rails', '3.1.3'
 gem 'aws-ses', :require => 'aws/ses'
 
-gem "mongoid", "~> 2.3"
+gem "mongoid", "~> 2.3.0"
 gem "mongo", "1.5.2"
 gem "bson_ext", "1.5.2"
 gem "bson", "1.5.2"
