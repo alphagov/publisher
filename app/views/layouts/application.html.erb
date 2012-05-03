@@ -74,18 +74,6 @@
 
   </section><!--/.container-fluid -->
 
-  <%= javascript_include_tag(
-    '/publisher-assets/javascripts/application.js',
-
-    # Mustache for rendering additional form items, say, for new sub-parts
-    '/javascripts/libs/jquery/plugins/jquery.mustache.js',
-    # JS to deal with adding and removing bits of forms for related items
-    '/publisher-assets/javascripts/form-tools.js',
-
-    # '/javascripts/libs/jquery/plugins/jquery.tablesorter.min.js',
-  ) %>
-
-
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <%= javascript_include_tag('bootstrap.min.js') %>
   <%= yield :extra_javascript %>
