@@ -44,17 +44,12 @@ gem 'rest-client'
 gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
-gem 'formtastic', '~> 2.0.0'
+gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
+gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
-
-if ENV['SLIMMER_DEV']
-  gem 'slimmer', :path => '../slimmer'
-else
-  gem 'slimmer', '~> 1.1'
-end
 
 if ENV['CDN_DEV']
   gem 'cdn_helpers', :path => '../cdn_helpers'
@@ -74,6 +69,11 @@ gem 'state_machine'
 gem 'lockfile'
 gem 'whenever'
 gem 'newrelic_rpm'
+
+group :assets do
+  gem "therubyracer", "~> 0.9.4"
+  gem 'uglifier'
+end
 
 group :development do
   gem 'passenger'

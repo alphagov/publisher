@@ -1,64 +1,59 @@
 <tr>
-  <td>
-    <%= image_tag "/images/icon-publisher-#{publication.format.downcase}.png", :alt => publication.class.name.humanize  %>
+  <td class="icon">
+    <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
   </td>
-  <td class="business">
+  <td>
     <%= publication.business_proposition ? 'Y' : 'N' %>
   </td>
-  <td class="title">
-    <%= publication.admin_list_title %>
+  <td>
+    <p>
+      <%= publication.admin_list_title %>
 
-    <span class="version">
-
-      (v.<%= publication.version_number %>)
+      &mdash; Ed. <%= publication.version_number %>
       <% if publication.has_sibling_in_progress? %>
-        (v.<%= publication.sibling_in_progress %> in draft)
+      (Ed. <%= publication.sibling_in_progress %> in draft)
       <% end %>
-    </span>
+
+      <% if publication.has_video? %>
+        <i class="icon-film" alt="Has video"></i>
+      <% end %>
+    </p>
   </td>
   <td>
-    <% if publication.has_video? %>
-      <%= image_tag "/images/icon-publisher-video.png", :alt => "Has video"  %>
-    <% end %>
-  </td>
-  <td class="updated">
     <%= timestamp(publication.updated_at) %>
   </td>
-
   <td>
     <%= publication.assignee %>
   </td>
-    <td>
-      <%= publication.creator %>
-    </td>
-    <td>
-      <%= publication.section %>
-    </td>
   <td>
-    <%= publication.rejected_count %>
+    <%= publication.creator %>
   </td>
-    <td>
-      <%= publication.publisher %>
-    </td>
-    <td>
-      <%= link_to 'View', publication_front_end_path(publication) %>
-    </td>
-    <td>
-      <%#admin_edition_path(publication) %>
-      <%= link_to "/admin/editions/#{publication.id}" do %>
-        <%= image_tag '/images/icon-publisher-preview-locked.png', :alt => 'Locked edit view for this publication', :title => 'Locked edit view for this publication' %>
-      <% end %>
-    </td>
   <td>
+    <%= publication.section %>
+  </td>
+  <td>
+    <%= publication.publisher %>
+  </td>
+  <td class="icon">
+    <%= link_to publication_front_end_path(publication) do %>
+      <i class="icon-share-alt" title="View this publication"></i>
+    <% end %>
+  </td>
+  <td class="icon">
+    <%#admin_edition_path(publication) %>
+    <%= link_to "/admin/editions/#{publication.id}" do %>
+      <i class="icon-lock" title="Locked view for this publication"></i>
+    <% end %>
+  </td>
+  <td class="icon">
     <% #duplicate_admin_edition_path(publication) %>
-      <%= form_tag "/admin/editions/#{publication.id}/duplicate" do %>
-        <%= image_submit_tag '/images/icon-publisher-create-new-edition.png', :alt => 'Create new edition of this publication', :title => 'Create new edition of this publication', :class => 'new-edition' %>
-      <% end %>
-
+    <%= link_to "/admin/editions/#{publication.id}/duplicate" do %>
+      <i class="icon-plus" title="Create new edition of this publication"></i>
+    <% end %>
   </td>
-  <td>
-      <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
-        <%= image_tag '/images/icon-publisher-preview.png', :alt => 'Preview this publication', :title => 'Preview this publication', :class => 'preview' %>
-      <% end %>
+  <td class="icon">
+    <%= link_to preview_edition_path(publication) do %>
+      <i class="icon-eye-open" title="Preview this publication"></i>
+    <% end %>
   </td>
 </tr>

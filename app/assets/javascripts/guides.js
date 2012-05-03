@@ -1,5 +1,11 @@
 // Javascript specific to guide admin
 $(function() {
+  // collapse the parts using the bootstrap accordion
+  $(".collapse").collapse();
+
+  // simulate a click on the first part to open it
+  $('#parts .part .accordion-body').first().collapse('show');
+
   $('input.title').
     live('change', function () {
       var title_field = $(this);
@@ -9,21 +15,6 @@ $(function() {
       }
   });
 
-  var accordion_opts = {
-    header: "> div > h3",
-    collapsible: true,
-    active: false
-  }
-  var sortable_opts = {
-    axis: "y",
-    handle: "h3",
-    stop: function() {
-      $('.part').each(function (i, elem) {
-        $(elem).find('input.order').val(i + 1);
-      });
-    }
-  }
-
   $('input.title').
     live('change', function () {
       var elem = $(this);
@@ -31,20 +22,13 @@ $(function() {
       header.text(elem.val());
     });
 
-  $("#parts").accordion(accordion_opts).sortable(sortable_opts);
   $('.add-associated').bind('associated-added', function () {
     var active_index = $('#parts div.part').length;
-    var my_opts = accordion_opts;
-    my_opts.active = active_index - 1;
-    $('#parts').sortable('destroy').accordion("destroy").
-      accordion(my_opts).sortable(sortable_opts);
     var new_part = $('#parts .part:last-child');
+    new_part.find('.collapse').attr('id', 'new-part-' + active_index).collapse('show');
+    new_part.find('a.accordion-toggle').attr('href', '#new-part-' + active_index);
+
     new_part.find('input.order').val(active_index);
     new_part.find('.title').focus();
-  });
-  $('body').bind('associated-removed', function () {
-    $('#parts').sortable('destroy').accordion("destroy").
-      accordion(accordion_opts).sortable(sortable_opts);
-    return false;
   });
 });

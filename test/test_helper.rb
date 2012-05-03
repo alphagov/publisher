@@ -2,8 +2,6 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'simplecov'
-require 'slimmer/skin'
-require 'slimmer/test'
 
 require 'rails/test_help'
 require 'mocha'

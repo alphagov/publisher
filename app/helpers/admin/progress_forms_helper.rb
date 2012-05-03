@@ -28,8 +28,8 @@ module Admin::ProgressFormsHelper
     ].map{ |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
-      "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
-      <input type=\"submit\" value=\"#{title}\"  #{disabled}>
+      "<form id=\"#{activity}_toggle\" class=\"workflow_buttons\">
+        <button class=\"btn btn-primary\" type=\"submit\" #{disabled}>#{title}</button>
       </form>"
     }.join("\n").html_safe
   end
@@ -49,7 +49,7 @@ module Admin::ProgressFormsHelper
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
       "<form id=\"#{activity}_toggle\" class=\"button_to review_button\">
-      <input type=\"submit\" value=\"#{title}\"  #{disabled}>
+        <button class=\"btn btn-primary\" type=\"submit\" #{disabled}>#{title}</button>
       </form>"
     }.join("\n").html_safe
   end
@@ -69,17 +69,17 @@ module Admin::ProgressFormsHelper
     ].map { |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
-      "<form id=\"#{activity}_toggle\" class=\"button_to progress_button\">
-      <input type=\"submit\" value=\"#{title}\"  #{disabled}>
+      "<form id=\"#{activity}_toggle\" class=\"#{activity}\">
+      <button class=\"btn btn-primary btn-large\" type=\"submit\" #{disabled}>#{title}</button>
       </form>"
     }.join("\n").html_safe
   end
 
   def preview_button(edition)
-    form_tag(preview_edition_path(edition), :method => :get, :class => 'preview button_to also_save_edition') do
+    form_tag(preview_edition_path(edition), :method => :get) do
       hidden_field_tag('cache', Time.now().to_i) +
       hidden_field_tag('edition', edition.version_number) +
-      submit_tag('Preview')
+      submit_tag('Preview', class: 'btn btn-primary btn-large')
     end
   end
 end
