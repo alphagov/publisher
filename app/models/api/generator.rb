@@ -9,7 +9,7 @@ module Api
     def self.edition_to_hash(edition, *args)
       generator = generator_class(edition)
       edition_fields     =  [:slug, :updated_at, :title, :alternative_title, :overview] + generator.extra_fields
-      
+
       attrs = edition.as_json(:only => edition_fields)
 
       if edition.respond_to?(:parts)
@@ -74,13 +74,15 @@ module Api
       end
 
       def self.authority_to_json(authority)
-        authority
+        authority.as_json(only: [:name, :snac, :tier, :contact_address, :contact_url, :contact_phone, :contact_email])
       end
-      
+
       def self.interaction_to_json(interaction)
         return nil unless interaction
         json = interaction.as_json(:only => [:lgsl_code, :lgil_code, :url])
-        json['authority'] = interaction.local_authority.as_json(:only => [:snac, :name, :tier])
+        only = [:snac, :name, :tier, :contact_address, :contact_url, :contact_phone, :contact_email]
+        # DEPRECATED: This is now located at the top level.
+        json['authority'] = interaction.local_authority.as_json(:only => only)
         json
       end
 
@@ -89,6 +91,9 @@ module Api
           service = edition.service
           interaction = service.preferred_interaction(options[:snac])
           attrs['interaction'] = interaction_to_json(interaction)
+
+          authority = service.preferred_provider(options[:snac])
+          attrs['authority']   = authority_to_json(authority)
         end
         attrs
       end

@@ -4,7 +4,7 @@ source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', :path => '../gds-sso'
 else
-  gem 'gds-sso', '~> 0.4.2'
+  gem 'gds-sso', '~> 0.5.2'
 end
 
 gem 'gds-warmup-controller'

@@ -24,7 +24,7 @@ class FactCheckEmailHandler
   end
 
   def process()
-    Mail.all(:delete_after_find => true) do |message, imap, message_id|
+    Mail.all(:delete_after_find => true) do |message|
       message.skip_deletion unless process_message(message)
     end
   end

@@ -1,10 +1,9 @@
+# encoding: utf-8
 
 require 'test_helper'
 require 'local_interaction_importer'
-require_relative 'helpers/local_services_helper'
 
 class LocalInteractionImporterTest < ActiveSupport::TestCase
-  include LocalServicesHelper
   
   def fixture_file(file)
     File.expand_path("fixtures/" + file, File.dirname(__FILE__))
@@ -19,6 +18,59 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       to_return(status: 404, body: '{}')
   end
   
+  context "update" do
+    setup do
+      LocalInteractionImporter.stubs(:new).returns(stub(:run))
+    end
+
+    should "download the data" do
+      LocalInteractionImporter.expects(:fetch_data).returns(stub(:close))
+      LocalInteractionImporter.update
+    end
+
+    should "pass the download filehandle to a new instance of self, and run self" do
+      stub_fh = stub(:close)
+      LocalInteractionImporter.stubs(:fetch_data).returns(stub_fh)
+      LocalInteractionImporter.expects(:new).with(stub_fh).returns(stub(:run))
+      LocalInteractionImporter.update
+    end
+
+    should "close the filehandle when done" do
+      stub_fh = stub()
+      LocalInteractionImporter.stubs(:fetch_data).returns(stub_fh)
+      stub_fh.expects(:close)
+      LocalInteractionImporter.update
+    end
+  end
+
+  context "fetch_data" do
+    should "download the csv file and return a filehandle containing the data" do
+      stub_request(:get, "http://local.direct.gov.uk/Data/local_authority_service_details.csv").
+        to_return(:status => 200, :body => "Example Interactions CSV Content")
+
+      filehandle = LocalInteractionImporter.fetch_data
+      data = filehandle.read
+      assert_equal "Example Interactions CSV Content", data
+
+      filehandle.close
+    end
+
+    should "handle the strange character encodings correctly" do
+      fh = File.open(fixture_file('local_interactions_encoding_samples.csv'))
+      fh.set_encoding('ascii-8bit')
+      stub_request(:get, "http://local.direct.gov.uk/Data/local_authority_service_details.csv").
+        to_return(:status => 200, :body => fh)
+
+      filehandle = LocalInteractionImporter.fetch_data
+      data = filehandle.read
+      assert_equal 'UTF-8', data.encoding.to_s
+      lines = data.split("\r\n")
+      assert_equal "Adur District Council,45UB,1,Find out about  cooling tower registration  ,707,8,http://www.adur.gov.uk/licences/", lines[1]
+      assert_equal "Adur District Council,45UB,1,Find out about details of council expenditure over £500,1465,8,http://www.adur.gov.uk/finance/payments-to-suppliers.htm", lines[2]
+      assert_equal "Buckinghamshire County Council,11,45,Apply to join a library,438,0,http://buckinghamshire.spydus.co.uk/cgi-bin/spydus.exe/MSGTRN/OPAC/JOIN ", lines[3]
+    end
+  end
+
   context "CSV of interaction definitions with one row" do
     setup do
       @source = File.open(fixture_file('local_interactions_sample.csv'))
@@ -26,7 +78,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
     
     context "Local authority already known" do
       setup do
-        @authority = make_authority('county', snac: '45UB')
+        @authority = FactoryGirl.create(:local_authority, :snac => '45UB')
       end
       
       should "Add one interaction to that authority" do

@@ -47,7 +47,6 @@ Publisher::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.default_url_options = { :host => "www.gov.uk" }
-  # config.action_mailer.delivery_method = :ses
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -61,4 +60,5 @@ Publisher::Application.configure do
 
   # Generate digests for assets URLs.
   config.assets.digest = true
+  config.action_mailer.delivery_method = :ses
 end

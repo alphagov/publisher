@@ -9,7 +9,7 @@ class WholeEdition
   include Workflow
   include Searchable
 
-  field :panopticon_id, :type => Integer
+  field :panopticon_id, :type => String
   field :version_number, :type => Integer, :default => 1
   field :sibling_in_progress, :type => Integer, :default => nil
   field :business_proposition, :type => Boolean, :default => false
@@ -129,7 +129,7 @@ class WholeEdition
   end
 
   def self.create_from_panopticon_data(panopticon_id, importing_user)
-    existing_publication = WholeEdition.where(panopticon_id: panopticon_id).first
+    existing_publication = WholeEdition.where(panopticon_id: panopticon_id).order_by([:version_number, :desc]).first
     return existing_publication if existing_publication
 
     require 'gds_api/panopticon'

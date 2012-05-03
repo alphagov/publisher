@@ -79,7 +79,7 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
     new_edition = translator.run
 
     assert new_edition.valid?
-    assert_equal answer.panopticon_id, new_edition.panopticon_id
+    assert_equal answer.panopticon_id.to_s, new_edition.panopticon_id.to_s
     assert_equal answer.editions.last.body, new_edition.body
     assert_equal answer.editions.last.version_number, new_edition.version_number
     assert_equal answer.editions.last.title, new_edition.title
@@ -137,8 +137,9 @@ class WholeEditionTranslatorTest < ActiveSupport::TestCase
 
 
   test "it handles LGSL data for local transactions" do
-    council = make_authority('county', snac: '00BC', lgsl: 1)
-    service = make_service(1, %w{county unitary})
+    council = FactoryGirl.create(:local_authority, tier: 'county', snac: '00BC')
+    FactoryGirl.create(:local_interaction, local_authority: council, lgsl_code: 1)
+    service = FactoryGirl.create(:local_service, lgsl_code: 1, providing_tier: %w{county unitary})
 
     local_transaction = LocalTransaction.new(lgsl_code: "1", name: "Local Transaction", slug: "slug", panopticon_id: 1243)
     local_transaction.editions.build(introduction: 'Something local', title: 'A local transaction')
