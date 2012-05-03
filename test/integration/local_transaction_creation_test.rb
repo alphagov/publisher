@@ -50,6 +50,6 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
-    assert page.has_content? "Viewing Edition 1 of “Foo bar”"
+    assert page.has_content? "Viewing “Foo bar” Edition 1"
   end
 end
