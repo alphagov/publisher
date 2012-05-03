@@ -9,21 +9,6 @@ $(function() {
       }
   });
 
-  var accordion_opts = {
-    header: "> div > h3",
-    collapsible: true,
-    active: false
-  }
-  var sortable_opts = {
-    axis: "y",
-    handle: "h3",
-    stop: function() {
-      $('.part').each(function (i, elem) {
-        $(elem).find('input.order').val(i + 1);
-      });
-    }
-  }
-
   $('input.title').
     live('change', function () {
       var elem = $(this);
@@ -31,7 +16,6 @@ $(function() {
       header.text(elem.val());
     });
 
-  $("#parts").accordion(accordion_opts).sortable(sortable_opts);
   $('.add-associated').bind('associated-added', function () {
     var active_index = $('#parts div.part').length;
     var my_opts = accordion_opts;
@@ -42,6 +26,7 @@ $(function() {
     new_part.find('input.order').val(active_index);
     new_part.find('.title').focus();
   });
+
   $('body').bind('associated-removed', function () {
     $('#parts').sortable('destroy').accordion("destroy").
       accordion(accordion_opts).sortable(sortable_opts);
