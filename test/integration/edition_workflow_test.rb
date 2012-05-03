@@ -74,7 +74,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   end
 
   def button_selector(text)
-    "//input[@type='submit' and @value='#{text}']"
+    "//button[@type='submit' and text()='#{text}']"
   end
 
   def find_button(text)
@@ -92,6 +92,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     action_button.click
     fill_in "Comment", with: message
     click_on "Send"
+
     wait_until { page.has_content? "updated" }
     guide.reload
   end
