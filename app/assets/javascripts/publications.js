@@ -81,15 +81,10 @@ $(function () {
           been submitted
         */
         edition_form_dirty = false;
-        this_form.trigger("submit");
+        this_form.trigger("submit");        
       });
     }
 
     return submitted_forms;
-  });
-
-  $('.cancel_button').click(function () {
-    $(this).closest('form').dialog( "close" );
-    return false;
   });
 });
