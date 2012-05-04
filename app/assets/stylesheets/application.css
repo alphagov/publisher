@@ -29,7 +29,7 @@ body {
   margin-bottom: 6px;
 }
 
-form.send_fact_check {
+button.send-fact-check {
   /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
   margin-left: 70px;
 }
