@@ -29,7 +29,7 @@ module Admin::ProgressFormsHelper
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
       "<form id=\"#{activity}_toggle\" class=\"workflow_buttons\">
-        <button class=\"btn btn-primary\" type=\"submit\" #{disabled}>#{title}</button>
+        <button class=\"btn btn-primary\" value=\"#{title}\" type=\"submit\" #{disabled}>#{title}</button>
       </form>"
     }.join("\n").html_safe
   end
@@ -69,9 +69,9 @@ module Admin::ProgressFormsHelper
     ].map { |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
-      "<form id=\"#{activity}_toggle\" class=\"#{activity}\">
-      <button class=\"btn btn-primary btn-large\" type=\"submit\" #{disabled}>#{title}</button>
-      </form>"
+      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary btn-large" value="#{title}" type="submit" #{disabled}>
+      #{title}
+      </button>}
     }.join("\n").html_safe
   end
 

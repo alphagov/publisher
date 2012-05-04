@@ -66,6 +66,8 @@ $(function () {
       }
   });
 
+  $('.modal').modal('hide');
+
   $('.also_save_edition').submit(function () {
     var edition_form = $('form.whole_edition');
     var this_form = $(this);
@@ -73,6 +75,7 @@ $(function () {
     if (! submitted_forms) {
       submit_form(edition_form, function () {
         submitted_forms = true;
+
         /*
           Need to clear the dirty flag manually, as the form hasn't officially
           been submitted
@@ -89,18 +92,4 @@ $(function () {
     $(this).closest('form').dialog( "close" );
     return false;
   });
-
-  $(".review_button, .progress_button").submit(function () {
-    var activity = this.id.replace('_toggle', '_form');
-    $('#' + activity).dialog({
-      modal: true,
-      width: 600
-    });
-    return false;
-  });
 });
-
-function close_popups() {
-   var iframe = document.getElementById('popup');
-   iframe.parentNode.removeChild(iframe);
-}

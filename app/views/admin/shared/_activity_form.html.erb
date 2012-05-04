@@ -1,4 +1,4 @@
-<%= semantic_form_for(:activity, :url => url, :html => {:title => title, :class => 'button_to also_save_edition', :style => 'display: none', :id => id}) do |f| %>
+<%= semantic_form_for(:activity, url: url, html: {title: title, class: 'button_to also_save_edition modal fade', id: id}) do |f| %>
   <%= f.inputs do %>
     <input type="hidden" value="<%= activity %>" name="activity[request_type]">
     <%= f.input :comment, :as => :text, :input_html => {:cols => 60, :rows => 3} %>
