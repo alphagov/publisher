@@ -15,7 +15,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up an email and add an action to the edition, and advance the state to 'fact_check_received'" do
-    answer = Factory.create(:answer_edition, :state => 'fact_check')
+    answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
 
     message = fact_check_mail_for(answer)
     Mail.stubs(:all).yields( message )
@@ -34,7 +34,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up an email and add an action to the edition, even if it's not in 'fact_check' state" do
-    answer = Factory.create(:answer_edition, :state => 'fact_check_received')
+    answer = FactoryGirl.create(:answer_edition, :state => 'fact_check_received')
 
     Mail.stubs(:all).yields( fact_check_mail_for(answer) )
 
@@ -50,8 +50,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up multiple emails and update the relevant publications" do
-    answer1 = Factory.create(:answer_edition, :state => 'fact_check')
-    answer2 = Factory.create(:answer_edition, :state => 'in_review')
+    answer1 = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    answer2 = FactoryGirl.create(:answer_edition, :state => 'in_review')
 
     Mail.stubs(:all).multiple_yields(
           fact_check_mail_for(answer1, :body => "First Message"),
