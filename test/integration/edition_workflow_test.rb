@@ -228,7 +228,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     submit_for_review guide
 
     visit_guide guide
-    wait_until { page.has_selector? ".notification" }
+    wait_until { page.has_selector? ".alert-info" }
     assert (not has_button? "OK for publication")
   end
 
@@ -238,7 +238,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     login_as "Bob"
     visit_guide guide
-    wait_until { page.has_selector? ".notification" }
+    wait_until { page.has_selector? ".alert-info" }
     assert has_button? "Needs more work"
     assert has_button? "OK for publication"
   end
