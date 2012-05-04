@@ -8,19 +8,19 @@ $(function () {
     makes sense to save the edition and perform the requested action if there
     aren't any errors.
   */
-  var submit_form = function(form,success) {
-     var jq = $.post(
-         form.attr('action')+".json",
-         form.serialize(),
-         success
-     ).error( function(data) {
-         var errors = $.parseJSON(data.responseText);
-         var messages = "There were problems saving this edition: ";
-         errors = $.map(errors, function(v,k) {
-             return k + " " + v.join(", ");
-         });
-         messages = messages + errors.join("; ") + ".";
-         $("<p class=\"flash-alert\">"+messages+"</p>").insertBefore("#wrapper:first");
+  var submit_form = function(form, success) {
+    var jq = $.post(
+      form.attr('action') + ".json",
+      form.serialize(),
+      success
+    ).error( function(data) {
+      var errors = $.parseJSON(data.responseText);
+      var messages = "There were problems saving this edition: ";
+      errors = $.map(errors, function(v,k) {
+        return k + " " + v.join(", ");
+      });
+      messages = messages + errors.join("; ") + ".";
+      $("<p class=\"flash-alert\">" + messages + "</p>").insertBefore("section.container-fluid:first");
      });
    }
 
@@ -28,13 +28,13 @@ $(function () {
   var saved = false;
 
   $('#save-edition').submit(function () {
-      var edition_form = $('form.whole_edition');
-      if (! saved) {
-          saved = true;
-          edition_form.trigger('submit');
-      }
+    var edition_form = $('form.whole_edition');
+    if (! saved) {
+      saved = true;
+      edition_form.trigger('submit');
+    }
 
-      return false;
+    return false;
   });
 
   if (! 'autofocus' in document.createElement('input')) {
@@ -61,9 +61,9 @@ $(function () {
   });
   
   $(window).bind('beforeunload', function() {
-      if (edition_form_dirty) {
-          return 'You have unsaved changes to this edition.';
-      }
+    if (edition_form_dirty) {
+      return 'You have unsaved changes to this edition.';
+    }
   });
 
   $('.modal').modal('hide');
