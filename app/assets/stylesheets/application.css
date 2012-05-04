@@ -38,3 +38,8 @@ td.icon {
   /* change alignment of publication table cells that just have icons in them  */
   text-align: center;
 }
+
+.modal textarea.span5, 
+.modal input.span5 {
+  width: 520px;
+}
