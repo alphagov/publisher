@@ -2,10 +2,10 @@
   <td class="icon">
     <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
   </td>
-  <td>
+  <td class="business">
     <%= publication.business_proposition ? 'Y' : 'N' %>
   </td>
-  <td>
+  <td class="title">
     <%= publication.admin_list_title %>
 
     <% if tab && (tab == :published || tab == :archived) %>
