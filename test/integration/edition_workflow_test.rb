@@ -74,7 +74,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   end
 
   def button_selector(text)
-    "//button[@type='submit' and text()='#{text}']"
+    "//button[text()='#{text}']"
   end
 
   def find_button(text)
@@ -88,10 +88,14 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   def send_action(guide, button_text, message)
     visit_guide guide
     action_button = find_button button_text
+
     assert (not action_button['disabled'])
     action_button.click
-    fill_in "Comment", with: message
-    click_on "Send"
+
+    within action_button['href'] do
+      fill_in "Comment", with: message
+      click_on "Send"
+    end
 
     wait_until { page.has_content? "updated" }
     guide.reload
@@ -133,6 +137,15 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     end
 
     wait_until { page.has_selector? expected_selector }
+  end
+
+  # Given a guide and an owner, take the guide to review stage
+  def get_to_review(guide, owner)
+    login_as owner
+    assign guide, owner
+    start_work_on guide
+    fill_in_parts guide
+    submit_for_review guide
   end
 
   test "should show and update a guide's assigned person" do
@@ -217,15 +230,6 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     visit_guide guide
     wait_until { page.has_selector? ".notification" }
     assert (not has_button? "OK for publication")
-  end
-
-  # Given a guide and an owner, take the guide to review stage
-  def get_to_review(guide, owner)
-    login_as owner
-    assign guide, owner
-    start_work_on guide
-    fill_in_parts guide
-    submit_for_review guide
   end
 
   test "can review another's guide" do

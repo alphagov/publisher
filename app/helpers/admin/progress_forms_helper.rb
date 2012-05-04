@@ -69,9 +69,7 @@ module Admin::ProgressFormsHelper
     ].map { |title, activity|
       check_method = "can_#{activity}?".to_sym
       disabled = edition.send(check_method) ? "" : "disabled"
-      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary btn-large" value="#{title}" type="submit" #{disabled}>
-      #{title}
-      </button>}
+      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary btn-large" value="#{title}" type="submit" #{disabled}>#{title}</button>}
     }.join("\n").html_safe
   end
 
