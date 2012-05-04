@@ -3,9 +3,11 @@
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
   <% end %>
 
-  <h2 class="visuallyhidden">Parts</h2>
+  <hr>
 
-  <section id="parts" class="group">
+  <h3>Parts</h3>
+
+  <section class="accordion" id="parts">
 
     <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 

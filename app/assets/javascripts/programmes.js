@@ -1,5 +1,12 @@
 // Javascript specific to guide admin
 $(function() {
+ 
+ // collapse the parts using the bootstrap accordion
+  $(".collapse").collapse();
+
+  // simulate a click on the first part to open it
+  $('#parts .part .accordion-body').first().collapse('show');
+
   $('input.title').
     live('change', function () {
       var title_field = $(this);
@@ -8,13 +15,6 @@ $(function() {
         slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
       }
   });
-
-  var accordion_opts = {
-    header: "> div > h3",
-    collapsible: true,
-    active: false
-  }
-
 
   $('input.title').
     live('change', function () {

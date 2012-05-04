@@ -1,8 +1,8 @@
-<div class="notification">
+<div class="alert alert-info">
   <p><%= @resource.latest_status_action.requester.name %> has requested this edition be reviewed</p>
 
   <% if @resource.latest_status_action.requester == current_user %>
-    <p>That's you! You'll get an email when it has been reviewed.</p>
+    <p>That&rsquo;s you! You'll get an email when it has been reviewed.</p>
   <% else %>
     <div class="workflow_buttons">      
       <%= review_buttons(@resource) %>

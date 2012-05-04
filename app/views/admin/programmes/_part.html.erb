@@ -1,9 +1,49 @@
-<div class="part group">
-  <h3><a href=#"><%= f.object.title %></a></h3>
-  <%= f.inputs do %>
-    <%= f.input :title, :input_html => { :class => 'title', :disabled => true }, :required => true %>
-    <%= f.input :body, :as => :text, :required => true, :input_html => {:disabled => @resource.published?} %>
-    <%= f.input :slug, :input_html => { :class => 'slug', :disabled => true }, :required => true %>
-    <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => true } %>
-  <% end %>
+<div class="accordion-group part">
+  <div class="accordion-heading">
+    <a class="accordion-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug %>">
+      <i class="icon-chevron-down"></i> 
+      <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
+    </a>
+  </div>
+  <div id="<%= f.object.slug %>" class="accordion-body collapse in">
+    <div class="accordion-inner">
+
+      <div class="row-fluid">
+
+        <div class="span8">
+
+          <%= f.inputs do %>
+            <%= f.input :title, 
+                        :input_html => { :class => 'span7', :disabled => true }, 
+                        :required => true %>
+
+            <%= f.input :body, 
+                        :as => :text, 
+                        :required => true, 
+                        :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+
+            <%= f.input :slug, 
+                        :input_html => { :class => 'span7', :disabled => true }, 
+                        :required => true %>
+
+            <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => true } %>
+          <% end %>
+
+        </div>
+        <div class="span4">
+          <%= render "../shared/govspeak_help" %>
+        </div>
+      </div><!--/.row-fluid -->
+
+      <% unless @resource.published? %>
+      <div class="row-fluid">
+        <div class="span12">
+          <hr>
+          <%= f.remove_link "Remove this part" %>
+        </div>
+      </div><!--/.row-fluid -->
+      <% end %>
+
+    </div>
+  </div>
 </div>
