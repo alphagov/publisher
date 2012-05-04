@@ -92,7 +92,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert (not action_button['disabled'])
     action_button.click
 
-    within action_button['href'] do
+    within :css, action_button['href'] do
       fill_in "Comment", with: message
       click_on "Send"
     end
@@ -112,31 +112,18 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     wait_until { page.has_content? "All publications" }
   end
 
-  def view_tab(tab_name)
+  def view_filtered_list(filter_label)
     visit "/admin"
-    tab_link = find(:xpath, "//a[contains(., '#{tab_name}')]")
-    assert (not tab_link.nil?), "Tab link #{tab_name} not found"
-    assert (not tab_link['href'].nil?), "Tab link #{tab_name} has no target"
+    filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
+    assert (not filter_link.nil?), "Tab link #{filter_label} not found"
+    assert (not filter_link['href'].nil?), "Tab link #{filter_label} has no target"
 
     # puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
     # puts "Tab link: #{tab_link.inspect}"
 
-    tab_link.click
+    filter_link.click
 
-    # If the JavaScript is working happily, the link's target gets rewritten to
-    # a target tab, and the table will be loaded in as a child of this target.
-    # If the JavaScript is broken in some way, the table will just be loaded in
-    # a new page, so we can safely look for a table with a class of 'formats',
-    # which we can't safely do when the JavaScript works, because there can be
-    # several such tables on the page.
-    if tab_link['href'].starts_with? '#'
-      expected_selector = "#{tab_link['href']} table"
-    else
-      puts 'WARNING: the tab JavaScript on this page is b0rked'
-      expected_selector = 'table.formats'
-    end
-
-    wait_until { page.has_selector? expected_selector }
+    wait_until { page.has_content? filter_label }
   end
 
   # Given a guide and an owner, take the guide to review stage
@@ -213,7 +200,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     login_as "Bob"
     filter_for "All"
-    view_tab "In review"
+    view_filtered_list "In review"
 
     assert page.has_content? guide.title
   end
@@ -250,7 +237,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     login_as "Bob"
     send_action guide, "Needs more work", "You need to fix some stuff"
     filter_for "All"
-    view_tab "Amends needed"
+    view_filtered_list "Amends needed"
     assert page.has_content? guide.title
   end
 
@@ -261,7 +248,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     login_as "Bob"
     send_action guide, "OK for publication", "Yup, looks good"
     filter_for "All"
-    view_tab "Ready"
+    view_filtered_list "Ready"
     assert page.has_content? guide.title
   end
 
