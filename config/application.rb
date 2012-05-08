@@ -26,6 +26,10 @@ module Publisher
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/presenters)
 
+    config.assets.precompile += Dir.glob(Rails.root.join('app', 'assets', 'stylesheets', '*.css'))
+    config.assets.precompile += Dir.glob(Rails.root.join('app', 'assets', 'javascripts', '*.js'))
+    config.assets.precompile += Dir.glob(Rails.root.join('app', 'assets', 'images', '*'))
+
     config.generators do |g|
         g.orm :mongoid
         g.template_engine :erb # this could be :haml or whatever
