@@ -2,7 +2,7 @@ require 'test_helper'
 
 class GuideEditionTest < ActiveSupport::TestCase
   setup do
-    panopticon_has_metadata("id" => '1234574', "name" => "Childcare", "slug" => "childcare")
+    panopticon_has_metadata("_id" => '1234574', "name" => "Childcare", "slug" => "childcare")
   end
   
   def template_guide

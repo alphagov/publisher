@@ -39,7 +39,7 @@ class UpdatePublicationMetadata
   end
 
   def panopticon_id
-    artefact['id']
+    artefact['_id']
   end
 
   def denormalise_metadata

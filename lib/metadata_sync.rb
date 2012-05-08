@@ -17,7 +17,7 @@ class MetadataSync
     @marples.when 'publisher', '*', 'created' do |publication|
       begin
         logger.info "Publisher created publication #{publication['id']}"
-        artefact = { 'id' => publication['panopticon_id'] }
+        artefact = { '_id' => publication['panopticon_id'] }
         sync artefact
       rescue => e
         logger.error("Exception caused while processing message for publication #{publication.inspect} #{e.message}")
@@ -25,7 +25,7 @@ class MetadataSync
     end
     @marples.when 'panopticon', 'artefacts', 'updated' do |artefact|
       begin
-        logger.info "Panopticon updated artefact #{artefact['id']}"
+        logger.info "Panopticon updated artefact #{artefact['_id']}"
         sync artefact
       rescue => e
         logger.error("Exception caused while processing message for artefact #{artefact.inspect} #{e.message}")

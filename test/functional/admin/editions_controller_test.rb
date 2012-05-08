@@ -9,8 +9,8 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     @programme = ProgrammeEdition.create(title: "test", slug: "test", panopticon_id: 12345)
 
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
-    panopticon_has_metadata("id" => "test", "name" => "FOOOO")
-    panopticon_has_metadata("id" => "12345", "name" => "Test", "slug" => "test")
+    panopticon_has_metadata("_id" => "test", "name" => "FOOOO")
+    panopticon_has_metadata("_id" => "12345", "name" => "Test", "slug" => "test")
   end
 
   test "it renders the lgsl edit form successfully if creation fails" do
@@ -119,7 +119,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
   test "should show the edit page again if updating fails" do
     panopticon_has_metadata(
-      "id" => "test"
+      "_id" => "test"
     )
 
     WholeEdition.expects(:find).returns(@guide)

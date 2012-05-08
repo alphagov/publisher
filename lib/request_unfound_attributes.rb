@@ -38,9 +38,9 @@ class RequestUnfoundAttributes
   private :load_attribute
 
   def load_attributes_and_return key
-    logger.debug "Loading attributes for #{attributes['id']}"
+    logger.debug "Loading attributes for #{attributes['_id']}"
     api = GdsApi::Panopticon.new(Plek.current.environment, PANOPTICON_API_CREDENTIALS)
-    loaded_attributes = api.artefact_for_slug(attributes['id'], :as_hash => true)
+    loaded_attributes = api.artefact_for_slug(attributes['_id'], :as_hash => true)
 
     logger.debug "Merging #{loaded_attributes.inspect} into #{attributes.inspect}"
     attributes.merge!(loaded_attributes)

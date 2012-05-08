@@ -11,7 +11,7 @@ class MetadataSyncTest < ActiveSupport::TestCase
 
   test "denormalises data from Panopticon" do
     panopticon_url = panopticon_has_metadata(
-      "id" => 123,
+      "_id" => 123,
       "name" => "New title"
     )
 
@@ -19,7 +19,7 @@ class MetadataSyncTest < ActiveSupport::TestCase
 
 
     updated_artefact = {
-      'id' => publication.panopticon_id
+      '_id' => publication.panopticon_id
     }
 
     @metadata.sync updated_artefact
@@ -32,7 +32,7 @@ class MetadataSyncTest < ActiveSupport::TestCase
     publication = FactoryGirl.create(:guide_edition, :panopticon_id => 124, :title => "Old title 2")
 
     updated_artefact = {
-      'id' => publication.panopticon_id,
+      '_id' => publication.panopticon_id,
       'name' => 'New title 2',
       'slug' => 'new-title-2',
       'tags' => 'abc, def, ghi',
