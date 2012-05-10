@@ -21,7 +21,7 @@ end
 
 Given /I have an artefact in Panopticon/ do
   @panopticon_id = 123
-  panopticon_has_metadata( "_id" => @panopticon_id, "name" => "Test", "slug" => "test", "kind" => "answer", "department" => "GDS", "section" => "Example content" )
+  panopticon_has_metadata( "id" => @panopticon_id, "name" => "Test", "slug" => "test", "kind" => "answer", "department" => "GDS", "section" => "Example content" )
 end
 
 And /I have clicked the create publication button in Panopticon/ do

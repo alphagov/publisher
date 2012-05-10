@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
   setup do
-    panopticon_has_metadata("_id" => '2356')
+    panopticon_has_metadata("id" => '2356')
     %w(Alice Bob Charlie).each do |name|
       FactoryGirl.create(:user, name: name)
     end

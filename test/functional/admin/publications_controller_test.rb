@@ -12,7 +12,7 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
     latest_edition = FactoryGirl.create(:edition, :panopticon_id => panopticon_id, :state => 'draft', :version_number => 3)
 
     panopticon_has_metadata(
-      "_id" => panopticon_id,
+      "id" => panopticon_id,
       "kind" => "answer"
     )
     get :show, :id => panopticon_id
@@ -25,7 +25,7 @@ class Admin::PublicationsControllerTest < ActionController::TestCase
     assert WholeEdition.where(panopticon_id: panopticon_id).first.nil?
 
     panopticon_has_metadata(
-      "_id" => panopticon_id,
+      "id" => panopticon_id,
       "kind" => "local_transaction"
     )
     get :show, :id => 2357

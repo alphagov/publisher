@@ -138,7 +138,7 @@ class WholeEdition
     raise "Artefact not found" if metadata.nil?
 
     importing_user.create_whole_edition(metadata.kind.to_sym,
-      :panopticon_id => metadata._id,
+      :panopticon_id => metadata.id,
       :slug => metadata.slug,
       :title => metadata.name,
       :section => metadata.section,

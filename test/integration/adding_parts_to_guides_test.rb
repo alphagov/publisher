@@ -10,7 +10,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
     guide.save!
     guide.update_attribute(:state, 'draft')
 
-    panopticon_has_metadata("_id" => '2356')
+    panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
     

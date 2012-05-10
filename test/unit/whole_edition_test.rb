@@ -2,7 +2,7 @@ require 'test_helper'
 
 class WholeEditionTest < ActiveSupport::TestCase
   setup do
-    panopticon_has_metadata("_id" => '2356', "kind" => "answer", "slug" => 'childcare', "name" => "Childcare")
+    panopticon_has_metadata("id" => '2356', "kind" => "answer", "slug" => 'childcare', "name" => "Childcare")
   end
 
   def template_answer(version_number = 1)
