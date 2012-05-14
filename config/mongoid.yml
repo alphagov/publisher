@@ -1,11 +1,12 @@
 development:
   host: localhost
-  database: mguides_development2
+  database: govuk_content_development
   persist_in_safe_mode: true
 
 test:
   host: localhost
-  database: mguides_test
+  # Don't want this interfering with a concurrent Panopticon test run
+  database: govuk_content_publisher_test
 
 # set these environment variables on your prod server
 production:
