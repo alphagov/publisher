@@ -34,3 +34,14 @@ The source data can be downloaded from [http://local.direct.gov.uk/Data/local_au
 They can be imported using a rake task:
 
     bundle exec rake local_transactions:import SOURCE=/path/to/local_authority_service_details.CSV
+
+## ENVIRONMENT
+
+Various flags and settings can control the runtime behaviour of publisher.
+These are mainly useful when working in development.
+
+NO_TRANSPORT - don't try to connect to the STOMP message broker. 
+
+e.g.
+
+$ NO_TRANSPORT=1 bundle exec rails s
