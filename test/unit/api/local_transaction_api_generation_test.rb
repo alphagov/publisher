@@ -1,5 +1,5 @@
 require 'test_helper'
-require_relative '../helpers/local_services_helper'
+require 'govuk_content_models/test_helpers/local_services'
 
 class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
   include LocalServicesHelper

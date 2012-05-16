@@ -1,6 +1,6 @@
 class Admin::PublicationsController < Admin::BaseController
   def show
-    edition = WholeEdition.create_from_panopticon_data(params[:id], current_user)
+    edition = WholeEdition.create_from_panopticon_data(params[:id], current_user, PANOPTICON_API_CREDENTIALS)
 
     if edition.persisted?
       redirect_with_return_to(edition) and return

@@ -1,6 +1,6 @@
 module Searchable
   extend ActiveSupport::Concern
-  
+
   included do
     after_destroy :remove_from_search_index
   end
@@ -12,12 +12,28 @@ module Searchable
   def remove_from_search_index
     Rummageable.delete "/#{slug}"
   end
-  
+
   def indexable_content
+    respond_to?(:parts) ? indexable_content_with_parts : indexable_content_without_parts
+  end
+
+  def indexable_content_without_parts
     published? ? alternative_title : ""
   end
 
+  def indexable_content_with_parts
+    content = indexable_content_without_parts
+    return content unless published_edition
+    parts.inject([content]) { |acc, part|
+      acc.concat([part.title, govspeak_to_text(part.body)])
+    }.compact.join(" ").strip
+  end
+
   def search_index
+    respond_to?(:parts) ? search_index_with_parts : search_index_without_parts
+  end
+
+  def search_index_without_parts
     {
       "title" => title,
       "link" => "/#{slug}",
@@ -26,7 +42,27 @@ module Searchable
       "indexable_content" => indexable_content,
     }.merge(split_section(section))
   end
-  
+
+  def search_index_with_parts
+    output = search_index_without_parts
+    output['additional_links'] = []
+    return output unless published_edition
+
+    parts.each_with_index do |part, index|
+      if format.downcase == 'programme' && part.slug != 'further-information'
+        link = "/#{slug}\##{part.slug}"
+      else
+        link = "/#{slug}/#{part.slug}"
+      end
+      output['additional_links'] << {
+        'title' => part.title,
+        'link' => link,
+        'link_order' => index
+      }
+    end
+    output
+  end
+
   def split_section(section)
     section, subsection = (section || "").split(':', 2).map { |s| s.parameterize }
     {
@@ -34,7 +70,7 @@ module Searchable
       "subsection" => subsection
     }
   end
-  
+
   module ClassMethods
     def search_index_all
       published.map(&:search_index)

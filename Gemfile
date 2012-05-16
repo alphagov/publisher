@@ -17,16 +17,11 @@ end
 gem 'rails', '3.1.3'
 gem 'aws-ses', :require => 'aws/ses'
 
-gem "mongoid", "~> 2.3.0"
-gem "mongo", "1.5.2"
-gem "bson_ext", "1.5.2"
-gem "bson", "1.5.2"
 gem 'erubis'
 gem 'plek', '~> 0'
 gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
-gem 'differ'
 
 if ENV['MARPLES_DEV']
   gem 'marples', :path => '../marples'
@@ -37,7 +32,7 @@ end
 gem 'null_logger'
 gem 'rummageable'
 gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
-gem 'gds-api-adapters', '~> 0.0.23'
+gem 'gds-api-adapters'
 
 gem 'rest-client'
 
@@ -50,6 +45,8 @@ gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
+
+gem "govuk_content_models"
 
 if ENV['CDN_DEV']
   gem 'cdn_helpers', :path => '../cdn_helpers'
@@ -64,7 +61,6 @@ else
 end
 
 gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
-gem 'state_machine'
 
 gem 'lockfile'
 gem 'whenever'

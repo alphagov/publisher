@@ -8,6 +8,7 @@ require 'mocha'
 require 'database_cleaner'
 require 'webmock/test_unit'
 require 'gds_api/test_helpers/panopticon'
+require 'govuk_content_models/test_helpers/factories'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 

@@ -24,6 +24,41 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     NoisyWorkflow.make_noise(action)
   end
 
+  def publisher_and_guide
+    user = User.create(:name => "Ben")
+    other_user = User.create(:name => "James")
+
+    guide = user.create_whole_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    edition = guide
+    user.start_work(edition)
+    user.request_review(edition,{:comment => "Review this guide please."})
+    other_user.approve_review(edition, {:comment => "I've reviewed it"})
+    user.send_fact_check(edition,{:comment => "Review this guide please.", :email_addresses => 'test@test.com'})
+    user.receive_fact_check(edition, {:comment => "No changes needed, this is all correct"})
+    other_user.approve_fact_check(edition, {:comment => "Looks good to me"})
+    user.publish(edition, {:comment => "PUBLISHED!"})
+    return user, guide
+  end
+
+  test "user should be able to have an email sent for fact checking" do
+    stub_mailer = stub('mailer', :deliver => true)
+    NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
+    user = User.create(:name => "Ben")
+
+    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    edition = guide
+    edition.state = 'ready'
+    assert edition.can_send_fact_check?
+    user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
+  end
+
+  test "a guide should not send an email if creating a new edition fails" do
+    user, guide = publisher_and_guide
+    edition = guide.published_edition
+    NoisyWorkflow.expects(:make_noise).never
+    edition.expects(:build_clone).returns(false)
+    assert ! user.new_version(edition)
+  end
   test "fact checking emails should set appropriate reply-to address" do
     guide, email = fact_check_email
     assert_equal ["factcheck+test-#{guide.id}@alphagov.co.uk"], email.reply_to
