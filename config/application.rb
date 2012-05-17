@@ -27,11 +27,6 @@ module Publisher
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/presenters)
 
     config.assets.precompile += %W(
-        application.css bootstrap.min.css bootstrap-responsive.min.css 
-
-        application.js bootstrap.min.js form-tools.js jquery.min.js 
-        jquery.mustache.js jquery.tablesorter.min.js multi-part.js publications.js
-
         glyphicons-halflings-white.png glyphicons-halflings.png 
         header-crown.png icon-answer.png icon-guide.png icon-localtransaction.png 
         icon-place.png icon-programme.png icon-service.png icon-transaction.png)
