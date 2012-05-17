@@ -116,11 +116,11 @@ GEM
       rack (~> 1.1)
     fastthread (1.0.7)
     ffi (1.0.11)
-    gds-api-adapters (0.0.46)
+    gds-api-adapters (0.0.47)
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (0.5.3)
+    gds-sso (0.5.4)
       oa-core (~> 0.3.2)
       oa-oauth (~> 0.3.2)
       oauth2 (= 0.5.2)
@@ -137,7 +137,7 @@ GEM
     govspeak (0.8.11)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
-    govuk_content_models (0.0.2)
+    govuk_content_models (0.0.4)
       bson_ext
       differ
       gds-api-adapters
@@ -154,7 +154,7 @@ GEM
     inherited_resources (1.3.1)
       has_scope (~> 0.5.0)
       responders (~> 0.6)
-    json (1.7.0)
+    json (1.7.3)
     kramdown (0.13.5)
     launchy (2.1.0)
       addressable (~> 2.2.6)
@@ -162,7 +162,7 @@ GEM
     libwebsocket (0.1.3)
       addressable
     lockfile (2.1.0)
-    lrucache (0.1.2)
+    lrucache (0.1.3)
       PriorityQueue (~> 0.1.2)
     mail (2.3.3)
       i18n (>= 0.4.0)
@@ -205,7 +205,7 @@ GEM
       fastthread (>= 1.0.1)
       rack
       rake (>= 0.8.1)
-    plek (0.1.20)
+    plek (0.1.21)
       builder
     polyglot (0.3.3)
     rack (1.3.5)
