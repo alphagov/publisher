@@ -43,3 +43,23 @@ td.icon {
 .modal input.span5 {
   width: 520px;
 }
+
+/* tablesorter styles */
+
+th.header { 
+  background-image: url(/assets/bg.gif);     
+  cursor: pointer; 
+  background-repeat: no-repeat; 
+  background-position: center right; 
+  padding-right: 20px; 
+}
+
+th.headerSortUp { 
+  background-image: url(/assets/asc.gif); 
+  background-color: #eee;
+}
+
+th.headerSortDown { 
+  background-image: url(/assets/desc.gif); 
+  background-color: #eee;
+}
