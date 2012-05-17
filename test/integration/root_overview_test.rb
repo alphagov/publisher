@@ -1,12 +1,13 @@
-require 'integration_test_helper'
+require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
   def filter_by(option)
     visit "/admin"
 
-    select option, from: "Filter by user"
-    click_on "Filter"
-
+    within ".user-filter-form" do
+      select option, from: "Filter by user"
+      click_on "Filter"
+    end
     click_on "Lined up"
   end
 
@@ -22,9 +23,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
-    x, y, z = %w[ XXX YYY ZZZ ].map.with_index { |name, i|
-      GuideEdition.create(:panopticon_id => i + 1, :title => name, :slug => name.downcase)
-    }
+    x =  GuideEdition.create(:panopticon_id => 1, :title => "XXX", :slug => "xxx")
+    y =  GuideEdition.create(:panopticon_id => 2, :title => "YYY", :slug => "yyy")
+    z =  GuideEdition.create(:panopticon_id => 3, :title => "ZZZ", :slug => "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)

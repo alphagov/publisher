@@ -107,7 +107,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
   def filter_for(user)
     visit "/admin"
-    select "All", :from => 'filter'
+    select "All", :from => 'user_filter'
     click_button "Filter"
     wait_until { page.has_content? "All publications" }
   end

@@ -34,13 +34,13 @@
 
         </div><!--/.well -->
 
-        <form method="GET" action="/admin">
-          <label for="user-filter" class="visuallyhidden">Filter by user</label>
+        <form method="GET" action="/admin" class="user-filter-form">
+          <label for="user_filter" class="visuallyhidden">Filter by user</label>
           <%=
-            select_tag("user-filter", options_for_select(
+            select_tag("user_filter", options_for_select(
               [["All", "all"], ["Nobody", "nobody"]] +
-              User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
-            ), id: "user-filter", :class => "span2")
+              User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
+            ), :class => "span2")
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
