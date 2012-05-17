@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class AdminRootPresenterTest < ActiveSupport::TestCase
 
@@ -181,4 +181,23 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal [a, b], presenter.lined_up.to_a
   end
 
+  test "can filter publications by title substring" do
+    FactoryGirl.create(:guide_edition, title: "First")
+
+    FactoryGirl.create(:guide_edition, title: "Second")
+
+    presenter = AdminRootPresenter.new(:all)
+    presenter.filter_by_title_substring("Sec")
+    assert_equal ["Second"], presenter.all.map(&:title)
+  end
+
+  test "can filter publications by title substring regardless of capitalization" do
+    FactoryGirl.create(:guide_edition, title: "First")
+
+    FactoryGirl.create(:guide_edition, title: "Second")
+
+    presenter = AdminRootPresenter.new(:all)
+    presenter.filter_by_title_substring("sec")
+    assert_equal ["Second"], presenter.all.map(&:title)    
+  end
 end

@@ -2,7 +2,12 @@
   <div class="span12">
 
     <div class="page-header">
-      <h1>Publications dashboard</h1>
+      <h1>
+        <% if !params[:filter_title].blank? -%>
+          Searching for &ldquo;<%= params[:title] -%>&rdquo; in 
+        <% end -%>
+        &ldquo;<%= @list.humanize %>&rdquo; publications
+      </h1>
     </div>
 
     <div class="row-fluid">
@@ -32,11 +37,16 @@
         <form method="GET" action="/admin">
           <label for="user-filter" class="visuallyhidden">Filter by user</label>
           <%=
-            select_tag("filter", options_for_select(
+            select_tag("user-filter", options_for_select(
               [["All", "all"], ["Nobody", "nobody"]] +
               User.alphabetized.map{ |u| [u.name, u.uid] }, @filter
             ), id: "user-filter", :class => "span2")
           %>
+          <input class="btn btn-primary" type="submit" value="Filter">
+        </form>
+        <form method="GET" action="/admin">
+          <label for="title-filter">Filter by title</label>
+          <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
 
