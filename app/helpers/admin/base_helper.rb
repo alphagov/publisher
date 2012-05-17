@@ -14,7 +14,7 @@ module Admin::BaseHelper
       li_classes << 'active' if scope == options[:current]
 
       content_tag(:li, class: li_classes.join(' ')) do
-        url = admin_root_path(:filter => params[:filter], :title => params[:title], :list => scope)
+        url = admin_root_path(:user_filter => params[:user_filter], :title_filter => params[:title_filter], :list => scope)
 
         content_tag(:a, :href => url) do
           h(status + " ") + content_tag(:span, @presenter.send(scope).length, class: "label pull-right")
