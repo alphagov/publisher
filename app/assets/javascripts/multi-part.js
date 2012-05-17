@@ -10,7 +10,8 @@ $(function() {
     live('change', function () {
       var title_field = $(this);
       var slug_field = title_field.closest('.part').find('.slug');
-      if (slug_field.text() == '') {
+
+      if (slug_field.text() === '') {
         slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
       }
   });
