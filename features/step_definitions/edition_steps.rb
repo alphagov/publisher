@@ -42,7 +42,7 @@ When /I visit the editions list/ do
 end
 
 When /filter by everyone/ do
-  select "All", :from => 'filter'
+  select "All", :from => 'user_filter'
   click_button "Filter"
 end
 
