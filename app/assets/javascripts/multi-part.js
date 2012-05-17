@@ -8,19 +8,18 @@ $(function() {
 
   $('input.title').
     live('change', function () {
-      var title_field = $(this);
-      var slug_field = title_field.closest('.part').find('.slug');
-
-      if (slug_field.text() === '') {
-        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
-      }
-  });
-
-  $('input.title').
-    live('change', function () {
       var elem = $(this);
+      var value = elem.val();
+
+      // Set slug on change.
+      var slug_field = elem.closest('.part').find('.slug');
+      if (slug_field.text() === '') {
+        slug_field.val(GovUKGuideUtils.convertToSlug(value));
+      }
+
+      // Set header on change.
       var header = elem.closest('fieldset').prev('h3').find('a');
-      header.text(elem.val());
+      header.text(value);
     });
 
   $('.add-associated').bind('associated-added', function () {
