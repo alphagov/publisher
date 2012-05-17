@@ -5,7 +5,7 @@
       <th scope="col">Biz?</th>
       <th scope="col" class="span4">Title</th>
       <th scope="col">Updated</th>
-      <th scope="col">Sent Out</th>
+      <th scope="col" class="span2">Sent Out</th>
       <th scope="col" class="span2">Assigned to</th>
       <th scope="col" class="span2">Created by</th>
       <th scope="col">Section</th>
@@ -17,3 +17,18 @@
     <%= render :collection => @presenter.fact_check, :partial => 'publication', :locals => {:tab => :fact_check} %>
   </tbody>
 </table>
+
+<%= content_for :extra_javascript do %>
+  <script type="text/javascript">
+    $(function () {
+      $("table").tablesorter({ 
+        headers: { 
+          // increment from 0 for columns you wish to not sort
+          0: { sorter: false }, 
+          8: { sorter: false }, 
+          9: { sorter: false } 
+        } 
+      });
+    });
+  </script>
+<% end %>

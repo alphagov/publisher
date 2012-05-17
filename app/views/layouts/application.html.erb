@@ -72,10 +72,12 @@
 
   </section><!--/.container-fluid -->
 
-  <%= javascript_include_tag('jquery.min.js', 'bootstrap.min.js') %>
+  <%= javascript_include_tag('jquery.min.js', 'bootstrap.min.js', 'jquery.tablesorter.min.js') %>
   <%= yield :extra_javascript %>
   <script type="text/javascript">
-    $('.icon-question-sign').popover()
+    $(function () {
+      $('.icon-question-sign').popover();
+    });
   </script>
 
 </body>

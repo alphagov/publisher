@@ -15,3 +15,18 @@
     <%= render :collection => @presenter.lined_up, :partial => 'publication', :locals => {:tab => :lined_up} %>
   </tbody>
 </table>
+
+<%= content_for :extra_javascript do %>
+  <script type="text/javascript">
+    $(function () {
+      $("table").tablesorter({ 
+        headers: { 
+          // increment from 0 for columns you wish to not sort
+          0: { sorter: false }, 
+          6: { sorter: false }, 
+          7: { sorter: false } 
+        } 
+      });
+    });
+  </script>
+<% end %>
