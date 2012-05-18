@@ -5,7 +5,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
   def fixture_file(file)
     File.expand_path("fixtures/" + file, File.dirname(__FILE__))
   end
-  
+
   context "update" do
     setup do
       LocalServiceImporter.stubs(:new).returns(stub(:run))
@@ -37,7 +37,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
     setup do
       @sample_csv = File.open(fixture_file('local_services_sample.csv'))
     end
-    
+
     should "import the definitions" do
       assert_difference "LocalService.count" do
         LocalServiceImporter.new(@sample_csv).run
@@ -47,7 +47,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       assert_equal 850, s.lgsl_code
       assert_equal %w{county unitary}, s.providing_tier
     end
-    
+
     should "not duplicate definitions if running the import again" do
       LocalServiceImporter.new(@sample_csv).run
       assert_difference "LocalService.count", 0 do

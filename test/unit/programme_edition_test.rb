@@ -15,7 +15,7 @@ class ProgrammeEditionTest < ActiveSupport::TestCase
 
   test "order parts shouldn't fail if one part's order attribute is nil" do
     g = template_programme
-    
+
     g.parts.build
     g.parts.build(:order => 1)
     assert g.order_parts

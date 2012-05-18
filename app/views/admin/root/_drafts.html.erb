@@ -20,13 +20,13 @@
 <%= content_for :extra_javascript do %>
   <script type="text/javascript">
     $(function () {
-      $("table").tablesorter({ 
-        headers: { 
+      $("table").tablesorter({
+        headers: {
           // increment from 0 for columns you wish to not sort
-          0: { sorter: false }, 
-          7: { sorter: false }, 
-          8: { sorter: false } 
-        } 
+          0: { sorter: false },
+          7: { sorter: false },
+          8: { sorter: false }
+        }
       });
     });
   </script>

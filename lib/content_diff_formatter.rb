@@ -10,14 +10,14 @@ class ContentDiffFormatter
   def line_for(type = :none, content)
     classes = [type, "alt"]
     @line_no += 1
-    
+
     modifier = case type
     when :addition then "+"
     when :removal then "-"
     else
       ""
     end
-    
+
     multiple_lines = content.split('\n')
     [ type, multiple_lines.map do |line|
       escaped_content = escape_once( line.sub("\\r","") ).html_safe
@@ -28,7 +28,7 @@ class ContentDiffFormatter
   end
 
   def lines
-    output = @body.map {|ln| 
+    output = @body.map {|ln|
       case ln
       when /{"(.*)" >> "(.*)"}/
         matches = ln.match /{"(.*)" >> "(.*)"}/
@@ -49,8 +49,8 @@ class ContentDiffFormatter
   end
 
   def to_html
-    content_tag :ul, :class => 'diff' do 
-      lines  
+    content_tag :ul, :class => 'diff' do
+      lines
     end
   end
 end

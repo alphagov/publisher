@@ -23,4 +23,3 @@ namespace :router do
   desc "Register publisher application and routes with the router (run this task on server in cluster)"
   task :register => [:register_application, :register_routes]
 end
-

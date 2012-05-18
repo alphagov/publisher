@@ -13,7 +13,7 @@ class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
-    
+
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'

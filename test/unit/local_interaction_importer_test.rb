@@ -4,20 +4,20 @@ require 'test_helper'
 require 'local_interaction_importer'
 
 class LocalInteractionImporterTest < ActiveSupport::TestCase
-  
+
   def fixture_file(file)
     File.expand_path("fixtures/" + file, File.dirname(__FILE__))
   end
-  
+
   def read_fixture_file(file)
     File.read(fixture_file(file))
   end
-  
+
   def setup
     stub_request(:get, "http://mapit.mysociety.org/area/45UB").
       to_return(status: 404, body: '{}')
   end
-  
+
   context "update" do
     setup do
       LocalInteractionImporter.stubs(:new).returns(stub(:run))
@@ -75,12 +75,12 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
     setup do
       @source = File.open(fixture_file('local_interactions_sample.csv'))
     end
-    
+
     context "Local authority already known" do
       setup do
         @authority = FactoryGirl.create(:local_authority, :snac => '45UB')
       end
-      
+
       should "Add one interaction to that authority" do
         assert_difference "@authority.reload.local_interactions.count" do
           LocalInteractionImporter.new(@source).run
@@ -90,7 +90,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
         assert_equal 18, interaction.lgsl_code
         assert_equal 8, interaction.lgil_code
       end
-      
+
       context "interaction already defined" do
         setup do
           @authority.local_interactions.create!(
@@ -98,7 +98,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
             lgsl_code: 18,
             lgil_code: 8)
         end
-        
+
         should "update the url" do
           assert_no_difference "@authority.reload.local_interactions.count" do
             LocalInteractionImporter.new(@source).run
@@ -108,7 +108,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
         end
       end
     end
-    
+
     context "Local authority not already known" do
       should "Create a new authority" do
         assert_difference "LocalAuthority.count" do
@@ -119,7 +119,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
         assert_equal "45UB", authority.snac
         assert_equal 1, authority.local_directgov_id
       end
-      
+
       should "Lookup tier from mapit" do
         stub_request(:get, "http://mapit.mysociety.org/area/45UB")
           .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
@@ -127,7 +127,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
         assert_equal 'district', LocalAuthority.first.tier
       end
     end
-    
+
   end
-  
+
 end

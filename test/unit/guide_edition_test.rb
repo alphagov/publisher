@@ -4,14 +4,14 @@ class GuideEditionTest < ActiveSupport::TestCase
   setup do
     panopticon_has_metadata("id" => '1234574', "name" => "Childcare", "slug" => "childcare")
   end
-  
+
   def template_guide
     edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: 1234574)
     edition.start_work
     edition.save
     edition
   end
-  
+
   def publisher_and_guide
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
@@ -34,7 +34,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     edition.parts.build(:order => 1)
     assert edition.order_parts
   end
-  
+
   test "struct for search index" do
     edition = template_guide
     edition.update_attribute(:state, 'published')
@@ -84,5 +84,5 @@ class GuideEditionTest < ActiveSupport::TestCase
     assert_equal edition.alternative_title, new_edition.alternative_title
     assert_equal edition.overview, new_edition.overview
   end
-  
+
 end

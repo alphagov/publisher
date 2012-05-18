@@ -25,7 +25,7 @@ Feature: Managing editions
     Given draft editions exist in Publisher
     When I update fields for an edition
     Then the edition form should show the fields
-  
+
   Scenario: Business editions
     Given lined up editions for business exist in Publisher
     When I visit the editions list

@@ -51,4 +51,3 @@ task :update_publisher_dashboard => :environment do
 
   puts "Done"
 end
-

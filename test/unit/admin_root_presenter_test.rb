@@ -16,7 +16,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by draft state" do
     presenter = AdminRootPresenter.new(:all)
-    
+
     a = FactoryGirl.create(:guide_edition)
     a.update_attribute(:state, 'draft')
     assert a.draft?
@@ -54,7 +54,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     b.update_attribute(:state, 'published')
     b.archive
     b.save
-    
+
     assert b.archived?
 
     assert_equal [b], presenter.archived.to_a
@@ -198,6 +198,6 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
     presenter = AdminRootPresenter.new(:all)
     presenter.filter_by_title_substring("sec")
-    assert_equal ["Second"], presenter.all.map(&:title)    
+    assert_equal ["Second"], presenter.all.map(&:title)
   end
 end

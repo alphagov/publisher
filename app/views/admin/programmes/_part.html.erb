@@ -1,7 +1,7 @@
 <div class="accordion-group part">
   <div class="accordion-heading">
     <a class="accordion-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug %>">
-      <i class="icon-chevron-down"></i> 
+      <i class="icon-chevron-down"></i>
       <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
     </a>
   </div>
@@ -13,17 +13,17 @@
         <div class="span8">
 
           <%= f.inputs do %>
-            <%= f.input :title, 
-                        :input_html => { :class => 'span7', :disabled => true }, 
+            <%= f.input :title,
+                        :input_html => { :class => 'span7', :disabled => true },
                         :required => true %>
 
-            <%= f.input :body, 
-                        :as => :text, 
-                        :required => true, 
+            <%= f.input :body,
+                        :as => :text,
+                        :required => true,
                         :input_html => { :class => 'span7', :disabled => @resource.published? } %>
 
-            <%= f.input :slug, 
-                        :input_html => { :class => 'span7', :disabled => true }, 
+            <%= f.input :slug,
+                        :input_html => { :class => 'span7', :disabled => true },
                         :required => true %>
 
             <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => true } %>

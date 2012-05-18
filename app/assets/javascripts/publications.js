@@ -43,7 +43,7 @@ $(function () {
 
   /* Apparently a lock variable to prevent multiple form submissions */
   var submitted_forms = false;
-  
+
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
     the edition form (such as by clicking the "Edit in Panopticon" link)
@@ -59,7 +59,7 @@ $(function () {
     edition_form_dirty = false;
     return true;
   });
-  
+
   $(window).bind('beforeunload', function() {
     if (edition_form_dirty) {
       return 'You have unsaved changes to this edition.';
@@ -81,7 +81,7 @@ $(function () {
           been submitted
         */
         edition_form_dirty = false;
-        this_form.trigger("submit");        
+        this_form.trigger("submit");
       });
     }
 
