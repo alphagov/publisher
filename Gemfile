@@ -73,9 +73,6 @@ end
 
 group :development do
   gem 'passenger'
-  if ENV['RUBY_DEBUG']
-    gem 'ruby-debug19'
-  end
 end
 
 group :test do
