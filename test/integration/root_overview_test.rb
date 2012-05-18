@@ -2,8 +2,6 @@ require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
   def filter_by_user(option)
-    visit "/admin"
-
     within ".user-filter-form" do
       select option, from: "Filter by user"
       click_on "Filter"
@@ -12,7 +10,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   def filter_by_title(substring)
-    visit "/admin"
     within ".title-filter-form" do
       fill_in "Filter by title", with: substring
       click_on "Filter"
@@ -37,6 +34,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
+
+    visit "/admin"
 
     filter_by_user("All")
 
@@ -76,7 +75,22 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     FactoryGirl.create(:guide_edition, :title => "YYY")
 
     filter_by_title("xXx")
+
     assert page.has_content?("XXX")
     assert page.has_no_content?("YYY")
+  end
+
+  test "filtering by title content should not lose the active section" do
+    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
+      to_return(status: 200, body: "{}", headers: {})
+
+    FactoryGirl.create(:user)
+
+    visit "/admin"
+    click_on "Amends needed"
+    
+    filter_by_title("xXx")
+
+    assert page.has_css?('h1', text: "Amends needed")
   end
 end

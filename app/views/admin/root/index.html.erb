@@ -35,6 +35,7 @@
         </div><!--/.well -->
 
         <form method="GET" action="/admin" class="user-filter-form">
+          <%= hidden_field_tag :list, params[:list] %>
           <label for="user_filter" class="visuallyhidden">Filter by user</label>
           <%=
             select_tag("user_filter", options_for_select(
@@ -45,7 +46,8 @@
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
         <form method="GET" action="/admin" class="title-filter-form">
-          <label for="title_filter">Filter by title</label>
+          <%= hidden_field_tag :list, params[:list] %>
+          <label for="title_filter" class="visuallyhidden">Filter by title</label>
           <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
