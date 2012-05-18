@@ -36,6 +36,7 @@
 
         <form method="GET" action="/admin" class="user-filter-form">
           <%= hidden_field_tag :list, params[:list] %>
+          <%= hidden_field_tag :title_filter, params[:title_filter] %>
           <label for="user_filter" class="visuallyhidden">Filter by user</label>
           <%=
             select_tag("user_filter", options_for_select(
