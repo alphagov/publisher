@@ -34,16 +34,19 @@
   </div><!--/.span12 -->
 </div><!--/.row-fluid -->
 
-<%= javascript_include_tag '/publisher-assets/javascripts/publications.js' %>
-<script type="text/javascript" charset="utf-8">
-  $(function () {
-    $('#expectation_text').change(function () {
-      var title_field = $(this);
-      var slug_field = $('#expectation_css_class');
-      if (slug_field.text() == '') {
-        slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
-      }
+<% content_for :extra_javascript do %>
+  <%= javascript_include_tag 'publications.js' %>
+
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+      $('#expectation_text').change(function () {
+        var title_field = $(this);
+        var slug_field = $('#expectation_css_class');
+        if (slug_field.val() == '') {
+          slug_field.val(GovUKGuideUtils.convertToSlug(title_field.val()));
+        }
+      })
     })
-  })
-</script>
+  </script>
+<% end %>
 <% content_for :page_title, "Manage expectations" %>
