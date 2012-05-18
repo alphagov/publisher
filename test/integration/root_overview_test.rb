@@ -1,7 +1,7 @@
 require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
-  def filter_by(option)
+  def filter_by_user(option)
     visit "/admin"
 
     within ".user-filter-form" do
@@ -9,6 +9,14 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
       click_on "Filter"
     end
     click_on "Lined up"
+  end
+
+  def filter_by_title(substring)
+    visit "/admin"
+    within ".title-filter-form" do
+      fill_in "Filter by title", with: substring
+      click_on "Filter"
+    end
   end
 
   test "filtering by assigned user" do
@@ -30,19 +38,19 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob.assign(x, alice)
     bob.assign(y, charlie)
 
-    filter_by("All")
+    filter_by_user("All")
 
     assert page.has_content?("XXX")
     assert page.has_content?("YYY")
     assert page.has_content?("ZZZ")
 
-    filter_by("Nobody")
+    filter_by_user("Nobody")
 
     assert page.has_no_content?("XXX")
     assert page.has_no_content?("YYY")
     assert page.has_content?("ZZZ")
 
-    filter_by("Charlie")
+    filter_by_user("Charlie")
 
     assert page.has_no_content?("XXX")
     assert page.has_content?("YYY")
@@ -57,5 +65,18 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?("XXX")
     assert page.has_content?("YYY")
     assert page.has_no_content?("ZZZ")
+  end
+
+  test "filtering by title content" do
+    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
+      to_return(status: 200, body: "{}", headers: {})
+
+    FactoryGirl.create(:user)
+    FactoryGirl.create(:guide_edition, :title => "XXX")
+    FactoryGirl.create(:guide_edition, :title => "YYY")
+
+    filter_by_title("xXx")
+    assert page.has_content?("XXX")
+    assert page.has_no_content?("YYY")
   end
 end

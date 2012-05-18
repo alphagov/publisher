@@ -44,8 +44,8 @@
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
-        <form method="GET" action="/admin">
-          <label for="title-filter">Filter by title</label>
+        <form method="GET" action="/admin" class="title-filter-form">
+          <label for="title_filter">Filter by title</label>
           <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
