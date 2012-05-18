@@ -1,23 +1,26 @@
 Hello,
 
-Please check the following item for factual accuracy:
+The following piece of mainstream GOV.UK content is ready to be checked for factual accuracy:
 
 Title: <%= @edition.title %>
 <%= "#{Plek.current.find("publication-preview")}/#{@edition.slug}?edition=#{@edition.version_number}" %>
 
-If you spot something that's factually incorrect reply to this email with your comments:
+You will need your GOV.UK user name and password to view the content.
+
+If you or your colleagues spot something that's factually incorrect please reply to this email with comments:
 
 - directing us to any specific instances, e.g. part 2, subheading 3
 - explaining what the problem is, e.g. the text implies a legal obligation, when there isn't one
 
 Please don't rewrite the text - just point out any factual errors.  We will rewrite accordingly.
 
-Please respond within five working days.  If we don't hear from you, we will assume you are happy with the content's accuracy.
+Please respond within ten working days.  If you may not be able to meet this deadline let us know as soon as possible.
+
+PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS:
+<%= @edition.fact_check_email_address %>
+This will ensure they are logged in the right place in our system.
 
 If you've forgotten your username and password, please email govuk-feedback@digital.cabinet-office.gov.uk.
 
-PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: <%= @edition.fact_check_email_address %>
-
-
-Thanks,
+Many thanks,
 GOV.UK editorial team
