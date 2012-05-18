@@ -5,4 +5,6 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 require 'ci/reporter/rake/test_unit' if Rails.env.test?
 
+Rake.application.options.trace = true
+
 Publisher::Application.load_tasks
