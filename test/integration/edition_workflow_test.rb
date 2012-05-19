@@ -85,20 +85,36 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     page.has_xpath? button_selector(text)
   end
 
-  def send_action(guide, button_text, message)
+  def send_for_generic_action(guide, button_text, &block)
     visit_guide guide
     action_button = find_button button_text
 
     assert (not action_button['disabled'])
     action_button.click
 
-    within :css, action_button['href'] do
-      fill_in "Comment", with: message
-      click_on "Send"
-    end
+    within :css, action_button['href'], &block
 
     wait_until { page.has_content? "updated" }
     guide.reload
+  end
+
+  def send_for_fact_check(guide)
+    button_text = 'Fact check'
+    email = 'test@example.com'
+    message = 'Let us know what you think'
+
+    send_for_generic_action(guide, button_text) do
+      fill_in "Comment", with: message
+      fill_in "Email", with: email
+      click_on "Send"
+    end
+  end
+
+  def send_action(guide, button_text, message)
+    send_for_generic_action(guide, button_text) do
+      fill_in "Comment", with: message
+      click_on "Send"
+    end
   end
 
   def submit_for_review(guide, options={message: "I think this is done"})
@@ -135,6 +151,15 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     submit_for_review guide
   end
 
+  def get_to_fact_check_received(guide, owner)
+    get_to_review guide, owner
+    login_as "Bob"
+    send_action guide, "OK for publication", "Yup, looks good"
+    send_for_fact_check guide
+    User.new.receive_fact_check(guide, comment: "Fantastic stuff, well done.")
+    guide.reload
+  end
+
   test "should show and update a guide's assigned person" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     fill_in_parts guide
@@ -169,7 +194,6 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   end
 
   test "should update progress of a guide" do
-
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
@@ -247,6 +271,17 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     login_as "Bob"
     send_action guide, "OK for publication", "Yup, looks good"
+    filter_for "All"
+    view_filtered_list "Ready"
+    assert page.has_content? guide.title
+  end
+
+  test "can progress from fact check" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    get_to_fact_check_received guide, "Alice"
+    visit_guide guide    
+    
+    send_action guide, "Minor or no changes required", "Hurrah!"
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
