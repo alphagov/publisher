@@ -45,11 +45,8 @@
       <i class="icon-lock" title="Locked view for this publication"></i>
     <% end %>
   </td>
-  <td class="icon">
-    <% #duplicate_admin_edition_path(publication) %>
-    <%= link_to "/admin/editions/#{publication.id}/duplicate" do %>
-      <i class="icon-plus" title="Create new edition of this publication"></i>
-    <% end %>
+  <td class="duplicate icon">
+    <%= button_to "Create new edition of this publication", duplicate_admin_edition_path(publication) %>
   </td>
   <td class="icon">
     <%= link_to preview_edition_path(publication) do %>

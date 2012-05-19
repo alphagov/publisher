@@ -287,4 +287,13 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert page.has_content? guide.title
   end
 
+  test "can create a new edition from the listings screens" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'published')
+    filter_for "All"
+    view_filtered_list "Published"
+
+    click_button "Create new edition of this publication"
+    assert page.has_content? "New edition created"
+  end
+
 end
