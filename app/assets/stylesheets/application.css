@@ -44,9 +44,9 @@ td.icon {
   width: 520px;
 }
 
-/* tablesorter styles */
+/* table sorting styles */
 
-th.header { 
+th .sortable { 
   background-image: url(/assets/bg.gif);     
   cursor: pointer; 
   background-repeat: no-repeat; 
@@ -54,12 +54,18 @@ th.header {
   padding-right: 20px; 
 }
 
-th.headerSortUp { 
+th .asc { 
   background-image: url(/assets/asc.gif); 
   background-color: #eee;
 }
 
-th.headerSortDown { 
+th .desc { 
   background-image: url(/assets/desc.gif); 
   background-color: #eee;
+}
+
+th .current {
+  padding-right: 20px;
+  background-repeat: no-repeat;
+  background-position: right center;
 }

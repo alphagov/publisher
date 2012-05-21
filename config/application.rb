@@ -30,7 +30,7 @@ module Publisher
         application.css bootstrap.min.css bootstrap-responsive.min.css
 
         application.js bootstrap.min.js form-tools.js jquery.min.js
-        jquery.mustache.js jquery.tablesorter.min.js multi-part.js publications.js
+        jquery.mustache.js multi-part.js publications.js
 
         glyphicons-halflings-white.png glyphicons-halflings.png
         header-crown.png icon-answer.png icon-guide.png icon-localtransaction.png

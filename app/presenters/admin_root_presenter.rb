@@ -1,12 +1,12 @@
 class AdminRootPresenter
-  def initialize(user)
+  def initialize(whole_editions, user)
     @scope = case user
     when :all
-      WholeEdition
+      whole_editions
     when :nobody
-      WholeEdition.assigned_to(nil)
+      whole_editions.assigned_to(nil)
     else
-      WholeEdition.assigned_to(user)
+      whole_editions.assigned_to(user)
     end
   end
 

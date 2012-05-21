@@ -1,14 +1,14 @@
 <table class="table table-striped table-bordered table-condensed" summary="List of &ldquo;Archived&rdquo; content">
   <thead>
     <tr>
-      <th scope="col">Format</th>
-      <th scope="col">Biz?</th>
-      <th scope="col" class="span4">Title</th>
-      <th scope="col">Updated</th>
-      <th scope="col" class="span2">Assigned to</th>
-      <th scope="col" class="span2">Created by</th>
-      <th scope="col">Section</th>
-      <th scope="col">Archived by</th>
+      <th scope="col"><%= sortable "_type", "Format" %></th>
+      <th scope="col"><%= sortable "business_proposition", "Biz?" %></th>
+      <th scope="col" class="span4"><%= sortable "title" %></th>
+      <th scope="col"><%= sortable "updated_at", "Updated" %></th>
+      <th scope="col" class="span2"><%= sortable "assignee", "Assigned to" %></th>
+      <th scope="col" class="span2"><%= sortable "creator", "Created by" %></th>
+      <th scope="col"><%= sortable "section" %></th>
+      <th scope="col"><%= sortable "archiver", "Archived by" %></th>
       <th scope="col">View</th>
       <th scope="col">Edit</th>
       <th scope="col">New</th>
@@ -19,20 +19,3 @@
     <%= render :collection => @presenter.archived, :partial => 'publication', :locals => {:tab => :archived}  %>
   </tbody>
 </table>
-
-<%= content_for :extra_javascript do %>
-  <script type="text/javascript">
-    $(function () {
-      $("table").tablesorter({
-        headers: {
-          // increment from 0 for columns you wish to not sort
-          0: { sorter: false },
-          8: { sorter: false },
-          9: { sorter: false },
-          10: { sorter: false },
-          11: { sorter: false }
-        }
-      });
-    });
-  </script>
-<% end %>
