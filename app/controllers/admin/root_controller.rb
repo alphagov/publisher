@@ -16,10 +16,13 @@ class Admin::RootController < Admin::BaseController
     end
 
     session[:user_filter] = @user_filter
+    
     whole_editions = WholeEdition.order_by([sort_column, sort_direction])
+        .page(params[:page])
+        .per(20)
     @presenter = AdminRootPresenter.new(whole_editions, user)
 
-    if params[:title_filter]
+    if ! params[:title_filter].blank?
       @presenter.filter_by_title_substring(params[:title_filter])
     end
   end

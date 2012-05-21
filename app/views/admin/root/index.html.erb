@@ -56,9 +56,9 @@
       </div>
 
       <div id="publication-list-container" class="span10">
-
+        <%= paginate @presenter.send(@list) %>
         <%= render @list %>
-
+        <%= paginate @presenter.send(@list) %>
       </div><!--./span10 -->
 
     </div><!--./row-fluid -->

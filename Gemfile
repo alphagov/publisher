@@ -45,6 +45,7 @@ gem 'has_scope'
 gem 'stomp', '1.1.9'
 gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
+gem 'kaminari', '0.13.0'
 
 gem "govuk_content_models"
 
