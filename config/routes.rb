@@ -15,6 +15,8 @@ Publisher::Application.routes.draw do
       end
     end
 
+    match 'my_stuff' => 'my_stuff#index'
+
     resources :publications
     match 'overview' => 'overview#index'
     root :to => 'root#index'
