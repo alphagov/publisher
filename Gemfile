@@ -47,7 +47,11 @@ gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
 gem 'kaminari', '0.13.0'
 
-gem "govuk_content_models"
+if ENV['CONTENT_MODELS_DEV']
+  gem "govuk_content_models", :path => '../govuk_content_models'
+else
+  gem "govuk_content_models"
+end
 
 if ENV['CDN_DEV']
   gem 'cdn_helpers', :path => '../cdn_helpers'
