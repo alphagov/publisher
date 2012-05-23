@@ -1,7 +1,7 @@
 #encoding: utf-8
 require 'integration_test_helper'
 
-class LicenceCreationTest < ActionDispatch::IntegrationTest
+class LicenceCreateEditTest < ActionDispatch::IntegrationTest
   setup do
     panopticon_has_metadata(
       "id" => 2358,
