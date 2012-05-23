@@ -11,3 +11,4 @@ test/reports
 *iml
 *.daemonette-dump
 data/local_interactions.csv
+config/initializers/dev_*.rb
