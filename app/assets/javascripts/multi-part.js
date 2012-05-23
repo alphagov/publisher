@@ -3,6 +3,17 @@ $(function() {
   // collapse the parts using the bootstrap accordion
   $(".collapse").collapse();
 
+  var sortable_opts = {
+    axis: "y",
+    handle: "a.accordion-toggle",
+    stop: function() {
+      $('.part').each(function (i, elem) {
+        $(elem).find('input.order').val(i + 1);
+      });
+    }
+  }
+  $('#parts').sortable(sortable_opts);
+
   // simulate a click on the first part to open it
   $('#parts .part .accordion-body').first().collapse('show');
 
