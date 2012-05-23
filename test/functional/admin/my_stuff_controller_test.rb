@@ -9,4 +9,27 @@ class Admin::MyStuffControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   end
+
+  test "should show commented editions" do
+    @guide = FactoryGirl.create(:guide_edition)
+    FactoryGirl.create(:guide_edition)
+
+    @user.record_note @guide, "I like this edition very much"
+    get :index
+
+    assert_response :success
+    assert_equal [@guide], assigns[:editions].to_a
+  end
+
+  test "should show assigned editions" do
+    @guide = FactoryGirl.create(:guide_edition) do |edition|
+      edition.assigned_to = @user
+      edition.save!
+    end
+
+    get :index
+
+    assert_response :success
+    assert_equal [@guide], assigns[:editions].to_a
+  end
 end
