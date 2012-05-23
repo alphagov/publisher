@@ -83,3 +83,12 @@ th .current {
   background-repeat: no-repeat;
   background-position: right center;
 }
+
+#parts .part a.accordion-toggle {
+  background-color: transparent;
+  -webkit-transition: background-color 0.6s ease;
+}
+  
+#parts .part a.accordion-toggle.highlight {
+  background-color: #ff9;
+}
