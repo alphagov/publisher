@@ -25,4 +25,5 @@ Publisher::Application.routes.draw do
   end
 
   post "/local_transactions/verify_snac", :to => "publications#verify_snac"
+  root to: redirect("/admin")
 end
