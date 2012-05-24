@@ -3,7 +3,7 @@ require_relative '../integration_test_helper'
 class RootOverviewTest < ActionDispatch::IntegrationTest
   def filter_by_user(option)
     within ".user-filter-form" do
-      select option, from: "Filter by user"
+      select option, from: "Filter by assignee"
       click_on "Filter"
     end
     click_on "Lined up"
@@ -58,7 +58,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     visit "/admin"
 
     # Should remember last selection in session
-    assert_equal charlie.uid, page.find_field("Filter by user").value
+    assert_equal charlie.uid, page.find_field("Filter by assignee").value
 
     click_on "Lined up"
     assert page.has_no_content?("XXX")
