@@ -13,9 +13,6 @@ class MyStuffTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by assigned user" do
-    # stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-    #   to_return(status: 200, body: "{}", headers: {})
-
     @guide = FactoryGirl.create(:guide_edition)
     @user.record_note @guide, "I like this guide"
 
