@@ -1,6 +1,6 @@
 require_relative '../integration_test_helper'
 
-class MyStuffTest < ActionDispatch::IntegrationTest
+class UserSearchTest < ActionDispatch::IntegrationTest
 
   def setup
     alice = FactoryGirl.create(:user, name: "Alice", uid: "alice")
@@ -16,7 +16,7 @@ class MyStuffTest < ActionDispatch::IntegrationTest
     @guide = FactoryGirl.create(:guide_edition)
     @user.record_note @guide, "I like this guide"
 
-    visit "/admin/my_stuff"
+    visit "/admin/user_search"
 
     assert page.has_content? @guide.title
   end

@@ -15,7 +15,7 @@ Publisher::Application.routes.draw do
       end
     end
 
-    match 'my_stuff' => 'my_stuff#index'
+    match 'user_search' => 'user_search#index'
 
     resources :publications
     match 'overview' => 'overview#index'

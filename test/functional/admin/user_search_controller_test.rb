@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Admin::MyStuffControllerTest < ActionController::TestCase
+class Admin::UserSearchControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
   end
