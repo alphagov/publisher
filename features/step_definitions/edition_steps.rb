@@ -10,7 +10,6 @@ Given /I am signed in to Publisher/ do
 end
 
 Given /(.*?) editions (for business )?exist in Publisher/ do |state, business|
-  puts business
   @editions = FactoryGirl.create_list(
     :edition,
     10,
