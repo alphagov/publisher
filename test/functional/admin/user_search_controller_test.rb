@@ -23,8 +23,7 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
 
   test "should show assigned editions" do
     @guide = FactoryGirl.create(:guide_edition) do |edition|
-      edition.assigned_to = @user
-      edition.save!
+      @user.assign(edition, @user)
     end
 
     get :index
