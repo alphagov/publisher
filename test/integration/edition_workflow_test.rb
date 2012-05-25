@@ -89,7 +89,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     visit_guide guide
     action_button = find_button button_text
 
-    assert (not action_button['disabled'])
+    refute action_button['disabled']
     action_button.click
 
     within :css, action_button['href'], &block
@@ -131,8 +131,8 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   def view_filtered_list(filter_label)
     visit "/admin"
     filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
-    assert (not filter_link.nil?), "Tab link #{filter_label} not found"
-    assert (not filter_link['href'].nil?), "Tab link #{filter_label} has no target"
+    refute filter_link.nil?, "Tab link #{filter_label} not found"
+    refute filter_link['href'].nil?, "Tab link #{filter_label} has no target"
 
     # puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
     # puts "Tab link: #{tab_link.inspect}"
@@ -240,7 +240,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     visit_guide guide
     wait_until { page.has_selector? ".alert-info" }
-    assert (not has_button? "OK for publication")
+    refute has_button? "OK for publication"
   end
 
   test "can review another's guide" do

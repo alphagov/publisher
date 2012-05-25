@@ -4,6 +4,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'simplecov'
 
 require 'rails/test_help'
+require 'minitest/unit'
 require 'mocha'
 require 'database_cleaner'
 require 'webmock/test_unit'
@@ -24,6 +25,8 @@ class ActiveSupport::TestCase
   # fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  include MiniTest::Assertions
 
   def clean_db
     DatabaseCleaner.clean
