@@ -48,6 +48,9 @@ module Api
     class Programme < Base
     end
 
+    class Licence < Base
+    end
+
     class Answer < Base
       def self.extra_fields
         [:body]

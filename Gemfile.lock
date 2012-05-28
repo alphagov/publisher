@@ -325,7 +325,7 @@ DEPENDENCIES
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.7)
-  govuk_content_models
+  govuk_content_models (~> 0.0.9)
   graylog2_exceptions
   has_scope
   inherited_resources
