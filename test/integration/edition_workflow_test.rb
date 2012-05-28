@@ -289,7 +289,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
 
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
-    assert page.has_content? "We have received a fact check response for this edition."
+    assert page.has_content? "Fact check was skipped for this edition."
 
     filter_for "All"
     view_filtered_list "Fact check received"
