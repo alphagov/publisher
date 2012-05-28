@@ -18,7 +18,7 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
     get :index
 
     assert_response :success
-    assert_equal [@guide], assigns[:editions].to_a
+    assert_equal [@guide.id], assigns[:editions].map(&:id)
   end
 
   test "should show assigned editions" do
@@ -29,6 +29,6 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
     get :index
 
     assert_response :success
-    assert_equal [@guide], assigns[:editions].to_a
+    assert_equal [@guide.id], assigns[:editions].map(&:id)
   end
 end
