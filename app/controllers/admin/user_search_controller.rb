@@ -14,6 +14,10 @@ class Admin::UserSearchController < Admin::BaseController
       {'actions.recipient_id' => user.id}
     ).excludes(state: 'archived').order_by(last_updated_at: -1)
 
-    @editions = editions.map { |e| UserSearchEditionDecorator.new e, user }
+    # Need separate assignments here because Kaminari won't preserve pagination
+    # info across a map, and we don't want to load every edition and paginate
+    # the resulting array
+    @page_info = editions.page(params[:page]).per(20)
+    @editions = @page_info.map { |e| UserSearchEditionDecorator.new e, user }
   end
 end
