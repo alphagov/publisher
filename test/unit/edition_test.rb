@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class EditionTest < ActiveSupport::TestCase
-  setup do
-    panopticon_has_metadata("id" => '2356', "kind" => "answer", "slug" => 'childcare', "name" => "Childcare")
-  end
 
   def template_answer(version_number = 1)
     AnswerEdition.create(state: 'ready', slug: "childcare", panopticon_id: 1,
@@ -36,9 +33,18 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should update Rummager on deletion" do
-    publication = FactoryGirl.create(:guide_edition, :slug => "hedgehog-topiary")
+    artefact = FactoryGirl.create(:artefact,
+        slug: "hedgehog-topiary",
+        kind: "guide",
+        name: "Foo bar",
+        owning_app: "publisher",
+    )
+
+    user = User.create
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user, {})
+
     Rummageable.expects(:delete).with("/hedgehog-topiary")
-    publication.destroy
+    edition.destroy
   end
 
   test "struct for search index" do

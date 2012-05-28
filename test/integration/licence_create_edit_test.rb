@@ -3,18 +3,18 @@ require 'integration_test_helper'
 
 class LicenceCreateEditTest < ActionDispatch::IntegrationTest
   setup do
-    panopticon_has_metadata(
-      "id" => 2358,
-      "slug" => "foo-bar",
-      "kind" => "licence",
-      "name" => "Foo bar"
+    @artefact = FactoryGirl.create(:artefact,
+        slug: "hedgehog-topiary",
+        kind: "licence",
+        name: "Foo bar",
+        owning_app: "publisher",
     )
 
     setup_users
   end
 
   should "create a new LicenceEdition" do
-    visit "/admin/publications/2358"
+    visit "/admin/publications/#{@artefact.id}"
 
     assert page.has_content? "We need a bit more information to create your licence."
     assert page.has_content? "Licence identifier can't be blank"
@@ -25,13 +25,13 @@ class LicenceCreateEditTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
     l = LicenceEdition.first
-    assert_equal '2358', l.panopticon_id
+    assert_equal @artefact.id.to_s, l.panopticon_id
     assert_equal 'AB1234', l.licence_identifier
   end
 
   should "allow editing LicenceEdition" do
     licence = FactoryGirl.create(:licence_edition,
-                                 :panopticon_id => "2358",
+                                 :panopticon_id => @artefact.id,
                                  :title => "Foo bar",
                                  :licence_identifier => "ab2345",
                                  :licence_overview => "Licence overview content")

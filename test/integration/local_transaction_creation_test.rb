@@ -6,11 +6,11 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
     LocalAuthority.create(snac: 'ABCDE')
 
-    panopticon_has_metadata(
-      "id" => 2357,
-      "slug" => "foo-bar",
-      "kind" => "local_transaction",
-      "name" => "Foo bar"
+    @artefact = FactoryGirl.create(:artefact,
+        slug: "hedgehog-topiary",
+        kind: "local_transaction",
+        name: "Foo bar",
+        owning_app: "publisher",
     )
 
     setup_users
@@ -21,7 +21,7 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
 
     email_count_before_start = ActionMailer::Base.deliveries.count
 
-    visit "/admin/publications/2357"
+    visit "/admin/publications/#{@artefact.id}"
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
@@ -33,7 +33,7 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
 
   test "creating a local transaction with a bad LGSL code displays an appropriate error" do
 
-    visit "/admin/publications/2357"
+    visit "/admin/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in "Lgsl code", :with => "2"
@@ -45,7 +45,7 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
 
   test "creating a local transaction from panopticon requests an LGSL code" do
 
-    visit "/admin/publications/2357"
+    visit "/admin/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in 'Lgsl code', :with => '1'

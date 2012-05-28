@@ -3,14 +3,20 @@ require 'test_helper'
 class Admin::EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-
     @guide = FactoryGirl.create(:guide_edition)
-    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: '123')
-    @programme = ProgrammeEdition.create(title: "test", slug: "test", panopticon_id: 12345)
+    artefact1 = FactoryGirl.create(:artefact, slug: "test",
+        kind: "transaction",
+        name: "test",
+        owning_app: "publisher")
+    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
+
+    artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+        kind: "programme",
+        name: "test",
+        owning_app: "publisher")
+    @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
-    panopticon_has_metadata("id" => "test", "name" => "FOOOO")
-    panopticon_has_metadata("id" => "12345", "name" => "Test", "slug" => "test")
   end
 
   test "it renders the lgsl edit form successfully if creation fails" do

@@ -19,8 +19,9 @@ Given /(.*?) editions (for business )?exist in Publisher/ do |state, business|
 end
 
 Given /I have an artefact in Panopticon/ do
-  @panopticon_id = 123
-  panopticon_has_metadata( "id" => @panopticon_id, "name" => "Test", "slug" => "test", "kind" => "answer", "department" => "GDS", "section" => "Example content" )
+  tag = FactoryGirl.create(:tag, tag_id: "example-content", tag_type: "section", title: "Example content")
+  artefact = FactoryGirl.create(:artefact, "name" => "Test", "slug" => "test", "kind" => "answer", "department" => "GDS", "primary_section" => "example-content", "owning_app" => "publisher")
+  @panopticon_id = artefact.id
 end
 
 And /I have clicked the create publication button in Panopticon/ do
