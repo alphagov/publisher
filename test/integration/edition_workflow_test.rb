@@ -292,7 +292,7 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Fact check was skipped for this edition."
 
     filter_for "All"
-    view_filtered_list "Fact check received"
+    view_filtered_list "Ready"
     assert page.has_content? guide.title
   end
 
@@ -315,5 +315,4 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     click_button "Create new edition of this publication"
     assert page.has_content? "New edition created"
   end
-
 end
