@@ -102,7 +102,7 @@ class Admin::UserSearchController < Admin::BaseController
       {'assigned_to_id' => user.id},
       {'actions.requester_id' => user.id},
       {'actions.recipient_id' => user.id}
-    )
+    ).excludes(state: 'archived').order_by(last_updated_at: -1)
 
     @editions = editions.map { |e| UserSearchEdition.new e, user }
   end
