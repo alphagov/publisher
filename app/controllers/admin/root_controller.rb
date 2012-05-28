@@ -16,11 +16,11 @@ class Admin::RootController < Admin::BaseController
     end
 
     session[:user_filter] = @user_filter
-    
-    whole_editions = WholeEdition.order_by([sort_column, sort_direction])
+
+    editions = Edition.order_by([sort_column, sort_direction])
         .page(params[:page])
         .per(20)
-    @presenter = AdminRootPresenter.new(whole_editions, user)
+    @presenter = AdminRootPresenter.new(editions, user)
 
     if ! params[:title_filter].blank?
       @presenter.filter_by_title_substring(params[:title_filter])
@@ -28,11 +28,11 @@ class Admin::RootController < Admin::BaseController
   end
 
   private
-  
+
     def sort_column
-      WholeEdition.fields.keys.include?(params[:sort]) ? params[:sort] : "updated_at"
+      Edition.fields.keys.include?(params[:sort]) ? params[:sort] : "updated_at"
     end
-    
+
     def sort_direction
       %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
     end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class WholeEditionTest < ActiveSupport::TestCase
+class EditionTest < ActiveSupport::TestCase
   setup do
     panopticon_has_metadata("id" => '2356', "kind" => "answer", "slug" => 'childcare', "name" => "Childcare")
   end
@@ -49,7 +49,7 @@ class WholeEditionTest < ActiveSupport::TestCase
 
   test "search index for all publications" do
     dummy_publication = template_published_answer
-    out = WholeEdition.search_index_all
+    out = Edition.search_index_all
     assert_equal 1, out.count
     assert_equal ["title", "link", "format", "description", "indexable_content", "section", "subsection"], out.first.keys
   end

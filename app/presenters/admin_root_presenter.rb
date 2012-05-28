@@ -1,12 +1,12 @@
 class AdminRootPresenter
-  def initialize(whole_editions, user)
+  def initialize(editions, user)
     @scope = case user
     when :all
-      whole_editions
+      editions
     when :nobody
-      whole_editions.assigned_to(nil)
+      editions.assigned_to(nil)
     else
-      whole_editions.assigned_to(user)
+      editions.assigned_to(user)
     end
   end
 
@@ -16,7 +16,7 @@ class AdminRootPresenter
   def all
     @scope
   end
-  
+
   [:lined_up, :draft, :amends_needed, :in_review, :fact_check, :fact_check_received, :ready, :published, :archived].each do |state|
     define_method state do
       scope.send(state.to_s)

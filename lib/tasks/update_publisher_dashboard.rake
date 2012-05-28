@@ -20,7 +20,7 @@ task :update_publisher_dashboard => :environment do
     @index = {}
     @index[OverviewDashboard::TOTAL_KEY] = initialize_states
 
-    WholeEdition.all.each do |edition|
+    Edition.all.each do |edition|
       if edition.latest_edition?
         state = edition.state
         attribute_value = filter_empty_values(edition.send(attribute))

@@ -28,7 +28,7 @@ $(function () {
   var saved = false;
 
   $('#save-edition').submit(function () {
-    var edition_form = $('form.whole_edition');
+    var edition_form = $('form.edition');
     if (! saved) {
       saved = true;
       edition_form.trigger('submit');
@@ -50,12 +50,12 @@ $(function () {
   */
   var edition_form_dirty = false;
 
-  $('form.whole_edition').change(function () {
+  $('form.edition').change(function () {
     submitted_forms = false;
     edition_form_dirty = true;
   });
 
-  $('form.whole_edition').submit(function() {
+  $('form.edition').submit(function() {
     edition_form_dirty = false;
     return true;
   });
@@ -69,7 +69,7 @@ $(function () {
   $('.modal').modal('hide');
 
   $('.also_save_edition').submit(function () {
-    var edition_form = $('form.whole_edition');
+    var edition_form = $('form.edition');
     var this_form = $(this);
 
     if (! submitted_forms) {

@@ -24,7 +24,7 @@ class FactCheckMessageProcessor
   end
 
   def process_for_publication(publication_id)
-    edition = WholeEdition.find(publication_id)
+    edition = Edition.find(publication_id)
     progress_publication_edition(edition)
     return true
   rescue BSON::InvalidObjectId, Mongoid::Errors::DocumentNotFound

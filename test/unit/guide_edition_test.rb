@@ -16,7 +16,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_whole_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    guide = user.create_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
     edition = guide
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})

@@ -1,5 +1,5 @@
 class Admin::NotesController < Admin::BaseController
-  belongs_to :whole_edition
+  belongs_to :edition
 
   include Admin::PathsHelper
 

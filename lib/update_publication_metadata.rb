@@ -35,7 +35,7 @@ class UpdatePublicationMetadata
   end
 
   def publications
-    @publications ||= WholeEdition.where(panopticon_id: panopticon_id)
+    @publications ||= Edition.where(panopticon_id: panopticon_id)
   end
 
   def panopticon_id

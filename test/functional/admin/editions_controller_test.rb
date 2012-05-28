@@ -53,7 +53,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
     assert_equal "Guide updated", flash[:notice]
 
-    reloaded = WholeEdition.find(@guide.id)
+    reloaded = Edition.find(@guide.id)
     assert reloaded.fact_check?
   end
 
@@ -66,7 +66,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     post :duplicate, :id => @guide.id,
       :edition  => { :assigned_to_id => bob.id, :kind => 'guide' }
 
-    @new_guide = WholeEdition.where(panopticon_id: @guide.panopticon_id).last
+    @new_guide = Edition.where(panopticon_id: @guide.panopticon_id).last
     assert_equal bob, @new_guide.assigned_to
   end
 
@@ -122,7 +122,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       "id" => "test"
     )
 
-    WholeEdition.expects(:find).returns(@guide)
+    Edition.expects(:find).returns(@guide)
     @guide.stubs(:update_attributes).returns(false)
     @guide.expects(:errors).at_least_once.returns({:title => ['values']})
 

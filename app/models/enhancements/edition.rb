@@ -1,7 +1,7 @@
-require 'marples/model_action_broadcast'
-require 'whole_edition'
+require "marples/model_action_broadcast"
+require "edition"
 
-class WholeEdition
+class Edition
   include Marples::ModelActionBroadcast
   include Admin::BaseHelper
   include Searchable

@@ -15,7 +15,7 @@ class RouterBridge
       begin
         publication_id = publication_hash['_id']
         logger.info("Recieved message for #{publication_hash['title']} #{publication_id}")
-        publication = WholeEdition.find(publication_id)
+        publication = Edition.find(publication_id)
 
         if (publication.nil?)
           logger.warn("Could not find publication #{publication_id}")
