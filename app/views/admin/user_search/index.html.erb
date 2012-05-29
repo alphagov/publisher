@@ -27,7 +27,13 @@
               <th scope="col" class="span1">Format</th>
               <th scope="col" class="span3">Title</th>
               <th scope="col" class="span1">State</th>
-              <th scope="col" class="span3">User&rsquo;s last action</th>
+              <% if @user == current_user %>
+              <th scope="col" class="span3">Your last action</th>
+              <% elsif @user_forename.end_with? "s" %>
+              <th scope="col" class="span3"><%= @user_forename %>&rsquo; last action</th>
+              <% else %>
+              <th scope="col" class="span3"><%= @user_forename %>&rsquo;s last action</th>
+              <% end %>
               <th scope="col" class="span2">Assigned to</th>
               <th scope="col" class="span2">View</th>
             </tr>

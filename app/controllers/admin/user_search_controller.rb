@@ -6,6 +6,10 @@ class Admin::UserSearchController < Admin::BaseController
     @user = params[:user_filter] ? User.find_by_uid(@user_filter) : current_user
     raise ActionController::RoutingError.new('Not Found') unless @user
 
+    # Warning: this works for all our current users, but is likely to break in
+    # future. We should update our user model to have the concept of a forename
+    @user_forename = @user.name.split()[0]
+
     # Including recipient_id on actions will include anything that has been
     # assigned to the user we're looking at, but include the check anyway to
     # account for manual assignments
