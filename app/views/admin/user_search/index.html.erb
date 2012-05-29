@@ -59,6 +59,8 @@
               <td>
                 <% if publication.user_last_action %>
                 <%= publication.user_last_action[:summary] %>
+                <% else %>
+                <span class="placeholder">No actions for <%= @user_forename %> on this edition</span>
                 <% end %>
               </td>
               <td>

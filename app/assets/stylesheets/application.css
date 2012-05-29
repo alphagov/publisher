@@ -87,3 +87,8 @@ th .current {
 #current td {
   background-color: #adf;
 }
+
+/* Placeholder text to explain a blank value */
+.placeholder {
+  color: #ccc;
+}
