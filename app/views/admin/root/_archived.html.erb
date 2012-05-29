@@ -16,6 +16,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render :collection => @presenter.archived, :partial => 'publication', :locals => {:tab => :archived}  %>
+    <%= render :collection => @presenter.archived, :partial => 'publication', :locals => {:tab => :archived, :with => with}  %>
   </tbody>
 </table>

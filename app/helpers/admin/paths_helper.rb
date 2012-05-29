@@ -20,6 +20,10 @@ module Admin::PathsHelper
     "/admin/editions/#{edition.to_param}"
   end
 
+  def view_edition_path(edition)
+    "/admin?with=#{edition.id}"
+  end
+
 protected
   def path_from_edition_class(edition)
     edition.format.underscore.pluralize

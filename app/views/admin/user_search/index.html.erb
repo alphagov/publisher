@@ -28,6 +28,7 @@
               <th scope="col" class="span1">State</th>
               <th scope="col" class="span3">User&rsquo;s last action</th>
               <th scope="col" class="span2">Assigned to</th>
+              <th scope="col" class="span2">View</th>
             </tr>
           </thead>
           <tbody>
@@ -55,6 +56,11 @@
               </td>
               <td>
                 <%= publication.assignee %>
+              </td>
+              <td>
+                <%= link_to view_edition_path(publication) do %>
+                  <i class="icon-chevron-right" title="View this publication in the publication list"></i>
+                <% end %>
               </td>
             </tr>
             <% end %>
