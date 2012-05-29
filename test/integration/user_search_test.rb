@@ -32,7 +32,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     visit "/admin/user_search"
     select other_user.name, from: "Filter by user"
     click_button "Filter"
-    wait_until { page.has_content? "User search" }
+    wait_until { page.has_content? "Search by user" }
 
     assert page.has_content? @guides[0].title
     refute page.has_content? @guides[1].title
