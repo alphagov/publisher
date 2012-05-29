@@ -15,6 +15,10 @@ class Admin::UserSearchController < Admin::BaseController
       {'actions.recipient_id' => @user.id}
     ).excludes(state: 'archived').order_by(last_updated_at: -1)
 
+    unless params[:title_filter].blank?
+      editions = editions.where(title: /#{params[:title_filter]}/i)
+    end
+
     # Need separate assignments here because Kaminari won't preserve pagination
     # info across a map, and we don't want to load every edition and paginate
     # the resulting array

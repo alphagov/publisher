@@ -46,12 +46,7 @@
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
-        <form method="GET" action="/admin" class="title-filter-form">
-          <%= hidden_field_tag :list, params[:list] %>
-          <label for="title_filter" class="visuallyhidden">Filter by title</label>
-          <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
-          <input class="btn btn-primary" type="submit" value="Filter">
-        </form>
+        <%= render partial: "admin/shared/title_filter_form", locals: {action: "/admin", preserve: [:list]} %>
 
       </div>
 
