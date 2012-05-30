@@ -1,4 +1,8 @@
+<% if with && publication.id.to_s == with %>
+<tr id="current">
+<% else %>
 <tr>
+<% end %>
   <td class="icon">
     <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
   </td>

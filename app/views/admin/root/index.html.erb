@@ -37,7 +37,7 @@
         <form method="GET" action="/admin" class="user-filter-form">
           <%= hidden_field_tag :list, params[:list] %>
           <%= hidden_field_tag :title_filter, params[:title_filter] %>
-          <label for="user_filter" class="visuallyhidden">Filter by user</label>
+          <label for="user_filter" class="visuallyhidden">Filter by assignee</label>
           <%=
             select_tag("user_filter", options_for_select(
               [["All", "all"], ["Nobody", "nobody"]] +
@@ -46,19 +46,21 @@
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
-        <form method="GET" action="/admin" class="title-filter-form">
-          <%= hidden_field_tag :list, params[:list] %>
-          <label for="title_filter" class="visuallyhidden">Filter by title</label>
-          <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
-          <input class="btn btn-primary" type="submit" value="Filter">
-        </form>
+        <%= render partial: "admin/shared/title_filter_form", locals: {action: "/admin", preserve: [:list]} %>
 
       </div>
 
       <div id="publication-list-container" class="span10">
+        <% if params[:with] %>
+        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
+        <%= render @list, with: params[:with] %>
+        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
+        <% else %>
         <%= paginate @presenter.send(@list) %>
-        <%= render @list %>
+        <%= render @list, with: nil %>
         <%= paginate @presenter.send(@list) %>
+        <% end %>
+
       </div><!--./span10 -->
 
     </div><!--./row-fluid -->

@@ -1,0 +1,8 @@
+<form method="GET" action="<%= action %>" class="title-filter-form">
+  <% preserve.each do |param| %>
+  <%= hidden_field_tag param, params[param] %>
+  <% end %>
+  <label for="title_filter" class="visuallyhidden">Filter by title</label>
+  <%= text_field_tag "title_filter", params[:title_filter], class: "span2", type: "search" %>
+  <input class="btn btn-primary" type="submit" value="Filter">
+</form>

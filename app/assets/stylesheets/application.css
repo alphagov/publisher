@@ -84,6 +84,15 @@ th .current {
   background-position: right center;
 }
 
+#current td {
+  background-color: #adf;
+}
+
+/* Placeholder text to explain a blank value */
+.placeholder {
+  color: #ccc;
+}
+
 #parts .part a.accordion-toggle {
   background-color: transparent;
   -webkit-transition: background-color 0.6s ease;
