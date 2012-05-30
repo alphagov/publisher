@@ -1,6 +1,7 @@
 class Admin::RootController < Admin::BaseController
   respond_to :html, :json
-  helper_method :sort_column, :sort_direction
+
+  include Admin::ColumnSortable
 
   ITEMS_PER_PAGE = 20
 
@@ -58,14 +59,6 @@ class Admin::RootController < Admin::BaseController
   end
 
 private
-
-  def sort_column
-    WholeEdition.fields.keys.include?(params[:sort]) ? params[:sort] : "updated_at"
-  end
-
-  def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
-  end
 
   def list_parameter_from_state(state)
     STATE_NAME_LISTS[state] || state

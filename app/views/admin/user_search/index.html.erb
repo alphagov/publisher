@@ -25,8 +25,8 @@
           <thead>
             <tr>
               <th scope="col" class="span1">Format</th>
-              <th scope="col" class="span3">Title</th>
-              <th scope="col" class="span1">State</th>
+              <th scope="col" class="span3"><%= sortable "title" %></th>
+              <th scope="col" class="span1"><%= sortable "state" %></th>
               <% if @user == current_user %>
               <th scope="col" class="span3">Your last action</th>
               <% elsif @user_forename.end_with? "s" %>
@@ -34,7 +34,7 @@
               <% else %>
               <th scope="col" class="span3"><%= @user_forename %>&rsquo;s last action</th>
               <% end %>
-              <th scope="col" class="span2">Assigned to</th>
+              <th scope="col" class="span2"><%= sortable "assignee", "Assigned to" %></th>
               <th scope="col" class="span2">View</th>
             </tr>
           </thead>

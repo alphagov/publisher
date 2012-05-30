@@ -1,6 +1,8 @@
 class Admin::UserSearchController < Admin::BaseController
   respond_to :html
 
+  include Admin::ColumnSortable
+
   def index
     @user_filter = params[:user_filter] || current_user.uid
     @user = params[:user_filter] ? User.find_by_uid(@user_filter) : current_user
@@ -17,7 +19,7 @@ class Admin::UserSearchController < Admin::BaseController
       {'assigned_to_id' => @user.id},
       {'actions.requester_id' => @user.id},
       {'actions.recipient_id' => @user.id}
-    ).excludes(state: 'archived').order_by(last_updated_at: -1)
+    ).excludes(state: 'archived').order_by([sort_column, sort_direction])
 
     unless params[:title_filter].blank?
       editions = editions.where(title: /#{params[:title_filter]}/i)
