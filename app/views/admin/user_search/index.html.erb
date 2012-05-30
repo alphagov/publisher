@@ -24,7 +24,7 @@
         <table class="table table-striped table-bordered table-condensed" summary="List of <%= @user.name %>&rsquo;s publications">
           <thead>
             <tr>
-              <th scope="col" class="span1">Format</th>
+              <th scope="col" class="span1"><%= sortable "_type", "Format" %></th>
               <th scope="col" class="span3"><%= sortable "title" %></th>
               <th scope="col" class="span1"><%= sortable "state" %></th>
               <% if @user == current_user %>
