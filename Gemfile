@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 if ENV['BUNDLE_DEV']
-  gem 'gds-sso', :path => '../gds-sso'
+  gem 'gds-sso', path: '../gds-sso'
 else
   gem 'gds-sso', '~> 0.5.2'
 end
@@ -15,7 +15,7 @@ group :passenger_compatibility do
 end
 
 gem 'rails', '3.1.3'
-gem 'aws-ses', :require => 'aws/ses'
+gem 'aws-ses', require: 'aws/ses'
 
 gem 'erubis'
 gem 'plek', '~> 0'
@@ -24,14 +24,14 @@ gem 'graylog2_exceptions'
 gem 'rest-client'
 
 if ENV['MARPLES_DEV']
-  gem 'marples', :path => '../marples'
+  gem 'marples', path: '../marples'
 else
   gem 'marples', '~> 1'
 end
 
 gem 'null_logger'
 gem 'rummageable'
-gem 'daemonette', :git => 'git@github.com:alphagov/daemonette.git'
+gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
 gem 'gds-api-adapters'
 
 gem 'rest-client'
@@ -47,21 +47,25 @@ gem 'null_logger'
 gem 'router-client', '2.0.3', require: 'router/client'
 gem 'kaminari', '0.13.0'
 
-gem "govuk_content_models"
+if ENV['CONTENT_MODELS_DEV']
+  gem "govuk_content_models", :path => '../govuk_content_models'
+else
+  gem "govuk_content_models", "~> 0.0.12"
+end
 
 if ENV['CDN_DEV']
-  gem 'cdn_helpers', :path => '../cdn_helpers'
+  gem 'cdn_helpers', path: '../cdn_helpers'
 else
   gem 'cdn_helpers', '0.9'
 end
 
 if ENV['GOVSPEAK_DEV']
-  gem 'govspeak', :path => '../govspeak'
+  gem 'govspeak', path: '../govspeak'
 else
   gem 'govspeak', '~> 0.8.7'
 end
 
-gem 'exception_notification', '~> 2.4.1', :require => 'exception_notifier'
+gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
 
 gem 'lockfile'
 gem 'whenever'
@@ -81,14 +85,14 @@ group :test do
   gem 'shoulda'
   gem 'database_cleaner'
 
-  gem 'cucumber-rails', :require => false
+  gem 'cucumber-rails', require: false
 
   gem 'capybara', '~> 1.0.0'
   gem "capybara-webkit"
   gem 'launchy'
 
   gem 'webmock'
-  gem 'mocha', :require => false
+  gem 'mocha', require: false
   gem 'factory_girl_rails'
   gem 'faker'
 

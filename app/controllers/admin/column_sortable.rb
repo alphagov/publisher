@@ -11,7 +11,7 @@ module Admin::ColumnSortable
 
 private
   def sort_column
-    WholeEdition.fields.keys.include?(params[:sort]) ? params[:sort] : @@default_sort_column
+    Edition.fields.keys.include?(params[:sort]) ? params[:sort] : @@default_sort_column
   end
 
   def sort_direction

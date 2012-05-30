@@ -1,7 +1,7 @@
-require 'marples/model_action_broadcast'
-require 'whole_edition'
+require "marples/model_action_broadcast"
+require "edition"
 
-class WholeEdition
+class Edition
   include Marples::ModelActionBroadcast
   include Admin::BaseHelper
   include Searchable
@@ -10,5 +10,9 @@ class WholeEdition
   def was_published
     was_published_without_indexing
     update_in_search_index
+  end
+
+  def fact_check_skipped?
+    actions.any? and actions.last.request_type == 'skip_fact_check'
   end
 end

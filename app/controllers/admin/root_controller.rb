@@ -21,7 +21,7 @@ class Admin::RootController < Admin::BaseController
 
     if params[:with]
       begin
-        edition = WholeEdition.find(params[:with])
+        edition = Edition.find(params[:with])
       rescue Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId
         raise ActionController::RoutingError.new('Not Found')
       end
@@ -41,17 +41,17 @@ class Admin::RootController < Admin::BaseController
       user = User.where(uid: @user_filter).first
     end
 
-    whole_editions = WholeEdition.order_by([sort_column, sort_direction])
+    editions = Edition.order_by([sort_column, sort_direction])
 
     if params[:with]
-      item_index = whole_editions.send(edition.state).to_a.index { |e| e.id == edition.id }
+      item_index = editions.send(edition.state).to_a.index { |e| e.id == edition.id }
       current_page = (item_index / ITEMS_PER_PAGE) + 1
     else
       current_page = params[:page]
     end
 
-    whole_editions = whole_editions.page(current_page).per(ITEMS_PER_PAGE)
-    @presenter = AdminRootPresenter.new(whole_editions, user)
+    editions = editions.page(current_page).per(ITEMS_PER_PAGE)
+    @presenter = AdminRootPresenter.new(editions, user)
 
     if ! params[:title_filter].blank?
       @presenter.filter_by_title_substring(params[:title_filter])
@@ -63,4 +63,5 @@ private
   def list_parameter_from_state(state)
     STATE_NAME_LISTS[state] || state
   end
+
 end

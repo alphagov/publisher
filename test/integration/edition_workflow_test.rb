@@ -152,12 +152,16 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
   end
 
   def get_to_fact_check_received(guide, owner)
+    get_to_fact_check(guide, owner)
+    User.new.receive_fact_check(guide, comment: "Fantastic stuff, well done.")
+    guide.reload
+  end
+
+  def get_to_fact_check(guide, owner)
     get_to_review guide, owner
     login_as "Bob"
     send_action guide, "OK for publication", "Yup, looks good"
     send_for_fact_check guide
-    User.new.receive_fact_check(guide, comment: "Fantastic stuff, well done.")
-    guide.reload
   end
 
   test "should show and update a guide's assigned person" do
@@ -276,6 +280,22 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     assert page.has_content? guide.title
   end
 
+  test "can skip fact check" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    get_to_fact_check guide, "Alice"
+    visit_guide guide
+
+    click_button 'Skip Fact Check'
+
+    # This information is not quite correct but it is the current behaviour.
+    # Adding this test as an aid to future improvements
+    assert page.has_content? "Fact check was skipped for this edition."
+
+    filter_for "All"
+    view_filtered_list "Ready"
+    assert page.has_content? guide.title
+  end
+
   test "can progress from fact check" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     get_to_fact_check_received guide, "Alice"
@@ -295,5 +315,4 @@ class EditionWorkflowTest < ActionDispatch::IntegrationTest
     click_button "Create new edition of this publication"
     assert page.has_content? "New edition created"
   end
-
 end

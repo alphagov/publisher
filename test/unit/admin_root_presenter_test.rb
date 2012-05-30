@@ -10,12 +10,12 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   def setup_users
     alice = User.create
-    bob   = User.create
+    bob = User.create
     return alice, bob
   end
 
   test "should filter by draft state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
 
     a = FactoryGirl.create(:guide_edition)
     a.update_attribute(:state, 'draft')
@@ -31,7 +31,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should filter by published state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
 
     a = FactoryGirl.create(:guide_edition)
     assert !a.published?
@@ -45,7 +45,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should filter by archived state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
 
     a = FactoryGirl.create(:guide_edition)
     assert ! a.archived?
@@ -61,7 +61,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should filter by in_review state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     user = User.create
 
     a = FactoryGirl.create(:guide_edition)
@@ -76,7 +76,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should filter by fact checking state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     user = User.create
 
     a = FactoryGirl.create(:guide_edition)
@@ -91,7 +91,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   test "should filter by lined up state" do
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
 
     a = FactoryGirl.create(:guide_edition)
     a.update_attribute(:state, "lined_up")
@@ -117,7 +117,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    presenter = AdminRootPresenter.new(WholeEdition, bob)
+    presenter = AdminRootPresenter.new(Edition, bob)
     assert_equal [b], presenter.lined_up.to_a
   end
 
@@ -133,7 +133,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    presenter = AdminRootPresenter.new(WholeEdition, :nobody)
+    presenter = AdminRootPresenter.new(Edition, :nobody)
     assert_equal [a], presenter.lined_up.to_a
   end
 
@@ -149,7 +149,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.lined_up.to_a.collect { |i| i.id.to_s }.sort
   end
 
@@ -171,13 +171,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, c.assigned_to
     assert !c.lined_up?
 
-    presenter = AdminRootPresenter.new(WholeEdition, bob)
+    presenter = AdminRootPresenter.new(Edition, bob)
     assert_equal [b], presenter.lined_up.to_a
 
-    presenter = AdminRootPresenter.new(WholeEdition, :nobody)
+    presenter = AdminRootPresenter.new(Edition, :nobody)
     assert_equal [a], presenter.lined_up.to_a
 
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     assert_equal [a, b], presenter.lined_up.to_a
   end
 
@@ -186,7 +186,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
     FactoryGirl.create(:guide_edition, title: "Second")
 
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     presenter.filter_by_title_substring("Sec")
     assert_equal ["Second"], presenter.all.map(&:title)
   end
@@ -196,7 +196,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
     FactoryGirl.create(:guide_edition, title: "Second")
 
-    presenter = AdminRootPresenter.new(WholeEdition, :all)
+    presenter = AdminRootPresenter.new(Edition, :all)
     presenter.filter_by_title_substring("sec")
     assert_equal ["Second"], presenter.all.map(&:title)
   end

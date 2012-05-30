@@ -20,7 +20,7 @@ class PublicationsController < ApplicationController
 
   def compose_publication(slug, edition_number, snac)
     edition_number = nil unless allow_preview?
-    edition = WholeEdition.find_and_identify(slug, edition_number)
+    edition = Edition.find_and_identify(slug, edition_number)
     return nil if edition.nil?
 
     options = {:snac => params[:snac], :all => params[:all]}.select { |k, v| v.present? }

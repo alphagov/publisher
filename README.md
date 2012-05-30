@@ -40,7 +40,7 @@ They can be imported using a rake task:
 Various flags and settings can control the runtime behaviour of publisher.
 These are mainly useful when working in development.
 
-NO_TRANSPORT - don't try to connect to the STOMP message broker. 
+NO_TRANSPORT - don't try to connect to the STOMP message broker.
 
 e.g.
 

@@ -13,7 +13,7 @@ class PublicationsControllerTest < ActionController::TestCase
   end
 
   test "returns a 404 if the publication isn't found" do
-    WholeEdition.expects(:find_and_identify).returns(nil)
+    Edition.expects(:find_and_identify).returns(nil)
     get :show, :id => 'fake-slug', :format => :json
     assert_response :not_found
   end

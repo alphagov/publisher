@@ -3,14 +3,20 @@ require 'test_helper'
 class Admin::EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-
     @guide = FactoryGirl.create(:guide_edition)
-    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: '123')
-    @programme = ProgrammeEdition.create(title: "test", slug: "test", panopticon_id: 12345)
+    artefact1 = FactoryGirl.create(:artefact, slug: "test",
+        kind: "transaction",
+        name: "test",
+        owning_app: "publisher")
+    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
+
+    artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+        kind: "programme",
+        name: "test",
+        owning_app: "publisher")
+    @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
     stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
-    panopticon_has_metadata("id" => "test", "name" => "FOOOO")
-    panopticon_has_metadata("id" => "12345", "name" => "Test", "slug" => "test")
   end
 
   test "it renders the lgsl edit form successfully if creation fails" do
@@ -53,7 +59,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
     assert_equal "Guide updated", flash[:notice]
 
-    reloaded = WholeEdition.find(@guide.id)
+    reloaded = Edition.find(@guide.id)
     assert reloaded.fact_check?
   end
 
@@ -66,7 +72,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     post :duplicate, :id => @guide.id,
       :edition  => { :assigned_to_id => bob.id, :kind => 'guide' }
 
-    @new_guide = WholeEdition.where(panopticon_id: @guide.panopticon_id).last
+    @new_guide = Edition.where(panopticon_id: @guide.panopticon_id).last
     assert_equal bob, @new_guide.assigned_to
   end
 
@@ -122,7 +128,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       "id" => "test"
     )
 
-    WholeEdition.expects(:find).returns(@guide)
+    Edition.expects(:find).returns(@guide)
     @guide.stubs(:update_attributes).returns(false)
     @guide.expects(:errors).at_least_once.returns({:title => ['values']})
 

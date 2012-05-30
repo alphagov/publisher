@@ -1,6 +1,6 @@
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
-  defaults :resource_class => WholeEdition, :collection_name => 'editions', :instance_name => 'resource'
+  defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create]
 
   def index
@@ -15,7 +15,7 @@ class Admin::EditionsController < Admin::BaseController
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
-    @publication = current_user.create_whole_edition(class_identifier, params[:edition])
+    @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
       redirect_to admin_edition_path(@publication),

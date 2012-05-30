@@ -28,7 +28,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_whole_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    guide = user.create_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
     edition = guide
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -45,7 +45,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
 
-    guide = user.create_whole_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    guide = user.create_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
     edition = guide
     edition.state = 'ready'
     assert edition.can_send_fact_check?

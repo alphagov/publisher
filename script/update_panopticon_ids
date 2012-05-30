@@ -1,4 +1,4 @@
-# 
+#
 unless defined? Rails
   $stderr.puts "Run me with script/rails r #$0 < cross_reference_ids.json"
   exit 1
@@ -8,18 +8,18 @@ panopticon_ids = JSON.parse($stdin.read)
 
 editions_by_panopticon_id = Hash[panopticon_ids.map do |old, new|
   [
-    old.to_s, 
-    WholeEdition.where(panopticon_id: old.to_i).map(&:id)
+    old.to_s,
+    Edition.where(panopticon_id: old.to_i).map(&:id)
   ]
 end]
 
-class WholeEdition
+class Edition
   field :old_panopticon_id, :type => Integer
   field :panopticon_id, :type => String
 end
 
 # prevent a flood of messages on message queue
-WholeEdition.marples_transport = Marples::NullTransport.instance
+Edition.marples_transport = Marples::NullTransport.instance
 
 editions_by_panopticon_id.each do |old_panopticon_id, edition_ids|
   if edition_ids.size == 0
@@ -31,8 +31,8 @@ editions_by_panopticon_id.each do |old_panopticon_id, edition_ids|
   puts "Applying mapping #{old_panopticon_id} => #{new_panopticon_id} to #{edition_ids.size} editions"
   edition_ids.each do |edition_id|
     begin
-      e = WholeEdition.find(edition_id)
-      if e.panopticon_id.to_s != old_panopticon_id 
+      e = Edition.find(edition_id)
+      if e.panopticon_id.to_s != old_panopticon_id
         raise "Something funny #{edition_id} should have panopticon_id #{old_panopticon_id} but has #{e.panopticon_id}"
       end
       e.old_panopticon_id = old_panopticon_id

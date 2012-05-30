@@ -15,7 +15,7 @@ class Admin::UserSearchController < Admin::BaseController
     # Including recipient_id on actions will include anything that has been
     # assigned to the user we're looking at, but include the check anyway to
     # account for manual assignments
-    editions = WholeEdition.any_of(
+    editions = Edition.any_of(
       {'assigned_to_id' => @user.id},
       {'actions.requester_id' => @user.id},
       {'actions.recipient_id' => @user.id}
