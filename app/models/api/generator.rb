@@ -49,6 +49,10 @@ module Api
     end
 
     class Licence < Base
+      def self.extra_fields
+        [ :licence_identifier,
+          :licence_overview ]
+      end
     end
 
     class Answer < Base

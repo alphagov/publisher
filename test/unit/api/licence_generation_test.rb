@@ -1,16 +1,29 @@
 require 'test_helper'
 
 class LicenceGenerationTest < ActiveSupport::TestCase
-  def setup
-    @updated_time = Time.now
-    @licence = FactoryGirl.create(:licence_edition, slug: 'test_slug', title: 'Test Licence', alternative_title: 'This is an example licence title')
+  setup do
+    #@updated_time = Time.now
+    @licence = FactoryGirl.create(:licence_edition,
+                                  slug: 'test_slug',
+                                  title: 'Test Licence',
+                                  alternative_title: 'This is an example licence title',
+                                  licence_identifier: 'AB1234',
+                                  licence_overview: 'Overview of Licence')
   end
 
   def generated
     Api::Generator.edition_to_hash(@licence)
   end
 
-  def test_api_licence_has_alternative_title
-    assert_equal "This is an example licence title", generated['alternative_title']
+  should "return the standard data for a licence" do
+    result = generated
+    assert_equal "Test Licence", result['title']
+    assert_equal "This is an example licence title", result['alternative_title']
+  end
+
+  should "return the extra fields for a licence" do
+    result = generated
+    assert_equal "AB1234", result['licence_identifier']
+    assert_equal "Overview of Licence", result['licence_overview']
   end
 end
