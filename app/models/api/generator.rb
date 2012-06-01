@@ -51,6 +51,7 @@ module Api
     class Licence < Base
       def self.extra_fields
         [ :licence_identifier,
+          :licence_short_description,
           :licence_overview ]
       end
     end

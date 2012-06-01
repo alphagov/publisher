@@ -8,6 +8,7 @@ class LicenceGenerationTest < ActiveSupport::TestCase
                                   title: 'Test Licence',
                                   alternative_title: 'This is an example licence title',
                                   licence_identifier: 'AB1234',
+                                  licence_short_description: 'Short description of licence',
                                   licence_overview: 'Overview of Licence')
   end
 
@@ -24,6 +25,7 @@ class LicenceGenerationTest < ActiveSupport::TestCase
   should "return the extra fields for a licence" do
     result = generated
     assert_equal "AB1234", result['licence_identifier']
+    assert_equal "Short description of licence", result['licence_short_description']
     assert_equal "Overview of Licence", result['licence_overview']
   end
 end
