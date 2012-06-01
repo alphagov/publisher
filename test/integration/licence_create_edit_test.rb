@@ -34,6 +34,7 @@ class LicenceCreateEditTest < ActionDispatch::IntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :title => "Foo bar",
                                  :licence_identifier => "ab2345",
+                                 :licence_short_description => "Short description content",
                                  :licence_overview => "Licence overview content")
 
     visit "/admin/editions/#{licence.to_param}"
@@ -41,9 +42,11 @@ class LicenceCreateEditTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
     assert page.has_field?("Licence identifier", :with => "ab2345")
+    assert page.has_field?("Licence short description", :with => "Short description content")
     assert page.has_field?("Licence overview", :with => "Licence overview content")
 
     fill_in "Licence identifier", :with => "5432de"
+    fill_in "Licence short description", :with => "New short description"
     fill_in "Licence overview", :with => "New Overview content"
 
     click_button "Save"
@@ -52,6 +55,7 @@ class LicenceCreateEditTest < ActionDispatch::IntegrationTest
 
     l = LicenceEdition.find(licence.id)
     assert_equal "5432de", l.licence_identifier
+    assert_equal "New short description", l.licence_short_description
     assert_equal "New Overview content", l.licence_overview
   end
 end

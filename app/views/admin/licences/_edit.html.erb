@@ -2,7 +2,11 @@
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= f.input :licence_identifier %>
-    <%= f.input :licence_overview, :as => :text, :input_html => { :class => 'span12', :disabled => @resource.published? } %>
+    <%= f.input :licence_short_description,
+          :as => :text,
+          :hint => 'One line curated description, will appear in Licence Finder results',
+          :input_html => { :rows => 2, :class => 'span7', :disabled => @resource.published? } %>
+    <%= f.input :licence_overview, :as => :text, :input_html => { :class => 'span7', :disabled => @resource.published? } %>
   <% end %>
 <% end %>
 
