@@ -1,16 +1,6 @@
 require 'test_helper'
 
 class LicencesControllerTest < ActionController::TestCase
-  #def build_publication
-    #GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: 1)
-  #end
-
-  #def build_published_publication
-    #build_publication.tap { |p|
-      #p.state = 'ready'
-      #p.publish
-    #}
-  #end
 
   context "index" do
     setup do

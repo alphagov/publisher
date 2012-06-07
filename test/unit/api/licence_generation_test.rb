@@ -2,7 +2,6 @@ require 'test_helper'
 
 class LicenceGenerationTest < ActiveSupport::TestCase
   setup do
-    #@updated_time = Time.now
     @licence = FactoryGirl.create(:licence_edition,
                                   slug: 'test_slug',
                                   title: 'Test Licence',
