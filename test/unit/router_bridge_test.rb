@@ -55,8 +55,44 @@ class RouterBridgeTest < ActiveSupport::TestCase
         incoming_path: "/#{edition['slug']}.xml",
         route_type: :full
     )
-    RouterBridge.new(:router => @router_client, :marples_client => @marples_client).run
+    RouterBridge.new(:router => @router_client, :marples_client => @marples_client, logger: NullLogger.instance).run
     @marples_client.publish("publisher", "guide_edition", "published", edition)
   end
 
+  test "RouterBridge.register_all will register homepage" do
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      route_type: :full,
+      incoming_path: "/"
+    )
+    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge.register_all
+  end
+
+  test "RouterBridge.register_all will register all publications" do
+    a_publication = stub("a publication", 
+      slug: "a-publication", 
+      title: "A publication", 
+      is_a?: false)
+    Edition.stubs(:published).returns([a_publication])
+    @router_client.routes.stubs(:update)
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      route_type: :full,
+      incoming_path: "/a-publication"
+    )
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      route_type: :full,
+      incoming_path: "/a-publication.json"
+    )
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      route_type: :full,
+      incoming_path: "/a-publication.xml"
+    )
+
+    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge.register_all
+  end
 end

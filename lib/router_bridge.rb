@@ -30,7 +30,16 @@ class RouterBridge
     marples.join
   end
 
-  private
+  def register_all
+    register_homepage
+    register_publications
+  end
+
+  def register_homepage
+    register_route(default_route_params.merge(:incoming_path => "/"))
+  end
+
+private
   def register_multi_part_publication(default_route_params, publication)
     logger.info(" Registering publication parts for #{publication['title']}")
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/print"))
@@ -39,8 +48,6 @@ class RouterBridge
       logger.info(" Registering part #{part.slug}")
       register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/#{part.slug}"))
     end
-
-    # end
 
     if publication.has_video?
       register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/video"))
@@ -55,12 +62,25 @@ class RouterBridge
   def register_local_transaction(default_route_params, publication)
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/not_found"))
   end
+  
+  def register_publications
+    logger.info "Registering #{Edition.published.count} publications"
+    i = 0
+    Edition.published.each do |p|
+      register_publication(p)
+      i += 1
+    end
+    logger.info "Registered #{i} publications"
+  end
 
+  def default_route_params
+    {:application_id => 'frontend', :route_type => :full}
+  end
+  
   def register_publication(publication)
     logger.info("pub #{publication.inspect}")
     logger.info("Registering publication #{publication.title} with router as #{publication.class.to_s}")
 
-    default_route_params = {:application_id => 'frontend', :route_type => :full}
     register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}"))
     register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}.json"))
     register_route(default_route_params.merge(:incoming_path  => "/#{publication.slug}.xml"))

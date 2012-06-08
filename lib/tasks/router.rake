@@ -18,6 +18,7 @@ namespace :router do
   end
 
   task :register_routes => [:router_environment, :environment] do
+    RouterBridge.new(router: @router, logger: @logger).register_all
   end
 
   desc "Register publisher application and routes with the router (run this task on server in cluster)"
