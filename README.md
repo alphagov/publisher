@@ -40,8 +40,8 @@ They can be imported using a rake task:
 Various flags and settings can control the runtime behaviour of publisher.
 These are mainly useful when working in development.
 
-`NO_TRANSPORT` - don't try to connect to the STOMP message broker.
+`NO_MESSENGER` - don't try to connect to the STOMP message broker.
 
 e.g.
 
-    $ NO_TRANSPORT=1 bundle exec rails s
+    $ NO_MESSENGER=1 bundle exec rails s
