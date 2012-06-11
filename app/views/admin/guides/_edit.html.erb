@@ -6,20 +6,32 @@
 
   <hr>
 
-  <h3>Parts</h3>
+  <div class="row-fluid">
 
-  <section class="accordion" id="parts">
-    <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
-    <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
+    <div class="span8">
 
-    <%= f.semantic_fields_for :parts do |part| %>
-      <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
-    <% end %>
-  </section>
+      <h3>Parts</h3>
 
-  <button class="btn btn-success add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</button>
+      <section class="accordion" id="parts">
+        <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
+        <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
-  <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
-<% end %>
+        <%= f.semantic_fields_for :parts do |part| %>
+          <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
+        <% end %>
+      </section>
+
+      <button class="btn btn-success add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</button>
+
+      <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
+      <% end %>
+
+    </div>
+
+    <div class="span4">
+      <%= render "../shared/govspeak_help" %>
+    </div>
+
+  </div>
 
 <% content_for :extra_javascript, javascript_include_tag('application', 'multi-part', 'form-tools', 'jquery.mustache.js') %>
