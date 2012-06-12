@@ -5,7 +5,7 @@
       <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
     </a>
   </div>
-  <div id="<%= f.object.slug %>" class="accordion-body collapse in">
+  <div id="<%= f.object.slug %>" class="accordion-body <% if f.object.valid? %>collapse <% end %>in">
     <div class="accordion-inner">
 
       <div class="row-fluid">
