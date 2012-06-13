@@ -104,9 +104,6 @@ th .current {
 
 /* Govspeak helper in Guides */
 .govspeak_help {
-  border-bottom: 2px solid #ccc;
-  margin: 13px 0 0;
-  height: 590px;
+  height: 650px;
   overflow-y: scroll;
-  padding-bottom: 10px;
 }
