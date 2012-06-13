@@ -58,4 +58,23 @@ class LicenceCreateEditTest < ActionDispatch::IntegrationTest
     assert_equal "New short description", l.licence_short_description
     assert_equal "New Overview content", l.licence_overview
   end
+
+  should "allow creating a new version of a LicenceEdition" do
+    licence = FactoryGirl.create(:licence_edition,
+                                 :panopticon_id => @artefact.id,
+                                 :state => 'published',
+                                 :title => "Foo bar",
+                                 :licence_identifier => "ab2345",
+                                 :licence_short_description => "Short description content",
+                                 :licence_overview => "Licence overview content")
+
+    visit "/admin/editions/#{licence.to_param}"
+    click_on "Create new edition"
+
+    assert page.has_content? "Viewing “Foo bar” Edition 2"
+
+    assert page.has_field?("Licence identifier", :with => "ab2345")
+    assert page.has_field?("Licence short description", :with => "Short description content")
+    assert page.has_field?("Licence overview", :with => "Licence overview content")
+  end
 end
