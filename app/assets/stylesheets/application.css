@@ -101,3 +101,9 @@ th .current {
 #parts .part a.accordion-toggle.highlight {
   background-color: #ff9;
 }
+
+/* Govspeak helper in Guides */
+.govspeak_help {
+  height: 650px;
+  overflow-y: scroll;
+}
