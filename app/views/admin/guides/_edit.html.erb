@@ -17,14 +17,13 @@
         <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
         <%= f.semantic_fields_for :parts do |part| %>
-          <%= render :partial => '/admin/guides/part', :locals => {:f => part} %>
+          <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => ! @resource.published? } %>
         <% end %>
       </section>
 
       <button class="btn btn-success add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</button>
 
-      <%= f.add_associated_jquery_template :parts, :partial => '/admin/guides/part' %>
-      <% end %>
+      <%= f.add_associated_jquery_template :parts, :partial => '/admin/shared/part', :locals => {:editable => ! @resource.published?} %>
 
     </div>
 
@@ -37,5 +36,7 @@
     </div>
 
   </div>
+<% end %>
+
 
 <% content_for :extra_javascript, javascript_include_tag('application', 'multi-part', 'form-tools', 'jquery.mustache.js') %>

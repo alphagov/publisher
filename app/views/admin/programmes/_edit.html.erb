@@ -5,18 +5,32 @@
 
   <hr>
 
-  <h3>Parts</h3>
+  <div class="row-fluid">
 
-  <section class="accordion" id="parts">
+    <div class="span8">
 
-    <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
+      <h3>Parts</h3>
 
-    <%= f.semantic_fields_for :parts do |part| %>
-      <%= render :partial => '/admin/programmes/part', :locals => {:f => part} %>
-    <% end %>
+      <section class="accordion" id="parts">
 
-  </section>
+        <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
+        <%= f.semantic_fields_for :parts do |part| %>
+          <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => false } %>
+        <% end %>
+
+      </section>
+
+    </div>
+
+    <div class="span4">
+      <h3>Govspeak help</h3>
+
+      <div class="well">
+        <%= render "../shared/govspeak_help" %>
+      </div>
+    </div>
+  </div>
 <% end %>
 
 <% content_for :extra_javascript, javascript_include_tag('multi-part') %>
