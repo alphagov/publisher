@@ -45,6 +45,12 @@ module Api
       end
     end
 
+    class BusinessSupport < Base
+      def self.extra_fields
+        [ :short_description, :min_value, :max_value ]
+      end
+    end
+
     class Programme < Base
     end
 
