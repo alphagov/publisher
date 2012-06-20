@@ -20,8 +20,6 @@ class LocalTransactionApiTest < ActionDispatch::IntegrationTest
       state: "published",
       lgsl_code: interaction.lgsl_code
     )
-
-    Capybara.current_driver = :rack_test
   end
 
   test "basic edition information but no interaction is returned when no snac is provided" do

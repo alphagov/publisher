@@ -1,7 +1,7 @@
 #encoding: utf-8
 require 'integration_test_helper'
 
-class LocalTransactionCreateEditTest < ActionDispatch::IntegrationTest
+class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
     LocalAuthority.create(snac: 'ABCDE')

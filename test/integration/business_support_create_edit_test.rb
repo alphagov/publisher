@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class BusinessSupportCreate < ActionDispatch::IntegrationTest
+class BusinessSupportCreate < JavascriptIntegrationTest
   setup do
     @artefact = FactoryGirl.create(:artefact,
        slug: "hedgehog-topiary",
