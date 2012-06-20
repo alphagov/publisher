@@ -88,6 +88,7 @@ module Api
       end
 
       def self.authority_to_json(authority)
+        return nil unless authority
         authority.as_json(only: [:name, :snac, :tier, :contact_address, :contact_url, :contact_phone, :contact_email])
       end
 
@@ -103,7 +104,8 @@ module Api
       def self.edition_to_hash(attrs, edition, options = {})
         if options[:snac]
           service = edition.service
-          interaction = service.preferred_interaction(options[:snac])
+
+          interaction = service.preferred_interaction(options[:snac], edition.lgil_override)
           attrs['interaction'] = interaction_to_json(interaction)
 
           authority = service.preferred_provider(options[:snac])
