@@ -134,7 +134,7 @@ GEM
       json
     gherkin (2.4.21)
       json (>= 1.4.6)
-    govspeak (0.8.11)
+    govspeak (0.8.15)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
     govuk_content_models (0.0.16)
@@ -159,7 +159,7 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
-    kramdown (0.13.5)
+    kramdown (0.13.7)
     launchy (2.1.0)
       addressable (~> 2.2.6)
     libv8 (3.3.10.4)
@@ -324,7 +324,7 @@ DEPENDENCIES
   gds-sso (~> 0.5.2)
   gds-warmup-controller
   gelf
-  govspeak (~> 0.8.7)
+  govspeak (~> 0.8.15)
   govuk_content_models (~> 0.0.16)
   graylog2_exceptions
   has_scope
