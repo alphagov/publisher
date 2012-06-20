@@ -67,7 +67,7 @@ module Formtastic #:nodoc:
       associated_name = extract_option_or_class_name(opts, :name, object)
       partial = opts.delete(:partial) || associated_name
 
-      form = render_associated_form(object, :partial => partial, :associated_name => associated_name)
+      form = render_associated_form(object, :partial => partial, :associated_name => associated_name, :locals => opts[:locals])
       form.gsub!(/attributes_(\d+)/, 'attributes_{{index}}')
       form.gsub!(/\[(\d+)\]/, '[{{index}}]')
 

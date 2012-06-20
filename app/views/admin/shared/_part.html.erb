@@ -1,0 +1,43 @@
+<div class="accordion-group part">
+  <div class="accordion-heading">
+    <a class="accordion-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug %>">
+      <i class="icon-chevron-down"></i>
+      <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
+    </a>
+  </div>
+  <div id="<%= f.object.slug %>" class="accordion-body <% if f.object.valid? %>collapse <% end %>in">
+    <div class="accordion-inner">
+
+      <div class="row-fluid">
+
+        <%= f.inputs do %>
+          <%= f.input :title,
+                      :input_html => { :class => 'span7 title', :disabled => ! editable },
+                      :hint => true,
+                      :required => true %>
+
+          <%= f.input :body,
+                      :as => :text,
+                      :required => true,
+                      :input_html => { :class => 'span7', :rows => '25', :disabled => @resource.published? } %>
+
+          <%= f.input :slug,
+                      :input_html => { :class => 'span7 slug', :disabled => ! editable },
+                      :hint => false,
+                      :required => true %>
+
+          <p class="help-block"><i class="icon-info-sign"></i> Eg. title-of-part (no spaces, apostrophes, etc).</p>
+
+          <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
+
+        <% unless @resource.published? %>
+          <div class="row-fluid">
+            <hr>
+            <%= f.remove_link "Remove this part" %>
+          </div><!--/.row-fluid -->
+        <% end %>
+      <% end %>
+      </div><!--/.row-fluid -->
+    </div>
+  </div>
+</div>
