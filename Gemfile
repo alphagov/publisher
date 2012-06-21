@@ -4,7 +4,7 @@ source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '~> 0.5.2'
+  gem 'gds-sso', '~> 0.7.0'
 end
 
 gem 'gds-warmup-controller'
@@ -50,7 +50,7 @@ gem 'kaminari', '0.13.0'
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "~> 0.0.20"
+  gem "govuk_content_models", "~> 0.1.0"
 end
 
 if ENV['CDN_DEV']
