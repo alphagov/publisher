@@ -11,18 +11,11 @@ class ContentDiffFormatter
     classes = [type, "alt"]
     @line_no += 1
 
-    modifier = case type
-    when :addition then "+"
-    when :removal then "-"
-    else
-      ""
-    end
-
     multiple_lines = content.split('\n')
     [ type, multiple_lines.map do |line|
       escaped_content = escape_once( line.sub("\\r","") ).html_safe
       content_tag :li, :class => classes.join(' ') do
-        "<!--#{@line_no}-->".html_safe + "#{modifier} #{escaped_content}"
+        "<!--#{@line_no}-->".html_safe + "#{escaped_content}"
       end
     end.join("\n") ]
   end
