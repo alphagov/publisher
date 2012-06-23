@@ -31,4 +31,14 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal [@guide.id], assigns[:editions].map(&:id)
   end
+
+  test "should handle simple title filter values" do
+    # no assertions, just validating that the Regexp is fine like this
+    get(:index, :title_filter => "stuff")
+  end
+
+  test "should safely handle title filter values" do
+    # no assertions; just validating that the Regexp is successfully created when the input contains Regexp special chars
+    get(:index, :title_filter => "(stuff")
+  end
 end
