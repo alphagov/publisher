@@ -22,7 +22,8 @@ class Admin::UserSearchController < Admin::BaseController
     ).excludes(state: 'archived').order_by([sort_column, sort_direction])
 
     unless params[:title_filter].blank?
-      editions = editions.where(title: /#{params[:title_filter]}/i)
+      title_p = Regexp.new(Regexp.escape(params[:title_filter]), true)
+      editions = editions.where(title: title_p)
     end
 
     # Need separate assignments here because Kaminari won't preserve pagination

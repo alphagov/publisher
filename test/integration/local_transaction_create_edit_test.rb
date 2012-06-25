@@ -1,7 +1,7 @@
 #encoding: utf-8
 require 'integration_test_helper'
 
-class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
+class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
     LocalAuthority.create(snac: 'ABCDE')
@@ -51,5 +51,35 @@ class LocalTransactionCreationTest < ActionDispatch::IntegrationTest
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
     assert page.has_content? "Viewing “Foo bar” Edition 1"
+  end
+
+  test "editing a local transaction has the LGSL and LGIL fields" do
+    edition = FactoryGirl.create(:local_transaction_edition, :panopticon_id => @artefact.id, :slug => @artefact.slug,
+                                 :title => "Foo transaction", :lgsl_code => 1)
+
+    visit "/admin/editions/#{edition.to_param}"
+
+    assert page.has_content? "Viewing “Foo transaction” Edition 1"
+
+    assert page.has_field?("LGSL code", :with => "1")
+    assert page.has_field?("LGIL override", :with => "")
+
+    fill_in "LGIL override", :with => '7'
+
+    click_button "Save"
+
+    assert page.has_content? "Local transaction edition was successfully updated."
+
+    e = LocalTransactionEdition.find(edition.id)
+    assert_equal 7, e.lgil_override
+
+    # Ensure it gets set to nil when clearing field
+    fill_in "LGIL override", :with => ''
+    click_button "Save"
+
+    assert page.has_content? "Local transaction edition was successfully updated."
+
+    e = LocalTransactionEdition.find(edition.id)
+    assert_equal nil, e.lgil_override
   end
 end

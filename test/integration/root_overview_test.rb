@@ -74,6 +74,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     FactoryGirl.create(:guide_edition, :title => "XXX")
     FactoryGirl.create(:guide_edition, :title => "YYY")
 
+    visit "/admin"
+    filter_by_user("All")
+
     filter_by_title("xXx")
 
     assert page.has_content?("XXX")

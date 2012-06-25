@@ -23,6 +23,8 @@ class ActionDispatch::IntegrationTest
 
   teardown do
     DatabaseCleaner.clean
+    Capybara.reset_sessions!    # Forget the (simulated) browser state
+    Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
   end
 
   def setup_users
@@ -34,9 +36,10 @@ class ActionDispatch::IntegrationTest
   end
 end
 
-Capybara.default_driver = :webkit
-Capybara.app = Rack::Builder.new do
-  map "/" do
-    run Capybara.app
+class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
+  setup do
+    Capybara.current_driver = Capybara.javascript_driver
   end
 end
+
+Capybara.javascript_driver = :webkit

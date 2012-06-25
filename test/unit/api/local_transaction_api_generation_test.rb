@@ -98,6 +98,60 @@ class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
       assert_equal expected_interaction_description, @generated['interaction']
       assert_equal expected_authority, @generated['authority']
     end
+
+    context "picking the interaction" do
+      context "with no LGIL override" do
+        should "pick the lowest interaction that's not LGIL 8" do
+          @interaction.update_attributes!(:lgil_code => 9, :url => 'http://foo.gov.uk/9.html')
+          @interaction2 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code,
+                                             :lgil_code => LocalInteraction::LGIL_CODE_PROVIDING_INFORMATION, :url => 'http://foo.gov.uk/8.html')
+          @interaction3 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code, 
+                                             :lgil_code => 3, :url => 'http://foo.gov.uk/3.html')
+          generated = Api::Generator::edition_to_hash(@edition, :snac => @county_council.snac)
+
+          assert_equal 3, generated['interaction']['lgil_code']
+          assert_equal @interaction.lgsl_code, generated['interaction']['lgsl_code']
+          assert_equal 'http://foo.gov.uk/3.html', generated['interaction']['url']
+        end
+
+        should "pick LGIL 8 if there are no others" do
+          @interaction.update_attributes!(:lgil_code => LocalInteraction::LGIL_CODE_PROVIDING_INFORMATION, :url => 'http://foo.gov.uk/8.html')
+          generated = Api::Generator::edition_to_hash(@edition, :snac => @county_council.snac)
+
+          assert_equal 8, generated['interaction']['lgil_code'], "Expected LGIL of 8, got #{generated['interaction']['lgil_code']}"
+          assert_equal @interaction.lgsl_code, generated['interaction']['lgsl_code']
+          assert_equal 'http://foo.gov.uk/8.html', generated['interaction']['url']
+        end
+      end
+
+      context "with an LGIL override" do
+        should "return the specified LGIL" do
+          @edition.update_attributes!(:lgil_override => 9)
+          @interaction.update_attributes!(:lgil_code => 9, :url => 'http://foo.gov.uk/9.html')
+          @interaction2 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code,
+                                             :lgil_code => LocalInteraction::LGIL_CODE_PROVIDING_INFORMATION, :url => 'http://foo.gov.uk/8.html')
+          @interaction3 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code, 
+                                             :lgil_code => 3, :url => 'http://foo.gov.uk/3.html')
+          generated = Api::Generator::edition_to_hash(@edition, :snac => @county_council.snac)
+
+          assert_equal 9, generated['interaction']['lgil_code']
+          assert_equal @interaction.lgsl_code, generated['interaction']['lgsl_code']
+          assert_equal 'http://foo.gov.uk/9.html', generated['interaction']['url']
+        end
+
+        should "return no interaction if the specified LGIL doesn't exist" do
+          @edition.update_attributes!(:lgil_override => 4)
+          @interaction.update_attributes!(:lgil_code => 9, :url => 'http://foo.gov.uk/9.html')
+          @interaction2 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code,
+                                             :lgil_code => LocalInteraction::LGIL_CODE_PROVIDING_INFORMATION, :url => 'http://foo.gov.uk/8.html')
+          @interaction3 = FactoryGirl.create(:local_interaction, :local_authority => @county_council, :lgsl_code => @interaction.lgsl_code, 
+                                             :lgil_code => 3, :url => 'http://foo.gov.uk/3.html')
+          generated = Api::Generator::edition_to_hash(@edition, :snac => @county_council.snac)
+
+          assert_equal nil, generated['interaction']
+        end
+      end
+    end
   end
 
   context "snac exists but doesn't have that interaction" do
@@ -120,6 +174,15 @@ class LocalTransactionApiGenerationTest < ActiveSupport::TestCase
 
       assert_equal nil, generated['interaction']
       assert_equal expected_authority, generated['authority']
+    end
+  end
+
+  context "no authority exists for the SNAC" do
+    should "return an empty authority and interaction" do
+      generated = Api::Generator.edition_to_hash(@edition, :snac => 'BB00')
+
+      assert_equal nil, generated['authority']
+      assert_equal nil, generated['interaction']
     end
   end
 

@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class EditionWorkflowTest < ActionDispatch::IntegrationTest
+class EditionWorkflowTest < JavascriptIntegrationTest
 
   setup do
     panopticon_has_metadata("id" => '2356')

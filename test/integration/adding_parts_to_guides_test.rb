@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class AddingPartsToGuidesTest < ActionDispatch::IntegrationTest
+class AddingPartsToGuidesTest < JavascriptIntegrationTest
   test "Publishing a guide" do
     setup_users
 

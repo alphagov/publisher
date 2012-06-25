@@ -1,7 +1,7 @@
 #encoding: utf-8
 require 'integration_test_helper'
 
-class LicenceCreateEditTest < ActionDispatch::IntegrationTest
+class LicenceCreateEditTest < JavascriptIntegrationTest
   setup do
     @artefact = FactoryGirl.create(:artefact,
         slug: "hedgehog-topiary",
