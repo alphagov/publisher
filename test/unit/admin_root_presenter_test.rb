@@ -200,4 +200,14 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     presenter.filter_by_title_substring("sec")
     assert_equal ["Second"], presenter.all.map(&:title)
   end
+
+  test "Can handle regexp reserved characters for title filter" do
+    FactoryGirl.create(:guide_edition, title: "First")
+
+    FactoryGirl.create(:guide_edition, title: "(Second")
+
+    presenter = AdminRootPresenter.new(Edition, :all)
+    presenter.filter_by_title_substring("(sec")
+    assert_equal ["(Second"], presenter.all.map(&:title)
+  end
 end
