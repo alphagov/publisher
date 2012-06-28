@@ -39,7 +39,7 @@ module Searchable
       "link" => "/#{slug}",
       "format" => format.underscore.downcase,
       "description" => (published? && overview) || "",
-      "indexable_content" => indexable_content,
+      "indexable_content" => govspeak_to_text(indexable_content),
     }.merge(split_section(section))
   end
 
