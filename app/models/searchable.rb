@@ -39,7 +39,7 @@ module Searchable
       "link" => "/#{slug}",
       "format" => format.underscore.downcase,
       "description" => (published? && overview) || "",
-      "indexable_content" => indexable_content,
+      "indexable_content" => govspeak_to_text(indexable_content),
     }.merge(split_section(section))
   end
 
@@ -54,10 +54,12 @@ module Searchable
       else
         link = "/#{slug}/#{part.slug}"
       end
+
       output['additional_links'] << {
         'title' => part.title,
         'link' => link,
-        'link_order' => index
+        # use the order set in the part or fall back to it's position in the list
+        'link_order' => part.order.present? ? part.order : (index + 1)
       }
     end
     output

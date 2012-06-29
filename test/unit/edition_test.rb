@@ -85,4 +85,48 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal generated_search_content['indexable_content'], "PART ! This is some version text. PART !! This is some more version text."
     assert generated_search_content['additional_links'][1].has_value?("/#{edition.slug}/part-two")
   end
+
+  test "should produce all indexable content as plain text without govspeak syntax" do
+    edition = FactoryGirl.create(:guide_edition_with_two_govspeak_parts, :state => 'ready')
+    edition.publish
+
+    expected = "Some Part Title! This is some version text. Another Part Title This is link text."
+    assert_equal expected, edition.indexable_content
+  end
+
+  test "should produce a hash of the edition without parts" do
+    edition = FactoryGirl.create(:guide_edition_with_two_govspeak_parts, :state => 'ready')
+    edition.publish
+
+    expected = {
+      "title" => "A title for govspeak parts",
+      "format" => "guide",
+      "description" => "",
+      "indexable_content" => "Some Part Title! This is some version text. Another Part Title This is link text.",
+      "section" => "test",
+      "subsection" => "subsection-test"
+    }
+    assert_equal expected, edition.search_index_without_parts.tap { |edition| edition.delete("link") }
+  end
+
+  test "should produce a hash of the edition with parts" do
+    edition = FactoryGirl.create(:guide_edition_with_two_govspeak_parts, :state => 'ready')
+    edition.publish
+
+    expected = {
+      "title" => "A title for govspeak parts",
+      "format" => "guide",
+      "description" => "",
+      "indexable_content" => "Some Part Title! This is some version text. Another Part Title This is link text.",
+      "section" => "test",
+      "subsection" => "subsection-test",
+      "additional_links" => [{ "title" => "Some Part Title!",
+                               "link_order" => 1},
+                             { "title" => "Another Part Title",
+                               "link_order" => 2}]}
+    assert_equal expected, edition.search_index_with_parts.tap { |edition|
+      edition.delete("link")
+      edition["additional_links"].each { |link| link.tap { |l| l.delete("link") } }
+    }
+  end
 end
