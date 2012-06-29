@@ -102,6 +102,12 @@ th .current {
   background-color: #ff9;
 }
 
+/* override the font-size for main textareas */
+form.formtastic .controls textarea { 
+  font-size: 17px;
+  line-height: 21px;
+}
+
 /* Govspeak helper in Guides */
 .govspeak_help {
   height: 650px;
