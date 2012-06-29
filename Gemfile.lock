@@ -317,7 +317,6 @@ DEPENDENCIES
   faker
   formtastic!
   formtastic-bootstrap!
-  gds-api-adapters
   gds-sso (~> 0.7.0)
   gds-warmup-controller
   gelf

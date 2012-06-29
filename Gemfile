@@ -23,28 +23,24 @@ gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
 
+gem 'null_logger'
+gem 'rummageable'
+gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
+gem 'stomp', '1.1.9'
 if ENV['MARPLES_DEV']
   gem 'marples', path: '../marples'
 else
   gem 'marples', '~> 1'
 end
-
-gem 'null_logger'
-gem 'rummageable'
-gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
-gem 'gds-api-adapters'
+gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'
-
 gem "colorize", "~> 0.5.8"
 
 gem 'inherited_resources'
 gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'has_scope'
-gem 'stomp', '1.1.9'
-gem 'null_logger'
-gem 'router-client', '2.0.3', require: 'router/client'
 gem 'kaminari', '0.13.0'
 
 if ENV['CONTENT_MODELS_DEV']
