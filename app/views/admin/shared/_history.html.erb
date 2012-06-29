@@ -1,5 +1,14 @@
 <div class="row-fluid">
 
+  <% if resource.safe_to_preview? %>
+  <p>This edition can be previewed at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
+  <% else %>
+  <p>This edition is not yet ready to be previewed.</p>
+  <% end %>
+
+  <p>Fact check responses should (when appropriate) be sent to <%= mail_to resource.fact_check_email_address %></p>
+  <hr />
+
   <div class="span6">
     <%= semantic_form_for(:note, :url=> admin_notes_path) do |f| %>
       <%= f.inputs do %>
