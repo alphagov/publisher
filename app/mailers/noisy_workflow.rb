@@ -14,9 +14,9 @@ class NoisyWorkflow < ActionMailer::Base
     @action = action
 
     if action.edition.business_proposition
-      subject = "[PUBLISHER]-BUSINESS #{@action.friendly_description}"
+      subject = "[PUBLISHER]-BUSINESS #{describe_action(@action)}"
     else
-      subject = "[PUBLISHER] #{@action.friendly_description}"
+      subject = "[PUBLISHER] #{describe_action(@action)}"
     end
 
     recipient_emails = []
@@ -50,4 +50,39 @@ class NoisyWorkflow < ActionMailer::Base
     mail(:to => EMAIL_GROUPS['dev'], :subject => 'Errors in fact check email processing')
   end
 
+  protected
+  def describe_action(action)
+    edition = action.edition
+    requester = action.requester
+    recipient = action.recipient
+
+    case action.request_type
+    when Action::CREATE
+      "Created #{edition.format_name}: \"#{edition.title}\" (by #{requester.name})"
+    when Action::START_WORK
+      "Work started: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::REQUEST_REVIEW
+      "Review requested: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::APPROVE_REVIEW
+      "Okayed for publication: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::APPROVE_FACT_CHECK
+      "Fact check okayed for publication: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::REQUEST_AMENDMENTS
+      "Amends needed: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::SEND_FACT_CHECK
+      "Fact check requested: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::RECEIVE_FACT_CHECK
+      "Fact check response: \"#{edition.title}\" (#{edition.format_name})"
+    when Action::PUBLISH
+      "Published: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::ARCHIVE
+      "Archived: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::NEW_VERSION
+      "New version: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
+    when Action::NOTE
+      "Note added by #{requester.name}"
+    when Action::ASSIGN
+      "Assigned: \"#{edition.title}\" (#{edition.format_name}) to #{recipient.name}"
+    end
+  end
 end
