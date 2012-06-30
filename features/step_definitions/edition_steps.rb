@@ -6,7 +6,7 @@ Transform /^for business $/ do |business|
 end
 
 Given /I am signed in to Publisher/ do
-  User.create! :name => 'Example User', :email => 'test@gov.uk', :version => 1, :uid => 't3st1ng'
+  FactoryGirl.create(:user, :name => 'Example User', :email => 'test@gov.uk', :version => 1, :uid => 't3st1ng')
 end
 
 Given /(.*?) editions (for business )?exist in Publisher/ do |state, business|

@@ -50,7 +50,7 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    @user = User.create!(:name => 'Stub User')
+    @user = FactoryGirl.create(:user, :name => 'Stub User')
     request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => @user)
   end
 

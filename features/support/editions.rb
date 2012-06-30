@@ -38,7 +38,7 @@ def check_editions_appear_in_list(editions, options={})
 
     assert row.has_content? edition.title
     assert row.has_content? "Ed. #{edition.version_number}"
-    assert row.has_content? (edition.assignee || "")
+    assert row.has_content?((edition.assignee || "")), "Expected to see #{(edition.assignee || "")} in #{row.text}"
     if options.include? :business
       business_cell = row.find('.business')
       assert business_cell.has_content? (options[:business] ? 'Y' : 'N')
