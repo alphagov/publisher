@@ -62,6 +62,10 @@ private
   def register_local_transaction(default_route_params, publication)
     register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}/not_found"))
   end
+
+  def register_place(default_route_params, publication)
+    register_route(default_route_params.merge(:incoming_path => "/#{publication.slug}.kml"))
+  end
   
   def register_publications
     logger.info "Registering #{Edition.published.count} publications"
@@ -91,6 +95,8 @@ private
       register_programme(default_route_params, publication)
     elsif publication.is_a?(LocalTransactionEdition)
       register_local_transaction(default_route_params, publication)
+    elsif publication.is_a?(PlaceEdition)
+      register_place(default_route_params, publication)
     end
   end
 

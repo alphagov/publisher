@@ -37,34 +37,28 @@ class RouterBridgeTest < ActiveSupport::TestCase
     answer
   end
 
+  def expect_update(incoming_path)
+    @router_client.routes.expects(:update).with(
+      application_id: "frontend",
+      route_type: :full,
+      incoming_path: incoming_path
+    )
+  end
+
   test "when marples receives a published message, create a route" do
     edition = create_answer_edition()
 
-    @router_client.routes.expects(:update).with(
-        application_id: "frontend",
-        incoming_path: "/#{edition['slug']}",
-        route_type: :full
-    )
-    @router_client.routes.expects(:update).with(
-        application_id: "frontend",
-        incoming_path: "/#{edition['slug']}.json",
-        route_type: :full
-    )
-    @router_client.routes.expects(:update).with(
-        application_id: "frontend",
-        incoming_path: "/#{edition['slug']}.xml",
-        route_type: :full
-    )
+    expect_update("/#{edition['slug']}")
+    expect_update("/#{edition['slug']}.json")
+    expect_update("/#{edition['slug']}.xml")
+
     RouterBridge.new(:router => @router_client, :marples_client => @marples_client, logger: NullLogger.instance).run
     @marples_client.publish("publisher", "guide_edition", "published", edition)
   end
 
   test "RouterBridge.register_all will register homepage" do
-    @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      route_type: :full,
-      incoming_path: "/"
-    )
+    expect_update("/")
+
     router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
     router_bridge.register_all
   end
@@ -76,21 +70,31 @@ class RouterBridgeTest < ActiveSupport::TestCase
       is_a?: false)
     Edition.stubs(:published).returns([a_publication])
     @router_client.routes.stubs(:update)
-    @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      route_type: :full,
-      incoming_path: "/a-publication"
+
+    expect_update("/a-publication")
+    expect_update("/a-publication.json")
+    expect_update("/a-publication.xml")
+
+    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge.register_all
+  end
+
+  test "RouterBridge.register_all will register .kml for PlaceEdition" do
+    a_places_edition = stub("a places edition",
+      slug: "a-places-edition",
+      title: "A places edition"
     )
-    @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      route_type: :full,
-      incoming_path: "/a-publication.json"
-    )
-    @router_client.routes.expects(:update).with(
-      application_id: "frontend",
-      route_type: :full,
-      incoming_path: "/a-publication.xml"
-    )
+    a_places_edition.expects(:is_a?).with(GuideEdition).returns(false)
+    a_places_edition.expects(:is_a?).with(ProgrammeEdition).returns(false)
+    a_places_edition.expects(:is_a?).with(LocalTransactionEdition).returns(false)
+    a_places_edition.expects(:is_a?).with(PlaceEdition).returns(true)
+    Edition.stubs(:published).returns([a_places_edition])
+    @router_client.routes.stubs(:update)
+
+    expect_update("/a-places-edition")
+    expect_update("/a-places-edition.json")
+    expect_update("/a-places-edition.xml")
+    expect_update("/a-places-edition.kml")
 
     router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
     router_bridge.register_all
