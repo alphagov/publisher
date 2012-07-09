@@ -1,5 +1,6 @@
 class Admin::BaseController < InheritedResources::Base
   before_filter :authenticate_user!
+  before_filter :require_signin_permission!
   defaults :route_prefix => 'admin'
 
   rescue_from Mongoid::Errors::DocumentNotFound, :with => :record_not_found
