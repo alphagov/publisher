@@ -26,7 +26,6 @@ gem 'rest-client'
 gem 'null_logger'
 gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
-gem 'stomp', '1.1.9'
 gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'
