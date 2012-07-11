@@ -17,7 +17,6 @@ class UserTest < ActiveSupport::TestCase
     user.request_review(trans, {comment: "Hello"})
     second_user.approve_review(trans, {comment: "Hello"})
 
-    Messenger.instance.expects(:published).with(trans).once
     user.publish trans, {comment: "Published because I did"}
   end
 end

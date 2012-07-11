@@ -27,11 +27,6 @@ gem 'null_logger'
 gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
 gem 'stomp', '1.1.9'
-if ENV['MARPLES_DEV']
-  gem 'marples', path: '../marples'
-else
-  gem 'marples', '~> 1'
-end
 gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'

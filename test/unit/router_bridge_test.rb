@@ -1,33 +1,9 @@
 require 'test_helper'
 
-class MarplesTestDouble
-  def initialize
-    @listeners = []
-  end
-
-  def when(application, object_type, action, &block)
-    @listeners << [application, object_type, action, block]
-  end
-
-  def publish(application, object_type, action, object)
-    @listeners.select { |listener| listener_matches?(listener, [application, object_type, action]) }.each { |listener| listener[3].call(object) }
-  end
-
-  def listener_matches?(listener, message)
-    message.each_index.all? do |i|
-      listener[i] == '*' || listener[i] == message[i]
-    end
-  end
-
-  def join
-  end
-end
-
 class RouterBridgeTest < ActiveSupport::TestCase
   def setup
     routes = stub("routes")
     @router_client = stub("router", routes: routes)
-    @marples_client = MarplesTestDouble.new
   end
 
   def create_answer_edition
@@ -45,21 +21,10 @@ class RouterBridgeTest < ActiveSupport::TestCase
     )
   end
 
-  test "when marples receives a published message, create a route" do
-    edition = create_answer_edition()
-
-    expect_update("/#{edition['slug']}")
-    expect_update("/#{edition['slug']}.json")
-    expect_update("/#{edition['slug']}.xml")
-
-    RouterBridge.new(:router => @router_client, :marples_client => @marples_client, logger: NullLogger.instance).run
-    @marples_client.publish("publisher", "guide_edition", "published", edition)
-  end
-
   test "RouterBridge.register_all will register homepage" do
     expect_update("/")
 
-    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge = RouterBridge.new(router: @router_client, logger: NullLogger.instance)
     router_bridge.register_all
   end
 
@@ -75,7 +40,7 @@ class RouterBridgeTest < ActiveSupport::TestCase
     expect_update("/a-publication.json")
     expect_update("/a-publication.xml")
 
-    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge = RouterBridge.new(router: @router_client, logger: NullLogger.instance)
     router_bridge.register_all
   end
 
@@ -96,7 +61,7 @@ class RouterBridgeTest < ActiveSupport::TestCase
     expect_update("/a-places-edition.xml")
     expect_update("/a-places-edition.kml")
 
-    router_bridge = RouterBridge.new(router: @router_client, marples_client: stub_everything(:marples_client), logger: NullLogger.instance)
+    router_bridge = RouterBridge.new(router: @router_client, logger: NullLogger.instance)
     router_bridge.register_all
   end
 end

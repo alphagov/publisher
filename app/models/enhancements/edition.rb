@@ -1,8 +1,6 @@
-require "marples/model_action_broadcast"
 require "edition"
 
 class Edition
-  include Marples::ModelActionBroadcast
   include Admin::BaseHelper
   include Searchable
 

@@ -1,33 +1,12 @@
 class RouterBridge
-  attr_accessor :router, :logger, :marples
+  attr_accessor :router, :logger
 
   def initialize options = {}
     logger = options[:logger] || Logger.new(STDOUT)
     logger.info("Initializing router bridge")
     self.router = options[:router] || Router::Client.new(:logger => logger)
     self.logger = logger
-    self.marples = options[:marples_client] || Marples::Client.new(transport: Messenger.transport, logger: logger)
     logger.info("Done")
-  end
-
-  def run
-    marples.when 'publisher', '*', 'published' do |publication_hash|
-      begin
-        publication_id = publication_hash['_id']
-        logger.info("Recieved message for #{publication_hash['title']} #{publication_id}")
-        publication = Edition.find(publication_id)
-
-        if (publication.nil?)
-          logger.warn("Could not find publication #{publication_id}")
-        else
-          register_publication(publication)
-        end
-      rescue => e
-        logger.error("Exception caused while processing message for #{publication_hash.inspect} #{e.message}")
-      end
-    end
-
-    marples.join
   end
 
   def register_all
