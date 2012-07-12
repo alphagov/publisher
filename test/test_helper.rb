@@ -40,6 +40,10 @@ class ActiveSupport::TestCase
     result
   end
 
+  def stub_register_published_content
+    stub_request(:put, %r{http://panopticon.dev.gov.uk/artefacts/.*})
+  end
+
   setup do
     Rummageable.stubs :index
     Rummageable.stubs :delete
