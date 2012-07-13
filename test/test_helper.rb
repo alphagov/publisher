@@ -44,11 +44,6 @@ class ActiveSupport::TestCase
     stub_request(:put, %r{http://panopticon.dev.gov.uk/artefacts/.*})
   end
 
-  setup do
-    Rummageable.stubs :index
-    Rummageable.stubs :delete
-  end
-
   teardown do
     WebMock.reset!
   end

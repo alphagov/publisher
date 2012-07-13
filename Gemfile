@@ -25,7 +25,6 @@ gem 'graylog2_exceptions'
 gem 'rest-client'
 
 gem 'null_logger'
-gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
 
 gem 'rest-client'
