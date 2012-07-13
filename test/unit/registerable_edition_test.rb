@@ -90,4 +90,59 @@ class RegisterableEditionTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "paths" do
+    should "generate paths, including .json and .xml" do
+      edition = FactoryGirl.create(:edition,
+        slug: "slug", 
+        title: "A publication", 
+        state: "published")
+      registerable = RegisterableEdition.new(edition)
+      
+      assert_equal ["slug", "slug.json", "slug.xml"], registerable.paths
+    end
+
+    context "GuideEdition" do
+      should "generate standard paths, plus slug/print" do
+        edition = GuideEdition.create(slug: "slug", title: "A guide edition", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug", "slug.json", "slug.xml", "slug/print"], registerable.paths
+      end
+
+      should "also generate video path when applicable" do
+        edition = FactoryGirl.create(:guide_edition_with_two_parts, slug: "slug", title: "A guide edition", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug", "slug.json", "slug.xml", "slug/print", "slug/part-one", "slug/part-two"], registerable.paths
+      end
+    end
+
+    context "ProgrammeEdition" do
+      should "generate standard paths, plus slug/print and slug/further-information" do
+        edition = ProgrammeEdition.create(slug: "slug", title: "A programme edition", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug", "slug.json", "slug.xml", "slug/print", "slug/further-information"], registerable.paths
+      end
+    end
+
+    context "LocalTransactionEdition" do
+      should "generate standard paths, plus slug/not_found" do
+        edition = LocalTransactionEdition.create(slug: "slug", title: "A title", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug", "slug.json", "slug.xml", "slug/not_found"], registerable.paths
+      end
+    end
+
+    context "PlaceEdition" do
+      should "generate standard paths, plus .kml" do
+        edition = PlaceEdition.create(slug: "slug", title: "A places edition", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug", "slug.json", "slug.xml", "slug.kml"], registerable.paths
+      end
+    end
+  end
 end

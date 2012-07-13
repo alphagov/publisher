@@ -27,7 +27,6 @@ gem 'rest-client'
 gem 'null_logger'
 gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
-gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'
 gem "colorize", "~> 0.5.8"
