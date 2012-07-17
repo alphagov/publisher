@@ -141,9 +141,31 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   test "should not progress to fact check if the email addresses were blank" do
     post :progress, {
       :id       => @guide.id.to_s,
-      :activity => { 'request_type' => "send_fact_check" }
+      :activity => { 
+        'request_type' => "send_fact_check",
+        "email_addresses" => ""
+      }
     }
     assert_equal "Couldn't send fact check for guide", flash[:alert]
+  end
+
+  test "should not progress to fact check if the email addresses were invalid" do
+    @guide.update_attribute(:state, :ready)
+
+    post :progress,
+      :id       => @guide.id,
+      :activity => {
+        "request_type"       => "send_fact_check",
+        "comment"            => "Blah",
+        "email_addresses"    => "nouseratexample.com",
+        "customised_message" => "Hello"
+      }
+
+    assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
+    assert_match /email.*invalid/, flash[:alert]
+
+    reloaded = Edition.find(@guide.id)
+    assert_equal false, reloaded.fact_check?
   end
 
   test "should show the edit page after starting work" do
