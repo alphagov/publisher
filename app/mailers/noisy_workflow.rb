@@ -41,8 +41,7 @@ class NoisyWorkflow < ActionMailer::Base
       :from => "Beta Editorial Team <#{fact_check_address}>",
       :subject => "[FACT CHECK REQUESTED] #{@edition.title}") do |format|
      format.text { render :text => action.customised_message }
-   end
-
+    end
   end
 
   def report_errors(error_list)
