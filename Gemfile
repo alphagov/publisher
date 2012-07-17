@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
+gem 'gds-api-adapters', '0.2.0'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
@@ -24,15 +25,7 @@ gem 'graylog2_exceptions'
 gem 'rest-client'
 
 gem 'null_logger'
-gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
-gem 'stomp', '1.1.9'
-if ENV['MARPLES_DEV']
-  gem 'marples', path: '../marples'
-else
-  gem 'marples', '~> 1'
-end
-gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'
 gem "colorize", "~> 0.5.8"
@@ -46,7 +39,7 @@ gem 'kaminari', '0.13.0'
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "0.1.5"
+  gem "govuk_content_models", "0.1.10"
 end
 
 if ENV['CDN_DEV']

@@ -28,7 +28,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_edition(:guide, :panopticon_id => 1234574, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
     edition = guide
     user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
@@ -36,6 +36,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     user.send_fact_check(edition,{:comment => "Review this guide please.", :email_addresses => 'test@test.com'})
     user.receive_fact_check(edition, {:comment => "No changes needed, this is all correct"})
     other_user.approve_fact_check(edition, {:comment => "Looks good to me"})
+    stub_register_published_content
     user.publish(edition, {:comment => "PUBLISHED!"})
     return user, guide
   end
