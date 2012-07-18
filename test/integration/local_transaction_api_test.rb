@@ -43,4 +43,40 @@ class LocalTransactionApiTest < ActionDispatch::IntegrationTest
     assert_equal "0000000000", authority['contact_phone']
     assert_equal "contact@some.council.gov.uk", authority['contact_email']
   end
+
+  test "404 if snac code not found" do
+    visit "/local_transactions/find_by_snac?snac=bloop"
+    assert_equal 404, page.status_code
+    assert_equal " ", page.source
+  end
+
+  test "returns a council hash if provided with a snac code" do
+    visit "/local_transactions/find_by_snac?snac=AA00"
+    assert_equal 200, page.status_code
+    response = JSON.parse(page.source)
+    expected = {"name" => "Some Council", "snac" => "AA00"}
+    assert_equal expected, response
+  end
+
+  test "404 if council not found" do
+    visit "/local_transactions/find_by_council?council=bloop"
+    assert_equal 404, page.status_code
+    assert_equal " ", page.source
+  end
+
+  test "returns a council hash if provided with a lower case council name" do
+    visit "/local_transactions/find_by_council?council=some%20council"
+    assert_equal 200, page.status_code
+    response = JSON.parse(page.source)
+    expected = {"name" => "Some Council", "snac" => "AA00"}
+    assert_equal expected, response
+  end
+
+  test "returns a council hash if provided with a mixed case council name" do
+    visit "/local_transactions/find_by_council?council=Some%20Council"
+    assert_equal 200, page.status_code
+    response = JSON.parse(page.source)
+    expected = {"name" => "Some Council", "snac" => "AA00"}
+    assert_equal expected, response
+  end
 end

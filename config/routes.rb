@@ -28,5 +28,9 @@ Publisher::Application.routes.draw do
   resources :licences, :only => :index, :defaults => { :format => 'json' }
 
   post "/local_transactions/verify_snac", :to => "publications#verify_snac"
+
+  get "/local_transactions/find_by_snac", :to => "local_transactions#find_by_snac"
+  get "/local_transactions/find_by_council", :to => "local_transactions#find_by_council"
+
   root to: redirect("/admin")
 end
