@@ -30,7 +30,7 @@ Publisher::Application.routes.draw do
   post "/local_transactions/verify_snac", :to => "publications#verify_snac"
 
   get "/local_transactions/find_by_snac", :to => "local_transactions#find_by_snac"
-  get "/local_transactions/find_by_council", :to => "local_transactions#find_by_council"
+  get "/local_transactions/find_by_council_name", :to => "local_transactions#find_by_council_name"
 
   root to: redirect("/admin")
 end

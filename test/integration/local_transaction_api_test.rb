@@ -59,13 +59,13 @@ class LocalTransactionApiTest < ActionDispatch::IntegrationTest
   end
 
   test "404 if council not found" do
-    visit "/local_transactions/find_by_council?council=bloop"
+    visit "/local_transactions/find_by_council_name?name=bloop"
     assert_equal 404, page.status_code
     assert_equal " ", page.source
   end
 
   test "returns a council hash if provided with a lower case council name" do
-    visit "/local_transactions/find_by_council?council=some%20council"
+    visit "/local_transactions/find_by_council_name?name=some%20council"
     assert_equal 200, page.status_code
     response = JSON.parse(page.source)
     expected = {"name" => "Some Council", "snac" => "AA00"}
@@ -73,7 +73,7 @@ class LocalTransactionApiTest < ActionDispatch::IntegrationTest
   end
 
   test "returns a council hash if provided with a mixed case council name" do
-    visit "/local_transactions/find_by_council?council=Some%20Council"
+    visit "/local_transactions/find_by_council_name?name=Some%20Council"
     assert_equal 200, page.status_code
     response = JSON.parse(page.source)
     expected = {"name" => "Some Council", "snac" => "AA00"}
