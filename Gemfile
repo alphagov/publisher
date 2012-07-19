@@ -18,7 +18,7 @@ gem 'rails', '3.1.3'
 gem 'aws-ses', require: 'aws/ses'
 
 gem 'erubis'
-gem 'plek', '~> 0'
+gem 'plek', '0.1.24'
 gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
@@ -48,6 +48,8 @@ if ENV['CONTENT_MODELS_DEV']
 else
   gem "govuk_content_models", "0.1.11"
 end
+
+gem "gds-api-adapters", "0.0.50"
 
 if ENV['CDN_DEV']
   gem 'cdn_helpers', path: '../cdn_helpers'
