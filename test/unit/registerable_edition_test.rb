@@ -32,10 +32,17 @@ class RegisterableEditionTest < ActiveSupport::TestCase
   end
 
   context "live" do
-    should "always return true, because we only register something when it's published" do
+    should "return true if the edition is published" do
       registerable = RegisterableEdition.new(@edition)
       assert_equal true, registerable.live
     end
+
+    should "return false otherwise" do
+      @edition.stubs(:published?).returns(false)
+      registerable = RegisterableEdition.new(@edition)
+      assert_equal false, registerable.live
+    end
+
   end
 
   context "description" do

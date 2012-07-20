@@ -8,7 +8,7 @@ class RegisterableEdition
   end
 
   def live
-    true
+    @edition.published?
   end
 
   def description
