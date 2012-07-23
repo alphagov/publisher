@@ -13,7 +13,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
 
   test "a new edition of a transaction creates a diff when published" do
     stub_register_published_content
-    
+
     without_metadata_denormalisation(AnswerEdition) do
       user = User.create :name => 'Thomas'
 
