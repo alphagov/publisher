@@ -31,7 +31,6 @@ class TransactionEditionTest < ActiveSupport::TestCase
       publish_action = edition_two.actions.where(request_type: "publish").last
 
       assert_equal "http://example.com\n\n{\"Example\" >> \"Changed content\"}\n\nMore information", publish_action.diff
-
     end
   end
 end
