@@ -41,7 +41,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_register_published_content
-    stub_request(:put, %r{http://panopticon.dev.gov.uk/artefacts/.*})
+    stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
   end
 
   teardown do

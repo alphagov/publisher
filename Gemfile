@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
-gem 'gds-api-adapters', '0.2.0'
+gem 'gds-api-adapters', '0.2.2'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
