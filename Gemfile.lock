@@ -132,11 +132,11 @@ GEM
     govspeak (0.8.15)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
-    govuk_content_models (0.1.11)
+    govuk_content_models (0.1.13)
       bson_ext
       differ
       gds-api-adapters
-      gds-sso (~> 0.7.0)
+      gds-sso (~> 0.7)
       mongoid (~> 2.4.10)
       omniauth-oauth2 (~> 1.0)
       plek (~> 0.1.22)
@@ -314,7 +314,7 @@ DEPENDENCIES
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.15)
-  govuk_content_models (= 0.1.11)
+  govuk_content_models (= 0.1.13)
   graylog2_exceptions
   has_scope
   inherited_resources
