@@ -6,7 +6,12 @@ namespace :panopticon do
     logger.info "Registering with panopticon..."
 
     Edition.published.each do |edition|
-      edition.register_with_panopticon
+      begin
+        edition.register_with_panopticon
+      rescue Mongoid::Errors::DocumentNotFound
+        # This happens if an Edition doesn't have a corresponding Artefact
+        logger.warn "Missing Artefact for #{edition.class.name} #{edition.slug}"
+      end
     end
   end
 end
