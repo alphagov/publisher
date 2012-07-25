@@ -56,6 +56,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     Capybara.current_session.driver.browser.clear_cookies
   end
 
+  def visit_edition(edition)
+    visit "/admin/editions/#{edition.to_param}"
+  end
+
   # Fill in some sample sections for a guide
   def fill_in_parts(guide)
     visit_guide guide

@@ -13,10 +13,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  def visit_guide(guide)
-    visit "/admin/editions/#{guide.to_param}"
-  end
-
   # Assign a guide to a user. The user parameter can be a User or a name
   def assign(guide, user)
     if user.is_a? User
@@ -252,7 +248,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   test "can skip fact check" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     get_to_fact_check guide, "Alice"
-    visit_guide guide
+    visit_edition guide
 
     click_button 'Skip Fact Check'
 
@@ -268,7 +264,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   test "can progress from fact check" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     get_to_fact_check_received guide, "Alice"
-    visit_guide guide
+    visit_edition guide
     send_action guide, "Minor or no changes required", "Hurrah!"
     filter_for "All"
     view_filtered_list "Ready"
