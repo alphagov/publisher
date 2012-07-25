@@ -18,7 +18,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     if user.is_a? User
       user = user.name
     end
-    visit_guide guide
+    visit_edition guide
 
     select user, from: "Assigned to"
     click_on "Save"
@@ -51,7 +51,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   def send_for_generic_action(guide, button_text, &block)
-    visit_guide guide
+    visit_edition guide
     action_button = find_button button_text
 
     refute action_button['disabled']
@@ -207,7 +207,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
     submit_for_review guide
 
-    visit_guide guide
+    visit_edition guide
     wait_until { page.has_selector? ".alert-info" }
     refute has_button? "OK for publication"
   end
@@ -217,7 +217,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    visit_guide guide
+    visit_edition guide
     wait_until { page.has_selector? ".alert-info" }
     assert has_button? "Needs more work"
     assert has_button? "OK for publication"

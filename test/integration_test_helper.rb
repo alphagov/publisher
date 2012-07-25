@@ -62,7 +62,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
   # Fill in some sample sections for a guide
   def fill_in_parts(guide)
-    visit_guide guide
+    visit_edition guide
 
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
