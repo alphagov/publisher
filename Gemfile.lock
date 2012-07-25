@@ -118,7 +118,7 @@ GEM
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (0.7.9)
+    gds-sso (1.0.0)
       omniauth-gds (= 0.0.3)
       rack-accept (~> 0.4.4)
       rails (>= 3.0.0)
@@ -132,11 +132,11 @@ GEM
     govspeak (0.8.15)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
-    govuk_content_models (0.1.13)
+    govuk_content_models (0.1.14)
       bson_ext
       differ
       gds-api-adapters
-      gds-sso (~> 0.7)
+      gds-sso (>= 0.7, < 1.2)
       mongoid (~> 2.4.10)
       omniauth-oauth2 (~> 1.0)
       plek (~> 0.1.22)
@@ -153,8 +153,8 @@ GEM
       has_scope (~> 0.5.0)
       responders (~> 0.6)
     json (1.7.3)
-    jwt (0.1.4)
-      json (>= 1.2.4)
+    jwt (0.1.5)
+      multi_json (>= 1.0)
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -310,11 +310,11 @@ DEPENDENCIES
   formtastic!
   formtastic-bootstrap!
   gds-api-adapters (= 0.2.2)
-  gds-sso (= 0.7.9)
+  gds-sso (= 1.0.0)
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.15)
-  govuk_content_models (= 0.1.13)
+  govuk_content_models (= 0.1.14)
   graylog2_exceptions
   has_scope
   inherited_resources

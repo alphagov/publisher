@@ -5,7 +5,7 @@ gem 'gds-api-adapters', '0.2.2'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '0.7.9'
+  gem 'gds-sso', '1.0.0'
 end
 
 gem 'gds-warmup-controller'
@@ -39,7 +39,7 @@ gem 'kaminari', '0.13.0'
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "0.1.13"
+  gem "govuk_content_models", "0.1.14"
 end
 
 if ENV['CDN_DEV']
