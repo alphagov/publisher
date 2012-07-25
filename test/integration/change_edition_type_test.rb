@@ -20,12 +20,13 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert page.has_button? "Convert into an Answer edition"
+    assert_equal true, page.has_button?("Convert into an Answer edition")
+
     click_on "Convert into an Answer edition"
 
-    assert page.has_content? guide.title
-    assert page.has_content? guide.whole_body
-    assert page.has_content? "Successfully converted Edition type"
+    assert_equal true, page.has_content?(guide.title)
+    assert_equal true, page.has_content?(guide.whole_body)
+    assert_equal true, page.has_content?("Successfully converted Edition type")
   end
 
   test "should be able to convert an AnswerEdition into a GuideEdition" do
@@ -36,12 +37,13 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert page.has_button? "Convert into a Guide edition"
+    assert_equal true, page.has_button?("Convert into a Guide edition")
+
     click_on "Convert into a Guide edition"
 
-    assert page.has_content? answer.title
-    assert page.has_content? answer.whole_body
-    assert page.has_content? "Successfully converted Edition type"
+    assert_equal true, page.has_content?(answer.title)
+    assert_equal true, page.has_content?(answer.whole_body)
+    assert_equal true, page.has_content?("Successfully converted Edition type")
   end
 
   test "should not be able to convert a GuideEdition into an AnswerEdition if not published" do
