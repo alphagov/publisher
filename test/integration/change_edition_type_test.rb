@@ -43,4 +43,15 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content? answer.whole_body
     assert page.has_content? "Successfully converted Edition type"
   end
+
+  test "should not be able to convert a GuideEdition into an AnswerEdition if not published" do
+    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'ready')
+    visit_edition guide
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert_equal false, page.has_button?("Convert into an Answer edition")
+  end
 end
