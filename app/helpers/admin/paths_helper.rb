@@ -20,6 +20,10 @@ module Admin::PathsHelper
     "/admin/editions/#{edition.to_param}"
   end
 
+  def clone_edition_path(edition, conversions)
+    send("clone_admin_edition_path", edition, conversions)
+  end
+
   def view_edition_path(edition)
     "/admin?with=#{edition.id}"
   end

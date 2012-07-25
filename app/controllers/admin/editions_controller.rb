@@ -83,6 +83,19 @@ class Admin::EditionsController < Admin::BaseController
     end
   end
 
+  def clone
+    convert_to = params[:to].to_s.constantize
+
+    edition = Edition.find(params[:id])
+
+    new_edition = edition.build_clone(convert_to)
+    new_edition.save
+    edition.archive
+    edition.save
+
+    redirect_to admin_edition_path(new_edition), :notice => "Successfully converted Edition type"
+  end
+
   protected
     # TODO: This could probably live in the i18n layer?
     def failure_message(activity)

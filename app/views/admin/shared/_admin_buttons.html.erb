@@ -5,3 +5,12 @@
 <%- if @resource.fact_check? -%>
 <%= button_to "Skip Fact Check", skip_fact_check_for_edition(@resource), :method => :post %>
 <%- end -%>
+<%- if @edition.published? -%>
+  <%- if @edition.class == GuideEdition -%>
+    <%= button_to "Convert into an Answer edition", clone_edition_path(@resource, {from: "GuideEdition", to: "AnswerEdition"}), :method => :post, :class => "btn" %>
+  <%- end -%>
+
+  <%- if @edition.class == AnswerEdition -%>
+    <%= button_to "Convert into a Guide edition", clone_edition_path(@resource, {from: "AnswerEdition", to: "GuideEdition"}), :method => :post, :class => "btn" %>
+  <%- end -%>
+<%- end -%>
