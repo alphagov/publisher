@@ -35,6 +35,7 @@ gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '
 gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'has_scope'
 gem 'kaminari', '0.13.0'
+gem 'lograge'
 
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
