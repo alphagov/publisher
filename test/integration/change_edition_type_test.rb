@@ -26,7 +26,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
     assert_equal true, page.has_content?(guide.title)
     assert_equal true, page.has_content?(guide.whole_body)
-    assert_equal true, page.has_content?("Successfully converted Edition type")
+    assert_equal true, page.has_content?("New edition created")
   end
 
   test "should be able to convert an AnswerEdition into a GuideEdition" do
@@ -43,7 +43,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
     assert_equal true, page.has_content?(answer.title)
     assert_equal true, page.has_content?(answer.whole_body)
-    assert_equal true, page.has_content?("Successfully converted Edition type")
+    assert_equal true, page.has_content?("New edition created")
   end
 
   test "should not be able to convert a GuideEdition into an AnswerEdition if not published" do

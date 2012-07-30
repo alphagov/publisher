@@ -38,7 +38,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "an appropriate error message is shown if new edition failed" do
-    @user.stubs(:new_version).with(@guide).returns(false)
+    @user.stubs(:new_version).with(@guide, nil).returns(false)
     post :duplicate, :id => @guide.id
     assert_response 302
     assert_equal "Failed to create new edition: couldn't initialise", flash[:alert]
