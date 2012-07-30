@@ -43,6 +43,8 @@ module Publisher
         g.test_framework :test_unit, :fixture => false # this could be :rpsec or whatever
     end
 
+    config.action_dispatch.rack_cache = nil
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
