@@ -83,7 +83,7 @@ group :test do
 
   gem "timecop"
 
-  gem 'simplecov', '0.4.2'
-  gem 'simplecov-rcov'
+  gem 'simplecov', '~> 0.6.4', :require => false
+  gem 'simplecov-rcov', '~> 0.2.3', :require => false
   gem 'ci_reporter'
 end
