@@ -10,7 +10,7 @@ end
 
 gem 'gds-warmup-controller'
 
-gem 'rails', '3.1.7'
+gem 'rails', '3.2.7'
 gem 'aws-ses', require: 'aws/ses'
 
 gem 'erubis'
