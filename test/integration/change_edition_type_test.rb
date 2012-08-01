@@ -20,9 +20,9 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert_equal true, page.has_button?("Convert into an Answer edition")
+    assert_equal true, page.has_button?("Create new edition as Quick Answer")
 
-    click_on "Convert into an Answer edition"
+    click_on "Create new edition as Quick Answer"
 
     assert_equal true, page.has_content?(guide.title)
     assert_equal true, page.has_content?(guide.whole_body)
@@ -37,9 +37,9 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert_equal true, page.has_button?("Convert into a Guide edition")
+    assert_equal true, page.has_button?("Create new edition as Guide")
 
-    click_on "Convert into a Guide edition"
+    click_on "Create new edition as Guide"
 
     assert_equal true, page.has_content?(answer.title)
     assert_equal true, page.has_content?(answer.whole_body)
@@ -54,6 +54,6 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert_equal false, page.has_button?("Convert into an Answer edition")
+    assert_equal false, page.has_button?("Create new edition as Quick Answer")
   end
 end

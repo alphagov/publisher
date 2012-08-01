@@ -7,13 +7,13 @@
 <%- end -%>
 <%- if @edition.published? -%>
   <%- if @edition.class == GuideEdition -%>
-    <%= button_to "Convert into an Answer edition",
+    <%= button_to "Create new edition as Quick Answer",
         duplicate_admin_edition_path(@resource, {from: "GuideEdition", to: "AnswerEdition"}),
         :method => :post, :class => "btn" %>
   <%- end -%>
 
   <%- if @edition.class == AnswerEdition -%>
-    <%= button_to "Convert into a Guide edition",
+    <%= button_to "Create new edition as Guide",
         duplicate_admin_edition_path(@resource, {from: "AnswerEdition", to: "GuideEdition"}),
         :method => :post, :class => "btn" %>
   <%- end -%>
