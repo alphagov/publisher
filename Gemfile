@@ -57,6 +57,7 @@ gem 'whenever'
 gem 'newrelic_rpm'
 
 group :assets do
+  gem 'twitter-bootstrap-rails'
   gem "therubyracer", "~> 0.9.4"
   gem 'uglifier'
 end
