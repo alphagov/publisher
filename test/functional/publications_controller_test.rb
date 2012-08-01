@@ -2,12 +2,13 @@ require 'test_helper'
 
 class PublicationsControllerTest < ActionController::TestCase
   def build_publication
-    GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: 1)
+    GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: FactoryGirl.create(:artefact).id)
   end
 
   def build_published_publication
     build_publication.tap { |p|
       p.state = 'ready'
+      stub_register_published_content
       p.publish
     }
   end

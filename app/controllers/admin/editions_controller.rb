@@ -28,7 +28,7 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def duplicate
-    new_edition = current_user.new_version(resource)
+    new_edition = current_user.new_version(resource, (params[:to] || nil))
     assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
     if new_edition and new_edition.save
       update_assignment new_edition, assigned_to_id

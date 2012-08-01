@@ -1,7 +1,7 @@
+require 'simplecov'
+
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
-
-require 'simplecov'
 
 require 'rails/test_help'
 require 'minitest/unit'
@@ -40,9 +40,8 @@ class ActiveSupport::TestCase
     result
   end
 
-  setup do
-    Rummageable.stubs :index
-    Rummageable.stubs :delete
+  def stub_register_published_content
+    stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
   end
 
   teardown do

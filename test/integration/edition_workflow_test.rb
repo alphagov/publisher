@@ -13,31 +13,12 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  # Get a single user by their name. If the user doesn't exist, return nil.
-  def get_user(name)
-    User.where(name: name).first
-  end
-
-  # Set the given user to be the current user
-  # Accepts either a User object or a user's name
-  def login_as(user)
-    if not user.is_a? User
-      user = get_user(user)
-    end
-    GDS::SSO.test_user = user
-    Capybara.current_session.driver.browser.clear_cookies
-  end
-
-  def visit_guide(guide)
-    visit "/admin/editions/#{guide.to_param}"
-  end
-
   # Assign a guide to a user. The user parameter can be a User or a name
   def assign(guide, user)
     if user.is_a? User
       user = user.name
     end
-    visit_guide guide
+    visit_edition guide
 
     select user, from: "Assigned to"
     click_on "Save"
@@ -57,22 +38,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     wait_until { page.has_content? "Work started" }
   end
 
-  # Fill in some sample sections for a guide
-  def fill_in_parts(guide)
-    visit_guide guide
-
-    click_on 'Untitled part'
-    within :css, '#parts div.part:first-of-type' do
-      fill_in 'Title', with: 'Part One'
-      fill_in 'Body',  with: 'Body text'
-      fill_in 'Slug',  with: 'part-one'
-    end
-    click_on "Save"
-    wait_until { page.has_content? "successfully updated" }
-
-    guide.reload
-  end
-
   def button_selector(text)
     "//button[text()='#{text}']"
   end
@@ -86,7 +51,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   def send_for_generic_action(guide, button_text, &block)
-    visit_guide guide
+    visit_edition guide
     action_button = find_button button_text
 
     refute action_button['disabled']
@@ -242,7 +207,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
     submit_for_review guide
 
-    visit_guide guide
+    visit_edition guide
     wait_until { page.has_selector? ".alert-info" }
     refute has_button? "OK for publication"
   end
@@ -252,7 +217,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    visit_guide guide
+    visit_edition guide
     wait_until { page.has_selector? ".alert-info" }
     assert has_button? "Needs more work"
     assert has_button? "OK for publication"
@@ -283,7 +248,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   test "can skip fact check" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     get_to_fact_check guide, "Alice"
-    visit_guide guide
+    visit_edition guide
 
     click_button 'Skip Fact Check'
 
@@ -299,8 +264,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   test "can progress from fact check" do
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
     get_to_fact_check_received guide, "Alice"
-    visit_guide guide    
-    
+    visit_edition guide
     send_action guide, "Minor or no changes required", "Hurrah!"
     filter_for "All"
     view_filtered_list "Ready"
@@ -311,7 +275,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'published')
     filter_for "All"
     view_filtered_list "Published"
-
     click_button "Create new edition of this publication"
     assert page.has_content? "New edition created"
   end

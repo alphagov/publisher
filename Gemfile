@@ -1,24 +1,20 @@
 source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
+gem 'gds-api-adapters', '0.2.2'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '0.7.9'
+  gem 'gds-sso', '~> 1.2.0'
 end
 
 gem 'gds-warmup-controller'
 
-group :passenger_compatibility do
-  gem 'rack', '1.3.5'
-  gem 'rake', '0.9.2'
-end
-
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.7'
 gem 'aws-ses', require: 'aws/ses'
 
 gem 'erubis'
-gem 'plek', '~> 0'
+gem 'plek', '0.1.24'
 gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
@@ -26,15 +22,7 @@ gem 'rest-client'
 gem "curb"
 
 gem 'null_logger'
-gem 'rummageable'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
-gem 'stomp', '1.1.9'
-if ENV['MARPLES_DEV']
-  gem 'marples', path: '../marples'
-else
-  gem 'marples', '~> 1'
-end
-gem 'router-client', '2.0.3', require: 'router/client'
 
 gem 'rest-client'
 gem "colorize", "~> 0.5.8"
@@ -44,11 +32,12 @@ gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '
 gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'has_scope'
 gem 'kaminari', '0.13.0'
+gem 'lograge'
 
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "0.1.5"
+  gem "govuk_content_models", "~> 0.2.2"
 end
 
 if ENV['CDN_DEV']
@@ -96,7 +85,7 @@ group :test do
 
   gem "timecop"
 
-  gem 'simplecov', '0.4.2'
-  gem 'simplecov-rcov'
+  gem 'simplecov', '~> 0.6.4', :require => false
+  gem 'simplecov-rcov', '~> 0.2.3', :require => false
   gem 'ci_reporter'
 end
