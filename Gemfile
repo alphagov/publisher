@@ -35,7 +35,7 @@ gem 'lograge'
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "~> 0.2.2"
+  gem "govuk_content_models", "~> 0.2.6"
 end
 
 if ENV['CDN_DEV']
