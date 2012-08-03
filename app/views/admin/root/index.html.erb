@@ -52,11 +52,9 @@
 
       <div id="publication-list-container" class="span10">
         <% if params[:with] %>
-        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
         <%= render @list, with: params[:with] %>
         <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
         <% else %>
-        <%= paginate @presenter.send(@list) %>
         <%= render @list, with: nil %>
         <%= paginate @presenter.send(@list) %>
         <% end %>
