@@ -42,7 +42,7 @@
             select_tag("user_filter", options_for_select(
               [["All", "all"], ["Nobody", "nobody"]] +
               User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-            ), :class => "span2")
+            ), :class => "span12")
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
