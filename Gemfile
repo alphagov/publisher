@@ -38,6 +38,8 @@ else
   gem "govuk_content_models", "~> 0.2.6"
 end
 
+gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
+
 if ENV['CDN_DEV']
   gem 'cdn_helpers', path: '../cdn_helpers'
 else
