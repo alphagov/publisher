@@ -325,6 +325,7 @@ DEPENDENCIES
   lockfile
   lograge
   mocha
+  mongo (= 1.6.2)
   newrelic_rpm
   null_logger
   passenger
