@@ -278,4 +278,24 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_button "Create new edition of this publication"
     assert page.has_content? "New edition created"
   end
+
+  test "should link to a newer sibling" do
+    old_edition = FactoryGirl.create(
+      :guide_edition,
+      panopticon_id: 2356,
+      state: "published",
+      version_number: 1
+    )
+    new_edition = FactoryGirl.create(
+      :guide_edition,
+      panopticon_id: 2356,
+      state: "draft",
+      version_number: 2
+    )
+    visit_edition old_edition
+    assert page.has_link?(
+      "Edit existing newer edition",
+      href: admin_edition_path(new_edition)
+    )
+  end
 end
