@@ -121,7 +121,6 @@ module Api
           :more_information,
           :place_type]
       end
-
     end
 
     class Video < Base
