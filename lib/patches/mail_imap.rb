@@ -6,6 +6,10 @@ module Mail
     # https://github.com/mikel/mail/commit/219717c453d1b275ab6235cb1909e49eaabba409
     # but not rolled out as a 2.4.5 or 2.5.0 gem yet
     def find(options={}, &block)
+      unless Mail::VERSION.version == "2.4.4" 
+        raise "This patch is only intended for use with the Mail gem version 2.4.4"
+      end
+
       options = validate_options(options)
 
       start do |imap|
