@@ -53,10 +53,10 @@ else
 end
 
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
-
 gem 'lockfile'
-gem 'whenever'
 gem 'newrelic_rpm'
+gem 'statsd-ruby', '~> 1.0.0'
+gem 'whenever'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"
