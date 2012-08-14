@@ -121,7 +121,13 @@ module Api
           :more_information,
           :place_type]
       end
+    end
 
+    class Video < Base
+      def self.extra_fields
+        [ :video_url,
+          :video_summary]
+      end
     end
   end
 end
