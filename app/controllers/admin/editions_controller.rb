@@ -1,3 +1,5 @@
+require "statsd"
+
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
@@ -15,6 +17,7 @@ class Admin::EditionsController < Admin::BaseController
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
+    Statsd.new(::STATSD_HOST).increment("publisher.edition.create.#{class_identifier}")
     @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
@@ -76,7 +79,14 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def progress
+    current_status = resource.state
+    intended_status = params[:activity][:request_type]
+
     if current_user.progress(resource, params[:activity].dup)
+      statsd = Statsd.new(::STATSD_HOST)
+      statsd.decrement("publisher.edition.#{current_status}")
+      statsd.increment("publisher.edition.#{intended_status}")
+
       redirect_to admin_edition_path(resource), :notice => success_message(params[:activity][:request_type])
     else
       redirect_to admin_edition_path(resource), :alert => failure_message(params[:activity][:request_type])
