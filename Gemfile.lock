@@ -336,7 +336,7 @@ DEPENDENCIES
   shoulda
   simplecov (~> 0.6.4)
   simplecov-rcov (~> 0.2.3)
-  statsd-ruby (~> 1.0.0)
+  statsd-ruby (= 1.0.0)
   test-unit
   therubyracer (~> 0.9.4)
   timecop
