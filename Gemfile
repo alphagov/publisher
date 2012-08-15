@@ -10,7 +10,7 @@ end
 
 gem 'gds-warmup-controller'
 
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.8'
 gem 'aws-ses', require: 'aws/ses'
 
 gem 'erubis'
@@ -35,8 +35,10 @@ gem 'lograge'
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "~> 0.2.2"
+  gem "govuk_content_models", "0.7.0"
 end
+
+gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 
 if ENV['CDN_DEV']
   gem 'cdn_helpers', path: '../cdn_helpers'
@@ -51,10 +53,10 @@ else
 end
 
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
-
 gem 'lockfile'
-gem 'whenever'
 gem 'newrelic_rpm'
+gem 'statsd-ruby', '1.0.0'
+gem 'whenever'
 
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
