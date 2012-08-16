@@ -18,11 +18,11 @@ if ENV['CONTENT_MODELS_DEV']
 else
   gem "govuk_content_models", "0.7.0"
 end
-gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
+gem 'daemonette', git: 'https://github.com/alphagov/daemonette.git'
 gem 'erubis'
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
-gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
-gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
+gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
+gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '0.2.2'
 gem 'gds-warmup-controller'
 gem 'gelf'

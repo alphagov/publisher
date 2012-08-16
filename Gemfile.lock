@@ -1,5 +1,11 @@
 GIT
-  remote: git://github.com/cgunther/formtastic-bootstrap.git
+  remote: https://github.com/alphagov/daemonette.git
+  revision: 8179408a2db8f2e882965a2b95ddfc4cdf5230f3
+  specs:
+    daemonette (0.1.0)
+
+GIT
+  remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
   specs:
@@ -8,18 +14,12 @@ GIT
       rails (>= 3.1.0)
 
 GIT
-  remote: git://github.com/justinfrench/formtastic.git
+  remote: https://github.com/justinfrench/formtastic.git
   revision: 7b7428fa4a6a44aea1e8278523f4f45f2570a33d
   branch: 2.1-stable
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
-
-GIT
-  remote: git@github.com:alphagov/daemonette.git
-  revision: 8179408a2db8f2e882965a2b95ddfc4cdf5230f3
-  specs:
-    daemonette (0.1.0)
 
 GEM
   remote: https://rubygems.org/
