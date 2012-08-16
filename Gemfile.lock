@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/alphagov/daemonette.git
-  revision: 8179408a2db8f2e882965a2b95ddfc4cdf5230f3
-  specs:
-    daemonette (0.1.0)
-
-GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
@@ -304,7 +298,6 @@ DEPENDENCIES
   ci_reporter
   colorize (~> 0.5.8)
   cucumber-rails
-  daemonette!
   database_cleaner
   erubis
   exception_notification (~> 2.4.1)

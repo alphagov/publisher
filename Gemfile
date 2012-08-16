@@ -18,7 +18,7 @@ if ENV['CONTENT_MODELS_DEV']
 else
   gem "govuk_content_models", "0.7.0"
 end
-gem 'daemonette', git: 'https://github.com/alphagov/daemonette.git'
+
 gem 'erubis'
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
