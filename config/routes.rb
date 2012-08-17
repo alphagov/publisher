@@ -18,7 +18,6 @@ Publisher::Application.routes.draw do
     match 'user_search' => 'user_search#index'
 
     resources :publications
-    match 'overview' => 'overview#index'
     root :to => 'root#index'
   end
 
