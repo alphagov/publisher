@@ -2,27 +2,19 @@ require 'csv'
 
 class LicenceIdentifierMigrator
 
-  # MAPPING_CSV_URL = "https://raw.github.com/alphagov/licence-finder/master/data/licence_mappings.csv"
-  MAPPING_CSV_URL = "https://raw.github.com/alphagov/licence-finder/correlation_id_migration/data/licence_mappings.csv"
+  # MAPPING_CSV_URL = "https://raw.github.com/alphagov/licence-finder/master/data/correlation_id_to_gds_id_mappings.csv"
+  MAPPING_CSV_URL = "https://raw.github.com/alphagov/licence-finder/correlation_id_migration/data/correlation_id_to_gds_id_mappings.csv"
   
   def self.update_all
     counter = 0
     licence_mappings = mappings_as_hash
     
-    LicenceEdition.marples_transport ||= Marples::NullTransport.instance
-    LicenceEdition.marples_client_name ||= "LicenceIdentifierMigrator"
-    
     LicenceEdition.all.each do |licence_edition|
       licence_identifier = licence_mappings[licence_edition.licence_identifier.to_s]
       if licence_identifier
-        if licence_edition.state == 'published'
-          clone = licence_edition.build_clone
-          clone.licence_identifier = licence_identifier
-          clone.save!
-        else
-          licence_edition.licence_identifier = licence_identifier
-          licence_edition.save! 
-        end
+        licence_edition = licence_edition.build_clone if licence_edition.state == 'published'
+        licence_edition.licence_identifier = licence_identifier
+        licence_edition.save! 
         counter += 1
       end
       done(counter, "\r")
@@ -38,7 +30,7 @@ class LicenceIdentifierMigrator
   def self.mappings_as_hash
     licence_mappings = {} 
     read_mappings.each do |row|
-      licence_mappings[row['GDS ID']] = row['Legal_Ref_No']  
+      licence_mappings[row['correlation_id']] = row['gds_id']  
     end
     licence_mappings
   end
