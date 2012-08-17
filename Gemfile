@@ -63,7 +63,7 @@ group :test do
 
   gem 'cucumber-rails', require: false
 
-  gem 'capybara', '~> 1.0.0'
+  gem 'capybara', '~> 1.1.0'
   gem "capybara-webkit"
   gem 'launchy'
 
