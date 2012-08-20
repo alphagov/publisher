@@ -50,7 +50,11 @@
     <% end %>
   </td>
   <td class="duplicate icon">
-    <%= button_to "Create new edition of this publication", duplicate_admin_edition_path(publication) %>
+    <% if publication.can_create_new_edition? %>
+      <%= button_to "Create new edition of this publication", duplicate_admin_edition_path(publication) %>
+    <% else %>
+      <%= link_to 'Edit existing newer edition', admin_edition_path(publication.in_progress_sibling), html_options = { "class" => ""} %>
+    <% end %>
   </td>
   <td class="icon">
     <%= link_to preview_edition_path(publication) do %>

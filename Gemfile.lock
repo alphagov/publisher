@@ -1,5 +1,11 @@
 GIT
-  remote: git://github.com/cgunther/formtastic-bootstrap.git
+  remote: https://github.com/alphagov/daemonette.git
+  revision: 8179408a2db8f2e882965a2b95ddfc4cdf5230f3
+  specs:
+    daemonette (0.1.0)
+
+GIT
+  remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
   specs:
@@ -8,30 +14,24 @@ GIT
       rails (>= 3.1.0)
 
 GIT
-  remote: git://github.com/justinfrench/formtastic.git
+  remote: https://github.com/justinfrench/formtastic.git
   revision: 7b7428fa4a6a44aea1e8278523f4f45f2570a33d
   branch: 2.1-stable
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
 
-GIT
-  remote: git@github.com:alphagov/daemonette.git
-  revision: 8179408a2db8f2e882965a2b95ddfc4cdf5230f3
-  specs:
-    daemonette (0.1.0)
-
 GEM
   remote: https://rubygems.org/
   remote: https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/
   specs:
     PriorityQueue (0.1.2)
-    actionmailer (3.2.7)
-      actionpack (= 3.2.7)
+    actionmailer (3.2.8)
+      actionpack (= 3.2.8)
       mail (~> 2.4.4)
-    actionpack (3.2.7)
-      activemodel (= 3.2.7)
-      activesupport (= 3.2.7)
+    actionpack (3.2.8)
+      activemodel (= 3.2.8)
+      activesupport (= 3.2.8)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
@@ -39,18 +39,18 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.3)
-    activemodel (3.2.7)
-      activesupport (= 3.2.7)
+    activemodel (3.2.8)
+      activesupport (= 3.2.8)
       builder (~> 3.0.0)
-    activerecord (3.2.7)
-      activemodel (= 3.2.7)
-      activesupport (= 3.2.7)
+    activerecord (3.2.8)
+      activemodel (= 3.2.8)
+      activesupport (= 3.2.8)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activeresource (3.2.7)
-      activemodel (= 3.2.7)
-      activesupport (= 3.2.7)
-    activesupport (3.2.7)
+    activeresource (3.2.8)
+      activemodel (= 3.2.8)
+      activesupport (= 3.2.8)
+    activesupport (3.2.8)
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.8)
@@ -64,7 +64,7 @@ GEM
     bson_ext (1.6.4)
       bson (~> 1.6.4)
     builder (3.0.0)
-    capybara (1.0.1)
+    capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -77,8 +77,8 @@ GEM
     cdn_helpers (0.9)
       actionpack
       nokogiri
-    childprocess (0.3.2)
-      ffi (~> 1.0.6)
+    childprocess (0.3.5)
+      ffi (~> 1.0, >= 1.0.6)
     chronic (0.6.7)
     ci_reporter (1.7.0)
       builder (>= 2.1.2)
@@ -112,12 +112,12 @@ GEM
     faraday (0.8.1)
       multipart-post (~> 1.1)
     fastthread (1.0.7)
-    ffi (1.0.11)
+    ffi (1.1.5)
     gds-api-adapters (0.2.2)
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (1.2.0)
+    gds-sso (1.2.1)
       omniauth-gds (= 0.0.3)
       rack-accept (~> 0.4.4)
       rails (>= 3.0.0)
@@ -131,14 +131,14 @@ GEM
     govspeak (0.8.15)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
-    govuk_content_models (0.2.2)
+    govuk_content_models (0.7.0)
       bson_ext
       differ
       gds-api-adapters
       gds-sso (>= 0.7, < 2.0)
       mongoid (~> 2.4.10)
       omniauth-oauth2 (~> 1.0)
-      plek (~> 0.1.22)
+      plek (>= 0.1.22, < 0.4)
       state_machine
     graylog2_exceptions (1.3.0)
       gelf (= 1.1.3)
@@ -163,7 +163,7 @@ GEM
     launchy (2.1.0)
       addressable (~> 2.2.6)
     libv8 (3.3.10.4)
-    libwebsocket (0.1.3)
+    libwebsocket (0.1.5)
       addressable
     lockfile (2.1.0)
     lograge (0.0.6)
@@ -188,7 +188,7 @@ GEM
     multi_json (1.3.6)
     multipart-post (1.1.5)
     newrelic_rpm (3.3.4.1)
-    nokogiri (1.5.2)
+    nokogiri (1.5.5)
     null_logger (0.0.1)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -221,17 +221,17 @@ GEM
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
-    rails (3.2.7)
-      actionmailer (= 3.2.7)
-      actionpack (= 3.2.7)
-      activerecord (= 3.2.7)
-      activeresource (= 3.2.7)
-      activesupport (= 3.2.7)
+    rails (3.2.8)
+      actionmailer (= 3.2.8)
+      actionpack (= 3.2.8)
+      activerecord (= 3.2.8)
+      activeresource (= 3.2.8)
+      activesupport (= 3.2.8)
       bundler (~> 1.0)
-      railties (= 3.2.7)
-    railties (3.2.7)
-      actionpack (= 3.2.7)
-      activesupport (= 3.2.7)
+      railties (= 3.2.8)
+    railties (3.2.8)
+      actionpack (= 3.2.8)
+      activesupport (= 3.2.8)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -243,10 +243,9 @@ GEM
       railties (~> 3.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rubyzip (0.9.8)
-    selenium-webdriver (2.21.2)
+    rubyzip (0.9.9)
+    selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
-      ffi (~> 1.0)
       libwebsocket (~> 0.1.3)
       multi_json (~> 1.0)
       rubyzip
@@ -266,6 +265,7 @@ GEM
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     state_machine (1.1.2)
+    statsd-ruby (1.0.0)
     term-ansicolor (1.0.7)
     test-unit (2.4.8)
     therubyracer (0.9.10)
@@ -297,7 +297,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-ses
-  capybara (~> 1.0.0)
+  capybara (~> 1.1.0)
   capybara-webkit
   cdn_helpers (= 0.9)
   ci_reporter
@@ -316,7 +316,7 @@ DEPENDENCIES
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.15)
-  govuk_content_models (~> 0.2.2)
+  govuk_content_models (= 0.7.0)
   graylog2_exceptions
   has_scope
   inherited_resources
@@ -325,15 +325,17 @@ DEPENDENCIES
   lockfile
   lograge
   mocha
+  mongo (= 1.6.2)
   newrelic_rpm
   null_logger
   passenger
   plek (= 0.1.24)
-  rails (= 3.2.7)
+  rails (= 3.2.8)
   rest-client
   shoulda
   simplecov (~> 0.6.4)
   simplecov-rcov (~> 0.2.3)
+  statsd-ruby (= 1.0.0)
   test-unit
   therubyracer (~> 0.9.4)
   timecop

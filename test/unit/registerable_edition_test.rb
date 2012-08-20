@@ -99,14 +99,14 @@ class RegisterableEditionTest < ActiveSupport::TestCase
   end
 
   context "paths" do
-    should "generate paths, including .json and .xml" do
+    should "generate paths, including .json" do
       edition = FactoryGirl.create(:edition,
         slug: "slug", 
         title: "A publication", 
         state: "published")
       registerable = RegisterableEdition.new(edition)
       
-      assert_equal ["slug", "slug.json", "slug.xml"], registerable.paths
+      assert_equal ["slug", "slug.json"], registerable.paths
     end
 
     context "GuideEdition" do
@@ -114,14 +114,14 @@ class RegisterableEditionTest < ActiveSupport::TestCase
         edition = GuideEdition.create(slug: "slug", title: "A guide edition", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug.xml", "slug/print"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/print"], registerable.paths
       end
 
       should "also generate video path when applicable" do
         edition = FactoryGirl.create(:guide_edition_with_two_parts, slug: "slug", title: "A guide edition", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug.xml", "slug/print", "slug/part-one", "slug/part-two"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/print", "slug/part-one", "slug/part-two"], registerable.paths
       end
     end
 
@@ -130,7 +130,7 @@ class RegisterableEditionTest < ActiveSupport::TestCase
         edition = ProgrammeEdition.create(slug: "slug", title: "A programme edition", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug.xml", "slug/print", "slug/further-information"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/print", "slug/further-information"], registerable.paths
       end
     end
 
@@ -139,7 +139,7 @@ class RegisterableEditionTest < ActiveSupport::TestCase
         edition = LocalTransactionEdition.create(slug: "slug", title: "A title", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug.xml", "slug/not_found"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/not_found"], registerable.paths
       end
     end
 
@@ -148,7 +148,7 @@ class RegisterableEditionTest < ActiveSupport::TestCase
         edition = PlaceEdition.create(slug: "slug", title: "A places edition", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug.xml", "slug.kml"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug.kml"], registerable.paths
       end
     end
   end

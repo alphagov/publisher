@@ -1,4 +1,5 @@
 require 'fact_check_message_processor'
+require 'patches/mail_imap'
 
 # A class to pull messages from an email account and send relevant ones
 # to a processor.
@@ -24,7 +25,7 @@ class FactCheckEmailHandler
   end
 
   def process()
-    Mail.all(:delete_after_find => true) do |message|
+    Mail.all(read_only: false, delete_after_find: true) do |message|
       message.skip_deletion unless process_message(message)
     end
   end
