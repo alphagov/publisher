@@ -1,3 +1,6 @@
+require "net/http"
+require "uri"
+
 class LicenceIdentifierMigrator
 
   LICENCE_MAPPING_URL = "https://raw.github.com/alphagov/licence-finder/correlation_id_migration/data/licence_gds_ids.yaml"
@@ -9,10 +12,10 @@ class LicenceIdentifierMigrator
     LicenceEdition.all.each do |licence_edition|
       licence_identifier = licence_mappings[licence_edition.licence_identifier.to_i]
       if licence_identifier
-        licence_edition = licence_edition.build_clone if licence_edition.state == 'published'
         licence_edition.licence_identifier = licence_identifier
-        licence_edition.save! 
-        counter += 1
+        if licence_edition.save(validate: false) 
+          counter += 1
+        end
       end
       done(counter, "\r")
     end
@@ -20,7 +23,13 @@ class LicenceIdentifierMigrator
   end
   
   def self.mappings_as_hash
-    YAML.load(Curl::Easy.http_get(LICENCE_MAPPING_URL).body_str)
+    uri = URI.parse(LICENCE_MAPPING_URL)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
+    YAML.load(response.body)
   end
 
   def self.done(counter, nl)
