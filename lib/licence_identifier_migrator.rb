@@ -5,7 +5,6 @@ class LicenceIdentifierMigrator
   def self.update_all
     counter = 0
     licence_mappings = mappings_as_hash
-    puts licence_mappings
     
     LicenceEdition.all.each do |licence_edition|
       licence_identifier = licence_mappings[licence_edition.licence_identifier.to_i]
