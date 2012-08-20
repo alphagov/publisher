@@ -19,8 +19,6 @@ gem 'gelf'
 gem 'graylog2_exceptions'
 gem 'rest-client'
 
-gem "curb"
-
 gem 'null_logger'
 gem 'daemonette', git: 'git@github.com:alphagov/daemonette.git'
 
