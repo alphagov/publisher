@@ -16,7 +16,7 @@ class RegisterableEdition
   end
 
   def paths
-    array = [slug, "#{slug}.json", "#{slug}.xml"]
+    array = [slug, "#{slug}.json"]
     if @edition.is_a?(GuideEdition)
       array << "#{slug}/print"
       array << "#{slug}/video" if @edition.has_video?

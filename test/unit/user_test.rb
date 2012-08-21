@@ -20,4 +20,8 @@ class UserTest < ActiveSupport::TestCase
     stub_register_published_content
     user.publish trans, {comment: "Published because I did"}
   end
+
+  test "use a custom collection for users" do
+    assert_equal "publisher_users", User.collection_name
+  end
 end
