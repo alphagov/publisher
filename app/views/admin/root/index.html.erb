@@ -42,7 +42,7 @@
             select_tag("user_filter", options_for_select(
               [["All", "all"], ["Nobody", "nobody"]] +
               User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-            ), :class => "span2")
+            ), :class => "span12")
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
@@ -52,11 +52,9 @@
 
       <div id="publication-list-container" class="span10">
         <% if params[:with] %>
-        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
         <%= render @list, with: params[:with] %>
         <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
         <% else %>
-        <%= paginate @presenter.send(@list) %>
         <%= render @list, with: nil %>
         <%= paginate @presenter.send(@list) %>
         <% end %>

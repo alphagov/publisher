@@ -12,17 +12,17 @@
 
         <%= f.inputs do %>
           <%= f.input :title,
-                      :input_html => { :class => 'span7 title', :disabled => ! editable },
+                      :input_html => { :class => 'span12 title', :disabled => ! editable },
                       :hint => true,
                       :required => true %>
 
           <%= f.input :body,
                       :as => :text,
                       :required => true,
-                      :input_html => { :class => 'span7', :rows => '25', :disabled => @resource.published? } %>
+                      :input_html => { :class => 'span12', :rows => '25', :disabled => @resource.published? } %>
 
           <%= f.input :slug,
-                      :input_html => { :class => 'span7 slug', :disabled => ! editable },
+                      :input_html => { :class => 'span12 slug', :disabled => ! editable },
                       :hint => false,
                       :required => true %>
 

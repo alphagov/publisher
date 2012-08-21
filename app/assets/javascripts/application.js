@@ -1,3 +1,8 @@
+//= require jquery
+//= require jquery_ujs
+//= require twitter/bootstrap
+//= require_tree .
+
 // System wide behaviours
 $(function () {
   $('.flash-notice').delay(3000).slideUp(300).one('click', function () { $(this).slideUp(300); });
