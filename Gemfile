@@ -47,6 +47,9 @@ gem 'rest-client'
 gem 'statsd-ruby', '1.0.0'
 gem 'whenever'
 
+gem 'jquery-rails'
+gem 'less-rails-bootstrap'
+
 group :assets do
   gem "therubyracer", "~> 0.9.4"
   gem 'uglifier'
@@ -60,8 +63,6 @@ group :test do
   gem 'test-unit'
   gem 'shoulda'
   gem 'database_cleaner'
-
-  gem 'cucumber-rails', require: false
 
   gem 'capybara', '~> 1.1.0'
   gem "capybara-webkit"
