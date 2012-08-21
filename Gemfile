@@ -64,8 +64,6 @@ group :test do
   gem 'shoulda'
   gem 'database_cleaner'
 
-  gem 'cucumber-rails', require: false
-
   gem 'capybara', '~> 1.1.0'
   gem "capybara-webkit"
   gem 'launchy'
