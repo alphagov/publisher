@@ -119,14 +119,16 @@ GEM
     govspeak (0.8.18)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
-    govuk_content_models (1.3.0)
+    govuk_content_models (1.4.0)
       bson_ext
       differ
       gds-api-adapters
       gds-sso (>= 0.7, < 2.0)
+      govspeak (~> 0.8.15)
       mongoid (~> 2.4.10)
       omniauth-oauth2 (~> 1.0)
       plek (>= 0.1.22, < 0.4)
+      sanitize (= 2.0.3)
       state_machine
     graylog2_exceptions (1.3.0)
       gelf (= 1.1.3)
@@ -242,6 +244,8 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rubyzip (0.9.9)
+    sanitize (2.0.3)
+      nokogiri (>= 1.4.4, < 1.6)
     selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -313,7 +317,7 @@ DEPENDENCIES
   gds-warmup-controller
   gelf
   govspeak (~> 0.8.15)
-  govuk_content_models (~> 1.3.0)
+  govuk_content_models (~> 1.4.0)
   graylog2_exceptions
   has_scope
   inherited_resources
