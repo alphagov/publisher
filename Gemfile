@@ -16,7 +16,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "~> 1.4.1"
+  gem "govuk_content_models", "1.4.3"
 end
 gem 'daemonette', git: 'https://github.com/alphagov/daemonette.git'
 gem 'erubis'

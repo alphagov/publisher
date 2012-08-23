@@ -1,3 +1,7 @@
 <div class="alert alert-info">
-  <p><%= @resource.latest_status_action.requester.name %> requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
+  <% if @resource.latest_status_action %>
+  	<p><%= @resource.latest_status_action.requester.name %> requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
+  <% else %>
+    <p>Someone requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
+  <% end %>
 </div>
