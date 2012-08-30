@@ -16,7 +16,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "1.4.3"
+  gem "govuk_content_models", "1.6.4"
 end
 gem 'daemonette', git: 'https://github.com/alphagov/daemonette.git'
 gem 'erubis'
@@ -29,7 +29,7 @@ gem 'gelf'
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '~> 0.8.15'
+  gem 'govspeak', '1.0.0'
 end
 gem 'graylog2_exceptions'
 gem 'has_scope'
