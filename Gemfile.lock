@@ -103,7 +103,7 @@ GEM
       multipart-post (~> 1.1)
     fastthread (1.0.7)
     ffi (1.1.5)
-    gds-api-adapters (0.2.2)
+    gds-api-adapters (0.2.3)
       lrucache (~> 0.1.1)
       null_logger
       plek
@@ -312,7 +312,7 @@ DEPENDENCIES
   faker
   formtastic!
   formtastic-bootstrap!
-  gds-api-adapters (= 0.2.2)
+  gds-api-adapters (= 0.2.3)
   gds-sso (~> 1.2.0)
   gds-warmup-controller
   gelf
