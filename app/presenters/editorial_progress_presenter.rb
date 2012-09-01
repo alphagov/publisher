@@ -8,6 +8,10 @@ class EditorialProgressPresenter
     self.column_headings = [:title, :slug, :preview_url, :state, :format, :version_number, :assigned_to]
   end
 
+  def filename
+    "all-editions-#{Date.today.strftime("%Y-%m-%d")}"
+  end
+
   def build_row(item)
     column_headings.collect do |ch| 
       if ch == :preview_url
