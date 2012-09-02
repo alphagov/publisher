@@ -5,7 +5,9 @@ class EditorialProgressPresenter
 
   def initialize(scope = Edition.all)
     self.scope = scope
-    self.column_headings = [:title, :slug, :preview_url, :state, :format, :version_number, :assigned_to]
+    self.column_headings = [:title, :slug, :preview_url, :state,
+      :format, :version_number, :assigned_to, :sibling_in_progress,
+      :panopticon_id]
   end
 
   def filename
