@@ -79,9 +79,13 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def progress
+    if params[:activity][:request_type] == "send_fact_check"
+      if params[:activity][:email_addresses].split(",").any? { |address| ! address.include?("@") }
+        return redirect_to admin_edition_path(resource), :alert => "Couldn't #{params[:activity].to_s.humanize.downcase} for #{description(resource).downcase}. The email addresses you entered appear to be invalid."
+      end
+    end
     current_status = resource.state
     intended_status = params[:activity][:request_type]
-
     if current_user.progress(resource, params[:activity].dup)
       statsd = Statsd.new(::STATSD_HOST)
       statsd.decrement("publisher.edition.#{current_status}")
