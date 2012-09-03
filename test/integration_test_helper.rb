@@ -1,23 +1,6 @@
 require 'test_helper'
 require 'capybara/rails'
 
-SimpleCov.at_exit do
-  coverage_file = File.absolute_path(File.join(Rails.root, 'coverage.txt'))
-  expected_coverage = File.read(coverage_file).to_f
-  result = SimpleCov.result
-  result.format!
-  coverage = (result.covered_percent * 100).to_i.to_f / 100
-  puts "C0 code coverage: #{coverage}%"
-  if coverage != expected_coverage
-    puts "Expected integration tests coverage of #{expected_coverage}%"
-    if coverage > expected_coverage
-      puts "You can increase the coverage in #{coverage_file}"
-    else
-      puts "Coverage went down. How sad."
-    end
-  end
-end
-
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
 
@@ -39,6 +22,41 @@ end
 class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
+  end
+
+  # Get a single user by their name. If the user doesn't exist, return nil.
+  def get_user(name)
+    User.where(name: name).first
+  end
+
+  # Set the given user to be the current user
+  # Accepts either a User object or a user's name
+  def login_as(user)
+    if not user.is_a? User
+      user = get_user(user)
+    end
+    GDS::SSO.test_user = user
+    Capybara.current_session.driver.browser.clear_cookies
+  end
+
+  def visit_edition(edition)
+    visit "/admin/editions/#{edition.to_param}"
+  end
+
+  # Fill in some sample sections for a guide
+  def fill_in_parts(guide)
+    visit_edition guide
+
+    click_on 'Untitled part'
+    within :css, '#parts div.part:first-of-type' do
+      fill_in 'Title', with: 'Part One'
+      fill_in 'Body',  with: 'Body text'
+      fill_in 'Slug',  with: 'part-one'
+    end
+    click_on "Save"
+    wait_until { page.has_content? "successfully updated" }
+
+    guide.reload
   end
 end
 

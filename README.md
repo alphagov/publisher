@@ -35,13 +35,9 @@ They can be imported using a rake task:
 
     bundle exec rake local_transactions:import SOURCE=/path/to/local_authority_service_details.CSV
 
-## ENVIRONMENT
+## Statsd
 
-Various flags and settings can control the runtime behaviour of publisher.
-These are mainly useful when working in development.
-
-`NO_MESSENGER` - don't try to connect to the STOMP message broker.
-
-e.g.
-
-    $ NO_MESSENGER=1 bundle exec rails s
+This application uses [statsd-ruby](http://rubygems.org/gems/statsd-ruby) to send metrics to
+[statsd](https://github.com/etsy/statsd/). If a statsd process isn't present on the server
+it won't matter as statsd-ruby sends metrics over UDP. If a statsd process is present then
+it'll send strings with the respective increment/decrement/gauge function to use.

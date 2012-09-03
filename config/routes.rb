@@ -15,18 +15,22 @@ Publisher::Application.routes.draw do
       end
     end
 
+    match 'reports' => 'reports#index', as: :reports
+    match 'reports/progress' => 'reports#progress', as: :progress_report
+
     match 'user_search' => 'user_search#index'
 
     resources :publications
-    match 'overview' => 'overview#index'
     root :to => 'root#index'
   end
 
-  resources :publications, :only => :show do
-    post :verify_snac, :on => :member
-  end
+  resources :publications, :only => :show
   resources :licences, :only => :index, :defaults => { :format => 'json' }
 
   post "/local_transactions/verify_snac", :to => "publications#verify_snac"
+
+  get "/local_transactions/find_by_snac", :to => "local_transactions#find_by_snac"
+  get "/local_transactions/find_by_council_name", :to => "local_transactions#find_by_council_name"
+
   root to: redirect("/admin")
 end

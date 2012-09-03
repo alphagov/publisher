@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @guide = FactoryGirl.create(:guide_edition)
+    @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
     artefact1 = FactoryGirl.create(:artefact, slug: "test",
         kind: "transaction",
         name: "test",
@@ -38,7 +38,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "an appropriate error message is shown if new edition failed" do
-    @user.stubs(:new_version).with(@guide).returns(false)
+    @user.stubs(:new_version).with(@guide, nil).returns(false)
     post :duplicate, :id => @guide.id
     assert_response 302
     assert_equal "Failed to create new edition: couldn't initialise", flash[:alert]
@@ -67,6 +67,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     bob = User.create
 
     @guide.state = 'ready'
+    stub_register_published_content
     User.create(:name => 'test').publish(@guide, comment: "Publishing this")
 
     post :duplicate, :id => @guide.id,
@@ -78,6 +79,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
   test "should not assign after creating a new edition if assignment is blank" do
     @bob = User.create
+    stub_register_published_content
     @bob.publish(@guide, comment: "Publishing this")
 
     post :duplicate,
@@ -169,7 +171,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should show the edit page after starting work" do
-    post :progress, { id: @guide.id.to_s, activity: {request_type: 'start_work'} }
+    post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' } }
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
 
     @guide.reload
@@ -187,6 +189,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
   test "can't destroy published transaction" do
     @transaction.state = 'ready'
+    stub_register_published_content
     @transaction.publish
     assert !@transaction.can_destroy?
     @transaction.save!
@@ -223,6 +226,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   test "can't destroy published programme" do
     @programme.state = 'ready'
     @programme.save!
+    stub_register_published_content
     @programme.publish
     @programme.save!
     assert @programme.published?

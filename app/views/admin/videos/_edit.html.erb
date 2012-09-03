@@ -1,0 +1,19 @@
+<%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
+  <% end %>
+
+  <hr>
+
+  <div class="row-fluid">
+    <div class="span4">
+      <h3>Govspeak help</h3>
+      <div class="well">
+        <%= render "../shared/govspeak_help" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :extra_javascript, javascript_include_tag('application', 'form-tools', 'jquery.mustache.js') %>

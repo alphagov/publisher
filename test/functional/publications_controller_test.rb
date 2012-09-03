@@ -2,12 +2,13 @@ require 'test_helper'
 
 class PublicationsControllerTest < ActionController::TestCase
   def build_publication
-    GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: 1)
+    GuideEdition.create!(slug: "childcare", title: 'Something distinctive', panopticon_id: FactoryGirl.create(:artefact).id)
   end
 
   def build_published_publication
     build_publication.tap { |p|
       p.state = 'ready'
+      stub_register_published_content
       p.publish
     }
   end
@@ -44,5 +45,25 @@ class PublicationsControllerTest < ActionController::TestCase
     get :show, :id => publication.slug, :edition => 1, :format => :json
     assert_response 200
     assert_match publication.title, response.body
+  end
+
+  test "should show the video 'type' when requested as a slug" do
+    @controller.stubs(:allow_preview?).returns(true)
+    video  = VideoEdition.create!(slug: "the-matrix", title: "The Matrix",
+                                  video_url: "http://www.thematrix.com", video_summary: "Neo is the one",
+                                  panopticon_id: FactoryGirl.create(:artefact).id)
+
+    get :show, :id => video.slug, :edition => 1, :format => :json
+
+    expected = {
+      "alternative_title" => nil,
+      "overview" => nil,
+      "slug" => "the-matrix",
+      "title" => "The Matrix",
+      "video_summary" => "Neo is the one",
+      "video_url" => "http://www.thematrix.com",
+      "type" => "video"
+    }
+    assert_equal expected, JSON.parse(response.body).tap { |json| json.delete("updated_at") }
   end
 end

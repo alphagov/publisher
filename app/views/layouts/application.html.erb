@@ -4,14 +4,16 @@
   <title>
     <%= yield :page_title %> | GOV.UK Publisher
   </title>
-  <%= csrf_meta_tag %>
-  <%= yield :extra_headers %>
-  <%= stylesheet_link_tag 'bootstrap.min.css', 'bootstrap-responsive.min.css', 'application.css' %>
-
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= csrf_meta_tag %>
+  <%= yield :extra_headers %>
 </head>
 <body>
 
@@ -27,8 +29,8 @@
         <nav role="navigation" class="nav-collapse">
           <ul class="nav">
             <%= nav_link 'All publications', admin_root_path %>
-            <%= nav_link 'Overview', admin_overview_path %>
             <%= nav_link 'Manage expectations', admin_expectations_path %>
+            <%= nav_link 'Reports', admin_reports_path %>
             <%= nav_link 'Search by user', admin_user_search_path %>
             <li class="divider-vertical"></li>
           </ul>
@@ -73,7 +75,7 @@
 
   </section><!--/.container-fluid -->
 
-  <%= javascript_include_tag('jquery.min.js', 'application.js', 'bootstrap.min.js') %>
+  <%= javascript_include_tag "application" %>
   <%= yield :extra_javascript %>
   <script type="text/javascript">
     $(function () {

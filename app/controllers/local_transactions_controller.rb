@@ -15,4 +15,23 @@ class LocalTransactionsController < ApplicationController
       render :text => '', :status => 422
     end
   end
+
+  def find_by_snac
+    local_authority = LocalAuthority.find_by_snac(params[:snac])
+    head 404 and return if local_authority.nil?
+    render :json => {
+      name: local_authority.name,
+      snac: local_authority.snac
+    }
+  end
+
+  def find_by_council_name
+    council = params[:name]
+    local_authority = LocalAuthority.where(name: /^#{council}/i).first
+    head 404 and return if local_authority.nil?
+    render :json => {
+      name: local_authority.name,
+      snac: local_authority.snac
+    }
+  end
 end
