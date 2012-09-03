@@ -3,6 +3,11 @@
   <div class="page-header">
     <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
   </div>
+  <% if @resource.artefact.state == "archived" %>
+    <div class="alert alert">
+      The artefact for this edition has been archived
+    </div>
+  <% end %>
 
   <div class="alert alert-info">
     Status: <strong><%= @resource.capitalized_state_name %></strong>
@@ -11,8 +16,10 @@
     <% end %>
   </div>
 
-  <%= render 'admin/shared/review_or_fact_check' %>
-  <%= render 'admin/shared/workflow_buttons' %>
+  <% if @resource.artefact.state != "archived" %>
+    <%= render 'admin/shared/review_or_fact_check' %>
+    <%= render 'admin/shared/workflow_buttons' %>
+  <% end %>
 
   <div class="tabbable">
     <ul class="nav nav-tabs">
@@ -40,7 +47,9 @@
         </div>
         <div class="tab-pane" id="admin">
           <div class="well">
-            <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+            <% if @resource.artefact.state != "archived" %>
+              <%= render :partial => '/admin/shared/admin_buttons', :locals => {:publication => @resource} %>
+            <% end %>
           </div><!--/.well -->
         </div>
     </div><!--/.tab-content -->
