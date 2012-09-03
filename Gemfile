@@ -16,20 +16,20 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "0.7.0"
+  gem "govuk_content_models", "1.6.4"
 end
 
 gem 'erubis'
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
-gem 'gds-api-adapters', '0.2.2'
+gem 'gds-api-adapters', '0.2.3'
 gem 'gds-warmup-controller'
 gem 'gelf'
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '~> 0.8.15'
+  gem 'govspeak', '1.0.0'
 end
 gem 'graylog2_exceptions'
 gem 'has_scope'
@@ -47,6 +47,9 @@ gem 'rest-client'
 gem 'statsd-ruby', '1.0.0'
 gem 'whenever'
 
+gem 'jquery-rails'
+gem 'less-rails-bootstrap'
+
 group :assets do
   gem "therubyracer", "~> 0.9.4"
   gem 'uglifier'
@@ -61,9 +64,7 @@ group :test do
   gem 'shoulda'
   gem 'database_cleaner'
 
-  gem 'cucumber-rails', require: false
-
-  gem 'capybara', '~> 1.0.0'
+  gem 'capybara', '~> 1.1.0'
   gem "capybara-webkit"
   gem 'launchy'
 
