@@ -4,19 +4,17 @@
     <h1>Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span></h1>
   </div>
   <% if @resource.artefact.state == "archived" %>
-    <div class="alert alert">
+    <div class="alert alert-error">
       The artefact for this edition has been archived
     </div>
-  <% end %>
+  <% else %>
+    <div class="alert alert-info">
+      Status: <strong><%= @resource.capitalized_state_name %></strong>
+      <% if @resource.business_proposition %>
+        <span class="pull-right"><strong>! BUSINESS PROPOSITION CONTENT !</strong></span>
+      <% end %>
+    </div>
 
-  <div class="alert alert-info">
-    Status: <strong><%= @resource.capitalized_state_name %></strong>
-    <% if @resource.business_proposition %>
-      <span class="pull-right"><strong>! BUSINESS PROPOSITION CONTENT !</strong></span>
-    <% end %>
-  </div>
-
-  <% if @resource.artefact.state != "archived" %>
     <%= render 'admin/shared/review_or_fact_check' %>
     <%= render 'admin/shared/workflow_buttons' %>
   <% end %>
