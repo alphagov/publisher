@@ -15,10 +15,12 @@ Publisher::Application.routes.draw do
       end
     end
 
+    match 'reports' => 'reports#index', as: :reports
+    match 'reports/progress' => 'reports#progress', as: :progress_report
+
     match 'user_search' => 'user_search#index'
 
     resources :publications
-    match 'overview' => 'overview#index'
     root :to => 'root#index'
   end
 
