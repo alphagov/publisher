@@ -5,10 +5,6 @@ every 5.minutes do
   run_script "mail_fetcher"
 end
 
-every :hour do
-  rake "update_publisher_dashboard"
-end
-
 every 1.day, :at => '5am' do
   rake "local_transactions:fetch"
 end
