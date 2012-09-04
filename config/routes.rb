@@ -24,7 +24,7 @@ Publisher::Application.routes.draw do
     root :to => 'root#index'
   end
 
-  resources :publications, :only => :show
+  resources :publications, :only => :show, :constraints => { :id => /[^\.]+/ }
   resources :licences, :only => :index, :defaults => { :format => 'json' }
 
   post "/local_transactions/verify_snac", :to => "publications#verify_snac"
