@@ -27,7 +27,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   def sample_publication
-    GuideEdition.create!(title: 'Hello', slug: "hello-#{Time.now.to_i}", panopticon_id: '1234')
+    FactoryGirl.create(:guide_edition, title: 'Hello', slug: "hello-#{Time.now.to_i}")
   end
 
   test "processing returns false if the publication isn't found" do

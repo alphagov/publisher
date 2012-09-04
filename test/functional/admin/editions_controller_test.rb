@@ -22,11 +22,12 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   test "it renders the lgsl edit form successfully if creation fails" do
     lgsl_code = 800
     local_service = FactoryGirl.create(:local_service, :lgsl_code=>lgsl_code)
+    artefact = FactoryGirl.create(:artefact)
 
-    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code, "panopticon_id"=>"827", "title"=>"a title"}
+    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code, "panopticon_id"=>artefact.id, "title"=>"a title"}
     assert_equal '302', response.code
 
-    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code+1, "panopticon_id"=>"827", "title"=>"a title"}
+    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code+1, "panopticon_id"=>artefact.id, "title"=>"a title"}
     assert_equal '200', response.code
   end
 

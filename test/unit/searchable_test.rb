@@ -3,7 +3,7 @@ require 'test_helper'
 class SearchableTest < ActiveSupport::TestCase
 
   def template_guide_edition
-    edition = GuideEdition.create(:title => 'Guide', :slug => 'guide', :panopticon_id => 1)
+    edition = FactoryGirl.create(:guide_edition, :title => 'Guide', :slug => 'guide')
     edition.start_work
     edition
   end
