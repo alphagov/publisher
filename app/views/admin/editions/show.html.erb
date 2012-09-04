@@ -5,7 +5,8 @@
   </div>
   <% if @resource.artefact.state == "archived" %>
     <div class="alert alert-error">
-      The artefact for this edition has been archived
+      <h2>Stop! You can't edit this publication because its artefact file in Panopticon has been archived.</h2>
+      <p>(It's unpublished from the website but you can still see the latest edition here in Publisher.)</p>
     </div>
   <% else %>
     <div class="alert alert-info">
