@@ -45,8 +45,8 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     stub_mailer = stub('mailer', :deliver => true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
-
-    guide = user.create_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: '12345')
+    artefact = FactoryGirl.create(:artefact)
+    guide = user.create_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: artefact.id)
     edition = guide
     edition.state = 'ready'
     assert edition.can_send_fact_check?

@@ -13,7 +13,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   test "should be able to convert a GuideEdition into an AnswerEdition" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'published')
+    guide = FactoryGirl.create(:guide_edition, state: 'published')
     visit_edition guide
 
     within "div.tabbable" do
@@ -30,7 +30,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   test "should be able to convert an AnswerEdition into a GuideEdition" do
-    answer = FactoryGirl.create(:answer_edition, slug: "childcare", title: "meh", body: "bleh", panopticon_id: 2356, state: 'published')
+    answer = FactoryGirl.create(:answer_edition, slug: "childcare", title: "meh", body: "bleh", state: 'published')
     visit_edition answer
 
     within "div.tabbable" do
@@ -47,7 +47,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   test "should not be able to convert a GuideEdition into an AnswerEdition if not published" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'ready')
+    guide = FactoryGirl.create(:guide_edition, state: 'ready')
     visit_edition guide
 
     within "div.tabbable" do

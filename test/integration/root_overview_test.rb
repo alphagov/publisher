@@ -28,9 +28,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
-    x =  GuideEdition.create(:panopticon_id => 1, :title => "XXX", :slug => "xxx")
-    y =  GuideEdition.create(:panopticon_id => 2, :title => "YYY", :slug => "yyy")
-    z =  GuideEdition.create(:panopticon_id => 3, :title => "ZZZ", :slug => "zzz")
+    x =  FactoryGirl.create(:guide_edition, :title => "XXX", :slug => "xxx")
+    y =  FactoryGirl.create(:guide_edition, :title => "YYY", :slug => "yyy")
+    z =  FactoryGirl.create(:guide_edition, :title => "ZZZ", :slug => "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
