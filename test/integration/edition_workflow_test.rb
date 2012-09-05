@@ -130,7 +130,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should show and update a guide's assigned person" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     fill_in_parts guide
     assert_nil guide.assigned_to
 
@@ -142,14 +142,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can assign a new guide without editing the part" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
 
     assign guide, "Bob"
     assert_equal guide.assigned_to, get_user("Bob")
   end
 
   test "a guide is lined up until work starts on it" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
 
     assign guide, "Alice"
     assert guide.lined_up?
@@ -163,7 +163,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should update progress of a guide" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
 
@@ -183,7 +183,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can flag guide for review" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     login_as "Alice"
 
     assign guide, "Alice"
@@ -199,7 +199,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "cannot review own guide" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     login_as "Alice"
 
     assign guide, "Alice"
@@ -213,7 +213,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can review another's guide" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     get_to_review guide, "Alice"
 
     login_as "Bob"
@@ -224,7 +224,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "review failed" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     get_to_review guide, "Alice"
 
     login_as "Bob"
@@ -235,7 +235,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "review passed" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     get_to_review guide, "Alice"
 
     login_as "Bob"
@@ -246,7 +246,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can skip fact check" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     get_to_fact_check guide, "Alice"
     visit_edition guide
 
@@ -262,7 +262,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can progress from fact check" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356)
+    guide = FactoryGirl.create(:guide_edition)
     get_to_fact_check_received guide, "Alice"
     visit_edition guide
     send_action guide, "Minor or no changes required", "Hurrah!"
@@ -272,7 +272,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can create a new edition from the listings screens" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: 2356, state: 'published')
+    guide = FactoryGirl.create(:guide_edition, state: 'published')
     filter_for "All"
     view_filtered_list "Published"
     click_button "Create new edition of this publication"
@@ -280,15 +280,16 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should link to a newer sibling" do
+    artefact = FactoryGirl.create(:artefact)
     old_edition = FactoryGirl.create(
       :guide_edition,
-      panopticon_id: 2356,
+      panopticon_id: artefact.id,
       state: "published",
       version_number: 1
     )
     new_edition = FactoryGirl.create(
       :guide_edition,
-      panopticon_id: 2356,
+      panopticon_id: artefact.id,
       state: "draft",
       version_number: 2
     )
@@ -296,6 +297,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_link?(
       "Edit existing newer edition",
       href: admin_edition_path(new_edition)
-    )
+    ), "Page should have edit link"
   end
 end

@@ -124,11 +124,11 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   test "should select publications assigned to nobody" do
     alice, bob = setup_users
 
-    a = GuideEdition.create!(title: 'My First Guide', panopticon_id: 1)
+    a = FactoryGirl.create(:guide_edition, title: 'My First Guide')
     assert_nil a.assigned_to
     assert a.lined_up?
 
-    b = GuideEdition.create!(title: 'My Second Guide', panopticon_id: 2)
+    b = FactoryGirl.create(:guide_edition, title: 'My Second Guide')
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.lined_up?
