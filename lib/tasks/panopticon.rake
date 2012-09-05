@@ -5,7 +5,7 @@ namespace :panopticon do
     logger = GdsApi::Base.logger = Logger.new(STDERR).tap { |l| l.level = Logger::INFO }
     logger.info "Registering with panopticon..."
 
-    edition_count = Edition.count
+    edition_count = Edition.published.count
     Edition.published.each_with_index do |edition, index|
       begin
         logger.info "Registering #{edition.slug} [#{index}/#{edition_count}]"
