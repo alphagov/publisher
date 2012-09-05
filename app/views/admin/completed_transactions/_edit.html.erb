@@ -1,0 +1,6 @@
+<%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+    <%= f.input :body, :as => :text, :input_html => { :class => 'span12', :disabled => @resource.published? } %>
+  <% end %>
+<% end %>

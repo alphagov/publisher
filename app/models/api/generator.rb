@@ -115,6 +115,12 @@ module Api
       end
     end
 
+    class CompletedTransaction < Base
+      def self.extra_fields
+        [:body]
+      end
+    end
+
     class Place < Base
       def self.extra_fields
         [ :introduction,
