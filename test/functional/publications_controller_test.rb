@@ -26,6 +26,17 @@ class PublicationsControllerTest < ActionController::TestCase
     assert_match publication.title, response.body
   end
 
+  test "should emit a published publication with a slash in the slug" do
+    publication = AnswerEdition.create!(slug: "done/example-content", title: 'Example transaction is complete', panopticon_id: FactoryGirl.create(:artefact).id)
+    publication.state = 'ready'
+    stub_register_published_content
+    publication.publish
+
+    get :show, :id => publication.slug, :format => :json
+    assert_response 200
+    assert_match publication.title, response.body
+  end
+
   test "should return 404 for an unpublished publication" do
     publication = build_publication
     get :show, :id => publication.slug, :format => :json
