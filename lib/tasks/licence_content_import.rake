@@ -4,7 +4,7 @@ namespace :licence_importer do
     LicenceContentImporter.run(:report)
   end
   desc "Imports unwritten licence data from CSV."
-  task :import => :environment do
-    LicenceContentImporter.run(:import)
+  task :import, [:importer] => :environment do |t, args|
+    LicenceContentImporter.run(:import, args[:importer])
   end
 end

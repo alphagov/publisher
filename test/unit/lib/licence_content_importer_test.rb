@@ -3,7 +3,7 @@ require 'test_helper'
 class LicenceContentImporterTest < ActiveSupport::TestCase
   
   def setup
-    
+    @user = FactoryGirl.create(:user, :name => "Test user")
     @artefact = FactoryGirl.create(:artefact, slug: "licence-to-test",
       kind: "licence", name: "test", owning_app: "publisher")
     
@@ -13,7 +13,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     
     GdsApi::Panopticon.any_instance.stubs(:create_artefact).returns(response)
     
-    @importer = LicenceContentImporter.new
+    @importer = LicenceContentImporter.new(@user.name)
     @row = CSV::Row.new(['OID', 'NAME', 'LONGDESC'], 
       [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
   end

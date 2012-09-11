@@ -2,20 +2,21 @@ require 'csv'
 require 'reverse_markdown'
 
 class LicenceContentImporter
-
-  LICENCE_CONTENT_FILENAME = 'unwritten-licences'
   
+  LICENCE_CONTENT_FILENAME = 'unwritten-licences'
   attr_reader :imported, :existing, :failed
    
-  def initialize
+  def initialize(importing_user)
     @imported = []
     @existing = []
     @failed = []
     @api = GdsApi::Panopticon.new(Rails.env)
+    @user = User.where(name: importing_user).first
+    raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
   end
   
-  def self.run(method)
-    importer = LicenceContentImporter.new
+  def self.run(method, importing_user=self.name)
+    importer = LicenceContentImporter.new(importing_user)
     
     importer.csv_data(LICENCE_CONTENT_FILENAME).each do |row|
       importer.send(method, row)
@@ -64,12 +65,13 @@ class LicenceContentImporter
         edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug, 
           licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
         
-        if edition  
+        if edition
+          add_workflow(@user, edition)
           puts "Created LicenceEdition in publisher with panopticon_id: #{artefact_id}, licence_identifier: #{identifier}"       
           @imported << edition
         else
           @failed << identifier
-          puts "Failed to import LicenceEdition via panopticon API. Identifier: #{identifier}."
+          puts "Failed to import LicenceEdition to publisher. Identifier: #{identifier}."
         end
       else
         @failed << identifier
@@ -78,7 +80,14 @@ class LicenceContentImporter
     end
   end
   
-  def formatted_result import=true
+  def add_workflow(user, edition)
+    user.record_note(edition, "Imported #{Date.today.to_s(:db)}")
+    type = Action.const_get(Action::CREATE.to_s.upcase)
+    action = edition.new_action(user, type, {})
+    edition.save!
+  end
+  
+  def formatted_result(import=true)
     puts "--------------------------------------------------------------------------"
     puts "#{existing.size} LicenceEditions skipped."
     puts "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
