@@ -61,7 +61,7 @@ class LicenceContentImporter
                     
         puts "Created artefact in panopticon with id: #{artefact_id}, slug: #{slug}."
         
-        edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug, state: "draft", 
+        edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug, 
           licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
         
         if edition  
