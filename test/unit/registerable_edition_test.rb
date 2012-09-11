@@ -31,18 +31,23 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     @edition = FactoryGirl.create(:guide_edition, state: "published", panopticon_id: @artefact.id)
   end
 
-  context "live" do
-    should "return true if the edition is published" do
+  context "state" do
+    should "return live if the edition is published" do
       registerable = RegisterableEdition.new(@edition)
-      assert_equal true, registerable.live
+      assert_equal 'live', registerable.state
     end
 
-    should "return false otherwise" do
-      @edition.stubs(:published?).returns(false)
+    should "return archived if the edition is archived" do
+      @edition.state = 'archived'
       registerable = RegisterableEdition.new(@edition)
-      assert_equal false, registerable.live
+      assert_equal 'archived', registerable.state
     end
 
+    should "return draft if the edition is not published or archived" do
+      @edition.state = 'other'
+      registerable = RegisterableEdition.new(@edition)
+      assert_equal 'draft', registerable.state
+    end
   end
 
   context "description" do

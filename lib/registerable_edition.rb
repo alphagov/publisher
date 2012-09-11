@@ -7,8 +7,12 @@ class RegisterableEdition
     @edition = edition
   end
 
-  def live
-    @edition.published?
+  def state
+    case @edition.state
+    when 'published': 'live'
+    when 'archived': 'archived'
+    else 'draft'
+    end
   end
 
   def description
