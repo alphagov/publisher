@@ -57,7 +57,7 @@ GEM
     bson (1.6.4)
     bson_ext (1.6.4)
       bson (~> 1.6.4)
-    builder (3.0.0)
+    builder (3.0.3)
     capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -97,7 +97,7 @@ GEM
       multipart-post (~> 1.1)
     fastthread (1.0.7)
     ffi (1.1.5)
-    gds-api-adapters (0.2.3)
+    gds-api-adapters (1.8.0)
       lrucache (~> 0.1.1)
       null_logger
       plek
@@ -307,7 +307,7 @@ DEPENDENCIES
   faker
   formtastic!
   formtastic-bootstrap!
-  gds-api-adapters (= 0.2.3)
+  gds-api-adapters (= 1.8.0)
   gds-sso (~> 1.2.0)
   gds-warmup-controller
   gelf

@@ -46,7 +46,7 @@ class NoisyWorkflow < ActionMailer::Base
 
   def report_errors(error_list)
     @errors = error_list
-    mail(:to => EMAIL_GROUPS['dev'], :subject => 'Errors in fact check email processing')
+    mail(:to => EMAIL_GROUPS[:dev], :subject => 'Errors in fact check email processing')
   end
 
   protected
