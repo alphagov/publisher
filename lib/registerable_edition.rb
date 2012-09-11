@@ -9,8 +9,8 @@ class RegisterableEdition
 
   def state
     case @edition.state
-    when 'published': 'live'
-    when 'archived': 'archived'
+    when 'published' then 'live'
+    when 'archived' then 'archived'
     else 'draft'
     end
   end
