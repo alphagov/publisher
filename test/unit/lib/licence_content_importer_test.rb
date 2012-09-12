@@ -34,6 +34,12 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     end
     assert 12345, @importer.imported.first.licence_identifier
     assert_equal 'licence-to-test', @importer.imported.first.slug
+    assert_equal @artefact.id.to_s, @importer.imported.first.panopticon_id 
+  end
+  
+  def test_marked_down
+    assert_equal "**strong**", @importer.marked_down("<strong>strong</strong>")
+    assert_equal "**strong**", @importer.marked_down("&lt;strong&gt;strong&lt;/strong&gt;", true)
   end
   
 end
