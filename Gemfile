@@ -2,12 +2,8 @@ source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 gem 'aws-ses', require: 'aws/ses'
-if ENV['CDN_DEV']
-  gem 'cdn_helpers', path: '../cdn_helpers'
-else
-  gem 'cdn_helpers', '0.9'
-end
 gem 'colorize', "~> 0.5.8"
+
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
