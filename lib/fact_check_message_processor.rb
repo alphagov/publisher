@@ -20,6 +20,14 @@ class FactCheckMessageProcessor
   end
 
   def progress_publication_edition(edition)
+    utf8_body = body_as_utf8
+    goverised = Govspeak::Document.new(utf8_body)
+    if goverised.valid?
+      safe_body = utf8_body
+    else
+      safe_body = Govspeak::HtmlValidator.sanitize_html(utf8_body)
+      "Hai! We noticed something amiss contained within this response, so we have escaped it! Some characters may not be as intended. #{safe_body}"
+    end
     User.new.receive_fact_check(edition, comment: body_as_utf8)
   end
 

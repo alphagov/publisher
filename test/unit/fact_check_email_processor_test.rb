@@ -92,4 +92,9 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_match /Hello/, f.body_as_utf8
   end
 
+  test "should sanitise content of the email to prevent any javascript nasty and still save to the database" do
+    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/hidden_nasty.txt", __FILE__))
+    f = FactCheckMessageProcessor.new(message)
+    assert f.process_for_publication(sample_publication.id)
+  end
 end
