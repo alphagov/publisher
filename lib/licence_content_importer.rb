@@ -1,7 +1,10 @@
 require 'csv'
 require 'reverse_markdown'
+require 'gds_api/helpers'
 
 class LicenceContentImporter
+
+  include GdsApi::Helpers
 
   LICENCE_CONTENT_FILENAME = 'unwritten-licences'
   attr_reader :imported, :existing, :failed
@@ -10,7 +13,7 @@ class LicenceContentImporter
     @imported = []
     @existing = []
     @failed = []
-    @api = GdsApi::Panopticon.new(Rails.env)
+    @api = panopticon_api
     @user = User.where(name: importing_user).first
     raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
   end
