@@ -25,7 +25,7 @@ gem 'gelf'
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '1.0.1'
+  gem 'govspeak', '1.1.0'
 end
 gem 'graylog2_exceptions'
 gem 'has_scope'

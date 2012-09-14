@@ -1,3 +1,5 @@
+require 'govspeak/html_sanitizer'
+
 class FactCheckMessageProcessor
   attr_accessor :message
 
@@ -25,8 +27,7 @@ class FactCheckMessageProcessor
     if goverised.valid?
       safe_body = utf8_body
     else
-      # TODO we should probably split out the class so we don't have to invoke it
-      safe_body = Govspeak::HtmlValidator.new("").sanitize_html(utf8_body)
+      safe_body = Govspeak::HtmlSanitizer.new(utf8_body).sanitize
       "Hai! We noticed something amiss contained within this response, so we have escaped it! Some characters may not be as intended. #{safe_body}"
     end
     User.new.receive_fact_check(edition, comment: safe_body)
