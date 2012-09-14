@@ -40,6 +40,7 @@ gem 'plek', '0.1.24'
 gem 'rails', '3.2.8'
 gem 'rest-client'
 gem 'rest-client'
+gem 'reverse_markdown'
 gem 'statsd-ruby', '1.0.0'
 gem 'whenever'
 
