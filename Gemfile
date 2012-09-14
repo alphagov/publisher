@@ -12,7 +12,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "1.7.2"
+  gem "govuk_content_models", "1.8.0"
 end
 
 gem 'erubis'
@@ -25,7 +25,7 @@ gem 'gelf'
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '1.0.0'
+  gem 'govspeak', '1.0.1'
 end
 gem 'graylog2_exceptions'
 gem 'has_scope'

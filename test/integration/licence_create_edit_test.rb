@@ -35,7 +35,9 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :licence_identifier => "ab2345",
                                  :licence_short_description => "Short description content",
-                                 :licence_overview => "Licence overview content")
+                                 :licence_overview => "Licence overview content",
+                                 :will_continue_on => "The HMRC website",
+                                 :continuation_link => "http://www.hmrc.gov.uk")
 
     visit "/admin/editions/#{licence.to_param}"
 
@@ -44,10 +46,14 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Licence identifier", :with => "ab2345")
     assert page.has_field?("Licence short description", :with => "Short description content")
     assert page.has_field?("Licence overview", :with => "Licence overview content")
+    assert page.has_field?("Will continue on", :with => "The HMRC website")
+    assert page.has_field?("Link to competent authority", :with => "http://www.hmrc.gov.uk")
 
     fill_in "Licence identifier", :with => "5432de"
     fill_in "Licence short description", :with => "New short description"
     fill_in "Licence overview", :with => "New Overview content"
+    fill_in "Will continue on", :with => "The DVLA website"
+    fill_in "Link to competent authority", :with => "http://www.dvla.gov.uk"
 
     click_button "Save"
 
@@ -66,7 +72,9 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :licence_identifier => "ab2345",
                                  :licence_short_description => "Short description content",
-                                 :licence_overview => "Licence overview content")
+                                 :licence_overview => "Licence overview content",
+                                 :will_continue_on => "The HMRC website",
+                                 :continuation_link => "http://www.hmrc.gov.uk")
 
     visit "/admin/editions/#{licence.to_param}"
     click_on "Create new edition"
@@ -76,5 +84,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Licence identifier", :with => "ab2345")
     assert page.has_field?("Licence short description", :with => "Short description content")
     assert page.has_field?("Licence overview", :with => "Licence overview content")
+    assert page.has_field?("Will continue on", :with => "The HMRC website")
+    assert page.has_field?("Link to competent authority", :with => "http://www.hmrc.gov.uk")
   end
 end
