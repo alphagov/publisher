@@ -234,6 +234,8 @@ GEM
       railties (~> 3.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    reverse_markdown (0.3.0)
+      nokogiri
     rubyzip (0.9.9)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
@@ -324,6 +326,7 @@ DEPENDENCIES
   plek (= 0.1.24)
   rails (= 3.2.8)
   rest-client
+  reverse_markdown
   shoulda
   simplecov (~> 0.6.4)
   simplecov-rcov (~> 0.2.3)
