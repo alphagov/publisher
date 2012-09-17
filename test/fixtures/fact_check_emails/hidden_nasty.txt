@@ -1,0 +1,112 @@
+Delivered-To: factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk
+Received: by 10.220.193.201 with SMTP id dv9cs282215vcb;
+        Mon, 28 Nov 2011 03:37:02 -0800 (PST)
+Received: by 10.205.135.6 with SMTP id ie6mr17070013bkc.69.1322480220653;
+        Mon, 28 Nov 2011 03:37:00 -0800 (PST)
+Return-Path: <Mark.Stanley@justice.gsi.gov.uk>
+Received: from mail185.messagelabs.com (mail185.messagelabs.com. [85.158.143.19])
+        by mx.google.com with SMTP id gf16si18551182bkc.70.2011.11.28.03.37.00;
+        Mon, 28 Nov 2011 03:37:00 -0800 (PST)
+Received-SPF: neutral (google.com: 85.158.143.19 is neither permitted nor denied by best guess record for domain of Mark.Stanley@justice.gsi.gov.uk) client-ip=85.158.143.19;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 85.158.143.19 is neither permitted nor denied by best guess record for domain of Mark.Stanley@justice.gsi.gov.uk) smtp.mail=Mark.Stanley@justice.gsi.gov.uk
+X-Env-Sender: Mark.Stanley@justice.gsi.gov.uk
+X-Msg-Ref: server-2.tower-185.messagelabs.com!1322480219!5259075!1
+X-Originating-IP: [195.92.40.48]
+X-StarScan-Version: 6.3.6; banners=justice.gsi.gov.uk,-,-
+X-VirusChecked: Checked
+Received: (qmail 4773 invoked from network); 28 Nov 2011 11:36:59 -0000
+Received: from gateway-201.energis.gsi.gov.uk (HELO mx.hosting-e.gsi.gov.uk) (195.92.40.48)
+  by server-2.tower-185.messagelabs.com with SMTP; 28 Nov 2011 11:36:59 -0000
+X-IronPort-AV: E=Sophos;i="4.69,583,1315177200"; 
+   d="scan'208";a="46381388"
+From: "Stanley, Mark" <Mark.Stanley@justice.gsi.gov.uk>
+To: "factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk"
+  <factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk>
+Date: Mon, 28 Nov 2011 11:36:57 +0000
+Subject: RE: [FACT CHECK REQUESTED] Find out if someone has an attorney or
+ deputy acting for them
+Thread-Topic: [FACT CHECK REQUESTED] Find out if someone has an attorney or
+ deputy acting for them
+Thread-Index: AcyX7SKocnxwd23dTaOm8LEBneMrtAV1MOKw
+Message-ID: <ED35BCA4B8742E49943C61F87DC459B22BCCBFCBCC@EXM0002.dom1.infra.int>
+References: <4eaed1b674d12_1b45949184972f5@ip-10-59-151-229.mail>
+In-Reply-To: <4eaed1b674d12_1b45949184972f5@ip-10-59-151-229.mail>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+acceptlanguage: en-US, en-GB
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+This is some text 
+
+<script>function(){alert("hello I am evil");}</script>
+
+-----Original Message-----
+From: Beta Editorial Team [mailto:winston@alphagov.co.uk]=20
+Sent: 31 October 2011 16:50
+To: Stanley, Mark
+Subject: [FACT CHECK REQUESTED] Find out if someone has an attorney or dep=
+uty acting for them
+
+Hello - thank you for fact-checking the beta version of www.gov.uk
+
+Please read this content and check it's factually correct.
+
+PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: factcheck+production-4e6e1b2fe=
+2ba8022d100000a@alphagov.co.uk
+
+If you spot something that's incorrect, please let us know by:
+
+- replying to this email with your comments
+- directing us to any specific instances, e.g. part 2, subheading 3
+- explaining what the problem is, e.g. the text implies a legal obligation=
+, when there isn't one
+
+Please don't rewrite the text - just point out any factual errors. We will=
+ rewrite accordingly.
+
+Title: Find out if someone has an attorney or deputy acting for them
+
+http://www.production.alphagov.co.uk/find-someones-attorney-or-deputy?edit=
+ion=3D1
+
+Thanks,
+Beta editorial team
+       =20
+
+This email was received from the INTERNET and scanned by the Government Se=
+cure Intranet anti-virus service supplied by Cable&Wireless Worldwide in p=
+artnership with MessageLabs. (CCTM Certificate Number 2009/09/0052.) In ca=
+se of problems, please call your organisation's IT Helpdesk.=20
+Communications via the GSi may be automatically logged, monitored and/or r=
+ecorded for legal purposes.
+
+
+This e-mail (and any attachment) is intended only for the attention of
+the addressee(s). Its unauthorised use, disclosure, storage or copying
+is not permitted. If you are not the intended recipient, please destroy al=
+l
+copies and inform the sender by return e-mail.
+
+Internet e-mail is not a secure medium. Any reply to this message
+could be intercepted and read by someone else. Please bear that in
+mind when deciding whether to send material Look into movies to see
+in response to this message
+by e-mail.
+
+This e-mail (whether you are the sender or the recipient) may be
+monitored, recorded and retained by the Ministry of Justice. E-mail
+monitoring / blocking software may be used, and e-mail content may be
+read at any time. You have a responsibility to ensure laws are not
+broken when composing or forwarding e-mails and their contents.
+
+
+The original of this email was scanned for viruses by the Government Secur=
+e Intranet virus scanning service supplied by Cable&Wireless Worldwide in =
+partnership with MessageLabs. (CCTM Certificate Number 2009/09/0052.) On l=
+eaving the GSi this email was certified virus free.
+Communications via the GSi may be automatically logged, monitored and/or r=
+ecorded for legal purposes.

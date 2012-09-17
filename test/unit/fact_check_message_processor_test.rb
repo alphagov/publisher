@@ -92,4 +92,15 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_match /Hello/, f.body_as_utf8
   end
 
+  test "it should sanitize comments that would fail Govspeak/HTML validation" do
+    edition = sample_publication
+    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/hidden_nasty.txt", __FILE__))
+    f = FactCheckMessageProcessor.new(message)
+    assert f.process_for_publication(edition.id)
+
+    edition.reload
+    assert_includes(edition.actions.last.comment, 'This is some text')
+    refute_includes(edition.actions.last.comment, '<script>')
+    assert edition.actions.last.comment_sanitized
+  end
 end
