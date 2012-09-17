@@ -13,6 +13,11 @@
           GOV.UK Bot
         <% end %>
         <% if action.comment.present? || action.is_fact_check_request? || action.diff || action.request_type == "assign" %>
+          <% if action.comment_sanitized %>
+            <div class="alert alert-error alert-block">
+              This email contained some potentially harmful content, which has been automatically removed. You may want to read it carefully in case of a mistake.
+            </div>
+          <% end %>
           <q>
           <% if action.comment.present? %>
             <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
