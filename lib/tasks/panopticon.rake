@@ -6,7 +6,11 @@ namespace :panopticon do
     logger.info "Registering with panopticon..."
 
     edition_count = Edition.published.count
-    Edition.published.each_with_index do |edition, index|
+    # Pulling the editions into an array before iterating over them
+    # This is more memory-hungry (to the tune of 100 megs or so) but it works
+    # around the problem where re-registration takes so long that Mongo gives
+    # up on the cursor it's holding and throws it away.
+    Edition.published.to_a.each_with_index do |edition, index|
       begin
         logger.info "Registering #{edition.slug} [#{index}/#{edition_count}]"
         edition.register_with_panopticon
