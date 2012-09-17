@@ -104,7 +104,9 @@ class BusinessSupportImporter
   def marked_down(str, unescape_html=false)
     return nil if str.nil?
     str = CGI.unescapeHTML(str) if unescape_html
-    ReverseMarkdown.parse(str)
+    ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|match|
+      "\n\n#{$1}"
+    }
   end
   
   def csv_data(path)

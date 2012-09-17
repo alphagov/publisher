@@ -33,4 +33,15 @@ class BusinessSupportImporterTest < ActiveSupport::TestCase
     assert_equal "**strong**", @importer.marked_down("&lt;strong&gt;strong&lt;/strong&gt;", true)
   end
   
+  def test_valid_markdown_for_lists
+    content = "<p>This is a list:</p><ul><li>One</li><li>two</li><li>three</li></ul>"
+    markdown = "This is a list:
+
+- One
+- two
+- three"
+
+    assert_equal markdown, @importer.marked_down(content).strip
+  end
+  
 end
