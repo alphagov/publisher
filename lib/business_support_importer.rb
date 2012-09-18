@@ -18,11 +18,9 @@ class BusinessSupportImporter
   
   def self.run(method, data_path, importing_user=User.first)
     importer = BusinessSupportImporter.new(data_path, importing_user)
-    
     importer.csv_data(data_path).each do |row|
       importer.send(method, row)
     end
-    
     puts importer.formatted_result(method == :import)
     
   end
@@ -41,7 +39,7 @@ class BusinessSupportImporter
   
   def import row
     
-    title = CGI.unescapeHTML(row['title'])
+    title = CGI.unescapeHTML(to_utf8(row['title']))
     slug = slug_for(title)
       
     api_response = @api.create_artefact(slug: slug, kind: 'business_support', state: 'draft',
@@ -55,9 +53,9 @@ class BusinessSupportImporter
       short_desc = marked_down(row['short_description'])
       
       edition = BusinessSupportEdition.create title: title, panopticon_id: artefact_id, slug: slug, 
-        business_support_identifier: slug, short_description: short_desc, max_employees: row['max_employees'], 
-        min_value: row['min_grant_value'], max_value: row['max_grant_value'], organiser: row['organiser'], 
-        continuation_link: row['url'], contact_details: row['contact_details'], business_proposition: true
+        business_support_identifier: slug, short_description: short_desc, max_employees: to_utf8(row['max_employees']), 
+        min_value: row['min_grant_value'], max_value: to_utf8(row['max_grant_value']), organiser: to_utf8(row['organiser']), 
+        continuation_link: to_utf8(row['url']), contact_details: to_utf8(row['contact_details']), business_proposition: true
       
       if edition
         
@@ -82,7 +80,6 @@ class BusinessSupportImporter
   def add_workflow(user, edition)
     type = Action.const_get(Action::CREATE.to_s.upcase)
     action = edition.new_action(user, type, {})
-    # edition.save!
     user.record_note(edition, "Imported via BusinessSupportContentImporter: #{Date.today.to_s(:db)}")
   end
   
@@ -101,9 +98,13 @@ class BusinessSupportImporter
     title.parameterize.gsub("-amp-", "-and-")
   end
   
+  def to_utf8(str)
+    (str.nil? ? nil : str.force_encoding("UTF-8"))
+  end
+  
   def marked_down(str, unescape_html=false)
     return nil if str.nil?
-    str = CGI.unescapeHTML(str) if unescape_html
+    str = CGI.unescapeHTML(to_utf8(str)) if unescape_html
     ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|match|
       "\n\n#{$1}"
     }
