@@ -10,31 +10,33 @@ class BusinessSupportImporter
    
   def initialize(data_path, importing_user)
     @imported = 0
-    @failed = 0
+    @failed = []
     @api = panopticon_api
     @user = User.where(name: importing_user).first
     raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
   end
   
   def self.run(method, data_path, importing_user=User.first)
-    importer = BusinessSupportImporter.new(data_path, importing_user)
-    importer.csv_data(data_path).each do |row|
-      importer.send(method, row)
-    end
-    puts importer.formatted_result(method == :import)
-    
+      importer = BusinessSupportImporter.new(data_path, importing_user)
+      importer.csv_data(data_path).each do |row|
+        importer.send(method, row)
+      end
+    ensure
+      puts importer.formatted_result(method == :import)
   end
   
   def report row
     slug = slug_for(row['title'])
     long_desc = marked_down(row['long_description'])
-
-    puts slug
-    puts "---------------------------- marked down ---------------------------------"
-    puts long_desc
-    puts "------------------------------- end --------------------------------------\n\n"
-    
-    @imported += 1
+    if LicenceEdition.where(slug: slug).size == 0
+      puts slug
+      puts "---------------------------- marked down ---------------------------------"
+      puts long_desc
+      puts "------------------------------- end --------------------------------------\n\n"
+      @imported += 1
+    else
+      @failed << "Failed to import LicenceEdition. Slug: #{slug}"
+    end
   end
   
   def import row
@@ -68,12 +70,10 @@ class BusinessSupportImporter
         puts "Created BusinessSupportEdition in publisher with panopticon_id: #{artefact_id}, Slug: #{slug}"       
         @imported += 1
       else
-        @failed += 1
-        puts "Failed to import BusinessSupportEdition into publisher. Slug: #{slug}."
+        @failed << "Failed to import BusinessSupportEdition into publisher. Slug: #{slug}."
       end
     else
-      @failed += 1
-      puts "Failed to import BusinessSupportEdition via panopticon API. Slug: #{slug}."
+      @failed << "Failed to import BusinessSupportEdition via panopticon API. Slug: #{slug}."
     end
   end
   
@@ -91,6 +91,7 @@ class BusinessSupportImporter
   def formatted_result(import=true)
     puts "--------------------------------------------------------------------------"
     puts "#{imported} BusinessSupportEditions#{(import ? '' : ' can be')} imported."
+    failed.each { |f| puts f }
     puts "--------------------------------------------------------------------------"
   end
   
