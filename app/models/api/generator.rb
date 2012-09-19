@@ -132,7 +132,8 @@ module Api
     class Video < Base
       def self.extra_fields
         [ :video_url,
-          :video_summary]
+          :video_summary,
+          :body]
       end
     end
   end
