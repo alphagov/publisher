@@ -133,7 +133,7 @@ module Api
       def self.extra_fields
         [ :video_url,
           :video_summary,
-          :description]
+          :body]
       end
     end
   end

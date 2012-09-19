@@ -34,7 +34,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     assert_equal "Spinach and Agushi; Ghanaian street food", video.alternative_title
     assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", video.video_url
     assert_equal "A simple fried plantain recipe", video.video_summary
-    assert_equal "Description of video", video.description
+    assert_equal "Description of video", video.body
   end
 
   should "allow editing a VideoEdition" do
@@ -43,7 +43,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
                                  :video_summary => "Coke smoothie",
-                                 :description => "Old description")
+                                 :body => "Old description")
 
     visit "/admin/editions/#{video.to_param}"
 
@@ -66,7 +66,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     v = VideoEdition.find(video.id)
     assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", v.video_url
     assert_equal "A simple fried plantain recipe", v.video_summary
-    assert_equal "Description of video", v.description
+    assert_equal "Description of video", v.body
   end
 
   should "allow creating a new version of a VideoEdition" do
@@ -76,7 +76,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
                                  :video_summary => "Coke smoothie",
-                                 :description => "Description of video")
+                                 :body => "Description of video")
 
     visit "/admin/editions/#{video.to_param}"
     click_on "Create new edition"

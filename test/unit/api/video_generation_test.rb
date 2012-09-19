@@ -8,7 +8,7 @@ class VideoGenerationTest < ActiveSupport::TestCase
                                  :alternative_title => 'This is an example video title',
                                  :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
                                  :video_summary => "Coke smoothie",
-                                 :description => "Description of video")
+                                 :body => "Description of video")
   end
 
   def generated
@@ -26,6 +26,6 @@ class VideoGenerationTest < ActiveSupport::TestCase
     assert_equal "video", result['type']
     assert_equal "Coke smoothie", result['video_summary']
     assert_equal "http://www.youtube.com/watch?v=qySFp3qnVmM", result['video_url']
-    assert_equal "Description of video", result['description']
+    assert_equal "Description of video", result['body']
   end
 end
