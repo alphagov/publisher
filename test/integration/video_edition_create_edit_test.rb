@@ -20,7 +20,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     fill_in "Alternative title", :with => "Spinach and Agushi; Ghanaian street food"
     fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
-    fill_in "Description", :with => "Description of video"
+    fill_in "Body", :with => "Description of video"
 
     within :css, ".workflow_buttons" do
       click_on "Save"
@@ -51,11 +51,11 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
     assert page.has_field?("Video Summary", :with => "Coke smoothie")
-    assert page.has_field?("Description", :with => "Old description")
+    assert page.has_field?("Body", :with => "Old description")
 
     fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
-    fill_in "Description", :with => "Description of video"
+    fill_in "Body", :with => "Description of video"
 
     within ".workflow_buttons" do
       click_button "Save"
@@ -85,6 +85,6 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
     assert page.has_field?("Video Summary", :with => "Coke smoothie")
-    assert page.has_field?("Description", :with => "Description of video")
+    assert page.has_field?("Body", :with => "Description of video")
   end
 end

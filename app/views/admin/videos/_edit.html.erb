@@ -2,7 +2,6 @@
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
-    <%= f.input :body, :as => :text, :label => "Description",
-                       :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+    <%= f.input :body, :as => :text, :input_html => { :class => 'span7', :disabled => @resource.published? } %>
   <% end %>
 <% end %>
