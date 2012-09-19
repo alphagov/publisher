@@ -22,10 +22,7 @@ class FactCheckMessageProcessor
   end
 
   def progress_publication_edition(edition)
-    # We have to govspeak and sanitize that because it's going to be validated that way. Yuck.
-    document = Govspeak::Document.new(body_as_utf8)
-    comment = document.valid? ? body_as_utf8 : document.to_sanitized_html
-    User.new.receive_fact_check(edition, { comment: comment, comment_sanitized: !document.valid? })
+    User.new.receive_fact_check(edition, { comment: body_as_utf8 })
   end
 
   def process_for_publication(publication_id)
