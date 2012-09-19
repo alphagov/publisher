@@ -1,5 +1,6 @@
 require 'csv'
 require 'gds_api/helpers'
+require 'retriable'
 require 'reverse_markdown'
 
 class BusinessSupportImporter
@@ -17,9 +18,12 @@ class BusinessSupportImporter
   end
   
   def self.run(method, data_path, importing_user=User.first)
+      timeouts = 0
       importer = BusinessSupportImporter.new(data_path, importing_user)
       importer.csv_data(data_path).each do |row|
-        importer.send(method, row)
+        retriable :on => GdsApi::TimedOutException, :tries => 5, :interval => 5 do
+          importer.send(method, row)
+        end
       end
     ensure
       puts importer.formatted_result(method == :import)
