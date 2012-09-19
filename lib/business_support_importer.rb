@@ -18,7 +18,6 @@ class BusinessSupportImporter
   end
   
   def self.run(method, data_path, importing_user=User.first)
-      timeouts = 0
       importer = BusinessSupportImporter.new(data_path, importing_user)
       importer.csv_data(data_path).each do |row|
         retriable :on => GdsApi::TimedOutException, :tries => 5, :interval => 5 do
