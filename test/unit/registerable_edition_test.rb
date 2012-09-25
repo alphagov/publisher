@@ -131,11 +131,11 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
 
     context "ProgrammeEdition" do
-      should "generate standard paths, plus slug/print and slug/further-information" do
+      should "generate standard paths, plus slug/print" do
         edition = ProgrammeEdition.create(slug: "slug", title: "A programme edition", state: "published")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug/print", "slug/further-information"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/print"], registerable.paths
       end
     end
 
