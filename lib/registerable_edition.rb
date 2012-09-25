@@ -29,7 +29,9 @@ class RegisterableEdition
       end
     elsif @edition.is_a?(ProgrammeEdition)
       array << "#{slug}/print"
-      array << "#{slug}/further-information"
+      @edition.parts.each do |part|
+        array << "#{slug}/#{part.slug}"
+      end
     elsif @edition.is_a?(PlaceEdition)
       array << "#{slug}.kml"
     elsif @edition.is_a?(LocalTransactionEdition)

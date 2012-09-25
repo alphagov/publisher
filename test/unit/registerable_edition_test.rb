@@ -131,11 +131,14 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
 
     context "ProgrammeEdition" do
-      should "generate standard paths, plus slug/print and slug/further-information" do
-        edition = ProgrammeEdition.create(slug: "slug", title: "A programme edition", state: "published")
+      should "generate standard paths, paths for all parts, plus slug/print" do
+        edition = FactoryGirl.create(:programme_edition, slug: "slug", title: "A programme edition", state: "published")
+        edition.setup_default_parts
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug/print", "slug/further-information"], registerable.paths
+        assert_equal ["slug", "slug.json", "slug/print", "slug/overview",
+          "slug/what-youll-get", "slug/eligibility", "slug/how-to-claim",
+          "slug/further-information"], registerable.paths
       end
     end
 
