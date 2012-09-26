@@ -10,6 +10,7 @@ class Admin::RootController < Admin::BaseController
   def index
     @user_filter = params[:user_filter] || session[:user_filter]
     @list = params[:list].blank? ? 'lined_up' : params[:list]
+
     session[:user_filter] = @user_filter
 
     if params[:with] && params[:title_filter]
@@ -52,6 +53,12 @@ class Admin::RootController < Admin::BaseController
 
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
     @presenter = AdminRootPresenter.new(editions, user)
+
+    # Looking at another class, but the whole approach taken by this method and its
+    # associated presenter needs revisiting.
+    unless @presenter.acceptable_list?(@list)
+      head(:not_found) and return
+    end
 
     if ! params[:title_filter].blank?
       @presenter.filter_by_title_substring(params[:title_filter])
