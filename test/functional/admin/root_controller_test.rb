@@ -9,6 +9,11 @@ class Admin::RootControllerTest < ActionController::TestCase
     @guide = FactoryGirl.create(:guide_edition, state: 'draft')
   end
 
+  test "it returns a 404 for an unknown list" do
+    get :index, list: 'draFts'
+    assert response.not_found?
+  end
+
   test "it goes to the right state when a with parameter is given" do
     get :index, with: @guide.id
     assert_equal "drafts", assigns[:list]
