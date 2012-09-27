@@ -57,7 +57,7 @@ class Admin::RootController < Admin::BaseController
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
     unless @presenter.acceptable_list?(@list)
-      head(:not_found) and return
+      render text: 'Not Found', status: 404 and return
     end
 
     if ! params[:title_filter].blank?
