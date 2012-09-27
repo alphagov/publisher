@@ -106,11 +106,11 @@ class RegisterableEditionTest < ActiveSupport::TestCase
   context "paths" do
     should "generate paths, including .json" do
       edition = FactoryGirl.create(:edition,
-        slug: "slug", 
-        title: "A publication", 
+        slug: "slug",
+        title: "A publication",
         state: "published")
       registerable = RegisterableEdition.new(edition)
-      
+
       assert_equal ["slug", "slug.json"], registerable.paths
     end
 
@@ -157,6 +157,26 @@ class RegisterableEditionTest < ActiveSupport::TestCase
         registerable = RegisterableEdition.new(edition)
 
         assert_equal ["slug", "slug.json", "slug.kml"], registerable.paths
+      end
+    end
+
+    context "LicenceEdition" do
+      should "generate only a json path" do
+        edition = LicenceEdition.create(slug: "slug", title: "A title", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug.json"], registerable.paths
+      end
+    end
+  end
+
+  context "prefix" do
+    context "LicenceEdition" do
+      should "generate prefix routes for licences" do
+        edition = LicenceEdition.create(slug: "slug", title: "A title", state: "published")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal ["slug"], registerable.prefixes
       end
     end
   end

@@ -20,7 +20,12 @@ class RegisterableEdition
   end
 
   def paths
-    array = [slug, "#{slug}.json"]
+    if @edition.is_a?(LicenceEdition)
+      array = ["#{slug}.json"]
+    else
+      array = [slug,"#{slug}.json"]
+    end
+
     if @edition.is_a?(GuideEdition)
       array << "#{slug}/print"
       array << "#{slug}/video" if @edition.has_video?
@@ -41,6 +46,10 @@ class RegisterableEdition
   end
 
   def prefixes
-    []
+    if @edition.is_a?(LicenceEdition)
+      [slug]
+    else
+      []
+    end
   end
 end
