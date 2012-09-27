@@ -58,7 +58,9 @@ module Api
       def self.extra_fields
         [ :licence_identifier,
           :licence_short_description,
-          :licence_overview ]
+          :licence_overview,
+          :continuation_link,
+          :will_continue_on ]
       end
     end
 
