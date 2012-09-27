@@ -2,6 +2,14 @@ class AdminRootPresenter
   AVAILABLE_LISTS = [:lined_up, :draft, :amends_needed, :in_review,
     :fact_check, :fact_check_received, :ready, :published, :archived]
 
+  # There's some discrepancy between the scope names and partial
+  # names so we need a mapping (scope_name => partial_name) to
+  # help identify acceptable names
+  LIST_TRANSLATIONS = {
+    :draft => :drafts,
+    :fact_check => :out_for_fact_check,
+  }
+
   def initialize(editions, user)
     @scope = case user
     when :all
@@ -17,7 +25,11 @@ class AdminRootPresenter
   private :scope
 
   def acceptable_list?(list)
-    AVAILABLE_LISTS.include?(list.to_sym)
+    available_partials = AVAILABLE_LISTS.map do |scope|
+      LIST_TRANSLATIONS[scope] ? LIST_TRANSLATIONS[scope] : scope
+    end
+
+    available_partials.include?(list.to_sym)
   end
 
   def all

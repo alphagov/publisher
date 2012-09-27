@@ -14,6 +14,14 @@ class Admin::RootControllerTest < ActionController::TestCase
     assert response.not_found?
   end
 
+  # Most values of the list parameter match a scope on the Edition
+  # model, but some don't and we want to test that we allow those
+  # through correctly
+  test "it supports lists that don't match a model scope" do
+    get :index, list: 'drafts'
+    assert response.ok?
+  end
+
   test "it goes to the right state when a with parameter is given" do
     get :index, with: @guide.id
     assert_equal "drafts", assigns[:list]
