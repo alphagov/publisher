@@ -1,5 +1,7 @@
     <%= f.input :business_support_identifier %>
+    
     <%= f.input :organiser, :input_html => { :class => "span7", :disabled => published } %>
+    
     <%= f.input :short_description,
                 :label => 'Short description',
                 :hint => 'Short description shown in search results.',
@@ -41,14 +43,17 @@
                 :label => 'Min value',
                 :hint => "The smallest amount of support available",
                 :input_html => {:disabled => published } %>
+                
     <%= f.input :max_value,
                 :label => 'Max value',
                 :hint => "The largest amount of support available",
                 :input_html => { :disabled => published } %>
+                
     <%= f.input :will_continue_on,
                 :label => 'Will continue on',
                 :hint => 'Text to accompany external website link',
                 :input_html => { :class => "span7", :disabled => published } %>
+                
     <%= f.input :continuation_link,
                 :label => 'Continuation link',
                 :hint => 'Link to external website for this business support',
