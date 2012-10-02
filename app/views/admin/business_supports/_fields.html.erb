@@ -1,0 +1,60 @@
+    <%= f.input :business_support_identifier %>
+    
+    <%= f.input :organiser, :input_html => { :class => "span7", :disabled => published } %>
+    
+    <%= f.input :short_description,
+                :label => 'Short description',
+                :hint => 'Short description shown in search results.',
+                :input_html => {:class => "span7", :disabled => published } %>
+    
+    <%= f.input :body,
+                :as => :text,
+                :label => 'Body',
+                :hint => 'The full description of this business support',
+                :input_html => { :class => "span7", :rows => 10, :disabled => published } %>
+  
+    <%= f.input :eligibility,
+                :as => :text,
+                :label => 'Eligibility',
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>
+
+    <%= f.input :evaluation,
+                :as => :text,
+                :label => 'Evaluation',
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>     
+
+    <%= f.input :additional_information,
+                :as => :text,
+                :label => 'Additional information',
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>   
+
+    <%= f.input :contact_details,
+                :as => :text,
+                :label => 'Contact details',
+                :hint => 'Email, telephone, address and postcode of the business support authority or company',
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>  
+
+    <%= f.input :max_employees,
+                :label => 'Max employees',
+                :hint => 'Maximum number of employees in qualifying business',
+                :input_html => {:disabled => published } %>
+    
+    <%= f.input :min_value,
+                :label => 'Min value',
+                :hint => "The smallest amount of support available",
+                :input_html => {:disabled => published } %>
+                
+    <%= f.input :max_value,
+                :label => 'Max value',
+                :hint => "The largest amount of support available",
+                :input_html => { :disabled => published } %>
+                
+    <%= f.input :will_continue_on,
+                :label => 'Will continue on',
+                :hint => 'Text to accompany external website link',
+                :input_html => { :class => "span7", :disabled => published } %>
+                
+    <%= f.input :continuation_link,
+                :label => 'Continuation link',
+                :hint => 'Link to external website for this business support',
+                :input_html => { :class => "span7", :disabled => published } %>

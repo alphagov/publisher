@@ -1,47 +1,13 @@
 <%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
-  <%= f.inputs do %>
-    <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
-
-    <%= f.input :short_description,
-          :label => 'Short description',
-          :hint => 'Short description shown in search results.',
-          :input_html => {:class => "span7", :disabled => @resource.published? } %>
-
-    <div class="row-fluid">
-      <div class="span3">
-        <%= f.input :min_value,
-              :label => 'Min value',
-              :hint => "The smallest amount of support available",
-              :input_html => {:disabled => @resource.published? } %>
-      </div>
-      <div class="span3">
-        <%= f.input :max_value,
-              :label => 'Max value',
-              :hint => "The largest amount of support available",
-              :input_html => { :disabled => @resource.published? } %>
-      </div>
-    </div>
-  <% end %>
-
-  <hr>
-
   <div class="row-fluid">
 
+
     <div class="span8">
-
-      <h3>Parts</h3>
-
-      <section class="accordion" id="parts">
-
-        <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
-
-        <%= f.semantic_fields_for :parts do |part| %>
-          <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => false} %>
-        <% end %>
-
-      </section>
+    <%= f.inputs do %>
+      <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+      <%= render :partial => 'admin/business_supports/fields', :locals => { :f => f, :published => @resource.published? } %>
+    <% end %>
     </div>
-
     <div class="span4">
       <h3>Govspeak help</h3>
 
