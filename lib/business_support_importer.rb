@@ -57,13 +57,13 @@ class BusinessSupportImporter
       
       short_desc = marked_down(row['short_description'])
       
-      edition = BusinessSupportEdition.create! title: title, panopticon_id: artefact_id, slug: slug, 
+      edition = BusinessSupportEdition.create title: title, panopticon_id: artefact_id, slug: slug, 
         business_support_identifier: row['id'], short_description: short_desc, max_employees: to_utf8(row['max_employees']), 
         min_value: row['min_grant_value'], max_value: to_utf8(row['max_grant_value']), organiser: to_utf8(row['organiser']), 
         additional_information: marked_down(row['additional_information']), eligibility: marked_down(row['eligibility']),
         body: marked_down(row['long_description']), evaluation: marked_down(row['evaluation']), continuation_link: to_utf8(row['url']), 
         will_continue_on: row['will_continue_on'], contact_details: to_utf8(row['contact_details']), business_proposition: true
-      
+
       if edition
         
         add_workflow(@user, edition)
