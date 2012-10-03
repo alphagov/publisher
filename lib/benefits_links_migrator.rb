@@ -1,9 +1,10 @@
-class BenefitsLinksMigrator 
-  
+class BenefitsLinksMigrator
+
   REGEXP = /#(overview|what-youll-get|eligibility|how-to-claim)/
 
   def report
     matching_editions = match_editions
+    modified_latest_editions = 0
 
     matching_editions.each do |e|
       if e.latest_edition?
@@ -11,20 +12,21 @@ class BenefitsLinksMigrator
         if e.respond_to?("body")
           m = REGEXP.match(e.body)
           if m
-            report_match(m, e.body) 
+            report_match(m, e.body)
           end
         end
         if e.respond_to?("parts")
           e.parts.each do |p|
-            m = REGEXP.match(p.body) if p.body =~ REGEXP
-            if m
+            if p.body =~ REGEXP
+              m = REGEXP.match(p.body)
               report_match(m, p.body)
             end
           end
         end
+        modified_latest_editions += 1
       end
-    end            
-    puts "#{matching_editions.size} editions would be modified."
+    end
+    puts "#{modified_latest_editions} editions would be modified."
   end
 
   def report_edition(e)
@@ -34,6 +36,10 @@ class BenefitsLinksMigrator
   def report_match(match, str)
     puts "---------------------------------------------------------------------"
     puts "Anchor match : '#{match}' would be replaced with '/#{match[1]}'"
+    puts "---------------------------------------------------------------------"
+    puts "Original content is:"
+    puts "---------------------------------------------------------------------"
+    puts str
     puts "---------------------------------------------------------------------"
     puts "Modified content would be:"
     puts "---------------------------------------------------------------------"
@@ -61,7 +67,7 @@ class BenefitsLinksMigrator
           clone = e.build_clone
           clone.new_action(u, Action::REQUEST_REVIEW, {})
           clone.state = 'in_review'
-          u.record_note(clone, update_msg)    
+          u.record_note(clone, update_msg)
           updated = clone.save!
         else
           u.record_note(e, update_msg)
@@ -71,7 +77,7 @@ class BenefitsLinksMigrator
       end
     end
   end
-  
+
   def replace_matching_anchors(str)
     str.gsub(REGEXP) { |m|
       "/#{$1}"
@@ -79,7 +85,7 @@ class BenefitsLinksMigrator
   end
 
   def match_editions
-    matching_editions = [] 
+    matching_editions = []
     Edition.where(body: REGEXP).each { |e| matching_editions << e unless e.state == 'archived' }
     Edition.where('parts.body' => REGEXP).each { |e| matching_editions << e unless e.state == 'archived' }
     matching_editions
