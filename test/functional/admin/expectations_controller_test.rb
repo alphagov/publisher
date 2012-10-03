@@ -11,7 +11,7 @@ class Admin::ExpectationsControllerTest < ActionController::TestCase
   end
 
   test "creating an expectation works" do
-    post :create, :expectation => {:text => 'It will cost money', :css_class => 'it-will-cost-money'}
+    post :create, :expectation => {:text => 'It will cost money'}
     assert_response 302
     assert_equal "Expectation set", flash[:notice]
   end

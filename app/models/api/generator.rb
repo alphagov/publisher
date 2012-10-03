@@ -21,7 +21,7 @@ module Api
       end
 
       if edition.respond_to?(:expectations)
-        attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:css_class,:text]) }
+        attrs['expectations'] = edition.expectations.map {|e| e.as_json(:only => [:text]) }
       end
 
       attrs['type'] = edition.format.underscore
