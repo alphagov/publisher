@@ -101,7 +101,8 @@ class BusinessSupportImporter
   
   def marked_down(str, unescape_html=false)
     return nil if str.nil?
-    str = CGI.unescapeHTML(to_utf8(str)) if unescape_html
+    str = to_utf8(str)
+    str = CGI.unescapeHTML(str) if unescape_html
     ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|match|
       "\n\n#{$1}"
     }
