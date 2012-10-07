@@ -54,10 +54,6 @@ group :assets do
   gem 'uglifier'
 end
 
-group :development do
-  gem 'passenger'
-end
-
 group :test do
   gem 'test-unit'
   gem 'shoulda'
