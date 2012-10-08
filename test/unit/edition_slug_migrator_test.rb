@@ -5,9 +5,10 @@ require 'gds_api/panopticon'
 class EditionSlugMigratorTest < ActiveSupport::TestCase
 
   setup do
+    @example_artefact = FactoryGirl.create(:artefact)
     @editions = [
-      FactoryGirl.create(:edition, :slug => "first-original-slug"),
-      FactoryGirl.create(:edition, :slug => "first-original-slug"),
+      FactoryGirl.create(:edition, :slug => "first-original-slug", :version_number => 1, :panopticon_id => @example_artefact.id, :state => "published"),
+      FactoryGirl.create(:edition, :slug => "first-original-slug", :version_number => 2, :panopticon_id => @example_artefact.id, :state => "draft"),
       FactoryGirl.create(:edition, :slug => "second-original-slug", :state => "published"),
       FactoryGirl.create(:edition, :slug => "third-original-slug", :state => "archived")
     ]
@@ -29,9 +30,11 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
     assert_equal ["first-new-slug", "first-new-slug", "second-new-slug", "third-new-slug"], @editions.map(&:slug)
   end
 
-  should "reregister the edition with Panopticon" do
+  should "reregister the latest or published edition with Panopticon" do
+    GdsApi::Panopticon::Registerer.any_instance.unstub(:register)
+
     ["first-new-slug","second-new-slug","third-new-slug"].each do |slug|
-      GdsApi::Panopticon::Registerer.any_instance.stubs(:register).with(responds_with(:slug, slug)).returns(true)
+      GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(responds_with(:slug, slug)).returns(true)
     end
 
     @it.run

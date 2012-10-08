@@ -18,7 +18,14 @@ class EditionSlugMigrator
       editions.each do |edition|
         edition.update_attribute(:slug, new_slug)
 
-        edition.register_with_panopticon if edition.published?
+        # if there is a published edition, register the published edition
+        # if there isn't a published edition, register the latest edition
+        if edition.published_edition.present?
+          edition.register_with_panopticon if edition == edition.published_edition
+        elsif edition.latest_edition?
+          edition.register_with_panopticon
+        end
+
         edition.actions.create!(
           :request_type => Action::NOTE,
           :comment => "Edition moved from '#{slug}' to '#{new_slug}"
