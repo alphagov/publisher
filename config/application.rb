@@ -32,6 +32,7 @@ module Publisher
       jquery.mustache.js
       multi-part.js
       publications.js
+      html5.js
     )
 
     config.generators do |g|
