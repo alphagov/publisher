@@ -12,27 +12,30 @@ class EditionSlugMigrator
     logger.info "Migrating slugs for #{slugs.size} editions"
     slugs.each do |slug, new_slug|
       editions = Edition.where(slug: slug)
-      raise "Edition not found with slug #{slug}" unless editions.any?
 
-      count = editions.count
-      editions.each do |edition|
-        edition.update_attribute(:slug, new_slug)
+      if editions.any?
+        count = editions.count
+        editions.each do |edition|
+          edition.update_attribute(:slug, new_slug)
 
-        # if there is a published edition, register the published edition
-        # if there isn't a published edition, register the latest edition
-        if edition.published_edition.present?
-          edition.register_with_panopticon if edition == edition.published_edition
-        elsif edition.latest_edition?
-          edition.register_with_panopticon
+          # if there is a published edition, register the published edition
+          # if there isn't a published edition, register the latest edition
+          if edition.published_edition.present?
+            edition.register_with_panopticon if edition == edition.published_edition
+          elsif edition.latest_edition?
+            edition.register_with_panopticon
+          end
+
+          edition.actions.create!(
+            :request_type => Action::NOTE,
+            :comment => "Edition moved from '#{slug}' to '#{new_slug}"
+          )
         end
 
-        edition.actions.create!(
-          :request_type => Action::NOTE,
-          :comment => "Edition moved from '#{slug}' to '#{new_slug}"
-        )
+        logger.info "     #{slug} -> #{new_slug} (#{count} editions)"
+      else
+        logger.error "Edition not found with slug #{slug}"
       end
-
-      logger.info "     #{slug} -> #{new_slug} (#{count} editions)"
     end
     logger.info "Sequence complete."
   end
