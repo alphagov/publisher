@@ -33,7 +33,7 @@ class LicenceContentImporter
   end
 
   def report row
-    identifier = row['OID']
+    identifier = row['OID'].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
     if existing_editions.size > 0
@@ -62,8 +62,6 @@ class LicenceContentImporter
 
       api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
         owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1, business_proposition: true)
-
-      puts "Panopticon repsonse code: #{api_response.code}.\n#{api_response.to_hash.inspect}\n"
 
       if api_response && api_response.code == 201 # 'created' http response code
         artefact_id = api_response.to_hash['id']
