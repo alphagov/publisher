@@ -22,7 +22,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     silence_stream(STDOUT) do
       @importer.report(@row)
     end
-    assert_equal 12345, @importer.imported.first[:identifier]
+    assert_equal "12345", @importer.imported.first[:identifier]
     assert_equal 'licence-to-test', @importer.imported.first[:slug]
     assert_match /\*\*Software testing\*\*/, @importer.imported.first[:description]
     assert_match /\*validating\*/, @importer.imported.first[:description]
