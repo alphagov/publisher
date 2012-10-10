@@ -7,22 +7,25 @@ class LicenceContentImporter
   include GdsApi::Helpers
 
   LICENCE_CONTENT_FILENAME = 'unwritten-licences'
-  attr_reader :imported, :existing, :failed
+  attr_reader :data_path, :imported, :existing, :failed
 
-  def initialize(importing_user)
+  def initialize(data_path, importing_user)
     @imported = []
     @existing = []
     @failed = []
     @api = panopticon_api
+    @data_path = data_path
     @user = User.where(name: importing_user).first
     raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
   end
 
-  def self.run(method, importing_user=User.first)
-    importer = LicenceContentImporter.new(importing_user)
+  def self.run(method, data_path, importing_user=User.first)
+    importer = LicenceContentImporter.new(data_path, importing_user)
 
-    importer.csv_data(LICENCE_CONTENT_FILENAME).each do |row|
-      importer.send(method, row)
+    importer.csv_data(data_path).each do |row|
+      retriable :on => GdsApi::TimedOutException, :tries => 5, :interval => 5 do
+        importer.send(method, row)
+      end
     end
 
     puts importer.formatted_result(method == :import)
@@ -47,18 +50,20 @@ class LicenceContentImporter
   end
 
   def import row
-    identifier = row['OID']
+    identifier = row['OID'].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
     if existing_editions.size > 0
       @existing << existing_editions
       @existing.flatten!
     else
-      title = CGI.unescapeHTML(row['NAME'])
+      title = CGI.unescapeHTML(to_utf8(row['NAME']))
       slug = slug_for(title)
 
       api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
         owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1, business_proposition: true)
+
+      puts "Panopticon repsonse code: #{api_response.code}.\n#{api_response.to_hash.inspect}\n"
 
       if api_response && api_response.code == 201 # 'created' http response code
         artefact_id = api_response.to_hash['id']
@@ -102,14 +107,20 @@ class LicenceContentImporter
   end
 
   def marked_down(str, unescape_html=false)
+    return str if str.nil?
+    str = to_utf8(str)
     str = CGI.unescapeHTML(str) if unescape_html
     ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|match|
       "\n\n#{$1}"
     }
   end
 
-  def csv_data(name)
-    CSV.read "#{Rails.root}/data/#{name}.csv", headers: true
+  def to_utf8(str)
+    (str.nil? ? nil : str.force_encoding("UTF-8"))
+  end
+
+  def csv_data(data_path)
+    CSV.read "#{Rails.root}/#{data_path}.csv", headers: true
   end
 
 end

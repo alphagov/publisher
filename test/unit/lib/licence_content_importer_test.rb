@@ -13,7 +13,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
 
     GdsApi::Panopticon.any_instance.stubs(:create_artefact).returns(response)
 
-    @importer = LicenceContentImporter.new(@user.name)
+    @importer = LicenceContentImporter.new('data/foo', @user.name)
     @row = CSV::Row.new(['OID', 'NAME', 'LONGDESC'],
       [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
   end
