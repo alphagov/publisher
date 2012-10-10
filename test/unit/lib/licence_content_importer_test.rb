@@ -10,7 +10,8 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     response = mock()
     response.stubs(:code).returns(201)
     response.stubs(:to_hash).returns({ 'id' => @artefact.id })
-
+    
+    GdsApi::Panopticon.any_instance.stubs(:artefact_for_slug).with("licence-to-test").returns(response)
     GdsApi::Panopticon.any_instance.stubs(:create_artefact).returns(response)
 
     @importer = LicenceContentImporter.new('data/foo', @user.name)

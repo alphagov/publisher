@@ -59,13 +59,17 @@ class LicenceContentImporter
       title = CGI.unescapeHTML(to_utf8(row['NAME']))
       slug = slug_for(title)
 
-      api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
-        owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1, business_proposition: true)
+      api_response = @api.artefact_for_slug(slug)
+      
+      unless api_response
+        api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
+          owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1, business_proposition: true)
+      end
 
-      if api_response && api_response.code == 201 # 'created' http response code
+      if api_response and [200, 201].include?(api_response.code)
         artefact_id = api_response.to_hash['id']
 
-        puts "Created Artefact in panopticon with id: #{artefact_id}, slug: #{slug}."
+        puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
         edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
           licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
@@ -95,6 +99,10 @@ class LicenceContentImporter
   def formatted_result(import=true)
     puts "--------------------------------------------------------------------------"
     puts "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
+    unless existing.empty?
+      puts "#{existing.size} existing LicenceEditions:"
+      puts "#{existing.map(&:slug).join(', ')}"
+    end
     unless failed.empty?
       puts "#{failed.keys.size} failed imports:"
       failed.keys.each do |k|
