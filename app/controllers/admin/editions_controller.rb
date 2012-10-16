@@ -84,20 +84,27 @@ class Admin::EditionsController < Admin::BaseController
         return redirect_to admin_edition_path(resource), :alert => "Couldn't #{params[:activity].to_s.humanize.downcase} for #{description(resource).downcase}. The email addresses you entered appear to be invalid."
       end
     end
-    current_status = resource.state
-    intended_status = params[:activity][:request_type]
-    if current_user.progress(resource, params[:activity].dup)
-      statsd = Statsd.new(::STATSD_HOST)
-      statsd.decrement("publisher.edition.#{current_status}")
-      statsd.increment("publisher.edition.#{intended_status}")
 
-      redirect_to admin_edition_path(resource), :notice => success_message(params[:activity][:request_type])
-    else
-      redirect_to admin_edition_path(resource), :alert => failure_message(params[:activity][:request_type])
-    end
+    redirect_to admin_edition_path(resource), progress_message
   end
 
   protected
+    def progress_message
+      if current_user.progress(resource, params[:activity].dup)
+        collect_edition_status_stats
+        { notice: success_message(params[:activity][:request_type]) }
+      else
+        { alert:  failure_message(params[:activity][:request_type]) }
+      end
+    end
+
+    def collect_edition_status_stats
+      intended_status = params[:activity][:request_type]
+      statsd = Statsd.new(::STATSD_HOST)
+      statsd.decrement("publisher.edition.#{resource.state}")
+      statsd.increment("publisher.edition.#{intended_status}")
+    end
+
     # TODO: This could probably live in the i18n layer?
     def failure_message(activity)
       case activity
