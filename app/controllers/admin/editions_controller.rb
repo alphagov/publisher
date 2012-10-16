@@ -79,18 +79,32 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def progress
-    if params[:activity][:request_type] == "send_fact_check"
-      if params[:activity][:email_addresses].split(",").any? { |address| ! address.include?("@") }
-        return redirect_to admin_edition_path(resource), :alert => "Couldn't #{params[:activity].to_s.humanize.downcase} for #{description(resource).downcase}. The email addresses you entered appear to be invalid."
-      end
-    end
-
     redirect_to admin_edition_path(resource), progress_message
   end
 
   protected
+    def valid_fact_check_email_addresses?
+      fact_check_request? and valid_email_addresses?
+    end
+
+    def fact_check_request?
+      params[:activity][:request_type] == "send_fact_check"
+    end
+
+    def valid_email_addresses?
+      params[:activity][:email_addresses].split(",").any? do |address|
+        !address.include?("@")
+      end
+    end
+
     def progress_message
-      if current_user.progress(resource, params[:activity].dup)
+      if valid_fact_check_email_addresses?
+        {
+          alert:  "Couldn't #{params[:activity].to_s.humanize.downcase} for " +
+                  "#{description(resource).downcase}. The email addresses " +
+                  "you entered appear to be invalid."
+        }
+      elsif current_user.progress(resource, params[:activity].dup)
         collect_edition_status_stats
         { notice: success_message(params[:activity][:request_type]) }
       else
