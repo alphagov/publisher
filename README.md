@@ -14,16 +14,16 @@ with other apps, here's how.
 
 ### Create a user
 
-    guides$ script/console
+    publisher$ script/console
     >> User.create name: "Your name", email: "youremail@example.com", uid: Time.now.to_i, version: 1
 
 ### Run panopticon using rails s or similar
 
     panopticon$ rails s -p 3001
 
-### Run the guides app setting env variable to point at your panopticon instance
+### Run the publisher app setting env variable to point at your panopticon instance
 
-    guides$ PANOPTICON_URI="http://localhost:3001" bundle exec rails server
+    publisher$ PANOPTICON_URI="http://localhost:3001" bundle exec rails server
 
 ## Local Transactions
 
