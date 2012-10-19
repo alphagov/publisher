@@ -17,6 +17,8 @@ namespace :panopticon do
       rescue Mongoid::Errors::DocumentNotFound
         # This happens if an Edition doesn't have a corresponding Artefact
         logger.warn "Missing Artefact for #{edition.class.name} #{edition.slug}"
+      rescue Edition::ResurrectionError
+        logger.error "Attempted to register archived edition '#{edition.slug}'"
       end
     end
   end
