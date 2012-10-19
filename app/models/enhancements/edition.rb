@@ -5,6 +5,9 @@ class Edition
   include Admin::BaseHelper
   include Searchable
 
+  class ResurrectionError < RuntimeError
+  end
+
   alias_method :was_published_without_indexing, :was_published
   def was_published
     was_published_without_indexing
@@ -17,6 +20,9 @@ class Edition
 
   def register_with_panopticon
     artefact = Artefact.find(self.panopticon_id)
+    if artefact.state == "archived"
+      raise ResurrectionError, "Cannot register archived artefact '#{artefact.slug}'"
+    end
     registerer = GdsApi::Panopticon::Registerer.new(owning_app: artefact.owning_app, rendering_app: "frontend", kind: artefact.kind)
     details = RegisterableEdition.new(self)
     registerer.register(details)
