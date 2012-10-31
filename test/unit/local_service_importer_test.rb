@@ -55,4 +55,20 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "updates to service definitions" do
+    setup do
+      @sample_csv = File.open(fixture_file('local_services_sample.csv'))
+      @update_csv = File.open(fixture_file('local_services_update_sample.csv'))
+      LocalServiceImporter.new(@sample_csv).run
+    end
+
+    should "update description and providing tier" do
+      LocalServiceImporter.new(@update_csv).run
+      s = LocalService.first
+      assert_equal 850, s.lgsl_code
+      assert_equal 'Updated hazardous waste collection description', s.description
+      assert_equal %w{district unitary}, s.providing_tier
+    end
+  end
 end
