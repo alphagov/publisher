@@ -72,6 +72,8 @@ class NoisyWorkflow < ActionMailer::Base
       "Fact check requested: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::RECEIVE_FACT_CHECK
       "Fact check response: \"#{edition.title}\" (#{edition.format_name})"
+    when Action::SKIP_FACT_CHECK
+      "Skipped fact check: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::PUBLISH
       "Published: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::ARCHIVE
