@@ -83,8 +83,8 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   protected
-    def valid_fact_check_email_addresses?
-      fact_check_request? and valid_email_addresses?
+    def invalid_fact_check_email_addresses?
+      fact_check_request? and invalid_email_addresses?
     end
 
     def fact_check_request?
