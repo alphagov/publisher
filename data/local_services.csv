@@ -117,6 +117,7 @@ LGSL,Description,Providing Tier
 362,Find out about elections,district/unitary
 364,Find out more about the electoral register,district/unitary
 372,Find out about abandoned vehicles,district/unitary
+382,Scaffolding and hoarding licence,county/unitary
 399,Find out about illegal street trading,district/unitary
 412,Find out about noise nuisance,district/unitary
 413,Find out about local air  pollution,district/unitary
@@ -210,6 +211,7 @@ LGSL,Description,Providing Tier
 670,Find out about play facilities in the community,district/unitary
 671,Find out about a council funeral,district/unitary
 684,Find out about open and derelict properties,district/unitary
+695,Skip operator licence,county/unitary
 698,Find out about historical searches on marriages,county/unitary
 700,Find advice for young people,county/unitary
 701,Find out about road adoption by the council,county/unitary
@@ -220,15 +222,19 @@ LGSL,Description,Providing Tier
 721,Find out about election results,all
 722,Find out about freedom of information requests,all
 734,Find out about holiday accommodation,district/unitary
+742,Street cafe licence,county/unitary
+744,Highway projection licence,county/unitary
 750,Find out about countryside volunteering,all
 780,Find out about the use and mooring of houseboats,district/unitary
 787,Find advice to consumers,county/unitary
 788,Find out about animal health and welfare,county/unitary
 802,Find out about fire safety,county/unitary
+810,Petroleum storage licence,county/unitary
 828,Find out about council contracts and tenders over £500,all
 831,"Find out about local support groups for children, young people and families",all
 838,Find out about local arts events,all
 840,Find out about support for looked after children,county/unitary
+843,Weighbridge operator certificate,county/unitary
 850,Find out about hazardous waste collection,district/unitary
 851,Find out about recycling,all
 852,Find out about citizenship ceremonies,county/unitary
@@ -240,13 +246,16 @@ LGSL,Description,Providing Tier
 873,Find out about naming ceremonies,county/unitary
 874,Find out about marriage renewal ceremonies,county/unitary
 876,Find out about civil partnerships,county/unitary
+1077,Performing animals licence,county/unitary
 1116,Find out about Youth Opportunity Funding,county/unitary
 1135,Find out about transport for 16-19 year olds in education,county/unitary
 1140,Find out about emergency school closures,county/unitary
 1145,Find your local 14-19 prospectus,county/unitary
 1150,Find out about your Local Area Network (LINk),county/unitary
 1287,Get local information about swine flu,all
-1307,Get information on services dsirupted by severe weather,all
+1296,Civil marriage and civil partnership venue licence,county/unitary
+1307,Get information on services disrupted by severe weather,all
+1354,"Licence for bridges, buildings, beams and cables over or along the highway",county/unitary
 1465,Find out about details of council expenditure,all
 1573,Find out about senior salary details at your council,all
 1574,Find out about councillor allowances and expenses at your council,all
