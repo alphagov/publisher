@@ -11,7 +11,7 @@ class NoisyWorkflow < ActionMailer::Base
       recipient_emails = EMAIL_GROUPS[:business]
     else
       subject = "[PUBLISHER] #{describe_action(@action)}"
-      recipient_emails = EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:franchise_editors]
+      recipient_emails = EMAIL_GROUPS[:citizen]
     end
 
     mail(:to => recipient_emails.join(', '), :subject => subject)
