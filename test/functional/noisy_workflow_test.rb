@@ -104,21 +104,11 @@ class NoisyWorkflowTest < ActionMailer::TestCase
         assert_equal email.to, ['publisher-alerts-business@digital.cabinet-office.gov.uk']
       end
 
-      should "send to 'publisher-alerts-citizen' and 'freds' for a non-business edition" do
+      should "send to 'publisher-alerts-citizen' for a non-business edition" do
         email = action_email(Action::PUBLISH)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
+        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
         email = action_email(Action::REQUEST_REVIEW)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk', 'freds@alphagov.co.uk'].sort
-      end
-
-      should "send to 'devs' when in 'preview' environment" do
-        plek_current = Plek.current
-        plek_current.stubs(:environment).returns('preview')
-        Plek.stubs(:current).returns( plek_current )
-        email = business_action_email(Action::PUBLISH)
-        assert_equal email.to, ['govuk-dev@digital.cabinet-office.gov.uk']
-        email = action_email(Action::REQUEST_REVIEW)
-        assert_equal email.to, ['govuk-dev@digital.cabinet-office.gov.uk']
+        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
       end
     end
   end
