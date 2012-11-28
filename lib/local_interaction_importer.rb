@@ -21,11 +21,11 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
       authority.local_interactions.create!(
         lgsl_code: row['LGSL'],
         lgil_code: row['LGIL'],
-        url: row['Service URL']
+        url: row['Service URL'].strip
       )
     elsif existing_interactions.count == 1
       i = existing_interactions.first
-      i.update_attributes!(url: row['Service URL'])
+      i.update_attributes!(url: row['Service URL'].strip)
     else
       raise "Error: duplicate definitions already exist for interaction [lgsl=#{row['LGSL']}, lgil=#{row['LGIL']}] for authority '#{row['SNAC']}'"
     end
