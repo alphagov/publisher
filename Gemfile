@@ -12,14 +12,14 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "2.4.0"
+  gem "govuk_content_models", "2.2.0"
 end
 
 gem 'erubis'
 gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
-gem 'gds-api-adapters', '4.1.1'
+gem 'gds-api-adapters', '1.8.0'
 gem 'gds-warmup-controller'
 gem 'gelf'
 if ENV['GOVSPEAK_DEV']
