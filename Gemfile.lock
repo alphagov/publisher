@@ -194,7 +194,7 @@ GEM
     omniauth-oauth2 (1.1.0)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
-    plek (0.1.24)
+    plek (0.3.0)
       builder
     polyglot (0.3.3)
     rack (1.4.1)
@@ -322,7 +322,7 @@ DEPENDENCIES
   mongo (= 1.6.2)
   newrelic_rpm
   null_logger
-  plek (= 0.1.24)
+  plek (= 0.3.0)
   rails (= 3.2.8)
   rest-client
   retriable
