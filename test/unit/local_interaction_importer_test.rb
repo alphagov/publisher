@@ -91,6 +91,14 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
         assert_equal 8, interaction.lgil_code
       end
 
+      should "strip trailing or preceding whitespace from the url" do
+        @source = File.open(fixture_file('local_interaction_with_whitespace.csv'))
+        LocalInteractionImporter.new(@source).run
+
+        interaction = @authority.reload.local_interactions.first
+        assert_equal "http://www.adur.gov.uk/education/index.htm", interaction.url
+      end
+
       context "interaction already defined" do
         setup do
           @authority.local_interactions.create!(
@@ -103,6 +111,14 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
           assert_no_difference "@authority.reload.local_interactions.count" do
             LocalInteractionImporter.new(@source).run
           end
+          interaction = @authority.reload.local_interactions.first
+          assert_equal "http://www.adur.gov.uk/education/index.htm", interaction.url
+        end
+
+        should "strip trailing or preceding whitespace from the url" do
+          @source = File.open(fixture_file('local_interaction_with_whitespace.csv'))
+          LocalInteractionImporter.new(@source).run
+
           interaction = @authority.reload.local_interactions.first
           assert_equal "http://www.adur.gov.uk/education/index.htm", interaction.url
         end
