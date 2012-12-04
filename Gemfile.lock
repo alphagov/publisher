@@ -1,4 +1,22 @@
 GIT
+  remote: https://github.com/alphagov/govuk_content_models.git
+  revision: fcf61f835ff8b48f177dc3de65ddd46e58712884
+  ref: fcf61f835ff8b48f177dc3de65ddd46e58712884
+  branch: remove_validation_hack_for_safe_html_false_positives
+  specs:
+    govuk_content_models (2.6.0)
+      bson_ext
+      differ
+      gds-api-adapters
+      gds-sso (>= 0.7, < 3.0)
+      govspeak (>= 1.0.1, < 2.0.0)
+      mongoid (~> 2.4.10)
+      multi_json (= 1.3.7)
+      omniauth-oauth2 (~> 1.0)
+      plek
+      state_machine
+
+GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
@@ -109,16 +127,6 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (2.5.0)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 0.7, < 3.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      omniauth-oauth2 (~> 1.0)
-      plek (>= 0.1.22, < 0.4)
-      state_machine
     graylog2_exceptions (1.3.0)
       gelf (= 1.1.3)
     has_scope (0.5.1)
@@ -175,7 +183,7 @@ GEM
       activemodel (~> 3.1)
       mongo (<= 1.6.2)
       tzinfo (~> 0.3.22)
-    multi_json (1.3.6)
+    multi_json (1.3.7)
     multipart-post (1.1.5)
     newrelic_rpm (3.3.4.1)
     nokogiri (1.5.5)
@@ -308,7 +316,7 @@ DEPENDENCIES
   gds-warmup-controller
   gelf
   govspeak (= 1.2.0)
-  govuk_content_models (= 2.5.0)
+  govuk_content_models!
   graylog2_exceptions
   has_scope
   inherited_resources
