@@ -12,7 +12,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "2.5.0"
+  gem "govuk_content_models", git: "https://github.com/alphagov/govuk_content_models.git", branch: "remove_validation_hack_for_safe_html_false_positives", ref: "fcf61f835ff8b48f177dc3de65ddd46e58712884" #"2.5.0"
 end
 
 gem 'erubis'
