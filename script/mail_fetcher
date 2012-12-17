@@ -25,7 +25,7 @@ begin
       NoisyWorkflow.report_errors(handler.errors).deliver
     end
 
-    Rails.logger.info "Finished running MailFetcher in #{Plek.current.environment} mode"
+    Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
   end
 rescue Lockfile::MaxTriesLockError => e
   Rails.logger.info "Another email fetcher is already running. Exiting."
