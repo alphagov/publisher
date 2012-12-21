@@ -4,4 +4,4 @@
 <%= text_field_tag key, value, class: "span7 uneditable-input", disabled: 'disabled' %>
 <% end %>
 
-<%= link_to "Edit in Panopticon", publication.panopticon_uri + '/edit', :class => "btn btn-primary" %>
+<%= link_to "Edit in Panopticon", panopticon_edit_url(publication), :class => "btn btn-primary" %>
