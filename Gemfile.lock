@@ -103,8 +103,6 @@ GEM
       warden (~> 1.2)
     gds-warmup-controller (0.1.0)
       rails (>= 3.0.0)
-    gelf (1.1.3)
-      json
     govspeak (1.2.0)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
@@ -120,8 +118,6 @@ GEM
       omniauth-oauth2 (~> 1.0)
       plek
       state_machine
-    graylog2_exceptions (1.3.0)
-      gelf (= 1.1.3)
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.1)
@@ -306,10 +302,8 @@ DEPENDENCIES
   gds-api-adapters (= 4.1.3)
   gds-sso (~> 1.2.0)
   gds-warmup-controller
-  gelf
   govspeak (= 1.2.0)
   govuk_content_models (= 2.6.0)
-  graylog2_exceptions
   has_scope
   inherited_resources
   jquery-rails

@@ -21,13 +21,13 @@ gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch:
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '4.1.3'
 gem 'gds-warmup-controller'
-gem 'gelf'
+
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
   gem 'govspeak', '1.2.0'
 end
-gem 'graylog2_exceptions'
+
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
@@ -38,7 +38,6 @@ gem 'null_logger'
 gem 'plek', '0.3.0'
 gem 'rails', '3.2.8'
 gem 'retriable'
-gem 'rest-client'
 gem 'rest-client'
 gem 'reverse_markdown'
 gem 'statsd-ruby', '1.0.0'
