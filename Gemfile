@@ -31,15 +31,17 @@ end
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
-gem 'lockfile'
 gem 'lograge'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 gem 'null_logger'
 gem 'plek', '0.3.0'
 gem 'rails', '3.2.8'
-gem 'retriable'
-gem 'rest-client'
-gem 'reverse_markdown'
+
+gem 'lockfile', require: false
+gem 'rest-client', require: false # Only used in some importers
+gem 'retriable', require: false # Only used in some importers
+gem 'reverse_markdown', require: false # Only used in some importers
+
 gem 'statsd-ruby', '1.0.0'
 gem 'whenever'
 
