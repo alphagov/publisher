@@ -41,7 +41,7 @@ gem 'retriable', require: false # Only used in some importers
 gem 'reverse_markdown', require: false # Only used in some importers
 
 gem 'statsd-ruby', '1.0.0', require: false
-gem 'whenever'
+gem 'whenever', require: false
 
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
