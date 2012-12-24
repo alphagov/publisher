@@ -1,3 +1,5 @@
+require 'rest_client'
+
 class LocalInteractionImporter < LocalAuthorityDataImporter
   INTERACTIONS_LIST_URL = "http://local.direct.gov.uk/Data/local_authority_service_details.csv"
 
