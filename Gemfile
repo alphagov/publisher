@@ -2,13 +2,13 @@ source 'https://rubygems.org'
 source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
 gem 'aws-ses', require: 'aws/ses'
-gem 'colorize', "~> 0.5.8"
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
   gem 'gds-sso', '~> 1.2.0'
 end
+
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
@@ -16,33 +16,32 @@ else
 end
 
 gem 'erubis'
-gem 'exception_notification', '~> 2.4.1', require: 'exception_notifier'
+gem 'exception_notification', '~> 2.4.1', require: false
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '4.1.3'
-gem 'gds-warmup-controller'
-gem 'gelf'
+
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
   gem 'govspeak', '1.2.0'
 end
-gem 'graylog2_exceptions'
+
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
-gem 'lockfile'
 gem 'lograge'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
-gem 'null_logger'
 gem 'plek', '0.3.0'
 gem 'rails', '3.2.8'
-gem 'retriable'
-gem 'rest-client'
-gem 'rest-client'
-gem 'reverse_markdown'
-gem 'statsd-ruby', '1.0.0'
-gem 'whenever'
+
+gem 'lockfile', require: false
+gem 'rest-client', require: false # Only used in some importers
+gem 'retriable', require: false # Only used in some importers
+gem 'reverse_markdown', require: false # Only used in some importers
+
+gem 'statsd-ruby', '1.0.0', require: false
+gem 'whenever', require: false
 
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
