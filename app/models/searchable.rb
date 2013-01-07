@@ -16,12 +16,4 @@ module Searchable
       acc.concat([part.title, govspeak_to_text(part.body)])
     }.compact.join(" ").strip
   end
-
-  def split_section(section)
-    section, subsection = (section || "").split(':', 2).map { |s| s.parameterize }
-    {
-      "section" => section,
-      "subsection" => subsection
-    }
-  end
 end
