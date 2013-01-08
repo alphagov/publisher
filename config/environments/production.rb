@@ -1,8 +1,6 @@
 Publisher::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
-  config.middleware.use "Graylog2Exceptions", { :hostname => 'graylog.cluster', :port => '12201', :facility => 'publisher'}
-
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
