@@ -3,7 +3,6 @@ require 'gds_api/panopticon'
 
 class Edition
   include Admin::BaseHelper
-  include Searchable
 
   class ResurrectionError < RuntimeError
   end
