@@ -49,10 +49,6 @@ module Admin::BaseHelper
     end
   end
 
-  def govspeak_to_text(s)
-    Govspeak::Document.new(s).to_text
-  end
-
   include Admin::PathsHelper
   include Admin::ProgressFormsHelper
 end
