@@ -11,6 +11,7 @@ namespace :panopticon do
     # around the problem where re-registration takes so long that Mongo gives
     # up on the cursor it's holding and throws it away.
     Edition.published.to_a.each_with_index do |edition, index|
+      retry_count = 0
       begin
         logger.info "Registering #{edition.slug} [#{index}/#{edition_count}]"
         edition.register_with_panopticon
@@ -19,6 +20,14 @@ namespace :panopticon do
         logger.warn "Missing Artefact for #{edition.class.name} #{edition.slug}"
       rescue Edition::ResurrectionError
         logger.error "Attempted to register archived edition '#{edition.slug}'"
+      rescue Timeout::Error, GdsApi::TimedOutException
+        if retry_count < 3
+          retry_count += 1
+          logger.warn "Encountered timeout for '#{edition.slug}', retrying (max 3 retries)"
+          retry
+        else
+          logger.error "Encountered 4 timeouts for '#{edition.slug}', skipping"
+        end
       end
     end
   end
