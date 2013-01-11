@@ -6,7 +6,7 @@ gem 'aws-ses', require: 'aws/ses'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '~> 1.2.0'
+  gem 'gds-sso', '2.1.0'
 end
 
 if ENV['CONTENT_MODELS_DEV']

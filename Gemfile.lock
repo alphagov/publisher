@@ -95,7 +95,7 @@ GEM
       lrucache (~> 0.1.1)
       null_logger
       plek
-    gds-sso (1.2.2)
+    gds-sso (2.1.0)
       omniauth-gds (= 0.0.3)
       rack-accept (~> 0.4.4)
       rails (>= 3.0.0)
@@ -119,7 +119,7 @@ GEM
     hashie (1.2.0)
     hike (1.2.1)
     htmlentities (4.3.1)
-    httpauth (0.1)
+    httpauth (0.2.0)
     i18n (0.6.1)
     inherited_resources (1.3.1)
       has_scope (~> 0.5.0)
@@ -184,7 +184,7 @@ GEM
       rack
     omniauth-gds (0.0.3)
       omniauth-oauth2 (~> 1.0)
-    omniauth-oauth2 (1.1.0)
+    omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
     plek (0.3.0)
@@ -297,7 +297,7 @@ DEPENDENCIES
   formtastic!
   formtastic-bootstrap!
   gds-api-adapters (= 4.1.3)
-  gds-sso (~> 1.2.0)
+  gds-sso (= 2.1.0)
   govspeak (= 1.2.0)
   govuk_content_models (= 2.7.1)
   has_scope
