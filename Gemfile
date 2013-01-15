@@ -30,16 +30,12 @@ end
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
-gem 'lograge'
+gem 'lograge', '~> 0.1.0'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
-<<<<<<< HEAD
-gem 'plek', '0.3.0'
-=======
 gem 'newrelic_rpm'
 gem 'null_logger'
 gem 'plek', '1.0.0'
->>>>>>> bumping plek to 1.0.0
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.11'
 
 gem 'lockfile', require: false
 gem 'rest-client', require: false # Only used in some importers
