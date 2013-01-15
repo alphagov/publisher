@@ -6,13 +6,13 @@ gem 'aws-ses', require: 'aws/ses'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '2.1.0'
+  gem 'gds-sso', '3.0.0'
 end
 
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "2.7.1"
+  gem "govuk_content_models", "4.0.0"
 end
 
 gem 'erubis'
@@ -32,6 +32,7 @@ gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
 gem 'lograge', '~> 0.1.0'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
+gem "mongoid_rails_migrations", "1.0.0"
 gem 'plek', '0.3.0'
 gem 'rails', '3.2.11'
 
