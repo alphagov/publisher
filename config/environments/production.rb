@@ -9,6 +9,15 @@ Publisher::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  # Disable even limited exception/debug pages in production for two reasons:
+  #  1) our backend rails apps get X-Forwarded-For & Client-IP for all requests
+  #     as 10.x.x.x, which is a trusted proxy. This means they render the
+  #     limited exception/debug pages.
+  #  2) our backend rails apps receive requests from other apps that might
+  #     appear to be on trusted proxy IPs, so we might render exception/debug
+  #     page, which could then be exposed in a frontend app to the world.
+  config.action_dispatch.show_exceptions = false
+  
   # Specifies the header that your server uses for sending files
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
 
