@@ -34,18 +34,27 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   end
 
   def authority(row)
-    @authorities[row['SNAC']] ||= LocalAuthority.find_by_snac(row['SNAC']) || create_authority(row)
+    @authorities[row['SNAC']] ||= create_or_update_authority(row)
   end
 
-  def create_authority(row)
-    Rails.logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
-    authority_tier = identify_tier(row['SNAC'])
-    LocalAuthority.create!(
-      name: row['Authority Name'],
-      snac: row['SNAC'],
-      local_directgov_id: row['LAid'],
-      tier: authority_tier
-    )
+  def create_or_update_authority(row)
+    if la = LocalAuthority.find_by_snac(row['SNAC'])
+      Rails.logger.info("Updating authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
+      la.update_attributes!(
+        name: row['Authority Name'],
+        local_directgov_id: row['LAid'],
+        tier: identify_tier(row['SNAC'])
+      )
+      la
+    else
+      Rails.logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
+      LocalAuthority.create!(
+        name: row['Authority Name'],
+        snac: row['SNAC'],
+        local_directgov_id: row['LAid'],
+        tier: identify_tier(row['SNAC'])
+      )
+    end
   end
 
   def identify_tier(snac)

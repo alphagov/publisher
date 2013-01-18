@@ -78,7 +78,24 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
 
     context "Local authority already known" do
       setup do
-        @authority = FactoryGirl.create(:local_authority, :snac => '45UB')
+        stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
+          .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
+        @authority = FactoryGirl.create(:local_authority, :snac => '45UB', :name => "Adur Council", :tier => "county", :local_directgov_id => 4)
+      end
+
+      should "Update the authority" do
+        LocalInteractionImporter.new(@source).run
+        @authority.reload
+        assert_equal "Adur District Council", @authority.name
+        assert_equal "45UB", @authority.snac
+        assert_equal 1, @authority.local_directgov_id
+        assert_equal 'district', @authority.tier
+      end
+
+      should "Only update the authority once" do
+        source = File.open(fixture_file('local_interactions_sample_multi.csv'))
+        LocalInteractionImporter.new(source).run
+        assert_requested(:get, "#{MAPIT_BASE_URL}area/45UB", :times => 1)
       end
 
       should "Add one interaction to that authority" do
