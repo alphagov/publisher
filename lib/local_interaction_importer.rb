@@ -53,7 +53,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   end
 
   def authority_type_from_mapit(snac)
-    url = "http://mapit.mysociety.org/area/#{snac}"
+    url = "#{MAPIT_BASE_URL}area/#{snac}"
     Rails.logger.debug("Finding authority type from mapit, url #{url}")
     raw_response = RestClient.get(url)
     response = JSON.parse(raw_response.body)

@@ -14,7 +14,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
   end
 
   def setup
-    stub_request(:get, "http://mapit.mysociety.org/area/45UB").
+    stub_request(:get, "#{MAPIT_BASE_URL}area/45UB").
       to_return(status: 404, body: '{}')
   end
 
@@ -137,7 +137,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       end
 
       should "Lookup tier from mapit" do
-        stub_request(:get, "http://mapit.mysociety.org/area/45UB")
+        stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
           .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
         LocalInteractionImporter.new(@source).run
         assert_equal 'district', LocalAuthority.first.tier
