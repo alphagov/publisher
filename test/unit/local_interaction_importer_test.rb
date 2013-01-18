@@ -76,6 +76,17 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       @source = File.open(fixture_file('local_interactions_sample.csv'))
     end
 
+    should "skip the row if there is an invalid SNAC" do
+      # sample contains SNAC OOHF (that's o's, not zeroes)
+      source = File.open(fixture_file('local_interactions_invalid_snac.csv'))
+      importer = LocalInteractionImporter.new(source)
+
+      LocalAuthority.expects(:find_by_snac).with('OOHF').never
+      LocalAuthority.expects(:find_by_snac).with('45UB').returns(nil)
+
+      importer.run
+    end
+
     context "Local authority already known" do
       setup do
         stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
