@@ -16,7 +16,7 @@ else
 end
 
 gem 'erubis'
-gem 'exception_notification', '~> 2.4.1', require: false
+gem 'exception_notification', '2.6.1', require: false
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '4.1.3'
