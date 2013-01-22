@@ -87,6 +87,15 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       importer.run
     end
 
+    should "allow council-level SNAC codes (e.g. 11)" do
+      source = File.open(fixture_file('local_interactions_county_sample.csv'))
+      importer = LocalInteractionImporter.new(source)
+
+      LocalAuthority.expects(:find_by_snac).with('11').returns(nil)
+
+      importer.run
+    end
+
     context "Local authority already known" do
       setup do
         stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
