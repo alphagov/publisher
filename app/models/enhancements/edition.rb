@@ -24,7 +24,7 @@ class Edition
     end
 
     format_as_kind = self.format.underscore
-    registerer = GdsApi::Panopticon::Registerer.new(owning_app: artefact.owning_app, rendering_app: "frontend", kind: format_as_kind)
+    registerer = GdsApi::Panopticon::Registerer.new(owning_app: "publisher", rendering_app: "frontend", kind: format_as_kind)
     details = RegisterableEdition.new(self)
     registerer.register(details)
   end
