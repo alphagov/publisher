@@ -22,7 +22,9 @@ class Edition
     if artefact.state == "archived"
       raise ResurrectionError, "Cannot register archived artefact '#{artefact.slug}'"
     end
-    registerer = GdsApi::Panopticon::Registerer.new(owning_app: artefact.owning_app, rendering_app: "frontend", kind: artefact.kind)
+
+    format_as_kind = self.format.underscore
+    registerer = GdsApi::Panopticon::Registerer.new(owning_app: artefact.owning_app, rendering_app: "frontend", kind: format_as_kind)
     details = RegisterableEdition.new(self)
     registerer.register(details)
   end

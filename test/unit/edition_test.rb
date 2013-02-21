@@ -14,6 +14,18 @@ class EditionTest < ActiveSupport::TestCase
       user.publish(edition, comment: "I am bananas")
     end
 
+    should "use the edition's snake_cased format for kind, not the artefact's kind (it may have changed)" do
+      user = FactoryGirl.create(:user)
+      artefact = FactoryGirl.create(:artefact, kind: "answer")
+      edition = FactoryGirl.create(:local_transaction_edition, :state => "ready", panopticon_id: artefact.id, lgsl_code: FactoryGirl.create(:local_service).lgsl_code)
+
+      GdsApi::Panopticon::Registerer
+          .expects(:new)
+          .with(owning_app: "publisher", rendering_app: "frontend", kind: "local_transaction")
+          .returns(stub("registerer", register: nil))
+      user.publish(edition, comment: "I am bananas")
+    end
+
     should "not register with Panopticon if the artefact is archived" do
       user = FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
