@@ -35,7 +35,7 @@ gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'newrelic_rpm'
 gem 'null_logger'
-gem 'plek', '1.0.0'
+gem 'plek', '1.3.1'
 gem 'rails', '3.2.11'
 
 gem 'lockfile', require: false
