@@ -42,7 +42,7 @@ module Admin::BaseHelper
   end
 
   def friendly_date(date)
-    if Time.now - date < 2.days
+    if Time.zone.now - date < 2.days
       time_ago_in_words(date) + " ago."
     else
       date.strftime("%d/%m/%Y %R")

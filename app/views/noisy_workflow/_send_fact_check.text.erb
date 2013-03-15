@@ -1,4 +1,4 @@
-Fact check requested for "<%= @action.edition.title %>" (<%= @action.edition.format %>) by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+Fact check requested for "<%= @action.edition.title %>" (<%= @action.edition.format %>) by <%= @action.requester.name %> at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
 Sent to: <%= @action.email_addresses %>
 2nd eyes: <%= @action.requester.name %>

@@ -2,7 +2,7 @@ Please review "<%= @action.edition.title %>" (<%= @action.edition.format %>)
 
 Comment: <%= @action.comment %>
 
-Requested by <%= @action.requester.name %> at <%=Time.now.strftime("%R on %d/%m/%Y") %>
+Requested by <%= @action.requester.name %> at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
 View:
 <%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
