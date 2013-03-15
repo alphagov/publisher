@@ -81,7 +81,7 @@ class BusinessSupportImporter
   def add_workflow(user, edition)
     type = Action.const_get(Action::CREATE.to_s.upcase)
     action = edition.new_action(user, type, {})
-    user.record_note(edition, "Imported via BusinessSupportContentImporter: #{Time.now.to_s(:db)}")
+    user.record_note(edition, "Imported via BusinessSupportContentImporter: #{Time.zone.now.to_s(:db)}")
   end
   
   def formatted_result(import=true)

@@ -1,12 +1,15 @@
+# This file is overwritten by one in alphagov-deployment at deploy time
 development:
   host: localhost
   database: govuk_content_development
   persist_in_safe_mode: true
+  use_activesupport_time_zone: true
 
 test:
   host: localhost
   # Don't want this interfering with a concurrent Panopticon test run
   database: govuk_content_publisher_test
+  use_activesupport_time_zone: true
 
 # set these environment variables on your prod server
 production:
@@ -15,6 +18,7 @@ production:
   username: <%= ENV['MONGOID_USERNAME'] %>
   password: <%= ENV['MONGOID_PASSWORD'] %>
   database: <%= ENV['MONGOID_DATABASE'] %>
+  use_activesupport_time_zone: true
   # slaves:
   #   - host: slave1.local
   #     port: 27018

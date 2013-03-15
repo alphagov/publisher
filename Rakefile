@@ -8,3 +8,5 @@ require 'ci/reporter/rake/test_unit' if Rails.env.test?
 Rake.application.options.trace = true
 
 Publisher::Application.load_tasks
+
+task :default => [:test, :check_for_bad_time_handling]
