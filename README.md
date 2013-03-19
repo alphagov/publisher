@@ -15,7 +15,7 @@ with other apps, here's how.
 ### Create a user
 
     publisher$ script/console
-    >> User.create name: "Your name", email: "youremail@example.com", uid: Time.now.to_i, version: 1
+    >> User.create name: "Your name", email: "youremail@example.com", uid: Time.zone.now.to_i, version: 1
 
 ### Run panopticon using rails s or similar
 

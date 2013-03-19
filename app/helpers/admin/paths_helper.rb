@@ -5,7 +5,7 @@ module Admin::PathsHelper
   end
 
   def preview_edition_path(edition)
-    publication_front_end_path(edition) + "?edition=#{edition.version_number}&cache=#{Time.now().to_i}"
+    publication_front_end_path(edition) + "?edition=#{edition.version_number}&cache=#{Time.zone.now().to_i}"
   end
 
   def start_work_path(edition)
