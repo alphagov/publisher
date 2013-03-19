@@ -5,7 +5,7 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
 require 'minitest/unit'
-require 'mocha'
+require 'mocha/setup'
 require 'database_cleaner'
 require 'webmock/test_unit'
 require 'gds_api/test_helpers/panopticon'

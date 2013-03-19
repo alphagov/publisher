@@ -36,7 +36,7 @@ gem "mongoid_rails_migrations", "1.0.0"
 gem 'newrelic_rpm'
 gem 'null_logger'
 gem 'plek', '1.3.1'
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.13'
 
 gem 'lockfile', require: false
 gem 'rest-client', require: false # Only used in some importers
@@ -65,7 +65,7 @@ group :test do
   gem 'launchy'
 
   gem 'webmock'
-  gem 'mocha', require: false
+  gem 'mocha', '0.13.3', :require => false
   gem 'factory_girl_rails'
   gem 'faker'
 
