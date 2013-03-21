@@ -1,6 +1,5 @@
 require 'fact_check_message_processor'
 require 'fact_check_address'
-require 'patches/mail_imap'
 
 # A class to pull messages from an email account and send relevant ones
 # to a processor.
