@@ -12,7 +12,7 @@ class BatchPublish
       ).first
       if edition.nil?
         Rails.logger.error "Edition couldn't be found for #{identifier}"
-      elsif edition.ready? || edition.published?
+      elsif ["ready", "published"].exclude?(edition.state)
         Rails.logger.error "Edition #{identifier} isn't 'published' or 'ready'. It's #{edition.state}"
       end
       edition
