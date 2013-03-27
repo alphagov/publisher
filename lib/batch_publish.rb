@@ -5,7 +5,8 @@ class BatchPublish
   end
 
   def call
-    editions = @edition_identifiers.map do |identifier|
+    editions = []
+    @edition_identifiers.each do |identifier|
       edition = Edition.where(
           slug: identifier.fetch(:slug),
           version_number: identifier.fetch(:edition)
@@ -14,11 +15,10 @@ class BatchPublish
         Rails.logger.error "Edition couldn't be found for #{identifier}"
       elsif ["ready", "published"].exclude?(edition.state)
         Rails.logger.error "Edition #{identifier} isn't 'published' or 'ready'. It's #{edition.state}"
+      else
+        editions << edition
       end
-      edition
     end
-
-    editions = editions.compact
 
     editions.each do |edition|
       published = user.progress(edition, { request_type: "publish", comment: "" })
