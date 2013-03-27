@@ -28,42 +28,41 @@ class BatchPublishTest < ActiveSupport::TestCase
   end
 
   context "edition doesn't exist" do
-    should "fail noisily" do
+    should "still try to publish the other editions" do
+      edition = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "ready", body: "x")
       edition_identifiers = [
-        { slug: "not-foo", edition: 1 }
+        { slug: "not-foo", edition: 1 },
+        { slug: "foo", edition: 1 }
       ]
-      assert_raises RuntimeError do
-        BatchPublish.new(edition_identifiers, @user.email).call
-      end
+      BatchPublish.new(edition_identifiers, @user.email).call
+      assert_equal "published", edition.reload.state
     end
   end
 
   context "an edition is not 'Ready' yet" do
-    should "fail noisily" do
-      edition = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "draft", body: "x")
-      edition.expects(:publish).never
+    should "still try to publish the other editions" do
+      draft = FactoryGirl.create(:edition, slug: "foo-draft", version_number: 1, state: "draft", body: "x")
+      ready = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "ready", body: "x")
+      draft.expects(:publish).never
       edition_identifiers = [
+        { slug: "foo-draft", edition: 1 },
         { slug: "foo", edition: 1 }
       ]
-      assert_raises RuntimeError do
-        BatchPublish.new(edition_identifiers, @user.email).call
-      end
-      assert_equal "draft", edition.reload.state
+      BatchPublish.new(edition_identifiers, @user.email).call
+      assert_equal "draft", draft.reload.state
+      assert_equal "published", ready.reload.state
     end
   end
 
   context "one of the editions cannot be found" do
-    should "not try to publish any of the editions" do
+    should "still try to publish the other editions" do
       edition = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "ready", body: "x")
-      Edition.any_instance.expects(:publish).never
       edition_identifiers = [
-        { slug: "foo", edition: 1 },
-        { slug: "not-foo", edition: 1 }
+        { slug: "not-foo", edition: 1 },
+        { slug: "foo", edition: 1 }
       ]
-      assert_raises RuntimeError do
-        BatchPublish.new(edition_identifiers, @user.email).call
-      end
-      assert_equal "ready", edition.reload.state
+      BatchPublish.new(edition_identifiers, @user.email).call
+      assert_equal "published", edition.reload.state
     end
   end
 end

@@ -10,14 +10,15 @@ class BatchPublish
           slug: identifier.fetch(:slug),
           version_number: identifier.fetch(:edition)
       ).first
-      unless edition
-        raise "Edition couldn't be found for #{identifier}"
-      end
-      unless edition.ready? || edition.published?
-        raise "Edition #{identifier} isn't 'published' or 'ready'. It's #{edition.state}"
+      if edition.nil?
+        Rails.logger.error "Edition couldn't be found for #{identifier}"
+      elsif edition.ready? || edition.published?
+        Rails.logger.error "Edition #{identifier} isn't 'published' or 'ready'. It's #{edition.state}"
       end
       edition
     end
+
+    editions = editions.compact
 
     editions.each do |edition|
       published = user.progress(edition, { request_type: "publish", comment: "" })
