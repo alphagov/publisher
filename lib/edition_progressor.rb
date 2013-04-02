@@ -3,12 +3,15 @@ class EditionProgressor
 
   # existing_edition: The existing edition to be duplicated
   # actor:            The WorkflowActor (usually a user) to perform the action
+  # statsd:           An object that accepts #decrement and #increment
   def initialize(edition, actor, statsd)
     self.edition = edition
     self.actor   = actor
     self.statsd  = statsd
   end
 
+  # activity: A hash of details about the progress activity to be performed
+  #           See test/unit/edition_progressor_test.rb for examples
   def progress(activity)
     if invalid_fact_check_email_addresses?(activity)
       self.status_message = fact_check_error_message(activity)
