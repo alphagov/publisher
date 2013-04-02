@@ -38,11 +38,13 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_equal "app/views/admin/guides", @controller.admin_template_folder_for(g)
   end
 
-  test "an appropriate error message is shown if new edition failed" do
-    @user.stubs(:new_version).with(@guide, nil).returns(false)
+  test "delegates complexity of duplication to appropriate collaborator" do
+    EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+    EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+
     post :duplicate, :id => @guide.id
     assert_response 302
-    assert_equal "Failed to create new edition: couldn't initialise", flash[:alert]
+    assert_equal "New edition created", flash[:notice]
   end
 
   test "should update status via progress and redirect to parent" do
@@ -62,33 +64,6 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     reloaded = Edition.find(@guide.id)
     assert reloaded.fact_check?
-  end
-
-  test "should assign after creating new edition" do
-    bob = User.create
-
-    @guide.state = 'ready'
-    stub_register_published_content
-    User.create(:name => 'test').publish(@guide, comment: "Publishing this")
-
-    post :duplicate, :id => @guide.id,
-      :edition  => { :assigned_to_id => bob.id, :kind => 'guide' }
-
-    @new_guide = Edition.where(panopticon_id: @guide.panopticon_id).last
-    assert_equal bob, @new_guide.assigned_to
-  end
-
-  test "should not assign after creating a new edition if assignment is blank" do
-    @bob = User.create
-    stub_register_published_content
-    @bob.publish(@guide, comment: "Publishing this")
-
-    post :duplicate,
-      :id => @guide.id,
-      :edition  => { :assigned_to_id => "", :kind => 'guide' }
-
-    @guide.reload
-    assert_nil @guide.assigned_to
   end
 
   test "should update assignment" do
