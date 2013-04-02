@@ -17,7 +17,7 @@ class Admin::EditionsController < Admin::BaseController
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
-    Statsd.new(::STATSD_HOST).increment("publisher.edition.create.#{class_identifier}")
+    statsd.increment("publisher.edition.create.#{class_identifier}")
     @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
@@ -146,5 +146,13 @@ class Admin::EditionsController < Admin::BaseController
 
     def setup_view_paths
       setup_view_paths_for(resource)
+    end
+
+    def statsd
+      @statsd ||= Statsd.new(::STATSD_HOST)
+    end
+
+    def description(r)
+      r.format.underscore.humanize
     end
 end
