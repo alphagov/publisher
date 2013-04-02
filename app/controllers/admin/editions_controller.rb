@@ -1,5 +1,6 @@
 require "statsd"
 require "edition_duplicator"
+require "edition_progressor"
 
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
@@ -81,64 +82,15 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def progress
-    redirect_to admin_edition_path(resource), progress_message
+    command = EditionProgressor.new(resource, current_user, statsd)
+    if command.progress(params[:activity])
+      redirect_to admin_edition_path(resource), notice: command.status_message
+    else
+      redirect_to admin_edition_path(resource), alert: command.status_message
+    end
   end
 
   protected
-    def invalid_fact_check_email_addresses?
-      fact_check_request? and invalid_email_addresses?
-    end
-
-    def fact_check_request?
-      params[:activity][:request_type] == "send_fact_check"
-    end
-
-    def invalid_email_addresses?
-      params[:activity][:email_addresses].split(",").any? do |address|
-        !address.include?("@")
-      end
-    end
-
-    def progress_message
-      if invalid_fact_check_email_addresses?
-        {
-          alert:  "Couldn't #{params[:activity].to_s.humanize.downcase} for " +
-                  "#{description(resource).downcase}. The email addresses " +
-                  "you entered appear to be invalid."
-        }
-      elsif current_user.progress(resource, params[:activity].dup)
-        collect_edition_status_stats
-        { notice: success_message(params[:activity][:request_type]) }
-      else
-        { alert:  failure_message(params[:activity][:request_type]) }
-      end
-    end
-
-    def collect_edition_status_stats
-      intended_status = params[:activity][:request_type]
-      statsd = Statsd.new(::STATSD_HOST)
-      statsd.decrement("publisher.edition.#{resource.state}")
-      statsd.increment("publisher.edition.#{intended_status}")
-    end
-
-    # TODO: This could probably live in the i18n layer?
-    def failure_message(activity)
-      case activity
-      when 'skip_fact_check' then "Could not skip fact check for this publication."
-      when 'start_work' then "Couldn't start work on #{description(resource).downcase}"
-      else "Couldn't #{activity.to_s.humanize.downcase} for #{description(resource).downcase}"
-      end
-    end
-
-    # TODO: This could probably live in the i18n layer?
-    def success_message(activity)
-      case activity
-      when 'start_work' then "Work started on #{description(resource)}"
-      when 'skip_fact_check' then "The fact check has been skipped for this publication."
-      else "#{description(resource)} updated"
-      end
-    end
-
     def new_assignee
       assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
       User.find(assignee_id) if assignee_id.present?
