@@ -1,4 +1,5 @@
 require "statsd"
+require "edition_duplicator"
 
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
@@ -31,26 +32,27 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def duplicate
-    new_edition = current_user.new_version(resource, (params[:to] || nil))
-    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
-    if new_edition and new_edition.save
-      update_assignment new_edition, assigned_to_id
-      redirect_to params[:return_to] and return if params[:return_to]
-      redirect_to admin_edition_path(new_edition), :notice => 'New edition created'
+    command = EditionDuplicator.new(resource, current_user)
+
+    if command.duplicate(params[:to], new_assignee)
+      return_to = params[:return_to] || admin_edition_path(command.new_edition)
+      redirect_to return_to, :notice => 'New edition created'
     else
-      alert = 'Failed to create new edition'
-      alert += new_edition ? ": #{new_edition.errors.inspect}" : ": couldn't initialise"
-      redirect_to admin_edition_path(resource), :alert => alert
+      redirect_to admin_edition_path(resource), :alert => command.error_message
     end
   end
 
   def update
-    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
+    # We have to call this before updating as it removes any assigned_to_id
+    # parameter from the request, preventing us from inadvertently changing
+    # it at the wrong time.
+    assign_to = new_assignee
+
     update! do |success, failure|
       success.html {
-        update_assignment resource, assigned_to_id
-        redirect_to params[:return_to] and return if params[:return_to]
-        redirect_to admin_edition_path(resource)
+        update_assignment resource, assign_to
+        return_to = params[:return_to] || admin_edition_path(resource)
+        redirect_to return_to
       }
       failure.html {
         @resource = resource
@@ -58,7 +60,7 @@ class Admin::EditionsController < Admin::BaseController
         render :template => "show"
       }
       success.json {
-        update_assignment resource, assigned_to_id
+        update_assignment resource, assign_to
         render :json => resource
       }
       failure.json { render :json => resource.errors, :status=>406 }
@@ -137,11 +139,14 @@ class Admin::EditionsController < Admin::BaseController
       end
     end
 
-    def update_assignment(edition, assigned_to_id)
-      return if assigned_to_id.blank?
-      assigned_to = User.find(assigned_to_id)
-      return if edition.assigned_to == assigned_to
-      current_user.assign(edition, assigned_to)
+    def new_assignee
+      assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
+      User.find(assignee_id) if assignee_id.present?
+    end
+
+    def update_assignment(edition, assignee)
+      return if assignee.nil? || edition.assigned_to == assignee
+      current_user.assign(edition, assignee)
     end
 
     def setup_view_paths
