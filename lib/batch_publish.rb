@@ -1,4 +1,6 @@
 class BatchPublish
+  MAX_RETRIES = 5
+
   def initialize(edition_identifiers, email)
     @edition_identifiers = edition_identifiers
     @email = email
@@ -21,11 +23,22 @@ class BatchPublish
     end
 
     editions.each do |edition|
-      published = user.progress(edition, { request_type: "publish", comment: "" })
-      if published
-        Rails.logger.info("Published #{edition.slug} #{edition.version_number}")
-      else
-        Rails.logger.info("Skipped #{edition.slug} #{edition.version_number}")
+      retry_count = 0
+      begin
+        published = user.progress(edition, { request_type: "publish", comment: "" })
+        if published
+          Rails.logger.info("Published #{edition.slug} #{edition.version_number}")
+        else
+          Rails.logger.info("Skipped #{edition.slug} #{edition.version_number}")
+        end
+      rescue StandardError => e
+        if retry_count < MAX_RETRIES
+          Rails.logger.error("Retrying to publish #{edition.slug} #{edition.version_number}. Error: #{e.message}")
+          retry_count += 1
+          retry
+        else
+          Rails.logger.error("Failed to publish #{edition.slug} #{edition.version_number}. Error: #{e.message}")
+        end
       end
     end
   end

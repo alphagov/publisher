@@ -27,6 +27,23 @@ class BatchPublishTest < ActiveSupport::TestCase
     end
   end
 
+  context "notifying Panopticon times out" do
+    should "retry 5 times and then continue" do
+      edition1 = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "ready", body: "x")
+      edition2 = FactoryGirl.create(:edition, slug: "bar", version_number: 1, state: "ready", body: "x")
+      edition_identifiers = [
+        { slug: "foo", edition: 1 },
+        { slug: "bar", edition: 1 }
+      ]
+
+      stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/#{edition1.slug}}).to_timeout
+
+      BatchPublish.new(edition_identifiers, @user.email).call
+      assert_requested(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/#{edition1.slug}}, times: 6)
+      assert_requested(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/#{edition2.slug}}, times: 1)
+    end
+  end
+
   context "edition doesn't exist" do
     should "still try to publish the other editions" do
       edition = FactoryGirl.create(:edition, slug: "foo", version_number: 1, state: "ready", body: "x")
