@@ -21,38 +21,10 @@ class Admin::RootController < Admin::BaseController
     end
 
     if params[:with]
-      begin
-        edition = Edition.find(params[:with])
-      rescue Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId
-        raise ActionController::RoutingError.new('Not Found')
-      end
-
-      @list = list_parameter_from_state edition.state
-      if edition.assigned_to.nil? or edition.assigned_to.uid != @user_filter
-        @user_filter = "all"
-      end
-    end
-
-    if @user_filter.blank?
-      @user_filter = current_user.uid
-      user = current_user
-    elsif %w[ all nobody ].include?(@user_filter)
-      user = @user_filter.to_sym
+      @presenter = build_with_focus
     else
-      user = User.where(uid: @user_filter).first
+      @presenter = build_without_focus(params[:page])
     end
-
-    editions = Edition.order_by([sort_column, sort_direction])
-
-    if params[:with]
-      item_index = editions.send(edition.state).to_a.index { |e| e.id == edition.id }
-      current_page = (item_index / ITEMS_PER_PAGE) + 1
-    else
-      current_page = params[:page]
-    end
-
-    editions = editions.page(current_page).per(ITEMS_PER_PAGE)
-    @presenter = AdminRootPresenter.new(editions, user)
 
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
@@ -71,4 +43,46 @@ private
     STATE_NAME_LISTS[state] || state
   end
 
+  def build_without_focus(current_page = nil)
+    @user_filter, user = process_user_filter(@user_filter)
+    editions = Edition.order_by([sort_column, sort_direction])
+    editions = editions.page(current_page).per(ITEMS_PER_PAGE)
+    AdminRootPresenter.new(editions, user)
+  end
+
+  def build_with_focus
+    begin
+      edition = Edition.find(params[:with])
+    rescue Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
+    @list = list_parameter_from_state edition.state
+    if edition.assigned_to.nil? or edition.assigned_to.uid != @user_filter
+      @user_filter = "all"
+    end
+
+    @user_filter, user = process_user_filter(@user_filter)
+
+    editions = Edition.order_by([sort_column, sort_direction])
+
+    item_index = editions.send(edition.state).to_a.index { |e| e.id == edition.id }
+    current_page = (item_index / ITEMS_PER_PAGE) + 1
+
+    editions = editions.page(current_page).per(ITEMS_PER_PAGE)
+    AdminRootPresenter.new(editions, user)
+  end
+
+  def process_user_filter(user_filter = nil)
+    if user_filter.blank?
+      user_filter = current_user.uid
+      user = current_user
+    elsif %w[ all nobody ].include?(@user_filter)
+      user = @user_filter.to_sym
+    else
+      user = User.where(uid: @user_filter).first
+    end
+
+    return user_filter, user
+  end
 end
