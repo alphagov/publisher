@@ -1,10 +1,22 @@
 require 'test_helper'
 require 'edition_progressor'
 
-class EditionProgressorTest < ActiveSupport::TestCase
+# The EditionProgressor expects to receive a WorkflowActor.
+# In our system that's usually a User object, but it doesn't
+# have to be. The DummyActor implements just enough behaviour
+# to operate as a WorkflowActor without the overhead of creating
+# a (database-persisted) User.
+class DummyActor
+  include WorkflowActor
 
+  def id
+    "fake-id"
+  end
+end
+
+class EditionProgressorTest < ActiveSupport::TestCase
   setup do
-    @laura = FactoryGirl.create(:user)
+    @laura = DummyActor.new
     @statsd = stub_everything
     @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
     stub_register_published_content
