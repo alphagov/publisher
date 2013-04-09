@@ -63,4 +63,10 @@ class Admin::RootControllerTest < ActionController::TestCase
     get(:index, list: "drafts", user_filter: "all", title_filter: " stuff")
     assert_select "td.title", /Stuff/i
   end
+
+  test "should strip excess interstitial whitespace from title_filter" do
+    @guide.update_attribute(:title, "Stuff and things")
+    get(:index, list: "drafts", user_filter: "all", title_filter: "stuff   and things")
+    assert_select "td.title", /Stuff and things/i
+  end
 end

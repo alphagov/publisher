@@ -22,7 +22,10 @@ class Admin::UserSearchController < Admin::BaseController
     ).excludes(state: 'archived').order_by([sort_column, sort_direction])
 
     unless params[:title_filter].blank?
-      title_p = Regexp.new(Regexp.escape(params[:title_filter]), true)
+      clean_title_filter = params[:title_filter]
+                                .strip
+                                .gsub(/\s+/, ' ')
+      title_p = Regexp.new(Regexp.escape(clean_title_filter), true)
       editions = editions.where(title: title_p)
     end
 
