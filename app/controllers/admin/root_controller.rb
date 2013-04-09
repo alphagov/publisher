@@ -61,7 +61,8 @@ class Admin::RootController < Admin::BaseController
     end
 
     if ! params[:title_filter].blank?
-      @presenter.filter_by_title_substring(params[:title_filter])
+      clean_title_filter = params[:title_filter].strip
+      @presenter.filter_by_title_substring(clean_title_filter)
     end
   end
 

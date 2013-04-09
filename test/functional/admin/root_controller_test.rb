@@ -58,4 +58,9 @@ class Admin::RootControllerTest < ActionController::TestCase
     assert_equal 2, assigns[:presenter].fact_check.current_page
   end
 
+  test "should strip leading/trailing whitespace from title_filter" do
+    @guide.update_attribute(:title, "Stuff")
+    get(:index, list: "drafts", user_filter: "all", title_filter: " stuff")
+    assert_select "td.title", /Stuff/i
+  end
 end
