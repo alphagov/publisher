@@ -38,15 +38,18 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_equal "app/views/admin/guides", @controller.admin_template_folder_for(g)
   end
 
-  test "an appropriate error message is shown if new edition failed" do
-    @user.stubs(:new_version).with(@guide, nil).returns(false)
+  test "delegates complexity of duplication to appropriate collaborator" do
+    EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+    EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+
     post :duplicate, :id => @guide.id
     assert_response 302
-    assert_equal "Failed to create new edition: couldn't initialise", flash[:alert]
+    assert_equal "New edition created", flash[:notice]
   end
 
   test "should update status via progress and redirect to parent" do
-    @guide.update_attribute(:state, :ready)
+    EditionProgressor.any_instance.expects(:progress).returns(true)
+    EditionProgressor.any_instance.expects(:status_message).returns("Guide updated")
 
     post :progress,
       :id       => @guide.id,
@@ -59,36 +62,6 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
     assert_equal "Guide updated", flash[:notice]
-
-    reloaded = Edition.find(@guide.id)
-    assert reloaded.fact_check?
-  end
-
-  test "should assign after creating new edition" do
-    bob = User.create
-
-    @guide.state = 'ready'
-    stub_register_published_content
-    User.create(:name => 'test').publish(@guide, comment: "Publishing this")
-
-    post :duplicate, :id => @guide.id,
-      :edition  => { :assigned_to_id => bob.id, :kind => 'guide' }
-
-    @new_guide = Edition.where(panopticon_id: @guide.panopticon_id).last
-    assert_equal bob, @new_guide.assigned_to
-  end
-
-  test "should not assign after creating a new edition if assignment is blank" do
-    @bob = User.create
-    stub_register_published_content
-    @bob.publish(@guide, comment: "Publishing this")
-
-    post :duplicate,
-      :id => @guide.id,
-      :edition  => { :assigned_to_id => "", :kind => 'guide' }
-
-    @guide.reload
-    assert_nil @guide.assigned_to
   end
 
   test "should update assignment" do
@@ -141,7 +114,10 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_response 200
   end
 
-  test "should not progress to fact check if the email addresses were blank" do
+  test "should set an error message if it couldn't progress an edition" do
+    EditionProgressor.any_instance.expects(:progress).returns(false)
+    EditionProgressor.any_instance.expects(:status_message).returns("I failed")
+
     post :progress, {
       :id       => @guide.id.to_s,
       :activity => { 
@@ -149,35 +125,13 @@ class Admin::EditionsControllerTest < ActionController::TestCase
         "email_addresses" => ""
       }
     }
-    assert_equal "Couldn't send fact check for guide", flash[:alert]
-  end
-
-  test "should not progress to fact check if the email addresses were invalid" do
-    @guide.update_attribute(:state, :ready)
-
-    post :progress,
-      :id       => @guide.id,
-      :activity => {
-        "request_type"       => "send_fact_check",
-        "comment"            => "Blah",
-        "email_addresses"    => "nouseratexample.com",
-        "customised_message" => "Hello"
-      }
-
-    assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
-    assert_match /email.*invalid/, flash[:alert]
-
-    reloaded = Edition.find(@guide.id)
-    assert_equal false, reloaded.fact_check?
+    assert_equal "I failed", flash[:alert]
   end
 
   test "should show the edit page after starting work" do
+    EditionProgressor.any_instance.expects(:progress).returns(true)
     post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' } }
     assert_redirected_to :controller => "admin/editions", :action => "show", :id => @guide.id
-
-    @guide.reload
-    assert !@guide.lined_up?
-    assert @guide.draft?
   end
 
   test "destroy transaction" do
