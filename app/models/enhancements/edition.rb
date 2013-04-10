@@ -8,7 +8,7 @@ class Edition
   end
 
   scope :internal_search, lambda { |term|
-    any_of({title: term}, {slug: term}, {overview: term}, {alternative_title: term}, {licence_identifier: term})
+    any_of({title: term}, {slug: term}, {overview: term}, {alternative_title: term}, {licence_identifier: term}, {"parts.title" => term})
   }
 
   alias_method :was_published_without_indexing, :was_published
