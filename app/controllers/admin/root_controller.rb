@@ -15,8 +15,7 @@ class Admin::RootController < Admin::BaseController
       raise "Cannot specify both 'with' and 'title_filter' parameters." if params[:title_filter]
       raise "Cannot specify both 'with' and 'page' parameters." if params[:page]
 
-      @list = list_parameter_from_state(edition.state)
-      @presenter, @user_filter = build_with_focus(user_filter)
+      @presenter, @user_filter, @list = build_with_focus(user_filter)
     else
       @list = params[:list].blank? ? 'lined_up' : params[:list]
       @presenter, @user_filter = build_without_focus(user_filter, params[:page])
@@ -66,7 +65,9 @@ private
     item_index = editions.send(edition.state).to_a.index { |e| e.id == edition.id }
     current_page = (item_index / ITEMS_PER_PAGE) + 1
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
-    return AdminRootPresenter.new(editions, user), user_filter
+
+    list = list_parameter_from_state(edition.state)
+    return AdminRootPresenter.new(editions, user), user_filter, list
   end
 
   def process_user_filter(user_filter = nil)
