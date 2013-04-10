@@ -57,7 +57,7 @@ private
   def build_with_focus(user_filter)
     edition = edition_of_interest
 
-    if edition.assigned_to.nil? or edition.assigned_to.uid != @user_filter
+    if edition.assigned_to.nil? or edition.assigned_to.uid != user_filter
       user_filter = "all"
     end
 
