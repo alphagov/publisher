@@ -21,7 +21,7 @@
 #   test "we can view a transaction" do
 #     get :show, :id => @transaction.id
 #     assert_response :success
-#     assert_not_nil assigns(:transaction)
+#     refute_nil assigns(:transaction)
 #   end
 #
 #   test "destroy transaction" do

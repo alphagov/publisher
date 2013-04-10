@@ -11,8 +11,8 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
 
     visit "/admin/editions/#{programme.to_param}"
 
-    assert_not_include page.body, "Part One"
-    assert_not_include page.body, "part-one"
+    refute_includes page.body, "Part One"
+    refute_includes page.body, "part-one"
 
     click_on "Overview"
     within :css, "#overview" do
@@ -23,9 +23,9 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
 
     within(:css, ".workflow_buttons") { click_on "Save" }
 
-    assert_include page.body, "Programme edition was successfully updated."
+    assert_includes page.body, "Programme edition was successfully updated."
 
-    assert_include page.body, "Imagine this is Welsh"
-    assert_not_include page.body, "imagine-this-is-welsh"
+    assert_includes page.body, "Imagine this is Welsh"
+    refute_includes page.body, "imagine-this-is-welsh"
   end
 end

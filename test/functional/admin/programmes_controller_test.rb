@@ -26,7 +26,7 @@
 #   test "we can view a programme" do
 #     get :show, :id => @programme.id
 #     assert_response :success
-#     assert_not_nil assigns(:programme)
+#     refute_nil assigns(:programme)
 #   end
 #
 #   test "destroy programme" do
