@@ -1,9 +1,6 @@
 require "statsd"
-<<<<<<< HEAD
-=======
 require "edition_duplicator"
 require "edition_progressor"
->>>>>>> a57ea96... Extract progressing editions into a new class
 
 class Admin::EditionsController < Admin::BaseController
   actions :create, :update, :destroy
