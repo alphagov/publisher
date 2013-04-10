@@ -30,7 +30,7 @@ end
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
-gem 'lograge', '~> 0.1.0'
+gem 'lograge', '0.2.0'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'newrelic_rpm'
@@ -56,7 +56,8 @@ group :assets do
 end
 
 group :test do
-  gem 'test-unit'
+  gem 'turn', '0.9.6'
+  gem 'minitest', '3.3.0'
   gem 'shoulda'
   gem 'database_cleaner'
 
