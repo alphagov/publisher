@@ -1,5 +1,4 @@
 require "statsd"
-require "edition_duplicator"
 require "edition_progressor"
 
 class Admin::EditionsController < Admin::BaseController
