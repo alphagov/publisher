@@ -33,7 +33,6 @@ gem 'kaminari', '0.13.0'
 gem 'lograge', '0.2.0'
 gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 gem "mongoid_rails_migrations", "1.0.0"
-gem 'newrelic_rpm'
 gem 'null_logger'
 gem 'plek', '1.3.1'
 gem 'rails', '3.2.13'
@@ -68,7 +67,7 @@ group :test do
   gem 'webmock'
   gem 'mocha', '0.13.3', :require => false
   gem 'factory_girl_rails'
-  gem 'faker'
+  gem 'faker', '1.1.2'
 
   gem "timecop"
 
