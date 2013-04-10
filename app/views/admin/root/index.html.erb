@@ -3,8 +3,8 @@
 
     <div class="page-header">
       <h1>
-        <% if !params[:title_filter].blank? -%>
-          Searching for &ldquo;<%= params[:title_filter] -%>&rdquo; in
+        <% if !params[:string_filter].blank? -%>
+          Searching for &ldquo;<%= params[:string_filter] -%>&rdquo; in
         <% end -%>
         &ldquo;<%= @list.humanize %>&rdquo; publications
       </h1>
@@ -36,7 +36,7 @@
 
         <form method="GET" action="/admin" class="user-filter-form">
           <%= hidden_field_tag :list, params[:list] %>
-          <%= hidden_field_tag :title_filter, params[:title_filter] %>
+          <%= hidden_field_tag :string_filter, params[:string_filter] %>
           <label for="user_filter" class="visuallyhidden">Filter by assignee</label>
           <%=
             select_tag("user_filter", options_for_select(
@@ -46,7 +46,7 @@
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
-        <%= render partial: "admin/shared/title_filter_form", locals: {action: "/admin", preserve: [:list]} %>
+        <%= render partial: "admin/shared/string_filter_form", locals: {action: "/admin", preserve: [:list]} %>
 
       </div>
 

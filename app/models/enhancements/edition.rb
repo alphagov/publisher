@@ -7,6 +7,10 @@ class Edition
   class ResurrectionError < RuntimeError
   end
 
+  scope :internal_search, lambda { |term|
+    any_of({title: term}, {slug: term}, {overview: term}, {alternative_title: term}, {licence_identifier: term})
+  }
+
   alias_method :was_published_without_indexing, :was_published
   def was_published
     was_published_without_indexing

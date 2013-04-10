@@ -42,8 +42,9 @@ class AdminRootPresenter
     end
   end
 
-  def filter_by_title_substring(s)
-    @scope = @scope.where(title: Regexp.new(Regexp.escape(s), true))
+  def filter_by_substring(s)
+    search_regex = Regexp.new(Regexp.escape(s), true)
+    @scope = @scope.internal_search(search_regex)
   end
 
   alias_method :drafts, :draft

@@ -58,15 +58,22 @@ class Admin::RootControllerTest < ActionController::TestCase
     assert_equal 2, assigns[:presenter].fact_check.current_page
   end
 
-  test "should strip leading/trailing whitespace from title_filter" do
+  test "should strip leading/trailing whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff")
-    get(:index, list: "drafts", user_filter: "all", title_filter: " stuff")
+    get(:index, list: "drafts", user_filter: "all", string_filter: " stuff")
     assert_select "td.title", /Stuff/i
   end
 
-  test "should strip excess interstitial whitespace from title_filter" do
+  test "should strip excess interstitial whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff and things")
-    get(:index, list: "drafts", user_filter: "all", title_filter: "stuff   and things")
+    get(:index, list: "drafts", user_filter: "all", string_filter: "stuff   and things")
     assert_select "td.title", /Stuff and things/i
+  end
+
+  test "should search in slug with string_filter" do
+    @guide.update_attribute(:title, "Stuff")
+    @guide.update_attribute(:slug, "electric-banana")
+    get(:index, list: "drafts", user_filter: "all", string_filter: "electric-banana")
+    assert_select "td.title", /Stuff/i
   end
 end
