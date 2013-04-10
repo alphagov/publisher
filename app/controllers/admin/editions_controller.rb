@@ -33,9 +33,9 @@ class Admin::EditionsController < Admin::BaseController
 
   def duplicate
     new_edition = current_user.new_version(resource, (params[:to] || nil))
-    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
+
     if new_edition and new_edition.save
-      update_assignment new_edition, assigned_to_id
+      update_assignment new_edition, new_assignee
       redirect_to params[:return_to] and return if params[:return_to]
       redirect_to admin_edition_path(new_edition), :notice => 'New edition created'
     else
@@ -46,10 +46,14 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def update
-    assigned_to_id = (params[:edition] || {}).delete(:assigned_to_id)
+    # We have to call this before updating as it removes any assigned_to_id
+    # parameter from the request, preventing us from inadvertently changing
+    # it at the wrong time.
+    assign_to = new_assignee
+
     update! do |success, failure|
       success.html {
-        update_assignment resource, assigned_to_id
+        update_assignment resource, assign_to
         redirect_to params[:return_to] and return if params[:return_to]
         redirect_to admin_edition_path(resource)
       }
@@ -59,7 +63,7 @@ class Admin::EditionsController < Admin::BaseController
         render :template => "show"
       }
       success.json {
-        update_assignment resource, assigned_to_id
+        update_assignment resource, assign_to
         render :json => resource
       }
       failure.json { render :json => resource.errors, :status=>406 }
