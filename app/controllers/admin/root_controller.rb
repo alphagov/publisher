@@ -28,7 +28,7 @@ class Admin::RootController < Admin::BaseController
       render text: 'Not Found', status: 404 and return
     end
 
-    if ! params[:title_filter].blank?
+    if params[:title_filter].present?
       @presenter.filter_by_title_substring(params[:title_filter])
     end
   end
