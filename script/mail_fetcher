@@ -22,6 +22,7 @@ begin
     handler.process
     
     if handler.errors.any?
+      Rails.logger.error(handler.errors.join("\n"))
       NoisyWorkflow.report_errors(handler.errors).deliver
     end
 
