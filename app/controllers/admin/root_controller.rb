@@ -28,7 +28,7 @@ class Admin::RootController < Admin::BaseController
       render text: 'Not Found', status: 404 and return
     end
 
-    if ! params[:string_filter].blank?
+    if params[:title_filter].present?
       clean_string_filter = params[:string_filter]
                               .strip
                               .gsub(/\s+/, ' ')
