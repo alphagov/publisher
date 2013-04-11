@@ -22,8 +22,4 @@ class Admin::BaseController < InheritedResources::Base
   def record_not_found
     render :text => "404 Not Found", :status => 404
   end
-
-  def description(r)
-    r.format.underscore.humanize
-  end
 end
