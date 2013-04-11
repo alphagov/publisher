@@ -13,10 +13,36 @@ require 'mail'
 require Rails.root.join("config/fact_check_account")
 require 'fact_check_email_handler'
 
+require 'redis'
+require 'redis-lock'
+
+def redis
+  redis_config = YAML.load_file(File.join(Rails.root, "config", "redis.yml"))
+  Redis.new(redis_config.symbolize_keys)
+end
+
 Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
 handler = FactCheckEmailHandler.new
-handler.process
+
+# The lock is created and belongs to this process for as long as the `life`.
+# When the block has finished executing, the lock is explicitly released.
+# If an exception is raised in the block, the lock is explicitly released.
+#
+# If we fail to explicitly release the lock before the end of its life
+# (eg network cable unplugged), it will be considered stale by other processes
+# if its life has passed.
+#
+# 5 minutes should be long enough to complete the processing. If it one day
+# ceases to be long enough, we could manually renew the lock before it expires.
+AUTOMATIC_LOCK_EXPIRY = (5 * 60) # seconds
+begin
+  redis.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do
+    handler.process
+  end
+rescue Redis::Lock::LockNotAcquired => e
+  Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
+end
 
 if handler.errors.any?
   Rails.logger.error(handler.errors.join("\n"))

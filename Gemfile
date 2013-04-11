@@ -37,6 +37,8 @@ gem 'null_logger'
 gem 'plek', '1.3.1'
 gem 'rails', '3.2.13'
 
+gem 'redis', '3.0.3', require: false # Only used in some importers
+gem 'mlanett-redis-lock', '0.2.1', require: false # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
 gem 'reverse_markdown', require: false # Only used in some importers
