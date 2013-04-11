@@ -17,4 +17,9 @@ class Admin::ReportsController < ApplicationController
     report = EditorialProgressPresenter.new
     render csv: report
   end
+
+  def business_support_schemes_content
+    schemes = BusinessSupportEdition.published.asc("title")
+    send_data BusinessSupportExportPresenter.new(schemes).to_csv, :filename => 'business_support_schemes_content.csv'
+  end
 end
