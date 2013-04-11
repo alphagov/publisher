@@ -14,7 +14,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
   end
 
   def setup
-    stub_request(:get, "http://mapit.mysociety.org/area/45UB").
+    stub_request(:get, "#{MAPIT_BASE_URL}area/45UB").
       to_return(status: 404, body: '{}')
   end
 
@@ -76,9 +76,46 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       @source = File.open(fixture_file('local_interactions_sample.csv'))
     end
 
+    should "skip the row if there is an invalid SNAC" do
+      # sample contains SNAC OOHF (that's o's, not zeroes)
+      source = File.open(fixture_file('local_interactions_invalid_snac.csv'))
+      importer = LocalInteractionImporter.new(source)
+
+      LocalAuthority.expects(:find_by_snac).with('OOHF').never
+      LocalAuthority.expects(:find_by_snac).with('45UB').returns(nil)
+
+      importer.run
+    end
+
+    should "allow council-level SNAC codes (e.g. 11)" do
+      source = File.open(fixture_file('local_interactions_county_sample.csv'))
+      importer = LocalInteractionImporter.new(source)
+
+      LocalAuthority.expects(:find_by_snac).with('11').returns(nil)
+
+      importer.run
+    end
+
     context "Local authority already known" do
       setup do
-        @authority = FactoryGirl.create(:local_authority, :snac => '45UB')
+        stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
+          .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
+        @authority = FactoryGirl.create(:local_authority, :snac => '45UB', :name => "Adur Council", :tier => "county", :local_directgov_id => 4)
+      end
+
+      should "Update the authority" do
+        LocalInteractionImporter.new(@source).run
+        @authority.reload
+        assert_equal "Adur District Council", @authority.name
+        assert_equal "45UB", @authority.snac
+        assert_equal 1, @authority.local_directgov_id
+        assert_equal 'district', @authority.tier
+      end
+
+      should "Only update the authority once" do
+        source = File.open(fixture_file('local_interactions_sample_multi.csv'))
+        LocalInteractionImporter.new(source).run
+        assert_requested(:get, "#{MAPIT_BASE_URL}area/45UB", :times => 1)
       end
 
       should "Add one interaction to that authority" do
@@ -137,7 +174,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       end
 
       should "Lookup tier from mapit" do
-        stub_request(:get, "http://mapit.mysociety.org/area/45UB")
+        stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
           .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
         LocalInteractionImporter.new(@source).run
         assert_equal 'district', LocalAuthority.first.tier

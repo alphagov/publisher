@@ -1,4 +1,5 @@
 require 'csv'
+require 'exception_notifier'
 
 class LocalAuthorityDataImporter
 
@@ -35,7 +36,12 @@ class LocalAuthorityDataImporter
 
   def run
     CSV.new(@filehandle, headers: true).each do |row|
-      process_row(row)
+      begin
+        process_row(row)
+      rescue => e
+        Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
+        ExceptionNotifier::Notifier.background_exception_notification(e, :data => {:row => row})
+      end
     end
   end
 end
