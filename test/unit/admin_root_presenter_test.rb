@@ -187,7 +187,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     FactoryGirl.create(:guide_edition, title: "Second")
 
     presenter = AdminRootPresenter.new(Edition, :all)
-    presenter.filter_by_title_substring("Sec")
+    presenter.filter_by_substring("Sec")
     assert_equal ["Second"], presenter.all.map(&:title)
   end
 
@@ -197,7 +197,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     FactoryGirl.create(:guide_edition, title: "Second")
 
     presenter = AdminRootPresenter.new(Edition, :all)
-    presenter.filter_by_title_substring("sec")
+    presenter.filter_by_substring("sec")
     assert_equal ["Second"], presenter.all.map(&:title)
   end
 
@@ -207,7 +207,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     FactoryGirl.create(:guide_edition, title: "(Second")
 
     presenter = AdminRootPresenter.new(Edition, :all)
-    presenter.filter_by_title_substring("(sec")
+    presenter.filter_by_substring("(sec")
     assert_equal ["(Second"], presenter.all.map(&:title)
   end
 end

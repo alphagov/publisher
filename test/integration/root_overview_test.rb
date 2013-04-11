@@ -9,9 +9,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     click_on "Lined up"
   end
 
-  def filter_by_title(substring)
-    within ".title-filter-form" do
-      fill_in "Filter by title", with: substring
+  def filter_by_content(substring)
+    within ".string-filter-form" do
+      fill_in "Filter", with: substring
       click_on "Filter"
     end
   end
@@ -77,7 +77,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     visit "/admin"
     filter_by_user("All")
 
-    filter_by_title("xXx")
+    filter_by_content("xXx")
 
     assert page.has_content?("XXX")
     assert page.has_no_content?("YYY")
@@ -92,7 +92,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     visit "/admin"
     click_on "Amends needed"
     
-    filter_by_title("xXx")
+    filter_by_content("xXx")
 
     assert page.has_css?('h1', text: "Amends needed")
   end
