@@ -37,7 +37,6 @@ gem 'null_logger'
 gem 'plek', '1.3.1'
 gem 'rails', '3.2.13'
 
-gem 'lockfile', require: false
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
 gem 'reverse_markdown', require: false # Only used in some importers

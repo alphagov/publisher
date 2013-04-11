@@ -8,26 +8,19 @@
 # gmail account and having a look.
 #
 require File.expand_path('../../config/environment',  __FILE__)
-require File.expand_path("../../lib/lockfile_ext", __FILE__)
 
-begin
-  Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
-    require 'mail'
-    require Rails.root.join("config/fact_check_account")
-    require 'fact_check_email_handler'
+require 'mail'
+require Rails.root.join("config/fact_check_account")
+require 'fact_check_email_handler'
 
-    Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
-    handler = FactCheckEmailHandler.new
-    handler.process
-    
-    if handler.errors.any?
-      Rails.logger.error(handler.errors.join("\n"))
-      NoisyWorkflow.report_errors(handler.errors).deliver
-    end
+handler = FactCheckEmailHandler.new
+handler.process
 
-    Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
-  end
-rescue Lockfile::MaxTriesLockError => e
-  Rails.logger.info "Another email fetcher is already running. Exiting."
+if handler.errors.any?
+  Rails.logger.error(handler.errors.join("\n"))
+  NoisyWorkflow.report_errors(handler.errors).deliver
 end
+
+Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"

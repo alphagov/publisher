@@ -149,7 +149,6 @@ GEM
     libv8 (3.3.10.4)
     libwebsocket (0.1.5)
       addressable
-    lockfile (2.1.0)
     lograge (0.2.0)
       actionpack
       activesupport
@@ -312,7 +311,6 @@ DEPENDENCIES
   kaminari (= 0.13.0)
   launchy
   less-rails-bootstrap
-  lockfile
   lograge (= 0.2.0)
   minitest (= 3.3.0)
   mocha (= 0.13.3)
