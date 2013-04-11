@@ -34,11 +34,11 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
 
   test "should handle simple title filter values" do
     # no assertions, just validating that the Regexp is fine like this
-    get(:index, :title_filter => "stuff")
+    get(:index, :string_filter => "stuff")
   end
 
   test "should safely handle title filter values" do
     # no assertions; just validating that the Regexp is successfully created when the input contains Regexp special chars
-    get(:index, :title_filter => "(stuff")
+    get(:index, :string_filter => "(stuff")
   end
 end

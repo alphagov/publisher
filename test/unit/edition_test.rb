@@ -44,4 +44,12 @@ class EditionTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "internal_search" do
+    should "search on part titles" do
+      FactoryGirl.create(:guide_edition, title: "Big title", parts: [Part.new(title: "Little title", slug: "x", )])
+      results = Edition.internal_search("Little title")
+      assert_equal ["Big title"], results.map(&:title)
+    end
+  end
 end

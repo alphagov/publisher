@@ -13,8 +13,8 @@ class Admin::RootController < Admin::BaseController
 
     session[:user_filter] = @user_filter
 
-    if params[:with] && params[:title_filter]
-      raise "Cannot specify both 'with' and 'title_filter' parameters."
+    if params[:with] && params[:string_filter]
+      raise "Cannot specify both 'with' and 'string_filter' parameters."
     end
     if params[:with] && params[:page]
       raise "Cannot specify both 'with' and 'page' parameters."
@@ -60,8 +60,11 @@ class Admin::RootController < Admin::BaseController
       render text: 'Not Found', status: 404 and return
     end
 
-    if ! params[:title_filter].blank?
-      @presenter.filter_by_title_substring(params[:title_filter])
+    if ! params[:string_filter].blank?
+      clean_string_filter = params[:string_filter]
+                              .strip
+                              .gsub(/\s+/, ' ')
+      @presenter.filter_by_substring(clean_string_filter)
     end
   end
 

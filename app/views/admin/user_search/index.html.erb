@@ -16,7 +16,7 @@
           %>
           <input class="btn btn-primary" type="submit" value="Filter">
         </form>
-        <%= render partial: "admin/shared/title_filter_form", locals: {action: "/admin/user_search", preserve: [:user_filter]} %>
+        <%= render partial: "admin/shared/string_filter_form", locals: {action: "/admin/user_search", preserve: [:user_filter]} %>
       </div>
 
       <div id="publication-list-container" class="span10">
