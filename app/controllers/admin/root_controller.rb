@@ -12,7 +12,7 @@ class Admin::RootController < Admin::BaseController
     session[:user_filter] = user_filter
 
     if params[:with]
-      raise "Cannot specify both 'with' and 'title_filter' parameters." if params[:title_filter]
+      raise "Cannot specify both 'with' and 'string_filter' parameters." if params[:string_filter]
       raise "Cannot specify both 'with' and 'page' parameters." if params[:page]
 
       @presenter, @user_filter, @list = build_with_focus(user_filter)
@@ -27,7 +27,7 @@ class Admin::RootController < Admin::BaseController
       render text: 'Not Found', status: 404 and return
     end
 
-    if params[:title_filter].present?
+    if params[:string_filter].present?
       clean_string_filter = params[:string_filter]
                               .strip
                               .gsub(/\s+/, ' ')
