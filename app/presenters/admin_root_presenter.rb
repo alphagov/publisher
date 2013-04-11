@@ -43,8 +43,7 @@ class AdminRootPresenter
   end
 
   def filter_by_substring(s)
-    search_regex = Regexp.new(Regexp.escape(s), true)
-    @scope = @scope.internal_search(search_regex)
+    @scope = @scope.internal_search(s)
   end
 
   alias_method :drafts, :draft

@@ -25,8 +25,7 @@ class Admin::UserSearchController < Admin::BaseController
       clean_string_filter = params[:string_filter]
                                 .strip
                                 .gsub(/\s+/, ' ')
-      search_regex = Regexp.new(Regexp.escape(clean_string_filter), true)
-      editions = editions.internal_search(search_regex)
+      editions = editions.internal_search(clean_string_filter)
     end
 
     # Need separate assignments here because Kaminari won't preserve pagination

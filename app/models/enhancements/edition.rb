@@ -8,10 +8,11 @@ class Edition
   end
 
   scope :internal_search, lambda { |term|
-    any_of({title: term}, {slug: term}, {overview: term},
-           {alternative_title: term}, {licence_identifier: term},
-           {body: term},
-           {"parts.title" => term}, {"parts.body" => term})
+    regex = Regexp.new(Regexp.escape(term), true)
+    any_of({title: regex}, {slug: regex}, {overview: regex},
+           {alternative_title: regex}, {licence_identifier: regex},
+           {body: regex},
+           {"parts.title" => regex}, {"parts.body" => regex})
   }
 
   alias_method :was_published_without_indexing, :was_published
