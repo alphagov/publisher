@@ -8,7 +8,7 @@ class EditionDuplicator
     self.actor            = actor
   end
 
-  # new_format : A new format to create (eg. 'answer')
+  # new_format : The format of the new edition (eg. 'answer')
   # assign_to  : The User who the new item should be assigned to for further
   #              work.
   def duplicate(new_format = nil, assign_to = nil)
