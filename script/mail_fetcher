@@ -33,12 +33,17 @@ handler = FactCheckEmailHandler.new
 # (eg network cable unplugged), it will be considered stale by other processes
 # if its life has passed.
 #
-# 5 minutes should be long enough to complete the processing. If it one day
-# ceases to be long enough, we could manually renew the lock before it expires.
+# We set the lock to expire after five minutes. After we process each message,
+# we update it to expire at five minutes from that point. This should mean that
+# we retain the lock for the duration, even if processing takes longer than
+# five minutes. The exception to that is if processing a single message takes
+# that long.
 AUTOMATIC_LOCK_EXPIRY = (5 * 60) # seconds
 begin
-  redis.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do
-    handler.process
+  redis.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |lock|
+    handler.process do
+      lock.extend_life(AUTOMATIC_LOCK_EXPIRY)
+    end
   end
 rescue Redis::Lock::LockNotAcquired => e
   Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
