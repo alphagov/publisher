@@ -8,26 +8,50 @@
 # gmail account and having a look.
 #
 require File.expand_path('../../config/environment',  __FILE__)
-require File.expand_path("../../lib/lockfile_ext", __FILE__)
 
-begin
-  Lockfile.new('cron_mail_fetcher.lock', :retries => 0) do
-    require 'mail'
-    require Rails.root.join("config/fact_check_account")
-    require 'fact_check_email_handler'
+require 'mail'
+require Rails.root.join("config/fact_check_account")
+require 'fact_check_email_handler'
 
-    Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+require 'redis'
+require 'redis-lock'
 
-    handler = FactCheckEmailHandler.new
-    handler.process
-    
-    if handler.errors.any?
-      Rails.logger.error(handler.errors.join("\n"))
-      NoisyWorkflow.report_errors(handler.errors).deliver
-    end
-
-    Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
-  end
-rescue Lockfile::MaxTriesLockError => e
-  Rails.logger.info "Another email fetcher is already running. Exiting."
+def redis
+  redis_config = YAML.load_file(File.join(Rails.root, "config", "redis.yml"))
+  Redis.new(redis_config.symbolize_keys)
 end
+
+Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+
+handler = FactCheckEmailHandler.new
+
+# The lock is created and belongs to this process for as long as the `life`.
+# When the block has finished executing, the lock is explicitly released.
+# If an exception is raised in the block, the lock is explicitly released.
+#
+# If we fail to explicitly release the lock before the end of its life
+# (eg network cable unplugged), it will be considered stale by other processes
+# if its life has passed.
+#
+# We set the lock to expire after five minutes. After we process each message,
+# we update it to expire at five minutes from that point. This should mean that
+# we retain the lock for the duration, even if processing takes longer than
+# five minutes. The exception to that is if processing a single message takes
+# that long.
+AUTOMATIC_LOCK_EXPIRY = (5 * 60) # seconds
+begin
+  redis.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |lock|
+    handler.process do
+      lock.extend_life(AUTOMATIC_LOCK_EXPIRY)
+    end
+  end
+rescue Redis::Lock::LockNotAcquired => e
+  Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
+end
+
+if handler.errors.any?
+  Rails.logger.error(handler.errors.join("\n"))
+  NoisyWorkflow.report_errors(handler.errors).deliver
+end
+
+Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"

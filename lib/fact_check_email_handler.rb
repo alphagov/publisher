@@ -29,9 +29,11 @@ class FactCheckEmailHandler
     return false
   end
 
-  def process()
+  # &after_each_message: an optional block to call after processing each message
+  def process(&after_each_message)
     Mail.all(read_only: false, delete_after_find: true) do |message|
       message.skip_deletion unless process_message(message)
+      after_each_message.call(message) if after_each_message
     end
   end
 end
