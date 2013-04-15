@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/alphagov/redis-lock.git
-  revision: 02426b527865763e0989c25ab6ecb19b7b72775a
-  branch: pass_lock_to_block
-  specs:
-    mlanett-redis-lock (0.2.1)
-      redis
-
-GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
@@ -169,6 +161,8 @@ GEM
     metaclass (0.0.1)
     mime-types (1.21)
     minitest (3.3.0)
+    mlanett-redis-lock (0.2.2)
+      redis
     mocha (0.13.3)
       metaclass (~> 0.0.1)
     mongo (1.6.2)
@@ -322,7 +316,7 @@ DEPENDENCIES
   less-rails-bootstrap
   lograge (= 0.2.0)
   minitest (= 3.3.0)
-  mlanett-redis-lock (= 0.2.1)!
+  mlanett-redis-lock (= 0.2.2)
   mocha (= 0.13.3)
   mongo (= 1.6.2)
   mongoid_rails_migrations (= 1.0.0)
