@@ -91,4 +91,23 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     assert ! message.is_marked_for_delete?
   end
+
+  test "should invoke the supplied block after each message" do
+    answer1 = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    answer2 = FactoryGirl.create(:answer_edition, :state => 'in_review')
+
+    Mail.stubs(:all).multiple_yields(
+          fact_check_mail_for(answer1, :body => "First Message"),
+          fact_check_mail_for(answer2, :body => "Second Message")
+    )
+
+    handler = FactCheckEmailHandler.new
+
+    invocations = 0
+    handler.process do
+      invocations += 1
+    end
+
+    assert_equal 2, invocations
+  end
 end

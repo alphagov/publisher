@@ -21,9 +21,11 @@ class Admin::UserSearchController < Admin::BaseController
       {'actions.recipient_id' => @user.id}
     ).excludes(state: 'archived').order_by([sort_column, sort_direction])
 
-    unless params[:title_filter].blank?
-      title_p = Regexp.new(Regexp.escape(params[:title_filter]), true)
-      editions = editions.where(title: title_p)
+    unless params[:string_filter].blank?
+      clean_string_filter = params[:string_filter]
+                                .strip
+                                .gsub(/\s+/, ' ')
+      editions = editions.internal_search(clean_string_filter)
     end
 
     # Need separate assignments here because Kaminari won't preserve pagination

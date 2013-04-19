@@ -21,14 +21,18 @@ module Admin::ProgressFormsHelper
     )
   end
 
+  def build_review_button(edition, activity, title)
+    check_method = "can_#{activity}?".to_sym
+    disabled = edition.send(check_method) ? "" : "disabled"
+    %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+  end
+
   def review_buttons(edition)
     [
       ["Needs more work",    "request_amendments"],
       ["OK for publication", "approve_review"]
     ].map{ |title, activity|
-      check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled"
-      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+      build_review_button(edition, activity, title)
     }.join("\n").html_safe
   end
 
@@ -44,9 +48,7 @@ module Admin::ProgressFormsHelper
       ["Needs major changes",    "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
     ].map{ |title, activity|
-      check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled"
-      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+      build_review_button(edition, activity, title)
     }.join("\n").html_safe
   end
 

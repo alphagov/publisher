@@ -16,6 +16,10 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
 
   def process_row(row)
     return if row['SNAC'].blank?
+    unless row['SNAC'] =~ /\A\d{2}[A-Z]{2}?\z/ # 2 digits, optionally 2 uppercase letters
+      Rails.logger.warn "Invalid SNAC #{row['SNAC']} While importing local interactions"
+      return
+    end
     authority = authority(row)
 
     existing_interactions = authority.interactions_for(row['LGSL'], row['LGIL'])
@@ -34,18 +38,27 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   end
 
   def authority(row)
-    @authorities[row['SNAC']] ||= LocalAuthority.find_by_snac(row['SNAC']) || create_authority(row)
+    @authorities[row['SNAC']] ||= create_or_update_authority(row)
   end
 
-  def create_authority(row)
-    Rails.logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
-    authority_tier = identify_tier(row['SNAC'])
-    LocalAuthority.create!(
-      name: row['Authority Name'],
-      snac: row['SNAC'],
-      local_directgov_id: row['LAid'],
-      tier: authority_tier
-    )
+  def create_or_update_authority(row)
+    if la = LocalAuthority.find_by_snac(row['SNAC'])
+      Rails.logger.info("Updating authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
+      la.update_attributes!(
+        name: row['Authority Name'],
+        local_directgov_id: row['LAid'],
+        tier: identify_tier(row['SNAC'])
+      )
+      la
+    else
+      Rails.logger.info("New authority '%s' (snac %s)" % [row['Authority Name'], row['SNAC']])
+      LocalAuthority.create!(
+        name: row['Authority Name'],
+        snac: row['SNAC'],
+        local_directgov_id: row['LAid'],
+        tier: identify_tier(row['SNAC'])
+      )
+    end
   end
 
   def identify_tier(snac)
@@ -53,7 +66,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
   end
 
   def authority_type_from_mapit(snac)
-    url = "http://mapit.mysociety.org/area/#{snac}"
+    url = "#{MAPIT_BASE_URL}area/#{snac}"
     Rails.logger.debug("Finding authority type from mapit, url #{url}")
     raw_response = RestClient.get(url)
     response = JSON.parse(raw_response.body)
