@@ -1,4 +1,5 @@
 require "statsd"
+require "edition_duplicator"
 require "edition_progressor"
 
 class Admin::EditionsController < Admin::BaseController
@@ -32,16 +33,13 @@ class Admin::EditionsController < Admin::BaseController
   end
 
   def duplicate
-    new_edition = current_user.new_version(resource, (params[:to] || nil))
+    command = EditionDuplicator.new(resource, current_user)
 
-    if new_edition and new_edition.save
-      update_assignment new_edition, new_assignee
-      redirect_to params[:return_to] and return if params[:return_to]
-      redirect_to admin_edition_path(new_edition), :notice => 'New edition created'
+    if command.duplicate(params[:to], new_assignee)
+      return_to = params[:return_to] || admin_edition_path(command.new_edition)
+      redirect_to return_to, :notice => 'New edition created'
     else
-      alert = 'Failed to create new edition'
-      alert += new_edition ? ": #{new_edition.errors.inspect}" : ": couldn't initialise"
-      redirect_to admin_edition_path(resource), :alert => alert
+      redirect_to admin_edition_path(resource), :alert => command.error_message
     end
   end
 
@@ -54,8 +52,8 @@ class Admin::EditionsController < Admin::BaseController
     update! do |success, failure|
       success.html {
         update_assignment resource, assign_to
-        redirect_to params[:return_to] and return if params[:return_to]
-        redirect_to admin_edition_path(resource)
+        return_to = params[:return_to] || admin_edition_path(resource)
+        redirect_to return_to
       }
       failure.html {
         @resource = resource
@@ -105,6 +103,16 @@ class Admin::EditionsController < Admin::BaseController
 
     def setup_view_paths
       setup_view_paths_for(resource)
+    end
+
+    def new_assignee
+      assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
+      User.find(assignee_id) if assignee_id.present?
+    end
+
+    def update_assignment(edition, assignee)
+      return if assignee.nil? || edition.assigned_to == assignee
+      current_user.assign(edition, assignee)
     end
 
     def statsd
