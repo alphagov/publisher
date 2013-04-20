@@ -105,11 +105,6 @@ class Admin::EditionsController < Admin::BaseController
       setup_view_paths_for(resource)
     end
 
-    def new_assignee
-      assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
-      User.find(assignee_id) if assignee_id.present?
-    end
-
     def statsd
       @statsd ||= Statsd.new(::STATSD_HOST)
     end
