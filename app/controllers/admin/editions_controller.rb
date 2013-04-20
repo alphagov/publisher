@@ -110,11 +110,6 @@ class Admin::EditionsController < Admin::BaseController
       User.find(assignee_id) if assignee_id.present?
     end
 
-    def update_assignment(edition, assignee)
-      return if assignee.nil? || edition.assigned_to == assignee
-      current_user.assign(edition, assignee)
-    end
-
     def statsd
       @statsd ||= Statsd.new(::STATSD_HOST)
     end
