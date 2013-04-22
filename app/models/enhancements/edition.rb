@@ -10,9 +10,7 @@ class Edition
   scope :internal_search, lambda { |term|
     regex = Regexp.new(Regexp.escape(term), true)  # case-insensitive
     any_of({title: regex}, {slug: regex}, {overview: regex},
-           {alternative_title: regex}, {licence_identifier: regex},
-           {body: regex},
-           {"parts.title" => regex}, {"parts.body" => regex})
+           {alternative_title: regex}, {licence_identifier: regex})
   }
 
   alias_method :was_published_without_indexing, :was_published
