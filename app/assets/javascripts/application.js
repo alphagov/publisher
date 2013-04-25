@@ -4,6 +4,7 @@
 //= require jquery.mustache
 //= require twitter/bootstrap
 //= require_tree .
+//= require jquery_nested_form
 
 // System wide behaviours
 $(function () {

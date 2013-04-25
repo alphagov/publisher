@@ -21,6 +21,8 @@ gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch:
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '4.1.3'
 
+gem "nested_form"
+
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
