@@ -13,6 +13,7 @@
       <h3>Parts</h3>
 
       <section class="accordion" id="parts">
+        <% tidy_up_parts_before_editing(f.object) %>
 
         <%= f.semantic_fields_for :parts do |part| %>
           <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => ! @resource.published? } %>
