@@ -13,6 +13,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
+    assert_selector '#parts div.part', count: 1
 
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
@@ -22,7 +23,8 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
 
     click_on 'Add new part'
-    within :css, '#parts div.part:nth-of-type(2)' do
+    assert_selector '#parts div.fields', count: 2
+    within :css, '#parts div.fields:nth-of-type(2)' do
       fill_in 'Title', :with => 'Part Two'
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-two'
@@ -30,14 +32,14 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
     click_on 'Add new part'
-    within :css, '#parts div.part:nth-of-type(3)' do
+    within :css, '#parts div.fields:nth-of-type(3)' do
       fill_in 'Title', :with => 'Part Three'
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-three'
     end
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
-    assert_equal 3, all(:css, '#parts > div.part').length
+    assert_selector '#parts div.part', count: 3
 
     visit "/admin?user_filter=all&list=drafts"
     assert page.has_content? random_name
