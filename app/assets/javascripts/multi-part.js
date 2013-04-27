@@ -35,14 +35,4 @@ $(function() {
       var header = elem.closest('fieldset').prev('h3').find('a');
       header.text(value);
     });
-
-  $('.add-associated').bind('associated-added', function () {
-    var active_index = $('#parts div.part').length;
-    var new_part = $('#parts .part:last-child');
-    new_part.find('.collapse').attr('id', 'new-part-' + active_index).collapse('show');
-    new_part.find('a.accordion-toggle').attr('href', '#new-part-' + active_index);
-
-    new_part.find('input.order').val(active_index);
-    new_part.find('.title').focus();
-  });
 });
