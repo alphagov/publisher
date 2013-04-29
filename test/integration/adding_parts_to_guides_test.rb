@@ -32,6 +32,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
     click_on 'Add new part'
+    assert_selector '#parts div.fields', count: 3
     within :css, '#parts div.fields:nth-of-type(3)' do
       fill_in 'Title', :with => 'Part Three'
       fill_in 'Body',  :with => 'Body text'
