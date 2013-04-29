@@ -66,6 +66,9 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 1.0.0)
+    capybara-webkit (0.14.2)
+      capybara (~> 2.0, >= 2.0.2)
+      json
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.6.7)
@@ -76,7 +79,6 @@ GEM
     database_cleaner (0.8.0)
     differ (0.1.2)
     erubis (2.7.0)
-    eventmachine (1.0.3)
     exception_notification (2.6.1)
       actionmailer (>= 3.0.4)
     execjs (1.4.0)
@@ -90,8 +92,6 @@ GEM
       i18n (~> 0.5)
     faraday (0.8.6)
       multipart-post (~> 1.1)
-    faye-websocket (0.4.7)
-      eventmachine (>= 0.12.0)
     ffi (1.8.1)
     gds-api-adapters (4.1.3)
       lrucache (~> 0.1.1)
@@ -119,7 +119,6 @@ GEM
     hashie (1.2.0)
     hike (1.2.2)
     htmlentities (4.3.1)
-    http_parser.rb (0.5.3)
     httpauth (0.2.0)
     i18n (0.6.1)
     inherited_resources (1.3.1)
@@ -195,10 +194,6 @@ GEM
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
     plek (1.3.1)
-    poltergeist (1.1.0)
-      capybara (~> 2.0, >= 2.0.1)
-      faye-websocket (~> 0.4, >= 0.4.4)
-      http_parser.rb (~> 0.5.3)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-accept (0.4.5)
@@ -300,6 +295,7 @@ PLATFORMS
 DEPENDENCIES
   aws-ses
   capybara (~> 2.0.1)
+  capybara-webkit
   ci_reporter
   database_cleaner
   erubis
@@ -327,7 +323,6 @@ DEPENDENCIES
   nested_form
   null_logger
   plek (= 1.3.1)
-  poltergeist (= 1.1.0)
   rails (= 3.2.13)
   redis (= 3.0.3)
   rest-client
