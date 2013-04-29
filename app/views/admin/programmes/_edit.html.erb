@@ -16,7 +16,7 @@
         <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
         <%= f.semantic_fields_for :parts do |part| %>
-          <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => false } %>
+          <%= render :partial => '/admin/shared/part', :locals => { :f => part, :editable => false } %>
         <% end %>
 
       </section>
