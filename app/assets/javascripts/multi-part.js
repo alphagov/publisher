@@ -1,8 +1,5 @@
 // Javascript specific to guide admin
 $(function() {
-  // collapse the parts using the bootstrap accordion
-  $(".collapse").collapse();
-
   var sortable_opts = {
     axis: "y",
     handle: "a.accordion-toggle",
