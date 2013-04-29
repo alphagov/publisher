@@ -18,7 +18,7 @@ $(function() {
   $('#parts .part .accordion-body').first().collapse('show');
 
   $('input.title').
-    live('change', function () {
+    on('change', function () {
       var elem = $(this);
       var value = elem.val();
 
