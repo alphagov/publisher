@@ -17,8 +17,6 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   test "creating a local transaction sends the right emails" do
-
-
     email_count_before_start = ActionMailer::Base.deliveries.count
 
     visit "/admin/publications/#{@artefact.id}"
@@ -32,7 +30,6 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   test "creating a local transaction with a bad LGSL code displays an appropriate error" do
-
     visit "/admin/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
@@ -42,9 +39,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? "Lgsl code 2 not recognised"
   end
 
-
   test "creating a local transaction from panopticon requests an LGSL code" do
-
     visit "/admin/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
@@ -58,10 +53,13 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo transaction", :lgsl_code => 1)
 
     visit "/admin/editions/#{edition.to_param}"
-
     assert page.has_content? "Viewing “Foo transaction” Edition 1"
 
-    assert page.has_field?("LGSL code", :with => "1")
+    # For some reason capybara was having trouble matching this disabled
+    # field with the has_field? matcher. Retrieving it manually seems to
+    # work.
+    lgsl_element = page.find('#edition_lgsl_code')
+    assert_equal '1', lgsl_element['value']
     assert page.has_field?("LGIL override", :with => "")
 
     fill_in "LGIL override", :with => '7'

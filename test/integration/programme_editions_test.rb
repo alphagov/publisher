@@ -15,10 +15,16 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
     refute_includes page.body, "part-one"
 
     click_on "Overview"
+
     within :css, "#overview" do
       fill_in "Title", :with => "Imagine this is Welsh"
       fill_in "Body",  :with => "Body text"
-      fill_in "Slug",  :with => "imagine-this-is-welsh"
+
+      # Not clear whether the slug should ever be editable?
+      slug_element = page.find('#edition_parts_attributes_0_slug')
+      if slug_element && (slug_element['disabled'].nil? || slug_element['disabled'] == 0)
+        fill_in "Slug",  :with => "imagine-this-is-welsh"
+      end
     end
 
     within(:css, ".workflow_buttons") { click_on "Save" }
