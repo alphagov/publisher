@@ -22,20 +22,23 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "selecting another user" do
-    @guides = FactoryGirl.build_list(:guide_edition, 2)
+    guides = FactoryGirl.build_list(:guide_edition, 2)
     other_user = FactoryGirl.create(:user, name: "Bob", uid: "bob")
 
     # Assigning manually so it doesn't show up in Alice's list too
-    @guides[0].assigned_to_id = other_user.id
-    @guides[0].save!
+    guides[0].assigned_to_id = other_user.id
+    guides[0].save!
 
     visit "/admin/user_search"
-    select other_user.name, from: "Filter by user"
-    click_button "Filter"
-    wait_until { page.has_content? "Search by user" }
+    within :css, "form.user-filter-form" do
+      select other_user.name, from: "Filter by user"
+      click_button "Filter"
+    end
 
-    assert page.has_content? @guides[0].title
-    refute page.has_content? @guides[1].title
+    assert page.has_content?("Search by user")
+
+    assert page.has_content?(guides[0].title)
+    refute page.has_content?(guides[1].title)
   end
 
 end
