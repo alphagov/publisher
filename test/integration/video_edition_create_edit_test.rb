@@ -87,4 +87,51 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Video Summary", :with => "Coke smoothie")
     assert page.has_field?("Body", :with => "Description of video")
   end
+
+  should "manage caption files for a video edition" do
+    @edition = FactoryGirl.create(:video_edition, :state => 'draft')
+
+    file_one = File.open(Rails.root.join("test","fixtures","uploads","captions.txt"))
+    file_two = File.open(Rails.root.join("test","fixtures","uploads","captions_two.txt"))
+
+    asset_one = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/an_image_id', :file_url => 'http://path/to/captions.txt')
+    asset_two = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/another_image_id', :file_url => 'http://path/to/captions_two.txt')
+
+    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_one)
+    GdsApi::AssetManager.any_instance.stubs(:asset).with("an_image_id").returns(asset_one)
+
+    visit "/admin/editions/#{@edition.to_param}"
+
+    assert page.has_field?("Upload a new caption file", :type => "file")
+    attach_file("Upload a new caption file", file_one.path)
+    click_on "Save"
+
+    within(:css, ".uploaded-caption-file") do
+      assert page.has_selector?("a[href$='captions.txt']")
+    end
+
+    # ensure file is not removed on save
+    click_on "Save"
+
+    within(:css, ".uploaded-caption-file") do
+      assert page.has_selector?("a[href$='captions.txt']")
+    end
+
+    # replace file
+    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_two)
+    GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
+
+    attach_file("Upload a new caption file", file_two.path)
+    click_on "Save"
+
+    within(:css, ".uploaded-caption-file") do
+      assert page.has_selector?("a[href$='captions_two.txt']")
+    end
+
+    # remove file
+    check "Remove caption file?"
+    click_on "Save"
+
+    refute page.has_selector?(".uploaded-caption-file")
+  end
 end
