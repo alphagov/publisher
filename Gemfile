@@ -19,7 +19,7 @@ gem 'erubis'
 gem 'exception_notification', '2.6.1', require: false
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
-gem 'gds-api-adapters', '4.1.3'
+gem 'gds-api-adapters', '5.3.0'
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
