@@ -1,5 +1,5 @@
-    <h3>Notes for edition <%= edition.version_number %></h3>
-
+  <div id="version<%= edition.version_number %>">
+    <h3><a href="#version<%= edition.version_number %>">Notes for edition <%= edition.version_number %></a></h3>
     <dl class="dl-horizontal">
     <% edition.actions.reverse.each do |action| %>
       <dt>
@@ -36,3 +36,4 @@
       </dd>
     <% end %>
     </dl>
+  </div>
