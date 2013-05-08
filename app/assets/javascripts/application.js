@@ -16,18 +16,12 @@ $(function () {
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
 
-  var $allPanels = $('#accordion div dl').hide();
+  var $allPanels = $('#accordion div.accordion-body').hide();
   $allPanels.first().show();
 
-  $('#accordion h3 a').click(function() {
-    var $dl = $(this).parent().parent().find("dl");
-
-    if ($dl.is(":visible")) {
-      $dl.slideUp();
-    } else {
-      $dl.slideDown();
-    }
-
+  $('#accordion a.accordion-toggle').click(function() {
+    var $dl = $(this).parent().parent().find("div.accordion-body");
+    $dl.slideToggle();
     return false;
   });
 })
