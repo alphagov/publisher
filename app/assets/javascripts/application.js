@@ -15,6 +15,21 @@ $(function () {
   $('.confirm form').submit(function(){
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
+
+  var $allPanels = $('#accordion div dl').hide();
+  $allPanels.first().show();
+
+  $('#accordion h3 a').click(function() {
+    var $dl = $(this).parent().parent().find("dl");
+
+    if ($dl.is(":visible")) {
+      $dl.slideUp();
+    } else {
+      $dl.slideDown();
+    }
+
+    return false;
+  });
 })
 
 // System wide library functions
