@@ -25,9 +25,15 @@ class BatchPublish
     editions.each do |edition|
       retry_count = 0
       begin
+        edition.reload
         published = user.progress(edition, { request_type: "publish", comment: "" })
+
         if published
           Rails.logger.info("Published #{edition.slug} #{edition.version_number}")
+        elsif edition.published?
+          # If it's already published, try registering with panopticon again
+          edition.register_with_panopticon
+          Rails.logger.info("Registered #{edition.slug} #{edition.version_number} with Panopticon")
         else
           Rails.logger.info("Skipped #{edition.slug} #{edition.version_number}")
         end
