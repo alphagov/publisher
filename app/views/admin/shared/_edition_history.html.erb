@@ -1,39 +1,46 @@
-  <div id="version<%= edition.version_number %>">
-    <h3><a href="#version<%= edition.version_number %>">Notes for edition <%= edition.version_number %></a></h3>
-    <dl class="dl-horizontal">
-    <% edition.actions.reverse.each do |action| %>
-      <dt>
-        <%= action.created_at.strftime("%d/%m/%Y") %> <%= action.created_at.strftime("%R") %>
-      </dt>
-      <dd>
-        <strong><%= action.to_s %></strong> by
-        <% if action.requester %>
-          <%= mail_to action.requester.email, action.requester.name %>
-        <% else %>
-          GOV.UK Bot
+  <div id="version<%= edition.version_number %>" class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" href="#body<%= edition.version_number %>"><i class="icon-chevron-down"></i> Notes for edition <%= edition.version_number %></a>
+    </div>
+
+    <div class="accordion-body" id="body<%= edition.version_number %>">
+      <dl class="dl-horizontal accordion-inner">
+        <% edition.actions.reverse.each do |action| %>
+
+          <dt>
+            <%= action.created_at.strftime("%d/%m/%Y") %> <%= action.created_at.strftime("%R") %>
+          </dt>
+
+          <dd>
+            <strong><%= action.to_s %></strong> by
+            <% if action.requester %>
+              <%= mail_to action.requester.email, action.requester.name %>
+            <% else %>
+              GOV.UK Bot
+            <% end %>
+            <% if action.comment.present? || action.is_fact_check_request? || action.diff || action.request_type == "assign" %>
+              <% if action.comment_sanitized %>
+                <div class="alert alert-error alert-block">
+                  We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.
+                </div>
+              <% end %>
+              <q>
+                <% if action.comment.present? %>
+                  <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
+                <% end %>
+                <% if action.is_fact_check_request? && action.email_addresses.present? %>
+                  <strong>request sent to:</strong> <%= mail_to action.email_addresses %>
+                <% end %>
+                <% if action.recipient_id.present? %>
+                  <strong>assigned to &rarr;</strong> <%= mail_to action.recipient.email, action.recipient.name %>
+                <% end %>
+                <% if action.diff %>
+                  <%= format_content_diff(action.diff) %>
+                <% end %>
+              </q>
+            <% end %>
+          </dd>
         <% end %>
-        <% if action.comment.present? || action.is_fact_check_request? || action.diff || action.request_type == "assign" %>
-          <% if action.comment_sanitized %>
-            <div class="alert alert-error alert-block">
-              We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.
-            </div>
-          <% end %>
-          <q>
-          <% if action.comment.present? %>
-            <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
-          <% end %>
-          <% if action.is_fact_check_request? && action.email_addresses.present? %>
-            <strong>request sent to:</strong> <%= mail_to action.email_addresses %>
-          <% end %>
-          <% if action.recipient_id.present? %>
-            <strong>assigned to &rarr;</strong> <%= mail_to action.recipient.email, action.recipient.name %>
-          <% end %>
-          <% if action.diff %>
-            <%= format_content_diff(action.diff) %>
-          <% end %>
-          </q>
-      <% end %>
-      </dd>
-    <% end %>
-    </dl>
+      </dl>
+    </div>
   </div>
