@@ -125,7 +125,7 @@ GOVUK.autoSave = (function() {
       });
 
       if ($('.autosave-msg').length == 0) {
-        $('.alert-info').append(autosaveHtml);
+        $('.alert-info').first().append(autosaveHtml);
       }
     },
     success : function() {
