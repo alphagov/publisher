@@ -134,11 +134,9 @@ GOVUK.autoSave = (function() {
         $('.alert-info').append(autosaveHtml);
       }
     },
-    completed : function(xhr, status) {
+    success : function() {
       GOVUK.autoSave.dirty = false;
-      if (status == 'success') {
-        updateTimestamp();
-      }
+      updateTimestamp();
     },
     run: function() {
       if (GOVUK.autoSave.dirty) {
@@ -146,7 +144,7 @@ GOVUK.autoSave = (function() {
           url : $form.attr('action').json,
           type : 'POST',
           data : $form.serialize(),
-          complete : GOVUK.autoSave.completed
+          success : GOVUK.autoSave.success
         });
       }
     }
