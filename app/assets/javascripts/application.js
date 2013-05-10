@@ -16,10 +16,10 @@ $(function () {
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
 
-  var $allPanels = $('#accordion div.accordion-body').hide();
+  var $allPanels = $('#edition-history div.accordion-body').hide();
   $allPanels.first().show();
 
-  $('#accordion a.accordion-toggle').click(function() {
+  $('#edition-history a.accordion-toggle').click(function() {
     var $dl = $(this).parent().parent().find("div.accordion-body");
     $dl.slideToggle();
     return false;

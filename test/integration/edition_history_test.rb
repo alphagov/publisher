@@ -28,7 +28,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       visit "/admin/editions/#{@guide.id}"
 
       assert_equal [true, false],
-                   page.all("#accordion div.accordion-body").map { |e| e['style'].include?("display: block") }
+                   page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
 
     should "show all actions when the first edition title is clicked" do
@@ -36,7 +36,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "Notes for edition 1"
 
       assert_equal [true, true],
-                   page.all("#accordion div.accordion-body").map { |e| e['style'].include?("display: block") }
+                   page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
   end
 end
