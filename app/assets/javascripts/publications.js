@@ -88,3 +88,68 @@ $(function () {
     return submitted_forms;
   });
 });
+
+var GOVUK = GOVUK || {};
+GOVUK.autoSave = (function() {
+  var $form,
+      autosaveInterval = 60000,
+      autosaveHtml = '<span class="autosave-timestamp"></span>',
+      formattedTime = function(date) {
+        var zeroPad = function(num) {
+          return num < 10 ? "0"+num : num;
+        }
+        return [zeroPad(date.getHours()), zeroPad(date.getMinutes()), zeroPad(date.getSeconds())].join(':');
+      },
+      updateTimestamp = function() {
+        // TODO: While this timestamp is convenient for testing, it does not reflect the server update time accurately.
+        // How important is this?
+        $('.autosave-timestamp').text('Auto saved at ' + formattedTime(new Date()));
+      }
+
+  return {
+    intervalId: null,
+    dirty : false,
+
+    init: function(form) {
+      $form = form;
+
+      $(window).bind('beforeunload', function() {
+        if (GOVUK.autoSave.dirty) {
+          return 'You have unsaved changes to this edition.';
+        }
+      });
+
+      $form.submit(function() {
+        GOVUK.autoSave.dirty = false;
+        return true;
+      });
+
+      this.intervalId = setInterval(GOVUK.autoSave.run, autosaveInterval);
+      // TODO: Does this accurately denote a change on the form?
+      $form.on('keyup', function() { 
+        GOVUK.autoSave.dirty = true;
+      });
+
+      if ($('.autosave-timestamp').length == 0) {
+        $('.alert-info').append(autosaveHtml);
+      }
+    },
+    completed : function(xhr, status) {
+      GOVUK.autoSave.dirty = false;
+      if (status == 'success') {
+        updateTimestamp();
+      }
+    },
+    run: function() {
+      if (GOVUK.autoSave.dirty) {
+        $.ajax({
+          url : $form.attr('action').json,
+          type : 'POST',
+          data : $form.serialize(),
+          complete : GOVUK.autoSave.completed
+        });
+      }
+    }
+  }
+})();
+GOVUK.autoSave.init($('form.edition'));
