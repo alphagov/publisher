@@ -14,7 +14,7 @@
 
     <% if tab && (tab == :published || tab == :archived) %>
       (Ed.<%= publication.version_number %>)
-      <% if publication.has_sibling_in_progress? %>
+      <% if publication.subsequent_siblings.first.present? %>
         (Ed.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
       <% end%>
     <% else %>
