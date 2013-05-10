@@ -95,7 +95,7 @@ var GOVUK = GOVUK || {};
 GOVUK.autoSave = (function() {
   var $form,
       autosaveInterval = 60000,
-      autosaveHtml = '<span class="autosave-timestamp"></span>',
+      autosaveHtml = '<span class="autosave-msg"></span>',
       formattedTime = function(date) {
         var zeroPad = function(num) {
           return num < 10 ? "0"+num : num;
@@ -105,7 +105,7 @@ GOVUK.autoSave = (function() {
       updateTimestamp = function() {
         // TODO: While this timestamp is convenient for testing, it does not reflect the server update time accurately.
         // How important is this?
-        $('.autosave-timestamp').text('Auto saved at ' + formattedTime(new Date()));
+        $('.autosave-msg').text('Auto saved at ' + formattedTime(new Date()));
       }
 
   return {
@@ -126,7 +126,7 @@ GOVUK.autoSave = (function() {
         GOVUK.autoSave.dirty = true;
       });
 
-      if ($('.autosave-timestamp').length == 0) {
+      if ($('.autosave-msg').length == 0) {
         $('.alert-info').append(autosaveHtml);
       }
     },

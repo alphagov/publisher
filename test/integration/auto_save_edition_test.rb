@@ -19,7 +19,7 @@ class AutoSaveEditionTest < JavascriptIntegrationTest
 
     page.execute_script("GOVUK.autoSave.run();")
 
-    assert_equal '', page.find('.autosave-timestamp').text
+    assert_equal '', page.find('.autosave-msg').text
 
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
@@ -32,7 +32,7 @@ class AutoSaveEditionTest < JavascriptIntegrationTest
 
     page.execute_script("GOVUK.autoSave.run();")
 
-    wait_until { page.find('.autosave-timestamp').text =~ /Auto saved at \d\d:\d\d:\d\d/ }
+    wait_until { page.find('.autosave-msg').text =~ /Auto saved at \d\d:\d\d:\d\d/ }
 
     guide.reload
 
