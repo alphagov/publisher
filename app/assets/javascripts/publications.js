@@ -57,6 +57,7 @@ $(function () {
 
   $('form.edition').submit(function() {
     edition_form_dirty = false;
+    GOVUK.autoSave.dirty = false;
     return true;
   });
 
@@ -81,6 +82,7 @@ $(function () {
           been submitted
         */
         edition_form_dirty = false;
+        GOVUK.autoSave.dirty = false;
         this_form.trigger("submit");
       });
     }
