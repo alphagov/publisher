@@ -61,7 +61,7 @@ $(function () {
   });
 
   $(window).bind('beforeunload', function() {
-    if (edition_form_dirty) {
+    if (edition_form_dirty || GOVUK.autoSave.dirty) {
       return 'You have unsaved changes to this edition.';
     }
   });
@@ -112,12 +112,6 @@ GOVUK.autoSave = (function() {
 
     init: function(form) {
       $form = form;
-
-      $(window).bind('beforeunload', function() {
-        if (GOVUK.autoSave.dirty) {
-          return 'You have unsaved changes to this edition.';
-        }
-      });
 
       $form.submit(function() {
         GOVUK.autoSave.dirty = false;
