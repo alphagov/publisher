@@ -15,6 +15,15 @@ $(function () {
   $('.confirm form').submit(function(){
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
+
+  var $allPanels = $('#accordion div.accordion-body').hide();
+  $allPanels.first().show();
+
+  $('#accordion a.accordion-toggle').click(function() {
+    var $dl = $(this).parent().parent().find("div.accordion-body");
+    $dl.slideToggle();
+    return false;
+  });
 })
 
 // System wide library functions
