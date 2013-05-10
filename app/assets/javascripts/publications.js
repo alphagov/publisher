@@ -104,7 +104,6 @@ GOVUK.autoSave = (function() {
       },
       updateTimestamp = function() {
         // TODO: While this timestamp is convenient for testing, it does not reflect the server update time accurately.
-        // How important is this?
         $('.autosave-msg').text('Auto saved at ' + formattedTime(new Date()));
       }
 
@@ -121,7 +120,6 @@ GOVUK.autoSave = (function() {
       });
 
       this.intervalId = setInterval(GOVUK.autoSave.run, autosaveInterval);
-      // TODO: Does this accurately denote a change on the form?
       $form.on('keyup', function() { 
         GOVUK.autoSave.dirty = true;
       });
