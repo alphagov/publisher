@@ -128,6 +128,9 @@ GOVUK.autoSave = (function() {
         $('.alert-info').first().append(autosaveHtml);
       }
     },
+    saving : function() {
+      $('.autosave-msg').text('Saving');
+    },
     success : function() {
       GOVUK.autoSave.dirty = false;
       updateTimestamp();
@@ -138,6 +141,7 @@ GOVUK.autoSave = (function() {
           url : $form.attr('action').json,
           type : 'POST',
           data : $form.serialize(),
+          beforeSend : GOVUK.autoSave.saving,
           success : GOVUK.autoSave.success
         });
       }

@@ -31,7 +31,8 @@ class AutoSaveEditionTest < JavascriptIntegrationTest
     assert page.evaluate_script("GOVUK.autoSave.dirty"), "Expecting the form to be dirty"
 
     page.execute_script("GOVUK.autoSave.run();")
-
+    
+    wait_until { page.find('.autosave-msg').text =~ /Saving/ }
     wait_until { page.find('.autosave-msg').text =~ /Auto saved at \d\d:\d\d:\d\d/ }
 
     guide.reload
@@ -46,7 +47,7 @@ class AutoSaveEditionTest < JavascriptIntegrationTest
     assert !page.evaluate_script("GOVUK.autoSave.dirty"), "Expecting the form to be clean" 
 
     page.execute_script("GOVUK.autoSave.run();")
-
+ 
     assert !page.evaluate_script("GOVUK.autoSave.dirty"), "Expecting the form to be clean"
   end
 
