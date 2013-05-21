@@ -1,6 +1,7 @@
 require 'csv'
-require 'reverse_markdown'
 require 'gds_api/helpers'
+require 'retriable'
+require 'reverse_markdown'
 
 class LicenceContentImporter
 
@@ -40,10 +41,11 @@ class LicenceContentImporter
       @existing.flatten!
     else
       puts slug_for(row['NAME'])
-      puts "---------------------------- marked down ---------------------------------"
-      puts marked_down(row['LONGDESC'])
-      puts "------------------------------- end --------------------------------------\n\n"
-
+      if row['LONGDESC']
+        puts "---------------------------- marked down ---------------------------------"
+        puts marked_down(row['LONGDESC'])
+        puts "------------------------------- end --------------------------------------\n\n"
+      end
       @imported << { identifier: identifier, slug: slug_for(row['NAME']), description: marked_down(row['LONGDESC']) }
     end
   end
@@ -100,8 +102,10 @@ class LicenceContentImporter
     puts "--------------------------------------------------------------------------"
     puts "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
     unless existing.empty?
+      existing.map!{ |e| "#{e.slug} (#{e.licence_identifier})" }
+      existing.uniq!
       puts "#{existing.size} existing LicenceEditions:"
-      puts "#{existing.map(&:slug).join(', ')}"
+      puts existing
     end
     unless failed.empty?
       puts "#{failed.keys.size} failed imports:"
@@ -130,7 +134,7 @@ class LicenceContentImporter
   end
 
   def csv_data(data_path)
-    CSV.read "#{Rails.root}/#{data_path}.csv", headers: true
+    CSV.read "#{Rails.root}/#{data_path}", headers: true
   end
 
 end
