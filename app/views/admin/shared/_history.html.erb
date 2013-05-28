@@ -24,7 +24,8 @@
       <% end %>
     <% end %>
   </div>
-  <div class="span6">
+
+  <div id="edition-history" class="span6 accordion">
     <%= render collection: @resource.history, partial: '/admin/shared/edition_history', as: 'edition' %>
   </div>
 </div>

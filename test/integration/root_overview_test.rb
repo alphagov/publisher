@@ -96,4 +96,18 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert page.has_css?('h1', text: "Amends needed")
   end
+
+  test "invalid sibling_in_progress should not break archived view" do
+    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
+      to_return(status: 200, body: "{}", headers: {})
+
+    FactoryGirl.create(:user)
+    FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'archived', :sibling_in_progress => 2)
+
+    visit "/admin"
+    filter_by_user("All")
+    click_on "Archived"
+
+    assert page.has_content?("XXX")
+  end
 end

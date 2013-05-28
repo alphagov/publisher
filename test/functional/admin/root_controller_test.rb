@@ -43,9 +43,11 @@ class Admin::RootControllerTest < ActionController::TestCase
   end
 
   test "it jumps to the correct page" do
-    FactoryGirl.create_list(:guide_edition, 100)
-    @guide = GuideEdition.order_by(['updated_at', 'desc'])[59]
-    get :index, with: @guide.id.to_s
+    earlier = FactoryGirl.create_list(:guide_edition, 50, :state => 'draft', :updated_at => Date.parse("1 April 2013"))
+    guide = FactoryGirl.create(:guide_edition, :state => 'draft', :updated_at => Date.parse("1 May 2013"))
+    later = FactoryGirl.create_list(:guide_edition, 50, :state => 'draft', :updated_at => Date.parse("1 June 2013"))
+
+    get :index, with: guide.id.to_s
     assert_equal 3, assigns[:presenter].draft.current_page
   end
 

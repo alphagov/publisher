@@ -9,13 +9,13 @@
     <%= f.inputs do %>
       <input type="hidden" value="<%= activity %>" name="activity[request_type]">
 
-      <%= f.input :comment, :as => :text, :input_html => { :class => 'span5', :cols => 60, :rows => 6 } %>
+      <%= f.input :comment, :as => :text, :input_html => { :class => 'span12', :cols => 60, :rows => 6 } %>
 
       <% if title == "Fact check" %>
-        <%= f.input :email_addresses, :input_html => { :class => 'span5' } %>
+        <%= f.input :email_addresses, :input_html => { :class => 'span12' } %>
 
         <label id="activity_customised_message_input" for="activity_customised_message">Customised message<abbr title="required">*</abbr></label>
-        <textarea rows="6" name="activity[customised_message]" id="activity_customised_message" cols="60" class="span5">
+        <textarea rows="6" name="activity[customised_message]" id="activity_customised_message" cols="60" class="span12">
           <%- @edition = @resource %>
 <%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
         </textarea>
