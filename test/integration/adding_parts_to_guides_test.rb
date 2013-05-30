@@ -13,7 +13,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
-    assert_selector '#parts div.part', count: 1
+    assert page.has_css?('#parts div.part', count: 1)
 
     click_on 'Untitled part'
     within :css, '#parts div.part:first-of-type' do
@@ -23,7 +23,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
 
     click_on 'Add new part'
-    assert_selector '#parts div.fields', count: 2
+    assert page.has_css?('#parts div.fields', count: 2)
     within :css, '#parts div.fields:nth-of-type(2)' do
       fill_in 'Title', :with => 'Part Two'
       fill_in 'Body',  :with => 'Body text'
@@ -32,7 +32,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
     click_on 'Add new part'
-    assert_selector '#parts div.fields', count: 3
+    assert page.has_css?('#parts div.fields', count: 3)
     within :css, '#parts div.fields:nth-of-type(3)' do
       fill_in 'Title', :with => 'Part Three'
       fill_in 'Body',  :with => 'Body text'
@@ -40,7 +40,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
-    assert_selector '#parts div.part', count: 3
+    assert page.has_css?('#parts div.part', count: 3)
 
     visit "/admin?user_filter=all&list=drafts"
     assert page.has_content? random_name
