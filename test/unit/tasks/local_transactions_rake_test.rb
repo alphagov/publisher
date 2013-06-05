@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../../test_helper'
 require 'rake'
 
 class LocalTransactionsRakeTest < ActiveSupport::TestCase
@@ -11,27 +11,9 @@ class LocalTransactionsRakeTest < ActiveSupport::TestCase
   end
 
   context "local_transactions:fetch" do
-    setup do
-      @task_name = "local_transactions:fetch"
-
-      LocalServiceImporter.stubs(:update)
-      LocalInteractionImporter.stubs(:update)
-      LocalContactImporter.stubs(:update)
-    end
-
-    should "call LocalServiceImporter.update" do
-      LocalServiceImporter.expects(:update)
-      @rake[@task_name].invoke
-    end
-
-    should "call LocalInteractionImporter.update" do
-      LocalInteractionImporter.expects(:update)
-      @rake[@task_name].invoke
-    end
-
-    should "call LocalContactImporter.update" do
-      LocalContactImporter.expects(:update)
-      @rake[@task_name].invoke
+    should "call LocalAuthorityDataImporter.update_all" do
+      LocalAuthorityDataImporter.expects(:update_all)
+      @rake["local_transactions:fetch"].invoke
     end
   end
 

@@ -1,12 +1,23 @@
 require 'csv'
 require 'exception_notifier'
+require 'redis'
+require 'redis-lock'
 
 class LocalAuthorityDataImporter
 
   def self.update_all
-    LocalServiceImporter.update
-    LocalInteractionImporter.update
-    LocalContactImporter.update
+    redis.lock("publisher:#{Rails.env}:local_authority_data_importer_lock", :life => 2.hours) do
+      LocalServiceImporter.update
+      LocalInteractionImporter.update
+      LocalContactImporter.update
+    end
+  rescue Redis::Lock::LockNotAcquired => e
+    Rails.logger.debug("Failed to get lock for local directgov importing (#{e.message}). Another process probably got there first.")
+  end
+
+  def self.redis
+    redis_config = YAML.load_file(Rails.root.join("config", "redis.yml"))
+    Redis.new(redis_config.symbolize_keys)
   end
 
   def self.update
