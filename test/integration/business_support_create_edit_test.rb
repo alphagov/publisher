@@ -116,4 +116,22 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Business support identifier", :with => "ab2345")
   end
+
+  should "not allow entering non-numeric values into numeric fields" do
+    business_support = FactoryGirl.create(:business_support_edition,
+                                 :panopticon_id => @artefact.id)
+
+    visit "/admin/editions/#{business_support.to_param}"
+
+    fill_in "Min value", :with => "1,500"
+    fill_in "Max value", :with => "£10,000"
+    fill_in "Max employees", :with => "1,000"
+
+    click_button "Save"
+
+    assert page.has_content?("We had some problems saving")
+    assert page.has_content?("Min value is not a number")
+    assert page.has_content?("Max value is not a number")
+    assert page.has_content?("Max employees is not a number")
+  end
 end
