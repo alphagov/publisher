@@ -45,7 +45,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content?("New edition created")
 
     within :css, '#parts div.fields:first-of-type' do
-      assert page.has_xpath?("//textarea[text()='#{answer.whole_body}']"), "Expected to see: #{answer.whole_body}"  
+      assert page.has_xpath?("//textarea[contains(text(), '#{answer.whole_body}')]"), "Expected to see: #{answer.whole_body}"
     end
   end
 
