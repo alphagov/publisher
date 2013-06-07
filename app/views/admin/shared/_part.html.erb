@@ -33,7 +33,7 @@
         <% unless @resource.published? %>
           <div class="row-fluid">
             <hr>
-            <%= f.remove_link "Remove this part" %>
+            <%= f.link_to_remove "Remove this part" %>
           </div><!--/.row-fluid -->
         <% end %>
       <% end %>

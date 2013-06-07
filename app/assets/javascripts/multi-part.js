@@ -1,8 +1,5 @@
 // Javascript specific to guide admin
 $(function() {
-  // collapse the parts using the bootstrap accordion
-  $(".collapse").collapse();
-
   var sortable_opts = {
     axis: "y",
     handle: "a.accordion-toggle",
@@ -21,7 +18,7 @@ $(function() {
   $('#parts .part .accordion-body').first().collapse('show');
 
   $('input.title').
-    live('change', function () {
+    on('change', function () {
       var elem = $(this);
       var value = elem.val();
 
@@ -35,14 +32,4 @@ $(function() {
       var header = elem.closest('fieldset').prev('h3').find('a');
       header.text(value);
     });
-
-  $('.add-associated').bind('associated-added', function () {
-    var active_index = $('#parts div.part').length;
-    var new_part = $('#parts .part:last-child');
-    new_part.find('.collapse').attr('id', 'new-part-' + active_index).collapse('show');
-    new_part.find('a.accordion-toggle').attr('href', '#new-part-' + active_index);
-
-    new_part.find('input.order').val(active_index);
-    new_part.find('.title').focus();
-  });
 });

@@ -32,9 +32,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   # Set the given user to be the current user
   # Accepts either a User object or a user's name
   def login_as(user)
-    if not user.is_a? User
+    unless user.is_a?(User)
       user = get_user(user)
     end
+    Capybara.current_session.driver.browser.clear_cookies
     GDS::SSO.test_user = user
     Capybara.current_session.driver.browser.clear_cookies
   end
@@ -47,14 +48,20 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_parts(guide)
     visit_edition guide
 
-    click_on 'Untitled part'
+    # Toggle the first part to be open, presuming the first part
+    # is called 'Untitled part'
+    unless page.has_css?('#parts div.part:first-of-type input')
+      click_on 'Untitled part'
+    end
+
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', with: 'Part One'
       fill_in 'Body',  with: 'Body text'
       fill_in 'Slug',  with: 'part-one'
     end
+
     click_on "Save"
-    wait_until { page.has_content? "successfully updated" }
+    assert page.has_content?("was successfully updated"), "No successful update message"
 
     guide.reload
   end

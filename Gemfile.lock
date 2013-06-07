@@ -47,7 +47,7 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
-    addressable (2.3.2)
+    addressable (2.3.4)
     ansi (1.4.3)
     arel (3.0.2)
     aws-ses (0.4.4)
@@ -59,7 +59,7 @@ GEM
     bson_ext (1.6.4)
       bson (~> 1.6.4)
     builder (3.0.4)
-    capybara (1.1.2)
+    capybara (1.1.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -69,8 +69,8 @@ GEM
     capybara-webkit (0.12.1)
       capybara (>= 1.0.0, < 1.2)
       json
-    childprocess (0.3.5)
-      ffi (~> 1.0, >= 1.0.6)
+    childprocess (0.3.9)
+      ffi (~> 1.0, >= 1.0.11)
     chronic (0.6.7)
     ci_reporter (1.7.0)
       builder (>= 2.1.2)
@@ -92,7 +92,7 @@ GEM
       i18n (~> 0.5)
     faraday (0.8.6)
       multipart-post (~> 1.1)
-    ffi (1.1.5)
+    ffi (1.8.1)
     gds-api-adapters (5.3.0)
       link_header
       lrucache (~> 0.1.1)
@@ -130,7 +130,7 @@ GEM
     jquery-rails (2.0.2)
       railties (>= 3.2.0, < 5.0)
       thor (~> 0.14)
-    json (1.7.7)
+    json (1.8.0)
     jwt (0.1.8)
       multi_json (>= 1.5)
     kaminari (0.13.0)
@@ -149,8 +149,6 @@ GEM
     less-rails-bootstrap (2.0.13)
       less-rails (~> 2.2.0)
     libv8 (3.3.10.4)
-    libwebsocket (0.1.5)
-      addressable
     link_header (0.0.6)
     lograge (0.2.0)
       actionpack
@@ -162,7 +160,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.1)
-    mime-types (1.21)
+    mime-types (1.23)
     minitest (3.3.0)
     mlanett-redis-lock (0.2.2)
       redis
@@ -179,9 +177,10 @@ GEM
       bundler (>= 1.0.0)
       rails (>= 3.2.0)
       railties (>= 3.2.0)
-    multi_json (1.7.2)
+    multi_json (1.7.4)
     multipart-post (1.2.0)
-    nokogiri (1.5.6)
+    nested_form (0.3.2)
+    nokogiri (1.5.9)
     null_logger (0.0.1)
     oauth2 (0.8.1)
       faraday (~> 0.8)
@@ -238,11 +237,11 @@ GEM
     rubyzip (0.9.9)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
-    selenium-webdriver (2.25.0)
+    selenium-webdriver (2.33.0)
       childprocess (>= 0.2.5)
-      libwebsocket (~> 0.1.3)
       multi_json (~> 1.0)
       rubyzip
+      websocket (~> 1.0.4)
     shoulda (3.1.1)
       shoulda-context (~> 1.0)
       shoulda-matchers (~> 1.2)
@@ -285,6 +284,7 @@ GEM
     webmock (1.8.7)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
+    websocket (1.0.7)
     whenever (0.7.3)
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
@@ -297,8 +297,8 @@ PLATFORMS
 
 DEPENDENCIES
   aws-ses
-  capybara (~> 1.1.0)
-  capybara-webkit
+  capybara (= 1.1.4)
+  capybara-webkit (= 0.12.1)
   ci_reporter
   database_cleaner
   erubis
@@ -323,6 +323,7 @@ DEPENDENCIES
   mocha (= 0.13.3)
   mongo (= 1.6.2)
   mongoid_rails_migrations (= 1.0.0)
+  nested_form
   null_logger
   plek (= 1.3.1)
   rails (= 3.2.13)

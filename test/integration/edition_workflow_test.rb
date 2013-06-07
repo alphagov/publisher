@@ -23,7 +23,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     select user, from: "Assigned to"
     click_on "Save"
 
-    wait_until { page.has_content? "successfully updated" }
+    assert page.has_content?("successfully updated")
     guide.reload
   end
 
@@ -31,11 +31,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def start_work_on(guide)
     visit "/admin"
     click_on "Lined up"
-    wait_until { page.has_content? guide.title }
+    assert page.has_content?(guide.title)
     within :xpath, "//form[contains(@action, '#{guide.id}/start_work')]" do
       click_on "Start work"
     end
-    wait_until { page.has_content? "Work started" }
+    assert page.has_content?("Work started")
   end
 
   def button_selector(text)
@@ -57,9 +57,12 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     refute action_button['disabled']
     action_button.click
 
+    # Forces the driver to wait for any async javascript to complete
+    page.has_css?('.modal-header')
+
     within :css, action_button['href'], &block
 
-    wait_until { page.has_content? "updated" }
+    assert page.has_content?("updated"), "new page doesn't show 'updated' message"
     guide.reload
   end
 
@@ -77,8 +80,13 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   def send_action(guide, button_text, message)
     send_for_generic_action(guide, button_text) do
-      fill_in "Comment", with: message
-      click_on "Send"
+      assert page.has_css?('.modal-body #activity_comment'),  "Can't see comment box"
+      assert page.has_css?('.modal-footer input[type=submit]'), "Can't see send button"
+
+      fill_in  "Comment", with: message
+      within :css, '.modal-footer' do
+        click_on "Send"
+      end
     end
   end
 
@@ -88,9 +96,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   def filter_for(user)
     visit "/admin"
-    select "All", :from => 'user_filter'
-    click_button "Filter"
-    wait_until { page.has_content? "All publications" }
+    within :css, ".user-filter-form" do
+      select "All", :from => 'user_filter'
+      click_button "Filter"
+    end
+    assert page.has_content?("All publications")
   end
 
   def view_filtered_list(filter_label)
@@ -104,7 +114,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     filter_link.click
 
-    wait_until { page.has_content? filter_label }
+    assert page.has_content?(filter_label)
   end
 
   # Given a guide and an owner, take the guide to review stage
@@ -157,7 +167,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit "/admin"
     click_on "Lined up"
     click_on "Start work"
-    wait_until { page.has_content? "Work started" }
+    assert page.has_content?("Work started")
     guide.reload
     assert !guide.lined_up?
   end
@@ -175,7 +185,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    wait_until { page.has_content? "Status: Fact check" }
+    assert page.has_content?("Status: Fact check")
 
     guide.reload
 
@@ -208,7 +218,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     submit_for_review guide
 
     visit_edition guide
-    wait_until { page.has_selector? ".alert-info" }
+    assert page.has_selector?(".alert-info")
     refute has_button? "OK for publication"
   end
 
@@ -218,7 +228,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     login_as "Bob"
     visit_edition guide
-    wait_until { page.has_selector? ".alert-info" }
+    assert page.has_selector?(".alert-info")
     assert has_button? "Needs more work"
     assert has_button? "OK for publication"
   end
