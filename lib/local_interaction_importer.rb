@@ -16,7 +16,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
 
   def process_row(row)
     return if row['SNAC'].blank?
-    unless row['SNAC'] =~ /\A\d{2}[A-Z]{2}?\z/ # 2 digits, optionally 2 uppercase letters
+    unless row['SNAC'] =~ /\A\d{2}[A-Z]{0,2}\z/ # 2 digits, optionally 1 or 2 uppercase letters
       Rails.logger.warn "Invalid SNAC #{row['SNAC']} While importing local interactions"
       return
     end
