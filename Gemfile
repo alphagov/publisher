@@ -21,6 +21,8 @@ gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch:
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '5.3.0'
 
+gem "nested_form"
+
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
@@ -61,8 +63,8 @@ group :test do
   gem 'shoulda'
   gem 'database_cleaner'
 
-  gem 'capybara', '~> 1.1.0'
-  gem "capybara-webkit"
+  gem 'capybara', '1.1.4'
+  gem 'capybara-webkit', '0.12.1'
   gem 'launchy'
 
   gem 'webmock'

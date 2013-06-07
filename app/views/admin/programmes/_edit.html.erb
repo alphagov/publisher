@@ -1,4 +1,4 @@
-<%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+<%= semantic_nested_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
   <% end %>
@@ -16,7 +16,7 @@
         <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
 
         <%= f.semantic_fields_for :parts do |part| %>
-          <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => false } %>
+          <%= render :partial => '/admin/shared/part', :locals => { :f => part, :editable => false } %>
         <% end %>
 
       </section>

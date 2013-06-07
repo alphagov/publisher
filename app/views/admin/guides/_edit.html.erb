@@ -1,4 +1,4 @@
-<%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+<%= semantic_nested_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
@@ -13,17 +13,14 @@
       <h3>Parts</h3>
 
       <section class="accordion" id="parts">
-        <% setup_association(f.object, :parts, :new => 1, :edit => 1); f.object.order_parts %>
-        <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
+        <% tidy_up_parts_before_editing(f.object) %>
 
         <%= f.semantic_fields_for :parts do |part| %>
           <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => ! @resource.published? } %>
         <% end %>
       </section>
 
-      <button class="btn btn-success add-associated" data-target="parts" data-tmpl_id="tmpl-parts">Add new part</button>
-
-      <%= f.add_associated_jquery_template :parts, :partial => '/admin/shared/part', :locals => {:editable => ! @resource.published?} %>
+      <p><%= f.link_to_add "Add new part", :parts, :data => { :target => "#parts" } %></p>
 
     </div>
 
