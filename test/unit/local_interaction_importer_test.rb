@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'test_helper'
+require_relative '../test_helper'
 require 'local_interaction_importer'
 
 class LocalInteractionImporterTest < ActiveSupport::TestCase
@@ -92,6 +92,15 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
       importer = LocalInteractionImporter.new(source)
 
       LocalAuthority.expects(:find_by_snac).with('11').returns(nil)
+
+      importer.run
+    end
+
+    should "allow Northern Ireland SNAC codes (e.g. 95J)" do
+      source = File.open(fixture_file('local_interactions_ni_sample.csv'))
+      importer = LocalInteractionImporter.new(source)
+
+      LocalAuthority.expects(:find_by_snac).with('95J').returns(nil)
 
       importer.run
     end
