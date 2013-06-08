@@ -86,9 +86,9 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     context "Setting the recipients" do
       should "send to 'publisher-alerts-citizen'" do
         email = action_email(Action::PUBLISH)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
+        assert email.to.include?('publisher-alerts-citizen@digital.cabinet-office.gov.uk')
         email = action_email(Action::REQUEST_REVIEW)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
+        assert email.to.include?('publisher-alerts-citizen@digital.cabinet-office.gov.uk')
       end
     end
   end
