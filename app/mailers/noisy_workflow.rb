@@ -6,13 +6,8 @@ class NoisyWorkflow < ActionMailer::Base
   def make_noise(action)
     @action = action
 
-    if action.edition.business_proposition
-      subject = "[PUBLISHER]-BUSINESS #{describe_action(@action)}"
-      recipient_emails = EMAIL_GROUPS[:business]
-    else
-      subject = "[PUBLISHER] #{describe_action(@action)}"
-      recipient_emails = EMAIL_GROUPS[:citizen]
-    end
+    subject = "[PUBLISHER] #{describe_action(@action)}"
+    recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 
     mail(:to => recipient_emails.join(', '), :subject => subject)
   end
