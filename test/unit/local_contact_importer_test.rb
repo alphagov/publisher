@@ -100,5 +100,22 @@ Brighton & Hove City Council,http://www.brighton-hove.gov.uk/,http://www.brighto
       auth.reload
       assert_equal "(01273) 290000", auth.contact_phone
     end
+
+    should "handle blank phone numbers" do
+      source = StringIO.new(<<-END)
+Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
+Stockport Metropolitan Borough Council,http://www.stockport.gov.uk/,http://www.stockport.gov.uk/contactus,00BS,Town Hall,Edward Street,Stockport,,Greater Manchester,SK1 3XE,,,,,,,,stockportdirect@stockport.gov.uk,8.30 - 5pm Mon - Thurs and 8.30 -4.30 on Friday
+      END
+
+      auth = FactoryGirl.create(:local_authority, :snac => "00BS")
+
+      # Call process_row directly to bypass the top-level error rescue
+      importer = LocalContactImporter.new(nil)
+      csv = CSV.new(source, :headers => true)
+      importer.send(:process_row, csv.shift)
+
+      auth.reload
+      assert_equal nil, auth.contact_phone
+    end
   end
 end
