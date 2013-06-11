@@ -1,0 +1,13 @@
+.builder-container .row {
+  margin-left: 0;
+}
+
+.builder-container legend {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: none;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.builder-container select.span3 {
+    width: 358px;
+}
