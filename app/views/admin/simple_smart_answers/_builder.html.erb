@@ -1,0 +1,69 @@
+<div class="builder-container">
+  <div id="question-placeholder"></div>
+
+  <hr>
+
+  <div class="row">
+      <div class="span8">
+          <button type="button" class="btn btn-primary add-question"><i class="icon-plus-sign icon-white"></i> Add question</button>
+          <button type="button" class="btn btn-danger add-outcome"><i class="icon-plus-sign icon-white"></i> Add outcome</button>
+      </div>
+  </div>
+</div>
+
+<%= f.input :nodes, :as => :hidden %>
+
+
+<script type="text/x-handlebars" id="outcome_template">
+<div class="row" id="outcome-{{ number }}">
+    <div class="span8">
+        <legend>Outcome {{ number }}
+            <button type="button" class="btn btn-link pull-right remove-node">
+                <i class="icon-remove"></i>
+            </button>
+        </legend>
+
+        <input type="text" class="span8" name="title" placeholder="The title of the outcome" value="{{ title }}">
+
+        <input type="text" class="span8" name="description" placeholder="Optional extra information" value="{{ desc }}">
+    </div>
+</div>
+</script>
+
+<script type="text/x-handlebars" id="question_template">
+<div class="row" id="{{type}}-{{ number }}">
+    <div class="span8">
+        <legend>Question {{ number }}
+            {{#if notFirstQuestion}}
+            <button type="button" class="btn btn-link pull-right remove-node">
+                <i class="icon-remove"></i>
+            </button>
+            {{/if}}
+          </legend>
+        <input type="text" class="span8" name="title" placeholder="e.g. Are you a British citizen?" value="{{title}}">
+        <input type="text" class="span8" name="description" value="{{desc}}" placeholder="Optional extra information">
+      {{{ options }}}
+      <a class="add-new-option">Add new option</a>
+    </div>
+</div>
+</script>
+
+<script type="text/x-handlebars" id="option_template">
+<label class="radio outcome-wrap" id="option-{{ index }}">
+    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" disabled>
+    <input type="text" class="span4" placeholder="Option A" value="{{ text }}">
+    <i class="icon-arrow-right"></i>
+    <select name="destination" class="span3">
+      <optgroup label="Questions">
+        {{#each option_questions}}
+          <option value="{{key}}" {{selected}}>{{title}}</li>
+        {{/each}}
+      </optgroup>
+      <optgroup label="Outcomes">
+        {{#each option_outcomes}}
+          <option value="{{key}}" {{selected}}>{{title}}</li>
+        {{/each}}
+      </optgroup>
+    </select>
+</label>
+</script>
