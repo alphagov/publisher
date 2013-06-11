@@ -2,7 +2,7 @@
 //= require jquery_ujs
 //= require jquery-ui.custom.min
 //= require twitter/bootstrap
-//= require_tree .
+//= require_directory .
 //= require jquery_nested_form
 //= require handlebars
 
