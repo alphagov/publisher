@@ -29,6 +29,8 @@ class LocalContactImporter < LocalAuthorityDataImporter
   # The CSV contains some broken HTML entities (e.g. &#40) note the missing ;
   # This will decode any printable ascii characters, and leave any others unchanged.
   def decode_broken_entities(string)
+    return string if string.blank?
+
     # Catch any non-broken entities
     string = CGI.unescape_html(string)
     # Handle the broken entities (ones with a missing ;)
