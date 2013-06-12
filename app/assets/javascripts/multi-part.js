@@ -14,9 +14,6 @@ $(function() {
   $('#parts').sortable(sortable_opts)
       .find("a.accordion-toggle").css({cursor: 'move'});
 
-  // simulate a click on the first part to open it
-  $('#parts .part .accordion-body').first().collapse('show');
-
   $('input.title').
     on('change', function () {
       var elem = $(this);
