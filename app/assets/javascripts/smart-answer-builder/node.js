@@ -30,8 +30,7 @@ Node.prototype = {
       options: renderedOptions.join("\n")
     });
 
-
-    $("#question-placeholder").before(html);
+    $(".builder-container .nodes").append(html);
     this.domRef = $("#" + this.type + "-" + this.index);
     this.bindInputs();
   },
@@ -49,6 +48,7 @@ Node.prototype = {
       for(var i = 0; i < window.nodes.length; i++) {
         window.nodes[i].render();
       }
+      generateJSON();
     });
   }
 }

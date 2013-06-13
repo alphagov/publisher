@@ -1,4 +1,5 @@
 <div class="builder-container">
+  <div class="nodes"></div>
   <div id="question-placeholder"></div>
 
   <hr>
@@ -15,7 +16,7 @@
 
 
 <script type="text/x-handlebars" id="outcome_template">
-<div class="row" id="outcome-{{ number }}">
+<div class="row node outcome" id="outcome-{{ number }}">
     <div class="span8">
         <legend>Outcome {{ number }}
             <button type="button" class="btn btn-link pull-right remove-node">
@@ -31,7 +32,7 @@
 </script>
 
 <script type="text/x-handlebars" id="question_template">
-<div class="row" id="{{type}}-{{ number }}">
+<div class="row node question" id="{{type}}-{{ number }}">
     <div class="span8">
         <legend>Question {{ number }}
             {{#if notFirstQuestion}}
