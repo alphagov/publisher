@@ -17,6 +17,7 @@ var init = function() {
   });
   n.render();
   window.nodes.push(n);
+  generateJSON();
 };
 
 $(init);
@@ -48,36 +49,5 @@ $(function() {
     currentNode.options.push(new Option());
     e.preventDefault();
     renderAll();
-  });
-
-  $(".generateJSON").on("click", function() {
-    var SA = {};
-    SA.title = $("input[name='main-title']")[0].value;
-    SA.description = $("textarea[name='main-desc']")[0].value;
-    SA.nodes = {};
-    for(var i = 0; i < window.nodes.length; i++) {
-      var current = window.nodes[i];
-      SA.nodes[current.type + current.index] = {
-        title: current.title,
-        desc: current.bodyText
-      };
-      console.log(current.type);
-      if(current.type === "question") {
-        SA.nodes[current.type + current.index].options = {};
-        for(var j = 0; j < current.options.length; j++) {
-          var opt = current.options[j];
-          if(opt.text != "" && opt.destination != "") {
-            SA.nodes[current.type + current.index].options[opt.text] = opt.destination;
-          }
-        }
-      }
-    };
-    $(".json-resp").remove();
-    $(this).after($("<textarea></textarea>", {
-      "class": "span12 json-resp",
-      "height": "300px"
-    }).val(JSON.stringify(SA, null, 4)).wrap("<div />", {
-      "class": "row"
-    }));
   });
 });

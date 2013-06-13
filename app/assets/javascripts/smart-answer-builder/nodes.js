@@ -32,3 +32,25 @@ var renderAll = function() {
     window.nodes[i].render();
   }
 };
+
+var generateJSON = function() {
+  var SA = {};
+  SA.nodes = {};
+  for(var i = 0; i < window.nodes.length; i++) {
+    var current = window.nodes[i];
+    SA.nodes[current.type + current.index] = {
+      title: current.title,
+      body: current.bodyText
+    };
+    if(current.type === "question") {
+      SA.nodes[current.type + current.index].options = {};
+      for(var j = 0; j < current.options.length; j++) {
+        var opt = current.options[j];
+        if(opt.text != "" && opt.destination != "") {
+          SA.nodes[current.type + current.index].options[opt.text] = opt.destination;
+        }
+      }
+    }
+  };
+  $('#smart-answer-nodes').val(JSON.stringify(SA.nodes));
+};
