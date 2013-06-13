@@ -12,7 +12,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "5.4.0"
+  gem "govuk_content_models", "5.4.1"
 end
 
 gem 'erubis'
@@ -52,9 +52,7 @@ gem 'jquery-rails'
 gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 
-group :assets, :development do
-  gem 'handlebars_assets'
-end
+gem 'handlebars_assets'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"
