@@ -48,7 +48,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_parts(guide)
     visit_edition guide
 
-    if !page.has_css?('#parts div.part:first-of-type input')
+    unless page.has_css?('#parts div.part:first-of-type input')
       click_on 'Add new part'
     end
 
