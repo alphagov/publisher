@@ -1,19 +1,10 @@
 // Javascript specific to guide admin
-$(function() {
-  var sortable_opts = {
-    axis: "y",
-    handle: "a.accordion-toggle",
-    stop: function(event, ui) {
-      $('.part').each(function (i, elem) {
-        $(elem).find('input.order').val(i + 1);
-        ui.item.find("a.accordion-toggle").addClass("highlight");
-        setTimeout(function() { $("a.accordion-toggle.highlight").removeClass("highlight") }, 20 )
-      });
-    }
-  }
-  $('#parts').sortable(sortable_opts)
-      .find("a.accordion-toggle").css({cursor: 'move'});
+// When we add a new part, ensure we add the auto slug generator handler
+$(document).on('nested:fieldAdded:parts', function(event){
+  addAutoSlugGeneration();
+});
 
+function addAutoSlugGeneration() {
   $('input.title').
     on('change', function () {
       var elem = $(this);
@@ -29,4 +20,21 @@ $(function() {
       var header = elem.closest('fieldset').prev('h3').find('a');
       header.text(value);
     });
+}
+
+$(function() {
+  var sortable_opts = {
+    axis: "y",
+    handle: "a.accordion-toggle",
+    stop: function(event, ui) {
+      $('.part').each(function (i, elem) {
+        $(elem).find('input.order').val(i + 1);
+        ui.item.find("a.accordion-toggle").addClass("highlight");
+        setTimeout(function() { $("a.accordion-toggle.highlight").removeClass("highlight") }, 20 )
+      });
+    }
+  }
+  $('#parts').sortable(sortable_opts)
+      .find("a.accordion-toggle").css({cursor: 'move'});
+      addAutoSlugGeneration();
 });
