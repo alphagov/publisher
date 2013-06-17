@@ -13,9 +13,7 @@
 
       <section class="accordion" id="parts">
 
-        <% f.object.parts.replace f.object.parts.sort_by(&:order) %>
-
-        <%= f.semantic_fields_for :parts do |part| %>
+        <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
           <%= render :partial => '/admin/shared/part', :locals => { :f => part, :editable => false } %>
         <% end %>
 
