@@ -1,0 +1,19 @@
+<div class="row node <%= f.object.kind %>" id="<%= f.object.slug %>">
+  <div class="span8">
+    <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
+        <%= f.link_to_remove "<i class=\"icon-remove\"></i>".html_safe, :class => "btn btn-link pull-right remove-node" %>
+    </legend>
+
+    <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span8" } %>
+    <%= f.input :body, :label => false, :input_html => { :placeholder => "Optional extra information", :class => "span8" } %>
+
+    <%= f.input :kind, :as => :hidden, :input_html => { :class => "node-kind" } %>
+    <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>
+
+    <% unless f.object.kind == "outcome" %>
+      <p>Options</p>
+      <ul class="options">
+      </ul>
+    <% end %>
+  </div>
+</div>
