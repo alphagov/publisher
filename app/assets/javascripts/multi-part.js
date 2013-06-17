@@ -2,6 +2,9 @@
 // When we add a new part, ensure we add the auto slug generator handler
 $(document).on('nested:fieldAdded:parts', function(event){
   addAutoSlugGeneration();
+
+  // Populate order field on newly created subform.
+  $('.order', event.field).val($('#parts .fields').size());
 });
 
 function addAutoSlugGeneration() {
@@ -36,5 +39,5 @@ $(function() {
   }
   $('#parts').sortable(sortable_opts)
       .find("a.accordion-toggle").css({cursor: 'move'});
-      addAutoSlugGeneration();
+  addAutoSlugGeneration();
 });
