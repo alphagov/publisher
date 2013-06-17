@@ -21,7 +21,7 @@ class AutoSaveEditionTest < JavascriptIntegrationTest
 
     assert_equal '', page.find('.autosave-msg').text
 
-    click_on 'Untitled part'
+    click_on 'Add new part'
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'

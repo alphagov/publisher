@@ -11,6 +11,13 @@ class Admin::EditionsController < Admin::BaseController
     redirect_to admin_root_path
   end
 
+  def show
+    if @resource.is_a?(Parted)
+      @ordered_parts = @resource.parts.in_order
+    end
+    render
+  end
+
   # TODO: Clean this up via better use of instance var names here and in admin/publications_controller.rb
   def new
     @publication = build_resource
