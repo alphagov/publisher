@@ -48,6 +48,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_parts(guide)
     visit_edition guide
 
+    unless page.has_css?('#parts div.part:first-of-type input')
+      click_on 'Add new part'
+    end
+
     # Toggle the first part to be open, presuming the first part
     # is called 'Untitled part'
     unless page.has_css?('#parts div.part:first-of-type input')

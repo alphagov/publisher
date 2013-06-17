@@ -13,26 +13,26 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
-    assert page.has_css?('#parts div.part', count: 1)
 
-    click_on 'Untitled part'
-    within :css, '#parts div.part:first-of-type' do
+    click_on 'Add new part'
+    within :css, '#parts div.fields:first-of-type' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-one'
     end
 
+    assert page.has_css?('#parts div.fields', count: 1)
     click_on 'Add new part'
-    assert page.has_css?('#parts div.fields', count: 2)
+
     within :css, '#parts div.fields:nth-of-type(2)' do
       fill_in 'Title', :with => 'Part Two'
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-two'
     end
-    within(:css, '.workflow_buttons') { click_on 'Save' }
 
+    assert page.has_css?('#parts div.fields', count: 2)
     click_on 'Add new part'
-    assert page.has_css?('#parts div.fields', count: 3)
+
     within :css, '#parts div.fields:nth-of-type(3)' do
       fill_in 'Title', :with => 'Part Three'
       fill_in 'Body',  :with => 'Body text'
@@ -40,7 +40,9 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
     within(:css, '.workflow_buttons') { click_on 'Save' }
 
-    assert page.has_css?('#parts div.part', count: 3)
+    assert page.has_css?('section#parts div#part-one', count: 1)
+    assert page.has_css?('section#parts div#part-two', count: 1)
+    assert page.has_css?('section#parts div#part-three', count: 1)
 
     visit "/admin?user_filter=all&list=drafts"
     assert page.has_content? random_name
@@ -58,8 +60,8 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/admin/editions/#{guide.to_param}"
-
-    click_on 'Untitled part'
+    
+    click_on 'Add new part'
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'
