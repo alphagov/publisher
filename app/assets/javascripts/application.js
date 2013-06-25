@@ -4,7 +4,6 @@
 //= require twitter/bootstrap
 //= require_directory .
 //= require jquery_nested_form
-//= require handlebars
 
 // System wide behaviours
 $(function () {
