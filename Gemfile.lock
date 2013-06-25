@@ -124,10 +124,6 @@ GEM
       mongoid (~> 2.4.10)
       plek
       state_machine
-    handlebars_assets (0.13.0)
-      execjs (>= 1.2.9)
-      sprockets (>= 2.0.3)
-      tilt
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.2)
@@ -321,7 +317,6 @@ DEPENDENCIES
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
   govuk_content_models (= 5.6.0)
-  handlebars_assets
   has_scope
   inherited_resources
   jquery-rails
