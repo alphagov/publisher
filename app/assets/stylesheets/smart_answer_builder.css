@@ -11,3 +11,9 @@
 .builder-container select.span3 {
     width: 358px;
 }
+.builder-container .options ul {
+  margin: 0;
+}
+.builder-container .options .control-group, .builder-container .options .controls {
+  display: inline-block;
+}
