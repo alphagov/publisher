@@ -1,4 +1,4 @@
-<%= semantic_nested_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+<%= semantic_bootstrap_nested_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= render :partial => 'admin/shared/video', :locals => {:f => f} %>
@@ -13,9 +13,8 @@
       <h3>Parts</h3>
 
       <section class="accordion" id="parts">
-        <% tidy_up_parts_before_editing(f.object) %>
 
-        <%= f.semantic_fields_for :parts do |part| %>
+        <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
           <%= render :partial => '/admin/shared/part', :locals => {:f => part, :editable => ! @resource.published? } %>
         <% end %>
       </section>
