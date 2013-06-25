@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/alphagov/nested_form.git
+  revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
+  branch: add-wrapper-class
+  specs:
+    nested_form (0.3.2)
+
+GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
@@ -183,7 +190,6 @@ GEM
       railties (>= 3.2.0)
     multi_json (1.7.4)
     multipart-post (1.2.0)
-    nested_form (0.3.2)
     nokogiri (1.5.9)
     null_logger (0.0.1)
     oauth2 (0.8.1)
@@ -328,7 +334,7 @@ DEPENDENCIES
   mocha (= 0.13.3)
   mongo (= 1.6.2)
   mongoid_rails_migrations (= 1.0.0)
-  nested_form
+  nested_form!
   null_logger
   plek (= 1.3.1)
   rails (= 3.2.13)
