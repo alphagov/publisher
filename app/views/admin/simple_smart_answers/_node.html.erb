@@ -1,19 +1,34 @@
-<div class="row node <%= f.object.kind %>" id="<%= f.object.slug %>">
-  <div class="span8">
-    <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
-        <%= f.link_to_remove "<i class=\"icon-remove\"></i>".html_safe, :class => "btn btn-link pull-right remove-node" %>
-    </legend>
+<div class="span8">
+  <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
+      <%= f.link_to_remove "<i class=\"icon-remove\"></i>".html_safe, :class => "btn btn-link pull-right remove-node" %>
+  </legend>
 
-    <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span8" } %>
-    <%= f.input :body, :label => false, :input_html => { :placeholder => "Optional extra information", :class => "span8" } %>
+  <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span8 node-title" } %>
+  <%= f.input :body, :label => false, :input_html => { :placeholder => "Optional extra information", :class => "span8 node-body" } %>
 
-    <%= f.input :kind, :as => :hidden, :input_html => { :class => "node-kind" } %>
-    <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>
+  <%= f.input :kind, :as => :hidden, :input_html => { :class => "node-kind" } %>
+  <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>
 
-    <% unless f.object.kind == "outcome" %>
-      <p>Options</p>
-      <ul class="options">
+  <% unless f.object.kind == "outcome" %>
+    <div class="options">
+      <hr>
+      <ul>
+        <%= f.semantic_fields_for :options, :wrapper => false do |o| %>
+          <div class="radio outcome-wrap option">
+            <input type="radio" disabled>
+            <%= o.input :label, :label => false, :input_html => { :placeholder => "Label", :class => "option-label" } %>
+            <i class="icon-arrow-right"></i>
+            <%= o.input :next, :as => :hidden, :input_html => { :class => "next-node-id" } %>
+            <select class="next-node-list" name="next-node-list">
+              <option value="" class="default">Select a node..</option>
+              <optgroup label="Questions" class="question-list"></optgroup>
+              <optgroup label="Outcomes" class="outcome-list"></optgroup>
+            </select>
+            <%= o.link_to_remove "X" %>
+          </div>
+        <% end %>
+        <%= f.link_to_add "Add an option", :options %>
       </ul>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
