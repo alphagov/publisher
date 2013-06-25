@@ -1,16 +1,9 @@
 GIT
-  remote: git://github.com/theodi/govuk_content_models.git
-  revision: b941bde6cb4211dd4205fed41dd2e4067dfae0e7
+  remote: https://github.com/alphagov/nested_form.git
+  revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
+  branch: add-wrapper-class
   specs:
-    govuk_content_models (5.9.1)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      plek
-      state_machine
+    nested_form (0.3.2)
 
 GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
@@ -197,7 +190,6 @@ GEM
       railties (>= 3.2.0)
     multi_json (1.7.4)
     multipart-post (1.2.0)
-    nested_form (0.3.2)
     nokogiri (1.5.9)
     null_logger (0.0.1)
     oauth2 (0.8.1)
@@ -342,7 +334,7 @@ DEPENDENCIES
   mocha (= 0.13.3)
   mongo (= 1.6.2)
   mongoid_rails_migrations (= 1.0.0)
-  nested_form
+  nested_form!
   null_logger
   plek (= 1.4.0)
   rails (= 3.2.13)
