@@ -2,18 +2,36 @@
   margin-left: 0;
 }
 
-.builder-container legend {
-    border-top: 1px solid #e5e5e5;
-    border-bottom: none;
-    margin-bottom: 10px;
-    margin-top: 20px;
+.builder-container .node legend {
+  border: none;
+  margin: 0;
 }
-.builder-container select.span3 {
-    width: 358px;
+.builder-container .node > .span8 {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+
+    border-bottom: none;
+    margin: 30px 0px 20px;
+}
+.builder-container .option select {
+  width: 450px;
 }
 .builder-container .options ul {
   margin: 0;
 }
+.builder-container .options .control-group {
+  margin-bottom: 0;
+}
 .builder-container .options .control-group, .builder-container .options .controls {
   display: inline-block;
+}
+.builder-container .node .options {
+  border-top: 1px solid #e5e5e5;
+  padding-top: 10px;
+}
+.builder-container .option .remove-option {
+  vertical-align: top;
+}
+.builder-container .option input[type='radio'] {
+  vertical-align: middle;
 }
