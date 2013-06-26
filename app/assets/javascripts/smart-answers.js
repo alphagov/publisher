@@ -95,7 +95,7 @@
 
       node.find('.option').each( function(i, option){
         var nextNodeId = $(option).find('.next-node-id').first().val();
-        $(option).find('.next-node-list').first().val(nextNodeId);
+        $(option).find('.next-node-list').val(nextNodeId);
       });
     },
     optionsForNode: function(node) {
@@ -103,7 +103,7 @@
 
       return $.map( nextNodes, function(nodeContainer, i) {
         node = $(nodeContainer);
-        return { id: node.attr('id'), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() };
+        return { id: node.find('.node-slug').val(), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() };
       });
     },
     updateNextNode: function() {
