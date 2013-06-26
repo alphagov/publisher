@@ -211,4 +211,100 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_css?(".nodes .node", count: 5)
     end
   end
+
+  context "editing an existing edition" do
+    setup do
+      @edition = FactoryGirl.build(:simple_smart_answer_edition,
+        :title => "Can I get a driving licence?",
+        :panopticon_id => @artefact.id,
+        :slug => "can-i-get-a-driving-licence"
+      )
+      @edition.nodes.build(:slug => "question-1", :order => 1, :title => "To be or not to be?", :kind => "question", :options_attributes => [
+        { :label => "That is the question", :next => "outcome-1" },
+        { :label => "That is not the question", :next => "outcome-2" }
+      ])
+      @edition.nodes.build(:slug => "outcome-1", :order => 2, :title => "Outcome One", :kind => "outcome")
+      @edition.nodes.build(:slug => "outcome-2", :order => 3, :title => "Outcome Two", :kind => "outcome")
+      @edition.save!
+    end
+
+    should "correctly render the form" do
+      visit "/admin/editions/#{@edition.id}"
+
+      within ".page-header" do
+        assert page.has_content? "Viewing “Can I get a driving licence?”"
+      end
+
+      within ".builder-container" do
+        assert page.has_css?(".nodes .node", count: 3)
+        assert page.has_css?(".nodes .question", count: 1)
+        assert page.has_css?(".nodes .outcome", count: 2)
+
+        assert page.has_link? "Add question"
+        assert page.has_link? "Add outcome"
+
+        within ".nodes .node:first-child" do
+          assert page.has_content?("Question 1")
+          assert page.has_field?("edition_nodes_attributes_0_title", :with => "To be or not to be?")
+
+          assert page.has_css?(".option", count: 2)
+
+          within ".options > div:nth-of-type(1)" do
+            assert page.has_field?("edition_nodes_attributes_0_options_attributes_0_label", :with => "That is the question")
+            assert page.has_select?("next-node-list",
+              :options => ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+              :selected => "Outcome 1 (Outcome One)"
+            )
+          end
+
+          within ".options > div:nth-of-type(2)" do
+            assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", :with => "That is not the question")
+            assert page.has_select?("next-node-list",
+              :options => ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+              :selected => "Outcome 2 (Outcome Two)"
+            )
+          end
+        end
+
+        within ".nodes .node:nth-child(2)" do
+          assert page.has_content?("Outcome 1")
+          assert page.has_field?("edition_nodes_attributes_1_title", :with => "Outcome One")
+
+          assert page.has_no_css?(".options")
+        end
+
+        within ".nodes .node:nth-child(3)" do
+          assert page.has_content?("Outcome 2")
+          assert page.has_field?("edition_nodes_attributes_2_title", :with => "Outcome Two")
+
+          assert page.has_no_css?(".options")
+        end
+      end
+    end
+
+    should "delete an existing node and option" do
+      visit "/admin/editions/#{@edition.id}"
+
+      within ".nodes .node:first-child .option:nth-child(2)" do
+        click_link "Remove option"
+        assert_equal "1", page.find_by_id('edition_nodes_attributes_0_options_attributes_1__destroy').value
+      end
+
+      within ".nodes .outcome:nth-child(3)" do
+        click_link "Remove node"
+        assert_equal "1", page.find_by_id('edition_nodes_attributes_2__destroy').value
+      end
+      assert page.has_selector?(".nodes .outcome:nth-child(3)", :visible => false)
+
+      click_button "Save"
+
+      wait_until {
+        page.has_content?("Simple smart answer edition was successfully updated.")
+      }
+
+      assert page.has_css?(".nodes .question", count: 1)
+      assert page.has_css?(".nodes .outcome", count: 1)
+      assert page.has_css?(".nodes .node", count: 2)
+    end
+  end
 end
