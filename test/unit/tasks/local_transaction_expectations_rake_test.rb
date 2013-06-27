@@ -31,8 +31,12 @@ class LocalTransactionExpectationsRakeTest < ActiveSupport::TestCase
     should "replace 'Available in England only' expectations on local transactions with 'Available in England and Wales only'" do
       england_only = FactoryGirl.create(:expectation, :text => 'Available in England only')
       england_and_wales_only = FactoryGirl.create(:expectation, :text => 'Available in England and Wales only')
-      local_transaction = FactoryGirl.create(:local_transaction_edition, :state => 'draft')
+      scotland_only = FactoryGirl.create(:expectation, :text => 'Available in Scotland only')
+      local_transaction = FactoryGirl.create(:local_transaction_edition)
+      na_local_transaction = FactoryGirl.create(:local_transaction_edition)
+      na_local_transaction.expectation_ids << scotland_only.id.to_s
       local_transaction.expectation_ids << england_only._id.to_s
+      na_local_transaction.save
       local_transaction.save
 
       assert local_transaction.expectations.include?(england_only)
@@ -43,6 +47,7 @@ class LocalTransactionExpectationsRakeTest < ActiveSupport::TestCase
 
       assert local_transaction.expectations.include?(england_and_wales_only)
       refute local_transaction.expectations.include?(england_only)
+      refute na_local_transaction.expectations.include?(england_and_wales_only)
     end
   end
 
