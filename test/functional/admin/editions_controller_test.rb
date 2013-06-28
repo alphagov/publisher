@@ -206,8 +206,6 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     end
 
     should "remove an option and node from simple smart answer in single request" do
-      puts @edition.nodes.first.options.all.to_a.inspect
-
       atts = {
         :nodes_attributes => {
           "0" => {
@@ -237,7 +235,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
 
       question = @edition.nodes.where(:kind => "question").first
       assert_equal 1, question.options.count
-      assert_equal "Outcome One", question.options.first.label
+      assert_equal "Option One", question.options.first.label
 
     end
   end
