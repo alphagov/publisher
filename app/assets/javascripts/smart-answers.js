@@ -44,16 +44,16 @@
     },
     initNode: function(e) {
       var kind = smartAnswerBuilder.lastNodeKind;
+      var index = smartAnswerBuilder.indexOfKind(kind);
+
       var node = e.field;
       smartAnswerBuilder.lastNodeKind = null;
 
-      var indexOfKind = smartAnswerBuilder.container.find(".node."+ kind).length + 1;
-
       node.find('input.node-kind').val(kind);
-      node.find('input.node-slug').val(nodeId(kind));
+      node.find('input.node-slug').val(nodeId(kind, index));
 
-      node.find('.node-label').text(nodeLabel(kind));
-      node.addClass(kind).attr('id', nodeId(kind));
+      node.find('.node-label').text(nodeLabel(kind, index));
+      node.addClass(kind).attr('id', nodeId(kind, index));
 
       if (kind != "question") {
         node.find('.options').remove();
@@ -63,14 +63,24 @@
 
       smartAnswerBuilder.reloadAllNextNodeLists();
 
-      function nodeId(kind) {
-        return kind + "-" + indexOfKind;
+      function nodeId(kind, index) {
+        return kind + "-" + index;
       }
 
-      function nodeLabel(kind) {
+      function nodeLabel(kind, index) {
         var capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1);
-        return capitalizedKind + " " + indexOfKind;
+        return capitalizedKind + " " + index;
       }
+    },
+    indexOfKind: function(kind) {
+      var kindMatch = new RegExp(kind + "-");
+      var indexes = smartAnswerBuilder.container.find(".node."+ kind +" .node-slug").map( function(){
+        var index = $(this).val().replace(kindMatch, "");
+        return parseInt(index);
+      }).get();
+      var max = Math.max.apply(null, indexes);
+
+      return max + 1;
     },
     initOption: function(e) {
       var node = $(e.field).parents(".node").first();
