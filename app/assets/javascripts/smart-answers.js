@@ -78,9 +78,12 @@
         var index = $(this).val().replace(kindMatch, "");
         return parseInt(index);
       }).get();
-      var max = Math.max.apply(null, indexes);
-
-      return max + 1;
+      if (indexes.length < 1) {
+        return 1;
+      } else {
+        var max = Math.max.apply(null, indexes);
+        return max + 1;
+      }
     },
     initOption: function(e) {
       var node = $(e.field).parents(".node").first();
