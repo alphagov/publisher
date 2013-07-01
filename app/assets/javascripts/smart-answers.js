@@ -85,7 +85,10 @@
       var nextNodeField = node.find('.next-node-list');
       nextNodeField.find('option:not(.default)').remove();
 
-      $.each( smartAnswerBuilder.optionsForNode(node), function(i, x) {
+      var validNextNodes = smartAnswerBuilder.optionsForNode(node);
+      var validNextIds = $.map(validNextNodes, function(n){ return n.id; });
+
+      $.each( validNextNodes, function(i, x) {
         var optionLabel = x.name;
         if (x.label != '') {
           optionLabel = optionLabel + " (" + x.label + ")";
@@ -94,8 +97,17 @@
       });
 
       node.find('.option').each( function(i, option){
-        var nextNodeId = $(option).find('.next-node-id').first().val();
-        $(option).find('.next-node-list').val(nextNodeId);
+        var valueField = $(option).find('.next-node-id').first();
+        var selectList = $(option).find('.next-node-list');
+
+        var nextNodeId = valueField.val();
+
+        if (validNextIds.indexOf(nextNodeId) != -1) {
+          selectList.val(nextNodeId);
+        } else {
+          valueField.val("");
+          selectList.val("");
+        }
       });
     },
     optionsForNode: function(node) {

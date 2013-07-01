@@ -306,5 +306,21 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_css?(".nodes .outcome", count: 1)
       assert page.has_css?(".nodes .node", count: 2)
     end
+
+    should "reset the next node value in options when a node is deleted" do
+      visit "/admin/editions/#{@edition.id}"
+
+      within ".nodes .outcome:nth-child(3)" do
+        click_link "Remove node"
+      end
+
+      within ".nodes .node:first-child .option:nth-child(2)" do
+        assert_equal "", page.find_by_id('edition_nodes_attributes_0_options_attributes_1_next').value
+        assert page.has_select?("next-node-list",
+          :options => ["Select a node..", "Outcome 1 (Outcome One)"],
+          :selected => "Select a node.."
+        )
+      end
+    end
   end
 end
