@@ -338,5 +338,28 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert page.has_content?("Outcome 4")
       end
     end
+
+    should "highlight an error on the select field when the next node is blank" do
+      visit "/admin/editions/#{@edition.id}"
+
+      within ".nodes .question:first-child .option:first-child" do
+        select "Select a node..", :from => "next-node-list"
+        assert_equal "", find(:css, 'input.next-node-id').value
+      end
+
+      click_on "Save"
+
+      within ".nodes .question:first-child .option:first-child" do
+        assert_equal "", find(:css, 'input.next-node-id').value
+      end
+
+      wait_until {
+        page.has_content?("We had some problems saving. Please check the form below.")
+      }
+
+      within ".nodes .question:first-child .option:first-child" do
+        assert page.has_selector?(".error select")
+      end
+    end
   end
 end
