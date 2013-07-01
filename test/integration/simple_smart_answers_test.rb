@@ -322,5 +322,21 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         )
       end
     end
+
+    should "correctly number new nodes" do
+      @edition.nodes.where(:slug => "outcome-2").first.update_attribute(:slug, "outcome-3")
+
+      visit "/admin/editions/#{@edition.id}"
+
+      assert page.has_css?(".nodes .question", count: 1)
+      assert page.has_css?(".nodes .outcome", count: 2)
+
+      click_on "Add outcome"
+
+      within ".nodes .outcome:nth-child(4)" do
+        assert_equal "outcome-4", find(:css, 'input.node-slug').value
+        assert page.has_content?("Outcome 4")
+      end
+    end
   end
 end
