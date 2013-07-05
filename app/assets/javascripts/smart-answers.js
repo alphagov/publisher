@@ -133,7 +133,7 @@
     },
     updateNextNode: function() {
       var nextNode = $(this).val();
-      $(this).parent('.option').find('.next-node-id').val(nextNode);
+      $(this).parents('.option').find('.next-node-id').val(nextNode);
     },
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;

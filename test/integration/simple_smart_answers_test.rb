@@ -220,8 +220,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         :slug => "can-i-get-a-driving-licence"
       )
       @edition.nodes.build(:slug => "question-1", :order => 1, :title => "To be or not to be?", :kind => "question", :options_attributes => [
-        { :label => "That is the question", :next => "outcome-1" },
-        { :label => "That is not the question", :next => "outcome-2" }
+        { :label => "That is the question", :next_node => "outcome-1" },
+        { :label => "That is not the question", :next_node => "outcome-2" }
       ])
       @edition.nodes.build(:slug => "outcome-1", :order => 2, :title => "Outcome One", :kind => "outcome")
       @edition.nodes.build(:slug => "outcome-2", :order => 3, :title => "Outcome Two", :kind => "outcome")
@@ -315,7 +315,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
 
       within ".nodes .node:first-child .option:nth-child(2)" do
-        assert_equal "", page.find_by_id('edition_nodes_attributes_0_options_attributes_1_next').value
+        assert_equal "", page.find_by_id('edition_nodes_attributes_0_options_attributes_1_next_node').value
         assert page.has_select?("next-node-list",
           :options => ["Select a node..", "Outcome 1 (Outcome One)"],
           :selected => "Select a node.."
@@ -348,7 +348,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
 
       click_on "Save"
-
+      
       within ".nodes .question:first-child .option:first-child" do
         assert_equal "", find(:css, 'input.next-node-id').value
       end
