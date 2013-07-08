@@ -192,4 +192,30 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
 
   end
 
+  context "Handling an 'X' in the service_url field" do
+    setup do
+      @source = File.open(fixture_file('local_interactions_x_url.csv'))
+      stub_request(:get, "#{MAPIT_BASE_URL}area/45UB")
+        .to_return(status: 200, body: read_fixture_file('mapit_response.json'))
+      @authority = FactoryGirl.create(:local_authority, :snac => '45UB', :name => "Adur Council", :tier => "county", :local_directgov_id => 4)
+    end
+
+    should "not add an interaction for this entry" do
+      LocalInteractionImporter.new(@source).run
+
+      @authority.reload
+      assert_equal 0, @authority.local_interactions.count
+    end
+
+    should "remove an existing interaction if present" do
+      @authority.local_interactions.create!(
+        url: "http://www.adur.gov.uk/education/index-old.htm",
+        lgsl_code: 18,
+        lgil_code: 8)
+      LocalInteractionImporter.new(@source).run
+
+      @authority.reload
+      assert_equal 0, @authority.local_interactions.count
+    end
+  end
 end
