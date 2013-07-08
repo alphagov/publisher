@@ -24,14 +24,23 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
 
     existing_interactions = authority.interactions_for(row['LGSL'], row['LGIL'])
     if existing_interactions.count == 0
-      authority.local_interactions.create!(
-        lgsl_code: row['LGSL'],
-        lgil_code: row['LGIL'],
-        url: row['Service URL'].strip
-      )
+      # The source data sometimes has an 'X' in the URL field.  We don't want to create 
+      # entries for these lines
+      unless row['Service URL'].strip.upcase == 'X'
+        authority.local_interactions.create!(
+          lgsl_code: row['LGSL'],
+          lgil_code: row['LGIL'],
+          url: row['Service URL'].strip
+        )
+      end
     elsif existing_interactions.count == 1
       i = existing_interactions.first
-      i.update_attributes!(url: row['Service URL'].strip)
+      # If the source data has an 'X' for the URL, remove the existing (presumed invalid) entry.
+      if row['Service URL'].strip.upcase == 'X'
+        i.destroy
+      else
+        i.update_attributes!(url: row['Service URL'].strip)
+      end
     else
       raise "Error: duplicate definitions already exist for interaction [lgsl=#{row['LGSL']}, lgil=#{row['LGIL']}] for authority '#{row['SNAC']}'"
     end
