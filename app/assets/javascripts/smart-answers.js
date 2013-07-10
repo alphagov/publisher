@@ -133,8 +133,8 @@
     },
     updateNextNode: function() {
       var nextNode = $(this).val();
-      $(this).parents('.option').find('.next-node-id').val(nextNode);
-    },
+      $(this).closest('.option').find('.next-node-id').val(nextNode);
+    }
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;
 }).call(this);
