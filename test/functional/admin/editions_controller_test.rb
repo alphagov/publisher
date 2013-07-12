@@ -197,8 +197,8 @@ class Admin::EditionsControllerTest < ActionController::TestCase
       @artefact = FactoryGirl.create(:artefact, :slug => "foo", :name => "Foo", :kind => "simple_smart_answer", :owning_app => "publisher")
       @edition = FactoryGirl.create(:simple_smart_answer_edition, :body => "blah", :state => "draft", :slug => "foo", :panopticon_id => @artefact.id)
       @edition.nodes.build(:kind => "question", :slug => "question-1", :title => "Question One", :options_attributes => [
-        { :label => "Option One", :next => "outcome-1" },
-        { :label => "Option Two", :next => "outcome-2" }
+        { :label => "Option One", :next_node => "outcome-1" },
+        { :label => "Option Two", :next_node => "outcome-2" }
       ])
       @edition.nodes.build(:kind => "outcome", :slug => "outcome-1", :title => "Outcome One")
       @edition.nodes.build(:kind => "outcome", :slug => "outcome-2", :title => "Outcome Two")
