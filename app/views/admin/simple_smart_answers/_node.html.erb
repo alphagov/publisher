@@ -2,7 +2,7 @@
   <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
       <%= f.link_to_remove "<i class=\"icon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
   </legend>
-  
+  <%= f.hidden_field :order, :class => 'node-order' %> 
   <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span10 node-title" } %>
   <%= f.input :body, :label => false, :input_html => { :placeholder => "Optional extra information", :class => "span10 node-body" } %>
 
