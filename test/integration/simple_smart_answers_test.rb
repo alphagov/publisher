@@ -339,6 +339,28 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "correctly order new nodes" do
+      visit "/admin/editions/#{@edition.id}"
+
+      within ".nodes" do
+        assert_equal "1", find(:css, '.node:nth-child(1) .node-order').value
+        assert_equal "2", find(:css, '.node:nth-child(2) .node-order').value
+        assert_equal "3", find(:css, '.node:nth-child(3) .node-order').value
+      end
+
+      click_on "Add outcome"
+      
+      within ".nodes" do
+        assert_equal "4", find(:css, '.node:nth-child(4) .node-order').value
+      end
+
+      click_on "Add question"
+
+      within ".nodes" do
+        assert_equal "5", find(:css, '.node:nth-child(5) .node-order').value
+      end
+    end
+
     should "highlight an error on the select field when the next node is blank" do
       visit "/admin/editions/#{@edition.id}"
 

@@ -48,9 +48,10 @@
 
       var node = e.field;
       smartAnswerBuilder.lastNodeKind = null;
-
+      
       node.find('input.node-kind').val(kind);
       node.find('input.node-slug').val(nodeId(kind, index));
+      node.find('input.node-order').val($('.node').length);
 
       node.find('.node-label').text(nodeLabel(kind, index));
       node.addClass(kind).attr('id', nodeId(kind, index));
