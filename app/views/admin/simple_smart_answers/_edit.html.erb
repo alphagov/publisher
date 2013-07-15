@@ -6,7 +6,7 @@
 
   <div class="builder-container">
     <div class="nodes" id="nodes">
-      <%= f.semantic_fields_for :nodes, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
+      <%= f.semantic_fields_for :nodes, @resource.nodes, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
         <%= render :partial => "admin/simple_smart_answers/node", :locals => { :f => node } %>
       <% end %>
     </div>

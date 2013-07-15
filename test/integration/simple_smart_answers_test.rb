@@ -210,6 +210,53 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_css?(".nodes .outcome", count: 3)
       assert page.has_css?(".nodes .node", count: 5)
     end
+
+    should "preserve ordering of nodes when validation fails" do
+      within ".nodes .question:first-child" do
+        find(:css, "input.node-title").set("Do you hold a UK driving licence?")
+      end
+
+      click_on "Add outcome"
+      within ".nodes .outcome:nth-child(2)" do
+        find(:css, "input.node-title").set("You can't drive")
+      end
+
+      click_on "Add outcome"
+      within ".nodes .outcome:nth-child(3)" do
+        find(:css, "input.node-title").set("You can drive")
+      end
+
+      within ".nodes .question:nth-child(1) .options" do
+        within ".option:first-child" do
+          find(:css, "input.option-label").set("Yes")
+          select "Select a node..", :from => "next-node-list"
+        end
+
+        click_on "Add an option"
+
+        within ".option:nth-child(2)" do
+          find(:css, "input.option-label").set("No")
+          select "Select a node..", :from => "next-node-list"
+        end
+      end
+
+      click_on "Save"
+      
+      wait_until {
+        page.has_content?("We had some problems saving. Please check the form below.")
+      }
+      
+      assert page.has_css?(".nodes .node", count: 3)
+      
+      within('.nodes') do
+        within ".question:first-child" do
+          assert page.has_selector?(".option:nth-child(1) .error select")
+          assert page.has_selector?(".option:nth-child(1) .error select")
+        end
+        assert_equal "Do you hold a UK driving licence?", find(:css, '.node:nth-child(1) .node-title').value
+      end
+
+    end
   end
 
   context "editing an existing edition" do
