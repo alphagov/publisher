@@ -44,7 +44,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       within ".nodes .question:nth-child(2)" do
         assert page.has_content?("Question 2")
         assert page.has_selector?("input.node-title")
-        assert page.has_selector?("input.node-body")
+        assert page.has_selector?("textarea.node-body")
       end
 
       click_on "Add outcome"
@@ -55,7 +55,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       within ".nodes .outcome" do
         assert page.has_content?("Outcome 1")
         assert page.has_selector?("input.node-title")
-        assert page.has_selector?("input.node-body")
+        assert page.has_selector?("textarea.node-body")
       end
     end
 
@@ -144,7 +144,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     should "persist a valid smart answer" do
       within ".nodes .question:first-child" do
         find(:css, "input.node-title").set("Which driving licence do you hold?")
-        find(:css, "input.node-body").set("The type of driving licence you hold determines what vehicles you can drive.")
+        find(:css, "textarea.node-body").set("The type of driving licence you hold determines what vehicles you can drive.")
       end
 
       click_on "Add question"
@@ -155,7 +155,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       click_on "Add outcome"
       within ".nodes .outcome:nth-child(3)" do
         find(:css, "input.node-title").set("You can only drive a car with an accompanying adult.")
-        find(:css, "input.node-body").set("The adult must be over 21 years of age. You can't drive on the motorway.")
+        find(:css, "textarea.node-body").set("The adult must be over 21 years of age. You can't drive on the motorway.")
       end
 
       click_on "Add outcome"
