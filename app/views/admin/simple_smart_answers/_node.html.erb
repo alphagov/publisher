@@ -1,5 +1,5 @@
 <div class="span8">
-  <legend><span css="node-label"><%= f.object.slug.to_s.titleize %></span>
+  <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
       <%= f.link_to_remove "<i class=\"icon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
   </legend>
   <%= f.hidden_field :order, :class => 'node-order' %> 
