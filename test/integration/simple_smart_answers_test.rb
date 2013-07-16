@@ -43,7 +43,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".nodes .question:nth-child(2)" do
         assert page.has_content?("Question 2")
-        assert page.has_selector?("input.node-title")
+        assert page.has_selector?("input.node-title[placeholder='The title of the question']")
         assert page.has_selector?("textarea.node-body")
       end
 
@@ -54,7 +54,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".nodes .outcome" do
         assert page.has_content?("Outcome 1")
-        assert page.has_selector?("input.node-title")
+        assert page.has_selector?("input.node-title[placeholder='The title of the outcome']")
         assert page.has_selector?("textarea.node-body")
       end
     end

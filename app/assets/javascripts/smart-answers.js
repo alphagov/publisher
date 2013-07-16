@@ -60,6 +60,7 @@
         node.find('.options').remove();
       } else {
         node.find('.options .add_nested_fields').click();
+        node.find('input.node-title').attr('placeholder', 'The title of the question');
       }
 
       smartAnswerBuilder.reloadAllNextNodeLists();
