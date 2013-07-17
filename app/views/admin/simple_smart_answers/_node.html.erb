@@ -10,7 +10,7 @@
   <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>
   <% unless f.object.kind == "outcome" %>
     <div class="options">
-      <%= f.semantic_fields_for :options, :wrapper_class => "radio outcome-wrap option" do |o| %>
+      <%= f.semantic_fields_for :options, :wrapper_class => "outcome-wrap option" do |o| %>
         <div class="control-group<%= o.object.errors.empty? ? '' : ' error' %>">
           <%= o.input :label, :label => false,
             :input_html => { :placeholder => "Label", :class => "option-label" } %>
