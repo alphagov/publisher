@@ -140,7 +140,3 @@
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;
 }).call(this);
-
-// Turn off auto save.
-GOVUK = GOVUK || {};
-GOVUK.autoSave = {};
