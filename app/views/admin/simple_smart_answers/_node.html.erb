@@ -12,7 +12,6 @@
     <div class="options">
       <%= f.semantic_fields_for :options, :wrapper_class => "radio outcome-wrap option" do |o| %>
         <div class="control-group<%= o.object.errors.empty? ? '' : ' error' %>">
-          <input type="radio" disabled>
           <%= o.input :label, :label => false,
             :input_html => { :placeholder => "Label", :class => "option-label" } %>
           <i class="icon-arrow-right"></i>
