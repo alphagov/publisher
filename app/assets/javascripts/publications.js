@@ -96,6 +96,7 @@ GOVUK.autoSave = (function() {
   var $form,
       autosaveInterval = 60000,
       autosaveHtml = '<span class="autosave-msg"></span>',
+      exceptionalFormats = ['simple-smart-answer'],
       formattedTime = function(date) {
         var zeroPad = function(num) {
           return num < 10 ? "0"+num : num;
@@ -105,7 +106,7 @@ GOVUK.autoSave = (function() {
       updateTimestamp = function() {
         // TODO: While this timestamp is convenient for testing, it does not reflect the server update time accurately.
         $('.autosave-msg').text('Auto saved at ' + formattedTime(new Date()));
-      }
+      };
 
   return {
     intervalId: null,
@@ -114,19 +115,28 @@ GOVUK.autoSave = (function() {
     init: function(form) {
       $form = form;
 
-      $form.submit(function() {
-        GOVUK.autoSave.dirty = false;
-        return true;
-      });
+      if (this.shouldAutoSaveForm()) {
+        $form.submit(function() {
+          GOVUK.autoSave.dirty = false;
+          return true;
+        });
 
-      this.intervalId = setInterval(GOVUK.autoSave.run, autosaveInterval);
-      $form.on('keyup', function() { 
-        GOVUK.autoSave.dirty = true;
-      });
+        this.intervalId = setInterval(GOVUK.autoSave.run, autosaveInterval);
+        $form.on('keyup', function() { 
+          GOVUK.autoSave.dirty = true;
+        });
 
-      if ($('.autosave-msg').length == 0) {
-        $('.alert-info').first().append(autosaveHtml);
+        if ($('.autosave-msg').length == 0) {
+          $('.alert-info').first().append(autosaveHtml);
+        }
       }
+    },
+    shouldAutoSaveForm : function() {
+      var autoSave = true;
+      $.each(exceptionalFormats, function(i, val) {
+        if ($form.hasClass(val)) autoSave = false;
+      });
+      return autoSave;
     },
     saving : function() {
       $('.autosave-msg').text('Saving');
