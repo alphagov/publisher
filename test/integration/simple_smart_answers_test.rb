@@ -259,8 +259,6 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "not auto save" do
-      fill_in "Body", :with => "Some stuff that would normally kick off autosave"
-
       assert_equal false, page.evaluate_script("GOVUK.autoSave.shouldAutoSaveForm();")
     end
   end
