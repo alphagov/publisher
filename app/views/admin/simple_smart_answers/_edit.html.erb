@@ -1,5 +1,5 @@
 <%= semantic_bootstrap_nested_form_for @resource, :url => admin_edition_path(@resource),
-  :as => :edition, :html => { :class => 'simple-smart-answer' } do |f| %>
+  :as => :edition, :html => { :class => 'no-auto-save' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
     <%= f.input :body, :as => :text, :input_html => { :class => 'span7', :rows => 5, :disabled => @resource.published? } %>

@@ -96,7 +96,6 @@ GOVUK.autoSave = (function() {
   var $form,
       autosaveInterval = 60000,
       autosaveHtml = '<span class="autosave-msg"></span>',
-      exceptionalFormats = ['simple-smart-answer'],
       formattedTime = function(date) {
         var zeroPad = function(num) {
           return num < 10 ? "0"+num : num;
@@ -132,11 +131,7 @@ GOVUK.autoSave = (function() {
       }
     },
     shouldAutoSaveForm : function() {
-      var autoSave = true;
-      $.each(exceptionalFormats, function(i, val) {
-        if ($form.hasClass(val)) autoSave = false;
-      });
-      return autoSave;
+      return !$form.hasClass('no-auto-save');
     },
     saving : function() {
       $('.autosave-msg').text('Saving');
