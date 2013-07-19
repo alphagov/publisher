@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/theodi/govuk_content_models.git
-  revision: b941bde6cb4211dd4205fed41dd2e4067dfae0e7
+  revision: 1120c68b67e8f9b6ac26d64cea0bb0c74e391a97
   specs:
     govuk_content_models (5.9.1)
       bson_ext
