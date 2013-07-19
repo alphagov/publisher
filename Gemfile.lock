@@ -1,9 +1,16 @@
 GIT
-  remote: https://github.com/alphagov/nested_form.git
-  revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
-  branch: add-wrapper-class
+  remote: git://github.com/theodi/govuk_content_models.git
+  revision: 7874fcbcb0bc42f94561cd5c908f3f989e56ddc9
   specs:
-    nested_form (0.3.2)
+    govuk_content_models (5.9.1)
+      bson_ext
+      differ
+      gds-api-adapters
+      gds-sso (>= 3.0.0, < 4.0.0)
+      govspeak (>= 1.0.1, < 2.0.0)
+      mongoid (~> 2.4.10)
+      plek
+      state_machine
 
 GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
@@ -115,15 +122,6 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (5.9.1)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      plek
-      state_machine
     has_scope (0.5.1)
     hashie (2.0.5)
     hike (1.2.3)
@@ -315,7 +313,7 @@ DEPENDENCIES
   gds-api-adapters (= 5.3.0)
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 5.9.1)
+  govuk_content_models!
   has_scope
   inherited_resources
   jquery-rails
