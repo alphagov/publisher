@@ -1,4 +1,18 @@
 GIT
+  remote: git://github.com/theodi/govuk_content_models.git
+  revision: 7874fcbcb0bc42f94561cd5c908f3f989e56ddc9
+  specs:
+    govuk_content_models (5.9.1)
+      bson_ext
+      differ
+      gds-api-adapters
+      gds-sso (>= 3.0.0, < 4.0.0)
+      govspeak (>= 1.0.1, < 2.0.0)
+      mongoid (~> 2.4.10)
+      plek
+      state_machine
+
+GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
@@ -108,15 +122,6 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (5.3.0)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      plek
-      state_machine
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.2)
@@ -310,7 +315,7 @@ DEPENDENCIES
   gds-api-adapters (= 5.3.0)
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 5.3.0)
+  govuk_content_models!
   has_scope
   inherited_resources
   jquery-rails
