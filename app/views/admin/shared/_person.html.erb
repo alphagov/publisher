@@ -1,0 +1,13 @@
+<%= f.input :biography,
+            :as => :text,
+            :input_html => { :class => 'span7' , :rows => 5, :disabled => @resource.published? } %>
+
+<%= f.input :twitter,
+            :hint => "Without the @",
+            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+<%= f.input :email,
+            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+<%= f.input :gravatar_email,
+            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
