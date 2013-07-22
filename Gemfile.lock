@@ -1,16 +1,9 @@
 GIT
-  remote: git://github.com/theodi/govuk_content_models.git
-  revision: b941bde6cb4211dd4205fed41dd2e4067dfae0e7
+  remote: git://github.com/theodi/odi_content_models.git
+  revision: a4ad4b9f11f87f9563b7f43b1b1242f7318d17ce
   specs:
-    govuk_content_models (5.9.1)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      plek
-      state_machine
+    odi_content_models (0.0.1)
+      govuk_content_models
 
 GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
@@ -122,6 +115,15 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
+    govuk_content_models (5.9.0)
+      bson_ext
+      differ
+      gds-api-adapters
+      gds-sso (>= 3.0.0, < 4.0.0)
+      govspeak (>= 1.0.1, < 2.0.0)
+      mongoid (~> 2.4.10)
+      plek
+      state_machine
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.2)
@@ -315,7 +317,7 @@ DEPENDENCIES
   gds-api-adapters (= 5.3.0)
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
-  govuk_content_models!
+  govuk_content_models
   has_scope
   inherited_resources
   jquery-rails
@@ -330,6 +332,7 @@ DEPENDENCIES
   mongoid_rails_migrations (= 1.0.0)
   nested_form
   null_logger
+  odi_content_models!
   plek (= 1.4.0)
   rails (= 3.2.13)
   redis (= 3.0.3)

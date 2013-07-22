@@ -12,10 +12,11 @@ else
   gem 'gds-sso', '3.0.0'
 end
 
+gem "govuk_content_models"
 if ENV['CONTENT_MODELS_DEV']
-  gem "govuk_content_models", :path => '../govuk_content_models'
+  gem "odi_content_models", path: '../odi_content_models'
 else
-  gem "govuk_content_models", :github => 'theodi/govuk_content_models'
+  gem "odi_content_models", github: 'theodi/odi_content_models'
 end
 
 gem 'erubis'
