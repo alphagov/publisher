@@ -13,6 +13,13 @@ GIT
       state_machine
 
 GIT
+  remote: https://github.com/alphagov/nested_form.git
+  revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
+  branch: add-wrapper-class
+  specs:
+    nested_form (0.3.2)
+
+GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
   revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
   branch: bootstrap-2
