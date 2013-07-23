@@ -3,10 +3,12 @@ require 'integration_test_helper'
 class FactCheckEmailTest < ActionDispatch::IntegrationTest
   def fact_check_mail_for(edition, attrs = {})
     message = Mail.new do
-      from    attrs[:from] || 'foo@example.com'
-      to      attrs[:to] || edition.fact_check_email_address
-      subject attrs[:subject] || "This is a fact check response"
-      body    attrs[:body] || 'I like it. Good work!'
+      from    attrs.fetch(:from,    'foo@example.com')
+      to      attrs.fetch(:to,      edition && edition.fact_check_email_address)
+      cc      attrs.fetch(:cc,      nil)
+      bcc     attrs.fetch(:bcc,     nil)
+      subject attrs.fetch(:subject, "This is a fact check response")
+      body    attrs.fetch(:body,    'I like it. Good work!')
     end
     # The Mail.all(:delete_after_find => true) call in FactCheckEmailHandler will set this
     # on all messages before yielding them
@@ -90,6 +92,26 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     handler.process
 
     assert ! message.is_marked_for_delete?
+  end
+
+  test "should look for fact-check address in to, cc or bcc fields" do
+    edition_to = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    message_to  = fact_check_mail_for(edition_to, to: edition_to.fact_check_email_address)
+
+    edition_cc = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    message_cc  = fact_check_mail_for(edition_cc, to: nil, cc: edition_cc.fact_check_email_address)
+
+    edition_bcc = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    message_bcc = fact_check_mail_for(edition_bcc, to: nil, bcc: edition_bcc.fact_check_email_address)
+
+    Mail.stubs(:all).multiple_yields(message_to, message_cc, message_bcc)
+
+    handler = FactCheckEmailHandler.new
+    handler.process
+
+    assert message_to.is_marked_for_delete?
+    assert message_cc.is_marked_for_delete?
+    assert message_bcc.is_marked_for_delete?
   end
 
   test "should invoke the supplied block after each message" do

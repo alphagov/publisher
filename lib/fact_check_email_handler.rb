@@ -15,10 +15,11 @@ class FactCheckEmailHandler
 
   def process_message(message)
     address_matcher = FactCheckAddress.new
-    if message.to.any?
-      message.to.each do |to|
-        if address_matcher.valid_address?(to.to_s)
-          edition_id = address_matcher.edition_id_from_address(to.to_s)
+    recipients = [message.to, message.cc, message.bcc].compact.flatten
+    if recipients.any?
+      recipients.each do |recipient|
+        if address_matcher.valid_address?(recipient.to_s)
+          edition_id = address_matcher.edition_id_from_address(recipient.to_s)
           return FactCheckMessageProcessor.process(message, edition_id)
         end
       end
