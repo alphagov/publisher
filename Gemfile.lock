@@ -1,6 +1,21 @@
 GIT
+  remote: git://github.com/theodi/govuk_content_models.git
+  revision: 77bbd75991f54dc304c0bd289c271785fc586fd9
+  branch: feature-lambda-format-validator
+  specs:
+    govuk_content_models (5.10.0)
+      bson_ext
+      differ
+      gds-api-adapters
+      gds-sso (>= 3.0.0, < 4.0.0)
+      govspeak (>= 1.0.1, < 2.0.0)
+      mongoid (~> 2.4.10)
+      plek
+      state_machine
+
+GIT
   remote: git://github.com/theodi/odi_content_models.git
-  revision: a116e95d95c56fac2e2785ef141785946f33afd7
+  revision: cdda49d748baa1c6be7ec323342f82e2d9727688
   specs:
     odi_content_models (0.0.1)
       govuk_content_models
@@ -115,15 +130,6 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (5.9.0)
-      bson_ext
-      differ
-      gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
-      govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
-      plek
-      state_machine
     has_scope (0.5.1)
     hashie (1.2.0)
     hike (1.2.2)
@@ -317,7 +323,7 @@ DEPENDENCIES
   gds-api-adapters (= 5.3.0)
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
-  govuk_content_models
+  govuk_content_models!
   has_scope
   inherited_resources
   jquery-rails

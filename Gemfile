@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 
-#ruby=ruby-1.9.3-p374
+#ruby=ruby-1.9.3
 #ruby-gemset=quirkafleeg
 
 gem 'aws-ses', require: 'aws/ses'
@@ -12,7 +12,7 @@ else
   gem 'gds-sso', '3.0.0'
 end
 
-gem "govuk_content_models"
+gem "govuk_content_models", github: 'theodi/govuk_content_models', branch: 'feature-lambda-format-validator'
 if ENV['CONTENT_MODELS_DEV']
   gem "odi_content_models", path: '../odi_content_models'
 else
