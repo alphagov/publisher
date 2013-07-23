@@ -94,22 +94,20 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     assert ! message.is_marked_for_delete?
   end
 
-  test "should look for fact-check address in to, cc or bcc fields" do
-    edition_to = FactoryGirl.create(:answer_edition, :state => 'fact_check')
-    message_to  = fact_check_mail_for(edition_to, to: edition_to.fact_check_email_address)
-
+  test "should look for fact-check address cc or bcc fields" do
     edition_cc = FactoryGirl.create(:answer_edition, :state => 'fact_check')
-    message_cc  = fact_check_mail_for(edition_cc, to: nil, cc: edition_cc.fact_check_email_address)
+    # Test that it ignores irrelevant recipients
+    message_cc  = fact_check_mail_for(edition_cc, to: "something@example.com", cc: edition_cc.fact_check_email_address)
 
     edition_bcc = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    # Test that it doesn't fail on a nil recipient field
     message_bcc = fact_check_mail_for(edition_bcc, to: nil, bcc: edition_bcc.fact_check_email_address)
 
-    Mail.stubs(:all).multiple_yields(message_to, message_cc, message_bcc)
+    Mail.stubs(:all).multiple_yields(message_cc, message_bcc)
 
     handler = FactCheckEmailHandler.new
     handler.process
 
-    assert message_to.is_marked_for_delete?
     assert message_cc.is_marked_for_delete?
     assert message_bcc.is_marked_for_delete?
   end
