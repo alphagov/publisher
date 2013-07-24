@@ -1,8 +1,9 @@
 GIT
   remote: git://github.com/theodi/govuk_content_models.git
-  revision: 7874fcbcb0bc42f94561cd5c908f3f989e56ddc9
+  revision: 77bbd75991f54dc304c0bd289c271785fc586fd9
+  branch: feature-lambda-format-validator
   specs:
-    govuk_content_models (5.9.1)
+    govuk_content_models (5.10.0)
       bson_ext
       differ
       gds-api-adapters
@@ -11,6 +12,13 @@ GIT
       mongoid (~> 2.4.10)
       plek
       state_machine
+
+GIT
+  remote: git://github.com/theodi/odi_content_models.git
+  revision: cdda49d748baa1c6be7ec323342f82e2d9727688
+  specs:
+    odi_content_models (0.0.1)
+      govuk_content_models
 
 GIT
   remote: https://github.com/alphagov/nested_form.git
@@ -335,6 +343,7 @@ DEPENDENCIES
   mongoid_rails_migrations (= 1.0.0)
   nested_form!
   null_logger
+  odi_content_models!
   plek (= 1.4.0)
   rails (= 3.2.13)
   redis (= 3.0.3)
