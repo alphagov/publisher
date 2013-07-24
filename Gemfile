@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 
-#ruby=ruby-1.9.3-p374
-#ruby-gemset=quirkafleeg
+#ruby=ruby-1.9.3
+#ruby-gemset=quirkafleeg-publisher
 
 gem 'aws-ses', require: 'aws/ses'
 
@@ -12,10 +12,11 @@ else
   gem 'gds-sso', '3.0.0'
 end
 
+gem "govuk_content_models", github: 'theodi/govuk_content_models', branch: 'feature-lambda-format-validator'
 if ENV['CONTENT_MODELS_DEV']
-  gem "govuk_content_models", :path => '../govuk_content_models'
+  gem "odi_content_models", path: '../odi_content_models'
 else
-  gem "govuk_content_models", :github => 'theodi/govuk_content_models'
+  gem "odi_content_models", github: 'theodi/odi_content_models'
 end
 
 gem 'erubis'
@@ -24,7 +25,7 @@ gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch:
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '5.3.0'
 
-gem "nested_form"
+gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
