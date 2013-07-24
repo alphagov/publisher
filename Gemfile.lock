@@ -1,8 +1,9 @@
 GIT
   remote: git://github.com/theodi/govuk_content_models.git
-  revision: 1120c68b67e8f9b6ac26d64cea0bb0c74e391a97
+  revision: 77bbd75991f54dc304c0bd289c271785fc586fd9
+  branch: feature-lambda-format-validator
   specs:
-    govuk_content_models (5.9.1)
+    govuk_content_models (5.10.0)
       bson_ext
       differ
       gds-api-adapters
@@ -11,6 +12,13 @@ GIT
       mongoid (~> 2.4.10)
       plek
       state_machine
+
+GIT
+  remote: https://github.com/alphagov/nested_form.git
+  revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
+  branch: add-wrapper-class
+  specs:
+    nested_form (0.3.2)
 
 GIT
   remote: https://github.com/cgunther/formtastic-bootstrap.git
@@ -28,6 +36,12 @@ GIT
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
+
+PATH
+  remote: ../odi_content_models
+  specs:
+    odi_content_models (0.0.1)
+      govuk_content_models
 
 GEM
   remote: https://rubygems.org/
@@ -184,7 +198,6 @@ GEM
       railties (>= 3.2.0)
     multi_json (1.7.4)
     multipart-post (1.2.0)
-    nested_form (0.3.2)
     nokogiri (1.5.9)
     null_logger (0.0.1)
     oauth2 (0.8.1)
@@ -328,8 +341,9 @@ DEPENDENCIES
   mocha (= 0.13.3)
   mongo (= 1.6.2)
   mongoid_rails_migrations (= 1.0.0)
-  nested_form
+  nested_form!
   null_logger
+  odi_content_models!
   plek (= 1.4.0)
   rails (= 3.2.13)
   redis (= 3.0.3)
