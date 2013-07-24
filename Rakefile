@@ -9,4 +9,5 @@ Rake.application.options.trace = true
 
 Publisher::Application.load_tasks
 
-task :default => [:test, :check_for_bad_time_handling]
+Rake.application['default'].prerequisites.delete('test') if Rake.application['default']
+task :default => [:'test:units', :'test:functionals', :check_for_bad_time_handling]
