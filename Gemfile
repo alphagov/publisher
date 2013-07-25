@@ -43,6 +43,8 @@ gem 'null_logger'
 gem 'plek', '1.4.0'
 gem 'rails', '3.2.13'
 
+gem 'dotenv-rails'
+
 gem 'redis', '3.0.3', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
