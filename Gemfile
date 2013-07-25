@@ -56,7 +56,8 @@ gem 'whenever', require: false
 
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
-gem 'unicorn', '4.3.1'
+gem 'thin'
+gem 'foreman'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"
