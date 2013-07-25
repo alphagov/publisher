@@ -14,6 +14,13 @@ GIT
       state_machine
 
 GIT
+  remote: git://github.com/theodi/odi_content_models.git
+  revision: cdda49d748baa1c6be7ec323342f82e2d9727688
+  specs:
+    odi_content_models (0.0.1)
+      govuk_content_models
+
+GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -36,12 +43,6 @@ GIT
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
-
-PATH
-  remote: ../odi_content_models
-  specs:
-    odi_content_models (0.0.1)
-      govuk_content_models
 
 GEM
   remote: https://rubygems.org/
