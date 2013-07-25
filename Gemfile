@@ -9,7 +9,7 @@ gem 'aws-ses', require: 'aws/ses'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '3.0.0'
+  gem 'gds-sso', '~> 3.0.5'
 end
 
 gem "govuk_content_models", github: 'theodi/govuk_content_models', branch: 'feature-lambda-format-validator'
@@ -43,6 +43,8 @@ gem 'null_logger'
 gem 'plek', '1.4.0'
 gem 'rails', '3.2.13'
 
+gem 'dotenv-rails'
+
 gem 'redis', '3.0.3', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
@@ -54,7 +56,8 @@ gem 'whenever', require: false
 
 gem 'jquery-rails'
 gem 'less-rails-bootstrap'
-gem 'unicorn', '4.3.1'
+gem 'thin'
+gem 'foreman'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"
