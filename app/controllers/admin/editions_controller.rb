@@ -58,7 +58,14 @@ class Admin::EditionsController < Admin::BaseController
 
     update! do |success, failure|
       success.html {
+        # Automatically start work if we haven't already
+        if resource.can_start_work?
+          command = EditionProgressor.new(resource, current_user, statsd)
+          command.progress(request_type: 'start_work')
+        end
+        # Assign to right person
         update_assignment resource, assign_to
+        # Redirect
         return_to = params[:return_to] || admin_edition_path(resource)
         redirect_to return_to
       }
@@ -68,7 +75,14 @@ class Admin::EditionsController < Admin::BaseController
         render :template => "show"
       }
       success.json {
+        # Automatically start work if we haven't already
+        if resource.can_start_work?
+          command = EditionProgressor.new(resource, current_user, statsd)
+          command.progress(request_type: 'start_work')
+        end
+        # Assign to right person
         update_assignment resource, assign_to
+        # Result
         render :json => resource
       }
       failure.json { render :json => resource.errors, :status=>406 }

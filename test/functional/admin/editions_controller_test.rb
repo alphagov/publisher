@@ -128,6 +128,36 @@ class Admin::EditionsControllerTest < ActionController::TestCase
     assert_equal "I failed", flash[:alert]
   end
 
+  test "should automatically start work when saving" do
+    assert_equal "lined_up", @guide.state
+
+    bob = User.create
+    post :update,
+      :id       => @guide.id,
+      :edition  => { :assigned_to_id => bob.id }
+
+    @guide.reload
+    assert_equal "draft", @guide.state
+  end
+
+  test "should not automatically start work if save failed" do
+    assert_equal "lined_up", @guide.state
+    panopticon_has_metadata(
+      "id" => "test"
+    )
+
+    Edition.expects(:find).returns(@guide)
+    @guide.stubs(:update_attributes).returns(false)
+    @guide.expects(:errors).at_least_once.returns({:title => ['values']})
+
+    post :update,
+      :id       => @guide.id,
+      :edition  => { :assigned_to_id => "" }
+
+    @guide.reload
+    assert_equal "lined_up", @guide.state
+  end
+
   test "should show the edit page after starting work" do
     EditionProgressor.any_instance.expects(:progress).returns(true)
     post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' } }
