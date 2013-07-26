@@ -4,6 +4,8 @@ source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 #ruby=ruby-1.9.3
 #ruby-gemset=quirkafleeg-publisher
 
+gem 'dotenv-rails'
+
 gem 'aws-ses', require: 'aws/ses'
 
 if ENV['BUNDLE_DEV']
@@ -42,8 +44,6 @@ gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
 gem 'plek', '1.4.0'
 gem 'rails', '3.2.13'
-
-gem 'dotenv-rails'
 
 gem 'redis', '3.0.3', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
