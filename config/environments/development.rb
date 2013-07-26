@@ -19,8 +19,17 @@ Publisher::Application.configure do
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
-  config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
-  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.default_url_options = { :host => "www.#{ENV['GOVUK_APP_DOMAIN']}" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :user_name => ENV["MANDRILL_USERNAME"],
+    :password => ENV["MANDRILL_PASSWORD"],
+    :domain => "theodi.org",
+    :address => "smtp.mandrillapp.com",
+    :port => 587,
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
 
   # Do not compress assets
   config.assets.compress = false
