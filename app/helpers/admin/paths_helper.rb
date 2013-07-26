@@ -1,7 +1,8 @@
 module Admin::PathsHelper
   def publication_front_end_path(publication)
     raise "Publication without slug: #{publication.id}" if publication.slug.blank?
-    "#{Plek.current.find("private-frontend")}/#{publication.slug}"
+    app = publication.rendering_app || "private-frontend"
+    "#{Plek.current.find(app)}/#{publication.slug}"
   end
 
   def preview_edition_path(edition)
