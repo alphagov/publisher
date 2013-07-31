@@ -5,6 +5,21 @@
 		<%= f.input :subtitle, :input_html => { :class => 'span7', :disabled => @resource.published? } %>
 		<!-- <%= f.input :featured, :as => :boolean, :label => "Featured?" %> -->
 		<%= f.input :body, :as => :text, :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+
+    <%= f.inputs "Image file" do %>
+      <% if @resource.image %>
+        <div class="uploaded-image">
+          <h4>Current image</h4>
+          <p><%= link_to @resource.image.name, @resource.image.file_url %></p>
+          <p><%= label_tag do %>Remove image? <%= check_box_tag "edition[remove_image]", "1" %><% end %></p>
+        </div>
+
+        <h4>Replace image</h4>
+      <% end %>
+
+      <p><%= f.input :image, :as => :file, :label => "Upload a new image" %></p>
+    <% end %>
+
 	<% end %>
 <% end %>
 
