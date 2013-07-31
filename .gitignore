@@ -12,3 +12,6 @@ test/reports
 *.daemonette-dump
 data/local_interactions.csv
 config/initializers/dev_*.rb
+
+/.env
+/.powrc
