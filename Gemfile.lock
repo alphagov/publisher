@@ -21,6 +21,13 @@ GIT
       govuk_content_models
 
 GIT
+  remote: git://github.com/theodi/odidown.git
+  revision: 8f70d15db759f09d0104244819467149ab90df3d
+  specs:
+    odidown (0.0.1)
+      govspeak (~> 1.2.3)
+
+GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -141,7 +148,7 @@ GEM
       rack-accept (~> 0.4.4)
       rails (>= 3.0.0)
       warden (~> 1.2)
-    govspeak (1.2.0)
+    govspeak (1.2.3)
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
@@ -206,7 +213,7 @@ GEM
       railties (>= 3.2.0)
     multi_json (1.7.4)
     multipart-post (1.2.0)
-    nokogiri (1.5.9)
+    nokogiri (1.5.10)
     null_logger (0.0.1)
     oauth2 (0.8.1)
       faraday (~> 0.8)
@@ -336,7 +343,6 @@ DEPENDENCIES
   formtastic-bootstrap!
   gds-api-adapters (= 5.3.0)
   gds-sso (~> 3.0.5)
-  govspeak (= 1.2.0)
   govuk_content_models!
   has_scope
   inherited_resources
@@ -353,6 +359,7 @@ DEPENDENCIES
   nested_form!
   null_logger
   odi_content_models!
+  odidown!
   plek (= 1.4.0)
   rails (= 3.2.13)
   redis (= 3.0.3)

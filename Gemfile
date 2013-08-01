@@ -29,10 +29,10 @@ gem 'gds-api-adapters', '5.3.0'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
-if ENV['GOVSPEAK_DEV']
-  gem 'govspeak', path: '../govspeak'
+if ENV['ODIDOWN_DEV']
+  gem 'odidown', path: '../odidown'
 else
-  gem 'govspeak', '1.2.0'
+  gem 'odidown', github: 'theodi/odidown'
 end
 
 gem 'has_scope'
