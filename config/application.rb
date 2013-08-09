@@ -23,7 +23,8 @@ module Publisher
     config.assets.prefix = '/assets'
 
     # No need to boot app when precompiling assets
-    config.assets.initialize_on_precompile = false
+    # Except apparently we do with this one
+    #config.assets.initialize_on_precompile = false
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
