@@ -2,6 +2,9 @@ require 'integration_test_helper'
 
 class AutoSaveEditionTest < JavascriptIntegrationTest
   test "Auto save a guide edition" do
+    skip("Autosave is currently disabled because it was causing issues")
+    # See https://www.pivotaltracker.com/story/show/54184682
+
     setup_users
 
     guide = FactoryGirl.create(:guide_edition, :title => 'How not to lose your work', 

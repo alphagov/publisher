@@ -153,4 +153,5 @@ GOVUK.autoSave = (function() {
     }
   }
 })();
-GOVUK.autoSave.init($('form.edition'));
+// Disable autosave as it's causing issues (https://www.pivotaltracker.com/story/show/54184682)
+//GOVUK.autoSave.init($('form.edition'));
