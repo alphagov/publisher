@@ -257,11 +257,6 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
 
     end
-
-    should "not auto save" do
-      skip("Autosave is currently disabled because it was causing issues")
-      assert_equal false, page.evaluate_script("GOVUK.autoSave.shouldAutoSaveForm();")
-    end
   end
 
   context "editing an existing edition" do
