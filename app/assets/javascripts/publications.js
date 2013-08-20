@@ -57,12 +57,11 @@ $(function () {
 
   $('form.edition').submit(function() {
     edition_form_dirty = false;
-    GOVUK.autoSave.dirty = false;
     return true;
   });
 
   $(window).bind('beforeunload', function() {
-    if (edition_form_dirty || GOVUK.autoSave.dirty) {
+    if (edition_form_dirty) {
       return 'You have unsaved changes to this edition.';
     }
   });
@@ -82,7 +81,6 @@ $(function () {
           been submitted
         */
         edition_form_dirty = false;
-        GOVUK.autoSave.dirty = false;
         this_form.trigger("submit");
       });
     }
@@ -90,68 +88,3 @@ $(function () {
     return submitted_forms;
   });
 });
-
-var GOVUK = GOVUK || {};
-GOVUK.autoSave = (function() {
-  var $form,
-      autosaveInterval = 60000,
-      autosaveHtml = '<span class="autosave-msg"></span>',
-      formattedTime = function(date) {
-        var zeroPad = function(num) {
-          return num < 10 ? "0"+num : num;
-        }
-        return [zeroPad(date.getHours()), zeroPad(date.getMinutes()), zeroPad(date.getSeconds())].join(':');
-      },
-      updateTimestamp = function() {
-        // TODO: While this timestamp is convenient for testing, it does not reflect the server update time accurately.
-        $('.autosave-msg').text('Auto saved at ' + formattedTime(new Date()));
-      };
-
-  return {
-    intervalId: null,
-    dirty : false,
-
-    init: function(form) {
-      $form = form;
-
-      if (this.shouldAutoSaveForm()) {
-        $form.submit(function() {
-          GOVUK.autoSave.dirty = false;
-          return true;
-        });
-
-        this.intervalId = setInterval(GOVUK.autoSave.run, autosaveInterval);
-        $form.on('keyup', function() { 
-          GOVUK.autoSave.dirty = true;
-        });
-
-        if ($('.autosave-msg').length == 0) {
-          $('.alert-info').first().append(autosaveHtml);
-        }
-      }
-    },
-    shouldAutoSaveForm : function() {
-      return !$form.hasClass('no-auto-save');
-    },
-    saving : function() {
-      $('.autosave-msg').text('Saving');
-    },
-    success : function() {
-      GOVUK.autoSave.dirty = false;
-      updateTimestamp();
-    },
-    run: function() {
-      if (GOVUK.autoSave.dirty) {
-        $.ajax({
-          url : $form.attr('action').json,
-          type : 'POST',
-          data : $form.serialize(),
-          beforeSend : GOVUK.autoSave.saving,
-          success : GOVUK.autoSave.success
-        });
-      }
-    }
-  }
-})();
-// Disable autosave as it's causing issues (https://www.pivotaltracker.com/story/show/54184682)
-//GOVUK.autoSave.init($('form.edition'));
