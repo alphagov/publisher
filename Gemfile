@@ -53,7 +53,7 @@ gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 
 group :assets do
-  gem "therubyracer", "~> 0.9.4"
+  gem "therubyracer", "0.11.4"
   gem 'uglifier'
 end
 
