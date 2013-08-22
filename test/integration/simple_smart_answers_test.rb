@@ -59,6 +59,86 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "add a question after other questions and before outcomes" do
+      click_on "Add outcome"
+      click_on "Add question"
+
+      within ".nodes .question:nth-child(2)" do
+        assert_equal "question-2", find(:css, 'input.node-slug').value
+        assert_equal "2", find(:css, 'input.node-order').value
+      end
+    end
+
+    should "add a question before outcomes when no other questions" do
+      within ".nodes .question:nth-child(1)" do
+        click_link "Remove node"
+      end
+
+      click_on "Add outcome"
+      click_on "Add question"
+
+      within ".nodes .question:nth-child(1)" do
+        assert_equal "question-2", find(:css, 'input.node-slug').value
+        assert_equal "1", find(:css, 'input.node-order').value
+      end
+    end
+
+    should "reorder questions when a question is added" do
+      click_on "Add question"
+
+      within ".nodes .question:nth-child(2)" do
+        assert_equal "2", find(:css, 'input.node-order').value
+      end
+
+      within ".nodes .question:nth-child(1)" do
+        click_link "Remove node"
+      end
+
+      click_on "Add question"
+
+      within ".nodes .question:nth-child(2)" do
+        assert_equal "1", find(:css, 'input.node-order').value
+      end
+
+      within ".nodes .question:nth-child(3)" do
+        assert_equal "2", find(:css, 'input.node-order').value
+      end
+    end
+
+    should "reorder outcomes after a question is added" do
+      click_on "Add outcome"
+      click_on "Add question"
+
+      within ".nodes .outcome:nth-child(3)" do
+        assert_equal "3", find(:css, 'input.node-order').value
+      end
+    end
+
+    should "set the order for an outcome" do
+      within ".nodes .question:nth-child(1)" do
+        click_link "Remove node"
+      end
+
+      click_on "Add outcome"
+
+      within ".nodes .outcome:nth-child(2)" do
+        assert_equal "1", find(:css, 'input.node-order').value
+      end
+
+      click_on "Add outcome"
+
+      within ".nodes .outcome:nth-child(3)" do
+        assert_equal "2", find(:css, 'input.node-order').value
+      end
+
+      click_on "Add question"
+      click_on "Add outcome"
+
+      within ".nodes .outcome:nth-child(5)" do
+        assert_equal "4", find(:css, 'input.node-order').value
+      end
+    end
+
     should "set the slug and kind for a node" do
       click_on "Add question"
 
@@ -67,18 +147,18 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert_equal "question", find(:css, 'input.node-kind').value
       end
 
-      click_on "Add outcome"
-
-      within ".nodes .outcome:nth-child(3)" do
-        assert_equal "outcome-1", find(:css, 'input.node-slug').value
-        assert_equal "outcome", find(:css, 'input.node-kind').value
-      end
-
       click_on "Add question"
 
-      within ".nodes .question:nth-child(4)" do
+      within ".nodes .question:nth-child(3)" do
         assert_equal "question-3", find(:css, 'input.node-slug').value
         assert_equal "question", find(:css, 'input.node-kind').value
+      end
+
+      click_on "Add outcome"
+
+      within ".nodes .outcome:nth-child(4)" do
+        assert_equal "outcome-1", find(:css, 'input.node-slug').value
+        assert_equal "outcome", find(:css, 'input.node-kind').value
       end
     end
 
@@ -221,8 +301,13 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         find(:css, "input.node-title").set("You can't drive")
       end
 
+      click_on "Add question"
+      within ".nodes .question:nth-child(2)" do
+        find(:css, "input.node-title").set("When did you get your licence?")
+      end
+
       click_on "Add outcome"
-      within ".nodes .outcome:nth-child(3)" do
+      within ".nodes .outcome:nth-child(4)" do
         find(:css, "input.node-title").set("You can drive")
       end
 
@@ -246,7 +331,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         page.has_content?("We had some problems saving. Please check the form below.")
       }
       
-      assert page.has_css?(".nodes .node", count: 3)
+      assert page.has_css?(".nodes .node", count: 4)
       
       within('.nodes') do
         within ".question:first-child" do
@@ -254,6 +339,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           assert page.has_selector?(".option:nth-child(1) .error select")
         end
         assert_equal "Do you hold a UK driving licence?", find(:css, '.node:nth-child(1) .node-title').value
+        assert_equal "When did you get your licence?", find(:css, '.node:nth-child(2) .node-title').value
       end
 
     end

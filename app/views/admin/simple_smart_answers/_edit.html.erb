@@ -7,7 +7,8 @@
 
   <div class="builder-container">
     <div class="nodes" id="nodes">
-      <%= f.semantic_fields_for :nodes, @resource.nodes, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
+      <%# We need to output questions followed by outcomes but the potential for unsaved (invalid) nodes rules out the user of database ordering. So we must instead sort the collection by node order ascending (a.order <=> b.order) within node kind descending (b.kind <=> a.kind). %>
+      <%= f.semantic_fields_for :nodes, @resource.nodes.sort {|a,b| [b.kind, a.order] <=> [a.kind, b.order] }, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
         <%= render :partial => "admin/simple_smart_answers/node", :locals => { :f => node } %>
       <% end %>
     </div>
