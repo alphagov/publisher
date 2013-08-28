@@ -41,3 +41,23 @@ This application uses [statsd-ruby](http://rubygems.org/gems/statsd-ruby) to sen
 [statsd](https://github.com/etsy/statsd/). If a statsd process isn't present on the server
 it won't matter as statsd-ruby sends metrics over UDP. If a statsd process is present then
 it'll send strings with the respective increment/decrement/gauge function to use.
+
+## Asset Manager
+
+If your models include media assets such as images and video, you will need to run the asset-manager
+app alongside publisher.
+
+See the [asset-manager](http://github.com/alphagov/asset-manager) project for app-specific setup 
+instructions.
+
+Publisher needs an OAuth bearer token in order to authenticate with Asset Manager. By default, this 
+is loaded from the PUBLISHER_ASSET_MANAGER_BEARER_TOKEN environment variable in config/initializers/gds_api.rb.
+
+To obtain this bearer token, you should create an API user in the signonotron2 application. In the signonotron2
+directory, run:
+
+```
+rake api_clients:create[publisher,publisher@example.com,asset-manager,signin]
+```
+
+This will generate the bearer token you need.
