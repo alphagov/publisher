@@ -41,8 +41,8 @@
           <tbody>
             <% @editions.each do |publication| %>
             <tr>
-              <td class="icon">
-                <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
+              <td>
+                <%= publication.format.underscore.humanize %>
               </td>
               <td class="title">
                 <%= publication.admin_list_title %>
