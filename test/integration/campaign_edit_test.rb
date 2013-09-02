@@ -67,47 +67,68 @@ class CampaignEditTest < JavascriptIntegrationTest
                              :title => "Max Campaign",
                              :body => "Foo")
 
-    file_one = File.open(Rails.root.join("test","fixtures","uploads","campaign.jpg"))
-    file_two = File.open(Rails.root.join("test","fixtures","uploads","campaign_two.jpg"))
+    small_image = File.open(Rails.root.join("test","fixtures","uploads","campaign_small.jpg"))
+    medium_image = File.open(Rails.root.join("test","fixtures","uploads","campaign_medium.jpg"))
+    large_image = File.open(Rails.root.join("test","fixtures","uploads","campaign_large.jpg"))
 
-    asset_one = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/an_image_id', :file_url => 'http://path/to/campaign.jpg')
-    asset_two = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/another_image_id', :file_url => 'http://path/to/campaign_two.jpg')
+    asset_one = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_one', :file_url => 'http://path/to/campaign_small.jpg')
+    asset_two = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_two', :file_url => 'http://path/to/campaign_medium.jpg')
+    asset_three = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_three', :file_url => 'http://path/to/campaign_large.jpg')
 
-    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_one)
-    GdsApi::AssetManager.any_instance.stubs(:asset).with("an_image_id").returns(asset_one)
+    # This matches against the original_filename attribute on ActionDispatch::Http::UploadedFile
+    GdsApi::AssetManager.any_instance.stubs(:create_asset).with(has_entry(:file => responds_with(:original_filename, "campaign_small.jpg"))).returns(asset_one)
+    GdsApi::AssetManager.any_instance.stubs(:create_asset).with(has_entry(:file => responds_with(:original_filename, "campaign_medium.jpg"))).returns(asset_two)
+    GdsApi::AssetManager.any_instance.stubs(:create_asset).with(has_entry(:file => responds_with(:original_filename, "campaign_large.jpg"))).returns(asset_three)
+
+    GdsApi::AssetManager.any_instance.stubs(:asset).with("asset_one").returns(asset_one)
+    GdsApi::AssetManager.any_instance.stubs(:asset).with("asset_two").returns(asset_two)
+    GdsApi::AssetManager.any_instance.stubs(:asset).with("asset_three").returns(asset_three)
 
     visit "/admin/editions/#{c.to_param}"
 
-    assert page.has_field?("Upload a new campaign image", :type => "file")
-    attach_file("Upload a new campaign image", file_one.path)
-    click_on "Save"
-
-    within(:css, ".uploaded-image") do
-      assert page.has_selector?("a[href$='campaign.jpg']")
+    within(:css, "#small-campaign-image") do
+      assert page.has_field?("Upload image", :type => "file")
+      attach_file("Upload image", small_image.path)
+    end
+    within(:css, "#medium-campaign-image") do
+      assert page.has_field?("Upload image", :type => "file")
+      attach_file("Upload image", medium_image.path)
+    end
+    within(:css, "#large-campaign-image") do
+      assert page.has_field?("Upload image", :type => "file")
+      attach_file("Upload image", large_image.path)
     end
 
-    # ensure file is not removed on save
     click_on "Save"
 
-    within(:css, ".uploaded-image") do
-      assert page.has_selector?("a[href$='campaign.jpg']")
-    end
+    assert page.has_content?("Campaign edition was successfully updated.")
 
-    # replace file
-    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_two)
-    GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
+    assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
+    assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
+    assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
 
-    attach_file("Upload a new campaign image", file_two.path)
+    # ensure files are not removed on save
     click_on "Save"
 
-    within(:css, ".uploaded-image") do
-      assert page.has_selector?("a[href$='campaign_two.jpg']")
-    end
+    assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
+    assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
+    assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
 
     # remove file
-    check "Remove campaign image?"
+    within(:css, "#small-campaign-image") do
+      check "Remove image?"
+    end
+    within(:css, "#medium-campaign-image") do
+      check "Remove image?"
+    end
+    within(:css, "#large-campaign-image") do
+      check "Remove image?"
+    end
+
     click_on "Save"
 
-    refute page.has_selector?(".uploaded-image")
+    refute page.has_selector?("#small-campaign-image a")
+    refute page.has_selector?("#medium-campaign-image a")
+    refute page.has_selector?("#large-campaign-image a")
   end
 end

@@ -2,18 +2,15 @@
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
 
-    <%= f.inputs "Campaign image" do %>
-      <% if @edition.small_image %>
-        <div class="uploaded-image">
-          <h4>Current campaign image</h4>
-          <p><%= link_to @edition.small_image.name, @edition.small_image.file_url %></p>
-          <p><%= label_tag do %>Remove campaign image? <%= check_box_tag "edition[remove_small_image]", "1" %><% end %></p>
-        </div>
+    <%= f.inputs "Campaign images" do %>
+      <table class="table table-bordered image-upload">
+        <tbody>
+          <%= render :partial => "admin/campaigns/image_upload", :locals => { :f => f, :format => :small, :size => "320px x 236px" } %>
+          <%= render :partial => "admin/campaigns/image_upload", :locals => { :f => f, :format => :medium, :size => "768px x 566px" } %>
+          <%= render :partial => "admin/campaigns/image_upload", :locals => { :f => f, :format => :large, :size => "960px x 300px" } %>
+        </tbody>
+      </table>
 
-        <h4>Replace campaign image</h4>
-      <% end %>
-
-      <p><%= f.input :small_image, :as => :file, :label => "Upload a new campaign image" %></p>
     <% end %>
     <hr />
 
