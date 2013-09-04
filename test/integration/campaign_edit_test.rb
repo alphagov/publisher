@@ -26,15 +26,29 @@ class CampaignEditTest < JavascriptIntegrationTest
     campaign = FactoryGirl.create(:campaign_edition,
                                  :panopticon_id => @artefact.id,
                                  :title => "Singin' in the campaign",
-                                 :body => "I'm singin' in the campaign")
+                                 :body => "I'm singin' in the campaign",
+                                 :organisation_formatted_name => "Driver & Vehicle\nLicensing\nAgency",
+                                 :organisation_crest => "single-identity",
+                                 :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
+                                 :organisation_brand_colour => "department-for-transport")
     visit "/admin/editions/#{campaign.to_param}"
 
     assert page.has_content? "Viewing “Singin' in the campaign” Edition 1"
 
     assert page.has_field?("Title", :with => "Singin' in the campaign")
     assert page.has_field?("Body", :with => "I'm singin' in the campaign")
+    assert page.has_field?("Organisation formatted name", :with => "Driver & Vehicle\nLicensing\nAgency")
+    assert page.has_field?("Organisation URL", :with => "/government/organisations/driver-and-vehicle-licensing-agency")
+
+    assert page.has_select?('Organisation crest', :selected => 'Single identity')
+    assert page.has_select?('Organisation brand colour', :selected => 'department-for-transport')
 
     fill_in "Body", :with => "I'm dancin' in the campaign"
+    fill_in "Organisation formatted name", :with => "Ministry\nof Magic"
+    fill_in "Organisation URL", :with => "/government/organisations/ministry-of-magic"
+
+    select "Portcullis", :from => "Organisation crest"
+    select "cabinet-office", :from => "Organisation brand colour"
 
     click_button "Save"
 
@@ -42,6 +56,10 @@ class CampaignEditTest < JavascriptIntegrationTest
 
     c = CampaignEdition.find(campaign.id)
     assert_equal "I'm dancin' in the campaign", c.body
+    assert_equal "Ministry\r\nof Magic", c.organisation_formatted_name
+    assert_equal "/government/organisations/ministry-of-magic", c.organisation_url
+    assert_equal "portcullis", c.organisation_crest
+    assert_equal "cabinet-office", c.organisation_brand_colour
   end
 
   should "allow creating a new version of a CampaignEdition" do
@@ -49,7 +67,11 @@ class CampaignEditTest < JavascriptIntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :state => 'published',
                                  :title => "Campaign on your parade",
-                                 :body => "Foo")
+                                 :body => "Foo",
+                                 :organisation_formatted_name => "Driver & Vehicle\nLicensing\nAgency",
+                                 :organisation_crest => "single-identity",
+                                 :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
+                                 :organisation_brand_colour => "department-for-transport")
 
     visit "/admin/editions/#{campaign.to_param}"
 
@@ -58,6 +80,10 @@ class CampaignEditTest < JavascriptIntegrationTest
     assert page.has_content? "Viewing “Campaign on your parade” Edition 2"
 
     assert page.has_field?("Body", :with => "Foo")
+    assert page.has_field?("Organisation formatted name", :with => "Driver & Vehicle\nLicensing\nAgency")
+    assert page.has_field?("Organisation URL", :with => "/government/organisations/driver-and-vehicle-licensing-agency")
+    assert page.has_select?('Organisation crest', :selected => 'Single identity')
+    assert page.has_select?('Organisation brand colour', :selected => 'department-for-transport')
   end
 
   should "manage images for a CampaignEdition" do

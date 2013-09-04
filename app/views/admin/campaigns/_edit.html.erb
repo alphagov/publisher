@@ -14,6 +14,28 @@
     <% end %>
     <hr />
 
-    <%= f.input :body, :as => :text, :input_html => { :class => 'span12', :disabled => @resource.published? } %>
+    <%= f.input :organisation_formatted_name,
+                :as => :text,
+                :label => "Organisation formatted name",
+                :input_html => { :class => 'span3', :rows => "4", :disabled => @resource.published? } %>
+
+    <%= f.input :organisation_url,
+                :label => "Organisation URL",
+                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+
+    <%= f.input :organisation_crest,
+                :as => :select,
+                :collection => CampaignEdition::CRESTS,
+                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+
+    <%= f.input :organisation_brand_colour,
+                :as => :select,
+                :collection => CampaignEdition::BRAND_COLOURS,
+                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+
+    <%= f.input :body,
+                :as => :text,
+                :input_html => { :class => 'span12', :disabled => @resource.published? } %>
+
   <% end %>
 <% end %>
