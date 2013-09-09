@@ -65,7 +65,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should update assignment" do
-    bob = User.create
+    bob = User.create name: "Anon"
 
     post :update,
       :id       => @guide.id,
@@ -76,7 +76,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should not create a new action if the assignment is unchanged" do
-    bob = User.create
+    bob = User.create name: "Anon"
     @user.assign(@guide, bob)
 
     post :update,
@@ -88,7 +88,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   end
 
   test "should not update assignment if the assignment is blank" do
-    bob = User.create
+    bob = User.create name: "Anon"
     @user.assign(@guide, bob)
 
     post :update,
@@ -131,7 +131,7 @@ class Admin::EditionsControllerTest < ActionController::TestCase
   test "should automatically start work when saving" do
     assert_equal "lined_up", @guide.state
 
-    bob = User.create
+    bob = User.create name: "Anon"
     post :update,
       :id       => @guide.id,
       :edition  => { :assigned_to_id => bob.id }

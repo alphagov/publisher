@@ -9,8 +9,8 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
   end
 
   def setup_users
-    alice = User.create
-    bob = User.create
+    alice = User.create name: 'Alice'
+    bob = User.create name: 'Bob'
     return alice, bob
   end
 
@@ -62,7 +62,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by in_review state" do
     presenter = AdminRootPresenter.new(Edition, :all)
-    user = User.create
+    user = User.create name: "Anon"
 
     a = FactoryGirl.create(:guide_edition)
     assert !a.in_review?
@@ -77,7 +77,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
 
   test "should filter by fact checking state" do
     presenter = AdminRootPresenter.new(Edition, :all)
-    user = User.create
+    user = User.create name: "Anon"
 
     a = FactoryGirl.create(:guide_edition)
     assert !a.fact_check?
@@ -133,7 +133,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    presenter = AdminRootPresenter.new(Edition, :nobody)
+    presenter = AdminRootPresenter.new(GuideEdition, :nobody)
     assert_equal [a], presenter.lined_up.to_a
   end
 
@@ -149,7 +149,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, b.assigned_to
     assert b.lined_up?
 
-    presenter = AdminRootPresenter.new(Edition, :all)
+    presenter = AdminRootPresenter.new(GuideEdition, :all)
     assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.lined_up.to_a.collect { |i| i.id.to_s }.sort
   end
 
@@ -171,13 +171,13 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal bob, c.assigned_to
     assert !c.lined_up?
 
-    presenter = AdminRootPresenter.new(Edition, bob)
+    presenter = AdminRootPresenter.new(GuideEdition, bob)
     assert_equal [b], presenter.lined_up.to_a
 
-    presenter = AdminRootPresenter.new(Edition, :nobody)
+    presenter = AdminRootPresenter.new(GuideEdition, :nobody)
     assert_equal [a], presenter.lined_up.to_a
 
-    presenter = AdminRootPresenter.new(Edition, :all)
+    presenter = AdminRootPresenter.new(GuideEdition, :all)
     assert_equal [a, b], presenter.lined_up.to_a
   end
 

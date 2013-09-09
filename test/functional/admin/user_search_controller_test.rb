@@ -18,7 +18,7 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
     get :index
 
     assert_response :success
-    assert_equal [@guide.id], assigns[:editions].map(&:id)
+    assert assigns[:editions].map(&:id).include?(@guide.id)
   end
 
   test "should show assigned editions" do
@@ -29,7 +29,7 @@ class Admin::UserSearchControllerTest < ActionController::TestCase
     get :index
 
     assert_response :success
-    assert_equal [@guide.id], assigns[:editions].map(&:id)
+    assert assigns[:editions].map(&:id).include?(@guide.id)
   end
 
   test "should handle simple title filter values" do
