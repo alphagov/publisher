@@ -62,9 +62,9 @@ GEM
       mail (> 2.2.5)
       mime-types
       xml-simple
-    bson (1.6.4)
-    bson_ext (1.6.4)
-      bson (~> 1.6.4)
+    bson (1.7.1)
+    bson_ext (1.7.1)
+      bson (~> 1.7.1)
     builder (3.0.4)
     capybara (1.1.4)
       mime-types (>= 1.16)
@@ -115,13 +115,13 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (5.11.0)
+    govuk_content_models (5.12.0)
       bson_ext
       differ
       gds-api-adapters
       gds-sso (>= 3.0.0, < 4.0.0)
       govspeak (>= 1.0.1, < 2.0.0)
-      mongoid (~> 2.4.10)
+      mongoid (~> 2.5)
       plek
       state_machine
     has_scope (0.5.1)
@@ -172,11 +172,11 @@ GEM
       redis
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    mongo (1.6.2)
-      bson (~> 1.6.2)
-    mongoid (2.4.12)
+    mongo (1.7.1)
+      bson (~> 1.7.1)
+    mongoid (2.6.0)
       activemodel (~> 3.1)
-      mongo (<= 1.6.2)
+      mongo (~> 1.7)
       tzinfo (~> 0.3.22)
     mongoid_rails_migrations (1.0.0)
       activesupport (>= 3.2.0)
@@ -317,7 +317,7 @@ DEPENDENCIES
   gds-api-adapters (= 5.3.0)
   gds-sso (= 3.0.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 5.11.0)
+  govuk_content_models (= 5.12.0)
   has_scope
   inherited_resources
   jquery-rails
@@ -328,7 +328,7 @@ DEPENDENCIES
   minitest (= 3.3.0)
   mlanett-redis-lock (= 0.2.2)
   mocha (= 0.13.3)
-  mongo (= 1.6.2)
+  mongo (= 1.7.1)
   mongoid_rails_migrations (= 1.0.0)
   nested_form!
   null_logger

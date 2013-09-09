@@ -12,7 +12,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "5.11.0"
+  gem "govuk_content_models", "5.12.0"
 end
 
 gem 'erubis'
@@ -33,11 +33,15 @@ gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
 gem 'lograge', '0.2.0'
-gem 'mongo', '1.6.2'  # Locking this down to avoid a replica set bug
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
 gem 'plek', '1.4.0'
 gem 'rails', '3.2.13'
+
+# TODO: This was previously pinned due to a replica set bug in >1.6.2
+# Consider whether this still needs to be pinned when it is provided
+# as a dependency of govuk_content_models
+gem 'mongo', '1.7.1'
 
 gem 'redis', '3.0.3', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
