@@ -33,7 +33,7 @@ class LocalAuthorityDataImporter
   end
 
   def self.nagios_check(success, message)
-    code = if success then 0 else 1 end
+    code = success ? 0 : 1
     `local_authority_import_check #{code} "#{message}"`
   end
 
