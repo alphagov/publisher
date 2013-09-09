@@ -18,7 +18,7 @@ gem "govuk_content_models", github: 'theodi/govuk_content_models', branch: 'feat
 if ENV['CONTENT_MODELS_DEV']
   gem "odi_content_models", path: '../odi_content_models'
 else
-  gem "odi_content_models", github: 'theodi/odi_content_models'
+  gem "odi_content_models", github: 'theodi/odi_content_models', branch: 'feature-64-asset-metadata'
 end
 
 gem 'erubis'
