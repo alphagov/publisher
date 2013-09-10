@@ -59,8 +59,8 @@
     <div class='control-group'>
       <%= form.label "#{attribute}_subject", class: 'control-label' %>
       <div class='controls'>
-        <%= form.text_field "#{attribute}_subject", class: 'input-xlarge' %>
         <span class="help-inline">comma-separated list of keywords</span>
+        <%= form.text_field "#{attribute}_subject", class: 'input-xlarge', value: resource.send("#{attribute}_subject").join(',') %>
       </div>
     </div>
 
@@ -75,7 +75,7 @@
     <div class='control-group'>
       <%= form.label "#{attribute}_spatial", class: 'control-label' %>
       <div class='controls'>
-        <%= form.text_field "#{attribute}_spatial", class: 'input-xlarge' %>
+        <%= form.text_field "#{attribute}_spatial", class: 'input-xlarge', value: resource.send("#{attribute}_spatial").map{|x| x[1]}.join(',') %>
         <span class="help-inline">latitude, longitude</span>
       </div>
     </div>
