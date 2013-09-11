@@ -75,7 +75,8 @@
     <div class='control-group'>
       <%= form.label "#{attribute}_spatial", class: 'control-label' %>
       <div class='controls'>
-        <%= form.text_field "#{attribute}_spatial", class: 'input-xlarge', value: resource.send("#{attribute}_spatial").map{|x| x[1]}.join(',') %>
+        <% spatial = resource.send("#{attribute}_spatial") %>
+        <%= form.text_field "#{attribute}_spatial", class: 'input-xlarge', value: [spatial['lat'],spatial['lng']].join(',') %>
         <span class="help-inline">latitude, longitude</span>
       </div>
     </div>
