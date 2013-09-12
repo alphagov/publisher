@@ -62,7 +62,7 @@ Publisher::Application.configure do
   config.action_mailer.smtp_settings = {
     :user_name => ENV["MANDRILL_USERNAME"],
     :password => ENV["MANDRILL_PASSWORD"],
-    :domain => "theodi.org",
+    :domain => ENV['GOVUK_APP_DOMAIN'],
     :address => "smtp.mandrillapp.com",
     :port => 587,
     :authentication => :plain,
