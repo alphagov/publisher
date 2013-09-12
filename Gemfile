@@ -36,6 +36,8 @@ else
   gem 'odidown', github: 'theodi/odidown'
 end
 
+gem 'odlifier', github: 'theodi/odlifier'
+
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'

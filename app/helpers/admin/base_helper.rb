@@ -50,19 +50,9 @@ module Admin::BaseHelper
   end
 
   def license_options
-    [
-      ['Not specified', nil],
-      ['Creative Commons Attribution', 'cc-by'],
-      ['Creative Commons Attribution Share-Alike', 'cc-by-sa'],
-      ['Creative Commons CCZero', 'cc-zero'],
-      ['Creative Commons Non-Commercial', 'cc-nc'],
-      ['Free Art License', 'fal'],
-      ['Open Data Commons Public Domain Dedication and Licence', 'odc-pddl'],
-      ['Open Data Commons Attribution License', 'odc-by'],
-      ['Open Data Commons Open Database License', 'odc-odbl'],
-      ['Public domain', 'other-pd'],
-      ['UK Open Government Licence', 'uk-ogl'],
-    ]
+    Odlifier.content_licenses.map do |id|
+      [Odlifier.translate(id, "Not specified"), id]
+    end
   end
 
   include Admin::PathsHelper
