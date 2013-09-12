@@ -49,6 +49,12 @@ module Admin::BaseHelper
     end
   end
 
+  def license_options
+    Odlifier.content_licenses.map do |id|
+      [Odlifier.translate(id, "Not specified"), id]
+    end
+  end
+
   include Admin::PathsHelper
   include Admin::ProgressFormsHelper
 end

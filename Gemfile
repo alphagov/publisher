@@ -18,14 +18,15 @@ gem "govuk_content_models", github: 'theodi/govuk_content_models', branch: 'feat
 if ENV['CONTENT_MODELS_DEV']
   gem "odi_content_models", path: '../odi_content_models'
 else
-  gem "odi_content_models", github: 'theodi/odi_content_models'
+  gem "odi_content_models", :github => 'theodi/odi_content_models'
 end
 
 gem 'erubis'
 gem 'exception_notification', '2.6.1', require: false
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
-gem 'gds-api-adapters', '5.3.0'
+
+gem 'gds-api-adapters', :github => 'theodi/gds-api-adapters'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
@@ -34,6 +35,8 @@ if ENV['ODIDOWN_DEV']
 else
   gem 'odidown', github: 'theodi/odidown'
 end
+
+gem 'odlifier', github: 'theodi/odlifier'
 
 gem 'has_scope'
 gem 'inherited_resources'
