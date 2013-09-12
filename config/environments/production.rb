@@ -44,8 +44,6 @@ Publisher::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  config.action_mailer.default_url_options = { :host => "www.gov.uk" }
-
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
@@ -59,7 +57,17 @@ Publisher::Application.configure do
   # Generate digests for assets URLs.
   config.assets.digest = true
 
-  config.action_mailer.delivery_method = :ses
+  config.action_mailer.default_url_options = { :host => "www.#{ENV['GOVUK_APP_DOMAIN']}" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :user_name => ENV["MANDRILL_USERNAME"],
+    :password => ENV["MANDRILL_PASSWORD"],
+    :domain => ENV['GOVUK_APP_DOMAIN'],
+    :address => "smtp.mandrillapp.com",
+    :port => 587,
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
 
   config.lograge.enabled = true
 end
