@@ -26,6 +26,9 @@
     <% end %>
   </td>
   <td>
+    <%= publication.slug %>
+  </td>
+  <td>
     <%= timestamp(publication.updated_at) %>
   </td>
   <% if tab && tab == :fact_check %>
