@@ -178,7 +178,7 @@ class AdminRootPresenterTest < ActiveSupport::TestCase
     assert_equal [a], presenter.lined_up.to_a
 
     presenter = AdminRootPresenter.new(Edition, :all)
-    assert_equal [a, b], presenter.lined_up.to_a
+    assert_equal [a, b].sort_by(&:title), presenter.lined_up.to_a.sort_by(&:title)
   end
 
   test "can filter publications by title substring" do
