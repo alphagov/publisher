@@ -11,14 +11,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   end
 
   def action_email(action)
-    guide = FactoryGirl.create(:guide_edition, :business_proposition => false, :title => 'Test Guide 2')
-    requester = User.new(:name => 'Testing Person')
-    action = guide.actions.create(:request_type => action, :requester => requester)
-    NoisyWorkflow.make_noise(action)
-  end
-
-  def business_action_email(action)
-    guide = FactoryGirl.create(:guide_edition, :business_proposition => true, :title => 'Test Guide 1')
+    guide = FactoryGirl.create(:guide_edition, :title => 'Test Guide 2')
     requester = User.new(:name => 'Testing Person')
     action = guide.actions.create(:request_type => action, :requester => requester)
     NoisyWorkflow.make_noise(action)
@@ -84,31 +77,18 @@ class NoisyWorkflowTest < ActionMailer::TestCase
 
   context "make_noise" do
     context "Setting the subject" do
-
-      should "set a subject containing the description and business prefix for business" do
-        email = business_action_email(Action::PUBLISH)
-        assert_equal email.subject, "[PUBLISHER]-BUSINESS Published: \"Test Guide 1\" (Guide) by Testing Person"
-      end
-
-      should "set a subject containing the description and non-business prefix for non-business" do
+      should "set a subject containing the description" do
         email = action_email(Action::APPROVE_REVIEW)
         assert_equal email.subject, "[PUBLISHER] Okayed for publication: \"Test Guide 2\" (Guide) by Testing Person"
       end
     end
 
     context "Setting the recipients" do
-      should "send to 'publisher-alerts-business' for a business edition" do
-        email = business_action_email(Action::PUBLISH)
-        assert_equal email.to.sort, ['publisher-alerts-business@digital.cabinet-office.gov.uk'].sort
-        email = business_action_email(Action::APPROVE_REVIEW)
-        assert_equal email.to, ['publisher-alerts-business@digital.cabinet-office.gov.uk']
-      end
-
-      should "send to 'publisher-alerts-citizen' for a non-business edition" do
+      should "send to 'publisher-alerts-citizen'" do
         email = action_email(Action::PUBLISH)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
+        assert email.to.include?('publisher-alerts-citizen@digital.cabinet-office.gov.uk')
         email = action_email(Action::REQUEST_REVIEW)
-        assert_equal email.to.sort, ['publisher-alerts-citizen@digital.cabinet-office.gov.uk'].sort
+        assert email.to.include?('publisher-alerts-citizen@digital.cabinet-office.gov.uk')
       end
     end
   end
