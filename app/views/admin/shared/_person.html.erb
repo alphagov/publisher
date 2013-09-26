@@ -1,13 +1,57 @@
-<%= f.input :biography,
-            :as => :text,
-            :input_html => { :class => 'span7' , :rows => 5, :disabled => @resource.published? } %>
+<fieldset class='form-horizontal'>
+  
+  <legend>General Information</legend>
 
-<%= f.input :twitter,
-            :hint => "Without the @",
-            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+  <%= f.input :honorific_prefix,
+              :hint => "i.e. Sir, Dr, Professor etc",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
-<%= f.input :email,
-            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+  <%= f.input :honorific_suffix,
+              :hint => "i.e PhD etc",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+  
+  <%= f.input :affiliation,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
-<%= f.input :gravatar_email,
-            :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+  <%= f.input :role,
+              :label => "Role / Job Title",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :description,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
+            
+</fieldset>
+
+<%= render partial: 'admin/shared/asset', locals: { attribute: :image, description: "image", resource: @resource, form: f }%>
+
+<fieldset class='form-horizontal'>
+
+  <legend>Contact Details</legend>
+  
+  <%= f.input :url,
+              :as => :url,
+              :label => "Website address",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :telephone,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :email,
+              :as => :email,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :twitter,
+              :prepend => '@',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+              
+  <%= f.input :linkedin,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :github,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+</fieldset>
