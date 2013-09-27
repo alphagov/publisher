@@ -1,0 +1,7 @@
+<%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
+  <%= f.inputs do %>
+    <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
+    
+    <%= render :partial => 'admin/shared/organization', :locals => {:f => f} %>
+  <% end %>
+<% end %>
