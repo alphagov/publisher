@@ -6,7 +6,7 @@
               :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
           
   <%= f.input :end_date,
-              :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.end_date.strftime("%Y-%m-%d") } %>
+              :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.end_date.try(:strftime, "%Y-%m-%d") } %>
               
 </fieldset>
 
