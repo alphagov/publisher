@@ -61,6 +61,7 @@ gem 'jquery-rails'
 gem 'less-rails-bootstrap'
 gem 'thin'
 gem 'foreman'
+gem 'bootstrap-datepicker-rails'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"

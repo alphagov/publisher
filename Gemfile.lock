@@ -109,6 +109,8 @@ GEM
       mail (> 2.2.5)
       mime-types
       xml-simple
+    bootstrap-datepicker-rails (1.1.1.7)
+      railties (>= 3.0)
     bson (1.6.4)
     bson_ext (1.6.4)
       bson (~> 1.6.4)
@@ -345,6 +347,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-ses
+  bootstrap-datepicker-rails
   capybara (= 1.1.4)
   capybara-webkit (= 0.12.1)
   ci_reporter
