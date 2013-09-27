@@ -1,0 +1,27 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :location,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :salary,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :description,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '10', :disabled => @resource.published? } %>
+  
+  <%= f.input :closing_date,
+                :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker' } %>
+
+</fieldset>
+
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    jQuery(document).ready(function($){
+      jQuery('[data-behaviour~=datepicker]').datepicker({
+        format: "yyyy-mm-dd"
+      });
+    })
+  </script>
+<% end %>
