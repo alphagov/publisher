@@ -4,6 +4,7 @@
 //= require twitter/bootstrap
 //= require_directory .
 //= require jquery_nested_form
+//= require bootstrap-datepicker
 
 // System wide behaviours
 $(function () {
