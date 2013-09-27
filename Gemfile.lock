@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: git://github.com/theodi/odi_content_models.git
-  revision: 98535884f95feb5591ceb72f95cb55676eb2401b
+  revision: a7f9cff0e1593591d3666bc9400330b513b153f4
   specs:
     odi_content_models (0.0.1)
       govuk_content_models
