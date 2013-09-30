@@ -1,0 +1,84 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :description,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '10', :disabled => @resource.published? } %>
+
+  <%= f.input :tagline,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :joined_at,
+              :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.joined_at.try(:strftime, "%Y-%m-%d") } %>
+
+  <%= f.input :involvement,
+              :as => :text,
+              :input_html => { :class => 'span7', :rows => '5', :disabled => @resource.published? } %>
+              
+  <%= f.input :want_to_meet,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+                          
+  <%= f.input :case_study,
+              :as => :text,
+              :input_html => { :class => 'span7' , :rows => '10', :disabled => @resource.published? } %>
+
+  <%= f.inputs "Logo file" do %>
+  
+    <% if resource.send(:logo) %>
+      <div class='control-group'>
+        <%= f.label "Current logo", class: 'control-label' %>
+        <div class='controls'>
+          <%= link_to resource.send(:logo).name, resource.send(:logo).file_url %>
+        </div>
+      </div>
+
+      <div class='control-group'>
+        <%= f.label "Remove logo?", class: 'control-label' %>
+        <div class='controls'>
+          <%= check_box_tag "edition[remove_logo]", "1" %>
+        </div>
+      </div>
+
+    <% end %>
+
+    <%= f.input :logo, :as => :file, :label => resource.send(:logo) ? "Replace logo" : "Logo" %> 
+    
+  <% end %>
+  
+</fieldset>
+
+<fieldset class='form-horizontal'>
+
+  <legend>Contact Details</legend>
+  
+  <%= f.input :url,
+              :label => "Website",
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>  
+
+  <%= f.input :telephone,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :email,
+              :as => :email,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :twitter,
+              :prepend => "@",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+              
+  <%= f.input :linkedin,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+</fieldset>
+
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    jQuery(document).ready(function($){
+      jQuery('[data-behaviour~=datepicker]').datepicker({
+        format: "yyyy-mm-dd"
+      });
+    })
+  </script>
+<% end %>
