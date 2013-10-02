@@ -1,23 +1,7 @@
 <%= semantic_form_for @resource, :url => admin_edition_path(@resource), :as => :edition do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'admin/shared/title_etc', :locals => {:f => f} %>
-
-		<%= f.input :length, :input_html => { :class => "span7", :disabled => @resource.published? } %>
-
-    <%= f.input :summary, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :outline, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :outcomes, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :audience, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :prerequisites, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :requirements, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-    <%= f.input :materials, :as => :text, :input_html => { :class => 'span10', :rows => 10, :disabled => @resource.published? } %>
-
-
+    
+    <%= render :partial => 'admin/shared/course', :locals => {:f => f} %>
   <% end %>
 <% end %>
