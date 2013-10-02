@@ -22,28 +22,7 @@
               :as => :text,
               :input_html => { :class => 'span7' , :rows => '10', :disabled => @resource.published? } %>
 
-  <%= f.inputs "Logo file" do %>
-  
-    <% if resource.send(:logo) %>
-      <div class='control-group'>
-        <%= f.label "Current logo", class: 'control-label' %>
-        <div class='controls'>
-          <%= link_to resource.send(:logo).name, resource.send(:logo).file_url %>
-        </div>
-      </div>
-
-      <div class='control-group'>
-        <%= f.label "Remove logo?", class: 'control-label' %>
-        <div class='controls'>
-          <%= check_box_tag "edition[remove_logo]", "1" %>
-        </div>
-      </div>
-
-    <% end %>
-
-    <%= f.input :logo, :as => :file, :label => resource.send(:logo) ? "Replace logo" : "Logo" %> 
-    
-  <% end %>
+  <%= render partial: 'admin/shared/asset', locals: { attribute: :logo, description: "logo", resource: @resource, form: f }%>
   
 </fieldset>
 

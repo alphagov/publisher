@@ -21,66 +21,6 @@
 
     <p><%= form.input attribute, :as => :file, :label => resource.send(attribute) ? "Replace #{description}" : "Upload a new #{description}" %></p>
 
-    <div class='control-group'>
-      <%= form.label "#{attribute}_title", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.text_field "#{attribute}_title", class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_source", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.url_field "#{attribute}_source", class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_description", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.text_field "#{attribute}_description", class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_creator", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.text_field "#{attribute}_creator", class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_attribution", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.text_field "#{attribute}_attribution", class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_subject", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.text_field "#{attribute}_subject", class: 'input-xlarge', value: (resource.send("#{attribute}_subject")||[]).join(',') %>
-        <span class="help-inline">comma-separated list of keywords</span>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_license", class: 'control-label' %>
-      <div class='controls'>
-        <%= form.select "#{attribute}_license", license_options, 
-                        { include_blank: true }, class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class='control-group'>
-      <%= form.label "#{attribute}_spatial", class: 'control-label' %>
-      <div class='controls'>
-        <% spatial = resource.send("#{attribute}_spatial") %>
-        <%= form.text_field "#{attribute}_spatial", class: 'input-xlarge', value: spatial ? [spatial['lat'],spatial['lng']].join(',') : '' %>
-        <span class="help-inline">latitude, longitude</span>
-      </div>
-    </div>
-
   </fieldset>
   
 <% end %>
