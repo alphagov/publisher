@@ -1,0 +1,39 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :level,
+              :as => :select,
+              :collection => [1,2,3],
+              :include_blank => 'Please select',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :region,
+              :as => :select,
+              :collection => country_options_for_select,
+              :include_blank => 'Please select',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+       
+  <%= f.input :latlng,
+              :label => 'Location',
+              :hint => 'Latitude, Longitude',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+              
+  <%= f.input :description,
+              :as => :text, 
+              :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
+
+  <%= f.input :telephone,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :email,
+              :as => :email,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :twitter,
+              :prepend => '@',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :linkedin,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+</fieldset>

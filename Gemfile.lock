@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/ninkibah/country-select.git
+  revision: 727258eaaf50c84271f8022c045003bdd7b221bc
+  specs:
+    country-select (1.2.4)
+
+GIT
   remote: git://github.com/theodi/gds-api-adapters.git
   revision: cf3b40333b6dfb7742f11ba793a590a0b54070d0
   specs:
@@ -23,13 +29,6 @@ GIT
       mongoid (~> 2.4.10)
       plek
       state_machine
-
-GIT
-  remote: git://github.com/theodi/odi_content_models.git
-  revision: 76183522b78681ac3b5cfe3504c4a04df65dd473
-  specs:
-    odi_content_models (0.0.1)
-      govuk_content_models
 
 GIT
   remote: git://github.com/theodi/odidown.git
@@ -68,6 +67,12 @@ GIT
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
+
+PATH
+  remote: ../odi_content_models
+  specs:
+    odi_content_models (0.0.1)
+      govuk_content_models
 
 GEM
   remote: https://rubygems.org/
@@ -111,7 +116,6 @@ GEM
       xml-simple
     bootstrap-datepicker-rails (1.1.1.7)
       railties (>= 3.0)
-    bootstrap-datetimepicker-rails (0.0.11)
     bson (1.6.4)
     bson_ext (1.6.4)
       bson (~> 1.6.4)
@@ -349,10 +353,10 @@ PLATFORMS
 DEPENDENCIES
   aws-ses
   bootstrap-datepicker-rails
-  bootstrap-datetimepicker-rails
   capybara (= 1.1.4)
   capybara-webkit (= 0.12.1)
   ci_reporter
+  country-select!
   database_cleaner
   dotenv-rails
   erubis
