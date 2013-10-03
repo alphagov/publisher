@@ -1,0 +1,31 @@
+<fieldset class='form-horizontal'>
+    
+    <%= f.input :course, :collection => Artefact.where(:kind => "course").to_a.map {|p| [p.name, p.slug]}, :as => :select, :input_html => {:class => "span7"}, :include_blank => "Please select" %>
+    
+    <%= f.input :date,
+                :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.date.try(:strftime, "%Y-%m-%d") } %>
+                
+    <%= f.input :location,
+                :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+    <%= f.input :price,
+                :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+ 
+    <%= f.input :description,
+                :as => :text,
+                :required => true,
+                :input_html => { :class => 'span7', :rows => '10', :disabled => @resource.published? } %> 
+    
+    <%= f.input :trainers, :collection => Artefact.where(:kind => "person").to_a.map {|p| [p.name, p.slug]}, :as => :check_boxes %>
+
+</fieldset>
+
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    jQuery(document).ready(function($){
+      jQuery('[data-behaviour~=datepicker]').datepicker({
+        format: "yyyy-mm-dd"
+      });
+    })
+  </script>
+<% end %>
