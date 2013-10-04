@@ -1,0 +1,27 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :start_date,
+              :hint => "In format yyyy-mm-dd hh:mm (24 hour clock)",
+              :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.start_date.try(:strftime, "%Y-%m-%d %H:%M") } %>
+              
+  <%= f.input :end_date,
+              :hint => "In format yyyy-mm-dd hh:mm (24 hour clock)",
+              :input_html => { :class => 'span7' , :disabled => @resource.published?, 'data-behaviour' => 'datepicker', :value => @resource.end_date.try(:strftime, "%Y-%m-%d %H:%M") } %>
+
+  <%= f.input :location,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :description,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
+
+  <%= f.input :booking_url,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :hashtag,
+              :prepend => '#',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+</fieldset>

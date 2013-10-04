@@ -1,0 +1,12 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :length,
+              :hint => "i.e 5 days, 1/2 day etc",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :description,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '10', :disabled => @resource.published? } %>
+    
+</fieldset>

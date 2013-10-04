@@ -1,0 +1,5 @@
+<fieldset class='form-horizontal'>
+  <%= f.input :content,
+              :as => :text,
+              :input_html => { :class => 'span7' , :rows => 10, :disabled => @resource.published? } %>
+</fieldset>

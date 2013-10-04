@@ -61,6 +61,8 @@ gem 'jquery-rails'
 gem 'less-rails-bootstrap'
 gem 'thin'
 gem 'foreman'
+gem 'bootstrap-datepicker-rails'
+gem 'country-select', :github => 'ninkibah/country-select'
 
 group :assets do
   gem "therubyracer", "~> 0.9.4"

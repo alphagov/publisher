@@ -1,0 +1,31 @@
+<fieldset class='form-horizontal'>
+
+  <%= f.input :content,
+              :as => :text,
+              :required => true,
+              :input_html => { :class => 'span7', :rows => '20', :disabled => @resource.published? } %>
+
+  <%= f.input :url,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+</fieldset>
+
+<fieldset class='form-horizontal'>
+  <legend>Media Enquiries</legend>
+  
+  <%= f.input :media_enquiries_name,
+              :label => "Name",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :media_enquiries_email,
+              :as => :email,
+              :label => "Email",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :media_enquiries_telephone,
+              :label => "Telephone",
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+
+</fieldset>
