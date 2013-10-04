@@ -31,6 +31,13 @@ GIT
       state_machine
 
 GIT
+  remote: git://github.com/theodi/odi_content_models.git
+  revision: 90c00d9be05cf794486283ccb4dd11eb082cc84d
+  specs:
+    odi_content_models (0.0.1)
+      govuk_content_models
+
+GIT
   remote: git://github.com/theodi/odidown.git
   revision: 5e2232f9059d628936eb19b38fc51dde6ecdf3ee
   specs:
@@ -67,12 +74,6 @@ GIT
   specs:
     formtastic (2.1.1)
       actionpack (~> 3.0)
-
-PATH
-  remote: ../odi_content_models
-  specs:
-    odi_content_models (0.0.1)
-      govuk_content_models
 
 GEM
   remote: https://rubygems.org/
