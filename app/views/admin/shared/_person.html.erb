@@ -16,15 +16,12 @@
   <%= f.input :role,
               :label => "Role / Job Title",
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
-
-  <%= f.input :description,
-              :as => :text,
-              :required => true,
-              :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
+              
+  <%= render partial: 'admin/shared/markdown_field', locals: { type: :description, form: f }%>
             
 </fieldset>
 
-<%= render partial: 'admin/shared/asset_with_metadata', locals: { attribute: :image, description: "image", resource: @resource, form: f }%>
+<%= render partial: 'admin/shared/asset_with_metadata', locals: { attribute: :image, description: "image", resource: @resource, form: f, required: true }%>
 
 <fieldset class='form-horizontal'>
 

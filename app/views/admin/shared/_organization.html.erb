@@ -1,9 +1,6 @@
 <fieldset class='form-horizontal'>
 
-  <%= f.input :description,
-              :as => :text,
-              :required => true,
-              :input_html => { :class => 'span7', :rows => '10', :disabled => @resource.published? } %>
+  <%= render partial: 'admin/shared/markdown_field', locals: { type: :description, form: f, :required => true }%>
 
   <%= f.input :tagline,
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
