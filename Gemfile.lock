@@ -52,6 +52,13 @@ GIT
       httparty
 
 GIT
+  remote: git://github.com/zethussuen/epic-editor-rails.git
+  revision: 66e0cac7d901d36c430adbc6c9429b9c4a5e2503
+  specs:
+    epic-editor-rails (0.2.0)
+      railties (>= 3.2, < 5.0)
+
+GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -360,6 +367,7 @@ DEPENDENCIES
   country-select!
   database_cleaner
   dotenv-rails
+  epic-editor-rails!
   erubis
   exception_notification (= 2.6.1)
   factory_girl_rails
