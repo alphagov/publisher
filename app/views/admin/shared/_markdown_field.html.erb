@@ -1,0 +1,23 @@
+<div class="text control-group epic-group" id="edition_<%= type %>_input">
+  <label class="control-label" for="edition_<%= type %>"><%= type.to_s.titleize %><% if defined? required %><abbr title="required">*</abbr><% end %></label>
+  <div class="controls">
+    <%= form.text_area type, :style => "display:none", :id => "#{type}_textarea" %>
+      <div id="epiceditor" class="span7"></div>
+      <div class="span4 markdown-help well">
+        <h3>Markdown Help</h3>
+        <%= render partial: 'admin/shared/markdown_help' %>
+      </div>
+  </div>
+</div>
+ 
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    var editor = new EpicEditor({
+      textarea: '<%= type %>_textarea',
+      localStorageName: '<%= resource.id %>_<%= type %>_textarea',
+      theme: {
+        editor: '<%= asset_path('editor/epic-dark.css') %>'
+      }
+    }).load();
+  </script>
+<% end %>
