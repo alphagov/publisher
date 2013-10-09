@@ -11,10 +11,7 @@
   <%= f.input :location,
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
-  <%= f.input :description,
-              :as => :text,
-              :required => true,
-              :input_html => { :class => 'span7', :rows => '15', :disabled => @resource.published? } %>
+  <%= render partial: 'admin/shared/markdown_field', locals: { type: :description, form: f, :required => true }%>
 
   <%= f.input :booking_url,
               :as => :url,
