@@ -56,6 +56,8 @@ Publisher::Application.configure do
 
   # Generate digests for assets URLs.
   config.assets.digest = true
+  
+  config.assets.precompile += %w( preview/bartik.css preview/github.css preview/preview-dark.css editor/epic-dark.css editor/epic-light.css )
 
   config.action_mailer.default_url_options = { :host => "www.#{ENV['GOVUK_APP_DOMAIN']}" }
   config.action_mailer.delivery_method = :smtp
