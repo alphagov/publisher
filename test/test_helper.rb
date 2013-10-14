@@ -43,13 +43,17 @@ class ActiveSupport::TestCase
   def stub_register_published_content
     stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
   end
+  
+  setup do
+    Tag.create(title: "Team", tag_type: "person", tag_id: "writers")
+  end
 
   teardown do
     WebMock.reset!
   end
 
   def login_as_stub_user
-    @user = FactoryGirl.create(:user, :name => 'Stub User')
+    @user = FactoryGirl.create(:odi_user, :name => 'Stub User')
     request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => @user)
   end
 
