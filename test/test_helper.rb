@@ -43,6 +43,10 @@ class ActiveSupport::TestCase
   def stub_register_published_content
     stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
   end
+  
+  setup do
+    Tag.create(title: "Team", tag_type: "person", tag_id: "writers")
+  end
 
   teardown do
     WebMock.reset!

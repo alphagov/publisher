@@ -8,6 +8,10 @@
     <%= f.input :location,
                 :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
+    <%= f.input :url,
+                :as => :url,
+                :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
     <%= f.input :price,
                 :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
  
