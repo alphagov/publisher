@@ -42,7 +42,7 @@
             <% @editions.each do |publication| %>
             <tr>
               <td class="icon">
-                <%= image_tag "icon-#{publication.format.downcase}.png", :title => publication.format.humanize %>
+                <%= publication.format.humanize %>
               </td>
               <td class="title">
                 <%= publication.admin_list_title %>
