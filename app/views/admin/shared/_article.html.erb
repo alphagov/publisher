@@ -5,6 +5,14 @@
   <%= f.input :url,
               :as => :url,
               :input_html => { :class => 'span7' , :disabled => @resource.published?, } %>
+ 
+  <div class="control-group">
+    <label class="control-label">Attachments</label>
+    <div class="controls">
+      <div class="dropzone span7" id="attachment-dropzone">
+      </div>
+    </div>
+  </div>
 
 </fieldset>
 
@@ -26,3 +34,9 @@
 
 
 </fieldset>
+
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    $("div#attachment-dropzone").dropzone({ url: "<%= admin_attachments_path %>", paramName: "attachment[file]"}); 
+  </script>
+<% end %>
