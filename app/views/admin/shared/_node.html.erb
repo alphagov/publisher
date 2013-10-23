@@ -11,10 +11,18 @@
               :collection => country_options_for_select,
               :include_blank => 'Please select',
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+        
+  <%= f.input :area,
+              :label => 'Area / City',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
        
   <%= f.input :latlng,
               :label => 'Location',
               :hint => 'Latitude, Longitude',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :host,
+              :label => 'Host organisation',
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
               
   <%= render partial: 'admin/shared/markdown_field', locals: { type: :description, form: f, :required => true }%>
@@ -26,6 +34,10 @@
               :as => :email,
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
+  <%= f.input :url,
+              :as => :url,
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
   <%= f.input :twitter,
               :prepend => '@',
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
@@ -33,5 +45,10 @@
   <%= f.input :linkedin,
               :as => :url,
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :active,
+              :label => 'Active?',
+              :as => :boolean,
+              :input_html => { :disabled => @resource.published? } %>
 
 </fieldset>
