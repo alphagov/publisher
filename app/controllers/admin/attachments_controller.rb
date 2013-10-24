@@ -10,18 +10,30 @@ class Admin::AttachmentsController < Admin::BaseController
   def show
     @attachment = Attachment.find(params[:id])
     respond_to do |format|
-      format.json { render json: @attachment }
+      format.json { render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}]) }
     end
   end
 
   def create
     @attachment = Attachment.new params[:attachment]
     if @attachment.save
-      render json: @attachment
+      render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
     else
       render json: { errors: @attachment.errors.full_messages }
     end
   end
 
+  def update
+    @attachment = Attachment.find(params[:id])
+    params[:attachment].each do |metadata_field, value|
+      @attachment.send "#{metadata_field}=", value
+    end
+
+    if @attachment.save
+      render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
+    else
+      render json: { errors: @attachment.errors.full_mesasges }
+    end
+  end
 
 end
