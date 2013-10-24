@@ -15,7 +15,8 @@ class Admin::AttachmentsController < Admin::BaseController
   end
 
   def create
-    @attachment = Attachment.new params[:attachment]
+    @attachment = Attachment.new
+    @attachment.file = params[:attachment][:file]
     if @attachment.save
       render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
     else
