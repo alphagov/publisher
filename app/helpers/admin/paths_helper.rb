@@ -2,8 +2,9 @@ module Admin::PathsHelper
   def publication_front_end_path(publication)
     raise "Publication without slug: #{publication.id}" if publication.slug.blank?
     app = publication.rendering_app rescue nil # This isn't defined in the govuk_content_models
-    app = "private-frontend" if app.nil? 
-    "#{Plek.current.find(app)}/#{publication.slug}"
+    app = "private-frontend" if app.nil?
+    path = publication.rendering_path rescue "/#{publication.slug}" # This isn't defined in the govuk_content_models
+    "#{Plek.current.find(app)}#{path}"
   end
 
   def preview_edition_path(edition)
