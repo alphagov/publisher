@@ -10,7 +10,7 @@ class Admin::AttachmentsController < Admin::BaseController
   def show
     @attachment = Attachment.find(params[:id])
     respond_to do |format|
-      format.json { render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}]) }
+      format.json { render json: @attachment.as_json(methods: [:file_url, *AttachableWithMetadata::ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}]) }
     end
   end
 
@@ -18,7 +18,7 @@ class Admin::AttachmentsController < Admin::BaseController
     @attachment = Attachment.new
     @attachment.file = params[:attachment][:file]
     if @attachment.save
-      render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
+      render json: @attachment.as_json(methods: [:file_url, *AttachableWithMetadata::ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
     else
       render json: { errors: @attachment.errors.full_messages }
     end
@@ -31,7 +31,7 @@ class Admin::AttachmentsController < Admin::BaseController
     end
 
     if @attachment.save
-      render json: @attachment.as_json(methods: [:file_url, *ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
+      render json: @attachment.as_json(methods: [:file_url, *AttachableWithMetadata::ATTACHMENT_METADATA_FIELDS.map { |m| "file_#{m}"}])
     else
       render json: { errors: @attachment.errors.full_mesasges }
     end

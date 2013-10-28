@@ -113,7 +113,7 @@ var attachmentBuilder = {
     form.attr('action', url);
 
     // populate all input fields
-    <% (ATTACHMENT_METADATA_FIELDS - [:spatial, :subject]).each do |field| %>
+    <% (AttachableWithMetadata::ATTACHMENT_METADATA_FIELDS - [:spatial, :subject]).each do |field| %>
       form.find("input#attachment_file_<%= field %>")
           .attr("value", metadata["file_<%= field %>"]);
     <% end %>
