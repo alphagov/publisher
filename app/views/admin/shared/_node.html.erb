@@ -2,8 +2,12 @@
 
   <%= f.input :level,
               :as => :select,
-              :collection => [1,2,3],
+              :collection => ["country","city","comms"],
               :include_blank => 'Please select',
+              :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
+
+  <%= f.input :beta,
+              :as => :boolean,
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
 
   <%= f.input :region,
@@ -25,6 +29,10 @@
               :label => 'Host organisation',
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
               
+  <%= f.input :join_date,
+              :label => 'Join date',
+              :input_html => { :class => 'span7' , :disabled => @resource.published?, :type  => "date" } %>
+  
   <%= render partial: 'admin/shared/markdown_field', locals: { type: :description, form: f, :required => true }%>
 
   <%= f.input :telephone,
@@ -50,5 +58,7 @@
               :label => 'Active?',
               :as => :boolean,
               :input_html => { :disabled => @resource.published? } %>
+
+  <%= render partial: 'admin/shared/asset_with_metadata', locals: { attribute: :logo, description: "logo", resource: @resource, form: f, required: false }%>
 
 </fieldset>
