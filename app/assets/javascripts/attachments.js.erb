@@ -41,6 +41,18 @@ var attachmentBuilder = {
     $('#markdown-snippet .snippet').text(markdown);
   },
 
+	updateAltText: function(event) {
+		var text = $(this).val();
+		var alignment_class = attachmentBuilder.activeAttachment.data('alignment');
+		var metadata = attachmentBuilder.activeAttachment.data('attachment');
+		metadata['file_title'] = text
+    var markdown = attachmentBuilder.buildSnippet(metadata, alignment_class);
+
+    $('#markdown-snippet object param[name=FlashVars]').attr('value','text=' + markdown);
+    $('#markdown-snippet object embed').attr('FlashVars','text=' + markdown);
+    $('#markdown-snippet .snippet').text(markdown);
+	},
+
   prefillDropZone: function() {
     var self = this;
     var text = editor.exportFile();
@@ -155,5 +167,6 @@ var attachmentBuilder = {
     self.setupDropZone();
     $(document).on('click', '.dz-preview.dz-success, .dz-preview.dz-mock', self.openModal);
     $(document).on('click', '#alignment-buttons button', self.setAlignment);
+		$(document).on('keydown', '#attachment_file_title', self.updateAltText)
   }
 };
