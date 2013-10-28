@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require jquery-ui.custom.min
 //= require twitter/bootstrap
+//= require dropzone
 //= require_directory .
 //= require jquery_nested_form
 //= require bootstrap-datepicker

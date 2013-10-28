@@ -22,6 +22,7 @@ Publisher::Application.routes.draw do
     match 'user_search' => 'user_search#index'
 
     resources :publications
+    resources :attachments
     root :to => 'root#index'
   end
 

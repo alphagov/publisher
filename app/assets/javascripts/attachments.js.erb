@@ -1,0 +1,172 @@
+var attachmentBuilder = {
+
+  activeAttachment: null,
+  mockFiles: {},
+
+  buildURL: function(attachment) {
+    return "/admin/attachments/" + attachment;
+  },
+
+  fixFileURL: function(file_url) {
+    if (file_url.match(/^\//)) {
+      file_url = "http://asset-manager.dev" + file_url;
+    }
+    return file_url;
+  },
+
+  buildSnippet: function(metadata, alignment_class) {
+    var self = this;
+    return ("attachment[" + metadata['_id'] + 
+      ", " + self.fixFileURL(metadata['file_url']) +
+      ", " + metadata['file_title'] + 
+      ", " + alignment_class + "]");
+  },
+
+  setAlignment: function(event) {
+    var button = $(this);
+    var alignment = button.data('alignment');
+
+    attachmentBuilder.activeAttachment.data('alignment', alignment);
+
+    attachmentBuilder.updateAttachmentSnippet();
+  },
+
+  updateAttachmentSnippet: function() {
+    var alignment_class = attachmentBuilder.activeAttachment.data('alignment');
+    var metadata = attachmentBuilder.activeAttachment.data('attachment');
+    var markdown = attachmentBuilder.buildSnippet(metadata, alignment_class);
+
+    $('#markdown-snippet object param[name=FlashVars]').attr('value','text=' + markdown);
+    $('#markdown-snippet object embed').attr('FlashVars','text=' + markdown);
+    $('#markdown-snippet .snippet').text(markdown);
+  },
+
+	updateAltText: function(event) {
+		var text = $(this).val();
+		var alignment_class = attachmentBuilder.activeAttachment.data('alignment');
+		var metadata = attachmentBuilder.activeAttachment.data('attachment');
+		metadata['file_title'] = text
+    var markdown = attachmentBuilder.buildSnippet(metadata, alignment_class);
+
+    $('#markdown-snippet object param[name=FlashVars]').attr('value','text=' + markdown);
+    $('#markdown-snippet object embed').attr('FlashVars','text=' + markdown);
+    $('#markdown-snippet .snippet').text(markdown);
+	},
+
+  prefillDropZone: function() {
+    var self = this;
+    var text = editor.exportFile();
+
+    var attachmentFinder = /attachment\[([^,]+),([^,]*),([^,]*),([^\]]*)\]/g;
+    var matches;
+    while ((matches = attachmentFinder.exec(text)) !== null)
+    {
+      var msg = "Found " + matches[1] + ".  ";
+      // initialise the mockfile for this image
+      self.mockFiles[ matches[1] ] = { isMock: true, size: 10000, alignment: matches[4] };
+
+
+      // retrieve attachment's details
+      $.getJSON(self.buildURL(matches[1]),
+        function(jsondata) {
+
+          // add title to the mock file object
+          self.mockFiles[ jsondata['_id'] ]['name'] = jsondata["file_title"];
+
+          var mockFile = self.mockFiles[ jsondata['_id'] ];
+          // "add" the mockfile to the dropzone
+          self.dropZone.emit("addedfile", mockFile);
+
+          // fake success (this will attach the metadata to the file preview)
+          self.dropZone.emit("success", mockFile, jsondata);
+
+          // generate the thumbnail
+          var file_url = self.fixFileURL(jsondata['file_url']);
+          self.dropZone.emit("thumbnail", mockFile, file_url);
+        });
+      }
+  },
+
+  setupDropZone: function() {
+    var self = this;
+    self.dropZone = new Dropzone("div#attachment-dropzone", {
+      url: "<%= Rails.application.routes.url_helpers.admin_attachments_path %>",
+      paramName: "attachment[file]",
+      init: function() {
+        this.on("success", function(file, responseText) {
+          $(file.previewElement)
+          .data('attachment', responseText)
+        });
+
+        this.on("addedfile", function(file) {
+          if (file.isMock) {
+            $(file.previewElement).addClass('dz-mock')
+             .data('alignment', file.alignment);
+          } else {
+            $(file.previewEleemnt).data('alignment', 'img');
+          }
+        });
+
+        if (editor.is("loaded")) {
+          self.prefillDropZone();
+        } else {
+          editor.on("load", self.prefillDropZone());
+        }
+      }
+    });
+  },
+
+  setupForm: function(metadata) {
+    var self = this;
+    // initialise the form based on the attachment we clicked on
+    var form = $('#attachment-modal form');
+    var url = self.buildURL(metadata['_id']);
+
+    form.attr('action', url);
+
+    // populate all input fields
+    <% (AttachableWithMetadata::ATTACHMENT_METADATA_FIELDS - [:spatial, :subject]).each do |field| %>
+      form.find("input#attachment_file_<%= field %>")
+          .attr("value", metadata["file_<%= field %>"]);
+    <% end %>
+  },
+
+  openModal: function() {
+    // get hold of the right attachment metadata
+    attachmentBuilder.activeAttachment = $(this);
+
+    var attachment = attachmentBuilder.activeAttachment.data('attachment');
+    var alignment  = attachmentBuilder.activeAttachment.data('alignment');
+
+    if (alignment == null) {
+      alignment = 'img';
+    }
+
+    // open the modal window
+    $('#attachment-modal').modal('show');
+
+    $.ajax({
+      dataType: "json",
+      url: attachmentBuilder.buildURL(attachment['_id']),
+      success: function(metadata){
+      // retrieve details for this attachment
+
+      attachmentBuilder.activeAttachment.data('attachment', metadata);
+      attachmentBuilder.activeAttachment.data('alignment', alignment);
+      attachmentBuilder.setupForm(metadata);
+
+      // forge the markdown snippet for this image
+      attachmentBuilder.updateAttachmentSnippet();
+      }
+    });
+
+  },
+
+  setup: function() {
+    var self = this;
+    self.setupDropZone();
+    $(document).on('click', '.dz-preview.dz-success, .dz-preview.dz-mock', self.openModal);
+    $(document).on('click', '#alignment-buttons button', self.setAlignment);
+		$(document).on('keydown', '#attachment_file_title', self.updateAltText)
+  }
+};

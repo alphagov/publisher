@@ -5,6 +5,14 @@
   <%= f.input :url,
               :as => :url,
               :input_html => { :class => 'span7' , :disabled => @resource.published?, } %>
+ 
+  <div class="control-group">
+    <label class="control-label">Attachments</label>
+    <div class="controls">
+      <div class="dropzone span7" id="attachment-dropzone">
+      </div>
+    </div>
+  </div>
 
 </fieldset>
 
@@ -26,3 +34,32 @@
 
 
 </fieldset>
+
+<% content_for :extra_javascript do %>
+  <script type="text/javascript">
+    // let's create the Dropzone programmatically, please.
+    Dropzone.autoDiscover = false;
+
+    $(function() {
+      // create the dropzone, prefill it, setup the events for handling the modal
+      attachmentBuilder.setup();
+
+      // setup the form
+      $('#attachment-modal form').submit(function(event) {
+        event.preventDefault();
+        var form = $(this);
+        var actionURL = form.attr('action');
+        $.ajax({
+          url: actionURL,
+          type: "POST",
+          data: form.serialize(),
+          dataType: "json",
+          success: function( data ) {
+            attachmentBuilder.activeAttachment.data('attachment', data);
+            attachmentBuilder.updateAttachmentSnippet();
+          }
+        });
+      });
+    });
+  </script>
+<% end %>
