@@ -42,7 +42,7 @@
 
     $(function() {
       // create the dropzone, prefill it, setup the events for handling the modal
-      attachmentBuilder.setup();
+      attachmentBuilder.setup('<%= form_authenticity_token %>');
 
       // setup the form
       $('#attachment-modal form').submit(function(event) {
