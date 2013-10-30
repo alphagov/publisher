@@ -12,7 +12,7 @@
 
   <%= f.input :region,
               :as => :select,
-              :collection => country_options_for_select,
+              :collection => country_options_for_select(@resource.region),
               :include_blank => 'Please select',
               :input_html => { :class => 'span7' , :disabled => @resource.published? } %>
         
