@@ -87,11 +87,15 @@ var attachmentBuilder = {
       }
   },
 
-  setupDropZone: function() {
+  setupDropZone: function(token) {
     var self = this;
+		console.log(token);
     self.dropZone = new Dropzone("div#attachment-dropzone", {
       url: "<%= Rails.application.routes.url_helpers.admin_attachments_path %>",
       paramName: "attachment[file]",
+			params : {
+				authenticity_token: token
+			},
       init: function() {
         this.on("success", function(file, responseText) {
           $(file.previewElement)
@@ -162,9 +166,9 @@ var attachmentBuilder = {
 
   },
 
-  setup: function() {
+  setup: function(token) {
     var self = this;
-    self.setupDropZone();
+    self.setupDropZone(token);
     $(document).on('click', '.dz-preview.dz-success, .dz-preview.dz-mock', self.openModal);
     $(document).on('click', '#alignment-buttons button', self.setAlignment);
 		$(document).on('keydown', '#attachment_file_title', self.updateAltText)
