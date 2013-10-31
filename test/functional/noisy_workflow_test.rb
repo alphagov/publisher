@@ -61,16 +61,16 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     assert ! user.new_version(edition)
   end
 
-  test "should send an email on fact check received" do
-    user = User.create(:name => "Ben")
-    guide = user.create_edition(:guide, 
-      :panopticon_id => FactoryGirl.create(:artefact).id, 
-      :overview => 'My Overview', 
-      :title => 'My Title', :slug => 'my-title-b', :alternative_title => 'My Other Title')
-
-    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver: nil))
-    user.receive_fact_check(guide, { comment: "Yo facts are wrong, dog." })
-  end
+  # test "should send an email on fact check received" do
+  #   user = User.create(:name => "Ben")
+  #   guide = user.create_edition(:guide, 
+  #     :panopticon_id => FactoryGirl.create(:artefact).id, 
+  #     :overview => 'My Overview', 
+  #     :title => 'My Title', :slug => 'my-title-b', :alternative_title => 'My Other Title')
+  # 
+  #   NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver: nil))
+  #   user.receive_fact_check(guide, { comment: "Yo facts are wrong, dog." })
+  # end
 
   test "fact checking emails should set appropriate reply-to address" do
     guide, email = fact_check_email
