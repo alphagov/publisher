@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class NoisyWorkflow < ActionMailer::Base
-  default :from => "Clement (The ODI Publisher) <clement@theodi.org>"
+  default :from => "Florence (The ODI Publisher) <clement@theodi.org>"
 
   def make_noise(action)
     @action = action
