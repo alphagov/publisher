@@ -5,4 +5,4 @@ Comment: <%= @action.comment %>
 Requested by <%= @action.requester.name %> at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
 View:
-<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
+<%= "#{Plek.current.find("www")}#{@action.edition.rendering_path}?edition=#{@action.edition.version_number}"%>

@@ -16,7 +16,7 @@ class User
 
   private
     def make_record_action_noises(action, type)
-      NoisyWorkflow.make_noise(action).deliver
+      NoisyWorkflow.make_noise(action).deliver if type.to_s == "request_review"
       NoisyWorkflow.request_fact_check(action).deliver if type.to_s == "send_fact_check"
     end
 end
