@@ -58,80 +58,34 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
   end
 
-  context "paths" do
-    should "generate paths, including .json" do
-      edition = FactoryGirl.create(:edition,
-        slug: "slug",
-        title: "A publication",
-        state: "published")
-      registerable = RegisterableEdition.new(edition)
-
-      assert_equal ["slug", "slug.json"], registerable.paths
-    end
-
-    context "GuideEdition" do
-      should "generate standard paths, plus slug/print" do
-        edition = GuideEdition.create(slug: "slug", title: "A guide edition", state: "published")
+  context "paths and prefixes" do
+    context "for a CampaignEdition" do
+      should "generate /slug and /slug.json path" do
+        edition = FactoryGirl.build(:campaign_edition, :slug => "a-slug")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug/print"], registerable.paths
-      end
-
-      should "also generate video path when applicable" do
-        edition = FactoryGirl.create(:guide_edition_with_two_parts, slug: "slug", title: "A guide edition", state: "published")
-        registerable = RegisterableEdition.new(edition)
-
-        assert_equal ["slug", "slug.json", "slug/print", "slug/part-one", "slug/part-two"], registerable.paths
+        assert_equal [], registerable.prefixes
+        assert_equal ["/a-slug", "/a-slug.json"], registerable.paths
       end
     end
 
-    context "ProgrammeEdition" do
-      should "generate standard paths, paths for all parts, plus slug/print" do
-        edition = FactoryGirl.create(:programme_edition, slug: "slug", title: "A programme edition", state: "published")
-        edition.setup_default_parts
+    context "for a HelpPageEdition" do
+      should "generate /slug prefix and /slug.json path" do
+        edition = FactoryGirl.build(:help_page_edition, :slug => "help/a-slug")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug/print", "slug/overview",
-          "slug/what-youll-get", "slug/eligibility", "slug/how-to-claim",
-          "slug/further-information"], registerable.paths
+        assert_equal [], registerable.prefixes
+        assert_equal ["/help/a-slug", "/help/a-slug.json"], registerable.paths
       end
     end
 
-    context "LocalTransactionEdition" do
-      should "generate standard paths, plus slug/not_found" do
-        edition = LocalTransactionEdition.create(slug: "slug", title: "A title", state: "published")
+    context "for other edition types" do
+      should "generate /slug prefix and /slug.json path" do
+        edition = FactoryGirl.build(:answer_edition, :slug => "a-slug")
         registerable = RegisterableEdition.new(edition)
 
-        assert_equal ["slug", "slug.json", "slug/not_found"], registerable.paths
-      end
-    end
-
-    context "PlaceEdition" do
-      should "generate standard paths, plus .kml" do
-        edition = PlaceEdition.create(slug: "slug", title: "A places edition", state: "published")
-        registerable = RegisterableEdition.new(edition)
-
-        assert_equal ["slug", "slug.json", "slug.kml"], registerable.paths
-      end
-    end
-
-    context "LicenceEdition" do
-      should "generate only a json path" do
-        edition = LicenceEdition.create(slug: "slug", title: "A title", state: "published")
-        registerable = RegisterableEdition.new(edition)
-
-        assert_equal ["slug.json"], registerable.paths
-      end
-    end
-  end
-
-  context "prefix" do
-    context "LicenceEdition" do
-      should "generate prefix routes for licences" do
-        edition = LicenceEdition.create(slug: "slug", title: "A title", state: "published")
-        registerable = RegisterableEdition.new(edition)
-
-        assert_equal ["slug"], registerable.prefixes
+        assert_equal ["/a-slug"], registerable.prefixes
+        assert_equal ["/a-slug.json"], registerable.paths
       end
     end
   end
