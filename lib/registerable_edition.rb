@@ -20,36 +20,20 @@ class RegisterableEdition
   end
 
   def paths
-    if @edition.is_a?(LicenceEdition)
-      array = ["#{slug}.json"]
+    case @edition.class
+    when CampaignEdition, HelpPageEdition
+      ["/#{@edition.slug}", "/#{@edition.slug}.json"]
     else
-      array = [slug,"#{slug}.json"]
+      ["/#{@edition.slug}.json"]
     end
-
-    if @edition.is_a?(GuideEdition)
-      array << "#{slug}/print"
-      array << "#{slug}/video" if @edition.has_video?
-      @edition.parts.each do |part|
-        array << "#{slug}/#{part.slug}"
-      end
-    elsif @edition.is_a?(ProgrammeEdition)
-      array << "#{slug}/print"
-      @edition.parts.each do |part|
-        array << "#{slug}/#{part.slug}"
-      end
-    elsif @edition.is_a?(PlaceEdition)
-      array << "#{slug}.kml"
-    elsif @edition.is_a?(LocalTransactionEdition)
-      array << "#{slug}/not_found"
-    end
-    array
   end
 
   def prefixes
-    if @edition.is_a?(LicenceEdition)
-      [slug]
-    else
+    case @edition.class
+    when CampaignEdition, HelpPageEdition
       []
+    else
+      ["/#{@edition.slug}"]
     end
   end
 end
