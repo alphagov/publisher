@@ -70,12 +70,22 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
 
     context "for a HelpPageEdition" do
-      should "generate /slug prefix and /slug.json path" do
+      should "generate /slug and /slug.json path" do
         edition = FactoryGirl.build(:help_page_edition, :slug => "help/a-slug")
         registerable = RegisterableEdition.new(edition)
 
         assert_equal [], registerable.prefixes
         assert_equal ["/help/a-slug", "/help/a-slug.json"], registerable.paths
+      end
+    end
+
+    context "for a TransactionEdition" do
+      should "generate /slug and /slug.json path" do
+        edition = FactoryGirl.build(:transaction_edition, :slug => "a-slug")
+        registerable = RegisterableEdition.new(edition)
+
+        assert_equal [], registerable.prefixes
+        assert_equal ["/a-slug", "/a-slug.json"], registerable.paths
       end
     end
 
