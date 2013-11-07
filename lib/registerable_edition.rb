@@ -21,7 +21,7 @@ class RegisterableEdition
 
   def paths
     case @edition.class
-    when CampaignEdition, HelpPageEdition
+    when TransactionEdition, CampaignEdition, HelpPageEdition
       ["/#{@edition.slug}", "/#{@edition.slug}.json"]
     else
       ["/#{@edition.slug}.json"]
@@ -30,7 +30,7 @@ class RegisterableEdition
 
   def prefixes
     case @edition.class
-    when CampaignEdition, HelpPageEdition
+    when TransactionEdition, CampaignEdition, HelpPageEdition
       []
     else
       ["/#{@edition.slug}"]
