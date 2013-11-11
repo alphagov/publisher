@@ -14,7 +14,7 @@ class Admin::ReportsController < ApplicationController
   end
 
   def progress
-    report = EditorialProgressPresenter.new
+    report = EditorialProgressPresenter.new(Edition.not_in(state: ["archived"]))
     render csv: report
   end
 

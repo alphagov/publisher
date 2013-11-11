@@ -15,7 +15,7 @@ class ReportsTest < ActionDispatch::IntegrationTest
 
   test "can get a CSV of progress" do
     visit "/admin/reports"
-    click_link "Export CSV of all editions"
+    click_link "Export CSV of all non archived editions"
     
     parsed = CSV.parse(page.source, headers: true)
     assert_equal @edition.title, parsed.first['Title']
