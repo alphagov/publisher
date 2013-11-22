@@ -37,7 +37,6 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "Completed transaction edition was successfully updated."
 
-    t = CompletedTransactionEdition.find(completed_transaction.id)
     assert page.has_content? "Status: Lined up"
   end
 
