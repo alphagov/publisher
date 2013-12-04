@@ -36,7 +36,7 @@ gem 'lograge', '0.2.0'
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
 gem 'plek', '1.4.0'
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.16'
 
 # TODO: This was previously pinned due to a replica set bug in >1.6.2
 # Consider whether this still needs to be pinned when it is provided
