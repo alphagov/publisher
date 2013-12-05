@@ -8,4 +8,9 @@ namespace :business_support_content do
   task :import, [:data_path, :importing_user] => :environment do |t, args|
     BusinessSupportImporter.run(:import, args[:data_path], args[:importing_user])
   end
+
+  desc "Imports Imminence facet data into the corresponding BusinessSupportEdition"
+  task :import_facet_data => :environment do
+    BusinessSupportFacetDataImporter.run
+  end
 end
