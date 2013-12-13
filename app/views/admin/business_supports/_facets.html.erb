@@ -1,0 +1,12 @@
+<div class="control-group" id="<%= title.downcase.singularize %>">
+  <h3><%= title %></h3>
+  <label for="business_support_<%= title.downcase.singularize %>_check_all" class="checkbox inline">
+    <%= check_box_tag "business_support_#{title.downcase.singularize}_check_all" %>All
+  </label>
+  <% collection.each do |facet| -%>
+    <label class="checkbox inline">
+      <%= f.check_box model_collection, { :multiple => true }, facet.slug, nil %>
+      <%= facet.name %>
+    </label>
+  <% end %>
+</div>

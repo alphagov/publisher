@@ -2,27 +2,27 @@
                 :label => 'Will continue on',
                 :hint => 'Text to accompany external website link',
                 :input_html => { :class => "span7", :disabled => published } %>
-                
+
     <%= f.input :continuation_link,
                 :label => 'Continuation link',
                 :hint => 'Link to external website for this business support',
                 :input_html => { :class => "span7", :disabled => published } %>
 
     <%= f.input :business_support_identifier %>
-    
+
     <%= f.input :organiser, :input_html => { :class => "span7", :disabled => published } %>
-    
+
     <%= f.input :short_description,
                 :label => 'Short description',
                 :hint => 'Short description shown in search results.',
                 :input_html => {:class => "span7", :disabled => published } %>
-    
+
     <%= f.input :body,
                 :as => :text,
                 :label => 'Body',
                 :hint => 'The full description of this business support',
                 :input_html => { :class => "span7", :rows => 10, :disabled => published } %>
-  
+
     <%= f.input :eligibility,
                 :as => :text,
                 :label => 'Eligibility',
@@ -31,30 +31,106 @@
     <%= f.input :evaluation,
                 :as => :text,
                 :label => 'Evaluation',
-                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>     
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>
 
     <%= f.input :additional_information,
                 :as => :text,
                 :label => 'Additional information',
-                :input_html => { :class => "span7", :rows => 10, :disabled => published } %>   
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>
 
     <%= f.input :contact_details,
                 :as => :text,
                 :label => 'Contact details',
                 :hint => 'Email, telephone, address and postcode of the business support authority or company',
-                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>  
+                :input_html => { :class => "span7", :rows => 3, :disabled => published } %>
 
     <%= f.input :max_employees,
                 :label => 'Max employees',
                 :hint => 'Maximum number of employees in qualifying business',
                 :input_html => {:disabled => published } %>
-    
+
     <%= f.input :min_value,
                 :label => 'Min value',
                 :hint => "The smallest amount of support available",
                 :input_html => {:disabled => published } %>
-                
+
     <%= f.input :max_value,
                 :label => 'Max value',
                 :hint => "The largest amount of support available",
                 :input_html => { :disabled => published } %>
+
+    <%= f.input :will_continue_on,
+                :label => 'Will continue on',
+                :hint => 'Text to accompany external website link',
+                :input_html => { :class => "span7", :disabled => published } %>
+
+    <%= f.input :continuation_link,
+                :label => 'Continuation link',
+                :hint => 'Link to external website for this business support',
+                :input_html => { :class => "span7", :disabled => published } %>
+
+    <hr/>
+
+    <%= f.input :priority, :as => :select, :collection => [["Low",0],["Normal",1],["High",2]] %>
+
+    <% error_class = f.object.errors[:start_date] ? ' error' : '' -%>
+
+    <div class="control-group<%= error_class %>">
+      <label for="edition[start_date">Start date</label>
+      <div class="controls">
+        <%= f.date_select :start_date, { :include_blank => true }, { :class => "date-picker#{error_class}", :disabled => published } %>
+        <% if f.object.errors.has_key?(:start_date) -%>
+        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
+        <% end -%>
+      </div>
+    </div>
+    <div class="control-group<%= error_class %>">
+      <label for="edition[end_date]">End date</label>
+      <div class="controls">
+        <%= f.date_select :end_date, { :include_blank => true }, { :class => "date-picker#{error_class}", :disabled => published } %>
+        <% if f.object.errors.has_key?(:start_date) -%>
+        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
+        <% end -%>
+      </div>
+    </div>
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Business types",
+                                  collection: BusinessSupport::BusinessType.all,
+                                  model_collection: "business_types" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Business sizes",
+                                  collection: BusinessSupport::BusinessSize.all,
+                                  model_collection: "business_sizes" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Locations",
+                                  collection: BusinessSupport::Location.all,
+                                  model_collection: "locations" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Purposes",
+                                  collection: BusinessSupport::Purpose.all,
+                                  model_collection: "purposes" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Sectors",
+                                  collection: BusinessSupport::Sector.all,
+                                  model_collection: "sectors" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Stages",
+                                  collection: BusinessSupport::Stage.all,
+                                  model_collection: "stages" } %>
+
+    <hr/>
+    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+                                  title: "Support types",
+                                  collection: BusinessSupport::SupportType.all,
+                                  model_collection: "support_types" } %>
