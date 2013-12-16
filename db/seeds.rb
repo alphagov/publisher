@@ -20,3 +20,9 @@ Expectation.create :text=>"Available in England and Wales only"
 Expectation.create :text=>"Not available in Northern Ireland"
 
 User.create :name => 'Winston', :uid => 'winston', :version => 1, :email => 'winston@alphagov.co.uk'
+
+Dir[File.join(File.dirname(__FILE__),'seeds', '*.rb')].each do |f|
+  puts "Seeding from #{ File.basename f }..."
+  load f
+  puts "Done."
+end
