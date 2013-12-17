@@ -5,7 +5,7 @@
   </label>
   <% collection.each do |facet| -%>
     <label class="checkbox inline">
-      <%= f.check_box model_collection, { :multiple => true }, facet.slug, nil %>
+      <%= f.check_box model_collection, { :multiple => true, :disabled => published }, facet.slug, nil %>
       <%= facet.name %>
     </label>
   <% end %>

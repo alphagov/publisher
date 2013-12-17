@@ -219,4 +219,21 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_content?("Max value is not a number")
     assert page.has_content?("Max employees is not a number")
   end
+
+  should "disable fields for a published edition" do
+    business_support = FactoryGirl.create(:business_support_edition,
+                                          :panopticon_id => @artefact.id,
+                                          :state => 'published')
+
+    visit "/admin/editions/#{business_support.to_param}"
+
+    assert page.has_select?("Priority", disabled: true)
+    assert page.has_select?("edition_start_date_2i", disabled: true)
+    assert page.has_select?("edition_end_date_3i", disabled: true)
+    assert page.has_field?("Scotland", disabled: true)
+    assert page.has_field?("Under 10", disabled: true)
+
+    assert page.has_field?("World domination", disabled: true)
+    assert page.has_field?("Limited company", disabled: true)
+  end
 end

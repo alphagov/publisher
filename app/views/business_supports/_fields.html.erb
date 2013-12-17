@@ -73,7 +73,8 @@
 
     <%= f.input :priority, :as => :select, :collection => [["Low",0],["Normal",1],["High",2]] %>
 
-    <% error_class = f.object.errors[:start_date] ? ' error' : '' -%>
+    <% date_error = f.object.errors[:start_date]
+       error_class = date_error and !date_error.empty? ? ' error' : '' -%>
 
     <div class="control-group<%= error_class %>">
       <label for="edition[start_date">Start date</label>
@@ -97,40 +98,47 @@
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Business types",
                                   collection: BusinessSupport::BusinessType.all,
-                                  model_collection: "business_types" } %>
+                                  model_collection: "business_types",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Business sizes",
                                   collection: BusinessSupport::BusinessSize.all,
-                                  model_collection: "business_sizes" } %>
+                                  model_collection: "business_sizes",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Locations",
                                   collection: BusinessSupport::Location.all,
-                                  model_collection: "locations" } %>
+                                  model_collection: "locations",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Purposes",
                                   collection: BusinessSupport::Purpose.all,
-                                  model_collection: "purposes" } %>
+                                  model_collection: "purposes",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Sectors",
                                   collection: BusinessSupport::Sector.all,
-                                  model_collection: "sectors" } %>
+                                  model_collection: "sectors",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Stages",
                                   collection: BusinessSupport::Stage.all,
-                                  model_collection: "stages" } %>
+                                  model_collection: "stages",
+                                  published: published } %>
 
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Support types",
                                   collection: BusinessSupport::SupportType.all,
-                                  model_collection: "support_types" } %>
+                                  model_collection: "support_types",
+                                  published: published } %>
