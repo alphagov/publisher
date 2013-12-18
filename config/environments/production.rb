@@ -60,6 +60,4 @@ Publisher::Application.configure do
   config.assets.digest = true
 
   config.action_mailer.delivery_method = :ses
-
-  config.lograge.enabled = true
 end

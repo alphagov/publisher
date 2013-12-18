@@ -157,9 +157,9 @@ GEM
       less-rails (~> 2.2.0)
     libv8 (3.11.8.17)
     link_header (0.0.7)
-    lograge (0.2.0)
-      actionpack
-      activesupport
+    logstash-event (1.1.5)
+    logstasher (0.4.0)
+      logstash-event (~> 1.1.0)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
     mail (2.5.4)
@@ -324,7 +324,7 @@ DEPENDENCIES
   kaminari (= 0.13.0)
   launchy
   less-rails-bootstrap
-  lograge (= 0.2.0)
+  logstasher (= 0.4.0)
   minitest (= 3.3.0)
   mlanett-redis-lock (= 0.2.2)
   mocha (= 0.13.3)
