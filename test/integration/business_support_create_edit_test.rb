@@ -177,6 +177,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_start_date_1i", :selected => Date.today.year.to_s)
     assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
     assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
+    assert page.has_checked_field?("business_support_location_check_all")
     assert page.has_checked_field?("edition_locations_wales")
     assert page.has_checked_field?("edition_locations_england")
     assert page.has_checked_field?("edition_locations_scotland")
@@ -227,13 +228,54 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     visit "/admin/editions/#{business_support.to_param}"
 
-    assert page.has_select?("Priority", disabled: true)
-    assert page.has_select?("edition_start_date_2i", disabled: true)
-    assert page.has_select?("edition_end_date_3i", disabled: true)
-    assert page.has_field?("Scotland", disabled: true)
-    assert page.has_field?("Under 10", disabled: true)
+    assert page.has_css?("input#edition_title[disabled]")
+    assert page.has_css?("input#edition_business_support_identifier[disabled]")
+    assert page.has_css?("input#edition_organiser[disabled]")
+    assert page.has_css?("textarea#edition_eligibility[disabled]")
+    assert page.has_css?("textarea#edition_evaluation[disabled]")
+    assert page.has_css?("textarea#edition_contact_details[disabled]")
+    assert page.has_css?("input#edition_max_employees[disabled]")
+    assert page.has_css?("input#edition_min_value[disabled]")
+    assert page.has_css?("input#edition_max_value[disabled]")
+    assert page.has_css?("input#edition_will_continue_on[disabled]")
+    assert page.has_css?("input#edition_continuation_link[disabled]")
+    assert page.has_css?("select#edition_priority[disabled]")
+    assert page.has_css?("select#edition_start_date_1i[disabled]")
+    assert page.has_css?("select#edition_start_date_2i[disabled]")
+    assert page.has_css?("select#edition_start_date_3i[disabled]")
+    assert page.has_css?("select#edition_end_date_1i[disabled]")
+    assert page.has_css?("select#edition_end_date_2i[disabled]")
+    assert page.has_css?("select#edition_end_date_3i[disabled]")
 
-    assert page.has_field?("World domination", disabled: true)
-    assert page.has_field?("Limited company", disabled: true)
+    assert page.has_css?("input#business_support_business_type_check_all[disabled]")
+    assert page.has_css?("input#edition_business_types_charity[disabled]")
+    assert page.has_css?("input#edition_business_types_limited-company[disabled]")
+    assert page.has_css?("input#edition_business_types_plc[disabled]")
+
+    assert page.has_css?("input#business_support_business_size_check_all[disabled]")
+    assert page.has_css?("input#edition_business_sizes_under-10[disabled]")
+    assert page.has_css?("input#edition_business_sizes_up-to-249[disabled]")
+    assert page.has_css?("input#edition_business_sizes_over-1000000[disabled]")
+
+    assert page.has_css?("input#business_support_location_check_all[disabled]")
+    assert page.has_css?("input#edition_locations_england[disabled]")
+    assert page.has_css?("input#edition_locations_scotland[disabled]")
+    assert page.has_css?("input#edition_locations_wales[disabled]")
+
+    assert page.has_css?("input#business_support_purpose_check_all[disabled]")
+    assert page.has_css?("input#edition_purposes_expansion[disabled]")
+    assert page.has_css?("input#edition_purposes_world-domination[disabled]")
+
+    assert page.has_css?("input#business_support_sector_check_all[disabled]")
+    assert page.has_css?("input#edition_sectors_education[disabled]")
+    assert page.has_css?("input#edition_sectors_manufacturing[disabled]")
+
+    assert page.has_css?("input#business_support_stage_check_all[disabled]")
+    assert page.has_css?("input#edition_stages_start-up[disabled]")
+    assert page.has_css?("input#edition_stages_grow-and-sustain[disabled]")
+
+    assert page.has_css?("input#business_support_support_type_check_all[disabled]")
+    assert page.has_css?("input#edition_support_types_grant[disabled]")
+    assert page.has_css?("input#edition_support_types_loan[disabled]")
   end
 end
