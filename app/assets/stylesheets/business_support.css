@@ -20,7 +20,10 @@
 	width:100%;
 }
 
-.facing {
+#business_type,
+#business_size,
+#stage,
+#support_type {
 	width: 33.33333333%;
 	float: left;
 }

@@ -1,5 +1,5 @@
 <% all_checked = (collection.map(&:slug) - f.object.send(model_collection.to_sym)).empty? -%>
-<div class="control-group facing" id="<%= title.downcase.singularize.strip.gsub(' ', '_') %>">
+<div class="control-group" id="<%= title.downcase.singularize.strip.gsub(' ', '_') %>">
   <h3><%= title %></h3>
   <label for="business_support_<%= title.downcase.singularize %>_check_all" class="checkbox inline all">
     <%= check_box_tag "business_support_#{title.downcase.singularize}_check_all", "", all_checked, { :disabled => published } %>All
