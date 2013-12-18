@@ -91,7 +91,6 @@
                                   model_collection: "business_types",
                                   published: published } %>
 
-    <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Business sizes",
                                   collection: BusinessSupport::BusinessSize.asc(:name),
@@ -99,6 +98,7 @@
                                   published: published } %>
 
     <hr/>
+
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Locations",
                                   collection: BusinessSupport::Location.asc(:name),
@@ -106,19 +106,20 @@
                                   published: published } %>
 
     <hr/>
+
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Purposes",
                                   collection: BusinessSupport::Purpose.asc(:name),
                                   model_collection: "purposes",
                                   published: published } %>
-
+    
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Sectors",
                                   collection: BusinessSupport::Sector.asc(:name),
                                   model_collection: "sectors",
                                   published: published } %>
-
+    
     <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Stages",
@@ -126,7 +127,6 @@
                                   model_collection: "stages",
                                   published: published } %>
 
-    <hr/>
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Support types",
                                   collection: BusinessSupport::SupportType.asc(:name),

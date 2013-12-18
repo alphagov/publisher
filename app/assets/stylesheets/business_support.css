@@ -20,6 +20,16 @@
 	width:100%;
 }
 
+.facing {
+	width: 33.33333333%;
+	float: left;
+}
+
 h3 {
 	margin-bottom: 10px;
+}
+
+hr {
+	display: block;
+	width: 100%;
 }
