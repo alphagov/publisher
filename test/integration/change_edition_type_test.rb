@@ -20,13 +20,47 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert page.has_button?("Create new edition as Quick Answer")
+    assert page.has_button?("Create as new Answer edition")
 
-    click_on "Create new edition as Quick Answer"
+    click_on "Create as new Answer edition"
 
     assert page.has_content?(guide.title)
     assert page.has_content?("New edition created")
-    assert page.has_content?(guide.whole_body)  
+    assert page.has_content?(guide.whole_body)
+  end
+
+  test "should be able to convert a ProgrammeEdition into an AnswerEdition" do
+    programme = FactoryGirl.create(:programme_edition, state: 'published')
+    visit_edition programme
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Answer edition")
+
+    click_on "Create as new Answer edition"
+
+    assert page.has_content?(programme.title)
+    assert page.has_content?("New edition created")
+    assert page.has_content? "Status: Lined up"
+  end
+
+  test "should be able to convert an AnswerEdition into a TransactionEdition" do
+    answer = FactoryGirl.create(:answer_edition, state: 'published')
+    visit_edition answer
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Transaction edition")
+
+    click_on "Create as new Transaction edition"
+
+    assert page.has_content?(answer.title)
+    assert page.has_content?("New edition created")
+    assert page.has_content? "Status: Lined up"
   end
 
   test "should be able to convert an AnswerEdition into a GuideEdition" do
@@ -37,9 +71,9 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    assert page.has_button?("Create new edition as Guide")
+    assert page.has_button?("Create as new Guide edition")
 
-    click_on "Create new edition as Guide"
+    click_on "Create as new Guide edition"
 
     assert page.has_content?(answer.title)
     assert page.has_content?("New edition created")
@@ -49,6 +83,49 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     end
   end
 
+  test "should be able to convert a ProgrammeEdition into a GuideEdition" do
+    programme = FactoryGirl.create(:programme_edition, state: 'published')
+    visit_edition programme
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Guide edition")
+
+    click_on "Create as new Guide edition"
+
+    assert page.has_content?(programme.title)
+    assert page.has_content?("New edition created")
+
+    within :css, '#parts div.fields:first-of-type' do
+      assert page.has_field?("Title", :with => 'Overview')
+      assert page.has_field?("Slug", :with => 'overview')
+    end
+    within :css, '#parts div.fields:nth-of-type(2)' do
+      assert page.has_field?("Title", :with => "What you'll get")
+      assert page.has_field?("Slug", :with => 'what-youll-get')
+    end
+  end
+
+  test "should be able to convert a TransactionEdition into an AnswerEdition" do
+    transaction = FactoryGirl.create(:transaction_edition, slug: "childcare", state: 'published')
+    visit_edition transaction
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Answer edition")
+
+    click_on "Create as new Answer edition"
+
+    assert page.has_content?(transaction.title)
+    assert page.has_content?("New edition created")
+    assert page.has_content? "Status: Lined up"
+  end
+
+
   test "should not be able to convert a GuideEdition into an AnswerEdition if not published" do
     guide = FactoryGirl.create(:guide_edition, state: 'ready')
     visit_edition guide
@@ -57,6 +134,6 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    refute page.has_button?("Create new edition as Quick Answer")
+    refute page.has_button?("Create as new Answer edition")
   end
 end
