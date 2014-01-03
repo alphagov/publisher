@@ -4,15 +4,15 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   def filter_by_user(option)
     within ".user-filter-form" do
       select option, from: "Filter by assignee"
-      click_on "Filter"
+      click_on "Apply filters"
     end
     click_on "Lined up"
   end
 
   def filter_by_content(substring)
-    within ".string-filter-form" do
+    within ".user-filter-form" do
       fill_in "Filter", with: substring
-      click_on "Filter"
+      click_on "Apply filters"
     end
   end
 
