@@ -28,6 +28,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
+    susan = FactoryGirl.create(:user, name: "Susan", uid: "susan")
+    susan.set(:suspended_at, Time.now)
+
     x =  FactoryGirl.create(:guide_edition, :title => "XXX", :slug => "xxx")
     y =  FactoryGirl.create(:guide_edition, :title => "YYY", :slug => "yyy")
     z =  FactoryGirl.create(:guide_edition, :title => "ZZZ", :slug => "zzz")
@@ -36,6 +39,11 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob.assign(y, charlie)
 
     visit "/admin"
+
+    within(".user-filter-form") do
+      assert page.has_select?("user_filter", :with => "Alice")
+      refute page.has_css?("#user_filter option[value='susan']")
+    end
 
     filter_by_user("All")
 
