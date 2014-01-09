@@ -6,15 +6,13 @@
 <%= button_to "Skip Fact Check", skip_fact_check_for_edition(@resource), :method => :post %>
 <%- end -%>
 <%- if @edition.published? -%>
-  <%- if @edition.can_create_new_edition? && (@edition.class == GuideEdition) -%>
-    <%= button_to "Create new edition as Quick Answer",
-        duplicate_admin_edition_path(@resource, {from: "GuideEdition", to: "AnswerEdition"}),
-        :method => :post, :class => "btn" %>
-  <%- end -%>
+  
+  <%= render partial: "admin/shared/clone_buttons", locals: { edition: @edition, edition_class: AnswerEdition, to_classes: [GuideEdition, ProgrammeEdition, TransactionEdition] } %>
+  
+  <%= render partial: "admin/shared/clone_buttons", locals: { edition: @edition, edition_class: GuideEdition, to_classes: [AnswerEdition, ProgrammeEdition, TransactionEdition] } %>
 
-  <%- if @edition.can_create_new_edition? && (@edition.class == AnswerEdition) -%>
-    <%= button_to "Create new edition as Guide",
-        duplicate_admin_edition_path(@resource, {from: "AnswerEdition", to: "GuideEdition"}),
-        :method => :post, :class => "btn" %>
-  <%- end -%>
+  <%= render partial: "admin/shared/clone_buttons", locals: { edition: @edition, edition_class: ProgrammeEdition, to_classes: [AnswerEdition, GuideEdition, TransactionEdition] } %>
+
+  <%= render partial: "admin/shared/clone_buttons", locals: { edition: @edition, edition_class: TransactionEdition, to_classes: [AnswerEdition, GuideEdition, ProgrammeEdition] } %>
+
 <%- end -%>
