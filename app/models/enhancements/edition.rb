@@ -13,6 +13,21 @@ class Edition
            {alternative_title: regex}, {licence_identifier: regex})
   }
 
+  # Including recipient_id on actions will include anything that has been
+  # assigned to the user we're looking at, but include the check anyway to
+  # account for manual assignments
+  scope :for_user, lambda { |user|
+    any_of(
+      { assigned_to_id: user.id },
+      { 'actions.requester_id' => user.id },
+      { 'actions.recipient_id' => user.id }
+    )
+  }
+
+  scope :user_search, lambda { |user, term|
+    all_of(for_user(user).selector, internal_search(term).selector)
+  }
+
   alias_method :was_published_without_indexing, :was_published
   def was_published
     was_published_without_indexing
