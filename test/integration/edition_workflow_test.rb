@@ -98,7 +98,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit "/admin"
     within :css, ".user-filter-form" do
       select "All", :from => 'user_filter'
-      click_button "Filter"
+      click_button "Apply filters"
     end
     assert page.has_content?("All publications")
   end

@@ -22,20 +22,23 @@
 
         </div><!--/.well -->
 
-        <form method="GET" action="/admin" class="user-filter-form">
-          <%= hidden_field_tag :list, params[:list] %>
-          <%= hidden_field_tag :string_filter, params[:string_filter] %>
-          <label for="user_filter" class="visuallyhidden">Filter by assignee</label>
-          <%=
-            select_tag("user_filter", options_for_select(
-              [["All", "all"], ["Nobody", "nobody"]] +
-              User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-            ), :class => "span12")
-          %>
-          <input class="btn btn-primary" type="submit" value="Filter">
-        </form>
-        <%= render partial: "admin/shared/string_filter_form", locals: {action: "/admin", preserve: [:list]} %>
+        <div class="well sidebar-nav">
+          <form method="GET" action="/admin" class="user-filter-form nav nav-list">
+            <%= hidden_field_tag :list, params[:list] %>
+            <%= hidden_field_tag :string_filter, params[:string_filter] %>
+            <label for="user_filter" class="visuallyhidden nav-header">Filter by assignee</label>
+            <%=
+              select_tag("user_filter", options_for_select(
+                [["All", "all"], ["Nobody", "nobody"]] +
+                User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
+              ), :class => "span12")
+            %>
+            <label for="string_filter" class="visuallyhidden nav-header">Filter by keyword</label>
+            <%= text_field_tag "string_filter", params[:string_filter], class: "span12", type: "search" %>
 
+            <input class="btn btn-primary" type="submit" value="Apply filters">
+          </form>
+        </div>
       </div>
 
       <div id="publication-list-container" class="span10">
