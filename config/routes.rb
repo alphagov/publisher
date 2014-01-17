@@ -1,5 +1,4 @@
 Publisher::Application.routes.draw do
-
   resources :notes
   resources :expectations, :except => [:edit, :update, :destroy]
 
@@ -22,4 +21,9 @@ Publisher::Application.routes.draw do
 
   resources :publications
   root :to => 'root#index'
+
+  # We used to nest all URLs under /admin so we now redirect that
+  # in case people had bookmarks set up
+  get "/admin", to: redirect("/")
+  get "/admin/:real_path", to: redirect("/%{real_path}")
 end
