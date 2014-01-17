@@ -1,4 +1,4 @@
-class ExpectationsController < BaseController
+class ExpectationsController < InheritedResources::Base
   actions :all, :except => [:destroy, :edit, :update]
 
   def index

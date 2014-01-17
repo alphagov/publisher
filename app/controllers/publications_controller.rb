@@ -1,4 +1,4 @@
-class PublicationsController < BaseController
+class PublicationsController < InheritedResources::Base
   def show
     edition = Edition.find_or_create_from_panopticon_data(params[:id], current_user, PANOPTICON_API_CREDENTIALS)
 

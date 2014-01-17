@@ -1,4 +1,4 @@
-class NotesController < BaseController
+class NotesController < InheritedResources::Base
   belongs_to :edition
 
   include PathsHelper

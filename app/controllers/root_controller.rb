@@ -1,4 +1,4 @@
-class RootController < BaseController
+class RootController < ApplicationController
   respond_to :html, :json
 
   include ColumnSortable

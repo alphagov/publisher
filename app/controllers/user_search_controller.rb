@@ -1,4 +1,4 @@
-class UserSearchController < BaseController
+class UserSearchController < ApplicationController
   respond_to :html
 
   include ColumnSortable

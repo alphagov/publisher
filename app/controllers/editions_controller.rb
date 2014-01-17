@@ -2,7 +2,7 @@ require "statsd"
 require "edition_duplicator"
 require "edition_progressor"
 
-class EditionsController < BaseController
+class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create]
