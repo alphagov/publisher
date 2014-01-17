@@ -16,7 +16,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     @guide = FactoryGirl.create(:guide_edition)
     @user.record_note @guide, "I like this guide"
 
-    visit "/admin/user_search"
+    visit "/user_search"
 
     assert page.has_content? @guide.title
   end
@@ -25,7 +25,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     @guide = FactoryGirl.create(:guide_edition, state: 'archived')
     @user.record_note @guide, "I like this guide"
 
-    visit "/admin/user_search"
+    visit "/user_search"
 
     refute page.has_content? @guide.title
   end
@@ -38,7 +38,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
       :guide_edition, title: "Growing your business")
     @user.record_note another_guide, "I like this guide"
 
-    visit "/admin/user_search"
+    visit "/user_search"
     within :css, "form.user-filter-form" do
       fill_in :string_filter, with: "insurance"
       click_button "Apply filters"
@@ -51,7 +51,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     guide = FactoryGirl.create(
       :guide_edition, title: "Vehicle insurance", state: "archived")
     @user.record_note guide, "I like this guide"
-    visit "/admin/user_search"
+    visit "/user_search"
     within :css, "form.user-filter-form" do
       fill_in :string_filter, with: "insurance"
       click_button "Apply filters"
@@ -67,7 +67,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     guides[0].assigned_to_id = other_user.id
     guides[0].save!
 
-    visit "/admin/user_search"
+    visit "/user_search"
     within :css, "form.user-filter-form" do
       select other_user.name, from: "Filter by user"
       click_button "Apply filters"

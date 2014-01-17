@@ -1,0 +1,11 @@
+<% if @resource.in_review? %>
+  <%= render '/shared/review' %>
+<% elsif @resource.fact_check? %>
+  <%= render '/shared/fact_check' %>
+<% elsif @resource.fact_check_received? %>
+  <%= render '/shared/fact_check_received' %>
+<% elsif @resource.fact_check_skipped? %>
+  <div class="alert alert-info">
+    <p>Fact check was skipped for this edition.</p>
+  </div>
+<% end %>

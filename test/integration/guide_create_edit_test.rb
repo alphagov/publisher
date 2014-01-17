@@ -14,7 +14,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "create a new GuideEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -30,7 +30,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     guide.parts.build(:title => "Placeholder", :body => "placeholder", :slug => 'placeholder', :order => 1)
     guide.save!
 
-    visit "/admin/editions/#{guide.to_param}"
+    visit "/editions/#{guide.to_param}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -64,7 +64,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar")
     guide.save!
 
-    visit "/admin/editions/#{guide.to_param}"
+    visit "/editions/#{guide.to_param}"
     click_on "Create new edition"
 
     assert page.has_content? "Viewing “Foo bar” Edition 2"

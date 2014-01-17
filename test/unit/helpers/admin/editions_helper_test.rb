@@ -1,4 +1,4 @@
 require 'test_helper'
 
-class Admin::EditionsHelperTest < ActionView::TestCase
+class EditionsHelperTest < ActionView::TestCase
 end

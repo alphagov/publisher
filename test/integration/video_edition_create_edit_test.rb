@@ -13,7 +13,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "edit a new VideoEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
 
     assert page.has_content? @artefact.name
 
@@ -45,7 +45,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
                                  :video_summary => "Coke smoothie",
                                  :body => "Old description")
 
-    visit "/admin/editions/#{video.to_param}"
+    visit "/editions/#{video.to_param}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -78,7 +78,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
                                  :video_summary => "Coke smoothie",
                                  :body => "Description of video")
 
-    visit "/admin/editions/#{video.to_param}"
+    visit "/editions/#{video.to_param}"
     click_on "Create new edition"
 
     assert page.has_content? "Viewing “Foo bar” Edition 2"
@@ -100,7 +100,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_one)
     GdsApi::AssetManager.any_instance.stubs(:asset).with("an_image_id").returns(asset_one)
 
-    visit "/admin/editions/#{@edition.to_param}"
+    visit "/editions/#{@edition.to_param}"
 
     assert page.has_field?("Upload a new caption file", :type => "file")
     attach_file("Upload a new caption file", file_one.path)

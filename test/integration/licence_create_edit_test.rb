@@ -14,7 +14,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   end
 
   should "create a new LicenceEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
 
     assert page.has_content? "We need a bit more information to create your licence."
     assert page.has_content? "Licence identifier can't be blank"
@@ -39,7 +39,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                  :will_continue_on => "The HMRC website",
                                  :continuation_link => "http://www.hmrc.gov.uk")
 
-    visit "/admin/editions/#{licence.to_param}"
+    visit "/editions/#{licence.to_param}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -76,7 +76,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                  :will_continue_on => "The HMRC website",
                                  :continuation_link => "http://www.hmrc.gov.uk")
 
-    visit "/admin/editions/#{licence.to_param}"
+    visit "/editions/#{licence.to_param}"
     click_on "Create new edition"
 
     assert page.has_content? "Viewing “Foo bar” Edition 2"

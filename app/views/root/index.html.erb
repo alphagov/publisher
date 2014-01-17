@@ -1,0 +1,59 @@
+<div class="row-fluid">
+  <div class="span12">
+
+    <div class="page-header">
+      <h1>
+        <% if !params[:string_filter].blank? -%>
+          Searching for &ldquo;<%= params[:string_filter] -%>&rdquo; in
+        <% end -%>
+        &ldquo;<%= @list.humanize %>&rdquo; publications
+      </h1>
+    </div>
+
+    <div class="row-fluid">
+
+      <div class="span2">
+
+        <div class="well sidebar-nav">
+          <ul class="nav nav-list">
+            <li class="nav-header">Filter by Status</li>
+            <%= publication_tab_list 'Lined up', 'Drafts', 'In review', 'Amends needed', 'Out for fact check', 'Fact check received', 'Ready', 'Published', 'Archived', :current => @list %>
+          </ul>
+
+        </div><!--/.well -->
+
+        <div class="well sidebar-nav">
+          <form method="GET" action="/" class="user-filter-form nav nav-list">
+            <%= hidden_field_tag :list, params[:list] %>
+            <%= hidden_field_tag :string_filter, params[:string_filter] %>
+            <label for="user_filter" class="visuallyhidden nav-header">Filter by assignee</label>
+            <%=
+              select_tag("user_filter", options_for_select(
+                [["All", "all"], ["Nobody", "nobody"]] +
+                User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
+              ), :class => "span12")
+            %>
+            <label for="string_filter" class="visuallyhidden nav-header">Filter by keyword</label>
+            <%= text_field_tag "string_filter", params[:string_filter], class: "span12", type: "search" %>
+
+            <input class="btn btn-primary" type="submit" value="Apply filters">
+          </form>
+        </div>
+      </div>
+
+      <div id="publication-list-container" class="span10">
+        <% if params[:with] %>
+        <%= render @list, with: params[:with] %>
+        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
+        <% else %>
+        <%= render @list, with: nil %>
+        <%= paginate @presenter.send(@list) %>
+        <% end %>
+
+      </div><!--./span10 -->
+
+    </div><!--./row-fluid -->
+  </div><!--./span12 -->
+</div><!--./row-fluid -->
+
+<% content_for :page_title, "Publications" %>

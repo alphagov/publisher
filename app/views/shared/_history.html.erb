@@ -1,0 +1,31 @@
+<div class="row-fluid">
+
+  <% if resource.safe_to_preview? %>
+  <p>This edition can be previewed at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
+  <% else %>
+  <p>This edition is not yet ready to be previewed.</p>
+  <% end %>
+
+  <p>Fact check responses should (when appropriate) be sent to <%= mail_to resource.fact_check_email_address %></p>
+  <hr />
+
+</div>
+
+<div class="row-fluid">
+
+  <div class="span6">
+    <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
+      <%= f.inputs do %>
+        <%= hidden_field_tag :edition_id, resource.id %>
+        <%= f.input :comment, :label => 'Note', :as => :text, :input_html => { :class=> 'span6', :rows => 6, :cols => 120 } %>
+        <p class="help-block">Don&rsquo;t forget to save your note when you have finished!</p>
+
+        <button class="btn btn-success" name="commit"><i class="icon-comment icon-white"></i> Add Note</button>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div id="edition-history" class="span6 accordion">
+    <%= render collection: @resource.history, partial: '/shared/edition_history', as: 'edition' %>
+  </div>
+</div>
