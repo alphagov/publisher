@@ -23,7 +23,7 @@ Publisher::Application.routes.draw do
   root :to => 'root#index'
 
   # We used to nest all URLs under /admin so we now redirect that
-  # in case people had bookmarks set up
-  get "/admin", to: redirect("/")
-  get "/admin/:real_path", to: redirect("/%{real_path}")
+  # in case people had bookmarks set up. Using a proc as otherwise the
+  # path parameter gets escaped
+  get "/admin(/*path)", to: redirect { |params| "/#{params[:path]}" }
 end
