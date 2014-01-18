@@ -1,4 +1,4 @@
-class AdminRootPresenter
+class PrimaryListingPresenter
   AVAILABLE_LISTS = [:lined_up, :draft, :amends_needed, :in_review,
     :fact_check, :fact_check_received, :ready, :published, :archived]
 

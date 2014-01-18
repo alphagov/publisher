@@ -45,7 +45,7 @@ private
     user_filter, user = process_user_filter(user_filter)
     editions = Edition.order_by([sort_column, sort_direction])
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
-    return AdminRootPresenter.new(editions, user), user_filter
+    return PrimaryListingPresenter.new(editions, user), user_filter
   end
 
   def edition_of_interest
@@ -70,7 +70,7 @@ private
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
 
     list = list_parameter_from_state(edition.state)
-    return AdminRootPresenter.new(editions, user), user_filter, list
+    return PrimaryListingPresenter.new(editions, user), user_filter, list
   end
 
   def process_user_filter(user_filter = nil)
