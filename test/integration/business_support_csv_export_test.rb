@@ -26,7 +26,7 @@ class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
                       )
     FactoryGirl.create(:business_support_edition, :slug => "fooey-award", :title => "Fooey award", :state => "draft")
 
-    get "/admin/reports/business_support_schemes_content.csv"
+    get "/reports/business_support_schemes_content.csv"
 
     assert last_response.ok?
     assert_equal 'text/csv', last_response.headers['Content-Type']

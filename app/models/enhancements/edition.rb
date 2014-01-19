@@ -2,7 +2,7 @@ require "edition"
 require 'gds_api/panopticon'
 
 class Edition
-  include Admin::BaseHelper
+  include BaseHelper
 
   class ResurrectionError < RuntimeError
   end

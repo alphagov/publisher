@@ -1,0 +1,27 @@
+<div class="navbar navbar-fixed-bottom">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <% if @resource.published? %>
+        Published items can't be changed.
+        <%= preview_button(@resource) %>
+        <% if @resource.can_create_new_edition? %>
+          <%= button_to 'Create new edition', duplicate_edition_path(@resource), html_options = { "class" => "btn btn-primary btn-large"} %>
+        <% else %>
+          <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options = { "class" => "btn btn-primary btn-large"} %>
+        <% end %>
+      <% else %>
+        <div class="workflow_buttons">
+          <!-- Fake save button -->
+          <form id="save-edition">
+            <input type="submit" value="Save" class="btn btn-success btn-large">
+          </form>
+
+          <%= preview_button(@resource) %>
+          <%= progress_buttons(@resource) %>
+        </div>
+      <% end %>
+    </div><!--/.container-fluid -->
+  </div><!--/.navbar-inner -->
+</div><!--/.navbar -->
+
+<%= progress_forms(@resource) %>

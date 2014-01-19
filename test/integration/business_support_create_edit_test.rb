@@ -14,7 +14,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
   end
 
   should "create a new BusinessSupportEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
     
     assert page.has_content? "We need a bit more information to create your business support."
     assert page.has_content? "Business support identifier can't be blank"
@@ -46,7 +46,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                                  :contact_details => "The business support people.",
                                  :will_continue_on => "The HMRC website",
                                  :continuation_link => "http://www.hmrc.gov.uk")
-    visit "/admin/editions/#{business_support.to_param}"
+    visit "/editions/#{business_support.to_param}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -108,7 +108,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                                  :short_description => "Super business support",
                                  :body => "This is the super business support scheme")
     
-    visit "/admin/editions/#{business_support.to_param}"
+    visit "/editions/#{business_support.to_param}"
     
     click_on "Create new edition"
 
@@ -121,7 +121,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     business_support = FactoryGirl.create(:business_support_edition,
                                  :panopticon_id => @artefact.id)
 
-    visit "/admin/editions/#{business_support.to_param}"
+    visit "/editions/#{business_support.to_param}"
 
     fill_in "Min value", :with => "1,500"
     fill_in "Max value", :with => "£10,000"

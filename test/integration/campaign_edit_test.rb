@@ -14,7 +14,7 @@ class CampaignEditTest < JavascriptIntegrationTest
   end
 
   should "create a new CampaignEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
 
     assert page.has_content? "Viewing “No campaign, no gain” Edition 1"
 
@@ -31,7 +31,7 @@ class CampaignEditTest < JavascriptIntegrationTest
                                  :organisation_crest => "single-identity",
                                  :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
                                  :organisation_brand_colour => "department-for-transport")
-    visit "/admin/editions/#{campaign.to_param}"
+    visit "/editions/#{campaign.to_param}"
 
     assert page.has_content? "Viewing “Singin' in the campaign” Edition 1"
 
@@ -73,7 +73,7 @@ class CampaignEditTest < JavascriptIntegrationTest
                                  :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
                                  :organisation_brand_colour => "department-for-transport")
 
-    visit "/admin/editions/#{campaign.to_param}"
+    visit "/editions/#{campaign.to_param}"
 
     click_on "Create new edition"
 
@@ -110,7 +110,7 @@ class CampaignEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:asset).with("asset_two").returns(asset_two)
     GdsApi::AssetManager.any_instance.stubs(:asset).with("asset_three").returns(asset_three)
 
-    visit "/admin/editions/#{c.to_param}"
+    visit "/editions/#{c.to_param}"
 
     within(:css, "#small-campaign-image") do
       assert page.has_field?("Upload image", :type => "file")

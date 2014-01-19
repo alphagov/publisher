@@ -15,7 +15,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
   context "creating a new edition" do
     setup do
-      visit "/admin/publications/#{@artefact.id}"
+      visit "/publications/#{@artefact.id}"
     end
 
     should "show the smart answer builder form with an initial question" do
@@ -362,7 +362,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "correctly render the form" do
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       within ".page-header" do
         assert page.has_content? "Viewing “Can I get a driving licence?”"
@@ -416,7 +416,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "delete an existing node and option" do
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       within ".nodes .node:first-child .option:nth-child(2)" do
         click_link "Remove option"
@@ -441,7 +441,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "reset the next node value in options when a node is deleted" do
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       within ".nodes .outcome:nth-child(3)" do
         click_link "Remove node"
@@ -459,7 +459,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     should "correctly number new nodes" do
       @edition.nodes.where(:slug => "outcome-2").first.update_attribute(:slug, "outcome-3")
 
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       assert page.has_css?(".nodes .question", count: 1)
       assert page.has_css?(".nodes .outcome", count: 2)
@@ -473,7 +473,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "correctly order new nodes" do
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       within ".nodes" do
         assert_equal "1", find(:css, '.node:nth-child(1) .node-order').value
@@ -495,7 +495,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "highlight an error on the select field when the next node is blank" do
-      visit "/admin/editions/#{@edition.id}"
+      visit "/editions/#{@edition.id}"
 
       within ".nodes .question:first-child .option:first-child" do
         select "Select a node..", :from => "next-node-list"

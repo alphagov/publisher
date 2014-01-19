@@ -1,0 +1,20 @@
+<h2>New Local Transaction</h2>
+
+<p>We need a bit more information to create your local transaction.</p>
+
+<% if @publication.errors.any? %>
+<p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
+<% end %>
+
+<%= semantic_form_for(@publication, :url => editions_path, :as => :edition) do |f| %>
+  <%= f.inputs :lgsl_code %>
+  <%= f.inputs do %>
+    <input type="hidden" name="edition[kind]" value="local_transaction">
+    <%= f.input :panopticon_id, :as => :hidden %>
+    <%= f.input :title, :as => :hidden %>
+    <%= f.input :slug, :as => :hidden %>
+    <%= f.input :section, :as => :hidden %>
+    <%= f.input :department, :as => :hidden %>
+  <% end %>
+  <%= f.buttons %>
+<% end %>

@@ -9,7 +9,7 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
     programme = FactoryGirl.create(:programme_edition, :title => "Benefit Example", :slug => "benefit-example")
     programme.save!
 
-    visit "/admin/editions/#{programme.to_param}"
+    visit "/editions/#{programme.to_param}"
 
     refute_includes page.body, "Part One"
     refute_includes page.body, "part-one"

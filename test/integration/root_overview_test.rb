@@ -35,7 +35,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob.assign(x, alice)
     bob.assign(y, charlie)
 
-    visit "/admin"
+    visit "/"
 
     filter_by_user("All")
 
@@ -55,7 +55,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_content?("YYY")
     assert page.has_no_content?("ZZZ")
 
-    visit "/admin"
+    visit "/"
 
     # Should remember last selection in session
     assert_equal charlie.uid, page.find_field("Filter by assignee").value
@@ -74,7 +74,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     FactoryGirl.create(:guide_edition, :title => "XXX")
     FactoryGirl.create(:guide_edition, :title => "YYY")
 
-    visit "/admin"
+    visit "/"
     filter_by_user("All")
 
     filter_by_content("xXx")
@@ -89,7 +89,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     FactoryGirl.create(:user)
 
-    visit "/admin"
+    visit "/"
     click_on "Amends needed"
     
     filter_by_content("xXx")
@@ -104,7 +104,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     FactoryGirl.create(:user)
     FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'archived', :sibling_in_progress => 2)
 
-    visit "/admin"
+    visit "/"
     filter_by_user("All")
     click_on "Archived"
 

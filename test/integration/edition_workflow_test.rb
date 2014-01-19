@@ -29,7 +29,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   # Transfer a guide from lined-up state to draft state
   def start_work_on(guide)
-    visit "/admin"
+    visit "/"
     click_on "Lined up"
     assert page.has_content?(guide.title)
     within :xpath, "//form[contains(@action, '#{guide.id}/start_work')]" do
@@ -95,7 +95,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   def filter_for(user)
-    visit "/admin"
+    visit "/"
     within :css, ".user-filter-form" do
       select "All", :from => 'user_filter'
       click_button "Apply filters"
@@ -104,7 +104,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   def view_filtered_list(filter_label)
-    visit "/admin"
+    visit "/"
     filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
     refute filter_link.nil?, "Tab link #{filter_label} not found"
     refute filter_link['href'].nil?, "Tab link #{filter_label} has no target"
@@ -164,7 +164,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assign guide, "Alice"
     assert guide.lined_up?
 
-    visit "/admin"
+    visit "/"
     click_on "Lined up"
     click_on "Start work"
     assert page.has_content?("Work started")
@@ -306,7 +306,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition old_edition
     assert page.has_link?(
       "Edit existing newer edition",
-      href: admin_edition_path(new_edition)
+      href: edition_path(new_edition)
     ), "Page should have edit link"
   end
 end

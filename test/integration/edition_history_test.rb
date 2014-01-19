@@ -25,14 +25,14 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "have the first history actions visible" do
-      visit "/admin/editions/#{@guide.id}"
+      visit "/editions/#{@guide.id}"
 
       assert_equal [true, false],
                    page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
 
     should "show all actions when the first edition title is clicked" do
-      visit "/admin/editions/#{@guide.id}"
+      visit "/editions/#{@guide.id}"
       click_on "Notes for edition 1"
 
       assert_equal [true, true],

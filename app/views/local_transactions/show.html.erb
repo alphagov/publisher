@@ -1,0 +1,37 @@
+<h2>Viewing Edition <%= @resource.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
+<p>Status: <%= @resource.capitalized_state_name %></p>
+
+<%= render 'shared/review_or_fact_check' %>
+<%= render 'shared/workflow_buttons' %>
+
+<div id="local_transaction-nav" class="publication-nav">
+  <ul>
+    <li><a href="#edit">Edit</a></li>
+    <li><a href="#metadata">Metadata</a></li>
+    <li><a href="#history">History &amp; Notes</a></li>
+    <li><a href="#providers">Service Providers</a></li>
+    <li><a href="#admin">Admin</a></li>
+  </ul>
+  <div id="edit">
+    <%= render '/local_transactions/edit' %>
+  </div>
+  <div id="metadata">
+    <%= render :partial => '/shared/metadata', :locals => {:publication => @resource} %>
+  </div>
+  <div id="history">
+    <%= render :partial => '/shared/history', :locals => {:publication => @resource} %>
+  </div>
+  <div id="providers">
+    <ul>
+    <%- @resource.service.provided_by.each do |authority| -%>
+      <li><%= authority.name %></li>
+    <%- end -%>
+    </ul>
+  </div>
+  <div id="admin">
+    <%= render :partial => '/shared/admin_buttons', :locals => {:publication => @resource} %>
+  </div>
+</div>
+
+<% content_for :extra_javascript, javascript_include_tag('/publisher-assets/javascripts/publications') %>
+<% content_for :page_title, "Editing #{@resource.title}" %>

@@ -14,7 +14,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "create a new CompletedTransactionEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
     
     assert page.has_content? "Viewing “All bar done” Edition 1"
 
@@ -27,7 +27,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :title => "All bar done")
 
-    visit "/admin/editions/#{completed_transaction.to_param}"
+    visit "/editions/#{completed_transaction.to_param}"
 
     assert page.has_content? "Viewing “All bar done” Edition 1"
 
@@ -46,7 +46,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                  :state => 'published',
                                  :title => "All bar done")
     
-    visit "/admin/editions/#{completed_transaction.to_param}"
+    visit "/editions/#{completed_transaction.to_param}"
     
     click_on "Create new edition"
 

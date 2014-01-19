@@ -14,7 +14,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   end
 
   should "create a new HelpPageEdition" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
     
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -27,7 +27,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :title => "Foo bar",
                                  :body => "Body content")
-    visit "/admin/editions/#{help_page.to_param}"
+    visit "/editions/#{help_page.to_param}"
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
@@ -51,7 +51,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :body => "This is really helpful")
     
-    visit "/admin/editions/#{help_page.to_param}"
+    visit "/editions/#{help_page.to_param}"
     
     click_on "Create new edition"
 

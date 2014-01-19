@@ -1,5 +1,5 @@
 class EditorialProgressPresenter
-  include Admin::PathsHelper
+  include PathsHelper
 
   attr_accessor :scope, :column_headings
 

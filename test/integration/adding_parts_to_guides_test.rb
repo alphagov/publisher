@@ -12,7 +12,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     panopticon_has_metadata("id" => '2356')
 
-    visit    "/admin/editions/#{guide.to_param}"
+    visit    "/editions/#{guide.to_param}"
 
     click_on 'Add new part'
     within :css, '#parts div.fields:first-of-type' do
@@ -44,7 +44,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     assert page.has_css?('section#parts div#part-two', count: 1)
     assert page.has_css?('section#parts div#part-three', count: 1)
 
-    visit "/admin?user_filter=all&list=drafts"
+    visit "/?user_filter=all&list=drafts"
     assert page.has_content? random_name
   end
 
@@ -59,7 +59,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     panopticon_has_metadata("id" => '2356')
 
-    visit    "/admin/editions/#{guide.to_param}"
+    visit    "/editions/#{guide.to_param}"
     
     click_on 'Add new part'
     within :css, '#parts div.part:first-of-type' do

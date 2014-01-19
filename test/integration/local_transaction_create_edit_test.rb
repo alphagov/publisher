@@ -19,7 +19,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   test "creating a local transaction sends the right emails" do
     email_count_before_start = ActionMailer::Base.deliveries.count
 
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
@@ -30,7 +30,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   test "creating a local transaction with a bad LGSL code displays an appropriate error" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in "Lgsl code", :with => "2"
@@ -40,7 +40,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   test "creating a local transaction from panopticon requests an LGSL code" do
-    visit "/admin/publications/#{@artefact.id}"
+    visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in 'Lgsl code', :with => '1'
@@ -52,7 +52,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     edition = FactoryGirl.create(:local_transaction_edition, :panopticon_id => @artefact.id, :slug => @artefact.slug,
                                  :title => "Foo transaction", :lgsl_code => 1)
 
-    visit "/admin/editions/#{edition.to_param}"
+    visit "/editions/#{edition.to_param}"
     assert page.has_content? "Viewing “Foo transaction” Edition 1"
 
     # For some reason capybara was having trouble matching this disabled

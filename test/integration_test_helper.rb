@@ -41,7 +41,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def visit_edition(edition)
-    visit "/admin/editions/#{edition.to_param}"
+    visit "/editions/#{edition.to_param}"
   end
 
   # Fill in some sample sections for a guide
