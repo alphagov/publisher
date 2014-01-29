@@ -67,9 +67,9 @@
        error_class = date_error and !date_error.empty? ? ' error' : '' -%>
 
     <hr/>
-    <div class="control-group<%= error_class %>">
+    <div class="control-group<%= error_class %> date-picker">
       <h3>Scheme start/end date</h3>
-      <label for="edition[start_date">Start date</label>
+      <label for="edition[start_date]">Start date</label>
       <div class="controls">
         <%= f.date_select :start_date, { :include_blank => true }, { :class => "date-picker#{error_class}", :disabled => published } %>
         <% if f.object.errors.has_key?(:start_date) -%>
@@ -77,7 +77,7 @@
         <% end -%>
       </div>
     </div>
-    <div class="control-group<%= error_class %>">
+    <div class="control-group<%= error_class %> date-picker">
       <label for="edition[end_date]">End date</label>
       <div class="controls">
         <%= f.date_select :end_date, { :include_blank => true }, { :class => "date-picker#{error_class}", :disabled => published } %>
