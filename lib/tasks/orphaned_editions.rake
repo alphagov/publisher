@@ -40,7 +40,7 @@ namespace :orphaned_editions do
     orphans = []
     QUALIFYING_EDITION_STATES.each do |state|
       orphaned_editions(state).each do |oe|
-        orphans.concat(oe)
+        orphans << oe
       end
     end
     if orphans.any?
