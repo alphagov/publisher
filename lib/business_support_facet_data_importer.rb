@@ -23,7 +23,7 @@ class BusinessSupportFacetDataImporter
     editions.each do |bse|
 
       # Ignore anything that doesn't have a published edition in the series
-      unless bse.published_edition.nil?
+      unless bse.artefact.archived? or bse.published_edition.nil?
 
         # Find the corresponding Imminence scheme data
         imminence_scheme = imminence_results.find { |bs|
