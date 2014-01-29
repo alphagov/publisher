@@ -1,5 +1,5 @@
 namespace :orphaned_editions do
-  desc "Destroy editions having an artefact with the state 'archived'"
+  desc "Report on or destroy editions having an artefact with the state 'archived'"
 
   QUALIFYING_EDITION_STATES = [
     "ready",
@@ -20,6 +20,7 @@ namespace :orphaned_editions do
     "Id: #{edition.id} Type: #{edition._type} Title: #{edition.title}"
   end
 
+  desc "Report on editions having an artefact with the state 'archived'"
   task :report => :environment do
     puts "Searching for orphaned editions..."
     orphans = []
@@ -33,6 +34,7 @@ namespace :orphaned_editions do
     end
   end
 
+  desc "Remove editions having an artefact with the state 'archived'"
   task :destroy => :environment do
     puts "Searching for orphaned editions..."
     orphans = []
