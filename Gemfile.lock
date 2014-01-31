@@ -106,8 +106,8 @@ GEM
       null_logger
       plek
       rest-client (~> 1.6.3)
-    gds-sso (3.0.0)
-      omniauth-gds (= 0.0.3)
+    gds-sso (9.2.0)
+      omniauth-gds (>= 3.0.0)
       rack-accept (~> 0.4.4)
       rails (>= 3.0.0)
       warden (~> 1.2)
@@ -115,11 +115,11 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (6.0.5)
+    govuk_content_models (6.1.0)
       bson_ext
       differ
       gds-api-adapters
-      gds-sso (>= 3.0.0, < 4.0.0)
+      gds-sso (>= 7.0.0, < 10.0.0)
       govspeak (>= 1.0.1, < 2.0.0)
       mongoid (~> 2.5)
       plek
@@ -196,7 +196,7 @@ GEM
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
-    omniauth-gds (0.0.3)
+    omniauth-gds (3.0.0)
       omniauth-oauth2 (~> 1.0)
     omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
@@ -315,9 +315,9 @@ DEPENDENCIES
   formtastic!
   formtastic-bootstrap!
   gds-api-adapters (= 5.3.0)
-  gds-sso (= 3.0.0)
+  gds-sso (= 9.2.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 6.0.5)
+  govuk_content_models (= 6.1.0)
   has_scope
   inherited_resources
   jquery-rails
