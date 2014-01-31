@@ -25,5 +25,5 @@ Publisher::Application.routes.draw do
   # We used to nest all URLs under /admin so we now redirect that
   # in case people had bookmarks set up. Using a proc as otherwise the
   # path parameter gets escaped
-  get "/admin(/*path)", to: redirect { |params| "/#{params[:path]}" }
+  get "/admin(/*path)", to: redirect { |params, req| "/#{params[:path]}" }
 end
