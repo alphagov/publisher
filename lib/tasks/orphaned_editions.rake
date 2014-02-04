@@ -1,6 +1,4 @@
 namespace :orphaned_editions do
-  desc "Report on or destroy editions having an artefact with the state 'archived'"
-
   QUALIFYING_EDITION_STATES = [
     "ready",
     "amends_needed",
