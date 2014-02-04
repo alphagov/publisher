@@ -1,0 +1,47 @@
+#edition_start_date_1i, #edition_end_date_1i {
+  width: 80px;
+}
+
+#edition_start_date_2i, #edition_end_date_2i {
+  width: 110px;
+}
+
+#edition_start_date_3i, #edition_end_date_3i {
+  width: 50px;
+}
+
+.checkbox.inline + .checkbox.inline {
+  margin-left: 0;
+  width: 100%;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.checkbox.inline.all {
+	margin-bottom: 10px;
+	width:100%;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.date-picker label {
+  font-weight: normal;
+  font-size: 13px;
+}
+
+#business_type,
+#business_size,
+#stage,
+#support_type {
+	width: 33.33333333%;
+	float: left;
+}
+
+h3 {
+	margin-bottom: 10px;
+}
+
+hr {
+	display: block;
+	width: 100%;
+}
