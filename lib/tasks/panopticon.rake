@@ -28,6 +28,8 @@ namespace :panopticon do
         else
           logger.error "Encountered 4 timeouts for '#{edition.slug}', skipping"
         end
+      rescue GdsApi::HTTPErrorResponse => e
+        logger.error "Failed to register '#{edition.slug}' with error #{e.code}: #{e.error_details}"
       end
     end
   end
