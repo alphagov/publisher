@@ -158,7 +158,7 @@ GEM
     libv8 (3.11.8.17)
     link_header (0.0.7)
     logstash-event (1.1.5)
-    logstasher (0.4.1)
+    logstasher (0.4.8)
       logstash-event (~> 1.1.0)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
@@ -324,7 +324,7 @@ DEPENDENCIES
   kaminari (= 0.13.0)
   launchy
   less-rails-bootstrap
-  logstasher (= 0.4.1)
+  logstasher (= 0.4.8)
   minitest (= 3.3.0)
   mlanett-redis-lock (= 0.2.2)
   mocha (= 0.13.3)
