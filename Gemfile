@@ -57,6 +57,8 @@ gem 'jquery-rails'
 gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 
+gem 'airbrake', '3.1.15'
+
 group :assets do
   gem "therubyracer", "0.11.4"
   gem 'uglifier'
