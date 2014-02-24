@@ -3,8 +3,6 @@ source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 
 gem 'rails', '3.2.17'
 
-gem 'aws-ses', require: 'aws/ses'
-
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
@@ -18,7 +16,6 @@ else
 end
 
 gem 'erubis'
-gem 'exception_notification', '2.6.1', require: false
 gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
 gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'gds-api-adapters', '5.3.0'
