@@ -6,7 +6,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
       select option, from: "Filter by assignee"
       click_on "Apply filters"
     end
-    click_on "Lined up"
+    click_on "Drafts"
   end
 
   def filter_by_content(substring)
@@ -60,7 +60,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     # Should remember last selection in session
     assert_equal charlie.uid, page.find_field("Filter by assignee").value
 
-    click_on "Lined up"
+    click_on "Drafts"
     assert page.has_no_content?("XXX")
     assert page.has_content?("YYY")
     assert page.has_no_content?("ZZZ")

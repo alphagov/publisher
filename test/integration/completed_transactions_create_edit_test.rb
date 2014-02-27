@@ -37,7 +37,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "Completed transaction edition was successfully updated."
 
-    assert page.has_content? "Status: Lined up"
+    assert page.has_content? "Status: Draft"
   end
 
   should "allow creating a new version of a CompletedTransactionEdition" do
