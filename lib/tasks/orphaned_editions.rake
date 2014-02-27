@@ -6,7 +6,6 @@ namespace :orphaned_editions do
     "fact_check",
     "draft",
     "in_review",
-    "lined_up"
   ]
 
   def orphaned_editions(state)

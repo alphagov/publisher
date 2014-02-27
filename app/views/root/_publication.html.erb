@@ -35,16 +35,10 @@
   <% end %>
   <td>
     <%= publication.assignee %>
-
-    <% if tab && tab == :lined_up %>
-    <%= link_to publication.assignee ? ' (change)' : 'assign', edit_edition_path(publication) %>
-    <% end %>
   </td>
-    <% unless tab && tab == :lined_up %>
     <td>
       <%= publication.creator %>
     </td>
-    <% end %>
     <td>
       <%= publication.section %>
     </td>
@@ -65,12 +59,7 @@
     </td>
     <% end %>
   <td class="icon">
-    <% if tab && tab == :lined_up %>
-      <%= form_tag start_work_path(publication) do %>
-        <%= hidden_field_tag :start_work, 1 %>
-        <%= submit_tag 'Start work', :class => 'btn btn-mini btn-success' %>
-      <% end %>
-    <% elsif tab and tab == :archived and publication.can_create_new_edition? %>
+    <% if tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_edition_path(publication) do %>
         <%= submit_tag 'Create new edition', :class => 'btn btn-mini btn-success' %>
       <% end %>
