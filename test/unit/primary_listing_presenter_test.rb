@@ -151,7 +151,6 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert b.draft?
 
     c = FactoryGirl.create(:guide_edition)
-    c.start_work
     alice.assign(c, bob)
     assert_equal bob, c.assigned_to
     assert c.draft?

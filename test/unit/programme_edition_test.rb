@@ -8,7 +8,6 @@ class ProgrammeEditionTest < ActiveSupport::TestCase
 
   def template_programme
     p = ProgrammeEdition.new(:slug=>"childcare", :title=>"Children", :panopticon_id => FactoryGirl.create(:artefact).id)
-    p.start_work
     p.save
     p
   end

@@ -13,7 +13,6 @@ class UserTest < ActiveSupport::TestCase
     second_user = User.create(:name => "dave")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryGirl.create(:artefact).id)
-    user.start_work(trans)
     user.request_review(trans, {comment: "Hello"})
     second_user.approve_review(trans, {comment: "Hello"})
 

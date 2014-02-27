@@ -128,12 +128,6 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal "I failed", flash[:alert]
   end
 
-  test "should show the edit page after starting work" do
-    EditionProgressor.any_instance.expects(:progress).returns(true)
-    post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' } }
-    assert_redirected_to :controller => "editions", :action => "show", :id => @guide.id
-  end
-
   test "destroy transaction" do
     assert @transaction.can_destroy?
     assert_difference('TransactionEdition.count', -1) do
