@@ -1,7 +1,7 @@
 <h2>Viewing Edition <%= @resource.version_number %> of &ldquo;<%= @resource.title %>&rdquo;</h2>
 <p>Status: <%= @resource.capitalized_state_name %></p>
 
-<%= render 'shared/review_or_fact_check' %>
+<%= render 'shared/ready_or_review_or_fact_check' %>
 <%= render 'shared/workflow_buttons' %>
 
 <div id="local_transaction-nav" class="publication-nav">
