@@ -1,7 +1,7 @@
 <%= semantic_form_for(:activity, url: url, html: {class: 'button_to also_save_edition modal hide fade', id: id}) do |f| %>
 
   <div class="modal-header">
-    <h3>Send to <%= title %></h3>
+    <h3><%= title %></h3>
   </div>
 
   <div class="modal-body">
@@ -11,7 +11,7 @@
 
       <%= f.input :comment, :as => :text, :input_html => { :class => 'span12', :cols => 60, :rows => 6 } %>
 
-      <% if title == "Fact check" %>
+      <% if activity == "send_fact_check" %>
         <%= f.input :email_addresses, :input_html => { :class => 'span12' } %>
 
         <label id="activity_customised_message_input" for="activity_customised_message">Customised message<abbr title="required">*</abbr></label>
@@ -21,6 +21,12 @@
         </textarea>
       <% end %>
 
+      <% if activity == "schedule_for_publishing" %>
+        <%= f.label :publish_at do %>
+          Publish at <abbr title="required">*</abbr>
+        <% end %>
+        <%= f.datetime_select :publish_at, { start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date' } %>
+      <% end %>
     <% end %>
   </div>
 

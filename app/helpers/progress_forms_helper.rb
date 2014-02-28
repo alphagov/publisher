@@ -1,9 +1,10 @@
 module ProgressFormsHelper
   def progress_forms(edition)
     [
-      ["Fact check",       "send_fact_check", "Enter email addresses"],
-      ["2nd pair of eyes", "request_review"],
-      ["Publish",          "publish"]
+      ["Send to Fact check", "send_fact_check", "Enter email addresses"],
+      ["Send to 2nd pair of eyes", "request_review"],
+      ["Schedule for Publishing", "schedule_for_publishing"],
+      ["Send to Publish", "publish"],
     ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
@@ -61,13 +62,20 @@ module ProgressFormsHelper
 
   def progress_buttons(edition)
     [
-      ["Fact check",       "send_fact_check"],
+      ["Fact check", "send_fact_check"],
       ["2nd pair of eyes", "request_review"],
-      ["Publish",          "publish"]
-    ].map { |title, activity|
-      check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled"
-      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary btn-large" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+      ["Schedule", "schedule_for_publishing", 'warning'],
+      ["Publish", "publish"],
+    ].map { |title, activity, button_color = 'primary'|
+      button_options = {
+        type: :submit,
+        data: { toggle: 'modal'},
+        href: "##{activity}_form",
+        class: "btn btn-large btn-#{button_color}",
+        disabled: ! edition.send("can_#{activity}?"),
+        value: title,
+      }
+      content_tag(:button, button_options) { title }
     }.join("\n").html_safe
   end
 
