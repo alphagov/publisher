@@ -27,17 +27,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.reload
   end
 
-  # Transfer a guide from lined-up state to draft state
-  def start_work_on(guide)
-    visit "/"
-    click_on "Lined up"
-    assert page.has_content?(guide.title)
-    within :xpath, "//form[contains(@action, '#{guide.id}/start_work')]" do
-      click_on "Start work"
-    end
-    assert page.has_content?("Work started")
-  end
-
   def button_selector(text)
     "//button[text()='#{text}']"
   end
@@ -121,7 +110,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def get_to_review(guide, owner)
     login_as owner
     assign guide, owner
-    start_work_on guide
     fill_in_parts guide
     submit_for_review guide
   end
@@ -158,18 +146,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert_equal guide.assigned_to, get_user("Bob")
   end
 
-  test "a guide is lined up until work starts on it" do
+  test "a guide is in draft after creation" do
     guide = FactoryGirl.create(:guide_edition)
 
     assign guide, "Alice"
-    assert guide.lined_up?
+    assert guide.draft?
 
-    visit "/"
-    click_on "Lined up"
-    click_on "Start work"
-    assert page.has_content?("Work started")
-    guide.reload
-    assert !guide.lined_up?
+    visit_edition guide
+    assert page.has_content?("Status: Draft")
   end
 
   test "should update progress of a guide" do
@@ -192,12 +176,35 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert guide.fact_check?
   end
 
+  test "a guide in the ready state can be requested to make more amendments" do
+    guide = FactoryGirl.create(:guide_edition)
+    guide.update_attribute(:state, 'ready')
+    fill_in_parts guide
+
+    login_as "Bob"
+    send_action guide, "Needs more work", "You need to fix some stuff"
+    filter_for "All"
+    view_filtered_list "Amends needed"
+    assert page.has_content? guide.title
+  end
+
+  test "a guide in the fact check state can be requested to make more amendments" do
+    guide = FactoryGirl.create(:guide_edition)
+    guide.update_attribute(:state, 'fact_check')
+    fill_in_parts guide
+
+    login_as "Bob"
+    send_action guide, "Needs more work", "You need to fix some stuff"
+    filter_for "All"
+    view_filtered_list "Amends needed"
+    assert page.has_content? guide.title
+  end
+
   test "can flag guide for review" do
     guide = FactoryGirl.create(:guide_edition)
     login_as "Alice"
 
     assign guide, "Alice"
-    start_work_on guide
     fill_in_parts guide
     submit_for_review guide
 
@@ -213,7 +220,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     login_as "Alice"
 
     assign guide, "Alice"
-    start_work_on guide
     fill_in_parts guide
     submit_for_review guide
 
@@ -269,6 +275,9 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
+    visit_edition guide
+    assert page.has_content? "Request this edition to be amended further."
+    assert page.has_content? "Needs more work"
   end
 
   test "can progress from fact check" do
@@ -279,6 +288,16 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
+  end
+
+  test "can go back to fact check from fact check received" do
+    guide = FactoryGirl.create(:guide_edition)
+    get_to_fact_check_received guide, "Alice"
+
+    send_for_fact_check guide
+
+    visit_edition guide
+    assert page.has_content? "Status: Fact check"
   end
 
   test "can create a new edition from the listings screens" do

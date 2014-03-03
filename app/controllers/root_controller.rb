@@ -17,7 +17,7 @@ class RootController < ApplicationController
 
       @presenter, @user_filter, @list = build_with_focus(user_filter)
     else
-      @list = params[:list].blank? ? 'lined_up' : params[:list]
+      @list = params[:list].blank? ? 'drafts' : params[:list]
       @presenter, @user_filter = build_without_focus(user_filter, params[:page])
     end
 

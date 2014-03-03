@@ -90,35 +90,20 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_equal [b], presenter.fact_check.to_a
   end
 
-  test "should filter by lined up state" do
-    presenter = PrimaryListingPresenter.new(Edition, :all)
-
-    a = FactoryGirl.create(:guide_edition)
-    a.update_attribute(:state, "lined_up")
-    assert a.lined_up?
-
-    b = FactoryGirl.create(:guide_edition)
-    b.update_attribute(:state, "draft")
-    b.reload
-    assert !b.lined_up?
-
-    assert_equal [a], presenter.lined_up.to_a
-  end
-
   test "should select publications assigned to a user" do
     alice, bob = setup_users
 
     a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
-    assert a.lined_up?
+    assert a.draft?
 
     b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
-    assert b.lined_up?
+    assert b.draft?
 
     presenter = PrimaryListingPresenter.new(Edition, bob)
-    assert_equal [b], presenter.lined_up.to_a
+    assert_equal [b], presenter.draft.to_a
   end
 
   test "should select publications assigned to nobody" do
@@ -126,15 +111,15 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
     a = FactoryGirl.create(:guide_edition, title: 'My First Guide')
     assert_nil a.assigned_to
-    assert a.lined_up?
+    assert a.draft?
 
     b = FactoryGirl.create(:guide_edition, title: 'My Second Guide')
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
-    assert b.lined_up?
+    assert b.draft?
 
     presenter = PrimaryListingPresenter.new(Edition, :nobody)
-    assert_equal [a], presenter.lined_up.to_a
+    assert_equal [a], presenter.draft.to_a
   end
 
   test "should select all publications" do
@@ -142,15 +127,15 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
     a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
-    assert a.lined_up?
+    assert a.draft?
 
     b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
-    assert b.lined_up?
+    assert b.draft?
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.lined_up.to_a.collect { |i| i.id.to_s }.sort
+    assert_equal [b, a].collect { |i| i.id.to_s }.sort, presenter.draft.to_a.collect { |i| i.id.to_s }.sort
   end
 
   test "should select and filter" do
@@ -158,27 +143,26 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
     a = FactoryGirl.create(:guide_edition)
     assert_nil a.assigned_to
-    assert a.lined_up?
+    assert a.draft?
 
     b = FactoryGirl.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
-    assert b.lined_up?
+    assert b.draft?
 
     c = FactoryGirl.create(:guide_edition)
-    c.start_work
     alice.assign(c, bob)
     assert_equal bob, c.assigned_to
-    assert !c.lined_up?
+    assert c.draft?
 
     presenter = PrimaryListingPresenter.new(Edition, bob)
-    assert_equal [b], presenter.lined_up.to_a
+    assert_equal [b, c].sort_by(&:title), presenter.draft.to_a.sort_by(&:title)
 
     presenter = PrimaryListingPresenter.new(Edition, :nobody)
-    assert_equal [a], presenter.lined_up.to_a
+    assert_equal [a], presenter.draft.to_a
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    assert_equal [a, b].sort_by(&:title), presenter.lined_up.to_a.sort_by(&:title)
+    assert_equal [a, b, c].sort_by(&:title), presenter.draft.to_a.sort_by(&:title)
   end
 
   test "can filter publications by title substring" do

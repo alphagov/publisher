@@ -49,8 +49,6 @@ private
       participle = case action.request_type
       when Action::CREATE
         "created"
-      when Action::START_WORK
-        "started work"
       when Action::REQUEST_REVIEW
         "requested review"
       when Action::APPROVE_REVIEW

@@ -6,8 +6,6 @@ Publisher::Application.routes.draw do
     member do
       post 'duplicate'
       post 'progress'
-      post 'start_work', to: 'editions#progress',
-        activity: { request_type: 'start_work' }
       post 'skip_fact_check', to: 'editions#progress',
         activity: { request_type: 'skip_fact_check', comment: "Fact check skipped by request."}
     end

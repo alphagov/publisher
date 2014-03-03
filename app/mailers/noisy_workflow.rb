@@ -36,8 +36,6 @@ class NoisyWorkflow < ActionMailer::Base
     case action.request_type
     when Action::CREATE
       "Created #{edition.format_name}: \"#{edition.title}\" (by #{requester.name})"
-    when Action::START_WORK
-      "Work started: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::REQUEST_REVIEW
       "Review requested: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::APPROVE_REVIEW

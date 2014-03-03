@@ -7,7 +7,6 @@ class GuideEditionTest < ActiveSupport::TestCase
 
   def template_guide
     edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    edition.start_work
     edition.save
     edition
   end
@@ -18,7 +17,6 @@ class GuideEditionTest < ActiveSupport::TestCase
 
     guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
     edition = guide
-    user.start_work(edition)
     user.request_review(edition,{:comment => "Review this guide please."})
     other_user.approve_review(edition, {:comment => "I've reviewed it"})
     user.send_fact_check(edition,{:comment => "Review this guide please.", :email_addresses => 'test@test.com'})
