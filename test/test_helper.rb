@@ -11,6 +11,9 @@ require 'webmock/test_unit'
 require 'gds_api/test_helpers/panopticon'
 require 'govuk_content_models/test_helpers/factories'
 
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
+
 WebMock.disable_net_connect!(:allow_localhost => true)
 
 DatabaseCleaner.strategy = :truncation

@@ -41,7 +41,7 @@ gem 'plek', '1.4.0'
 # as a dependency of govuk_content_models
 gem 'mongo', '1.7.1'
 
-gem 'redis', '3.0.3', require: false # Only used in some importers
+gem 'redis', '3.0.7', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
@@ -55,6 +55,7 @@ gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 
 gem 'airbrake', '3.1.15'
+gem 'sidekiq', '2.17.2'
 
 group :assets do
   gem "therubyracer", "0.11.4"
