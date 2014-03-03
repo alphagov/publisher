@@ -128,6 +128,14 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal "I failed", flash[:alert]
   end
 
+  test "should squash multiparameter attributes" do
+    EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
+
+    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4", 
+                          "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
+    post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' }.merge(publish_at_params) }
+  end
+
   test "destroy transaction" do
     assert @transaction.can_destroy?
     assert_difference('TransactionEdition.count', -1) do

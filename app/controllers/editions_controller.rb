@@ -90,7 +90,7 @@ class EditionsController < InheritedResources::Base
 
   def progress
     command = EditionProgressor.new(resource, current_user, statsd)
-    if command.progress(params[:activity])
+    if command.progress(squash_multiparameter_datetime_attributes(params[:activity]))
       redirect_to edition_path(resource), notice: command.status_message
     else
       redirect_to edition_path(resource), alert: command.status_message
@@ -118,5 +118,14 @@ class EditionsController < InheritedResources::Base
 
     def description(r)
       r.format.underscore.humanize
+    end
+
+  private
+    def squash_multiparameter_datetime_attributes(params)
+      datetime_params = params.select { |k, v| k.include? 'publish_at' }.values.map(&:to_i)
+      params.delete_if { |k, v| k.include? 'publish_at' }
+
+      params['publish_at'] = DateTime.new(*datetime_params) if datetime_params.present?
+      params
     end
 end
