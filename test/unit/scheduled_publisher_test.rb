@@ -6,6 +6,10 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       Sidekiq::Testing.fake!
     end
 
+    teardown do
+      ScheduledPublisher.jobs.clear
+    end
+
     should "queue up an edition for publishing at the specified publish_at time" do
       user = FactoryGirl.create(:user)
       edition = FactoryGirl.create(:edition, :scheduled_for_publishing)

@@ -13,10 +13,20 @@ class EditionProgressor
   # activity: A hash of details about the progress activity to be performed
   #           See test/unit/edition_progressor_test.rb for examples
   def progress(activity)
+    if activity[:request_type] == 'cancel_scheduled_publishing'
+      scheduled_set = Sidekiq::ScheduledSet.new
+      jobs_to_cancel = scheduled_set.select do |scheduled_job|
+        scheduled_job.args[1] == edition.id.to_s
+      end
+      jobs_to_cancel.map(&:delete)
+    end
     if invalid_fact_check_email_addresses?(activity)
       self.status_message = fact_check_error_message(activity)
       return false
     elsif actor.progress(edition, activity.dup)
+      if activity[:request_type] == 'schedule_for_publishing'
+        ScheduledPublisher.perform_at(edition.publish_at, actor.id.to_s, edition.id.to_s, activity)
+      end
       collect_edition_status_stats(activity[:request_type])
       self.status_message = success_message(activity[:request_type])
       return true

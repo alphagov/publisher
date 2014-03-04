@@ -66,4 +66,38 @@ class EditionProgressorTest < ActiveSupport::TestCase
     command = EditionProgressor.new(@guide, @laura, @statsd)
     refute command.progress(activity)
   end
+
+  context "scheduled_publishing" do
+    teardown do
+      ScheduledPublisher.jobs.clear
+      Sidekiq::ScheduledSet.new.clear
+    end
+
+    should "enqueue a job for sidekiq to perform later" do
+      Sidekiq::Testing.fake! do
+        @guide.update_attribute(:state, :ready)
+        publish_at = 1.day.from_now
+        activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: publish_at }
+
+        command = EditionProgressor.new(@guide, @laura, @statsd)
+        assert command.progress(activity)
+
+        assert_equal publish_at.to_i, ScheduledPublisher.jobs.first['at'].to_i
+      end
+    end
+
+    should "dequeue a scheduled job" do
+      Sidekiq::Testing.disable! do
+        publish_at = 1.day.from_now
+        @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)
+        ScheduledPublisher.perform_at(publish_at, @laura.id.to_s, @guide.id.to_s, {})
+
+        activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }
+        command = EditionProgressor.new(@guide, @laura, @statsd)
+        assert command.progress(activity)
+
+        assert_equal 0, Sidekiq::ScheduledSet.new.size
+      end
+    end
+  end
 end
