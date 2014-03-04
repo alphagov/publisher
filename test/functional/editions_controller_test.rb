@@ -114,6 +114,17 @@ class EditionsControllerTest < ActionController::TestCase
     assert_response 200
   end
 
+  test "should show the resource base errors if present" do
+    panopticon_has_metadata("id" => "test")
+    Edition.expects(:find).returns(@guide)
+    @guide.stubs(:update_attributes).returns(false)
+    @guide.expects(:errors).at_least_once.returns({:base => ["Editions scheduled for publishing can't be edited"]})
+
+    post :update, :id => @guide.id
+
+    assert_equal "Editions scheduled for publishing can't be edited", flash[:alert]
+  end
+
   test "should set an error message if it couldn't progress an edition" do
     EditionProgressor.any_instance.expects(:progress).returns(false)
     EditionProgressor.any_instance.expects(:status_message).returns("I failed")

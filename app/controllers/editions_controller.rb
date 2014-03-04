@@ -64,7 +64,7 @@ class EditionsController < InheritedResources::Base
       }
       failure.html {
         @resource = resource
-        flash.now[:alert] = "We had some problems saving. Please check the form below."
+        flash.now[:alert] = format_failure_message(resource)
         render :template => "show"
       }
       success.json {
@@ -127,5 +127,11 @@ class EditionsController < InheritedResources::Base
 
       params['publish_at'] = DateTime.new(*datetime_params) if datetime_params.present?
       params
+    end
+
+    def format_failure_message(resource)
+      resource_base_errors = resource.errors[:base]
+      return resource.errors[:base].join('<br />') if resource_base_errors.present?
+      "We had some problems saving. Please check the form below."
     end
 end
