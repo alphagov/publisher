@@ -1,6 +1,15 @@
 class PrimaryListingPresenter
-  AVAILABLE_LISTS = [:draft, :amends_needed, :in_review,
-    :fact_check, :fact_check_received, :ready, :published, :archived]
+  AVAILABLE_LISTS = [
+    :draft,
+    :amends_needed,
+    :in_review,
+    :fact_check,
+    :fact_check_received,
+    :ready,
+    :scheduled_for_publishing,
+    :published,
+    :archived,
+  ]
 
   # There's some discrepancy between the scope names and partial
   # names so we need a mapping (scope_name => partial_name) to

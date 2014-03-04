@@ -33,6 +33,11 @@
     <%= timestamp(publication.last_fact_checked_at) %>
   </td>
   <% end %>
+  <% if tab && tab == :scheduled_for_publishing %>
+  <td>
+    <%= timestamp(publication.publish_at) %>
+  </td>
+  <% end %>
   <td>
     <%= publication.assignee %>
   </td>
@@ -51,13 +56,15 @@
         <i class="icon-share-alt" title="View this publication"></i>
       <% end %>
     </td>
+    <% end %>
+    <% if tab && [:archived, :scheduled_for_publishing].include?(tab) %>
     <td class="icon">
-      <%#edition_path(publication) %>
       <%= link_to edition_path(publication) do %>
         <i class="icon-lock" title="Locked view for this publication"></i>
       <% end %>
     </td>
     <% end %>
+  <% if tab && tab != :scheduled_for_publishing %>
   <td class="icon">
     <% if tab and tab == :archived and publication.can_create_new_edition? %>
       <%= form_tag duplicate_edition_path(publication) do %>
@@ -69,6 +76,7 @@
       <% end %>
     <% end %>
   </td>
+  <% end %>
   <td class="icon">
     <% if publication.safe_to_preview? %>
       <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
