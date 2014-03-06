@@ -44,6 +44,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     visit "/editions/#{edition.to_param}"
   end
 
+  def visit_editions
+    visit "/editions"
+  end
+
   # Fill in some sample sections for a guide
   def fill_in_parts(guide)
     visit_edition guide

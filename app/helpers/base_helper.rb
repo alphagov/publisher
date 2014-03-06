@@ -13,7 +13,7 @@ module BaseHelper
       archived: 'Archived',
     }
     output = state_names.collect do |scope, status_label|
-      li_classes = ['status-option']
+      li_classes = ['status-option', scope]
       li_classes << 'active' if scope == options[:current]
 
       content_tag(:li, class: li_classes.join(' ')) do
