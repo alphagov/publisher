@@ -7,7 +7,7 @@
 <% end %>
 
 <%= semantic_form_for(@publication, :url => editions_path, :as => :edition) do |f| %>
-  <%= render partial: 'business_supports/fields', locals: { f: f, published: false } %>  
+  <%= render partial: 'business_supports/fields', locals: { f: f, locked_for_edits: false } %>
   <%= f.inputs do %>
     <input type="hidden" name="edition[kind]" value="business_support">
     <%= f.input :panopticon_id, :as => :hidden %>

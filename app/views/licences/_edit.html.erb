@@ -4,16 +4,16 @@
     <%= f.input :licence_identifier %>
     <%= f.input :will_continue_on,
                 :hint => 'Text to follow the statement "This will continue on. eg. "the HMRC website"',
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
     <%= f.input :continuation_link,
                 :label => 'Link to competent authority',
                 :hint => 'Link as deep as possible.',
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
     <%= f.input :licence_short_description,
           :as => :text,
           :hint => 'One line curated description, will appear in Licence Finder results',
-          :input_html => { :rows => 2, :class => 'span7', :disabled => @resource.published? } %>
-    <%= f.input :licence_overview, :as => :text, :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+          :input_html => { :rows => 2, :class => 'span7', :disabled => @resource.locked_for_edits? } %>
+    <%= f.input :licence_overview, :as => :text, :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
   <% end %>
 <% end %>
 

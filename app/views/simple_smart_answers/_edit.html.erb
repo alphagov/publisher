@@ -2,7 +2,7 @@
   :as => :edition, :html => { :class => 'no-auto-save' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
-    <%= f.input :body, :as => :text, :input_html => { :class => 'span7', :rows => 5, :disabled => @resource.published? } %>
+    <%= f.input :body, :as => :text, :input_html => { :class => 'span7', :rows => 5, :disabled => @resource.locked_for_edits? } %>
   <% end %>
 
   <div class="builder-container">

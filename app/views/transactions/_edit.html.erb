@@ -6,38 +6,38 @@
                 :as => :text,
                 :label => 'Introductory paragraph',
                 :hint => 'Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")',
-                :input_html => { :rows => 2, :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :rows => 2, :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :will_continue_on,
                 :hint => 'Text to follow the statement "This will continue on". eg. "the HMRC website"',
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :link,
                 :label => 'Link to start of transaction',
                 :hint => 'Link as deep as possible.',
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :more_information,
                 :as => :text,
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :alternate_methods,
                 :as => :text,
                 :label => "Other ways to apply",
                 :hint => "Alternative ways of completing this transaction. Not displayed on front end if left blank.",
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :minutes_to_complete,
-                :input_html => { :class => 'span7', :disabled => @resource.published? } %>
+                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :uses_government_gateway,
                 :as => :boolean,
-                :input_html => { :disabled => @resource.published? } %>
+                :input_html => { :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :expectation_ids,
                 :as => :check_boxes,
                 :label => "Expectations",
                 :collection => TransactionEdition.expectation_choices,
-                :input_html => { :disabled => @resource.published? } %>
+                :input_html => { :disabled => @resource.locked_for_edits? } %>
   <% end %>
 <% end %>

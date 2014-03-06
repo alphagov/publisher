@@ -61,19 +61,23 @@ module ProgressFormsHelper
     ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
-  def progress_buttons(edition)
+  def progress_buttons(edition, options = {})
     [
       ["Fact check", "send_fact_check"],
       ["2nd pair of eyes", "request_review"],
       *scheduled_publishing_buttons(edition),
       ["Publish", "publish"],
     ].map { |title, activity, button_color = 'primary'|
+      enabled = edition.send("can_#{activity}?")
+      show_disabled = options.fetch(:show_disabled, true)
+      next unless show_disabled || enabled
+
       button_options = {
         type: :submit,
         data: { toggle: 'modal'},
         href: "##{activity}_form",
         class: "btn btn-large btn-#{button_color}",
-        disabled: ! edition.send("can_#{activity}?"),
+        disabled: ! enabled,
         value: title,
       }
       content_tag(:button, button_options) { title }
