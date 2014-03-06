@@ -38,5 +38,36 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert_equal [true, true],
                    page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
+
+    context "Editors note" do
+      should "be able to add a note" do
+        visit "/editions/#{@guide.id}"
+        click_on "History & Notes"
+        fill_in "Editors note", with: "This is an important note. Take note."
+        click_on "Save Editors Note"
+
+        visit "/editions/#{@guide.id}"
+        assert page.has_content? "Editors note: This is an important note. Take note."
+
+        click_on "History & Notes"
+        assert_equal "This is an important note. Take note.",
+                     page.find_field("edition_editors_note").value
+      end
+
+      should "be cleared on creating a new edition" do
+        @edition = FactoryGirl.create(:answer_edition,
+                                      :editors_note => "This is an important note. Take note.",
+                                      :state => "published")
+
+        visit "/editions/#{@edition.id}"
+        assert page.has_content? "Editors note: This is an important note. Take note."
+
+        click_on "Create new edition"
+        assert page.has_no_content? "Editors note: This is an important note. Take note."
+
+        click_on "History & Notes"
+        assert_equal "", page.find_field("edition_editors_note").value
+      end
+    end
   end
 end

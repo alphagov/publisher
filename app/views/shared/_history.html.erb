@@ -23,6 +23,12 @@
         <button class="btn btn-success" name="commit"><i class="icon-comment icon-white"></i> Add Note</button>
       <% end %>
     <% end %>
+
+    <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition) do |f| %>
+      <%= f.input :editors_note, :label => 'Editors note', :as => :text, :input_html => { :class => 'span6', :rows => 6, :cols => 120 }, :hint => 'Use this field for an important note that must be seen by all who view this publication. Remove the text and save when it is no longer needed.' %>
+      <%= f.submit :class=>"btn btn-danger", :value=>'Save Editors Note' %>
+    <% end %>
+
   </div>
 
   <div id="edition-history" class="span6 accordion">

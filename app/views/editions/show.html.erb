@@ -5,6 +5,7 @@
       Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span>
       <span class="label label-info">Status: <%= @resource.status_text %></span>
     </h1>
+    <%= render 'shared/editors_note' %>
   </div>
   <% if @resource.artefact.state == "archived" %>
     <div class="alert alert-error">
