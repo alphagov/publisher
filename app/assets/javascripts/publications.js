@@ -27,14 +27,13 @@ $(function () {
   /* Apparently a lock variable to prevent multiple form submissions */
   var saved = false;
 
-  $('#save-edition').submit(function () {
+  $('#save-edition').submit(function (e) {
+    e.preventDefault();
     var edition_form = $('form.edition');
     if (! saved) {
       saved = true;
       edition_form.trigger('submit');
     }
-
-    return false;
   });
 
   if (! 'autofocus' in document.createElement('input')) {
@@ -57,7 +56,6 @@ $(function () {
 
   $('form.edition').submit(function() {
     edition_form_dirty = false;
-    return true;
   });
 
   $(window).bind('beforeunload', function() {
