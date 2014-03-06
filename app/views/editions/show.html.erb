@@ -10,7 +10,7 @@
     </div>
   <% else %>
     <div class="alert alert-info">
-      Status: <strong><%= @resource.capitalized_state_name %></strong>
+      Status: <strong><%= @resource.status_text %></strong>
     </div>
 
     <%= render 'shared/ready_or_review_or_fact_check' %>
