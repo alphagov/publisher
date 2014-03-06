@@ -1,6 +1,13 @@
 class ScheduledPublisher
   include Sidekiq::Worker
 
+  # 5 retries over 10 mins
+  sidekiq_options :retry => 5
+  sidekiq_retry_in do |count|
+    # 16s, 31s, 96s, 271s, 640s
+    count ** 4 + 15
+  end
+
   # NOTE on ids: edition and actor id are enqueued
   # as String or else marshalling converts it to a hash
   def self.cancel_scheduled_publishing(cancel_edition_id)
