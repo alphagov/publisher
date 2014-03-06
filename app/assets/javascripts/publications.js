@@ -25,13 +25,12 @@ $(function () {
    }
 
   /* Apparently a lock variable to prevent multiple form submissions */
-  var saved = false;
-
+  var edition_form_saved = false;
   $('#save-edition').submit(function (e) {
     e.preventDefault();
     var edition_form = $('form.edition');
-    if (! saved) {
-      saved = true;
+    if (! edition_form_saved) {
+      edition_form_saved = true;
       edition_form.trigger('submit');
     }
   });
@@ -41,7 +40,7 @@ $(function () {
   }
 
   /* Apparently a lock variable to prevent multiple form submissions */
-  var submitted_forms = false;
+  var edition_form_submitted = false;
 
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
@@ -50,7 +49,7 @@ $(function () {
   var edition_form_dirty = false;
 
   $('form.edition').change(function () {
-    submitted_forms = false;
+    edition_form_submitted = false;
     edition_form_dirty = true;
   });
 
@@ -70,9 +69,9 @@ $(function () {
     var edition_form = $('form.edition');
     var this_form = $(this);
 
-    if (! submitted_forms) {
+    if (! edition_form_submitted) {
       submit_form(edition_form, function () {
-        submitted_forms = true;
+        edition_form_submitted = true;
 
         /*
           Need to clear the dirty flag manually, as the form hasn't officially
@@ -83,6 +82,6 @@ $(function () {
       });
     }
 
-    return submitted_forms;
+    return edition_form_submitted;
   });
 });
