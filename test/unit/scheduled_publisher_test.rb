@@ -37,5 +37,12 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       ScheduledPublisher.new.perform(@user.id, @edition.id, comment: "schedule!")
       assert_equal "schedule!", @edition.reload.actions.last[:comment]
     end
+
+    should "update statsd counters" do
+      Statsd.any_instance.expects(:decrement).with("publisher.edition.scheduled_for_publishing")
+      Statsd.any_instance.expects(:increment).with("publisher.edition.published")
+
+      ScheduledPublisher.new.perform(@user.id, @edition.id, comment: "schedule!")
+    end
   end
 end
