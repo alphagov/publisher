@@ -54,7 +54,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
                      page.find_field("edition_editors_note").value
       end
 
-      should "be cleared on creating a new edition" do
+      should "not be carried forward to new editions" do
         @edition = FactoryGirl.create(:answer_edition,
                                       :editors_note => "This is an important note. Take note.",
                                       :state => "published")
