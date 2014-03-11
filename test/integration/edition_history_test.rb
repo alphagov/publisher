@@ -39,15 +39,15 @@ class EditionHistoryTest < JavascriptIntegrationTest
                    page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
 
-    context "Editors note" do
+    context "Workflow note" do
       should "be able to add a note" do
         visit "/editions/#{@guide.id}"
         click_on "History & Notes"
-        fill_in "Editors note", with: "This is an important note. Take note."
-        click_on "Save Editors Note"
+        fill_in "Workflow note", with: "This is an important note. Take note."
+        click_on "Save workflow note"
 
         visit "/editions/#{@guide.id}"
-        assert page.has_content? "Editors note: This is an important note. Take note."
+        assert page.has_content? "This is an important note. Take note."
 
         click_on "History & Notes"
         assert_equal "This is an important note. Take note.",
@@ -60,10 +60,10 @@ class EditionHistoryTest < JavascriptIntegrationTest
                                       :state => "published")
 
         visit "/editions/#{@edition.id}"
-        assert page.has_content? "Editors note: This is an important note. Take note."
+        assert page.has_content? "This is an important note. Take note."
 
         click_on "Create new edition"
-        assert page.has_no_content? "Editors note: This is an important note. Take note."
+        assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History & Notes"
         assert_equal "", page.find_field("edition_editors_note").value

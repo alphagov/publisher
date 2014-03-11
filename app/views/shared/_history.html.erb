@@ -17,16 +17,16 @@
     <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
       <%= f.inputs do %>
         <%= hidden_field_tag :edition_id, resource.id %>
-        <%= f.input :comment, :label => 'Note', :as => :text, :input_html => { :class=> 'span6', :rows => 6, :cols => 120 } %>
-        <p class="help-block">Don&rsquo;t forget to save your note when you have finished!</p>
+        <%= f.input :comment, :label => 'Edition notes', :as => :text, :required => false, :input_html => { :class=> 'span6', :rows => 6, :cols => 120 } %>
+        <p class="help-block">Summarise your changes, and briefly explain why if you didn't make any requested changes.</p>
 
-        <button class="btn btn-success" name="commit"><i class="icon-comment icon-white"></i> Add Note</button>
+        <button class="btn btn-success" name="commit"><i class="icon-comment icon-white"></i> Save note</button>
       <% end %>
     <% end %>
 
     <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition) do |f| %>
-      <%= f.input :editors_note, :label => 'Editors note', :as => :text, :input_html => { :class => 'span6', :rows => 6, :cols => 120 }, :hint => 'Use this field for an important note that must be seen by all who view this publication. Remove the text and save when it is no longer needed.' %>
-      <%= f.submit :class=>"btn btn-danger", :value=>'Save Editors Note' %>
+      <%= f.input :editors_note, :label => 'Workflow note', :as => :text, :input_html => { :class => 'span6', :rows => 6, :cols => 120 }, :hint => 'Add important workflow notes that anyone who works on this edition needs to see, eg "(Doesn\'t) need fact check, don\'t publish."' %>
+      <%= f.submit :class=>"btn btn-danger", :value=>'Save workflow note' %>
     <% end %>
 
   </div>
