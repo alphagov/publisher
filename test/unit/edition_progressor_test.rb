@@ -90,7 +90,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
         @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)
-        ScheduledPublisher.perform_at(publish_at, @laura.id.to_s, @guide.id.to_s, {})
+        ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }
         command = EditionProgressor.new(@guide, @laura, @statsd)

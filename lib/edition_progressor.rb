@@ -21,7 +21,7 @@ class EditionProgressor
       return false
     elsif actor.progress(edition, activity.dup)
       if activity[:request_type] == 'schedule_for_publishing'
-        ScheduledPublisher.perform_at(edition.publish_at, actor.id.to_s, edition.id.to_s, activity)
+        ScheduledPublisher.perform_at(edition.publish_at, edition.id.to_s)
       end
       collect_edition_status_stats(action)
       self.status_message = success_message(action)
