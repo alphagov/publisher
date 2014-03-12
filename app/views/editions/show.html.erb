@@ -5,10 +5,10 @@
       Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span>
       <span class="label label-info">Status: <%= @resource.status_text %></span>
     </h1>
-  <% unless @resource.editors_note.blank? %>
+  <% unless @resource.important_note.blank? %>
     <br/>
-    <h2 class="workflow-note">
-      <%= @resource.editors_note %>
+    <h2 class="important-note">
+      <%= @resource.important_note %>
     </h2>
   <% end %>
   </div>

@@ -39,24 +39,24 @@ class EditionHistoryTest < JavascriptIntegrationTest
                    page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
 
-    context "Workflow note" do
+    context "Important note" do
       should "be able to add a note" do
         visit "/editions/#{@guide.id}"
         click_on "History & Notes"
-        fill_in "Workflow note", with: "This is an important note. Take note."
-        click_on "Save workflow note"
+        fill_in "Important note", with: "This is an important note. Take note."
+        click_on "Save important note"
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
 
         click_on "History & Notes"
         assert_equal "This is an important note. Take note.",
-                     page.find_field("edition_editors_note").value
+                     page.find_field("edition_important_note").value
       end
 
       should "not be carried forward to new editions" do
         @edition = FactoryGirl.create(:answer_edition,
-                                      :editors_note => "This is an important note. Take note.",
+                                      :important_note => "This is an important note. Take note.",
                                       :state => "published")
 
         visit "/editions/#{@edition.id}"
@@ -66,7 +66,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History & Notes"
-        assert_equal "", page.find_field("edition_editors_note").value
+        assert_equal "", page.find_field("edition_important_note").value
       end
     end
   end
