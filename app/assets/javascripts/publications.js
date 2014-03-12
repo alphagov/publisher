@@ -21,20 +21,19 @@ $(function () {
       });
       messages = messages + errors.join("; ") + ".";
       $("<p class=\"flash-alert\">" + messages + "</p>").insertBefore("section.container-fluid:first");
-     });
-   }
+    });
+  }
 
   /* Apparently a lock variable to prevent multiple form submissions */
-  var saved = false;
+  var edition_form_saved = false;
+  $('#save-edition').submit(function (e) {
+    e.preventDefault();
 
-  $('#save-edition').submit(function () {
     var edition_form = $('form.edition');
-    if (! saved) {
-      saved = true;
+    if (! edition_form_saved) {
+      edition_form_saved = true;
       edition_form.trigger('submit');
     }
-
-    return false;
   });
 
   if (! 'autofocus' in document.createElement('input')) {
@@ -42,7 +41,7 @@ $(function () {
   }
 
   /* Apparently a lock variable to prevent multiple form submissions */
-  var submitted_forms = false;
+  var edition_form_submitted = false;
 
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
@@ -51,13 +50,12 @@ $(function () {
   var edition_form_dirty = false;
 
   $('form.edition').change(function () {
-    submitted_forms = false;
     edition_form_dirty = true;
+    edition_form_submitted = false;
   });
 
   $('form.edition').submit(function() {
     edition_form_dirty = false;
-    return true;
   });
 
   $(window).bind('beforeunload', function() {
@@ -72,19 +70,11 @@ $(function () {
     var edition_form = $('form.edition');
     var this_form = $(this);
 
-    if (! submitted_forms) {
+    if (edition_form_dirty && ! edition_form_submitted) {
       submit_form(edition_form, function () {
-        submitted_forms = true;
-
-        /*
-          Need to clear the dirty flag manually, as the form hasn't officially
-          been submitted
-        */
         edition_form_dirty = false;
-        this_form.trigger("submit");
+        edition_form_submitted = true;
       });
     }
-
-    return submitted_forms;
   });
 });

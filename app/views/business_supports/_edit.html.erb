@@ -5,7 +5,7 @@
     <div class="span8">
     <%= f.inputs do %>
       <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
-      <%= render :partial => 'business_supports/fields', :locals => { :f => f, :published => @resource.published? } %>
+      <%= render :partial => 'business_supports/fields', :locals => { :f => f, :locked_for_edits => @resource.locked_for_edits? } %>
     <% end %>
     </div>
     <div class="span4">

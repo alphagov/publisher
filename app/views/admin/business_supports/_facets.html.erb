@@ -2,12 +2,12 @@
 <div class="control-group" id="<%= model_collection.singularize %>">
   <h3><%= title %></h3>
   <label for="business_support_<%= model_collection.singularize %>_check_all" class="checkbox inline all">
-    <%= check_box_tag "business_support_#{model_collection.singularize}_check_all", "", all_checked, { :disabled => published } %>All
+    <%= check_box_tag "business_support_#{model_collection.singularize}_check_all", "", all_checked, { :disabled => locked_for_edits } %>All
   </label>
 
   <% collection.each do |facet| -%>
     <label class="checkbox inline">
-      <%= f.check_box model_collection, { :multiple => true, :disabled => published }, facet.slug, nil %>
+      <%= f.check_box model_collection, { :multiple => true, :disabled => locked_for_edits }, facet.slug, nil %>
       <%= facet.name %>
     </label>
   <% end %>

@@ -15,7 +15,7 @@
       <section class="accordion" id="parts">
 
         <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
-          <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.published? } %>
+          <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
         <% end %>
       </section>
 

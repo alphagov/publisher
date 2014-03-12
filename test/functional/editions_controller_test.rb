@@ -114,6 +114,17 @@ class EditionsControllerTest < ActionController::TestCase
     assert_response 200
   end
 
+  test "should show the resource base errors if present" do
+    panopticon_has_metadata("id" => "test")
+    Edition.expects(:find).returns(@guide)
+    @guide.stubs(:update_attributes).returns(false)
+    @guide.expects(:errors).at_least_once.returns({:base => ["Editions scheduled for publishing can't be edited"]})
+
+    post :update, :id => @guide.id
+
+    assert_equal "Editions scheduled for publishing can't be edited", flash[:alert]
+  end
+
   test "should set an error message if it couldn't progress an edition" do
     EditionProgressor.any_instance.expects(:progress).returns(false)
     EditionProgressor.any_instance.expects(:status_message).returns("I failed")
@@ -126,6 +137,14 @@ class EditionsControllerTest < ActionController::TestCase
       }
     }
     assert_equal "I failed", flash[:alert]
+  end
+
+  test "should squash multiparameter attributes" do
+    EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
+
+    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4", 
+                          "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
+    post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' }.merge(publish_at_params) }
   end
 
   test "destroy transaction" do

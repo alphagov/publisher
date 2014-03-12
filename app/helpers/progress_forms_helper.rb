@@ -1,9 +1,11 @@
 module ProgressFormsHelper
   def progress_forms(edition)
     [
-      ["Fact check",       "send_fact_check", "Enter email addresses"],
-      ["2nd pair of eyes", "request_review"],
-      ["Publish",          "publish"]
+      ["Send to Fact check", "send_fact_check", "Enter email addresses"],
+      ["Send to 2nd pair of eyes", "request_review"],
+      ["Schedule for Publishing", "schedule_for_publishing"],
+      ["Cancel Scheduled Publishing", "cancel_scheduled_publishing"],
+      ["Send to Publish", "publish"],
     ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
@@ -59,16 +61,34 @@ module ProgressFormsHelper
     ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
   end
 
-  def progress_buttons(edition)
+  def progress_buttons(edition, options = {})
     [
-      ["Fact check",       "send_fact_check"],
+      ["Fact check", "send_fact_check"],
       ["2nd pair of eyes", "request_review"],
-      ["Publish",          "publish"]
-    ].map { |title, activity|
-      check_method = "can_#{activity}?".to_sym
-      disabled = edition.send(check_method) ? "" : "disabled"
-      %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary btn-large" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+      *scheduled_publishing_buttons(edition),
+      ["Publish", "publish"],
+    ].map { |title, activity, button_color = 'primary'|
+      enabled = edition.send("can_#{activity}?")
+      show_disabled = options.fetch(:show_disabled, true)
+      next unless show_disabled || enabled
+
+      button_options = {
+        type: :submit,
+        data: { toggle: 'modal'},
+        href: "##{activity}_form",
+        class: "btn btn-large btn-#{button_color}",
+        disabled: ! enabled,
+        value: title,
+      }
+      content_tag(:button, button_options) { title }
     }.join("\n").html_safe
+  end
+
+  def scheduled_publishing_buttons(edition)
+    buttons = []
+    buttons << ["Schedule", "schedule_for_publishing", 'warning'] if edition.can_schedule_for_publishing?
+    buttons << ["Cancel scheduled publishing", "cancel_scheduled_publishing", 'danger'] if edition.can_cancel_scheduled_publishing?
+    buttons
   end
 
   def preview_button(edition)

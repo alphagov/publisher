@@ -1,0 +1,3 @@
+<%= @action.requester.name %> scheduled "<%= @action.edition.title %>" (<%= @action.edition.format %>) to be published at <%= @action.edition.publish_at.strftime("%R on %d/%m/%Y") %>. This change was made at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>.
+
+<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}" %>

@@ -13,15 +13,21 @@ class EditionProgressor
   # activity: A hash of details about the progress activity to be performed
   #           See test/unit/edition_progressor_test.rb for examples
   def progress(activity)
+    action = activity[:request_type]
+
+    ScheduledPublisher.cancel_scheduled_publishing(edition.id.to_s) if action == 'cancel_scheduled_publishing'
     if invalid_fact_check_email_addresses?(activity)
       self.status_message = fact_check_error_message(activity)
       return false
     elsif actor.progress(edition, activity.dup)
-      collect_edition_status_stats(activity[:request_type])
-      self.status_message = success_message(activity[:request_type])
+      if activity[:request_type] == 'schedule_for_publishing'
+        ScheduledPublisher.perform_at(edition.publish_at, actor.id.to_s, edition.id.to_s, activity)
+      end
+      collect_edition_status_stats(action)
+      self.status_message = success_message(action)
       return true
     else
-      self.status_message = failure_message(activity[:request_type])
+      self.status_message = failure_message(action)
       return false
     end
   end

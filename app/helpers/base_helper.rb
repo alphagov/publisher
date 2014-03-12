@@ -1,23 +1,26 @@
 module BaseHelper
 
-  def publication_tab_list(*statuses)
-    # Allow passing :current => 'something' as the last argument
-    if statuses[-1].is_a? Hash
-      options = statuses.pop
-    else
-      options = {}
-    end
-
-    output = statuses.collect do |status|
-      scope = status.downcase.gsub(' ', '_')
-      li_classes = ['status-option']
+  def publication_tab_list(options)
+    state_names = {
+      drafts: 'Drafts',
+      in_review: 'In review',
+      amends_needed: 'Amends needed',
+      out_for_fact_check: 'Out for fact check',
+      fact_check_received: 'Fact check received',
+      ready: 'Ready',
+      scheduled_for_publishing: 'Scheduled',
+      published: 'Published',
+      archived: 'Archived',
+    }
+    output = state_names.collect do |scope, status_label|
+      li_classes = ['status-option', scope]
       li_classes << 'active' if scope == options[:current]
 
       content_tag(:li, class: li_classes.join(' ')) do
         url = root_path(:user_filter => params[:user_filter], :string_filter => params[:string_filter], :list => scope)
 
         content_tag(:a, :href => url) do
-          h(status + " ") + content_tag(:span, @presenter.send(scope).length, class: "label pull-right")
+          h(status_label + " ") + content_tag(:span, @presenter.send(scope).length, class: "label pull-right")
         end
       end
     end

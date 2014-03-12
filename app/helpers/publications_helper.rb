@@ -5,6 +5,7 @@ module PublicationsHelper
   end
 
   def timestamp(time)
+    return if time.nil?
     %{<time datetime="#{ time.strftime("%Y-%m-%dT%H:%M:%SZ") }">#{ time.strftime("%d/%m/%Y %H:%M") }</time>}.html_safe
   end
 
