@@ -25,7 +25,7 @@
         <%= f.label :publish_at do %>
           Publish at <abbr title="required">*</abbr>
         <% end %>
-        <%= f.datetime_select :publish_at, { start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date' } %>
+        <%= f.datetime_select :publish_at, { default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date' } %>
       <% end %>
     <% end %>
   </div>
