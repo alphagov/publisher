@@ -28,6 +28,16 @@ class Edition
     all_of(for_user(user).selector, internal_search(term).selector)
   }
 
+  def publish_anonymously
+    if can_publish? && publish
+      action_details = published_edition ? { diff: edition_changes } : {}
+      actions.create!(action_details.merge(request_type: Action::PUBLISH))
+      save! # trigger denormalisation callbacks
+    else
+      false
+    end
+  end
+
   alias_method :was_published_without_indexing, :was_published
   def was_published
     was_published_without_indexing
