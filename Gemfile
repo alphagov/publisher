@@ -47,7 +47,7 @@ gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
 gem 'reverse_markdown', require: false # Only used in some importers
 
-gem 'statsd-ruby', '1.0.0', require: false
+gem 'statsd-ruby', '~> 1.1.0', require: false
 gem 'whenever', require: false
 
 gem 'jquery-rails'
@@ -56,6 +56,7 @@ gem 'unicorn', '4.3.1'
 
 gem 'airbrake', '3.1.15'
 gem 'sidekiq', '2.17.2'
+gem 'sidekiq-statsd', '0.1.2'
 
 group :assets do
   gem "therubyracer", "0.11.4"
