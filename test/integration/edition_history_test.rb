@@ -26,13 +26,15 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
     should "have the first history actions visible" do
       visit "/editions/#{@guide.id}"
+      click_on "History & Notes"
 
-      assert_equal [true, false],
+      assert_equal [true],
                    page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
     end
 
     should "show all actions when the first edition title is clicked" do
       visit "/editions/#{@guide.id}"
+      click_on "History & Notes"
       click_on "Notes for edition 1"
 
       assert_equal [true, true],
@@ -50,8 +52,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_content? "This is an important note. Take note."
 
         click_on "History & Notes"
-        assert_equal "This is an important note. Take note.",
-                     page.find_field("edition_important_note").value
+        assert_field_contains("This is an important note. Take note.", "Important note")
       end
 
       should "not be carried forward to new editions" do
@@ -66,7 +67,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History & Notes"
-        assert_equal "", page.find_field("edition_important_note").value
+        assert_field_contains("", "Important note")
       end
     end
   end

@@ -161,6 +161,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
 
+    click_on "Admin"
     click_on "Fact check"
 
     within "#send_fact_check_form" do
@@ -266,7 +267,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_fact_check guide, "Alice"
     visit_edition guide
 
-    click_button 'Skip Fact Check'
+    click_on "Admin"
+    click_button "Skip Fact Check"
 
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
