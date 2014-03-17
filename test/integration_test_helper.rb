@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'capybara/rails'
+require 'capybara/poltergeist'
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
@@ -16,6 +17,11 @@ class ActionDispatch::IntegrationTest
     # tests that cover the oauth interaction properly
     @author   = FactoryGirl.create(:user, :name=>"Author",   :email=>"test@example.com")
     @reviewer = FactoryGirl.create(:user, :name=>"Reviewer", :email=>"test@example.com")
+  end
+
+  def assert_field_contains(expected, field)
+    assert(find_field(field).value.include?(expected),
+           "Can't find #{expected} within field #{field}. Field contains: #{find_field(field).value}")
   end
 end
 
@@ -35,9 +41,8 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     unless user.is_a?(User)
       user = get_user(user)
     end
-    Capybara.current_session.driver.browser.clear_cookies
+    clear_cookies
     GDS::SSO.test_user = user
-    Capybara.current_session.driver.browser.clear_cookies
   end
 
   def visit_edition(edition)
@@ -73,6 +78,12 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
     guide.reload
   end
+
+  def clear_cookies
+    Capybara.current_session.driver.browser.cookies.each do |k, v|
+      Capybara.current_session.driver.browser.remove_cookie(k)
+    end
+  end
 end
 
-Capybara.javascript_driver = :webkit
+Capybara.javascript_driver = :poltergeist
