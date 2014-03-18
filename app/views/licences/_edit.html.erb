@@ -1,4 +1,4 @@
-<%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition do |f| %>
+<%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
     <%= f.input :licence_identifier %>

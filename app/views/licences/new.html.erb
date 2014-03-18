@@ -6,7 +6,7 @@
 <p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
 <% end %>
 
-<%= semantic_form_for(@publication, :url => editions_path, :as => :edition) do |f| %>
+<%= semantic_form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
   <%= f.inputs :licence_identifier %>
   <%= f.inputs do %>
     <input type="hidden" name="edition[kind]" value="licence">

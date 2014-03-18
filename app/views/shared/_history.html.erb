@@ -24,7 +24,7 @@
       <% end %>
     <% end %>
 
-    <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition) do |f| %>
+    <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note' }) do |f| %>
       <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'span6', :rows => 6, :cols => 120 }, :hint => 'Add important notes that anyone who works on this edition needs to see, eg "(Doesn\'t) need fact check, don\'t publish."' %>
       <%= f.submit :class=>"btn btn-danger", :value=>'Save important note' %>
     <% end %>
