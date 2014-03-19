@@ -46,13 +46,11 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content?(programme.title)
     assert page.has_content?("New edition created")
 
-    within :css, '#edition_body_input div.controls' do
-      assert page.has_content?("Overview")
-      assert page.has_content?("What you'll get")
-      assert page.has_content?("Eligibility")
-      assert page.has_content?("How to claim")
-      assert page.has_content?("Further information")
-    end
+    assert_field_contains("Overview", "Body")
+    assert_field_contains("What you'll get", "Body")
+    assert_field_contains("Eligibility", "Body")
+    assert_field_contains("How to claim", "Body")
+    assert_field_contains("Further information", "Body")
   end
 
   test "should be able to convert a TransactionEdition into an AnswerEdition" do
@@ -69,8 +67,8 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
     assert page.has_content?(transaction.title)
     assert page.has_content?("New edition created")
-    assert page.has_content?(transaction.more_information)
-    assert page.has_content?(transaction.alternate_methods)
+    assert_field_contains(transaction.more_information, "Body")
+    assert_field_contains(transaction.alternate_methods, "Body")
   end
 
 # tests for changing Answer, Guide, Programme into a Transaction
@@ -140,13 +138,11 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content?("Link to start of transaction")
     assert page.has_content?("More information")
 
-    within :css, '#edition_more_information_input div.controls' do
-      assert page.has_content?("Overview")
-      assert page.has_content?("What you'll get")
-      assert page.has_content?("Eligibility")
-      assert page.has_content?("How to claim")
-      assert page.has_content?("Further information")
-    end
+    assert_field_contains("Overview", "More information")
+    assert_field_contains("What you'll get", "More information")
+    assert_field_contains("Eligibility", "More information")
+    assert_field_contains("How to claim", "More information")
+    assert_field_contains("Further information", "More information")
   end
 
 

@@ -29,7 +29,7 @@ $(function () {
   $('#save-edition').submit(function (e) {
     e.preventDefault();
 
-    var edition_form = $('form.edition');
+    var edition_form = $('#edition-form');
     if (! edition_form_saved) {
       edition_form_saved = true;
       edition_form.trigger('submit');
@@ -49,12 +49,12 @@ $(function () {
   */
   var edition_form_dirty = false;
 
-  $('form.edition').change(function () {
+  $('#edition-form').change(function () {
     edition_form_dirty = true;
     edition_form_submitted = false;
   });
 
-  $('form.edition').submit(function() {
+  $('#edition-form').submit(function() {
     edition_form_dirty = false;
   });
 
@@ -67,7 +67,7 @@ $(function () {
   $('.modal').modal('hide');
 
   $('.also_save_edition').submit(function () {
-    var edition_form = $('form.edition');
+    var edition_form = $('#edition-form');
     var this_form = $(this);
 
     if (edition_form_dirty && ! edition_form_submitted) {

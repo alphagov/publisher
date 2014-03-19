@@ -219,3 +219,17 @@ select.date {
 .important-note {
   color: #DA4F49;
 }
+
+/*
+ * Turning off all CSS animations
+ * Poltergeist doesn't wait on CSS animations to happen,
+ * so integration tests fail intermittently
+ */
+.modal.fade {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+

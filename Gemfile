@@ -69,8 +69,8 @@ group :test do
   gem 'shoulda'
   gem 'database_cleaner'
 
-  gem 'capybara', '1.1.4'
-  gem 'capybara-webkit', '0.12.1'
+  gem 'capybara', '2.2.1'
+  gem 'poltergeist', '1.5.0'
   gem 'launchy'
 
   gem 'webmock'
