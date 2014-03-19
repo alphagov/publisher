@@ -1,7 +1,7 @@
 <%= hidden_field_tag "return_to", params[:return_to] if params[:return_to] %>
 
 <label for="edition_assigned_to_id">Assigned to</label>
-<%= f.collection_select :assigned_to_id, User.order_by([[:name, :asc]]).all, :id, :name, :prompt => "Select someone" %>
+<%= f.collection_select :assigned_to_id, User.order_by([[:name, :asc]]).all, :id, :name, {:prompt => "Select someone"}, {:disabled => @resource.locked_for_edits?} %>
 
 <%= f.input :title,
       :input_html => { :class => "span7", :autofocus => true, :disabled => @resource.locked_for_edits? } %>
