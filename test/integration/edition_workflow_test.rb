@@ -44,7 +44,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     action_button = find_button button_text
 
     refute action_button['disabled']
-    action_button.click
+    click_button button_text
 
     # Forces the driver to wait for any async javascript to complete
     page.has_css?('.modal-header')
@@ -97,9 +97,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
     refute filter_link.nil?, "Tab link #{filter_label} not found"
     refute filter_link['href'].nil?, "Tab link #{filter_label} has no target"
-
-    # puts "Found tab link with URL '#{tab_link['href']}' and text '#{tab_link.text}'"
-    # puts "Tab link: #{tab_link.inspect}"
 
     filter_link.click
 
