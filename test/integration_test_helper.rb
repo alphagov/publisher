@@ -20,8 +20,9 @@ class ActionDispatch::IntegrationTest
   end
 
   def assert_field_contains(expected, field)
-    assert(find_field(field).value.include?(expected),
-           "Can't find #{expected} within field #{field}. Field contains: #{find_field(field).value}")
+    found_field = find_field(field)
+    assert(found_field.value.include?(expected),
+           "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}")
   end
 end
 
