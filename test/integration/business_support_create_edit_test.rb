@@ -50,6 +50,16 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     setup_users
   end
 
+  should "create a new BusinessSupportEdition" do
+    visit "/publications/#{@artefact.id}"
+
+    assert_match /^\/editions\/[0-9a-z]+?$/, current_path
+    assert page.has_content? "Viewing “Foo bar” Edition 1"
+
+    bs = BusinessSupportEdition.first
+    assert_equal @artefact.id.to_s, bs.panopticon_id
+  end
+
   should "allow editing BusinessSupportEdition" do
     a_year_ago = 1.year.ago(Date.today)
     a_year_since = 1.year.since(Date.today)
