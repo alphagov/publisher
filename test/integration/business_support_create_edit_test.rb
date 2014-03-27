@@ -50,22 +50,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     setup_users
   end
 
-  should "create a new BusinessSupportEdition" do
-    visit "/publications/#{@artefact.id}"
-
-    assert page.has_content? "We need a bit more information to create your business support."
-    assert page.has_content? "Business support identifier can't be blank"
-
-    fill_in "Business support identifier", :with => "AB1234"
-    click_button "Create Business support edition"
-
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
-
-    bs = BusinessSupportEdition.first
-    assert_equal @artefact.id.to_s, bs.panopticon_id
-    assert_equal 'AB1234', bs.business_support_identifier
-  end
-
   should "allow editing BusinessSupportEdition" do
     a_year_ago = 1.year.ago(Date.today)
     a_year_since = 1.year.since(Date.today)
@@ -73,7 +57,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     bs = FactoryGirl.create(:business_support_edition,
                            :panopticon_id => @artefact.id,
                            :title => "Foo bar",
-                           :business_support_identifier => "ab2345",
                            :organiser => "Business support corp.",
                            :short_description => "Short description content",
                            :body => "Body content",
@@ -101,7 +84,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "Viewing “Foo bar” Edition 1"
 
-    assert page.has_field?("Business support identifier", :with => "ab2345")
     assert page.has_field?("Organiser", :with => "Business support corp.")
     assert page.has_field?("Short description", :with => "Short description content")
     assert page.has_field?("Body", :with => "Body content")
@@ -132,7 +114,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_checked_field?("edition_support_types_grant")
     assert page.has_checked_field?("edition_support_types_loan")
 
-    fill_in "Business support identifier", :with => "5432de"
     fill_in "Organiser", :with => "Business support inc."
     fill_in "Short description", :with => "New short description"
     fill_in "Body", :with => "This body has changed"
@@ -158,7 +139,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     bs.reload
 
-    assert_equal "5432de", bs.business_support_identifier
     assert_equal "Business support inc.", bs.organiser
     assert_equal "New short description", bs.short_description
     assert_equal "This body has changed", bs.body
@@ -190,7 +170,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :state => 'published',
                                  :title => "Foo bar",
-                                 :business_support_identifier => "ab2345",
                                  :short_description => "Super business support",
                                  :body => "This is the super business support scheme")
 
@@ -200,7 +179,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "Viewing “Foo bar” Edition 2"
 
-    assert page.has_field?("Business support identifier", :with => "ab2345")
   end
 
   should "not allow entering non-numeric values into numeric fields" do
@@ -229,7 +207,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     visit "/admin/editions/#{business_support.to_param}"
 
     assert page.has_css?("input#edition_title[disabled]")
-    assert page.has_css?("input#edition_business_support_identifier[disabled]")
     assert page.has_css?("input#edition_organiser[disabled]")
     assert page.has_css?("textarea#edition_eligibility[disabled]")
     assert page.has_css?("textarea#edition_evaluation[disabled]")

@@ -8,7 +8,7 @@ class BusinessSupportExportPresenter
   def to_csv
     CSV.generate do |csv|
       csv << [
-        "id","title",
+        "title",
         "web URL", "organiser", "short description", "body",
         "eligibility", "evaluation", "additional information", "contact details",
         "max employees", "min value", "max value",
@@ -16,7 +16,7 @@ class BusinessSupportExportPresenter
       ]
       @schemes.each do |scheme|
         csv << [
-          scheme.business_support_identifier, scheme.title,
+          scheme.title,
           "#{Plek.current.website_root}/#{scheme.slug}", scheme.organiser, scheme.short_description, scheme.body,
           scheme.eligibility, scheme.evaluation, scheme.additional_information, scheme.contact_details,
           scheme.max_employees, scheme.min_value, scheme.max_value,

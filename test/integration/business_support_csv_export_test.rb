@@ -9,12 +9,10 @@ class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
   end
 
   should "provide a CSV export of business support schemes" do
-    FactoryGirl.create(:business_support_edition, :slug => "super-finance-triple-bonus", :title => "Super finance triple bonus", :state => "published",
-                       :business_support_identifier => "1")
-    FactoryGirl.create(:business_support_edition, :slug => "young-business-starter-award", :title => "Young business starter award", :state => "published",
-                       :business_support_identifier => "2")
+    FactoryGirl.create(:business_support_edition, :slug => "super-finance-triple-bonus", :title => "Super finance triple bonus", :state => "published")
+    FactoryGirl.create(:business_support_edition, :slug => "young-business-starter-award", :title => "Young business starter award", :state => "published")
     FactoryGirl.create(:business_support_edition, :slug => "brilliant-start-up-award", :title => "Brilliant start-up award", :state => "published",
-                       :business_support_identifier => "3", :organiser => "Capitalise Business Support",
+                       :organiser => "Capitalise Business Support",
                        :short_description => "Business start-up loans for pre-starts and applicants",
                        :body => "Business start-up loans from £1,000 to around £10,000 over periods up to 3 years. Ask for a quote based on our current rates.",
                        :eligibility => "Typically, we look for the applicant to be contributing at least 25% of the total investment",
@@ -34,7 +32,6 @@ class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
 
     data = CSV.parse(last_response.body, :headers => true)
     assert_equal ["Brilliant start-up award", "Super finance triple bonus", "Young business starter award"], data.map {|r| r["title"] }
-    assert_equal %w(3 1 2), data.map {|r| r["id"]}
 
     assert_equal "https://www.gov.uk/brilliant-start-up-award", data[0]["web URL"]
     assert_equal "Capitalise Business Support", data[0]["organiser"]
