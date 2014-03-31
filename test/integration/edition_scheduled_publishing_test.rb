@@ -19,9 +19,11 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     within "#schedule_for_publishing_form" do
       fill_in "Comment", with: "schedule!"
-      select Date.today.year.to_s, from: "activity_publish_at_1i"
-      select Date.today.strftime("%B"), from: "activity_publish_at_2i"
-      select Date.tomorrow.day.to_s, from: "activity_publish_at_3i"
+
+      tomorrow = Date.tomorrow
+      select tomorrow.year.to_s, from: "activity_publish_at_1i"
+      select tomorrow.strftime("%B"), from: "activity_publish_at_2i"
+      select tomorrow.day.to_s, from: "activity_publish_at_3i"
       select '12', from: "activity_publish_at_4i"
       select '15', from: "activity_publish_at_5i"
       click_on "Send"
