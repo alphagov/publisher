@@ -20,9 +20,6 @@ class ScheduledPublisher
     edition = Edition.find(edition_id)
     edition.publish_anonymously
     update_stats if edition.published?
-  rescue Exception => e
-    Airbrake.notify_or_ignore(e, :parameters => {:edition_id => edition_id})
-    raise
   end
 
   private
