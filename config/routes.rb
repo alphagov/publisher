@@ -4,6 +4,7 @@ Publisher::Application.routes.draw do
 
   resources :editions do
     member do
+      get 'diff'
       post 'duplicate'
       post 'progress'
       post 'skip_fact_check', to: 'editions#progress',

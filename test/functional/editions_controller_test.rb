@@ -205,6 +205,16 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  test "we can diff the last edition" do
+    first_edition = FactoryGirl.create(:guide_edition, state: "published")
+    second_edition = first_edition.build_clone(GuideEdition)
+    second_edition.save
+    second_edition.reload
+
+    get :diff, :id => second_edition.id
+    assert_response :success
+  end
+
   context "given a simple smart answer" do
     setup do
       @artefact = FactoryGirl.create(:artefact, :slug => "foo", :name => "Foo", :kind => "simple_smart_answer", :owning_app => "publisher")

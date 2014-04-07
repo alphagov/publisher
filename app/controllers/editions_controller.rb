@@ -97,6 +97,10 @@ class EditionsController < InheritedResources::Base
     end
   end
 
+  def diff
+    @resource = resource
+  end
+
   protected
     def new_assignee
       assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
