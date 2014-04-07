@@ -206,7 +206,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   test "we can diff the last edition" do
-    first_edition = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id, state: "published")
+    first_edition = FactoryGirl.create(:guide_edition, state: "published")
     second_edition = first_edition.build_clone(GuideEdition)
     second_edition.save
     second_edition.reload
