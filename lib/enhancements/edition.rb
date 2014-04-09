@@ -29,8 +29,8 @@ class Edition
   }
 
   def publish_anonymously
+    action_details = published_edition ? { diff: edition_changes } : {}
     if can_publish? && publish
-      action_details = published_edition ? { diff: edition_changes } : {}
       actions.create!(action_details.merge(request_type: Action::PUBLISH))
       save! # trigger denormalisation callbacks
     else
