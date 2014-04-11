@@ -20,8 +20,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   context "Subsequent editions" do
     setup do
       @second_edition = @first_edition.build_clone(AnswerEdition)
-      @second_edition.body = "Test Body 2"
-      @second_edition.save
+      @second_edition.update_attributes(body: "Test Body 2")
       @second_edition.reload
 
       visit "/editions/#{@second_edition.id}"
@@ -47,6 +46,29 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       click_on "Changes since previous edition"
 
       assert page.has_link?("Back to current edition", href: edition_path(@second_edition))
+    end
+  end
+
+  context "Editions scheduled for publishing" do
+    setup do
+      AnswerEdition.any_instance.stubs(:register_with_panopticon).returns(true)
+      @second_edition = @first_edition.build_clone(AnswerEdition)
+      @second_edition.update_attributes(body: "Test Body 2")
+      @second_edition.update_attribute(:state, :scheduled_for_publishing)
+    end
+
+    should "show differences after publishing" do
+      ScheduledPublisher.new.perform(@second_edition.id.to_s)
+
+      @second_edition.reload
+      assert_equal "published", @second_edition.state
+
+      visit "/editions/#{@second_edition.id}"
+      click_on "History & Notes"
+      click_on "Changes since previous edition"
+
+      assert page.has_content?("test body 1")
+      assert page.has_content?("Test Body 2")
     end
   end
 end
