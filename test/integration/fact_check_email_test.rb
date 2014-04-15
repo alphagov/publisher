@@ -10,6 +10,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       subject attrs.fetch(:subject, "This is a fact check response")
       body    attrs.fetch(:body,    'I like it. Good work!')
     end
+
     # The Mail.all(:delete_after_find => true) call in FactCheckEmailHandler will set this
     # on all messages before yielding them
     message.mark_for_delete= true
@@ -129,5 +130,40 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal 2, invocations
+  end
+
+  context "Out of office replies" do
+    def assert_answer_still_in_fact_check_state(out_of_office_header)
+      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+
+      message = fact_check_mail_for(answer)
+      message[out_of_office_header.keys.first] = out_of_office_header.values.first
+
+      Mail.stubs(:all).yields( message )
+
+      FactCheckEmailHandler.new.process
+
+      answer.reload
+      refute answer.fact_check_received?
+      assert answer.fact_check?
+    end
+
+    [
+      ['Auto-Submitted', 'auto-replied'],
+      ['Precedence', 'bulk'],
+      ['Precedence', 'auto_reply'],
+      ['Precedence', 'junk'],
+      ['Subject', 'Out of Office'],
+      ['X-Precedence', 'bulk'],
+      ['X-Precedence', 'auto_reply'],
+      ['X-Precedence', 'junk'],
+      ['X-Autoreply', 'yes'],
+      ['X-Autorespond', nil],
+      ['X-Auto-Response-Suppress', nil]
+    ].each do |key, value|
+      should "ignore emails with #{key} set to #{value}" do
+        assert_answer_still_in_fact_check_state(key => value)
+      end
+    end
   end
 end
