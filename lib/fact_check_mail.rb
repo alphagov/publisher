@@ -37,7 +37,7 @@ class FactCheckMail
       ['X-Precedence', 'junk'],
       ['X-Autoreply', 'yes'],
     ].map do |key, value|
-      @message[key] == value
+      @message[key].to_s == value
     end.any?
   end
 end
