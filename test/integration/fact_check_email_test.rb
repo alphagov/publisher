@@ -155,6 +155,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     [
       ['Auto-Submitted', 'auto-replied'],
+      ['Auto-Submitted', 'auto-generated'],
       ['Precedence', 'bulk'],
       ['Precedence', 'auto_reply'],
       ['Precedence', 'junk'],
