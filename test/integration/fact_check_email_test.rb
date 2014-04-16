@@ -133,19 +133,24 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   context "Out of office replies" do
-    def assert_answer_still_in_fact_check_state(out_of_office_header)
-      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+    def assert_answer_progresses_to_fact_check_received(header)
+      assert_correct_state(header, "fact_check_received")
+    end
 
+    def assert_answer_still_in_fact_check_state(out_of_office_header)
+      assert_correct_state(out_of_office_header, "fact_check")
+    end
+
+    def assert_correct_state(header_hash, state)
+      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
       message = fact_check_mail_for(answer)
-      message[out_of_office_header.keys.first] = out_of_office_header.values.first
+      message[header_hash.keys.first] = header_hash.values.first
 
       Mail.stubs(:all).yields( message )
-
       FactCheckEmailHandler.new.process
 
       answer.reload
-      refute answer.fact_check_received?
-      assert answer.fact_check?
+      assert answer.public_send("#{state}?")
     end
 
     [
@@ -163,6 +168,18 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     ].each do |key, value|
       should "ignore emails with #{key} set to #{value}" do
         assert_answer_still_in_fact_check_state(key => value)
+      end
+    end
+
+    [
+      ['Auto-Submitted', 'no'],
+      ['Precedence', 'foo'],
+      ['Subject', 'On holiday'],
+      ['X-Precedence', 'bar'],
+      ['X-Autoreply', 'no'],
+    ].each do |key, value|
+      should "progress emails when the #{key} header isn't an auto-reply value" do
+        assert_answer_progresses_to_fact_check_received(key => value)
       end
     end
   end
