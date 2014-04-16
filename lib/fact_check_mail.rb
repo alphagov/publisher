@@ -10,7 +10,7 @@ class FactCheckMail
   end
 
   def out_of_office?
-    subject_is_out_of_office? or out_of_office_header_set?
+    subject_is_out_of_office? || out_of_office_header_set?
   end
 
   def method_missing(m, *args, &block)
