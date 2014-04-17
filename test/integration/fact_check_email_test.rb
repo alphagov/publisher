@@ -159,6 +159,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       ['Precedence', 'bulk'],
       ['Precedence', 'auto_reply'],
       ['Precedence', 'junk'],
+      ['Return-Path', nil],
       ['Subject', 'Out of Office'],
       ['X-Precedence', 'bulk'],
       ['X-Precedence', 'auto_reply'],
@@ -182,6 +183,18 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       should "progress emails when the #{key} header isn't an auto-reply value" do
         assert_answer_progresses_to_fact_check_received(key => value)
       end
+    end
+
+    should "Return Mail::Field class if the header is present" do
+      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+      message = fact_check_mail_for(answer)
+      assert_equal message['From'].class, Mail::Field
+    end
+
+    should "Return NilClass class if the header is not present" do
+      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
+      message = fact_check_mail_for(answer)
+      assert_equal message['X-Some-Random-Header'].class, NilClass
     end
   end
 end

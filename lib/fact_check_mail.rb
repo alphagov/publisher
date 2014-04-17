@@ -33,12 +33,14 @@ class FactCheckMail
       ['Precedence', 'bulk'],
       ['Precedence', 'auto_reply'],
       ['Precedence', 'junk'],
+      ['Return-Path', ''],
       ['X-Precedence', 'bulk'],
       ['X-Precedence', 'auto_reply'],
       ['X-Precedence', 'junk'],
       ['X-Autoreply', 'yes'],
-    ].map do |key, value|
+    ].map { |key, value|
+      @message[key].class == Mail::Field &&
       @message[key].to_s == value
-    end.any?
+    }.any?
   end
 end
