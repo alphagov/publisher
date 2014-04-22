@@ -17,5 +17,3 @@ done
 
 bundle exec rake db:mongoid:drop
 bundle exec rake ci:setup:minitest test
-RESULT=$?
-exit $RESULT
