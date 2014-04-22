@@ -3,6 +3,7 @@ require 'integration_test_helper'
 class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
   def setup
+    setup_users
     # queue up the edition, don't perform inline
     Sidekiq::Testing.fake!
   end
@@ -12,7 +13,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   end
 
   test "should schedule publishing of an edition" do
-    edition = FactoryGirl.create(:edition, state: 'ready')
+    edition = FactoryGirl.create(:edition, state: 'ready', :assigned_to => @author)
     visit_edition edition
 
     click_on "Schedule"

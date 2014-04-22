@@ -11,6 +11,7 @@ test:
   database: govuk_content_publisher_test
   use_activesupport_time_zone: true
   persist_in_safe_mode: true
+  autocreate_indexes: true
 
 # set these environment variables on your prod server
 production:

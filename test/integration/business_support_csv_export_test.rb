@@ -5,6 +5,7 @@ class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
   include Rack::Test::Methods
 
   setup do
+    setup_users
     Plek.any_instance.stubs(:website_root).returns("https://www.gov.uk")
   end
 
