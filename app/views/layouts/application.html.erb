@@ -59,8 +59,8 @@
   </header>
 
   <section class="container-fluid" role="main">
-    <% [:notice, :alert].select { |k| flash[k].present? }.each do |k| %>
-      <div class="alert <%= k %>">
+    <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
+      <div class="alert alert-<%= k %>">
         <%= flash[k] %>
       </div>
     <% end %>

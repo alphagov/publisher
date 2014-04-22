@@ -43,7 +43,8 @@ class EditionsController < InheritedResources::Base
     command = EditionDuplicator.new(resource, current_user)
 
     if resource.sibling_in_progress.present?
-      redirect_to edition_path(resource), :alert => "Another person has created a newer edition"
+      flash[:error] = "Another person has created a newer edition"
+      redirect_to edition_path(resource)
     elsif command.duplicate(params[:to], new_assignee)
       return_to = params[:return_to] || edition_path(command.new_edition)
       redirect_to return_to, :notice => 'New edition created'
