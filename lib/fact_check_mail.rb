@@ -38,9 +38,9 @@ class FactCheckMail
       ['X-Precedence', 'auto_reply'],
       ['X-Precedence', 'junk'],
       ['X-Autoreply', 'yes'],
-    ].map { |key, value|
+    ].any? do |key, value|
       @message[key].class == Mail::Field &&
       @message[key].to_s == value
-    }.any?
+    end
   end
 end
