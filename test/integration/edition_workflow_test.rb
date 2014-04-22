@@ -327,4 +327,21 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       href: edition_path(new_edition)
     ), "Page should have edit link"
   end
+
+  test "should show an alert if another person has created a newer edition" do
+    guide = FactoryGirl.create(:guide_edition, state: 'published')
+    filter_for "All"
+    view_filtered_list "Published"
+
+    # Simulate that someone has clicked on 'Create new edition of this publication'
+    # while current user has been viewing the list of published editions
+    new_edition = guide.build_clone(GuideEdition)
+    new_edition.save
+
+    # Current user now decides to click the button
+    click_button "Create new edition of this publication"
+
+    assert page.has_content?("Another person has created a newer edition")
+    assert page.has_content?("Status: Published")
+  end
 end
