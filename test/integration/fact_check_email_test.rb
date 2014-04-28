@@ -133,9 +133,10 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   context "Out of office replies" do
-    def assert_correct_state(state)
+    def assert_correct_state(key, value, state)
       answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
       message = fact_check_mail_for(answer)
+      message[key] = value
 
       Mail.stubs(:all).yields( message )
       FactCheckEmailHandler.new.process
@@ -145,13 +146,11 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     end
 
     should "remain in Fact Check state if email is an out of office reply" do
-      FactCheckMail.any_instance.stubs(:out_of_office?).returns(true)
-      assert_correct_state("fact_check")
+      assert_correct_state("Auto-Submitted", "auto-replied", "fact_check")
     end
 
     should "progress to Fact Check Received state if email is a genuine reply" do
-      FactCheckMail.any_instance.stubs(:out_of_office?).returns(false)
-      assert_correct_state("fact_check_received")
+      assert_correct_state("X-Some-Header", "some-value", "fact_check_received")
     end
   end
 end
