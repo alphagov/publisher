@@ -133,18 +133,10 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   context "Out of office replies" do
-    def assert_answer_progresses_to_fact_check_received(header)
-      assert_correct_state(header, "fact_check_received")
-    end
-
-    def assert_answer_still_in_fact_check_state(out_of_office_header)
-      assert_correct_state(out_of_office_header, "fact_check")
-    end
-
-    def assert_correct_state(header_hash, state)
+    def assert_correct_state(key, value, state)
       answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
       message = fact_check_mail_for(answer)
-      message[header_hash.keys.first] = header_hash.values.first
+      message[key] = value
 
       Mail.stubs(:all).yields( message )
       FactCheckEmailHandler.new.process
@@ -153,48 +145,12 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       assert answer.public_send("#{state}?")
     end
 
-    [
-      ['Auto-Submitted', 'auto-replied'],
-      ['Auto-Submitted', 'auto-generated'],
-      ['Precedence', 'bulk'],
-      ['Precedence', 'auto_reply'],
-      ['Precedence', 'junk'],
-      ['Return-Path', nil],
-      ['Subject', 'Out of Office'],
-      ['X-Precedence', 'bulk'],
-      ['X-Precedence', 'auto_reply'],
-      ['X-Precedence', 'junk'],
-      ['X-Autoreply', 'yes'],
-      ['X-Autorespond', nil],
-      ['X-Auto-Response-Suppress', nil]
-    ].each do |key, value|
-      should "ignore emails with #{key} set to #{value}" do
-        assert_answer_still_in_fact_check_state(key => value)
-      end
+    should "remain in Fact Check state if email is an out of office reply" do
+      assert_correct_state("Auto-Submitted", "auto-replied", "fact_check")
     end
 
-    [
-      ['Auto-Submitted', 'no'],
-      ['Precedence', 'foo'],
-      ['Subject', 'On holiday'],
-      ['X-Precedence', 'bar'],
-      ['X-Autoreply', 'no'],
-    ].each do |key, value|
-      should "progress emails when the #{key} header isn't an auto-reply value" do
-        assert_answer_progresses_to_fact_check_received(key => value)
-      end
-    end
-
-    should "Return Mail::Field class if the header is present" do
-      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
-      message = fact_check_mail_for(answer)
-      assert_equal message['From'].class, Mail::Field
-    end
-
-    should "Return NilClass class if the header is not present" do
-      answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
-      message = fact_check_mail_for(answer)
-      assert_equal message['X-Some-Random-Header'].class, NilClass
+    should "progress to Fact Check Received state if email is a genuine reply" do
+      assert_correct_state("X-Some-Header", "some-value", "fact_check_received")
     end
   end
 end
