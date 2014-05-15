@@ -8,9 +8,8 @@
 # gmail account and having a look.
 #
 require File.expand_path('../../config/environment',  __FILE__)
+Publisher::Application.mail_fetcher_config.configure
 
-require 'mail'
-require Rails.root.join("config/fact_check_account")
 require 'fact_check_email_handler'
 
 require 'redis'

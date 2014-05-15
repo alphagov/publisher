@@ -1,0 +1,13 @@
+# Configuration for the fact check system
+# This file is overwritten on deployment
+
+# In deployed versions, this contains connection details for the fact check
+# account, eg:
+#
+#     address: imap.example.com
+#     port: 993
+#     user_name: factcheck@example.com
+#     password: correct horse battery staple
+#     enable_ssl: true
+#
+fetcher: {}
