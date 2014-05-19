@@ -1,6 +1,11 @@
 # Configuration for the fact check system
 # This file is overwritten on deployment
 
+# The main address pattern sent out as the From address on fact check emails
+# If we ever want to change this format, we'll need to support some notion of
+# legacy formats, so we still pick up emails to old addresses
+address_format: "factcheck+dev-{id}@alphagov.co.uk"
+
 # In deployed versions, this contains connection details for the fact check
 # account, eg:
 #

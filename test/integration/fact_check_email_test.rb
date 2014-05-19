@@ -17,13 +17,17 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     message
   end
 
+  def fact_check_config
+    Publisher::Application.fact_check_config
+  end
+
   test "should pick up an email and add an action to the edition, and advance the state to 'fact_check_received'" do
     answer = FactoryGirl.create(:answer_edition, :state => 'fact_check')
 
     message = fact_check_mail_for(answer)
     Mail.stubs(:all).yields( message )
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
     answer.reload
@@ -41,7 +45,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).yields( fact_check_mail_for(answer) )
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
     answer.reload
@@ -62,7 +66,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
           fact_check_mail_for(answer1, :body => "Third Message")
     )
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
     answer1.reload
@@ -89,7 +93,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).yields(message)
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
     assert ! message.is_marked_for_delete?
@@ -106,7 +110,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).multiple_yields(message_cc, message_bcc)
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
     assert message_cc.is_marked_for_delete?
@@ -122,7 +126,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
           fact_check_mail_for(answer2, :body => "Second Message")
     )
 
-    handler = FactCheckEmailHandler.new
+    handler = FactCheckEmailHandler.new(fact_check_config)
 
     invocations = 0
     handler.process do
@@ -139,7 +143,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       message[key] = value
 
       Mail.stubs(:all).yields( message )
-      FactCheckEmailHandler.new.process
+      FactCheckEmailHandler.new(fact_check_config).process
 
       answer.reload
       assert answer.public_send("#{state}?")

@@ -22,7 +22,7 @@ end
 
 Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
 
-handler = FactCheckEmailHandler.new
+handler = FactCheckEmailHandler.new(Publisher::Application.fact_check_config)
 
 # The lock is created and belongs to this process for as long as the `life`.
 # When the block has finished executing, the lock is explicitly released.

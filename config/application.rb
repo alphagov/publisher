@@ -18,6 +18,9 @@ module Publisher
     # See `script/mail_fetcher`
     attr_accessor :mail_fetcher_config
 
+    # Configuration object for fact check address construction and parsing
+    attr_accessor :fact_check_config
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
