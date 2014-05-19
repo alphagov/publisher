@@ -93,7 +93,7 @@ GEM
       i18n (~> 0.5)
     faraday (0.8.7)
       multipart-post (~> 1.1)
-    gds-api-adapters (5.3.0)
+    gds-api-adapters (10.11.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -108,10 +108,10 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (10.2.2)
+    govuk_content_models (11.0.0)
       bson_ext
       differ
-      gds-api-adapters
+      gds-api-adapters (>= 10.9.0)
       gds-sso (>= 7.0.0, < 10.0.0)
       govspeak (>= 1.0.1, < 2.0.0)
       mongoid (~> 2.5)
@@ -149,7 +149,7 @@ GEM
     less-rails-bootstrap (2.0.13)
       less-rails (~> 2.2.0)
     libv8 (3.11.8.17)
-    link_header (0.0.7)
+    link_header (0.0.8)
     logstash-event (1.1.5)
     logstasher (0.4.8)
       logstash-event (~> 1.1.0)
@@ -316,10 +316,10 @@ DEPENDENCIES
   faker (= 1.1.2)
   formtastic!
   formtastic-bootstrap!
-  gds-api-adapters (= 5.3.0)
+  gds-api-adapters (= 10.11.0)
   gds-sso (= 9.2.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 10.2.2)
+  govuk_content_models (= 11.0.0)
   has_scope
   inherited_resources
   jquery-rails
