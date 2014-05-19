@@ -1,5 +1,4 @@
 require 'fact_check_message_processor'
-require 'fact_check_address'
 require_relative 'fact_check_mail'
 
 # A class to pull messages from an email account and send relevant ones
@@ -10,7 +9,8 @@ require_relative 'fact_check_mail'
 class FactCheckEmailHandler
   attr_accessor :errors
 
-  def initialize
+  def initialize(fact_check_config)
+    @fact_check_config = fact_check_config
     self.errors = []
   end
 
@@ -19,10 +19,9 @@ class FactCheckEmailHandler
 
     return false if message.out_of_office?
 
-    address_matcher = FactCheckAddress.new
     message.recipients.each do |recipient|
-      if address_matcher.valid_address?(recipient.to_s)
-        edition_id = address_matcher.edition_id_from_address(recipient.to_s)
+      if @fact_check_config.valid_address?(recipient.to_s)
+        edition_id = @fact_check_config.item_id(recipient.to_s)
         return FactCheckMessageProcessor.process(message, edition_id)
       end
     end

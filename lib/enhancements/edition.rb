@@ -48,6 +48,10 @@ class Edition
     actions.any? and actions.last.request_type == 'skip_fact_check'
   end
 
+  def fact_check_email_address
+    Publisher::Application.fact_check_config.address(self.id)
+  end
+
   def register_with_panopticon
     artefact = Artefact.find(self.panopticon_id)
     if artefact.state == "archived"
