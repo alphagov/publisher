@@ -11,7 +11,7 @@
       <%= publication.admin_list_title %>
 
       &mdash; Ed. <%= publication.version_number %>
-      <% if publication.has_sibling_in_progress? %>
+      <% unless publication.can_create_new_edition? %>
       (Ed. <%= publication.sibling_in_progress %> in draft)
       <% end %>
 
