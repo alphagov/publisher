@@ -13,6 +13,7 @@
   <![endif]-->
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= csrf_meta_tag %>
+  <%= favicon_link_tag "favicon-#{environment_name}.png" %>
   <%= yield :extra_headers %>
 </head>
 <body class="environment-<%= environment_name %>">
