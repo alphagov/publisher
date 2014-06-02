@@ -42,3 +42,27 @@
 .environment-dev .navbar-inner {
   border-bottom-color: @dev-color;
 }
+
+.environment-message {
+  background: #333;
+  padding: 3px 5px;
+  line-height: 19px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin: 6px 20px 0 -5px;
+}
+
+.environment-production .environment-message {
+  background-color: @production-color;
+  color: #fff;
+}
+
+.environment-preview .environment-message {
+  background-color: @preview-color;
+  color: #000;
+}
+
+.environment-dev .environment-message {
+  background-color: @dev-color;
+  color: #000;
+}
