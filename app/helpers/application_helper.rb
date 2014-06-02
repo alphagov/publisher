@@ -20,10 +20,8 @@ module ApplicationHelper
       "production"
     elsif domain.include? "preview"
       "preview"
-    elsif domain.include? "dev"
-      "development"
     else
-      "unknown"
+      "development"
     end
   end
 
