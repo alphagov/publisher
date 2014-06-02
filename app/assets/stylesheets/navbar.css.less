@@ -23,3 +23,22 @@
 .navbar .nav .active > a:hover {
   background: none;
 }
+
+/* Environment indicators
+   ========================================================================== */
+
+@production-color: #df3034; /* Red */
+@preview-color: #ffbf47;    /* Orange */
+@dev-color: #bfc1c3;        /* Grey */
+
+.environment-production .navbar-inner {
+  border-bottom-color: @production-color;
+}
+
+.environment-preview .navbar-inner {
+  border-bottom-color: @preview-color;
+}
+
+.environment-dev .navbar-inner {
+  border-bottom-color: @dev-color;
+}
