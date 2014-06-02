@@ -14,6 +14,19 @@ module ApplicationHelper
       end
   end
 
+  def environment_name
+    domain = Plek.current.website_root
+    if domain.include? "production"
+      "production"
+    elsif domain.include? "preview"
+      "preview"
+    elsif domain.include? "dev"
+      "development"
+    else
+      "unknown"
+    end
+  end
+
   def sortable(column, title = nil)
     title ||= column.titleize
     css_class = column == sort_column ? "current #{sort_direction}" : "sortable"

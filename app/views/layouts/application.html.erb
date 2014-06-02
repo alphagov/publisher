@@ -15,7 +15,7 @@
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
 </head>
-<body>
+<body class="environment-<%= environment_name %>">
 
   <header class="navbar navbar-fixed-top" role="banner">
     <div class="navbar-inner">
@@ -29,7 +29,7 @@
         <nav role="navigation" class="nav-collapse">
           <ul class="nav">
             <li>
-              <div class="environment-message">Environment</div>
+              <div class="environment-message"><%= environment_name.titleize %></div>
             </li>
             <%= nav_link 'All publications', root_path %>
             <%= nav_link 'Manage expectations', expectations_path %>
