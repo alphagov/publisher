@@ -12,7 +12,7 @@
   padding-left: 2em;
 }
 
-.navbar-inner {
+.navbar-inner-header {
   background: #000; /* black */
   border-top: 5px solid #000;
   border-bottom: 5px solid #000;
@@ -31,15 +31,15 @@
 @preview-color: #ffbf47;    /* Orange */
 @dev-color: #bfc1c3;        /* Grey */
 
-.environment-production .navbar-inner {
+.environment-production .navbar-inner-header {
   border-bottom-color: @production-color;
 }
 
-.environment-preview .navbar-inner {
+.environment-preview .navbar-inner-header {
   border-bottom-color: @preview-color;
 }
 
-.environment-development .navbar-inner {
+.environment-development .navbar-inner-header {
   border-bottom-color: @dev-color;
 }
 
