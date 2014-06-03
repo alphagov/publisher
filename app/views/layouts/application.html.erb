@@ -13,10 +13,10 @@
   <![endif]-->
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= csrf_meta_tag %>
-  <%= favicon_link_tag "favicon-#{environment_name}.png" %>
+  <%= favicon_link_tag "favicon-#{GovukAdminTemplate.environment_style}.png" %>
   <%= yield :extra_headers %>
 </head>
-<body class="environment-<%= environment_name %>">
+<body class="environment-<%= GovukAdminTemplate.environment_style %>">
 
   <header class="navbar navbar-fixed-top" role="banner">
     <div class="navbar-inner navbar-inner-header">
@@ -30,7 +30,7 @@
         <nav role="navigation" class="nav-collapse">
           <ul class="nav">
             <li>
-              <div class="environment-message"><%= environment_name.titleize %></div>
+              <div class="environment-message"><%= GovukAdminTemplate.environment_label %></div>
             </li>
             <%= nav_link 'All publications', root_path %>
             <%= nav_link 'Manage expectations', expectations_path %>
