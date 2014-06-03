@@ -1,5 +1,6 @@
 /*
  *= require bootstrap_and_overrides
+ *= require navbar
  *= require business_support
  *= require smart_answer_builder
  */

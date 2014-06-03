@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Main navigation bar
+   ========================================================================== */
+
+.navbar .brand {
+  background-image: asset-url("header-crown.png");
+  background-position: 0 0.25em;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-family: "GillSans", "Gill Sans", "Helvetica Neue", Helvetica, sans-serif;
+  margin-left: 0;
+  padding-left: 2em;
+}
+
+.navbar-inner-header {
+  background: #000; /* black */
+  border-top: 5px solid #000;
+  border-bottom: 5px solid #000;
+  box-shadow: none;
+}
+
+.navbar .nav .active > a,
+.navbar .nav .active > a:hover {
+  background: none;
+}
+
+/* Environment indicators
+   ========================================================================== */
+
+@production-color: #df3034; /* Red */
+@preview-color: #ffbf47;    /* Orange */
+@dev-color: #bfc1c3;        /* Grey */
+
+.environment-production .navbar-inner-header {
+  border-bottom-color: @production-color;
+}
+
+.environment-preview .navbar-inner-header {
+  border-bottom-color: @preview-color;
+}
+
+.environment-development .navbar-inner-header {
+  border-bottom-color: @dev-color;
+}
+
+.environment-message {
+  background: #333;
+  padding: 3px 5px;
+  line-height: 19px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin: 6px 20px 0 -5px;
+}
+
+.environment-production .environment-message {
+  background-color: @production-color;
+  color: #fff;
+}
+
+.environment-preview .environment-message {
+  background-color: @preview-color;
+  color: #000;
+}
+
+.environment-development .environment-message {
+  background-color: @dev-color;
+  color: #000;
+}

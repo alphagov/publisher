@@ -13,12 +13,13 @@
   <![endif]-->
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= csrf_meta_tag %>
+  <%= favicon_link_tag "favicon-#{GovukAdminTemplate.environment_style}.png" %>
   <%= yield :extra_headers %>
 </head>
-<body>
+<body class="environment-<%= GovukAdminTemplate.environment_style %>">
 
   <header class="navbar navbar-fixed-top" role="banner">
-    <div class="navbar-inner">
+    <div class="navbar-inner navbar-inner-header">
       <div class="container-fluid">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
           <span class="icon-bar"></span>
@@ -28,11 +29,13 @@
         <%= link_to 'GOV.UK Publisher', root_path, :class => "brand" %>
         <nav role="navigation" class="nav-collapse">
           <ul class="nav">
+            <li>
+              <div class="environment-message"><%= GovukAdminTemplate.environment_label %></div>
+            </li>
             <%= nav_link 'All publications', root_path %>
             <%= nav_link 'Manage expectations', expectations_path %>
             <%= nav_link 'Reports', reports_path %>
             <%= nav_link 'Search by user', user_search_path %>
-            <li class="divider-vertical"></li>
           </ul>
           <ul class="nav pull-right">
             <li class="dropdown">
