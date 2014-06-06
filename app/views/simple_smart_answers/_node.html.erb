@@ -1,6 +1,6 @@
 <div>
   <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
-      <%= f.link_to_remove "<i class=\"icon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
+      <%= f.link_to_remove "<i class=\"glyphicon glyphicon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
   </legend>
   <%= f.hidden_field :order, :class => 'node-order' %> 
   <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "col-md-10 node-title" } %>
@@ -14,21 +14,21 @@
         <div class="control-group<%= o.object.errors.empty? ? '' : ' error' %>">
           <%= o.input :label, :label => false,
             :input_html => { :placeholder => "Label", :class => "option-label" } %>
-          <i class="icon-arrow-right"></i>
+          <i class="glyphicon glyphicon-arrow-right"></i>
           <%= o.input :next_node, :as => :hidden, :input_html => { :class => "next-node-id" } %>
           <select class="required next-node-list" name="next-node-list">
             <option value="" class="default">Select a node..</option>
             <optgroup label="Questions" class="question-list"></optgroup>
             <optgroup label="Outcomes" class="outcome-list"></optgroup>
           </select>
-          <%= o.link_to_remove "<i class=\"icon-remove\"></i> Remove option".html_safe, 
+          <%= o.link_to_remove "<i class=\"glyphicon glyphicon-remove\"></i> Remove option".html_safe, 
             :class => "btn btn-link btn-small remove-option" %> 
           <% if o.object.errors.has_key?(:next_node) -%>
             <span class="help-inline"><%= o.object.errors[:next_node].join(', ') %></span>
           <% end -%>
         </div>
       <% end %>
-      <%= f.link_to_add "<i class=\"icon-plus-sign icon-white\"></i> Add an option".html_safe, :options, :class => "btn btn-primary btn-small" %>
+      <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus-sign\"></i> Add an option".html_safe, :options, :class => "btn btn-primary btn-small" %>
     </div>
   <% end %>
 </div>

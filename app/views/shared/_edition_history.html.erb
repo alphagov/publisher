@@ -1,6 +1,6 @@
   <div id="version<%= edition.version_number %>" class="accordion-group">
     <div class="accordion-heading">
-      <a class="accordion-toggle history" href="#body<%= edition.version_number %>"><i class="icon-chevron-down"></i> Notes for edition <%= edition.version_number %></a>
+      <a class="accordion-toggle history" href="#body<%= edition.version_number %>"><i class="glyphicon glyphicon-chevron-down"></i> Notes for edition <%= edition.version_number %></a>
       <% if edition.version_number > 1 %>
         <%= link_to "Changes since previous edition", diff_edition_path(edition), class: "see-what-changed" %>
       <% end %>

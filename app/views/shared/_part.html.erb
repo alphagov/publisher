@@ -1,7 +1,7 @@
 <div class="accordion-group part">
   <div class="accordion-heading">
     <a class="accordion-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug || 'untitled-part' %>">
-      <i class="icon-chevron-down"></i>
+      <i class="glyphicon glyphicon-chevron-down"></i>
       <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
     </a>
   </div>
@@ -26,7 +26,7 @@
                       :hint => false,
                       :required => true %>
 
-          <p class="help-block"><i class="icon-info-sign"></i> Eg. title-of-part (no spaces, apostrophes, etc).</p>
+          <p class="help-block"><i class="glyphicon glyphicon-info-sign"></i> Eg. title-of-part (no spaces, apostrophes, etc).</p>
 
           <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
 

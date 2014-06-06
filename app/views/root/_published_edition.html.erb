@@ -16,7 +16,7 @@
       <% end %>
 
       <% if publication.has_video? %>
-        <i class="icon-film" alt="Has video"></i>
+        <i class="glyphicon glyphicon-film" alt="Has video"></i>
       <% end %>
     </p>
   </td>
@@ -40,13 +40,13 @@
   </td>
   <td class="icon">
     <%= link_to publication_front_end_path(publication) do %>
-      <i class="icon-share-alt" title="View this publication"></i>
+      <i class="glyphicon glyphicon-share-alt" title="View this publication"></i>
     <% end %>
   </td>
   <td class="icon">
     <%#edition_path(publication) %>
     <%= link_to "/editions/#{publication.id}" do %>
-      <i class="icon-lock" title="Locked view for this publication"></i>
+      <i class="glyphicon glyphicon-lock" title="Locked view for this publication"></i>
     <% end %>
   </td>
   <td class="duplicate icon">
@@ -58,7 +58,7 @@
   </td>
   <td class="icon">
     <%= link_to preview_edition_path(publication) do %>
-      <i class="icon-eye-open" title="Preview this publication"></i>
+      <i class="glyphicon glyphicon-eye-open" title="Preview this publication"></i>
     <% end %>
   </td>
 </tr>
