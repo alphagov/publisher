@@ -6,7 +6,7 @@
   border: none;
   margin: 0;
 }
-.builder-container .node > .span8 {
+.builder-container .node > .col-md-8 {
     border-top: 1px solid #ccc;
     padding-top: 10px;
 

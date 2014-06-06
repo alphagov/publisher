@@ -1,5 +1,5 @@
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
 
     <div class="page-header">
       <h1>
@@ -10,9 +10,9 @@
       </h1>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
 
-      <div class="span2">
+      <div class="col-md-2">
 
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
@@ -31,17 +31,17 @@
               select_tag("user_filter", options_for_select(
                 [["All", "all"], ["Nobody", "nobody"]] +
                 User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-              ), :class => "span12")
+              ), :class => "col-md-12")
             %>
             <label for="string_filter" class="visuallyhidden nav-header">Filter by keyword</label>
-            <%= text_field_tag "string_filter", params[:string_filter], class: "span12", type: "search" %>
+            <%= text_field_tag "string_filter", params[:string_filter], class: "col-md-12", type: "search" %>
 
             <input class="btn btn-primary" type="submit" value="Apply filters">
           </form>
         </div>
       </div>
 
-      <div id="publication-list-container" class="span10">
+      <div id="publication-list-container" class="col-md-10">
         <% if params[:with] %>
         <%= render @list, with: params[:with] %>
         <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter } %>
@@ -50,10 +50,10 @@
         <%= paginate @presenter.send(@list) %>
         <% end %>
 
-      </div><!--./span10 -->
+      </div><!--./col-md-10 -->
 
-    </div><!--./row-fluid -->
-  </div><!--./span12 -->
-</div><!--./row-fluid -->
+    </div><!--./row -->
+  </div><!--./col-md-12 -->
+</div><!--./row -->
 
 <% content_for :page_title, "Publications" %>

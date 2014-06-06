@@ -1,5 +1,5 @@
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
 
     <div class="page-header">
       <h1>Manage expectations</h1>
@@ -7,8 +7,8 @@
 
     <div class="well">
 
-      <div class="row-fluid">
-        <div class="span5">
+      <div class="row">
+        <div class="col-md-5">
           <h2>Existing expectations</h2>
           <ul>
             <% @expectations.each do |expectation| %>
@@ -17,7 +17,7 @@
           </ul>
         </div>
 
-        <div class="span7">
+        <div class="col-md-7">
           <h2>Add new expectation</h2>
           <%= semantic_form_for(@expectation) do |f| %>
             <%= f.inputs do %>
@@ -26,11 +26,11 @@
             <% end %>
           <% end %>
         </div>
-      </div><!--/.row-fluid -->
+      </div><!--/.row -->
 
     </div><!--/.well -->
 
-  </div><!--/.span12 -->
-</div><!--/.row-fluid -->
+  </div><!--/.col-md-12 -->
+</div><!--/.row -->
 
 <% content_for :page_title, "Manage expectations" %>

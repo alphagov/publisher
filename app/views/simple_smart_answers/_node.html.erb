@@ -3,8 +3,8 @@
       <%= f.link_to_remove "<i class=\"icon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
   </legend>
   <%= f.hidden_field :order, :class => 'node-order' %> 
-  <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span10 node-title" } %>
-  <%= f.text_area :body, :label => false, :placeholder => "Optional extra information", :class => "span10 node-body", :rows => 10 %>
+  <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "col-md-10 node-title" } %>
+  <%= f.text_area :body, :label => false, :placeholder => "Optional extra information", :class => "col-md-10 node-body", :rows => 10 %>
 
   <%= f.input :kind, :as => :hidden, :input_html => { :class => "node-kind" } %>
   <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>

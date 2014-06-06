@@ -1,14 +1,14 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
-  <div class="row-fluid">
+  <div class="row">
 
 
-    <div class="span8">
+    <div class="col-md-8">
     <%= f.inputs do %>
       <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
       <%= render :partial => 'business_supports/fields', :locals => { :f => f, :locked_for_edits => @resource.locked_for_edits? } %>
     <% end %>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
       <h3>Govspeak help</h3>
 
       <div class="well">

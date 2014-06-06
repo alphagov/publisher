@@ -17,25 +17,25 @@
     <%= f.input :organisation_formatted_name,
                 :as => :text,
                 :label => "Organisation formatted name",
-                :input_html => { :class => 'span3', :rows => "4", :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :class => 'col-md-3', :rows => "4", :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :organisation_url,
                 :label => "Organisation URL",
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :organisation_crest,
                 :as => :select,
                 :collection => CampaignEdition::CRESTS,
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :organisation_brand_colour,
                 :as => :select,
                 :collection => CampaignEdition::BRAND_COLOURS,
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :body,
                 :as => :text,
-                :input_html => { :class => 'span12', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :class => 'col-md-12', :disabled => @resource.locked_for_edits? } %>
 
   <% end %>
 <% end %>

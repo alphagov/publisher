@@ -8,21 +8,21 @@
   <div id="<%= f.object.slug || 'untitled-part' %>" class="accordion-body <% if f.object.valid? %>collapse <% end %>in">
     <div class="accordion-inner">
 
-      <div class="row-fluid">
+      <div class="row">
 
         <%= f.inputs do %>
           <%= f.input :title,
-                      :input_html => { :class => 'span12 title', :disabled => @resource.locked_for_edits? },
+                      :input_html => { :class => 'col-md-12 title', :disabled => @resource.locked_for_edits? },
                       :hint => true,
                       :required => true %>
 
           <%= f.input :body,
                       :as => :text,
                       :required => true,
-                      :input_html => { :class => 'span12', :rows => '25', :disabled => @resource.locked_for_edits? } %>
+                      :input_html => { :class => 'col-md-12', :rows => '25', :disabled => @resource.locked_for_edits? } %>
 
           <%= f.input :slug,
-                      :input_html => { :class => 'span12 slug', :disabled => ! editable },
+                      :input_html => { :class => 'col-md-12 slug', :disabled => ! editable },
                       :hint => false,
                       :required => true %>
 
@@ -31,13 +31,13 @@
           <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
 
         <% unless @resource.locked_for_edits? %>
-          <div class="row-fluid">
+          <div class="row">
             <hr>
             <%= f.link_to_remove "Remove this part" %>
-          </div><!--/.row-fluid -->
+          </div><!--/.row -->
         <% end %>
       <% end %>
-      </div><!--/.row-fluid -->
+      </div><!--/.row -->
     </div>
   </div>
 </div>
