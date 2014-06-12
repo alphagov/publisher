@@ -108,7 +108,7 @@ GEM
       htmlentities (~> 4)
       kramdown (~> 0.13.3)
       sanitize (= 2.0.3)
-    govuk_content_models (11.0.1)
+    govuk_content_models (12.1.0)
       bson_ext
       differ
       gds-api-adapters (>= 10.9.0)
@@ -319,7 +319,7 @@ DEPENDENCIES
   gds-api-adapters (= 10.11.0)
   gds-sso (= 9.2.0)
   govspeak (= 1.2.0)
-  govuk_content_models (= 11.0.1)
+  govuk_content_models (= 12.1.0)
   has_scope
   inherited_resources
   jquery-rails
