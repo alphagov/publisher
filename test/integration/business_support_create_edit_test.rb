@@ -22,12 +22,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
       {slug:'plc',name:'Public limited company'}
     ])
 
-    BusinessSupport::Location.collection.insert([
-      {slug:'england', name:'England'},
-      {slug:'scotland', name:'Scotland'},
-      {slug:'wales', name:'Wales'}
-    ])
-
     BusinessSupport::Purpose.collection.insert([
       {slug:'expansion', name: 'Expansion'},
       {slug:'world-domination', name: 'World domination'}
@@ -84,7 +78,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                            :end_date => a_year_since,
                            :business_sizes => ["up-to-249"],
                            :business_types => ["charity"],
-                           :locations => ["england", "scotland"],
                            :purposes => ["world-domination"],
                            :sectors => ["education"],
                            :stages => ["grow-and-sustain"],
@@ -116,8 +109,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_checked_field?("edition_business_sizes_up-to-249")
     assert page.has_checked_field?("edition_business_types_charity")
-    assert page.has_checked_field?("edition_locations_england")
-    assert page.has_checked_field?("edition_locations_scotland")
     assert page.has_checked_field?("edition_purposes_world-domination")
     assert page.has_checked_field?("edition_sectors_education")
     assert page.has_checked_field?("edition_stages_grow-and-sustain")
@@ -139,7 +130,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     select "Normal", :from => "edition_priority"
     select Date.today.year.to_s, :from => "edition_start_date_1i"
-    check "business_support_location_check_all"
 
     # circumvent poltergeist not handling bootstrap modals
     # by directly triggering our expected change
@@ -170,10 +160,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_start_date_1i", :selected => Date.today.year.to_s)
     assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
     assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
-    assert page.has_checked_field?("business_support_location_check_all")
-    assert page.has_checked_field?("edition_locations_wales")
-    assert page.has_checked_field?("edition_locations_england")
-    assert page.has_checked_field?("edition_locations_scotland")
     assert page.has_checked_field?("edition_sectors_manufacturing")
     refute page.has_checked_field?("edition_support_type_loan")
   end
@@ -253,11 +239,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_css?("input#edition_business_sizes_under-10[disabled]")
     assert page.has_css?("input#edition_business_sizes_up-to-249[disabled]")
     assert page.has_css?("input#edition_business_sizes_over-1000000[disabled]")
-
-    assert page.has_css?("input#business_support_location_check_all[disabled]")
-    assert page.has_css?("input#edition_locations_england[disabled]")
-    assert page.has_css?("input#edition_locations_scotland[disabled]")
-    assert page.has_css?("input#edition_locations_wales[disabled]")
 
     assert page.has_css?("input#business_support_purpose_check_all[disabled]")
     assert page.has_css?("input#edition_purposes_expansion[disabled]")

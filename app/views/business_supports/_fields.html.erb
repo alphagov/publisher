@@ -103,14 +103,6 @@
     <hr/>
 
     <%= render partial: "admin/business_supports/facets", locals: { f: f,
-                                  title: "Locations",
-                                  collection: BusinessSupport::Location.asc(:name),
-                                  model_collection: "locations",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <hr/>
-
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
                                   title: "Purposes",
                                   collection: BusinessSupport::Purpose.asc(:name),
                                   model_collection: "purposes",
