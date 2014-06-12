@@ -50,7 +50,7 @@ gem 'reverse_markdown', require: false # Only used in some importers
 gem 'statsd-ruby', '~> 1.1.0', require: false
 gem 'whenever', require: false
 
-gem 'jquery-rails'
+gem 'jquery-rails', '3.0.4'
 gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 

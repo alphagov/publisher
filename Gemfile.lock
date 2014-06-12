@@ -127,9 +127,9 @@ GEM
       has_scope (~> 0.5.0)
       responders (~> 0.6)
     journey (1.0.4)
-    jquery-rails (2.0.2)
-      railties (>= 3.2.0, < 5.0)
-      thor (~> 0.14)
+    jquery-rails (3.0.4)
+      railties (>= 3.0, < 5.0)
+      thor (>= 0.14, < 2.0)
     json (1.8.1)
     jwt (0.1.8)
       multi_json (>= 1.5)
@@ -322,7 +322,7 @@ DEPENDENCIES
   govuk_content_models (= 11.0.1)
   has_scope
   inherited_resources
-  jquery-rails
+  jquery-rails (= 3.0.4)
   kaminari (= 0.13.0)
   launchy
   less-rails-bootstrap
