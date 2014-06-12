@@ -3,7 +3,7 @@ $(document).ready(function() {
     $("#business_support_" + facet + "_check_all").click(function(e) {
       var $el = $(e.target);
       $.each($el.parent().parent().find(":checkbox"), function(sidx, chkbx) {
-        $(chkbx).attr("checked", ($el.attr("checked")?true:false));
+        $(chkbx).attr("checked", $el.is(":checked"));
       });
     });
   });
