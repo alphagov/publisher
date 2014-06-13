@@ -20,7 +20,7 @@ module BaseHelper
         url = root_path(:user_filter => params[:user_filter], :string_filter => params[:string_filter], :list => scope)
 
         content_tag(:a, :href => url) do
-          h(status_label + " ") + content_tag(:span, @presenter.send(scope).length, class: "label pull-right")
+          h(status_label + " ") + content_tag(:span, @presenter.send(scope).length, class: "badge pull-right")
         end
       end
     end

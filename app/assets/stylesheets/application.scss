@@ -1,4 +1,9 @@
 @import 'govuk_admin_template';
 @import 'bootstrap_and_overrides';
+
+// Components
+@import 'sidebar_nav';
+
+// Pages
 @import 'business_support';
 @import 'smart_answer_builder';

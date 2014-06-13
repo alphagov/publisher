@@ -41,7 +41,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     visit "/user_search"
     within :css, "form.user-filter-form" do
       fill_in :string_filter, with: "insurance"
-      click_button "Apply filters"
+      click_button "Filter publications"
     end
     assert page.has_content?("Vehicle insurance")
     refute page.has_content?("Growing your business")
@@ -54,7 +54,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     visit "/user_search"
     within :css, "form.user-filter-form" do
       fill_in :string_filter, with: "insurance"
-      click_button "Apply filters"
+      click_button "Filter publications"
     end
     refute page.has_content?("Vehicle insurance")
   end
@@ -70,7 +70,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     visit "/user_search"
     within :css, "form.user-filter-form" do
       select other_user.name, from: "Filter by user"
-      click_button "Apply filters"
+      click_button "Filter publications"
     end
 
     assert page.has_content?("Search by user")

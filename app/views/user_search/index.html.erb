@@ -8,15 +8,15 @@
     <div class="row">
       <div class="col-md-2 well sidebar-nav">
         <form method="GET" action="" class="user-filter-form nav nav-list">
-          <label for="user_filter" class="visuallyhidden nav-header">Filter by user</label>
+          <label for="user_filter" class="nav-header">Filter by user</label>
           <%=
             select_tag("user_filter", options_for_select(
               User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-            ), :class => "col-md-12")
+            ), :class => "form-control")
           %>
-          <label for="string_filter" class="visuallyhidden nav-header">Filter by keyword</label>
-          <%= text_field_tag "string_filter", params[:string_filter], class: "col-md-12", type: "search" %>
-          <input class="btn btn-primary" type="submit" value="Apply filters">
+          <label for="string_filter" class="nav-header">Filter by keyword</label>
+          <%= text_field_tag "string_filter", params[:string_filter], class: "form-control", type: "search" %>
+          <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
         </form>
       </div>
 
