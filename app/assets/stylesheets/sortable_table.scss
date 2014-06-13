@@ -1,0 +1,29 @@
+/* table sorting styles */
+
+th .sortable {
+  background-image: url("/assets/bg.gif");
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center right;
+  padding-right: 20px;
+}
+
+th .asc {
+  background-image: url("/assets/asc.gif");
+  background-color: #ddd;
+}
+
+th .desc {
+  background-image: url("/assets/desc.gif");
+  background-color: #ddd;
+}
+
+th .current {
+  padding-right: 20px;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+#current td {
+  background-color: #adf;
+}

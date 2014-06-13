@@ -36,36 +36,6 @@ button.send-fact-check {
   margin-left: -40%;
 }
 
-/* table sorting styles */
-
-th .sortable {
-  background-image: url("/assets/bg.gif");
-  cursor: pointer;
-  background-repeat: no-repeat;
-  background-position: center right;
-  padding-right: 20px;
-}
-
-th .asc {
-  background-image: url("/assets/asc.gif");
-  background-color: #eee;
-}
-
-th .desc {
-  background-image: url("/assets/desc.gif");
-  background-color: #eee;
-}
-
-th .current {
-  padding-right: 20px;
-  background-repeat: no-repeat;
-  background-position: right center;
-}
-
-#current td {
-  background-color: #adf;
-}
-
 /* Placeholder text to explain a blank value */
 .placeholder {
   color: #ccc;
