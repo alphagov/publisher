@@ -3,7 +3,7 @@ $(document).ready(function() {
     $("#business_support_" + facet + "_check_all").click(function(e) {
       var $el = $(e.target);
       $.each($el.parent().parent().find(":checkbox"), function(sidx, chkbx) {
-        $(chkbx).attr("checked", ($el.attr("checked")?true:false));
+        $(chkbx).prop("checked", $el.is(":checked"));
       });
     });
   });
@@ -26,10 +26,10 @@ $(document).ready(function() {
         return matchText.match(countryMatch) && matchText != countryLabel;
       });
 
-      var value = $(this).prop("checked");
+      var value = $(this).is(":checked");
       matches.each (function (index, match) {
         var checkbox = $(match).children(":checkbox");
-        checkbox.attr("checked", value);
+        checkbox.prop("checked", value);
       });
     });
   });
