@@ -88,13 +88,13 @@
       </div>
     </div>
     <hr/>
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Business types",
                                   collection: BusinessSupport::BusinessType.asc(:name),
                                   model_collection: "business_types",
                                   locked_for_edits: locked_for_edits } %>
 
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Business sizes",
                                   collection: BusinessSupport::BusinessSize.asc(:name),
                                   model_collection: "business_sizes",
@@ -102,27 +102,27 @@
 
     <hr/>
 
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Purposes",
                                   collection: BusinessSupport::Purpose.asc(:name),
                                   model_collection: "purposes",
                                   locked_for_edits: locked_for_edits } %>
 
     <hr/>
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Sectors",
                                   collection: BusinessSupport::Sector.asc(:name),
                                   model_collection: "sectors",
                                   locked_for_edits: locked_for_edits } %>
 
     <hr/>
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Stages",
                                   collection: BusinessSupport::Stage.asc(:name),
                                   model_collection: "stages",
                                   locked_for_edits: locked_for_edits } %>
 
-    <%= render partial: "admin/business_supports/facets", locals: { f: f,
+    <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Support types",
                                   collection: BusinessSupport::SupportType.asc(:name),
                                   model_collection: "support_types",
