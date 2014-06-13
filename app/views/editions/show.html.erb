@@ -1,10 +1,12 @@
 <div class="row">
-
   <div class="page-header">
     <h1>
-      Viewing &ldquo;<%= @resource.title %>&rdquo; <span class="label">Edition <%= @resource.version_number %></span>
-      <span class="label label-info">Status: <%= @resource.status_text %></span>
+      Viewing &ldquo;<%= @resource.title %>&rdquo;
     </h1>
+    <span class="lead">
+      <span class="label label-default">Edition <%= @resource.version_number %></span>
+      <span class="label label-info">Status: <%= @resource.status_text %></span>
+    </span>
   <% unless @resource.important_note.blank? %>
     <br/>
     <h2 class="important-note">
