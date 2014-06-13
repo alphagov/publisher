@@ -1,6 +1,9 @@
-<% publication.attributes.slice('slug', 'section', 'department', 'kind').each do |key, value| %>
-<%= content_tag :label, key.humanize, for: key %>
-<%= text_field_tag key, value, class: "col-md-7 uneditable-input", disabled: 'disabled' %>
-<% end %>
-
+<div class="row">
+  <div class="col-md-7">
+    <% publication.attributes.slice('slug', 'section', 'department', 'kind').each do |key, value| %>
+      <%= content_tag :label, key.humanize, for: key %>
+      <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
+    <% end %>
+  </div>
+</div>
 <%= link_to "Edit in Panopticon", panopticon_edit_url(publication), :class => "btn btn-primary" %>
