@@ -32,6 +32,7 @@ end
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
+gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'logstasher', '0.4.8'
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
