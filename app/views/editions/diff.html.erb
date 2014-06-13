@@ -1,5 +1,3 @@
-<div class="row">
-
   <div class="page-header">
     <h1>
       Viewing &ldquo;<%= @resource.title %>&rdquo;
@@ -36,7 +34,4 @@
       <%= format_content_diff(@resource.previous_edition_differences) %>
     </div>
   </div>
-
-</div><!--./row -->
-
 <% content_for :page_title, "Editing #{@resource.title}" %>
