@@ -1,4 +1,3 @@
-<div class="row">
 
   <% if resource.safe_to_preview? %>
   <p>This edition can be previewed at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
@@ -9,23 +8,20 @@
   <p>Fact check responses should (when appropriate) be sent to <%= mail_to resource.fact_check_email_address %></p>
   <hr />
 
-</div>
-
 <div class="row">
-
   <div class="col-md-6">
     <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
       <%= f.inputs do %>
         <%= hidden_field_tag :edition_id, resource.id %>
-        <%= f.input :comment, :label => 'Edition notes', :as => :text, :required => false, :input_html => { :class=> 'col-md-6', :rows => 6, :cols => 120 } %>
+        <%= f.input :comment, :label => 'Edition notes', :as => :text, :required => false, :input_html => { :class=> 'form-control', :rows => 6, :cols => 120 } %>
         <p class="help-block">Summarise your changes, and briefly explain why if you didn't make any requested changes.</p>
 
         <button class="btn btn-success" name="commit"><i class="glyphicon glyphicon-comment"></i> Save note</button>
       <% end %>
     <% end %>
-
-    <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note' }) do |f| %>
-      <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'col-md-6', :rows => 6, :cols => 120 }, :hint => 'Add important notes that anyone who works on this edition needs to see, eg "(Doesn\'t) need fact check, don\'t publish."' %>
+    <hr />
+    <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note', :class => 'add-top-margin' }) do |f| %>
+      <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'form-control', :rows => 6, :cols => 120 }, :hint => 'Add important notes that anyone who works on this edition needs to see, eg "(Doesn\'t) need fact check, don\'t publish."' %>
       <%= f.submit :class=>"btn btn-danger", :value=>'Save important note' %>
     <% end %>
 
