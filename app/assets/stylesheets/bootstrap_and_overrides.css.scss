@@ -32,7 +32,7 @@ button.send-fact-check {
 }
 
 /* override the font-size for main textareas */
-form.formtastic .controls textarea {
+form.formtastic .form-group textarea {
   font-size: 17px;
   line-height: 21px;
 }
@@ -114,16 +114,6 @@ label {
 
 label.nav-header {
   margin-bottom: 4px;
-}
-
-form.formtastic .controls textarea {
-  font-size:13px;
-  width:80%;
-}
-
-.control-group,
-#edition_assigned_to_id {
-  margin-bottom:35px;
 }
 
 .help-inline {
