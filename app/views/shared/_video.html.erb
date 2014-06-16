@@ -1,9 +1,13 @@
+<div class="row">
+  <div class="col-md-7">
 <%= f.input :video_url,
             :label => "Video URL",
             :hint => 'Put the YouTube URL in here if it exists',
-            :input_html => { :class => 'col-md-7' , :disabled => @resource.locked_for_edits? } %>
+            :input_html => { :disabled => @resource.locked_for_edits? } %>
 
 <%= f.input :video_summary,
             :as => :text,
             :label => "Video Summary",
-            :input_html => { :class => 'col-md-7' , :rows => 2, :disabled => @resource.locked_for_edits? } %>
+            :input_html => { :rows => 2, :disabled => @resource.locked_for_edits? } %>
+  </div>
+</div>
