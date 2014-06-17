@@ -1,10 +1,10 @@
   <div id="version<%= edition.version_number %>" class="panel panel-default">
     <div class="panel-heading">
-      <a data-toggle="collapse" data-parent="#edition-history" class="panel-title history" href="#body<%= edition.version_number %>">
-        <i class="glyphicon glyphicon-smaller-than-text glyphicon-chevron-down add-right-margin"></i> Notes for edition <%= edition.version_number %>
+      <a data-toggle="collapse" class="panel-title history" href="#body<%= edition.version_number %>">
+        <i class="glyphicon glyphicon-smaller-than-text glyphicon-chevron-down add-right-margin"></i> Edition <%= edition.version_number %>
       </a>
       <% if edition.version_number > 1 %>
-        <%= link_to "Changes since previous edition", diff_edition_path(edition), class: "pull-right" %>
+        <%= link_to "Compare with previous", diff_edition_path(edition), class: "pull-right" %>
       <% end %>
     </div>
 
