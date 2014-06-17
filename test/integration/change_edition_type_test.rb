@@ -92,7 +92,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content?("Link to start of transaction")
     assert page.has_content?("More information")
 
-    within :css, '#edition_more_information_input div.controls' do
+    within :css, '#edition_more_information_input' do
       assert page.has_xpath?("//textarea[contains(text(), '#{answer.whole_body}')]"), "Expected to see: #{answer.whole_body}"
     end
 
