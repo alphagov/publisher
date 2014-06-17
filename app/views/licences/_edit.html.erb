@@ -1,19 +1,28 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
-    <%= f.input :licence_identifier %>
+    <div class="row">
+      <div class="col-md-3">
+        <%= f.input :licence_identifier %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
     <%= f.input :will_continue_on,
                 :hint => 'Text to follow the statement "This will continue on. eg. "the HMRC website"',
-                :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :disabled => @resource.locked_for_edits? } %>
     <%= f.input :continuation_link,
                 :label => 'Link to competent authority',
                 :hint => 'Link as deep as possible.',
-                :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => { :disabled => @resource.locked_for_edits? } %>
+      </div>
+      <div class="col-md-10">
     <%= f.input :licence_short_description,
           :as => :text,
           :hint => 'One line curated description, will appear in Licence Finder results',
-          :input_html => { :rows => 2, :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
-    <%= f.input :licence_overview, :as => :text, :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
+          :input_html => { :rows => 2, :disabled => @resource.locked_for_edits? } %>
+    <%= f.input :licence_overview, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
+      </div>
+    </div>
   <% end %>
 <% end %>
-
