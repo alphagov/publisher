@@ -204,9 +204,16 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     click_button "Save"
 
     assert page.has_content?("We had some problems saving")
-    assert page.has_content?("Min value is not a number")
-    assert page.has_content?("Max value is not a number")
-    assert page.has_content?("Max employees is not a number")
+
+    within '#edition_min_value_input' do
+      assert page.has_content?("is not a number")
+    end
+    within '#edition_max_value_input' do
+      assert page.has_content?("is not a number")
+    end
+    within '#edition_max_employees_input' do
+      assert page.has_content?("is not a number")
+    end
   end
 
   should "disable fields for a published edition" do
