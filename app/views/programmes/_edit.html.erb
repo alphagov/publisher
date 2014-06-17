@@ -1,4 +1,4 @@
-<%= semantic_nested_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
+<%= semantic_bootstrap_nested_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
   <% end %>
