@@ -1,12 +1,14 @@
-<div class="accordion-group part">
-  <div class="accordion-heading">
-    <a class="accordion-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug || 'untitled-part' %>">
-      <i class="glyphicon glyphicon-chevron-down"></i>
-      <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
-    </a>
+<div class="panel panel-default part">
+  <div class="panel-heading js-sort-handle">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug || 'untitled-part' %>">
+        <i class="glyphicon glyphicon-chevron-down pull-left add-right-margin"></i>
+        <%= f.object.title.present? ? f.object.title : 'Untitled part' %>
+      </a>
+    </h4>
   </div>
-  <div id="<%= f.object.slug || 'untitled-part' %>" class="accordion-body <% if f.object.valid? %>collapse <% end %>in">
-    <div class="accordion-inner">
+  <div id="<%= f.object.slug || 'untitled-part' %>" class="panel-collapse <% if f.object.valid? %>collapse <% end %>in">
+    <div class="panel-body">
         <%= f.inputs do %>
           <%= f.input :title,
                       :input_html => { :class => 'title', :disabled => @resource.locked_for_edits? },

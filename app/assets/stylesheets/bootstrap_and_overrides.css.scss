@@ -22,15 +22,6 @@ button.send-fact-check {
   color: #ccc;
 }
 
-#parts .part a.accordion-toggle {
-  background-color: transparent;
-  -webkit-transition: background-color 0.6s ease;
-}
-
-#parts .part a.accordion-toggle.highlight {
-  background-color: #ff9;
-}
-
 /* override the font-size for main textareas */
 form.formtastic .form-group textarea {
   font-size: 17px;

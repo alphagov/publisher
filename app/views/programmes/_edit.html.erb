@@ -11,12 +11,10 @@
 
       <h3>Parts</h3>
 
-      <section class="accordion" id="parts">
-
+      <section class="panel-group" id="parts">
         <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
           <%= render :partial => '/shared/part', :locals => { :f => part, :editable => false } %>
         <% end %>
-
       </section>
 
     </div>

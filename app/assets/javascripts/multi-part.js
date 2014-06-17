@@ -26,18 +26,18 @@ function addAutoSlugGeneration() {
 }
 
 $(function() {
+  var accordionSelector = ".js-sort-handle";
   var sortable_opts = {
     axis: "y",
-    handle: "a.accordion-toggle",
+    handle: accordionSelector,
     stop: function(event, ui) {
       $('.part').each(function (i, elem) {
         $(elem).find('input.order').val(i + 1);
-        ui.item.find("a.accordion-toggle").addClass("highlight");
-        setTimeout(function() { $("a.accordion-toggle.highlight").removeClass("highlight") }, 20 )
+        ui.item.find(accordionSelector).addClass("yellow-fade");
       });
     }
   }
   $('#parts').sortable(sortable_opts)
-      .find("a.accordion-toggle").css({cursor: 'move'});
+      .find(accordionSelector).css({cursor: 'move'});
   addAutoSlugGeneration();
 });
