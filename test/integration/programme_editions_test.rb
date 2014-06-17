@@ -27,7 +27,7 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
       end
     end
 
-    within(:css, ".workflow_buttons") { click_on "Save" }
+    within(:css, ".workflow-buttons") { click_on "Save" }
 
     assert_includes page.body, "Programme edition was successfully updated."
 

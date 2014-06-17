@@ -38,7 +38,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-three'
     end
-    within(:css, '.workflow_buttons') { click_on 'Save' }
+    within(:css, '.workflow-buttons') { click_on 'Save' }
 
     assert page.has_css?('section#parts div#part-one', count: 1)
     assert page.has_css?('section#parts div#part-two', count: 1)
@@ -60,7 +60,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     panopticon_has_metadata("id" => '2356')
 
     visit    "/editions/#{guide.to_param}"
-    
+
     click_on 'Add new part'
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'

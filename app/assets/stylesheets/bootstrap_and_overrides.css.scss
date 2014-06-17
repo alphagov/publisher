@@ -1,10 +1,11 @@
-.navbar-fixed-bottom {
-  text-align: center;
+// Increase padding on footer to account for
+// fixed navbar
+.page-footer {
+  margin-bottom: 63px;
 }
 
-.workflow_buttons form {
+.workflow-buttons form {
   display: inline-block;
-  margin-bottom: 6px;
 }
 
 button.send-fact-check {
