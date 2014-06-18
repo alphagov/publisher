@@ -13,9 +13,8 @@ button.send-fact-check {
   margin-left: 70px;
 }
 
-.modal {
-  width: 80%;
-  margin-left: -40%;
+.alert .modal {
+  color: $text-color;
 }
 
 /* Placeholder text to explain a blank value */

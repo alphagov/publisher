@@ -1,21 +1,29 @@
-<%= semantic_form_for(:activity, url: url, html: {class: 'button_to also_save_edition modal hide fade', id: id}) do |f| %>
-
-  <div class="modal-header">
-    <h3><%= title %></h3>
-  </div>
+<%= semantic_form_for(:activity, url: url, html: {
+    class: 'button_to also_save_edition modal',
+    id: id,
+    tabindex: '-1',
+    role: 'dialog',
+    'aria-hidden' => true
+  }) do |f| %>
+<div class="modal-dialog">
+  <div class="modal-content">
+  <header class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 class="modal-title"><%= title %></h3>
+  </header>
 
   <div class="modal-body">
 
     <%= f.inputs do %>
       <input type="hidden" value="<%= activity %>" name="activity[request_type]">
 
-      <%= f.input :comment, :as => :text, :input_html => { :class => 'col-md-12', :cols => 60, :rows => 6 } %>
+      <%= f.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
 
       <% if activity == "send_fact_check" %>
-        <%= f.input :email_addresses, :input_html => { :class => 'col-md-12' } %>
+        <%= f.input :email_addresses %>
 
         <label id="activity_customised_message_input" for="activity_customised_message">Customised message<abbr title="required">*</abbr></label>
-        <textarea rows="6" name="activity[customised_message]" id="activity_customised_message" cols="60" class="col-md-12">
+        <textarea rows="6" name="activity[customised_message]" id="activity_customised_message" cols="60" class="form-control">
           <%- @edition = @resource %>
 <%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
         </textarea>
@@ -25,15 +33,19 @@
         <%= f.label :publish_at do %>
           Publish at <abbr title="required">*</abbr>
         <% end %>
-        <%= f.time_select :publish_at, {}, { class: 'date' } %>
+        <div class="form-inline">
+        <%= f.time_select :publish_at, {}, { class: 'date form-control' } %>
         &mdash;
-        <%= f.date_select :publish_at, { order: [:day, :month, :year], default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date' } %>
+        <%= f.date_select :publish_at, { order: [:day, :month, :year], default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+        </div>
       <% end %>
     <% end %>
   </div>
 
-  <div class="modal-footer">
-    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+  <footer class="modal-footer remove-top-margin">
+    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
     <input class="btn btn-success" name="commit" type="submit" value="Send">
+  </footer>
   </div>
+</div>
 <% end %>

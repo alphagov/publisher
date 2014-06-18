@@ -140,7 +140,10 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     select "Normal", :from => "edition_priority"
     select Date.today.year.to_s, :from => "edition_start_date_1i"
     check "business_support_location_check_all"
-    check "edition_sectors_manufacturing"
+
+    # circumvent poltergeist not handling bootstrap modals
+    # by directly triggering our expected change
+    find('#edition_sectors_manufacturing').trigger('click')
     uncheck "edition_support_types_loan"
 
     click_button "Save"
