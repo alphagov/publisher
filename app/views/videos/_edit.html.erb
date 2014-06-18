@@ -18,6 +18,10 @@
     <% end %>
     <hr />
 
-    <%= f.input :body, :as => :text, :input_html => { :class => 'col-md-7', :disabled => @resource.locked_for_edits? } %>
+    <div class="row">
+      <div class="col-md-10">
+        <%= f.input :body, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
+      </div>
+    </div>
   <% end %>
 <% end %>
