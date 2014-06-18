@@ -1,6 +1,6 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
-    <%= f.input :body, :as => :text, :input_html => { :class => 'col-md-12', :disabled => @resource.locked_for_edits? } %>
+    <%= f.input :body, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
   <% end %>
 <% end %>
