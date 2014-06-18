@@ -12,7 +12,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "12.1.0"
+  gem "govuk_content_models", "12.3.0"
 end
 
 gem 'erubis'
@@ -25,7 +25,7 @@ gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: '
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '1.2.0'
+  gem 'govspeak', '1.6.0'
 end
 
 gem 'has_scope'
