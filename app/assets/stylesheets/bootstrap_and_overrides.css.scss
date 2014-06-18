@@ -84,13 +84,14 @@ form.formtastic .form-group textarea {
   float:right;
 }
 
-table.image-upload th {
-  width: 25%;
+// Give contrast against grey well. Also put images against
+// the colour they'll be against when published.
+.image-upload {
+  background: $body-bg;
 }
 
-table.image-upload span.image-size {
-  display: block;
-  font-weight: normal;
+.image-upload .row-header {
+  width: 25%;
 }
 
 table.image-upload label {

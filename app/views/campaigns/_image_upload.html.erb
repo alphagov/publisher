@@ -1,9 +1,12 @@
 <tr id="<%= format %>-campaign-image">
-  <th scope="row"><%= format.capitalize %> image <span class="image-size"><%= size %></span></th>
+  <th scope="row" class="row-header">
+    <%= format.capitalize %> image
+    <div class="normal"><%= size %></div>
+  </th>
   <td>
     <% if @edition.send("#{format}_image") %>
       <% if @edition.send("#{format}_image").state == "unscanned" %>
-        <p class="alert"><%= @edition.send("#{format}_image").name %> is being scanned for viruses</p>
+        <p class="alert alert-info"><%= @edition.send("#{format}_image").name %> is being scanned for viruses</p>
       <% else %>
         <p>
           <%= link_to @edition.send("#{format}_image").file_url do %>
