@@ -1,7 +1,3 @@
-.builder-container .row {
-  margin-left: 0;
-}
-
 .builder-container .node legend {
   border: none;
   margin: 0;
@@ -18,12 +14,6 @@
 }
 .builder-container .options ul {
   margin: 0;
-}
-.builder-container .options .control-group {
-  margin-bottom: 0;
-}
-.builder-container .options .control-group, .builder-container .options .controls {
-  display: inline-block;
 }
 .builder-container .node .options {
   border-top: 1px solid #e5e5e5;
