@@ -24,8 +24,8 @@
 <% end %>
 
 <% content_for :content do %>
-  <% [:notice, :alert, :error].select { |k| flash[k].present? }.each do |k| %>
-    <div class="alert alert-<%= k %>">
+  <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
+    <div class="alert alert-<%= k == :notice || k == :alert ? 'warning' : k %>">
       <%= flash[k] %>
     </div>
   <% end %>

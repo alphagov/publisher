@@ -43,7 +43,7 @@ class EditionsController < InheritedResources::Base
     command = EditionDuplicator.new(resource, current_user)
 
     if !resource.can_create_new_edition?
-      flash[:error] = "Another person has created a newer edition"
+      flash[:danger] = "Another person has created a newer edition"
       redirect_to edition_path(resource)
     elsif command.duplicate(params[:to], new_assignee)
       return_to = params[:return_to] || edition_path(command.new_edition)
