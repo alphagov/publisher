@@ -3,12 +3,12 @@
 <%= button_to "Delete #{@edition.class.to_s.underscore.humanize}", path_for_edition(@resource), :method => :delete, :class => "btn btn-danger" %>
 <%- end -%>
 <%- if @resource.fact_check? -%>
-<%= button_to "Skip Fact Check", skip_fact_check_for_edition(@resource), :method => :post %>
+<%= button_to "Skip Fact Check", skip_fact_check_for_edition(@resource), :method => :post, :class => "btn btn-default add-top-margin" %>
 <%- end -%>
 <%- if @edition.published? -%>
-  
+
   <%= render partial: "shared/clone_buttons", locals: { edition: @edition, edition_class: AnswerEdition, to_classes: [GuideEdition, ProgrammeEdition, TransactionEdition] } %>
-  
+
   <%= render partial: "shared/clone_buttons", locals: { edition: @edition, edition_class: GuideEdition, to_classes: [AnswerEdition, ProgrammeEdition, TransactionEdition] } %>
 
   <%= render partial: "shared/clone_buttons", locals: { edition: @edition, edition_class: ProgrammeEdition, to_classes: [AnswerEdition, GuideEdition, TransactionEdition] } %>

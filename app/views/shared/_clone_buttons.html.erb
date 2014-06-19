@@ -2,6 +2,6 @@
   <%- to_classes.each do |to_class| -%>
   	<%= button_to "Create as new #{to_class.to_s.gsub('Edition', '')} edition",
       duplicate_edition_path(@resource, {from: edition_class.to_s, to: to_class.to_s}),
-      :method => :post, :class => "btn" %>
+      :method => :post, :class => "btn btn-default add-top-margin" %>
   <%- end -%>
 <%- end -%>
