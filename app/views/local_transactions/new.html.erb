@@ -1,9 +1,14 @@
-<h2>New Local Transaction</h2>
-
-<p>We need a bit more information to create your local transaction.</p>
+<div class="page-header">
+  <h1>New Local Transaction</h1>
+</div>
+<p class="alert alert-info">
+  We need a bit more information to create your local transaction.
+</p>
 
 <% if @publication.errors.any? %>
-<p>Errors: <%= @publication.errors.full_messages.uniq.to_sentence %></p>
+  <p class="alert alert-danger">
+    Errors: <%= @publication.errors.full_messages.uniq.to_sentence %>
+  </p>
 <% end %>
 
 <%= semantic_form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
@@ -16,5 +21,7 @@
     <%= f.input :section, :as => :hidden %>
     <%= f.input :department, :as => :hidden %>
   <% end %>
-  <%= f.buttons %>
+  <%= f.actions do %>
+    <%= f.submit "Create Local transaction edition", class: 'btn btn-success' %>
+  <% end %>
 <% end %>
