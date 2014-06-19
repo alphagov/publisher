@@ -117,5 +117,21 @@ Stockport Metropolitan Borough Council,http://www.stockport.gov.uk/,http://www.s
       auth.reload
       assert_equal nil, auth.contact_phone
     end
+
+    should "add http:// to URLs without it" do
+      source=StringIO.new(<<-END)
+Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
+South Somerset District Council,www.southsomerset.gov.uk,www.southsomerset.gov.uk,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
+      END
+
+      auth = FactoryGirl.create(:local_authority, :snac => "40UD")
+      # Call process_row directly to bypass the top-level error rescue
+      importer = LocalContactImporter.new(nil)
+      csv = CSV.new(source, :headers => true)
+      importer.send(:process_row, csv.shift)
+
+      auth.reload
+      assert_equal "http://www.southsomerset.gov.uk", auth.contact_url
+    end
   end
 end
