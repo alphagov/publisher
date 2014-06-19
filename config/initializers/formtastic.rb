@@ -39,13 +39,13 @@
 
 # Set the way inline errors will be displayed.
 # Defaults to :sentence, valid options are :sentence, :list, :first and :none
-# Formtastic::SemanticFormBuilder.inline_errors = :sentence
+Formtastic::FormBuilder.inline_errors = :list
 # Formtastic uses the following classes as default for hints, inline_errors and error list
 
 # If you override the class here, please ensure to override it in your formtastic_changes.css stylesheet as well
 # Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
 # Formtastic::SemanticFormBuilder.default_inline_error_class = "inline-errors"
-# Formtastic::SemanticFormBuilder.default_error_list_class = "errors"
+Formtastic::FormBuilder.default_error_list_class = "help-block"
 
 # Set the method to call on label text to transform or format it for human-friendly
 # reading when formtastic is used without object. Defaults to :humanize.
