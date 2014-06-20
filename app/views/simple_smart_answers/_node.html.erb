@@ -1,35 +1,36 @@
-<div>
-  <legend><span class="node-label"><%= f.object.slug.to_s.titleize %></span>
-      <%= f.link_to_remove "<i class=\"icon-remove\"></i> Remove node".html_safe, :class => "btn btn-link pull-right remove-node" %>
+<div class="col-md-10">
+  <legend class="add-bottom-margin">
+    <span class="node-label bold"><%= f.object.slug.to_s.titleize %></span>
+    <%= f.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i> Remove node".html_safe, :class => "btn btn-default pull-right remove-node" %>
   </legend>
-  <%= f.hidden_field :order, :class => 'node-order' %> 
-  <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "span10 node-title" } %>
-  <%= f.text_area :body, :label => false, :placeholder => "Optional extra information", :class => "span10 node-body", :rows => 10 %>
+  <%= f.hidden_field :order, :class => 'node-order' %>
+  <%= f.input :title, :label => false, :input_html => { :placeholder => "The title of the outcome", :class => "node-title" } %>
+  <%= f.text_area :body, :label => false, :placeholder => "Optional extra information", :class => "form-control node-body", :rows => 10 %>
 
   <%= f.input :kind, :as => :hidden, :input_html => { :class => "node-kind" } %>
   <%= f.input :slug, :as => :hidden, :input_html => { :class => "node-slug" } %>
   <% unless f.object.kind == "outcome" %>
     <div class="options">
       <%= f.semantic_fields_for :options, :wrapper_class => "outcome-wrap option" do |o| %>
-        <div class="control-group<%= o.object.errors.empty? ? '' : ' error' %>">
+        <div class="form-inline form-group<%= o.object.errors.empty? ? '' : ' error' %>">
           <%= o.input :label, :label => false,
             :input_html => { :placeholder => "Label", :class => "option-label" } %>
-          <i class="icon-arrow-right"></i>
+          <i class="glyphicon glyphicon-arrow-right add-left-margin add-right-margin"></i>
           <%= o.input :next_node, :as => :hidden, :input_html => { :class => "next-node-id" } %>
-          <select class="required next-node-list" name="next-node-list">
+          <select class="form-control required next-node-list" name="next-node-list">
             <option value="" class="default">Select a node..</option>
             <optgroup label="Questions" class="question-list"></optgroup>
             <optgroup label="Outcomes" class="outcome-list"></optgroup>
           </select>
-          <%= o.link_to_remove "<i class=\"icon-remove\"></i> Remove option".html_safe, 
-            :class => "btn btn-link btn-small remove-option" %> 
+          <%= o.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i> Remove option".html_safe,
+            :class => "btn btn-default add-left-margin remove-option" %>
           <% if o.object.errors.has_key?(:next_node) -%>
             <span class="help-inline"><%= o.object.errors[:next_node].join(', ') %></span>
           <% end -%>
         </div>
       <% end %>
-      <%= f.link_to_add "<i class=\"icon-plus-sign icon-white\"></i> Add an option".html_safe, :options, :class => "btn btn-primary btn-small" %>
+      <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add an option".html_safe, :options, :class => "btn btn-primary" %>
     </div>
   <% end %>
+  <hr/>
 </div>
-<hr/>

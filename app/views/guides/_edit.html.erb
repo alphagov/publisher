@@ -6,14 +6,13 @@
 
   <hr>
 
-  <div class="row-fluid">
+  <div class="row">
 
-    <div class="span8">
+    <div class="col-md-8">
 
       <h3>Parts</h3>
 
-      <section class="accordion" id="parts">
-
+      <section class="panel-group" id="parts">
         <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
           <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
         <% end %>
@@ -23,7 +22,7 @@
 
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <h3>Govspeak help</h3>
 
       <div class="well">

@@ -22,7 +22,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
     fill_in "Body", :with => "Description of video"
 
-    within :css, ".workflow_buttons" do
+    within :css, ".workflow-buttons" do
       click_on "Save"
     end
 
@@ -57,7 +57,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
     fill_in "Body", :with => "Description of video"
 
-    within ".workflow_buttons" do
+    within ".workflow-buttons" do
       click_button "Save"
     end
 

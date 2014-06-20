@@ -1,7 +1,7 @@
-<div class="navbar navbar-fixed-bottom">
+<div class="navbar navbar-inverse navbar-fixed-bottom text-center">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <div class="workflow_buttons">
+      <div class="workflow-buttons navbar-btn">
         <% if @resource.locked_for_edits? %>
           <%= @resource.error_description %> can't be changed.
           <%= preview_button(@resource) %>
@@ -17,7 +17,6 @@
           <form id="save-edition">
             <input type="submit" value="Save" class="btn btn-success btn-large">
           </form>
-
           <%= preview_button(@resource) %>
           <%= progress_buttons(@resource) %>
         <% end %>

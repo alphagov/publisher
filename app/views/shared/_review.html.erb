@@ -4,14 +4,14 @@
     <% if @resource.latest_status_action.requester == current_user %>
       <p>That&rsquo;s you! You'll get an email when it has been reviewed.</p>
     <% else %>
-      <div class="workflow_buttons">
+      <div class="workflow-buttons">
         <%= review_buttons(@resource)%>
       </div>
       <%= review_forms(@resource)%>
     <% end %>
   <% else %>
     <p>We're having trouble accessing the action data. This Edition has been requested to be reviewed.</p>
-    <div class="workflow_buttons">
+    <div class="workflow-buttons">
       <%= review_buttons(@resource)%>
     </div>
     <%= review_forms(@resource)%>

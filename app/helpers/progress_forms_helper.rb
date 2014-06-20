@@ -26,7 +26,7 @@ module ProgressFormsHelper
   def build_review_button(edition, activity, title)
     check_method = "can_#{activity}?".to_sym
     disabled = edition.send(check_method) ? "" : "disabled"
-    %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-primary" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+    %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-info add-top-margin" value="#{title}" type="submit" #{disabled}>#{title}</button>}
   end
 
   def review_buttons(edition)

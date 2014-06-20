@@ -28,17 +28,14 @@ class EditionHistoryTest < JavascriptIntegrationTest
       visit "/editions/#{@guide.id}"
       click_on "History & Notes"
 
-      assert_equal [true],
-                   page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
+      assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
 
-    should "show all actions when the first edition title is clicked" do
+    should "hide actions when the edition title is clicked" do
       visit "/editions/#{@guide.id}"
       click_on "History & Notes"
-      click_on "Notes for edition 1"
-
-      assert_equal [true, true],
-                   page.all("#edition-history div.accordion-body").map { |e| e['style'].include?("display: block") }
+      click_on "Edition 2"
+      assert page.has_no_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
 
     context "Important note" do

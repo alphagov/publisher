@@ -19,7 +19,7 @@
     <% end %>
 
     <% if publication.has_video? %>
-      <i class="icon-film" alt="Has video"></i>
+      <i class="glyphicon glyphicon-film" alt="Has video"></i>
     <% end %>
   </td>
   <td>
@@ -53,14 +53,14 @@
     </td>
     <td class="icon">
       <%= link_to publication_front_end_path(publication) do %>
-        <i class="icon-share-alt" title="View this publication"></i>
+        <i class="glyphicon glyphicon-share-alt" title="View this publication"></i>
       <% end %>
     </td>
     <% end %>
     <% if tab && [:archived, :scheduled_for_publishing].include?(tab) %>
     <td class="icon">
       <%= link_to edition_path(publication) do %>
-        <i class="icon-lock" title="Locked view for this publication"></i>
+        <i class="glyphicon glyphicon-lock" title="Locked view for this publication"></i>
       <% end %>
     </td>
     <% end %>
@@ -72,7 +72,7 @@
       <% end %>
     <% else %>
       <%= link_to edition_path(publication) do %>
-        <i class="icon-edit" title="Edit this publication"></i>
+        <i class="glyphicon glyphicon-edit" title="Edit this publication"></i>
       <% end %>
     <% end %>
   </td>
@@ -80,10 +80,10 @@
   <td class="icon">
     <% if publication.safe_to_preview? %>
       <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
-        <i class="icon-eye-open" title="Preview this publication"></i>
+        <i class="glyphicon glyphicon-eye-open" title="Preview this publication"></i>
       <% end %>
     <% else %>
-      <i class="icon-ban-circle" title="Preview disabled for this publication"></i>
+      <i class="glyphicon glyphicon-ban-circle" title="Preview disabled for this publication"></i>
     <% end %>
   </td>
 </tr>

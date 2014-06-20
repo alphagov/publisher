@@ -16,8 +16,9 @@ else
 end
 
 gem 'erubis'
-gem 'formtastic', git: 'https://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
-gem 'formtastic-bootstrap', git: 'https://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
+gem 'govuk_admin_template', '1.0.0'
+gem 'formtastic', '2.3.0.rc3'
+gem 'formtastic-bootstrap', '3.0.0'
 gem 'gds-api-adapters', '10.11.0'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
@@ -31,6 +32,7 @@ end
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'kaminari', '0.13.0'
+gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'logstasher', '0.4.8'
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
@@ -50,8 +52,6 @@ gem 'reverse_markdown', require: false # Only used in some importers
 gem 'statsd-ruby', '~> 1.1.0', require: false
 gem 'whenever', require: false
 
-gem 'jquery-rails', '3.0.4'
-gem 'less-rails-bootstrap'
 gem 'unicorn', '4.3.1'
 
 gem 'airbrake', '3.1.15'
@@ -60,6 +60,7 @@ gem 'sidekiq-statsd', '0.1.2'
 
 group :assets do
   gem "therubyracer", "0.11.4"
+  gem 'sass-rails', '3.2.6'
   gem 'uglifier'
 end
 

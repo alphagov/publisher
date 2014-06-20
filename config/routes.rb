@@ -25,4 +25,6 @@ Publisher::Application.routes.draw do
   # in case people had bookmarks set up. Using a proc as otherwise the
   # path parameter gets escaped
   get "/admin(/*path)", to: redirect { |params, req| "/#{params[:path]}" }
+
+  mount GovukAdminTemplate::Engine, at: "/style-guide"
 end

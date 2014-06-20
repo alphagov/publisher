@@ -87,9 +87,9 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit "/"
     within :css, ".user-filter-form" do
       select "All", :from => 'user_filter'
-      click_button "Apply filters"
+      click_button "Filter publications"
     end
-    assert page.has_content?("All publications")
+    assert page.has_content?("Publications")
   end
 
   def view_filtered_list(filter_label)

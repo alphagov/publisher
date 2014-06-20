@@ -1,19 +1,19 @@
-  <div id="version<%= edition.version_number %>" class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle history" href="#body<%= edition.version_number %>"><i class="icon-chevron-down"></i> Notes for edition <%= edition.version_number %></a>
+  <div id="version<%= edition.version_number %>" class="panel panel-default">
+    <div class="panel-heading">
+      <a data-toggle="collapse" class="panel-title history" href="#body<%= edition.version_number %>">
+        <i class="glyphicon glyphicon-smaller-than-text glyphicon-chevron-down add-right-margin"></i> Edition <%= edition.version_number %>
+      </a>
       <% if edition.version_number > 1 %>
-        <%= link_to "Changes since previous edition", diff_edition_path(edition), class: "see-what-changed" %>
+        <%= link_to "Compare with previous", diff_edition_path(edition), class: "pull-right" %>
       <% end %>
     </div>
 
-    <div class="accordion-body" id="body<%= edition.version_number %>">
-      <dl class="dl-horizontal accordion-inner">
+    <div class="panel-collapse collapse<% if edition_counter == 0 %> in<% end %>" id="body<%= edition.version_number %>">
+      <dl class="panel-body dl-horizontal remove-bottom-margin">
         <% edition.actions.reverse.each do |action| %>
-
           <dt>
             <%= action.created_at.strftime("%d/%m/%Y") %> <%= action.created_at.strftime("%R") %>
           </dt>
-
           <dd>
             <strong><%= action.to_s %></strong> by
             <% if action.requester %>
@@ -27,7 +27,7 @@
                   We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.
                 </div>
               <% end %>
-              <q>
+              <p>
                 <% if action.comment.present? %>
                   <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
                 <% end %>
@@ -37,7 +37,7 @@
                 <% if action.recipient_id.present? %>
                   <strong>assigned to &rarr;</strong> <%= mail_to action.recipient.email, action.recipient.name %>
                 <% end %>
-              </q>
+              </p>
             <% end %>
           </dd>
         <% end %>

@@ -2,7 +2,11 @@
   :as => :edition, :html => { :class => 'no-auto-save', :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
-    <%= f.input :body, :as => :text, :input_html => { :class => 'span7', :rows => 5, :disabled => @resource.locked_for_edits? } %>
+    <div class="row">
+      <div class="col-md-10">
+        <%= f.input :body, :as => :text, :input_html => { :rows => 5, :disabled => @resource.locked_for_edits? } %>
+      </div>
+    </div>
   <% end %>
 
   <div class="builder-container">
@@ -12,13 +16,10 @@
         <%= render :partial => "simple_smart_answers/node", :locals => { :f => node } %>
       <% end %>
     </div>
-
-    <hr>
-
     <div class="row">
-      <div class="span8">
-        <%= f.link_to_add "<i class=\"icon-plus-sign icon-white\"></i> Add question".html_safe, :nodes, :class => "btn btn-primary add-question", :data => { :target => "#nodes" } %>
-        <%= f.link_to_add "<i class=\"icon-plus-sign icon-white\"></i> Add outcome".html_safe, :nodes, :class => "btn btn-danger add-outcome", :data => { :target => "#nodes" } %>
+      <div class="col-md-8">
+        <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add question".html_safe, :nodes, :class => "btn btn-primary add-question add-right-margin", :data => { :target => "#nodes" } %>
+        <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add outcome".html_safe, :nodes, :class => "btn btn-danger add-outcome", :data => { :target => "#nodes" } %>
       </div>
     </div>
   </div>
@@ -26,9 +27,7 @@
 <% end %>
 
 <% content_for :extra_javascript do %>
-  <script type="text/javascript">
-  <!--
+  <script>
     Publisher.smartAnswerBuilder.init();
-  -->
   </script>
 <% end %>

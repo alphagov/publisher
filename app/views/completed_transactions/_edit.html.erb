@@ -1,9 +1,13 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <div class="row">
+      <div class="col-md-10">
     <%= f.input :body,
                 :as => :text,
                 :hint => 'The body text is overwritten by the service feedback survey',
-                :input_html => { :class => 'span12', :disabled => 'disabled' } %>
+                :input_html => { :disabled => 'disabled' } %>
+      </div>
+    </div>
   <% end %>
 <% end %>

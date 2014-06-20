@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Sidebar navigation for filtering tables
+   * Compacted Bootstrap 2 nav-list
+   * Tighten the margins because of limited horizontal space
+   * Reduce font size of nav list and badges
+   ========================================================================== */
+
+.sidebar-nav {
+  padding: 9px 0;
+  font-size: 12px;
+}
+
+.sidebar-nav .nav-list {
+  margin: auto -5px;
+}
+
+.sidebar-nav .nav-list > li > a {
+  padding: 3px 10px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.sidebar-nav .badge {
+  padding: 3px 5px;
+  font-size: 11px;
+}

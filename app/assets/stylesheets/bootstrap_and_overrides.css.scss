@@ -1,0 +1,142 @@
+// Increase padding on footer to account for
+// fixed navbar
+.page-footer {
+  margin-bottom: 63px;
+}
+
+.workflow-buttons form {
+  display: inline-block;
+}
+
+.navbar-inverse .workflow-buttons {
+  color: $gray-light;
+}
+
+button.send-fact-check {
+  /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
+  margin-left: 70px;
+}
+
+.alert .modal {
+  color: $text-color;
+}
+
+/* Placeholder text to explain a blank value */
+.placeholder {
+  color: #ccc;
+}
+
+/* override the font-size for main textareas */
+form.formtastic .form-group textarea {
+  font-size: 17px;
+  line-height: 21px;
+}
+
+/* Govspeak helper in Guides */
+.govspeak_help {
+  height: 650px;
+  overflow-y: scroll;
+}
+
+/* History tab diff styling */
+.diff {
+  list-style: none;
+  margin-left: 0;
+}
+
+.diff li {
+  margin-bottom: 1em;
+  word-wrap: break-word;
+}
+
+.diff .removal, .diff .addition {
+  border-radius: 3px;
+  color: #000;
+  padding: 0.2rem 0.4rem;
+}
+
+.diff .removal {
+  background-color: #DA4F49;
+}
+
+.diff .addition {
+  background-color:#468847;
+}
+
+.diff .removal:before, .diff .addition:before {
+  float: left;
+  font-size: 26px;
+  font-weight: bold;
+  margin-left: -26px;
+}
+
+.diff .removal:before {
+  color: #DA4F49;
+  content: "-";
+}
+
+.diff .addition:before {
+  color: #468847;
+  content: "+";
+}
+
+.autosave-msg {
+  float:right;
+}
+
+// Give contrast against grey well. Also put images against
+// the colour they'll be against when published.
+.image-upload {
+  background: $body-bg;
+}
+
+.image-upload .row-header {
+  width: 25%;
+}
+
+table.image-upload label {
+  display: inline-block;
+}
+table.image-upload div.controls {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+label {
+  font-weight: bold;
+  font-size:16px;
+  margin-bottom:10px;
+}
+
+label.nav-header {
+  margin-bottom: 4px;
+}
+
+.help-inline {
+  padding-left:0;
+  color:#888;
+  max-width: 400px;
+}
+
+/* datetime selectors */
+
+select.date {
+  width: auto;
+}
+
+.important-note {
+  color: #DA4F49;
+}
+
+/*
+ * Turning off all CSS animations
+ * Poltergeist doesn't wait on CSS animations to happen,
+ * so integration tests fail intermittently
+ */
+.modal.fade {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}

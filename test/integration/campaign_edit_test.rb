@@ -141,15 +141,9 @@ class CampaignEditTest < JavascriptIntegrationTest
     assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
 
     # remove file
-    within(:css, "#small-campaign-image") do
-      check "Remove image?"
-    end
-    within(:css, "#medium-campaign-image") do
-      check "Remove image?"
-    end
-    within(:css, "#large-campaign-image") do
-      check "Remove image?"
-    end
+    find('#edition_remove_small_image').trigger('click')
+    find('#edition_remove_medium_image').trigger('click')
+    find('#edition_remove_large_image').trigger('click')
 
     click_on "Save"
 

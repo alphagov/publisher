@@ -64,8 +64,6 @@ $(function () {
     }
   });
 
-  $('.modal').modal('hide');
-
   $('.also_save_edition').submit(function () {
     var edition_form = $('#edition-form');
     var this_form = $(this);

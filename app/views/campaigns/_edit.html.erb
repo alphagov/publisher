@@ -3,7 +3,13 @@
     <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
 
     <%= f.inputs "Campaign images" do %>
-      <table class="table table-bordered image-upload">
+      <table class="table table-bordered image-upload remove-bottom-margin">
+        <thead>
+          <tr class="table-header">
+            <th scope="col">Size</th>
+            <th scope="col">Image</th>
+          </tr>
+        </thead>
         <tbody>
           <%= render :partial => "campaigns/image_upload", :locals => { :f => f, :format => :small, :size => "320px x 236px" } %>
           <%= render :partial => "campaigns/image_upload", :locals => { :f => f, :format => :medium, :size => "768px x 566px" } %>
@@ -14,28 +20,34 @@
     <% end %>
     <hr />
 
+    <div class="row">
+      <div class="col-md-3">
     <%= f.input :organisation_formatted_name,
                 :as => :text,
                 :label => "Organisation formatted name",
-                :input_html => { :class => 'span3', :rows => "4", :disabled => @resource.locked_for_edits? } %>
-
+                :input_html => { :rows => "4", :disabled => @resource.locked_for_edits? } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
     <%= f.input :organisation_url,
                 :label => "Organisation URL",
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
-
+                :input_html => {:disabled => @resource.locked_for_edits? } %>
     <%= f.input :organisation_crest,
                 :as => :select,
                 :collection => CampaignEdition::CRESTS,
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
+                :input_html => {:disabled => @resource.locked_for_edits? } %>
 
     <%= f.input :organisation_brand_colour,
                 :as => :select,
                 :collection => CampaignEdition::BRAND_COLOURS,
-                :input_html => { :class => 'span7', :disabled => @resource.locked_for_edits? } %>
-
+                :input_html => {:disabled => @resource.locked_for_edits? } %>
+      </div>
+      <div class="col-md-10">
     <%= f.input :body,
                 :as => :text,
-                :input_html => { :class => 'span12', :disabled => @resource.locked_for_edits? } %>
-
+                :input_html => {:disabled => @resource.locked_for_edits? } %>
+      </div>
+    </div>
   <% end %>
 <% end %>

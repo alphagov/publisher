@@ -1,7 +1,4 @@
-//= require jquery
-//= require jquery_ujs
 //= require jquery-ui.custom.min
-//= require twitter/bootstrap
 //= require_directory .
 //= require jquery_nested_form
 
@@ -14,15 +11,6 @@ $(function () {
 
   $('.confirm form').submit(function(){
       return confirm('Woah. Scary action, cannot be undone. Continue?');
-  });
-
-  var $allPanels = $('#edition-history div.accordion-body').hide();
-  $allPanels.first().show();
-
-  $('#edition-history a.accordion-toggle').click(function() {
-    var $dl = $(this).parent().parent().find("div.accordion-body");
-    $dl.slideToggle();
-    return false;
   });
 })
 

@@ -13,7 +13,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       visit "/editions/#{@first_edition.id}"
       click_on "History & Notes"
 
-      assert page.has_no_link?("Changes since previous edition")
+      assert page.has_no_link?("Compare with previous")
     end
   end
 
@@ -27,15 +27,15 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       click_on "History & Notes"
     end
 
-    should "have links to show changes since previous edition" do
-      assert page.has_link?("Notes for edition 2")
-      assert page.has_link?("Changes since previous edition")
+    should "have links to show Compare with previous" do
+      assert page.has_link?("Edition 2")
+      assert page.has_link?("Compare with previous")
 
-      assert page.has_link?("Notes for edition 1")
+      assert page.has_link?("Edition 1")
     end
 
     should "show what the body differences are" do
-      click_on "Changes since previous edition"
+      click_on "Compare with previous"
 
       assert page.has_content?("Changes from edition 1 to edition 2")
       assert page.has_content?("test body 1")
@@ -43,7 +43,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     end
 
     should "have a link back to the current edition" do
-      click_on "Changes since previous edition"
+      click_on "Compare with previous"
 
       assert page.has_link?("Back to current edition", href: edition_path(@second_edition))
     end
@@ -65,7 +65,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
 
       visit "/editions/#{@second_edition.id}"
       click_on "History & Notes"
-      click_on "Changes since previous edition"
+      click_on "Compare with previous"
 
       assert page.has_content?("test body 1")
       assert page.has_content?("Test Body 2")
