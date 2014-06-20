@@ -85,3 +85,7 @@ group :test do
   gem 'simplecov-rcov', '~> 0.2.3', :require => false
   gem 'ci_reporter'
 end
+
+group :development, :test do
+  gem 'jasmine', '2.0.2'
+end
