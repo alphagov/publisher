@@ -10,20 +10,6 @@
   width: 50px;
 }
 
-.checkbox.inline + .checkbox.inline {
-  margin-left: 0;
-  width: 100%;
-  font-weight: normal;
-  font-size: 13px;
-}
-
-.checkbox.inline.all {
-	margin-bottom: 10px;
-	width:100%;
-  font-weight: normal;
-  font-size: 13px;
-}
-
 .date-picker label {
   font-weight: normal;
   font-size: 13px;
