@@ -1,5 +1,5 @@
 //= require jquery-ui.custom.min
-//= require_directory .
+//= require_tree .
 //= require jquery_nested_form
 
 // System wide behaviours
