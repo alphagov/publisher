@@ -1,13 +1,4 @@
 $(document).ready(function() {
-  $.each(["business_size", "business_type", "location", "purpose", "sector", "stage", "support_type"], function(idx, facet) {
-    $("#business_support_" + facet + "_check_all").click(function(e) {
-      var $el = $(e.target);
-      $.each($el.parent().parent().find(":checkbox"), function(sidx, chkbx) {
-        $(chkbx).prop("checked", $el.is(":checked"));
-      });
-    });
-  });
-
   /*
    * Checks all child regions when a country is checked.
    */

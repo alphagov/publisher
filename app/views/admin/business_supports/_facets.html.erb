@@ -1,12 +1,12 @@
 <% all_checked = (collection.map(&:slug) - f.object.send(model_collection.to_sym)).empty? -%>
-<div class="form-group" id="<%= model_collection.singularize %>">
+<div class="form-group" id="<%= model_collection.singularize %>" data-module="check-all-boxes">
   <h3><%= title %></h3>
-  <label for="business_support_<%= model_collection.singularize %>_check_all" class="checkbox inline all">
-    <%= check_box_tag "business_support_#{model_collection.singularize}_check_all", "", all_checked, { :disabled => locked_for_edits } %>All
+  <label for="business_support_<%= model_collection.singularize %>_check_all" class="checkbox inline normal add-bottom-margin">
+    <%= check_box_tag "business_support_#{model_collection.singularize}_check_all", "", all_checked, { :disabled => locked_for_edits, class: 'js-check-all' } %>All
   </label>
 
   <% collection.each do |facet| -%>
-    <label class="checkbox inline">
+    <label class="checkbox inline normal">
       <%= f.check_box model_collection, { :multiple => true, :disabled => locked_for_edits }, facet.slug, nil %>
       <%= facet.name %>
     </label>
