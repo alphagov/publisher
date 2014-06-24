@@ -19,7 +19,7 @@ gem 'erubis'
 gem 'govuk_admin_template', '1.0.0'
 gem 'formtastic', '2.3.0.rc3'
 gem 'formtastic-bootstrap', '3.0.0'
-gem 'gds-api-adapters', '10.11.0'
+gem 'gds-api-adapters', '11.1.0'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
