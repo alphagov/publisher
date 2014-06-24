@@ -1,0 +1,11 @@
+.panel-part {
+  border-color: $table-border-color;
+
+  .panel-heading {
+    background-color: darken($gray-lighter, 5%);
+  }
+
+  .panel-body {
+    background-color: $gray-lighter;
+  }
+}
