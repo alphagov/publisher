@@ -9,7 +9,7 @@
 
     <div class="col-md-8">
 
-      <h3>Parts</h3>
+      <h3 class="remove-top-margin add-bottom-margin">Parts</h3>
 
       <section class="panel-group" id="parts">
         <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="col-md-4">
-      <h3>Govspeak help</h3>
+      <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
 
       <div class="well">
         <%= render "../shared/govspeak_help" %>
