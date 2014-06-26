@@ -80,6 +80,16 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     guide.reload
   end
 
+  def select2(value, element_selector)
+    select2_container = first("#{element_selector}")
+    select2_container.first(".select2-search-choice").click
+
+    find(:xpath, "//body").find("input.select2-input").set(value)
+    page.execute_script(%|$("input.select2-input:visible").keyup();|)
+    drop_container = ".select2-results"
+    find(:xpath, "//body").find("#{drop_container} li", text: value).click
+  end
+
   def clear_cookies
     Capybara.current_session.driver.browser.cookies.each do |k, v|
       Capybara.current_session.driver.browser.remove_cookie(k)

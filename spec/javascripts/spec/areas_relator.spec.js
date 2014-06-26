@@ -1,0 +1,84 @@
+describe('Areas relator', function() {
+  "use strict";
+
+  var form,
+      areasData = []
+
+  beforeEach(function() {
+
+    form = $('<form>\
+      <div class="related-areas">\
+        <input type="checkbox" id="all_regions" class="areas-chkbx"/>\
+        <input type="checkbox" id="english_regions" class="areas-chkbx"/>\
+        <textarea id="edition_areas">3456</textarea>\
+      </div>\
+    </form>\
+    <script type="text/javascript">var areas = [\
+      {"id":1234,"text":"London","type":"EUR","country":"England"},\
+      {"id":2345,"text":"South East","type":"EUR","country":"England"},\
+      {"id":3456,"text":"Hackney Borough Council","type":"LBO","country":"England"},\
+      {"id":4567,"text":"Scotland","type":"EUR","country":"Scotland"},\
+    ];</script>\
+    <script src="/assets/vendor/select2.js" type="text/javascript"></script>\
+    <script src="/assets/views/business_support/areas_relator.js" type="text/javascript"></script>');
+
+    form.find('#edition_areas').data('areas', [{"id":3456,"text":"Hackney Borough Council"}]);
+    $('body').append(form);
+  });
+
+  afterEach(function() {
+    form.remove();
+  });
+
+  describe('initialising a select2 element', function() {
+    it('should add areas data to the select2' , function() {
+      expect(form.find('.select2-choices li').length).toBe(2);
+      expect(form.find('.select2-choices .js-area-name').text()).toEqual("Hackney Borough Council");
+    });
+  });
+
+  describe('checking the all UK areas checkbox', function() {
+    it('should add all areas the target select2 element' , function() {
+      form.find('#all_regions').trigger('click');
+      expect(form.find('.select2-choices li').length).toBe(4);
+      expect(form.find('.select2-choices li:first-child .js-area-name').text()).toEqual("London");
+      expect(form.find('.select2-choices li:nth-child(2) .js-area-name').text()).toEqual("South East");
+      expect(form.find('.select2-choices li:nth-child(3) .js-area-name').text()).toEqual("Scotland");
+    });
+  });
+
+  describe('checking the english areas checkbox', function() {
+    it('should add english areas the target select2 element' , function() {
+      form.find('#english_regions').trigger('click');
+      expect(form.find('.select2-choices li').length).toBe(3);
+      expect(form.find('.select2-choices li:first-child .js-area-name').text()).toEqual("London");
+      expect(form.find('.select2-choices li:nth-child(2) .js-area-name').text()).toEqual("South East");
+    });
+  });
+
+  describe('checking the english areas when uk areas is checked', function() {
+    it('should deselect uk areas' , function() {
+      form.find('#all_regions').prop('checked', true);
+      form.find('#english_regions').trigger('click');
+      expect(form.find('#all_regions').prop('checked')).toBeFalsy();
+    });
+  });
+
+  describe('removing an area when uk areas is checked', function() {
+    it('should deselect uk areas' , function() {
+      form.find('#all_regions').trigger('click');
+      expect(form.find('#all_regions').prop('checked')).toBeTruthy();
+      form.find('.select2-choices li:first-child .select2-search-choice-close').trigger('click');
+      expect(form.find('#all_regions').prop('checked')).toBeFalsy();
+    });
+  });
+
+  describe('removing an area when english areas is checked', function() {
+    it('should deselect english areas' , function() {
+      form.find('#english_regions').trigger('click');
+      expect(form.find('#english_regions').prop('checked')).toBeTruthy();
+      form.find('.select2-choices li:first-child .select2-search-choice-close').trigger('click');
+      expect(form.find('#english_regions').prop('checked')).toBeFalsy();
+    });
+  });
+});

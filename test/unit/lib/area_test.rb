@@ -18,7 +18,8 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def setup
-    @regions = [{id: 9728, name: "London", type: "EUR"}, {id: 9730, name: "Scotland", type: "EUR"}]
+    @regions = [{id: 9728, name: "London", type: "EUR", country_name: "England"},
+                {id: 9730, name: "Scotland", type: "EUR", country_name: "Scotland"}]
     @counties = [{id: 1764, name: "West Sussex County Council", type: "CTY"},
                 {id: 1767, name: "Devon County Council", type: "CTY"}]
     @districts = [{id: 1768, name: "Wycombe District Council", type: "DIS"},
@@ -62,5 +63,13 @@ class AreaTest < ActiveSupport::TestCase
   def test_areas_for_edition
     edition = OpenStruct.new(areas: ["9728", "1994"])
     assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
+  end
+
+  def test_regions
+    assert_equal ["London", "Scotland"], Area.regions.map(&:name)
+  end
+
+  def test_english_regions
+    assert_equal ["London"], Area.english_regions.map(&:name)
   end
 end

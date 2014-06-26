@@ -88,6 +88,8 @@
       </div>
     </div>
     <hr/>
+    <%= render partial: "business_supports/areas", locals: { f: f } %>
+
     <%= render partial: "business_supports/facets", locals: { f: f,
                                   title: "Business types",
                                   collection: BusinessSupport::BusinessType.asc(:name),
