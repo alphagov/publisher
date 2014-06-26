@@ -19,18 +19,5 @@ class ScheduledPublisher
   def perform(edition_id)
     edition = Edition.find(edition_id)
     edition.publish_anonymously
-    update_stats if edition.published?
   end
-
-  private
-    def update_stats
-      require 'statsd'
-
-      statsd.decrement("publisher.edition.scheduled_for_publishing")
-      statsd.increment("publisher.edition.published")
-    end
-
-    def statsd
-      @statsd ||= Statsd.new(::STATSD_HOST)
-    end
 end

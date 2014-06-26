@@ -1,13 +1,11 @@
 class EditionProgressor
-  attr_accessor :edition, :actor, :activity, :statsd, :status_message
+  attr_accessor :edition, :actor, :activity, :status_message
 
   # existing_edition: The existing edition to be duplicated
   # actor:            The WorkflowActor (usually a user) to perform the action
-  # statsd:           An object that accepts #decrement and #increment
-  def initialize(edition, actor, statsd)
+  def initialize(edition, actor)
     self.edition = edition
     self.actor   = actor
-    self.statsd  = statsd
   end
 
   # activity: A hash of details about the progress activity to be performed
@@ -23,7 +21,6 @@ class EditionProgressor
       if activity[:request_type] == 'schedule_for_publishing'
         ScheduledPublisher.perform_at(edition.publish_at, edition.id.to_s)
       end
-      collect_edition_status_stats(action)
       self.status_message = success_message(action)
       return true
     else
@@ -45,11 +42,6 @@ class EditionProgressor
       addresses.split(",").any? do |address|
         !address.include?("@")
       end
-    end
-
-    def collect_edition_status_stats(intended_status)
-      statsd.decrement("publisher.edition.#{edition.state}")
-      statsd.increment("publisher.edition.#{intended_status}")
     end
 
     def fact_check_error_message(activity)

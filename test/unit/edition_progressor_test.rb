@@ -17,7 +17,6 @@ end
 class EditionProgressorTest < ActiveSupport::TestCase
   setup do
     @laura = DummyActor.new
-    @statsd = stub_everything
     @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
     stub_register_published_content
   end
@@ -32,7 +31,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       :customised_message => "Hello"
     }
 
-    command = EditionProgressor.new(@guide, @laura, @statsd)
+    command = EditionProgressor.new(@guide, @laura)
     assert command.progress(activity)
 
     @guide.reload
@@ -49,7 +48,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       :customised_message => "Hello"
     }
 
-    command = EditionProgressor.new(@guide, @laura, @statsd)
+    command = EditionProgressor.new(@guide, @laura)
     refute command.progress(activity)
   end
 
@@ -63,7 +62,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       :customised_message => "Hello"
     }
 
-    command = EditionProgressor.new(@guide, @laura, @statsd)
+    command = EditionProgressor.new(@guide, @laura)
     refute command.progress(activity)
   end
 
@@ -79,7 +78,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
         publish_at = 1.day.from_now
         activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: publish_at }
 
-        command = EditionProgressor.new(@guide, @laura, @statsd)
+        command = EditionProgressor.new(@guide, @laura)
         assert command.progress(activity)
 
         assert_equal publish_at.to_i, ScheduledPublisher.jobs.first['at'].to_i
@@ -93,7 +92,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }
-        command = EditionProgressor.new(@guide, @laura, @statsd)
+        command = EditionProgressor.new(@guide, @laura)
         assert command.progress(activity)
 
         assert_equal 0, Sidekiq::ScheduledSet.new.size

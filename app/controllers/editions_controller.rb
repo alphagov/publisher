@@ -1,4 +1,3 @@
-require "statsd"
 require "edition_duplicator"
 require "edition_progressor"
 
@@ -26,7 +25,6 @@ class EditionsController < InheritedResources::Base
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
-    statsd.increment("publisher.edition.create.#{class_identifier}")
     @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
@@ -92,7 +90,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    command = EditionProgressor.new(resource, current_user, statsd)
+    command = EditionProgressor.new(resource, current_user)
     if command.progress(squash_multiparameter_datetime_attributes(params[:activity]))
       redirect_to edition_path(resource), notice: command.status_message
     else
@@ -124,10 +122,6 @@ class EditionsController < InheritedResources::Base
 
     def setup_view_paths
       setup_view_paths_for(resource)
-    end
-
-    def statsd
-      @statsd ||= Statsd.new(::STATSD_HOST)
     end
 
     def description(r)
