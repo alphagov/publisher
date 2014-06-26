@@ -48,7 +48,7 @@ describe('Areas relator', function() {
   });
 
   describe('checking the english areas checkbox', function() {
-    it('should add english areas the target select2 element' , function() {
+    it('should add english areas to the target select2 element' , function() {
       form.find('#english_regions').trigger('click');
       expect(form.find('.select2-choices li').length).toBe(3);
       expect(form.find('.select2-choices li:first-child .js-area-name').text()).toEqual("London");
@@ -56,11 +56,19 @@ describe('Areas relator', function() {
     });
   });
 
-  describe('checking the english areas when uk areas is checked', function() {
+  describe('checking english areas when uk areas is checked', function() {
     it('should deselect uk areas' , function() {
       form.find('#all_regions').prop('checked', true);
       form.find('#english_regions').trigger('click');
       expect(form.find('#all_regions').prop('checked')).toBeFalsy();
+    });
+  });
+
+  describe('checking uk areas when english areas is checked', function() {
+    it('should deselect english areas' , function() {
+      form.find('#english_regions').prop('checked', true);
+      form.find('#all_regions').trigger('click');
+      expect(form.find('#english_regions').prop('checked')).toBeFalsy();
     });
   });
 
