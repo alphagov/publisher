@@ -1,7 +1,22 @@
 #encoding: utf-8
 require 'integration_test_helper'
+require 'gds_api/test_helpers/imminence'
 
 class BusinessSupportCreateEditTest < JavascriptIntegrationTest
+  include GdsApi::TestHelpers::Imminence
+
+  def areas_response(areas)
+    {
+      "_response_info" => { "status" => "ok","links" => [] },
+      "total" => areas.size,
+      "start_index" => 1,
+      "page_size" => areas.size,
+      "current_page" => 1,
+      "pages" => 1,
+      "results" => areas
+    }.to_json
+  end
+
   setup do
     @artefact = FactoryGirl.create(:artefact,
         slug: "hedgehog-topiary",
@@ -22,12 +37,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
       {slug:'plc',name:'Public limited company'}
     ])
 
-    BusinessSupport::Location.collection.insert([
-      {slug:'england', name:'England'},
-      {slug:'scotland', name:'Scotland'},
-      {slug:'wales', name:'Wales'}
-    ])
-
     BusinessSupport::Purpose.collection.insert([
       {slug:'expansion', name: 'Expansion'},
       {slug:'world-domination', name: 'World domination'}
@@ -46,6 +55,27 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     BusinessSupport::SupportType.collection.insert([
       {slug:'grant', name:'Grant'}, {slug:'loan', name:'Loan'}
     ])
+
+    @regions = [{id: 9728, name: "London", type: "EUR"}, {id: 9730, name: "Scotland", type: "EUR"}]
+    @counties = [{id: 1764, name: "West Sussex County Council", type: "CTY"},
+                {id: 1767, name: "Devon County Council", type: "CTY"}]
+    @districts = [{id: 1768, name: "Wycombe District Council", type: "DIS"},
+                 {id: 1769, name: "South Bucks District Council", type: "DIS"}]
+    @london_boroughs = [{id: 1994, name: "Hackney Borough Council", type: "LBO"},
+                      {id: 1991, name: "Camden Borough Council", type: "LBO"}]
+
+    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/EUR.json}).to_return(
+      body: areas_response(@regions)
+    )
+    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/CTY.json}).to_return(
+      body: areas_response(@counties)
+    )
+    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/DIS.json}).to_return(
+      body: areas_response(@districts)
+    )
+    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/LBO.json}).to_return(
+      body: areas_response(@london_boroughs)
+    )
 
     setup_users
   end
@@ -82,9 +112,9 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                            :priority => 2,
                            :start_date => a_year_ago,
                            :end_date => a_year_since,
+                           :areas => ["9728"],
                            :business_sizes => ["up-to-249"],
                            :business_types => ["charity"],
-                           :locations => ["england", "scotland"],
                            :purposes => ["world-domination"],
                            :sectors => ["education"],
                            :stages => ["grow-and-sustain"],
@@ -114,10 +144,12 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_end_date_2i", :selected => a_year_since.strftime("%B"))
     assert page.has_select?("edition_end_date_3i", :selected => a_year_since.day.to_s)
 
+    within(".select2-choices") do
+      assert page.has_content?("London")
+    end
+
     assert page.has_checked_field?("edition_business_sizes_up-to-249")
     assert page.has_checked_field?("edition_business_types_charity")
-    assert page.has_checked_field?("edition_locations_england")
-    assert page.has_checked_field?("edition_locations_scotland")
     assert page.has_checked_field?("edition_purposes_world-domination")
     assert page.has_checked_field?("edition_sectors_education")
     assert page.has_checked_field?("edition_stages_grow-and-sustain")
@@ -139,7 +171,9 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     select "Normal", :from => "edition_priority"
     select Date.today.year.to_s, :from => "edition_start_date_1i"
-    check "business_support_location_check_all"
+
+    select2 "Hackney Borough Council", "#s2id_autogen1"
+    select2 "Camden Borough Council", "#s2id_autogen1"
 
     # circumvent poltergeist not handling bootstrap modals
     # by directly triggering our expected change
@@ -170,10 +204,11 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_start_date_1i", :selected => Date.today.year.to_s)
     assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
     assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
-    assert page.has_checked_field?("business_support_location_check_all")
-    assert page.has_checked_field?("edition_locations_wales")
-    assert page.has_checked_field?("edition_locations_england")
-    assert page.has_checked_field?("edition_locations_scotland")
+
+    within(".select2-choices") do
+      assert page.has_content?("London Hackney Borough Council Camden Borough Council")
+    end
+
     assert page.has_checked_field?("edition_sectors_manufacturing")
     refute page.has_checked_field?("edition_support_type_loan")
   end
@@ -253,11 +288,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_css?("input#edition_business_sizes_under-10[disabled]")
     assert page.has_css?("input#edition_business_sizes_up-to-249[disabled]")
     assert page.has_css?("input#edition_business_sizes_over-1000000[disabled]")
-
-    assert page.has_css?("input#business_support_location_check_all[disabled]")
-    assert page.has_css?("input#edition_locations_england[disabled]")
-    assert page.has_css?("input#edition_locations_scotland[disabled]")
-    assert page.has_css?("input#edition_locations_wales[disabled]")
 
     assert page.has_css?("input#business_support_purpose_check_all[disabled]")
     assert page.has_css?("input#edition_purposes_expansion[disabled]")

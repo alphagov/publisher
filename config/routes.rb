@@ -16,6 +16,8 @@ Publisher::Application.routes.draw do
   match 'reports/progress' => 'reports#progress', as: :progress_report
   get 'reports/business_support_schemes_content' => 'reports#business_support_schemes_content', :as => :business_support_report
 
+  get 'areas' => 'editions#areas'
+
   match 'user_search' => 'user_search#index'
 
   resources :publications

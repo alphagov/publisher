@@ -5,7 +5,7 @@ require "edition_progressor"
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
-  before_filter :setup_view_paths, :except => [:index, :new, :create]
+  before_filter :setup_view_paths, :except => [:index, :new, :create, :areas]
 
   def index
     redirect_to root_path
@@ -102,6 +102,13 @@ class EditionsController < InheritedResources::Base
 
   def diff
     @resource = resource
+  end
+
+  def areas
+    @areas = Area.all
+    respond_to do |format|
+      format.js { render :areas }
+    end
   end
 
   protected

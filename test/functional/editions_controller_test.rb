@@ -1,6 +1,9 @@
 require 'test_helper'
+require 'gds_api/test_helpers/imminence'
 
 class EditionsControllerTest < ActionController::TestCase
+  include GdsApi::TestHelpers::Imminence
+
   setup do
     login_as_stub_user
     @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
@@ -260,6 +263,24 @@ class EditionsControllerTest < ActionController::TestCase
       assert_equal 1, question.options.count
       assert_equal "Option One", question.options.first.label
 
+    end
+  end
+
+  context "/areas" do
+    setup do
+      stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/\w+.json}).to_return(
+        :body => { "results" => [] }.to_json
+      )
+    end
+    should "respond with javascript" do
+      get :areas, :format => :js
+
+      assert_response :success
+    end
+    should "not respond to other formats" do
+      get :areas
+
+      assert_response :not_acceptable
     end
   end
 end

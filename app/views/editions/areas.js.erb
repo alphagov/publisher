@@ -1,0 +1,3 @@
+var areas = <%= raw @areas.map { |a|
+  { id: a.id, text: a.name, country: a.country_name, type: a.type }
+}.to_json %>;
