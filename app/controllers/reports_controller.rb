@@ -20,6 +20,29 @@ class ReportsController < ApplicationController
 
   def business_support_schemes_content
     schemes = BusinessSupportEdition.published.asc("title")
-    send_data BusinessSupportExportPresenter.new(schemes).to_csv, :filename => 'business_support_schemes_content.csv'
+    send_data BusinessSupportExportPresenter.new(schemes, facets).to_csv, :filename => 'business_support_schemes_content.csv'
   end
+
+  private
+
+    def facets
+      slugs_and_names = {}
+
+      facet_classes = [
+        BusinessSupport::BusinessSize,
+        BusinessSupport::Location,
+        BusinessSupport::Purpose,
+        BusinessSupport::Sector,
+        BusinessSupport::Stage,
+        BusinessSupport::SupportType
+      ]
+
+      facet_classes.each do |facet_class|
+        facet_class.all.each do |facet|
+          slugs_and_names[facet.slug] = facet.name
+        end
+      end
+
+      slugs_and_names
+    end
 end
