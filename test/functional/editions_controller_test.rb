@@ -142,6 +142,15 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal "I failed", flash[:alert]
   end
 
+  test "should report publication counts on creation" do
+    StateCountReporter.any_instance.expects(:report)
+    post :create, "edition" => {
+      "kind" => "answer",
+      "panopticon_id"=>Artefact.first.id,
+      "title"=>"a title"
+    }
+  end
+
   test "should squash multiparameter attributes" do
     EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
 

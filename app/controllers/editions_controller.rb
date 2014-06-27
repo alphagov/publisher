@@ -5,6 +5,7 @@ class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create, :areas]
+  after_filter :report_state_counts, :only => [:create, :duplicate, :progress, :destroy]
 
   def index
     redirect_to root_path
@@ -141,5 +142,17 @@ class EditionsController < InheritedResources::Base
       resource_base_errors = resource.errors[:base]
       return resource.errors[:base].join('<br />') if resource_base_errors.present?
       "We had some problems saving. Please check the form below."
+    end
+
+    def report_state_counts
+      state_count_reporter.report
+    end
+
+    def state_count_reporter
+      StateCountReporter.new(
+        Edition,
+        Edition.state_names,
+        Publisher::Application.statsd,
+      )
     end
 end
