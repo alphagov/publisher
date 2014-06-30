@@ -25,24 +25,26 @@ class ReportsController < ApplicationController
 
   private
 
-    def facets
-      slugs_and_names = {}
+  def facets
+    facet_mappings = {}
 
-      facet_classes = [
-        BusinessSupport::BusinessSize,
-        BusinessSupport::Location,
-        BusinessSupport::Purpose,
-        BusinessSupport::Sector,
-        BusinessSupport::Stage,
-        BusinessSupport::SupportType
-      ]
+    facet_classes = [
+      BusinessSupport::BusinessSize,
+      BusinessSupport::Location,
+      BusinessSupport::Purpose,
+      BusinessSupport::Sector,
+      BusinessSupport::Stage,
+      BusinessSupport::SupportType
+    ]
 
-      facet_classes.each do |facet_class|
-        facet_class.all.each do |facet|
-          slugs_and_names[facet.slug] = facet.name
-        end
+    facet_classes.each do |facet_class|
+      facet_class_key = facet_class.to_s.demodulize
+      facet_mappings[facet_class_key] = {} unless facet_mappings.has_key?(facet_class_key)
+      facet_class.all.each do |facet|
+        facet_mappings[facet_class_key][facet.slug] = facet.name
       end
-
-      slugs_and_names
     end
+
+    facet_mappings
+  end
 end

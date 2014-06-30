@@ -10,10 +10,10 @@ class BusinessSupportExportPresenter
     Area.areas_for_edition(scheme).map(&:name).join(", ")
   end
 
-  def facet_names(facet_values)
+  def facet_names(facet_type, facet_values)
     [].tap do |ary|
       facet_values.each do |slug|
-        ary << @facets[slug]
+        ary << @facets[facet_type][slug]
       end
     end.join(", ")
   end
@@ -36,9 +36,10 @@ class BusinessSupportExportPresenter
           scheme.eligibility, scheme.evaluation, scheme.additional_information, scheme.contact_details,
           scheme.max_employees, scheme.min_value, scheme.max_value,
           scheme.continuation_link, scheme.will_continue_on, scheme.start_date, scheme.end_date,
-          area_names(scheme), facet_names(scheme.business_sizes), facet_names(scheme.locations),
-          facet_names(scheme.purposes), facet_names(scheme.sectors),
-          facet_names(scheme.stages), facet_names(scheme.support_types)
+          area_names(scheme), facet_names("BusinessSize", scheme.business_sizes),
+          facet_names("Location", scheme.locations), facet_names("Purpose", scheme.purposes),
+          facet_names("Sector", scheme.sectors), facet_names("Stage", scheme.stages),
+          facet_names("SupportType", scheme.support_types)
         ]
       end
     end
