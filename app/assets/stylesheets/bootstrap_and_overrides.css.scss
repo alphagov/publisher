@@ -76,10 +76,35 @@ label.nav-header {
   max-width: 400px;
 }
 
-/* datetime selectors */
+.date-input {
+  .date-input-legend {
+    margin-bottom: 10px;
+    border: none;
+  }
 
-select.date {
-  width: auto;
+  &.scheme-date-inputs {
+    @include add-bottom-margin;
+    margin-right: 40px;
+    float: left;
+  }
+
+  .form-group-day, .form-group-month, .form-group-year {
+    @include add-right-margin;
+    float: left;
+    clear: none;
+
+    label {
+      font-weight: normal;
+    }
+  }
+
+  .form-group-day, .form-group-month {
+    width: 50px;
+  }
+
+  .form-group-year {
+    width: 70px;
+  }
 }
 
 .important-note {
