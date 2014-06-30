@@ -33,7 +33,7 @@ module Publisher
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
 
-    config.assets.precompile += %W(html5.js business_support.css)
+    config.assets.precompile += %W(html5.js business_support.css select2.js views/business_support/areas_relator.js)
 
     config.generators do |g|
         g.orm :mongoid
