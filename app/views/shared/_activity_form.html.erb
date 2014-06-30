@@ -30,13 +30,8 @@
       <% end %>
 
       <% if activity == "schedule_for_publishing" %>
-        <%= f.label :publish_at do %>
-          Publish at <abbr title="required">*</abbr>
-        <% end %>
-        <div class="form-inline">
-        <%= f.time_select :publish_at, {}, { class: 'date form-control' } %>
-        &mdash;
-        <%= f.date_select :publish_at, { order: [:day, :month, :year], default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+        <div class="date-input">
+          <%= f.input :publish_at, :as => :date_time, :required => true %>
         </div>
       <% end %>
     <% end %>

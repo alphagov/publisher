@@ -88,7 +88,8 @@ label.nav-header {
     float: left;
   }
 
-  .form-group-day, .form-group-month, .form-group-year {
+  .form-group-day, .form-group-month, .form-group-year,
+  .form-group-hour, .form-group-min {
     @include add-right-margin;
     float: left;
     clear: none;
@@ -98,12 +99,17 @@ label.nav-header {
     }
   }
 
-  .form-group-day, .form-group-month {
+  .form-group-day, .form-group-month,
+  .form-group-hour, .form-group-min {
     width: 50px;
   }
 
   .form-group-year {
     width: 70px;
+  }
+
+  .form-group-min {
+    margin-right: 20px;
   }
 }
 
