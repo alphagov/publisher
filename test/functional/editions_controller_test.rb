@@ -143,7 +143,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   test "should report publication counts on creation" do
-    StateCountReporter.any_instance.expects(:report)
+    Publisher::Application.edition_state_count_reporter.expects(:report)
     post :create, "edition" => {
       "kind" => "answer",
       "panopticon_id"=>Artefact.first.id,

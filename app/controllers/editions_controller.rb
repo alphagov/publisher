@@ -145,14 +145,6 @@ class EditionsController < InheritedResources::Base
     end
 
     def report_state_counts
-      state_count_reporter.report
-    end
-
-    def state_count_reporter
-      StateCountReporter.new(
-        Edition,
-        Edition.state_names,
-        Publisher::Application.statsd,
-      )
+      Publisher::Application.edition_state_count_reporter.report
     end
 end

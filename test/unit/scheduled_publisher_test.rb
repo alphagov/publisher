@@ -33,7 +33,7 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
     end
 
     should "report on edition state counts" do
-      StateCountReporter.any_instance.expects(:report)
+      Publisher::Application.edition_state_count_reporter.expects(:report)
       ScheduledPublisher.new.perform(@edition.id.to_s)
     end
   end
