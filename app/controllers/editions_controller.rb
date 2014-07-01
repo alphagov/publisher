@@ -1,4 +1,3 @@
-require "statsd"
 require "edition_duplicator"
 require "edition_progressor"
 
@@ -6,6 +5,7 @@ class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create, :areas]
+  after_filter :report_state_counts, :only => [:create, :duplicate, :progress, :destroy]
 
   def index
     redirect_to root_path
@@ -26,7 +26,6 @@ class EditionsController < InheritedResources::Base
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
-    statsd.increment("publisher.edition.create.#{class_identifier}")
     @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
@@ -92,7 +91,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    command = EditionProgressor.new(resource, current_user, statsd)
+    command = EditionProgressor.new(resource, current_user)
     if command.progress(squash_multiparameter_datetime_attributes(params[:activity]))
       redirect_to edition_path(resource), notice: command.status_message
     else
@@ -126,10 +125,6 @@ class EditionsController < InheritedResources::Base
       setup_view_paths_for(resource)
     end
 
-    def statsd
-      @statsd ||= Statsd.new(::STATSD_HOST)
-    end
-
     def description(r)
       r.format.underscore.humanize
     end
@@ -147,5 +142,9 @@ class EditionsController < InheritedResources::Base
       resource_base_errors = resource.errors[:base]
       return resource.errors[:base].join('<br />') if resource_base_errors.present?
       "We had some problems saving. Please check the form below."
+    end
+
+    def report_state_counts
+      Publisher::Application.edition_state_count_reporter.report
     end
 end

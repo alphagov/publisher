@@ -32,10 +32,8 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       assert @edition.reload.published?
     end
 
-    should "update statsd counters" do
-      Statsd.any_instance.expects(:decrement).with("publisher.edition.scheduled_for_publishing")
-      Statsd.any_instance.expects(:increment).with("publisher.edition.published")
-
+    should "report on edition state counts" do
+      Publisher::Application.edition_state_count_reporter.expects(:report)
       ScheduledPublisher.new.perform(@edition.id.to_s)
     end
   end

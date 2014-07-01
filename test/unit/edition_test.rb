@@ -44,4 +44,16 @@ class EditionTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "state names" do
+    should "return an array of symbols" do
+      assert Edition.state_names.is_a? Array
+      assert Edition.state_names.all? { |name| name.is_a? Symbol }
+    end
+
+    should "include the draft and published state" do
+      assert_includes Edition.state_names, :draft
+      assert_includes Edition.state_names, :published
+    end
+  end
 end
