@@ -31,5 +31,10 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       ScheduledPublisher.new.perform(@edition.id.to_s)
       assert @edition.reload.published?
     end
+
+    should "report on edition state counts" do
+      StateCountReporter.any_instance.expects(:report)
+      ScheduledPublisher.new.perform(@edition.id.to_s)
+    end
   end
 end

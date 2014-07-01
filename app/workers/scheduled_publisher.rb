@@ -19,5 +19,16 @@ class ScheduledPublisher
   def perform(edition_id)
     edition = Edition.find(edition_id)
     edition.publish_anonymously
+    state_count_reporter.report
+  end
+
+private
+
+  def state_count_reporter
+    StateCountReporter.new(
+      Edition,
+      Edition.state_names,
+      Publisher::Application.statsd,
+    )
   end
 end
