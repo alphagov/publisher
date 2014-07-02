@@ -6,8 +6,10 @@ class StateCountReporter
   end
 
   def report
-    @states.each do |state|
-      emit(state, state_count(state))
+    @statsd.batch do |batch|
+      @states.each do |state|
+        batch.gauge("state.#{state}", state_count(state))
+      end
     end
 
     nil
@@ -16,10 +18,5 @@ class StateCountReporter
 private
   def state_count(state)
     @model_class.public_send(state).count
-  end
-
-  def emit(state, value)
-    stat_key = "state.#{state}"
-    @statsd.gauge(stat_key, value)
   end
 end
