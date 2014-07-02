@@ -13,13 +13,9 @@ class StateCountReporterTest < ActiveSupport::TestCase
     @states = [:draft, :published]
   end
 
-  should "do nothing if there are no states" do
-    statsd_mock = mock("statsd")
-    StateCountReporter.new(@model_class, [], statsd_mock).report
-  end
-
   should "report a count for each state" do
     statsd_mock = mock("statsd") do
+      stubs(:batch).yields(self)
       expects(:gauge).with("state.draft", 12)
       expects(:gauge).with("state.published", 15)
     end
@@ -28,7 +24,17 @@ class StateCountReporterTest < ActiveSupport::TestCase
   end
 
   should "return nil" do
-    statsd_stub = stub("statsd", gauge: nil)
+    statsd_stub = stub("statsd", gauge: nil, batch: nil)
     assert_nil StateCountReporter.new(@model_class, @states, statsd_stub).report
+  end
+
+  should "batch the metrics together" do
+    # The actual calls to the batch object get tested above
+    batch_stub = stub("statsd batch", gauge: nil)
+    statsd_mock = mock("statsd") do
+      expects(:batch).yields(batch_stub)
+    end
+
+    StateCountReporter.new(@model_class, @states, statsd_mock).report
   end
 end
