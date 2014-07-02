@@ -137,12 +137,12 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Will continue on", :with => "The HMRC website")
     assert page.has_field?("Continuation link", :with => "http://www.hmrc.gov.uk")
     assert page.has_select?("edition_priority", :selected => "High")
-    assert page.has_select?("edition_start_date_1i", :selected => a_year_ago.year.to_s)
-    assert page.has_select?("edition_start_date_2i", :selected => a_year_ago.strftime("%B"))
-    assert page.has_select?("edition_start_date_3i", :selected => a_year_ago.day.to_s)
-    assert page.has_select?("edition_end_date_1i", :selected => a_year_since.year.to_s)
-    assert page.has_select?("edition_end_date_2i", :selected => a_year_since.strftime("%B"))
-    assert page.has_select?("edition_end_date_3i", :selected => a_year_since.day.to_s)
+    assert page.has_field?("start_date_year", :with => a_year_ago.year.to_s)
+    assert page.has_field?("start_date_month", :with => a_year_ago.month.to_s.rjust(2, '0'))
+    assert page.has_field?("start_date_day", :with => a_year_ago.day.to_s.rjust(2, '0'))
+    assert page.has_field?("end_date_year", :with => a_year_since.year.to_s)
+    assert page.has_field?("end_date_month", :with => a_year_since.month.to_s.rjust(2, '0'))
+    assert page.has_field?("end_date_day", :with => a_year_since.day.to_s.rjust(2, '0'))
 
     within(".select2-choices") do
       assert page.has_content?("London")
@@ -170,7 +170,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     fill_in "Continuation link", :with => "http://www.business-support.com"
 
     select "Normal", :from => "edition_priority"
-    select Date.today.year.to_s, :from => "edition_start_date_1i"
+    fill_in "start_date_year", with: Date.today.year.to_s
 
     select2 "Hackney Borough Council", "#s2id_autogen1"
     select2 "Camden Borough Council", "#s2id_autogen1"
@@ -201,9 +201,9 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert_equal 1, bs.priority
     assert page.has_select?("edition_priority", :selected => "Normal")
     assert_equal Date.today, bs.start_date
-    assert page.has_select?("edition_start_date_1i", :selected => Date.today.year.to_s)
-    assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
-    assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
+    assert page.has_field?("start_date_year", :with => Date.today.year.to_s)
+    assert page.has_field?("start_date_month", :with => Date.today.month.to_s.rjust(2, '0'))
+    assert page.has_field?("start_date_day", :with => Date.today.day.to_s.rjust(2, '0'))
 
     within(".select2-choices") do
       assert page.has_content?("London Hackney Borough Council Camden Borough Council")
@@ -272,12 +272,12 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_css?("input#edition_will_continue_on[disabled]")
     assert page.has_css?("input#edition_continuation_link[disabled]")
     assert page.has_css?("select#edition_priority[disabled]")
-    assert page.has_css?("select#edition_start_date_1i[disabled]")
-    assert page.has_css?("select#edition_start_date_2i[disabled]")
-    assert page.has_css?("select#edition_start_date_3i[disabled]")
-    assert page.has_css?("select#edition_end_date_1i[disabled]")
-    assert page.has_css?("select#edition_end_date_2i[disabled]")
-    assert page.has_css?("select#edition_end_date_3i[disabled]")
+    assert page.has_css?("input#start_date_year[disabled]")
+    assert page.has_css?("input#start_date_month[disabled]")
+    assert page.has_css?("input#start_date_day[disabled]")
+    assert page.has_css?("input#end_date_year[disabled]")
+    assert page.has_css?("input#end_date_month[disabled]")
+    assert page.has_css?("input#end_date_day[disabled]")
 
     assert page.has_css?("input#business_support_business_type_check_all[disabled]")
     assert page.has_css?("input#edition_business_types_charity[disabled]")

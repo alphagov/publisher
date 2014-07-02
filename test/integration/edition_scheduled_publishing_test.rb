@@ -22,11 +22,11 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
       fill_in "Comment", with: "schedule!"
 
       tomorrow = Date.tomorrow
-      select tomorrow.year.to_s, from: "activity_publish_at_1i"
-      select tomorrow.strftime("%B"), from: "activity_publish_at_2i"
-      select tomorrow.day.to_s, from: "activity_publish_at_3i"
-      select '12', from: "activity_publish_at_4i"
-      select '15', from: "activity_publish_at_5i"
+      fill_in "publish_at_year", with: tomorrow.year.to_s
+      fill_in "publish_at_month", with: tomorrow.month.to_s
+      fill_in "publish_at_day", with: tomorrow.day.to_s
+      fill_in "publish_at_hour", with: '12'
+      fill_in "publish_at_min", with: '15'
       click_on "Send"
     end
 
