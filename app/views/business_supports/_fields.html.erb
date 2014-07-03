@@ -68,20 +68,27 @@
       </div>
     </div>
     <hr/>
-    <h3>Scheme dates</h3>
-    <div class="form-group<%= error_class %> date-input scheme-date-inputs">
-      <%= f.input :start_date, :as => :date, :disabled => locked_for_edits %>
-      <% if f.object.errors.has_key?(:start_date) -%>
-      <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
-      <% end -%>
-    </div>
-    <div class="form-group<%= error_class %> date-input scheme-date-inputs">
-      <%= f.input :end_date, :as => :date, :disabled => locked_for_edits %>
-      <% if f.object.errors.has_key?(:end_date) -%>
-      <span class="help-inline"><%= f.object.errors[:end_date].join(', ') %></span>
-      <% end -%>
+
+    <div class="row">
+      <div class="col-md-8">
+        <h3>Scheme dates</h3>
+        <p class="form-hint">For example, 08 04 2014</p>
+        <div class="form-group<%= error_class %> date-input scheme-date-inputs">
+          <%= f.input :start_date, :as => :date, :disabled => locked_for_edits %>
+          <% if f.object.errors.has_key?(:start_date) -%>
+          <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
+          <% end -%>
+        </div>
+        <div class="form-group<%= error_class %> date-input scheme-date-inputs">
+          <%= f.input :end_date, :as => :date, :disabled => locked_for_edits %>
+          <% if f.object.errors.has_key?(:end_date) -%>
+          <span class="help-inline"><%= f.object.errors[:end_date].join(', ') %></span>
+          <% end -%>
+        </div>
+      </div>
     </div>
     <hr/>
+
     <%= render partial: "business_supports/areas", locals: { f: f } %>
 
     <%= render partial: "business_supports/facets", locals: { f: f,
