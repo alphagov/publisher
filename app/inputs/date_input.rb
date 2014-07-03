@@ -2,7 +2,9 @@ class DateInput
   include Formtastic::Inputs::Base
 
   def to_html
-    field_title << date_fields
+    html = field_title
+    html += hint_tag unless options[:hide_hint]
+    html << date_fields
   end
 
   def date_fields
@@ -19,7 +21,7 @@ private
     template.content_tag(:div, class: 'form-group-day') do
       template.label_tag(method_s + '_day', 'Day') +
       template.text_field_tag(method_s + '_day', value,
-        { placeholder: 'DD', maxlength: 2, name: format_tag_name(builder, '3i'), class: 'form-control', disabled: options[:disabled] })
+        { maxlength: 2, name: format_tag_name(builder, '3i'), class: 'form-control', disabled: options[:disabled] })
     end
   end
 
@@ -27,7 +29,7 @@ private
     template.content_tag(:div, class: 'form-group-month') do
       template.label_tag(method_s + '_month', "Month") +
       template.text_field_tag(method_s + '_month', value,
-        { placeholder: 'MM', maxlength: 2, name: format_tag_name(builder, '2i'), class: 'form-control', disabled: options[:disabled] })
+        { maxlength: 2, name: format_tag_name(builder, '2i'), class: 'form-control', disabled: options[:disabled] })
     end
   end
 
@@ -35,7 +37,7 @@ private
     template.content_tag(:div, class: 'form-group-year') do
       template.label_tag(method_s + '_year', "Year") +
       template.text_field_tag(method_s + '_year', value,
-        { placeholder: 'YYYY', maxlength: 4, name: format_tag_name(builder, '1i'), class: 'form-control', disabled: options[:disabled] })
+        { maxlength: 4, name: format_tag_name(builder, '1i'), class: 'form-control', disabled: options[:disabled] })
     end
   end
 
@@ -58,6 +60,14 @@ private
 
   def field_title
     template.content_tag(:legend, label_text, class: 'date-input-legend')
+  end
+
+  def hint_tag
+    template.content_tag(:p, hint_text, class: "form-hint")
+  end
+
+  def hint_text
+    "For example, 16 08 2014"
   end
 
 end

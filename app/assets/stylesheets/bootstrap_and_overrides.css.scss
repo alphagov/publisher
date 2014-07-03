@@ -111,6 +111,18 @@ label.nav-header {
   .form-group-min {
     margin-right: 20px;
   }
+
+  .time-separator {
+    position: absolute;
+    padding-top: 40px;
+    padding-left: 53px;
+    font-weight: bold;
+  }
+}
+
+.form-hint {
+  color: #6f777b;
+  margin-bottom: 15px;
 }
 
 .important-note {
