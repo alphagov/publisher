@@ -31,7 +31,7 @@
 
       <% if activity == "schedule_for_publishing" %>
         <div class="date-input">
-          <%= f.input :publish_at, :as => :date_time, :required => true %>
+          <%= f.input :publish_at, :as => :date_time, :required => true, :default => Time.now + 1.day %>
         </div>
       <% end %>
     <% end %>

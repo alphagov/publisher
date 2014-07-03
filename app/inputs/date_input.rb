@@ -50,12 +50,13 @@ private
   end
 
   def extract_date_field_prefill_values
-    return if builder.object.nil?
-
-    prefill_value = builder.object.send(method)
     [prefill_value.day.to_s.rjust(2, '0'),
       prefill_value.month.to_s.rjust(2, '0'),
       prefill_value.year] if prefill_value
+  end
+
+  def prefill_value
+    @value ||= (builder.object && builder.object.send(method)) || options[:default]
   end
 
   def field_title

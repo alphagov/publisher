@@ -30,9 +30,6 @@ private
   end
 
   def extract_time_field_prefill_values
-    return if builder.object.nil?
-
-    prefill_value = builder.object.send(method)
     [prefill_value.hour.to_s.rjust(2, '0'),
       prefill_value.min.to_s.rjust(2, '0')] if prefill_value
   end
