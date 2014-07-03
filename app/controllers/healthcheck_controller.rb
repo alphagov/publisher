@@ -5,7 +5,7 @@ class HealthcheckController < ActionController::Base
   respond_to :json
 
   def check
-    health_status = {}
+    health_status = {"status" => "ok"}
     respond_with health_status
   end
 end
