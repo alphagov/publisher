@@ -27,6 +27,18 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     assert_equal @fred, command.new_edition.assigned_to
   end
 
+  test "should be possible to create a new draft of an invalid edition" do
+    guide = FactoryGirl.create(:guide_edition_with_two_parts, panopticon_id: FactoryGirl.create(:artefact).id)
+    publish_item(guide, @laura)
+
+    # invalid link in body having a {:rel="external"}
+    guide.parts.first.update_attribute(:body, %q<[Home page](http://example.com "Home"){:rel="external"}>)
+    guide.reload
+
+    command = EditionDuplicator.new(guide, @laura)
+    assert command.duplicate(nil, @fred)
+  end
+
   test "should not assign after creating a new edition if assignment is blank" do
     publish_item(@guide, @laura)
 

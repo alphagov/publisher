@@ -14,7 +14,7 @@ class EditionDuplicator
   def duplicate(new_format = nil, assign_to = nil)
     self.new_edition = actor.new_version(existing_edition, new_format)
 
-    if new_edition && new_edition.save
+    if new_edition && new_edition.save(validate: false)
       update_assignment(assign_to)
       true
     else
