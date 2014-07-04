@@ -103,7 +103,7 @@ GEM
       bootstrap-sass (= 3.1.0)
       jquery-rails (= 3.0.4)
       rails (>= 3.2.0)
-    govuk_content_models (13.1.0)
+    govuk_content_models (13.2.1)
       bson_ext
       differ
       gds-api-adapters (>= 10.9.0)
@@ -321,7 +321,7 @@ DEPENDENCIES
   gds-sso (= 9.2.0)
   govspeak (= 1.6.0)
   govuk_admin_template (= 1.0.1)
-  govuk_content_models (= 13.1.0)
+  govuk_content_models (= 13.2.1)
   has_scope
   inherited_resources
   jasmine (= 2.0.2)
