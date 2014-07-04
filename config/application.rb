@@ -61,6 +61,10 @@ module Publisher
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Enforce locale restriction to silence deprecation warnings; this will be
+    # the default in future Rails versions.
+    config.i18n.enforce_available_locales = true
+
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
