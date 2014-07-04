@@ -2,9 +2,16 @@
    Diff of two publication editions
    ========================================================================== */
 
+$removed-color: #fdd;
+$added-color: #dfd;
+
+.panel-diff {
+  border-left: 40px solid #f3f3f3;
+}
+
 .diff {
   list-style: none;
-  margin-left: 0;
+  padding-left: 0;
 }
 
 .diff li {
@@ -20,20 +27,22 @@
 }
 
 .diff .removal {
-  background-color: #DA4F49;
+  background-color: $removed-color;
 }
 
 .diff .addition {
-  background-color: #468847;
+  background-color: $added-color;
 }
 
 .diff .removal:before,
 .diff .addition:before {
-  float: left;
+  position: absolute;
   font-size: 26px;
   font-weight: bold;
-  margin-left: -26px;
+  margin-left: -60px;
   margin-top: -10px;
+  width: 40px;
+  text-align: center;
 }
 
 .diff .removal:before {
