@@ -25,5 +25,10 @@ private
         "message" => "#{scheduled_editions} scheduled edition(s); #{queue_size} item(s) queued"
       }
     end
+  rescue Mongo::MongoRubyError, Mongo::MongoDBError, Redis::CannotConnectError
+    {
+      "status" => "critical",
+      "message" => "Unable to check scheduled counts"
+    }
   end
 end
