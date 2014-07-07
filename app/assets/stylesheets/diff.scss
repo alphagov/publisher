@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Diff of two publication editions
+   ========================================================================== */
+
+$removed-color: #fdd;
+$added-color: #dfd;
+
+.panel-diff {
+  border-left: 40px solid #f3f3f3;
+}
+
+.diff {
+  list-style: none;
+  padding-left: 0;
+}
+
+.diff li {
+  margin-bottom: 1em;
+  word-wrap: break-word;
+}
+
+.diff .removal,
+.diff .addition {
+  border-radius: 3px;
+  color: #000;
+  padding: 0.2rem 0.4rem;
+}
+
+.diff .removal {
+  background-color: $removed-color;
+}
+
+.diff .addition {
+  background-color: $added-color;
+}
+
+.diff .removal:before,
+.diff .addition:before {
+  position: absolute;
+  font-size: 26px;
+  font-weight: bold;
+  margin-left: -60px;
+  margin-top: -10px;
+  width: 40px;
+  text-align: center;
+}
+
+.diff .removal:before {
+  color: #DA4F49;
+  content: "-";
+}
+
+.diff .addition:before {
+  color: #468847;
+  content: "+";
+}

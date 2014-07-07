@@ -28,10 +28,12 @@
   </p>
 
   <div id="diff">
-    <h2>Changes from edition <%= @resource.version_number-1 %> to edition <%= @resource.version_number %></h2>
+    <h2 class="remove-bottom-margin">Changes from edition <%= @resource.version_number-1 %> to edition <%= @resource.version_number %></h2>
     <br/>
-    <div class="well">
-      <%= format_content_diff(@resource.previous_edition_differences) %>
+    <div class="panel panel-default panel-diff">
+      <div class="panel-body">
+        <%= format_content_diff(@resource.previous_edition_differences) %>
+      </div>
     </div>
   </div>
 <% content_for :page_title, "Editing #{@resource.title}" %>

@@ -38,48 +38,6 @@ form.formtastic .form-group textarea {
   overflow-y: scroll;
 }
 
-/* History tab diff styling */
-.diff {
-  list-style: none;
-  margin-left: 0;
-}
-
-.diff li {
-  margin-bottom: 1em;
-  word-wrap: break-word;
-}
-
-.diff .removal, .diff .addition {
-  border-radius: 3px;
-  color: #000;
-  padding: 0.2rem 0.4rem;
-}
-
-.diff .removal {
-  background-color: #DA4F49;
-}
-
-.diff .addition {
-  background-color:#468847;
-}
-
-.diff .removal:before, .diff .addition:before {
-  float: left;
-  font-size: 26px;
-  font-weight: bold;
-  margin-left: -26px;
-}
-
-.diff .removal:before {
-  color: #DA4F49;
-  content: "-";
-}
-
-.diff .addition:before {
-  color: #468847;
-  content: "+";
-}
-
 .autosave-msg {
   float:right;
 }
