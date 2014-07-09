@@ -93,6 +93,7 @@ label.nav-header {
     @include add-right-margin;
     float: left;
     clear: none;
+    margin-bottom: 10px;
 
     label {
       font-weight: normal;
@@ -118,6 +119,11 @@ label.nav-header {
     padding-left: 53px;
     font-weight: bold;
   }
+
+  span.error {
+    color: red;
+  }
+
 }
 
 .form-hint {

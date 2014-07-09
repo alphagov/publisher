@@ -76,13 +76,13 @@
         <div class="form-group<%= error_class %> date-input scheme-date-inputs">
           <%= f.input :start_date, :as => :date, :disabled => locked_for_edits, :hide_hint => true %>
           <% if f.object.errors.has_key?(:start_date) -%>
-          <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
+          <span class="error"><%= f.object.errors[:start_date].join(', ') %></span>
           <% end -%>
         </div>
         <div class="form-group<%= error_class %> date-input scheme-date-inputs">
           <%= f.input :end_date, :as => :date, :disabled => locked_for_edits, :hide_hint => true %>
           <% if f.object.errors.has_key?(:end_date) -%>
-          <span class="help-inline"><%= f.object.errors[:end_date].join(', ') %></span>
+          <span class="error"><%= f.object.errors[:end_date].join(', ') %></span>
           <% end -%>
         </div>
       </div>
