@@ -112,7 +112,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                            :priority => 2,
                            :start_date => a_year_ago,
                            :end_date => a_year_since,
-                           :areas => ["9728"],
+                           :areas => ["london"],
                            :business_sizes => ["up-to-249"],
                            :business_types => ["charity"],
                            :purposes => ["world-domination"],
