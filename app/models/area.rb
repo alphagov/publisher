@@ -11,7 +11,7 @@ class Area < OpenStruct
   end
 
   def self.areas_for_edition(edition)
-    areas.select { |a| edition.areas.include?(a.id.to_s) }
+    areas.select { |a| edition.areas.include?(a.slug) }
   end
 
   def self.regions
@@ -20,6 +20,10 @@ class Area < OpenStruct
 
   def self.english_regions
     regions.select { |r| r.country_name == "England" }
+  end
+
+  def slug
+    name.parameterize
   end
 
   private

@@ -61,7 +61,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_areas_for_edition
-    edition = OpenStruct.new(areas: ["9728", "1994"])
+    edition = OpenStruct.new(areas: ["london", "hackney-borough-council"])
     assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
   end
 

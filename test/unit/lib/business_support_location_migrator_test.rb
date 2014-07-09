@@ -15,8 +15,8 @@ class BusinessSupportLocationMigratorTest < ActiveSupport::TestCase
   end
 
   def test_run
-    assert_equal ['9728','9733'], @bs1.areas
-    assert_equal ['9728','9729','9734','9727','9731','9732','9736','9733','9726','9735'], @bs2.areas
+    assert_equal ['london','south-east'], @bs1.areas
+    assert_equal ['london','north-west','north-east','east-midlands','west-midlands','yorkshire-and-the-humber','south-west','south-east','eastern','wales'], @bs2.areas
     assert_equal [], @bs3.areas
   end
 end
