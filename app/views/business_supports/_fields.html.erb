@@ -68,26 +68,27 @@
       </div>
     </div>
     <hr/>
-    <div class="form-group<%= error_class %> date-picker">
-      <h3>Scheme start/end date</h3>
-      <label for="edition[start_date]">Start date</label>
-      <div class="form-inline">
-        <%= f.date_select :start_date, { :include_blank => true }, { :class => "form-control date-picker#{error_class}", :disabled => locked_for_edits } %>
-        <% if f.object.errors.has_key?(:start_date) -%>
-        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
-        <% end -%>
-      </div>
-    </div>
-    <div class="add-top-margin form-group<%= error_class %> date-picker">
-      <label for="edition[end_date]">End date</label>
-      <div class="form-inline">
-        <%= f.date_select :end_date, { :include_blank => true }, { :class => "form-control date-picker#{error_class}", :disabled => locked_for_edits } %>
-        <% if f.object.errors.has_key?(:start_date) -%>
-        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
-        <% end -%>
+
+    <div class="row">
+      <div class="col-md-8">
+        <h3>Scheme dates</h3>
+        <p class="form-hint">For example, 08 04 2014</p>
+        <div class="form-group<%= error_class %> date-input scheme-date-inputs">
+          <%= f.input :start_date, :as => :date, :disabled => locked_for_edits, :hide_hint => true %>
+          <% if f.object.errors.has_key?(:start_date) -%>
+          <span class="error"><%= f.object.errors[:start_date].join(', ') %></span>
+          <% end -%>
+        </div>
+        <div class="form-group<%= error_class %> date-input scheme-date-inputs">
+          <%= f.input :end_date, :as => :date, :disabled => locked_for_edits, :hide_hint => true %>
+          <% if f.object.errors.has_key?(:end_date) -%>
+          <span class="error"><%= f.object.errors[:end_date].join(', ') %></span>
+          <% end -%>
+        </div>
       </div>
     </div>
     <hr/>
+
     <%= render partial: "business_supports/areas", locals: { f: f } %>
 
     <%= render partial: "business_supports/facets", locals: { f: f,

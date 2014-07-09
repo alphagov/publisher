@@ -131,7 +131,7 @@ class EditionsController < InheritedResources::Base
 
   private
     def squash_multiparameter_datetime_attributes(params)
-      datetime_params = params.select { |k, v| k.include? 'publish_at' }.values.map(&:to_i)
+      datetime_params = params.select { |k, v| k.include? 'publish_at' }.sort.map(&:last).map(&:to_i)
       params.delete_if { |k, v| k.include? 'publish_at' }
 
       params['publish_at'] = DateTime.new(*datetime_params) if datetime_params.present?

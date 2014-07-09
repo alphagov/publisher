@@ -76,10 +76,59 @@ label.nav-header {
   max-width: 400px;
 }
 
-/* datetime selectors */
+.date-input {
+  .date-input-legend {
+    margin-bottom: 10px;
+    border: none;
+  }
 
-select.date {
-  width: auto;
+  &.scheme-date-inputs {
+    @include add-bottom-margin;
+    margin-right: 30px;
+    float: left;
+  }
+
+  .form-group-day, .form-group-month, .form-group-year,
+  .form-group-hour, .form-group-min {
+    @include add-right-margin;
+    float: left;
+    clear: none;
+    margin-bottom: 10px;
+
+    label {
+      font-weight: normal;
+    }
+  }
+
+  .form-group-day, .form-group-month,
+  .form-group-hour, .form-group-min {
+    width: 50px;
+  }
+
+  .form-group-year {
+    width: 70px;
+  }
+
+  .form-group-min {
+    margin-right: 20px;
+  }
+
+  .time-separator {
+    position: absolute;
+    padding-top: 40px;
+    padding-left: 53px;
+    font-weight: bold;
+  }
+
+  span.error {
+    color: red;
+  }
+
+}
+
+.form-hint {
+  color: #6f777b;
+  margin-bottom: 15px;
 }
 
 .important-note {
