@@ -18,14 +18,17 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def setup
-    @regions = [{id: 9728, name: "London", type: "EUR", country_name: "England"},
-                {id: 9730, name: "Scotland", type: "EUR", country_name: "Scotland"}]
-    @counties = [{id: 1764, name: "West Sussex County Council", type: "CTY"},
-                {id: 1767, name: "Devon County Council", type: "CTY"}]
-    @districts = [{id: 1768, name: "Wycombe District Council", type: "DIS"},
-                 {id: 1769, name: "South Bucks District Council", type: "DIS"}]
-    @london_boroughs = [{id: 1994, name: "Hackney Borough Council", type: "LBO"},
-                      {id: 1991, name: "Camden Borough Council", type: "LBO"}]
+    @regions = [{slug: "london", name: "London", type: "EUR", country_name: "England"},
+                {slug: "scotland", name: "Scotland", type: "EUR", country_name: "Scotland"}]
+
+    @counties = [{slug: "west-sussex-county-council", name: "West Sussex County Council", type: "CTY"},
+                 {slug: "devon-county-council", name: "Devon County Council", type: "CTY"}]
+
+    @districts = [{slug: "wycombe-district-council", name: "Wycombe District Council", type: "DIS"},
+                  {slug: "south-bucks-district-council", name: "South Bucks District Council", type: "DIS"}]
+
+    @london_boroughs = [{slug: "hackney-borough-council", name: "Hackney Borough Council", type: "LBO"},
+                        {slug: "camden-borough-council", name: "Camden Borough Council", type: "LBO"}]
 
     stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/EUR.json}).to_return(
       body: areas_response(@regions)
@@ -61,7 +64,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_areas_for_edition
-    edition = OpenStruct.new(areas: ["9728", "1994"])
+    edition = OpenStruct.new(areas: ["london", "hackney-borough-council"])
     assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
   end
 
