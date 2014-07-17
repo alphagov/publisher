@@ -11,7 +11,7 @@ class Area < OpenStruct
   end
 
   def self.areas_for_edition(edition)
-    areas.select { |a| edition.areas.include?(a.id.to_s) }
+    areas.select { |a| edition.areas.include?(a.slug) }
   end
 
   def self.regions
