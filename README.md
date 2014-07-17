@@ -10,8 +10,6 @@ manages metadata, slugs, titles, etc.
 If you're just interested in running the Publisher locally, with a minimum of interaction
 with other apps, here's how.
 
-*These instructions are out of date. Updates coming soon*
-
 ### Create a user
 
     publisher$ script/console
