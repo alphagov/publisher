@@ -5,7 +5,7 @@ gem 'rails', '3.2.18'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '9.2.0'
+  gem 'gds-sso', '9.3.0'
 end
 
 if ENV['CONTENT_MODELS_DEV']
