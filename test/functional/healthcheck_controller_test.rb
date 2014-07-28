@@ -13,17 +13,17 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "return a 200 response" do
-      get :check, format: :json
+      get :check
       assert_response :success
     end
 
     should "return an overall status field" do
-      get :check, format: :json
+      get :check
       assert_includes json, "status"
     end
 
     should "have a field for the checks" do
-      get :check, format: :json
+      get :check
       assert_includes json, "checks"
       assert json["checks"].is_a? Hash
     end
@@ -36,13 +36,13 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report the check is ok" do
-      get :check, format: :json
+      get :check
       assert_includes json["checks"], "schedule_queue"
       assert_equal "ok", json["checks"]["schedule_queue"]["status"]
     end
 
     should "report the overall status as ok" do
-      get :check, format: :json
+      get :check
       assert_equal "ok", json["status"]
     end
   end
@@ -54,13 +54,13 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report the check as a warning" do
-      get :check, format: :json
+      get :check
       assert_includes json["checks"], "schedule_queue"
       assert_equal "warning", json["checks"]["schedule_queue"]["status"]
     end
 
     should "include a status message" do
-      get :check, format: :json
+      get :check
       assert_includes json["checks"], "schedule_queue"
       assert_equal(
         "5 scheduled edition(s); 3 item(s) queued",
@@ -69,7 +69,7 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report the overall status as a warning" do
-      get :check, format: :json
+      get :check
       assert_equal "warning", json["status"]
     end
   end
@@ -81,7 +81,7 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report a critical error" do
-      get :check, format: :json
+      get :check
 
       assert_equal "critical", json["checks"]["schedule_queue"]["status"]
     end
@@ -98,7 +98,7 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report a critical error" do
-      get :check, format: :json
+      get :check
 
       assert_equal "critical", json["checks"]["schedule_queue"]["status"]
     end
@@ -111,7 +111,7 @@ class HealthcheckControllerTest < ActionController::TestCase
     end
 
     should "report a critical error" do
-      get :check, format: :json
+      get :check
 
       assert_equal "critical", json["checks"]["schedule_queue"]["status"]
     end
