@@ -31,4 +31,8 @@ Publisher::Application.routes.draw do
   get "/admin(/*path)", to: redirect { |params, req| "/#{params[:path]}" }
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
 end
