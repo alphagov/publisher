@@ -17,14 +17,12 @@ private
     scheduled_editions = Edition.scheduled_for_publishing.count
     queue_size = Sidekiq::Stats.new.scheduled_size
 
-    if scheduled_editions == queue_size
-      {"status" => "ok"}
-    else
-      {
-        "status" => "warning",
-        "message" => "#{scheduled_editions} scheduled edition(s); #{queue_size} item(s) queued"
-      }
-    end
+    status = (scheduled_editions == queue_size) ? "ok" : "warning"
+
+    {
+      "status" => status,
+      "message" => "#{scheduled_editions} scheduled edition(s); #{queue_size} item(s) queued"
+    }
   rescue Mongo::MongoRubyError, Mongo::MongoDBError, Redis::CannotConnectError
     {
       "status" => "critical",
