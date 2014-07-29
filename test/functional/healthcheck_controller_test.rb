@@ -45,6 +45,15 @@ class HealthcheckControllerTest < ActionController::TestCase
       get :check
       assert_equal "ok", json["status"]
     end
+
+    should "include a status message" do
+      get :check, format: :json
+      assert_includes json["checks"], "schedule_queue"
+      assert_equal(
+        "0 scheduled edition(s); 0 item(s) queued",
+        json["checks"]["schedule_queue"]["message"]
+      )
+    end
   end
 
   context "scheduled count does not match queue length" do
