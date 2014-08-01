@@ -21,11 +21,11 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
       end
 
       # re-register with panopticon to recreate in search
-      puts "Re-registering with panopticon to recreate in search"
+      puts "Re-registering #{SA_SLUG} with panopticon to recreate in search"
       ed = Edition.published.where(:slug => SA_SLUG).first
       ed.register_with_panopticon
     else
-      puts "Can't find artefact"
+      puts "Can't find artefact for slug '#{SA_SLUG}"
     end
   end
 
@@ -48,11 +48,11 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
       end
 
       # re-register with panopticon to recreate in search
-      puts "Re-registering with panopticon to recreate in search"
+      puts "Re-registering #{SSA_SLUG} with panopticon to recreate in search"
       ed = Edition.published.where(:slug => SSA_SLUG).first
       ed.register_with_panopticon
     else
-      puts "Can't find artefact"
+      puts "Can't find artefact with slug #{SA_SLUG}"
     end
   end
 end
