@@ -24,6 +24,21 @@ class ActionDispatch::IntegrationTest
     assert(found_field.value.include?(expected),
            "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}")
   end
+
+  def filter_by_user(option)
+    within ".user-filter-form" do
+      select option, from: "Filter by assignee"
+      click_on "Filter publications"
+    end
+    click_on "Drafts"
+  end
+
+  def filter_by_content(substring)
+    within ".user-filter-form" do
+      fill_in "Filter", with: substring
+      click_on "Filter publications"
+    end
+  end
 end
 
 class JavascriptIntegrationTest < ActionDispatch::IntegrationTest

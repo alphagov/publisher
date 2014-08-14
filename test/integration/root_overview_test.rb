@@ -1,21 +1,6 @@
 require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
-  def filter_by_user(option)
-    within ".user-filter-form" do
-      select option, from: "Filter by assignee"
-      click_on "Filter publications"
-    end
-    click_on "Drafts"
-  end
-
-  def filter_by_content(substring)
-    within ".user-filter-form" do
-      fill_in "Filter", with: substring
-      click_on "Filter publications"
-    end
-  end
-
   test "filtering by assigned user" do
     stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
       to_return(status: 200, body: "{}", headers: {})

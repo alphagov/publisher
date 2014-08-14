@@ -10,6 +10,13 @@
   <%= f.input :title,
         :input_html => { :autofocus => true, :disabled => @resource.locked_for_edits? } %>
 
+  <%= f.input :in_beta,
+        as: :boolean,
+        label: 'Content is in beta',
+        hint: raw("A beta label will show beneath the title with a link to " +
+          link_to('beta services on GOV.UK', 'https://www.gov.uk/help/beta', class: 'link-inherit')),
+        wrapper_html: { class: "form-group add-bottom-margin" } %>
+
   <%= f.input :alternative_title,
         :label => 'Alternative title',
         :hint => 'Use this where longer title is needed for SEO purposes',
