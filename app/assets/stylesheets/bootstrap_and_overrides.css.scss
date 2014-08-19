@@ -76,6 +76,10 @@ label.nav-header {
   max-width: 400px;
 }
 
+.badge-beta {
+  background-color: $beta-color;
+}
+
 /* datetime selectors */
 
 select.date {
