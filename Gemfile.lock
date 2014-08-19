@@ -98,7 +98,7 @@ GEM
       rails (>= 3.0.0)
       warden (~> 1.2)
       warden-oauth2 (~> 0.0.1)
-    govspeak (3.1.0)
+    govspeak (3.1.1)
       htmlentities (~> 4)
       kramdown (~> 1.4.1)
       nokogiri (~> 1.5.10)
@@ -107,7 +107,7 @@ GEM
       bootstrap-sass (= 3.1.0)
       jquery-rails (= 3.0.4)
       rails (>= 3.2.0)
-    govuk_content_models (19.0.0)
+    govuk_content_models (20.0.0)
       bson_ext
       differ
       gds-api-adapters (>= 10.9.0)
@@ -333,9 +333,9 @@ DEPENDENCIES
   formtastic-bootstrap (= 3.0.0)
   gds-api-adapters (= 11.1.0)
   gds-sso (= 9.3.0)
-  govspeak (= 3.1.0)
+  govspeak (~> 3.1.0)
   govuk_admin_template (= 1.0.1)
-  govuk_content_models (= 19.0.0)
+  govuk_content_models (= 20.0.0)
   has_scope
   inherited_resources
   jasmine (= 2.0.2)
