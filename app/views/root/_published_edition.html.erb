@@ -18,6 +18,10 @@
       <% if publication.has_video? %>
         <i class="glyphicon glyphicon-film" alt="Has video"></i>
       <% end %>
+
+      <% if publication.in_beta? %>
+        <span class="badge badge-beta">beta</span>
+      <% end %>
     </p>
   </td>
   <td>
