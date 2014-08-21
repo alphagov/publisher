@@ -15,6 +15,7 @@
         label: 'Content is in beta',
         hint: raw("A beta label will show beneath the title with a link to " +
           link_to('beta services on GOV.UK', 'https://www.gov.uk/help/beta', class: 'link-inherit')),
+        input_html: { disabled: @resource.locked_for_edits? },
         wrapper_html: { class: "form-group add-bottom-margin" } %>
 
   <%= f.input :alternative_title,
