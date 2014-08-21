@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "17.1.0"
+  gem 'govuk_content_models', '19.0.0'
 end
 
 gem 'erubis'
@@ -25,7 +25,7 @@ gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: '
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '~> 2.0'
+  gem 'govspeak', '3.1.0'
 end
 
 gem 'has_scope'
@@ -46,7 +46,7 @@ gem 'redis', '3.0.7', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
-gem 'reverse_markdown', require: false # Only used in some importers
+gem 'reverse_markdown', '0.3.0', require: false # Only used in some importers
 
 gem 'statsd-ruby', '~> 1.1.0', require: false
 gem 'whenever', require: false
@@ -63,29 +63,29 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 group :assets do
   gem "therubyracer", "0.11.4"
   gem 'sass-rails', '3.2.6'
-  gem 'uglifier'
+  gem 'uglifier', '1.2.7'
 end
 
 group :test do
   gem 'turn', '0.9.6'
   gem 'minitest', '3.3.0'
-  gem 'shoulda'
-  gem 'database_cleaner'
+  gem 'shoulda', '3.1.1'
+  gem 'database_cleaner', '0.8.0'
 
   gem 'capybara', '2.2.1'
   gem 'poltergeist', '1.5.0'
-  gem 'launchy'
+  gem 'launchy', '2.1.1'
 
-  gem 'webmock'
+  gem 'webmock', '1.8.7'
   gem 'mocha', '0.13.3', :require => false
   gem 'factory_girl_rails'
   gem 'faker', '1.1.2'
 
-  gem "timecop"
+  gem "timecop", '0.4.4'
 
   gem 'simplecov', '~> 0.6.4', :require => false
   gem 'simplecov-rcov', '~> 0.2.3', :require => false
-  gem 'ci_reporter'
+  gem 'ci_reporter', '1.7.0'
 end
 
 group :development, :test do
