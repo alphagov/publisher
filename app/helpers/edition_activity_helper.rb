@@ -40,8 +40,8 @@ module EditionActivityHelper
 
   def review_forms(edition)
     activities = [
-      ["Needs more work",    "request_amendments"],
-      ["OK for publication", "approve_review"]
+      ["Request amendments", "request_amendments"],
+      ["Approve review", "approve_review"]
     ]
 
     edition_activities_forms(edition, activities)
@@ -49,8 +49,8 @@ module EditionActivityHelper
 
   def fact_check_forms(edition)
     activities = [
-      ["Needs major changes",    "request_amendments"],
-      ["Minor or no changes required", "approve_fact_check"]
+      ["Request amendments", "request_amendments"],
+      ["Approve fact check", "approve_fact_check"]
     ]
 
     edition_activities_forms(edition, activities)
