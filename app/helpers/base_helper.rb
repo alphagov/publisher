@@ -53,5 +53,5 @@ module BaseHelper
   end
 
   include PathsHelper
-  include ProgressFormsHelper
+  include EditionActivityHelper
 end

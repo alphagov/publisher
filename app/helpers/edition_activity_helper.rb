@@ -1,24 +1,22 @@
-module ProgressFormsHelper
-  def progress_forms(edition)
+module EditionActivityHelper
+  def edition_activities_fields(f, edition)
     [
       ["Send to Fact check", "send_fact_check", "Enter email addresses"],
       ["Send to 2nd pair of eyes", "request_review"],
       ["Schedule for Publishing", "schedule_for_publishing"],
       ["Cancel Scheduled Publishing", "cancel_scheduled_publishing"],
       ["Send to Publish", "publish"],
-    ].map { |args| progress_form(edition, *args) }.join("\n").html_safe
+    ].map { |args| edition_activity_fields(f, edition, *args) }.join("\n").html_safe
   end
 
-  def progress_form(edition, title, activity, placeholder=nil)
-    path_method  = "progress_edition_path".to_sym
-    path         = send(path_method, edition)
+  def edition_activity_fields(f, edition, title, activity, placeholder=nil)
     check_method = "can_#{activity}?".to_sym
 
     render(
-      :partial => 'shared/activity_form',
+      :partial => 'shared/edition_activity_fields',
       :locals => {
-        :url => path, :title => title, :id => activity+"_form",
-        :disabled => !edition.send(check_method), :activity => activity
+        :f => f, :title => title, :activity => activity,
+        :disabled => !edition.send(check_method)
       }
     )
   end
