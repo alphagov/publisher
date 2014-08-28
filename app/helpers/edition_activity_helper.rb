@@ -1,7 +1,7 @@
 module EditionActivityHelper
   def edition_activities_fields(f, edition)
     [
-      ["Send to Fact check", "send_fact_check", "Enter email addresses"],
+      ["Send to Fact check", "send_fact_check"],
       ["Send to 2nd pair of eyes", "request_review"],
       ["Schedule for Publishing", "schedule_for_publishing"],
       ["Cancel Scheduled Publishing", "cancel_scheduled_publishing"],
@@ -9,7 +9,7 @@ module EditionActivityHelper
     ].map { |args| edition_activity_fields(f, edition, *args) }.join("\n").html_safe
   end
 
-  def edition_activity_fields(f, edition, title, activity, placeholder=nil)
+  def edition_activity_fields(f, edition, title, activity)
     check_method = "can_#{activity}?".to_sym
 
     render(
