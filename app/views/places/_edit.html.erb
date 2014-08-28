@@ -1,6 +1,6 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
-    <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
     <div class="row">
       <div class="col-md-7">
     <%= f.input :place_type, :hint => "This is the 'slug' assigned in the imminence app", :input_html => { :disabled => @resource.locked_for_edits? } %>
