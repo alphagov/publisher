@@ -1,50 +1,44 @@
-<div class="modal" id="<%= "#{activity}_form" %>" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    <header class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3 class="modal-title"><%= title %></h3>
-    </header>
+<div class="modal-dialog">
+  <div class="modal-content">
+  <header class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 class="modal-title"><%= title %></h3>
+  </header>
 
+  <%= form_builder.fields_for(inline ? "activity_#{activity}_attributes" : :activity) do |activity_fields| %>
     <div class="modal-body">
+      <%= activity_fields.hidden_field :request_type, value: activity %>
+      <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
 
-      <%= f.fields_for("activity_#{activity}_attributes") do |activity_fields| %>
-        <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
+      <% if activity == "send_fact_check" %>
+        <%= activity_fields.input :email_addresses %>
 
-        <% if activity == "send_fact_check" %>
-          <%= activity_fields.input :email_addresses %>
-
-          <!-- <label id="activity_customised_message_input" for="activity_customised_message">
-          </label> -->
-          <%= activity_fields.label :customised_message do %>
-            Customised message<abbr title="required">*</abbr>
-          <% end %>
-          <!-- <textarea rows="6" name="activity[customised_message]" id="activity_customised_message" cols="60" class="form-control"> -->
-          <%= activity_fields.text_area :customised_message, cols: 60, rows: 6, class: 'form-control' do %>
-  <%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
-          <% end %>
+        <%= activity_fields.label :customised_message do %>
+          Customised message<abbr title="required">*</abbr>
         <% end %>
-
-        <% if activity == "schedule_for_publishing" %>
-          <%= activity_fields.label :publish_at do %>
-            Publish at <abbr title="required">*</abbr>
-          <% end %>
-          <div class="form-inline">
-          <%= activity_fields.time_select :publish_at, {}, { class: 'date form-control' } %>
-          &mdash;
-          <%= activity_fields.date_select :publish_at, { order: [:day, :month, :year],
-            default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next },
-            { class: 'date form-control' } %>
-          </div>
+        <%= activity_fields.text_area :customised_message, cols: 60, rows: 6, class: 'form-control' do %>
+<%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
         <% end %>
+      <% end %>
+
+      <% if activity == "schedule_for_publishing" %>
+        <%= activity_fields.label :publish_at do %>
+          Publish at <abbr title="required">*</abbr>
+        <% end %>
+        <div class="form-inline">
+        <%= activity_fields.time_select :publish_at, {}, { class: 'date form-control' } %>
+        &mdash;
+        <%= activity_fields.date_select :publish_at, { order: [:day, :month, :year],
+          default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next },
+          { class: 'date form-control' } %>
+        </div>
       <% end %>
     </div>
 
     <footer class="modal-footer remove-top-margin">
       <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-      <!-- <input class="btn btn-success" name="commit" type="submit" value="Send"> -->
-      <%= f.submit title, name: "request_type", class: "btn btn-success" %>
+      <%= (inline ? form_builder : activity_fields).submit(title, class: "btn btn-success") %>
     </footer>
     </div>
-  </div>
+  <% end %>
 </div>

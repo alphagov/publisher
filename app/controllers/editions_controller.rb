@@ -92,7 +92,7 @@ class EditionsController < InheritedResources::Base
 
   def progress
     command = EditionProgressor.new(resource, current_user)
-    if command.progress(squash_multiparameter_datetime_attributes(params[:activity]))
+    if command.progress(squash_multiparameter_datetime_attributes(params[:edition][:activity]))
       redirect_to edition_path(resource), notice: command.status_message
     else
       redirect_to edition_path(resource), alert: command.status_message
