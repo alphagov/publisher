@@ -1,14 +1,6 @@
 module EditionActivityHelper
   def edition_activities_fields(f, edition)
-    activities = [
-      ["Send to Fact check", "send_fact_check", "Enter email addresses"],
-      ["Send to 2nd pair of eyes", "request_review"],
-      ["Schedule for Publishing", "schedule_for_publishing"],
-      ["Cancel Scheduled Publishing", "cancel_scheduled_publishing"],
-      ["Send to Publish", "publish"],
-    ]
-
-    activities_fields = activities.map do |title, activity|
+    activities_fields = Edition::BASIC_TRANSITION_EVENTS.map do |activity, title|
       content_tag(:div, modal_attributes.merge(id: "#{activity}_form")) do
         edition_activity_fields(edition, title, activity, f, inline: true)
       end
@@ -18,7 +10,7 @@ module EditionActivityHelper
   end
 
   def edition_activities_forms(edition, activities)
-    activities_forms = activities.map do |title, activity|
+    activities_forms = activities.map do |activity, title|
       semantic_form_for(:edition, url: progress_edition_path(edition),
         html: modal_attributes.merge(id: "#{activity}_form")) do |f|
         edition_activity_fields(edition, title, activity, f, inline: false)
@@ -39,21 +31,11 @@ module EditionActivityHelper
   end
 
   def review_forms(edition)
-    activities = [
-      ["Request amendments", "request_amendments"],
-      ["Approve review", "approve_review"]
-    ]
-
-    edition_activities_forms(edition, activities)
+    edition_activities_forms(edition, Edition::REVIEW_EVENTS)
   end
 
   def fact_check_forms(edition)
-    activities = [
-      ["Request amendments", "request_amendments"],
-      ["Approve fact check", "approve_fact_check"]
-    ]
-
-    edition_activities_forms(edition, activities)
+    edition_activities_forms(edition, Edition::FACT_CHECK_EVENTS)
   end
 
   def modal_attributes

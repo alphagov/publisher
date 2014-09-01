@@ -57,9 +57,12 @@ class EditionsController < InheritedResources::Base
     # parameter from the request, preventing us from inadvertently changing
     # it at the wrong time.
     assign_to = new_assignee
+    transition_attempted = Edition::BASIC_TRANSITION_EVENTS.invert[params[:commit]]
+    transition_params = params[:edition]["activity_#{transition_attempted}_attributes"]
 
     update! do |success, failure|
       success.html {
+        progress_edition(resource, transition_params) if transition_attempted
         update_assignment resource, assign_to
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -70,6 +73,7 @@ class EditionsController < InheritedResources::Base
         render :template => "show"
       }
       success.json {
+        progress_edition(resource, transition_params) if transition_attempted
         update_assignment resource, assign_to
         render :json => resource
       }
@@ -91,11 +95,10 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    command = EditionProgressor.new(resource, current_user)
-    if command.progress(squash_multiparameter_datetime_attributes(params[:edition][:activity]))
-      redirect_to edition_path(resource), notice: command.status_message
+    if progress_edition(resource, params[:edition][:activity])
+      redirect_to edition_path(resource), notice: @command.status_message
     else
-      redirect_to edition_path(resource), alert: command.status_message
+      redirect_to edition_path(resource), alert: @command.status_message
     end
   end
 
@@ -142,6 +145,11 @@ class EditionsController < InheritedResources::Base
       resource_base_errors = resource.errors[:base]
       return resource.errors[:base].join('<br />') if resource_base_errors.present?
       "We had some problems saving. Please check the form below."
+    end
+
+    def progress_edition(edition, transition_params)
+      @command = EditionProgressor.new(resource, current_user)
+      @command.progress(squash_multiparameter_datetime_attributes(transition_params))
     end
 
     def report_state_counts

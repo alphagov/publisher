@@ -7,6 +7,22 @@ class Edition
   class ResurrectionError < RuntimeError
   end
 
+  BASIC_TRANSITION_EVENTS = {
+    send_fact_check: "Send to Fact check",
+    request_review: "Send to 2nd pair of eyes",
+    schedule_for_publishing: "Schedule for Publishing",
+    cancel_scheduled_publishing: "Cancel Scheduled Publishing",
+    publish: "Send to Publish"
+  }
+  REVIEW_EVENTS = {
+    request_amendments: "Request amendments",
+    approve_review: "Approve review"
+  }
+  FACT_CHECK_EVENTS = {
+    request_amendments: "Request amendments",
+    approve_fact_check: "Approve fact check"
+  }
+
   def self.state_names
     state_machine.states.map &:name
   end
