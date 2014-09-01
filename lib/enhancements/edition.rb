@@ -11,12 +11,12 @@ class Edition
     send_fact_check: "Send to Fact check",
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for Publishing",
-    cancel_scheduled_publishing: "Cancel Scheduled Publishing",
+    cancel_scheduled_publishing: "Cancel scheduled Publishing",
     publish: "Send to Publish"
   }
   REVIEW_EVENTS = {
     request_amendments: "Request amendments",
-    approve_review: "Approve review"
+    approve_review: "OK for publication"
   }
   FACT_CHECK_EVENTS = {
     request_amendments: "Request amendments",

@@ -21,7 +21,6 @@
     </div>
   <% else %>
     <%= render 'shared/ready_or_review_or_fact_check' %>
-    <%= render 'shared/workflow_buttons' %>
   <% end %>
 
   <div class="tabbable">
@@ -37,6 +36,7 @@
           <div class="well">
             <%= render resource_edit_view %>
           </div><!--/.well -->
+          <%= render 'shared/workflow_buttons' %>
         </div>
         <div class="tab-pane" id="metadata">
           <div class="well">

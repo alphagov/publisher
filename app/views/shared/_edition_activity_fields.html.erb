@@ -10,7 +10,7 @@
       <%= activity_fields.hidden_field :request_type, value: activity %>
       <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
 
-      <% if activity == "send_fact_check" %>
+      <% if activity == :send_fact_check %>
         <%= activity_fields.input :email_addresses %>
 
         <%= activity_fields.label :customised_message do %>
@@ -21,7 +21,7 @@
         <% end %>
       <% end %>
 
-      <% if activity == "schedule_for_publishing" %>
+      <% if activity == :schedule_for_publishing %>
         <%= activity_fields.label :publish_at do %>
           Publish at <abbr title="required">*</abbr>
         <% end %>

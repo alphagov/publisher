@@ -67,20 +67,17 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     end
   end
 
-  def send_action(guide, button_text, message)
+  def send_action(guide, button_text, modal_button_text, message)
     send_for_generic_action(guide, button_text) do
-      assert page.has_css?('.modal-body #activity_comment'),  "Can't see comment box"
-      assert page.has_css?('.modal-footer input[type=submit]'), "Can't see send button"
-
-      fill_in  "Comment", with: message
+      fill_in "Comment", with: message
       within :css, '.modal-footer' do
-        click_on "Send"
+        click_on modal_button_text
       end
     end
   end
 
   def submit_for_review(guide, options={message: "I think this is done"})
-    send_action guide, "2nd pair of eyes", "I think this is done"
+    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
   end
 
   def filter_for(user)
@@ -120,7 +117,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def get_to_fact_check(guide, owner)
     get_to_review guide, owner
     login_as "Bob"
-    send_action guide, "OK for publication", "Yup, looks good"
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
     send_for_fact_check guide
   end
 
@@ -158,7 +155,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
 
-    click_on "Admin"
     click_on "Fact check"
 
     within "#send_fact_check_form" do
@@ -180,7 +176,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -192,7 +188,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -242,7 +238,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -253,7 +249,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    send_action guide, "OK for publication", "Yup, looks good"
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
@@ -283,7 +279,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition)
     get_to_fact_check_received guide, "Alice"
     visit_edition guide
-    send_action guide, "Minor or no changes required", "Hurrah!"
+    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title

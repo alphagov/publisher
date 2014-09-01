@@ -22,12 +22,12 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
       fill_in "Comment", with: "schedule!"
 
       tomorrow = Date.tomorrow
-      select tomorrow.year.to_s, from: "activity_publish_at_1i"
-      select tomorrow.strftime("%B"), from: "activity_publish_at_2i"
-      select tomorrow.day.to_s, from: "activity_publish_at_3i"
-      select '12', from: "activity_publish_at_4i"
-      select '15', from: "activity_publish_at_5i"
-      click_on "Send"
+      select tomorrow.year.to_s, from: "edition_activity_schedule_for_publishing_attributes_publish_at_1i"
+      select tomorrow.strftime("%B"), from: "edition_activity_schedule_for_publishing_attributes_publish_at_2i"
+      select tomorrow.day.to_s, from: "edition_activity_schedule_for_publishing_attributes_publish_at_3i"
+      select '12', from: "edition_activity_schedule_for_publishing_attributes_publish_at_4i"
+      select '15', from: "edition_activity_schedule_for_publishing_attributes_publish_at_5i"
+      click_on "Schedule for Publishing"
     end
 
     visit_editions
@@ -55,7 +55,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     within "#cancel_scheduled_publishing_form" do
       fill_in "Comment", with: "stop!"
-      click_on "Send"
+      click_on "Cancel scheduled Publishing"
     end
 
     assert page.has_content?("Status: Ready")
