@@ -57,6 +57,7 @@ class EditionsController < InheritedResources::Base
     # parameter from the request, preventing us from inadvertently changing
     # it at the wrong time.
     assign_to = new_assignee
+
     transition_attempted = Edition::BASIC_TRANSITION_EVENTS.invert[params[:commit]]
     transition_params = params[:edition]["activity_#{transition_attempted}_attributes"]
 
