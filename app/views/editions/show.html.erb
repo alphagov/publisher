@@ -39,7 +39,6 @@
           <% # cancel scheduled publishing doesn't require the edition to be saved when transitioning,
              # because this action is triggered from a view where editing is not allowed. %>
           <%= edition_activities_forms(@resource, Edition::SCHEDULED_PUBLISHING_EVENTS) %>
-          <%= render 'shared/workflow_buttons' %>
         </div>
         <div class="tab-pane" id="metadata">
           <div class="well">

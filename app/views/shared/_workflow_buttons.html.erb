@@ -13,10 +13,7 @@
           <% end %>
           <%= progress_buttons(@resource, show_disabled: false) %>
         <% else %>
-          <!-- Fake save button -->
-          <form id="save-edition">
-            <input type="submit" value="Save" class="btn btn-success btn-large">
-          </form>
+          <%= f.submit 'Save', id: 'save-edition', class: 'btn btn-success btn-large' %>
           <%= preview_button(@resource) %>
           <%= progress_buttons(@resource) %>
         <% end %>

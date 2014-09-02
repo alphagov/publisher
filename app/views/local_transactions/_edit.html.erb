@@ -21,4 +21,6 @@
     <hr />
     <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => LocalTransactionEdition.expectation_choices, :input_html => { :disabled => @resource.locked_for_edits? } %>
   <% end %>
+
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
 <% end %>

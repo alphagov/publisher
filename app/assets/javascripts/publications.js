@@ -1,16 +1,9 @@
 // Javascript that may be used on every publication show/edit page
 
 $(function () {
-  /* Apparently a lock variable to prevent multiple form submissions */
-  var edition_form_saved = false;
-  $('#save-edition').submit(function (e) {
-    e.preventDefault();
-
-    var edition_form = $('#edition-form');
-    if (! edition_form_saved) {
-      edition_form_saved = true;
-      edition_form.trigger('submit');
-    }
+  /* prevent multiple form submissions */
+  $('#save-edition').click(function () {
+    $(this).attr('disabled', true);
   });
 
   if (! 'autofocus' in document.createElement('input')) {
