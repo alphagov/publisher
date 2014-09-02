@@ -35,15 +35,8 @@ module EditionActivityButtonsHelper
       show_disabled = options.fetch(:show_disabled, true)
       next unless show_disabled || enabled
 
-      button_options = {
-        type: :submit,
-        data: { toggle: 'modal'},
-        href: "##{activity}_form",
-        class: "btn btn-large btn-#{button_color}",
-        disabled: ! enabled,
-        value: title,
-      }
-      content_tag(:button, button_options) { title }
+      link_to title, "##{activity}_form", data: { toggle: 'modal'},
+        class: "btn btn-large btn-#{button_color} #{"disabled" if !enabled}"
     }.join("\n").html_safe
   end
 
@@ -55,11 +48,7 @@ module EditionActivityButtonsHelper
   end
 
   def preview_button(edition)
-    form_tag(preview_edition_path(edition), :method => :get) do
-      hidden_field_tag('cache', Time.zone.now().to_i) +
-      hidden_field_tag('edition', edition.version_number) +
-      submit_tag('Preview', class: 'btn btn-primary btn-large')
-    end
+    link_to('Preview', preview_edition_path(edition), class: 'btn btn-primary btn-large')
   end
 
 end

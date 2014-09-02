@@ -1,11 +1,6 @@
 // Javascript that may be used on every publication show/edit page
 
 $(function () {
-  /* prevent multiple form submissions */
-  $('#save-edition').click(function () {
-    $(this).attr('disabled', true);
-  });
-
   if (! 'autofocus' in document.createElement('input')) {
     $('*[autofocus]').focus();
   }
@@ -22,6 +17,8 @@ $(function () {
 
   $('#edition-form').submit(function() {
     edition_form_dirty = false;
+    /* prevent multiple form submissions */
+    $("#save-edition").attr('disabled', true);
   });
 
   $(window).bind('beforeunload', function() {
