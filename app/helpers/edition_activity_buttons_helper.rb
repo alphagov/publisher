@@ -2,8 +2,10 @@ module EditionActivityButtonsHelper
 
   def build_review_button(edition, activity, title)
     check_method = "can_#{activity}?".to_sym
-    disabled = edition.send(check_method) ? "" : "disabled"
-    %{<button data-toggle="modal" href="##{activity}_form" class="btn btn-info add-top-margin" value="#{title}" type="submit" #{disabled}>#{title}</button>}
+    enabled = edition.send(check_method)
+
+    link_to title, "##{activity}_form", data: { toggle: 'modal'},
+      class: "btn btn-info #{"disabled" if !enabled} add-top-margin"
   end
 
   def review_buttons(edition)

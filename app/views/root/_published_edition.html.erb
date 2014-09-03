@@ -55,7 +55,7 @@
   </td>
   <td class="duplicate icon">
     <% if publication.can_create_new_edition? %>
-      <%= button_to "Create new edition of this publication", duplicate_edition_path(publication), class: 'btn btn-default btn-sm' %>
+      <%= link_to 'Create new edition of this publication', duplicate_edition_path(publication), class: 'btn btn-default btn-sm', method: :post %>
     <% else %>
       <%= link_to 'Edit existing newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => ""} %>
     <% end %>

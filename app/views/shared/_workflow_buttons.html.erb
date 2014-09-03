@@ -6,7 +6,7 @@
           <%= @resource.error_description %> can't be changed.
           <%= preview_button(@resource) %>
           <% if @resource.can_create_new_edition? %>
-            <%= button_to 'Create new edition', duplicate_edition_path(@resource), html_options = { "class" => "btn btn-primary btn-large"} %>
+            <%= link_to 'Create new edition', duplicate_edition_path(@resource), class: 'btn btn-primary btn-large', method: :post %>
           <% end %>
           <% if @resource.in_progress_sibling.present? %>
             <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options = { "class" => "btn btn-primary btn-large"} %>
