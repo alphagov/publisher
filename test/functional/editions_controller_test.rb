@@ -130,7 +130,7 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal "Editions scheduled for publishing can't be edited", flash[:alert]
   end
 
-  test "should perform a transition while updating an edition" do
+  test "should save the edition changes while performing an activity" do
     panopticon_has_metadata("id" => "test")
 
     post :update, id: @guide.id, commit: "Send to 2nd pair of eyes",

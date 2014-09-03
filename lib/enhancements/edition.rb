@@ -7,7 +7,7 @@ class Edition
   class ResurrectionError < RuntimeError
   end
 
-  BASIC_TRANSITION_EVENTS = {
+  BASIC_EVENTS = {
     send_fact_check: "Send to Fact check",
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for Publishing",
