@@ -27,7 +27,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
       select tomorrow.day.to_s, from: "edition_activity_schedule_for_publishing_attributes_publish_at_3i"
       select '12', from: "edition_activity_schedule_for_publishing_attributes_publish_at_4i"
       select '15', from: "edition_activity_schedule_for_publishing_attributes_publish_at_5i"
-      click_on "Schedule for Publishing"
+      click_on "Schedule for publishing"
     end
 
     visit_editions
@@ -55,7 +55,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     within "#cancel_scheduled_publishing_form" do
       fill_in "Comment", with: "stop!"
-      click_on "Cancel scheduled Publishing"
+      click_on "Cancel scheduled publishing"
     end
 
     assert page.has_content?("Status: Ready")

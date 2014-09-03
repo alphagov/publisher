@@ -10,8 +10,8 @@ class Edition
   BASIC_EVENTS = {
     send_fact_check: "Send to Fact check",
     request_review: "Send to 2nd pair of eyes",
-    schedule_for_publishing: "Schedule for Publishing",
-    publish: "Send to Publish"
+    schedule_for_publishing: "Schedule for publishing",
+    publish: "Send to publish"
   }
   REVIEW_EVENTS = {
     request_amendments: "Request amendments",
@@ -22,7 +22,7 @@ class Edition
     approve_fact_check: "Approve fact check"
   }
   SCHEDULED_PUBLISHING_EVENTS = {
-    cancel_scheduled_publishing: "Cancel scheduled Publishing"
+    cancel_scheduled_publishing: "Cancel scheduled publishing"
   }
 
   def self.state_names
