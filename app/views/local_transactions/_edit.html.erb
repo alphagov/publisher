@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
     <div class="row">
       <div class="col-md-10">
         <%= f.input :introduction, :label => 'Introductory paragraph', :hint => 'Set the scene for the user. Explain that it\'s the responsibility of the local council and that we\'ll take you there.', :as => :text, :input_html => {:rows => 2, :disabled => @resource.locked_for_edits? } %>
@@ -21,4 +21,6 @@
     <hr />
     <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => LocalTransactionEdition.expectation_choices, :input_html => { :disabled => @resource.locked_for_edits? } %>
   <% end %>
+
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
 <% end %>

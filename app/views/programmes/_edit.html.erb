@@ -1,6 +1,6 @@
 <%= semantic_bootstrap_nested_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
-    <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
   <% end %>
 
   <hr>
@@ -27,4 +27,6 @@
       </div>
     </div>
   </div>
+
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
 <% end %>

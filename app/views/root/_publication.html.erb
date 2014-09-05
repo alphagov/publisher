@@ -71,9 +71,7 @@
   <% if tab && tab != :scheduled_for_publishing %>
   <td class="icon">
     <% if tab and tab == :archived and publication.can_create_new_edition? %>
-      <%= form_tag duplicate_edition_path(publication) do %>
-        <%= submit_tag 'Create new edition', :class => 'btn btn-mini btn-success' %>
-      <% end %>
+      <%= link_to 'Create new edition of this publication', duplicate_edition_path(publication), class: 'btn btn-default btn-sm', method: :post %>
     <% else %>
       <%= link_to edition_path(publication) do %>
         <i class="glyphicon glyphicon-edit" title="Edit this publication"></i>

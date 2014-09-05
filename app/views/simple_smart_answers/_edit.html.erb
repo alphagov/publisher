@@ -1,7 +1,7 @@
 <%= semantic_bootstrap_nested_form_for @resource, :url => edition_path(@resource),
   :as => :edition, :html => { :class => 'no-auto-save', :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
-    <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
     <div class="row">
       <div class="col-md-10">
         <%= f.input :body, :as => :text, :input_html => { :rows => 5, :disabled => @resource.locked_for_edits? } %>
@@ -24,6 +24,7 @@
     </div>
   </div>
 
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
 <% end %>
 
 <% content_for :extra_javascript do %>

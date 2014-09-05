@@ -10,7 +10,12 @@ Publisher::Application.routes.draw do
       post 'duplicate'
       post 'progress'
       post 'skip_fact_check', to: 'editions#progress',
-        activity: { request_type: 'skip_fact_check', comment: "Fact check skipped by request."}
+        edition: {
+          activity: {
+            request_type: 'skip_fact_check',
+            comment: "Fact check skipped by request."
+            }
+          }
     end
   end
 

@@ -1,3 +1,4 @@
+<% @edition = @resource %>
   <div class="page-header">
     <h1>
       Viewing &ldquo;<%= @resource.title %>&rdquo;
@@ -20,7 +21,6 @@
     </div>
   <% else %>
     <%= render 'shared/ready_or_review_or_fact_check' %>
-    <%= render 'shared/workflow_buttons' %>
   <% end %>
 
   <div class="tabbable">
@@ -36,6 +36,9 @@
           <div class="well">
             <%= render resource_edit_view %>
           </div><!--/.well -->
+          <% # cancel scheduled publishing doesn't require the edition to be saved when requesting an activity,
+             # because this action is triggered from a view where editing is not allowed. %>
+          <%= edition_activities_forms(@resource, Edition::SCHEDULED_PUBLISHING_EVENTS) %>
         </div>
         <div class="tab-pane" id="metadata">
           <div class="well">

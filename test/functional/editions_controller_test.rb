@@ -56,11 +56,13 @@ class EditionsControllerTest < ActionController::TestCase
 
     post :progress,
       :id       => @guide.id,
-      :activity => {
-        "request_type"       => "send_fact_check",
-        "comment"            => "Blah",
-        "email_addresses"    => "user@example.com",
-        "customised_message" => "Hello"
+      :edition => {
+        :activity => {
+          "request_type"       => "send_fact_check",
+          "comment"            => "Blah",
+          "email_addresses"    => "user@example.com",
+          "customised_message" => "Hello"
+        }
       }
 
     assert_redirected_to :controller => "editions", :action => "show", :id => @guide.id
@@ -123,9 +125,27 @@ class EditionsControllerTest < ActionController::TestCase
     @guide.stubs(:update_attributes).returns(false)
     @guide.expects(:errors).at_least_once.returns({:base => ["Editions scheduled for publishing can't be edited"]})
 
-    post :update, :id => @guide.id
+    post :update, :id => @guide.id, :edition => {}
 
     assert_equal "Editions scheduled for publishing can't be edited", flash[:alert]
+  end
+
+  test "should save the edition changes while performing an activity" do
+    panopticon_has_metadata("id" => "test")
+
+    post :update, id: @guide.id, commit: "Send to 2nd pair of eyes",
+      edition: {
+        title: "Updated title",
+        activity_request_review_attributes: {
+          request_type: "request_review",
+          comment: "Please review the updated title"
+        }
+      }
+
+    @guide.reload
+    assert_equal "Updated title", @guide.title
+    assert_equal "in_review", @guide.state
+    assert_equal "Please review the updated title", @guide.actions.last.comment
   end
 
   test "should set an error message if it couldn't progress an edition" do
@@ -134,9 +154,11 @@ class EditionsControllerTest < ActionController::TestCase
 
     post :progress, {
       :id       => @guide.id.to_s,
-      :activity => { 
-        'request_type' => "send_fact_check",
-        "email_addresses" => ""
+      :edition => {
+        :activity => {
+          'request_type' => "send_fact_check",
+          "email_addresses" => ""
+        }
       }
     }
     assert_equal "I failed", flash[:alert]
@@ -156,7 +178,15 @@ class EditionsControllerTest < ActionController::TestCase
 
     publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4", 
                           "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
-    post :progress, { id: @guide.id.to_s, activity: { "request_type" => 'start_work' }.merge(publish_at_params) }
+
+    post :progress, {
+      id: @guide.id.to_s,
+      edition: {
+        activity: {
+          "request_type" => 'start_work'
+          }.merge(publish_at_params)
+        }
+      }
   end
 
   test "destroy transaction" do

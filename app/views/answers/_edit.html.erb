@@ -1,10 +1,12 @@
 <%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
   <%= f.inputs do %>
-    <%= render :partial => 'shared/title_etc', :locals => {:f => f} %>
+    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
     <div class="row">
       <div class="col-md-10">
         <%= f.input :body, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
       </div>
     </div>
   <% end %>
+
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
 <% end %>

@@ -27,24 +27,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.reload
   end
 
-  def button_selector(text)
-    "//button[text()='#{text}']"
-  end
-
-  def find_button(text)
-    find(:xpath, button_selector(text))
-  end
-
-  def has_button(text)
-    page.has_xpath? button_selector(text)
-  end
-
   def send_for_generic_action(guide, button_text, &block)
     visit_edition guide
-    action_button = find_button button_text
+    action_button = page.find_link button_text
 
-    refute action_button['disabled']
-    click_button button_text
+    click_on button_text
 
     # Forces the driver to wait for any async javascript to complete
     page.has_css?('.modal-header')
@@ -67,27 +54,24 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     end
   end
 
-  def send_action(guide, button_text, message)
+  def send_action(guide, button_text, modal_button_text, message)
     send_for_generic_action(guide, button_text) do
-      assert page.has_css?('.modal-body #activity_comment'),  "Can't see comment box"
-      assert page.has_css?('.modal-footer input[type=submit]'), "Can't see send button"
-
-      fill_in  "Comment", with: message
+      fill_in "Comment", with: message
       within :css, '.modal-footer' do
-        click_on "Send"
+        click_on modal_button_text
       end
     end
   end
 
   def submit_for_review(guide, options={message: "I think this is done"})
-    send_action guide, "2nd pair of eyes", "I think this is done"
+    send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
   end
 
   def filter_for(user)
     visit "/"
     within :css, ".user-filter-form" do
       select "All", :from => 'user_filter'
-      click_button "Filter publications"
+      click_on "Filter publications"
     end
     assert page.has_content?("Publications")
   end
@@ -120,7 +104,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def get_to_fact_check(guide, owner)
     get_to_review guide, owner
     login_as "Bob"
-    send_action guide, "OK for publication", "Yup, looks good"
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
     send_for_fact_check guide
   end
 
@@ -158,7 +142,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
 
-    click_on "Admin"
     click_on "Fact check"
 
     within "#send_fact_check_form" do
@@ -180,7 +163,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -192,7 +175,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in_parts guide
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -223,7 +206,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     assert page.has_selector?(".alert-info")
-    refute has_button? "OK for publication"
+    refute has_link? "OK for publication"
   end
 
   test "can review another's guide" do
@@ -233,8 +216,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     login_as "Bob"
     visit_edition guide
     assert page.has_selector?(".alert-info")
-    assert has_button? "Needs more work"
-    assert has_button? "OK for publication"
+    assert has_link? "Needs more work"
+    assert has_link? "OK for publication"
   end
 
   test "review failed" do
@@ -242,7 +225,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    send_action guide, "Needs more work", "You need to fix some stuff"
+    send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
     filter_for "All"
     view_filtered_list "Amends needed"
     assert page.has_content? guide.title
@@ -253,7 +236,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     get_to_review guide, "Alice"
 
     login_as "Bob"
-    send_action guide, "OK for publication", "Yup, looks good"
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
@@ -265,7 +248,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     click_on "Admin"
-    click_button "Skip Fact Check"
+    click_on "Skip Fact Check"
 
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
@@ -283,7 +266,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition)
     get_to_fact_check_received guide, "Alice"
     visit_edition guide
-    send_action guide, "Minor or no changes required", "Hurrah!"
+    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
     filter_for "All"
     view_filtered_list "Ready"
     assert page.has_content? guide.title
@@ -303,7 +286,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition, state: 'published')
     filter_for "All"
     view_filtered_list "Published"
-    click_button "Create new edition of this publication"
+    click_on "Create new edition of this publication"
     assert page.has_content? "New edition created"
   end
 
@@ -339,7 +322,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     new_edition.save
 
     # Current user now decides to click the button
-    click_button "Create new edition of this publication"
+    click_on "Create new edition of this publication"
 
     assert page.has_content?("Another person has created a newer edition")
     assert page.has_content?("Status: Published")
