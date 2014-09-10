@@ -7,7 +7,7 @@ class Edition
   class ResurrectionError < RuntimeError
   end
 
-  EVENTS = {
+  ACTIONS = {
     send_fact_check: "Send to Fact check",
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for publishing",
@@ -16,9 +16,9 @@ class Edition
     request_amendments: "Request amendments",
     approve_fact_check: "Approve fact check"
   }
-  REVIEW_EVENTS = EVENTS.slice(:request_amendments, :approve_review)
-  FACT_CHECK_EVENTS = EVENTS.slice(:request_amendments, :approve_fact_check)
-  CANCEL_SCHEDULED_PUBLISHING_EVENT = {
+  REVIEW_ACTIONS = ACTIONS.slice(:request_amendments, :approve_review)
+  FACT_CHECK_ACTIONS = ACTIONS.slice(:request_amendments, :approve_fact_check)
+  CANCEL_SCHEDULED_PUBLISHING_ACTION = {
     cancel_scheduled_publishing: "Cancel scheduled publishing"
   }
 

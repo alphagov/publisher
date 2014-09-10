@@ -7,7 +7,7 @@
       <div class="workflow-buttons">
         <%= review_buttons(@resource)%>
       </div>
-      <% if render_activity_forms %>
+      <% if activity_forms_required? %>
         <%= review_forms(@resource)%>
       <% end %>
     <% end %>
