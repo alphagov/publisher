@@ -13,7 +13,10 @@ class EditionProgressor
   def progress(activity)
     action = activity[:request_type]
 
-    ScheduledPublisher.cancel_scheduled_publishing(edition.id.to_s) if action == 'cancel_scheduled_publishing'
+    if %w(cancel_scheduled_publishing publish).include?(action)
+      ScheduledPublisher.cancel_scheduled_publishing(edition.id.to_s)
+    end
+
     if invalid_fact_check_email_addresses?(activity)
       self.status_message = fact_check_error_message(activity)
       return false

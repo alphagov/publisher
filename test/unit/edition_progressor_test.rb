@@ -66,6 +66,38 @@ class EditionProgressorTest < ActiveSupport::TestCase
     refute command.progress(activity)
   end
 
+  context "publishing" do
+    teardown do
+      ScheduledPublisher.jobs.clear
+      Sidekiq::ScheduledSet.new.clear
+    end
+
+    should "dequeue the scheduled job if present" do
+      Sidekiq::Testing.disable! do
+        publish_at = 1.day.from_now
+        @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)
+        ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
+
+        activity = { request_type: "publish", comment: "go live now!" }
+        command = EditionProgressor.new(@guide, @laura)
+        assert command.progress(activity)
+
+        assert_equal 0, Sidekiq::ScheduledSet.new.size
+        assert @guide.reload.published?
+      end
+    end
+
+    should "not fail if there is no scheduled job for the edition being published" do
+      @guide.update_attributes(state: :ready)
+
+      activity = { request_type: "publish", comment: "go live!" }
+      command = EditionProgressor.new(@guide, @laura)
+
+      assert_nothing_raised { command.progress(activity) }
+      assert @guide.reload.published?
+    end
+  end
+
   context "scheduled_publishing" do
     teardown do
       ScheduledPublisher.jobs.clear
