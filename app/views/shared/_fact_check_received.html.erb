@@ -4,5 +4,7 @@
   <div class="workflow-buttons">
     <%= fact_check_buttons(@resource)%>
   </div>
-  <%= fact_check_forms(@resource)%>
+  <% if render_activity_forms %>
+    <%= fact_check_forms(@resource)%>
+  <% end %>
 </div>

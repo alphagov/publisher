@@ -1,14 +1,19 @@
+<%  # edition transitions are done using fields inlined in the edition form.
+    # we need to render activity forms to allow edition transitions on views
+    # where activity fields are not inlined with edition form.
+    render_activity_forms = false unless defined?(:render_activity_forms) %>
+
 <% if @resource.in_review? %>
-  <%= render '/shared/review' %>
+  <%= render '/shared/review', render_activity_forms: render_activity_forms %>
 <% elsif @resource.fact_check? %>
-  <%= render '/shared/fact_check' %>
+  <%= render '/shared/fact_check', render_activity_forms: render_activity_forms %>
 <% elsif @resource.fact_check_received? %>
-  <%= render '/shared/fact_check_received' %>
+  <%= render '/shared/fact_check_received', render_activity_forms: render_activity_forms %>
 <% elsif @resource.fact_check_skipped? %>
   <div class="alert alert-info">
     <p>Fact check was skipped for this edition.</p>
   </div>
-  <%= render '/shared/ready' %>
+  <%= render '/shared/ready', render_activity_forms: render_activity_forms %>
 <% elsif @resource.ready? %>
-  <%= render '/shared/ready' %>
+  <%= render '/shared/ready', render_activity_forms: render_activity_forms %>
 <% end %>
