@@ -183,7 +183,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     find('#edition_sectors_manufacturing').trigger('click')
     uncheck "edition_support_types_loan"
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Business support edition was successfully updated."
 
@@ -242,7 +242,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     fill_in "Max value", :with => "£10,000"
     fill_in "Max employees", :with => "1,000"
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content?("We had some problems saving")
 

@@ -21,7 +21,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     select user, from: "Assigned to"
-    click_on "Save"
+    save_edition
 
     assert page.has_content?("successfully updated")
     guide.reload

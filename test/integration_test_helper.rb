@@ -88,8 +88,8 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
       fill_in 'Body',  with: 'Body text'
       fill_in 'Slug',  with: 'part-one'
     end
+    save_edition
 
-    click_on "Save"
     assert page.has_content?("was successfully updated"), "No successful update message"
 
     guide.reload
@@ -103,6 +103,17 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     page.execute_script(%|$("input.select2-input:visible").keyup();|)
     drop_container = ".select2-results"
     find(:xpath, "//body").find("#{drop_container} li", text: value).click
+  end
+
+  def save_edition
+    # using trigger because poltergeist
+    # thinks there are overlapping elements
+    page.find_button('Save').trigger('click')
+
+    # using .trigger("click") causes race conditions,
+    # hence we need to explicitly wait till the page reloads.
+    # save button is disabled after one click, so refreshing should enable it.
+    assert page.has_selector?("input[type=submit]#save-edition:enabled"), "Failed to save edition."
   end
 
   def clear_cookies

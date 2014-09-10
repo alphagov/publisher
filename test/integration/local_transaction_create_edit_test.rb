@@ -64,7 +64,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     fill_in "LGIL override", :with => '7'
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Local transaction edition was successfully updated."
 
@@ -73,7 +73,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     # Ensure it gets set to nil when clearing field
     fill_in "LGIL override", :with => ''
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Local transaction edition was successfully updated."
 

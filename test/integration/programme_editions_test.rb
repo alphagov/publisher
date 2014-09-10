@@ -26,8 +26,7 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
         fill_in "Slug",  :with => "imagine-this-is-welsh"
       end
     end
-
-    within(:css, ".workflow-buttons") { click_on "Save" }
+    save_edition
 
     assert_includes page.body, "Programme edition was successfully updated."
 

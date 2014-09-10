@@ -282,7 +282,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_css?(".nodes .outcome", count: 3)
       assert page.has_css?(".nodes .node", count: 5)
 
-      click_on "Save"
+      save_edition
 
       assert page.has_content?("Simple smart answer edition was successfully updated.")
 
@@ -325,7 +325,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         end
       end
 
-      click_on "Save"
+      save_edition
       page.has_content?("We had some problems saving. Please check the form below.")
 
       assert page.has_css?(".nodes .node", count: 4)
@@ -427,7 +427,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_no_content?("Outcome 2")
       assert page.has_selector?(".nodes .outcome:nth-child(3)", :visible => false)
 
-      click_button "Save"
+      save_edition
 
       page.has_content?("Simple smart answer edition was successfully updated.")
 
@@ -498,7 +498,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert_equal "", find(:css, 'input.next-node-id', :visible => false).value
       end
 
-      click_on "Save"
+      save_edition
 
       within ".nodes .question:first-child .option:first-child" do
         assert_equal "", find(:css, 'input.next-node-id', :visible => false).value

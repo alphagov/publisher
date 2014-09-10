@@ -33,7 +33,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Title", :with => "All bar done")
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Completed transaction edition was successfully updated."
 

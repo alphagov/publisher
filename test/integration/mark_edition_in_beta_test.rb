@@ -12,7 +12,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
     refute find('#edition_in_beta').checked?
 
     check 'Content is in beta'
-    click_button 'Save'
+    save_edition
 
     assert find('#edition_in_beta').checked?
 
@@ -27,7 +27,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
     assert find('#edition_in_beta').checked?
 
     uncheck 'Content is in beta'
-    click_button 'Save'
+    save_edition
 
     refute find('#edition_in_beta').checked?
 

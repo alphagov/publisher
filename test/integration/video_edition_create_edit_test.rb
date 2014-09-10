@@ -22,9 +22,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
     fill_in "Body", :with => "Description of video"
 
-    within :css, ".workflow-buttons" do
-      click_on "Save"
-    end
+    save_edition
 
     assert page.has_content? @artefact.name
 
@@ -57,9 +55,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     fill_in "Video Summary", :with => "A simple fried plantain recipe"
     fill_in "Body", :with => "Description of video"
 
-    within ".workflow-buttons" do
-      click_button "Save"
-    end
+    save_edition
 
     assert page.has_content? "Video edition was successfully updated."
 
@@ -104,14 +100,14 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Upload a new caption file", :type => "file")
     attach_file("Upload a new caption file", file_one.path)
-    click_on "Save"
+    save_edition
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions.txt']")
     end
 
     # ensure file is not removed on save
-    click_on "Save"
+    save_edition
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions.txt']")
@@ -122,7 +118,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
 
     attach_file("Upload a new caption file", file_two.path)
-    click_on "Save"
+    save_edition
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions_two.txt']")
@@ -130,7 +126,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     # remove file
     check "Remove caption file?"
-    click_on "Save"
+    save_edition
 
     refute page.has_selector?(".uploaded-caption-file")
   end
