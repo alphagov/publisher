@@ -38,7 +38,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       fill_in 'Body',  :with => 'Body text'
       fill_in 'Slug',  :with => 'part-three'
     end
-    within(:css, '.workflow-buttons') { click_on 'Save' }
+    save_edition
 
     assert page.has_css?('section#parts div#part-one', count: 1)
     assert page.has_css?('section#parts div#part-two', count: 1)

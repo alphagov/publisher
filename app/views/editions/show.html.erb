@@ -38,7 +38,7 @@
           </div><!--/.well -->
           <% # cancel scheduled publishing doesn't require the edition to be saved when requesting an activity,
              # because this action is triggered from a view where editing is not allowed. %>
-          <%= edition_activities_forms(@resource, Edition::SCHEDULED_PUBLISHING_EVENTS) %>
+          <%= edition_activities_forms(@resource, Edition::CANCEL_SCHEDULED_PUBLISHING_ACTION) %>
         </div>
         <div class="tab-pane" id="metadata">
           <div class="well">

@@ -1,2 +1,4 @@
 <%= build_review_button(@resource, "request_amendments", "Needs more work").html_safe %>
-<%= edition_activities_forms(@resource, request_amendments: "Request amendments") %>
+<% if activity_forms_required? %>
+  <%= edition_activities_forms(@resource, request_amendments: "Request amendments") %>
+<% end %>

@@ -55,7 +55,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     fill_in "Will continue on", :with => "The DVLA website"
     fill_in "Link to competent authority", :with => "http://www.dvla.gov.uk"
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Licence edition was successfully updated."
 

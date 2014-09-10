@@ -7,7 +7,9 @@
       <div class="workflow-buttons">
         <%= review_buttons(@resource)%>
       </div>
-      <%= review_forms(@resource)%>
+      <% if activity_forms_required? %>
+        <%= review_forms(@resource)%>
+      <% end %>
     <% end %>
   <% else %>
     <p>We're having trouble accessing the action data. This Edition has been requested to be reviewed.</p>

@@ -10,7 +10,7 @@ module EditionActivityButtonsHelper
 
   def review_buttons(edition)
     [
-      ["Needs more work",    "request_amendments"],
+      ["Needs more work", "request_amendments"],
       ["OK for publication", "approve_review"]
     ].map{ |title, activity|
       build_review_button(edition, activity, title)
@@ -19,7 +19,7 @@ module EditionActivityButtonsHelper
 
   def fact_check_buttons(edition)
     [
-      ["Needs major changes",    "request_amendments"],
+      ["Needs major changes", "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
     ].map{ |title, activity|
       build_review_button(edition, activity, title)

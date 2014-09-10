@@ -58,7 +58,7 @@ class EditionsController < InheritedResources::Base
     # it at the wrong time.
     assign_to = new_assignee
 
-    activity_attempted = Edition::BASIC_EVENTS.invert[params[:commit]]
+    activity_attempted = Edition::ACTIONS.invert[params[:commit]]
     activity_params = params[:edition]["activity_#{activity_attempted}_attributes"]
 
     update! do |success, failure|

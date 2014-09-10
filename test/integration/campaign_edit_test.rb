@@ -50,7 +50,7 @@ class CampaignEditTest < JavascriptIntegrationTest
     select "Portcullis", :from => "Organisation crest"
     select "cabinet-office", :from => "Organisation brand colour"
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Campaign edition was successfully updated."
 
@@ -125,7 +125,7 @@ class CampaignEditTest < JavascriptIntegrationTest
       attach_file("Upload image", large_image.path)
     end
 
-    click_on "Save"
+    save_edition
 
     assert page.has_content?("Campaign edition was successfully updated.")
 
@@ -134,7 +134,7 @@ class CampaignEditTest < JavascriptIntegrationTest
     assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
 
     # ensure files are not removed on save
-    click_on "Save"
+    save_edition
 
     assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
     assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
@@ -145,7 +145,7 @@ class CampaignEditTest < JavascriptIntegrationTest
     find('#edition_remove_medium_image').trigger('click')
     find('#edition_remove_large_image').trigger('click')
 
-    click_on "Save"
+    save_edition
 
     refute page.has_selector?("#small-campaign-image a")
     refute page.has_selector?("#medium-campaign-image a")

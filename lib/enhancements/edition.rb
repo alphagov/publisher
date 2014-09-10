@@ -7,21 +7,18 @@ class Edition
   class ResurrectionError < RuntimeError
   end
 
-  BASIC_EVENTS = {
+  ACTIONS = {
     send_fact_check: "Send to Fact check",
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for publishing",
-    publish: "Send to publish"
-  }
-  REVIEW_EVENTS = {
-    request_amendments: "Request amendments",
-    approve_review: "OK for publication"
-  }
-  FACT_CHECK_EVENTS = {
+    publish: "Send to publish",
+    approve_review: "OK for publication",
     request_amendments: "Request amendments",
     approve_fact_check: "Approve fact check"
   }
-  SCHEDULED_PUBLISHING_EVENTS = {
+  REVIEW_ACTIONS = ACTIONS.slice(:request_amendments, :approve_review)
+  FACT_CHECK_ACTIONS = ACTIONS.slice(:request_amendments, :approve_fact_check)
+  CANCEL_SCHEDULED_PUBLISHING_ACTION = {
     cancel_scheduled_publishing: "Cancel scheduled publishing"
   }
 

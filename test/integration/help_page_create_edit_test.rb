@@ -36,7 +36,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     fill_in "Body", :with => "This body has changed"
 
-    click_button "Save"
+    save_edition
 
     assert page.has_content? "Help page edition was successfully updated."
 
