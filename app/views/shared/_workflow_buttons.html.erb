@@ -11,7 +11,7 @@
           <% if @resource.in_progress_sibling.present? %>
             <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options = { "class" => "btn btn-primary btn-large"} %>
           <% end %>
-          <%= progress_buttons(@resource, show_disabled: false) %>
+          <%= progress_buttons(@resource, skip_disabled_buttons: true) %>
         <% else %>
           <%= f.submit 'Save', id: 'save-edition', class: 'btn btn-success btn-large' %>
           <%= preview_button(@resource) %>

@@ -33,12 +33,11 @@ module EditionActivityButtonsHelper
       *scheduled_publishing_buttons(edition),
       ["Publish", "publish"],
     ].map { |title, activity, button_color = 'primary'|
-      enabled = edition.send("can_#{activity}?")
-      show_disabled = options.fetch(:show_disabled, true)
-      next unless show_disabled || enabled
+      disabled = !edition.send("can_#{activity}?")
+      next if disabled && options.fetch(:skip_disabled_buttons, false)
 
       link_to title, "##{activity}_form", data: { toggle: 'modal'},
-        class: "btn btn-large btn-#{button_color} #{"disabled" if !enabled}"
+        class: "btn btn-large btn-#{button_color} #{"disabled" if disabled}"
     }.join("\n").html_safe
   end
 
