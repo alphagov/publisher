@@ -27,8 +27,8 @@ module BaseHelper
     safe_join(output)
   end
 
-  def resource_edit_view
-    "/#{@resource.format.underscore.downcase.pluralize}/edit"
+  def resource_fields
+    "/#{@resource.format.underscore.downcase.pluralize}/fields"
   end
 
   def skip_fact_check_for_edition(edition)
@@ -37,11 +37,6 @@ module BaseHelper
 
   def edition_can_be_deleted?(edition)
     ! edition.published?
-  end
-
-  def produce_fact_check_request_text
-    @edition = @resource
-    render :partial => '/noisy_workflow/request_fact_check'
   end
 
   def friendly_date(date)

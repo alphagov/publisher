@@ -1,36 +1,34 @@
-<%= semantic_bootstrap_nested_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
-  <%= f.inputs do %>
-    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-    <%= render :partial => 'shared/video', :locals => {:f => f} %>
-  <% end %>
+<%= f.inputs do %>
+  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+  <%= render :partial => 'shared/video', :locals => {:f => f} %>
+<% end %>
 
-  <hr>
+<hr>
 
-  <div class="row">
+<div class="row">
 
-    <div class="col-md-8">
+  <div class="col-md-8">
 
-      <h3 class="remove-top-margin add-bottom-margin">Parts</h3>
+    <h3 class="remove-top-margin add-bottom-margin">Parts</h3>
 
-      <section class="panel-group" id="parts">
-        <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
-          <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
-        <% end %>
-      </section>
+    <section class="panel-group" id="parts">
+      <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
+        <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
+      <% end %>
+    </section>
 
-      <p><%= f.link_to_add "Add new part", :parts, :data => { :target => "#parts" } %></p>
-
-    </div>
-
-    <div class="col-md-4">
-      <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
-
-      <div class="well">
-        <%= render "../shared/govspeak_help" %>
-      </div>
-    </div>
+    <p><%= f.link_to_add "Add new part", :parts, :data => { :target => "#parts" } %></p>
 
   </div>
 
-  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
-<% end %>
+  <div class="col-md-4">
+    <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
+
+    <div class="well">
+      <%= render "../shared/govspeak_help" %>
+    </div>
+  </div>
+
+</div>
+
+<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

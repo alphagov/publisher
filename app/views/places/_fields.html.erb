@@ -1,17 +1,15 @@
-<%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
-  <%= f.inputs do %>
-    <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-    <div class="row">
-      <div class="col-md-7">
-    <%= f.input :place_type, :hint => "This is the 'slug' assigned in the imminence app", :input_html => { :disabled => @resource.locked_for_edits? } %>
-      </div>
-      <div class="col-md-10">
-    <%= f.input :introduction, :as => :text, :input_html => {:rows => 2, :disabled => @resource.locked_for_edits? } %>
-    <%= f.input :more_information, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
-    <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => PlaceEdition.expectation_choices, :input_html => { :disabled => @resource.locked_for_edits? } %>
-      </div>
+<%= f.inputs do %>
+  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+  <div class="row">
+    <div class="col-md-7">
+  <%= f.input :place_type, :hint => "This is the 'slug' assigned in the imminence app", :input_html => { :disabled => @resource.locked_for_edits? } %>
     </div>
-  <% end %>
-
-  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+    <div class="col-md-10">
+  <%= f.input :introduction, :as => :text, :input_html => {:rows => 2, :disabled => @resource.locked_for_edits? } %>
+  <%= f.input :more_information, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
+  <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => PlaceEdition.expectation_choices, :input_html => { :disabled => @resource.locked_for_edits? } %>
+    </div>
+  </div>
 <% end %>
+
+<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
