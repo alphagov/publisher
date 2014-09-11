@@ -31,7 +31,7 @@ module EditionActivityButtonsHelper
       ["Fact check", "send_fact_check"],
       ["2nd pair of eyes", "request_review"],
       *scheduled_publishing_buttons(edition),
-      ["Publish", "publish"],
+      publish_button(edition),
     ].map { |title, activity, button_color = 'primary'|
       disabled = !edition.send("can_#{activity}?")
       next if disabled && options.fetch(:skip_disabled_buttons, false)
@@ -46,6 +46,11 @@ module EditionActivityButtonsHelper
     buttons << ["Schedule", "schedule_for_publishing", 'warning'] if edition.can_schedule_for_publishing?
     buttons << ["Cancel scheduled publishing", "cancel_scheduled_publishing", 'danger'] if edition.can_cancel_scheduled_publishing?
     buttons
+  end
+
+  def publish_button(edition)
+    button_text = edition.scheduled_for_publishing? ? "Publish now" : "Publish"
+    [button_text, "publish"]
   end
 
   def preview_button(edition)

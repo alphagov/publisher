@@ -46,6 +46,22 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
     assert page.has_content? edition.publish_at.strftime('%d/%m/%Y %H:%M')
   end
 
+  test "should allow a scheduled edition to be published now" do
+    edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+    stub_artefact_registration(edition.slug)
+
+    visit_edition edition
+    assert page.has_content?("Status: Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    click_on "Publish now"
+
+    within "#publish_form" do
+      fill_in "Comment", with: "Go live now!"
+      click_on "Send to publish"
+    end
+
+    assert page.has_content?("Status: Published")
+  end
+
   test "should cancel the publishing of a scheduled edition" do
     edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
 

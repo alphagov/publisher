@@ -58,12 +58,13 @@ class EditionsController < InheritedResources::Base
     # it at the wrong time.
     assign_to = new_assignee
 
-    activity_attempted = Edition::ACTIONS.invert[params[:commit]]
-    activity_params = params[:edition]["activity_#{activity_attempted}_attributes"]
+    attempted_activity = Edition::ACTIONS.invert[params[:commit]]
+    activity_params = attempted_activity_params(attempted_activity)
+    remove_activity_params
 
     update! do |success, failure|
       success.html {
-        progress_edition(resource, activity_params) if activity_attempted
+        progress_edition(resource, activity_params) if attempted_activity
         update_assignment resource, assign_to
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -74,7 +75,7 @@ class EditionsController < InheritedResources::Base
         render :template => "show"
       }
       success.json {
-        progress_edition(resource, activity_params) if activity_attempted
+        progress_edition(resource, activity_params) if attempted_activity
         update_assignment resource, assign_to
         render :json => resource
       }
@@ -140,6 +141,14 @@ class EditionsController < InheritedResources::Base
 
       params['publish_at'] = DateTime.new(*datetime_params) if datetime_params.present?
       params
+    end
+
+    def attempted_activity_params(attempted_activity)
+      params[:edition]["activity_#{attempted_activity}_attributes"]
+    end
+
+    def remove_activity_params
+      params[:edition].delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
     end
 
     def format_failure_message(resource)
