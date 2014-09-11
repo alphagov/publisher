@@ -1,131 +1,19 @@
-    <%= f.input :organiser, :input_html => { :disabled => locked_for_edits } %>
+<%= semantic_form_for @resource, :url => edition_path(@resource), :as => :edition, :html => { :id => 'edition-form' } do |f| %>
+  <div class="row">
+    <div class="col-md-8">
+      <%= f.inputs do %>
+        <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+        <%= render :partial => 'business_supports/additional_fields', :locals => { :f => f, :locked_for_edits => @resource.locked_for_edits? } %>
+      <% end %>
+    </div>
+    <div class="col-md-4">
+      <h3>Govspeak help</h3>
 
-    <%= f.input :short_description,
-                :label => 'Short description',
-                :hint => 'Short description shown in search results.',
-                :input_html => {:disabled => locked_for_edits } %>
-
-    <%= f.input :body,
-                :as => :text,
-                :label => 'Body',
-                :hint => 'The full description of this business support',
-                :input_html => {:rows => 10, :disabled => locked_for_edits } %>
-
-    <%= f.input :eligibility,
-                :as => :text,
-                :label => 'Eligibility',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
-
-    <%= f.input :evaluation,
-                :as => :text,
-                :label => 'Evaluation',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
-
-    <%= f.input :additional_information,
-                :as => :text,
-                :label => 'Additional information',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
-
-    <%= f.input :contact_details,
-                :as => :text,
-                :label => 'Contact details',
-                :hint => 'Email, telephone, address and postcode of the business support authority or company',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
-    <div class="row">
-      <div class="col-md-6">
-    <%= f.input :max_employees,
-                :label => 'Max employees',
-                :hint => 'Maximum number of employees in qualifying business',
-                :input_html => {:disabled => locked_for_edits } %>
-
-    <%= f.input :min_value,
-                :label => 'Min value',
-                :hint => "The smallest amount of support available",
-                :input_html => {:disabled => locked_for_edits } %>
-
-    <%= f.input :max_value,
-                :label => 'Max value',
-                :hint => "The largest amount of support available",
-                :input_html => { :disabled => locked_for_edits } %>
+      <div class="well">
+        <%= render "../shared/govspeak_help" %>
       </div>
     </div>
-    <%= f.input :will_continue_on,
-                :label => 'Will continue on',
-                :hint => 'Text to accompany external website link',
-                :input_html => {:disabled => locked_for_edits } %>
+  </div>
 
-    <%= f.input :continuation_link,
-                :label => 'Continuation link',
-                :hint => 'Link to external website for this business support',
-                :input_html => {:disabled => locked_for_edits } %>
-    <hr/>
-    <div class="row">
-      <div class="col-md-4">
-        <%= f.input :priority, :as => :select, :collection => [["Low",0],["Normal",1],["High",2]], :input_html => { :disabled => locked_for_edits } %>
-
-        <% date_error = f.object.errors[:start_date]
-       error_class = date_error and !date_error.empty? ? ' error' : '' -%>
-      </div>
-    </div>
-    <hr/>
-    <div class="form-group<%= error_class %> date-picker">
-      <h3>Scheme start/end date</h3>
-      <label for="edition[start_date]">Start date</label>
-      <div class="form-inline">
-        <%= f.date_select :start_date, { :include_blank => true }, { :class => "form-control date-picker#{error_class}", :disabled => locked_for_edits } %>
-        <% if f.object.errors.has_key?(:start_date) -%>
-        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
-        <% end -%>
-      </div>
-    </div>
-    <div class="add-top-margin form-group<%= error_class %> date-picker">
-      <label for="edition[end_date]">End date</label>
-      <div class="form-inline">
-        <%= f.date_select :end_date, { :include_blank => true }, { :class => "form-control date-picker#{error_class}", :disabled => locked_for_edits } %>
-        <% if f.object.errors.has_key?(:start_date) -%>
-        <span class="help-inline"><%= f.object.errors[:start_date].join(', ') %></span>
-        <% end -%>
-      </div>
-    </div>
-    <hr/>
-    <%= render partial: "business_supports/areas", locals: { f: f } %>
-
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Business types",
-                                  collection: BusinessSupport::BusinessType.asc(:name),
-                                  model_collection: "business_types",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Business sizes",
-                                  collection: BusinessSupport::BusinessSize.asc(:name),
-                                  model_collection: "business_sizes",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <hr/>
-
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Purposes",
-                                  collection: BusinessSupport::Purpose.asc(:name),
-                                  model_collection: "purposes",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <hr/>
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Sectors",
-                                  collection: BusinessSupport::Sector.asc(:name),
-                                  model_collection: "sectors",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <hr/>
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Stages",
-                                  collection: BusinessSupport::Stage.asc(:name),
-                                  model_collection: "stages",
-                                  locked_for_edits: locked_for_edits } %>
-
-    <%= render partial: "business_supports/facets", locals: { f: f,
-                                  title: "Support types",
-                                  collection: BusinessSupport::SupportType.asc(:name),
-                                  model_collection: "support_types",
-                                  locked_for_edits: locked_for_edits } %>
+  <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+<% end %>
