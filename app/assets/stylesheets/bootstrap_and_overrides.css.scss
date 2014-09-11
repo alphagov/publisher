@@ -102,3 +102,17 @@ select.date {
   -o-transition: none !important;
   transition: none !important;
 }
+
+/*
+ * Bootstrap tab styles apply display attributes only to .tab-pane
+ * elements that are direct children of .tab-content. This fix is
+ * required to apply correct display attributes to .tab-pane
+ * elements wrapped inside the edition form in .tab-content.
+ * See: edition/show.html.erb
+ */
+.tab-content .tab-pane {
+  display: none;
+}
+.tab-content .active {
+  display: block;
+}
