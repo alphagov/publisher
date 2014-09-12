@@ -1,21 +1,11 @@
 #encoding: utf-8
 require 'integration_test_helper'
 require 'gds_api/test_helpers/imminence'
+require 'imminence_areas_test_helper'
 
 class BusinessSupportCreateEditTest < JavascriptIntegrationTest
   include GdsApi::TestHelpers::Imminence
-
-  def areas_response(areas)
-    {
-      "_response_info" => { "status" => "ok","links" => [] },
-      "total" => areas.size,
-      "start_index" => 1,
-      "page_size" => areas.size,
-      "current_page" => 1,
-      "pages" => 1,
-      "results" => areas
-    }.to_json
-  end
+  include ImminenceAreasTestHelper
 
   setup do
     @artefact = FactoryGirl.create(:artefact,
@@ -56,29 +46,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
       {slug:'grant', name:'Grant'}, {slug:'loan', name:'Loan'}
     ])
 
-    @regions = [{slug: "london", name: "London", type: "EUR"}, {slug: "scotland", name: "Scotland", type: "EUR"}]
-
-    @counties = [{slug: "west-sussex-county-council", name: "West Sussex County Council", type: "CTY"},
-                 {slug: "devon-county-council", name: "Devon County Council", type: "CTY"}]
-
-    @districts = [{slug: "wycombe-district-council", name: "Wycombe District Council", type: "DIS"},
-                  {slug: "south-bucks-district-council", name: "South Bucks District Council", type: "DIS"}]
-
-    @london_boroughs = [{slug: "hackney-borough-council", name: "Hackney Borough Council", type: "LBO"},
-                        {slug: "camden-borough-council", name: "Camden Borough Council", type: "LBO"}]
-
-    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/EUR.json}).to_return(
-      body: areas_response(@regions)
-    )
-    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/CTY.json}).to_return(
-      body: areas_response(@counties)
-    )
-    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/DIS.json}).to_return(
-      body: areas_response(@districts)
-    )
-    stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/LBO.json}).to_return(
-      body: areas_response(@london_boroughs)
-    )
+    stub_mapit_areas_requests(IMMINENCE_API_ENDPOINT)
 
     setup_users
   end
