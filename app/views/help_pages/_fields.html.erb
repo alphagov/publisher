@@ -1,0 +1,6 @@
+<%= f.inputs do %>
+  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+  <%= f.input :body, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
+<% end %>
+
+<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

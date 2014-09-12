@@ -9,4 +9,9 @@ module EditionsHelper
   def activity_forms_required?
     params[:action] == 'diff'
   end
+
+  def resource_form(&form_definition)
+    semantic_bootstrap_nested_form_for @resource, :as => :edition, :url => edition_path(@resource),
+      :html => { :id => 'edition-form' }, &form_definition
+  end
 end

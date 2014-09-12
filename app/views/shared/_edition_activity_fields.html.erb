@@ -16,9 +16,11 @@
         <%= activity_fields.label :customised_message do %>
           Customised message<abbr title="required">*</abbr>
         <% end %>
-        <%= activity_fields.text_area :customised_message, cols: 60, rows: 6, class: 'form-control' do %>
+        <textarea id="edition_activity_send_fact_check_attributes_customised_message"
+                  name="edition[activity_send_fact_check_attributes][customised_message]"
+                  class="form-control" cols="60" rows="6">
 <%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
-        <% end %>
+        </textarea>
       <% end %>
 
       <% if activity == :schedule_for_publishing %>
