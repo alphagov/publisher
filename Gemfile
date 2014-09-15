@@ -57,9 +57,6 @@ gem 'airbrake', '3.1.15'
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
-# for sidekiq monitoring
-gem 'sinatra', '>= 1.3.0', :require => nil
-
 group :assets do
   gem "therubyracer", "0.11.4"
   gem 'sass-rails', '3.2.6'
