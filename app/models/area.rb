@@ -4,7 +4,7 @@ require "gds_api/helpers"
 class Area < OpenStruct
   extend GdsApi::Helpers
 
-  AREA_TYPES = ["EUR", "CTY", "DIS", "LBO"]
+  AREA_TYPES = ["EUR", "CTY", "DIS", "LBO", "LGD", "MTD", "UTA"]
 
   def self.all
     areas
