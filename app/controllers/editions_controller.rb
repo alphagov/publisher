@@ -72,7 +72,7 @@ class EditionsController < InheritedResources::Base
       failure.html {
         @resource = resource
         flash.now[:alert] = format_failure_message(resource)
-        render :template => "show"
+        render :action => "show"
       }
       success.json {
         progress_edition(resource, activity_params) if attempted_activity

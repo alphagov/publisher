@@ -80,4 +80,20 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     e = LocalTransactionEdition.find(edition.id)
     assert_equal nil, e.lgil_override
   end
+
+  test "editing a local transaction with an error" do
+    edition = FactoryGirl.create(:local_transaction_edition,
+      :panopticon_id => @artefact.id,
+      :slug => @artefact.slug,
+      :title => "Foo transaction",
+      :lgsl_code => 1
+    )
+
+    visit "/editions/#{edition.to_param}"
+
+    fill_in "Title", :with => ""
+    save_edition
+
+    assert page.has_content? "We had some problems saving"
+  end
 end
