@@ -36,6 +36,7 @@ gem 'logstasher', '0.4.8'
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
 gem 'plek', '1.4.0'
+gem 'diffy', '3.0.6'
 
 # TODO: This was previously pinned due to a replica set bug in >1.6.2
 # Consider whether this still needs to be pinned when it is provided
