@@ -66,7 +66,6 @@ GEM
     connection_pool (1.2.0)
     crack (0.3.1)
     database_cleaner (0.8.0)
-    differ (0.1.2)
     diffy (3.0.6)
     erubis (2.7.0)
     execjs (1.4.0)
@@ -108,9 +107,8 @@ GEM
       bootstrap-sass (= 3.2.0.0)
       jquery-rails (= 3.1.1)
       rails (>= 3.2.0)
-    govuk_content_models (20.0.0)
+    govuk_content_models (21.0.0)
       bson_ext
-      differ
       gds-api-adapters (>= 10.9.0)
       gds-sso (>= 7.0.0, < 10.0.0)
       govspeak (~> 3.1.0)
@@ -331,7 +329,7 @@ DEPENDENCIES
   gds-sso (= 9.3.0)
   govspeak (~> 3.1.0)
   govuk_admin_template (= 1.1.2)
-  govuk_content_models (= 20.0.0)
+  govuk_content_models (= 21.0.0)
   has_scope
   inherited_resources
   jasmine (= 2.0.2)
