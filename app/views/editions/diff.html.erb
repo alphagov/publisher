@@ -26,13 +26,10 @@
     <%= link_to "Back to current edition", edition_path(@resource.history.first), :class => "btn btn-default" %>
   </p>
 
-  <div id="diff">
-    <h2 class="remove-bottom-margin">Changes from edition <%= @resource.version_number-1 %> to edition <%= @resource.version_number %></h2>
-    <br/>
-    <div class="panel panel-default panel-diff">
-      <div class="panel-body">
-        <%= format_content_diff(@resource.previous_edition_differences) %>
-      </div>
-    </div>
-  </div>
+  <h2>
+    Changes from edition <%= @resource.version_number-1 %> to edition <%= @resource.version_number %>
+  </h2>
+
+  <%= diff_html(@comparison.whole_body, @resource.whole_body) %>
+
 <% content_for :page_title, "Editing #{@resource.title}" %>

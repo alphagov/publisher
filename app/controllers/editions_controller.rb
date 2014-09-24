@@ -106,6 +106,7 @@ class EditionsController < InheritedResources::Base
 
   def diff
     @resource = resource
+    @comparison = @resource.previous_siblings.last
   end
 
   def areas

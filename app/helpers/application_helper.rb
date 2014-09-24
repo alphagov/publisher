@@ -20,4 +20,8 @@ module ApplicationHelper
     direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
     link_to title, params.merge({:sort => column, :direction => direction}), {:class => css_class}
   end
+
+  def diff_html(version_1, version_2)
+    Diffy::Diff.new(version_1, version_2, :allow_empty_diff => false).to_s(:html).html_safe
+  end
 end

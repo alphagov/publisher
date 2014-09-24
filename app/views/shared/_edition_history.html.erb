@@ -4,7 +4,9 @@
         <i class="glyphicon glyphicon-smaller-than-text glyphicon-chevron-down add-right-margin"></i> Edition <%= edition.version_number %>
       </a>
       <% if edition.version_number > 1 %>
-        <%= link_to "Compare with previous", diff_edition_path(edition), class: "pull-right" %>
+        <%= link_to "Compare with edition #{edition.version_number - 1}",
+                    diff_edition_path(edition),
+                    class: "pull-right" %>
       <% end %>
     </div>
 

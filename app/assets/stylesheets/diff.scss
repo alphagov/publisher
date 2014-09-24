@@ -1,56 +1,75 @@
 /* ==========================================================================
-   Diff of two publication editions
+   Diff of two editions
    ========================================================================== */
 
-$removed-color: #fdd;
 $added-color: #dfd;
-
-.panel-diff {
-  border-left: 40px solid #f3f3f3;
-}
+$strong-added-color: #77f177;
+$removed-color: #fdd;
+$strong-removed-color: #faa;
 
 .diff {
-  list-style: none;
-  padding-left: 0;
-}
-
-.diff li {
-  margin-bottom: 1em;
-  word-wrap: break-word;
-}
-
-.diff .removal,
-.diff .addition {
+  border: 1px solid $gray-lighter;
+  border-left: 40px solid $gray-lighter;
   border-radius: 3px;
-  color: #000;
-  padding: 0.2rem 0.4rem;
-}
+  padding: 15px;
 
-.diff .removal {
-  background-color: $removed-color;
-}
+  ul {
+    padding-left: 0;
 
-.diff .addition {
-  background-color: $added-color;
-}
+    li {
+      margin-bottom: 1em;
+      word-wrap: break-word;
+      list-style: none;
 
-.diff .removal:before,
-.diff .addition:before {
-  position: absolute;
-  font-size: 26px;
-  font-weight: bold;
-  margin-left: -60px;
-  margin-top: -10px;
-  width: 40px;
-  text-align: center;
-}
+      del,
+      ins {
+        text-decoration: none;
+      }
+    }
 
-.diff .removal:before {
-  color: #DA4F49;
-  content: "-";
-}
+    li.del,
+    li.ins {
+      border-radius: 3px;
+      padding: 0.2rem 0.4rem;
+    }
 
-.diff .addition:before {
-  color: #468847;
-  content: "+";
+    li.del {
+      background-color: $removed-color;
+
+      strong {
+        font-weight: normal;
+        background-color: $strong-removed-color;
+      }
+    }
+
+    li.ins {
+      background-color: $added-color;
+
+      strong {
+        font-weight: normal;
+        background-color: $strong-added-color;
+      }
+    }
+
+    li.del:before,
+    li.ins:before {
+      position: absolute;
+      font-size: 26px;
+      font-weight: bold;
+      margin-left: -57px;
+      margin-top: -11px;
+      width: 40px;
+      text-align: center;
+    }
+
+    li.del:before {
+      color: $strong-removed-color;
+      content: "-";
+    }
+
+    li.ins:before {
+      color: $strong-added-color;
+      content: "+";
+    }
+  }
 }
