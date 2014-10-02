@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ScheduledPublisherTest < ActiveSupport::TestCase
-  context ".perform_at" do
+  context ".enqueue" do
     setup do
       Sidekiq::Testing.fake!
     end
@@ -14,7 +14,7 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       user = FactoryGirl.create(:user)
       edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
 
-      ScheduledPublisher.perform_at(edition.publish_at, edition.id.to_s)
+      ScheduledPublisher.enqueue(edition)
 
       assert_equal 1, ScheduledPublisher.jobs.size
       assert_equal edition.publish_at.to_i, ScheduledPublisher.jobs.first['at']
