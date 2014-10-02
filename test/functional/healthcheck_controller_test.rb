@@ -9,7 +9,7 @@ class HealthcheckControllerTest < ActionController::TestCase
   context "response structure" do
     setup do
       Edition.stubs(:scheduled_for_publishing).returns(stub(count: 0))
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).returns(0)
+      ScheduledPublisher.stubs(:queue_size).returns(0)
     end
 
     should "return a 200 response" do
@@ -32,7 +32,7 @@ class HealthcheckControllerTest < ActionController::TestCase
   context "scheduled count matches queue length" do
     setup do
       Edition.stubs(:scheduled_for_publishing).returns(stub(count: 0))
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).returns(0)
+      ScheduledPublisher.stubs(:queue_size).returns(0)
     end
 
     should "report the check is ok" do
@@ -59,7 +59,7 @@ class HealthcheckControllerTest < ActionController::TestCase
   context "scheduled count does not match queue length" do
     setup do
       Edition.stubs(:scheduled_for_publishing).returns(stub(count: 5))
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).returns(3)
+      ScheduledPublisher.stubs(:queue_size).returns(3)
     end
 
     should "report the check as a warning" do
@@ -86,7 +86,7 @@ class HealthcheckControllerTest < ActionController::TestCase
   context "cannot connect to the Mongo" do
     setup do
       Edition.stubs(:scheduled_for_publishing).raises(Mongo::ConnectionFailure)
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).returns(3)
+      ScheduledPublisher.stubs(:queue_size).returns(3)
     end
 
     should "report a critical error" do
@@ -103,7 +103,7 @@ class HealthcheckControllerTest < ActionController::TestCase
     # when it loses connection, but I wouldn't swear to it.
     setup do
       Edition.stubs(:scheduled_for_publishing).raises(Mongo::ConnectionError)
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).returns(3)
+      ScheduledPublisher.stubs(:queue_size).returns(3)
     end
 
     should "report a critical error" do
@@ -116,7 +116,7 @@ class HealthcheckControllerTest < ActionController::TestCase
   context "cannot connect to Redis" do
     setup do
       Edition.stubs(:scheduled_for_publishing).returns(stub(count: 5))
-      Sidekiq::Stats.any_instance.stubs(:scheduled_size).raises(Redis::CannotConnectError)
+      ScheduledPublisher.stubs(:queue_size).raises(Redis::CannotConnectError)
     end
 
     should "report a critical error" do

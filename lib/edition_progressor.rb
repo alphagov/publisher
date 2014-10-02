@@ -22,7 +22,7 @@ class EditionProgressor
       return false
     elsif actor.progress(edition, activity.dup)
       if activity[:request_type] == 'schedule_for_publishing'
-        ScheduledPublisher.perform_at(edition.publish_at, edition.id.to_s)
+        ScheduledPublisher.enqueue(edition)
       end
       self.status_message = success_message(action)
       return true

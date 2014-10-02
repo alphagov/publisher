@@ -13,7 +13,7 @@ private
 
   def schedule_queue_result
     scheduled_editions = Edition.scheduled_for_publishing.count
-    queue_size = Sidekiq::Stats.new.scheduled_size
+    queue_size = ScheduledPublisher.queue_size
 
     status = (scheduled_editions == queue_size) ? "ok" : "warning"
 
