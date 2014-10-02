@@ -24,6 +24,11 @@ class ScheduledPublisher
     queued_jobs.size
   end
 
+  # used by the editions:requeue_scheduled_for_publishing rake task
+  def self.dequeue_all
+    queued_jobs.map(&:delete)
+  end
+
   def perform(edition_id)
     edition = Edition.find(edition_id)
     edition.publish_anonymously
