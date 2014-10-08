@@ -1,11 +1,9 @@
-
 <% if resource.safe_to_preview? %>
-  <p>This edition can be previewed at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
+  <p>Preview edition at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
 <% else %>
-  <p>This edition is not yet ready to be previewed.</p>
+  <p>This edition can’t be previewed yet.</p>
 <% end %>
-
-<p>Fact check responses should be sent to <%= mail_to resource.fact_check_email_address %></p>
+<p>Send fact check responses to <%= mail_to resource.fact_check_email_address %></p>
 <hr />
 
 <div class="row">
