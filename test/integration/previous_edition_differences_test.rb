@@ -2,6 +2,7 @@ require 'integration_test_helper'
 
 class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   setup do
+    stub_register_published_content
     setup_users
     @first_edition = FactoryGirl.create(:answer_edition,
                                         :state => "published",
@@ -51,7 +52,6 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
 
   context "Editions scheduled for publishing" do
     setup do
-      AnswerEdition.any_instance.stubs(:register_with_panopticon).returns(true)
       @second_edition = @first_edition.build_clone(AnswerEdition)
       @second_edition.update_attributes(body: "Test Body 2")
       @second_edition.update_attribute(:state, :scheduled_for_publishing)

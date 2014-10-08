@@ -9,6 +9,7 @@ require 'mocha/setup'
 require 'database_cleaner'
 require 'webmock/test_unit'
 require 'gds_api/test_helpers/panopticon'
+require 'gds_api/test_helpers/publishing_api'
 require 'govuk_content_models/test_helpers/factories'
 
 require 'sidekiq/testing'
@@ -45,6 +46,7 @@ class ActiveSupport::TestCase
 
   def stub_register_published_content
     stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
+    stub_default_publishing_api_put
   end
 
   teardown do
@@ -57,4 +59,5 @@ class ActiveSupport::TestCase
   end
 
   include GdsApi::TestHelpers::Panopticon
+  include GdsApi::TestHelpers::PublishingApi
 end
