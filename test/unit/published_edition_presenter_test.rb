@@ -30,17 +30,5 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
 
       assert_equal expected_attributes_for_publishing_api_hash, presenter.render_for_publishing_api
     end
-
-    should "consider editions with skipped fact check to be minor changes" do
-      edition = FactoryGirl.create(:edition, :published)
-
-      presenter = PublishedEditionPresenter.new(edition)
-
-      assert_equal "major", presenter.render_for_publishing_api[:update_type]
-
-      edition.actions.create!(request_type: Action::SKIP_FACT_CHECK)
-
-      assert_equal "minor", presenter.render_for_publishing_api[:update_type]
-    end
   end
 end

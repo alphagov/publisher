@@ -17,7 +17,7 @@ class PublishedEditionPresenter
         {path: base_path, type: "exact"}
       ],
       redirects: [],
-      update_type: update_type,
+      update_type: "major",
       details: {
         change_note: "",
         tags: { # Coming soon
@@ -32,9 +32,5 @@ private
 
   def base_path
     "/#{@edition.slug}"
-  end
-
-  def update_type
-    @edition.fact_check_skipped? ? "minor" : "major"
   end
 end
