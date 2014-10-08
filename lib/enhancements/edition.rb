@@ -60,6 +60,7 @@ class Edition
   def was_published
     was_published_without_indexing
     register_with_panopticon
+    notify_publishing_api
   end
 
   def fact_check_skipped?
@@ -80,5 +81,9 @@ class Edition
     registerer = GdsApi::Panopticon::Registerer.new(owning_app: "publisher", rendering_app: "frontend", kind: format_as_kind)
     details = RegisterableEdition.new(self)
     registerer.register(details)
+  end
+
+  def notify_publishing_api
+    PublishingAPINotifier.perform_async(self.id.to_s)
   end
 end

@@ -18,7 +18,7 @@ gem 'erubis'
 gem 'govuk_admin_template', '1.1.2'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
-gem 'gds-api-adapters', '11.1.0'
+gem 'gds-api-adapters', '14.10.0'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
@@ -35,7 +35,7 @@ gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'logstasher', '0.4.8'
 gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
-gem 'plek', '1.4.0'
+gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
 
 # TODO: This was previously pinned due to a replica set bug in >1.6.2
