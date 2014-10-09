@@ -26,14 +26,14 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
     should "have the first history actions visible" do
       visit "/editions/#{@guide.id}"
-      click_on "History & Notes"
+      click_on "History and notes"
 
       assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
 
     should "hide actions when the edition title is clicked" do
       visit "/editions/#{@guide.id}"
-      click_on "History & Notes"
+      click_on "History and notes"
       click_on "Edition 2"
       assert page.has_no_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
@@ -41,15 +41,22 @@ class EditionHistoryTest < JavascriptIntegrationTest
     context "Important note" do
       should "be able to add a note" do
         visit "/editions/#{@guide.id}"
-        click_on "History & Notes"
-        fill_in "Important note", with: "This is an important note. Take note."
-        click_on "Save important note"
+        click_on "History and notes"
+        click_on "Update important note"
+
+        within "#update-important-note" do
+          fill_in "Important note", with: "This is an important note. Take note."
+          click_on "Save important note"
+        end
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
 
-        click_on "History & Notes"
-        assert_field_contains("This is an important note. Take note.", "Important note")
+        click_on "History and notes"
+        click_on "Update important note"
+        within "#update-important-note" do
+          assert_field_contains("This is an important note. Take note.", "Important note")
+        end
       end
 
       should "not be carried forward to new editions" do
@@ -63,8 +70,11 @@ class EditionHistoryTest < JavascriptIntegrationTest
         click_on "Create new edition"
         assert page.has_no_content? "This is an important note. Take note."
 
-        click_on "History & Notes"
-        assert_field_contains("", "Important note")
+        click_on "History and notes"
+        click_on "Update important note"
+        within "#update-important-note" do
+          assert_field_contains("", "Important note")
+        end
       end
     end
   end

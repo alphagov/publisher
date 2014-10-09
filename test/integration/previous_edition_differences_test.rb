@@ -12,7 +12,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   context "First edition" do
     should "not have a link to show changes" do
       visit "/editions/#{@first_edition.id}"
-      click_on "History & Notes"
+      click_on "History and notes"
 
       assert page.has_no_link?("Compare with previous")
     end
@@ -25,7 +25,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       @second_edition.reload
 
       visit "/editions/#{@second_edition.id}"
-      click_on "History & Notes"
+      click_on "History and notes"
     end
 
     should "have links to view the difference with the previous version" do
@@ -64,7 +64,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       assert_equal "published", @second_edition.state
 
       visit "/editions/#{@second_edition.id}"
-      click_on "History & Notes"
+      click_on "History and notes"
       click_on "Compare with edition 1"
 
       assert page.has_content?("test body 1")
