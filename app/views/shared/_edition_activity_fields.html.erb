@@ -8,7 +8,6 @@
   <%= form_builder.fields_for(inline ? "activity_#{activity}_attributes" : :activity) do |activity_fields| %>
     <div class="modal-body">
       <%= activity_fields.hidden_field :request_type, value: activity %>
-      <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
 
       <% if activity == :send_fact_check %>
         <%= activity_fields.input :email_addresses %>
@@ -18,9 +17,9 @@
         <% end %>
         <textarea id="edition_activity_send_fact_check_attributes_customised_message"
                   name="edition[activity_send_fact_check_attributes][customised_message]"
-                  class="form-control" cols="60" rows="6">
-<%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %>
-        </textarea>
+                  class="form-control" cols="60" rows="14"><%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %></textarea>
+      <% else %>
+        <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
       <% end %>
 
       <% if activity == :schedule_for_publishing %>
