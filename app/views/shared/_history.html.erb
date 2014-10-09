@@ -1,33 +1,66 @@
-<% if resource.safe_to_preview? %>
-  <p>Preview edition at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.</p>
-<% else %>
-  <p>This edition can’t be previewed yet.</p>
-<% end %>
-<p>Send fact check responses to <%= mail_to resource.fact_check_email_address %></p>
-<hr />
-
-<div class="row">
-  <div class="col-md-6">
-  <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
-    <%= f.inputs do %>
-      <%= hidden_field_tag :edition_id, resource.id %>
-      <%= f.input :comment, :label => 'Edition notes', :as => :text, :required => false, :input_html => { :class=> 'form-control input-md-5', :rows => 6, :cols => 120 } %>
-      <p class="help-block">Summarise your changes, and briefly explain why if you didn't make any requested changes.</p>
-
-      <button class="btn btn-success" name="commit">Save note</button>
-    <% end %>
-  <% end %>
-  </div>
-  <div class="col-md-6">
-  <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note' }) do |f| %>
-    <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'form-control input-md-5', :rows => 6, :cols => 120 }, :hint => 'Add important notes that anyone who works on this edition needs to see, eg "(Doesn\'t) need fact check, don\'t publish."' %>
-    <%= f.submit :class=>"btn btn-danger", :value=>'Save important note' %>
-  <% end %>
+<div aria-hidden="true" class="modal" id="save-edition-note" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <header class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title">Add edition note</h3>
+      </header>
+      <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
+        <%= f.inputs do %>
+          <%= hidden_field_tag :edition_id, resource.id %>
+          <div class="modal-body">
+            <%= f.input :comment, :label => 'Note', :as => :text, :required => false, :input_html => { :class=> 'form-control', :rows => 6, :cols => 120 } %>
+            <p class="help-block">Summarise your changes, and briefly explain why if you didn't make any requested changes.</p>
+          </div>
+          <footer class="modal-footer remove-top-margin">
+            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+            <button class="btn btn-success" name="commit">Save edition note</button>
+          </footer>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>
-<hr />
 
-<div id="edition-history" class="panel-group">
-  <h3 class="add-bottom-margin">History and notes</h3>
-  <%= render collection: @resource.history, partial: '/shared/edition_history', as: 'edition' %>
+<div aria-hidden="true" class="modal" id="update-important-note" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <header class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title">Update important note</h3>
+      </header>
+      <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note' }) do |f| %>
+        <div class="modal-body">
+          <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'form-control', :rows => 6, :cols => 120 } %>
+          <p class="help-block">Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.” Each edition can have only one important note at a time.</p>
+        </div>
+        <footer class="modal-footer remove-top-margin">
+          <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+          <%= f.submit :class=>"btn btn-success", :value=>'Save important note' %>
+        </footer>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div id="edition-history">
+  <h3 class="remove-top-margin add-bottom-margin">History and notes</h3>
+
+  <div class="add-bottom-margin">
+    <a href="#save-edition-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-comment add-right-margin"></i>Add edition note</a>
+    <a href="#update-important-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-exclamation-sign add-right-margin"></i>Update important note</a>
+  </div>
+
+  <p class="add-bottom-margin">
+    <% if resource.safe_to_preview? %>
+      Preview edition at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.<br />
+    <% else %>
+      This edition can’t be previewed yet.<br />
+    <% end %>
+    Send fact check responses to <%= mail_to resource.fact_check_email_address %>
+  </p>
+
+  <div class="panel-group">
+    <%= render collection: @resource.history, partial: '/shared/edition_history', as: 'edition' %>
+  </div>
 </div>

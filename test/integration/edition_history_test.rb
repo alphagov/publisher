@@ -42,14 +42,21 @@ class EditionHistoryTest < JavascriptIntegrationTest
       should "be able to add a note" do
         visit "/editions/#{@guide.id}"
         click_on "History and notes"
-        fill_in "Important note", with: "This is an important note. Take note."
-        click_on "Save important note"
+        click_on "Update important note"
+
+        within "#update-important-note" do
+          fill_in "Important note", with: "This is an important note. Take note."
+          click_on "Save important note"
+        end
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
 
         click_on "History and notes"
-        assert_field_contains("This is an important note. Take note.", "Important note")
+        click_on "Update important note"
+        within "#update-important-note" do
+          assert_field_contains("This is an important note. Take note.", "Important note")
+        end
       end
 
       should "not be carried forward to new editions" do
@@ -64,7 +71,10 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History and notes"
-        assert_field_contains("", "Important note")
+        click_on "Update important note"
+        within "#update-important-note" do
+          assert_field_contains("", "Important note")
+        end
       end
     end
   end
