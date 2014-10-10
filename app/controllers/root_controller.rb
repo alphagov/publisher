@@ -11,15 +11,8 @@ class RootController < ApplicationController
     user_filter           = params[:user_filter] || session[:user_filter]
     session[:user_filter] = user_filter
 
-    if params[:with]
-      raise "Cannot specify both 'with' and 'string_filter' parameters." if params[:string_filter]
-      raise "Cannot specify both 'with' and 'page' parameters." if params[:page]
-
-      @presenter, @user_filter, @list = build_with_focus(user_filter)
-    else
-      @list = params[:list].blank? ? 'drafts' : params[:list]
-      @presenter, @user_filter = build_without_focus(user_filter, params[:page])
-    end
+    @list = params[:list].blank? ? 'drafts' : params[:list]
+    @presenter, @user_filter = build_presenter(user_filter, params[:page])
 
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
@@ -41,36 +34,11 @@ private
     STATE_NAME_LISTS[state] || state
   end
 
-  def build_without_focus(user_filter, current_page = nil)
+  def build_presenter(user_filter, current_page = nil)
     user_filter, user = process_user_filter(user_filter)
     editions = Edition.order_by([sort_column, sort_direction])
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
     return PrimaryListingPresenter.new(editions, user), user_filter
-  end
-
-  def edition_of_interest
-    Edition.find(params[:with])
-  rescue Mongoid::Errors::DocumentNotFound, BSON::InvalidObjectId
-    raise ActionController::RoutingError.new('Not Found')
-  end
-
-  def build_with_focus(user_filter)
-    edition = edition_of_interest
-
-    if edition.assigned_to.nil? or edition.assigned_to.uid != user_filter
-      user_filter = "all"
-    end
-
-    user_filter, user = process_user_filter(user_filter)
-
-    editions = Edition.order_by([sort_column, sort_direction])
-
-    item_index = editions.send(edition.state).to_a.index { |e| e.id == edition.id }
-    current_page = (item_index / ITEMS_PER_PAGE) + 1
-    editions = editions.page(current_page).per(ITEMS_PER_PAGE)
-
-    list = list_parameter_from_state(edition.state)
-    return PrimaryListingPresenter.new(editions, user), user_filter, list
   end
 
   def process_user_filter(user_filter = nil)
