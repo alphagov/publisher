@@ -48,8 +48,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     message = 'Let us know what you think'
 
     send_for_generic_action(guide, button_text) do
-      fill_in "Comment", with: message
       fill_in "Email", with: email
+      fill_in "Customised message", with: message
       click_on "Send"
     end
   end
@@ -145,7 +145,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on "Fact check"
 
     within "#send_fact_check_form" do
-      fill_in "Comment",       with: "Blah"
+      fill_in "Customised message", with: "Blah"
       fill_in "Email address", with: "user@example.com"
       click_on "Send"
     end
