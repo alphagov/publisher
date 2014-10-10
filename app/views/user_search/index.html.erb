@@ -67,7 +67,7 @@
                 <%= publication.assignee %>
               </td>
               <td>
-                <%= link_to view_edition_path(publication) do %>
+                <%= link_to edition_path(publication.id) do %>
                   <i class="glyphicon glyphicon-chevron-right" title="View this publication in the publication list"></i>
                 <% end %>
               </td>

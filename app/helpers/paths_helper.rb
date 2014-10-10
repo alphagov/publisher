@@ -20,10 +20,6 @@ module PathsHelper
     "/editions/#{edition.to_param}"
   end
 
-  def view_edition_path(edition)
-    "/?with=#{edition.id}"
-  end
-
 protected
   def path_from_edition_class(edition)
     edition.format.underscore.pluralize
