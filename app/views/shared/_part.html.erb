@@ -28,8 +28,9 @@
           <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
 
           <% unless @resource.locked_for_edits? %>
-            <hr>
-            <%= f.link_to_remove "Remove this part" %>
+            <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
+              <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this part
+            <% end %>
           <% end %>
         <% end %>
     </div>

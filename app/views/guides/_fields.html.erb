@@ -22,7 +22,9 @@
       <% end %>
     </section>
 
-    <p><%= f.link_to_add "Add new part", :parts, :data => { :target => "#parts" } %></p>
+    <%= f.link_to_add :parts, :data => { :target => "#parts" }, :class => 'btn btn-default' do %>
+      <i class="glyphicon glyphicon-plus add-right-margin"></i>Add new part
+    <% end %>
 
   </div>
 
