@@ -12,6 +12,11 @@
         <%= f.inputs do %>
           <%= f.input :title,
                       :input_html => { :class => 'title', :disabled => @resource.locked_for_edits? },
+                      :hint => false,
+                      :required => true %>
+
+          <%= f.input :slug,
+                      :input_html => { :class => 'slug', :disabled => ! editable },
                       :hint => true,
                       :required => true %>
 
@@ -19,13 +24,6 @@
                       :as => :text,
                       :required => true,
                       :input_html => {:rows => '25', :disabled => @resource.locked_for_edits? } %>
-
-          <%= f.input :slug,
-                      :input_html => { :class => 'slug', :disabled => ! editable },
-                      :hint => false,
-                      :required => true %>
-
-          <p class="help-block"><i class="glyphicon glyphicon-info-sign"></i> Eg. title-of-part (no spaces, apostrophes, etc).</p>
 
           <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
 
