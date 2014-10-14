@@ -16,10 +16,10 @@ describe('A collapsible group module', function() {
     }
 
     element = $('<div>\
-      <a href="#" class="js-expand-all">Expand</a>\
-      <a href="#" class="js-collapse-all">Collapse</a>\
+      <a href="#" class="js-toggle-all">Toggle all</a>\
       <div class="collapse"></div>\
-      <div class="collapse in"></div>\
+      <div class="collapse"></div>\
+      <div class="collapse"></div>\
     </div>');
 
     $('body').append(element);
@@ -35,21 +35,35 @@ describe('A collapsible group module', function() {
     delete $.fn.collapse;
   });
 
-  describe('clicking expand all', function() {
-    it('expands all collapsible items' , function() {
-      var expand = element.find('.js-expand-all');
+  describe('when all items are closed', function() {
+    it('expands all items' , function() {
+      var toggle = element.find('.js-toggle-all');
 
-      expand.trigger('click');
-      expect(element.find('.collapse.in').length).toBe(2);
+      toggle.trigger('click');
+      expect(element.find('.collapse.in').length).toBe(3);
     });
   });
 
-  describe('clicking collapse all', function() {
-    it('collapses all collapsible items' , function() {
-      var expand = element.find('.js-collapse-all');
+  describe('when all items are open', function() {
+    it('collapses all items' , function() {
+      element.find('.collapse').addClass('in');
 
-      expand.trigger('click');
-      expect(element.find('.collapse').length).toBe(2);
+      var toggle = element.find('.js-toggle-all');
+
+      expect(element.find('.collapse.in').length).toBe(3);
+      toggle.trigger('click');
+      expect(element.find('.collapse.in').length).toBe(0);
+    });
+  });
+
+  describe('when at least one item is open', function() {
+    it('collapses all items' , function() {
+      element.find('.collapse').first().addClass('in');
+
+      var toggle = element.find('.js-toggle-all');
+
+      expect(element.find('.collapse.in').length).toBe(1);
+      toggle.trigger('click');
       expect(element.find('.collapse.in').length).toBe(0);
     });
   });

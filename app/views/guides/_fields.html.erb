@@ -10,11 +10,9 @@
   <div class="col-md-8" data-module="collapsible-group">
 
     <h3 class="remove-top-margin">Parts</h3>
-
-    <ul class="list-inline add-bottom-margin hide-if-no-js">
-      <li><a href="#" class="js-expand-all">Expand all parts</a></li>
-      <li><a href="#" class="js-collapse-all">Collapse all parts</a></li>
-    </ul>
+    <p class="add-bottom-margin if-no-js-hide">
+      <a href="#" class="js-toggle-all">Show/hide all parts</a>
+    </p>
 
     <section class="panel-group" id="parts">
       <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>

@@ -10,17 +10,17 @@
     var that = this;
 
     that.start = function(element) {
-      element.on('click', '.js-expand-all', expandAll);
-      element.on('click', '.js-collapse-all', collapseAll);
+      element.on('click', '.js-toggle-all', toggleAll);
 
-      function expandAll(event) {
-        element.find('.collapse').collapse('show');
+      function toggleAll(event) {
+        var action = hasOpenItems() ? 'hide' : 'show';
+
+        element.find('.collapse').collapse(action);
         event.preventDefault();
       }
 
-      function collapseAll(event) {
-        element.find('.collapse').collapse('hide');
-        event.preventDefault();
+      function hasOpenItems() {
+        return element.find('.collapse.in').length > 0;
       }
     }
   };
