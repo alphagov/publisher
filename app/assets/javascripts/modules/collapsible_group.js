@@ -2,7 +2,7 @@
   "use strict";
 
   /* Click a link to expand or collapse all Bootstrap 3
-     collapisibles within specified element
+     collapsibles within specified element
 
      http://getbootstrap.com/javascript/#collapse
   */
