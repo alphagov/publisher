@@ -38,15 +38,9 @@
       </div>
 
       <div id="publication-list-container" class="col-md-10">
-        <% if params[:with] %>
-        <%= render @list, with: params[:with] %>
-        <%= paginate @presenter.send(@list), params: {list: @list, with: nil, user_filter: @user_filter}, theme: 'twitter-bootstrap-3' %>
-        <% else %>
-        <%= render @list, with: nil %>
+        <%= render @list %>
         <%= paginate @presenter.send(@list), theme: 'twitter-bootstrap-3' %>
-        <% end %>
-
-      </div><!--./col-md-10 -->
+      </div>
 
     </div><!--./row -->
 

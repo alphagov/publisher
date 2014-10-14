@@ -35,7 +35,7 @@
               <th scope="col"><%= @user_forename %>&rsquo;s last action</th>
               <% end %>
               <th scope="col"><%= sortable "assignee", "Assigned to" %></th>
-              <th scope="col">View</th>
+              <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -67,8 +67,8 @@
                 <%= publication.assignee %>
               </td>
               <td>
-                <%= link_to view_edition_path(publication) do %>
-                  <i class="glyphicon glyphicon-chevron-right" title="View this publication in the publication list"></i>
+                <%= link_to edition_path(publication.id) do %>
+                  <i class="glyphicon glyphicon-edit" title="Edit this publication"></i>
                 <% end %>
               </td>
             </tr>
