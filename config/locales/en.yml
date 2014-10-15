@@ -6,7 +6,6 @@ en:
   formtastic:
     hints:
       guide:
-        slug: "Something along the lines of 'title-of-guide' (no spaces, apostrophes, etc)."
+        slug: "eg ‘title-of-part’ (no spaces, apostrophes, etc)"
       part:
-        slug: "Something along the lines of title-of-part (no spaces, apostrophes, etc)."
-        title: Enter text to rename this part
+        slug: "eg ‘title-of-part’ (no spaces, apostrophes, etc)"
