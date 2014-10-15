@@ -10,13 +10,15 @@ describe('A collapsible group module', function() {
     $.fn.collapse = function(str) {
       if (str === "show") {
         $(this).addClass('in');
+        element.trigger('shown.bs.collapse');
       } else if (str === "hide") {
         $(this).removeClass('in');
+        element.trigger('hidden.bs.collapse');
       }
     }
 
-    element = $('<div>\
-      <a href="#" class="js-toggle-all">Toggle all</a>\
+    element = $('<div data-expand-text="Expand" data-collapse-text="Collapse">\
+      <a href="#" class="js-toggle-all">Starting text</a>\
       <div class="collapse"></div>\
       <div class="collapse"></div>\
       <div class="collapse"></div>\
@@ -35,36 +37,59 @@ describe('A collapsible group module', function() {
     delete $.fn.collapse;
   });
 
-  describe('when all items are closed', function() {
+  describe('when all items are closed and the toggle is clicked', function() {
+    beforeEach(function() {
+      element.find('.js-toggle-all').trigger('click');
+    });
+
     it('expands all items' , function() {
-      var toggle = element.find('.js-toggle-all');
-
-      toggle.trigger('click');
       expect(element.find('.collapse.in').length).toBe(3);
+    });
+
+    it('then shows the collapse text' , function() {
+      expect(element.find('.js-toggle-all').text()).toBe('Collapse');
     });
   });
 
-  describe('when all items are open', function() {
-    it('collapses all items' , function() {
+  describe('when all items are open and the toggle is clicked', function() {
+    beforeEach(function() {
       element.find('.collapse').addClass('in');
-
-      var toggle = element.find('.js-toggle-all');
-
       expect(element.find('.collapse.in').length).toBe(3);
-      toggle.trigger('click');
-      expect(element.find('.collapse.in').length).toBe(0);
+      element.find('.js-toggle-all').trigger('click');
     });
-  });
 
-  describe('when at least one item is open', function() {
     it('collapses all items' , function() {
-      element.find('.collapse').first().addClass('in');
-
-      var toggle = element.find('.js-toggle-all');
-
-      expect(element.find('.collapse.in').length).toBe(1);
-      toggle.trigger('click');
       expect(element.find('.collapse.in').length).toBe(0);
     });
+
+    it('then shows the expand text' , function() {
+      expect(element.find('.js-toggle-all').text()).toBe('Expand');
+    });
   });
+
+  describe('when at least one item is open and the toggle is clicked', function() {
+    beforeEach(function() {
+      element.find('.collapse').first().addClass('in');
+      expect(element.find('.collapse.in').length).toBe(1);
+      element.find('.js-toggle-all').trigger('click');
+    });
+
+    it('collapses all items' , function() {
+      expect(element.find('.collapse.in').length).toBe(0);
+      expect(element.find('.js-toggle-all').text()).toBe('Expand');
+    });
+  });
+
+  describe('when a user manually collapses or expands items', function() {
+    it('updates the link text', function() {
+      element.find('.collapse').first().addClass('in');
+      element.trigger('shown.bs.collapse');
+      expect(element.find('.js-toggle-all').text()).toBe('Collapse');
+
+      element.find('.collapse').first().removeClass('in');
+      element.trigger('hidden.bs.collapse');
+      expect(element.find('.js-toggle-all').text()).toBe('Expand');
+    });
+  });
+
 });

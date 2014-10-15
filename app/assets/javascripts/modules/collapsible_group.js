@@ -10,7 +10,13 @@
     var that = this;
 
     that.start = function(element) {
+
+      var collapseText = element.data('collapse-text'),
+          expandText = element.data('expand-text'),
+          $links = element.find('.js-toggle-all');
+
       element.on('click', '.js-toggle-all', toggleAll);
+      element.on('shown.bs.collapse hidden.bs.collapse', updateLinkText);
 
       function toggleAll(event) {
         var action = hasOpenItems() ? 'hide' : 'show';
@@ -22,6 +28,11 @@
       function hasOpenItems() {
         return element.find('.collapse.in').length > 0;
       }
+
+      function updateLinkText() {
+        $links.text(hasOpenItems() ? collapseText : expandText);
+      }
+
     }
   };
 
