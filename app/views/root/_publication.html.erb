@@ -28,16 +28,22 @@
     <% end %>
   </td>
   <td>
-    <%= timestamp(publication.updated_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_s(:govuk_date) %>">
+      <%= publication.updated_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% if tab && tab == :fact_check %>
   <td>
-    <%= timestamp(publication.last_fact_checked_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.last_fact_checked_at %>" title="<%= publication.last_fact_checked_at.to_s(:govuk_date) %>">
+      <%= publication.last_fact_checked_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% end %>
   <% if tab && tab == :scheduled_for_publishing %>
   <td>
-    <%= timestamp(publication.publish_at) %>
+    <time class="publication-table-date" datetime="<%= publication.publish_at %>">
+      <%= publication.publish_at.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% end %>
   <td>

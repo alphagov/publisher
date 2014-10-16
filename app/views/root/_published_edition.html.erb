@@ -23,7 +23,9 @@
     <% end %>
   </td>
   <td>
-    <%= timestamp(publication.updated_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_s(:govuk_date) %>">
+      <%= publication.updated_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <td>
     <%= publication.assignee %>
