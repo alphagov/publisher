@@ -3,7 +3,7 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td class="title">
-    <%= publication.admin_list_title %>
+    <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
 
     <% if tab && (tab == :published || tab == :archived) %>
       (Ed.<%= publication.version_number %>)
