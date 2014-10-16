@@ -9,9 +9,9 @@
 
     <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
 
-    &mdash; Ed. <%= publication.version_number %>
+    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
     <% unless publication.can_create_new_edition? %>
-      (<%= link_to "Ed. #{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling) %>)
+      <span class="text-muted"> – <%= link_to "##{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling), class: 'link-inherit' %></span>
     <% end %>
 
     <% if publication.has_video? %>

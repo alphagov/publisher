@@ -13,13 +13,10 @@
       <span class="text-muted"><%= publication.slug %></span>
     <% end %>
 
-    <% if tab && (tab == :published || tab == :archived) %>
-      (Ed.<%= publication.version_number %>)
-      <% if publication.subsequent_siblings.first.present? %>
-        (Ed.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
-      <% end%>
-    <% else %>
-      (Ed. <%= publication.version_number %>)
+    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <% if tab && (tab == :published || tab == :archived) && publication.subsequent_siblings.first.present? %>
+      <span class="text-muted"> – #<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>
+      </span>
     <% end %>
 
     <% if publication.has_video? %>
