@@ -3,7 +3,9 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td class="title">
-    <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %><br />
+    <h4 class="publication-table-title">
+      <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
+    </h4>
 
     <% if publication.safe_to_preview? %>
       <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: 'link-muted' %>

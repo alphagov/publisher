@@ -3,25 +3,24 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td>
-    <p>
+    <h4 class="publication-table-title">
+      <%= link_to publication.admin_list_title, "/editions/#{publication.id}", title: "Locked view for this publication" %>
+    </h4>
 
-      <%= link_to publication.admin_list_title, "/editions/#{publication.id}", title: "Locked view for this publication" %><br />
+    <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
 
-      <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
+    &mdash; Ed. <%= publication.version_number %>
+    <% unless publication.can_create_new_edition? %>
+      (<%= link_to "Ed. #{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling) %>)
+    <% end %>
 
-      &mdash; Ed. <%= publication.version_number %>
-      <% unless publication.can_create_new_edition? %>
-        (<%= link_to "Ed. #{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling) %>)
-      <% end %>
+    <% if publication.has_video? %>
+      <i class="glyphicon glyphicon-film" alt="Has video"></i>
+    <% end %>
 
-      <% if publication.has_video? %>
-        <i class="glyphicon glyphicon-film" alt="Has video"></i>
-      <% end %>
-
-      <% if publication.in_beta? %>
-        <span class="badge badge-beta">beta</span>
-      <% end %>
-    </p>
+    <% if publication.in_beta? %>
+      <span class="badge badge-beta">beta</span>
+    <% end %>
   </td>
   <td>
     <%= timestamp(publication.updated_at) %>
