@@ -36,27 +36,11 @@
   <td>
     <%= publication.publisher %>
   </td>
-  <td class="icon">
-    <%= link_to publication_front_end_path(publication) do %>
-      <i class="glyphicon glyphicon-share-alt" title="View this publication"></i>
-    <% end %>
-  </td>
-  <td class="icon">
-    <%#edition_path(publication) %>
-    <%= link_to "/editions/#{publication.id}" do %>
-      <i class="glyphicon glyphicon-lock" title="Locked view for this publication"></i>
-    <% end %>
-  </td>
-  <td class="duplicate icon">
+  <td>
     <% if publication.can_create_new_edition? %>
-      <%= link_to 'Create new edition of this publication', duplicate_edition_path(publication), class: 'btn btn-default btn-sm', method: :post %>
+      <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
     <% else %>
-      <%= link_to 'Edit existing newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => ""} %>
-    <% end %>
-  </td>
-  <td class="icon">
-    <%= link_to preview_edition_path(publication) do %>
-      <i class="glyphicon glyphicon-eye-open" title="Preview this publication"></i>
+      <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
     <% end %>
   </td>
 </tr>

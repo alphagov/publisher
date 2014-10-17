@@ -286,7 +286,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition, state: 'published')
     filter_for "All"
     view_filtered_list "Published"
-    click_on "Create new edition of this publication"
+    click_on "Create new edition"
     assert page.has_content? "New edition created"
   end
 
@@ -316,13 +316,13 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     filter_for "All"
     view_filtered_list "Published"
 
-    # Simulate that someone has clicked on 'Create new edition of this publication'
+    # Simulate that someone has clicked on 'Create new edition'
     # while current user has been viewing the list of published editions
     new_edition = guide.build_clone(GuideEdition)
     new_edition.save
 
     # Current user now decides to click the button
-    click_on "Create new edition of this publication"
+    click_on "Create new edition"
 
     assert page.has_content?("Another person has created a newer edition")
     assert page.has_content?("Status: Published")
