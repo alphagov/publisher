@@ -1,4 +1,5 @@
 require "edition"
+require "registerable_edition"
 require 'gds_api/panopticon'
 
 class Edition
