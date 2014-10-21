@@ -14,7 +14,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
-    stub_browse_pages
+    stub_collections
   end
 
   test "creating a local transaction sends the right emails" do

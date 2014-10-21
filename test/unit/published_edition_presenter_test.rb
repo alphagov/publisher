@@ -4,7 +4,9 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
   context ".render_for_publishing_api" do
     should "create an attributes hash for the publishing api" do
       edition = FactoryGirl.create(:edition, :published,
-        browse_pages: ["tax/vat", "tax/capital-gains"]
+        browse_pages: ["tax/vat", "tax/capital-gains"],
+        primary_topic: "oil-and-gas/wells",
+        additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"]
       )
 
       presenter = PublishedEditionPresenter.new(edition)
@@ -25,7 +27,9 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
           change_note: "",
           tags: {
             browse_pages: ["tax/vat", "tax/capital-gains"],
-            topics: [],
+            primary_topic: ["oil-and-gas/wells"],
+            additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"],
+            topics: ["oil-and-gas/wells", "oil-and-gas/fields", "oil-and-gas/distillation"],
           }
         }
       }

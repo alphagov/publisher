@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class ChangeEditionTypeTest < JavascriptIntegrationTest
   setup do
     panopticon_has_metadata("id" => "2356")
-    stub_browse_pages
+    stub_collections
     %w(Alice Bob Charlie).each do |name|
       FactoryGirl.create(:user, name: name)
     end
