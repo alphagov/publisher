@@ -11,6 +11,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     )
 
     setup_users
+    stub_browse_pages
   end
 
   context "creating a new edition" do

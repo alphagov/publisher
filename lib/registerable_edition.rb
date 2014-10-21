@@ -36,4 +36,8 @@ class RegisterableEdition
       ["/#{@edition.slug}"]
     end
   end
+
+  def sections
+    @edition.browse_pages
+  end
 end

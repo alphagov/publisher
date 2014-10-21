@@ -10,4 +10,20 @@ module EditionsHelper
     semantic_bootstrap_nested_form_for @resource, :as => :edition, :url => edition_path(@resource),
       :html => { :id => 'edition-form' }, &form_definition
   end
+
+  def browse_options_for_select(grouped_collections)
+    grouped_collections.map do |parent_title, collections|
+      collections = collections.map do |collection|
+        if collection.draft?
+          collection_title = "#{collection.title} (draft)"
+        else
+          collection_title = collection.title
+        end
+
+        ["#{parent_title}: #{collection_title}", collection.slug]
+      end
+
+      [parent_title, collections]
+    end
+  end
 end

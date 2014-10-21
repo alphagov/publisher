@@ -49,6 +49,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     stub_mapit_areas_requests(IMMINENCE_API_ENDPOINT)
 
     setup_users
+    stub_browse_pages
   end
 
   should "create a new BusinessSupportEdition" do
@@ -115,7 +116,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_end_date_2i", :selected => a_year_since.strftime("%B"))
     assert page.has_select?("edition_end_date_3i", :selected => a_year_since.day.to_s)
 
-    within(".select2-choices") do
+    within(".related-areas") do
       assert page.has_content?("London")
     end
 
@@ -143,8 +144,8 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     select "Normal", :from => "edition_priority"
     select Date.today.year.to_s, :from => "edition_start_date_1i"
 
-    select2 "Hackney Borough Council", "#s2id_autogen1"
-    select2 "Camden Borough Council", "#s2id_autogen1"
+    select2 "Hackney Borough Council", ".related-areas"
+    select2 "Camden Borough Council", ".related-areas"
 
     # circumvent poltergeist not handling bootstrap modals
     # by directly triggering our expected change
@@ -176,7 +177,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
     assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
 
-    within(".select2-choices") do
+    within(".related-areas") do
       assert page.has_content?("London Hackney Borough Council Camden Borough Council")
     end
 

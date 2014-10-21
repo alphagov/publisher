@@ -3,6 +3,7 @@ require 'integration_test_helper'
 class ProgrammeEditionsTest < JavascriptIntegrationTest
   def setup
     setup_users
+    stub_browse_pages
   end
 
   test "should have editable part titles" do

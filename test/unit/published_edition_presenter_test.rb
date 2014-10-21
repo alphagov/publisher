@@ -3,7 +3,9 @@ require "test_helper"
 class PublishedEditionPresenterTest < ActiveSupport::TestCase
   context ".render_for_publishing_api" do
     should "create an attributes hash for the publishing api" do
-      edition = FactoryGirl.create(:edition, :published)
+      edition = FactoryGirl.create(:edition, :published,
+        browse_pages: ["tax/vat", "tax/capital-gains"]
+      )
 
       presenter = PublishedEditionPresenter.new(edition)
 
@@ -21,8 +23,8 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         update_type: "major",
         details: {
           change_note: "",
-          tags: { # Coming soon
-            browse_pages: [],
+          tags: {
+            browse_pages: ["tax/vat", "tax/capital-gains"],
             topics: [],
           }
         }
