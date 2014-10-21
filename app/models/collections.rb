@@ -6,6 +6,11 @@ class Collections
     group_collections_by_parent(collections)
   end
 
+  def self.grouped_topics
+    collections = make_collections_from_tags(topic_tags)
+    group_collections_by_parent(collections)
+  end
+
 private
 
   def self.group_collections_by_parent(collections)
@@ -25,6 +30,10 @@ private
 
   def self.mainstream_browse_page_tags
     content_api.tags("section", draft: true)
+  end
+
+  def self.topic_tags
+    content_api.tags("specialist_sector", draft: true)
   end
 
   def self.content_api

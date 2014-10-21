@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class EditionHistoryTest < JavascriptIntegrationTest
   setup do
     setup_users
-    stub_browse_pages
+    stub_collections
   end
 
   context "viewing the history and notes tab" do

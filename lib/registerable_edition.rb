@@ -40,4 +40,8 @@ class RegisterableEdition
   def sections
     @edition.browse_pages
   end
+
+  def specialist_sectors
+    [@edition.primary_topic] + @edition.additional_topics
+  end
 end

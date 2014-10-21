@@ -40,4 +40,23 @@
                       class: 'select2',
                       data: { placeholder: 'Choose mainstream browse pages…' } } %>
   </div>
+
+  <div class="col-md-7 form-group">
+    <%= f.label :primary_topic %>
+    <%= f.select :primary_topic,
+                    browse_options_for_select(Collections.grouped_topics),
+                    { include_blank: true },
+                    { class: 'select2',
+                      data: { placeholder: 'Choose primary topic…' } } %>
+  </div>
+
+  <div class="col-md-7 form-group">
+    <%= f.label :additional_topics %>
+    <%= f.select :additional_topics,
+                    browse_options_for_select(Collections.grouped_topics),
+                    {},
+                    { multiple: true,
+                      class: 'select2',
+                      data: { placeholder: 'Choose additional topics…' } } %>
+  </div>
 </div>

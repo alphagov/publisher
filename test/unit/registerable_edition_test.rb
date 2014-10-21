@@ -68,6 +68,17 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
   end
 
+  context "specialist_sectors" do
+    should "return the combined topics" do
+      @edition.update_attributes(
+        primary_topic: "oil-and-gas/wells",
+        additional_topics: ["oil-and-gas/licensing", "oil-and-gas/fields"]
+      )
+      registerable = RegisterableEdition.new(@edition)
+      assert_equal ["oil-and-gas/wells", "oil-and-gas/licensing", "oil-and-gas/fields"], registerable.specialist_sectors
+    end
+  end
+
   context "paths and prefixes" do
     context "for a CampaignEdition" do
       should "generate /slug and /slug.json path" do

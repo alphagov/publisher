@@ -154,7 +154,11 @@ class EditionsController < InheritedResources::Base
     end
 
     def remove_blank_collections
-      [:browse_pages].each do |collection_name|
+      [:primary_topic].each do |collection_name|
+        params[:edition][collection_name] = nil if params[:edition][collection_name].blank?
+      end
+
+      [:browse_pages, :additional_topics].each do |collection_name|
         if params[:edition].has_key?(collection_name)
           params[:edition][collection_name] = params[:edition][collection_name].reject(&:blank?)
         end
