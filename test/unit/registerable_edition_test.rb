@@ -58,6 +58,16 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
   end
 
+  context "sections" do
+    should "return the browse pages" do
+      @edition.update_attributes(
+        browse_pages: ["tax/vat", "tax/capital-gains"]
+      )
+      registerable = RegisterableEdition.new(@edition)
+      assert_equal ["tax/vat", "tax/capital-gains"], registerable.sections
+    end
+  end
+
   context "paths and prefixes" do
     context "for a CampaignEdition" do
       should "generate /slug and /slug.json path" do

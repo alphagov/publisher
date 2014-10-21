@@ -30,4 +30,14 @@
           :hint => 'Some search engines will display this if they can&rsquo;t find what they need in the main text',
           :input_html => { :rows => 3, :disabled => @resource.locked_for_edits? } %>
   </div>
+
+  <div class="col-md-7 form-group">
+    <%= f.label :browse_pages %>
+    <%= f.select :browse_pages,
+                    browse_options_for_select(Collections.grouped_mainstream_browse_pages),
+                    {},
+                    { multiple: true,
+                      class: 'select2',
+                      data: { placeholder: 'Choose mainstream browse pages…' } } %>
+  </div>
 </div>

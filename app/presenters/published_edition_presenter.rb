@@ -20,8 +20,8 @@ class PublishedEditionPresenter
       update_type: "major",
       details: {
         change_note: "",
-        tags: { # Coming soon
-          browse_pages: [],
+        tags: {
+          browse_pages: @edition.browse_pages,
           topics: [],
         }
       }

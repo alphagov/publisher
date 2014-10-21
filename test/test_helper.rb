@@ -8,9 +8,11 @@ require 'minitest/unit'
 require 'mocha/setup'
 require 'database_cleaner'
 require 'webmock/test_unit'
+require 'webmock/minitest'
 require 'gds_api/test_helpers/panopticon'
 require 'gds_api/test_helpers/publishing_api'
 require 'govuk_content_models/test_helpers/factories'
+require 'support/tag_test_helpers'
 
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
@@ -60,4 +62,5 @@ class ActiveSupport::TestCase
 
   include GdsApi::TestHelpers::Panopticon
   include GdsApi::TestHelpers::PublishingApi
+  include TagTestHelpers
 end

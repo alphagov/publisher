@@ -3,6 +3,7 @@ require 'integration_test_helper'
 class MarkEditionInBetaTest < JavascriptIntegrationTest
   setup do
     setup_users
+    stub_browse_pages
   end
 
   should "allow marking an edition as in beta" do

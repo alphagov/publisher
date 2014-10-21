@@ -1,9 +1,12 @@
 require 'integration_test_helper'
 
 class AddingPartsToGuidesTest < JavascriptIntegrationTest
-  test "Publishing a guide" do
+  setup do
     setup_users
+    stub_browse_pages
+  end
 
+  test "Publishing a guide" do
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 
     guide = FactoryGirl.create(:guide_edition, :title => random_name, :slug => 'test-guide')
@@ -49,8 +52,6 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
   end
 
   test "slug for parts should be automatically generated" do
-    setup_users
-
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 
     guide = FactoryGirl.create(:guide_edition, :title => random_name, :slug => 'test-guide')

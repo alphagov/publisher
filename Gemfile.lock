@@ -90,7 +90,7 @@ GEM
       actionpack (>= 3.0)
     formtastic-bootstrap (3.0.0)
       formtastic (>= 2.2)
-    gds-api-adapters (14.10.0)
+    gds-api-adapters (15.1.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -337,7 +337,7 @@ DEPENDENCIES
   faker (= 1.1.2)
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
-  gds-api-adapters (= 14.10.0)
+  gds-api-adapters (= 15.1.0)
   gds-sso (= 9.3.0)
   govspeak (~> 3.1.0)
   govuk_admin_template (= 1.1.7)

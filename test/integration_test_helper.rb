@@ -95,14 +95,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     guide.reload
   end
 
-  def select2(value, element_selector)
-    select2_container = first("#{element_selector}")
+  def select2(value, scope)
+    select2_container = first("#{scope} .select2-container")
     select2_container.first(".select2-search-choice").click
 
-    find(:xpath, "//body").find("input.select2-input").set(value)
-    page.execute_script(%|$("input.select2-input:visible").keyup();|)
-    drop_container = ".select2-results"
-    find(:xpath, "//body").find("#{drop_container} li", text: value).click
+    select2_container.first("input.select2-input").set(value)
+    page.execute_script(%|$("#{scope} input.select2-input:visible").keyup();|)
+    find(:xpath, "//body").find(".select2-results li", text: value).click
   end
 
   def save_edition

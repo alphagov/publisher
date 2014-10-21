@@ -11,6 +11,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
+    stub_browse_pages
   end
 
   should "create a new CompletedTransactionEdition" do
