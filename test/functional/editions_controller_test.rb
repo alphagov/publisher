@@ -176,7 +176,7 @@ class EditionsControllerTest < ActionController::TestCase
   test "should squash multiparameter attributes" do
     EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
 
-    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4", 
+    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4",
                           "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
 
     post :progress, {
