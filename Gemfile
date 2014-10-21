@@ -88,4 +88,5 @@ end
 
 group :development, :test do
   gem 'jasmine', '2.0.2'
+  gem 'debugger'
 end
