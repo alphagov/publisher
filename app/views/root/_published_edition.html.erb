@@ -3,28 +3,29 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td>
-    <p>
-      <%= publication.admin_list_title %>
+    <h4 class="publication-table-title">
+      <%= link_to publication.admin_list_title, "/editions/#{publication.id}", title: "Locked view for this publication" %>
+    </h4>
 
-      &mdash; Ed. <%= publication.version_number %>
-      <% unless publication.can_create_new_edition? %>
-      (Ed. <%= publication.sibling_in_progress %> in draft)
-      <% end %>
+    <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
 
-      <% if publication.has_video? %>
-        <i class="glyphicon glyphicon-film" alt="Has video"></i>
-      <% end %>
+    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <% unless publication.can_create_new_edition? %>
+      <span class="text-muted"> – <%= link_to "##{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling), class: 'link-inherit' %></span>
+    <% end %>
 
-      <% if publication.in_beta? %>
-        <span class="badge badge-beta">beta</span>
-      <% end %>
-    </p>
+    <% if publication.has_video? %>
+      <i class="glyphicon glyphicon-film" alt="Has video"></i>
+    <% end %>
+
+    <% if publication.in_beta? %>
+      <span class="badge badge-beta">beta</span>
+    <% end %>
   </td>
   <td>
-    <%= publication.slug %>
-  </td>
-  <td>
-    <%= timestamp(publication.updated_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_s(:govuk_date) %>">
+      <%= publication.updated_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <td>
     <%= publication.assignee %>
@@ -33,32 +34,13 @@
     <%= publication.creator %>
   </td>
   <td>
-    <%= publication.artefact.section %>
-  </td>
-  <td>
     <%= publication.publisher %>
   </td>
-  <td class="icon">
-    <%= link_to publication_front_end_path(publication) do %>
-      <i class="glyphicon glyphicon-share-alt" title="View this publication"></i>
-    <% end %>
-  </td>
-  <td class="icon">
-    <%#edition_path(publication) %>
-    <%= link_to "/editions/#{publication.id}" do %>
-      <i class="glyphicon glyphicon-lock" title="Locked view for this publication"></i>
-    <% end %>
-  </td>
-  <td class="duplicate icon">
+  <td>
     <% if publication.can_create_new_edition? %>
-      <%= link_to 'Create new edition of this publication', duplicate_edition_path(publication), class: 'btn btn-default btn-sm', method: :post %>
+      <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
     <% else %>
-      <%= link_to 'Edit existing newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => ""} %>
-    <% end %>
-  </td>
-  <td class="icon">
-    <%= link_to preview_edition_path(publication) do %>
-      <i class="glyphicon glyphicon-eye-open" title="Preview this publication"></i>
+      <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
     <% end %>
   </td>
 </tr>

@@ -43,7 +43,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     edition.reload
     assert page.has_content? edition.title
-    assert page.has_content? edition.publish_at.strftime('%d/%m/%Y %H:%M')
+    assert page.has_content? edition.publish_at.to_s(:govuk_date_short)
   end
 
   test "should allow a scheduled edition to be published now" do

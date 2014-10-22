@@ -3,15 +3,20 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td class="title">
-    <%= publication.admin_list_title %>
+    <h4 class="publication-table-title">
+      <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
+    </h4>
 
-    <% if tab && (tab == :published || tab == :archived) %>
-      (Ed.<%= publication.version_number %>)
-      <% if publication.subsequent_siblings.first.present? %>
-        (Ed.<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>)
-      <% end%>
+    <% if publication.safe_to_preview? %>
+      <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: 'link-muted' %>
     <% else %>
-      (Ed. <%= publication.version_number %>)
+      <span class="text-muted"><%= publication.slug %></span>
+    <% end %>
+
+    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <% if tab && (tab == :published || tab == :archived) && publication.subsequent_siblings.first.present? %>
+      <span class="text-muted"> – #<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>
+      </span>
     <% end %>
 
     <% if publication.has_video? %>
@@ -23,65 +28,40 @@
     <% end %>
   </td>
   <td>
-    <%= publication.slug %>
-  </td>
-  <td>
-    <%= timestamp(publication.updated_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_s(:govuk_date) %>">
+      <%= publication.updated_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% if tab && tab == :fact_check %>
   <td>
-    <%= timestamp(publication.last_fact_checked_at) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.last_fact_checked_at %>" title="<%= publication.last_fact_checked_at.to_s(:govuk_date) %>">
+      <%= publication.last_fact_checked_at.to_date.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% end %>
   <% if tab && tab == :scheduled_for_publishing %>
   <td>
-    <%= timestamp(publication.publish_at) %>
+    <time class="publication-table-date" datetime="<%= publication.publish_at %>">
+      <%= publication.publish_at.to_s(:govuk_date_short) %>
+    </time>
   </td>
   <% end %>
   <td>
     <%= publication.assignee %>
   </td>
-    <td>
-      <%= publication.creator %>
-    </td>
-    <td>
-      <%= publication.artefact.section %>
-    </td>
-    <% if tab && tab == :archived %>
+  <td>
+    <%= publication.creator %>
+  </td>
+  <% if tab && tab == :archived %>
     <td>
       <%= publication.archiver %>
     </td>
-    <td class="icon">
-      <%= link_to publication_front_end_path(publication) do %>
-        <i class="glyphicon glyphicon-share-alt" title="View this publication"></i>
+    <td>
+      <% if publication.can_create_new_edition? %>
+        <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
+      <% else %>
+        <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
       <% end %>
     </td>
-    <% end %>
-    <% if tab && [:archived, :scheduled_for_publishing].include?(tab) %>
-    <td class="icon">
-      <%= link_to edition_path(publication) do %>
-        <i class="glyphicon glyphicon-lock" title="Locked view for this publication"></i>
-      <% end %>
-    </td>
-    <% end %>
-  <% if tab && tab != :scheduled_for_publishing %>
-  <td class="icon">
-    <% if tab and tab == :archived and publication.can_create_new_edition? %>
-      <%= link_to 'Create new edition of this publication', duplicate_edition_path(publication), class: 'btn btn-default btn-sm', method: :post %>
-    <% else %>
-      <%= link_to edition_path(publication) do %>
-        <i class="glyphicon glyphicon-edit" title="Edit this publication"></i>
-      <% end %>
-    <% end %>
-  </td>
   <% end %>
-  <td class="icon">
-    <% if publication.safe_to_preview? %>
-      <%= link_to preview_edition_path(publication), {:class => 'preview'} do %>
-        <i class="glyphicon glyphicon-eye-open" title="Preview this publication"></i>
-      <% end %>
-    <% else %>
-      <i class="glyphicon glyphicon-ban-circle" title="Preview disabled for this publication"></i>
-    <% end %>
-  </td>
 </tr>
