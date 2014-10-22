@@ -31,8 +31,12 @@
           :input_html => { :rows => 3, :disabled => @resource.locked_for_edits? } %>
   </div>
 
-  <div class="col-md-7 form-group">
+  <div class="col-md-8 form-group">
     <%= f.label :browse_pages %>
+    <p class="help-block">
+      The first section will be the primary section the content lives in.
+      This will form the content breadcrumb.
+    </p>
     <%= f.select :browse_pages,
                     browse_options_for_select(Collections.grouped_mainstream_browse_pages),
                     {},
@@ -41,7 +45,7 @@
                       data: { placeholder: 'Choose mainstream browse pages…' } } %>
   </div>
 
-  <div class="col-md-7 form-group">
+  <div class="col-md-8 form-group">
     <%= f.label :primary_topic %>
     <%= f.select :primary_topic,
                     browse_options_for_select(Collections.grouped_topics),
@@ -50,7 +54,7 @@
                       data: { placeholder: 'Choose primary topic…' } } %>
   </div>
 
-  <div class="col-md-7 form-group">
+  <div class="col-md-8 form-group">
     <%= f.label :additional_topics %>
     <%= f.select :additional_topics,
                     browse_options_for_select(Collections.grouped_topics),
