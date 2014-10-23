@@ -1,33 +1,34 @@
 <hr />
-<div class="row form-group">
-  <div class="col-md-8">
+<div class="row">
+  <div class="col-md-7">
     <h3 class="remove-top-margin">Tags</h3>
 
-    <%= f.label :browse_pages %>
-    <p class="text-muted add-label-margin">
-      The first section will be the primary section the content lives in.
-      This will form the content breadcrumb.
-    </p>
-    <%= f.select :browse_pages,
-                    browse_options_for_select(Collections.grouped_mainstream_browse_pages),
-                    {},
-                    { multiple: true,
-                      class: 'select2',
-                      data: { placeholder: 'Choose mainstream browse pages…' } } %>
-
-    <%= f.label :primary_topic %>
-    <%= f.select :primary_topic,
-                    browse_options_for_select(Collections.grouped_topics),
-                    { include_blank: true },
-                    { class: 'select2',
-                      data: { placeholder: 'Choose primary topic…' } } %>
-
-    <%= f.label :additional_topics %>
-    <%= f.select :additional_topics,
-                    browse_options_for_select(Collections.grouped_topics),
-                    {},
-                    { multiple: true,
-                      class: 'select2',
-                      data: { placeholder: 'Choose additional topics…' } } %>
+    <div class="form-group">
+      <%= f.label :browse_pages, class: 'remove-bottom-margin' %>
+      <p class="help-block">The first section will form the content’s breadcrumb</p>
+      <%= f.select :browse_pages,
+                      browse_options_for_select(Collections.grouped_mainstream_browse_pages),
+                      {},
+                      { multiple: true,
+                        class: 'select2',
+                        data: { placeholder: 'Choose mainstream browse pages…' } } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :primary_topic %>
+      <%= f.select :primary_topic,
+                      browse_options_for_select(Collections.grouped_topics),
+                      { include_blank: true },
+                      { class: 'select2',
+                        data: { placeholder: 'Choose primary topic…' } } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :additional_topics %>
+      <%= f.select :additional_topics,
+                      browse_options_for_select(Collections.grouped_topics),
+                      {},
+                      { multiple: true,
+                        class: 'select2',
+                        data: { placeholder: 'Choose additional topics…' } } %>
+    </div>
   </div>
 </div>
