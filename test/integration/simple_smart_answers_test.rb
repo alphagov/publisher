@@ -37,7 +37,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "allow additional nodes to be added" do
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
       assert page.has_css?(".nodes .node", count: 2)
       assert page.has_css?(".nodes .question", count: 2)
       assert page.has_no_css?(".nodes .outcome")
@@ -48,7 +48,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert page.has_selector?("textarea.node-body")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       assert page.has_css?(".nodes .node", count: 3)
       assert page.has_css?(".nodes .question", count: 2)
       assert page.has_css?(".nodes .outcome", count: 1)
@@ -61,8 +61,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "add a question after other questions and before outcomes" do
-      click_on "Add outcome"
-      click_on "Add question"
+      find('a', text: 'Add outcome').trigger('click')
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
         assert_equal "question-2", find(:css, 'input.node-slug', :visible => false).value
@@ -75,8 +75,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         click_link "Remove node"
       end
 
-      click_on "Add outcome"
-      click_on "Add question"
+      find('a', text: 'Add outcome').trigger('click')
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(1)" do
         assert_equal "question-2", find(:css, 'input.node-slug', :visible => false).value
@@ -85,7 +85,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "reorder questions when a question is added" do
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
         assert_equal "2", find(:css, 'input.node-order', :visible => false).value
@@ -95,7 +95,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         click_link "Remove node"
       end
 
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
         assert_equal "1", find(:css, 'input.node-order', :visible => false).value
@@ -107,8 +107,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "reorder outcomes after a question is added" do
-      click_on "Add outcome"
-      click_on "Add question"
+      find('a', text: 'Add outcome').trigger('click')
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .outcome:nth-child(3)" do
         assert_equal "3", find(:css, 'input.node-order', :visible => false).value
@@ -120,20 +120,20 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         click_link "Remove node"
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome:nth-child(2)" do
         assert_equal "1", find(:css, 'input.node-order', :visible => false).value
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome:nth-child(3)" do
         assert_equal "2", find(:css, 'input.node-order', :visible => false).value
       end
 
-      click_on "Add question"
-      click_on "Add outcome"
+      find('a', text: 'Add question').trigger('click')
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome:nth-child(5)" do
         assert_equal "4", find(:css, 'input.node-order', :visible => false).value
@@ -141,21 +141,21 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "set the slug and kind for a node" do
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
         assert_equal "question-2", find(:css, 'input.node-slug', :visible => false).value
         assert_equal "question", find(:css, 'input.node-kind', :visible => false).value
       end
 
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(3)" do
         assert_equal "question-3", find(:css, 'input.node-slug', :visible => false).value
         assert_equal "question", find(:css, 'input.node-kind', :visible => false).value
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome:nth-child(4)" do
         assert_equal "outcome-1", find(:css, 'input.node-slug', :visible => false).value
@@ -164,7 +164,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "not show options for a outcome" do
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome" do
         assert page.has_no_selector?(".options")
@@ -174,7 +174,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "build an initial option for a question" do
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
         assert page.has_selector?(".options")
@@ -183,10 +183,10 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "allow additional options to be added for a question" do
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes .question:nth-child(2)" do
-        click_on "Add an option"
+        find('a', text: 'Add an option').trigger('click')
 
         assert page.has_selector?(".options")
         assert page.has_css?(".options .option", count: 2)
@@ -194,8 +194,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "show a list of subsequent nodes in the select box" do
-      click_on "Add question"
-      click_on "Add outcome"
+      find('a', text: 'Add question').trigger('click')
+      find('a', text: 'Add outcome').trigger('click')
 
       find(:css, ".nodes .question:nth-child(2) input.node-title").set("Label for Question Two")
       find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")
@@ -210,7 +210,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "set the next node id from the select box" do
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")
 
       within ".nodes .question:first-child .option:first-child" do
@@ -228,23 +228,23 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         find(:css, "textarea.node-body").set("The type of driving licence you hold determines what vehicles you can drive.")
       end
 
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
       within ".nodes .question:nth-child(2)" do
         find(:css, "input.node-title").set("When did you get your licence?")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       within ".nodes .outcome:nth-child(3)" do
         find(:css, "input.node-title").set("You can only drive a car with an accompanying adult.")
         find(:css, "textarea.node-body").set("The adult must be over 21 years of age. You can't drive on the motorway.")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       within ".nodes .outcome:nth-child(4)" do
         find(:css, "input.node-title").set("You can drive all the things.")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       within ".nodes .outcome:nth-child(5)" do
         find(:css, "input.node-title").set("You can drive some of the things.")
       end
@@ -256,7 +256,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Question 2 (When did you get your licence?)", :from => "next-node-list"
         end
 
-        click_on "Add an option"
+        find('a', text: 'Add an option').trigger('click')
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("Provisional licence")
@@ -271,7 +271,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Outcome 2 (You can drive all the things.)", :from => "next-node-list"
         end
 
-        click_on "Add an option"
+        find('a', text: 'Add an option').trigger('click')
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("A long time ago")
@@ -297,17 +297,17 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         find(:css, "input.node-title").set("Do you hold a UK driving licence?")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       within ".nodes .outcome:nth-child(2)" do
         find(:css, "input.node-title").set("You can't drive")
       end
 
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
       within ".nodes .question:nth-child(2)" do
         find(:css, "input.node-title").set("When did you get your licence?")
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
       within ".nodes .outcome:nth-child(4)" do
         find(:css, "input.node-title").set("You can drive")
       end
@@ -318,7 +318,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Select a node..", :from => "next-node-list"
         end
 
-        click_on "Add an option"
+        find('a', text: 'Add an option').trigger('click')
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("No")
@@ -461,7 +461,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_css?(".nodes .question", count: 1)
       assert page.has_css?(".nodes .outcome", count: 2)
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes .outcome:nth-child(4)" do
         assert_equal "outcome-4", find(:css, 'input.node-slug', :visible => false).value
@@ -478,13 +478,13 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert_equal "3", find(:css, '.node:nth-child(3) .node-order', :visible => false).value
       end
 
-      click_on "Add outcome"
+      find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes" do
         assert_equal "4", find(:css, '.node:nth-child(4) .node-order', :visible => false).value
       end
 
-      click_on "Add question"
+      find('a', text: 'Add question').trigger('click')
 
       within ".nodes" do
         assert_equal "5", find(:css, '.node:nth-child(5) .node-order', :visible => false).value
