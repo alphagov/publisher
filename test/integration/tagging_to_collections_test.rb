@@ -11,8 +11,8 @@ class TaggingToCollectionsTest < JavascriptIntegrationTest
 
     visit edition_path(edition)
 
-    select 'Tax: VAT', from: 'Browse pages'
-    select 'Tax: RTI (draft)', from: 'Browse pages'
+    select 'Tax: VAT', from: 'Mainstream browse pages'
+    select 'Tax: RTI (draft)', from: 'Mainstream browse pages'
 
     save_edition
 
