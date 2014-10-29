@@ -83,7 +83,20 @@ select.date {
 }
 
 .important-note {
-  color: #DA4F49;
+  border: 1px solid $table-border-color;
+  border-left: 5px solid $state-danger-text;
+  border-radius: $border-radius-small;
+  padding: $default-vertical-padding;
+
+  .important-note-title {
+    margin-top: 0;
+    font-size: $font-size-h4;
+    color: $state-danger-text;
+  }
+
+  .important-note-body {
+    font-size: $font-size-h3;
+  }
 }
 
 /*

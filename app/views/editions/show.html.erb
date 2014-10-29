@@ -1,5 +1,5 @@
 <% @edition = @resource %>
-  <div class="page-header">
+  <div class="page-title">
     <h1>
       Viewing &ldquo;<%= @resource.title %>&rdquo;
     </h1>
@@ -7,13 +7,17 @@
       <span class="label label-default">Edition <%= @resource.version_number %></span>
       <span class="label label-info">Status: <%= @resource.status_text %></span>
     </span>
-  <% unless @resource.important_note.blank? %>
-    <br/>
-    <h2 class="important-note">
-      <%= @resource.important_note %>
-    </h2>
-  <% end %>
   </div>
+  <% unless @resource.important_note.blank? %>
+    <div class="important-note add-bottom-margin">
+      <h2 class="important-note-title">
+        Important note
+      </h2>
+      <div class="important-note-body">
+        <%= @resource.important_note %>
+      </div>
+    </div>
+  <% end %>
   <% if @resource.artefact.state == "archived" %>
     <div class="alert alert-error">
       <h2>Stop! You can't edit this publication because its artefact file in Panopticon has been archived.</h2>
