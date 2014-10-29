@@ -5,6 +5,9 @@
   <td class="title">
     <h4 class="publication-table-title">
       <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
+      <% if publication.in_beta? %>
+        <span class="badge badge-beta">beta</span>
+      <% end %>
     </h4>
 
     <% if publication.safe_to_preview? %>
@@ -21,10 +24,6 @@
 
     <% if publication.has_video? %>
       <i class="glyphicon glyphicon-film" alt="Has video"></i>
-    <% end %>
-
-    <% if publication.in_beta? %>
-      <span class="badge badge-beta">beta</span>
     <% end %>
   </td>
   <td>

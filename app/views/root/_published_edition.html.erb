@@ -5,6 +5,9 @@
   <td>
     <h4 class="publication-table-title">
       <%= link_to publication.admin_list_title, "/editions/#{publication.id}", title: "Locked view for this publication" %>
+      <% if publication.in_beta? %>
+        <span class="badge badge-beta">beta</span>
+      <% end %>
     </h4>
 
     <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
@@ -16,10 +19,6 @@
 
     <% if publication.has_video? %>
       <i class="glyphicon glyphicon-film" alt="Has video"></i>
-    <% end %>
-
-    <% if publication.in_beta? %>
-      <span class="badge badge-beta">beta</span>
     <% end %>
   </td>
   <td>
