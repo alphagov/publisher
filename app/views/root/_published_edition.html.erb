@@ -4,7 +4,7 @@
   </td>
   <td>
     <h4 class="publication-table-title">
-      <%= link_to publication.admin_list_title, "/editions/#{publication.id}", title: "Locked view for this publication" %>
+      <%= link_to publication.admin_list_title, "/editions/#{publication.id}" %>
       <% if publication.in_beta? %>
         <span class="badge badge-beta">beta</span>
       <% end %>
@@ -12,7 +12,7 @@
 
     <%= link_to "/#{publication.slug}", publication_front_end_path(publication), class: 'link-muted', title: 'View this publication' %>
 
-    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <span class="text-muted"> &middot; <span title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
     <% unless publication.can_create_new_edition? %>
       <span class="text-muted"> – <%= link_to "##{publication.sibling_in_progress} in draft", edition_path(publication.in_progress_sibling), class: 'link-inherit' %></span>
     <% end %>

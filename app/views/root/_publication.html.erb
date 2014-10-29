@@ -4,7 +4,7 @@
   </td>
   <td class="title">
     <h4 class="publication-table-title">
-      <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
+      <%= link_to publication.admin_list_title, edition_path(publication) %>
       <% if publication.in_beta? %>
         <span class="badge badge-beta">beta</span>
       <% end %>
@@ -16,7 +16,7 @@
       <span class="text-muted"><%= publication.slug %></span>
     <% end %>
 
-    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <span class="text-muted"> &middot; <span title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
     <% if tab && (tab == :published || tab == :archived) && publication.subsequent_siblings.first.present? %>
       <span class="text-muted"> – #<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>
       </span>
