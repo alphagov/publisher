@@ -17,9 +17,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
     assert find('#edition_in_beta').checked?
 
     visit "/?user_filter=all"
-    assert page.has_text?("#{edition.title}")
-    assert page.has_text?('#1 beta')
-    assert page.has_css? "#publication-list-container table tbody tr", count: 1
+    assert page.has_text?("#{edition.title} beta")
   end
 
   should "allow marking an edition as not in beta" do

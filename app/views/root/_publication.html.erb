@@ -4,7 +4,10 @@
   </td>
   <td class="title">
     <h4 class="publication-table-title">
-      <%= link_to publication.admin_list_title, edition_path(publication), title: "Edit edition #{publication.version_number}" %>
+      <%= link_to publication.admin_list_title, edition_path(publication) %>
+      <% if publication.in_beta? %>
+        <span class="badge badge-beta">beta</span>
+      <% end %>
     </h4>
 
     <% if publication.safe_to_preview? %>
@@ -13,18 +16,21 @@
       <span class="text-muted"><%= publication.slug %></span>
     <% end %>
 
-    <span class="text-muted"> &middot; <span data-toggle="tooltip" title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
+    <span class="text-muted"> &middot; <span title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
     <% if tab && (tab == :published || tab == :archived) && publication.subsequent_siblings.first.present? %>
       <span class="text-muted"> – #<%= publication.subsequent_siblings.first.version_number %> in <%= publication.subsequent_siblings.first.state.humanize.downcase %>
       </span>
     <% end %>
 
     <% if publication.has_video? %>
-      <i class="glyphicon glyphicon-film" alt="Has video"></i>
+      <i class="glyphicon glyphicon-film" title="Has video"></i>
     <% end %>
 
-    <% if publication.in_beta? %>
-      <span class="badge badge-beta">beta</span>
+    <% if publication.important_note.present? %>
+      <span class="text-muted">
+        &middot;
+        <i class="glyphicon glyphicon-comment" data-toggle="tooltip" title="<%= publication.important_note %>"></i>
+      </span>
     <% end %>
   </td>
   <td>
