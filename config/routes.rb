@@ -1,7 +1,9 @@
 Publisher::Application.routes.draw do
   get '/healthcheck' => 'healthcheck#check'
 
-  resources :notes
+  resources :notes do
+    put 'resolve', on: :member
+  end
   resources :expectations, :except => [:edit, :update, :destroy]
 
   resources :editions do

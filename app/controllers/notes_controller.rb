@@ -19,6 +19,14 @@ class NotesController < InheritedResources::Base
     redirect_to edit_edition_path(parent) + '#history'
   end
 
+  def resolve
+    if parent.important_note.present?
+      current_user.resolve_important_note(parent)
+      flash[:success] = "Note resolved"
+    end
+    redirect_to edit_edition_path(parent) + '#history'
+  end
+
   def resource
     parent
   end
