@@ -29,7 +29,7 @@
     <% if publication.important_note.present? %>
       <span class="text-muted">
         &middot;
-        <i class="glyphicon glyphicon-comment" data-toggle="tooltip" title="<%= publication.important_note %>"></i>
+        <i class="glyphicon glyphicon-comment" data-toggle="tooltip" title="<%= publication.important_note.comment %>"></i>
       </span>
     <% end %>
   </td>
