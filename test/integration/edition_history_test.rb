@@ -39,10 +39,10 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     context "Important note" do
-      should "be able to add a note" do
+      should "be able to add and resolve a note" do
         visit "/editions/#{@guide.id}"
         click_on "History and notes"
-        click_on "Update important note"
+        click_on "Add important note"
 
         within "#update-important-note" do
           fill_in "Important note", with: "This is an important note. Take note."
@@ -53,16 +53,16 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_content? "This is an important note. Take note."
 
         click_on "History and notes"
-        click_on "Update important note"
-        within "#update-important-note" do
-          assert_field_contains("This is an important note. Take note.", "Important note")
-        end
+        click_on "Delete important note"
+        visit "/editions/#{@guide.id}"
+        assert page.has_no_css?('.important-note')
       end
 
       should "not be carried forward to new editions" do
         @edition = FactoryGirl.create(:answer_edition,
-                                      :important_note => "This is an important note. Take note.",
                                       :state => "published")
+        @edition.actions.create(:request_type => Action::IMPORTANT_NOTE,
+                                :comment => "This is an important note. Take note.")
 
         visit "/editions/#{@edition.id}"
         assert page.has_content? "This is an important note. Take note."
@@ -71,7 +71,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History and notes"
-        click_on "Update important note"
+        click_on "Add important note"
         within "#update-important-note" do
           assert_field_contains("", "Important note")
         end
