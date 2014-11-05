@@ -1,3 +1,4 @@
+//= require select2
 //= require jquery-ui.custom.min
 //= require_directory .
 //= require_directory ./modules
