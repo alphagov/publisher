@@ -36,6 +36,7 @@ $(document).ready(function() {
                                       .attr("value", $relatedAreasTextArea.val());
 
   $relatedAreasTextArea.replaceWith($relatedAreasHiddenInput);
+  $relatedAreasHiddenInput.addClass('form-control');
 
   $('#edition-form').submit(submitWithAreaArrayInputs);
 
