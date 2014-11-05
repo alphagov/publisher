@@ -43,7 +43,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     visit "/"
 
     # Should remember last selection in session
-    assert_equal charlie.uid, page.find_field("Filter by assignee").value
+    assert_equal charlie.uid, page.find_field("Assignee").value
 
     click_on "Drafts"
     assert page.has_no_content?("XXX")
@@ -76,7 +76,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     visit "/"
     click_on "Amends needed"
-    
+
     filter_by_content("xXx")
 
     assert page.has_css?('h1', text: "Amends needed")

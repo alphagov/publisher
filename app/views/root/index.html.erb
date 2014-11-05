@@ -1,3 +1,4 @@
+
     <div class="page-header">
       <h1>
         <% if !params[:string_filter].blank? -%>
@@ -16,21 +17,20 @@
             <li class="nav-header">Filter by Status</li>
             <%= publication_tab_list :current => @list %>
           </ul>
-
-        </div><!--/.well -->
+        </div>
 
         <div class="well sidebar-nav">
-          <form method="GET" action="/" class="user-filter-form nav nav-list">
+          <form method="GET" action="/" data-module="publication-filter" class="user-filter-form nav nav-list">
             <%= hidden_field_tag :list, params[:list] %>
             <%= hidden_field_tag :string_filter, params[:string_filter] %>
-            <label for="user_filter" class="nav-header">Filter by assignee</label>
+            <label for="user_filter" class="nav-header">Assignee</label>
             <%=
               select_tag("user_filter", options_for_select(
                 [["All", "all"], ["Nobody", "nobody"]] +
                 User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-              ), class: 'form-control')
+              ), class: 'form-control js-user-filter')
             %>
-            <label for="string_filter" class="add-top-margin nav-header">Filter by keyword</label>
+            <label for="string_filter" class="add-top-margin nav-header">Keyword</label>
             <%= text_field_tag "string_filter", params[:string_filter], class: 'form-control', type: "search" %>
             <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
           </form>

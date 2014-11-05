@@ -27,7 +27,7 @@ class ActionDispatch::IntegrationTest
 
   def filter_by_user(option)
     within ".user-filter-form" do
-      select option, from: "Filter by assignee"
+      select option, from: "Assignee"
       click_on "Filter publications"
     end
     click_on "Drafts"
@@ -35,7 +35,7 @@ class ActionDispatch::IntegrationTest
 
   def filter_by_content(substring)
     within ".user-filter-form" do
-      fill_in "Filter", with: substring
+      fill_in "Keyword", with: substring
       click_on "Filter publications"
     end
   end
