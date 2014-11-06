@@ -29,15 +29,19 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="modal-title">Update important note</h3>
       </header>
-      <%= semantic_form_for(@resource, :url=> edition_path(@resource), :as => :edition, :html => { :id => 'important_note' }) do |f| %>
-        <div class="modal-body">
-          <%= f.input :important_note, :label => 'Important note', :as => :text, :input_html => { :class => 'form-control', :rows => 6, :cols => 120 } %>
-          <p class="help-block">Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.” Each edition can have only one important note at a time.</p>
-        </div>
-        <footer class="modal-footer remove-top-margin">
-          <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-          <%= f.submit :class=>"btn btn-success", :value=>'Save important note' %>
-        </footer>
+      <%= semantic_form_for(:note, :url=> notes_path) do |f| %>
+        <%= f.inputs do %>
+          <%= hidden_field_tag :edition_id, resource.id %>
+          <%= hidden_field_tag "note[type]", Action::IMPORTANT_NOTE %>
+          <div class="modal-body">
+            <%= f.input :comment, :label => 'Important note', :as => :text, :input_html => { :class => 'form-control', :rows => 6, :cols => 120 } %>
+            <p class="help-block">Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.” Each edition can have only one important note at a time.</p>
+          </div>
+          <footer class="modal-footer remove-top-margin">
+            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+            <%= f.submit :class=>"btn btn-success", :value=>'Save important note' %>
+          </footer>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -48,7 +52,13 @@
 
   <div class="add-bottom-margin">
     <a href="#save-edition-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-comment add-right-margin"></i>Add edition note</a>
-    <a href="#update-important-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-exclamation-sign add-right-margin"></i>Update important note</a>
+    <a href="#update-important-note" class="btn btn-default" data-toggle="modal"><i class="glyphicon glyphicon-exclamation-sign add-right-margin"></i>Add important note</a>
+    <% if @resource.important_note %>
+      <%= semantic_form_for(@resource.important_note, :url=> resolve_note_path, :html => { :class => "add-left-margin inline" }) do |f| %>
+        <%= hidden_field_tag :edition_id, resource.id %>
+        <%= f.submit :class=>"btn btn-default", :value => 'Delete important note' %>
+      <% end %>
+    <% end %>
   </div>
 
   <p class="add-bottom-margin">

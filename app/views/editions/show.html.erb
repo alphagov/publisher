@@ -8,13 +8,22 @@
       <span class="label label-info">Status: <%= @resource.status_text %></span>
     </span>
   </div>
-  <% unless @resource.important_note.blank? %>
+  <% important_note = @resource.important_note %>
+  <% unless important_note.blank? %>
     <div class="important-note add-bottom-margin">
+      <div class="add-label-margin normal">
+        <time datetime="<%= important_note.created_at %>" class="text-muted add-label-margin">
+          <%= important_note.created_at.to_s(:govuk_date) %>
+        </time>
+      </div>
       <h2 class="important-note-title">
         Important note
+        <% if important_note.requester.present? %>
+          by <%= mail_to important_note.requester.email, important_note.requester.name, { class: 'link-inherit' }  %>
+        <% end %>
       </h2>
       <div class="important-note-body">
-        <%= @resource.important_note %>
+        <%= @resource.important_note.comment %>
       </div>
     </div>
   <% end %>
