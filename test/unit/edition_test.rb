@@ -67,4 +67,13 @@ class EditionTest < ActiveSupport::TestCase
     user = FactoryGirl.create(:user)
     user.publish(edition, comment: "This is a test")
   end
+
+  should "raise an exception when publish_anonymously! fails to publish" do
+    edition = FactoryGirl.create(:guide_edition_with_two_parts, state: "ready")
+    # simulate validation error causing failure to publish anonymously
+    edition.parts.first.update_attribute(:body, "[register your vehicle](registering-an-imported-vehicle)")
+
+    exception = assert_raises(StateMachine::InvalidTransition) { edition.publish_anonymously! }
+    assert_equal "Cannot transition state via :publish from :ready (Reason(s): Parts is invalid)", exception.message
+  end
 end
