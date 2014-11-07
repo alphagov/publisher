@@ -48,12 +48,11 @@ class Edition
     all_of(for_user(user).selector, internal_search(term).selector)
   }
 
-  def publish_anonymously
-    if can_publish? && publish
+  def publish_anonymously!
+    if can_publish?
+      publish!
       actions.create!(request_type: Action::PUBLISH)
       save! # trigger denormalisation callbacks
-    else
-      false
     end
   end
 

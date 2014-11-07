@@ -31,7 +31,7 @@ class ScheduledPublisher
 
   def perform(edition_id)
     edition = Edition.find(edition_id)
-    edition.publish_anonymously
+    edition.publish_anonymously!
     report_state_counts
   end
 
