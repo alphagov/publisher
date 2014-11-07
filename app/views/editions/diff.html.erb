@@ -1,26 +1,4 @@
-  <div class="page-header">
-    <h1>
-      Viewing &ldquo;<%= @resource.title %>&rdquo;
-    </h1>
-    <span class="lead">
-      <span class="label label-default">Edition <%= @resource.version_number %></span>
-      <span class="label label-info">Status: <%= @resource.status_text %></span>
-    </span>
-  <% unless @resource.important_note.blank? %>
-    <br/>
-    <h2 class="important-note">
-      <%= @resource.important_note %>
-    </h2>
-  <% end %>
-  </div>
-  <% if @resource.artefact.state == "archived" %>
-    <div class="alert alert-error">
-      <h2>Stop! You can't edit this publication because its artefact file in Panopticon has been archived.</h2>
-      <p>(It's unpublished from the website but you can still see the latest edition here in Publisher.)</p>
-    </div>
-  <% else %>
-    <%= render 'shared/ready_or_review_or_fact_check' %>
-  <% end %>
+  <%= render 'shared/edition_header' %>
 
   <p>
     <%= link_to "Back to current edition", edition_path(@resource.history.first), :class => "btn btn-default" %>
