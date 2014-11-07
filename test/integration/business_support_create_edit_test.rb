@@ -143,8 +143,8 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     select "Normal", :from => "edition_priority"
     select Date.today.year.to_s, :from => "edition_start_date_1i"
 
-    select2 "Hackney Borough Council", "#s2id_autogen1"
-    select2 "Camden Borough Council", "#s2id_autogen1"
+    select2 "Hackney Borough Council", ".related-areas"
+    select2 "Camden Borough Council", ".related-areas"
 
     # circumvent poltergeist not handling bootstrap modals
     # by directly triggering our expected change
