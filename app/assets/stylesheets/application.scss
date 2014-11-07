@@ -1,4 +1,6 @@
 @import 'govuk_admin_template';
+@import 'select2';
+@import './vendor/select2-bootstrap';
 @import 'colors';
 @import 'bootstrap_and_overrides';
 @import 'forms';
@@ -11,5 +13,4 @@
 @import 'diff';
 
 // Pages
-@import 'business_support';
 @import 'smart_answer_builder';

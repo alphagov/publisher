@@ -15,7 +15,8 @@ else
 end
 
 gem 'erubis'
-gem 'govuk_admin_template', '1.1.6'
+gem 'govuk_admin_template', '1.1.7'
+gem 'select2-rails', '3.5.9.1'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'gds-api-adapters', '14.10.0'
@@ -87,5 +88,5 @@ group :test do
 end
 
 group :development, :test do
-  gem 'jasmine', '2.0.2'
+  gem 'jasmine', '2.0.3'
 end

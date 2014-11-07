@@ -1,10 +1,16 @@
 <h3>Areas</h3>
-<label class="checkbox inline normal">All of the UK
-  <%= check_box_tag "all_regions", "1", all_regions?(f.object), { class: "areas-chkbx" } %>
-</label>
-<label class="checkbox inline normal">All of England
-  <%= check_box_tag "english_regions", "1", english_regions?(f.object), { class: "areas-chkbx" } %>
-</label>
+<div class="checkbox">
+  <label>
+    <%= check_box_tag "all_regions", "1", all_regions?(f.object), { class: "areas-chkbx" } %>
+    All of the UK
+  </label>
+</div>
+<div class="checkbox">
+  <label>
+    <%= check_box_tag "english_regions", "1", english_regions?(f.object), { class: "areas-chkbx" } %>
+    All of England
+  </label>
+</div>
 
 <div class="related-areas fieldset-section">
   <%= f.label :areas, class: "control-label" %>
@@ -16,9 +22,6 @@
         data: { areas: edition_areas_json(f.object) } %>
 </div>
 <hr/>
-<% content_for :extra_headers do %>
-  <%= stylesheet_link_tag "business_support" %>
-<% end %>
 <% content_for :extra_javascript do %>
   <%= javascript_include_tag "views/business_support/areas_select", "/areas" %>
 <% end %>
