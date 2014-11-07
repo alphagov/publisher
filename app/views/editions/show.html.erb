@@ -1,41 +1,5 @@
 <% @edition = @resource %>
-  <div class="page-title">
-    <h1>
-      Viewing &ldquo;<%= @resource.title %>&rdquo;
-    </h1>
-    <span class="lead">
-      <span class="label label-default">Edition <%= @resource.version_number %></span>
-      <span class="label label-info">Status: <%= @resource.status_text %></span>
-    </span>
-  </div>
-  <% important_note = @resource.important_note %>
-  <% unless important_note.blank? %>
-    <div class="important-note add-bottom-margin">
-      <div class="add-label-margin normal">
-        <time datetime="<%= important_note.created_at %>" class="text-muted add-label-margin">
-          <%= important_note.created_at.to_s(:govuk_date) %>
-        </time>
-      </div>
-      <h2 class="important-note-title">
-        Important note
-        <% if important_note.requester.present? %>
-          by <%= mail_to important_note.requester.email, important_note.requester.name, { class: 'link-inherit' }  %>
-        <% end %>
-      </h2>
-      <div class="important-note-body">
-        <%= @resource.important_note.comment %>
-      </div>
-    </div>
-  <% end %>
-  <% if @resource.artefact.state == "archived" %>
-    <div class="alert alert-error">
-      <h2>Stop! You can't edit this publication because its artefact file in Panopticon has been archived.</h2>
-      <p>(It's unpublished from the website but you can still see the latest edition here in Publisher.)</p>
-    </div>
-  <% else %>
-    <%= render 'shared/ready_or_review_or_fact_check' %>
-  <% end %>
-
+  <%= render 'shared/edition_header' %>
   <div class="tabbable">
     <ul class="nav nav-tabs">
       <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
