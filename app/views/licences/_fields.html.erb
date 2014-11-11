@@ -1,28 +1,25 @@
 <%= f.inputs do %>
   <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-  <div class="row">
-    <div class="col-md-3">
-      <%= f.input :licence_identifier %>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-7">
+  <%= f.input :licence_identifier, :input_html => { class: 'input-md-3' } %>
+
   <%= f.input :will_continue_on,
               :hint => 'Text to follow the statement "This will continue on. eg. "the HMRC website"',
-              :input_html => { :disabled => @resource.locked_for_edits? } %>
+              :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+
   <%= f.input :continuation_link,
               :label => 'Link to competent authority',
               :hint => 'Link as deep as possible.',
-              :input_html => { :disabled => @resource.locked_for_edits? } %>
-    </div>
-    <div class="col-md-10">
+              :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+
   <%= f.input :licence_short_description,
         :as => :text,
         :hint => 'One line curated description, will appear in Licence Finder results',
-        :input_html => { :rows => 2, :disabled => @resource.locked_for_edits? } %>
-  <%= f.input :licence_overview, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
-    </div>
-  </div>
+        :input_html => { :rows => 2, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+
+  <%= f.input :licence_overview,
+        :as => :text,
+        :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10' } %>
+
 <% end %>
 
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
