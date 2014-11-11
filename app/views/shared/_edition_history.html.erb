@@ -12,7 +12,7 @@
 
     <div class="panel-collapse collapse<% if edition_counter == 0 %> in<% end %>" id="body<%= edition.version_number %>">
       <ul class="panel-body list-unstyled remove-bottom-margin">
-        <% edition.actions.reverse.each do |action| %>
+        <% edition_actions(edition).each do |action| %>
           <li class="add-bottom-margin add-left-margin">
             <h4>
               <div class="add-label-margin normal">
@@ -27,22 +27,14 @@
                 GOV.UK Bot
               <% end %>
             </h4>
-            <% if action.comment.present? || action.is_fact_check_request? || action.request_type == "assign" %>
+            <% if action_note?(action) %>
               <% if action.comment_sanitized %>
                 <div class="alert alert-error alert-block">
                   We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.
                 </div>
               <% end %>
               <blockquote class="add-left-margin">
-                <% if action.comment.present? %>
-                  <%= simple_format(escape_once(action.comment), {}, :sanitize => false) %>
-                <% end %>
-                <% if action.is_fact_check_request? && action.email_addresses.present? %>
-                  Request sent to <%= mail_to action.email_addresses %>
-                <% end %>
-                <% if action.recipient_id.present? %>
-                  Assigned to <%= mail_to action.recipient.email, action.recipient.name %>
-                <% end %>
+                <%= action_note(action).html_safe %>
               </blockquote>
             <% end %>
           </li>
