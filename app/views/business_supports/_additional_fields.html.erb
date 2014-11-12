@@ -1,72 +1,69 @@
-    <%= f.input :organiser, :input_html => { :disabled => locked_for_edits } %>
+    <%= f.input :organiser,
+                :input_html => { :disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :short_description,
                 :label => 'Short description',
                 :hint => 'Short description shown in search results.',
-                :input_html => {:disabled => locked_for_edits } %>
+                :input_html => {:disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :body,
                 :as => :text,
                 :label => 'Body',
                 :hint => 'The full description of this business support',
-                :input_html => {:rows => 10, :disabled => locked_for_edits } %>
+                :input_html => {:rows => 10, :disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :eligibility,
                 :as => :text,
                 :label => 'Eligibility',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
+                :input_html => {:rows => 3, :disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :evaluation,
                 :as => :text,
                 :label => 'Evaluation',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
+                :input_html => {:rows => 3, :disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :additional_information,
                 :as => :text,
                 :label => 'Additional information',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
+                :input_html => {:rows => 3, :disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :contact_details,
                 :as => :text,
                 :label => 'Contact details',
                 :hint => 'Email, telephone, address and postcode of the business support authority or company',
-                :input_html => {:rows => 3, :disabled => locked_for_edits } %>
-    <div class="row">
-      <div class="col-md-6">
+                :input_html => {:rows => 3, :disabled => locked_for_edits, class: 'input-md-7' } %>
+
     <%= f.input :max_employees,
                 :label => 'Max employees',
                 :hint => 'Maximum number of employees in qualifying business',
-                :input_html => {:disabled => locked_for_edits } %>
+                :input_html => {:disabled => locked_for_edits, class: 'input-md-2' } %>
 
     <%= f.input :min_value,
                 :label => 'Min value',
                 :hint => "The smallest amount of support available",
-                :input_html => {:disabled => locked_for_edits } %>
+                :input_html => {:disabled => locked_for_edits, class: 'input-md-2' } %>
 
     <%= f.input :max_value,
                 :label => 'Max value',
                 :hint => "The largest amount of support available",
-                :input_html => { :disabled => locked_for_edits } %>
-      </div>
-    </div>
+                :input_html => { :disabled => locked_for_edits, class: 'input-md-2' } %>
+
     <%= f.input :will_continue_on,
                 :label => 'Will continue on',
                 :hint => 'Text to accompany external website link',
-                :input_html => {:disabled => locked_for_edits } %>
+                :input_html => {:disabled => locked_for_edits, class: 'input-md-7' } %>
 
     <%= f.input :continuation_link,
                 :label => 'Continuation link',
                 :hint => 'Link to external website for this business support',
-                :input_html => {:disabled => locked_for_edits } %>
+                :input_html => {:disabled => locked_for_edits, class: 'input-md-7' } %>
     <hr/>
-    <div class="row">
-      <div class="col-md-4">
-        <%= f.input :priority, :as => :select, :collection => [["Low",0],["Normal",1],["High",2]], :input_html => { :disabled => locked_for_edits } %>
 
-        <% date_error = f.object.errors[:start_date]
+    <%= f.input :priority, :as => :select, :collection => [["Low",0],["Normal",1],["High",2]], :input_html => { :disabled => locked_for_edits, class: 'input-md-2' } %>
+
+    <% date_error = f.object.errors[:start_date]
        error_class = date_error and !date_error.empty? ? ' error' : '' -%>
-      </div>
-    </div>
+
     <hr/>
     <div class="form-group<%= error_class %> date-picker">
       <h3>Scheme start/end date</h3>

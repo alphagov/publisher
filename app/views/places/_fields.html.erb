@@ -1,15 +1,23 @@
 <%= f.inputs do %>
   <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-  <div class="row">
-    <div class="col-md-7">
-  <%= f.input :place_type, :hint => "This is the 'slug' assigned in the imminence app", :input_html => { :disabled => @resource.locked_for_edits? } %>
-    </div>
-    <div class="col-md-10">
-  <%= f.input :introduction, :as => :text, :input_html => {:rows => 2, :disabled => @resource.locked_for_edits? } %>
-  <%= f.input :more_information, :as => :text, :input_html => { :disabled => @resource.locked_for_edits? } %>
-  <%= f.input :expectation_ids, :label => "Expectations", :as => :check_boxes, :collection => PlaceEdition.expectation_choices, :input_html => { :disabled => @resource.locked_for_edits? } %>
-    </div>
-  </div>
+
+  <%= f.input :place_type,
+    :hint => "This is the 'slug' assigned in the imminence app",
+    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+
+  <%= f.input :introduction,
+    :as => :text,
+    :input_html => {:rows => 5, :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
+
+  <%= f.input :more_information,
+    :as => :text,
+    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
+
+  <%= f.input :expectation_ids,
+    :label => "Expectations",
+    :as => :check_boxes,
+    :collection => PlaceEdition.expectation_choices,
+    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
 <% end %>
 
 <%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
