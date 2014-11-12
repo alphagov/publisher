@@ -11,11 +11,12 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
+    stub_collections
   end
 
   should "create a new CompletedTransactionEdition" do
     visit "/publications/#{@artefact.id}"
-    
+
     assert page.has_content? "Viewing “All bar done” Edition 1"
 
     t = CompletedTransactionEdition.first
@@ -45,9 +46,9 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                  :panopticon_id => @artefact.id,
                                  :state => 'published',
                                  :title => "All bar done")
-    
+
     visit "/editions/#{completed_transaction.to_param}"
-    
+
     click_on "Create new edition"
 
     assert page.has_content? "Viewing “All bar done” Edition 2"

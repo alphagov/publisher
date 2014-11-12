@@ -11,6 +11,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
+    stub_collections
   end
 
   should "create a new LicenceEdition" do

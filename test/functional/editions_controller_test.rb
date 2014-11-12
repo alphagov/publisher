@@ -6,6 +6,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
+    stub_collections
     @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
     artefact1 = FactoryGirl.create(:artefact, slug: "test",
         kind: "transaction",
@@ -176,7 +177,7 @@ class EditionsControllerTest < ActionController::TestCase
   test "should squash multiparameter attributes" do
     EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
 
-    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4", 
+    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4",
                           "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
 
     post :progress, {
@@ -187,6 +188,32 @@ class EditionsControllerTest < ActionController::TestCase
           }.merge(publish_at_params)
         }
       }
+  end
+
+  test "should strip blank collection associations" do
+    artefact = FactoryGirl.create(:artefact)
+
+    edition_params = {
+      "kind" => "answer",
+      "panopticon_id" => artefact.id,
+      "title" => "a title",
+      "browse_pages" => ["", "tax/vat"],
+      "additional_topics" => ["", "oil-and-gas/wells"]
+    }
+
+    post :create, "edition" => edition_params
+
+    edition = Edition.last
+
+    assert_equal ["tax/vat"], edition.browse_pages
+    assert_equal ["oil-and-gas/wells"], edition.additional_topics
+
+    post :update, "id" => edition.id, "edition" => edition_params
+
+    edition.reload
+
+    assert_equal ["tax/vat"], edition.browse_pages
+    assert_equal ["oil-and-gas/wells"], edition.additional_topics
   end
 
   test "destroy transaction" do

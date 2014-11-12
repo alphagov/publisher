@@ -13,6 +13,8 @@ $(function () {
   $('.confirm form').submit(function(){
       return confirm('Woah. Scary action, cannot be undone. Continue?');
   });
+
+  $(".select2").select2();
 })
 
 // System wide library functions

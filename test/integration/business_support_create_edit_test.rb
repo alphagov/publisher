@@ -49,6 +49,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     stub_mapit_areas_requests(IMMINENCE_API_ENDPOINT)
 
     setup_users
+    stub_collections
   end
 
   should "create a new BusinessSupportEdition" do
@@ -115,7 +116,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_end_date_2i", :selected => a_year_since.strftime("%B"))
     assert page.has_select?("edition_end_date_3i", :selected => a_year_since.day.to_s)
 
-    within(".select2-choices") do
+    within(".related-areas") do
       assert page.has_content?("London")
     end
 
@@ -176,7 +177,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
     assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
 
-    within(".select2-choices") do
+    within(".related-areas") do
       assert page.has_content?("London Hackney Borough Council Camden Borough Council")
     end
 

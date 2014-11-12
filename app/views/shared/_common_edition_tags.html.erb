@@ -1,0 +1,44 @@
+<hr />
+<div class="row">
+  <div class="col-md-7 edition-tags">
+    <h3 class="remove-top-margin">Tags</h3>
+    <p class="help-block">
+      These tags use the new nomenclature:
+    </p>
+    <ul class="help-block">
+      <li>Section ➤ Mainstream browse page</li>
+      <li>Specialist sector ➤ Topic</li>
+    </ul>
+
+    <div class="form-group">
+      <%= f.label :browse_pages, "Mainstream browse pages", class: 'remove-bottom-margin' %>
+      <p class="help-block">The first mainstream browse page will form the content’s breadcrumb</p>
+      <%= f.select :browse_pages,
+                      browse_options_for_select(Collections.grouped_mainstream_browse_pages),
+                      {},
+                      { multiple: true,
+                        class: 'select2',
+                        disabled: @resource.locked_for_edits?,
+                        data: { placeholder: 'Choose mainstream browse pages…' } } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :primary_topic %>
+      <%= f.select :primary_topic,
+                      browse_options_for_select(Collections.grouped_topics),
+                      { include_blank: true },
+                      { class: 'select2',
+                        disabled: @resource.locked_for_edits?,
+                        data: { placeholder: 'Choose primary topic…' } } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :additional_topics %>
+      <%= f.select :additional_topics,
+                      browse_options_for_select(Collections.grouped_topics),
+                      {},
+                      { multiple: true,
+                        class: 'select2',
+                        disabled: @resource.locked_for_edits?,
+                        data: { placeholder: 'Choose additional topics…' } } %>
+    </div>
+  </div>
+</div>

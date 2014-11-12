@@ -20,9 +20,11 @@ class PublishedEditionPresenter
       update_type: "major",
       details: {
         change_note: "",
-        tags: { # Coming soon
-          browse_pages: [],
-          topics: [],
+        tags: {
+          browse_pages: @edition.browse_pages,
+          primary_topic: [@edition.primary_topic],
+          additional_topics: @edition.additional_topics,
+          topics: [@edition.primary_topic] + @edition.additional_topics,
         }
       }
     }

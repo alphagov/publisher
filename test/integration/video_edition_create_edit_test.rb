@@ -10,6 +10,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
        owning_app: "publisher")
 
     setup_users
+    stub_collections
   end
 
   should "edit a new VideoEdition" do

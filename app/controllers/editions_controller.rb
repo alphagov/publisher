@@ -6,6 +6,7 @@ class EditionsController < InheritedResources::Base
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
   before_filter :setup_view_paths, :except => [:index, :new, :create, :areas]
   after_filter :report_state_counts, :only => [:create, :duplicate, :progress, :destroy]
+  before_filter :remove_blank_collections, only: [:create, :update]
 
   def index
     redirect_to root_path
@@ -150,6 +151,18 @@ class EditionsController < InheritedResources::Base
 
     def remove_activity_params
       params[:edition].delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
+    end
+
+    def remove_blank_collections
+      [:primary_topic].each do |collection_name|
+        params[:edition][collection_name] = nil if params[:edition][collection_name].blank?
+      end
+
+      [:browse_pages, :additional_topics].each do |collection_name|
+        if params[:edition].has_key?(collection_name)
+          params[:edition][collection_name] = params[:edition][collection_name].reject(&:blank?)
+        end
+      end
     end
 
     def format_failure_message(resource)
