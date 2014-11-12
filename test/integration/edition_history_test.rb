@@ -21,8 +21,9 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @guide.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "fourth"})
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "fifth"})
       @guide.new_action(@author, Action::PUBLISH, {:comment => "sixth"})
+      @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
 
-      assert_equal ["fourth", "fifth", "sixth"], @guide.actions.map(&:comment)
+      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
     end
 
     should "have the first history actions visible" do
@@ -30,6 +31,13 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
+    end
+
+    should "has clickable links in notes" do
+      visit "/editions/#{@guide.id}"
+      click_on "History and notes"
+
+      assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
     end
 
     should "hide actions when the edition title is clicked" do
