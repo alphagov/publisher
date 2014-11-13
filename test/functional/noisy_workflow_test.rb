@@ -23,13 +23,13 @@ class NoisyWorkflowTest < ActionMailer::TestCase
 
     guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
     edition = guide
-    user.request_review(edition,{:comment => "Review this guide please."})
-    other_user.approve_review(edition, {:comment => "I've reviewed it"})
-    user.send_fact_check(edition,{:comment => "Review this guide please.", :email_addresses => 'test@test.com'})
-    user.receive_fact_check(edition, {:comment => "No changes needed, this is all correct"})
-    other_user.approve_fact_check(edition, {:comment => "Looks good to me"})
+    request_review(user, edition)
+    approve_review(other_user, edition)
+    send_fact_check(user, edition)
+    receive_fact_check(user, edition)
+    approve_fact_check(other_user, edition)
     stub_register_published_content
-    user.publish(edition, {:comment => "PUBLISHED!"})
+    publish(user, edition)
     return user, guide
   end
 
@@ -42,7 +42,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     edition = guide
     edition.state = 'ready'
     assert edition.can_send_fact_check?
-    user.send_fact_check(edition, {:email_addresses => "js@alphagov.co.uk, james.stewart@digital.cabinet-office.gov.uk", :customised_message => "Our message"})
+    send_fact_check(user, edition)
   end
 
   test "a guide should not send an email if creating a new edition fails" do
@@ -61,7 +61,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       :title => 'My Title', :slug => 'my-title-b', :alternative_title => 'My Other Title')
 
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver: nil))
-    user.receive_fact_check(guide, { comment: "Yo facts are wrong, dog." })
+    receive_fact_check(user, guide)
   end
 
   test "fact checking emails should set appropriate reply-to address" do

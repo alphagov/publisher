@@ -22,7 +22,7 @@ class FactCheckMessageProcessor
   end
 
   def progress_publication_edition(edition)
-    User.new.receive_fact_check(edition, { comment: body_as_utf8 })
+    User.new.progress(edition, { request_type: :receive_fact_check, comment: body_as_utf8 })
   end
 
   def process_for_publication(publication_id)

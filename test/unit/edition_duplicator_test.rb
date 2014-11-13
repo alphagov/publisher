@@ -15,7 +15,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
 
   def publish_item(item, actor)
     item.state = 'ready'
-    actor.publish(item, command: 'Publishing this')
+    publish(actor, item)
   end
 
   test "should assign after creating new edition" do

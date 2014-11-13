@@ -98,7 +98,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   def get_to_fact_check_received(guide, owner)
     get_to_fact_check(guide, owner)
-    User.new.receive_fact_check(guide, comment: "Fantastic stuff, well done.")
+    receive_fact_check(User.new, guide)
     guide.reload
   end
 
