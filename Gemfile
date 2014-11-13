@@ -20,6 +20,7 @@ gem 'select2-rails', '3.5.9.1'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'gds-api-adapters', '15.1.0'
+gem 'rails_autolink', '1.1.6'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 

@@ -226,6 +226,8 @@ GEM
       activesupport (= 3.2.18)
       bundler (~> 1.0)
       railties (= 3.2.18)
+    rails_autolink (1.1.6)
+      rails (> 3.1)
     railties (3.2.18)
       actionpack (= 3.2.18)
       activesupport (= 3.2.18)
@@ -358,6 +360,7 @@ DEPENDENCIES
   plek (= 1.9.0)
   poltergeist (= 1.5.0)
   rails (= 3.2.18)
+  rails_autolink (= 1.1.6)
   redis (= 3.0.7)
   rest-client
   retriable
