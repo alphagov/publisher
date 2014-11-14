@@ -1,6 +1,6 @@
 <div class="page-title">
   <h1>
-    Viewing &ldquo;<%= @resource.title %>&rdquo;
+    <%= @resource.title %>
   </h1>
   <span class="lead">
     <span class="label label-default">Edition <%= @resource.version_number %></span>
@@ -34,4 +34,3 @@
 <% else %>
   <%= render 'shared/ready_or_review_or_fact_check' %>
 <% end %>
-

@@ -21,7 +21,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
     should "show the smart answer builder form with an initial question" do
       within ".page-title" do
-        assert page.has_content? "Viewing “Can I get a driving licence?”"
+        assert page.has_content? "Can I get a driving licence?"
       end
 
       assert page.has_css?(".nodes .node", count: 1)
@@ -363,7 +363,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       visit "/editions/#{@edition.id}"
 
       within ".page-title" do
-        assert page.has_content? "Viewing “Can I get a driving licence?”"
+        assert page.has_content? "Can I get a driving licence?"
       end
 
       within ".builder-container" do

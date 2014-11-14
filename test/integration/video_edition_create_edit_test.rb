@@ -46,7 +46,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     visit "/editions/#{video.to_param}"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
+    assert page.has_content? "Foo bar Edition 1"
 
     assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
     assert page.has_field?("Video Summary", :with => "Coke smoothie")
@@ -78,7 +78,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     visit "/editions/#{video.to_param}"
     click_on "Create new edition"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 2"
+    assert page.has_content? "Foo bar Edition 2"
 
     assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
     assert page.has_field?("Video Summary", :with => "Coke smoothie")

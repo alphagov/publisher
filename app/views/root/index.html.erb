@@ -1,10 +1,11 @@
 
     <div class="page-header">
       <h1>
-        <% if !params[:string_filter].blank? -%>
-          Searching for &ldquo;<%= params[:string_filter] -%>&rdquo; in
-        <% end -%>
-        &ldquo;<%= @list.humanize %>&rdquo; publications
+        <% if !params[:string_filter].blank? %>
+          Searching for “<%= params[:string_filter] -%>” in “<%= @list.humanize %>”
+        <% else %>
+          <%= @list.humanize %>
+        <% end %>
       </h1>
     </div>
 
