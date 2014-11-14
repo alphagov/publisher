@@ -77,7 +77,7 @@ private
 
   def register_with_publishing_api(edition)
     presenter = PublishedEditionPresenter.new(edition)
-    document_for_publishing_api = presenter.render_for_publishing_api(true)
+    document_for_publishing_api = presenter.render_for_publishing_api(republish: true)
     base_path = document_for_publishing_api[:base_path]
 
     publishing_api.put_content_item(base_path, document_for_publishing_api)

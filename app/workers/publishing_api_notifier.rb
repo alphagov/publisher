@@ -6,7 +6,7 @@ class PublishingAPINotifier
   def perform(edition_id)
     edition = Edition.find(edition_id)
     presenter = PublishedEditionPresenter.new(edition)
-    document_for_publishing_api = presenter.render_for_publishing_api(false)
+    document_for_publishing_api = presenter.render_for_publishing_api(republish: false)
     base_path = document_for_publishing_api[:base_path]
 
     publishing_api.put_content_item(base_path, document_for_publishing_api)
