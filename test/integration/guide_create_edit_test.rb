@@ -17,7 +17,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   should "create a new GuideEdition" do
     visit "/publications/#{@artefact.id}"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
+    assert page.has_content? "Foo bar Edition 1"
 
     g = GuideEdition.first
     assert_equal @artefact.id.to_s, g.panopticon_id
@@ -33,7 +33,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
 
     visit "/editions/#{guide.to_param}"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
+    assert page.has_content? "Foo bar Edition 1"
 
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'
@@ -68,7 +68,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     visit "/editions/#{guide.to_param}"
     click_on "Create new edition"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 2"
+    assert page.has_content? "Foo bar Edition 2"
 
     g2 = GuideEdition.where(:version_number => 2).first
 

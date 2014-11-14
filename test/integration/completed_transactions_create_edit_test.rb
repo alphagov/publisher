@@ -17,7 +17,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   should "create a new CompletedTransactionEdition" do
     visit "/publications/#{@artefact.id}"
 
-    assert page.has_content? "Viewing “All bar done” Edition 1"
+    assert page.has_content? "All bar done Edition 1"
 
     t = CompletedTransactionEdition.first
     assert_equal @artefact.id.to_s, t.panopticon_id
@@ -30,7 +30,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     visit "/editions/#{completed_transaction.to_param}"
 
-    assert page.has_content? "Viewing “All bar done” Edition 1"
+    assert page.has_content? "All bar done Edition 1"
 
     assert page.has_field?("Title", :with => "All bar done")
 
@@ -51,7 +51,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     click_on "Create new edition"
 
-    assert page.has_content? "Viewing “All bar done” Edition 2"
+    assert page.has_content? "All bar done Edition 2"
 
   end
 end

@@ -56,7 +56,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
 
     assert_match /^\/editions\/[0-9a-z]+?$/, current_path
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
+    assert page.has_content? "Foo bar Edition 1"
 
     bs = BusinessSupportEdition.first
     assert_equal @artefact.id.to_s, bs.panopticon_id
@@ -94,7 +94,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     visit "/editions/#{bs.to_param}"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 1"
+    assert page.has_content? "Foo bar Edition 1"
 
     assert page.has_field?("Organiser", :with => "Business support corp.")
     assert page.has_field?("Short description", :with => "Short description content")
@@ -197,7 +197,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
     click_on "Create new edition"
 
-    assert page.has_content? "Viewing “Foo bar” Edition 2"
+    assert page.has_content? "Foo bar Edition 2"
 
   end
 
