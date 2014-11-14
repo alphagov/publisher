@@ -17,7 +17,7 @@ class PublishedEditionPresenter
         {path: base_path, type: "exact"}
       ],
       redirects: [],
-      update_type: options.fetch(:republish) ? "republish" : "major",
+      update_type: options[:republish] ? "republish" : "major",
       details: {
         change_note: "",
         tags: {
