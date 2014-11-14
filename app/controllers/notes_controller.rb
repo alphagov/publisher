@@ -6,10 +6,13 @@ class NotesController < InheritedResources::Base
 
   def create
     comment = params[:note][:comment]
-    if comment.blank?
+    type = params[:note][:type] || Action::NOTE
+
+    if comment.blank? && type == Action::IMPORTANT_NOTE
+      resolve_important_note
+    elsif comment.blank?
       flash[:warning] = "Didn’t save empty note"
     else
-      type = params[:note][:type] || Action::NOTE
       if current_user.record_note(resource, comment, type)
         flash[:success] = "Note recorded"
       else
@@ -20,14 +23,21 @@ class NotesController < InheritedResources::Base
   end
 
   def resolve
-    if parent.important_note.present?
-      current_user.resolve_important_note(parent)
-      flash[:success] = "Note resolved"
-    end
+    resolve_important_note
     redirect_to edit_edition_path(parent) + '#history'
   end
 
   def resource
     parent
   end
+
+  private
+
+  def resolve_important_note
+    if parent.important_note.present?
+      current_user.resolve_important_note(parent)
+      flash[:success] = "Note resolved"
+    end
+  end
+
 end

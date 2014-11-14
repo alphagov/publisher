@@ -49,14 +49,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
     context "Important note" do
       should "be able to add and resolve a note" do
-        visit "/editions/#{@guide.id}"
-        click_on "History and notes"
-        click_on "Add important note"
-
-        within "#update-important-note" do
-          fill_in "Important note", with: "This is an important note. Take note."
-          click_on "Save important note"
-        end
+        add_important_note("This is an important note. Take note.")
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
@@ -64,6 +57,25 @@ class EditionHistoryTest < JavascriptIntegrationTest
         click_on "History and notes"
         click_on "Delete important note"
         visit "/editions/#{@guide.id}"
+        assert page.has_no_css?('.important-note')
+      end
+
+      should "prepopulate with an existing note" do
+        add_important_note("This is an important note. Take note.")
+
+        visit "/editions/#{@guide.id}"
+        click_on "History and notes"
+        click_on "Update important note"
+
+        within "#update-important-note" do
+          assert_field_contains("This is an important note. Take note.", "Important note")
+        end
+      end
+
+      should "resolve an important note if an empty one is saved" do
+        add_important_note("Note")
+        add_important_note("")
+
         assert page.has_no_css?('.important-note')
       end
 
@@ -80,11 +92,22 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_content? "This is an important note. Take note."
 
         click_on "History and notes"
-        click_on "Add important note"
+        click_on "Update important note"
         within "#update-important-note" do
           assert_field_contains("", "Important note")
         end
       end
+    end
+  end
+
+  def add_important_note(note)
+    visit "/editions/#{@guide.id}"
+    click_on "History and notes"
+    click_on "Update important note"
+
+    within "#update-important-note" do
+      fill_in "Important note", with: note
+      click_on "Save important note"
     end
   end
 end
