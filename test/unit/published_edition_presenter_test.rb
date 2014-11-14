@@ -39,7 +39,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       assert_equal @expected_attributes_for_publishing_api_hash, @presenter.render_for_publishing_api(republish: false)
     end
 
-    should "create an attributes hash for the publishing api" do
+    should "create an attributes hash for the publishing api for a republish" do
       attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge({
         update_type: "republish",
       })
