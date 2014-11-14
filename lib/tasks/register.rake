@@ -2,14 +2,14 @@ require "published_slug_registerer"
 
 namespace :reregister do
 
-  desc "Re-register published editions"
+  desc "Re-register all published editions"
   task :all => :environment do
     logger.info "Re-registering all published editions..."
     slugs = Edition.published.map(&:slug)
     PublishedSlugRegisterer.new(logger, slugs).run
   end
 
-  desc "Re-register published edition for slugs from stdin"
+  desc "Re-register published editions for slugs from stdin"
   task :slugs_from_stdin => :environment do
     logger.info "Re-registering published editions for slugs from stdin..."
     slugs = []
@@ -41,7 +41,7 @@ namespace :reregister do
     PublishedSlugRegisterer.new(logger, slugs).run
   end
 
-  desc "Re-register published editions tagged to an organisation, read form the ORGANISATION environment variable"
+  desc "Re-register published editions tagged to an organisation, read from the ORGANISATION environment variable"
   task :by_organisation => :environment do
     organisation = ENV.fetch('ORGANISATION')
     logger.info "Re-registering all published editions tagged to organisation #{organisation}..."
