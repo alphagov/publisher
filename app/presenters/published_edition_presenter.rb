@@ -3,7 +3,7 @@ class PublishedEditionPresenter
     @edition = edition
   end
 
-  def render_for_publishing_api
+  def render_for_publishing_api(republish)
     {
       title: @edition.title,
       base_path: base_path,
@@ -17,7 +17,7 @@ class PublishedEditionPresenter
         {path: base_path, type: "exact"}
       ],
       redirects: [],
-      update_type: "major",
+      update_type: republish ? "republish" : "major",
       details: {
         change_note: "",
         tags: {
