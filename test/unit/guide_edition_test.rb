@@ -15,7 +15,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title')
     edition = guide
     request_review(user, edition)
     approve_review(other_user, edition)
@@ -49,11 +49,9 @@ class GuideEditionTest < ActiveSupport::TestCase
     user, guide = publisher_and_guide
     edition = guide.published_edition
 
-    assert ! edition.alternative_title.blank?
     assert ! edition.overview.blank?
 
     new_edition = user.new_version(edition)
-    assert_equal edition.alternative_title, new_edition.alternative_title
     assert_equal edition.overview, new_edition.overview
   end
 

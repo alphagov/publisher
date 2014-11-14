@@ -29,8 +29,7 @@ class Edition
 
   scope :internal_search, lambda { |term|
     regex = Regexp.new(Regexp.escape(term), true)  # case-insensitive
-    any_of({title: regex}, {slug: regex}, {overview: regex},
-           {alternative_title: regex}, {licence_identifier: regex})
+    any_of({title: regex}, {slug: regex}, {overview: regex}, {licence_identifier: regex})
   }
 
   # Including recipient_id on actions will include anything that has been
