@@ -5,7 +5,7 @@
 </div>
 
 <%= f.input :title,
-      :input_html => { :autofocus => true, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+      :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
 
 <%= f.input :in_beta,
       as: :boolean,
@@ -16,7 +16,7 @@
 <%= f.input :alternative_title,
       :label => 'Alternative title',
       :hint => 'Use this where longer title is needed for SEO purposes',
-      :input_html => { :autofocus => true, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+      :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
 
 <%= f.input :overview,
       :as => :text,

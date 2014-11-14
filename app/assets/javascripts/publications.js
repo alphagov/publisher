@@ -1,9 +1,6 @@
 // Javascript that may be used on every publication show/edit page
 
 $(function () {
-  if (! 'autofocus' in document.createElement('input')) {
-    $('*[autofocus]').focus();
-  }
 
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
