@@ -12,7 +12,7 @@ class EditionTest < ActiveSupport::TestCase
       PublishingAPINotifier.stubs(:perform_async)
       RegisterableEdition.expects(:new).with(edition).returns(registerable)
       GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(registerable)
-      user.publish(edition, comment: "I am bananas")
+      publish(user, edition)
     end
 
     should "use the edition's snake_cased format for kind, not the artefact's kind (it may have changed)" do
@@ -25,7 +25,7 @@ class EditionTest < ActiveSupport::TestCase
           .expects(:new)
           .with(owning_app: "publisher", rendering_app: "frontend", kind: "local_transaction")
           .returns(stub("registerer", register: nil))
-      user.publish(edition, comment: "I am bananas")
+      publish(user, edition)
     end
 
     should "not register with Panopticon if the artefact is archived" do
@@ -65,7 +65,7 @@ class EditionTest < ActiveSupport::TestCase
     GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
 
     user = FactoryGirl.create(:user)
-    user.publish(edition, comment: "This is a test")
+    publish(user, edition)
   end
 
   should "raise an exception when publish_anonymously! fails to publish" do

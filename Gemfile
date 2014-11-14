@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "23.0.0"
+  gem "govuk_content_models", "24.0.1"
 end
 
 gem 'erubis'

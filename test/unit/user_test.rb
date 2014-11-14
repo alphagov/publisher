@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.create(:name => "bob")
     NoisyWorkflow.expects(:request_fact_check).never
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryGirl.create(:artefact).id)
-    assert ! user.send_fact_check(trans, {comment: "Hello"})
+    refute send_fact_check(user, trans)
   end
 
   test "when an user publishes a guide, a status message is sent on the message bus" do
@@ -13,11 +13,11 @@ class UserTest < ActiveSupport::TestCase
     second_user = User.create(:name => "dave")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryGirl.create(:artefact).id)
-    user.request_review(trans, {comment: "Hello"})
-    second_user.approve_review(trans, {comment: "Hello"})
+    request_review(user, trans)
+    approve_review(second_user, trans)
 
     stub_register_published_content
-    user.publish trans, {comment: "Published because I did"}
+    publish user, trans
   end
 
   test "use a custom collection for users" do

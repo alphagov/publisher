@@ -13,6 +13,7 @@ require 'gds_api/test_helpers/panopticon'
 require 'gds_api/test_helpers/publishing_api'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
+require 'govuk_content_models/test_helpers/action_processor_helpers'
 
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
@@ -33,6 +34,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   include MiniTest::Assertions
+  include GovukContentModels::TestHelpers::ActionProcessorHelpers
 
   def clean_db
     DatabaseCleaner.clean

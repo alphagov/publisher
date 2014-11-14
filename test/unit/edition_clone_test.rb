@@ -9,12 +9,12 @@ class EditionCloneTest < ActiveSupport::TestCase
   end
 
   def fact_check_and_publish(edition = nil)
-    @user.request_review(edition, {comment: "Review this guide please."})
-    @other_user.approve_review(edition, {comment: "I've reviewed it"})
-    @user.send_fact_check(edition, {comment: "Review this guide please.", email_addresses: 'test@test.com'})
-    @user.receive_fact_check(edition, {comment: "No changes needed, this is all correct"})
-    @other_user.approve_fact_check(edition, {comment: "Looks good to me"})
-    @user.publish(edition, {comment: "First edition"})
+    request_review(@user, edition)
+    approve_review(@other_user, edition)
+    send_fact_check(@user, edition)
+    receive_fact_check(@user, edition)
+    approve_fact_check(@user, edition)
+    publish(@user, edition)
   end
 
   test "should clone a published GuideEdition to an AnswerEdition" do
