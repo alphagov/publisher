@@ -17,7 +17,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     visit    "/editions/#{guide.to_param}"
 
-    click_on 'Add new part'
+    add_new_part
     within :css, '#parts div.fields:first-of-type' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'
@@ -25,8 +25,8 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
 
     assert page.has_css?('#parts div.fields', count: 1)
-    click_on 'Add new part'
 
+    add_new_part
     within :css, '#parts div.fields:nth-of-type(2)' do
       fill_in 'Title', :with => 'Part Two'
       fill_in 'Body',  :with => 'Body text'
@@ -34,8 +34,8 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
 
     assert page.has_css?('#parts div.fields', count: 2)
-    click_on 'Add new part'
 
+    add_new_part
     within :css, '#parts div.fields:nth-of-type(3)' do
       fill_in 'Title', :with => 'Part Three'
       fill_in 'Body',  :with => 'Body text'
@@ -62,7 +62,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     visit    "/editions/#{guide.to_param}"
 
-    click_on 'Add new part'
+    add_new_part
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'

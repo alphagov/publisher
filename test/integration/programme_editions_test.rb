@@ -15,6 +15,7 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
     refute_includes page.body, "Part One"
     refute_includes page.body, "part-one"
 
+    scroll_to_bottom
     click_on "Overview"
 
     within :css, "#overview" do
