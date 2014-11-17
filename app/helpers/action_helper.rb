@@ -19,6 +19,14 @@ module ActionHelper
 
   def format_and_auto_link_plain_text(text)
     text = auto_link(escape_once(text), link: :urls, sanitize: false)
+    text = auto_link_zendesk_tickets(text)
     simple_format(text, {}, :sanitize => false)
+  end
+
+  def auto_link_zendesk_tickets(text)
+    text.gsub(/(?:zen|zendesk|zendesk ticket)(?:\s)?(?:#|\:)?(?:\s)?(\d{4,})/i) do |s|
+      ticket = $1
+      "<a href=\"https://govuk.zendesk.com/tickets/#{ticket}\">#{s}</a>"
+    end
   end
 end
