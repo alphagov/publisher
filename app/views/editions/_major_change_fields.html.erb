@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-md-7">
+    <%= f.input :change_note,
+          as: :text,
+          label: 'Summary of changes to this edition',
+          input_html: { rows: 3 } %>
+    <div class="emphasised-field">
+      <%= f.input :major_change,
+            as: :boolean,
+            label: "Alert the public to this change" %>
+    </div>
+  </div>
+</div>
+
