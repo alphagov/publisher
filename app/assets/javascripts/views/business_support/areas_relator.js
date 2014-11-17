@@ -17,13 +17,14 @@ $(document).ready(function() {
         });
       },
       submitWithAreaArrayInputs = function (e) {
-        e.preventDefault();
         var areaIds = $relatedAreasHiddenInput.attr("value").split(',');
         $relatedAreasHiddenInput.remove();
         for (var idx = 0; idx < areaIds.length; idx++) {
           $(this).append('<input name="edition[areas][]" type="hidden" value="'+areaIds[idx]+'"/>');
         }
-        this.submit();
+
+        // let event continue and perform its default action (form submit)
+        // submitting with javascript would lose some context (eg which workflow button was pressed)
       };
 
   $relatedAreasWrapper
