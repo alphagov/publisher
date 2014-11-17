@@ -11,8 +11,8 @@
 <%= f.input :in_beta,
       as: :boolean,
       label: 'Content is in beta',
-      input_html: { disabled: @resource.locked_for_edits?, class: 'input-md-7' },
-      wrapper_html: { class: "form-group add-bottom-margin" } %>
+      input_html: { disabled: @resource.locked_for_edits? },
+      wrapper_html: { class: "emphasised-field form-group add-bottom-margin input-md-7" } %>
 
 <%= f.input :alternative_title,
       :label => 'Alternative title',
