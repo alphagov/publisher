@@ -1,0 +1,8 @@
+<%= f.input :change_note,
+      as: :text,
+      label: 'Summary of changes to this edition',
+      input_html: { rows: 3, class: 'input-md-7' } %>
+<%= f.input :major_change,
+      as: :boolean,
+      wrapper_html: {class: 'emphasised-field add-bottom-margin input-md-7'},
+      label: "Alert the public to this change" %>

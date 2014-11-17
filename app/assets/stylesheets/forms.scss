@@ -9,3 +9,9 @@
     display: block;
   }
 }
+
+.emphasised-field {
+  background: #ddd;
+  padding: $default-vertical-margin/2;
+  border-radius: $border-radius-base;
+}
