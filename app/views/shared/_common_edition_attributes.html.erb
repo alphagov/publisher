@@ -13,11 +13,6 @@
       input_html: { disabled: @resource.locked_for_edits?, class: 'input-md-7' },
       wrapper_html: { class: "form-group add-bottom-margin" } %>
 
-<%= f.input :alternative_title,
-      :label => 'Alternative title',
-      :hint => 'Use this where longer title is needed for SEO purposes',
-      :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
-
 <%= f.input :overview,
       :as => :text,
       :label => 'Meta tag description',

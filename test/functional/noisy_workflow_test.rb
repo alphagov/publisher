@@ -21,7 +21,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     user = User.create(:name => "Ben")
     other_user = User.create(:name => "James")
 
-    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title', :alternative_title => 'My Other Title')
+    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title')
     edition = guide
     request_review(user, edition)
     approve_review(other_user, edition)
@@ -58,7 +58,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     guide = user.create_edition(:guide, 
       :panopticon_id => FactoryGirl.create(:artefact).id, 
       :overview => 'My Overview', 
-      :title => 'My Title', :slug => 'my-title-b', :alternative_title => 'My Other Title')
+      :title => 'My Title', :slug => 'my-title-b')
 
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver: nil))
     receive_fact_check(user, guide)

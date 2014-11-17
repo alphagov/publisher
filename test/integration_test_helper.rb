@@ -74,12 +74,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     visit_edition guide
 
     unless page.has_css?('#parts div.part:first-of-type input')
-      click_on 'Add new part'
+      add_new_part
     end
 
     # Toggle the first part to be open, presuming the first part
     # is called 'Untitled part'
     unless page.has_css?('#parts div.part:first-of-type input')
+      scroll_to_bottom
       click_on 'Untitled part'
     end
 
@@ -119,6 +120,15 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     Capybara.current_session.driver.browser.cookies.each do |k, v|
       Capybara.current_session.driver.browser.remove_cookie(k)
     end
+  end
+
+  def add_new_part
+    scroll_to_bottom
+    click_on 'Add new part'
+  end
+
+  def scroll_to_bottom
+    page.execute_script "window.scrollBy(0,10000)"
   end
 end
 
