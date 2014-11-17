@@ -76,4 +76,10 @@ class EditionTest < ActiveSupport::TestCase
     exception = assert_raises(StateMachine::InvalidTransition) { edition.publish_anonymously! }
     assert_equal "Cannot transition state via :publish from :ready (Reason(s): Parts is invalid)", exception.message
   end
+
+  should "expose the update type" do
+    assert_equal "major", Edition.new(major_change: true).update_type
+    assert_equal "minor", Edition.new.update_type
+  end
+
 end

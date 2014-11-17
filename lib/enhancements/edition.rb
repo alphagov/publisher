@@ -86,4 +86,8 @@ class Edition
   def notify_publishing_api
     PublishingAPINotifier.perform_async(self.id.to_s)
   end
+
+  def update_type
+    self.major_change ? "major" : "minor"
+  end
 end
