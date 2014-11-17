@@ -10,7 +10,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     setup do
       @answer = FactoryGirl.create(:answer_edition, :state => "published")
 
-      @answer.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "first"})
+      @answer.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "first", :email_addresses => 'a@a.com, b@b.com'})
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "second"})
       @answer.new_action(@author, Action::PUBLISH, {:comment => "third"})
 
@@ -33,11 +33,20 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
 
-    should "has clickable links in notes" do
+    should "have clickable links in notes" do
       visit "/editions/#{@guide.id}"
       click_on "History and notes"
 
       assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
+    end
+
+    should "include the email addresses of fact check request recipients" do
+      visit "/editions/#{@guide.id}"
+      click_on "History and notes"
+      click_on "Edition 1"
+      assert page.has_css?('p', text: "first")
+      assert page.has_css?('p', text: "Request sent to a@a.com, b@b.com")
+      assert page.has_css?('.panel a[href="mailto:a@a.com,b@b.com"]', text: 'a@a.com, b@b.com')
     end
 
     should "hide actions when the edition title is clicked" do

@@ -8,13 +8,18 @@ module ActionHelper
   end
 
   def action_note(action)
-    if action.comment.present?
-      format_and_auto_link_plain_text(action.comment)
-    elsif action.is_fact_check_request? && action.email_addresses.present?
-      "Request sent to #{mail_to action.email_addresses}".html_safe
-    elsif action.recipient_id.present?
-      "Assigned to #{mail_to action.recipient.email, action.recipient.name}".html_safe
+    notes = []
+    notes << format_and_auto_link_plain_text(action.comment) if action.comment.present?
+
+    if action.is_fact_check_request? && action.email_addresses.present?
+      notes << content_tag(:p, "Request sent to #{mail_to action.email_addresses.gsub(/\s/,''), action.email_addresses}".html_safe)
     end
+
+    if action.recipient_id.present?
+      notes << content_tag(:p, "Assigned to #{mail_to action.recipient.email, action.recipient.name}".html_safe)
+    end
+
+    notes.join.html_safe
   end
 
   def format_and_auto_link_plain_text(text)
