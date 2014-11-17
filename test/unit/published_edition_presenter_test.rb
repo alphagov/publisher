@@ -22,9 +22,9 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         rendering_app: "frontend",
         routes: [ { path: "/#{edition.slug}", type: "exact" }],
         redirects: [],
-        update_type: "major",
+        update_type: "minor",
         details: {
-          change_note: "",
+          change_note: nil,
           tags: {
             browse_pages: ["tax/vat", "tax/capital-gains"],
             primary_topic: ["oil-and-gas/wells"],
