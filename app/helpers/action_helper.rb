@@ -24,9 +24,11 @@ module ActionHelper
   end
 
   def auto_link_zendesk_tickets(text)
-    text.gsub(/(?:zen|zendesk|zendesk ticket)(?:\s)?(?:#|\:)?(?:\s)?(\d{4,})/i) do |s|
+    text = text.gsub(/(?:zen|zendesk|zendesk ticket)(?:\s)?(?:#|\:)?(?:\s)?(\d{4,})/i) do |match|
       ticket = $1
-      "<a href=\"https://govuk.zendesk.com/tickets/#{ticket}\">#{s}</a>"
+      link_to match, "https://govuk.zendesk.com/tickets/#{ticket}"
     end
+
+    text.html_safe
   end
 end
