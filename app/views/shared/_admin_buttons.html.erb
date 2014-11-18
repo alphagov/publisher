@@ -1,42 +1,49 @@
 <% if @resource.can_destroy? %>
-<h3 class="remove-top-margin add-bottom-margin">Delete edition</h3>
-<%= button_to "Delete this edition – ##{@resource.version_number}", path_for_edition(@resource), :method => :delete, :class => "btn btn-danger" %>
+  <h3 class="remove-top-margin add-bottom-margin">Delete edition</h3>
+  <%= button_to "Delete this edition – ##{@resource.version_number}", path_for_edition(@resource), :method => :delete, :class => "btn btn-danger" %>
 <% end %>
 
 <% if @resource.can_destroy? && @resource.fact_check? %><hr/><% end %>
 
 <% if @resource.fact_check? %>
-<h3 class="add-bottom-margin">Skip fact check</h3>
-<%= button_to "Skip fact check", skip_fact_check_for_edition(@resource), :method => :post, :class => "btn btn-default" %>
+  <h3 class="add-bottom-margin">Skip fact check</h3>
+  <%= button_to "Skip fact check", skip_fact_check_for_edition(@resource), :method => :post, :class => "btn btn-default" %>
 <% end %>
 
-<% if @edition.published? %>
-  <h3 class="remove-top-margin add-bottom-margin">Change edition format</h3>
-  <%= render partial: "shared/clone_buttons",
-    locals: {
-      edition: @edition,
-      edition_class: AnswerEdition,
-      to_classes: [GuideEdition, ProgrammeEdition, TransactionEdition]
-    } %>
+<% if @edition.published? && @edition.can_create_new_edition? %>
+  <h3 class="remove-top-margin">Change edition format</h3>
 
-  <%= render partial: "shared/clone_buttons",
-    locals: {
-      edition: @edition,
-      edition_class: GuideEdition,
-      to_classes: [AnswerEdition, ProgrammeEdition, TransactionEdition]
-    } %>
+  <% if [AnswerEdition, GuideEdition, ProgrammeEdition, TransactionEdition].include?(@edition.class) %>
+    <%= render partial: "shared/clone_buttons",
+      locals: {
+        edition: @edition,
+        edition_class: AnswerEdition,
+        to_classes: [GuideEdition, ProgrammeEdition, TransactionEdition]
+      } %>
 
-  <%= render partial: "shared/clone_buttons",
-    locals: {
-      edition: @edition,
-      edition_class: ProgrammeEdition,
-      to_classes: [AnswerEdition, GuideEdition, TransactionEdition]
-    } %>
+    <%= render partial: "shared/clone_buttons",
+      locals: {
+        edition: @edition,
+        edition_class: GuideEdition,
+        to_classes: [AnswerEdition, ProgrammeEdition, TransactionEdition]
+      } %>
 
-  <%= render partial: "shared/clone_buttons",
-    locals: {
-      edition: @edition,
-      edition_class: TransactionEdition,
-      to_classes: [AnswerEdition, GuideEdition, ProgrammeEdition]
-    } %>
+    <%= render partial: "shared/clone_buttons",
+      locals: {
+        edition: @edition,
+        edition_class: ProgrammeEdition,
+        to_classes: [AnswerEdition, GuideEdition, TransactionEdition]
+      } %>
+
+    <%= render partial: "shared/clone_buttons",
+      locals: {
+        edition: @edition,
+        edition_class: TransactionEdition,
+        to_classes: [AnswerEdition, GuideEdition, ProgrammeEdition]
+      } %>
+  <% else %>
+    <p class="lead remove-bottom-margin">
+      <%= "#{@edition.class.to_s.underscore.humanize} can’t be switched to another format" %>
+    </p>
+  <% end %>
 <% end %>

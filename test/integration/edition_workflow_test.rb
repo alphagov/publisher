@@ -249,7 +249,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     click_on "Admin"
-    click_on "Skip Fact Check"
+    click_on "Skip fact check"
 
     # This information is not quite correct but it is the current behaviour.
     # Adding this test as an aid to future improvements
