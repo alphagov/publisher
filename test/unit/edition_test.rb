@@ -76,4 +76,39 @@ class EditionTest < ActiveSupport::TestCase
     exception = assert_raises(StateMachine::InvalidTransition) { edition.publish_anonymously! }
     assert_equal "Cannot transition state via :publish from :ready (Reason(s): Parts is invalid)", exception.message
   end
+
+  context "last_major_update_at" do
+    should "return the last update time from a series with a published major change" do
+      edition1 = FactoryGirl.create(:answer_edition,
+                                    major_change: true,
+                                    change_note: "changed",
+                                    state: "published",
+                                    updated_at: 1.minute.ago)
+
+      edition2 = edition1.build_clone
+      edition2.update_attributes(major_change: true, change_note: "changed", state: "published")
+
+      edition3 = edition2.build_clone
+      edition2.archive!
+
+      assert_equal edition3.last_major_update_at, edition1.updated_at
+    end
+
+    should "return the time of the first published edition from a series with no major changes" do
+      edition1 = FactoryGirl.create(:answer_edition,
+                                    state: "published",
+                                    updated_at: 1.minute.ago)
+
+      edition2 = edition1.build_clone
+      edition2.update_attributes(state: "published")
+      assert_equal edition2.last_major_update_at, edition1.updated_at
+    end
+
+    should "be nil for an unpublished series" do
+      edition1 = FactoryGirl.create(:answer_edition, state: "published")
+      edition2 = edition1.build_clone
+      edition1.archive!
+      assert_nil edition2.last_major_update_at
+    end
+  end
 end

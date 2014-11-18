@@ -10,16 +10,16 @@ class PublishedEditionPresenter
       description: @edition.overview,
       format: "placeholder",
       need_ids: [],
-      public_updated_at: @edition.updated_at,
+      public_updated_at: @edition.last_major_update_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
       routes: [
         {path: base_path, type: "exact"}
       ],
       redirects: [],
-      update_type: options[:republish] ? "republish" : "major",
+      update_type: update_type(options),
       details: {
-        change_note: "",
+        change_note: @edition.change_note,
         tags: {
           browse_pages: @edition.browse_pages,
           primary_topic: [@edition.primary_topic],
@@ -34,5 +34,15 @@ private
 
   def base_path
     "/#{@edition.slug}"
+  end
+
+  def update_type(options)
+    if options[:republish]
+      "republish"
+    elsif @edition.major_change
+      "major"
+    else
+      "minor"
+    end
   end
 end
