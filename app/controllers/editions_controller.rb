@@ -30,8 +30,8 @@ class EditionsController < InheritedResources::Base
     @publication = current_user.create_edition(class_identifier, params[:edition])
 
     if @publication.persisted?
-      redirect_to edition_path(@publication),
-        :notice => "#{description(@publication)} successfully created"
+      flash[:success] = "#{description(@publication)} successfully created"
+      redirect_to edition_path(@publication)
       return
     else
       setup_view_paths_for(@publication)
@@ -43,13 +43,15 @@ class EditionsController < InheritedResources::Base
     command = EditionDuplicator.new(resource, current_user)
 
     if !resource.can_create_new_edition?
-      flash[:danger] = "Another person has created a newer edition"
+      flash[:warning] = 'Another person has created a newer edition'
       redirect_to edition_path(resource)
     elsif command.duplicate(params[:to], new_assignee)
       return_to = params[:return_to] || edition_path(command.new_edition)
-      redirect_to return_to, :notice => 'New edition created'
+      flash[:success] = 'New edition created'
+      redirect_to return_to
     else
-      redirect_to edition_path(resource), :alert => command.error_message
+      flash[:danger] = command.error_message
+      redirect_to edition_path(resource)
     end
   end
 
@@ -72,7 +74,7 @@ class EditionsController < InheritedResources::Base
       }
       failure.html {
         @resource = resource
-        flash.now[:alert] = format_failure_message(resource)
+        flash.now[:danger] = format_failure_message(resource)
         render :action => "show"
       }
       success.json {
@@ -87,22 +89,24 @@ class EditionsController < InheritedResources::Base
   def destroy
     if resource.can_destroy?
       destroy! do
-        redirect_to root_url, :notice => "#{description(resource)} destroyed"
+        flash[:success] = "#{description(resource)} destroyed"
+        redirect_to root_url
         return
       end
     else
-      redirect_to edition_path(resource),
-        :notice => "Cannot delete a #{description(resource).downcase} that has ever been published."
+      flash[:danger] = "Cannot delete a #{description(resource).downcase} that has ever been published."
+      redirect_to edition_path(resource)
       return
     end
   end
 
   def progress
     if progress_edition(resource, params[:edition][:activity])
-      redirect_to edition_path(resource), notice: @command.status_message
+      flash[:success] = @command.status_message
     else
-      redirect_to edition_path(resource), alert: @command.status_message
+      flash[:danger] = @command.status_message
     end
+    redirect_to edition_path(resource)
   end
 
   def diff
