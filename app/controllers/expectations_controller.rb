@@ -9,7 +9,8 @@ class ExpectationsController < InheritedResources::Base
   def create
     @expectation = Expectation.new(params[:expectation])
     if @expectation.save
-      redirect_to expectations_path, :notice => 'Expectation set'
+      flash[:success] = 'Expectation set'
+      redirect_to expectations_path
     else
       @expectations = Expectation.all
       render :action => 'index'

@@ -48,7 +48,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     post :duplicate, :id => @guide.id
     assert_response 302
-    assert_equal "New edition created", flash[:notice]
+    assert_equal "New edition created", flash[:success]
   end
 
   test "should update status via progress and redirect to parent" do
@@ -67,7 +67,7 @@ class EditionsControllerTest < ActionController::TestCase
       }
 
     assert_redirected_to :controller => "editions", :action => "show", :id => @guide.id
-    assert_equal "Guide updated", flash[:notice]
+    assert_equal "Guide updated", flash[:success]
   end
 
   test "should update assignment" do
@@ -128,7 +128,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     post :update, :id => @guide.id, :edition => {}
 
-    assert_equal "Editions scheduled for publishing can't be edited", flash[:alert]
+    assert_equal "Editions scheduled for publishing can't be edited", flash[:danger]
   end
 
   test "should save the edition changes while performing an activity" do
@@ -162,7 +162,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
       }
     }
-    assert_equal "I failed", flash[:alert]
+    assert_equal "I failed", flash[:danger]
   end
 
   test "should report publication counts on creation" do
