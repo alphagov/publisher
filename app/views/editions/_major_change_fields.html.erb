@@ -1,8 +1,9 @@
 <%= f.input :change_note,
       as: :text,
       label: 'Summary of changes to this edition',
-      input_html: { rows: 3, class: 'input-md-7' } %>
+      input_html: { rows: 3, class: 'input-md-7', disabled: @resource.locked_for_edits? } %>
 <%= f.input :major_change,
       as: :boolean,
+      input_html: {disabled: @resource.locked_for_edits?},
       wrapper_html: {class: 'emphasised-field add-bottom-margin input-md-7'},
       label: "Alert the public to this change" %>

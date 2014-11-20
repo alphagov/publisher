@@ -25,8 +25,8 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
 
     should "show change note fields once an edition has been published" do
       visit_edition @edition
-      assert page.has_field?("edition_change_note")
-      assert page.has_field?("edition_major_change")
+      assert page.has_field?("edition_change_note", disabled: true)
+      assert page.has_field?("edition_major_change", disabled: true)
     end
 
     context "for an edition in a published series" do
@@ -63,4 +63,3 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
     end
   end
 end
-
