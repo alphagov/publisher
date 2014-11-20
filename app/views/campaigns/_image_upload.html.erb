@@ -14,8 +14,8 @@
           <% end %>
         </p>
       <% end %>
-      <p><%= label_tag do %>Remove image? <%= check_box_tag "edition[remove_#{format}_image]", "1" %><% end %></p>
+      <p><%= label_tag do %>Remove image? <%= check_box_tag "edition[remove_#{format}_image]", "1", false, disabled: @resource.locked_for_edits? %><% end %></p>
     <% end %>
-    <%= f.input "#{format}_image".to_sym, :as => :file, :label => "Upload image:" %>
+    <%= f.input "#{format}_image".to_sym, :as => :file, :label => "Upload image:", input_html: { disabled: @resource.locked_for_edits? } %>
   </td>
 </tr>
