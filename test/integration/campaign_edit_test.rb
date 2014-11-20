@@ -164,7 +164,7 @@ class CampaignEditTest < JavascriptIntegrationTest
                                            :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
                                            :organisation_brand_colour => "department-for-transport")
 
-    visit "/admin/editions/#{campaign.to_param}"
+    visit "/editions/#{campaign.to_param}"
     assert_all_edition_fields_disabled(page)
   end
 end

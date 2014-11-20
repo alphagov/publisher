@@ -231,7 +231,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                                           :panopticon_id => @artefact.id,
                                           :state => 'published')
 
-    visit "/admin/editions/#{business_support.to_param}"
+    visit "/editions/#{business_support.to_param}"
     assert_all_edition_fields_disabled(page)
   end
 end

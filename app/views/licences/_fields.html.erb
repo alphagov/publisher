@@ -1,6 +1,6 @@
 <%= f.inputs do %>
   <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-  <%= f.input :licence_identifier, :input_html => { class: 'input-md-3' } %>
+  <%= f.input :licence_identifier, :input_html => { class: 'input-md-3', disabled: @resource.locked_for_edits? } %>
 
   <%= f.input :will_continue_on,
               :hint => 'Text to follow the statement "This will continue on. eg. "the HMRC website"',

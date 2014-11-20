@@ -54,4 +54,14 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? "All bar done Edition 2"
 
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:completed_transaction_edition,
+                                  :panopticon_id => @artefact.id,
+                                  :state => 'published',
+                                  :title => "All bar done")
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

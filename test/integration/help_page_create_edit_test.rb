@@ -60,4 +60,15 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Body", :with => "This is really helpful")
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:help_page_edition,
+                                 :panopticon_id => @artefact.id,
+                                 :state => 'published',
+                                 :title => "Foo bar",
+                                 :body => "This is really helpful")
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end
