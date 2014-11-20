@@ -36,6 +36,10 @@ $(document).ready(function() {
                                       .attr("name", $relatedAreasTextArea.attr("name"))
                                       .attr("value", $relatedAreasTextArea.val());
 
+  if ($relatedAreasTextArea.is(":disabled")) {
+    $relatedAreasHiddenInput.prop('disabled', true);
+  }
+
   $relatedAreasTextArea.replaceWith($relatedAreasHiddenInput);
   $relatedAreasHiddenInput.addClass('form-control');
 

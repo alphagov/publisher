@@ -232,49 +232,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
                                           :state => 'published')
 
     visit "/admin/editions/#{business_support.to_param}"
-
-    assert page.has_css?("input#edition_title[disabled]")
-    assert page.has_css?("input#edition_organiser[disabled]")
-    assert page.has_css?("textarea#edition_eligibility[disabled]")
-    assert page.has_css?("textarea#edition_evaluation[disabled]")
-    assert page.has_css?("textarea#edition_contact_details[disabled]")
-    assert page.has_css?("input#edition_max_employees[disabled]")
-    assert page.has_css?("input#edition_min_value[disabled]")
-    assert page.has_css?("input#edition_max_value[disabled]")
-    assert page.has_css?("input#edition_will_continue_on[disabled]")
-    assert page.has_css?("input#edition_continuation_link[disabled]")
-    assert page.has_css?("select#edition_priority[disabled]")
-    assert page.has_css?("select#edition_start_date_1i[disabled]")
-    assert page.has_css?("select#edition_start_date_2i[disabled]")
-    assert page.has_css?("select#edition_start_date_3i[disabled]")
-    assert page.has_css?("select#edition_end_date_1i[disabled]")
-    assert page.has_css?("select#edition_end_date_2i[disabled]")
-    assert page.has_css?("select#edition_end_date_3i[disabled]")
-
-    assert page.has_css?("input#business_support_business_type_check_all[disabled]")
-    assert page.has_css?("input#edition_business_types_charity[disabled]")
-    assert page.has_css?("input#edition_business_types_limited-company[disabled]")
-    assert page.has_css?("input#edition_business_types_plc[disabled]")
-
-    assert page.has_css?("input#business_support_business_size_check_all[disabled]")
-    assert page.has_css?("input#edition_business_sizes_under-10[disabled]")
-    assert page.has_css?("input#edition_business_sizes_up-to-249[disabled]")
-    assert page.has_css?("input#edition_business_sizes_over-1000000[disabled]")
-
-    assert page.has_css?("input#business_support_purpose_check_all[disabled]")
-    assert page.has_css?("input#edition_purposes_expansion[disabled]")
-    assert page.has_css?("input#edition_purposes_world-domination[disabled]")
-
-    assert page.has_css?("input#business_support_sector_check_all[disabled]")
-    assert page.has_css?("input#edition_sectors_education[disabled]")
-    assert page.has_css?("input#edition_sectors_manufacturing[disabled]")
-
-    assert page.has_css?("input#business_support_stage_check_all[disabled]")
-    assert page.has_css?("input#edition_stages_start-up[disabled]")
-    assert page.has_css?("input#edition_stages_grow-and-sustain[disabled]")
-
-    assert page.has_css?("input#business_support_support_type_check_all[disabled]")
-    assert page.has_css?("input#edition_support_types_grant[disabled]")
-    assert page.has_css?("input#edition_support_types_loan[disabled]")
+    assert_all_edition_fields_disabled(page)
   end
 end
