@@ -28,7 +28,7 @@
             <%=
               select_tag("user_filter", options_for_select(
                 [["All", "all"], ["Nobody", "nobody"]] +
-                User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
+                User.enabled.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
               ), class: 'form-control js-user-filter', "data-module" => 'assignee-select')
             %>
             <label for="string_filter" class="add-top-margin nav-header">Keyword</label>

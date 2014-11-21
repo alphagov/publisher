@@ -9,7 +9,7 @@
           <label for="user_filter" class="nav-header">Filter by user</label>
           <%=
             select_tag("user_filter", options_for_select(
-              User.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
+              User.enabled.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
             ), :class => "form-control")
           %>
           <label for="string_filter" class="add-top-margin nav-header">Filter by keyword</label>

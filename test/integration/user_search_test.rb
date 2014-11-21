@@ -78,4 +78,13 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     assert page.has_content?(guides[0].title)
     refute page.has_content?(guides[1].title)
   end
+
+  test "doesn't show disabled users in 'Filter by user' select box" do
+    disabled_user = FactoryGirl.create(:disabled_user)
+
+    visit "/user_search"
+
+    select_box = find_field('Filter by user')
+    refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
+  end
 end

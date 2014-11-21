@@ -128,6 +128,15 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert_equal guide.assigned_to, get_user("Bob")
   end
 
+  test "doesn't show disabled users in 'Assigned to' select box" do
+    disabled_user = FactoryGirl.create(:disabled_user)
+    guide = FactoryGirl.create(:guide_edition)
+
+    visit_edition guide
+
+    refute page.has_xpath?("//select[@id='edition_assigned_to_id']/option[text() = '#{disabled_user.name}']")
+  end
+
   test "a guide is in draft after creation" do
     guide = FactoryGirl.create(:guide_edition)
 

@@ -95,4 +95,12 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?("XXX")
   end
+
+  test "doesn't show disabled users in 'Assignee' select box" do
+    disabled_user = FactoryGirl.create(:disabled_user)
+
+    visit "/"
+    select_box = find_field('Assignee')
+    refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
+  end
 end
