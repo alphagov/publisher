@@ -74,4 +74,14 @@ class GuideCreateEditTest < JavascriptIntegrationTest
 
     assert_equal guide.parts.map(&:title), g2.parts.map(&:title)
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:guide_edition_with_two_parts,
+                                 :panopticon_id => @artefact.id,
+                                 :state => 'published',
+                                 :title => "Foo bar")
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

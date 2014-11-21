@@ -129,4 +129,17 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     refute page.has_selector?(".uploaded-caption-file")
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:video_edition,
+                                 :panopticon_id => @artefact.id,
+                                 :state => 'published',
+                                 :title => "Foo bar",
+                                 :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
+                                 :video_summary => "Coke smoothie",
+                                 :body => "Description of video")
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

@@ -16,13 +16,13 @@
       <div class="uploaded-caption-file">
         <h4>Current caption file</h4>
         <p><%= link_to @edition.caption_file.name, @edition.caption_file.file_url %></p>
-        <p><%= label_tag do %>Remove caption file? <%= check_box_tag "edition[remove_caption_file]", "1" %><% end %></p>
+        <p><%= label_tag do %>Remove caption file? <%= check_box_tag "edition[remove_caption_file]", "1", false, disabled: @resource.locked_for_edits? %><% end %></p>
       </div>
 
       <h4>Replace caption file</h4>
     <% end %>
 
-    <p><%= f.input :caption_file, :as => :file, :label => "Upload a new caption file" %></p>
+    <p><%= f.input :caption_file, :as => :file, :label => "Upload a new caption file", input_html: { disabled: @resource.locked_for_edits? } %></p>
   <% end %>
   <hr />
 

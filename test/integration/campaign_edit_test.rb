@@ -152,4 +152,19 @@ class CampaignEditTest < JavascriptIntegrationTest
     refute page.has_selector?("#medium-campaign-image a")
     refute page.has_selector?("#large-campaign-image a")
   end
+
+  should "disable fields for a published edition" do
+    campaign = FactoryGirl.create(:campaign_edition,
+                                           :panopticon_id => @artefact.id,
+                                           :state => 'published',
+                                           :title => "Campaign on your parade",
+                                           :body => "Foo",
+                                           :organisation_formatted_name => "Driver & Vehicle\nLicensing\nAgency",
+                                           :organisation_crest => "single-identity",
+                                           :organisation_url => "/government/organisations/driver-and-vehicle-licensing-agency",
+                                           :organisation_brand_colour => "department-for-transport")
+
+    visit "/editions/#{campaign.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

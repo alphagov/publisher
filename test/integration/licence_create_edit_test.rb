@@ -88,4 +88,19 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Will continue on", :with => "The HMRC website")
     assert page.has_field?("Link to competent authority", :with => "http://www.hmrc.gov.uk")
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:licence_edition,
+                                  :panopticon_id => @artefact.id,
+                                  :state => 'published',
+                                  :title => "Foo bar",
+                                  :licence_identifier => "ab2345",
+                                  :licence_short_description => "Short description content",
+                                  :licence_overview => "Licence overview content",
+                                  :will_continue_on => "The HMRC website",
+                                  :continuation_link => "http://www.hmrc.gov.uk")
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

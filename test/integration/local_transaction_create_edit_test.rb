@@ -97,4 +97,17 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "We had some problems saving"
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:local_transaction_edition,
+                                  :panopticon_id => @artefact.id,
+                                  :state => 'published',
+                                  :slug => @artefact.slug,
+                                  :title => "Foo transaction",
+                                  :lgsl_code => 1
+                                )
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end

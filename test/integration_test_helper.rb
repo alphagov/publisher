@@ -105,6 +105,14 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     find(:xpath, "//body").find(".select2-results li", text: value).click
   end
 
+  def assert_all_edition_fields_disabled(page)
+    selector = '#edit input:not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
+    inputs = page.all(selector)
+    input_description = ""
+    inputs.each{|i| input_description = "#{input_description}\n##{i['id']}"}
+    assert_same(0, inputs.length, "#{inputs.length} field(s) on this edition need(s) disabling: #{input_description}")
+  end
+
   def save_edition
     # using trigger because poltergeist
     # thinks there are overlapping elements

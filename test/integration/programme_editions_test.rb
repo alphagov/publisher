@@ -35,4 +35,11 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
     assert_includes page.body, "Imagine this is Welsh"
     refute_includes page.body, "imagine-this-is-welsh"
   end
+
+  should "disable fields for a published edition" do
+    edition = FactoryGirl.create(:programme_edition, :title => "Benefit Example", :slug => "benefit-example", :state => 'published')
+
+    visit "/editions/#{edition.to_param}"
+    assert_all_edition_fields_disabled(page)
+  end
 end
