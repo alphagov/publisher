@@ -5,13 +5,13 @@ gem 'rails', '3.2.18'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '9.3.0'
+  gem 'gds-sso', '10.0.0'
 end
 
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "24.0.1"
+  gem "govuk_content_models", "24.1.0"
 end
 
 gem 'erubis'
