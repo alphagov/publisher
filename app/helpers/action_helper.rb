@@ -22,6 +22,10 @@ module ActionHelper
     notes.join.html_safe
   end
 
+  def action_class(action)
+    action.request_type.gsub(/_/, '-')
+  end
+
   def format_and_auto_link_plain_text(text)
     text = auto_link(escape_once(text), link: :urls, sanitize: false)
     text = auto_link_zendesk_tickets(text)

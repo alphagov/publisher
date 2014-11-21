@@ -13,7 +13,7 @@
     <div class="panel-collapse collapse<% if edition_counter == 0 %> in<% end %>" id="body<%= edition.version_number %>">
       <ul class="panel-body list-unstyled remove-bottom-margin">
         <% edition_actions(edition).each do |action| %>
-          <li class="add-bottom-margin add-left-margin">
+          <li class="action-<%= action_class(action) %> add-bottom-margin add-left-margin">
             <h4>
               <div class="add-label-margin normal">
                 <time datetime="<%= action.created_at %>" class="text-muted add-label-margin">
@@ -33,7 +33,7 @@
                   We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.
                 </div>
               <% end %>
-              <blockquote class="add-left-margin">
+              <blockquote class="<%= action_class(action) %>-note add-left-margin">
                 <%= action_note(action) %>
               </blockquote>
             <% end %>
