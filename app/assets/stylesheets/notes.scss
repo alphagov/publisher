@@ -8,3 +8,18 @@
   margin-right: 25px;
   margin-top: $default-vertical-margin;
 }
+
+.original-message-toggle {
+  display: block;
+  margin: $default-vertical-margin -30px -30px;
+  background: rgba(0,0,0,0.02);
+  padding: 15px 30px;
+}
+
+.original-message-toggle:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.original-message {
+  margin-top: 50px;
+}

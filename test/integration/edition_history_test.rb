@@ -24,6 +24,8 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
 
       assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
+
+      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
     end
 
     should "have the first history actions visible" do
@@ -38,6 +40,19 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
+    end
+
+    should "hide everything but the latest reply in fact check responses behind a toggle" do
+      visit "/editions/#{@guide.id}"
+      click_on "History and notes"
+
+      assert page.has_css?('p', text: 'email reply')
+      refute page.has_css?('p', text: 'original email request')
+      assert page.has_css?('.panel a', text: 'Toggle original message')
+
+      click_on "Toggle original message"
+
+      assert page.has_css?('p', text: 'original email request')
     end
 
     should "include the email addresses of fact check request recipients" do
