@@ -48,9 +48,9 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
       assert page.has_css?('p', text: 'email reply')
       refute page.has_css?('p', text: 'original email request')
-      assert page.has_css?('.panel a', text: 'Toggle original message')
+      assert page.has_css?('.panel a', text: 'Toggle earlier messages')
 
-      click_on "Toggle original message"
+      click_on "Toggle earlier messages"
 
       assert page.has_css?('p', text: 'original email request')
     end

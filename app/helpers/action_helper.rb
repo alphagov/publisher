@@ -55,7 +55,7 @@ module ActionHelper
 
     # if a reply was found
     if email_parts.length > 0
-      formatted_email_parts << link_to('Toggle original message',
+      formatted_email_parts << link_to('Toggle earlier messages',
                   '#show-original',
                   class: 'original-message-toggle if-no-js-hide js-toggle')
       formatted_email_parts << content_tag(:div,

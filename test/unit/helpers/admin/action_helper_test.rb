@@ -37,7 +37,7 @@ class ActionHelperTest < ActionView::TestCase
       formatted_email = format_email_text(text)
       assert_equal formatted_email.length, 3
       assert_match /reply/, formatted_email.first
-      assert_match /Toggle original message/, formatted_email.second
+      assert_match /Toggle earlier messages/, formatted_email.second
       assert_match /original/, formatted_email.last
     end
   end
