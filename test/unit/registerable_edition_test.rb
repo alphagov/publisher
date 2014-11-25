@@ -79,6 +79,24 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
   end
 
+  context "latest changes" do
+    setup do
+      @edition_with_major_change = FactoryGirl.create(:answer_edition, major_change: true,
+                                                                       change_note: 'First edition',
+                                                                       updated_at: 1.minute.ago,
+                                                                       state: 'published')
+      @registerable = RegisterableEdition.new(@edition_with_major_change)
+    end
+
+    should "return the latest_change_note" do
+      assert_equal 'First edition', @registerable.latest_change_note
+    end
+
+    should 'return the public_timestamp' do
+      assert_equal @edition_with_major_change.updated_at, @registerable.public_timestamp
+    end
+  end
+
   context "paths and prefixes" do
     context "for a CampaignEdition" do
       should "generate /slug and /slug.json path" do
