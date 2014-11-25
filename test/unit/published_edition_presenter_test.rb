@@ -27,7 +27,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         redirects: [],
         update_type: "major",
         details: {
-          change_note: nil,
+          change_note: @edition.change_note,
           tags: {
             browse_pages: ["tax/vat", "tax/capital-gains"],
             primary_topic: ["oil-and-gas/wells"],

@@ -19,7 +19,7 @@ class PublishedEditionPresenter
       redirects: [],
       update_type: update_type(options),
       details: {
-        change_note: @edition.change_note,
+        change_note: @edition.latest_change_note,
         tags: {
           browse_pages: @edition.browse_pages,
           primary_topic: [@edition.primary_topic],
