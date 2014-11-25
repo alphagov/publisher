@@ -1,7 +1,7 @@
 class RegisterableEdition
   extend Forwardable
 
-  def_delegators :@edition, :slug, :title, :indexable_content
+  def_delegators :@edition, :slug, :title, :indexable_content, :latest_change_note
 
   def initialize(edition)
     @edition = edition
@@ -43,5 +43,9 @@ class RegisterableEdition
 
   def specialist_sectors
     [@edition.primary_topic] + @edition.additional_topics
+  end
+
+  def public_timestamp
+    @edition.public_updated_at
   end
 end

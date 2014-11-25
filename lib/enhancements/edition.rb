@@ -85,17 +85,4 @@ class Edition
   def notify_publishing_api
     PublishingAPINotifier.perform_async(self.id.to_s)
   end
-
-  def last_major_update_at
-    last_major_update = self.series.published.where(major_change: true)
-                                             .order(version_number: "desc").first
-
-    if last_major_update
-      last_major_update.updated_at
-    elsif first_published_edition = self.series.published.order(version_number: "asc").first
-      first_published_edition.updated_at
-    else
-      nil
-    end
-  end
 end
