@@ -10,7 +10,7 @@ class PublishedEditionPresenter
       description: @edition.overview,
       format: "placeholder",
       need_ids: [],
-      public_updated_at: @edition.last_major_update_at,
+      public_updated_at: @edition.public_updated_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
       routes: [
