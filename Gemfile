@@ -11,7 +11,13 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "24.1.0"
+  gem "govuk_content_models", "25.0.0"
+end
+
+if ENV['API_DEV']
+  gem 'gds-api-adapters', path: '../gds-api-adapters'
+else
+  gem 'gds-api-adapters', '16.4.0'
 end
 
 gem 'erubis'
@@ -19,7 +25,6 @@ gem 'govuk_admin_template', '1.1.7'
 gem 'select2-rails', '3.5.9.1'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
-gem 'gds-api-adapters', '15.1.0'
 gem 'rails_autolink', '1.1.6'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
