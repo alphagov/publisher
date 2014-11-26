@@ -39,10 +39,14 @@ private
   def update_type(options)
     if options[:republish]
       "republish"
-    elsif @edition.major_change
+    elsif major_change?
       "major"
     else
       "minor"
     end
+  end
+
+  def major_change?
+    @edition.major_change || @edition.version_number == 1
   end
 end
