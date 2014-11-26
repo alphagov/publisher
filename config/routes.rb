@@ -1,6 +1,10 @@
 Publisher::Application.routes.draw do
   get '/healthcheck' => 'healthcheck#check'
 
+  namespace :api do
+    post 'reindex-topic-editions/*slug', to: 'search#reindex_topic_editions', as: 'reindex_topic_editions'
+  end
+
   resources :notes do
     put 'resolve', on: :member
   end
