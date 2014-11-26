@@ -19,7 +19,7 @@ class BusinessSupportAreasImporter
             regions.keep_if { |r| imminence_areas.include?(r) }
             # Overwrite areas for Edition
             puts "Updating #{bs_edition.slug} with areas: #{regions}"
-            count += 1 if bs_edition.update_attribute(:areas, regions)
+            count += 1 if regions.any? and bs_edition.update_attribute(:areas, regions)
           end
         end
       end
