@@ -24,8 +24,6 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
 
       assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
-
-      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
     end
 
     should "have the first history actions visible" do
@@ -43,6 +41,8 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "hide everything but the latest reply in fact check responses behind a toggle" do
+      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
+
       visit "/editions/#{@guide.id}"
       click_on "History and notes"
 
