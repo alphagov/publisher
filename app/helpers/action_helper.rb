@@ -68,7 +68,7 @@ module ActionHelper
 
   # Based on common reply patterns
   # http://stackoverflow.com/questions/1372694/strip-signatures-and-replies-from-emails
-  # https://github.com/fofr/email_reply_parser/blob/master/lib/email_reply_parser.rb
+  # https://github.com/github/email_reply_parser/blob/master/lib/email_reply_parser.rb
   #
   # Outlook: -----Original Message-----
   # OSX Mail: On [date] [someone] wrote:
