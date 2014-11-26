@@ -40,6 +40,21 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
     end
 
+    should "hide everything but the latest reply in fact check responses behind a toggle" do
+      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
+
+      visit "/editions/#{@guide.id}"
+      click_on "History and notes"
+
+      assert page.has_css?('p', text: 'email reply')
+      refute page.has_css?('p', text: 'original email request')
+      assert page.has_css?('.panel a', text: 'Toggle earlier messages')
+
+      click_on "Toggle earlier messages"
+
+      assert page.has_css?('p', text: 'original email request')
+    end
+
     should "include the email addresses of fact check request recipients" do
       visit "/editions/#{@guide.id}"
       click_on "History and notes"
