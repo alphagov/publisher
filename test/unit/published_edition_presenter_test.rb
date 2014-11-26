@@ -10,6 +10,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         major_change: true,
         updated_at: 1.minute.ago,
         change_note: 'Test',
+        version_number: 2,
       )
 
       @presenter = PublishedEditionPresenter.new(@edition)
@@ -54,6 +55,14 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
 
       output = @presenter.render_for_publishing_api(republish: false)
       assert_equal 'minor', output[:update_type]
+    end
+
+    should 'always return a "major" update_type for a first edition' do
+      first_edition = FactoryGirl.create(:edition, major_change: false, version_number: 1)
+      presenter = PublishedEditionPresenter.new(first_edition)
+
+      output = presenter.render_for_publishing_api(republish: false)
+      assert_equal 'major', output[:update_type]
     end
   end
 end
