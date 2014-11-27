@@ -7,6 +7,15 @@ class TopicChanges::ProcessorTest < ActiveSupport::TestCase
     PublishedSlugRegisterer.any_instance.stubs(:run)
   end
 
+  def build_stub_logger
+    stub("Logger").tap {|logger|
+      # don't set up expectations about info log messages to keep these tests
+      # simpler
+      #
+      logger.stubs(:info)
+    }
+  end
+
   context 'replacing a topic on an edition' do
     should 'retag the additional_topic for an Edition' do
       edition = FactoryGirl.create(:answer_edition, additional_topics: ['tea/yorkshire', 'tea/tetley'], primary_topic: 'tea/pg-tips')
@@ -100,7 +109,7 @@ class TopicChanges::ProcessorTest < ActiveSupport::TestCase
       },
     ]
 
-    stub_logger = stub("Logger")
+    stub_logger = build_stub_logger
     stub_logger.expects(:warn).with(regexp_matches(/no slug/))
 
     processor = TopicChanges::Processor.new(operations, stub_logger)
@@ -116,7 +125,7 @@ class TopicChanges::ProcessorTest < ActiveSupport::TestCase
       },
     ]
 
-    stub_logger = stub("Logger")
+    stub_logger = build_stub_logger
     stub_logger.expects(:warn).with(regexp_matches(/No editions found/))
 
     processor = TopicChanges::Processor.new(operations, stub_logger)
@@ -167,7 +176,7 @@ class TopicChanges::ProcessorTest < ActiveSupport::TestCase
       },
     ]
 
-    stub_logger = stub("Logger")
+    stub_logger = build_stub_logger
     mock_slug_registerer = stub("PublishedSlugRegisterer")
     PublishedSlugRegisterer.stubs(:new)
                            .with(stub_logger, [edition.slug])

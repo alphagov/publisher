@@ -1,3 +1,5 @@
+require 'csv'
+
 namespace :topic_changes do
 
   desc "Given a source and destination tag, writes a CSV of slugs requiring retagging"
@@ -21,6 +23,23 @@ namespace :topic_changes do
     end
 
     puts "Task complete."
+  end
+
+  task :process, [:path_to_csv] => :environment do |t, args|
+    path_to_csv = args[:path_to_csv]
+
+    unless path_to_csv.present?
+      raise "Missing arguments. Specify the CSV file to use with the 'path_to_csv' argument."
+    end
+
+    puts "Reading from: #{path_to_csv}"
+    csv = CSV.read(path_to_csv, headers: true)
+
+    logger = Logger.new($stdout)
+    processor = TopicChanges::Processor.new(csv, logger)
+    processor.run
+
+    puts "Task complete"
   end
 
 end
