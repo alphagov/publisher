@@ -54,6 +54,8 @@ module TopicChanges
           edition,
           row['remove_topic']
         )
+      else
+        logger.warn "No value present in the 'remove_topic' column, no action taken."
       end
     end
 
