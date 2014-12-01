@@ -34,18 +34,16 @@
   <%= f.input :minutes_to_complete,
               :input_html => { :disabled => @resource.locked_for_edits? } %>
 
-
   <%= f.input :uses_government_gateway,
               :as => :boolean,
               :input_html => { :disabled => @resource.locked_for_edits? } %>
     </div>
   </div>
-  <hr />
-  <%= f.input :expectation_ids,
-              :as => :check_boxes,
-              :label => "Expectations",
-              :collection => TransactionEdition.expectation_choices,
-              :input_html => { :disabled => @resource.locked_for_edits? } %>
+
+  <%= f.input :need_to_know,
+    :as => :text,
+    :label => 'What you need to know',
+    :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
 <% end %>
 
 <%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
