@@ -8,7 +8,6 @@ Publisher::Application.routes.draw do
   resources :notes do
     put 'resolve', on: :member
   end
-  resources :expectations, :except => [:edit, :update, :destroy]
 
   resources :editions do
     member do
