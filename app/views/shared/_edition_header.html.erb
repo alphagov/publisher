@@ -27,9 +27,12 @@
   </div>
 <% end %>
 <% if @resource.artefact.state == "archived" %>
-  <div class="alert alert-error">
-    <h2>Stop! You can't edit this publication because its artefact file in Panopticon has been archived.</h2>
-    <p>(It's unpublished from the website but you can still see the latest edition here in Publisher.)</p>
+  <div class="callout callout-danger add-bottom-margin">
+    <h2 class="callout-title">You can’t edit this publication</h2>
+    <div class="callout-body">
+      This publication’s artefact file has been archived in Panopticon.<br />
+      It’s unpublished from the website but you can still see the latest edition here.
+    </div>
   </div>
 <% else %>
   <%= render 'shared/ready_or_review_or_fact_check' %>
