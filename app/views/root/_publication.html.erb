@@ -51,9 +51,15 @@
   <td>
     <%= publication.assignee %>
   </td>
-  <td>
-    <%= publication.creator %>
-  </td>
+  <% if tab && tab == :in_review %>
+    <td>
+      <%= time_ago_in_words(publication.review_requested_at) %>
+    </td>
+  <% else %>
+    <td>
+      <%= publication.creator %>
+    </td>
+  <% end -%>
   <% if tab && tab == :published %>
     <td>
       <%= publication.publisher %>

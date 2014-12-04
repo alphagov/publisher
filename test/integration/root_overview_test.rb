@@ -103,4 +103,28 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     select_box = find_field('Assignee')
     refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
+
+  test "Publications in review are ordered correctly" do
+    FactoryGirl.create(:user)
+    x =  FactoryGirl.create(:guide_edition, :title => "XXX", :slug => "xxx",
+                            :state => 'in_review', :review_requested_at => 4.days.ago)
+    y =  FactoryGirl.create(:guide_edition, :title => "YYY", :slug => "yyy",
+                            :state => 'in_review', :review_requested_at => 2.days.ago)
+    z =  FactoryGirl.create(:guide_edition, :title => "ZZZ", :slug => "zzz",
+                            :state => 'in_review', :review_requested_at => 20.minutes.ago)
+
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", :text => "4 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", :text => "2 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", :text => "20 minutes")
+
+    click_on "Awaiting review"
+
+    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", :text => "20 minutes")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", :text => "2 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", :text => "4 days")
+  end
 end
