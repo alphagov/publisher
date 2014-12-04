@@ -17,7 +17,7 @@ module BaseHelper
       li_classes << 'active' if scope == options[:current]
 
       content_tag(:li, class: li_classes.join(' ')) do
-        url = root_path(:user_filter => params[:user_filter], :string_filter => params[:string_filter], :list => scope)
+        url = root_path(scope_path_options(scope))
 
         content_tag(:a, :href => url) do
           h(status_label + " ") + content_tag(:span, @presenter.send(scope).length, class: "badge pull-right")
@@ -45,6 +45,17 @@ module BaseHelper
     else
       date.strftime("%d/%m/%Y %R")
     end
+  end
+
+private
+  def scope_path_options(scope)
+    opts = { :user_filter => params[:user_filter], :string_filter => params[:string_filter], :list => scope }
+    opts.merge!(in_review_url_defaults) if scope == :in_review
+    opts
+  end
+
+  def in_review_url_defaults
+    { :direction => 'asc', :sort => 'review_requested_at' }
   end
 
   include PathsHelper
