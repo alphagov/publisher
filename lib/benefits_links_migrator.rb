@@ -66,9 +66,8 @@ class BenefitsLinksMigrator
         if e.state == 'published'
           clone = e.build_clone
           clone.new_action(u, Action::REQUEST_REVIEW, {})
-          clone.state = 'in_review'
           u.record_note(clone, update_msg)
-          updated = clone.save!
+          updated = clone.request_review!
         else
           u.record_note(e, update_msg)
           updated = e.save

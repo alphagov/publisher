@@ -140,7 +140,7 @@ class TopicChanges::ProcessorTest < ActiveSupport::TestCase
 
     non_archived_editions = [
       FactoryGirl.create(:edition, atts.merge(state: 'draft')),
-      FactoryGirl.create(:edition, atts.merge(state: 'in_review')),
+      FactoryGirl.create(:edition, atts.merge(state: 'in_review', review_requested_at: Time.zone.now)),
       FactoryGirl.create(:edition, atts.merge(state: 'ready')),
       FactoryGirl.create(:edition, atts.merge(state: 'published')),
     ]
