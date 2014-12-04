@@ -45,7 +45,7 @@ GEM
     bootstrap-kaminari-views (0.0.3)
       kaminari (>= 0.13)
       rails (>= 3.1)
-    bootstrap-sass (3.2.0.2)
+    bootstrap-sass (3.3.1.0)
       sass (~> 3.2)
     bson (1.7.1)
     bson_ext (1.7.1)
@@ -111,8 +111,8 @@ GEM
       kramdown (~> 1.4.1)
       nokogiri (~> 1.5.10)
       sanitize (~> 2.1.0)
-    govuk_admin_template (1.1.7)
-      bootstrap-sass (~> 3.2.0.2)
+    govuk_admin_template (1.4.0)
+      bootstrap-sass (~> 3.3.1)
       jquery-rails (~> 3.1.1)
       rails (>= 3.2.0)
     govuk_content_models (26.1.0)
@@ -342,7 +342,7 @@ DEPENDENCIES
   gds-api-adapters (= 16.4.0)
   gds-sso (= 10.0.0)
   govspeak (~> 3.1.0)
-  govuk_admin_template (= 1.1.7)
+  govuk_admin_template (= 1.4.0)
   govuk_content_models (= 26.1.0)
   has_scope
   inherited_resources
