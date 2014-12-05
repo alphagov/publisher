@@ -5,7 +5,7 @@
               :as => :text,
               :label => 'Introductory paragraph',
               :hint => 'Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")',
-              :input_html => { :rows => 2, :disabled => @resource.locked_for_edits?, :class => 'input-md-10' } %>
+              :input_html => { :rows => 8, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
 
   <%= f.input :will_continue_on,
               :hint => 'Text to follow the statement "This will continue on". eg. "the HMRC website"',
