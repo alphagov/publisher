@@ -55,6 +55,9 @@
     <td>
       <%= time_ago_in_words(publication.review_requested_at) %>
     </td>
+    <td>
+      <%= render partial: 'reviewer', locals: { publication: publication } %>
+    </td>
   <% else %>
     <td>
       <%= publication.creator %>

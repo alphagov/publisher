@@ -127,4 +127,37 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", :text => "2 days")
     assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", :text => "4 days")
   end
+
+  test "allows a user to claim 2i" do
+    stub_collections
+    user = FactoryGirl.create(:user)
+    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
+                                 :review_requested_at => Time.zone.now)
+
+    visit "/"
+    filter_by_user("All")
+
+    click_on "In review"
+
+    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+      click_on "Claim 2i"
+    end
+
+    assert edition_url(edition), current_url
+    assert page.has_content?("edition was successfully updated")
+    assert page.has_select?("Reviewer", :selected => user.name)
+  end
+
+  test "prevents the assignee claiming 2i" do
+    user = FactoryGirl.create(:user)
+    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
+                                 :review_requested_at => Time.zone.now, :assigned_to => user)
+
+    visit "/"
+    filter_by_user("All")
+
+    click_on "In review"
+
+    assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
+  end
 end
