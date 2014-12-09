@@ -219,6 +219,55 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     refute has_link? "OK for publication"
   end
 
+  test "cannot be the guide reviewer and assignee" do
+    guide = FactoryGirl.create(:guide_edition)
+    login_as "Alice"
+
+    assign guide, "Bob"
+    fill_in_parts guide
+    submit_for_review guide
+
+    visit_edition guide
+
+    select("Bob", from: "Reviewer")
+    save_edition
+
+    assert page.has_content?("We had some problems saving")
+    assert page.has_css?(".form-group.error ul.help-block li", text: "can't be the assignee")
+  end
+
+  test "can deselect the guide reviewer" do
+    guide = FactoryGirl.create(:guide_edition)
+    login_as "Alice"
+
+    assign guide, "Bob"
+    fill_in_parts guide
+    submit_for_review guide
+
+    visit_edition guide
+
+    select("", from: "Reviewer")
+    save_edition
+
+    assert page.has_content?("Guide edition was successfully updated")
+  end
+
+  test "can become the guide reviewer" do
+    guide = FactoryGirl.create(:guide_edition)
+    login_as "Alice"
+
+    assign guide, "Bob"
+    fill_in_parts guide
+    submit_for_review guide
+
+    visit_edition guide
+
+    select("Charlie", from: "Reviewer")
+    save_edition
+
+    assert page.has_content?("Guide edition was successfully updated")
+  end
+
   test "can review another's guide" do
     guide = FactoryGirl.create(:guide_edition)
     get_to_review guide, "Alice"

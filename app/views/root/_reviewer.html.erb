@@ -1,0 +1,8 @@
+<% if publication.reviewer and publication.reviewer.present? -%>
+  <%= publication.reviewer %>
+<% elsif current_user != publication.assigned_to -%>
+  <%= form_for :edition, url: edition_path(publication._id), method: :put do |f| %>
+    <%= f.hidden_field :reviewer, value: current_user.name %>
+    <%= f.submit "Claim 2i", class: "btn btn-primary" %>
+  <% end -%>
+<% end -%>
