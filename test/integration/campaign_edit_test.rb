@@ -17,7 +17,7 @@ class CampaignEditTest < JavascriptIntegrationTest
   should "create a new CampaignEdition" do
     visit "/publications/#{@artefact.id}"
 
-    assert page.has_content? "No campaign, no gain Edition 1"
+    assert page.has_content? 'No campaign, no gain #1'
 
     c = CampaignEdition.first
     assert_equal @artefact.id.to_s, c.panopticon_id
@@ -34,7 +34,7 @@ class CampaignEditTest < JavascriptIntegrationTest
                                  :organisation_brand_colour => "department-for-transport")
     visit "/editions/#{campaign.to_param}"
 
-    assert page.has_content? "Singin' in the campaign Edition 1"
+    assert page.has_content? 'Singin\' in the campaign #1'
 
     assert page.has_field?("Title", :with => "Singin' in the campaign")
     assert page.has_field?("Body", :with => "I'm singin' in the campaign")
@@ -78,7 +78,7 @@ class CampaignEditTest < JavascriptIntegrationTest
 
     click_on "Create new edition"
 
-    assert page.has_content? "Campaign on your parade Edition 2"
+    assert page.has_content? 'Campaign on your parade #2'
 
     assert page.has_field?("Body", :with => "Foo")
     assert page.has_field?("Organisation formatted name", :with => "Driver & Vehicle\nLicensing\nAgency")

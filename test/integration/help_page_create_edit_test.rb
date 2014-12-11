@@ -17,7 +17,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   should "create a new HelpPageEdition" do
     visit "/publications/#{@artefact.id}"
 
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
 
     h = HelpPageEdition.first
     assert_equal @artefact.id.to_s, h.panopticon_id
@@ -30,7 +30,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                  :body => "Body content")
     visit "/editions/#{help_page.to_param}"
 
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
 
     assert page.has_field?("Title", :with => "Foo bar")
     assert page.has_field?("Body", :with => "Body content")
@@ -56,7 +56,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     click_on "Create new edition"
 
-    assert page.has_content? "Foo bar Edition 2"
+    assert page.has_content? 'Foo bar #2'
 
     assert page.has_field?("Body", :with => "This is really helpful")
   end

@@ -52,7 +52,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
     stub_artefact_registration(edition.slug)
 
     visit_edition edition
-    assert page.has_content?("Status: Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?('.label', text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Publish now"
 
     within "#publish_form" do
@@ -60,14 +60,14 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
       click_on "Send to publish"
     end
 
-    assert page.has_content?("Status: Published")
+    assert page.has_css?('.label', text: 'Published')
   end
 
   test "should cancel the publishing of a scheduled edition" do
     edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
 
     visit_edition edition
-    assert page.has_content?("Status: Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
+    assert page.has_css?('.label', text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
     click_on "Cancel scheduled publishing"
 
     within "#cancel_scheduled_publishing_form" do
@@ -75,7 +75,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
       click_on "Cancel scheduled publishing"
     end
 
-    assert page.has_content?("Status: Ready")
+    assert page.has_css?('.label', text: 'Ready')
   end
 
 end

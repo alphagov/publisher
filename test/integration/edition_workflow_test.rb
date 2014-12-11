@@ -144,7 +144,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert guide.draft?
 
     visit_edition guide
-    assert page.has_content?("Status: Draft")
+    assert page.has_css?('.label', text: 'Draft')
   end
 
   test "should update progress of a guide" do
@@ -160,7 +160,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_content?("Status: Fact check")
+    assert page.has_css?('.label', text: 'Fact check')
 
     guide.reload
 
@@ -338,7 +338,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     send_for_fact_check guide
 
     visit_edition guide
-    assert page.has_content? "Status: Fact check"
+    assert page.has_css?('.label', text: 'Fact check')
   end
 
   test "can create a new edition from the listings screens" do
@@ -384,6 +384,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on "Create new edition"
 
     assert page.has_content?("Another person has created a newer edition")
-    assert page.has_content?("Status: Published")
+    assert page.has_css?('.label', text: 'Published')
   end
 end
