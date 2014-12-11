@@ -111,7 +111,7 @@ GEM
       kramdown (~> 1.4.1)
       nokogiri (~> 1.5.10)
       sanitize (~> 2.1.0)
-    govuk_admin_template (1.4.0)
+    govuk_admin_template (1.4.2)
       bootstrap-sass (~> 3.3.1)
       jquery-rails (~> 3.1.1)
       rails (>= 3.2.0)
@@ -342,7 +342,7 @@ DEPENDENCIES
   gds-api-adapters (= 16.4.0)
   gds-sso (= 10.0.0)
   govspeak (~> 3.1.0)
-  govuk_admin_template (= 1.4.0)
+  govuk_admin_template (= 1.4.2)
   govuk_content_models (= 27.0.0)
   has_scope
   inherited_resources
