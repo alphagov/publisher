@@ -2,8 +2,8 @@ require "test_helper"
 
 class EditionCloneTest < ActiveSupport::TestCase
   def setup
-    @user = User.create :name => "Grandmaster Flash"
-    @other_user = User.create :name => "Furious Five"
+    @user = User.create :uid => "123", :name => "Grandmaster Flash"
+    @other_user = User.create :uid => "321", :name => "Furious Five"
 
     @artefact = FactoryGirl.create(:artefact, name: "Childcare", slug: "childcare")
   end

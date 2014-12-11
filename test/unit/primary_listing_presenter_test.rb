@@ -9,8 +9,8 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   end
 
   def setup_users
-    alice = User.create
-    bob = User.create
+    alice = User.create(uid: '123')
+    bob = User.create(uid: '321')
     return alice, bob
   end
 

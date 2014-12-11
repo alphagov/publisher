@@ -9,8 +9,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "when an user publishes a guide, a status message is sent on the message bus" do
-    user = User.create(:name => "bob")
-    second_user = User.create(:name => "dave")
+    user = User.create(:uid => '123', :name => "bob")
+    second_user = User.create(:uid => '321', :name => "dave")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryGirl.create(:artefact).id)
     request_review(user, trans)

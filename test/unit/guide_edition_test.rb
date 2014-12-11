@@ -12,8 +12,8 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
 
   def publisher_and_guide
-    user = User.create(:name => "Ben")
-    other_user = User.create(:name => "James")
+    user = User.create(:uid => '123', :name => "Ben")
+    other_user = User.create(:uid => '321', :name => "James")
 
     guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title')
     edition = guide
