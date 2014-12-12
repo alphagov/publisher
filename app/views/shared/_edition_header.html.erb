@@ -3,8 +3,9 @@
     <%= @resource.title %>
   </h1>
   <span class="lead">
-    <span class="label label-default">Edition <%= @resource.version_number %></span>
-    <span class="label label-info">Status: <%= @resource.status_text %></span>
+    <span class="label label-default" title="Edition">#<%= @resource.version_number %></span>
+    <span class="label label-default" title="Format"><%= @resource.format.underscore.humanize %></span>
+    <span class="label label-info" title="Status"><%= @resource.status_text %></span>
   </span>
 </div>
 <% important_note = @resource.important_note %>

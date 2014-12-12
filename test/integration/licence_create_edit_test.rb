@@ -23,7 +23,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     fill_in "Licence identifier", :with => "AB1234"
     click_button "Create Licence"
 
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
 
     l = LicenceEdition.first
     assert_equal @artefact.id.to_s, l.panopticon_id
@@ -42,7 +42,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
     visit "/editions/#{licence.to_param}"
 
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
 
     assert page.has_field?("Licence identifier", :with => "ab2345")
     assert page.has_field?("Licence short description", :with => "Short description content")
@@ -80,7 +80,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     visit "/editions/#{licence.to_param}"
     click_on "Create new edition"
 
-    assert page.has_content? "Foo bar Edition 2"
+    assert page.has_content? 'Foo bar #2'
 
     assert page.has_field?("Licence identifier", :with => "ab2345")
     assert page.has_field?("Licence short description", :with => "Short description content")

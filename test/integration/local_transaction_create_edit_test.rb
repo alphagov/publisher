@@ -24,7 +24,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
 
     assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
     assert_match /Created Local transaction: "Foo bar"/, ActionMailer::Base.deliveries.last.subject
@@ -46,7 +46,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     fill_in 'Lgsl code', :with => '1'
     click_button 'Create Local transaction'
-    assert page.has_content? "Foo bar Edition 1"
+    assert page.has_content? 'Foo bar #1'
   end
 
   test "editing a local transaction has the LGSL and LGIL fields" do
@@ -54,7 +54,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo transaction", :lgsl_code => 1)
 
     visit "/editions/#{edition.to_param}"
-    assert page.has_content? "Foo transaction Edition 1"
+    assert page.has_content? 'Foo transaction #1'
 
     # For some reason capybara was having trouble matching this disabled
     # field with the has_field? matcher. Retrieving it manually seems to
