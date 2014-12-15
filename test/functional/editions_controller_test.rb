@@ -93,18 +93,6 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal 1, @guide.actions.select { |a| a.request_type == Action::ASSIGN }.length
   end
 
-  test "should not update assignment if the assignment is blank" do
-    bob = User.create
-    @user.assign(@guide, bob)
-
-    post :update,
-      :id       => @guide.id,
-      :edition  => { :assigned_to_id => "" }
-
-    @guide.reload
-    assert_equal bob, @guide.assigned_to
-  end
-
   test "should show the edit page again if updating fails" do
     panopticon_has_metadata(
       "id" => "test"

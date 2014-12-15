@@ -1,3 +1,6 @@
+<% if @action.recipient -%>
 "<%= @action.edition.title %>" (<%= @action.edition.format %>) has been assigned to <%= @action.recipient.name %> at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
-
+<% else -%>
+"<%= @action.edition.title %>" (<%= @action.edition.format %>) has been unassigned at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
+<% end -%>
 <%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>

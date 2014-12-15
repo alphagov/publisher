@@ -128,8 +128,12 @@ class EditionsController < InheritedResources::Base
     end
 
     def update_assignment(edition, assignee)
-      return if assignee.nil? || edition.assigned_to == assignee
-      current_user.assign(edition, assignee)
+      return if edition.assigned_to == assignee
+      if assignee
+        current_user.assign(edition, assignee)
+      else
+        current_user.unassign(edition)
+      end
     end
 
     def setup_view_paths

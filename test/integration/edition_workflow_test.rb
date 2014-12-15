@@ -252,6 +252,21 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content?("Guide edition was successfully updated")
   end
 
+  test "can unassign the guide" do
+    guide = FactoryGirl.create(:guide_edition)
+    login_as "Alice"
+
+    assign guide, "Bob"
+    fill_in_parts guide
+
+    visit_edition guide
+
+    assign guide, ""
+
+    assert_nil guide.assignee
+    assert page.has_select?("Assigned to", selected: "")
+  end
+
   test "can become the guide reviewer" do
     guide = FactoryGirl.create(:guide_edition)
     login_as "Alice"

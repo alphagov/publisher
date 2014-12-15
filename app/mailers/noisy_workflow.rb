@@ -59,7 +59,11 @@ class NoisyWorkflow < ActionMailer::Base
     when Action::NOTE
       "Note added by #{requester.name}"
     when Action::ASSIGN
-      "Assigned: \"#{edition.title}\" (#{edition.format_name}) to #{recipient.name}"
+      if recipient
+        "Assigned: \"#{edition.title}\" (#{edition.format_name}) to #{recipient.name}"
+      else
+        "Unassigned: \"#{edition.title}\" (#{edition.format_name})"
+      end
     end
   end
 end
