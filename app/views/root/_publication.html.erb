@@ -68,11 +68,6 @@
       <%= publication.publisher %>
     </td>
   <% end %>
-  <% if tab && tab == :archived %>
-    <td>
-      <%= publication.archiver %>
-    </td>
-  <% end %>
   <% if tab && (tab == :archived || tab == :published) %>
     <td>
       <% if publication.can_create_new_edition? %>
