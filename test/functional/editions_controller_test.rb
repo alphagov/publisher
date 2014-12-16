@@ -93,6 +93,17 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal 1, @guide.actions.select { |a| a.request_type == Action::ASSIGN }.length
   end
 
+  test "should update the reviewer" do
+    bob = User.create
+
+    put :review,
+      :id       => @guide.id,
+      :edition  => { :reviewer => bob.name }
+
+    @guide.reload
+    assert_equal bob.name, @guide.reviewer
+  end
+
   test "should show the edit page again if updating fails" do
     panopticon_has_metadata(
       "id" => "test"

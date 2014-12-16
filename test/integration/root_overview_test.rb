@@ -131,8 +131,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "allows a user to claim 2i" do
     stub_collections
     user = FactoryGirl.create(:user)
+    assignee = FactoryGirl.create(:user)
     edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
-                                 :review_requested_at => Time.zone.now)
+                                 :review_requested_at => Time.zone.now, :assigned_to => assignee)
 
     visit "/"
     filter_by_user("All")
@@ -144,8 +145,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     end
 
     assert edition_url(edition), current_url
-    assert page.has_content?("edition was successfully updated")
+    assert page.has_content?("You are the reviewer of this guide.")
     assert page.has_select?("Reviewer", :selected => user.name)
+    assert page.has_select?("Assigned to", :selected => assignee.name)
   end
 
   test "prevents the assignee claiming 2i" do
