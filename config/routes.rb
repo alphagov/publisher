@@ -14,6 +14,7 @@ Publisher::Application.routes.draw do
       get 'diff'
       post 'duplicate'
       post 'progress'
+      put 'review'
       post 'skip_fact_check', to: 'editions#progress',
         edition: {
           activity: {

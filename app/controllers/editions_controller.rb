@@ -86,6 +86,16 @@ class EditionsController < InheritedResources::Base
     end
   end
 
+  def review
+    resource.reviewer = params[:edition][:reviewer]
+    if resource.save!
+      flash[:success] = "You are the reviewer of this #{description(resource).downcase}."
+    else
+      flash[:danger] = "Something went wrong when attempting to claim 2i."
+    end
+    redirect_to edition_path(resource)
+  end
+
   def destroy
     if resource.can_destroy?
       destroy! do
