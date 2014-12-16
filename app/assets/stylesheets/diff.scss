@@ -17,9 +17,12 @@ $strong-removed-color: #faa;
     padding-left: 0;
 
     li {
-      margin-bottom: 1em;
+      min-height: 24px;
+      margin: 0 -15px;
+      padding: 0 15px;
       word-wrap: break-word;
       list-style: none;
+      position: relative;
 
       del,
       ins {
@@ -29,8 +32,7 @@ $strong-removed-color: #faa;
 
     li.del,
     li.ins {
-      border-radius: 3px;
-      padding: 0.2rem 0.4rem;
+      padding-top: 2px;
     }
 
     li.del {
@@ -54,21 +56,24 @@ $strong-removed-color: #faa;
     li.del:before,
     li.ins:before {
       position: absolute;
-      font-size: 26px;
       font-weight: bold;
-      margin-left: -57px;
-      margin-top: -11px;
+      margin-left: -55px;
       width: 40px;
       text-align: center;
+      min-height: 24px;
+      top: 0;
+      bottom: 0;
     }
 
     li.del:before {
-      color: $strong-removed-color;
+      color: $state-danger-text;
+      background-color: $removed-color;
       content: "-";
     }
 
     li.ins:before {
-      color: $strong-added-color;
+      color: $state-success-text;
+      background-color: $added-color;
       content: "+";
     }
   }
