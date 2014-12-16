@@ -128,7 +128,7 @@ class EditionsController < InheritedResources::Base
     end
 
     def update_assignment(edition, assignee)
-      return if edition.assigned_to == assignee
+      return if claiming_2i? or edition.assigned_to == assignee
       if assignee
         current_user.assign(edition, assignee)
       else
@@ -186,5 +186,9 @@ class EditionsController < InheritedResources::Base
 
     def report_state_counts
       Publisher::Application.edition_state_count_reporter.report
+    end
+
+    def claiming_2i?
+      params[:commit] == "Claim 2i"
     end
 end
