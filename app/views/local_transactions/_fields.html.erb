@@ -16,9 +16,6 @@
     :as => :text,
     :input_html => { :disabled => @resource.locked_for_edits?,  class: 'input-md-10' } %>
 
-  <%= f.input :minutes_to_complete,
-    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-3' } %>
-
   <%= f.input :need_to_know,
     :as => :text,
     :label => 'What you need to know',
