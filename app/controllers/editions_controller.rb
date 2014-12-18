@@ -65,6 +65,8 @@ class EditionsController < InheritedResources::Base
     activity_params = attempted_activity_params(attempted_activity)
     remove_activity_params
 
+    # update! is from the Inherited Resources gem
+    # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
     update! do |success, failure|
       success.html {
         progress_edition(resource, activity_params) if attempted_activity
