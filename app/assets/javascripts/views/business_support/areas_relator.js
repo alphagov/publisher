@@ -10,43 +10,17 @@ $(document).ready(function() {
           $('.areas-chkbx').each(function (i,e) {
             if (e !== self) $(e).prop('checked', false);
           });
-          $relatedAreasHiddenInput.select2("data", []);
+          $relatedAreasTextArea.select2("data", []);
           if ($(this).is(':checked')) {
-            $relatedAreasHiddenInput.select2("data", $.map(areas, filter));
+            $relatedAreasTextArea.select2("data", $.map(areas, filter));
           }
         });
-      },
-      submitWithAreaArrayInputs = function (e) {
-        var areaIds = $relatedAreasHiddenInput.attr("value").split(',');
-        $relatedAreasHiddenInput.remove();
-        for (var idx = 0; idx < areaIds.length; idx++) {
-          $(this).append('<input name="edition[areas][]" type="hidden" value="'+areaIds[idx]+'"/>');
-        }
-
-        // let event continue and perform its default action (form submit)
-        // submitting with javascript would lose some context (eg which workflow button was pressed)
       };
 
-  $relatedAreasWrapper
-    .children("label")
-    .html("Related areas");
-
-  // select2 needs a hidden input to serve our purpose
-  var $relatedAreasHiddenInput = $('<input type="hidden">')
-                                      .attr("name", $relatedAreasTextArea.attr("name"))
-                                      .attr("value", $relatedAreasTextArea.val());
-
-  if ($relatedAreasTextArea.is(":disabled")) {
-    $relatedAreasHiddenInput.prop('disabled', true);
-  }
-
-  $relatedAreasTextArea.replaceWith($relatedAreasHiddenInput);
-  $relatedAreasHiddenInput.addClass('form-control');
-
-  $('#edition-form').submit(submitWithAreaArrayInputs);
+  $relatedAreasWrapper.children("label").html("Related areas");
 
   // http://ivaynberg.github.io/select2/select-2.1.html
-  $relatedAreasHiddenInput.select2({
+  $relatedAreasTextArea.select2({
     width: "75%",
     multiple: true,
     placeholder: "Enter first few characters of the area name",
@@ -76,13 +50,19 @@ $(document).ready(function() {
     }
   });
 
-  $relatedAreasHiddenInput.on('select2-removed', function () {
+  $relatedAreasTextArea.on('select2-removed', function () {
     $('.areas-chkbx').prop('checked', false);
   });
+
   bindAreasSelection('#all_regions', function(area) {
-    if (area.type === 'EUR') return area;
+    if (area.type === 'EUR') {
+      return area;
+    }
   });
+
   bindAreasSelection('#english_regions', function(area) {
-    if (area.type === 'EUR' && area.country === 'England') return area;
+    if (area.type === 'EUR' && area.country === 'England') {
+      return area;
+    }
   });
 });
