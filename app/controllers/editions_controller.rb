@@ -64,6 +64,7 @@ class EditionsController < InheritedResources::Base
     attempted_activity = Edition::ACTIONS.invert[params[:commit]]
     activity_params = attempted_activity_params(attempted_activity)
     remove_activity_params
+    coerce_business_support_params
 
     # update! is from the Inherited Resources gem
     # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
@@ -198,5 +199,11 @@ class EditionsController < InheritedResources::Base
 
     def report_state_counts
       Publisher::Application.edition_state_count_reporter.report
+    end
+
+    def coerce_business_support_params
+      if (params[:edition][:areas] && !params[:edition][:areas].kind_of?(Array))
+        params[:edition][:areas] = params[:edition][:areas].split(',').map(&:strip)
+      end
     end
 end
