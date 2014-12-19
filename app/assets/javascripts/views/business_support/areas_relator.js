@@ -1,8 +1,7 @@
 $(document).ready(function() {
   "use strict";
 
-  var $relatedAreasWrapper = $(".related-areas"),
-      $relatedAreasTextArea = $("#edition_areas"),
+  var $relatedAreasTextArea = $("#edition_areas"),
       prefillRelatedAreas = $relatedAreasTextArea.data("areas"),
       bindAreasSelection = function (selector, filter) {
         $(selector).change(function () {
@@ -16,8 +15,6 @@ $(document).ready(function() {
           }
         });
       };
-
-  $relatedAreasWrapper.children("label").html("Related areas");
 
   // http://ivaynberg.github.io/select2/select-2.1.html
   $relatedAreasTextArea.select2({

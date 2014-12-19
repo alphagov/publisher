@@ -207,7 +207,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
           select2 "Hackney Borough Council", ".related-areas"
           select2 "Camden Borough Council", ".related-areas"
         else
-          fill_in "Areas", :with => "london, hackney-borough-council, camden-borough-council"
+          fill_in "Related areas", :with => "london, hackney-borough-council, camden-borough-council"
         end
 
         save_edition
