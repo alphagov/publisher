@@ -14,14 +14,14 @@ describe('Areas relator', function() {
       </div>\
     </form>\
     <script>var areas = [\
-      {"id":1234,"text":"London","type":"EUR","country":"England"},\
-      {"id":2345,"text":"South East","type":"EUR","country":"England"},\
-      {"id":3456,"text":"Hackney Borough Council","type":"LBO","country":"England"},\
-      {"id":4567,"text":"Scotland","type":"EUR","country":"Scotland"},\
+      {"id":"london","text":"London","type":"EUR","country":"England"},\
+      {"id":"south-east","text":"South East","type":"EUR","country":"England"},\
+      {"id":"hackney-borough-council","text":"Hackney Borough Council","type":"LBO","country":"England"},\
+      {"id":"scotland","text":"Scotland","type":"EUR","country":"Scotland"},\
     ];</script>\
     <script src="/assets/views/business_support/areas_relator.js"></script>');
 
-    form.find('#edition_areas').data('areas', [{"id":3456,"text":"Hackney Borough Council"}]);
+    form.find('#edition_areas').data('areas', [{"id":"hackney-borough-council","text":"Hackney Borough Council"}]);
     $('body').append(form);
   });
 
