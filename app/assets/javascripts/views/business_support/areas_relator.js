@@ -2,7 +2,6 @@ $(document).ready(function() {
   "use strict";
 
   var $relatedAreasTextArea = $("#edition_areas"),
-      prefillRelatedAreas = $relatedAreasTextArea.data("areas"),
       bindAreasSelection = function (selector, filter) {
         $(selector).change(function () {
           var self = this;
@@ -23,7 +22,7 @@ $(document).ready(function() {
     placeholder: "Enter first few characters of the area name",
     minimumInputLength: 3,
     initSelection : function (element, callback) {
-      callback(prefillRelatedAreas);
+      callback(element.data('areas'));
     },
     formatSelection : function (object) {
       return $("<span>")
