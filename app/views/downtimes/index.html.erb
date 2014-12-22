@@ -23,14 +23,26 @@
     <tr>
       <td>
         <h4 class="publication-table-title">
-          <%= link_to transaction.title, 'downtime/schedule' %>
+          <%= link_to transaction.title, Downtime.for(transaction.artefact).present? ?
+                                          edit_edition_downtime_path(transaction) :
+                                          new_edition_downtime_path(transaction) %>
         </h4>
         <%= link_to "/#{transaction.slug}", "#{Plek.find('www')}/#{transaction.slug}", class: 'link-muted' %>
       </td>
-      <td>Live</td>
-      <td>
-        <%= link_to 'Add downtime', 'downtime/schedule', class: 'btn btn-default' %>
-      </td>
+        <% if downtime = Downtime.for(transaction.artefact) %>
+          <td>
+            Scheduled downtime<br />
+            <span class="text-muted"><%= display_scheduled_downtime(downtime) %></span>
+          </td>
+          <td>
+            <%= link_to 'Edit downtime', edit_edition_downtime_path(transaction), class: 'btn btn-default' %>
+          </td>
+        <% else %>
+          <td>Live</td>
+          <td>
+            <%= link_to 'Add downtime', new_edition_downtime_path(transaction), class: 'btn btn-default' %>
+          </td>
+        <% end %>
     </tr>
     <% end %>
   </tbody>
