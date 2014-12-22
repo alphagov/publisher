@@ -9,6 +9,8 @@ Publisher::Application.routes.draw do
     put 'resolve', on: :member
   end
 
+  get 'downtimes' => 'downtimes#index'
+
   resources :editions do
     member do
       get 'diff'

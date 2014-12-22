@@ -1,0 +1,37 @@
+<div class="page-title">
+  <h1>Downtime</h1>
+</div>
+
+<table class="table table-bordered table-striped" data-module="filterable-table">
+  <thead>
+    <tr class="table-header">
+      <td>Service start page</td>
+      <td>Service status</td>
+      <td>Action</td>
+    </tr>
+    <tr class="if-no-js-hide table-header-secondary">
+      <td colspan="5">
+        <form>
+          <label for="table-filter" class="rm">Filter services</label>
+          <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services">
+        </form>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+    <tr>
+      <td>
+        <h4 class="publication-table-title">
+          <%= link_to transaction.title, 'downtime/schedule' %>
+        </h4>
+        <%= link_to "/#{transaction.slug}", "#{Plek.find('www')}/#{transaction.slug}", class: 'link-muted' %>
+      </td>
+      <td>Live</td>
+      <td>
+        <%= link_to 'Add downtime', 'downtime/schedule', class: 'btn btn-default' %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
