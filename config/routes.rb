@@ -25,6 +25,8 @@ Publisher::Application.routes.draw do
             }
           }
     end
+
+    resource :downtime, only: [:new, :create, :edit, :update, :destroy]
   end
 
   match 'reports' => 'reports#index', as: :reports

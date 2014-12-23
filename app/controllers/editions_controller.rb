@@ -155,14 +155,6 @@ class EditionsController < InheritedResources::Base
     end
 
   private
-    def squash_multiparameter_datetime_attributes(params)
-      datetime_params = params.select { |k, v| k.include? 'publish_at' }.values.map(&:to_i)
-      params.delete_if { |k, v| k.include? 'publish_at' }
-
-      params['publish_at'] = DateTime.new(*datetime_params) if datetime_params.present?
-      params
-    end
-
     def attempted_activity_params(attempted_activity)
       params[:edition]["activity_#{attempted_activity}_attributes"]
     end
@@ -191,7 +183,7 @@ class EditionsController < InheritedResources::Base
 
     def progress_edition(edition, activity_params)
       @command = EditionProgressor.new(resource, current_user)
-      @command.progress(squash_multiparameter_datetime_attributes(activity_params))
+      @command.progress(squash_multiparameter_datetime_attributes(activity_params, ['publish_at']))
     end
 
     def report_state_counts

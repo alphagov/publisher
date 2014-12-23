@@ -1,8 +1,8 @@
 require 'integration_test_helper'
 
-class ChangeEditionTypeTest < ActionDispatch::IntegrationTest
-  test "doesn't show change note until an edition has been published" do
-    pending 'WIP'
+class DowntimeTest < ActionDispatch::IntegrationTest
+  test "scheduling and removing downtime" do
+    setup_users
 
     transaction = FactoryGirl.create(:transaction_edition, :published,
       title: 'Apply to become a driving instructor', slug: 'apply-to-become-a-driving-instructor')
@@ -25,8 +25,26 @@ class ChangeEditionTypeTest < ActionDispatch::IntegrationTest
     select '00', from: 'downtime_end_time_5i'
     click_on 'Schedule downtime'
 
+    assert page.has_content?('Successfully scheduled downtime')
+
     visit downtimes_path
     assert page.has_content?('Scheduled downtime')
-    assert page.has_content?("12:00 #{tomorrow.day} #{tomorrow.strftime('%b')} to 18:00 #{tomorrow.day} #{tomorrow.strftime('%b')}")
+    assert page.has_content?("midday to 6pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
+
+    click_link 'Edit downtime'
+    select '21', from: 'downtime_end_time_4i'
+    select '30', from: 'downtime_end_time_5i'
+    click_on 'Save changes and re-schedule'
+    assert page.has_content?('Successfully updated downtime')
+
+    visit downtimes_path
+    assert page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
+
+    click_link 'Edit downtime'
+    click_on 'Remove downtime'
+    assert page.has_content?('Successfully removed downtime')
+
+    visit downtimes_path
+    refute page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
   end
 end

@@ -1,0 +1,38 @@
+<%= f.hidden_field :artefact_id %>
+
+<% if @downtime.errors.any? %>
+   <p class="alert alert-danger">
+     Errors: <%= @downtime.errors.full_messages.to_sentence %>
+   </p>
+<% end %>
+
+<div class="form-group form-inline">
+  <%= f.label :start_time, 'Starts' %><br />
+  <span class="add-right-margin">
+  <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
+  </span>
+  <%= f.date_select :start_time, { order: [:day, :month, :year], default: Date.tomorrow,
+    start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+</div>
+
+<div class="form-group form-inline">
+  <%= f.label :end_time, 'Ends' %><br />
+  <span class="add-right-margin">
+  <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
+  </span>
+  <%= f.date_select :end_time, { order: [:day, :month, :year], default: Date.tomorrow,
+    start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+</div>
+
+<p class="text-muted add-top-margin">
+  Dates should be for the service’s planned downtime.
+  <br />Messages appear on the start page one day before the downtime is due.
+</p>
+
+<div class="form-group">
+  <%= f.label :message %>
+  <%= f.text_area :message, class: 'form-control input-md-8', rows: 3 %>
+  <p class="text-muted">
+    A message will be generated if left blank.
+  </p>
+</div>

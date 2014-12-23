@@ -136,7 +136,7 @@ GEM
     hike (1.2.3)
     hitimes (1.2.2)
     htmlentities (4.3.2)
-    i18n (0.6.11)
+    i18n (0.7.0)
     inherited_resources (1.4.0)
       has_scope (~> 0.5.0)
       responders (~> 0.9)

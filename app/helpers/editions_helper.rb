@@ -26,9 +26,4 @@ module EditionsHelper
       [parent_title, collections]
     end
   end
-
-  def display_scheduled_downtime(downtime)
-    datetime_format = '%l:%M%P on %e %b'
-    "#{downtime.start_time.strftime(datetime_format)} to #{downtime.end_time.strftime(datetime_format)}".gsub(':00', '')
-  end
 end

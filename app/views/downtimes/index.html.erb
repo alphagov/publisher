@@ -1,3 +1,5 @@
+<% content_for :page_title, 'Downtime' %>
+
 <div class="page-title">
   <h1>Downtime</h1>
 </div>
@@ -5,12 +7,12 @@
 <table class="table table-bordered table-striped" data-module="filterable-table">
   <thead>
     <tr class="table-header">
-      <td>Service start page</td>
-      <td>Service status</td>
-      <td>Action</td>
+      <th>Service start page</th>
+      <th>Service status</th>
+      <th>Action</th>
     </tr>
     <tr class="if-no-js-hide table-header-secondary">
-      <td colspan="5">
+      <td colspan="3">
         <form>
           <label for="table-filter" class="rm">Filter services</label>
           <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services">
@@ -32,10 +34,10 @@
         <% if downtime = Downtime.for(transaction.artefact) %>
           <td>
             Scheduled downtime<br />
-            <span class="text-muted"><%= display_scheduled_downtime(downtime) %></span>
+            <span class="text-muted"><%= downtime.datetime_string %></span>
           </td>
           <td>
-            <%= link_to 'Edit downtime', edit_edition_downtime_path(transaction), class: 'btn btn-default' %>
+            <%= link_to 'Edit downtime', edit_edition_downtime_path(transaction), class: 'btn btn-info' %>
           </td>
         <% else %>
           <td>Live</td>
