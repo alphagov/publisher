@@ -58,11 +58,7 @@
     <td>
       <%= render partial: 'reviewer', locals: { publication: publication } %>
     </td>
-  <% else %>
-    <td>
-      <%= publication.creator %>
-    </td>
-  <% end -%>
+  <% end %>
   <% if tab && tab == :published %>
     <td>
       <%= publication.publisher %>
