@@ -39,6 +39,39 @@ class ActionDispatch::IntegrationTest
       click_on "Filter publications"
     end
   end
+
+  def using_javascript?
+    Capybara.current_driver == Capybara.javascript_driver
+  end
+
+  def self.with_javascript
+    context "with javascript" do
+      setup do
+        Capybara.current_driver = Capybara.javascript_driver
+      end
+
+      yield
+    end
+  end
+
+  def self.without_javascript
+    context "without javascript" do
+      setup do
+        Capybara.use_default_driver
+      end
+      yield
+    end
+  end
+
+  def self.with_and_without_javascript
+    without_javascript do
+      yield
+    end
+
+    with_javascript do
+      yield
+    end
+  end
 end
 
 class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
@@ -116,7 +149,11 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def save_edition
     # using trigger because poltergeist
     # thinks there are overlapping elements
-    page.find_button('Save').trigger('click')
+    if using_javascript?
+      page.find_button('Save').trigger('click')
+    else
+      click_on 'Save'
+    end
 
     # using .trigger("click") causes race conditions,
     # hence we need to explicitly wait till the page reloads.

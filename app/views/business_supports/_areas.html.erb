@@ -1,11 +1,11 @@
 <h3>Areas</h3>
-<div class="checkbox">
+<div class="checkbox if-no-js-hide">
   <label>
     <%= check_box_tag "all_regions", "1", all_regions?(f.object), { class: "areas-chkbx", disabled: @resource.locked_for_edits? } %>
     All of the UK
   </label>
 </div>
-<div class="checkbox">
+<div class="checkbox if-no-js-hide">
   <label>
     <%= check_box_tag "english_regions", "1", english_regions?(f.object), { class: "areas-chkbx", disabled: @resource.locked_for_edits? } %>
     All of England
@@ -13,7 +13,7 @@
 </div>
 
 <div class="related-areas fieldset-section">
-  <%= f.label :areas, class: "control-label" %>
+  <%= f.label :areas, 'Related areas', class: "add-top-margin control-label" %>
   <%= f.text_area :areas, size: "75x3",
         class: "form-control",
         placeholder: "Fill-in regions, counties and local authorities, " +
