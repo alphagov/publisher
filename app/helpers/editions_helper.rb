@@ -7,7 +7,7 @@ module EditionsHelper
   end
 
   def resource_form(&form_definition)
-    form_class = "tab-pane #{'active' if @active_tab == 'edit'}"
+    form_class = "tab-pane #{'active' if @active_tab.name == 'edit'}"
     semantic_bootstrap_nested_form_for @resource, :as => :edition, :url => edition_path(@resource),
       :html => { :id => 'edit', class: form_class, role: 'tabpanel' }, &form_definition
   end
