@@ -1,40 +1,34 @@
+<% @active_tab ||= false %>
 <% @edition = @resource %>
   <%= render 'shared/edition_header' %>
-  <div class="tabbable">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
-      <li><a href="#metadata" data-toggle="tab">Metadata</a></li>
-      <li><a href="#history" data-toggle="tab">History and notes</a></li>
-      <li><a href="#admin" data-toggle="tab">Admin</a></li>
+  <div class="tabbable" data-module="tab-switcher" role="tabpanel">
+    <ul class="nav nav-tabs" role="tablist">
+      <% ['edit', 'metadata', 'history', 'admin'].each do |tab| %>
+        <% tab_path = tab == 'edit' ? edition_path(@resource) : "#{edition_path(@resource)}/#{tab}" %>
+        <li <% if @active_tab == tab %>class="active"<% end %>>
+          <a href="<%= tab_path %>" data-target="#<%= tab %>" data-toggle="tab" role="tab" aria-controls="<%= tab %>"><%= tab.capitalize %></a>
+        </li>
+      <% end %>
     </ul>
 
     <div class="tab-content add-top-margin">
       <%= resource_form do |f| %>
         <div class="well">
           <%= render resource_fields, f: f %>
-        </div><!--/.well -->
+        </div>
         <%= edition_activities_fields(f, @resource) %>
       <% end %>
       <%= # cancel scheduled publishing doesn't require the edition to be saved when requesting an activity,
         # because this action is triggered from a view where editing is not allowed.
         edition_activities_forms(@resource, Edition::CANCEL_SCHEDULED_PUBLISHING_ACTION) %>
-      <div class="tab-pane" id="metadata">
-        <div class="well">
-          <%= render :partial => '/shared/metadata', :locals => {:publication => @resource} %>
-        </div><!--/.well -->
-      </div>
-      <div class="tab-pane" id="history">
-        <div class="well">
-          <%= render :partial => '/shared/history', :locals => {:publication => @resource} %>
-        </div><!--/.well -->
-      </div>
-      <div class="tab-pane" id="admin">
-        <div class="well">
-          <% if @resource.artefact.state != "archived" %>
-            <%= render :partial => '/shared/admin_buttons', :locals => {:publication => @resource} %>
-          <% end %>
-        </div><!--/.well -->
-      </div>
+
+      <% ['metadata', 'history', 'admin'].each do |tab| %>
+        <div role="tabpanel" class="tab-pane <% if @active_tab == tab %>active<% end %>" id="<%= tab %>">
+          <div class="well">
+            <%= render :partial => "/shared/#{tab}", :locals => {:publication => @resource} %>
+          </div>
+        </div>
+      <% end %>
     </div><!--/.tab-content -->
   </div><!--/.tabbable -->
 <% content_for :page_title, "Editing #{@resource.title}" %>

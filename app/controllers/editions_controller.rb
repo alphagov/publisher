@@ -13,10 +13,26 @@ class EditionsController < InheritedResources::Base
   end
 
   def show
+    @active_tab ||= 'edit'
     if @resource.is_a?(Parted)
       @ordered_parts = @resource.parts.in_order
     end
     render
+  end
+
+  def metadata
+    @active_tab = 'metadata'
+    render :action => "show"
+  end
+
+  def history
+    @active_tab = 'history'
+    render :action => "show"
+  end
+
+  def admin
+    @active_tab = 'admin'
+    render :action => "show"
   end
 
   # TODO: Clean this up via better use of instance var names here and in publications_controller.rb
