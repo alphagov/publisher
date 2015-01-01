@@ -11,8 +11,10 @@
 
     <div class="tab-content add-top-margin">
       <%= resource_form do |f| %>
-        <div class="well">
-          <%= render resource_fields, f: f %>
+        <div role="tabpanel" class="tab-pane <% if @active_tab.name == 'edit'%>active<% end %>" id="edit">
+          <div class="well">
+            <%= render resource_fields, f: f %>
+          </div>
         </div>
         <%= edition_activities_fields(f, @resource) %>
       <% end %>
