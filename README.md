@@ -1,6 +1,6 @@
 # Publisher
 
-Publisher is the primary content design app for GovUK. It provides the user interface for
+Publisher is the primary content design app for GOV.UK. It provides the user interface for
 entering all the key editorial formats and an API so other apps (primarily frontend) can
 access that data for display. It is intended to work in partnership with Panopticon which
 manages metadata, slugs, titles, etc.
