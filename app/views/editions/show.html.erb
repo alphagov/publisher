@@ -4,7 +4,7 @@
     <ul class="nav nav-tabs" role="tablist">
       <% @tabs.each do |tab| %>
         <li <% if tab.active?(@active_tab) %>class="active"<% end %>>
-          <%= tab.link(@resource) %>
+          <%= tab.link(edition_path(@edition)) %>
         </li>
       <% end %>
     </ul>
@@ -25,7 +25,7 @@
       <% @tabs.reject {|t| t.name == 'edit'}.each do |tab| %>
         <div role="tabpanel" class="tab-pane <% if tab.active?(@active_tab) %>active<% end %>" id="<%= tab.name %>">
           <div class="well">
-            <%= render :partial => tab.partial, :locals => {:publication => @resource} %>
+            <%= render :partial => "/shared/#{tab.name}", :locals => {:publication => @resource} %>
           </div>
         </div>
       <% end %>

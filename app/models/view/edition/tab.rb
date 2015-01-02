@@ -16,17 +16,12 @@ module View
         name == 'history' ? 'History and notes' : name.capitalize
       end
 
-      def path(edition)
-        path = Rails.application.routes.url_helpers.edition_path(edition)
-        name == 'edit' ? path : "#{path}/#{name}"
+      def path(edition_path)
+        name == 'edit' ? edition_path : "#{edition_path}/#{name}"
       end
 
-      def partial
-        "/shared/#{name}"
-      end
-
-      def link(edition)
-        "<a href=\"#{path(edition)}\" data-target=\"##{name}\" data-toggle=\"tab\" role=\"tab\" aria-controls=\"#{name}\">#{title}</a>".html_safe
+      def link(edition_path)
+        "<a href=\"#{path(edition_path)}\" data-target=\"##{name}\" data-toggle=\"tab\" role=\"tab\" aria-controls=\"#{name}\">#{title}</a>".html_safe
       end
 
       def active?(active)
