@@ -90,6 +90,12 @@ class EditionsController < InheritedResources::Base
   end
 
   def review
+    if resource.reviewer
+      flash[:danger] = "#{resource.reviewer} has already claimed this 2i"
+      redirect_to edition_path(resource)
+      return
+    end
+
     resource.reviewer = params[:edition][:reviewer]
     if resource.save!
       flash[:success] = "You are the reviewer of this #{description(resource).downcase}."
