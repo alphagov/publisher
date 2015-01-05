@@ -32,7 +32,7 @@ class TabsHelperTest < ActionView::TestCase
     end
 
     should 'have a tab link that targets an element with an ID matching its name' do
-      link = @edit_tab.link('path/to')
+      link = tab_link(@edit_tab, 'path/to')
       assert_match 'data-target="#edit"', link
       assert_match 'href="path/to"', link
       assert_match 'aria-controls="edit"', link

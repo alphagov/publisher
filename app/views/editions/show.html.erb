@@ -4,7 +4,7 @@
     <ul class="nav nav-tabs" role="tablist">
       <% tabs.each do |tab| %>
         <li <% if tab == active_tab %>class="active"<% end %>>
-          <%= tab.link(edition_path(@edition)) %>
+          <%= tab_link(tab, edition_path(@edition)) %>
         </li>
       <% end %>
     </ul>

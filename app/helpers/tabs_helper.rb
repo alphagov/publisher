@@ -6,6 +6,14 @@ module TabsHelper
     @active_tab = tab_name.blank? ? Edition::Tab['edit'] : Edition::Tab[tab_name.first]
   end
 
+  def tab_link(tab, edition_path)
+    link_to tab.title, tab.path(edition_path),
+      'data-target' => "##{tab.name}",
+      'data-toggle' => 'tab',
+      'role' => 'tab',
+      'aria-controls' => tab.name
+  end
+
   def tabs
     Edition::Tab.all
   end
@@ -29,10 +37,6 @@ module TabsHelper
 
       def path(edition_path)
         name == 'edit' ? edition_path : "#{edition_path}/#{name}"
-      end
-
-      def link(edition_path)
-        "<a href=\"#{path(edition_path)}\" data-target=\"##{name}\" data-toggle=\"tab\" role=\"tab\" aria-controls=\"#{name}\">#{title}</a>".html_safe
       end
 
       def ==(other_tab)
