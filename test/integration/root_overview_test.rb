@@ -150,6 +150,31 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_select?("Assigned to", :selected => assignee.name)
   end
 
+  test "prevents claiming 2i when someone else has" do
+    stub_collections
+    user = FactoryGirl.create(:user)
+    assignee = FactoryGirl.create(:user)
+    another_user = FactoryGirl.create(:user, name: 'Another McPerson')
+    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
+                                 :review_requested_at => Time.zone.now, :assigned_to => assignee)
+
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    edition.reviewer = another_user.name
+    edition.save!
+
+    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+      click_on "Claim 2i"
+    end
+
+    assert edition_url(edition), current_url
+    assert page.has_content?("Another McPerson has already claimed this 2i")
+    assert page.has_select?("Reviewer", :selected => another_user.name)
+    assert page.has_select?("Assigned to", :selected => assignee.name)
+  end
+
   test "prevents the assignee claiming 2i" do
     user = FactoryGirl.create(:user)
     edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
