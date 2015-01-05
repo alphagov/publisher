@@ -1,11 +1,22 @@
-module View
+module TabsHelper
+  def active_tab
+    return @active_tab if @active_tab
+
+    tab_name = [action_name] & %w(metadata history admin)
+    @active_tab = tab_name.blank? ? Edition::Tab['edit'] : Edition::Tab[tab_name.first]
+  end
+
+  def tabs
+    Edition::Tab.all
+  end
+
   module Edition
     class Tab < Struct.new(:name)
 
-      TABS = ['edit', 'metadata', 'history', 'admin']
+      TABS = %w(edit metadata history admin)
 
       def self.all
-        TABS.map {|name| Tab.new(name)}
+        @@all ||= TABS.map { |name| Tab.new(name) }
       end
 
       def self.[](name)
@@ -24,8 +35,8 @@ module View
         "<a href=\"#{path(edition_path)}\" data-target=\"##{name}\" data-toggle=\"tab\" role=\"tab\" aria-controls=\"#{name}\">#{title}</a>".html_safe
       end
 
-      def active?(active)
-        name == active.name
+      def ==(other_tab)
+        name == other_tab.name
       end
     end
   end

@@ -13,28 +13,14 @@ class EditionsController < InheritedResources::Base
   end
 
   def show
-    @active_tab ||= View::Edition::Tab['edit']
-    @tabs = View::Edition::Tab.all
     if @resource.is_a?(Parted)
       @ordered_parts = @resource.parts.in_order
     end
     render :action => "show"
   end
-
-  def metadata
-    @active_tab = View::Edition::Tab['metadata']
-    show
-  end
-
-  def history
-    @active_tab = View::Edition::Tab['history']
-    show
-  end
-
-  def admin
-    @active_tab = View::Edition::Tab['admin']
-    show
-  end
+  alias_method :metadata, :show
+  alias_method :history, :show
+  alias_method :admin, :show
 
   # TODO: Clean this up via better use of instance var names here and in publications_controller.rb
   def new
@@ -95,8 +81,6 @@ class EditionsController < InheritedResources::Base
       failure.html {
         @resource = resource
         flash.now[:danger] = format_failure_message(resource)
-        @active_tab = View::Edition::Tab['edit']
-        @tabs = View::Edition::Tab.all
         render :action => "show"
       }
       success.json {

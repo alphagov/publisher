@@ -1,33 +1,30 @@
 require 'test_helper'
 
-class TabTest < ActiveSupport::TestCase
-
-  setup do
-    @tabs = View::Edition::Tab.all
-  end
+class TabsHelperTest < ActionView::TestCase
+  include TabsHelper
 
   context 'Tab' do
     should 'return all tabs in order' do
-      assert_equal 4, @tabs.count
-      assert_equal ['edit', 'metadata', 'history', 'admin'], @tabs.map {|t| t.name}
+      assert_equal 4, tabs.count
+      assert_equal ['edit', 'metadata', 'history', 'admin'], tabs.map {|t| t.name}
     end
 
     should 'return tabs with expected titles' do
-      assert_equal ['Edit', 'Metadata', 'History and notes', 'Admin'], @tabs.map {|t| t.title}
+      assert_equal ['Edit', 'Metadata', 'History and notes', 'Admin'], tabs.map {|t| t.title}
     end
 
     should 'return tabs with expected paths' do
-      assert_equal ['path', 'path/metadata', 'path/history', 'path/admin'], @tabs.map {|t| t.path('path')}
+      assert_equal ['path', 'path/metadata', 'path/history', 'path/admin'], tabs.map {|t| t.path('path')}
     end
 
     should 'return a single tab by name' do
-      assert_equal 'edit', View::Edition::Tab['edit'].name
+      assert_equal 'edit', Edition::Tab['edit'].name
     end
   end
 
   context 'Edit tab' do
     setup do
-      @edit_tab = View::Edition::Tab['edit']
+      @edit_tab = Edition::Tab['edit']
     end
 
     should 'have a path that matches the one provided' do
