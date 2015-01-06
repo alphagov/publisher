@@ -12,6 +12,9 @@ Publisher::Application.routes.draw do
   resources :editions do
     member do
       get 'diff'
+      get 'metadata'
+      get 'history'
+      get 'admin'
       post 'duplicate'
       post 'progress'
       put 'review'

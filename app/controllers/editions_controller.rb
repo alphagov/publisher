@@ -16,8 +16,11 @@ class EditionsController < InheritedResources::Base
     if @resource.is_a?(Parted)
       @ordered_parts = @resource.parts.in_order
     end
-    render
+    render :action => "show"
   end
+  alias_method :metadata, :show
+  alias_method :history, :show
+  alias_method :admin, :show
 
   # TODO: Clean this up via better use of instance var names here and in publications_controller.rb
   def new
