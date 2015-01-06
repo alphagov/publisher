@@ -19,12 +19,12 @@ class NotesController < InheritedResources::Base
         flash[:danger] = "Note failed to save"
       end
     end
-    redirect_to edit_edition_path(parent) + '#history'
+    redirect_to history_edition_path(parent)
   end
 
   def resolve
     resolve_important_note
-    redirect_to edit_edition_path(parent) + '#history'
+    redirect_to history_edition_path(parent)
   end
 
   def resource
