@@ -177,6 +177,8 @@ GEM
       redis
     mocha (0.13.3)
       metaclass (~> 0.0.1)
+    momentjs-rails (2.8.3)
+      railties (>= 3.1)
     mongo (1.7.1)
       bson (~> 1.7.1)
     mongoid (2.6.0)
@@ -364,6 +366,7 @@ DEPENDENCIES
   minitest (= 3.3.0)
   mlanett-redis-lock (= 0.2.2)
   mocha (= 0.13.3)
+  momentjs-rails (= 2.8.3)
   mongo (= 1.7.1)
   mongoid_rails_migrations (= 1.0.0)
   nested_form!
