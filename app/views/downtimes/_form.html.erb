@@ -6,16 +6,16 @@
    </p>
 <% end %>
 
-<div class="form-group form-inline">
   <%= f.label :start_time, 'Service will be unavailable from' %><br />
   <span class="add-right-margin">
+<div class="form-group form-inline js-start-time">
   <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
   </span>
   <%= f.date_select :start_time, { order: [:day, :month, :year], default: Date.tomorrow,
     start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
 </div>
 
-<div class="form-group form-inline">
+<div class="form-group form-inline js-stop-time">
   <%= f.label :end_time, 'to' %><br />
   <span class="add-right-margin">
   <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
@@ -24,14 +24,15 @@
     start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
 </div>
 
-<p class="text-muted add-top-margin">
-  Messages appear on the start page one day before the downtime is due.
-</p>
+<hr />
 
 <div class="form-group">
   <%= f.label :message %>
-  <%= f.text_area :message, class: 'form-control input-md-8', rows: 3 %>
-  <p class="text-muted">
-    A message will be generated if left blank.
-  </p>
+  <%= f.text_area :message, class: 'form-control input-md-8 js-downtime-message', rows: 3 %>
 </div>
+
+<p class="input-md-8 add-bottom-margin">
+  <span class="glyphicon glyphicon-exclamation-sign pull-left add-right-margin" style="font-size: 20px"></span>
+  <b class="js-schedule-message">Messages appear on the start page one day before the downtime is due.</b></p>
+
+<hr />
