@@ -1,9 +1,11 @@
-<% content_for :page_title, 'Downtime' %>
+<% content_for :page_title, 'Downtime messages' %>
 
 <div class="page-title">
-  <h1>Downtime</h1>
+  <h1>Downtime messages</h1>
+  <p class="lead">Show a message on a published transaction start page for a specific time.</p>
 </div>
 
+<h2 class="add-bottom-margin">Services</h2>
 <table class="table table-bordered table-striped" data-module="filterable-table">
   <thead>
     <tr class="table-header">
@@ -15,7 +17,7 @@
       <td colspan="3">
         <form>
           <label for="table-filter" class="rm">Filter services</label>
-          <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services">
+          <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services (eg ‘driving’ or ‘scheduled downtime’)">
         </form>
       </td>
     </tr>
