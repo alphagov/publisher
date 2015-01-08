@@ -6,20 +6,22 @@
    </p>
 <% end %>
 
-  <%= f.label :start_time, 'Service will be unavailable from' %><br />
-  <span class="add-right-margin">
 <div class="form-group form-inline js-start-time">
+  <%= f.label :start_time, 'This service will be unavailable from' %><br />
+  <span>
   <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
-  </span>
+</span>
+  <b class="add-left-margin add-right-margin">on</b>
   <%= f.date_select :start_time, { order: [:day, :month, :year], default: Date.tomorrow,
     start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
 </div>
 
 <div class="form-group form-inline js-stop-time">
   <%= f.label :end_time, 'to' %><br />
-  <span class="add-right-margin">
+  <span>
   <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
   </span>
+  <b class="add-left-margin add-right-margin">on</b>
   <%= f.date_select :end_time, { order: [:day, :month, :year], default: Date.tomorrow,
     start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
 </div>
