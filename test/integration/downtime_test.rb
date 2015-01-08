@@ -34,15 +34,15 @@ class DowntimeTest < ActionDispatch::IntegrationTest
     click_link 'Edit downtime'
     select '21', from: 'downtime_end_time_4i'
     select '30', from: 'downtime_end_time_5i'
-    click_on 'Save changes and re-schedule'
+    click_on 'Re-schedule downtime message'
     assert page.has_content?('Successfully updated downtime')
 
     visit downtimes_path
     assert page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
 
     click_link 'Edit downtime'
-    click_on 'Remove downtime'
-    assert page.has_content?('Successfully removed downtime')
+    click_on 'Cancel downtime'
+    assert page.has_content?('Successfully cancelled downtime')
 
     visit downtimes_path
     refute page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")

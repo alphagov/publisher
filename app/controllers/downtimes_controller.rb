@@ -28,9 +28,9 @@ class DowntimesController < ApplicationController
   def update
     @downtime = Downtime.for(@edition.artefact)
 
-    if params['commit'] == 'Remove downtime'
+    if params['commit'] == 'Cancel downtime'
       @downtime.destroy
-      flash[:success] = 'Successfully removed downtime'
+      flash[:success] = 'Successfully cancelled downtime'
       redirect_to downtimes_path
       return
     end
