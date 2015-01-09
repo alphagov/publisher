@@ -94,8 +94,8 @@ describe('A downtime message module', function() {
       <form>\
         <div class="js-start-time">'+ formHTML +'</div>\
         <div class="js-stop-time">'+ formHTML +'</div>\
-        <textarea class="js-downtime-message">x</textarea>\
-        <div class="js-schedule-message">x</div>\
+        <textarea class="js-downtime-message">starting message</textarea>\
+        <div class="js-schedule-message">starting message</div>\
       </form>'
     );
 
@@ -107,6 +107,13 @@ describe('A downtime message module', function() {
 
   afterEach(function() {
     form.remove();
+  });
+
+  describe('when starting', function() {
+    it('leaves the existing messages alone' , function() {
+      expectDowntimeMessageToMatch('starting message');
+      expectScheduleMessageToMatch('starting message');
+    });
   });
 
   describe('when selecting dates', function() {

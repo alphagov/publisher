@@ -9,7 +9,6 @@
           $scheduleMessage = element.find('.js-schedule-message');
 
       element.on('change', 'select', updateMessages);
-      updateMessages();
 
       function updateMessages() {
 
