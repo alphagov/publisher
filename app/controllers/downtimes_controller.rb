@@ -14,8 +14,9 @@ class DowntimesController < ApplicationController
     @downtime = Downtime.new(params[:downtime])
 
     if @downtime.save
-      flash[:success] = 'Successfully scheduled downtime'
-      redirect_to edit_edition_downtime_path(@edition)
+      link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
+      flash[:success] = "#{link} downtime message scheduled (from #{@downtime.datetime_string})".html_safe
+      redirect_to downtimes_path
     else
       render :new
     end
@@ -30,13 +31,15 @@ class DowntimesController < ApplicationController
 
     if params['commit'] == 'Cancel downtime'
       @downtime.destroy
-      flash[:success] = 'Successfully cancelled downtime'
+      link = view_context.link_to(@edition.title, new_edition_downtime_path(@edition), class: 'link-inherit bold')
+      flash[:success] = "#{link} downtime message cancelled".html_safe
       redirect_to downtimes_path
       return
     end
 
     if @downtime.update_attributes(params[:downtime])
-      flash[:success] = 'Successfully updated downtime'
+      link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
+      flash[:success] = "#{link} downtime message re-scheduled (from #{@downtime.datetime_string})".html_safe
       redirect_to downtimes_path
     else
       render :edit

@@ -26,9 +26,7 @@ class DowntimeTest < JavascriptIntegrationTest
     assert_match("midday to 6pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
     click_on 'Schedule downtime'
 
-    assert page.has_content?('Successfully scheduled downtime')
-
-    visit downtimes_path
+    assert page.has_content?('Apply to become a driving instructor downtime message scheduled')
     assert page.has_content?('Scheduled downtime')
     assert page.has_content?("midday to 6pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
 
@@ -37,16 +35,13 @@ class DowntimeTest < JavascriptIntegrationTest
     select '30', from: 'downtime_end_time_5i'
     assert_match("midday to 9:30pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
     click_on 'Re-schedule downtime message'
-    assert page.has_content?('Successfully updated downtime')
 
-    visit downtimes_path
+    assert page.has_content?('Apply to become a driving instructor downtime message re-scheduled')
     assert page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
 
     click_link 'Edit downtime'
     click_on 'Cancel downtime'
-    assert page.has_content?('Successfully cancelled downtime')
-
-    visit downtimes_path
+    assert page.has_content?('Apply to become a driving instructor downtime message cancelled')
     refute page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
   end
 end
