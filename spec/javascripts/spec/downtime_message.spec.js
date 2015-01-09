@@ -96,6 +96,7 @@ describe('A downtime message module', function() {
         <div class="js-stop-time">'+ formHTML +'</div>\
         <textarea class="js-downtime-message">starting message</textarea>\
         <div class="js-schedule-message">starting message</div>\
+        <input type="submit" class="js-submit">\
       </form>'
     );
 
@@ -110,9 +111,12 @@ describe('A downtime message module', function() {
   });
 
   describe('when starting', function() {
-    it('leaves the existing messages alone' , function() {
+    it('leaves any existing downtime message alone' , function() {
       expectDowntimeMessageToMatch('starting message');
-      expectScheduleMessageToMatch('starting message');
+    });
+
+    it('disables the form if the preloaded dates aren’t valid' , function() {
+      expectDisabledForm();
     });
   });
 
@@ -126,18 +130,38 @@ describe('A downtime message module', function() {
       selectStopDate({hour: '03'});
       expectDowntimeMessageToMatch('from 1am to 3am on Thursday 1 January.');
       expectScheduleMessageToMatch('from 1am on Wednesday 31 December');
+
+      expectEnabledForm();
     });
 
-    it('doesn’t generate a message if the start and end dates are the same', function() {
-      selectStartDate();
-      selectStopDate();
-      expectDowntimeMessageToBe('');
+    describe('that are the same', function() {
+      beforeEach(function() {
+        selectStartDate();
+        selectStopDate();
+      });
+
+      it('doesn’t generate a message', function() {
+        expectDowntimeMessageToBe('');
+      });
+
+      it('disables the form', function() {
+        expectDisabledForm();
+      });
     });
 
-    it('doesn’t generate a message if the end date is before the start date', function() {
-      selectStartDate({hour: '03'});
-      selectStopDate({hour: '01'});
-      expectDowntimeMessageToBe('');
+    describe('with a stop date before the start date', function() {
+      beforeEach(function() {
+        selectStartDate({hour: '03'});
+        selectStopDate({hour: '01'});
+      });
+
+      it('doesn’t generate a message', function() {
+        expectDowntimeMessageToBe('');
+      });
+
+      it('disables the form', function() {
+        expectDisabledForm();
+      });
     });
 
     describe('the generated messages', function() {
@@ -146,6 +170,7 @@ describe('A downtime message module', function() {
         selectStopDate({hour: '15'});
         expectDowntimeMessageToMatch('from 11am to 3pm on Thursday 1 January.');
         expectScheduleMessageToMatch('from 11am on Wednesday 31 December');
+        expectEnabledForm();
       });
 
       it('use midnight instead of 12am' , function() {
@@ -187,6 +212,7 @@ describe('A downtime message module', function() {
         selectStopDate({day: '5', month: '3'});
         expectDowntimeMessageToMatch('from 1am on Sunday 1 March to 1am on Thursday 5 March.');
         expectScheduleMessageToMatch('from 1am on Saturday 28 February');
+        expectEnabledForm();
       });
     });
   });
@@ -201,6 +227,17 @@ describe('A downtime message module', function() {
 
   function expectScheduleMessageToMatch(text) {
     expect(form.find('.js-schedule-message').text()).toMatch(text);
+  }
+
+  function expectDisabledForm() {
+    expect(form.find('.js-submit:disabled').length).toBe(1);
+    expect(form.find('.js-downtime-message:disabled').length).toBe(1);
+    expectScheduleMessageToMatch('Please select a valid date range');
+  }
+
+  function expectEnabledForm() {
+    expect(form.find('.js-submit:disabled').length).toBe(0);
+    expect(form.find('.js-downtime-message:disabled').length).toBe(0);
   }
 
   function selectStartDate(dateObj) {

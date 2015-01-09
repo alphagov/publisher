@@ -6,15 +6,34 @@
       var $startTimeFields = element.find('.js-start-time select'),
           $stopTimeFields  = element.find('.js-stop-time select'),
           $downtimeMessage = element.find('.js-downtime-message'),
-          $scheduleMessage = element.find('.js-schedule-message');
+          $scheduleMessage = element.find('.js-schedule-message'),
+          $submit          = element.find('.js-submit');
 
-      element.on('change', 'select', updateMessages);
+      element.on('change', 'select', updateFormAndMessages);
+      updateForm();
 
-      function updateMessages() {
+      function updateFormAndMessages() {
+        updateForm(true);
+      }
 
+      function updateForm(andMessages) {
         var startDate = getDateFromFields($startTimeFields),
             stopDate = getDateFromFields($stopTimeFields);
 
+        if (isValidSchedule(startDate, stopDate)) {
+          enableForm();
+          if (andMessages) {
+            updateMessages(startDate, stopDate);
+          }
+        } else {
+          if (andMessages) {
+            $downtimeMessage.val('');
+          }
+          disableForm();
+        }
+      }
+
+      function updateMessages(startDate, stopDate) {
         $downtimeMessage.val(downtimeMessage(startDate, stopDate));
         $scheduleMessage.text(scheduleMessage(startDate));
       }
@@ -97,13 +116,24 @@
       }
 
       function getDay(moment) {
-        var day = moment.format('dddd D MMMM');
-        return day;
+        return moment.format('dddd D MMMM');
       }
 
       function isValidSchedule(startDate, stopDate) {
-        return !startDate.isSame(stopDate) && !stopDate.isBefore(startDate);
+        return stopDate.isAfter(startDate);
       }
+
+      function disableForm() {
+        $submit.attr('disabled','disabled');
+        $downtimeMessage.attr('disabled','disabled');
+        $scheduleMessage.text('Please select a valid date range');
+      }
+
+      function enableForm() {
+        $submit.removeAttr('disabled');
+        $downtimeMessage.removeAttr('disabled');
+      }
+
     }
   };
 })(window.GOVUKAdmin.Modules);

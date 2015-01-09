@@ -14,6 +14,6 @@
 
 <%= semantic_form_for @downtime, url: edition_downtime_path(@edition), html: { class: 'form well remove-top-margin', 'data-module' => 'downtime-message' } do |f| %>
   <%= render 'form', f: f %>
-  <%= f.submit 'Re-schedule downtime message', class: 'btn btn-success' %>
+  <%= f.submit 'Re-schedule downtime message', class: 'js-submit btn btn-success' %>
   <%= f.submit 'Cancel downtime', class: 'add-left-margin btn btn-danger' %>
 <% end %>
