@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class DowntimeTest < ActionDispatch::IntegrationTest
+class DowntimeTest < JavascriptIntegrationTest
   test "scheduling and removing downtime" do
     setup_users
 
@@ -23,6 +23,7 @@ class DowntimeTest < ActionDispatch::IntegrationTest
     select tomorrow.day.to_s, from: 'downtime_end_time_3i'
     select '18', from: 'downtime_end_time_4i'
     select '00', from: 'downtime_end_time_5i'
+    assert_match("midday to 6pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
     click_on 'Schedule downtime'
 
     assert page.has_content?('Successfully scheduled downtime')
@@ -34,6 +35,7 @@ class DowntimeTest < ActionDispatch::IntegrationTest
     click_link 'Edit downtime'
     select '21', from: 'downtime_end_time_4i'
     select '30', from: 'downtime_end_time_5i'
+    assert_match("midday to 9:30pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
     click_on 'Re-schedule downtime message'
     assert page.has_content?('Successfully updated downtime')
 
