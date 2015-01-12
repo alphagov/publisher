@@ -1,11 +1,36 @@
 <% unless important_note.blank? %>
-<div class="callout callout-important-note add-bottom-margin">
+<% with_history = important_note_has_history?(@resource) %>
+<div class="callout callout-important-note add-bottom-margin" <% if with_history %>data-module="toggle"<% end %>>
   <div class="callout-body add-label-margin">
     <%= action_note(@resource.important_note) %>
   </div>
   <div class="callout-important-note-detail">
-    Note updated <time datetime="<%= important_note.created_at %>"><%= important_note.created_at.to_date.to_s(:govuk_date_short) %></time>
+    Note <%= with_history ? 'updated' : 'created' %> <time datetime="<%= important_note.created_at %>"><%= important_note.created_at.to_date.to_s(:govuk_date_short) %></time>
     <% if important_note.requester.present? %> by <%= mail_to important_note.requester.email, important_note.requester.name, { class: 'link-inherit' }  %><% end %>
+    <% if with_history %>
+     <span class="if-no-js-hide"> – <a href="#" class="js-toggle link-muted">See history</a></span>
+    <% end %>
   </div>
+
+  <% if with_history %>
+    <table class="table table-bordered table-striped add-top-margin remove-bottom-margin if-js-hide js-toggle-target">
+      <thead>
+        <tr class="table-header">
+          <th class="important-notes-date-col">Date</th>
+          <th class="important-notes-author-col">Author</th>
+          <th class="important-notes-note-col">Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% important_notes(@resource).each do |action| %>
+          <tr>
+            <td><%= action.created_at.to_date.to_s(:govuk_date) %></td>
+            <td><%= mail_to action.requester.email, action.requester.name if action.requester %></td>
+            <td><%= action_note(action) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 </div>
 <% end %>

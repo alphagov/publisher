@@ -22,9 +22,8 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "fifth"})
       @guide.new_action(@author, Action::PUBLISH, {:comment => "sixth"})
       @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
-      @guide.new_action(@author, Action::IMPORTANT_NOTE, {:comment => "Important note"})
 
-      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com", "Important note"], @guide.actions.map(&:comment)
+      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
     end
 
     should "have the first history actions visible" do
@@ -136,6 +135,20 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
         assert page.has_no_css?('.action-important-note')
         assert page.has_no_css?('.action-important-note-resolved')
+      end
+
+      should "shows a history of important notes behind a toggle when there are modifications" do
+        add_important_note("First note")
+        assert page.has_content?('Note created')
+
+        add_important_note("An updated note")
+        assert page.has_content?('Note updated')
+        assert page.has_no_css?('.callout-important-note table')
+
+        click_on "See history"
+        assert page.has_css?('.callout-important-note table tbody tr', count: 2)
+        assert page.has_css?('.callout-important-note tr:last-child td', text: 'First note')
+        assert page.has_css?('.callout-important-note tr:first-child td', text: 'An updated note')
       end
     end
   end

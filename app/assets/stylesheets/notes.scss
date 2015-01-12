@@ -24,6 +24,10 @@
   margin-top: 50px;
 }
 
+/* ==========================================================================
+   Important notes
+   ========================================================================== */
+
 .callout-important-note {
   padding-top: 16px;
   border-left: 5px solid $state-danger-text;
@@ -41,4 +45,9 @@
 
 .callout-important-note-detail {
   color: $text-muted;
+}
+
+.important-notes-date-col,
+.important-notes-author-col {
+  width: 150px;
 }
