@@ -25,13 +25,20 @@
 }
 
 .callout-important-note {
-  font-weight: bold;
   padding-top: 16px;
-  color: $state-danger-text;
   border-left: 5px solid $state-danger-text;
+
+  .callout-body {
+    color: $state-danger-text;
+    font-weight: bold;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
 }
 
 .callout-important-note-detail {
-  font-weight: normal;
   color: $text-muted;
 }

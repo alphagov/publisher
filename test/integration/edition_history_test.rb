@@ -105,6 +105,11 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_no_css?('.callout-important-note')
       end
 
+      should "have clickable links and zendesk tickets" do
+        add_important_note("Note http://www.google.com zen 123456")
+        assert page.has_css?('.callout-important-note .callout-body a', count: 2)
+      end
+
       should "not be carried forward to new editions" do
         @edition = FactoryGirl.create(:answer_edition,
                                       :state => "published")
