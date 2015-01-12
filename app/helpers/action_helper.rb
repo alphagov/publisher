@@ -1,6 +1,8 @@
 module ActionHelper
   def edition_actions(edition)
-    edition.actions.reverse
+    edition.actions.reverse.delete_if do |a|
+      [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED].include?(a.request_type)
+    end
   end
 
   def action_note?(action)

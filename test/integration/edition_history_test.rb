@@ -22,8 +22,9 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "fifth"})
       @guide.new_action(@author, Action::PUBLISH, {:comment => "sixth"})
       @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
+      @guide.new_action(@author, Action::IMPORTANT_NOTE, {:comment => "Important note"})
 
-      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
+      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com", "Important note"], @guide.actions.map(&:comment)
     end
 
     should "have the first history actions visible" do
@@ -120,6 +121,15 @@ class EditionHistoryTest < JavascriptIntegrationTest
         within "#update-important-note" do
           assert_field_contains("", "Important note")
         end
+      end
+
+      should "not show important notes in edition history" do
+        add_important_note("Note")
+        add_important_note("")
+        add_important_note("Another note")
+
+        assert page.has_no_css?('.action-important-note')
+        assert page.has_no_css?('.action-important-note-resolved')
       end
     end
   end
