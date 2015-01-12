@@ -9,17 +9,7 @@
   </span>
 </div>
 <% important_note = @resource.important_note %>
-<% unless important_note.blank? %>
-  <div class="callout callout-important-note add-bottom-margin">
-    <div class="callout-body add-label-margin">
-      <%= @resource.important_note.comment %>
-    </div>
-    <div class="callout-important-note-detail">
-      Note updated <time datetime="<%= important_note.created_at %>"><%= important_note.created_at.to_date.to_s(:govuk_date_short) %></time>
-      <% if important_note.requester.present? %> by <%= mail_to important_note.requester.email, important_note.requester.name, { class: 'link-inherit' }  %><% end %>
-    </div>
-  </div>
-<% end %>
+<%= render partial: 'shared/important_note', locals: {important_note: @resource.important_note} %>
 <% if @resource.artefact.state == "archived" %>
   <div class="callout callout-danger add-bottom-margin">
     <h2 class="callout-title">You can’t edit this publication</h2>
