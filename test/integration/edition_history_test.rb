@@ -78,11 +78,12 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
+        assert page.has_css?('.callout-important-note')
 
         click_on "History and notes"
         click_on "Delete important note"
         visit "/editions/#{@guide.id}"
-        assert page.has_no_css?('.important-note')
+        assert page.has_no_css?('.callout-important-note')
       end
 
       should "prepopulate with an existing note" do
@@ -101,7 +102,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         add_important_note("Note")
         add_important_note("")
 
-        assert page.has_no_css?('.important-note')
+        assert page.has_no_css?('.callout-important-note')
       end
 
       should "not be carried forward to new editions" do

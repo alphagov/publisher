@@ -23,3 +23,15 @@
 .original-message {
   margin-top: 50px;
 }
+
+.callout-important-note {
+  font-weight: bold;
+  padding-top: 16px;
+  color: $state-danger-text;
+  border-left: 5px solid $state-danger-text;
+}
+
+.callout-important-note-detail {
+  font-weight: normal;
+  color: $text-muted;
+}
