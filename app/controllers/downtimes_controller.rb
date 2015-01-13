@@ -15,7 +15,7 @@ class DowntimesController < ApplicationController
 
     if @downtime.save
       link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
-      flash[:success] = "#{link} downtime message scheduled (from #{@downtime.datetime_string})".html_safe
+      flash[:success] = "#{link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
       render :new
@@ -39,7 +39,7 @@ class DowntimesController < ApplicationController
 
     if @downtime.update_attributes(params[:downtime])
       link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
-      flash[:success] = "#{link} downtime message re-scheduled (from #{@downtime.datetime_string})".html_safe
+      flash[:success] = "#{link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
       render :edit
