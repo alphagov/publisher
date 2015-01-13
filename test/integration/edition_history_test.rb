@@ -77,11 +77,12 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
         visit "/editions/#{@guide.id}"
         assert page.has_content? "This is an important note. Take note."
+        assert page.has_css?('.callout-important-note')
 
         click_on "History and notes"
         click_on "Delete important note"
         visit "/editions/#{@guide.id}"
-        assert page.has_no_css?('.important-note')
+        assert page.has_no_css?('.callout-important-note')
       end
 
       should "prepopulate with an existing note" do
@@ -100,7 +101,12 @@ class EditionHistoryTest < JavascriptIntegrationTest
         add_important_note("Note")
         add_important_note("")
 
-        assert page.has_no_css?('.important-note')
+        assert page.has_no_css?('.callout-important-note')
+      end
+
+      should "have clickable links and zendesk tickets" do
+        add_important_note("Note http://www.google.com zen 123456")
+        assert page.has_css?('.callout-important-note .callout-body a', count: 2)
       end
 
       should "not be carried forward to new editions" do
@@ -120,6 +126,29 @@ class EditionHistoryTest < JavascriptIntegrationTest
         within "#update-important-note" do
           assert_field_contains("", "Important note")
         end
+      end
+
+      should "not show important notes in edition history" do
+        add_important_note("Note")
+        add_important_note("")
+        add_important_note("Another note")
+
+        assert page.has_no_css?('.action-important-note')
+        assert page.has_no_css?('.action-important-note-resolved')
+      end
+
+      should "shows a history of important notes behind a toggle when there are modifications" do
+        add_important_note("First note")
+        assert page.has_content?('Note created')
+
+        add_important_note("An updated note")
+        assert page.has_content?('Note updated')
+        assert page.has_no_css?('.callout-important-note table')
+
+        click_on "See history"
+        assert page.has_css?('.callout-important-note table tbody tr', count: 2)
+        assert page.has_css?('.callout-important-note tr:last-child td', text: 'First note')
+        assert page.has_css?('.callout-important-note tr:first-child td', text: 'An updated note')
       end
     end
   end
