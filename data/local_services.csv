@@ -258,7 +258,6 @@ LGSL,Description,Providing Tier
 1307,Get information on services disrupted by severe weather,all
 1354,"Licence for bridges, buildings, beams and cables over or along the highway",county/unitary
 1465,Find out about details of council expenditure,all
-1473,Find out about the Care Act 2014,county/unitary
 1573,Find out about senior salary details at your council,all
 1574,Find out about councillor allowances and expenses at your council,all
 1579,Find out about family information services,county/unitary
@@ -266,3 +265,4 @@ LGSL,Description,Providing Tier
 1584,Find out when you can check the accounts at your council,all
 1741,Find out about free early education,county/unitary
 1742,Find the location of weighbridges,county/unitary
+1743,Find out about the Care Act 2014,county/unitary
