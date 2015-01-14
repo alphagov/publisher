@@ -1,0 +1,18 @@
+// Increase padding on footer to account for
+// fixed navbar
+.page-footer {
+  margin-bottom: 63px;
+}
+
+.workflow-buttons form {
+  display: inline-block;
+}
+
+.navbar-inverse .workflow-buttons {
+  color: $gray-light;
+}
+
+button.send-fact-check {
+  /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
+  margin-left: 70px;
+}
