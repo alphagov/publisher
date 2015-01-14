@@ -23,6 +23,11 @@ class ReportsController < ApplicationController
     send_data BusinessSupportExportPresenter.new(schemes, facets).to_csv, :filename => 'business_support_schemes_content.csv'
   end
 
+  def organisation_content
+    documents = Artefact.where(owning_app: "publisher").not_in(state: ["archived"])
+    render csv: OrganisationContentPresenter.new(documents)
+  end
+
   private
 
   def facets
