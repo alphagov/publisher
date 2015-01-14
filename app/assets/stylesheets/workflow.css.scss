@@ -4,6 +4,10 @@
   margin-bottom: 63px;
 }
 
+/* ==========================================================================
+   Workflow buttons
+   ========================================================================== */
+
 .workflow-buttons form {
   display: inline-block;
 }
@@ -15,4 +19,49 @@
 button.send-fact-check {
   /* add one column margin to the Fact Check workflow button since we can't use .offset1 on the preview button */
   margin-left: 70px;
+}
+
+/* ==========================================================================
+   Workflow 'saving' messages
+   ========================================================================== */
+
+.workflow-message {
+  padding: 12px 0;
+  border-top: 5px solid $table-border-color;
+  font-size: 18px;
+  background: #eee;
+
+  text-align: center;
+  position: fixed;
+  bottom: -57px;
+  left: 0;
+  right: 0;
+
+  -webkit-transition: bottom 200ms;
+  transition: bottom 200ms;
+
+  /* Must display above navbar */
+  z-index: 1031;
+
+  &.workflow-message-hide {
+    bottom: -57px;
+  }
+}
+
+.workflow-message-saving {
+  bottom: 0;
+}
+
+.workflow-message-saved {
+  background: $state-success-bg;
+  color: $state-success-text;
+  border-color: #53ad53;
+  bottom: 0;
+}
+
+.workflow-message-error {
+  background: $state-danger-bg;
+  color: $state-danger-text;
+  border-color: #d9534f;
+  bottom: 0;
 }

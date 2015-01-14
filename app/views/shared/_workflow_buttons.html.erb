@@ -13,7 +13,7 @@
           <% end %>
           <%= progress_buttons(@resource, skip_disabled_buttons: true) %>
         <% else %>
-          <%= f.submit 'Save', id: 'save-edition', class: 'btn btn-success btn-large' %>
+          <%= f.submit 'Save', id: 'save-edition', class: 'btn btn-success btn-large js-save' %>
           <%= preview_button(@resource) %>
           <%= progress_buttons(@resource) %>
         <% end %>
@@ -21,3 +21,5 @@
     </div><!--/.container-fluid -->
   </div><!--/.navbar-inner -->
 </div><!--/.navbar -->
+
+<div class="workflow-message js-status-message"></div>
