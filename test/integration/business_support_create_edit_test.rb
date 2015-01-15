@@ -149,8 +149,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         check "edition_sectors_manufacturing"
         uncheck "edition_support_types_loan"
 
-        save_edition
-        assert page.has_content? "Business support edition was successfully updated."
+        save_edition_and_assert_success
 
         @bs.reload
 
@@ -182,8 +181,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         fill_in "Max value", :with => "£10,000"
         fill_in "Max employees", :with => "1,000"
 
-        save_edition
-        assert page.has_content?("We had some problems saving")
+        save_edition_and_assert_error
 
         within '#edition_min_value_input' do
           assert page.has_content?("is not a number")
@@ -210,8 +208,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
           fill_in "Related areas", :with => "london, hackney-borough-council, camden-borough-council"
         end
 
-        save_edition
-        assert page.has_content? "Business support edition was successfully updated."
+        save_edition_and_assert_success
 
         if using_javascript?
           within(".related-areas") do

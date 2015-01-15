@@ -23,22 +23,23 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     assert_equal @artefact.id.to_s, t.panopticon_id
   end
 
-  should "allow editing CompletedTransactionEdition" do
-    completed_transaction = FactoryGirl.create(:completed_transaction_edition,
-                                 :panopticon_id => @artefact.id,
-                                 :title => "All bar done")
+  with_and_without_javascript do
+    should "allow editing CompletedTransactionEdition" do
+      completed_transaction = FactoryGirl.create(:completed_transaction_edition,
+                                   :panopticon_id => @artefact.id,
+                                   :title => "All bar done")
 
-    visit "/editions/#{completed_transaction.to_param}"
+      visit "/editions/#{completed_transaction.to_param}"
 
-    assert page.has_content? 'All bar done #1'
+      assert page.has_content? 'All bar done #1'
+      assert page.has_field?("Title", :with => "All bar done")
+      fill_in "Title", :with => "Changed title"
 
-    assert page.has_field?("Title", :with => "All bar done")
+      save_edition_and_assert_success
 
-    save_edition
-
-    assert page.has_content? "Completed transaction edition was successfully updated."
-
-    assert page.has_css?('.label', text: 'Draft')
+      assert page.has_css?('.label', text: 'Draft')
+      assert 'Changed title', completed_transaction.title
+    end
   end
 
   should "allow creating a new version of a CompletedTransactionEdition" do

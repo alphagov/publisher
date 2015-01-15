@@ -6,34 +6,35 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
     stub_collections
   end
 
-  should "allow marking an edition as in beta" do
-    edition = FactoryGirl.create(:edition)
+  with_and_without_javascript do
+    should "allow marking an edition as in beta" do
+      edition = FactoryGirl.create(:edition)
+      visit_edition edition
 
-    visit "/editions/#{edition.to_param}"
-    refute find('#edition_in_beta').checked?
+      refute find('#edition_in_beta').checked?
+      check 'Content is in beta'
 
-    check 'Content is in beta'
-    save_edition
+      save_edition_and_assert_success
 
-    assert find('#edition_in_beta').checked?
+      assert find('#edition_in_beta').checked?
 
-    visit "/?user_filter=all"
-    assert page.has_text?("#{edition.title} beta")
+      visit "/?user_filter=all"
+      assert page.has_text?("#{edition.title} beta")
+    end
+
+    should "allow marking an edition as not in beta" do
+      edition = FactoryGirl.create(:edition, in_beta: true)
+      visit_edition edition
+
+      assert find('#edition_in_beta').checked?
+      uncheck 'Content is in beta'
+
+      save_edition_and_assert_success
+
+      refute find('#edition_in_beta').checked?
+
+      visit "/?user_filter=all"
+      refute page.has_text?("#{edition.title} beta")
+    end
   end
-
-  should "allow marking an edition as not in beta" do
-    edition = FactoryGirl.create(:edition, in_beta: true)
-
-    visit "/editions/#{edition.to_param}"
-    assert find('#edition_in_beta').checked?
-
-    uncheck 'Content is in beta'
-    save_edition
-
-    refute find('#edition_in_beta').checked?
-
-    visit "/?user_filter=all"
-    refute page.has_text?("#{edition.title} (Ed. 1) beta")
-  end
-
 end

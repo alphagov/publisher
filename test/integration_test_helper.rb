@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'test_helper'
 require 'capybara/rails'
 require 'capybara/poltergeist'
@@ -151,6 +153,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # thinks there are overlapping elements
     if using_javascript?
       page.find_button('Save').trigger('click')
+      assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
     else
       click_on 'Save'
     end
@@ -159,6 +162,24 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # hence we need to explicitly wait till the page reloads.
     # save button is disabled after one click, so refreshing should enable it.
     assert page.has_selector?("input[type=submit]#save-edition:enabled"), "Failed to save edition."
+  end
+
+  def save_edition_and_assert_success
+    save_edition
+    if using_javascript?
+      assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with ajax"
+    else
+      assert page.has_content? "edition was successfully updated."
+    end
+  end
+
+  def save_edition_and_assert_error
+    save_edition
+    if using_javascript?
+      assert page.has_css?('.workflow-message', text: 'Couldn’t save'),  "Edition didn’t error as expected when saved with ajax"
+    else
+      assert page.has_content? "We had some problems saving"
+    end
   end
 
   def clear_cookies

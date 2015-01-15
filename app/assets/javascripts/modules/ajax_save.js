@@ -29,7 +29,9 @@
       }
 
       function error(response) {
-        showErrors(response.responseJSON);
+        if (typeof response.responseJSON === "object") {
+          showErrors(response.responseJSON);
+        }
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
         message.text('Couldn’t save');
         hideTimeout = setTimeout(hide, 2000);

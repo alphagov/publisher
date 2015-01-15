@@ -28,38 +28,34 @@ class EditionTabTest < JavascriptIntegrationTest
     assert page.has_css?("##{name}.tab-pane.active"), 'Tab content not active'
   end
 
-  should "show the edit tab by default" do
-    visit_edition @guide
-    assert_tab_active('edit', 'Edit')
-  end
-
-  should "show the edit tab after saving whether successful or not" do
-    visit_edition @guide
-    fill_in 'Title', :with => 'New title'
-    save_edition
-
-    assert page.has_content? "Guide edition was successfully updated."
-    assert_tab_active('edit', 'Edit')
-
-    fill_in 'Title', :with => ''
-    save_edition
-
-    assert page.has_content? "We had some problems saving."
-    assert_tab_active('edit', 'Edit')
-  end
-
-  should "show the correct tab when visiting tab links" do
-    visit_tab('metadata')
-    assert_tab_active('metadata', 'Metadata')
-
-    visit_tab('admin')
-    assert_tab_active('admin', 'Admin')
-
-    visit_tab('history')
-    assert_tab_active('history', 'History and notes')
-  end
-
   with_and_without_javascript do
+    should "show the edit tab by default" do
+      visit_edition @guide
+      assert_tab_active('edit', 'Edit')
+    end
+
+    should "show the edit tab after saving whether successful or not" do
+      visit_edition @guide
+      fill_in 'Title', :with => 'New title'
+      save_edition_and_assert_success
+      assert_tab_active('edit', 'Edit')
+
+      fill_in 'Title', :with => ''
+      save_edition_and_assert_error
+      assert_tab_active('edit', 'Edit')
+    end
+
+    should "show the correct tab when visiting tab links" do
+      visit_tab('metadata')
+      assert_tab_active('metadata', 'Metadata')
+
+      visit_tab('admin')
+      assert_tab_active('admin', 'Admin')
+
+      visit_tab('history')
+      assert_tab_active('history', 'History and notes')
+    end
+
     should "show the correct tab when clicking tabs" do
       visit_edition @guide
 

@@ -14,8 +14,7 @@ class TaggingToCollectionsTest < JavascriptIntegrationTest
     select 'Tax: VAT', from: 'Mainstream browse pages'
     select 'Tax: RTI (draft)', from: 'Mainstream browse pages'
 
-    save_edition
-
+    save_edition_and_assert_success
     edition.reload
 
     assert_equal ['tax/vat', 'tax/rti'], edition.browse_pages
@@ -31,8 +30,7 @@ class TaggingToCollectionsTest < JavascriptIntegrationTest
     select 'Oil and Gas: Fields', from: 'Additional topics'
     select 'Oil and Gas: Distillation (draft)', from: 'Additional topics'
 
-    save_edition
-
+    save_edition_and_assert_success
     edition.reload
 
     assert_equal 'oil-and-gas/wells', edition.primary_topic
