@@ -53,6 +53,8 @@
         message.addClass('workflow-message-saved').removeClass('workflow-message-saving');
         message.text('Saved');
         hideTimeout = setTimeout(hide, 2000);
+
+        element.trigger('success.ajaxsave.admin', response);
       }
 
       function error(response) {
@@ -65,6 +67,8 @@
 
         // Save errored, form still has unsaved changes
         GOVUKAdmin.Data.editionFormDirty = true;
+
+        element.trigger('error.ajaxsave.admin', response);
       }
 
       function showErrors(errors) {

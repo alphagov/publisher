@@ -61,7 +61,7 @@ describe('An ajax save module', function() {
 
     beforeEach(function() {
       spyOn($, 'ajax').and.callFake(function(options) {
-        options.success({});
+        options.success({title: 'Title'});
       });
       spyOn(window, 'setTimeout').and.callFake(function(fn, time) {
         timeoutTime = time;
@@ -79,6 +79,15 @@ describe('An ajax save module', function() {
     it('the save message disappears after a short while', function() {
       expect(timeoutTime).toBe(2000);
       expect(element.find('.js-status-message').is('.workflow-message-hide'));
+    });
+
+    it('triggers a success.ajaxsave.admin dom event', function() {
+      var successResponse = false;
+      element.on('success.ajaxsave.admin', function(evt, response) {
+        successResponse = response;
+      });
+      element.find('.js-save').trigger('click');
+      expect(successResponse).toEqual({title: 'Title'});
     });
   });
 
@@ -143,6 +152,15 @@ describe('An ajax save module', function() {
       expect(element.find('#edition_another_input').is('.has-error')).toBe(true);
       expect(element.find('#edition_another_input ul li').length).toBe(1);
       expect(element.find('#edition_another_input ul li:first').text()).toBe('must rhyme');
+    });
+
+    it('triggers an error.ajaxsave.admin dom event', function() {
+      var errorResponse = false;
+      element.on('error.ajaxsave.admin', function(evt, response) {
+        errorResponse = response;
+      });
+      ajaxError({not_a_field: ['nonsense']});
+      expect(errorResponse).toEqual({responseJSON: {not_a_field: ['nonsense']}});
     });
 
     describe('when the form is saved again', function() {
