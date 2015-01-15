@@ -153,7 +153,9 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # thinks there are overlapping elements
     if using_javascript?
       page.find_button('Save').trigger('click')
-      assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
+      if page.has_selector?('[data-module="ajax-save"]')
+        assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
+      end
     else
       click_on 'Save'
     end

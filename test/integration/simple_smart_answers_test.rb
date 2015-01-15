@@ -359,6 +359,14 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       @edition.save!
     end
 
+    should "not save using ajax" do
+      visit "/editions/#{@edition.id}"
+      save_edition
+
+      assert page.has_no_css?('.workflow-message', text: 'Saving')
+      assert page.has_no_css?('.workflow-message', text: 'Saved')
+    end
+
     should "correctly render the form" do
       visit "/editions/#{@edition.id}"
 

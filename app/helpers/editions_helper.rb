@@ -7,8 +7,13 @@ module EditionsHelper
   end
 
   def resource_form(&form_definition)
+    html_options = { :id => 'edition-form' }
+    unless @resource.format == 'SimpleSmartAnswer'
+      html_options['data-module'] = 'ajax-save'
+    end
+
     semantic_bootstrap_nested_form_for @resource, :as => :edition, :url => edition_path(@resource),
-      :html => { :id => 'edition-form', 'data-module' => 'ajax-save' }, &form_definition
+      :html => html_options, &form_definition
   end
 
   def browse_options_for_select(grouped_collections)
