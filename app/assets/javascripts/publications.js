@@ -1,25 +1,28 @@
 // Javascript that may be used on every publication show/edit page
-
 $(function () {
+  "use strict";
 
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
     the edition form (such as by clicking the "Edit in Panopticon" link)
   */
-  var edition_form_dirty = false;
+  GOVUKAdmin.Data = GOVUKAdmin.Data || {};
+  GOVUKAdmin.Data.editionFormDirty = false;
 
-  $('#edition-form').change(function () {
-    edition_form_dirty = true;
+  var $editionForm = $('#edition-form');
+
+  $editionForm.change(function () {
+    GOVUKAdmin.Data.editionFormDirty = true;
   });
 
-  $('#edition-form').submit(function() {
-    edition_form_dirty = false;
+  $editionForm.submit(function() {
+    GOVUKAdmin.Data.editionFormDirty = false;
     /* prevent multiple form submissions */
     $("#save-edition").attr('disabled', true);
   });
 
   $(window).bind('beforeunload', function() {
-    if (edition_form_dirty) {
+    if (GOVUKAdmin.Data.editionFormDirty) {
       return 'You have unsaved changes to this edition.';
     }
   });

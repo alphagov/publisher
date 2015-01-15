@@ -6,6 +6,7 @@
           message = element.find('.js-status-message'),
           hideTimeout;
 
+      GOVUKAdmin.Data = GOVUKAdmin.Data || {};
       element.on('click', '.js-save', save);
 
       function save(evt) {
@@ -61,6 +62,9 @@
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
         message.text('Couldn’t save');
         hideTimeout = setTimeout(hide, 2000);
+
+        // Save errored, form still has unsaved changes
+        GOVUKAdmin.Data.editionFormDirty = true;
       }
 
       function showErrors(errors) {
@@ -91,6 +95,9 @@
         reset();
         message.addClass('workflow-message-saving');
         message.text('Saving…');
+
+        // Save attempt, form is no longer dirty
+        GOVUKAdmin.Data.editionFormDirty = false;
       }
 
       function hide() {

@@ -37,6 +37,11 @@ describe('An ajax save module', function() {
       expect(statusMessage.is('.workflow-message-saving')).toBe(true);
     });
 
+    it('resets the form’s dirty state' , function() {
+      element.find('.js-save').trigger('click');
+      expect(GOVUKAdmin.Data.editionFormDirty).toBe(false);
+    });
+
     it('posts the form using ajax' , function() {
       var ajaxOptions;
       spyOn($, 'ajax').and.callFake(function(options) {
@@ -94,6 +99,11 @@ describe('An ajax save module', function() {
         fn();
       });
       element.find('.js-save').trigger('click');
+    });
+
+    it('marks the form as dirty' , function() {
+      ajaxError();
+      expect(GOVUKAdmin.Data.editionFormDirty).toBe(true);
     });
 
     it('says that it couldn’t save' , function() {
