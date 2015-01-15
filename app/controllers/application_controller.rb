@@ -21,4 +21,15 @@ class ApplicationController < ActionController::Base
   def record_not_found
     render :text => "404 Not Found", :status => 404
   end
+
+  def squash_multiparameter_datetime_attributes(params, attribute_names)
+    attribute_names.each do |attribute_name|
+      datetime_params = params.select { |k, v| k.include? attribute_name }.values.map(&:to_i)
+      params.delete_if { |k, v| k.include? attribute_name }
+
+      params[attribute_name] = DateTime.new(*datetime_params) if datetime_params.present?
+    end
+    params
+  end
+
 end

@@ -1,0 +1,9 @@
+.help-note {
+  font-weight: bold;
+
+  .glyphicon {
+    float: left;
+    font-size: $font-size-large;
+    margin-right: $default-horizontal-margin;
+  }
+}

@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", "28.0.0"
+  gem "govuk_content_models", '~> 28.1.0'
 end
 
 if ENV['API_DEV']
@@ -23,6 +23,7 @@ end
 gem 'erubis'
 gem 'govuk_admin_template', '1.4.2'
 gem 'select2-rails', '3.5.9.1'
+gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'rails_autolink', '1.1.6'

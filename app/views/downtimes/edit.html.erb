@@ -1,0 +1,19 @@
+<% content_for :page_title, 'Re-schedule downtime message' %>
+
+<ul class="breadcrumb">
+  <li class="crumb"><%= link_to 'Downtime', downtimes_path %></li>
+  <li class="active"><%= @downtime.artefact.name %></li>
+</ul>
+
+<div class="page-title">
+  <h1>
+    <span class="small"><%= @downtime.artefact.name %></span>
+    Re-schedule downtime message
+  </h1>
+</div>
+
+<%= semantic_form_for @downtime, url: edition_downtime_path(@edition), html: { class: 'form well remove-top-margin', 'data-module' => 'downtime-message' } do |f| %>
+  <%= render 'form', f: f %>
+  <%= f.submit 'Re-schedule downtime message', class: 'js-submit btn btn-success' %>
+  <%= f.submit 'Cancel downtime', class: 'add-left-margin btn btn-danger' %>
+<% end %>

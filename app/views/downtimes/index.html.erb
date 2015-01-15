@@ -1,0 +1,53 @@
+<% content_for :page_title, 'Downtime messages' %>
+
+<div class="page-title">
+  <h1>Downtime messages</h1>
+  <p class="lead">Show a message on a published transaction start page for a specific time.</p>
+</div>
+
+<h2 class="add-bottom-margin">Services</h2>
+<table class="table table-bordered table-striped" data-module="filterable-table">
+  <thead>
+    <tr class="table-header">
+      <th>Service start page</th>
+      <th>Service status</th>
+      <th>Action</th>
+    </tr>
+    <tr class="if-no-js-hide table-header-secondary">
+      <td colspan="3">
+        <form>
+          <label for="table-filter" class="rm">Filter services</label>
+          <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services (eg ‘driving’ or ‘scheduled downtime’)">
+        </form>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+    <tr>
+      <td>
+        <h4 class="publication-table-title">
+          <%= link_to transaction.title, Downtime.for(transaction.artefact).present? ?
+                                          edit_edition_downtime_path(transaction) :
+                                          new_edition_downtime_path(transaction) %>
+        </h4>
+        <%= link_to "/#{transaction.slug}", "#{Plek.find('www')}/#{transaction.slug}", class: 'link-muted' %>
+      </td>
+        <% if downtime = Downtime.for(transaction.artefact) %>
+          <td>
+            Scheduled downtime<br />
+            <span class="text-muted"><%= downtime_datetime(downtime) %></span>
+          </td>
+          <td>
+            <%= link_to 'Edit downtime', edit_edition_downtime_path(transaction), class: 'btn btn-info' %>
+          </td>
+        <% else %>
+          <td>Live</td>
+          <td>
+            <%= link_to 'Add downtime', new_edition_downtime_path(transaction), class: 'btn btn-default' %>
+          </td>
+        <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
