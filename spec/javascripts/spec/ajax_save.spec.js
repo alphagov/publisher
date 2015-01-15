@@ -14,6 +14,8 @@ describe('An ajax save module', function() {
       <div id="edition_another_input">\
         <input type="text" name="another" value="another value">\
       </div>\
+      <input class="js-no-ajax" type="text" name="fake-file-input">\
+      <input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">\
       <input type="submit" class="js-save" value="Save">\
     </form>');
 
@@ -45,7 +47,7 @@ describe('An ajax save module', function() {
       expect($.ajax).toHaveBeenCalled();
       expect(ajaxOptions.type).toBe('POST');
       expect(ajaxOptions.url).toBe('some/url.json');
-      expect(ajaxOptions.data).toBe('test=prefilled+value&another=another+value');
+      expect(ajaxOptions.data).toBe('test=prefilled+value&another=another+value&fake-file-input=');
     });
   });
 
@@ -74,7 +76,6 @@ describe('An ajax save module', function() {
       expect(element.find('.js-status-message').is('.workflow-message-hide'));
     });
   });
-
 
   describe('when an ajax save errors with validation messages', function() {
     var timeoutTime, ajaxError, ajaxSuccess;
@@ -145,4 +146,42 @@ describe('An ajax save module', function() {
     });
 
   });
+
+  /* Cannot simulate a file input with a value, instead test this feature by proxy
+     using an input which has the class 'js-no-ajax' and setting a value on it */
+  describe('when submitting a form with fields that need a full page reload', function() {
+
+    it('still indicates the form is saving', function() {
+      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected');
+      element.find('.js-save').trigger('click');
+
+      var statusMessage = element.find('.js-status-message');
+      expect(statusMessage.text()).toBe('Saving…');
+      expect(statusMessage.is('.workflow-message-saving')).toBe(true);
+    });
+
+    it('avoids ajax if a non-ajax text input has a value' , function() {
+      var ajaxOptions;
+      spyOn($, 'ajax');
+      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected');
+      element.find('.js-save').trigger('click');
+
+      expect($.ajax).not.toHaveBeenCalled();
+
+      element.find('.js-no-ajax[name="fake-file-input"]').val('');
+      element.find('.js-save').trigger('click');
+
+      expect($.ajax).toHaveBeenCalled();
+    });
+
+    it('avoids ajax if a non-ajax checkbox is checked' , function() {
+      var ajaxOptions;
+      spyOn($, 'ajax');
+      element.find('.js-no-ajax[name="remove-file-checkbox"]').attr('checked', true);
+      element.find('.js-save').trigger('click');
+
+      expect($.ajax).not.toHaveBeenCalled();
+    });
+  });
+
 });

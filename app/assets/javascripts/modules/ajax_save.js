@@ -9,9 +9,15 @@
       element.on('click', '.js-save', save);
 
       function save(evt) {
-        evt.preventDefault();
         saving();
 
+        if (allFieldsCanBeSavedWithAjax()) {
+          evt.preventDefault();
+          postForm();
+        }
+      }
+
+      function postForm() {
         $.ajax({
           url : url,
           type : 'POST',
@@ -19,6 +25,26 @@
           success : success,
           error: error
         });
+      }
+
+      function allFieldsCanBeSavedWithAjax() {
+        var ok = true;
+        element.find('.js-no-ajax, input[type="file"]').each(function() {
+          var $input = $(this),
+              value = $input.val();
+
+          if ($input.is(':checkbox')) {
+            if ($input.is(':checked')) {
+              ok = false;
+            }
+          } else {
+            if (value && value.length > 0) {
+              ok = false;
+            }
+          }
+        });
+
+        return ok;
       }
 
       function success(response) {
