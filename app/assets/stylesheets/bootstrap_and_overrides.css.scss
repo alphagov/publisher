@@ -83,19 +83,6 @@ select.date {
 }
 
 /*
- * Turning off all CSS animations
- * Poltergeist doesn't wait on CSS animations to happen,
- * so integration tests fail intermittently
- */
-.modal.fade {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -ms-transition: none !important;
-  -o-transition: none !important;
-  transition: none !important;
-}
-
-/*
  * Bootstrap tab styles apply display attributes only to .tab-pane
  * elements that are direct children of .tab-content. This fix is
  * required to apply correct display attributes to .tab-pane
