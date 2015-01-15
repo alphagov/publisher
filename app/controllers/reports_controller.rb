@@ -28,6 +28,11 @@ class ReportsController < ApplicationController
     render csv: OrganisationContentPresenter.new(documents)
   end
 
+  def edition_churn
+    report = EditionChurnPresenter.new(Edition.not_in(state: ["archived"]))
+    render csv: report
+  end
+
   private
 
   def facets
