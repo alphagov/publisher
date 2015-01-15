@@ -11,6 +11,9 @@
         // the active class from a tab-pane that is a direct child of
         // the tab-content container. See:
         // https://github.com/twbs/bootstrap/blob/master/js/tab.js#L52
+        //
+        // Works in conjunction with:
+        // https://github.com/alphagov/publisher/blob/master/app/assets/stylesheets/bootstrap_and_overrides.css.scss#L98-L110
         resetAllTabs();
       });
 
