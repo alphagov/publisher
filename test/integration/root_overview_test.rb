@@ -173,6 +173,19 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Another McPerson has already claimed this 2i")
     assert page.has_select?("Reviewer", :selected => another_user.name)
     assert page.has_select?("Assigned to", :selected => assignee.name)
+
+    select("", from: "Reviewer")
+    click_on "Save"
+
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
+      click_on "Claim 2i"
+    end
+
+    assert page.has_content?("You are the reviewer of this guide.")
   end
 
   test "prevents the assignee claiming 2i" do

@@ -93,7 +93,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def review
-    if resource.reviewer
+    if resource.reviewer.present?
       flash[:danger] = "#{resource.reviewer} has already claimed this 2i"
       redirect_to edition_path(resource)
       return
