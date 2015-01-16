@@ -97,7 +97,7 @@
       function scheduleMessage(startDate) {
         var message = "A downtime message will show from ",
             beginShowingDate = startDate.clone().subtract(1, 'day'),
-            beginTime = getTime(beginShowingDate),
+            beginTime = 'midnight',
             beginDay = getDay(beginShowingDate);
 
         return message + beginTime + ' on ' + beginDay + ' (one day before the downtime)';
