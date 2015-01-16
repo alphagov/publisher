@@ -231,7 +231,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     select("Bob", from: "Reviewer")
 
     save_edition_and_assert_error
-    assert page.has_css?(".form-group.error ul.help-block li", text: "can't be the assignee")
+    
+    assert page.has_css?(".form-group.has-error li", text: "can't be the assignee")
   end
 
   test "can deselect the guide reviewer" do

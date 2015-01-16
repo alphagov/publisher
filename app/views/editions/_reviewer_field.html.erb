@@ -1,5 +1,5 @@
 <% error_class = @resource.errors.has_key?(:reviewer) ? ' error has-error' : '' -%>
-<div class="form-group<%= error_class %>">
+<div id="edition_reviewer_input" class="form-group<%= error_class %>">
   <label for="edition_reviewer" class="control-label">Reviewer</label>
   <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3 #{error_class}", :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
   <% if @resource.errors.has_key?(:reviewer) -%>
@@ -10,4 +10,3 @@
     </ul>
   <% end -%>
 </div>
-
