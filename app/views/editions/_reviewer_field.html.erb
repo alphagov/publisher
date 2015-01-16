@@ -3,7 +3,7 @@
   <label for="edition_reviewer" class="control-label">Reviewer</label>
   <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3 #{error_class}", :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
   <% if @resource.errors.has_key?(:reviewer) -%>
-    <ul class="help-block">
+    <ul class="help-block js-error">
     <% @resource.errors[:reviewer].each do |error| -%>
       <li><%= error %></li>
     <% end -%>

@@ -45,7 +45,7 @@ Formtastic::FormBuilder.inline_errors = :list
 # If you override the class here, please ensure to override it in your formtastic_changes.css stylesheet as well
 # Formtastic::SemanticFormBuilder.default_hint_class = "inline-hints"
 # Formtastic::SemanticFormBuilder.default_inline_error_class = "inline-errors"
-Formtastic::FormBuilder.default_error_list_class = "help-block"
+Formtastic::FormBuilder.default_error_list_class = "help-block js-error"
 
 # Set the method to call on label text to transform or format it for human-friendly
 # reading when formtastic is used without object. Defaults to :humanize.
