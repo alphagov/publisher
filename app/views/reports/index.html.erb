@@ -4,7 +4,9 @@
   </h1>
 </div>
 
-<p><%= link_to 'Export CSV of all non archived editions', progress_report_path(format: :csv) %></p>
-<p><%= link_to 'Export CSV of all published business support editions', business_support_report_path(:format => :csv) %></p>
+<p><%= link_to 'Export CSV of all documents for departmental distribution', organisation_content_report_path(format: :csv) %></p>
+<p><%= link_to 'Export CSV of churn in non-archived editions', edition_churn_report_path(format: :csv) %></p>
+<p><%= link_to 'Export CSV of progress on all non-archived editions', progress_report_path(format: :csv) %></p>
+<p><%= link_to 'Export CSV of all published business support editions', business_support_report_path(format: :csv) %></p>
 
 <% content_for :page_title, "Reports" %>
