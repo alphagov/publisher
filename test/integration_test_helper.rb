@@ -124,9 +124,8 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
       fill_in 'Body',  with: 'Body text'
       fill_in 'Slug',  with: 'part-one'
     end
-    save_edition
 
-    assert page.has_content?("was successfully updated"), "No successful update message"
+    save_edition_and_assert_success
 
     guide.reload
   end

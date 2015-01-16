@@ -22,9 +22,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     select user, from: "Assigned to"
-    save_edition
+    save_edition_and_assert_success
 
-    assert page.has_content?("successfully updated")
     guide.reload
   end
 
@@ -230,9 +229,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     select("Bob", from: "Reviewer")
-    save_edition
 
-    assert page.has_content?("We had some problems saving")
+    save_edition_and_assert_error
     assert page.has_css?(".form-group.error ul.help-block li", text: "can't be the assignee")
   end
 
@@ -247,9 +245,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     select("", from: "Reviewer")
-    save_edition
-
-    assert page.has_content?("Guide edition was successfully updated")
+    save_edition_and_assert_success
   end
 
   test "can unassign the guide" do
@@ -278,9 +274,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     select("Charlie", from: "Reviewer")
-    save_edition
-
-    assert page.has_content?("Guide edition was successfully updated")
+    save_edition_and_assert_success
   end
 
   test "can review another's guide" do

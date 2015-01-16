@@ -49,9 +49,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
       fill_in 'Slug',  :with => 'part-two'
     end
 
-    save_edition
-
-    assert page.has_content? "Guide edition was successfully updated."
+    save_edition_and_assert_success
 
     g = GuideEdition.find(guide.id)
     assert_equal ['Part One', 'Part Two'], g.parts.map(&:title)
