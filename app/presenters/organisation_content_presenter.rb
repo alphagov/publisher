@@ -1,12 +1,10 @@
 class OrganisationContentPresenter < CSVPresenter
-  include PathsHelper
-
   def initialize(scope = Artefact.where(owning_app: "publisher"))
     super(scope)
     self.column_headings = [
       :id,
       :name,
-      :url,
+      :slug,
       :state,
       :browse_pages,
       :primary_topic,
@@ -28,8 +26,6 @@ private
     return super if latest_edition.nil?
 
     case header
-    when :url
-      preview_edition_path(latest_edition)
     when :browse_pages
       latest_edition.browse_pages.join(",")
     when :primary_topic
