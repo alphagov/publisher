@@ -17,7 +17,7 @@ class EditionChurnPresenter < CSVPresenter
     ]
   end
 
-  private
+private
 
   def get_value(header, edition)
     case header
