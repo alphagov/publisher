@@ -90,6 +90,64 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       visit current_path
       assert_correct_parts
     end
+
+    context 'removing parts' do
+      setup do
+        save_edition_and_assert_success
+        visit current_path
+      end
+
+      should 'remove the appropriate part' do
+        within :css, '#parts div.fields:nth-of-type(3)' do
+          click_on 'Remove this part'
+        end
+
+        save_edition_and_assert_success
+        assert_correct_parts(2)
+
+        visit current_path
+        assert_correct_parts(2)
+
+        within :css, '#parts div.fields:nth-of-type(2)' do
+          click_on 'Remove this part'
+        end
+
+        save_edition_and_assert_success
+        assert_correct_parts(1)
+
+        visit current_path
+        assert_correct_parts(1)
+      end
+    end
+
+    context 'when removing parts' do
+      setup do
+        save_edition_and_assert_success
+        visit current_path
+      end
+
+      should 'remove the appropriate part' do
+        within :css, '#parts div.fields:nth-of-type(3)' do
+          click_on 'Remove this part'
+        end
+
+        save_edition_and_assert_success
+        assert_correct_parts(2)
+
+        visit current_path
+        assert_correct_parts(2)
+
+        within :css, '#parts div.fields:nth-of-type(2)' do
+          click_on 'Remove this part'
+        end
+
+        save_edition_and_assert_success
+        assert_correct_parts(1)
+
+        visit current_path
+        assert_correct_parts(1)
+      end
+    end
   end
 
   test "slug for new parts should be automatically generated" do
@@ -129,18 +187,24 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     end
   end
 
-  def assert_correct_parts
-    assert page.has_css?('#parts .panel-part', count: 3)
-    assert page.has_css?('#parts .panel-title', count: 3)
-    assert page.has_css?('#parts .panel-body', count: 3)
+  def assert_correct_parts(count = 3)
+    assert page.has_css?('#parts .panel-part', count: count)
+    assert page.has_css?('#parts .panel-title', count: count)
+    assert page.has_css?('#parts .panel-body', count: count)
 
-    assert page.has_css?('#part-one', count: 1)
-    assert_equal page.find('#part-one input.title').value, 'Part One'
+    if (count > 0)
+      assert page.has_css?('#part-one', count: 1)
+      assert_equal page.find('#part-one input.title').value, 'Part One'
+    end
 
-    assert page.has_css?('#part-two', count: 1)
-    assert_equal page.find('#part-two input.title').value, 'Part Two'
+    if (count > 1)
+      assert page.has_css?('#part-two', count: 1)
+      assert_equal page.find('#part-two input.title').value, 'Part Two'
+    end
 
-    assert page.has_css?('#part-three', count: 1)
-    assert_equal page.find('#part-three input.title').value, 'Part Three'
+    if (count > 2)
+      assert page.has_css?('#part-three', count: 1)
+      assert_equal page.find('#part-three input.title').value, 'Part Three'
+    end
   end
 end
