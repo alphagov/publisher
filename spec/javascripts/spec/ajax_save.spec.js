@@ -28,6 +28,14 @@ describe('An ajax save module', function() {
     element.remove();
   });
 
+  describe('when keying command+s', function() {
+    it('attempts to save', function() {
+      spyOn($, 'ajax');
+      Mousetrap.trigger('command+s');
+      expect($.ajax).toHaveBeenCalled();
+    });
+  });
+
   describe('when clicking a save link', function() {
     it('indicates the form is saving' , function() {
       element.find('.js-save').trigger('click');

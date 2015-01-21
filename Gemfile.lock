@@ -184,6 +184,7 @@ GEM
       bundler (>= 1.0.0)
       rails (>= 3.2.0)
       railties (>= 3.2.0)
+    mousetrap-rails (1.4.6)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -363,6 +364,7 @@ DEPENDENCIES
   momentjs-rails (= 2.8.3)
   mongo (= 1.7.1)
   mongoid_rails_migrations (= 1.0.0)
+  mousetrap-rails (= 1.4.6)
   nested_form!
   null_logger
   plek (= 1.9.0)

@@ -27,6 +27,7 @@ gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'rails_autolink', '1.1.6'
+gem 'mousetrap-rails', '1.4.6'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 

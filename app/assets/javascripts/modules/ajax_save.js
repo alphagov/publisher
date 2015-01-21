@@ -8,12 +8,15 @@
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {};
       element.on('click', '.js-save', save);
+      Mousetrap.bind(['command+s', 'ctrl+s'], save);
 
       function save(evt) {
         saving();
 
         if (allFieldsCanBeSavedWithAjax()) {
-          evt.preventDefault();
+          if (typeof evt.preventDefault === "function") {
+            evt.preventDefault();
+          }
           postForm();
         }
       }
