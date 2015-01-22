@@ -14,6 +14,7 @@ describe('An ajax save with parts module', function() {
         </a>\
         <div class="js-part-toggle-target" id="slug">\
           <input class="title" type="text" id="edition_part_100_title" name="edition[part][100][title]" value="Title">\
+          <input class="order" type="hidden" id="edition_part_100_order" name="edition[part][100][order]" value="1">\
           <input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">\
           <input type="hidden" id="edition_part_100_id" name="edition[part][100][id]" value="5f00000001">\
         </div>\
@@ -24,6 +25,7 @@ describe('An ajax save with parts module', function() {
         </a>\
         <div class="js-part-toggle-target" id="slug-2">\
           <input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">\
+          <input class="order" type="hidden" id="edition_part_101_order" name="edition[part][101][order]" value="2">\
           <input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">\
           <input type="hidden" id="edition_part_101_id" name="edition[part][101][id]" value="5f00000002">\
         </div>\
@@ -34,6 +36,7 @@ describe('An ajax save with parts module', function() {
         </a>\
         <div class="js-part-toggle-target" id="untitled-part">\
           <input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">\
+          <input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">\
           <input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">\
         </div>\
       </div>\
@@ -62,8 +65,8 @@ describe('An ajax save with parts module', function() {
   describe('when the form is saved successfully', function() {
     beforeEach(function() {
       element.trigger('success.ajaxsave.admin', {parts:
-        [{_id: '5f00000001', slug: 'updated-title-1', title: 'Updated title 1'},
-         {_id: '5f00000002', slug: 'updated-title-2', title: 'Updated title 2'}]
+        [{_id: '5f00000001', order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
+         {_id: '5f00000002', order: 2, slug: 'updated-title-2', title: 'Updated title 2'}]
       });
     });
 
@@ -83,13 +86,13 @@ describe('An ajax save with parts module', function() {
   describe('when a new part is added and the form is saved', function() {
     beforeEach(function() {
       element.trigger('success.ajaxsave.admin', {parts:
-        [{_id: '5f00000001', slug: 'updated-title-1', title: 'Updated title 1'},
-         {_id: '5f00000002', slug: 'updated-title-2', title: 'Updated title 2'},
-         {_id: '5f00000003', slug: 'updated-title-3', title: 'Updated title 3'}]
+        [{_id: '5f00000001', order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
+         {_id: '5f00000002', order: 2, slug: 'updated-title-2', title: 'Updated title 2'},
+         {_id: '5f00000003', order: 3, slug: 'updated-title-3', title: 'Updated title 3'}]
       });
     });
 
-    it('adds a hidden id input based on a part’s title', function() {
+    it('adds a hidden input containing the part’s new ID', function() {
       var $input = element.find('input[value="5f00000003"]');
 
       expect($input.length).toBe(1);

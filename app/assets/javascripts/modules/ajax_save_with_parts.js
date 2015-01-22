@@ -18,7 +18,7 @@
       }
 
       function updatePart(part) {
-        var $partContainer = identifyPartContainer(part),
+        var $partContainer = identifyPartContainer(part._id, part.order),
             $hiddenInputId = $partContainer.find('input[value="'+part._id+'"]');
 
         $partContainer.find('.js-part-title').text(part.title);
@@ -30,18 +30,18 @@
         }
       }
 
-      function identifyPartContainer(part) {
-        var $hiddenIdInput = element.find('input[value="'+part._id+'"]'),
-            $title;
+      function identifyPartContainer(id, order) {
+        var $hiddenIdInput = element.find('input[value="' + id + '"]'),
+            $order;
 
         if ($hiddenIdInput.length > 0) {
           return $hiddenIdInput.parents('.fields');
         } else {
-          $title = element.find('input.title').filter(function() {
-            return this.value == part.title
+          $order = element.find('input.order').filter(function() {
+            return this.value == order;
           });
 
-          return $title.parents('.fields');
+          return $order.parents('.fields');
         }
       }
 
