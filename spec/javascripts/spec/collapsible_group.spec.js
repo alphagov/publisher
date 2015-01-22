@@ -92,4 +92,16 @@ describe('A collapsible group module', function() {
     });
   });
 
+  describe('when a new group is added or removed', function() {
+    it('updates the link text', function() {
+      element.find('.collapse').first().addClass('in');
+      element.trigger('nested:fieldAdded');
+      expect(element.find('.js-toggle-all').text()).toBe('Collapse');
+
+      element.find('.collapse.in').first().hide();
+      element.trigger('nested:fieldRemoved');
+      expect(element.find('.js-toggle-all').text()).toBe('Expand');
+    });
+  });
+
 });
