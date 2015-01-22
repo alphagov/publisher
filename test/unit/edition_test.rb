@@ -74,6 +74,7 @@ class EditionTest < ActiveSupport::TestCase
     edition.parts.first.update_attribute(:body, "[register your vehicle](registering-an-imported-vehicle)")
 
     exception = assert_raises(StateMachine::InvalidTransition) { edition.publish_anonymously! }
-    assert_equal "Cannot transition state via :publish from :ready (Reason(s): Parts is invalid)", exception.message
+    assert_match "Cannot transition state via :publish from :ready (Reason(s): Parts", exception.message
+    assert_match "Internal links must start with a forward slash", exception.message
   end
 end

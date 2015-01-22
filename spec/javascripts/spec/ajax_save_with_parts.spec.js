@@ -13,9 +13,13 @@ describe('An ajax save with parts module', function() {
           <span class="js-part-title">Title</span>\
         </a>\
         <div class="js-part-toggle-target" id="slug">\
-          <input class="title" type="text" id="edition_part_100_title" name="edition[part][100][title]" value="Title">\
+          <div id="edition_parts_attributes_100_title_input">\
+            <input class="title" type="text" id="edition_part_100_title" name="edition[part][100][title]" value="Title">\
+          </div>\
           <input class="order" type="hidden" id="edition_part_100_order" name="edition[part][100][order]" value="1">\
-          <input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">\
+          <div id="edition_parts_attributes_100_slug_input">\
+            <input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">\
+          </div>\
           <input type="hidden" id="edition_part_100_id" name="edition[part][100][id]" value="5f00000001">\
         </div>\
       </div>\
@@ -24,9 +28,13 @@ describe('An ajax save with parts module', function() {
           <span class="js-part-title">Title 2</span>\
         </a>\
         <div class="js-part-toggle-target" id="slug-2">\
-          <input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">\
+          <div id="edition_parts_attributes_101_title_input">\
+            <input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">\
+          </div>\
           <input class="order" type="hidden" id="edition_part_101_order" name="edition[part][101][order]" value="2">\
-          <input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">\
+          <div id="edition_parts_attributes_101_slug_input">\
+            <input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">\
+          </div>\
           <input type="hidden" id="edition_part_101_id" name="edition[part][101][id]" value="5f00000002">\
         </div>\
       </div>\
@@ -35,9 +43,13 @@ describe('An ajax save with parts module', function() {
           <span class="js-part-title">Untitled part</span>\
         </a>\
         <div class="js-part-toggle-target" id="untitled-part">\
-          <input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">\
+          <div id="edition_parts_attributes_4535667_title_input">\
+            <input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">\
+          </div>\
           <input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">\
-          <input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">\
+          <div id="edition_parts_attributes_4535667_slug_input">\
+            <input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">\
+          </div>\
         </div>\
       </div>\
       <input type="submit" class="js-save" value="Save">\
@@ -107,6 +119,38 @@ describe('An ajax save with parts module', function() {
     it('updates the toggle href and target based on its slug', function() {
       expect(element.find('.js-part-toggle-target').eq(2).attr('id')).toBe('updated-title-3');
       expect(element.find('.js-part-toggle').eq(2).attr('href')).toBe('#updated-title-3');
+    });
+  });
+
+  describe('when the form save errors', function() {
+    beforeEach(function() {
+      element.trigger('error.ajaxsave.admin', {responseJSON: {"parts":
+        [
+          {
+            "5f00000001:1":{"slug":["can't be blank","is invalid"]},
+            "5f00000002:2":{"title":["can't be blank"]},
+            "unknownid:3" :{"title":["must not walk on the grass"]}
+          }
+        ]
+      }});
+    });
+
+    it('shows the error messages', function() {
+      expect(element.find('.has-error').length).toBe(3);
+      expect(element.find('ul.js-error').length).toBe(3);
+
+      expect(element.find('#edition_parts_attributes_100_slug_input').is('.has-error')).toBe(true);
+      expect(element.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(2);
+      expect(element.find('#edition_parts_attributes_100_slug_input ul li:first').text()).toBe('can\'t be blank');
+      expect(element.find('#edition_parts_attributes_100_slug_input ul li:last').text()).toBe('is invalid');
+
+      expect(element.find('#edition_parts_attributes_101_title_input').is('.has-error')).toBe(true);
+      expect(element.find('#edition_parts_attributes_101_title_input ul li').length).toBe(1);
+      expect(element.find('#edition_parts_attributes_101_title_input ul li:first').text()).toBe('can\'t be blank');
+
+      expect(element.find('#edition_parts_attributes_4535667_title_input').is('.has-error')).toBe(true);
+      expect(element.find('#edition_parts_attributes_4535667_title_input ul li').length).toBe(1);
+      expect(element.find('#edition_parts_attributes_4535667_title_input ul li:first').text()).toBe('must not walk on the grass');
     });
   });
 });

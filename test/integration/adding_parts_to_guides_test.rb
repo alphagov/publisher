@@ -148,6 +148,41 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
         assert_correct_parts(1)
       end
     end
+
+    context 'when entering invalid parts' do
+      setup do
+        save_edition_and_assert_success
+        visit current_path
+      end
+
+      should 'not save when a part is invalid' do
+        within :css, '#parts div.fields:nth-of-type(2)' do
+          fill_in 'Slug',  :with => ''
+        end
+
+        within :css, '#parts div.fields:nth-of-type(3)' do
+          fill_in 'Title',  :with => ''
+          fill_in 'Slug',  :with => 'part-three'
+        end
+
+        save_edition_and_assert_error
+
+        assert page.has_css?('#parts .has-error', count: 2)
+
+        within :css, '#parts div.fields:nth-of-type(2)' do
+          assert page.has_css?('.has-error[id*="slug"]')
+          assert page.has_css?('.js-error li', count: 2)
+          assert page.has_css?('.js-error li', text: 'can\'t be blank')
+          assert page.has_css?('.js-error li', text: 'is invalid')
+        end
+
+        within :css, '#parts div.fields:nth-of-type(3)' do
+          assert page.has_css?('.has-error[id*="title"]')
+          assert page.has_css?('.js-error li', count: 1)
+          assert page.has_css?('.js-error li', text: 'can\'t be blank')
+        end
+      end
+    end
   end
 
   test "slug for new parts should be automatically generated" do
