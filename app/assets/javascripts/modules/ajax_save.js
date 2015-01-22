@@ -61,12 +61,14 @@
       }
 
       function error(response) {
-        if (typeof response.responseJSON === "object") {
-          showErrors(response.responseJSON);
+        var responseJSON = response.responseJSON;
+
+        if (typeof responseJSON === "object") {
+          showErrors(responseJSON);
         }
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
-        message.text('Couldn’t save');
-        hideTimeout = setTimeout(hide, 2000);
+        message.text('We had some problems saving. Please check the form above.');
+        hideTimeout = setTimeout(hide, 4000);
 
         // Save errored, form still has unsaved changes
         GOVUKAdmin.Data.editionFormDirty = true;

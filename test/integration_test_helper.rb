@@ -177,7 +177,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def save_edition_and_assert_error
     save_edition
     if using_javascript?
-      assert page.has_css?('.workflow-message', text: 'Couldn’t save'),  "Edition didn’t error as expected when saved with ajax"
+      assert page.has_css?('.workflow-message', text: 'We had some problems saving. Please check the form above.'),  "Edition didn’t error as expected when saved with ajax"
     else
       assert page.has_content? "We had some problems saving"
     end

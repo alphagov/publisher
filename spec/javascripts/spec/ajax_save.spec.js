@@ -126,7 +126,7 @@ describe('An ajax save module', function() {
     it('says that it couldn’t save' , function() {
       ajaxError();
       var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('Couldn’t save');
+      expect(statusMessage.text()).toBe('We had some problems saving. Please check the form above.');
       expect(statusMessage.is('.workflow-message-error')).toBe(true);
     });
 
