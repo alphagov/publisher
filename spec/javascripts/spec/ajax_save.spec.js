@@ -132,7 +132,7 @@ describe('An ajax save module', function() {
 
     it('the error message disappears after a short while', function() {
       ajaxError();
-      expect(timeoutTime).toBe(2000);
+      expect(timeoutTime).toBe(4000);
       expect(element.find('.js-status-message').is('.workflow-message-hide'));
     });
 
