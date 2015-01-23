@@ -37,7 +37,7 @@ describe('An ajax save module', function() {
   });
 
   describe('when clicking a save link', function() {
-    it('indicates the form is saving' , function() {
+    it('indicates the form is saving', function() {
       element.find('.js-save').trigger('click');
 
       var statusMessage = element.find('.js-status-message');
@@ -45,12 +45,12 @@ describe('An ajax save module', function() {
       expect(statusMessage.is('.workflow-message-saving')).toBe(true);
     });
 
-    it('resets the form’s dirty state' , function() {
+    it('resets the form’s dirty state', function() {
       element.find('.js-save').trigger('click');
       expect(GOVUKAdmin.Data.editionFormDirty).toBe(false);
     });
 
-    it('posts the form using ajax' , function() {
+    it('posts the form using ajax', function() {
       var ajaxOptions;
       spyOn($, 'ajax').and.callFake(function(options) {
         ajaxOptions = options;
@@ -78,7 +78,7 @@ describe('An ajax save module', function() {
       element.find('.js-save').trigger('click');
     });
 
-    it('says that it has saved' , function() {
+    it('says that it has saved', function() {
       var statusMessage = element.find('.js-status-message');
       expect(statusMessage.text()).toBe('Saved');
       expect(statusMessage.is('.workflow-message-saved')).toBe(true);
@@ -118,12 +118,12 @@ describe('An ajax save module', function() {
       element.find('.js-save').trigger('click');
     });
 
-    it('marks the form as dirty' , function() {
+    it('marks the form as dirty', function() {
       ajaxError();
       expect(GOVUKAdmin.Data.editionFormDirty).toBe(true);
     });
 
-    it('says that it couldn’t save' , function() {
+    it('says that it couldn’t save', function() {
       ajaxError();
       var statusMessage = element.find('.js-status-message');
       expect(statusMessage.text()).toBe('We had some problems saving. Please check the form above.');
@@ -196,7 +196,7 @@ describe('An ajax save module', function() {
       expect(statusMessage.is('.workflow-message-saving')).toBe(true);
     });
 
-    it('avoids ajax if a non-ajax text input has a value' , function() {
+    it('avoids ajax if a non-ajax text input has a value', function() {
       var ajaxOptions;
       spyOn($, 'ajax');
       element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected');
@@ -210,7 +210,7 @@ describe('An ajax save module', function() {
       expect($.ajax).toHaveBeenCalled();
     });
 
-    it('avoids ajax if a non-ajax checkbox is checked' , function() {
+    it('avoids ajax if a non-ajax checkbox is checked', function() {
       var ajaxOptions;
       spyOn($, 'ajax');
       element.find('.js-no-ajax[name="remove-file-checkbox"]').attr('checked', true);
