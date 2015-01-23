@@ -45,11 +45,6 @@ describe('An ajax save module', function() {
       expect(statusMessage.is('.workflow-message-saving')).toBe(true);
     });
 
-    it('resets the form’s dirty state', function() {
-      element.find('.js-save').trigger('click');
-      expect(GOVUKAdmin.Data.editionFormDirty).toBe(false);
-    });
-
     it('posts the form using ajax', function() {
       var ajaxOptions;
       spyOn($, 'ajax').and.callFake(function(options) {
@@ -68,6 +63,7 @@ describe('An ajax save module', function() {
     var timeoutTime;
 
     beforeEach(function() {
+      GOVUKAdmin.Data.editionFormDirty = true;
       spyOn($, 'ajax').and.callFake(function(options) {
         options.success({title: 'Title'});
       });
@@ -82,6 +78,10 @@ describe('An ajax save module', function() {
       var statusMessage = element.find('.js-status-message');
       expect(statusMessage.text()).toBe('Saved');
       expect(statusMessage.is('.workflow-message-saved')).toBe(true);
+    });
+
+    it('marks the form as clean', function() {
+      expect(GOVUKAdmin.Data.editionFormDirty).toBe(false);
     });
 
     it('the save message disappears after a short while', function() {
@@ -119,6 +119,7 @@ describe('An ajax save module', function() {
     });
 
     it('marks the form as dirty', function() {
+      GOVUKAdmin.Data.editionFormDirty = false;
       ajaxError();
       expect(GOVUKAdmin.Data.editionFormDirty).toBe(true);
     });

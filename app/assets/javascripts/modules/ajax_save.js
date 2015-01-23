@@ -57,6 +57,9 @@
         message.text('Saved');
         hideTimeout = setTimeout(hide, 2000);
 
+        // Save successful, form is no longer dirty
+        GOVUKAdmin.Data.editionFormDirty = false;
+
         element.trigger('success.ajaxsave.admin', response);
       }
 
@@ -99,9 +102,6 @@
         reset();
         message.addClass('workflow-message-saving');
         message.text('Saving…');
-
-        // Save attempt, form is no longer dirty
-        GOVUKAdmin.Data.editionFormDirty = false;
       }
 
       function hide() {
