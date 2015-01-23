@@ -77,22 +77,17 @@
       }
 
       function showErrors(errors) {
-        var keys = Object.keys(errors);
-
-        for(var i = 0, l = keys.length; i < l; i++) {
-
-          var errorElement = element.find('#edition_' + keys[i] + '_input'),
-              errorMessages = errors[keys[i]],
+        $.each(errors, function(errorKey, errorMessages) {
+          var errorElement = element.find('#edition_' + errorKey + '_input'),
               $list = $('<ul class="help-block js-error"></ul>');
 
           errorElement.addClass('has-error');
-
           for(var j = 0, m = errorMessages.length; j < m; j++) {
             $list.append('<li>' + errorMessages[j] + '</li>');
           }
 
           errorElement.append($list);
-        }
+        });
       }
 
       function hideErrors() {
