@@ -13,8 +13,9 @@
               stop: function(event, ui) {
                 element.find('.part').each(function (i, elem) {
                   $(elem).find('input.order').val(i + 1);
-                  ui.item.find(accordionSelector).addClass("yellow-fade");
                 });
+
+                ui.item.find(accordionSelector).addClass("yellow-fade");
               }
             };
 
