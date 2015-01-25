@@ -19,7 +19,6 @@
             };
 
         element.sortable(sortable_opts);
-        element.find(accordionSelector).css({cursor: 'move'});
       }
     }
   };
