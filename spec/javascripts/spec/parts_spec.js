@@ -57,4 +57,14 @@ describe('A parts module', function() {
       expect($('#part_1').find('.js-sort-handle.yellow-fade').length).toBe(1);
     });
   });
+
+  describe('when editing a part’s title', function() {
+    it('updates that part’s slug', function() {
+      $('#part_1').find('.title').val('New title').trigger('change');
+
+      expect($('#part_1').find('.slug').val()).toBe('new-title');
+      expect($('#part_2').find('.slug').val()).toBe('part-title-2');
+      expect($('#part_3').find('.slug').val()).toBe('part-title-3');
+    });
+  });
 });

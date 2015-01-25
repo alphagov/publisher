@@ -3,7 +3,18 @@
   Modules.Parts = function() {
     this.start = function(element) {
 
+      element.on('change', 'input.title', generateSlug);
       makePartsSortable();
+
+      function generateSlug() {
+        var $titleInput = $(this),
+            value       = $titleInput.val(),
+            $slugInput  = $titleInput.closest('.part').find('.slug');
+
+        if ($slugInput.text() === '') {
+          $slugInput.val(GovUKGuideUtils.convertToSlug(value));
+        }
+      }
 
       function makePartsSortable() {
         var accordionSelector = ".js-sort-handle",
