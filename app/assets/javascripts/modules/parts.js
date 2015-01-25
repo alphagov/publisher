@@ -11,7 +11,8 @@
             value       = $titleInput.val(),
             $slugInput  = $titleInput.closest('.part').find('.slug');
 
-        if ($slugInput.text() === '') {
+        if ($slugInput.val() === '' || $slugInput.data('accepts-generated-value')) {
+          $slugInput.data('accepts-generated-value', true);
           $slugInput.val(GovUKGuideUtils.convertToSlug(value));
         }
       }

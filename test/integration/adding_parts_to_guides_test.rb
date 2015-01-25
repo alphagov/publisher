@@ -51,7 +51,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     assert page.has_content? random_name
   end
 
-  test "slug for parts should be automatically generated" do
+  test "slug for new parts should be automatically generated" do
     random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
 
     guide = FactoryGirl.create(:guide_edition, :title => random_name, :slug => 'test-guide')
@@ -67,6 +67,10 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'
       assert_equal 'part-one', find(:css, ".slug").value
+
+      fill_in 'Title', :with => 'Part One changed'
+      fill_in 'Body',  :with => 'Body text'
+      assert_equal 'part-one-changed', find(:css, ".slug").value
     end
   end
 end

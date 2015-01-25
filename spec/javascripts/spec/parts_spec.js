@@ -59,12 +59,33 @@ describe('A parts module', function() {
   });
 
   describe('when editing a part’s title', function() {
-    it('updates that part’s slug', function() {
+    it('updates that part’s slug if it was empty', function() {
+      $('#part_1').find('.slug').val('');
       $('#part_1').find('.title').val('New title').trigger('change');
 
       expect($('#part_1').find('.slug').val()).toBe('new-title');
       expect($('#part_2').find('.slug').val()).toBe('part-title-2');
       expect($('#part_3').find('.slug').val()).toBe('part-title-3');
+    });
+
+    it('updates that part’s slug if the slug accepts generated values', function() {
+      $('#part_1').find('.slug').data('accepts-generated-value', true);
+      $('#part_1').find('.title').val('New title').trigger('change');
+
+      expect($('#part_1').find('.slug').val()).toBe('new-title');
+    });
+
+    it('continues to update a slug if it begun empty', function() {
+      $('#part_1').find('.slug').val('');
+      $('#part_1').find('.title').val('New title').trigger('change');
+      $('#part_1').find('.title').val('Another change').trigger('change');
+
+      expect($('#part_1').find('.slug').val()).toBe('another-change');
+    });
+
+    it('leaves alone slugs that didn’t begin as empty', function() {
+      $('#part_1').find('.title').val('New title').trigger('change');
+      expect($('#part_1').find('.slug').val()).toBe('part-title-1');
     });
   });
 });
