@@ -7,7 +7,7 @@
 
       function makePartsSortable() {
         var accordionSelector = ".js-sort-handle",
-            sortable_opts = {
+            sortableOptions = {
               axis: "y",
               handle: accordionSelector,
               stop: function(event, ui) {
@@ -18,7 +18,7 @@
               }
             };
 
-        element.sortable(sortable_opts);
+        element.sortable(sortableOptions);
       }
     }
   };
