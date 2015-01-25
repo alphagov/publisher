@@ -4,6 +4,7 @@
     this.start = function(element) {
 
       element.on('change', 'input.title', generateSlug);
+      element.on('nested:fieldAdded:parts', updatePartOrders);
       makePartsSortable();
 
       function generateSlug() {
@@ -23,15 +24,18 @@
               axis: "y",
               handle: accordionSelector,
               stop: function(event, ui) {
-                element.find('.part').each(function (i, elem) {
-                  $(elem).find('input.order').val(i + 1);
-                });
-
+                updatePartOrders();
                 ui.item.find(accordionSelector).addClass("yellow-fade");
               }
             };
 
         element.sortable(sortableOptions);
+      }
+
+      function updatePartOrders() {
+        element.find('.part').each(function (i, elem) {
+          $(elem).find('input.order').val(i + 1);
+        });
       }
     }
   };

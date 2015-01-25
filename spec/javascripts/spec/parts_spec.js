@@ -43,18 +43,47 @@ describe('A parts module', function() {
       // Wait briefly until jquery ui has done its thing
       setTimeout(function() {
         done();
-      }, 50)
+      }, 50);
     });
 
     it('saves their order in the hidden order input', function() {
-      expect($('#part_1').find('.order').val()).toBe('3');
       expect($('#part_2').find('.order').val()).toBe('1');
       expect($('#part_3').find('.order').val()).toBe('2');
+      expect($('#part_1').find('.order').val()).toBe('3');
     });
 
     it('adds a yellow fade class to the element moved', function() {
       expect(element.find('.js-sort-handle.yellow-fade').length).toBe(1);
       expect($('#part_1').find('.js-sort-handle.yellow-fade').length).toBe(1);
+    });
+  });
+
+  describe('when adding a part', function() {
+    beforeEach(function() {
+      element.append('<div id="part_4" class="part">\
+        <div class="js-sort-handle"></div>\
+        <input class="title" name="part_4_title" type="text" value="">\
+        <input class="slug" name="part_4_slug" type="text" value="">\
+        <input class="order" name="part_4_order" type="hidden" value="">\
+      </div>');
+      element.trigger('nested:fieldAdded:parts');
+    });
+
+    it('updates the part orders', function() {
+      expect($('#part_4').find('.order').val()).toBe('4');
+    });
+
+    it('allows the part to be sortable', function(done) {
+      $('#part_4').simulateDragSortable({ move: -2, handle: '.js-sort-handle' });
+
+      // Wait briefly until jquery ui has done its thing
+      setTimeout(function() {
+        expect($('#part_1').find('.order').val()).toBe('1');
+        expect($('#part_4').find('.order').val()).toBe('2');
+        expect($('#part_2').find('.order').val()).toBe('3');
+        expect($('#part_3').find('.order').val()).toBe('4');
+        done();
+      }, 50);
     });
   });
 
