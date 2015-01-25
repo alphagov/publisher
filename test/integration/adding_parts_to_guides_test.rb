@@ -63,7 +63,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     visit    "/editions/#{guide.to_param}"
 
     add_new_part
-    within :css, '#parts div.part:first-of-type' do
+    within :css, '#parts .fields:first-of-type .part' do
       fill_in 'Title', :with => 'Part One'
       fill_in 'Body',  :with => 'Body text'
       assert_equal 'part-one', find(:css, ".slug").value
@@ -73,4 +73,19 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       assert_equal 'part-one-changed', find(:css, ".slug").value
     end
   end
+
+  test "slug for edition which has been previously published shouldn't be generated" do
+    guide = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'published', :title => "Foo bar")
+    guide.save!
+    visit_edition guide
+    click_on "Create new edition"
+
+    within :css, '#parts .fields:first-of-type .part' do
+      assert_equal 'part-one', find(:css, ".slug").value
+      fill_in 'Title', :with => 'Part One changed'
+      fill_in 'Body',  :with => 'Body text'
+      assert_equal 'part-one', find(:css, ".slug").value
+    end
+  end
+
 end
