@@ -15,6 +15,11 @@
         if ($slugInput.val() === '' || $slugInput.data('accepts-generated-value')) {
           $slugInput.data('accepts-generated-value', true);
           $slugInput.val(GovUKGuideUtils.convertToSlug(value));
+          $slugInput.addClass("yellow-fade");
+
+          setTimeout(function() {
+            $slugInput.removeClass("yellow-fade");
+          }, 2000)
         }
       }
 
