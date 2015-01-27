@@ -5,6 +5,10 @@
     background-color: darken($gray-lighter, 5%);
   }
 
+  .js & .panel-heading {
+    cursor: move;
+  }
+
   // Nudge chevron within panel heading down slightly
   // for better alignment with text
   .panel-heading .glyphicon-chevron-down {

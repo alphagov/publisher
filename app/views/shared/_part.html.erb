@@ -15,8 +15,15 @@
                       :hint => false,
                       :required => true %>
 
+          <%
+            slug_input_html = { :class => 'slug', :disabled => ! editable }
+            if @resource.version_number == 1
+              slug_input_html['data-accepts-generated-value'] = true
+            end
+          %>
+
           <%= f.input :slug,
-                      :input_html => { :class => 'slug', :disabled => ! editable },
+                      :input_html => slug_input_html,
                       :hint => true,
                       :required => true %>
 

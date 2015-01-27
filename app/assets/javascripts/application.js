@@ -7,14 +7,8 @@
 
 // System wide behaviours
 $(function () {
-
   $('a.preview').attr("target","_blank");
   $('form.preview').attr("target","_blank");
-
-  $('.confirm form').submit(function(){
-      return confirm('Woah. Scary action, cannot be undone. Continue?');
-  });
-
   $(".select2").select2();
 })
 

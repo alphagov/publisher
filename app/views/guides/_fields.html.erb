@@ -16,7 +16,7 @@
       <a href="#" class="js-toggle-all">Collapse all parts</a>
     </p>
 
-    <section class="panel-group" id="parts">
+    <section class="panel-group" id="parts" data-module="parts">
       <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
         <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
       <% end %>
