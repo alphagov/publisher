@@ -8,7 +8,7 @@
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {};
       element.on('click', '.js-save', save);
-      Mousetrap.bind(['command+s', 'ctrl+s'], save);
+      Mousetrap.bindGlobal(['command+s', 'ctrl+s'], save);
 
       function save(evt) {
         saving();
