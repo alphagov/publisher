@@ -4,6 +4,7 @@
     this.start = function(element) {
       var url = element.attr('action') + '.json',
           message = element.find('.js-status-message'),
+          requestRunning = false,
           hideTimeout;
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {};
@@ -11,23 +12,40 @@
       Mousetrap.bindGlobal(['command+s', 'ctrl+s'], save);
 
       function save(evt) {
+        var canPreventDefault = typeof evt.preventDefault === "function";
+
+        if (requestRunning) {
+          if (canPreventDefault) {
+            evt.preventDefault();
+          }
+          return;
+        }
+
         saving();
 
         if (allFieldsCanBeSavedWithAjax()) {
-          if (typeof evt.preventDefault === "function") {
+          if (canPreventDefault) {
             evt.preventDefault();
           }
           postForm();
         }
+
+        // if default not prevented, event bubbles up and form is
+        // intentionally submitted without ajax
       }
 
       function postForm() {
+        requestRunning = true;
+
         $.ajax({
           url : url,
           type : 'POST',
           data : element.serialize(),
           success : success,
-          error: error
+          error: error,
+          complete: function() {
+            requestRunning = false;
+          }
         });
       }
 
