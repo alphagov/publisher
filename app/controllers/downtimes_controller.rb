@@ -14,8 +14,8 @@ class DowntimesController < ApplicationController
     @downtime = Downtime.new(params[:downtime])
 
     if @downtime.save
-      link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
-      flash[:success] = "#{link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+      ExpiredDowntimeCleaner.enqueue(@downtime)
+      flash[:success] = "#{edition_link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
       render :new
@@ -31,15 +31,15 @@ class DowntimesController < ApplicationController
 
     if params['commit'] == 'Cancel downtime'
       @downtime.destroy
-      link = view_context.link_to(@edition.title, new_edition_downtime_path(@edition), class: 'link-inherit bold')
-      flash[:success] = "#{link} downtime message cancelled".html_safe
+      ExpiredDowntimeCleaner.dequeue_existing_jobs(@downtime)
+      flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
       return
     end
 
     if @downtime.update_attributes(params[:downtime])
-      link = view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
-      flash[:success] = "#{link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+      ExpiredDowntimeCleaner.enqueue(@downtime)
+      flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
       render :edit
@@ -54,5 +54,9 @@ class DowntimesController < ApplicationController
 
   def process_params
     squash_multiparameter_datetime_attributes(params[:downtime], ['start_time', 'end_time'])
+  end
+
+  def edition_link
+    view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
   end
 end
