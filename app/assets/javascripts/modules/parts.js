@@ -5,6 +5,8 @@
 
       element.on('change', 'input.title', generateSlug);
       element.on('nested:fieldAdded:parts', updatePartOrders);
+      element.on('nested:fieldAdded:parts', removeValidationMessages);
+
       makePartsSortable();
 
       function generateSlug() {
@@ -41,6 +43,13 @@
         element.find('.part').each(function (i, elem) {
           $(elem).find('input.order').val(i + 1);
         });
+      }
+
+      function removeValidationMessages(evt) {
+        var $part = $(evt.target);
+
+        $part.find('.error, .has-error').removeClass('error has-error');
+        $part.find('.js-error').remove();
       }
     }
   };
