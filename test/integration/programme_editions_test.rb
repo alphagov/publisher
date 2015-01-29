@@ -28,12 +28,13 @@ class ProgrammeEditionsTest < JavascriptIntegrationTest
         fill_in "Slug",  :with => "imagine-this-is-welsh"
       end
     end
-    save_edition
 
-    assert_includes page.body, "Programme edition was successfully updated."
-
+    save_edition_and_assert_success
     assert_includes page.body, "Imagine this is Welsh"
     refute_includes page.body, "imagine-this-is-welsh"
+
+    visit current_path
+    assert_includes page.body, "Imagine this is Welsh"
   end
 
   should "disable fields for a published edition" do

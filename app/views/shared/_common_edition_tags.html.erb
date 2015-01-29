@@ -10,8 +10,8 @@
       <li>Specialist sector ➤ Topic</li>
     </ul>
 
-    <div class="form-group">
-      <%= f.label :browse_pages, "Mainstream browse pages", class: 'remove-bottom-margin' %>
+    <div class="form-group" id="edition_browse_pages_input">
+      <%= f.label :browse_pages, "Mainstream browse pages", class: 'control-label remove-bottom-margin' %>
       <p class="help-block">The first mainstream browse page will form the content’s breadcrumb</p>
       <%= f.select :browse_pages,
                       browse_options_for_select(Collections.grouped_mainstream_browse_pages),
@@ -21,8 +21,8 @@
                         disabled: @resource.locked_for_edits?,
                         data: { placeholder: 'Choose mainstream browse pages…' } } %>
     </div>
-    <div class="form-group">
-      <%= f.label :primary_topic %>
+    <div class="form-group" id="edition_primary_topic_input">
+      <%= f.label :primary_topic, class: 'control-label' %>
       <%= f.select :primary_topic,
                       browse_options_for_select(Collections.grouped_topics),
                       { include_blank: true },
@@ -30,8 +30,8 @@
                         disabled: @resource.locked_for_edits?,
                         data: { placeholder: 'Choose primary topic…' } } %>
     </div>
-    <div class="form-group">
-      <%= f.label :additional_topics %>
+    <div class="form-group" id="edition_additional_topics_input">
+      <%= f.label :additional_topics, class: 'control-label' %>
       <%= f.select :additional_topics,
                       browse_options_for_select(Collections.grouped_topics),
                       {},

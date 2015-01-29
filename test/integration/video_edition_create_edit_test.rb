@@ -13,55 +13,54 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     stub_collections
   end
 
-  should "edit a new VideoEdition" do
-    visit "/publications/#{@artefact.id}"
+  with_and_without_javascript do
+    should "edit a new VideoEdition" do
+      visit "/publications/#{@artefact.id}"
 
-    assert page.has_content? @artefact.name
+      assert page.has_content? @artefact.name
 
-    fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
-    fill_in "Video Summary", :with => "A simple fried plantain recipe"
-    fill_in "Body", :with => "Description of video"
+      fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
+      fill_in "Video Summary", :with => "A simple fried plantain recipe"
+      fill_in "Body", :with => "Description of video"
 
-    save_edition
+      save_edition_and_assert_success
 
-    assert page.has_content? @artefact.name
+      assert page.has_content? @artefact.name
 
-    video = VideoEdition.first
-    assert_equal @artefact.id.to_s, video.panopticon_id
+      video = VideoEdition.first
+      assert_equal @artefact.id.to_s, video.panopticon_id
 
-    assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", video.video_url
-    assert_equal "A simple fried plantain recipe", video.video_summary
-    assert_equal "Description of video", video.body
-  end
+      assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", video.video_url
+      assert_equal "A simple fried plantain recipe", video.video_summary
+      assert_equal "Description of video", video.body
+    end
 
-  should "allow editing a VideoEdition" do
-    video = FactoryGirl.create(:video_edition,
-                                 :panopticon_id => @artefact.id,
-                                 :title => "Foo bar",
-                                 :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
-                                 :video_summary => "Coke smoothie",
-                                 :body => "Old description")
+    should "allow editing a VideoEdition" do
+      video = FactoryGirl.create(:video_edition,
+                                   :panopticon_id => @artefact.id,
+                                   :title => "Foo bar",
+                                   :video_url => "http://www.youtube.com/watch?v=qySFp3qnVmM",
+                                   :video_summary => "Coke smoothie",
+                                   :body => "Old description")
 
-    visit "/editions/#{video.to_param}"
+      visit "/editions/#{video.to_param}"
 
-    assert page.has_content? 'Foo bar #1'
+      assert page.has_content? 'Foo bar #1'
+      assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
+      assert page.has_field?("Video Summary", :with => "Coke smoothie")
+      assert page.has_field?("Body", :with => "Old description")
 
-    assert page.has_field?("Video URL", :with => "http://www.youtube.com/watch?v=qySFp3qnVmM")
-    assert page.has_field?("Video Summary", :with => "Coke smoothie")
-    assert page.has_field?("Body", :with => "Old description")
+      fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
+      fill_in "Video Summary", :with => "A simple fried plantain recipe"
+      fill_in "Body", :with => "Description of video"
 
-    fill_in "Video URL", :with => "http://www.youtube.com/watch?v=Wrcklaselbo"
-    fill_in "Video Summary", :with => "A simple fried plantain recipe"
-    fill_in "Body", :with => "Description of video"
+      save_edition_and_assert_success
 
-    save_edition
-
-    assert page.has_content? "Video edition was successfully updated."
-
-    v = VideoEdition.find(video.id)
-    assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", v.video_url
-    assert_equal "A simple fried plantain recipe", v.video_summary
-    assert_equal "Description of video", v.body
+      v = VideoEdition.find(video.id)
+      assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", v.video_url
+      assert_equal "A simple fried plantain recipe", v.video_summary
+      assert_equal "Description of video", v.body
+    end
   end
 
   should "allow creating a new version of a VideoEdition" do

@@ -49,53 +49,44 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? 'Foo bar #1'
   end
 
-  test "editing a local transaction has the LGSL and LGIL fields" do
-    edition = FactoryGirl.create(:local_transaction_edition, :panopticon_id => @artefact.id, :slug => @artefact.slug,
-                                 :title => "Foo transaction", :lgsl_code => 1)
+  with_and_without_javascript do
+    should "save the LGSL and LGIL fields" do
+      edition = FactoryGirl.create(:local_transaction_edition, :panopticon_id => @artefact.id, :slug => @artefact.slug,
+                                   :title => "Foo transaction", :lgsl_code => 1)
 
-    visit "/editions/#{edition.to_param}"
-    assert page.has_content? 'Foo transaction #1'
+      visit "/editions/#{edition.to_param}"
 
-    # For some reason capybara was having trouble matching this disabled
-    # field with the has_field? matcher. Retrieving it manually seems to
-    # work.
-    lgsl_element = page.find('#edition_lgsl_code')
-    assert_equal '1', lgsl_element['value']
-    assert page.has_field?("LGIL override", :with => "")
+      assert page.has_content? 'Foo transaction #1'
+      assert page.has_field?('LGSL code', :with => '1', disabled: true)
+      assert page.find_field('LGIL override').value.blank?
 
-    fill_in "LGIL override", :with => '7'
+      fill_in "LGIL override", :with => '7'
 
-    save_edition
+      save_edition_and_assert_success
 
-    assert page.has_content? "Local transaction edition was successfully updated."
+      e = LocalTransactionEdition.find(edition.id)
+      assert_equal 7, e.lgil_override
 
-    e = LocalTransactionEdition.find(edition.id)
-    assert_equal 7, e.lgil_override
+      # Ensure it gets set to nil when clearing field
+      fill_in "LGIL override", :with => ''
+      save_edition_and_assert_success
 
-    # Ensure it gets set to nil when clearing field
-    fill_in "LGIL override", :with => ''
-    save_edition
+      e = LocalTransactionEdition.find(edition.id)
+      assert_equal nil, e.lgil_override
+    end
 
-    assert page.has_content? "Local transaction edition was successfully updated."
+    should "show an error when the title is empty" do
+      edition = FactoryGirl.create(:local_transaction_edition,
+        :panopticon_id => @artefact.id,
+        :slug => @artefact.slug,
+        :title => "Foo transaction",
+        :lgsl_code => 1
+      )
+      visit "/editions/#{edition.to_param}"
+      fill_in "Title", :with => ""
 
-    e = LocalTransactionEdition.find(edition.id)
-    assert_equal nil, e.lgil_override
-  end
-
-  test "editing a local transaction with an error" do
-    edition = FactoryGirl.create(:local_transaction_edition,
-      :panopticon_id => @artefact.id,
-      :slug => @artefact.slug,
-      :title => "Foo transaction",
-      :lgsl_code => 1
-    )
-
-    visit "/editions/#{edition.to_param}"
-
-    fill_in "Title", :with => ""
-    save_edition
-
-    assert page.has_content? "We had some problems saving"
+      save_edition_and_assert_error
+    end
   end
 
   should "disable fields for a published edition" do

@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", '~> 28.2.0'
+  gem "govuk_content_models", '~> 28.3.0'
 end
 
 if ENV['API_DEV']
@@ -27,6 +27,7 @@ gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'rails_autolink', '1.1.6'
+gem 'mousetrap-rails', '1.4.6'
 
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 
@@ -95,6 +96,6 @@ group :test do
 end
 
 group :development, :test do
-  gem 'jasmine', '2.0.3'
+  gem 'jasmine', '2.1.0'
   gem 'debugger'
 end
