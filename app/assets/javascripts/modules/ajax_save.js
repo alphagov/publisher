@@ -64,13 +64,18 @@
       }
 
       function error(response) {
-        var responseJSON = response.responseJSON;
+        var responseJSON = response.responseJSON,
+            messageAddendum = "Please check the form above.";
 
         if (typeof responseJSON === "object") {
           showErrors(responseJSON);
+          if (typeof responseJSON.base === "object") {
+            messageAddendum = '<strong>' + responseJSON.base[0] + '</strong>.';
+          }
         }
+
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
-        message.text('We had some problems saving. Please check the form above.');
+        message.html('We had some problems saving. ' + messageAddendum);
         hideTimeout = setTimeout(hide, 4000);
 
         // Save errored, form still has unsaved changes

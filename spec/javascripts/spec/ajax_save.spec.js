@@ -144,6 +144,12 @@ describe('An ajax save module', function() {
       expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed');
     });
 
+    it('includes the base error in the save dialogue', function() {
+      ajaxError({base: ['Form is wholly wrong']});
+      var statusMessage = element.find('.js-status-message');
+      expect(statusMessage.text()).toBe('We had some problems saving. Form is wholly wrong.');
+    });
+
     it('ignores validation messages for fields it does not recognise', function() {
       ajaxError({not_a_field: ['nonsense']});
       expect(element.find('.has-error').length).toBe(0);
