@@ -3,7 +3,7 @@ class ExpiredDowntimeCleaner
 
   def self.enqueue(downtime)
     dequeue_existing_jobs(downtime)
-    perform_at(downtime.end_time, downtime.id.to_s)
+    perform_at(downtime.end_time + 15.seconds, downtime.id.to_s)
   end
 
   def self.dequeue_existing_jobs(downtime)
@@ -13,8 +13,8 @@ class ExpiredDowntimeCleaner
   end
 
   def perform(downtime_id)
-    downtime = Downtime.find(downtime_id)
-    return if downtime.end_time.future?
+    downtime = Downtime.where(_id: downtime_id).first
+    return if downtime.nil? || downtime.end_time.future?
 
     downtime.destroy
   end
