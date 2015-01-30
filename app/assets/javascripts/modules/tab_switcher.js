@@ -5,6 +5,12 @@
       element.on('show.bs.tab', function(e) {
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, null, $(e.target).attr('href'));
+
+          // Track tab switch as pageview
+          // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
+          if (typeof ga === "function") {
+            ga('send', 'pageview');
+          }
         }
 
         // Shim Boostrap tabs, which are only capabable of removing
