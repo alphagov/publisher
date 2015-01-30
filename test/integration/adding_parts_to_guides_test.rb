@@ -53,25 +53,21 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       assert page.has_content? @random_name
     end
 
-    should "be able to hide and show parts" do
+    should "be able to hide and show edited part after saving" do
       save_edition_and_assert_success
-
-      assert page.has_css?('#part-one input.title')
-      click_on 'Part One'
-      assert page.has_no_css?('#part-one input.title')
-      click_on 'Part One'
-
+      assert page.has_css?('#part-one[aria-expanded="true"]')
       within :css, '#parts div.fields:nth-of-type(1)' do
         fill_in 'Title', :with => 'Part One (edited)'
         fill_in 'Body',  :with => 'Body text'
         fill_in 'Slug',  :with => 'part-one-edited'
       end
-
       save_edition_and_assert_success
 
-      assert page.has_css?('#part-one-edited input.title')
+      assert page.has_css?('#part-one-edited[aria-expanded="true"]')
+
+      # collapse part
       click_on 'Part One (edited)'
-      assert page.has_no_css?('#part-one-edited input.title')
+      assert page.has_css?('#part-one-edited[aria-expanded="false"]')
     end
 
     should "add the new parts only once" do
