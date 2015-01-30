@@ -152,35 +152,50 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # thinks there are overlapping elements
     if using_javascript?
       page.find_button('Save').trigger('click')
-      if page.has_selector?('[data-module="ajax-save"]')
-        assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
-      end
     else
       click_on 'Save'
     end
+  end
 
-    # using .trigger("click") causes race conditions,
-    # hence we need to explicitly wait till the page reloads.
-    # save button is disabled after one click, so refreshing should enable it.
-    assert page.has_selector?("input[type=submit]#save-edition:enabled"), "Failed to save edition."
+  def assert_save_attempted(with_ajax)
+    if with_ajax
+      assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
+    else
+      # using .trigger("click") causes race conditions,
+      # hence we need to explicitly wait till the page reloads.
+      # save button is disabled after one click, so refreshing should enable it.
+      assert page.has_selector?("input[type=submit]#save-edition:enabled"), "Failed to save edition."
+    end
   end
 
   def save_edition_and_assert_success
     save_edition
-    if using_javascript?
+    assert_save_attempted(saving_with_ajax?)
+    if saving_with_ajax?
       assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with ajax"
     else
       assert page.has_content? "edition was successfully updated."
     end
   end
 
+  def save_edition_and_assert_success_without_ajax
+    save_edition
+    assert_save_attempted(false)
+    assert page.has_content? "edition was successfully updated."
+  end
+
   def save_edition_and_assert_error
     save_edition
-    if using_javascript?
+    assert_save_attempted(saving_with_ajax?)
+    if saving_with_ajax?
       assert page.has_css?('.workflow-message', text: 'We had some problems saving'),  "Edition didn’t error as expected when saved with ajax"
     else
       assert page.has_content? "We had some problems saving"
     end
+  end
+
+  def saving_with_ajax?
+    using_javascript? && page.has_selector?('[data-module*="ajax-save"]')
   end
 
   def clear_cookies
