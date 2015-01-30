@@ -151,7 +151,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     fill_in_parts guide
 
-    click_on "Fact check"
+    page.find_link('Fact check').trigger('click')
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -231,7 +231,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     select("Bob", from: "Reviewer")
 
     save_edition_and_assert_error
-    
+
     assert page.has_css?(".form-group.has-error li", text: "can't be the assignee")
   end
 
