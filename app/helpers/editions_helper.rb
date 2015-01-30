@@ -8,10 +8,12 @@ module EditionsHelper
 
   def resource_form(&form_definition)
     html_options = { :id => 'edition-form' }
-    if @resource.is_a?(Parted)
-      html_options['data-module'] = 'ajax-save-with-parts'
-    elsif @resource.format != 'SimpleSmartAnswer'
-      html_options['data-module'] = 'ajax-save'
+    unless @resource.locked_for_edits? or @resource.archived?
+      if @resource.is_a?(Parted)
+        html_options['data-module'] = 'ajax-save-with-parts'
+      elsif @resource.format != 'SimpleSmartAnswer'
+        html_options['data-module'] = 'ajax-save'
+      end
     end
 
     semantic_bootstrap_nested_form_for @resource, :as => :edition, :url => edition_path(@resource),

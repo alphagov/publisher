@@ -36,6 +36,29 @@ describe('An ajax save module', function() {
     });
   });
 
+  describe('when attempting to save multiple times before a request finishes', function() {
+    it('saves only once', function() {
+      spyOn($, 'ajax');
+      element.find('.js-save').trigger('click');
+      Mousetrap.trigger('command+s');
+      Mousetrap.trigger('command+s');
+      expect($.ajax.calls.count()).toEqual(1);
+    });
+
+    it('saves again afterwards', function() {
+      var complete;
+      spyOn($, 'ajax').and.callFake(function(options) {
+        complete = options.complete;
+      });
+      Mousetrap.trigger('command+s');
+      Mousetrap.trigger('command+s');
+      expect($.ajax.calls.count()).toEqual(1);
+      complete();
+      Mousetrap.trigger('command+s');
+      expect($.ajax.calls.count()).toEqual(2);
+    });
+  });
+
   describe('when clicking a save link', function() {
     it('indicates the form is saving', function() {
       element.find('.js-save').trigger('click');
@@ -66,6 +89,7 @@ describe('An ajax save module', function() {
       GOVUKAdmin.Data.editionFormDirty = true;
       spyOn($, 'ajax').and.callFake(function(options) {
         options.success({title: 'Title'});
+        options.complete();
       });
       spyOn(window, 'setTimeout').and.callFake(function(fn, time) {
         timeoutTime = time;
@@ -107,6 +131,7 @@ describe('An ajax save module', function() {
         ajaxError = function(errors) {
           errors = errors || {};
           options.error({responseJSON: errors});
+          options.complete();
         };
 
         ajaxSuccess = options.success;
@@ -142,6 +167,12 @@ describe('An ajax save module', function() {
       expect(element.find('#edition_test_input').is('.has-error')).toBe(true);
       expect(element.find('#edition_test_input ul li').length).toBe(1);
       expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed');
+    });
+
+    it('includes the base error in the save dialogue', function() {
+      ajaxError({base: ['Form is wholly wrong']});
+      var statusMessage = element.find('.js-status-message');
+      expect(statusMessage.text()).toBe('We had some problems saving. Form is wholly wrong.');
     });
 
     it('ignores validation messages for fields it does not recognise', function() {

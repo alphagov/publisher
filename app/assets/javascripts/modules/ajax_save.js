@@ -4,6 +4,7 @@
     this.start = function(element) {
       var url = element.attr('action') + '.json',
           message = element.find('.js-status-message'),
+          requestRunning = false,
           hideTimeout;
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {};
@@ -11,23 +12,40 @@
       Mousetrap.bindGlobal(['command+s', 'ctrl+s'], save);
 
       function save(evt) {
+        var canPreventDefault = typeof evt.preventDefault === "function";
+
+        if (requestRunning) {
+          if (canPreventDefault) {
+            evt.preventDefault();
+          }
+          return;
+        }
+
         saving();
 
         if (allFieldsCanBeSavedWithAjax()) {
-          if (typeof evt.preventDefault === "function") {
+          if (canPreventDefault) {
             evt.preventDefault();
           }
           postForm();
         }
+
+        // if default not prevented, event bubbles up and form is
+        // intentionally submitted without ajax
       }
 
       function postForm() {
+        requestRunning = true;
+
         $.ajax({
           url : url,
           type : 'POST',
           data : element.serialize(),
           success : success,
-          error: error
+          error: error,
+          complete: function() {
+            requestRunning = false;
+          }
         });
       }
 
@@ -64,13 +82,18 @@
       }
 
       function error(response) {
-        var responseJSON = response.responseJSON;
+        var responseJSON = response.responseJSON,
+            messageAddendum = "Please check the form above.";
 
         if (typeof responseJSON === "object") {
           showErrors(responseJSON);
+          if (typeof responseJSON.base === "object") {
+            messageAddendum = '<strong>' + responseJSON.base[0] + '</strong>.';
+          }
         }
+
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
-        message.text('We had some problems saving. Please check the form above.');
+        message.html('We had some problems saving. ' + messageAddendum);
         hideTimeout = setTimeout(hide, 4000);
 
         // Save errored, form still has unsaved changes
