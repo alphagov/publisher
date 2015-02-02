@@ -98,14 +98,14 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_field?("Upload a new caption file", :type => "file")
     attach_file("Upload a new caption file", file_one.path)
-    save_edition
+    save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions.txt']")
     end
 
     # ensure file is not removed on save
-    save_edition
+    save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions.txt']")
@@ -116,7 +116,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
 
     attach_file("Upload a new caption file", file_two.path)
-    save_edition
+    save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
       assert page.has_selector?("a[href$='captions_two.txt']")
@@ -124,7 +124,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     # remove file
     check "Remove caption file?"
-    save_edition
+    save_edition_and_assert_success_without_ajax
 
     refute page.has_selector?(".uploaded-caption-file")
   end
