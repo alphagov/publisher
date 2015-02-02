@@ -7,7 +7,7 @@
       </a>
     </h4>
   </div>
-  <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse <% if f.object.valid? %>collapse <% end %>in" aria-expanded="true">
+  <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse collapse in" aria-expanded="true">
     <div class="panel-body">
         <%= f.inputs do %>
           <%= f.input :title,

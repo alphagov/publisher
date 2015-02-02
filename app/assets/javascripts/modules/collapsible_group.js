@@ -16,7 +16,7 @@
           $links = element.find('.js-toggle-all');
 
       element.on('click', '.js-toggle-all', toggleAll);
-      element.on('shown.bs.collapse hidden.bs.collapse', updateLinkText);
+      element.on('shown.bs.collapse hidden.bs.collapse nested:fieldRemoved nested:fieldAdded', updateLinkText);
 
       function toggleAll(event) {
         var action = hasOpenItems() ? 'hide' : 'show';
@@ -26,7 +26,7 @@
       }
 
       function hasOpenItems() {
-        return element.find('.collapse.in').length > 0;
+        return element.find('.collapse.in:visible').length > 0;
       }
 
       function updateLinkText() {
