@@ -82,7 +82,7 @@
         element.trigger('success.ajaxsave.admin', response);
       }
 
-      function error(response) {
+      function error(response, textStatus, errorThrown) {
         var responseJSON = response.responseJSON,
             messageAddendum = "Please check the form above.";
 
@@ -93,6 +93,8 @@
           if (typeof responseJSON.base === "object") {
             messageAddendum = '<strong>' + responseJSON.base[0] + '</strong>.';
           }
+        } else {
+          window.GOVUKAdmin.track('ajax-save-error', textStatus + ': ' + errorThrown);
         }
 
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');

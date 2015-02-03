@@ -123,6 +123,18 @@ describe('An ajax save module', function() {
     });
   });
 
+  describe('when an ajax save errors without validation messages', function() {
+    it('tracks the error status and HTTP text', function() {
+      spyOn($, 'ajax').and.callFake(function(options) {
+        options.error({}, 'abort', 'Not Found');
+      });
+      spyOn(window.GOVUKAdmin, 'track');
+      element.find('.js-save').trigger('click');
+
+      expect(window.GOVUKAdmin.track).toHaveBeenCalledWith('ajax-save-error', 'abort: Not Found');
+    });
+  });
+
   describe('when an ajax save errors with validation messages', function() {
     var timeoutTime, ajaxError, ajaxSuccess;
 
