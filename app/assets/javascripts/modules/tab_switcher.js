@@ -3,13 +3,15 @@
   Modules.TabSwitcher = function() {
     this.start = function(element) {
       element.on('show.bs.tab', function(e) {
+        var tabHref = $(e.target).attr('href');
+
         if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, null, $(e.target).attr('href'));
+          window.history.replaceState(null, null, tabHref);
 
           // Track tab switch as pageview
           // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
           if (typeof ga === "function") {
-            ga('send', 'pageview');
+            ga('send', 'pageview', tabHref);
           }
         }
 
