@@ -77,19 +77,24 @@
 
         // Save successful, form is no longer dirty
         GOVUKAdmin.Data.editionFormDirty = false;
+        window.GOVUKAdmin.track('ajax-save-success');
 
         element.trigger('success.ajaxsave.admin', response);
       }
 
-      function error(response) {
+      function error(response, textStatus, errorThrown) {
         var responseJSON = response.responseJSON,
             messageAddendum = "Please check the form above.";
 
         if (typeof responseJSON === "object") {
           showErrors(responseJSON);
+          trackErrors(JSON.stringify(responseJSON))
+
           if (typeof responseJSON.base === "object") {
             messageAddendum = '<strong>' + responseJSON.base[0] + '</strong>.';
           }
+        } else {
+          window.GOVUKAdmin.track('ajax-save-error', textStatus + ': ' + errorThrown);
         }
 
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
@@ -114,6 +119,12 @@
 
           errorElement.append($list);
         });
+      }
+
+      function trackErrors(label) {
+        // Normalise parts errors, eg "54c0db08e5274000cc:10": to "part":
+        label = label.replace(/"[0-9a-fA-F]+:\d{1,2}":/g, '"part":');
+        window.GOVUKAdmin.track('ajax-save-error', label);
       }
 
       function hideErrors() {
