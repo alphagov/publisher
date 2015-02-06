@@ -9,7 +9,13 @@
 
       GOVUKAdmin.Data = GOVUKAdmin.Data || {};
       element.on('click', '.js-save', save);
-      Mousetrap.bindGlobal(['command+s', 'ctrl+s'], save);
+      Mousetrap.bindGlobal(['command+s', 'ctrl+s'], saveViaKeyboard);
+
+      function saveViaKeyboard(evt) {
+        if (element.find('.js-save:visible:enabled').length > 0) {
+          save(evt);
+        }
+      }
 
       function save(evt) {
         var canPreventDefault = typeof evt.preventDefault === "function";
