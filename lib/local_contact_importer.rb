@@ -18,7 +18,7 @@ class LocalContactImporter < LocalAuthorityDataImporter
     authority.contact_address = parse_address(row)
     authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )
     url = row['Contact page URL']
-    unless url.start_with?("http://") || url.start_with?("https://")
+    unless url.blank? || url.start_with?("http://") || url.start_with?("https://")
       url = "http://" + url
     end
     authority.contact_url = url
