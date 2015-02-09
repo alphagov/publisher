@@ -29,10 +29,29 @@ describe('An ajax save module', function() {
   });
 
   describe('when keying command+s', function() {
-    it('attempts to save', function() {
+    beforeEach(function() {
       spyOn($, 'ajax');
+    });
+
+    it('attempts to save', function() {
       Mousetrap.trigger('command+s');
       expect($.ajax).toHaveBeenCalled();
+    });
+
+    describe('and save button is not visible', function() {
+      it('does not save', function() {
+        element.find('.js-save').hide();
+        Mousetrap.trigger('command+s');
+        expect($.ajax).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('and save button is disabled', function() {
+      it('does not save', function() {
+        element.find('.js-save').prop('disabled', true);
+        Mousetrap.trigger('command+s');
+        expect($.ajax).not.toHaveBeenCalled();
+      });
     });
   });
 
