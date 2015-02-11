@@ -31,7 +31,7 @@
                                           edit_edition_downtime_path(transaction) :
                                           new_edition_downtime_path(transaction) %>
         </h4>
-        <%= link_to "/#{transaction.slug}", "#{Plek.find('www')}/#{transaction.slug}", class: 'link-muted' %>
+        <%= link_to "/#{transaction.slug}", "#{Plek.new.website_root}/#{transaction.slug}", class: 'link-muted' %>
       </td>
         <% if downtime = Downtime.for(transaction.artefact) %>
           <td>
