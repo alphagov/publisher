@@ -9,10 +9,7 @@
           window.history.replaceState(null, null, tabHref);
 
           // Track tab switch as pageview
-          // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
-          if (typeof ga === "function") {
-            ga('send', 'pageview', tabHref);
-          }
+          window.GOVUKAdmin.trackPageview(tabHref);
         }
 
         // Shim Boostrap tabs, which are only capabable of removing

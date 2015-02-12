@@ -83,7 +83,7 @@
 
         // Save successful, form is no longer dirty
         GOVUKAdmin.Data.editionFormDirty = false;
-        window.GOVUKAdmin.track('ajax-save-success');
+        window.GOVUKAdmin.trackEvent('ajax-save-success');
 
         element.trigger('success.ajaxsave.admin', response);
       }
@@ -100,7 +100,7 @@
             messageAddendum = '<strong>' + responseJSON.base[0] + '</strong>.';
           }
         } else {
-          window.GOVUKAdmin.track('ajax-save-error', textStatus + ': ' + errorThrown);
+          window.GOVUKAdmin.trackEvent('ajax-save-error', textStatus + ': ' + errorThrown);
         }
 
         message.addClass('workflow-message-error').removeClass('workflow-message-saving');
@@ -130,7 +130,7 @@
       function trackErrors(label) {
         // Normalise parts errors, eg "54c0db08e5274000cc:10": to "part":
         label = label.replace(/"[0-9a-fA-F]+:\d{1,2}":/g, '"part":');
-        window.GOVUKAdmin.track('ajax-save-error', label);
+        window.GOVUKAdmin.trackEvent('ajax-save-error', label);
       }
 
       function hideErrors() {
