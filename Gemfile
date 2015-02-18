@@ -21,7 +21,7 @@ else
 end
 
 gem 'erubis'
-gem 'govuk_admin_template', '2.0.0'
+gem 'govuk_admin_template', '2.1.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
