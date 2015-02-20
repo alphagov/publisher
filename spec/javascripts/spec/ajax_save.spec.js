@@ -147,10 +147,10 @@ describe('An ajax save module', function() {
       spyOn($, 'ajax').and.callFake(function(options) {
         options.error({}, 'abort', 'Not Found');
       });
-      spyOn(window.GOVUKAdmin, 'track');
+      spyOn(window.GOVUKAdmin, 'trackEvent');
       element.find('.js-save').trigger('click');
 
-      expect(window.GOVUKAdmin.track).toHaveBeenCalledWith('ajax-save-error', 'abort: Not Found');
+      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save-error', 'abort: Not Found');
     });
   });
 
@@ -235,7 +235,7 @@ describe('An ajax save module', function() {
     });
 
     it('tracks the error (and normalises part IDs)', function() {
-      spyOn(window.GOVUKAdmin, 'track');
+      spyOn(window.GOVUKAdmin, 'trackEvent');
       ajaxError({"parts":
         [
           {
@@ -246,7 +246,7 @@ describe('An ajax save module', function() {
         ]
       });
 
-      expect(window.GOVUKAdmin.track).toHaveBeenCalledWith('ajax-save-error', '{"parts":[{"part":{"slug":["can\'t be blank","is invalid"]},"part":{"title":["can\'t be blank"]},"part":{"title":["must not walk on the grass"]}}]}');
+      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save-error', '{"parts":[{"part":{"slug":["can\'t be blank","is invalid"]},"part":{"title":["can\'t be blank"]},"part":{"title":["must not walk on the grass"]}}]}');
     });
 
     describe('when the form is saved again', function() {
