@@ -7,4 +7,28 @@
 <% end %>
 
 <%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
+
+<hr />
+<div class="row">
+  <div class="col-md-8 edition-tags" data-module="checkbox-toggle">
+    <h3 class="remove-top-margin">Promote organ donor registration</h3>
+    <p class="help-block add-bottom-margin">
+      Displays the organ donor registration promotion above the completed transaction satisfaction survey
+    </p>
+
+    <div class="form-group">
+      <% f.object.presentation_toggles.each do |toggle_name, toggle_attributes| %>
+        <% toggle_attributes.each do |toggle_attribute_key, toggle_attribute_value|
+          boolean_field = toggle_attribute_value.is_a?(Boolean) %>
+          <%= f.input toggle_attribute_key,
+              as: boolean_field ? :boolean : :string,
+              required: false,
+              input_html: { disabled: @resource.locked_for_edits?, class: "#{'js-checkbox-toggle' if boolean_field}" },
+              wrapper_html: { class: "form-group input-md-8 #{'js-checkbox-toggle-target' if !boolean_field}" } %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

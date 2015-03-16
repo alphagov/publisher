@@ -65,4 +65,19 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     visit "/editions/#{edition.to_param}"
     assert_all_edition_fields_disabled(page)
   end
+
+  should "allow controlling display of promotions on this page" do
+    edition = FactoryGirl.create(:completed_transaction_edition, :panopticon_id => @artefact.id)
+    organ_donor_registration_promotion_url = "https://www.organdonation.nhs.uk/how_to_become_a_donor/registration/consent.asp?campaign=2244&v=7"
+
+    visit "/editions/#{edition.to_param}"
+    assert page.has_unchecked_field? "Promote organ donor registration"
+
+    check "Promote organ donor registration"
+    fill_in "Organ donor registration URL", with: organ_donor_registration_promotion_url
+    save_edition_and_assert_success
+
+    assert page.has_checked_field? "Promote organ donor registration"
+    assert page.has_field? 'Organ donor registration URL', with: organ_donor_registration_promotion_url
+  end
 end
