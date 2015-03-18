@@ -17,16 +17,15 @@
     </p>
 
     <div class="form-group">
-      <% f.object.presentation_toggles.each do |toggle_name, toggle_attributes| %>
-        <% toggle_attributes.each do |toggle_attribute_key, toggle_attribute_value|
-          boolean_field = toggle_attribute_value.is_a?(Boolean) %>
-          <%= f.input toggle_attribute_key,
-              as: boolean_field ? :boolean : :string,
-              required: false,
-              input_html: { disabled: @resource.locked_for_edits?, class: "#{'js-checkbox-toggle' if boolean_field}" },
-              wrapper_html: { class: "form-group input-md-8 #{'js-checkbox-toggle-target' if !boolean_field}" } %>
-        <% end %>
-      <% end %>
+      <%= f.input :promote_organ_donor_registration,
+        as: :boolean,
+        input_html: { disabled: @resource.locked_for_edits?, class: "js-checkbox-toggle" },
+        wrapper_html: { class: "form-group input-md-8" } %>
+
+      <%= f.input :organ_donor_registration_url,
+          required: false,
+          input_html: { disabled: @resource.locked_for_edits? },
+          wrapper_html: { class: "form-group input-md-8 js-checkbox-toggle-target" } %>
     </div>
   </div>
 </div>
