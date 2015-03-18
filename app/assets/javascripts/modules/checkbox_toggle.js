@@ -9,7 +9,8 @@
       element.on('change', '.js-checkbox-toggle', toggle);
 
       function toggle(event) {
-        element.find('.js-checkbox-toggle-target').toggle(element.find('.js-checkbox-toggle').is(':checked'));
+        var isCheckboxChecked = element.find('.js-checkbox-toggle').is(':checked');
+        element.find('.js-checkbox-toggle-target').toggle(isCheckboxChecked);
       }
       toggle();
     };
