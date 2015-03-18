@@ -7,4 +7,27 @@
 <% end %>
 
 <%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
+
+<hr />
+<div class="row">
+  <div class="col-md-8" data-module="checkbox-toggle">
+    <h3 class="remove-top-margin">Promote organ donor registration</h3>
+    <p class="help-block add-bottom-margin">
+      Display a promotion above the satisfaction survey
+    </p>
+
+    <div class="form-group">
+      <%= f.input :promote_organ_donor_registration,
+        as: :boolean,
+        input_html: { disabled: @resource.locked_for_edits?, class: "js-checkbox-toggle" },
+        wrapper_html: { class: "form-group input-md-8 emphasised-field" } %>
+
+      <%= f.input :organ_donor_registration_url,
+          required: false,
+          input_html: { disabled: @resource.locked_for_edits? },
+          wrapper_html: { class: "form-group input-md-8 js-checkbox-toggle-target" } %>
+    </div>
+  </div>
+</div>
+
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
