@@ -1,18 +1,4 @@
 GIT
-  remote: https://github.com/alphagov/govuk_content_models.git
-  revision: c0255a9a3caae30b3d2b8e6195ad089a4e85baa8
-  branch: edition-has-display-toggles
-  specs:
-    govuk_content_models (28.5.0)
-      bson_ext
-      gds-api-adapters (>= 10.9.0)
-      gds-sso (>= 10.0.0)
-      govspeak (~> 3.1.0)
-      mongoid (~> 2.5)
-      plek
-      state_machine
-
-GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -135,6 +121,14 @@ GEM
       bootstrap-sass (~> 3.3.3)
       jquery-rails (~> 3.1.1)
       rails (>= 3.2.0)
+    govuk_content_models (28.6.0)
+      bson_ext
+      gds-api-adapters (>= 10.9.0)
+      gds-sso (>= 10.0.0)
+      govspeak (~> 3.1.0)
+      mongoid (~> 2.5)
+      plek
+      state_machine
     has_scope (0.5.1)
     hashie (3.3.2)
     hike (1.2.3)
@@ -361,7 +355,7 @@ DEPENDENCIES
   gds-sso (= 10.0.0)
   govspeak (~> 3.1.0)
   govuk_admin_template (= 2.1.0)
-  govuk_content_models!
+  govuk_content_models (= 28.6.0)
   has_scope
   inherited_resources
   jasmine (= 2.1.0)

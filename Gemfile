@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", git: 'https://github.com/alphagov/govuk_content_models.git', branch: 'edition-has-display-toggles'
+  gem "govuk_content_models", '28.6.0'
 end
 
 if ENV['API_DEV']
