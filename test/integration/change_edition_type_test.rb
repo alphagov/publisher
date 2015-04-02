@@ -99,6 +99,27 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
   end
 
+  test "should be able to convert an AnswerEdition into a SimpleSmartAnswerEdition" do
+    answer = FactoryGirl.create(:answer_edition, state: 'published', body: "abcde")
+    visit_edition answer
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Simple Smart Answer edition")
+
+    click_on "Create as new Simple Smart Answer edition"
+
+    assert page.has_content?(answer.title)
+    assert page.has_content?("New edition created")
+    assert page.has_content?("Question 1")
+
+    within :css, '#edition_body_input' do
+      assert page.has_xpath?("//textarea[contains(text(), '#{answer.whole_body}')]"), "Expected to see: #{answer.whole_body}"
+    end
+  end
+
   test "should be able to convert an GuideEdition into a TransactionEdition" do
     guide = FactoryGirl.create(:guide_edition, state: 'published')
     visit_edition guide
