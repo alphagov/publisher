@@ -16,16 +16,19 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   test "should schedule publishing of an edition" do
     edition = FactoryGirl.create(:edition, state: 'ready', :assigned_to => @author)
     visit_edition edition
-
     click_on "Schedule"
+
+    tomorrow = Date.tomorrow
+    year = tomorrow.year.to_s
+    month = tomorrow.strftime("%b")
+    day = tomorrow.day.to_s
 
     within "#schedule_for_publishing_form" do
       fill_in "Comment", with: "schedule!"
 
-      tomorrow = Date.tomorrow
-      select tomorrow.year.to_s, from: "edition_activity_schedule_for_publishing_attributes_publish_at_1i"
-      select tomorrow.strftime("%B"), from: "edition_activity_schedule_for_publishing_attributes_publish_at_2i"
-      select tomorrow.day.to_s, from: "edition_activity_schedule_for_publishing_attributes_publish_at_3i"
+      select year, from: "edition_activity_schedule_for_publishing_attributes_publish_at_1i"
+      select month, from: "edition_activity_schedule_for_publishing_attributes_publish_at_2i"
+      select day, from: "edition_activity_schedule_for_publishing_attributes_publish_at_3i"
       select '12', from: "edition_activity_schedule_for_publishing_attributes_publish_at_4i"
       select '15', from: "edition_activity_schedule_for_publishing_attributes_publish_at_5i"
       click_on "Schedule for publishing"
@@ -44,7 +47,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     edition.reload
     assert page.has_content? edition.title
-    assert page.has_content? edition.publish_at.to_s(:govuk_date_short)
+    assert page.has_content?("12:15pm, #{day} #{month} #{year}"), 'Scheduled time is not showing-up as expected'
   end
 
   test "should allow a scheduled edition to be published now" do

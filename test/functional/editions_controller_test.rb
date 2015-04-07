@@ -173,8 +173,8 @@ class EditionsControllerTest < ActionController::TestCase
     }
   end
 
-  test "should squash multiparameter attributes" do
-    EditionProgressor.any_instance.expects(:progress).with(has_key('publish_at'))
+  test "squashes multiparameter attributes into a time field that has time-zone information" do
+    EditionProgressor.any_instance.expects(:progress).with(has_entry('publish_at', Time.zone.local(2014, 3, 4, 14, 47)))
 
     publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4",
                           "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
@@ -183,7 +183,7 @@ class EditionsControllerTest < ActionController::TestCase
       id: @guide.id.to_s,
       edition: {
         activity: {
-          "request_type" => 'start_work'
+          "request_type" => 'schedule_for_publishing'
           }.merge(publish_at_params)
         }
       }

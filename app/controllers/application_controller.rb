@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
       datetime_params = params.select { |k, v| k.include? attribute_name }.values.map(&:to_i)
       params.delete_if { |k, v| k.include? attribute_name }
 
-      params[attribute_name] = DateTime.new(*datetime_params) if datetime_params.present?
+      params[attribute_name] = Time.zone.local(*datetime_params) if datetime_params.present?
     end
     params
   end
