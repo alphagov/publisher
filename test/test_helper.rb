@@ -14,6 +14,8 @@ require 'gds_api/test_helpers/publishing_api'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
 require 'govuk_content_models/test_helpers/action_processor_helpers'
+require 'govuk-content-schema-test-helpers'
+require 'govuk-content-schema-test-helpers/test_unit'
 
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
@@ -23,6 +25,11 @@ WebMock.disable_net_connect!(:allow_localhost => true)
 DatabaseCleaner.strategy = :truncation
 # initial clean
 DatabaseCleaner.clean
+
+GovukContentSchemaTestHelpers.configure do |config|
+  config.schema_type = 'publisher'
+  config.project_root = Rails.root
+end
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.

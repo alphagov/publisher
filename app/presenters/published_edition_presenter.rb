@@ -7,7 +7,7 @@ class PublishedEditionPresenter
     {
       title: @edition.title,
       base_path: base_path,
-      description: @edition.overview,
+      description: @edition.overview || "",
       format: "placeholder",
       need_ids: [],
       public_updated_at: @edition.public_updated_at,
@@ -26,7 +26,8 @@ class PublishedEditionPresenter
           additional_topics: @edition.additional_topics,
           topics: [@edition.primary_topic] + @edition.additional_topics,
         }
-      }
+      },
+      locale: 'en',
     }
   end
 

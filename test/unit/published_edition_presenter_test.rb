@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PublishedEditionPresenterTest < ActiveSupport::TestCase
+  include GovukContentSchemaTestHelpers::TestUnit
+
   context ".render_for_publishing_api" do
     setup do
       @edition = FactoryGirl.create(:edition, :published,
@@ -18,7 +20,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       @expected_attributes_for_publishing_api_hash = {
         title: @edition.title,
         base_path: "/#{@edition.slug}",
-        description: @edition.overview,
+        description: "",
         format: "placeholder",
         need_ids: [],
         public_updated_at: @edition.updated_at,
@@ -35,7 +37,8 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
             additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"],
             topics: ["oil-and-gas/wells", "oil-and-gas/fields", "oil-and-gas/distillation"],
           }
-        }
+        },
+        locale: 'en',
       }
     end
 
@@ -47,7 +50,9 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge({
         update_type: "republish",
       })
-      assert_equal attributes_for_republish, @presenter.render_for_publishing_api(republish: true)
+      presented_hash = @presenter.render_for_publishing_api(republish: true)
+      assert_equal attributes_for_republish, presented_hash
+      assert_valid_against_schema(presented_hash, 'placeholder')
     end
 
     should 'create an attributes hash for a minor change' do
