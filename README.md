@@ -59,3 +59,16 @@ rake api_clients:create[publisher,publisher@example.com,asset-manager,signin]
 ```
 
 This will generate the bearer token you need.
+
+### Running the test suite
+
+The test suite relies on the presence of the
+[govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas)
+repository. If it is present at the same directory level as
+the government-frontend repository then run the tests with:
+
+`bundle exec rake`
+
+Or to specify the location explicitly:
+
+`GOVUK_CONTENT_SCHEMAS_PATH=/some/dir/govuk-content-schemas bundle exec rake`
