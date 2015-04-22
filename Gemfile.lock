@@ -36,7 +36,7 @@ GEM
     activesupport (3.2.18)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    addressable (2.3.6)
+    addressable (2.3.8)
     airbrake (3.1.15)
       builder
       multi_json
@@ -117,6 +117,8 @@ GEM
       kramdown (~> 1.4.1)
       nokogiri (~> 1.5.10)
       sanitize (~> 2.1.0)
+    govuk-content-schema-test-helpers (1.1.0)
+      json-schema (~> 2.5.1)
     govuk_admin_template (2.1.0)
       bootstrap-sass (~> 3.3.3)
       jquery-rails (~> 3.1.1)
@@ -149,6 +151,8 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.2)
+    json-schema (2.5.1)
+      addressable (~> 2.3.7)
     jwt (1.2.0)
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
@@ -354,6 +358,7 @@ DEPENDENCIES
   gds-api-adapters (= 16.4.0)
   gds-sso (= 10.0.0)
   govspeak (~> 3.1.0)
+  govuk-content-schema-test-helpers (= 1.1.0)
   govuk_admin_template (= 2.1.0)
   govuk_content_models (= 28.6.1)
   has_scope
