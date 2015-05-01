@@ -117,7 +117,7 @@ GEM
       kramdown (~> 1.4.1)
       nokogiri (~> 1.5.10)
       sanitize (~> 2.1.0)
-    govuk-content-schema-test-helpers (1.1.0)
+    govuk-content-schema-test-helpers (1.3.0)
       json-schema (~> 2.5.1)
     govuk_admin_template (2.1.0)
       bootstrap-sass (~> 3.3.3)
@@ -358,7 +358,7 @@ DEPENDENCIES
   gds-api-adapters (= 16.4.0)
   gds-sso (= 10.0.0)
   govspeak (~> 3.1.0)
-  govuk-content-schema-test-helpers (= 1.1.0)
+  govuk-content-schema-test-helpers (= 1.3.0)
   govuk_admin_template (= 2.1.0)
   govuk_content_models (= 28.6.1)
   has_scope
