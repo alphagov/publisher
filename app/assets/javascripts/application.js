@@ -11,7 +11,7 @@
 $(function () {
   $('a.preview').attr("target","_blank");
   $('form.preview').attr("target","_blank");
-  $(".select2").select2();
+  $(".select2").select2({ allowClear: true });
 })
 
 // System wide library functions
