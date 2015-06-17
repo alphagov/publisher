@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.18'
+gem 'rails', '3.2.22'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
@@ -21,7 +21,7 @@ else
 end
 
 gem 'erubis'
-gem 'govuk_admin_template', '2.1.0'
+gem 'govuk_admin_template', '~> 2.3.1'
 gem 'select2-rails', '3.5.9.1'
 gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
