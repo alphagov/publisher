@@ -36,4 +36,21 @@ class OrganisationContentReportTest < ActionDispatch::IntegrationTest
     assert_equal "HMRC", data[0]["Organisation"]
     assert_equal "123456,123321,654321", data[0]["Need ids"]
   end
+
+  should "handle artefacts without editions" do
+    document = FactoryGirl.create(:artefact,
+      name: "Important document",
+      department: "DfE",
+      need_ids: ["123456"]
+    )
+
+    get "/reports/organisation-content"
+
+    assert last_response.ok?
+
+
+    data = CSV.parse(last_response.body, :headers => true)
+
+    assert_equal "Important document", data[0]["Name"]
+  end
 end
