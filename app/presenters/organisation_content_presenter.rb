@@ -22,7 +22,7 @@ class OrganisationContentPresenter < CSVPresenter
 private
 
   def get_value(header, artefact)
-    latest_edition = @editions[artefact.id.to_s].last
+    latest_edition = @editions.fetch(artefact.id.to_s, []).last
 
     return super if latest_edition.nil?
 
