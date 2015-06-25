@@ -8,10 +8,14 @@ class CSVPresenter
 
   def to_csv
     CSV.generate do |csv|
-      csv << column_headings.collect { |ch| ch.to_s.humanize }
-      scope.each do |item|
-        csv << build_row(item)
-      end
+      build_csv(csv)
+    end
+  end
+
+  def build_csv(csv)
+    csv << column_headings.collect { |ch| ch.to_s.humanize }
+    scope.each do |item|
+      csv << build_row(item)
     end
   end
 
