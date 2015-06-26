@@ -1,4 +1,6 @@
 class BusinessSupportExportPresenter < CSVPresenter
+  private
+
   def build_csv(csv)
     csv << [
       "title",
@@ -26,8 +28,6 @@ class BusinessSupportExportPresenter < CSVPresenter
       ]
     end
   end
-
-  private
 
   def facets
     facet_mappings = {}

@@ -12,13 +12,6 @@ class CSVPresenter
     end
   end
 
-  def build_csv(csv)
-    csv << column_headings.collect { |ch| ch.to_s.humanize }
-    scope.each do |item|
-      csv << build_row(item)
-    end
-  end
-
   def filename
     "#{report_name}-#{Date.today.strftime("%F")}"
   end
@@ -41,5 +34,12 @@ private
 
   def get_value(heading, item)
     item.__send__(heading) if item.respond_to?(heading)
+  end
+
+  def build_csv(csv)
+    csv << column_headings.collect { |ch| ch.to_s.humanize }
+    scope.each do |item|
+      csv << build_row(item)
+    end
   end
 end
