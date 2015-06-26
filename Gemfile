@@ -87,6 +87,7 @@ group :test do
   gem 'mocha', '0.13.3', :require => false
   gem 'factory_girl_rails'
   gem 'faker', '1.1.2'
+  gem "fakefs", :require => "fakefs/safe"
 
   gem "timecop", '0.4.4'
 

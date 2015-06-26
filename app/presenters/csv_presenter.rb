@@ -12,8 +12,18 @@ class CSVPresenter
     end
   end
 
+  def write_csv(path)
+    CSV.open(File.join(path, "#{report_name}.csv"), "wb") do |csv|
+      build_csv(csv)
+    end
+  end
+
   def filename
     "#{report_name}-#{Date.today.strftime("%F")}"
+  end
+
+  def report_name
+    self.class.name.gsub(/Presenter/, '').underscore
   end
 
 protected
@@ -21,10 +31,6 @@ protected
   attr_accessor :scope, :column_headings
 
 private
-
-  def report_name
-    self.class.name.gsub(/Presenter/, '').underscore
-  end
 
   def build_row(item)
     column_headings.collect do |ch|
