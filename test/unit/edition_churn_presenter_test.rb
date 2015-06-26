@@ -1,13 +1,7 @@
 # encoding: utf-8
-require_relative '../integration_test_helper'
+require "test_helper"
 
-class EditionChurnReportTest < ActionDispatch::IntegrationTest
-  include Rack::Test::Methods
-
-  setup do
-    setup_users
-  end
-
+class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
   should "provide a CSV export of business support schemes" do
     document = FactoryGirl.create(:artefact,
       name: "Important document",
@@ -33,13 +27,10 @@ class EditionChurnReportTest < ActionDispatch::IntegrationTest
       panopticon_id: document.id
     )
 
-    get "/reports/edition-churn"
+    csv = EditionChurnPresenter.new(
+      Edition.not_in(state: ["archived"]).order(:id)).to_csv
 
-    assert last_response.ok?
-    assert_equal 'text/csv', last_response.headers['Content-Type']
-    assert_equal %{attachment; filename=edition_churn-#{Date.today.strftime("%F")}.csv}, last_response.headers['Content-Disposition']
-
-    data = CSV.parse(last_response.body, :headers => true)
+    data = CSV.parse(csv, :headers => true)
 
     assert_equal 2, data.length
 
