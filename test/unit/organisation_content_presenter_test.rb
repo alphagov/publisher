@@ -1,13 +1,7 @@
 # encoding: utf-8
-require_relative '../integration_test_helper'
+require "test_helper"
 
-class OrganisationContentReportTest < ActionDispatch::IntegrationTest
-  include Rack::Test::Methods
-
-  setup do
-    setup_users
-  end
-
+class OrganisationContentPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of business support schemes" do
     document = FactoryGirl.create(:artefact,
       name: "Important document",
@@ -21,13 +15,10 @@ class OrganisationContentReportTest < ActionDispatch::IntegrationTest
       panopticon_id: document.id
     )
 
-    get "/reports/organisation-content"
-
-    assert last_response.ok?
-    assert_equal 'text/csv', last_response.headers['Content-Type']
-    assert_equal %{attachment; filename=organisation_content-#{Date.today.strftime("%F")}.csv}, last_response.headers['Content-Disposition']
-
-    data = CSV.parse(last_response.body, :headers => true)
+    csv = OrganisationContentPresenter.new(
+            Artefact.where(owning_app: "publisher").not_in(state: ["archived"]))
+            .to_csv
+    data = CSV.parse(csv, :headers => true)
 
     assert_equal "Important document", data[0]["Name"]
     assert_equal "business/support,tax/vat", data[0]["Browse pages"]
@@ -44,12 +35,10 @@ class OrganisationContentReportTest < ActionDispatch::IntegrationTest
       need_ids: ["123456"]
     )
 
-    get "/reports/organisation-content"
-
-    assert last_response.ok?
-
-
-    data = CSV.parse(last_response.body, :headers => true)
+    csv = OrganisationContentPresenter.new(
+            Artefact.where(owning_app: "publisher").not_in(state: ["archived"]))
+            .to_csv
+    data = CSV.parse(csv, :headers => true)
 
     assert_equal "Important document", data[0]["Name"]
   end

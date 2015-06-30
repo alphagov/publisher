@@ -1,12 +1,23 @@
 <div class="page-header">
-  <h1>
-    Reports
-  </h1>
+  <h1>CSV Reports</h1>
+  <p>These reports are updated every hour.</p>
 </div>
 
-<p><%= link_to 'Export CSV of all documents for departmental distribution', organisation_content_report_path(format: :csv) %></p>
-<p><%= link_to 'Export CSV of churn in non-archived editions', edition_churn_report_path(format: :csv) %></p>
-<p><%= link_to 'Export CSV of progress on all non-archived editions', progress_report_path(format: :csv) %></p>
-<p><%= link_to 'Export CSV of all published business support editions', business_support_report_path(format: :csv) %></p>
+<p>
+  <strong><%= link_to 'All documents for departmental distribution', organisation_content_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("organisation_content")%>
+</p>
+<p>
+  <strong><%= link_to 'Churn in non-archived editions', edition_churn_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("edition_churn")%>
+</p>
+<p>
+  <strong><%= link_to 'Progress on all non-archived editions', progress_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("editorial_progress")%>
+</p>
+<p>
+  <strong><%= link_to 'Published business support editions', business_support_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("business_support_export")%>
+</p>
 
 <% content_for :page_title, "Reports" %>

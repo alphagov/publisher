@@ -1,11 +1,8 @@
 # encoding: utf-8
-require_relative '../integration_test_helper'
+require 'test_helper'
 
-class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
-  include Rack::Test::Methods
-
+class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
   setup do
-    setup_users
     Plek.any_instance.stubs(:website_root).returns("https://www.gov.uk")
   end
 
@@ -51,13 +48,10 @@ class BusinessSupportCSVExportTest < ActionDispatch::IntegrationTest
                       )
     FactoryGirl.create(:business_support_edition, :slug => "fooey-award", :title => "Fooey award", :state => "draft")
 
-    get "/reports/business_support_schemes_content.csv"
+    csv = BusinessSupportExportPresenter.new(
+      BusinessSupportEdition.published.asc("title")).to_csv
 
-    assert last_response.ok?
-    assert_equal 'text/csv', last_response.headers['Content-Type']
-    assert_equal 'attachment; filename="business_support_schemes_content.csv"', last_response.headers['Content-Disposition']
-
-    data = CSV.parse(last_response.body, :headers => true)
+    data = CSV.parse(csv, :headers => true)
     assert_equal ["Brilliant start-up award", "Super finance triple bonus", "Young business starter award"], data.map {|r| r["title"] }
 
     assert_equal "https://www.gov.uk/brilliant-start-up-award", data[0]["web URL"]

@@ -12,17 +12,16 @@ class OrganisationContentPresenter < CSVPresenter
       :organisation,
       :need_ids
     ]
-
-    @editions = Edition
-      .where(:panopticon_id.in => scope.only(:_id).map(&:_id))
-      .desc(:created_at)
-      .group_by(&:panopticon_id)
   end
 
 private
 
+  def latest_edition_for(artefact)
+    Edition.where(panopticon_id: artefact.id.to_s).desc(:created_at).first
+  end
+
   def get_value(header, artefact)
-    latest_edition = @editions.fetch(artefact.id.to_s, []).last
+    latest_edition = latest_edition_for(artefact)
 
     return super if latest_edition.nil?
 

@@ -1,12 +1,5 @@
 class ReportsController < ApplicationController
-  ActionController::Renderers.add :csv do |detailed_report, options|
-    headers['Cache-Control']             = 'must-revalidate, post-check=0, pre-check=0'
-    headers['Content-Disposition']       = "attachment; filename=#{detailed_report.filename}.csv"
-    headers['Content-Type']              = 'text/csv'
-    headers['Content-Transfer-Encoding'] = 'binary'
-
-    self.response_body = detailed_report.to_csv
-  end
+  include ActionView::Helpers::TagHelper
 
   before_filter :authenticate_user!
 
@@ -14,47 +7,50 @@ class ReportsController < ApplicationController
   end
 
   def progress
-    report = EditorialProgressPresenter.new(Edition.not_in(state: ["archived"]))
-    render csv: report
+    send_report "editorial_progress"
   end
 
   def business_support_schemes_content
-    schemes = BusinessSupportEdition.published.asc("title")
-    send_data BusinessSupportExportPresenter.new(schemes, facets).to_csv, :filename => 'business_support_schemes_content.csv'
+    send_report "business_support_export"
   end
 
   def organisation_content
-    documents = Artefact.where(owning_app: "publisher").not_in(state: ["archived"])
-    render csv: OrganisationContentPresenter.new(documents)
+    send_report "organisation_content"
   end
 
   def edition_churn
-    report = EditionChurnPresenter.new(Edition.not_in(state: ["archived"]))
-    render csv: report
+    send_report "edition_churn"
   end
 
   private
 
-  def facets
-    facet_mappings = {}
-
-    facet_classes = [
-      BusinessSupport::BusinessSize,
-      BusinessSupport::Location,
-      BusinessSupport::Purpose,
-      BusinessSupport::Sector,
-      BusinessSupport::Stage,
-      BusinessSupport::SupportType
-    ]
-
-    facet_classes.each do |facet_class|
-      facet_class_key = facet_class.to_s.demodulize
-      facet_mappings[facet_class_key] = {} unless facet_mappings.has_key?(facet_class_key)
-      facet_class.all.each do |facet|
-        facet_mappings[facet_class_key][facet.slug] = facet.name
-      end
+  def report_last_updated(report)
+    if mtime = mtime_for(report)
+      content_tag :span, "Generated #{mtime.to_s(:govuk_date)}", class: "text-muted"
+    else
+      content_tag :span, "Report currently unavailable", class: "text-muted"
     end
+  end
+  helper_method :report_last_updated
 
-    facet_mappings
+  def mtime_for(report)
+    mtime = File.stat(report_location(report)).mtime
+  rescue Errno::ENOENT
+    nil
+  end
+
+  def report_location(report)
+    File.join(CsvReportGenerator::CSV_PATH, "#{report}.csv")
+  end
+
+  def send_report(report)
+    if File.exist?(report_location(report))
+      send_file report_location(report),
+        filename: "#{report}-#{mtime_for(report).strftime("%Y%m%d%H%M%S")}.csv",
+        type: "text/csv",
+        disposition: "attachment"
+    else
+      render nothing: true, status: 404
+    end
   end
 end
