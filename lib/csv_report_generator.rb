@@ -1,5 +1,5 @@
 class CsvReportGenerator
-  CSV_PATH = "/data/uploads/publisher/reports"
+  CSV_PATH = "#{Rails.root}/reports"
 
   def run!
     reports.each do |report|
