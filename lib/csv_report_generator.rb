@@ -29,7 +29,7 @@ class CsvReportGenerator
         Artefact.where(owning_app: "publisher").not_in(state: ["archived"])),
 
       EditionChurnPresenter.new(
-        Edition.not_in(state: ["archived"]).order(:id)),
+        Edition.not_in(state: ["archived"]).order(:created_at)),
     ]
   end
 
