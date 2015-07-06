@@ -12,7 +12,7 @@ class ReportsControllerTest < ActionController::TestCase
     @controller.view_paths.each { |path| FakeFS::FileSystem.clone(path) }
 
     FileUtils.mkdir_p(CsvReportGenerator::CSV_PATH)
-    Timecop.freeze(Time.mktime(2015,1,1)) do
+    Timecop.freeze(Time.mktime(2015,6,1)) do
       File.open(path, "w") { |f| f.write("foo,bar") }
     end
   end
@@ -25,7 +25,7 @@ class ReportsControllerTest < ActionController::TestCase
     get :progress
 
     assert_equal "foo,bar", response.body
-    assert_equal 'attachment; filename="editorial_progress-20150101000000.csv"',
+    assert_equal 'attachment; filename="editorial_progress-20150601010000.csv"',
       response.header["Content-Disposition"]
     assert_equal "text/csv", response.header["Content-Type"]
   end
@@ -39,6 +39,6 @@ class ReportsControllerTest < ActionController::TestCase
   test "shows the mtime on the index page" do
     get :index
 
-    assert_match /Generated 12:00am, 1 January 2015/,  response.body
+    assert_match /Generated 1:00am, 1 June 2015/,  response.body
   end
 end
