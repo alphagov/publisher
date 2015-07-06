@@ -2,7 +2,7 @@ require 'redis'
 require 'redis-lock'
 
 class CsvReportGenerator
-  CSV_PATH = "#{Rails.root}/reports"
+  CSV_PATH = "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
 
   def run!
     redis.lock("publisher:#{Rails.env}:report_generation_lock", :life => 15.minutes) do

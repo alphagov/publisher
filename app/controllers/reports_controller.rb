@@ -34,7 +34,7 @@ class ReportsController < ApplicationController
   helper_method :report_last_updated
 
   def mtime_for(report)
-    mtime = File.stat(report_location(report)).mtime
+    mtime = File.stat(report_location(report)).mtime.in_time_zone(Time.zone)
   rescue Errno::ENOENT
     nil
   end
