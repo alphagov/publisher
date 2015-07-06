@@ -100,5 +100,4 @@ end
 
 group :development, :test do
   gem 'jasmine', '2.1.0'
-  gem 'debugger'
 end
