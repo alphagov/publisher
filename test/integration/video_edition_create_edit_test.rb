@@ -101,14 +101,14 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
-      assert page.has_selector?("a[href$='captions.txt']")
+      assert_selector("a[href$='captions.txt']")
     end
 
     # ensure file is not removed on save
     save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
-      assert page.has_selector?("a[href$='captions.txt']")
+      assert_selector("a[href$='captions.txt']")
     end
 
     # replace file
@@ -119,14 +119,14 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     save_edition_and_assert_success_without_ajax
 
     within(:css, ".uploaded-caption-file") do
-      assert page.has_selector?("a[href$='captions_two.txt']")
+      assert_selector("a[href$='captions_two.txt']")
     end
 
     # remove file
     check "Remove caption file?"
     save_edition_and_assert_success_without_ajax
 
-    refute page.has_selector?(".uploaded-caption-file")
+    assert_no_selector(".uploaded-caption-file")
   end
 
   should "disable fields for a published edition" do
