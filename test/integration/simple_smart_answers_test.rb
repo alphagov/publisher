@@ -11,6 +11,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     )
 
     setup_users
+    GDS::SSO.test_user = @author
     stub_collections
   end
 
