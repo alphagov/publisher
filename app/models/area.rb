@@ -4,6 +4,9 @@ require "gds_api/helpers"
 class Area < OpenStruct
   extend GdsApi::Helpers
 
+  # This list should stay in sync with Business Support API's
+  # WHITELISTED_AREA_CODES list:
+  # (https://github.com/alphagov/business-support-api/blob/master/app/models/scheme.rb#L8-L10).
   AREA_TYPES = ["EUR", "CTY", "DIS", "LBO", "LGD", "MTD", "UTA"]
 
   def self.all
