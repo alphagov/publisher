@@ -7,30 +7,42 @@ class EditionTagger
 
   def run
     @edition_tag_associations.each do |association|
+      add_mainstream_browse_tag(association[:slug], association[:tag])
+    end
+    logger.info "Retagging complete"
+  end
 
-      edition = Edition.where(slug: association[:slug], state: :published).last
-      if edition_not_present?(edition)
-        import_error(association[:slug], "Slug not present in database.")
-        next
-      elsif archived_artefact?(edition)
-        import_error(association[:slug], "It is part of an archived artefact")
-        next
-      elsif duplicate_tag?(edition, association[:tag])
-        import_error(association[:slug], "Tag '#{association[:tag]}' was already present")
-        next
-      else
-        associate_tag_with_edition(edition, association[:tag])
+private
 
-        edition.subsequent_siblings.where(state: :draft).each do |sibling|
-          associate_tag_with_edition(sibling, association[:tag])
-        end
+  def add_mainstream_browse_tag(slug, tag)
+    non_archived_editions = Edition.where(:slug => slug, :state.ne => 'archived')
 
-        logger.info("Edition with slug #{edition.slug} updated.")
-      end
+    unless non_archived_editions.any?
+      logger.error "No non-archived editions found with slug #{slug}"
+      return
+    end
+
+    non_archived_editions.each do |edition|
+      add_mainstream_browse_tag_to_edition(edition, tag)
     end
   end
 
-  private
+  def add_mainstream_browse_tag_to_edition(edition, tag)
+    if archived_artefact?(edition)
+      import_error(edition, "edition is part of an archived artefact")
+      return false
+    end
+
+    if duplicate_tag?(edition, tag)
+      import_error(edition, "Tag '#{tag}' was already present")
+      return false
+    end
+
+    associate_tag_with_edition(edition, tag)
+
+    logger.info("Updated #{edition.slug} version #{edition.version_number} (state: #{edition.state})")
+    true
+  end
 
   def associate_tag_with_edition(edition, tag)
     edition.browse_pages << tag
@@ -45,13 +57,9 @@ class EditionTagger
     edition.browse_pages.include?(tag)
   end
 
-  def edition_not_present?(edition)
-    edition == nil
-  end
-
-  def import_error(slug, error)
+  def import_error(edition, error)
     logger.info(
-      "Edition with slug '#{slug}' NOT updated. #{error}"
+      "Not updating edition '#{edition.slug}' version #{edition.version_number}: #{error}"
     )
   end
 

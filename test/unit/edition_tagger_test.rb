@@ -8,6 +8,16 @@ class EditionTaggerTest < ActiveSupport::TestCase
     assert_equal ["foo"], edition.published_edition.browse_pages
   end
 
+  test "should assign tags to draft edition when no published edition" do
+    draft_edition = FactoryGirl.create(:edition,
+      state: :draft, slug: "/a-slug")
+
+    EditionTagger.new([{slug: "/a-slug", tag: "foo"}], @logger).run
+    draft_edition.reload
+
+    assert_equal ["foo"], draft_edition.browse_pages
+  end
+
   test "should assign tags to published and draft Editions" do
     published_edition = FactoryGirl.create(:edition,
       state: :published, slug: "/a-slug")
