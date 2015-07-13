@@ -14,6 +14,8 @@ class EditionTagger
 
 private
 
+  attr_reader :logger
+
   def add_mainstream_browse_tag(slug, tag)
     non_archived_editions = Edition.where(:slug => slug, :state.ne => 'archived')
 
@@ -25,6 +27,10 @@ private
     non_archived_editions.each do |edition|
       add_mainstream_browse_tag_to_edition(edition, tag)
     end
+
+    # We republish whether we've made changes or not, since a previous run
+    # might have made the changes, but then received errors when publishing
+    republish(slug)
   end
 
   def add_mainstream_browse_tag_to_edition(edition, tag)
@@ -63,4 +69,10 @@ private
     )
   end
 
+  def republish(slug)
+    logger.info "Republishing"
+
+    registerer = PublishedSlugRegisterer.new(logger, [slug])
+    registerer.run
+  end
 end

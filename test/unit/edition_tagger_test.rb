@@ -1,9 +1,24 @@
 require "test_helper"
 
 class EditionTaggerTest < ActiveSupport::TestCase
+  setup do
+    @logger = stub("logger")
+    @logger.stubs(:info)
+  end
+
+  def mock_registerer(slug)
+    mock_slug_registerer = stub("PublishedSlugRegisterer")
+    PublishedSlugRegisterer.stubs(:new)
+                           .with(@logger, [slug])
+                           .returns(mock_slug_registerer)
+    mock_slug_registerer.expects(:run).returns(true)
+  end
+
   test "should assign tag to a single Edition" do
     edition = FactoryGirl.create(:edition, state: :published)
-    EditionTagger.new([{slug: edition.slug, tag: "foo"}], Logger.new(STDOUT)).run
+    mock_registerer(edition.slug)
+
+    EditionTagger.new([{slug: edition.slug, tag: "foo"}], @logger).run
 
     assert_equal ["foo"], edition.published_edition.browse_pages
   end
@@ -11,6 +26,7 @@ class EditionTaggerTest < ActiveSupport::TestCase
   test "should assign tags to draft edition when no published edition" do
     draft_edition = FactoryGirl.create(:edition,
       state: :draft, slug: "/a-slug")
+    mock_registerer("/a-slug")
 
     EditionTagger.new([{slug: "/a-slug", tag: "foo"}], @logger).run
     draft_edition.reload
@@ -27,8 +43,9 @@ class EditionTaggerTest < ActiveSupport::TestCase
     archived_edition = FactoryGirl.create(:edition,
       state: :archived, slug: "/a-slug",
       panopticon_id: published_edition.panopticon_id)
+    mock_registerer("/a-slug")
 
-    EditionTagger.new([{slug: "/a-slug", tag: "foo"}], Logger.new(STDOUT)).run
+    EditionTagger.new([{slug: "/a-slug", tag: "foo"}], @logger).run
     archived_edition.reload
     draft_edition.reload
     published_edition.reload
@@ -40,7 +57,9 @@ class EditionTaggerTest < ActiveSupport::TestCase
 
   test "should not add duplicate tags" do
     edition = FactoryGirl.create(:edition, state: :published, browse_pages: ["foo"])
-    EditionTagger.new([{slug: edition.slug, tag: "foo"}], Logger.new(STDOUT)).run
+    mock_registerer(edition.slug)
+
+    EditionTagger.new([{slug: edition.slug, tag: "foo"}], @logger).run
 
     assert_equal ["foo"], edition.published_edition.browse_pages
   end
