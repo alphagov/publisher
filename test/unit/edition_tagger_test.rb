@@ -63,4 +63,29 @@ class EditionTaggerTest < ActiveSupport::TestCase
 
     assert_equal ["foo"], edition.published_edition.browse_pages
   end
+
+  test "should add primary tags first" do
+    edition = FactoryGirl.create(:edition, state: :published, browse_pages: ["foo"])
+    mock_registerer(edition.slug)
+
+    EditionTagger.new([{slug: edition.slug, tag: "bar", primary: "TRUE"}], @logger).run
+
+    assert_equal ["bar", "foo"], edition.published_edition.browse_pages
+  end
+
+  test "should add non-primary tags last" do
+    edition = FactoryGirl.create(:edition, state: :published, browse_pages: ["foo"])
+    mock_registerer(edition.slug)
+
+    EditionTagger.new([{slug: edition.slug, tag: "bar", primary: "FALSE"}], @logger).run
+
+    assert_equal ["foo", "bar"], edition.published_edition.browse_pages
+  end
+
+  test "should error on typos in the `primary` column" do
+    err = assert_raises(RuntimeError) {
+      EditionTagger.new([{slug: "a-slug", tag: "bar", primary: "FASLE"}], @logger).run
+    }
+    assert_equal %{Invalid value for `primary`: FASLE}, err.message
+  end
 end
