@@ -31,6 +31,13 @@
               :label => 'What you need to know',
               :wrapper_html => { :class => 'add-top-margin' },
               :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
+
+  <%= f.input :department_analytics_profile,
+              :label => 'Department analytics profile',
+              :placeholder => 'UA-XXXXXX-X',
+              :hint => 'Let departments track user journeys between GOV.UK and their service using Google Analytics.',
+              :wrapper_html => { :class => 'add-top-margin' },
+              :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, :class => 'input-md-2' } %>
 <% end %>
 
 <%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
