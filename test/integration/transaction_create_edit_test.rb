@@ -12,6 +12,8 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_collections
+
+    login_as @author
   end
 
   with_and_without_javascript do
@@ -56,6 +58,23 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       t = TransactionEdition.find(transaction.id)
       assert_equal "Get your licence to fly to Mars", t.introduction
       assert_equal "UK Terrestrial Mars Office", t.will_continue_on
+    end
+
+    should "allow only a valid department analytics profile" do
+      transaction = FactoryGirl.create(:transaction_edition,
+                                   :panopticon_id => @artefact.id,
+                                   :title => "Register for space flight")
+
+      visit "/editions/#{transaction.to_param}"
+
+      fill_in "Department analytics profile", :with => "UA-INVALID-SPACE-FLIGHT"
+      save_edition_and_assert_error
+
+      fill_in "Department analytics profile", :with => "UA-00100000-1"
+      save_edition_and_assert_success
+
+      t = TransactionEdition.find(transaction.id)
+      assert_equal "UA-00100000-1", t.department_analytics_profile
     end
   end
 
