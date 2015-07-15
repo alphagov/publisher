@@ -139,6 +139,22 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     find(:xpath, "//body").find(".select2-results li", text: value).click
   end
 
+  def selectize(with, scope)
+    # clear any existing selections
+    page.execute_script("$('.selectize-input a.remove').click()");
+
+    select_field = page.find_field(scope, visible: false)
+    selectize_control = "select##{select_field[:id]} + .selectize-control"
+
+    Array(with).each do |value|
+      # Fill in the value into the input field
+      page.execute_script("$('#{selectize_control} .selectize-input input').val('#{value}');")
+      # Simulate selecting the first option
+      page.execute_script("$('#{selectize_control} .selectize-input input').keyup();")
+      page.execute_script("$('#{selectize_control} div.option').first().mousedown();")
+    end
+  end
+
   def assert_all_edition_fields_disabled(page)
     selector = '#edit input:not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
     inputs = page.all(selector)

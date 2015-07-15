@@ -35,4 +35,24 @@ module EditionsHelper
       [parent_title, collections]
     end
   end
+
+  def ordered_pages(unordered)
+    options = browse_options_for_select(unordered)
+    prioritise_data_container(options, @resource.browse_pages)
+  end
+
+  # Re-orders the data container such that +selected+ ones appear first.
+  def prioritise_data_container(unprioritised_container, selected)
+    selected.reverse.each do |selected_value|
+      unprioritised_container.each do |topic, subtopics|
+        subtopics.each do |title, slug|
+          if selected_value == slug
+            subtopics.delete([title, slug])
+            unprioritised_container.unshift( [topic, [[title, slug]]] )
+          end
+        end
+      end
+    end
+    unprioritised_container
+  end
 end
