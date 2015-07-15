@@ -32,6 +32,25 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert page.has_content?(guide.whole_body)
   end
 
+  test "should be able to convert a LicenceEdition into an AnswerEdition" do
+    licence = FactoryGirl.create(:licence_edition, state: 'published', licence_overview: "Licence overview content", licence_short_description: "Short description content")
+    visit_edition licence
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Answer edition")
+
+    click_on "Create as new Answer edition"
+
+    assert page.has_content?(licence.title)
+    assert page.has_content?("New edition created")
+
+    assert_field_contains("Licence overview content", "Body")
+    assert_field_contains("Short description content", "Body")
+  end
+
   test "should be able to convert a ProgrammeEdition into an AnswerEdition" do
     programme = FactoryGirl.create(:programme_edition, state: 'published')
     visit_edition programme
