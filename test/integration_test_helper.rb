@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 
 require 'test_helper'
 require 'capybara/rails'
@@ -163,10 +163,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     assert_same(0, inputs.length, "#{inputs.length} field(s) on this edition need(s) disabling: #{input_description}")
   end
 
-  def save_edition
+  def save_edition(with_javascript=using_javascript?)
     # using trigger because poltergeist
     # thinks there are overlapping elements
-    if using_javascript?
+    if with_javascript
       page.find_button('Save').trigger('click')
     else
       click_on 'Save'
@@ -187,6 +187,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def save_edition_and_assert_success
     save_edition
     assert_save_attempted(saving_with_ajax?)
+
     if saving_with_ajax?
       assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with ajax"
     else
@@ -194,9 +195,22 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def save_edition_and_assert_success_without_ajax
+  def save_edition_and_assert_success_slow
     save_edition
-    assert_save_attempted(false)
+
+    save_attempted = (page.has_selector?('.workflow-message-saving', text: 'Saving') ||
+                      page.has_selector?("input[type=submit]#save-edition:enabled"))
+    assert save_attempted, "Failed to attempt saving the edition"
+
+    saved = (page.has_content?("edition was successfully updated.") ||
+             page.has_css?('.workflow-message', text: 'Saved'))
+    assert saved, "Failed to save the edition"
+  end
+
+  def save_edition_and_assert_success_without_ajax
+    with_javascript = false
+    save_edition(with_javascript)
+    assert_save_attempted(with_javascript)
     assert page.has_content? "edition was successfully updated."
   end
 
@@ -207,7 +221,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def saving_with_ajax?
-    using_javascript? && page.has_selector?('[data-module*="ajax-save"]')
+    using_javascript?
   end
 
   def clear_cookies
