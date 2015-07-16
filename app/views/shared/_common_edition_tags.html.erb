@@ -14,10 +14,10 @@
       <%= f.label :browse_pages, "Mainstream browse pages", class: 'control-label remove-bottom-margin' %>
       <p class="help-block">The first mainstream browse page will form the content’s breadcrumb</p>
       <%= f.select :browse_pages,
-                      browse_options_for_select(Collections.grouped_mainstream_browse_pages),
+                      ordered_pages(Collections.grouped_mainstream_browse_pages),
                       {},
                       { multiple: true,
-                        class: 'select2',
+                        class: 'selectize',
                         disabled: @resource.locked_for_edits?,
                         data: { placeholder: 'Choose mainstream browse pages…' } } %>
     </div>

@@ -1,6 +1,8 @@
 @import 'govuk_admin_template';
 @import 'select2';
 @import './vendor/select2-bootstrap';
+@import 'selectize';
+@import 'selectize.bootstrap3';
 @import 'colors';
 @import 'bootstrap_and_overrides';
 @import 'forms';
@@ -17,3 +19,27 @@
 // Pages
 @import 'downtime';
 @import 'smart_answer_builder';
+
+.selectize-dropdown-content {
+  .option {
+    span.highlight {
+      text-align: left;
+      padding: 0;
+      font-size: 14px;
+      color: #000000;
+    }
+  }
+}
+
+.selectize-control.multi .selectize-input > div {
+  cursor: pointer;
+  margin: 0 3px 3px 0;
+  padding: 1px 3px;
+  background: #fff;
+  color: #555;
+  border: 1px solid #c1c1c1;
+}
+
+.selectize-control.multi .selectize-input > div.active {
+  display: inline-block;
+}

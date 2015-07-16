@@ -11,8 +11,7 @@ class TaggingToCollectionsTest < JavascriptIntegrationTest
 
     visit edition_path(edition)
 
-    select 'Tax: VAT', from: 'Mainstream browse pages'
-    select 'Tax: RTI (draft)', from: 'Mainstream browse pages'
+    selectize ['Tax: VAT', 'Tax: RTI (draft)'], 'Mainstream browse pages'
 
     save_edition_and_assert_success
     edition.reload

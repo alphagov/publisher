@@ -23,6 +23,8 @@ end
 gem 'erubis'
 gem 'govuk_admin_template', '~> 2.3.1'
 gem 'select2-rails', '3.5.9.1'
+gem 'jquery-ui-rails', '~> 5.0.3'
+gem 'selectize-rails', '0.12.1'
 gem 'momentjs-rails', '2.8.3'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
