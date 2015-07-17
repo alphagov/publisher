@@ -110,23 +110,6 @@ class CampaignEditTest < JavascriptIntegrationTest
       assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
       assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
       assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
-
-      # remove file
-      if using_javascript?
-        find('#edition_remove_small_image').trigger('click')
-        find('#edition_remove_medium_image').trigger('click')
-        find('#edition_remove_large_image').trigger('click')
-      else
-        find('#edition_remove_small_image').set(true)
-        find('#edition_remove_medium_image').set(true)
-        find('#edition_remove_large_image').set(true)
-      end
-
-      save_edition_and_assert_success_slow
-
-      assert page.has_no_selector?("#small-campaign-image a")
-      assert page.has_no_selector?("#medium-campaign-image a")
-      assert page.has_no_selector?("#large-campaign-image a")
     end
   end
 

@@ -111,17 +111,6 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
       assert_selector("a[href$='captions.txt']")
     end
 
-    # replace file
-    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_two)
-    GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
-
-    attach_file("Upload a new caption file", file_two.path)
-    save_edition_and_assert_success_slow
-
-    within(:css, ".uploaded-caption-file") do
-      assert_selector("a[href$='captions_two.txt']")
-    end
-
     # remove file
     check "Remove caption file?"
     save_edition_and_assert_success_slow
