@@ -99,14 +99,13 @@ class CampaignEditTest < JavascriptIntegrationTest
         attach_file("Upload image", large_image.path)
       end
 
-      save_edition_and_assert_success_without_ajax
+      save_edition_and_assert_success_slow
 
       assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
       assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
       assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
 
-      # ensure files are not removed on save
-      save_edition_and_assert_success_without_ajax
+      save_edition_and_assert_success_slow
 
       assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
       assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
@@ -123,7 +122,7 @@ class CampaignEditTest < JavascriptIntegrationTest
         find('#edition_remove_large_image').set(true)
       end
 
-      save_edition_and_assert_success_without_ajax
+      save_edition_and_assert_success_slow
 
       assert page.has_no_selector?("#small-campaign-image a")
       assert page.has_no_selector?("#medium-campaign-image a")

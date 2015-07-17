@@ -83,7 +83,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "manage caption files for a video edition" do
-    @edition = FactoryGirl.create(:video_edition, :state => 'draft')
+    edition = FactoryGirl.create(:video_edition, :state => 'draft')
 
     file_one = File.open(Rails.root.join("test","fixtures","uploads","captions.txt"))
     file_two = File.open(Rails.root.join("test","fixtures","uploads","captions_two.txt"))
@@ -94,18 +94,18 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_one)
     GdsApi::AssetManager.any_instance.stubs(:asset).with("an_image_id").returns(asset_one)
 
-    visit "/editions/#{@edition.to_param}"
+    visit "/editions/#{edition.to_param}"
 
     assert page.has_field?("Upload a new caption file", :type => "file")
     attach_file("Upload a new caption file", file_one.path)
-    save_edition_and_assert_success_without_ajax
+    save_edition_and_assert_success_slow
 
     within(:css, ".uploaded-caption-file") do
       assert_selector("a[href$='captions.txt']")
     end
 
     # ensure file is not removed on save
-    save_edition_and_assert_success_without_ajax
+    save_edition_and_assert_success_slow
 
     within(:css, ".uploaded-caption-file") do
       assert_selector("a[href$='captions.txt']")
@@ -116,7 +116,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     GdsApi::AssetManager.any_instance.stubs(:asset).with("another_image_id").returns(asset_two)
 
     attach_file("Upload a new caption file", file_two.path)
-    save_edition_and_assert_success_without_ajax
+    save_edition_and_assert_success_slow
 
     within(:css, ".uploaded-caption-file") do
       assert_selector("a[href$='captions_two.txt']")
@@ -124,7 +124,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
     # remove file
     check "Remove caption file?"
-    save_edition_and_assert_success_without_ajax
+    save_edition_and_assert_success_slow
 
     assert_no_selector(".uploaded-caption-file")
   end
