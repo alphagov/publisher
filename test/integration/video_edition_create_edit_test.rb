@@ -82,36 +82,6 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     assert page.has_field?("Body", :with => "Description of video")
   end
 
-  should "manage caption files for a video edition" do
-    edition = FactoryGirl.create(:video_edition, :state => 'draft')
-
-    file_one = File.open(Rails.root.join("test","fixtures","uploads","captions.txt"))
-    file_two = File.open(Rails.root.join("test","fixtures","uploads","captions_two.txt"))
-
-    asset_one = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/an_image_id', :file_url => 'http://path/to/captions.txt')
-    asset_two = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/another_image_id', :file_url => 'http://path/to/captions_two.txt')
-
-    GdsApi::AssetManager.any_instance.stubs(:create_asset).returns(asset_one)
-    GdsApi::AssetManager.any_instance.stubs(:asset).with("an_image_id").returns(asset_one)
-
-    visit "/editions/#{edition.to_param}"
-
-    assert page.has_field?("Upload a new caption file", :type => "file")
-    attach_file("Upload a new caption file", file_one.path)
-    save_edition_and_assert_success_slow
-
-    within(:css, ".uploaded-caption-file") do
-      assert_selector("a[href$='captions.txt']")
-    end
-
-    # ensure file is not removed on save
-    save_edition_and_assert_success_slow
-
-    within(:css, ".uploaded-caption-file") do
-      assert_selector("a[href$='captions.txt']")
-    end
-  end
-
   should "disable fields for a published edition" do
     edition = FactoryGirl.create(:video_edition,
                                  :panopticon_id => @artefact.id,
