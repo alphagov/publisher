@@ -110,12 +110,6 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
     within(:css, ".uploaded-caption-file") do
       assert_selector("a[href$='captions.txt']")
     end
-
-    # remove file
-    check "Remove caption file?"
-    save_edition_and_assert_success_slow
-
-    assert_no_selector(".uploaded-caption-file")
   end
 
   should "disable fields for a published edition" do

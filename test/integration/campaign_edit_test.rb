@@ -104,12 +104,6 @@ class CampaignEditTest < JavascriptIntegrationTest
       assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
       assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
       assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
-
-      save_edition_and_assert_success_slow
-
-      assert page.has_selector?("#small-campaign-image a[href$='campaign_small.jpg']")
-      assert page.has_selector?("#medium-campaign-image a[href$='campaign_medium.jpg']")
-      assert page.has_selector?("#large-campaign-image a[href$='campaign_large.jpg']")
     end
   end
 
