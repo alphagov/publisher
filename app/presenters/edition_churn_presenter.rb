@@ -10,7 +10,7 @@ class EditionChurnPresenter < CSVPresenter
       :browse_pages,
       :primary_topic,
       :additional_topics,
-      :organisation,
+      :organisations,
       :need_ids,
       :editioned_on,
       :version_number
@@ -27,8 +27,8 @@ private
       edition.browse_pages.join(",")
     when :additional_topics
       edition.additional_topics.join(",")
-    when :organisation
-      edition.department
+    when :organisations
+      edition.artefact.organisations.map(&:title).join(", ")
     when :need_ids
       edition.artefact.need_ids.join(',')
     when :editioned_on
