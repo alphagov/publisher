@@ -9,7 +9,7 @@ class OrganisationContentPresenter < CSVPresenter
       :browse_pages,
       :primary_topic,
       :additional_topics,
-      :organisation,
+      :organisations,
       :need_ids
     ]
   end
@@ -32,8 +32,8 @@ private
       latest_edition.primary_topic
     when :additional_topics
       latest_edition.additional_topics.join(",")
-    when :organisation
-      artefact.department
+    when :organisations
+      artefact.organisations.map(&:title).join(", ")
     when :need_ids
       artefact.need_ids.join(',')
     else

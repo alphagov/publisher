@@ -65,7 +65,7 @@ class LicenceContentImporter
       
       unless api_response
         api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
-          owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1, business_proposition: true)
+          owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1)
       end
 
       if api_response and [200, 201].include?(api_response.code)

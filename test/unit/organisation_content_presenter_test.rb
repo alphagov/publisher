@@ -3,9 +3,14 @@ require "test_helper"
 
 class OrganisationContentPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of business support schemes" do
+    hmrc = FactoryGirl.create(:live_tag,
+                               tag_id: "hm-revenue-customs",
+                               title: "HMRC",
+                               tag_type: "organisation")
+
     document = FactoryGirl.create(:artefact,
       name: "Important document",
-      department: "HMRC",
+      organisations: [hmrc.tag_id],
       need_ids: ["123456","123321","654321"]
     )
     FactoryGirl.create(:edition,
@@ -24,14 +29,13 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     assert_equal "business/support,tax/vat", data[0]["Browse pages"]
     assert_equal "business-tax/vat", data[0]["Primary topic"]
     assert_equal "oil-and-gas/licensing,environmental-management/boating", data[0]["Additional topics"]
-    assert_equal "HMRC", data[0]["Organisation"]
+    assert_equal "HMRC", data[0]["Organisations"]
     assert_equal "123456,123321,654321", data[0]["Need ids"]
   end
 
   should "handle artefacts without editions" do
     document = FactoryGirl.create(:artefact,
       name: "Important document",
-      department: "DfE",
       need_ids: ["123456"]
     )
 

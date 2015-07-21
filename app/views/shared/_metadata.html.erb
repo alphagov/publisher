@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-7">
-    <% publication.attributes.slice('slug', 'department', 'kind').each do |key, value| %>
+    <% publication.attributes.slice('slug', 'kind').each do |key, value| %>
       <%= content_tag :label, key.humanize, for: key %>
       <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
     <% end %>
