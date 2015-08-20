@@ -28,6 +28,7 @@ class FactCheckEmailHandler
     return false
   rescue => e
     errors << "Failed to process message #{message.subject}: #{e.message}"
+    Airbrake.notify_or_ignore(e)
     return false
   end
 
@@ -35,7 +36,11 @@ class FactCheckEmailHandler
   def process(&after_each_message)
     Mail.all(read_only: false, delete_after_find: true) do |message|
       message.skip_deletion unless process_message(message)
-      after_each_message.call(message) if after_each_message
+      begin
+        after_each_message.call(message) if after_each_message
+      rescue => e
+        Airbrake.notify_or_ignore(e)
+      end
     end
   end
 end

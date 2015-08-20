@@ -46,6 +46,9 @@ begin
   end
 rescue Redis::Lock::LockNotAcquired => e
   Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
+rescue => e
+  Airbrake.notify_or_ignore(e)
+  raise
 end
 
 if handler.errors.any?
