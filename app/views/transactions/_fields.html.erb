@@ -33,9 +33,9 @@
               :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
 
   <%= f.input :department_analytics_profile,
-              :label => 'Department analytics profile',
+              :label => 'Service analytics profile',
               :placeholder => 'UA-XXXXXX-X',
-              :hint => 'Let departments track user journeys between GOV.UK and their service using Google Analytics.',
+              :hint => 'Let service teams track user journeys between GOV.UK and their service using Google Analytics.',
               :wrapper_html => { :class => 'add-top-margin' },
               :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, :class => 'input-md-2' } %>
 <% end %>

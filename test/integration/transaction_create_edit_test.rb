@@ -60,17 +60,17 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       assert_equal "UK Terrestrial Mars Office", t.will_continue_on
     end
 
-    should "allow only a valid department analytics profile" do
+    should "allow only a valid Service analytics profile" do
       transaction = FactoryGirl.create(:transaction_edition,
                                    :panopticon_id => @artefact.id,
                                    :title => "Register for space flight")
 
       visit "/editions/#{transaction.to_param}"
 
-      fill_in "Department analytics profile", :with => "UA-INVALID-SPACE-FLIGHT"
+      fill_in "Service analytics profile", :with => "UA-INVALID-SPACE-FLIGHT"
       save_edition_and_assert_error
 
-      fill_in "Department analytics profile", :with => "UA-00100000-1"
+      fill_in "Service analytics profile", :with => "UA-00100000-1"
       save_edition_and_assert_success
 
       t = TransactionEdition.find(transaction.id)
