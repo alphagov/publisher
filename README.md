@@ -12,7 +12,7 @@ with other apps, here's how.
 
 ### Create a user
 
-    publisher$ script/console
+    publisher$ rails console
     >> User.create name: "Your name", email: "youremail@example.com", uid: Time.zone.now.to_i, version: 1
 
 ### Run panopticon using rails s or similar
