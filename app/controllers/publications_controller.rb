@@ -1,6 +1,6 @@
 class PublicationsController < InheritedResources::Base
   def show
-    edition = Edition.find_or_create_from_panopticon_data(params[:id], current_user, PANOPTICON_API_CREDENTIALS)
+    edition = Edition.find_or_create_from_panopticon_data(params[:id], current_user)
 
     if edition.persisted?
       redirect_with_return_to(edition) and return
