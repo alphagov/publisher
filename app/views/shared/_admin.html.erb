@@ -13,7 +13,7 @@
 <% if @edition.published? && @edition.can_create_new_edition? %>
   <h3 class="remove-top-margin">Change edition format</h3>
 
-  <% if [AnswerEdition, GuideEdition, LicenceEdition, ProgrammeEdition, TransactionEdition].include?(@edition.class) %>
+  <% if [AnswerEdition, GuideEdition, LicenceEdition, ProgrammeEdition, TransactionEdition, SimpleSmartAnswerEdition].include?(@edition.class) %>
     <%= render partial: "shared/clone_buttons",
       locals: {
         edition: @edition,
@@ -47,6 +47,13 @@
         edition: @edition,
         edition_class: TransactionEdition,
         to_classes: [AnswerEdition, GuideEdition, ProgrammeEdition]
+      } %>
+
+    <%= render partial: "shared/clone_buttons",
+      locals: {
+        edition: @edition,
+        edition_class: SimpleSmartAnswerEdition,
+        to_classes: [AnswerEdition]
       } %>
   <% else %>
     <p class="lead remove-bottom-margin">

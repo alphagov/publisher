@@ -91,6 +91,22 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert_field_contains(transaction.alternate_methods, "Body")
   end
 
+  test "should be able to convert a SimpleSmartAnswerEdition into an AnswerEdition" do
+    simple_smart_answer = FactoryGirl.create(:simple_smart_answer_edition, state: 'published')
+    visit_edition simple_smart_answer
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    assert page.has_button?("Create as new Answer edition")
+
+    click_on "Create as new Answer edition"
+
+    assert_text(simple_smart_answer.title)
+    assert_text("New edition created")
+  end
+
 # tests for changing Answer, Guide, Programme into a Transaction
 
   test "should be able to convert an AnswerEdition into a TransactionEdition" do
@@ -115,7 +131,6 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     within :css, '#edition_more_information_input' do
       assert page.has_xpath?("//textarea[contains(text(), '#{answer.whole_body}')]"), "Expected to see: #{answer.whole_body}"
     end
-
   end
 
   test "should be able to convert an AnswerEdition into a SimpleSmartAnswerEdition" do
