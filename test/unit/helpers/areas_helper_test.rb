@@ -4,10 +4,18 @@ class AreasHelperTest < ActionView::TestCase
   include AreasHelper
 
   def test_all_regions?
-    Area.stubs(:regions).returns([
-      Area.new(slug: "london", type: "EUR"),
-      Area.new(slug: "north-east", type: "EUR"),
-    ])
+    Area.stubs(:regions).returns(
+      [
+        Area.new(
+          slug: "london",
+          type: "EUR",
+        ),
+        Area.new(
+          slug: "north-east",
+          type: "EUR",
+        ),
+      ]
+    )
 
     edition = OpenStruct.new(
       areas: ["london", "north-east"],
@@ -23,10 +31,20 @@ class AreasHelperTest < ActionView::TestCase
   end
 
   def test_english_regions?
-    Area.stubs(:regions).returns([
-      Area.new(slug: "yorkshire-and-the-humber", type: "EUR", country_name: "England"),
-      Area.new(slug: "scotland", type: "EUR", country_name: "Scotland")
-    ])
+    Area.stubs(:regions).returns(
+      [
+        Area.new(
+          slug: "yorkshire-and-the-humber",
+          type: "EUR",
+          country_name: "England",
+        ),
+        Area.new(
+          slug: "scotland",
+          type: "EUR",
+          country_name: "Scotland",
+        ),
+      ]
+    )
 
     edition = OpenStruct.new(
       areas: ["yorkshire-and-the-humber"],
