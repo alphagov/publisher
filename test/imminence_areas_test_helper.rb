@@ -13,38 +13,110 @@ module ImminenceAreasTestHelper
   end
 
   def regions
-    [{slug: "london", name: "London", type: "EUR", country_name: "England"},
-     {slug: "scotland", name: "Scotland", type: "EUR", country_name: "Scotland"}]
+    [
+      {
+        slug: "london",
+        name: "London",
+        type: "EUR",
+        country_name: "England",
+      },
+      {
+        slug: "scotland",
+        name: "Scotland",
+        type: "EUR",
+        country_name: "Scotland",
+      },
+    ]
   end
 
   def counties
-    [{slug: "west-sussex-county-council", name: "West Sussex County Council", type: "CTY"},
-    {slug: "devon-county-council", name: "Devon County Council", type: "CTY"}]
+    [
+      {
+        slug: "west-sussex-county-council",
+        name: "West Sussex County Council",
+        type: "CTY",
+      },
+      {
+        slug: "devon-county-council",
+        name: "Devon County Council",
+        type: "CTY",
+      },
+    ]
   end
 
   def districts
-    [{slug: "wycombe-district-council", name: "Wycombe District Council", type: "DIS"},
-    {slug: "south-bucks-district-council", name: "South Bucks District Council", type: "DIS"}]
+    [
+      {
+        slug: "wycombe-district-council",
+        name: "Wycombe District Council",
+        type: "DIS",
+      },
+      {
+        slug: "south-bucks-district-council",
+        name: "South Bucks District Council",
+        type: "DIS",
+      },
+    ]
   end
 
   def london_boroughs
-    [{slug: "hackney-borough-council", name: "Hackney Borough Council", type: "LBO"},
-    {slug: "camden-borough-council", name: "Camden Borough Council", type: "LBO"}]
+    [
+      {
+        slug: "hackney-borough-council",
+        name: "Hackney Borough Council",
+        type: "LBO",
+      },
+      {
+        slug: "camden-borough-council",
+        name: "Camden Borough Council",
+        type: "LBO",
+      },
+    ]
   end
 
   def ni_councils
-    [{slug: "derry-city-council", name: "Derry City Council", type: "LGD"},
-    {slug: "belfast-city-council", name: "Belfast City Council", type: "LGD"}]
+    [
+      {
+        slug: "derry-city-council",
+        name: "Derry City Council",
+        type: "LGD",
+      },
+      {
+        slug: "belfast-city-council",
+        name: "Belfast City Council",
+        type: "LGD",
+      },
+    ]
   end
 
   def metropolitan_councils
-    [{slug: "birmingham-city-council", name: "Birmingham City Council", type: "MTD"},
-    {slug: "leeds-city-council", name: "Leeds City Council", type: "MTD"}]
+    [
+      {
+        slug: "birmingham-city-council",
+        name: "Birmingham City Council",
+        type: "MTD",
+      },
+      {
+        slug: "leeds-city-council",
+        name: "Leeds City Council",
+        type: "MTD",
+      },
+    ]
   end
 
   def unitary_authorities
-    [{slug: "glasgow-city-council", name: "Glasgow City Council", type: "UTA"},
-    {slug: "cardiff-council", name: "Cardiff Council", type: "UTA"}]
+    [
+      {
+        slug: "glasgow-city-council",
+        name: "Glasgow City Council",
+        type: "UTA",
+      },
+      {
+        slug: "cardiff-council",
+        name: "Cardiff Council",
+        type: "UTA",
+      },
+    ]
   end
 
   def stub_mapit_areas_requests(endpoint)
