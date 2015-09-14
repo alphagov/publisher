@@ -225,7 +225,7 @@ class EditionsControllerTest < ActionController::TestCase
       )
 
       update_params = {
-        "areas" => "northern-ireland,yorkshire-and-the-humber",
+        "areas" => "northern-ireland;N07000001,yorkshire-and-the-humber;E15000003",
       }
 
       post :update,
@@ -238,6 +238,11 @@ class EditionsControllerTest < ActionController::TestCase
     should "update area slugs" do
       assert_equal ["northern-ireland", "yorkshire-and-the-humber"],
         @business_support_edition.areas
+    end
+
+    should "update area GSS codes" do
+      assert_equal ["N07000001", "E15000003"],
+        @business_support_edition.area_gss_codes
     end
   end
 
