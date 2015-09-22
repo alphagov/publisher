@@ -204,7 +204,24 @@ class EditionsController < InheritedResources::Base
 
     def coerce_business_support_params
       if (params[:edition][:areas] && !params[:edition][:areas].kind_of?(Array))
-        params[:edition][:areas] = params[:edition][:areas].split(',').map(&:strip)
+        area_slugs = []
+        area_gss_codes = []
+
+        business_support_area_identifier_pairs.each do |area_slug, area_gss_code|
+          area_slugs << area_slug
+          area_gss_codes << area_gss_code
+        end
+
+        params[:edition][:area_gss_codes] = area_gss_codes.compact
+        params[:edition][:areas] = area_slugs.compact
       end
+    end
+
+    def business_support_area_identifier_pairs
+        params[:edition][:areas]
+          .split(',')
+          .map { |slug_and_gss_code|
+            slug_and_gss_code.split(';').map(&:strip)
+          }
     end
 end

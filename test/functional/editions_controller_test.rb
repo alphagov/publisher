@@ -215,6 +215,37 @@ class EditionsControllerTest < ActionController::TestCase
     assert_equal ["oil-and-gas/wells"], edition.additional_topics
   end
 
+  context "with Business Support areas" do
+    setup do
+      artefact = FactoryGirl.create(:artefact)
+
+      @business_support_edition = FactoryGirl.create(
+        :business_support_edition,
+        panopticon_id: artefact.id,
+      )
+
+      update_params = {
+        "areas" => "northern-ireland;N07000001,yorkshire-and-the-humber;E15000003",
+      }
+
+      post :update,
+        :id => @business_support_edition.id,
+        :edition => update_params
+
+      @business_support_edition.reload
+    end
+
+    should "update area slugs" do
+      assert_equal ["northern-ireland", "yorkshire-and-the-humber"],
+        @business_support_edition.areas
+    end
+
+    should "update area GSS codes" do
+      assert_equal ["N07000001", "E15000003"],
+        @business_support_edition.area_gss_codes
+    end
+  end
+
   test "destroy transaction" do
     assert @transaction.can_destroy?
     assert_difference('TransactionEdition.count', -1) do
