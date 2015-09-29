@@ -14,13 +14,16 @@
 
 <div class="related-areas fieldset-section">
   <%= f.label :areas, 'Related areas', class: "add-top-margin control-label" %>
-  <%= f.text_area :areas, size: "75x3",
-        class: "form-control",
-        placeholder: "Fill-in regions, counties and local authorities, " +
-          "separated by a comma. for example: South East, West Sussex, Horsham",
-        disabled: @resource.locked_for_edits?,
-        value: f.object.areas.present? ? f.object.areas.join(", ") : "",
-        data: { areas: edition_areas_json(f.object) } %>
+  <%= f.select :areas,
+    edition_areas_select_options(@resource),
+    {},
+    {
+      multiple: true,
+      class: "form-control",
+      placeholder: "Choose one or more regions, counties and local authorities",
+      disabled: @resource.locked_for_edits?,
+    }
+  %>
 </div>
 <hr/>
 <% content_for :extra_javascript do %>

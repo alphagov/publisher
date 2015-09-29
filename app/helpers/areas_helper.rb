@@ -1,7 +1,9 @@
 module AreasHelper
-  def edition_areas_json(edition)
-    areas = Area.areas_for_edition(edition)
-    areas.map { |a| { id: a.slug, text: a.name } }.to_json
+  def edition_areas_select_options(edition)
+    options_for_select(
+      Area.all.map { |area| [area.name, area.slug] },
+      Area.areas_for_edition(edition).map(&:slug),
+    )
   end
 
   def all_regions?(edition)

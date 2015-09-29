@@ -203,8 +203,9 @@ class EditionsController < InheritedResources::Base
     end
 
     def coerce_business_support_params
-      if (params[:edition][:areas] && !params[:edition][:areas].kind_of?(Array))
-        params[:edition][:areas] = params[:edition][:areas].split(',').map(&:strip)
+      if (params[:edition][:areas])
+        params[:edition][:areas] = params[:edition][:areas]
+          .map(&:strip).reject(&:empty?)
       end
     end
 end
