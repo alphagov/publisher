@@ -36,7 +36,7 @@ gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: '
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '~> 3.1.0'
+  gem 'govspeak', '~> 3.4.0'
 end
 
 gem 'has_scope'
