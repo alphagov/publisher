@@ -49,11 +49,6 @@ gem 'null_logger'
 gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
 
-# TODO: This was previously pinned due to a replica set bug in >1.6.2
-# Consider whether this still needs to be pinned when it is provided
-# as a dependency of govuk_content_models
-gem 'mongo', '1.7.1'
-
 gem 'redis', '3.0.7', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
