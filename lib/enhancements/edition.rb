@@ -56,6 +56,8 @@ class Edition
   end
 
   alias_method :was_published_without_indexing, :was_published
+  # `was_published` is called from the state machine in govuk_content_models
+  # when the edition state changes to `published`
   def was_published
     was_published_without_indexing
     register_with_panopticon
