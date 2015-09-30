@@ -36,7 +36,7 @@ gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: '
 if ENV['GOVSPEAK_DEV']
   gem 'govspeak', path: '../govspeak'
 else
-  gem 'govspeak', '~> 3.4.0'
+  gem 'govspeak', '~> 3.1.0'
 end
 
 gem 'has_scope'
@@ -48,6 +48,11 @@ gem "mongoid_rails_migrations", "1.0.0"
 gem 'null_logger'
 gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
+
+# TODO: This was previously pinned due to a replica set bug in >1.6.2
+# Consider whether this still needs to be pinned when it is provided
+# as a dependency of govuk_content_models
+gem 'mongo', '1.7.1'
 
 gem 'redis', '3.0.7', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
@@ -67,7 +72,7 @@ gem 'sidekiq-statsd', '0.1.2'
 group :assets do
   gem "therubyracer", "0.12.1"
   gem 'sass-rails', '3.2.6'
-  gem 'uglifier', '2.7.2'
+  gem 'uglifier', '1.2.7'
 end
 
 group :test do
