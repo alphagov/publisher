@@ -2,18 +2,20 @@ $(document).ready(function() {
   "use strict";
 
   var $relatedAreasSelect = $("#edition_areas"),
-      bindAreasSelection = function (selector, filter) {
-        $(selector).change(function () {
-          var self = this;
-          $('.areas-chkbx').each(function (i,e) {
-            if (e !== self) $(e).prop('checked', false);
-          });
-          $relatedAreasSelect.select2("data", []);
-          if ($(this).is(':checked')) {
-            $relatedAreasSelect.select2("data", $.map(areas, filter));
-          }
-        });
-      };
+      bindAreasSelection;
+
+  bindAreasSelection = function (selector, filter) {
+    $(selector).change(function () {
+      var self = this;
+      $('.areas-chkbx').each(function (i,e) {
+        if (e !== self) $(e).prop('checked', false);
+      });
+      $relatedAreasSelect.select2("data", []);
+      if ($(this).is(':checked')) {
+        $relatedAreasSelect.select2("data", $.map(areas, filter));
+      }
+    });
+  };
 
   // http://ivaynberg.github.io/select2/select-2.1.html
   $relatedAreasSelect.select2({
