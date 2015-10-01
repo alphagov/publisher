@@ -2,7 +2,21 @@ $(document).ready(function() {
   "use strict";
 
   var $relatedAreasSelect = $("#edition_areas"),
-      bindAreasSelection;
+      bindAreasSelection,
+      areas;
+
+  areas = function () {
+    return $.map($relatedAreasSelect.find("option"), function (areaOption) {
+      var $areaOption = $(areaOption);
+
+      return {
+        id: $areaOption.val(),
+        text: $areaOption.text(),
+        country: $areaOption.data("country"),
+        type: $areaOption.data("type"),
+      };
+    });
+  };
 
   bindAreasSelection = function (selector, filter) {
     $(selector).change(function () {
@@ -12,7 +26,7 @@ $(document).ready(function() {
       });
       $relatedAreasSelect.select2("data", []);
       if ($(this).is(':checked')) {
-        $relatedAreasSelect.select2("data", $.map(areas, filter));
+        $relatedAreasSelect.select2("data", $.map(areas(), filter));
       }
     });
   };
