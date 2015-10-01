@@ -330,22 +330,4 @@ class EditionsControllerTest < ActionController::TestCase
 
     end
   end
-
-  context "/areas" do
-    setup do
-      stub_request(:get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/\w+.json}).to_return(
-        :body => { "results" => [] }.to_json
-      )
-    end
-    should "respond with javascript" do
-      get :areas, :format => :js
-
-      assert_response :success
-    end
-    should "not respond to other formats" do
-      get :areas
-
-      assert_response :not_acceptable
-    end
-  end
 end
