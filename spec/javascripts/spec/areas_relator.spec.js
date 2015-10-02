@@ -10,18 +10,16 @@ describe('Areas relator', function() {
       <div class="related-areas">\
         <input type="checkbox" id="all_regions" class="areas-chkbx"/>\
         <input type="checkbox" id="english_regions" class="areas-chkbx"/>\
-        <textarea id="edition_areas">3456</textarea>\
+        <select id="edition_areas" multiple="multiple">\
+          <option value="london" data-type="EUR" data-country="England">London</option>\
+          <option value="south-east" data-type="EUR" data-country="England">South East</option>\
+          <option selected="selected" value="hackney-borough-council" data-type="LBO" data-country="England">Hackney Borough Council</option>\
+          <option value="scotland" data-type="EUR" data-country="Scotland">Scotland</option>\
+        </select>\
       </div>\
     </form>\
-    <script>var areas = [\
-      {"id":"london","text":"London","type":"EUR","country":"England"},\
-      {"id":"south-east","text":"South East","type":"EUR","country":"England"},\
-      {"id":"hackney-borough-council","text":"Hackney Borough Council","type":"LBO","country":"England"},\
-      {"id":"scotland","text":"Scotland","type":"EUR","country":"Scotland"},\
-    ];</script>\
     <script src="/assets/views/business_support/areas_relator.js"></script>');
 
-    form.find('#edition_areas').data('areas', [{"id":"hackney-borough-council","text":"Hackney Borough Council"}]);
     $('body').append(form);
   });
 

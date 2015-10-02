@@ -4,7 +4,7 @@ require "edition_progressor"
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
-  before_filter :setup_view_paths, :except => [:index, :new, :create, :areas]
+  before_filter :setup_view_paths, :except => [:index, :new, :create]
   after_filter :report_state_counts, :only => [:create, :duplicate, :progress, :destroy]
   before_filter :remove_blank_collections, only: [:create, :update]
 
@@ -136,13 +136,6 @@ class EditionsController < InheritedResources::Base
     @comparison = @resource.previous_siblings.last
   end
 
-  def areas
-    @areas = Area.all
-    respond_to do |format|
-      format.js { render :areas }
-    end
-  end
-
   protected
     def new_assignee
       assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
@@ -203,8 +196,9 @@ class EditionsController < InheritedResources::Base
     end
 
     def coerce_business_support_params
-      if (params[:edition][:areas] && !params[:edition][:areas].kind_of?(Array))
-        params[:edition][:areas] = params[:edition][:areas].split(',').map(&:strip)
+      if (params[:edition][:areas])
+        params[:edition][:areas] = params[:edition][:areas]
+          .map(&:strip).reject(&:empty?)
       end
     end
 end

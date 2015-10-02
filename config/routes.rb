@@ -38,8 +38,6 @@ Publisher::Application.routes.draw do
   get 'reports/organisation-content' => 'reports#organisation_content', :as => :organisation_content_report
   get 'reports/edition-churn' => 'reports#edition_churn', as: "edition_churn_report"
 
-  get 'areas' => 'editions#areas'
-
   match 'user_search' => 'user_search#index'
 
   resources :publications

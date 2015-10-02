@@ -3,18 +3,6 @@ require "test_helper"
 class AreasHelperTest < ActionView::TestCase
   include AreasHelper
 
-  def test_edition_areas_json
-    Area.stubs(:areas).returns([
-      Area.new(slug: "london", name: "London"),
-      Area.new(slug: "paris", name: "Paris"),
-      Area.new(slug: "new-york", name: "New York")
-    ])
-
-    edition = OpenStruct.new(areas: ["london","paris"])
-    assert_equal ["London", "Paris"],
-      JSON.parse(edition_areas_json(edition)).map { |a| a["text"] }
-  end
-
   def test_all_regions?
     Area.stubs(:regions).returns([
       Area.new(slug: "london", type: "EUR"),
