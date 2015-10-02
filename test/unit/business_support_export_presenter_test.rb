@@ -34,8 +34,6 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
     )
 
     BusinessSupport::BusinessSize.stubs(:all).returns([OpenStruct.new(slug: "up-to-249", name: "Up to 249")])
-    BusinessSupport::Location.stubs(:all).returns(
-      ["London", "South East", "World"].map { |f| OpenStruct.new(slug: f.parameterize, name: f) })
     BusinessSupport::Purpose.stubs(:all).returns(
       ["Business growth and expansion", "Setting up your business", "World Domination"].map { |f| OpenStruct.new(slug: f.parameterize, name: f) })
     BusinessSupport::Sector.stubs(:all).returns([OpenStruct.new(slug: "manufacturing", name: "Manufacturing")])
@@ -58,7 +56,6 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
                        :continuation_link => "http://www.capitalise.org/business_start.htm", :will_continue_on => "the Capitalise Business Support website",
                        :areas => ["1234","2345","3456"],
                        :business_sizes => ["up-to-249"],
-                       :locations => ["london", "south-east"],
                        :purposes => ["business-growth-and-expansion", "setting-up-your-business"],
                        :sectors => ["manufacturing"],
                        :stages => ["start-up", "grow-and-sustain"],
@@ -91,7 +88,6 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
     assert_equal 1.year.since(Date.today).to_s, data[0]["end date"]
     assert_equal "London, Hackney Borough Council, Camden Borough Council", data[0]["areas"]
     assert_equal "Up to 249", data[0]["business sizes"]
-    assert_equal "London, South East", data[0]["locations"]
     assert_equal "Business growth and expansion, Setting up your business", data[0]["purposes"]
     assert_equal "Manufacturing", data[0]["sectors"]
     assert_equal "Start-up, Grow and sustain", data[0]["stages"]
