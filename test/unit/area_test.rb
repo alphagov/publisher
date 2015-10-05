@@ -30,12 +30,14 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_all
-    assert_equal regions + counties + districts + london_boroughs + ni_councils + 
+    assert_equal regions + counties + districts + london_boroughs + ni_councils +
       metropolitan_councils + unitary_authorities, Area.all.map(&:marshal_dump)
   end
 
   def test_areas_for_edition
-    edition = OpenStruct.new(areas: ["london", "hackney-borough-council"])
+    edition = OpenStruct.new(
+      areas: ["london", "hackney-borough-council"],
+    )
     assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
   end
 
