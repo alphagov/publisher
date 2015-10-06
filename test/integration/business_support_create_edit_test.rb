@@ -221,6 +221,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
 
         @bs.reload
         assert_equal ["london", "hackney-borough-council", "camden-borough-council"], @bs.areas
+        assert_equal ["E15000007", "E09000012", "E09000007"], @bs.area_gss_codes
       end
     end
   end
