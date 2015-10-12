@@ -4,16 +4,14 @@ module AreasHelper
       Area.all.map { |area|
         [
           area.name,
-          "#{area.slug};#{area.codes["gss"]}",
+          area.slug,
           {
             "data-country" => area.country_name,
             "data-type" => area.type,
           },
         ]
       },
-      Area.areas_for_edition(edition).map { |area|
-        "#{area.slug};#{area.codes["gss"]}"
-      },
+      Area.areas_for_edition(edition).map(&:slug),
     )
   end
 

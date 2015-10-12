@@ -22,27 +22,10 @@ investment-escalatorzz,London
 EOT
 
       %w(business-start-up-support international-economic-development-support archived-artefact investment-escalatorzz).each do |slug|
-        FactoryGirl.create(
-          :business_support_edition,
-          slug: slug,
-          state: "published",
-        )
+        FactoryGirl.create(:business_support_edition, slug: slug, state: "published")
       end
-
-      FactoryGirl.create(
-        :business_support_edition,
-        slug: "archived",
-        state: "archived",
-      )
-
-      FactoryGirl.create(
-        :business_support_edition,
-        slug: "dont-update-me",
-        state: "published",
-        areas: ["london"],
-        area_gss_codes: ["E15000007"],
-      )
-
+      FactoryGirl.create(:business_support_edition, slug: "archived", state: "archived")
+      FactoryGirl.create(:business_support_edition, slug: "dont-update-me", state: "published", areas: ["london"])
       BusinessSupportEdition.where(slug: "archived-artefact").first.artefact.update_attribute(:state, "archived")
 
       results = OpenStruct.new(results: ["bolton-metropolitan-borough-council", "trafford-metropolitan-borough-council", "london",
