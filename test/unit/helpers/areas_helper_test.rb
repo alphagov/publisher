@@ -9,9 +9,14 @@ class AreasHelperTest < ActionView::TestCase
       Area.new(slug: "north-east", type: "EUR"),
     ])
 
-    edition = OpenStruct.new(areas: ["london","north-east"])
+    edition = OpenStruct.new(
+      areas: ["london", "north-east"],
+    )
     assert_equal true, all_regions?(edition)
-    edition = OpenStruct.new(areas: ["london","north-east", "jersey"])
+
+    edition = OpenStruct.new(
+      areas: ["london", "north-east", "jersey"],
+    )
     assert_equal false, all_regions?(edition)
   end
 
@@ -21,9 +26,14 @@ class AreasHelperTest < ActionView::TestCase
       Area.new(slug: "scotland", type: "EUR", country_name: "Scotland")
     ])
 
-    edition = OpenStruct.new(areas: ["yorkshire-and-the-humber"])
+    edition = OpenStruct.new(
+      areas: ["yorkshire-and-the-humber"],
+    )
     assert_equal true, english_regions?(edition)
-    edition = OpenStruct.new(areas: ["yorkshire-and-the-humber", "scotland"])
+
+    edition = OpenStruct.new(
+      areas: ["yorkshire-and-the-humber", "scotland"],
+    )
     assert_equal false, english_regions?(edition)
   end
 end
