@@ -12,14 +12,23 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
         Area.new(
           id: 1234,
           name: "London",
+          codes: {
+            "gss" => "E15000007",
+          },
         ),
         Area.new(
           id: 2345,
           name: "Hackney Borough Council",
+          codes: {
+            "gss" => "E09000012",
+          },
         ),
         Area.new(
           id: 3456,
           name: "Camden Borough Council",
+          codes: {
+            "gss" => "E09000007",
+          },
         ),
       ]
     )

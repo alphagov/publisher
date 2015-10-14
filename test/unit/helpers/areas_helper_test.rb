@@ -9,10 +9,16 @@ class AreasHelperTest < ActionView::TestCase
         Area.new(
           slug: "london",
           type: "EUR",
+          codes: {
+            "gss" => "E15000007",
+          },
         ),
         Area.new(
           slug: "north-east",
           type: "EUR",
+          codes: {
+            "gss" => "E15000001",
+          },
         ),
       ]
     )
@@ -37,11 +43,17 @@ class AreasHelperTest < ActionView::TestCase
           slug: "yorkshire-and-the-humber",
           type: "EUR",
           country_name: "England",
+          codes: {
+            "gss" => "E15000003",
+          },
         ),
         Area.new(
           slug: "scotland",
           type: "EUR",
           country_name: "Scotland",
+          codes: {
+            "gss" => "S15000001",
+          },
         ),
       ]
     )
