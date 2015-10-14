@@ -37,6 +37,7 @@ class AreaTest < ActiveSupport::TestCase
   def test_areas_for_edition
     edition = OpenStruct.new(
       areas: ["london", "hackney-borough-council"],
+      area_gss_codes: ["E15000007", "E09000012"],
     )
     assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
   end

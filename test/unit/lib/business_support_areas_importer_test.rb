@@ -40,6 +40,7 @@ EOT
         slug: "dont-update-me",
         state: "published",
         areas: ["london"],
+        area_gss_codes: ["E15000007"],
       )
 
       BusinessSupportEdition.where(slug: "archived-artefact").first.artefact.update_attribute(:state, "archived")

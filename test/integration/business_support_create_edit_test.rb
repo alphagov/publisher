@@ -87,6 +87,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
           :start_date => @a_year_ago,
           :end_date => @a_year_since,
           :areas => ["london"],
+          :area_gss_codes => ["E15000007"],
           :business_sizes => ["up-to-249"],
           :business_types => ["charity"],
           :purposes => ["world-domination"],
