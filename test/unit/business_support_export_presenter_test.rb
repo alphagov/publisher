@@ -7,11 +7,22 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
   end
 
   should "provide a CSV export of business support schemes" do
-    Area.stubs(:areas_for_edition).returns([
-      Area.new(id: 1234, name: "London"),
-      Area.new(id: 2345, name: "Hackney Borough Council"),
-      Area.new(id: 3456, name: "Camden Borough Council")
-    ])
+    Area.stubs(:areas_for_edition).returns(
+      [
+        Area.new(
+          id: 1234,
+          name: "London",
+        ),
+        Area.new(
+          id: 2345,
+          name: "Hackney Borough Council",
+        ),
+        Area.new(
+          id: 3456,
+          name: "Camden Borough Council",
+        ),
+      ]
+    )
 
     BusinessSupport::BusinessSize.stubs(:all).returns([OpenStruct.new(slug: "up-to-249", name: "Up to 249")])
     BusinessSupport::Location.stubs(:all).returns(
