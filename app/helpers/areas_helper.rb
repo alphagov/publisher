@@ -18,10 +18,14 @@ module AreasHelper
   end
 
   def all_regions?(edition)
-    Area.regions.map(&:slug).sort == edition.areas.sort
+    Area.regions.map { |area|
+      area.codes["gss"]
+    }.sort.compact == edition.area_gss_codes.sort
   end
 
   def english_regions?(edition)
-    Area.english_regions.map(&:slug).sort == edition.areas.sort
+    Area.english_regions.map { |area|
+      area.codes["gss"]
+    }.sort.compact == edition.area_gss_codes.sort
   end
 end
