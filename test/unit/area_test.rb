@@ -37,7 +37,6 @@ class AreaTest < ActiveSupport::TestCase
   context ".areas_for_edition" do
     should "return correct Areas" do
       edition = OpenStruct.new(
-        areas: ["london", "hackney-borough-council"],
         area_gss_codes: ["E15000007", "E09000012"],
       )
 
@@ -47,7 +46,6 @@ class AreaTest < ActiveSupport::TestCase
 
     should "not return duplicate Areas" do
       edition = OpenStruct.new(
-        areas: ["london", "hackney-borough-council", "london"],
         area_gss_codes: ["E15000007", "E09000012", "E15000007"],
       )
 
