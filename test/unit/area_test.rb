@@ -44,6 +44,16 @@ class AreaTest < ActiveSupport::TestCase
       assert_equal ["London", "Hackney Borough Council"],
         Area.areas_for_edition(edition).map(&:name)
     end
+
+    should "not return duplicate Areas" do
+      edition = OpenStruct.new(
+        areas: ["london", "hackney-borough-council", "london"],
+        area_gss_codes: ["E15000007", "E09000012", "E15000007"],
+      )
+
+      assert_equal ["London", "Hackney Borough Council"],
+        Area.areas_for_edition(edition).map(&:name)
+    end
   end
 
   def test_regions
