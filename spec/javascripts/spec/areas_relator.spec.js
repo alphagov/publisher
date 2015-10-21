@@ -8,11 +8,11 @@ describe('Areas relator', function() {
       <div class="related-areas">\
         <input type="checkbox" id="all_regions" class="areas-chkbx"/>\
         <input type="checkbox" id="english_regions" class="areas-chkbx"/>\
-        <select id="edition_areas" multiple="multiple">\
-          <option value="london;E15000007" data-type="EUR" data-country="England">London</option>\
-          <option value="south-east;E15000008" data-type="EUR" data-country="England">South East</option>\
-          <option selected="selected" value="hackney-borough-council;E09000012" data-type="LBO" data-country="England">Hackney Borough Council</option>\
-          <option value="scotland;S15000001" data-type="EUR" data-country="Scotland">Scotland</option>\
+        <select id="edition_area_gss_codes" multiple="multiple">\
+          <option value="E15000007" data-type="EUR" data-country="England">London</option>\
+          <option value="E15000008" data-type="EUR" data-country="England">South East</option>\
+          <option selected="selected" value="E09000012" data-type="LBO" data-country="England">Hackney Borough Council</option>\
+          <option value="S15000001" data-type="EUR" data-country="Scotland">Scotland</option>\
         </select>\
       </div>\
     </form>\

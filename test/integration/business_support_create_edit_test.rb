@@ -86,7 +86,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
           :priority => 2,
           :start_date => @a_year_ago,
           :end_date => @a_year_since,
-          :areas => ["london"],
           :area_gss_codes => ["E15000007"],
           :business_sizes => ["up-to-249"],
           :business_types => ["charity"],
@@ -220,7 +219,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         end
 
         @bs.reload
-        assert_equal ["london", "hackney-borough-council", "camden-borough-council"], @bs.areas
+        assert_equal [], @bs.areas
         assert_equal ["E15000007", "E09000012", "E09000007"], @bs.area_gss_codes
       end
     end
