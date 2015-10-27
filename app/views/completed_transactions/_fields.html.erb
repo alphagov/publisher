@@ -19,13 +19,13 @@
     <div class="form-group">
       <%= f.input :promote_organ_donor_registration,
         as: :boolean,
-        input_html: { disabled: @resource.locked_for_edits?, class: "js-checkbox-toggle" },
+        input_html: { disabled: @resource.locked_for_edits?, 'data-target' => 'organ-donor-registration-url' },
         wrapper_html: { class: "form-group input-md-8 emphasised-field" } %>
 
       <%= f.input :organ_donor_registration_url,
           required: false,
           input_html: { disabled: @resource.locked_for_edits? },
-          wrapper_html: { class: "form-group input-md-8 js-checkbox-toggle-target" } %>
+          wrapper_html: { class: "form-group input-md-8", id: 'organ-donor-registration-url' } %>
     </div>
   </div>
 </div>
