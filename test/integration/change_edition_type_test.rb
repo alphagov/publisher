@@ -52,6 +52,8 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
     should "be able to convert #{from} into #{to}" do
       edition = FactoryGirl.create(from, state: 'published')
+      sample_parts.each {|part| edition.parts.create(part)} if edition.respond_to?(:parts)
+
       visit_edition edition
 
       within "div.tabbable" do
@@ -73,5 +75,28 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
         assert_selector("form#edition-form .tab-pane textarea", text: /\s*#{Regexp.quote(edition_whole_body)}\s*/, visible: true)
       end
     end
+  end
+
+  should "be able to convert a Non Parted edition into a ProgrammeEdition and display default parts" do
+    edition = FactoryGirl.create(AnswerEdition, state: 'published')
+    visit_edition edition
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    select_target_edition(:programme_edition)
+
+    click_on "Change format"
+
+    assert_text edition.title
+    assert_text "New edition created"
+    edition_whole_body = edition.whole_body.gsub(/\s+/, " ").strip
+    assert_selector("form#edition-form .tab-pane textarea", text: /\s*#{Regexp.quote(edition_whole_body)}\s*/, visible: true)
+    assert_text("Overview")
+    assert_text("What you'll get")
+    assert_text("Eligibility")
+    assert_text("How to claim")
+    assert_text("Further information")
   end
 end
