@@ -87,4 +87,8 @@ class Edition
   def notify_publishing_api
     PublishingAPINotifier.perform_async(self.id.to_s)
   end
+
+  def self.edition_types
+    subclasses - [LocalTransactionEdition]
+  end
 end

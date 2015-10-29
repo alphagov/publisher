@@ -1,7 +1,9 @@
 <% if edition.can_create_new_edition? && (edition.class == edition_class) %>
-  <% to_classes.each do |to_class| %>
-  	<%= button_to "Create as new #{to_class.model_name.titleize.gsub("Edition", "edition")}",
-      duplicate_edition_path(@resource, {from: edition_class.to_s, to: to_class.to_s}),
-      :method => :post, :class => "btn btn-default add-label-margin" %>
-  <% end %>
+  <form method="post" action="<%= duplicate_edition_path(@resource, from: edition_class.to_s)%>" >
+    <div class="form-group">
+    <%= label_tag :to, "Create as new" %>
+    <%= select_tag :to, options_for_select(to_classes.map { |c| [c.model_name.titleize, c.to_s] }.sort!), class: "form-control input-md-3"%>
+    </div>
+    <input type="submit" value="Change format" class="btn btn-default">
+  </form>
 <% end %>
