@@ -1,7 +1,9 @@
 require 'integration_test_helper'
+require 'imminence_areas_test_helper'
 
 class ChangeEditionTypeTest < JavascriptIntegrationTest
   include ActiveSupport::Inflector
+  include ImminenceAreasTestHelper
 
   setup do
     panopticon_has_metadata("id" => "2356")
@@ -9,6 +11,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     %w(Alice Bob Charlie).each do |name|
       FactoryGirl.create(:user, name: name)
     end
+    stub_mapit_areas_requests(Plek.current.find('imminence'))
   end
 
   teardown do
