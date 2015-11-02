@@ -99,4 +99,19 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     assert_text("How to claim")
     assert_text("Further information")
   end
+
+  should "keep the additional information field when converting a BusinessSupportEdition into another edition" do
+    edition = FactoryGirl.create(BusinessSupportEdition, additional_information: "This is additional information text", state: 'published')
+    visit_edition edition
+
+    within "div.tabbable" do
+      click_on "Admin"
+    end
+
+    select_target_edition(:answer_edition)
+
+    click_on "Change format"
+
+    assert_selector("form#edition-form .tab-pane textarea", text: edition.additional_information, visible: true)
+  end
 end
