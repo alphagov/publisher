@@ -22,21 +22,6 @@ find_or_initialize_facets(BusinessSupport::BusinessSize,
                           "between-250-and-500"  => "Between 250 and 500",
                           "between-501-and-1000" => "Between 501 and 1000",
                           "over-1000"            => "Over 1000"})
-# BusinessSupportLocation
-find_or_initialize_facets(BusinessSupport::Location,
-                          { "northern-ireland" => "Northern Ireland",
-                            "england"          => "England",
-                            "london" => "London",
-                            "north-east" => "North East (England)",
-                            "north-west" => "North West (England)",
-                            "east-midlands" => "East Midlands (England)",
-                            "west-midlands" => "West Midlands (England)",
-                            "yorkshire-and-the-humber" => "Yorkshire and the Humber",
-                            "south-west" => "South West (England)",
-                            "east-of-england" => "East of England",
-                            "south-east" => "South East (England)",
-                            "wales"            => "Wales",
-                            "scotland"         => "Scotland"})
 
 # BusinessSupportSector
 find_or_initialize_facets(BusinessSupport::Sector,

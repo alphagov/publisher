@@ -8,7 +8,7 @@ class BusinessSupportExportPresenter < CSVPresenter
       "eligibility", "evaluation", "additional information", "contact details",
       "max employees", "min value", "max value",
       "continuation link", "will continue on", "start date", "end date",
-      "areas", "business sizes", "locations", "purposes", "sectors",
+      "areas", "business sizes", "purposes", "sectors",
       "stages","support types"
     ]
     scope.each do |scheme|
@@ -20,7 +20,6 @@ class BusinessSupportExportPresenter < CSVPresenter
         scheme.max_value, scheme.continuation_link, scheme.will_continue_on,
         scheme.start_date, scheme.end_date,area_names(scheme),
         facet_names("BusinessSize", scheme.business_sizes),
-        facet_names("Location", scheme.locations),
         facet_names("Purpose", scheme.purposes),
         facet_names("Sector", scheme.sectors),
         facet_names("Stage", scheme.stages),
@@ -34,7 +33,6 @@ class BusinessSupportExportPresenter < CSVPresenter
 
     facet_classes = [
       BusinessSupport::BusinessSize,
-      BusinessSupport::Location,
       BusinessSupport::Purpose,
       BusinessSupport::Sector,
       BusinessSupport::Stage,
