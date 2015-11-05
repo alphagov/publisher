@@ -219,7 +219,6 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         end
 
         @bs.reload
-        assert_equal [], @bs.areas
         assert_equal ["E15000007", "E09000012", "E09000007"], @bs.area_gss_codes
       end
     end
