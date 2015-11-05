@@ -30,8 +30,13 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_all
-    assert_equal regions + counties + districts + london_boroughs + ni_councils +
-      metropolitan_councils + unitary_authorities, Area.all.map(&:marshal_dump)
+    assert_equal (regions_with_gss_codes + counties + districts + london_boroughs +
+        ni_councils + metropolitan_councils + unitary_authorities),
+      Area.all.map(&:marshal_dump)
+  end
+
+  def test_all_excludes_areas_without_gss_code
+    assert Area.all.map(&:marshal_dump).exclude?(region_without_gss_code)
   end
 
   context ".areas_for_edition" do

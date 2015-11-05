@@ -12,7 +12,7 @@ module ImminenceAreasTestHelper
     }.to_json
   end
 
-  def regions
+  def regions_with_gss_codes
     [
       {
         slug: "london",
@@ -33,6 +33,18 @@ module ImminenceAreasTestHelper
         },
       },
     ]
+  end
+
+  def region_without_gss_code
+    {
+      slug: "england",
+      name: "England",
+      type: "EUR",
+      country_name: "England",
+      codes: {
+        "gss" => nil,
+      }
+    }
   end
 
   def counties
@@ -164,7 +176,7 @@ module ImminenceAreasTestHelper
   def stub_mapit_areas_requests(endpoint)
 
     stub_request(:get, %r{\A#{endpoint}/areas/EUR.json}).to_return(
-      body: areas_response(regions)
+      body: areas_response(regions_with_gss_codes.unshift(region_without_gss_code))
     )
     stub_request(:get, %r{\A#{endpoint}/areas/CTY.json}).to_return(
       body: areas_response(counties)
