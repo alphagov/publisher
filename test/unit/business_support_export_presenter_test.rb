@@ -54,7 +54,7 @@ class BusinessSupportExportPresenterTest < ActiveSupport::TestCase
                        :contact_details => "Capitalise Business Support\nSummerfields Business Centre\nBohemia Road",
                        :max_employees => 12, :min_value => 1000, :max_value => 10000,
                        :continuation_link => "http://www.capitalise.org/business_start.htm", :will_continue_on => "the Capitalise Business Support website",
-                       :areas => ["1234","2345","3456"],
+                       :area_gss_codes => ["E15000007","E09000012","E09000007"],
                        :business_sizes => ["up-to-249"],
                        :purposes => ["business-growth-and-expansion", "setting-up-your-business"],
                        :sectors => ["manufacturing"],

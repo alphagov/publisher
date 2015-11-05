@@ -240,10 +240,6 @@ class EditionsControllerTest < ActionController::TestCase
       @business_support_edition.reload
     end
 
-    should "not update area slugs" do
-      assert_equal [], @business_support_edition.areas
-    end
-
     should "update area GSS codes" do
       assert_equal ["N07000001", "E15000003"],
         @business_support_edition.area_gss_codes
