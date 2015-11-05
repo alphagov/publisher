@@ -18,7 +18,7 @@ class BusinessSupportExportPresenter < CSVPresenter
         scheme.eligibility, scheme.evaluation, scheme.additional_information,
         scheme.contact_details, scheme.max_employees, scheme.min_value,
         scheme.max_value, scheme.continuation_link, scheme.will_continue_on,
-        scheme.start_date, scheme.end_date,area_names(scheme),
+        scheme.start_date, scheme.end_date, area_names(scheme),
         facet_names("BusinessSize", scheme.business_sizes),
         facet_names("Purpose", scheme.purposes),
         facet_names("Sector", scheme.sectors),

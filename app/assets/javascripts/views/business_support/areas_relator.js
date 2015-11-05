@@ -1,7 +1,7 @@
 $(document).ready(function() {
   "use strict";
 
-  var $relatedAreasSelect = $("#edition_areas"),
+  var $relatedAreasSelect = $("#edition_area_gss_codes"),
       bindAreasSelection,
       areas;
 

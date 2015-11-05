@@ -24,13 +24,11 @@ class AreasHelperTest < ActionView::TestCase
     )
 
     edition = OpenStruct.new(
-      areas: ["london", "north-east"],
       area_gss_codes: ["E15000007", "E15000001"],
     )
     assert_equal true, all_regions?(edition)
 
     edition = OpenStruct.new(
-      areas: ["london", "north-east", "jersey"],
       area_gss_codes: ["E15000007", "E15000001", "J99999999"],
     )
     assert_equal false, all_regions?(edition)
@@ -59,13 +57,11 @@ class AreasHelperTest < ActionView::TestCase
     )
 
     edition = OpenStruct.new(
-      areas: ["yorkshire-and-the-humber"],
       area_gss_codes: ["E15000003"],
     )
     assert_equal true, english_regions?(edition)
 
     edition = OpenStruct.new(
-      areas: ["yorkshire-and-the-humber", "scotland"],
       area_gss_codes: ["E15000003", "S15000001"],
     )
     assert_equal false, english_regions?(edition)

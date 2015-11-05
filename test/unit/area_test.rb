@@ -34,12 +34,24 @@ class AreaTest < ActiveSupport::TestCase
       metropolitan_councils + unitary_authorities, Area.all.map(&:marshal_dump)
   end
 
-  def test_areas_for_edition
-    edition = OpenStruct.new(
-      areas: ["london", "hackney-borough-council"],
-      area_gss_codes: ["E15000007", "E09000012"],
-    )
-    assert_equal ["London", "Hackney Borough Council"], Area.areas_for_edition(edition).map(&:name)
+  context ".areas_for_edition" do
+    should "return correct Areas" do
+      edition = OpenStruct.new(
+        area_gss_codes: ["E15000007", "E09000012"],
+      )
+
+      assert_equal ["London", "Hackney Borough Council"],
+        Area.areas_for_edition(edition).map(&:name)
+    end
+
+    should "not return duplicate Areas" do
+      edition = OpenStruct.new(
+        area_gss_codes: ["E15000007", "E09000012", "E15000007"],
+      )
+
+      assert_equal ["London", "Hackney Borough Council"],
+        Area.areas_for_edition(edition).map(&:name)
+    end
   end
 
   def test_regions

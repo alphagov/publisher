@@ -226,10 +226,10 @@ class EditionsControllerTest < ActionController::TestCase
 
       update_params = {
         # select2 produces an array beginning with an empty string
-        "areas" => [
+        "area_gss_codes" => [
           "",
-          "northern-ireland;N07000001",
-          "yorkshire-and-the-humber;E15000003",
+          "N07000001",
+          "E15000003",
         ],
       }
 
@@ -240,9 +240,8 @@ class EditionsControllerTest < ActionController::TestCase
       @business_support_edition.reload
     end
 
-    should "update area slugs" do
-      assert_equal ["northern-ireland", "yorkshire-and-the-humber"],
-        @business_support_edition.areas
+    should "not update area slugs" do
+      assert_equal [], @business_support_edition.areas
     end
 
     should "update area GSS codes" do
