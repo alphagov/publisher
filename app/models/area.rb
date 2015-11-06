@@ -28,7 +28,7 @@ class Area < OpenStruct
   private
 
     def self.areas
-      @areas ||= all_areas
+      @areas ||= areas_with_gss_codes
     end
 
     def self.all_areas
@@ -39,5 +39,9 @@ class Area < OpenStruct
         end
       end
       areas.flatten
+    end
+
+    def self.areas_with_gss_codes
+      self.all_areas.select { |a| a.codes["gss"].present? }
     end
 end

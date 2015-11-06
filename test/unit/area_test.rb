@@ -29,9 +29,16 @@ class AreaTest < ActiveSupport::TestCase
     assert_equal ['EUR','CTY','DIS','LBO', 'LGD', 'MTD', 'UTA'], Area::AREA_TYPES
   end
 
-  def test_all
-    assert_equal regions + counties + districts + london_boroughs + ni_councils +
-      metropolitan_councils + unitary_authorities, Area.all.map(&:marshal_dump)
+  context ".all" do
+    should "return areas of all types" do
+      assert_equal (regions_with_gss_codes + counties + districts + london_boroughs +
+          ni_councils + metropolitan_councils + unitary_authorities),
+        Area.all.map(&:marshal_dump)
+    end
+
+    should "exclude areas without GSS codes" do
+      assert Area.all.map(&:marshal_dump).exclude?(region_without_gss_code)
+    end
   end
 
   context ".areas_for_edition" do
