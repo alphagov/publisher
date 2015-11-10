@@ -71,6 +71,7 @@ group :assets do
 end
 
 group :test do
+  gem 'pry-byebug'
   gem 'turn', '0.9.6'
   gem 'minitest', '3.3.0'
   gem 'shoulda', '3.1.1'

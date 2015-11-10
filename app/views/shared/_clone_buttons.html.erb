@@ -1,7 +1,17 @@
 <% if edition.can_create_new_edition? && (edition.class == edition_class) %>
-  <% to_classes.each do |to_class| %>
-  	<%= button_to "Create as new #{to_class.model_name.titleize.gsub("Edition", "edition")}",
-      duplicate_edition_path(@resource, {from: edition_class.to_s, to: to_class.to_s}),
-      :method => :post, :class => "btn btn-default add-label-margin" %>
+  <div>
+    <p>No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new format it will still be available in the previous edition. Content in multiple fields might be combined into a single field.</p>
+  <% if @edition.respond_to?(:parts) %>
+    <p>All parts of Guide Editions and Programme Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading. </p>
   <% end %>
+  </div>
+  <form method="post" action="<%= duplicate_edition_path(@resource, from: edition_class.to_s)%>" >
+    <div class="form-group">
+    <%= label_tag :to, "Create as new" %>
+    <%= select_tag :to, options_for_select(to_classes.map { |c| [c.model_name.titleize, c.to_s] }.sort!), class: "form-control input-md-3"%>
+    </div>
+    <input type="submit" value="Change format" class="btn btn-default">
+    <br>
+    <br>
+  </form>
 <% end %>
