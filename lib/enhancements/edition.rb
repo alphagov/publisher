@@ -88,7 +88,9 @@ class Edition
     PublishingAPINotifier.perform_async(self.id.to_s)
   end
 
-  def self.edition_types
-    subclasses - [LocalTransactionEdition]
+  def self.conversion_classes
+    classes = Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"]
+    classes.map{|c| (c + "_edition").titleize }
   end
+
 end

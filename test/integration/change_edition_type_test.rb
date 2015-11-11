@@ -2,7 +2,6 @@ require 'integration_test_helper'
 require 'imminence_areas_test_helper'
 
 class ChangeEditionTypeTest < JavascriptIntegrationTest
-  include ActiveSupport::Inflector
   include ImminenceAreasTestHelper
 
   setup do
@@ -18,10 +17,6 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  def self.class_to_symbol(class_name)
-    ActiveSupport::Inflector::underscore(class_name)
-  end
-
   def select_target_edition(format)
     select(format.to_s.gsub("_", " ").titleize.gsub(/Edition.*/, 'Edition'), from: 'to')
   end
@@ -30,7 +25,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     Set.new(edition.parts.map { |part| part.attributes.slice("title", "body", "slug") })
   end
 
-  edition_types = Edition.edition_types.map{ |edition_type| class_to_symbol(edition_type).to_sym}
+  edition_types = Edition.conversion_classes.map{ |edition_type| edition_type.parameterize('_').to_sym}
 
   sample_parts = Set.new([
     {

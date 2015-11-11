@@ -36,6 +36,11 @@ module EditionsHelper
     end
   end
 
+  def conversion_classes_for_select(edition)
+    conversion_classes = Edition.conversion_classes - [edition.class.to_s.gsub("Edition", " Edition")]
+    conversion_classes.map{|class_name| [class_name, class_name.gsub(" ", "")]}
+  end
+
   def ordered_pages(unordered)
     options = browse_options_for_select(unordered)
     prioritise_data_container(options, @resource.browse_pages)
