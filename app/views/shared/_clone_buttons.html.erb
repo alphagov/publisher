@@ -5,13 +5,12 @@
     <p>All parts of Guide Editions and Programme Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading. </p>
   <% end %>
   </div>
-  <form method="post" action="<%= duplicate_edition_path(@resource, from: edition_class.to_s)%>" >
-    <div class="form-group">
-    <%= label_tag :to, "Create as new" %>
-    <%= select_tag :to, options_for_select(to_classes.map { |c| [c.model_name.titleize, c.to_s] }.sort!), class: "form-control input-md-3"%>
-    </div>
-    <input type="submit" value="Change format" class="btn btn-default">
-    <br>
-    <br>
-  </form>
+
+  <%= form_for @resource, url: duplicate_edition_path(@resource, from: edition_class.to_s), method: "post" do |f| %>
+    <%= f.label :to, "Create as new" %>
+    <%= select_tag :to, options_for_select(conversion_classes_for_select(@resource)), class: "form-control input-md-3 add-bottom-margin"%>
+    <%= f.submit "Change format", class: "btn btn-default" %>
+  <% end %>
+
 <% end %>
+
