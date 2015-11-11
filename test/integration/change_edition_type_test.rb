@@ -2,7 +2,6 @@ require 'integration_test_helper'
 require 'imminence_areas_test_helper'
 
 class ChangeEditionTypeTest < JavascriptIntegrationTest
-  include ActiveSupport::Inflector
   include ImminenceAreasTestHelper
 
   setup do
@@ -18,19 +17,21 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  def self.class_to_symbol(class_name)
-    ActiveSupport::Inflector::underscore(class_name)
-  end
-
   def select_target_edition(format)
-    select(format.to_s.gsub("_", " ").titleize.gsub(/Edition.*/, 'Edition'), from: 'to')
+    select(format.to_s.humanize, from: 'to')
   end
 
   def edition_parts(edition)
     Set.new(edition.parts.map { |part| part.attributes.slice("title", "body", "slug") })
   end
 
-  edition_types = Edition.edition_types.map{ |edition_type| class_to_symbol(edition_type).to_sym}
+  def create_artefact_of_kind(kind)
+    if kind == 'help_page'
+      FactoryGirl.create(:artefact, slug: "help/foo", kind: kind)
+    else
+      FactoryGirl.create(:artefact, kind: kind)
+    end
+  end
 
   sample_parts = Set.new([
     {
@@ -46,12 +47,14 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       }
   ])
 
-  conversions = edition_types.permutation(2).reject { |pair| pair[0] == pair[1] }
+  conversions = Edition.convertible_formats.permutation(2).reject { |pair| pair[0] == pair[1] }
 
   conversions.each do |to, from|
 
     should "be able to convert #{from} into #{to}" do
-      edition = FactoryGirl.create(from, state: 'published')
+      factory_name = (from + "_edition").to_sym
+      artefact = create_artefact_of_kind(from)
+      edition = FactoryGirl.create(factory_name, state: 'published', panopticon_id: artefact.id)
       sample_parts.each {|part| edition.parts.create(part)} if edition.respond_to?(:parts)
 
       visit_edition edition
@@ -85,7 +88,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       click_on "Admin"
     end
 
-    select_target_edition(:programme_edition)
+    select_target_edition("programme")
 
     click_on "Change format"
 
@@ -101,14 +104,18 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   should "keep the additional information field when converting a BusinessSupportEdition into another edition" do
-    edition = FactoryGirl.create(BusinessSupportEdition, additional_information: "This is additional information text", state: 'published')
+    edition = FactoryGirl.create(BusinessSupportEdition,
+      additional_information: "This is additional information text",
+      state: 'published',
+      panopticon_id: FactoryGirl.create(:artefact, kind: 'business_support').id,
+    )
     visit_edition edition
 
     within "div.tabbable" do
       click_on "Admin"
     end
 
-    select_target_edition(:answer_edition)
+    select_target_edition("answer")
 
     click_on "Change format"
 
