@@ -36,6 +36,11 @@ module EditionsHelper
     end
   end
 
+  def format_conversion_select_options(edition)
+    possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
+    possible_target_formats.map{|format_name| [format_name.humanize, format_name]}
+  end
+
   def ordered_pages(unordered)
     options = browse_options_for_select(unordered)
     prioritise_data_container(options, @resource.browse_pages)

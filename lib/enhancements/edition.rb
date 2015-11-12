@@ -88,7 +88,8 @@ class Edition
     PublishingAPINotifier.perform_async(self.id.to_s)
   end
 
-  def self.edition_types
-    subclasses - [LocalTransactionEdition]
+  def self.convertible_formats
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"]
   end
+
 end
