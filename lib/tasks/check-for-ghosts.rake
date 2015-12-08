@@ -69,18 +69,23 @@ namespace :check_for_ghosts do
       total_count = destroyed_count = ghosts_count = 0
       output_filename = with_output_file 'removed_ghosts_in_local_authority_interactions' do |output|
         to_keep = []
+        to_remove = []
         iterate_over_interactions(
           on_new_authority: ->(current_la, new_la) do
             if current_la.present?
               current_la.local_interactions.substitute(to_keep)
+              to_remove.each do |(lai, ghost_status)|
+                output.puts [current_la.name, current_la.snac, lai.lgsl_code, lai.lgil_code, lai.url, ghost_status]
+              end
             end
             to_keep = []
+            to_remove = []
           end
         ) do |la, lai, ghost_status|
           total_count += 1
           ghosts_count +=1 if ghost_status != :interaction_in_input
           if statuses_to_remove.include? ghost_status
-            output.puts [la.name, la.snac, lai.lgsl_code, lai.lgil_code, lai.url, ghost_status]
+            to_remove << [lai, ghost_status]
             destroyed_count += 1
           else
             to_keep << lai
