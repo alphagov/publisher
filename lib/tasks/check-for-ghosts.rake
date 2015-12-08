@@ -50,8 +50,8 @@ namespace :check_for_ghosts do
     puts "Total Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Data: #{output_filename}"
   end
 
-  desc "Destroy any local authority interactions that appear in our DB but not in the local.directgov CSV export."
-  task :destroy, [] => :environment do |_task, args|
+  desc "Remove any local authority interactions that appear in our DB but not in the local.directgov CSV export."
+  task :remove, [] => :environment do |_task, args|
     interaction_limit =
       if ENV['INTERACTION_LIMIT']
         Integer(ENV['INTERACTION_LIMIT'])
@@ -66,7 +66,7 @@ namespace :check_for_ghosts do
         [:interaction_not_in_input]
       end
     if statuses_to_remove.empty?
-      puts "Usage: `rake check_for_ghosts:destroy` or `rake check_for_ghosts:destroy[statues_to_remove]`"
+      puts "Usage: `rake check_for_ghosts:remove` or `rake check_for_ghosts:remove[statuses_to_remove]`"
       puts "  If statuses_to_remove is omitted only interaction_not_in_input ghosts will be removed."
       puts "  If statuses_to_remove is provideded statuses not in #{possible_statuses.inspect} will be ignored."
     else
@@ -76,7 +76,7 @@ namespace :check_for_ghosts do
       else
         puts "More than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - proceeeding."
         puts "Removing ghost interactions with statuses: #{statuses_to_remove.inspect}"
-        total_count = destroyed_count = ghosts_count = 0
+        total_count = removed_count = ghosts_count = 0
         output_filename = with_output_file 'removed_ghosts_in_local_authority_interactions' do |output|
           to_keep = []
           to_remove = []
@@ -96,14 +96,14 @@ namespace :check_for_ghosts do
             ghosts_count +=1 if ghost_status != :interaction_in_input
             if statuses_to_remove.include? ghost_status
               to_remove << [lai, ghost_status]
-              destroyed_count += 1
+              removed_count += 1
             else
               to_keep << lai
             end
-            print "\rT: #{total_count} / G: #{ghosts_count} / D: #{destroyed_count}"
+            print "\rT: #{total_count} / G: #{ghosts_count} / R: #{removed_count}"
           end
         end
-        puts "\rTotal Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Total Destroyed: #{destroyed_count}, Data: #{output_filename}"
+        puts "\rTotal Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Total Removed: #{removed_count}, Data: #{output_filename}"
       end
     end
   end
