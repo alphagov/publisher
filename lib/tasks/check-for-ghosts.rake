@@ -57,19 +57,34 @@ namespace :check_for_ghosts do
       CSV.open(output_filename, 'w') do |output|
         output.puts ['LA Name', 'LA SNAC', 'LGSL', 'LGIL', 'URL', 'status']
         total_count = destroyed_count = ghosts_count = 0
+        current_la = nil
+        to_keep = []
         detector.detect_ghosts do |la, lai, ghost_status|
+          if la != current_la
+            if current_la.present?
+              current_la.local_interactions.substitute(to_keep)
+            end
+            to_keep = []
+            current_la = la
+          end
           total_count += 1
           if ghost_status != :interaction_in_input
             ghosts_count +=1
             if statuses_to_remove.include? ghost_status
-              lai.destroy
               output.puts [la.name,la.snac,lai.lgsl_code,lai.lgil_code,lai.url, ghost_status]
               destroyed_count += 1
+            else
+              to_keep << lai
             end
+          else
+            to_keep << lai
           end
           print "\rT: #{total_count} / G: #{ghosts_count} / D: #{destroyed_count}"
         end
         puts "\rTotal Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Total Destroyed: #{destroyed_count}, Data: #{output_filename}"
+        if current_la.present?
+          current_la.local_interactions.substitute(to_keep)
+        end
       end
     end
   end

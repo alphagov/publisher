@@ -8,7 +8,7 @@ class LocalAuthorityInteractionGhostDetector
 
   def detect_ghosts
     local_authorities.each do |la|
-      la.local_interactions.each do |lai|
+      la.local_interactions.to_a.each do |lai|
         yield la, lai, ghost_status(la, lai)
       end
     end
