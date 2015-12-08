@@ -4,6 +4,7 @@ class LocalAuthorityInteractionGhostDetector
 
   def initialize(input_data)
     @input_data = input_data
+    @interaction_count = 0
   end
 
   def detect_ghosts
@@ -12,6 +13,18 @@ class LocalAuthorityInteractionGhostDetector
         yield la, lai, ghost_status(la, lai)
       end
     end
+  end
+
+  def directgov_interactions_count
+    @_directgov_interactions_count ||= calculate_directgov_interaction_count
+  end
+
+  def local_authorities
+    @_local_authorities ||= LocalAuthority.all.to_a
+  end
+
+  def directgov_interactions
+    @_directgov_interactions ||= prepare_directgov_interactions
   end
 
 private
@@ -33,12 +46,8 @@ private
     end
   end
 
-  def local_authorities
-    @_local_authorities ||= LocalAuthority.all.to_a
-  end
-
-  def directgov_interactions
-    @_directgov_interactions ||= prepare_directgov_interactions
+  def calculate_directgov_interaction_count
+    directgov_interactions.inject(0) { |sum, (_snac, interactions)| sum + interactions.size }
   end
 
   def prepare_directgov_interactions

@@ -4,8 +4,7 @@ require 'local_authority_interaction_ghost_detector'
 
 namespace :check_for_ghosts do
   def detector
-    input = LocalInteractionImporter.fetch_data()
-    LocalAuthorityInteractionGhostDetector.new(input)
+    @_detector ||= LocalAuthorityInteractionGhostDetector.new(LocalInteractionImporter.fetch_data())
   end
 
   def with_output_file(name)
@@ -53,6 +52,12 @@ namespace :check_for_ghosts do
 
   desc "Destroy any local authority interactions that appear in our DB but not in the local.directgov CSV export."
   task :destroy, [] => :environment do |_task, args|
+    interaction_limit =
+      if ENV['INTERACTION_LIMIT']
+        Integer(ENV['INTERACTION_LIMIT'])
+      else
+        100_000
+      end
     possible_statuses = [:interaction_in_input_to_be_deleted, :interaction_not_in_input, :authority_not_in_input]
     statuses_to_remove =
       if args.extras.any?
@@ -65,35 +70,41 @@ namespace :check_for_ghosts do
       puts "  If statuses_to_remove is omitted only interaction_not_in_input ghosts will be removed."
       puts "  If statuses_to_remove is provideded statuses not in #{possible_statuses.inspect} will be ignored."
     else
-      puts "Removing ghost interactions with statuses: #{statuses_to_remove.inspect}"
-      total_count = destroyed_count = ghosts_count = 0
-      output_filename = with_output_file 'removed_ghosts_in_local_authority_interactions' do |output|
-        to_keep = []
-        to_remove = []
-        iterate_over_interactions(
-          on_new_authority: ->(current_la, new_la) do
-            if current_la.present?
-              current_la.local_interactions.substitute(to_keep)
-              to_remove.each do |(lai, ghost_status)|
-                output.puts [current_la.name, current_la.snac, lai.lgsl_code, lai.lgil_code, lai.url, ghost_status]
+      if detector.directgov_interactions_count < interaction_limit
+        puts "WARNING! Less than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - halting run!"
+        puts "Specify a different limit via environment variable INTERACTION_LIMIT if you want to run anyway."
+      else
+        puts "More than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - proceeeding."
+        puts "Removing ghost interactions with statuses: #{statuses_to_remove.inspect}"
+        total_count = destroyed_count = ghosts_count = 0
+        output_filename = with_output_file 'removed_ghosts_in_local_authority_interactions' do |output|
+          to_keep = []
+          to_remove = []
+          iterate_over_interactions(
+            on_new_authority: ->(current_la, new_la) do
+              if current_la.present?
+                current_la.local_interactions.substitute(to_keep)
+                to_remove.each do |(lai, ghost_status)|
+                  output.puts [current_la.name, current_la.snac, lai.lgsl_code, lai.lgil_code, lai.url, ghost_status]
+                end
               end
+              to_keep = []
+              to_remove = []
             end
-            to_keep = []
-            to_remove = []
+          ) do |la, lai, ghost_status|
+            total_count += 1
+            ghosts_count +=1 if ghost_status != :interaction_in_input
+            if statuses_to_remove.include? ghost_status
+              to_remove << [lai, ghost_status]
+              destroyed_count += 1
+            else
+              to_keep << lai
+            end
+            print "\rT: #{total_count} / G: #{ghosts_count} / D: #{destroyed_count}"
           end
-        ) do |la, lai, ghost_status|
-          total_count += 1
-          ghosts_count +=1 if ghost_status != :interaction_in_input
-          if statuses_to_remove.include? ghost_status
-            to_remove << [lai, ghost_status]
-            destroyed_count += 1
-          else
-            to_keep << lai
-          end
-          print "\rT: #{total_count} / G: #{ghosts_count} / D: #{destroyed_count}"
         end
+        puts "\rTotal Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Total Destroyed: #{destroyed_count}, Data: #{output_filename}"
       end
-      puts "\rTotal Interactions: #{total_count}, Total Ghosts: #{ghosts_count}, Total Destroyed: #{destroyed_count}, Data: #{output_filename}"
     end
   end
 end
