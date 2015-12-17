@@ -68,11 +68,13 @@ namespace :check_for_ghosts do
     if statuses_to_remove.empty?
       puts "Usage: `rake check_for_ghosts:remove` or `rake check_for_ghosts:remove[statuses_to_remove]`"
       puts "  If statuses_to_remove is omitted only interaction_not_in_input ghosts will be removed."
-      puts "  If statuses_to_remove is provideded statuses not in #{possible_statuses.inspect} will be ignored."
+      puts "  If statuses_to_remove is provided statuses not in #{possible_statuses.inspect} will be ignored."
+      abort "There are no statuses to remove. Check that the arguments passed to this task are appropriate."
     else
       if detector.directgov_interactions_count < interaction_limit
-        puts "WARNING! Less than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - halting run!"
-        puts "Specify a different limit via environment variable INTERACTION_LIMIT if you want to run anyway."
+        exit_text = "WARNING! Less than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - halting run!\n"
+        exit_text += "Specify a different limit via environment variable INTERACTION_LIMIT if you want to run anyway."
+        abort exit_text
       else
         puts "More than #{interaction_limit} interactions in directgov data (found #{detector.directgov_interactions_count}) - proceeeding."
         puts "Removing ghost interactions with statuses: #{statuses_to_remove.inspect}"
