@@ -5,6 +5,12 @@ namespace :local_transactions do
     LocalAuthorityDataImporter.update_all
   end
 
+  desc "Download and import services, interactions and contacts, and subsequently remove 'ghost' interactions"
+  task :fetch_and_clean => :environment do
+    Rake::Task["local_transactions:fetch"].invoke
+    Rake::Task["check_for_ghosts:remove"].invoke
+  end
+
   desc "Dowload the latest contact list CSV from Local Directgov and import"
   task :update_contacts => :environment do
     LocalContactImporter.update
