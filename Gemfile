@@ -65,7 +65,6 @@ gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
 group :assets do
-  gem "therubyracer", "0.12.1"
   gem 'sass-rails', '3.2.6'
   gem 'uglifier', '2.7.2'
 end
