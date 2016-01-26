@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22'
+gem 'rails', '3.2.22.1'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
