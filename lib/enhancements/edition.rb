@@ -47,6 +47,8 @@ class Edition
     all_of(for_user(user).selector, internal_search(term).selector)
   }
 
+  after_save :notify_udpate_publishing_api
+
   def publish_anonymously!
     if can_publish?
       publish!
@@ -90,6 +92,12 @@ class Edition
 
   def self.convertible_formats
     Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"]
+  end
+
+  private
+
+  def notify_udpate_publishing_api
+    PublishingAPIUpdateNotifier.perform_async(self.id.to_s)
   end
 
 end

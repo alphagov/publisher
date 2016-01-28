@@ -1,4 +1,4 @@
-class PublishingAPINotifier
+class PublishingAPIUpdateNotifier
   include Sidekiq::Worker
 
   def perform(edition_id, update_type = "normal")
@@ -7,6 +7,6 @@ class PublishingAPINotifier
     document_for_publishing_api = presenter.render_for_publishing_api(republish: update_type == "republish")
     content_id = document_for_publishing_api[:content_id]
 
-    Services.publishing_api.publish(content_id, update_type)
+    Services.publishing_api.put_content(content_id, document_for_publishing_api)
   end
 end
