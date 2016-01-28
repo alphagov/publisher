@@ -1,15 +1,15 @@
 require "test_helper"
-require "gds_api/test_helpers/publishing_api"
+require "gds_api/test_helpers/publishing_api_v2"
 
 class PublishingAPINotifierTest < ActiveSupport::TestCase
-  include GdsApi::TestHelpers::PublishingApi
+  include GdsApi::TestHelpers::PublishingApiV2
 
   context ".perform(edition_id)" do
     setup do
       @edition = FactoryGirl.create(:edition)
 
       @edition_attributes = {
-        base_path: "/vat-charities",
+        content_id: "vat-charities-id",
         details: {},
         tags: {}
       }
@@ -17,12 +17,13 @@ class PublishingAPINotifierTest < ActiveSupport::TestCase
       presenter = mock("published_edition_presenter", render_for_publishing_api: @edition_attributes)
 
       PublishedEditionPresenter.stubs(:new).with(@edition).returns(presenter)
-      stub_publishing_api_put_item("/vat-charities", @edition_attributes)
+      stub_publishing_api_put_content("vat-charities-id", @edition_attributes)
+      stub_publishing_api_publish("vat-charities-id", {"update_type" => "normal"})
     end
 
     should "notify the publishing API of the published document" do
       PublishingAPINotifier.new.perform(@edition.id)
-      assert_publishing_api_put_item("/vat-charities", @edition_attributes)
+      assert_publishing_api_publish("vat-charities-id", {"update_type" => "normal"})
     end
   end
 end
