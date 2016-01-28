@@ -62,6 +62,7 @@ class LocalContactImporterTest < ActiveSupport::TestCase
       assert_equal "01900 702 702", auth2.contact_phone
       assert_equal "enquiries@allerdale.gov.uk", auth2.contact_email
       assert_equal "http://www.allerdale.gov.uk/contact-or-find-us.aspx", auth2.contact_url
+      assert_equal "http://www.allerdale.gov.uk", auth2.homepage_url
 
       auth3 = LocalAuthority.find_by_snac("22UB")
       assert_equal "Basildon District Council", auth3.name
@@ -69,6 +70,7 @@ class LocalContactImporterTest < ActiveSupport::TestCase
       assert_equal "01268 533 333", auth3.contact_phone
       assert_equal "mailroom@basildon.gov.uk", auth3.contact_email
       assert_equal "http://www.basildon.gov.uk/contactus", auth3.contact_url
+      assert_equal "http://www.basildon.gov.uk/", auth3.homepage_url
 
       assert_equal 2, LocalAuthority.count
     end
@@ -121,7 +123,7 @@ Stockport Metropolitan Borough Council,http://www.stockport.gov.uk/,http://www.s
     should "add http:// to URLs without it" do
       source=StringIO.new(<<-END)
 Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
-South Somerset District Council,www.southsomerset.gov.uk,www.southsomerset.gov.uk,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
+South Somerset District Council,www.southsomerset.gov.uk,www.southsomerset.gov.uk/get-in-touch,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
       END
 
       auth = FactoryGirl.create(:local_authority, :snac => "40UD")
@@ -131,13 +133,14 @@ South Somerset District Council,www.southsomerset.gov.uk,www.southsomerset.gov.u
       importer.send(:process_row, csv.shift)
 
       auth.reload
-      assert_equal "http://www.southsomerset.gov.uk", auth.contact_url
+      assert_equal "http://www.southsomerset.gov.uk/get-in-touch", auth.contact_url
+      assert_equal "http://www.southsomerset.gov.uk", auth.homepage_url
     end
 
     should "handle missing contact URLs" do
       source=StringIO.new(<<-END)
 Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
-South Somerset District Council,,,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
+South Somerset District Council,http://www.southsomerset.gov.uk/,,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
       END
 
       auth = FactoryGirl.create(:local_authority, :snac => "40UD")
@@ -148,6 +151,22 @@ South Somerset District Council,,,40UD,Council Offices,Brympton Way,Yeovil,,Some
 
       auth.reload
       assert_equal nil, auth.contact_url
+    end
+
+    should "handle missing homepage URLs" do
+      source=StringIO.new(<<-END)
+Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
+South Somerset District Council,,http://www.southsomerset.gov.uk/get-in-touch/,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
+      END
+
+      auth = FactoryGirl.create(:local_authority, :snac => "40UD")
+      # Call process_row directly to bypass the top-level error rescue
+      importer = LocalContactImporter.new(nil)
+      csv = CSV.new(source, :headers => true)
+      importer.send(:process_row, csv.shift)
+
+      auth.reload
+      assert_equal nil, auth.homepage_url
     end
   end
 end
