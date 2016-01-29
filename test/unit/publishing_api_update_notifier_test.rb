@@ -6,7 +6,9 @@ class PublishingAPIUpdateNotifierTest < ActiveSupport::TestCase
 
   context ".perform(edition_id)" do
     setup do
-      @edition = FactoryGirl.build(:edition)
+      Edition.after_save.clear #avoids automated calls to PublishingAPIUpdateNotifier
+
+      @edition = FactoryGirl.create(:edition)
       @edition_attributes = {
         content_id: "vat-charities-id",
         details: {},
@@ -19,8 +21,7 @@ class PublishingAPIUpdateNotifierTest < ActiveSupport::TestCase
     end
 
     should "notify the publishing API of the updated document" do
-      #PublishingAPIUpdateNotifier.new.perform(@edition.id) it is executed in the Edition after_save callback
-      @edition.save
+      PublishingAPIUpdateNotifier.new.perform(@edition.id)
       assert_publishing_api_put_content("vat-charities-id", @edition_attributes)
     end
   end
