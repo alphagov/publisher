@@ -7,17 +7,9 @@ class PublishingApiPublisherTest < ActiveSupport::TestCase
   context ".perform(edition_id)" do
     setup do
       @edition = FactoryGirl.create(:edition)
+      @artefact = @edition.artefact
+      @artefact.update_attributes(content_id: "vat-charities-id")
 
-      @edition_attributes = {
-        content_id: "vat-charities-id",
-        details: {},
-        tags: {}
-      }
-
-      presenter = mock("published_edition_presenter", render_for_publishing_api: @edition_attributes)
-
-      PublishedEditionPresenter.stubs(:new).with(@edition).returns(presenter)
-      stub_publishing_api_put_content("vat-charities-id", @edition_attributes)
       stub_publishing_api_publish("vat-charities-id", {"update_type" => "minor"})
     end
 
