@@ -68,6 +68,16 @@ class EditionTest < ActiveSupport::TestCase
     publish(user, edition)
   end
 
+  should "notify the content store when updated" do
+    edition = FactoryGirl.create(:guide_edition, state: "ready")
+    PublishingAPIUpdateNotifier.expects(:perform_async).with(edition.id.to_s)
+    GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
+
+    user = FactoryGirl.create(:user)
+    edition.title = "Test guide 3"
+    edition.save
+  end
+
   should "raise an exception when publish_anonymously! fails to publish" do
     edition = FactoryGirl.create(:guide_edition_with_two_parts, state: "ready")
     # simulate validation error causing failure to publish anonymously
