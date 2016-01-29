@@ -87,7 +87,7 @@ class Edition
   end
 
   def notify_publishing_api
-    PublishingAPINotifier.perform_async(self.id.to_s)
+    PublishingApiPublisher.perform_async(self.id.to_s)
   end
 
   def self.convertible_formats
@@ -97,7 +97,7 @@ class Edition
   private
 
   def notify_udpate_publishing_api
-    PublishingAPIUpdateNotifier.perform_async(self.id.to_s)
+    PublishingAPIUpdater.perform_async(self.id.to_s)
   end
 
 end

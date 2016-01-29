@@ -9,7 +9,7 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
 
       registerable = mock("registerable_edition")
-      PublishingAPINotifier.stubs(:perform_async)
+      PublishingApiPublisher.stubs(:perform_async)
       RegisterableEdition.expects(:new).with(edition).returns(registerable)
       GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(registerable)
       publish(user, edition)
@@ -20,7 +20,7 @@ class EditionTest < ActiveSupport::TestCase
       artefact = FactoryGirl.create(:artefact, kind: "answer")
       edition = FactoryGirl.create(:local_transaction_edition, :state => "ready", panopticon_id: artefact.id, lgsl_code: FactoryGirl.create(:local_service).lgsl_code)
 
-      PublishingAPINotifier.stubs(:perform_async)
+      PublishingApiPublisher.stubs(:perform_async)
       GdsApi::Panopticon::Registerer
           .expects(:new)
           .with(owning_app: "publisher", rendering_app: "frontend", kind: "local_transaction")
@@ -61,7 +61,7 @@ class EditionTest < ActiveSupport::TestCase
 
   should "notify the content store when published" do
     edition = FactoryGirl.create(:guide_edition, state: "ready")
-    PublishingAPINotifier.expects(:perform_async).with(edition.id.to_s)
+    PublishingApiPublisher.expects(:perform_async).with(edition.id.to_s)
     GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
 
     user = FactoryGirl.create(:user)
@@ -70,7 +70,7 @@ class EditionTest < ActiveSupport::TestCase
 
   should "notify the content store when updated" do
     edition = FactoryGirl.create(:guide_edition, state: "ready")
-    PublishingAPIUpdateNotifier.expects(:perform_async).with(edition.id.to_s)
+    PublishingAPIUpdater.expects(:perform_async).with(edition.id.to_s)
     GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
 
     user = FactoryGirl.create(:user)

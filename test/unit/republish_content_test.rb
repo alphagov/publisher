@@ -8,7 +8,7 @@ class RepublishContentTest < ActiveSupport::TestCase
     Sidekiq::Testing.fake! do
       RepublishContent.schedule_republishing
 
-      assert_equal 1, PublishingAPINotifier.jobs.size
+      assert_equal 1, PublishingApiPublisher.jobs.size
     end
   end
 
