@@ -65,6 +65,7 @@ class ActiveSupport::TestCase
 
   teardown do
     WebMock.reset!
+    Sidekiq::Worker.clear_all
   end
 
   def login_as_stub_user
