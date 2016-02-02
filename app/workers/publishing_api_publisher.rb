@@ -1,4 +1,4 @@
-class PublishingApiPublisher
+class PublishingAPIPublisher
   include Sidekiq::Worker
 
   def perform(edition_id, update_type = "minor")

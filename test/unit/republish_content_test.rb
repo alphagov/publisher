@@ -22,7 +22,7 @@ class RepublishContentTest < ActiveSupport::TestCase
     Sidekiq::Testing.fake! do
       RepublishContent.schedule_republishing
 
-      assert_equal 1, PublishingApiRepublisher.jobs.size
+      assert_equal 1, PublishingAPIRepublisher.jobs.size
     end
   end
 
@@ -30,7 +30,7 @@ class RepublishContentTest < ActiveSupport::TestCase
     Sidekiq::Testing.fake! do
       RepublishContent.schedule_republishing
 
-      assert_equal 0, PublishingApiPublisher.jobs.size
+      assert_equal 0, PublishingAPIPublisher.jobs.size
       assert_equal 0, PublishingAPIUpdater.jobs.size
     end
   end
