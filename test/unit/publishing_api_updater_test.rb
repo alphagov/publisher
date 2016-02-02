@@ -6,23 +6,21 @@ class PublishingAPIUpdaterTest < ActiveSupport::TestCase
 
   context ".perform(edition_id)" do
     setup do
-      Edition.after_save.clear #avoids automated calls to PublishingAPIUpdater
+      @content_id = SecureRandom.uuid
+      @artefact = FactoryGirl.create(:artefact, content_id: @content_id)
+      @edition = FactoryGirl.create(:edition, panopticon_id: @artefact.id, title: "Some Title")
 
-      @edition = FactoryGirl.create(:edition)
-      @edition_attributes = {
-        content_id: "vat-charities-id",
-        details: {},
-        tags: {}
-      }
-
-      presenter = mock("published_edition_presenter", render_for_publishing_api: @edition_attributes)
-      PublishedEditionPresenter.stubs(:new).with(@edition).returns(presenter)
-      stub_publishing_api_put_content("vat-charities-id", @edition_attributes)
+      WebMock.reset!
+      stub_any_publishing_api_put_content
     end
 
     should "notify the publishing API of the updated document" do
       PublishingAPIUpdater.new.perform(@edition.id)
-      assert_publishing_api_put_content("vat-charities-id", @edition_attributes)
+
+      assert_publishing_api_put_content(@content_id, request_json_includes(
+        "content_id" => @content_id,
+        "title" => "Some Title",
+      ))
     end
   end
 end
