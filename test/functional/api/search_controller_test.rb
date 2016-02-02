@@ -22,7 +22,7 @@ class Api::SearchControllerTest < ActionController::TestCase
       FactoryGirl.create(:edition, state: 'published')
     ]
 
-    PublishingAPINotifier.stubs(:perform_async)
+    PublishingAPIPublisher.stubs(:perform_async)
   end
 
   test "#reindex_topic_editions resubmits to panopticon all published editions tagged to the topic" do

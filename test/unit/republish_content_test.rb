@@ -1,23 +1,47 @@
 require "test_helper"
+require "securerandom"
 
 class RepublishContentTest < ActiveSupport::TestCase
-  should "send all published items to sidekiq" do
-    FactoryGirl.create(:edition, state: 'draft')
-    FactoryGirl.create(:edition, state: 'published')
+  setup do
+    draft_edition = FactoryGirl.create(:edition, state: 'draft')
+    draft_edition.artefact.update_attributes(content_id: SecureRandom.uuid)
 
+    @published_edition = FactoryGirl.create(:edition, state: 'published')
+    @published_edition.artefact.update_attributes(content_id: SecureRandom.uuid)
+
+    # Because we have an after_save hook on the editions,
+    # a PUT is sent when creating these which is later
+    # picked up by the assert_requested calls.
+    #
+    # Reset all request history so the assertions are checking
+    # the behaviour of the republisher.
+    WebMock.reset!
+  end
+
+  should "send all published items to sidekiq" do
     Sidekiq::Testing.fake! do
       RepublishContent.schedule_republishing
 
-      assert_equal 1, PublishingAPINotifier.jobs.size
+      assert_equal 1, PublishingAPIRepublisher.jobs.size
     end
   end
 
-  should "does not error when running the sidekiq with the arguments" do
-    request = stub_request(:put, %r[#{Plek.find('publishing-api')}/*])
-    FactoryGirl.create(:edition, state: 'published')
+  should "perform the sub-jobs of updating and publishing synchronously" do
+    Sidekiq::Testing.fake! do
+      RepublishContent.schedule_republishing
+
+      assert_equal 0, PublishingAPIPublisher.jobs.size
+      assert_equal 0, PublishingAPIUpdater.jobs.size
+    end
+  end
+
+  should "sends the content as a PUT and a POST for the publish" do
+    request_1 = stub_request(:put, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}")
+    request_2 = stub_request(:post, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}/publish")
 
     RepublishContent.schedule_republishing
 
-    assert_requested(request)
+    assert_requested(request_1)
+    assert_requested(request_2)
   end
 end

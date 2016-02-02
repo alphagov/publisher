@@ -10,7 +10,7 @@ require 'database_cleaner'
 require 'webmock/test_unit'
 require 'webmock/minitest'
 require 'gds_api/test_helpers/panopticon'
-require 'gds_api/test_helpers/publishing_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
 require 'govuk_content_models/test_helpers/action_processor_helpers'
@@ -48,6 +48,10 @@ class ActiveSupport::TestCase
   end
   set_callback :teardown, :before, :clean_db
 
+  setup do
+    stub_any_publishing_api_call
+  end
+
   def without_metadata_denormalisation(*klasses, &block)
     klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
     result = yield
@@ -57,11 +61,11 @@ class ActiveSupport::TestCase
 
   def stub_register_published_content
     stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
-    stub_default_publishing_api_put
   end
 
   teardown do
     WebMock.reset!
+    Sidekiq::Worker.clear_all
   end
 
   def login_as_stub_user
@@ -70,6 +74,6 @@ class ActiveSupport::TestCase
   end
 
   include GdsApi::TestHelpers::Panopticon
-  include GdsApi::TestHelpers::PublishingApi
+  include GdsApi::TestHelpers::PublishingApiV2
   include TagTestHelpers
 end
