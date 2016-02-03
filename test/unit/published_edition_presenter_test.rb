@@ -3,7 +3,7 @@ require "test_helper"
 class PublishedEditionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
 
-  context ".render_for_publishing_api" do
+  context ".render_for_publishing_api with a published document" do
     setup do
       artefact = FactoryGirl.create(:artefact,
         content_id: "fd4b7ea6-5e95-489e-ac73-0d8710e894d8",
@@ -27,7 +27,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         description: "",
         format: "placeholder",
         need_ids: [],
-        public_updated_at: @edition.updated_at,
+        public_updated_at: @edition.public_updated_at,
         publishing_app: "publisher",
         rendering_app: "frontend",
         content_id: "fd4b7ea6-5e95-489e-ac73-0d8710e894d8",
@@ -73,6 +73,36 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
 
       output = presenter.render_for_publishing_api(republish: false)
       assert_equal 'major', output[:update_type]
+    end
+  end
+
+  context ".render_for_publishing_api with a draft document" do
+    setup do
+      artefact = FactoryGirl.create(:artefact,
+        content_id: SecureRandom.uuid,
+      )
+      updated_at = 1.minute.ago
+      @edition = FactoryGirl.create(
+        :edition,
+        state: "draft",
+        updated_at: updated_at,
+        panopticon_id: artefact.id,
+      )
+      @output = PublishedEditionPresenter.new(@edition).render_for_publishing_api
+    end
+
+    should "be valid against schema" do
+      assert_valid_against_schema(@output, 'placeholder')
+    end
+
+    should 'use updated_at value if public_updated_at is nil' do
+      assert_nil @edition.public_updated_at
+      assert_equal @edition.updated_at, @output[:public_updated_at]
+    end
+
+    should "filter nil elements from topics" do
+      assert_equal [], @output[:details][:tags][:topics]
+      assert_equal [], @output[:details][:tags][:primary_topic]
     end
   end
 end
