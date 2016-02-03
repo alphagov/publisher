@@ -17,18 +17,24 @@ class LocalContactImporter < LocalAuthorityDataImporter
     authority.name = decode_broken_entities( row['Name'] )
     authority.contact_address = parse_address(row)
     authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )
-    url = row['Contact page URL']
-    unless url.blank? || url.start_with?("http://") || url.start_with?("https://")
-      url = "http://" + url
-    end
-    authority.contact_url = url
+    authority.contact_url = parse_url( row['Contact page URL'] )
     authority.contact_email = row['Main Contact Email']
+    authority.homepage_url = parse_url( row['Home page URL'] )
     authority.save!
   end
 
   def parse_address(row)
     [row['Address Line 1'], row['Address Line 2'], row['Town'], row['City'], row['County'], row['Postcode']].reject(&:blank?)
   end
+
+  def parse_url(url)
+    if url.blank? || url.start_with?("http://") || url.start_with?("https://")
+      url
+    else
+      "http://" + url
+    end
+  end
+
 
   # The CSV contains some broken HTML entities (e.g. &#40) note the missing ;
   # This will decode any printable ascii characters, and leave any others unchanged.
