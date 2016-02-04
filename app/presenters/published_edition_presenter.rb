@@ -11,7 +11,7 @@ class PublishedEditionPresenter
       description: @edition.overview || "",
       format: "placeholder",
       need_ids: [],
-      public_updated_at: @edition.public_updated_at,
+      public_updated_at: public_updated_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
       content_id: @artefact.content_id,
@@ -24,10 +24,10 @@ class PublishedEditionPresenter
         change_note: @edition.latest_change_note,
         tags: {
           browse_pages: @edition.browse_pages,
-          primary_topic: [@edition.primary_topic],
+          primary_topic: primary_topic,
           additional_topics: @edition.additional_topics,
-          topics: [@edition.primary_topic] + @edition.additional_topics,
-        }
+          topics: (primary_topic + @edition.additional_topics) 
+        },
       },
       locale: 'en',
     }
@@ -51,5 +51,16 @@ private
 
   def major_change?
     @edition.major_change || @edition.version_number == 1
+  end
+
+  def public_updated_at
+    @edition.public_updated_at || @edition.updated_at
+  end
+
+  def tags
+  end
+
+  def primary_topic
+    [@edition.primary_topic].select &:present?
   end
 end
