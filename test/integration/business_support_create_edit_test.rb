@@ -15,34 +15,34 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         owning_app: "publisher",
     )
 
-    BusinessSupport::BusinessSize.collection.insert([
+    BusinessSupport::BusinessSize.collection.insert_many([
       {slug: 'under-10', name: 'Under 10'},
       {slug: 'up-to-249', name: 'Up to 249'},
       {slug: 'over-1000000', name: 'Over 1 million'}
     ])
 
-    BusinessSupport::BusinessType.collection.insert([
+    BusinessSupport::BusinessType.collection.insert_many([
       {slug:'charity', name:'Charity'},
       {slug:'limited-company',name:'Limited company'},
       {slug:'plc',name:'Public limited company'}
     ])
 
-    BusinessSupport::Purpose.collection.insert([
+    BusinessSupport::Purpose.collection.insert_many([
       {slug:'expansion', name: 'Expansion'},
       {slug:'world-domination', name: 'World domination'}
     ])
 
-    BusinessSupport::Sector.collection.insert([
+    BusinessSupport::Sector.collection.insert_many([
       {slug:'manufacturing', name: 'Manufacturing'},
       {slug:'education', name: 'Education'}
     ])
 
-    BusinessSupport::Stage.collection.insert([
+    BusinessSupport::Stage.collection.insert_many([
       {slug:'start-up', name:'Start-up'},
       {slug:'grow-and-sustain', name:'Grow and sustain'}
     ])
 
-    BusinessSupport::SupportType.collection.insert([
+    BusinessSupport::SupportType.collection.insert_many([
       {slug:'grant', name:'Grant'}, {slug:'loan', name:'Loan'}
     ])
 

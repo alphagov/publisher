@@ -202,7 +202,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     post :create, "edition" => edition_params
 
-    edition = Edition.last
+    edition = Edition.order(updated_at: 1).last
 
     assert_equal ["tax/vat"], edition.browse_pages
     assert_equal ["oil-and-gas/wells"], edition.additional_topics

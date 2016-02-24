@@ -17,6 +17,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert_equal ["first", "second", "third"], @answer.actions.map(&:comment)
 
       @guide = @answer.build_clone(GuideEdition)
+      @guide.save
 
       @guide.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "fourth"})
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "fifth"})
@@ -61,7 +62,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "Edition 1"
       assert page.has_css?('p', text: "first")
       assert page.has_css?('p', text: "Request sent to a@a.com, b@b.com")
-      assert page.has_css?('.panel a[href="mailto:a@a.com,b@b.com"]', text: 'a@a.com, b@b.com')
+      assert page.has_css?('.panel a[href="mailto:a@a.com%2Cb@b.com"]', text: 'a@a.com, b@b.com')
     end
 
     should "hide actions when the edition title is clicked" do

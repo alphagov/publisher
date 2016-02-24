@@ -27,7 +27,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
 
       assert page.has_content? @artefact.name
 
-      video = VideoEdition.first
+      video = VideoEdition.order_by(updated_at: 1).first
       assert_equal @artefact.id.to_s, video.panopticon_id
 
       assert_equal "http://www.youtube.com/watch?v=Wrcklaselbo", video.video_url
