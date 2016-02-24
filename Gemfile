@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22.1'
+gem 'rails', '4.2.5.1'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
@@ -11,7 +11,8 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", '~> 32.2'
+  gem "govuk_content_models", :github => 'alphagov/govuk_content_models', :ref => 'd7fae3a0f3bbbfccbe94e9c13f15e58a58422526'
+
 end
 
 if ENV['API_DEV']
@@ -45,6 +46,7 @@ gem 'kaminari', '0.13.0'
 gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'logstasher', '0.4.8'
 gem "mongoid_rails_migrations", "1.0.0"
+gem "mongoid-sadstory"
 gem 'null_logger'
 gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
@@ -65,26 +67,25 @@ gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
 group :assets do
-  gem 'sass-rails', '3.2.6'
+  gem 'sass-rails', '5.0.4'
   gem 'uglifier', '2.7.2'
 end
 
 group :test do
-  gem 'pry-byebug'
-  gem 'turn', '0.9.6'
-  gem 'minitest', '3.3.0'
-  gem 'shoulda', '3.1.1'
-  gem 'database_cleaner', '0.8.0'
+  gem 'minitest'
+  gem 'minitest-reporters'
+  gem 'shoulda', '3.5.0'
+  gem 'database_cleaner', '1.5.1'
 
-  gem 'capybara', '2.4.4'
+  gem 'capybara', '2.6.2'
   gem 'poltergeist', '1.5.0'
   gem 'launchy', '2.1.1'
+  gem 'rails-perftest'
+  gem 'ruby-prof'
 
-  gem 'webmock', '1.8.7'
-  gem 'mocha', '0.13.3', :require => false
+  gem 'webmock', '~> 1.22'
+  gem 'mocha', '1.1.0'
   gem 'factory_girl_rails'
-  gem 'faker', '1.1.2'
-  gem "fakefs", :require => "fakefs/safe"
 
   gem "timecop", '0.4.4'
 
@@ -96,5 +97,6 @@ group :test do
 end
 
 group :development, :test do
+  gem 'pry-byebug'
   gem 'jasmine', '2.1.0'
 end
