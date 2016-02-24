@@ -1,13 +1,13 @@
 require 'simplecov'
 
 ENV["RAILS_ENV"] = "test"
+
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
-require 'minitest/unit'
-require 'mocha/setup'
+require "minitest/autorun"
+require 'mocha/mini_test'
 require 'database_cleaner'
-require 'webmock/test_unit'
 require 'webmock/minitest'
 require 'gds_api/test_helpers/panopticon'
 require 'gds_api/test_helpers/publishing_api_v2'
@@ -21,6 +21,11 @@ require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 
 WebMock.disable_net_connect!(:allow_localhost => true)
+
+require 'minitest/reporters'
+Minitest::Reporters.use!(
+  Minitest::Reporters::SpecReporter.new({ color: true }),
+)
 
 DatabaseCleaner.strategy = :truncation
 # initial clean
@@ -42,11 +47,12 @@ class ActiveSupport::TestCase
 
   include MiniTest::Assertions
   include GovukContentModels::TestHelpers::ActionProcessorHelpers
+  include WebMock::API
 
   def clean_db
     DatabaseCleaner.clean
   end
-  set_callback :teardown, :before, :clean_db
+  set_callback :teardown, :after, :clean_db
 
   setup do
     stub_any_publishing_api_call
@@ -60,7 +66,7 @@ class ActiveSupport::TestCase
   end
 
   def stub_register_published_content
-    stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
+    WebMock.stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
   end
 
   teardown do

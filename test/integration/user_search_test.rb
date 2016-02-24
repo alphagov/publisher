@@ -2,14 +2,10 @@ require_relative '../integration_test_helper'
 
 class UserSearchTest < ActionDispatch::IntegrationTest
 
-  def setup
+  setup do
     alice = FactoryGirl.create(:user, name: "Alice", uid: "alice")
     GDS::SSO.test_user = alice
     @user = alice
-  end
-
-  def teardown
-    GDS::SSO.test_user = nil
   end
 
   test "filtering by assigned user" do

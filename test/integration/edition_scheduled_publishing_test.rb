@@ -2,14 +2,14 @@ require 'integration_test_helper'
 
 class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
-  def setup
+  setup do
     setup_users
     stub_collections
     # queue up the edition, don't perform inline
     Sidekiq::Testing.fake!
   end
 
-  def teardown
+  teardown do
     Sidekiq::Testing.inline!
   end
 
