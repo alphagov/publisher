@@ -1,28 +1,37 @@
 # This file is overwritten by one in alphagov-deployment at deploy time
 development:
-  host: localhost
-  database: govuk_content_development
-  persist_in_safe_mode: true
-  use_activesupport_time_zone: true
+  clients:
+    default:
+      hosts:
+        - localhost
+      database: govuk_content_development
+  options:
+    use_activesupport_time_zone: true
 
 test:
-  host: localhost
-  # Don't want this interfering with a concurrent Panopticon test run
-  database: govuk_content_publisher_test
-  use_activesupport_time_zone: true
-  persist_in_safe_mode: true
-  autocreate_indexes: true
+  clients:
+    default:
+      hosts:
+        - localhost
+      # Don't want this interfering with a concurrent Panopticon test run
+      database: govuk_content_publisher_test
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+  options:
+    use_activesupport_time_zone: true
 
 # set these environment variables on your prod server
 production:
-  host: <%= ENV['MONGOID_HOST'] %>
-  port: <%= ENV['MONGOID_PORT'] %>
-  username: <%= ENV['MONGOID_USERNAME'] %>
-  password: <%= ENV['MONGOID_PASSWORD'] %>
-  database: <%= ENV['MONGOID_DATABASE'] %>
-  use_activesupport_time_zone: true
-  # slaves:
-  #   - host: slave1.local
-  #     port: 27018
-  #   - host: slave2.local
-  #     port: 27019
+  clients:
+    default:
+      hosts:
+        - <%= ENV['MONGOID_HOST'] %>
+      port: <%= ENV['MONGOID_PORT'] %>
+      database: <%= ENV['MONGOID_DATABASE'] %>
+      options:
+        user: <%= ENV['MONGOID_USERNAME'] %>
+        password: <%= ENV['MONGOID_PASSWORD'] %>
+  options:
+    use_activesupport_time_zone: true
