@@ -29,7 +29,7 @@ class FactCheckMessageProcessor
     edition = Edition.find(publication_id)
     progress_publication_edition(edition)
     return true
-  rescue BSON::InvalidObjectId, Mongoid::Errors::DocumentNotFound
+  rescue Mongoid::Errors::DocumentNotFound
     Rails.logger.info "#{publication_id} is not a valid mongo id"
     return false
   end
