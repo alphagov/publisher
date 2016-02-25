@@ -30,7 +30,8 @@ class EditionsController < InheritedResources::Base
 
   def create
     class_identifier = params[:edition].delete(:kind).to_sym
-    @publication = current_user.create_edition(class_identifier, params[:edition])
+    create_params = permitted_params(subtype: :"#{class_identifier}_edition")
+    @publication = current_user.create_edition(class_identifier, create_params[:edition])
 
     if @publication.persisted?
       flash[:success] = "#{description(@publication)} successfully created"
@@ -124,7 +125,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    if progress_edition(resource, params[:edition][:activity])
+    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
       flash[:success] = @command.status_message
     else
       flash[:danger] = @command.status_message
@@ -138,6 +139,124 @@ class EditionsController < InheritedResources::Base
   end
 
   protected
+
+    def permitted_params(subtype: nil)
+      subtype = @resource.class.to_s.underscore.to_sym if subtype.nil?
+      type_specific_params = case subtype
+      when :business_support_edition
+        [
+          :organiser,
+          :short_description,
+          :body,
+          :eligibility,
+          :evaluation,
+          :additional_information,
+          :contact_details,
+          :max_employees,
+          :min_value,
+          :max_value,
+          :will_continue_on,
+          :continuation_link,
+          :priority,
+          :start_date,
+          :end_date,
+          area_gss_codes: [],
+          business_types: [],
+          business_sizes: [],
+          locations: [],
+          purposes: [],
+          sectors: [],
+          stages: [],
+          support_types: [],
+        ]
+      when :campaign_edition
+        [
+          :small_image,
+          :medium_image,
+          :large_image,
+          :organisation_formatted_name,
+          :organisation_url,
+          :organisation_crest,
+          :organisation_brand_colour,
+          :body,
+        ]
+      when :guide_edition, :programme_edition
+        [
+          parts_attributes: [:title, :body, :slug, :order, :id, :_destroy]
+        ]
+      when :licence_edition
+        [
+          :licence_identifier,
+          :will_continue_on,
+          :continuation_link,
+          :licence_short_description,
+          :licence_overview,
+        ]
+      when :local_transaction_edition
+        [
+          :lgsl_code,
+          :lgil_override,
+          :introduction,
+          :more_information,
+          :need_to_know,
+        ]
+      when :place_edition
+        [
+          :place_type,
+          :introduction,
+          :more_information,
+          :need_to_know,
+        ]
+      when :simple_smart_answer_edition
+        [
+          :body,
+          nodes_attributes: [
+            :slug, :title, :body, :order, :kind, :id, :_destroy,
+            options_attributes: [:label, :next_node, :id, :_destroy]
+          ],
+        ]
+      when :transaction_edition
+        [
+          :introduction,
+          :will_continue_on,
+          :link,
+          :more_information,
+          :alternate_methods,
+          :need_to_know,
+          :department_analytics_profile,
+        ]
+      when :video_edition
+        [
+          :body,
+          :video_url,
+          :video_summary,
+          :caption_file,
+        ]
+      else   # answer_edition, completed_transaction_edition, help_page_edition
+        [
+          :body,
+        ]
+      end
+      params.permit(edition: type_specific_params + common_params)
+    end
+
+    def common_params
+      [
+        :assigned_to_id,
+        :reviewer,
+        :panopticon_id,
+        :slug,
+        :change_note,
+        :major_change,
+        :title,
+        :in_beta,
+        :overview,
+        :primary_topic,
+        browse_pages: [],
+        additional_topics: [],
+      ]
+    end
+
     def new_assignee
       assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
       User.find(assignee_id) if assignee_id.present?
@@ -162,7 +281,9 @@ class EditionsController < InheritedResources::Base
 
   private
     def attempted_activity_params(attempted_activity)
-      params[:edition]["activity_#{attempted_activity}_attributes"]
+      return unless attempted_activity
+      params[:edition]["activity_#{attempted_activity}_attributes"].permit(
+        :request_type, :email_addresses, :customised_message, :comment, :publish_at)
     end
 
     def remove_activity_params
