@@ -93,7 +93,7 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
 
     should 'return the public_timestamp' do
-      assert_equal @edition_with_major_change.updated_at, @registerable.public_timestamp
+      assert_equal @edition_with_major_change.updated_at.to_i, @registerable.public_timestamp.to_i
     end
   end
 
