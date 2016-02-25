@@ -2,7 +2,9 @@ require 'redis'
 require 'redis-lock'
 
 class CsvReportGenerator
-  CSV_PATH = "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
+  def self.csv_path
+    "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
+  end
 
   def run!
     redis.lock("publisher:#{Rails.env}:report_generation_lock", :life => 15.minutes) do
@@ -43,7 +45,7 @@ class CsvReportGenerator
 
   def move_temporary_reports_into_place
     Dir[File.join(path, "*.csv")].each do |file|
-      FileUtils.mv(file, CSV_PATH, force: true)
+      FileUtils.mv(file, self.class.csv_path, force: true)
     end
   end
 

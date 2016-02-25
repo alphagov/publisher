@@ -3,22 +3,17 @@ require 'test_helper'
 class ReportsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    path = File.join(CsvReportGenerator::CSV_PATH, "editorial_progress.csv")
+    @report_dir = File.join(Dir.tmpdir, 'publisher-test-reports')
+    CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
+    path = File.join(@report_dir, "editorial_progress.csv")
 
-    FakeFS.activate!
-
-    # Needed to render the index response
-    FakeFS::FileSystem.clone(File.join(Rails.root, "app/views"))
-    @controller.view_paths.each { |path| FakeFS::FileSystem.clone(path) }
-
-    FileUtils.mkdir_p(CsvReportGenerator::CSV_PATH)
-    Timecop.freeze(Time.mktime(2015,6,1)) do
-      File.open(path, "w") { |f| f.write("foo,bar") }
-    end
+    FileUtils.mkdir_p(@report_dir)
+    File.open(path, "w") { |f| f.write("foo,bar") }
+    FileUtils.touch(path, mtime: Time.mktime(2015,6,1))
   end
 
   teardown do
-    FakeFS.deactivate!
+    FileUtils.rm_rf(@report_dir)
   end
 
   test "it sends the file with the correct name" do
