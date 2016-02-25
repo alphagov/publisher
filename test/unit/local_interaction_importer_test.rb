@@ -90,6 +90,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
     should "allow council-level SNAC codes (e.g. 11)" do
       source = File.open(fixture_file('local_interactions_county_sample.csv'))
       importer = LocalInteractionImporter.new(source)
+      importer.stubs(:authority_type_from_mapit).returns('county')
 
       LocalAuthority.expects(:find_by_snac).with('11').returns(nil)
 
@@ -99,6 +100,7 @@ class LocalInteractionImporterTest < ActiveSupport::TestCase
     should "allow Northern Ireland SNAC codes (e.g. 95J)" do
       source = File.open(fixture_file('local_interactions_ni_sample.csv'))
       importer = LocalInteractionImporter.new(source)
+      importer.stubs(:authority_type_from_mapit).returns('county')
 
       LocalAuthority.expects(:find_by_snac).with('95J').returns(nil)
 

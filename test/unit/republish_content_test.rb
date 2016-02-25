@@ -13,9 +13,10 @@ class RepublishContentTest < ActiveSupport::TestCase
     # a PUT is sent when creating these which is later
     # picked up by the assert_requested calls.
     #
-    # Reset all request history so the assertions are checking
+    # Reset all request history and sidekiq queues so the assertions are checking
     # the behaviour of the republisher.
     WebMock.reset!
+    Sidekiq::Worker.clear_all
   end
 
   should "send all published items to sidekiq" do

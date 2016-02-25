@@ -18,7 +18,6 @@ require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
 
 require 'sidekiq/testing'
-Sidekiq::Testing.inline!
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
@@ -55,6 +54,7 @@ class ActiveSupport::TestCase
   set_callback :teardown, :after, :clean_db
 
   setup do
+    Sidekiq::Testing.inline!
     stub_any_publishing_api_call
   end
 
