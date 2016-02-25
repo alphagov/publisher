@@ -77,8 +77,8 @@ describe('An ajax save with parts module', function() {
   describe('when the form is saved successfully', function() {
     beforeEach(function() {
       element.trigger('success.ajaxsave.admin', {parts:
-        [{_id: '5f00000001', order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
-         {_id: '5f00000002', order: 2, slug: 'updated-title-2', title: 'Updated title 2'}]
+        [{_id: {$oid: '5f00000001'}, order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
+         {_id: {$oid: '5f00000002'}, order: 2, slug: 'updated-title-2', title: 'Updated title 2'}]
       });
     });
 
@@ -98,9 +98,9 @@ describe('An ajax save with parts module', function() {
   describe('when a new part is added and the form is saved', function() {
     beforeEach(function() {
       element.trigger('success.ajaxsave.admin', {parts:
-        [{_id: '5f00000001', order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
-         {_id: '5f00000002', order: 2, slug: 'updated-title-2', title: 'Updated title 2'},
-         {_id: '5f00000003', order: 3, slug: 'updated-title-3', title: 'Updated title 3'}]
+        [{_id: {$oid: '5f00000001'}, order: 1, slug: 'updated-title-1', title: 'Updated title 1'},
+         {_id: {$oid: '5f00000002'}, order: 2, slug: 'updated-title-2', title: 'Updated title 2'},
+         {_id: {$oid: '5f00000003'}, order: 3, slug: 'updated-title-3', title: 'Updated title 3'}]
       });
     });
 

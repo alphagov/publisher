@@ -46,15 +46,16 @@
       }
 
       function updatePart(part) {
-        var $partContainer = identifyPartContainer(part._id, part.order),
-            $hiddenInputId = $partContainer.find('input[value="'+part._id+'"]');
+        var partId = part._id.$oid;
+        var $partContainer = identifyPartContainer(partId, part.order),
+            $hiddenInputId = $partContainer.find('input[value="'+partId+'"]');
 
         $partContainer.find('.js-part-title').text(part.title);
         $partContainer.find('.js-part-toggle-target').attr('id', part.slug);
         $partContainer.find('.js-part-toggle').attr('href', '#' + part.slug);
 
         if ($hiddenInputId.length == 0) {
-          generateHiddenIdInput($partContainer, part._id);
+          generateHiddenIdInput($partContainer, partId);
         }
       }
 
