@@ -34,7 +34,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   end
 
   test "user should be able to have an email sent for fact checking" do
-    stub_mailer = stub('mailer', :deliver => true)
+    stub_mailer = stub('mailer', :deliver_now => true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(:name => "Ben")
     artefact = FactoryGirl.create(:artefact)
@@ -60,7 +60,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       :overview => 'My Overview', 
       :title => 'My Title', :slug => 'my-title-b')
 
-    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver: nil))
+    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
     receive_fact_check(user, guide)
   end
 
