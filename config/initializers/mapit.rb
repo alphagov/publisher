@@ -1,1 +1,1 @@
-MAPIT_BASE_URL = 'http://mapit.preview.alphagov.co.uk/'
+MAPIT_BASE_URL = "#{Plek.current.find('mapit')}/"
