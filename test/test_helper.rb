@@ -23,7 +23,7 @@ WebMock.disable_net_connect!(:allow_localhost => true)
 
 require 'minitest/reporters'
 Minitest::Reporters.use!(
-  Minitest::Reporters::SpecReporter.new({ color: true }),
+  Minitest::Reporters::SpecReporter.new(color: true),
 )
 
 DatabaseCleaner.strategy = :truncation

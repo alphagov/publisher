@@ -9,7 +9,7 @@ class ReportsControllerTest < ActionController::TestCase
 
     FileUtils.mkdir_p(@report_dir)
     File.open(path, "w") { |f| f.write("foo,bar") }
-    FileUtils.touch(path, mtime: Time.mktime(2015,6,1))
+    FileUtils.touch(path, mtime: Time.mktime(2015, 6, 1))
   end
 
   teardown do
