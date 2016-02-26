@@ -23,16 +23,17 @@ class AreaTest < ActiveSupport::TestCase
     assert_requested :get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/LGD.json}, times: 1
     assert_requested :get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/MTD.json}, times: 1
     assert_requested :get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/UTA.json}, times: 1
+    assert_requested :get, %r{\A#{IMMINENCE_API_ENDPOINT}/areas/COI.json}, times: 1
   end
 
   def test_area_types
-    assert_equal ['EUR','CTY','DIS','LBO', 'LGD', 'MTD', 'UTA'], Area::AREA_TYPES
+    assert_equal ['EUR','CTY','DIS','LBO', 'LGD', 'MTD', 'UTA', 'COI'], Area::AREA_TYPES
   end
 
   context ".all" do
     should "return areas of all types" do
       assert_equal (regions_with_gss_codes + counties + districts + london_boroughs +
-          ni_councils + metropolitan_councils + unitary_authorities),
+          ni_councils + metropolitan_councils + unitary_authorities + isles_of_scilly),
         Area.all.map(&:marshal_dump)
     end
 
