@@ -65,8 +65,9 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
   with_and_without_javascript do
     context "editing a business support edition" do
       setup do
-        @a_year_ago = 1.year.ago(Date.today)
-        @a_year_since = 1.year.since(Date.today)
+        @the_past = 1.year.ago(Date.today)
+        @right_now = 1.year.since(@the_past)
+        @the_future = 1.year.since(@right_now)
 
         @bs = FactoryGirl.create(:business_support_edition,
           :panopticon_id => @artefact.id,
@@ -84,8 +85,8 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
           :will_continue_on => "The HMRC website",
           :continuation_link => "http://www.hmrc.gov.uk",
           :priority => 2,
-          :start_date => @a_year_ago,
-          :end_date => @a_year_since,
+          :start_date => @the_past,
+          :end_date => @the_future,
           :area_gss_codes => ["E15000007"],
           :business_sizes => ["up-to-249"],
           :business_types => ["charity"],
@@ -113,12 +114,12 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         assert page.has_field?("Will continue on", :with => "The HMRC website")
         assert page.has_field?("Continuation link", :with => "http://www.hmrc.gov.uk")
         assert page.has_select?("edition_priority", :selected => "High")
-        assert page.has_select?("edition_start_date_1i", :selected => @a_year_ago.year.to_s)
-        assert page.has_select?("edition_start_date_2i", :selected => @a_year_ago.strftime("%B"))
-        assert page.has_select?("edition_start_date_3i", :selected => @a_year_ago.day.to_s)
-        assert page.has_select?("edition_end_date_1i", :selected => @a_year_since.year.to_s)
-        assert page.has_select?("edition_end_date_2i", :selected => @a_year_since.strftime("%B"))
-        assert page.has_select?("edition_end_date_3i", :selected => @a_year_since.day.to_s)
+        assert page.has_select?("edition_start_date_1i", :selected => @the_past.year.to_s)
+        assert page.has_select?("edition_start_date_2i", :selected => @the_past.strftime("%B"))
+        assert page.has_select?("edition_start_date_3i", :selected => @the_past.day.to_s)
+        assert page.has_select?("edition_end_date_1i", :selected => @the_future.year.to_s)
+        assert page.has_select?("edition_end_date_2i", :selected => @the_future.strftime("%B"))
+        assert page.has_select?("edition_end_date_3i", :selected => @the_future.day.to_s)
 
         assert page.has_checked_field?("edition_business_sizes_up-to-249")
         assert page.has_checked_field?("edition_business_types_charity")
@@ -144,7 +145,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         fill_in "Continuation link", :with => "http://www.business-support.com"
 
         select "Normal", :from => "edition_priority"
-        select Date.today.year.to_s, :from => "edition_start_date_1i"
+        select @right_now.year.to_s, :from => "edition_start_date_1i"
 
         check "edition_sectors_manufacturing"
         uncheck "edition_support_types_loan"
@@ -167,10 +168,10 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
         assert_equal "http://www.business-support.com", @bs.continuation_link
         assert_equal 1, @bs.priority
         assert page.has_select?("edition_priority", :selected => "Normal")
-        assert_equal Date.today, @bs.start_date
-        assert page.has_select?("edition_start_date_1i", :selected => Date.today.year.to_s)
-        assert page.has_select?("edition_start_date_2i", :selected => Date.today.strftime("%B"))
-        assert page.has_select?("edition_start_date_3i", :selected => Date.today.day.to_s)
+        assert_equal @right_now, @bs.start_date
+        assert page.has_select?("edition_start_date_1i", :selected => @right_now.year.to_s)
+        assert page.has_select?("edition_start_date_2i", :selected => @right_now.strftime("%B"))
+        assert page.has_select?("edition_start_date_3i", :selected => @right_now.day.to_s)
 
         assert page.has_checked_field?("edition_sectors_manufacturing")
         refute page.has_checked_field?("edition_support_type_loan")
