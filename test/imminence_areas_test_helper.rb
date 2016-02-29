@@ -173,6 +173,19 @@ module ImminenceAreasTestHelper
     ]
   end
 
+  def isles_of_scilly
+    [
+      {
+        slug: "isles-of-scilly",
+        name: "Isles of Scilly",
+        type: "COI",
+        codes: {
+          "gss" => "E06000053",
+        },
+      },
+    ]
+  end
+
   def stub_mapit_areas_requests(endpoint)
 
     stub_request(:get, %r{\A#{endpoint}/areas/EUR.json}).to_return(
@@ -195,6 +208,9 @@ module ImminenceAreasTestHelper
     )
     stub_request(:get, %r{\A#{endpoint}/areas/UTA.json}).to_return(
       body: areas_response(unitary_authorities)
+    )
+    stub_request(:get, %r{\A#{endpoint}/areas/COI.json}).to_return(
+      body: areas_response(isles_of_scilly)
     )
   end
 end

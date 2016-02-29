@@ -5,9 +5,11 @@ class Area < OpenStruct
   extend GdsApi::Helpers
 
   # This list should stay in sync with Business Support API's
-  # WHITELISTED_AREA_CODES list:
-  # (https://github.com/alphagov/business-support-api/blob/master/app/models/scheme.rb#L8-L10).
-  AREA_TYPES = ["EUR", "CTY", "DIS", "LBO", "LGD", "MTD", "UTA"]
+  # Scheme::WHITELISTED_AREA_CODES list:
+  # https://github.com/alphagov/business-support-api/blob/master/app/models/scheme.rb#L16-L18
+  # and Imminence's areas route constraint:
+  # https://github.com/alphagov/imminence/blob/master/config/routes.rb#L13-L17
+  AREA_TYPES = ["EUR", "CTY", "DIS", "LBO", "LGD", "MTD", "UTA", "COI"]
 
   def self.all
     areas
