@@ -13,11 +13,12 @@ class RepublishContentTest < ActiveSupport::TestCase
   end
 
   should "does not error when running the sidekiq with the arguments" do
-    request = stub_request(:put, %r[#{Plek.find('publishing-api')}/*])
-    FactoryGirl.create(:edition, state: 'published')
+    stub_any_publishing_api_call
+    edition = create(:edition, state: 'published')
 
     RepublishContent.schedule_republishing
 
-    assert_requested(request)
+    assert_publishing_api_put_content(edition.artefact.content_id)
+    assert_publishing_api_publish(edition.artefact.content_id)
   end
 end

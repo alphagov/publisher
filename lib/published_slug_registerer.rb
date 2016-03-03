@@ -77,15 +77,9 @@ private
 
   def register_with_publishing_api(edition)
     presenter = PublishedEditionPresenter.new(edition)
-    document_for_publishing_api = presenter.render_for_publishing_api(republish: true)
-    base_path = document_for_publishing_api[:base_path]
-
-    publishing_api.put_content_item(base_path, document_for_publishing_api)
+    Services.publishing_api.put_content(presenter.content_id, presenter.payload)
+    Services.publishing_api.publish(presenter.content_id, "republish")
     true
-  end
-
-  def publishing_api
-    @publishing_api ||= GdsApi::PublishingApi.new(Plek.find("publishing-api"))
   end
 
   def register_with_panopticon(edition)

@@ -10,7 +10,7 @@ require 'database_cleaner'
 require 'webmock/test_unit'
 require 'webmock/minitest'
 require 'gds_api/test_helpers/panopticon'
-require 'gds_api/test_helpers/publishing_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
 require 'govuk_content_models/test_helpers/action_processor_helpers'
@@ -27,7 +27,7 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 GovukContentSchemaTestHelpers.configure do |config|
-  config.schema_type = 'publisher'
+  config.schema_type = 'publisher_v2'
   config.project_root = Rails.root
 end
 
@@ -41,6 +41,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   include MiniTest::Assertions
+  include FactoryGirl::Syntax::Methods
   include GovukContentModels::TestHelpers::ActionProcessorHelpers
 
   def clean_db
@@ -57,7 +58,7 @@ class ActiveSupport::TestCase
 
   def stub_register_published_content
     stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
-    stub_default_publishing_api_put
+    stub_any_publishing_api_call
   end
 
   teardown do
@@ -70,6 +71,6 @@ class ActiveSupport::TestCase
   end
 
   include GdsApi::TestHelpers::Panopticon
-  include GdsApi::TestHelpers::PublishingApi
+  include GdsApi::TestHelpers::PublishingApiV2
   include TagTestHelpers
 end

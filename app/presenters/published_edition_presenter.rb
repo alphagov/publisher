@@ -1,10 +1,16 @@
+# PublishedEditionPresenter generates the payload we'll send to
+# the Publishing API.
 class PublishedEditionPresenter
   def initialize(edition)
     @edition = edition
     @artefact = edition.artefact
   end
 
-  def render_for_publishing_api(options={})
+  def content_id
+    @artefact.content_id
+  end
+
+  def payload
     {
       title: @edition.title,
       base_path: base_path,
@@ -14,12 +20,10 @@ class PublishedEditionPresenter
       public_updated_at: @edition.public_updated_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
-      content_id: @artefact.content_id,
       routes: [
         {path: base_path, type: "exact"}
       ],
       redirects: [],
-      update_type: update_type(options),
       details: {
         change_note: @edition.latest_change_note,
         tags: {
@@ -37,19 +41,5 @@ private
 
   def base_path
     "/#{@edition.slug}"
-  end
-
-  def update_type(options)
-    if options[:republish]
-      "republish"
-    elsif major_change?
-      "major"
-    else
-      "minor"
-    end
-  end
-
-  def major_change?
-    @edition.major_change || @edition.version_number == 1
   end
 end

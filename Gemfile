@@ -5,19 +5,19 @@ gem 'rails', '3.2.22'
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
 else
-  gem 'gds-sso', '10.0.0'
+  gem 'gds-sso', '~> 11.2'
 end
 
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", '32.0.0'
+  gem 'govuk_content_models', '~> 32.3'
 end
 
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '20.1.1'
+  gem 'gds-api-adapters', '~> 29.0'
 end
 
 gem 'erubis'
@@ -89,7 +89,7 @@ group :test do
 
   gem "timecop", '0.4.4'
 
-  gem 'govuk-content-schema-test-helpers', '1.3.0'
+  gem 'govuk-content-schema-test-helpers', '~> 1.4'
 
   gem 'simplecov', '~> 0.6.4', :require => false
   gem 'simplecov-rcov', '~> 0.2.3', :require => false

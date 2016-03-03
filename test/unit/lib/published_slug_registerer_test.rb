@@ -2,6 +2,8 @@ require_relative '../../test_helper'
 
 class PublishedSlugRegistererTest < ActiveSupport::TestCase
   def setup
+    stub_register_published_content
+
     @logger = stub("logger")
 
     @slugs = %w{slug1 slug2 slug3}
@@ -25,7 +27,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       make_edition("archived", "slug3", 1),
     ]
 
-    @publishing_api = stub(:publishing_api)
     @panopticon_registerer = stub(:panopticon_registerer)
     GdsApi::Panopticon::Registerer.stubs(:new).returns(@panopticon_registerer)
   end
@@ -42,20 +43,12 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
     @panopticon_registerer.expects(:register).with(responds_with(:slug, slug))
   end
 
-  def stub_publishing(slug)
-    @publishing_api.expects(:put_content_item).with("/#{slug}", has_entries(
-      base_path: "/#{slug}",
-      update_type: "republish",
-    ))
-  end
-
   def completion_message(success, not_found, errored)
     "\nRegistration complete: processed #{success} slugs successfully, #{not_found} slugs not found, #{errored} slugs had errors"
   end
 
   def test_registers_published_editions
     @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-    @registerer.stubs(:publishing_api).returns(@publishing_api)
 
     @logger.expects(:info).at_least_once
     @logger.expects(:info).with(completion_message(2, 1, 0))
@@ -63,7 +56,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
 
     %w{slug1 slug2}.each do |slug|
       stub_panopticon(slug).once
-      stub_publishing(slug).once
     end
 
     @registerer.run
@@ -71,7 +63,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
 
   def test_handles_panopticon_timeout
     @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-    @registerer.stubs(:publishing_api).returns(@publishing_api)
 
     @logger.expects(:info).at_least_once
     @logger.expects(:info).with(completion_message(2, 1, 0))
@@ -81,7 +72,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       s = sequence("#{slug} registrations")
       stub_panopticon(slug).raises(GdsApi::TimedOutException).once.in_sequence(s)
       stub_panopticon(slug).once.in_sequence(s)
-      stub_publishing(slug).once
 
       @logger.expects(:warn).with("Encountered timeout for '#{slug}', retrying (max 3 retries)")
     end
@@ -91,7 +81,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
 
   def test_handles_panopticon_repeated_timeout
     @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-    @registerer.stubs(:publishing_api).returns(@publishing_api)
 
     @logger.expects(:info).at_least_once
     @logger.expects(:info).with(completion_message(0, 1, 2))
