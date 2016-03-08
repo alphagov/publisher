@@ -88,7 +88,7 @@ group :test do
 
   gem "timecop", '0.4.4'
 
-  gem 'govuk-content-schema-test-helpers', '1.3.0'
+  gem 'govuk-content-schema-test-helpers', '~> 1.4'
 
   gem 'simplecov', '~> 0.6.4', :require => false
   gem 'simplecov-rcov', '~> 0.2.3', :require => false

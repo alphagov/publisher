@@ -18,7 +18,6 @@ class PublishingAPIUpdaterTest < ActiveSupport::TestCase
       PublishingAPIUpdater.new.perform(@edition.id)
 
       assert_publishing_api_put_content(@content_id, request_json_includes(
-        "content_id" => @content_id,
         "title" => "Some Title",
       ))
     end

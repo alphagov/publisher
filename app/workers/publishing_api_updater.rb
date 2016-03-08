@@ -4,9 +4,8 @@ class PublishingAPIUpdater
   def perform(edition_id, update_type = "minor")
     edition = Edition.find(edition_id)
     presenter = PublishedEditionPresenter.new(edition)
-    document_for_publishing_api = presenter.render_for_publishing_api(republish: update_type == "republish")
-    content_id = document_for_publishing_api[:content_id]
+    payload = presenter.render_for_publishing_api(republish: update_type == "republish")
 
-    Services.publishing_api.put_content(content_id, document_for_publishing_api)
+    Services.publishing_api.put_content(edition.artefact.content_id, payload)
   end
 end

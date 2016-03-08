@@ -5,9 +5,8 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
 
   context ".render_for_publishing_api with a published document" do
     setup do
-      artefact = FactoryGirl.create(:artefact,
-        content_id: "fd4b7ea6-5e95-489e-ac73-0d8710e894d8",
-      )
+      artefact = FactoryGirl.create(:artefact)
+
       @edition = FactoryGirl.create(:edition, :published,
         browse_pages: ["tax/vat", "tax/capital-gains"],
         primary_topic: "oil-and-gas/wells",
@@ -30,7 +29,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         public_updated_at: @edition.public_updated_at,
         publishing_app: "publisher",
         rendering_app: "frontend",
-        content_id: "fd4b7ea6-5e95-489e-ac73-0d8710e894d8",
         routes: [ { path: "/#{@edition.slug}", type: "exact" }],
         redirects: [],
         update_type: "major",
