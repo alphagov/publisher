@@ -1,3 +1,5 @@
+require 'services'
+
 class PublishingAPIPublisher
   include Sidekiq::Worker
 
