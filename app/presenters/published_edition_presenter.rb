@@ -14,7 +14,6 @@ class PublishedEditionPresenter
       public_updated_at: public_updated_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
-      content_id: @artefact.content_id,
       routes: [
         {path: base_path, type: "exact"}
       ],
@@ -26,7 +25,7 @@ class PublishedEditionPresenter
           browse_pages: @edition.browse_pages,
           primary_topic: primary_topic,
           additional_topics: @edition.additional_topics,
-          topics: (primary_topic + @edition.additional_topics) 
+          topics: (primary_topic + @edition.additional_topics)
         },
       },
       locale: 'en',
