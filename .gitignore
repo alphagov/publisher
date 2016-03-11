@@ -13,3 +13,7 @@ test/reports
 data/local_interactions.csv
 config/initializers/dev_*.rb
 reports/*
+
+# Local transactions import reports
+removed_ghosts*.csv
+ghosts*.csv
