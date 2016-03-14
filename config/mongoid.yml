@@ -26,12 +26,6 @@ test:
 production:
   clients:
     default:
-      hosts:
-        - <%= ENV['MONGOID_HOST'] %>
-      port: <%= ENV['MONGOID_PORT'] %>
-      database: <%= ENV['MONGOID_DATABASE'] %>
-      options:
-        user: <%= ENV['MONGOID_USERNAME'] %>
-        password: <%= ENV['MONGOID_PASSWORD'] %>
+      uri: <%= ENV['MONGODB_URI'] %>
   options:
     use_activesupport_time_zone: true
