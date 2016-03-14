@@ -65,6 +65,7 @@ class BenefitsLinksMigrator
         update_msg = "Updated by development task. Benefits link anchors changed to paths."
         if e.state == 'published'
           clone = e.build_clone
+          clone.save
           clone.new_action(u, Action::REQUEST_REVIEW, {})
           u.record_note(clone, update_msg)
           updated = clone.request_review!

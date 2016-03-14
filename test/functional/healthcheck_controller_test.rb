@@ -85,7 +85,7 @@ class HealthcheckControllerTest < ActionController::TestCase
 
   context "cannot connect to the Mongo" do
     setup do
-      Edition.stubs(:scheduled_for_publishing).raises(Mongo::ConnectionFailure)
+      Edition.stubs(:scheduled_for_publishing).raises(Mongo::Error::SocketError)
       ScheduledPublisher.stubs(:queue_size).returns(3)
     end
 
@@ -97,12 +97,8 @@ class HealthcheckControllerTest < ActionController::TestCase
   end
 
   context "Mongo connection fails" do
-    # Yes, the Mongo driver has two separate exceptions for connection failure.
-    # No, they don't have a common parent below StandardError. I think
-    # `ConnectionFailure` is when it can't connect, and `ConnectionError` is
-    # when it loses connection, but I wouldn't swear to it.
     setup do
-      Edition.stubs(:scheduled_for_publishing).raises(Mongo::ConnectionError)
+      Edition.stubs(:scheduled_for_publishing).raises(Mongo::Error::SocketTimeoutError)
       ScheduledPublisher.stubs(:queue_size).returns(3)
     end
 

@@ -11,7 +11,7 @@ class DowntimesController < ApplicationController
   end
 
   def create
-    @downtime = Downtime.new(params[:downtime])
+    @downtime = Downtime.new(downtime_params)
 
     if @downtime.save
       ExpiredDowntimeCleaner.enqueue(@downtime)
@@ -37,7 +37,7 @@ class DowntimesController < ApplicationController
       return
     end
 
-    if @downtime.update_attributes(params[:downtime])
+    if @downtime.update_attributes(downtime_params)
       ExpiredDowntimeCleaner.enqueue(@downtime)
       flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
@@ -47,6 +47,10 @@ class DowntimesController < ApplicationController
   end
 
   private
+
+  def downtime_params
+    params[:downtime].permit(:message, :artefact_id, :start_time, :end_time)
+  end
 
   def load_edition
     @edition = Edition.find(params[:edition_id])

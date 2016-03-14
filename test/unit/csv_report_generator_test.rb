@@ -2,12 +2,13 @@ require "test_helper"
 
 class CsvReportGeneratorTest < ActiveSupport::TestCase
   setup do
+    @report_dir = File.join(Dir.tmpdir, 'publisher-test-reports')
+    CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
     @generator = CsvReportGenerator.new
-    FakeFS.activate!
   end
 
   teardown do
-    FakeFS.deactivate!
+    FileUtils.rm_rf(@report_dir)
   end
 
   test "#path makes a temp directory and returns the path" do
@@ -31,9 +32,9 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
   end
 
   test "#move_temporary_reports_into_place does what it says" do
-    FileUtils.mkdir_p(CsvReportGenerator::CSV_PATH)
+    FileUtils.mkdir_p(CsvReportGenerator.csv_path)
 
-    dest = File.join(CsvReportGenerator::CSV_PATH, "example.csv")
+    dest = File.join(CsvReportGenerator.csv_path, "example.csv")
     File.open(dest, "w") do |f|
       f.write("foo")
     end
@@ -45,6 +46,6 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
     @generator.move_temporary_reports_into_place
 
     assert_equal "bar", File.read(
-      File.join(CsvReportGenerator::CSV_PATH, "example.csv"))
+      File.join(CsvReportGenerator.csv_path, "example.csv"))
   end
 end

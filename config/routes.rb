@@ -32,13 +32,13 @@ Publisher::Application.routes.draw do
     resource :downtime, only: [:new, :create, :edit, :update, :destroy]
   end
 
-  match 'reports' => 'reports#index', as: :reports
-  match 'reports/progress' => 'reports#progress', as: :progress_report
+  get 'reports' => 'reports#index', as: :reports
+  get 'reports/progress' => 'reports#progress', as: :progress_report
   get 'reports/business_support_schemes_content' => 'reports#business_support_schemes_content', :as => :business_support_report
   get 'reports/organisation-content' => 'reports#organisation_content', :as => :organisation_content_report
   get 'reports/edition-churn' => 'reports#edition_churn', as: "edition_churn_report"
 
-  match 'user_search' => 'user_search#index'
+  get 'user_search' => 'user_search#index'
 
   resources :publications
   root :to => 'root#index'

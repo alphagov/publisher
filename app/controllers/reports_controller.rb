@@ -40,7 +40,7 @@ class ReportsController < ApplicationController
   end
 
   def report_location(report)
-    File.join(CsvReportGenerator::CSV_PATH, "#{report}.csv")
+    File.join(CsvReportGenerator.csv_path, "#{report}.csv")
   end
 
   def send_report(report)

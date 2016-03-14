@@ -17,7 +17,7 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       ScheduledPublisher.enqueue(edition)
 
       assert_equal 1, ScheduledPublisher.jobs.size
-      assert_equal edition.publish_at.to_i, ScheduledPublisher.jobs.first['at']
+      assert_equal edition.publish_at.to_i, ScheduledPublisher.jobs.first['at'].to_i
     end
   end
 

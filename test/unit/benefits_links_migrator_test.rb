@@ -39,7 +39,7 @@ class BenefitsLinksMigratorTest < ActiveSupport::TestCase
       assert_match "/should-not-change#no-it-should-not", @programme.parts.first.body
     end
     should "create a new revision for published editions and give them in_review state" do
-      new_edition = Edition.last
+      new_edition = Edition.order(updated_at: 1).last
       assert_match "/another-thing/overview", new_edition.parts.first.body 
       assert_equal 'request_review', new_edition.actions.first.request_type
       assert_equal 'in_review', new_edition.state
