@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class AddingPartsToGuidesTest < JavascriptIntegrationTest
   setup do
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   context 'creating a guide with parts' do

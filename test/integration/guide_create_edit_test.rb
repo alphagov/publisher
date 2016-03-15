@@ -4,7 +4,7 @@ require 'integration_test_helper'
 class GuideCreateEditTest < JavascriptIntegrationTest
   setup do
     setup_users
-    stub_collections
+    stub_linkables
 
     @artefact = FactoryGirl.create(:artefact,
         slug: "hedgehog-topiary",

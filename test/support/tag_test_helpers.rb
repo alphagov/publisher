@@ -1,42 +1,19 @@
-require 'gds_api/test_helpers/content_api'
+require 'gds_api/test_helpers/publishing_api_v2'
 
 module TagTestHelpers
-  include GdsApi::TestHelpers::ContentApi
+  include GdsApi::TestHelpers::PublishingApiV2
 
-  def stub_collections
-    stub_browse_pages
-    stub_topics
-  end
+  def stub_linkables
+    publishing_api_has_linkables([
+      { base_path: '/browse/tax/vat', internal_name: 'Tax / VAT', publication_state: 'published' },
+      { base_path: '/browse/tax/capital-gains', internal_name: 'Tax / Capital Gains Tax', publication_state: 'published' },
+      { base_path: '/browse/tax/rti', internal_name: 'Tax / RTI', publication_state: 'draft' },
+    ], document_type: "mainstream_browse_page")
 
-  def stub_browse_pages
-    tax = {slug: 'tax', title: 'Tax'}
-
-    live_browse_pages = [
-      tax,
-      {slug: 'tax/vat', title: 'VAT', parent: tax},
-      {slug: 'tax/capital-gains', title: 'Capital Gains Tax', parent: tax}
-    ]
-
-    draft_browse_pages = [
-      {slug: 'tax/rti', title: 'RTI', parent: tax}
-    ]
-
-    content_api_has_draft_and_live_tags(type: 'section', live: live_browse_pages, draft: draft_browse_pages)
-  end
-
-  def stub_topics
-    oil_and_gas = {slug: 'oil-and-gas', title: 'Oil and Gas'}
-
-    live_topics = [
-      oil_and_gas,
-      {slug: 'oil-and-gas/wells', title: 'Wells', parent: oil_and_gas},
-      {slug: 'oil-and-gas/fields', title: 'Fields', parent: oil_and_gas}
-    ]
-
-    draft_topics = [
-      {slug: 'oil-and-gas/distillation', title: 'Distillation', parent: oil_and_gas}
-    ]
-
-    content_api_has_draft_and_live_tags(type: 'specialist_sector', live: live_topics, draft: draft_topics)
+    publishing_api_has_linkables([
+      { base_path: '/topic/oil-and-gas/wells', internal_name: 'Oil and Gas / Wells', publication_state: 'published' },
+      { base_path: '/topic/oil-and-gas/fields', internal_name: 'Oil and Gas / Fields', publication_state: 'published' },
+      { base_path: '/topic/oil-and-gas/distillation', internal_name: 'Oil and Gas / Distillation', publication_state: 'draft' },
+    ], document_type: "topic")
   end
 end

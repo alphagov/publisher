@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class MarkEditionInBetaTest < JavascriptIntegrationTest
   setup do
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   with_and_without_javascript do

@@ -15,7 +15,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
     @edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id)
 
     setup_users
-    stub_collections
+    stub_linkables
   end
 
 

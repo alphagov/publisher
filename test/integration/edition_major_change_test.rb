@@ -4,7 +4,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
 
   setup do
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   teardown do

@@ -11,7 +11,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   should "create a new HelpPageEdition" do
