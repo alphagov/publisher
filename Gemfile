@@ -11,14 +11,14 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", :github => 'alphagov/govuk_content_models', :ref => 'd7fae3a0f3bbbfccbe94e9c13f15e58a58422526'
+  gem "govuk_content_models", :github => 'alphagov/govuk_content_models', :branch => 'rails-mongoid-upgrade'
 
 end
 
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '27.2.0'
+  gem 'gds-api-adapters', '~> 29.6'
 end
 
 gem 'erubis'
