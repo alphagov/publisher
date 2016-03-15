@@ -11,7 +11,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", :github => 'alphagov/govuk_content_models', :ref => 'd7fae3a0f3bbbfccbe94e9c13f15e58a58422526'
+  gem "govuk_content_models", :github => 'alphagov/govuk_content_models', :branch => 'rails-mongoid-upgrade'
 
 end
 
