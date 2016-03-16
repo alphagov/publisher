@@ -13,9 +13,10 @@ class PublishingAPIPublisherTest < ActiveSupport::TestCase
       stub_publishing_api_publish("vat-charities-id", {"update_type" => "minor"})
     end
 
-    should "notify the publishing API of the published document" do
+    should "notify the publishing API of the published document and links" do
       PublishingAPIPublisher.new.perform(@edition.id)
       assert_publishing_api_publish("vat-charities-id", {"update_type" => "minor"})
+      assert_publishing_api_patch_links("vat-charities-id")
     end
   end
 end
