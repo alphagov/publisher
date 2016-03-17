@@ -11,7 +11,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
-    stub_collections
+    stub_linkables
 
     login_as @author
   end

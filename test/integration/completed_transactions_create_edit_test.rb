@@ -11,7 +11,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     )
 
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   should "create a new CompletedTransactionEdition" do

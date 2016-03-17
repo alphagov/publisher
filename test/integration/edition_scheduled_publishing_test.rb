@@ -4,7 +4,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
   setup do
     setup_users
-    stub_collections
+    stub_linkables
     # queue up the edition, don't perform inline
     Sidekiq::Testing.fake!
   end

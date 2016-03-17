@@ -6,7 +6,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
-    stub_collections
+    stub_linkables
     @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
     artefact1 = FactoryGirl.create(:artefact, slug: "test",
         kind: "transaction",

@@ -14,7 +14,7 @@
       <%= f.label :browse_pages, "Mainstream browse pages", class: 'control-label remove-bottom-margin' %>
       <p class="help-block">The first mainstream browse page will form the content’s breadcrumb</p>
       <%= f.select :browse_pages,
-                      ordered_pages(Collections.grouped_mainstream_browse_pages),
+                      Linkables.mainstream_browse_pages,
                       {},
                       { multiple: true,
                         class: 'selectize',
@@ -24,7 +24,7 @@
     <div class="form-group" id="edition_primary_topic_input">
       <%= f.label :primary_topic, class: 'control-label' %>
       <%= f.select :primary_topic,
-                      browse_options_for_select(Collections.grouped_topics),
+                      Linkables.topics,
                       { include_blank: true },
                       { class: 'select2',
                         disabled: @resource.locked_for_edits?,
@@ -33,7 +33,7 @@
     <div class="form-group" id="edition_additional_topics_input">
       <%= f.label :additional_topics, class: 'control-label' %>
       <%= f.select :additional_topics,
-                      browse_options_for_select(Collections.grouped_topics),
+                      Linkables.topics,
                       {},
                       { multiple: true,
                         class: 'select2',

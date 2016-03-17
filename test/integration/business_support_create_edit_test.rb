@@ -49,7 +49,7 @@ class BusinessSupportCreateEditTest < JavascriptIntegrationTest
     stub_mapit_areas_requests(IMMINENCE_API_ENDPOINT)
 
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   should "create a new BusinessSupportEdition" do

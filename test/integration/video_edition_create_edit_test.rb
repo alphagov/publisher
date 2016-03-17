@@ -10,7 +10,7 @@ class VideoEditionCreateEditTest < JavascriptIntegrationTest
        owning_app: "publisher")
 
     setup_users
-    stub_collections
+    stub_linkables
   end
 
   with_and_without_javascript do

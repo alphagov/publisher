@@ -4,7 +4,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   setup do
     panopticon_has_metadata("id" => '2356')
-    stub_collections
+    stub_linkables
     %w(Alice Bob Charlie).each do |name|
       FactoryGirl.create(:user, name: name)
     end
