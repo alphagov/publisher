@@ -45,6 +45,11 @@ class EditionLinksPresenterTest < ActiveSupport::TestCase
         ]
       )
 
+      assert_equal(
+        payload[:links][:parent],
+        [content_ids_by_path["/browse/tax/vat"]]
+      )
+
       assert_valid_against_links_schema(payload, 'placeholder')
     end
 
@@ -62,14 +67,8 @@ class EditionLinksPresenterTest < ActiveSupport::TestCase
 
       payload = EditionLinksPresenter.new(edition).payload
 
-      assert_equal(
-        payload[:links][:mainstream_browse_pages],
-        []
-      )
-
-      assert_equal(
-        payload[:links][:topics],
-        []
+      assert(
+        payload[:links].values.all?(&:empty?),
       )
 
       assert_valid_against_links_schema(payload, 'placeholder')
