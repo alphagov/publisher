@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alphagov/govuk_content_models.git
-  revision: 3f1f07ecf8ea096102997534eaaeb82c85d628c7
+  revision: abc8edec36967cc3cd52a6196c2d54afda3d8777
   branch: rails-mongoid-upgrade
   specs:
     govuk_content_models (33.0.0)
@@ -119,7 +119,7 @@ GEM
       safe_yaml (~> 1.0.0)
     database_cleaner (1.5.1)
     diffy (3.0.6)
-    domain_name (0.5.20160309)
+    domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.6.0)
