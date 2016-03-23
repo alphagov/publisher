@@ -22,6 +22,10 @@ class ReportsController < ApplicationController
     send_report "edition_churn"
   end
 
+  def content_workflow
+    send_report "content_workflow"
+  end
+
   private
 
   def report_last_updated(report)

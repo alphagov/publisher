@@ -37,7 +37,8 @@ Publisher::Application.routes.draw do
   get 'reports/business_support_schemes_content' => 'reports#business_support_schemes_content', :as => :business_support_report
   get 'reports/organisation-content' => 'reports#organisation_content', :as => :organisation_content_report
   get 'reports/edition-churn' => 'reports#edition_churn', as: "edition_churn_report"
-
+  get 'reports/content_workflow' => 'reports#content_workflow', as: "content_workflow_report"
+  
   get 'user_search' => 'user_search#index'
 
   resources :publications

@@ -32,6 +32,8 @@ class CsvReportGenerator
 
       EditionChurnPresenter.new(
         Edition.not_in(state: ["archived"]).order(created_at: 1)),
+
+      ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
     ]
   end
 
