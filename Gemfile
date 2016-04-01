@@ -22,7 +22,7 @@ else
 end
 
 gem 'erubis'
-gem 'govuk_admin_template', '4.0.1'
+gem 'govuk_admin_template', '4.2.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'jquery-ui-rails', '~> 5.0.3'
 gem 'selectize-rails', '0.12.1'
