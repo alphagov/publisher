@@ -10,23 +10,31 @@
 
 <hr />
 <div class="row">
-  <div class="col-md-8" data-module="checkbox-toggle">
-    <h3 class="remove-top-margin">Promote organ donor registration</h3>
+  <div class="col-md-8">
+    <h3 class="remove-top-margin">Promotions</h3>
     <p class="help-block add-bottom-margin">
       Display a promotion above the satisfaction survey
     </p>
 
     <div class="form-group">
-      <%= f.input :promote_organ_donor_registration,
-        as: :boolean,
-        input_html: { disabled: @resource.locked_for_edits?, 'data-target' => 'organ-donor-registration-url' },
-        wrapper_html: { class: "form-group input-md-8 emphasised-field" } %>
+      <%= f.radio_button :promotion_choice, 'none',
+        { checked: (f.object.promotion_choice == "none"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-none' } %>
+      <%= f.label :promotion_choice, "Don't promote anything on this page", value: 'none' %>
+      <br />
+      <%= f.radio_button :promotion_choice, 'organ_donor',
+        { checked: (f.object.promotion_choice == "organ_donor"), disabled: @resource.locked_for_edits? } %>
+      <%= f.label :promotion_choice, "Promote organ donation", value: 'organ_donor' %>
+      <br />
+      <%= f.radio_button :promotion_choice, 'register_to_vote',
+        { checked: (f.object.promotion_choice == "register_to_vote"), disabled: @resource.locked_for_edits? } %>
+      <%= f.label :promotion_choice, "Promote register to vote", value: 'register_to_vote' %>
 
-      <%= f.input :organ_donor_registration_url,
+      <%= f.input :promotion_choice_url,
           required: false,
           input_html: { disabled: @resource.locked_for_edits? },
-          wrapper_html: { class: "form-group input-md-8", id: 'organ-donor-registration-url' } %>
+          wrapper_html: { class: "form-group input-md-8 promotion-choice-url", id: 'promotion-choice-url' } %>
     </div>
+
   </div>
 </div>
 

@@ -239,8 +239,8 @@ protected
     when :completed_transaction_edition
       [
         :body,
-        :promote_organ_donor_registration,
-        :organ_donor_registration_url,
+        :promotion_choice,
+        :promotion_choice_url,
       ]
     else # answer_edition, help_page_edition
       [
