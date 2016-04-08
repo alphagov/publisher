@@ -1,0 +1,71 @@
+<%= semantic_bootstrap_nested_form_for (@tagging_update || raise("No @tagging_update")), url: update_tagging_edition_path(@resource) do |f| %>
+    <%= f.hidden_field :content_id %>
+    <%= f.hidden_field :previous_version %>
+
+    <div class="row">
+      <div class="col-md-7 edition-tags">
+
+        <div class="form-group" id="edition_browse_pages_input">
+          <%= f.label :mainstream_browse_pages, "Mainstream browse pages", class: 'control-label' %>
+          <%= f.select :mainstream_browse_pages,
+                       @linkables.mainstream_browse_pages,
+                       {},
+                       { multiple: true,
+                         class: 'select2',
+                         data: { module: "tagging", placeholder: 'Choose mainstream browse pages…' } } %>
+
+          <p class='help-block'>
+            Mainstream browse pages live under <a href="https://www.gov.uk/browse">/browse</a>.
+            Examples: <a href="https://www.gov.uk/browse/working">Working</a> or
+            <a href="https://www.gov.uk/browse/business">Business</a>.
+            They are used to organise mainstream content. Formerly called
+            <i>sections and subsections</i>.
+          </p>
+        </div>
+
+        <div class="form-group" id="edition_parent_input">
+          <%= f.label :parent, "Breadcrumb", class: 'control-label' %>
+          <%= f.select :parent,
+                       @linkables.mainstream_browse_pages,
+                       { include_blank: true },
+                       { multiple: false,
+                         class: 'select2',
+                         data: { module: "tagging", placeholder: 'Choose a primary mainstream browse page…' } } %>
+
+         <br />
+         <div class="alert mainstream alert-warning hidden">
+           The breadcrumb does not match the browse pages.
+         </div>
+
+
+          <p class='help-block'>
+            If the page has a breadcrumb, it will be this browse page. For example
+            <a href="https://www.gov.uk/benefit-cap-calculator">the breadcrumb on this page</a>.
+            You can only choose one.
+          </p>
+        </div>
+
+        <div class="form-group" id="edition_topics_input">
+          <%= f.label :topics, "Topics", class: 'control-label' %>
+          <%= f.select :topics, @linkables.topics,
+                       {},
+                       { multiple: true,
+                         class: 'select2',
+                         data: { placeholder: 'Choose Topics…' } } %>
+
+          <p class='help-block'>
+            Topic pages live under <a href="https://www.gov.uk/topic">/topic</a>.
+            They contain collections of pages on GOV.UK. Example:
+            <a href="https://www.gov.uk/topic/business-tax">Business Tax</a> or
+            <a href="https://www.gov.uk/topic/animal-welfare/pets">Animal Welfare / Pets</a>.
+            Tagging a page with a topic will send out an
+            <a href="https://www.gov.uk/topic/business-tax/vat/email-signup">email alert to subscribers</a>.
+            Formerly called <i>specialist sectors</i>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+    <%= f.submit 'Update tags' %>
+<% end %>

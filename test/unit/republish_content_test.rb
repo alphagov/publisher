@@ -28,8 +28,13 @@ class RepublishContentTest < ActiveSupport::TestCase
   end
 
   should "perform the sub-jobs of updating and publishing synchronously" do
+    stub_request(:put, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}")
+    stub_request(:post, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}/publish")
+
     Sidekiq::Testing.fake! do
       RepublishContent.schedule_republishing
+
+      PublishingAPIRepublisher.drain
 
       assert_equal 0, PublishingAPIPublisher.jobs.size
       assert_equal 0, PublishingAPIUpdater.jobs.size
@@ -39,12 +44,10 @@ class RepublishContentTest < ActiveSupport::TestCase
   should "sends the content as PUT, POST, PATCH for the publish" do
     request_1 = stub_request(:put, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}")
     request_2 = stub_request(:post, "#{Plek.find('publishing-api')}/v2/content/#{@published_edition.artefact.content_id}/publish")
-    request_3 = stub_request(:patch, "#{Plek.find('publishing-api')}/v2/links/#{@published_edition.artefact.content_id}")
 
     RepublishContent.schedule_republishing
 
     assert_requested(request_1)
     assert_requested(request_2)
-    assert_requested(request_3)
   end
 end

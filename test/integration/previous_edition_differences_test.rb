@@ -5,6 +5,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     stub_register_published_content
     setup_users
     stub_linkables
+
     @first_edition = FactoryGirl.create(:answer_edition,
                                         :state => "published",
                                         :body => "test body 1")

@@ -70,7 +70,6 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       content_id = artefact.content_id
 
       assert_requested(:put, %r|publishing-api.*content/#{content_id}|, times: 7, headers: onward_headers)
-      assert_requested(:patch, %r|publishing-api.*links/#{content_id}|, headers: onward_headers)
       assert_requested(:post, %r|publishing-api.*content/#{content_id}/publish|, headers: onward_headers)
       assert_requested(:put, /panopticon/, headers: onward_headers)
     end

@@ -5,6 +5,7 @@ class EditionTabTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+
     @guide = FactoryGirl.create(:guide_edition, state: 'draft')
   end
 
@@ -54,6 +55,9 @@ class EditionTabTest < JavascriptIntegrationTest
 
       visit_tab('history')
       assert_tab_active('history', 'History and notes')
+
+      visit_tab('tagging')
+      assert_tab_active('tagging', 'Tagging')
     end
 
     should "show the correct tab when clicking tabs" do
@@ -70,6 +74,9 @@ class EditionTabTest < JavascriptIntegrationTest
 
       click_tab('Edit')
       assert_tab_active('edit', 'Edit')
+
+      click_tab('Tagging')
+      assert_tab_active('tagging', 'Tagging')
     end
   end
 

@@ -2,7 +2,7 @@ module TabsHelper
   def active_tab
     return @active_tab if @active_tab
 
-    tab_name = [action_name] & %w(metadata history admin)
+    tab_name = [action_name] & %w(metadata tagging history admin)
     @active_tab = tab_name.blank? ? Edition::Tab['edit'] : Edition::Tab[tab_name.first]
   end
 
@@ -21,7 +21,7 @@ module TabsHelper
   module Edition
     class Tab < Struct.new(:name)
 
-      TABS = %w(edit metadata history admin)
+      TABS = %w(edit tagging metadata history admin)
 
       def self.all
         @@all ||= TABS.map { |name| Tab.new(name) }

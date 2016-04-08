@@ -19,5 +19,4 @@
     :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
 <% end %>
 
-<%= render partial: 'shared/common_edition_tags', locals: {f: f} %>
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
