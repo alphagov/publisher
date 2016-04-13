@@ -236,7 +236,13 @@ protected
         :video_summary,
         :caption_file,
       ]
-    else # answer_edition, completed_transaction_edition, help_page_edition
+    when :completed_transaction_edition
+      [
+        :body,
+        :promote_organ_donor_registration,
+        :organ_donor_registration_url,
+      ]
+    else # answer_edition, help_page_edition
       [
         :body,
       ]
