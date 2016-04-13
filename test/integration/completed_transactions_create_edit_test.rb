@@ -77,6 +77,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     fill_in "Organ donor registration URL", with: organ_donor_registration_promotion_url
     save_edition_and_assert_success
 
+    visit current_path # Refresh the page to check that the boxes are still ticked.
     assert page.has_checked_field? "Promote organ donor registration"
     assert page.has_field? 'Organ donor registration URL', with: organ_donor_registration_promotion_url
   end
