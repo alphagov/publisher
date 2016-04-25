@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.5.1'
+gem 'sass-rails', '5.0.4'
+gem 'uglifier', '2.7.2'
 
 if ENV['BUNDLE_DEV']
   gem 'gds-sso', path: '../gds-sso'
@@ -65,11 +67,6 @@ gem 'unicorn', '4.3.1'
 gem 'airbrake', '3.1.15'
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
-
-group :assets do
-  gem 'sass-rails', '5.0.4'
-  gem 'uglifier', '2.7.2'
-end
 
 group :test do
   gem 'minitest'

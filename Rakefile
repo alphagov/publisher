@@ -7,6 +7,6 @@ require 'ci/reporter/rake/minitest' if Rails.env.test?
 
 Rake.application.options.trace = true
 
-Publisher::Application.load_tasks
+Rails.application.load_tasks
 
 task :default => [:test, :check_for_bad_time_handling, 'jasmine:ci']

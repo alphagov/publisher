@@ -1,4 +1,4 @@
-Publisher::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
   # The test environment is used exclusively to run your application's
@@ -12,6 +12,10 @@ Publisher::Application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
 
+  # Configure static file server for tests with Cache-Control for performance.
+  config.serve_static_files   = true
+  config.static_cache_control = 'public, max-age=3600'
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
@@ -23,12 +27,15 @@ Publisher::Application.configure do
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment
-  config.action_controller.allow_forgery_protection    = false
+  config.action_controller.allow_forgery_protection = false
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+
+  # Randomize the order test cases are executed.
+  config.active_support.test_order = :random
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -40,5 +47,4 @@ Publisher::Application.configure do
 
   config.action_mailer.default_url_options = { :host => "example.com" }
 
-  config.active_support.test_order = :sorted
 end
