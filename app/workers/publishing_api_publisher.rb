@@ -1,9 +1,7 @@
 require 'services'
 
-class PublishingAPIPublisher
-  include Sidekiq::Worker
-
-  def perform(edition_id, update_type = "minor")
+class PublishingAPIPublisher < WorkerBase
+  def call(edition_id, update_type = "minor")
     edition = Edition.find(edition_id)
     content_id = edition.artefact.content_id
 
