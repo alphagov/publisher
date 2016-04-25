@@ -6,6 +6,7 @@ require 'capybara/poltergeist'
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include Warden::Test::Helpers
 
   teardown do
     Capybara.reset_sessions!    # Forget the (simulated) browser state
@@ -19,6 +20,11 @@ class ActionDispatch::IntegrationTest
     # tests that cover the oauth interaction properly
     @author   = FactoryGirl.create(:user, :name=>"Author",   :email=>"test@example.com")
     @reviewer = FactoryGirl.create(:user, :name=>"Reviewer", :email=>"test@example.com")
+  end
+
+  def login_as(user)
+    GDS::SSO.test_user = user
+    super(user)
   end
 
   def assert_field_contains(expected, field)
