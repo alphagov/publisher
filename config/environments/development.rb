@@ -1,4 +1,4 @@
-Publisher::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
   # In the development environment your application's code is reloaded on
@@ -24,9 +24,17 @@ Publisher::Application.configure do
 
   config.action_mailer.default_url_options = { :host => "www.dev.gov.uk" }
 
-  # Do not compress assets
-  config.assets.compress = false
-
-  # Expands the lines which load the assets
+  # Debug mode disables concatenation and preprocessing of assets.
+  # This option may cause significant delays in view rendering with a large
+  # number of complex assets.
   config.assets.debug = true
+
+  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
+  # yet still be able to expire them through the digest params.
+  config.assets.digest = true
+
+  # Adds additional error checking when serving assets at runtime.
+  # Checks for improperly declared sprockets dependencies.
+  # Raises helpful error messages.
+  config.assets.raise_runtime_errors = true
 end

@@ -1,19 +1,4 @@
 GIT
-  remote: git://github.com/alphagov/govuk_content_models.git
-  revision: abc8edec36967cc3cd52a6196c2d54afda3d8777
-  branch: rails-mongoid-upgrade
-  specs:
-    govuk_content_models (33.0.0)
-      bson_ext
-      gds-api-adapters (>= 10.9.0)
-      gds-sso (~> 11.2)
-      govspeak (~> 3.1)
-      mongoid (~> 5.1)
-      plek
-      state_machines (~> 0.4)
-      state_machines-mongoid (~> 0.1)
-
-GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -165,6 +150,15 @@ GEM
       bootstrap-sass (= 3.3.5.1)
       jquery-rails (~> 3.1.3)
       rails (>= 3.2.0)
+    govuk_content_models (35.0.0)
+      bson_ext
+      gds-api-adapters (>= 10.9.0)
+      gds-sso (~> 11.2)
+      govspeak (~> 3.1)
+      mongoid (~> 5.1)
+      plek
+      state_machines (~> 0.4)
+      state_machines-mongoid (~> 0.1)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -451,7 +445,7 @@ DEPENDENCIES
   govuk-content-schema-test-helpers (~> 1.4)
   govuk-lint (~> 0.7)
   govuk_admin_template (= 4.2.0)
-  govuk_content_models!
+  govuk_content_models (= 35.0.0)
   has_scope
   inherited_resources
   jasmine (= 2.1.0)

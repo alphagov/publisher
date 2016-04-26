@@ -1,4 +1,4 @@
-Publisher::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
   # The production environment is meant for finished, "live" apps.
@@ -60,6 +60,9 @@ Publisher::Application.configure do
 
   # Generate digests for assets URLs.
   config.assets.digest = true
+
+  # Do not dump schema after migrations.
+  config.active_record.dump_schema_after_migration = false
 
   # Enable JSON-style logging
   config.logstasher.enabled = true

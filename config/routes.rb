@@ -1,4 +1,4 @@
-Publisher::Application.routes.draw do
+Rails.application.routes.draw do
   get '/healthcheck' => 'healthcheck#check'
 
   namespace :api do
