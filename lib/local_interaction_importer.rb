@@ -88,7 +88,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
     case mapit_type
     when 'DIS' then 'district'
     when 'CTY' then 'county'
-    when 'LBO','MTD','UTA', 'COI' then 'unitary'
+    when 'LBO', 'MTD', 'UTA', 'COI' then 'unitary'
     else
       'county'
     end
