@@ -24,7 +24,7 @@ class LocalInteractionImporter < LocalAuthorityDataImporter
 
     existing_interactions = authority.interactions_for(row['LGSL'], row['LGIL'])
     if existing_interactions.count == 0
-      # The source data sometimes has an 'X' in the URL field.  We don't want to create 
+      # The source data sometimes has an 'X' in the URL field.  We don't want to create
       # entries for these lines
       unless row['Service URL'].strip.upcase == 'X'
         authority.local_interactions.create!(
