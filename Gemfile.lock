@@ -118,7 +118,7 @@ GEM
       actionpack (>= 3.0)
     formtastic-bootstrap (3.0.0)
       formtastic (>= 2.2)
-    gds-api-adapters (29.6.0)
+    gds-api-adapters (30.2.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -439,7 +439,7 @@ DEPENDENCIES
   factory_girl_rails
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
-  gds-api-adapters (~> 29.6)
+  gds-api-adapters (~> 30.2.0)
   gds-sso (~> 11.2)
   govspeak (~> 3.4.0)
   govuk-content-schema-test-helpers (~> 1.4)

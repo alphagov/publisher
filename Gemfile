@@ -20,7 +20,7 @@ end
 if ENV['API_DEV']
   gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '~> 29.6'
+  gem 'gds-api-adapters', '~> 30.2.0'
 end
 
 gem 'erubis'
