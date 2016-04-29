@@ -8,6 +8,12 @@
 <% end %>
 
 <div class="builder-container">
+  <div class="row">
+    <div class="col-md-8">
+      <label for="edition_start_button_text" class="control-label">Start button text</label>
+      <%= f.select :start_button_text, ["Start now", "Continue", "Next"], {}, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
+    </div>
+  </div>
   <div class="nodes" id="nodes">
     <%# We need to output questions followed by outcomes but the potential for unsaved (invalid) nodes rules out the user of database ordering. So we must instead sort the collection by node order ascending (a.order <=> b.order) within node kind descending (b.kind <=> a.kind). %>
     <%= f.semantic_fields_for :nodes, @resource.nodes.sort {|a,b| [b.kind, a.order] <=> [a.kind, b.order] }, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>

@@ -236,6 +236,7 @@ protected
     when :simple_smart_answer_edition
       [
         :body,
+        :start_button_text,
         nodes_attributes: [
           :slug, :title, :body, :order, :kind, :id, :_destroy,
           options_attributes: [:label, :next_node, :id, :_destroy]
