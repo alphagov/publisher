@@ -216,7 +216,12 @@ protected
         :body,
         nodes_attributes: [
           :slug, :title, :body, :order, :kind, :id, :_destroy,
-          options_attributes: [:label, :next_node, :id, :_destroy]
+          options_attributes: [
+            :label, :next_node, :id, :_destroy,
+            conditions_attributes: [
+              :slug, :label, :next_node, :id, :_destroy
+            ]
+          ]
         ],
       ]
     when :transaction_edition

@@ -319,8 +319,14 @@ class EditionsControllerTest < ActionController::TestCase
       @artefact = FactoryGirl.create(:artefact, :slug => "foo", :name => "Foo", :kind => "simple_smart_answer", :owning_app => "publisher")
       @edition = FactoryGirl.create(:simple_smart_answer_edition, :body => "blah", :state => "draft", :slug => "foo", :panopticon_id => @artefact.id)
       @edition.nodes.build(:kind => "question", :slug => "question-1", :title => "Question One", :options_attributes => [
+        { :label => "Option One", :next_node => "question-2" },
+        { :label => "Option Two", :next_node => "question-2" }
+      ])
+      first_condition = { slug: "question-1", label: "Option One", next_node: "outcome-2"}
+      second_condition = { slug: "question-1", label: "Option Two", next_node: "outcome-1"}
+      @edition.nodes.build(:kind => "question", :slug => "question-2", :title => "Question Two", :options_attributes => [
         { :label => "Option One", :next_node => "outcome-1" },
-        { :label => "Option Two", :next_node => "outcome-2" }
+        { :label => "Option Two", :conditions_attributes => [first_condition, second_condition] }
       ])
       @edition.nodes.build(:kind => "outcome", :slug => "outcome-1", :title => "Outcome One")
       @edition.nodes.build(:kind => "outcome", :slug => "outcome-2", :title => "Outcome Two")
@@ -341,7 +347,10 @@ class EditionsControllerTest < ActionController::TestCase
             "id" => @edition.nodes.all[1].id
           },
           "2" => {
-            "id" => @edition.nodes.all[2].id,
+            "id" => @edition.nodes.all[2].id
+          },
+          "3" => {
+            "id" => @edition.nodes.all[3].id,
             "_destroy" => "1"
           }
         }
@@ -351,14 +360,102 @@ class EditionsControllerTest < ActionController::TestCase
 
       @edition.reload
 
-      assert_equal 2, @edition.nodes.count
-      assert_equal 1, @edition.nodes.where(:kind => "question").count
+      assert_equal 3, @edition.nodes.count
+      assert_equal 2, @edition.nodes.where(:kind => "question").count
       assert_equal 1, @edition.nodes.where(:kind => "outcome").count
 
       question = @edition.nodes.where(:kind => "question").first
       assert_equal 1, question.options.count
       assert_equal "Option One", question.options.first.label
+    end
 
+    should "remove the next_node of an option and add a condition in a single request" do
+      atts = {
+        :nodes_attributes => {
+          "0" => {
+            "id" => @edition.nodes.all[0].id,
+            "options_attributes" => {
+              "0" => { "id" => @edition.nodes.first.options.all[0].id },
+              "1" => { "id" => @edition.nodes.first.options.all[1].id }
+            },
+          },
+          "1" => {
+            "id" => @edition.nodes.all[1].id,
+            "options_attributes" => {
+              "0" => {
+                "id" => @edition.nodes[1].options.all[0].id,
+                "next_node" => nil,
+                "conditions_attributes" => [
+                  {
+                    :slug => "question-1",
+                    :label => "Option One",
+                    :next_node => "outcome-1"
+                  }
+                ]
+              },
+              "1" => { "id" => @edition.nodes[1].options.all[1].id }
+            }
+          },
+          "2" => {
+            "id" => @edition.nodes.all[2].id
+          },
+          "3" => {
+            "id" => @edition.nodes.all[3].id
+          }
+        }
+      }
+
+      put :update, :id => @edition.id, :edition => atts
+      assert_redirected_to edition_path(@edition)
+
+      @edition.reload
+
+      question = @edition.nodes.where(:kind => "question").last
+      assert_equal nil, question.options.first.next_node
+      assert_equal 1, question.options.first.conditions.count
+    end
+
+    should "remove a condition and option from a node in a single request" do
+      atts = {
+        :nodes_attributes => {
+          "0" => {
+            "id" => @edition.nodes.all[0].id,
+            "options_attributes" => {
+              "0" => { "id" => @edition.nodes.first.options.all[0].id },
+              "1" => { "id" => @edition.nodes.first.options.all[1].id, "_destroy" => "1" }
+            },
+          },
+          "1" => {
+            "id" => @edition.nodes.all[1].id,
+            "options_attributes" => {
+              "0" => { "id" => @edition.nodes[1].options.all[0].id },
+              "1" => {
+                "id" => @edition.nodes[1].options.all[1].id,
+                "conditions_attributes" => {
+                  "0" => { "id" => @edition.nodes[1].options.all[1].conditions.all[0].id },
+                  "1" => { "id" => @edition.nodes[1].options.all[1].conditions.all[1].id, "_destroy" => "1" }
+                }
+              }
+            }
+          },
+          "2" => {
+            "id" => @edition.nodes.all[2].id
+          },
+          "3" => {
+            "id" => @edition.nodes.all[3].id
+          }
+        }
+      }
+
+      put :update, :id => @edition.id, :edition => atts
+      assert_redirected_to edition_path(@edition)
+      @edition.reload
+
+      question_one = @edition.nodes.where(:kind => "question").first
+      assert_equal 1, question_one.options.count
+
+      question_two = @edition.nodes.where(:kind => "question").last
+      assert_equal 1, question_two.options.last.conditions.count
     end
   end
 end
