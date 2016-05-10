@@ -352,11 +352,15 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         :slug => "can-i-get-a-driving-licence"
       )
       @edition.nodes.build(:slug => "question-1", :order => 1, :title => "To be or not to be?", :kind => "question", :options_attributes => [
-        { :label => "That is the question", :next_node => "outcome-1" },
-        { :label => "That is not the question", :next_node => "outcome-2" }
+        { :label => "That is the question", :next_node => "question-2" },
+        { :label => "That is not the question", :next_node => "question-2" }
       ])
-      @edition.nodes.build(:slug => "outcome-1", :order => 2, :title => "Outcome One", :kind => "outcome")
-      @edition.nodes.build(:slug => "outcome-2", :order => 3, :title => "Outcome Two", :kind => "outcome")
+      @edition.nodes.build(:slug => "question-2", :order => 2, :title => "Question Two", :kind => "question", :options_attributes => [
+        { :label => "Yes", :next_node => "outcome-1" },
+        { :label => "No", :next_node => "outcome-2" }
+      ])
+      @edition.nodes.build(:slug => "outcome-1", :order => 3, :title => "Outcome One", :kind => "outcome")
+      @edition.nodes.build(:slug => "outcome-2", :order => 4, :title => "Outcome Two", :kind => "outcome")
       @edition.save!
     end
 
@@ -376,8 +380,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
 
       within ".builder-container" do
-        assert page.has_css?(".nodes .node", count: 3)
-        assert page.has_css?(".nodes .question", count: 1)
+        assert page.has_css?(".nodes .node", count: 4)
+        assert page.has_css?(".nodes .question", count: 2)
         assert page.has_css?(".nodes .outcome", count: 2)
 
         assert page.has_link? "Add question"
@@ -392,30 +396,34 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           within ".options > div:nth-of-type(1)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_0_label", :with => "That is the question")
             assert page.has_select?("next-node-list",
-              :options => ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
-              :selected => "Outcome 1 (Outcome One)"
+              :options => ["Select a node..", "Question 2 (Question Two)", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+              :selected => "Question 2 (Question Two)"
             )
           end
 
           within ".options > div:nth-of-type(2)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", :with => "That is not the question")
             assert page.has_select?("next-node-list",
-              :options => ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
-              :selected => "Outcome 2 (Outcome Two)"
+              :options => ["Select a node..", "Question 2 (Question Two)", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+              :selected => "Question 2 (Question Two)"
             )
           end
         end
 
         within ".nodes .node:nth-child(2)" do
+          assert page.has_content?("Question 2")
+        end
+
+        within ".nodes .node:nth-child(3)" do
           assert page.has_content?("Outcome 1")
-          assert page.has_field?("edition_nodes_attributes_1_title", :with => "Outcome One")
+          assert page.has_field?("edition_nodes_attributes_2_title", :with => "Outcome One")
 
           assert page.has_no_css?(".options")
         end
 
-        within ".nodes .node:nth-child(3)" do
+        within ".nodes .node:nth-child(4)" do
           assert page.has_content?("Outcome 2")
-          assert page.has_field?("edition_nodes_attributes_2_title", :with => "Outcome Two")
+          assert page.has_field?("edition_nodes_attributes_3_title", :with => "Outcome Two")
 
           assert page.has_no_css?(".options")
         end
@@ -430,31 +438,31 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert_equal "1", page.find_by_id('edition_nodes_attributes_0_options_attributes_1__destroy', :visible => false).value
       end
 
-      within ".nodes .outcome:nth-child(3)" do
+      within ".nodes .outcome:nth-child(4)" do
         find_link("Remove node").trigger("click")
-        assert_equal "1", page.find_by_id('edition_nodes_attributes_2__destroy', :visible => false).value
+        assert_equal "1", page.find_by_id('edition_nodes_attributes_3__destroy', :visible => false).value
       end
       assert page.has_no_content?("Outcome 2")
-      assert page.has_selector?(".nodes .outcome:nth-child(3)", :visible => false)
+      assert page.has_selector?(".nodes .outcome:nth-child(4)", :visible => false)
 
       save_edition
 
       page.has_content?("Simple smart answer edition was successfully updated.")
 
-      assert page.has_css?(".nodes .question", count: 1)
+      assert page.has_css?(".nodes .question", count: 2)
       assert page.has_css?(".nodes .outcome", count: 1)
-      assert page.has_css?(".nodes .node", count: 2)
+      assert page.has_css?(".nodes .node", count: 3)
     end
 
     should "reset the next node value in options when a node is deleted" do
       visit "/editions/#{@edition.id}"
 
-      within ".nodes .outcome:nth-child(3)" do
+      within ".nodes .outcome:nth-child(4)" do
         click_link "Remove node"
       end
 
-      within ".nodes .node:first-child .option:nth-child(2)" do
-        assert_equal "", page.find_by_id('edition_nodes_attributes_0_options_attributes_1_next_node', :visible => false).value
+      within ".nodes .node:nth-child(2) .option:nth-child(2)" do
+        assert_equal "", page.find_by_id('edition_nodes_attributes_1_options_attributes_1_next_node', :visible => false).value
         assert page.has_select?("next-node-list",
           :options => ["Select a node..", "Outcome 1 (Outcome One)"],
           :selected => "Select a node.."
@@ -467,12 +475,12 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       visit "/editions/#{@edition.id}"
 
-      assert page.has_css?(".nodes .question", count: 1)
+      assert page.has_css?(".nodes .question", count: 2)
       assert page.has_css?(".nodes .outcome", count: 2)
 
       find('a', text: 'Add outcome').trigger('click')
 
-      within ".nodes .outcome:nth-child(4)" do
+      within ".nodes .outcome:nth-child(5)" do
         assert_equal "outcome-4", find(:css, 'input.node-slug', :visible => false).value
         assert page.has_content?("Outcome 4")
       end
@@ -485,18 +493,19 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         assert_equal "1", find(:css, '.node:nth-child(1) .node-order', :visible => false).value
         assert_equal "2", find(:css, '.node:nth-child(2) .node-order', :visible => false).value
         assert_equal "3", find(:css, '.node:nth-child(3) .node-order', :visible => false).value
+        assert_equal "4", find(:css, '.node:nth-child(4) .node-order', :visible => false).value
       end
 
       find('a', text: 'Add outcome').trigger('click')
 
       within ".nodes" do
-        assert_equal "4", find(:css, '.node:nth-child(4) .node-order', :visible => false).value
+        assert_equal "5", find(:css, '.node:nth-child(5) .node-order', :visible => false).value
       end
 
       find('a', text: 'Add question').trigger('click')
 
       within ".nodes" do
-        assert_equal "5", find(:css, '.node:nth-child(5) .node-order', :visible => false).value
+        assert_equal "6", find(:css, '.node:nth-child(6) .node-order', :visible => false).value
       end
     end
 
