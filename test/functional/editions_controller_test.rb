@@ -318,6 +318,7 @@ class EditionsControllerTest < ActionController::TestCase
     setup do
       @artefact = FactoryGirl.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
       @edition = FactoryGirl.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
+      # Node 0
       @edition.nodes.build(
         kind: "question",
         slug: "question-1",
@@ -333,6 +334,7 @@ class EditionsControllerTest < ActionController::TestCase
           }
         ]
       )
+      # Node 1
       @edition.nodes.build(
         kind: "question",
         slug: "question-2",
@@ -359,11 +361,13 @@ class EditionsControllerTest < ActionController::TestCase
           }
         ]
       )
+      # Node 2
       @edition.nodes.build(
         kind: "outcome",
         slug: "outcome-1",
         title: "Outcome One"
       )
+      # Node 3
       @edition.nodes.build(
         kind: "outcome",
         slug: "outcome-2",
@@ -378,20 +382,11 @@ class EditionsControllerTest < ActionController::TestCase
           "0": {
             id: @edition.nodes.all[0].id,
             options_attributes: {
-              "0": {
-                id: @edition.nodes.first.options.all[0].id
-              },
               "1": {
                 id: @edition.nodes.first.options.all[1].id,
                 _destroy: 1
               }
             },
-          },
-          "1": {
-            id: @edition.nodes.all[1].id
-          },
-          "2": {
-            id: @edition.nodes.all[2].id
           },
           "3": {
             id: @edition.nodes.all[3].id,
@@ -416,17 +411,6 @@ class EditionsControllerTest < ActionController::TestCase
     should "remove the next_node of an option and add a condition in a single request" do
       atts = {
         nodes_attributes: {
-          "0": {
-            id: @edition.nodes.all[0].id,
-            options_attributes: {
-              "0": {
-                id: @edition.nodes.first.options.all[0].id
-              },
-              "1": {
-                id: @edition.nodes.first.options.all[1].id
-              }
-            },
-          },
           "1": {
             id: @edition.nodes.all[1].id,
             options_attributes: {
@@ -440,17 +424,8 @@ class EditionsControllerTest < ActionController::TestCase
                     next_node: "outcome-1"
                   }
                 ]
-              },
-              "1": {
-                id: @edition.nodes[1].options.all[1].id
               }
             }
-          },
-          "2": {
-            id: @edition.nodes.all[2].id
-          },
-          "3": {
-            id: @edition.nodes.all[3].id
           }
         }
       }
@@ -471,9 +446,6 @@ class EditionsControllerTest < ActionController::TestCase
           "0": {
             id: @edition.nodes.all[0].id,
             options_attributes: {
-              "0": {
-                id: @edition.nodes.first.options.all[0].id
-              },
               "1": {
                 id: @edition.nodes.first.options.all[1].id,
                 _destroy: 1
@@ -483,15 +455,9 @@ class EditionsControllerTest < ActionController::TestCase
           "1": {
             id: @edition.nodes.all[1].id,
             options_attributes: {
-              "0": {
-                id: @edition.nodes[1].options.all[0].id
-              },
               "1": {
                 id: @edition.nodes[1].options.all[1].id,
                 conditions_attributes: {
-                  "0": {
-                    id: @edition.nodes[1].options.all[1].conditions.all[0].id
-                  },
                   "1": {
                     id: @edition.nodes[1].options.all[1].conditions.all[1].id,
                     _destroy: 1
@@ -499,12 +465,6 @@ class EditionsControllerTest < ActionController::TestCase
                 }
               }
             }
-          },
-          "2": {
-            id: @edition.nodes.all[2].id
-          },
-          "3": {
-            id: @edition.nodes.all[3].id
           }
         }
       }
