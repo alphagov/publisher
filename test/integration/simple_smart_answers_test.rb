@@ -217,9 +217,23 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
         within ".nodes .question:nth-child(2) .option:first-child" do
           assert page.has_selector?(".conditions")
+          assert page.has_css?(".options .condition", count: 1)
           assert page.has_css?(".conditions .condition-label", count: 1)
           assert page.has_css?(".conditions .previous-question-list", count: 1)
           assert page.has_css?(".conditions .next-node-list", count: 1)
+        end
+      end
+    end
+
+    should "allow additional condtions to be added to an option" do
+      find('a', text: 'Add question').trigger('click')
+      within ".nodes .question:nth-child(2)" do
+        find('a', text: 'Add a condition').trigger('click')
+        find('a', text: 'Add a condition').trigger('click')
+
+        within ".nodes .question:nth-child(2) .option:first-child" do
+          assert page.has_selector?(".conditions")
+          assert page.has_css?(".options .condition", count: 2)
         end
       end
     end

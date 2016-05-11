@@ -28,7 +28,7 @@
             <span class="help-inline"><%= o.object.errors[:next_node].join(', ') %></span>
           <% end -%>
           <div class="conditions">
-            <%= o.semantic_fields_for :conditions do |c| %>
+            <%= o.semantic_fields_for :conditions, :wrapper_class => "outcome-wrap condition" do |c| %>
               IF
               <%= c.input :slug, :as => :hidden, :input_html => { :class => "previous-question-id" } %>
               <select class="form-control required previous-question-list" name="previous-question-list">
