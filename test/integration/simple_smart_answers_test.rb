@@ -210,6 +210,13 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "build an initial condition for an option" do
+      find('a', text: 'Add question').trigger('click')
+      within ".nodes .question:nth-child(2)" do
+        find('a', text: 'Add a condition').trigger('click')
+      end
+    end
+
     should "set the next node id from the select box" do
       find('a', text: 'Add outcome').trigger('click')
       find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")

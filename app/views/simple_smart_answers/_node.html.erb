@@ -27,6 +27,13 @@
           <% if o.object.errors.has_key?(:next_node) -%>
             <span class="help-inline"><%= o.object.errors[:next_node].join(', ') %></span>
           <% end -%>
+          <div class="conditions">
+            <%= o.semantic_fields_for :conditions do |c| %>
+              <%= c.input :label, :label => false, :input_html => { :placeholder => "Label", :class => "condition-label" } %>
+              <%= c.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i>Remove condition".html_safe %>
+            <% end %>
+            <%= o.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add a condition".html_safe, :conditions, :class => "btn btn-primary" %>
+          </div>
         </div>
       <% end %>
       <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add an option".html_safe, :options, :class => "btn btn-primary" %>
