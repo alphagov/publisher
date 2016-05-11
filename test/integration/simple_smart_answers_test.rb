@@ -355,10 +355,33 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         { :label => "That is the question", :next_node => "question-2" },
         { :label => "That is not the question", :next_node => "question-2" }
       ])
-      @edition.nodes.build(:slug => "question-2", :order => 2, :title => "Question Two", :kind => "question", :options_attributes => [
-        { :label => "Yes", :next_node => "outcome-1" },
-        { :label => "No", :next_node => "outcome-2" }
-      ])
+      @edition.nodes.build(
+        slug: "question-2",
+        order: 2,
+        title: "Question Two",
+        kind: "question",
+        options_attributes: [
+          {
+            label: "Yes",
+            next_node: "outcome-1"
+          },
+          {
+            label: "No",
+            conditions_attributes: [
+              {
+                slug: "question-1",
+                label: "That is not the question",
+                next_node: "outcome-1"
+              },
+              {
+                slug: "question-1",
+                label: "That is the question",
+                next_node: "outcome-2"
+              }
+            ]
+          }
+        ]
+      )
       @edition.nodes.build(:slug => "outcome-1", :order => 3, :title => "Outcome One", :kind => "outcome")
       @edition.nodes.build(:slug => "outcome-2", :order => 4, :title => "Outcome Two", :kind => "outcome")
       @edition.save!
