@@ -238,6 +238,21 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "show a list of subsequent nodes in the next_node select box in conditions" do
+      find('a', text: 'Add question').trigger('click')
+      find('a', text: 'Add outcome').trigger('click')
+
+      find(:css, ".nodes .question:nth-child(2) input.node-title").set("Label for Question Two")
+      find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")
+
+      within ".nodes .question:nth-child(2)" do
+        find('a', text: 'Add a condition').trigger('click')
+        within ".nodes .question:nth-child(2) .option:first-child .conditions" do
+          assert page.has_select?("next-node-list", options: ["Select a node..", "Outcome 1 (Label for Outcome One)"])
+        end
+      end
+    end
+
     should "set the next node id from the select box" do
       find('a', text: 'Add outcome').trigger('click')
       find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")
