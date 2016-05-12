@@ -125,6 +125,7 @@
     },
     reloadNextNodeList: function(node) {
       var nextNodeField = node.find('.next-node-list');
+      // console.log("nextNodeField outer", nextNodeField);
       nextNodeField.find('option:not(.default)').remove();
 
       var validNextNodes = smartAnswerBuilder.optionsForNode(node);
@@ -163,7 +164,27 @@
     updateNextNode: function() {
       var nextNode = $(this).val();
       $(this).closest('.option').find('.next-node-id').val(nextNode);
+    },
+
+    updateConditions: function (e) {
+      var nestedForm = new NestedFormEvents();
+      nestedForm.addFields(e);
+      var node = $(e.currentTarget).closest('div.fields.row.node');
+      var validNextNodes = smartAnswerBuilder.optionsForNode(node);
+      node.closest('.condition').find('.next-node-condition-list').ready(function(){
+        var that = $(this);
+        console.log("hello world");
+        $.each( validNextNodes, function(i, x) {
+          var optionLabel = x.name;
+          if (x.label != '') {
+            optionLabel = optionLabel + " (" + x.label + ")";
+          }
+          $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(that.find('optgroup[class="'+ x.kind +'-list"]'));
+        });
+      })
     }
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;
+
+  $("a[data-association='conditions']").on('click', root.Publisher.smartAnswerBuilder.updateConditions)
 }).call(this);
