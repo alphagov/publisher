@@ -248,7 +248,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       within ".nodes .question:nth-child(2)" do
         find('a', text: 'Add a condition').trigger('click')
         within ".nodes .question:nth-child(2) .option:first-child .condition:first-child" do
-          assert page.has_select?("next-node-condition-list", options: ["Select a node..", "Outcome 1 (Label for Outcome One)"]), "Page missing select next-node-condition-list"
+          assert page.has_select?("next-node-condition-list", options: ["Select a node..", "Outcome 1 (Label for Outcome One)"])
         end
       end
     end

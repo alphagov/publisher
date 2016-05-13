@@ -170,8 +170,8 @@
       nestedForm.addFields(e);
       var node = $(e.currentTarget).closest('.node');
       var validNextNodes = smartAnswerBuilder.optionsForNode(node);
-      node.closest('.condition').find('.next-node-condition-list').ready(function(){
-        var conditionNode = $(this).find(node);
+      $(document).ready(function(){
+        var conditionNode = $(this).find(node).find('.next-node-condition-list');
         conditionNode.find('option:not(.default)').remove();
         $.each( validNextNodes, function(i, x) {
           var optionLabel = x.name;
