@@ -220,7 +220,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           assert page.has_css?(".options .condition", count: 1)
           assert page.has_css?(".conditions .condition-label", count: 1)
           assert page.has_css?(".conditions .previous-question-list", count: 1)
-          assert page.has_css?(".conditions .next-node-list", count: 1)
+          assert page.has_css?(".conditions .next-node-condition-list", count: 1)
         end
       end
     end
@@ -247,8 +247,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".nodes .question:nth-child(2)" do
         find('a', text: 'Add a condition').trigger('click')
-        within ".nodes .question:nth-child(2) .option:first-child .conditions" do
-          assert page.has_select?("next-node-list", options: ["Select a node..", "Outcome 1 (Label for Outcome One)"])
+        within ".nodes .question:nth-child(2) .option:first-child .condition:first-child" do
+          assert page.has_select?("next-node-condition-list", options: ["Select a node..", "Outcome 1 (Label for Outcome One)"]), "Page missing select next-node-condition-list"
         end
       end
     end
