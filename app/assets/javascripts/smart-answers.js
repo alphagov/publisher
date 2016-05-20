@@ -23,6 +23,8 @@
       $(document).on('nested:fieldRemoved:nodes', smartAnswerBuilder.reloadAllNextNodeLists);
 
       $(document).on('nested:fieldAdded:options', smartAnswerBuilder.initOption);
+
+      $('.nodes').on('click', "a[data-association='conditions']", smartAnswerBuilder.updateConditions)
     },
     container: $('.builder-container'),
     addQuestion: function() {
@@ -152,6 +154,35 @@
         }
       });
     },
+    reloadNextNodeListCondition: function(node) {
+      var nextNodeField = node.find('.next-node-condition-list');
+      nextNodeField.find('option:not(.default)').remove();
+
+      var validNextNodes = smartAnswerBuilder.optionsForNode(node);
+      var validNextIds = $.map(validNextNodes, function(n){ return n.id; });
+
+      $.each( validNextNodes, function(i, x) {
+        var optionLabel = x.name;
+        if (x.label != '') {
+          optionLabel = optionLabel + " (" + x.label + ")";
+        }
+        $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(nextNodeField.find('optgroup[class="'+ x.kind +'-list"]'));
+      });
+
+      node.find('.condition').each( function(i, option){
+        var valueField = $(option).find('.next-node-id').first();
+        var selectList = $(option).find('.next-node-condition-list');
+
+        var nextNodeId = valueField.val();
+
+        if (validNextIds.indexOf(nextNodeId) != -1) {
+          selectList.val(nextNodeId);
+        } else {
+          valueField.val("");
+          selectList.val("");
+        }
+      });
+    },
     optionsForNode: function(node) {
       var nextNodes = node.nextAll(':visible');
 
@@ -169,23 +200,10 @@
       var nestedForm = new NestedFormEvents();
       nestedForm.addFields(e);
       var node = $(e.currentTarget).closest('.node');
-      var validNextNodes = smartAnswerBuilder.optionsForNode(node);
-      $(document).ready(function(){
-        var conditionNode = $(this).find(node).find('.next-node-condition-list');
-        conditionNode.find('option:not(.default)').remove();
-        $.each( validNextNodes, function(i, x) {
-          var optionLabel = x.name;
-          if (x.label != '') {
-            optionLabel = optionLabel + " (" + x.label + ")";
-          }
-          $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(conditionNode.find('optgroup[class="'+ x.kind +'-list"]'));
-        });
-      })
-
+      smartAnswerBuilder.reloadNextNodeListCondition(node);
       return false;
     }
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;
 
-  $("a[data-association='conditions']").on('click', root.Publisher.smartAnswerBuilder.updateConditions)
 }).call(this);
