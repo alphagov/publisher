@@ -239,7 +239,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
-    should "allow additional condtions to be added to an option" do
+    should "allow additional conditions to be added to an option" do
       find('a', text: 'Add question').trigger('click')
       within ".nodes .question:nth-child(2)" do
         find('a', text: 'Add a condition').trigger('click')
@@ -277,6 +277,22 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
         select "Select a node..", :from => "next-node-list"
         assert_equal "", find(:css, 'input.next-node-id', :visible => false).value
+      end
+    end
+
+    should "not show the next-node-list if a condition is added to an option" do
+      find('a', text: 'Add question').trigger('click')
+
+      within ".nodes .question:nth-child(2)" do
+        find('a', text: 'Add an option').trigger('click')
+        within ".nodes .question:nth-child(2) .option:first-child" do
+          find('a', text: 'Add a condition').trigger('click')
+          refute page.has_css?("select.next-node-list")
+        end
+
+        within ".nodes .question:nth-child(2) .option:nth-child(2)" do
+          assert page.has_css?("select.next-node-list")
+        end
       end
     end
 

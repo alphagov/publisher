@@ -211,7 +211,10 @@
     updateConditions: function(e) {
       var nestedForm = new NestedFormEvents();
       nestedForm.addFields(e);
-      var node = $(e.currentTarget).closest('.node');
+      var target = $(e.currentTarget)
+      var node = target.closest('.node');
+      var option = target.closest('.option')
+      option.find('.next-node-list').hide()
       smartAnswerBuilder.reloadNextNodeListCondition(node);
       return false;
     }
