@@ -10,6 +10,8 @@
       smartAnswerBuilder.setEventHandlers();
       smartAnswerBuilder.reloadAllNextNodeLists();
       smartAnswerBuilder.setupInitialQuestion();
+      smartAnswerBuilder.hideConditionsInFirstQuestion();
+
     },
     lastNodeKind: null,
     setEventHandlers: function() {
@@ -118,7 +120,17 @@
     },
     initOption: function(e) {
       var node = $(e.field).parents(".node").first();
+      smartAnswerBuilder.hideConditionsInFirstQuestion(node);
       smartAnswerBuilder.reloadNextNodeList(node);
+    },
+    hideConditionsInFirstQuestion: function(node) {
+      if (typeof node  === 'undefined') {
+        node = $('.nodes .question:first-child')
+      }
+      var nodeOrder = node.find('input.node-order').val();
+      if (nodeOrder == '1') {
+        node.find('.options .conditions').hide()
+      }
     },
     reloadAllNextNodeLists: function() {
       $.each( smartAnswerBuilder.container.find('.node'), function(i,node) {

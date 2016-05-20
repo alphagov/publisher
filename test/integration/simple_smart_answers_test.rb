@@ -164,6 +164,20 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "not show condition for first question" do
+      find("a", text: "Add an option").trigger("click")
+      within ".nodes .question .option:first-child" do
+        assert page.has_no_selector?(".conditions")
+        assert page.has_no_link?("Add a condition")
+        assert page.has_no_select?("next-node-condition-list")
+      end
+      within ".nodes .question .option:nth-child(2)" do
+        assert page.has_no_selector?(".conditions")
+        assert page.has_no_link?("Add a condition")
+        assert page.has_no_select?("next-node-condition-list")
+      end
+    end
+
     should "not show options for a outcome" do
       find('a', text: 'Add outcome').trigger('click')
 
