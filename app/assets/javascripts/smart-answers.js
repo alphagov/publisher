@@ -209,14 +209,24 @@
     },
 
     updateConditions: function(e) {
-      var nestedForm = new NestedFormEvents();
-      nestedForm.addFields(e);
       var target = $(e.currentTarget)
       var node = target.closest('.node');
       var option = target.closest('.option')
-      option.find('.next-node-list').hide()
-      smartAnswerBuilder.reloadNextNodeListCondition(node);
-      return false;
+
+      if(target.hasClass('add_nested_fields')){
+        var nestedForm = new NestedFormEvents();
+        nestedForm.addFields(e);
+        option.find('.next-node-list').hide()
+        smartAnswerBuilder.reloadNextNodeListCondition(node);
+        return false;
+      }
+      else if (target.hasClass('remove_nested_fields')){
+        var numberOfConditions = option.find('.next-node-condition-list:visible').length
+        console.log("numberOfConditions", numberOfConditions);
+        if ( (numberOfConditions - 1) == 0) {
+          option.find('.next-node-list').show()
+        }
+      }
     }
   }
   root.Publisher.smartAnswerBuilder = smartAnswerBuilder;

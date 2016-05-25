@@ -14,7 +14,7 @@
         <optgroup label="Questions" class="question-list"></optgroup>
         <optgroup label="Outcomes" class="outcome-list"></optgroup>
       </select>
-      <%= c.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i>Remove condition".html_safe %>
+      <%= c.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i>Remove condition".html_safe, :class => "btn btn-default .remove_condition_button"  %>
     <% end %>
-    <%= o.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add a condition".html_safe, :conditions, :class => "btn btn-primary nested_test" %>
+    <%= o.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add a condition".html_safe, :conditions, :class => "btn btn-primary .add_condition_button" %>
 </div>

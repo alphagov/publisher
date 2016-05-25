@@ -296,6 +296,38 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "show the next-node-list for an option when a condition is removed" do
+      find('a', text: 'Add question').trigger('click')
+      within ".nodes .question:nth-child(2) .option:first-child" do
+        find('a', text: 'Add a condition').trigger('click')
+        refute page.has_css?("select.next-node-list")
+
+        within ".nodes .question:nth-child(2) .option:first-child .condition:first-child" do
+          click_link "Remove condition"
+        end
+        assert page.has_css?("select.next-node-list")
+      end
+    end
+
+    should "only show the next-node-list for an option when all conditions are removed" do
+      find('a', text: 'Add question').trigger('click')
+      within ".nodes .question:nth-child(2) .option:first-child" do
+        find('a', text: 'Add a condition').trigger('click')
+        refute page.has_css?("select.next-node-list")
+
+        find('a', text: 'Add a condition').trigger('click')
+        within ".nodes .question:nth-child(2) .option:first-child .condition:nth-child(2)" do
+          click_link "Remove condition"
+        end
+        refute page.has_css?("select.next-node-list")
+
+        within ".nodes .question:nth-child(2) .option:first-child .condition:first-child" do
+          click_link "Remove condition"
+        end
+        assert page.has_css?("select.next-node-list")
+      end
+    end
+
     should "persist a valid smart answer" do
       within ".nodes .question:first-child" do
         find(:css, "input.node-title").set("Which driving licence do you hold?")
