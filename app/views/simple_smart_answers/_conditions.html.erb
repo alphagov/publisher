@@ -4,6 +4,7 @@
       <%= c.input :slug, :as => :hidden, :input_html => { :class => "previous-question-id" } %>
       <select class="form-control required previous-question-list" name="previous-question-list">
         <option value="" class="default">Select a question..</option>
+        <optgroup label="Questions" class="question-list"></optgroup>
       </select>
       ==
       <%= c.input :label, :label => false, :input_html => { :placeholder => "Label", :class => "condition-label" } %>

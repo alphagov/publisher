@@ -195,10 +195,47 @@
         }
       });
     },
+    reloadPreviousNodeListCondition: function(node) {
+      var previousNodeField = node.find('.previous-question-list');
+      previousNodeField.find('option:not(.default)').remove();
+
+      var validPreviousNodes = smartAnswerBuilder.previousNodesForOption(node);
+      var validPreviousIds = $.map(validPreviousNodes, function(n){ return n.id; });
+
+      $.each( validPreviousNodes, function(i, x) {
+        var optionLabel = x.name;
+        if (x.label != '') {
+          optionLabel = optionLabel + " (" + x.label + ")";
+        }
+        $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(previousNodeField.find('optgroup[class="'+ x.kind +'-list"]'));
+      });
+
+      node.find('.condition').each( function(i, option){
+        var valueField = $(option).find('.previous-question-id').first();
+        var selectList = $(option).find('.previous-question-list');
+
+        var previousNodeId = valueField.val();
+
+        if (validPreviousIds.indexOf(previousNodeId) != -1) {
+          selectList.val(previousNodeId);
+        } else {
+          valueField.val("");
+          selectList.val("");
+        }
+      });
+    },
     optionsForNode: function(node) {
       var nextNodes = node.nextAll(':visible');
 
       return $.map( nextNodes, function(nodeContainer, i) {
+        node = $(nodeContainer);
+        return { id: node.find('.node-slug').val(), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() };
+      });
+    },
+    previousNodesForOption: function(node) {
+      var previousNodes = node.prevAll(':visible');
+
+      return $.map( previousNodes, function(nodeContainer, i) {
         node = $(nodeContainer);
         return { id: node.find('.node-slug').val(), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() };
       });
@@ -218,11 +255,11 @@
         nestedForm.addFields(e);
         option.find('.next-node-list').hide()
         smartAnswerBuilder.reloadNextNodeListCondition(node);
+        smartAnswerBuilder.reloadPreviousNodeListCondition(node);
         return false;
       }
       else if (target.hasClass('remove_nested_fields')){
         var numberOfConditions = option.find('.next-node-condition-list:visible').length
-        console.log("numberOfConditions", numberOfConditions);
         if ( (numberOfConditions - 1) == 0) {
           option.find('.next-node-list').show()
         }

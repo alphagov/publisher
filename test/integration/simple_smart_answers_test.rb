@@ -267,6 +267,19 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "show a list of previous nodes in the previous-question-list select box in conditions" do
+      find('a', text: 'Add question').trigger('click')
+      find(:css, ".nodes .question:first-child input.node-title").set("Label for Question One")
+      find(:css, ".nodes .question:nth-child(2) input.node-title").set("Label for Question Two")
+
+      within ".nodes .question:nth-child(2)" do
+        find('a', text: 'Add a condition').trigger('click')
+        within ".nodes .question:nth-child(2) .option:first-child .condition:first-child" do
+          assert page.has_select?("previous-question-list", options: ["Select a question..", "Question 1 (Label for Question One)"])
+        end
+      end
+    end
+
     should "set the next node id from the select box" do
       find('a', text: 'Add outcome').trigger('click')
       find(:css, ".nodes .outcome input.node-title").set("Label for Outcome One")
