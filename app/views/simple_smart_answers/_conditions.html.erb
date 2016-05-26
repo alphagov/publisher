@@ -9,7 +9,7 @@
       ==
       <%= c.input :label, :label => false, :input_html => { :placeholder => "Label", :class => "condition-label" } %>
       <i class="glyphicon glyphicon-arrow-right add-left-margin add-right-margin"></i>
-      <%= c.input :next_node, :as => :hidden, :input_html => { :class => "next-node-id" } %>
+      <%= c.input :next_node, :as => :hidden, :input_html => { :class => "next-node-condition-id" } %>
       <select class="form-control required next-node-condition-list" name="next-node-condition-list">
         <option value="" class="default">Select a node..</option>
         <optgroup label="Questions" class="question-list"></optgroup>

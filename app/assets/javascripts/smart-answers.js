@@ -20,6 +20,9 @@
 
       $('.nodes').on("change", ".node input.node-title", smartAnswerBuilder.reloadAllNextNodeLists);
       $('.nodes').on("change", ".node select.next-node-list", smartAnswerBuilder.updateNextNode);
+      $('.nodes').on("change", ".node select.previous-question-list", smartAnswerBuilder.updateNextNode);
+      $('.nodes').on("change", ".node select.next-node-condition-list", smartAnswerBuilder.updateNextNode);
+      $('.nodes').on("change", ".node input.condition-label", smartAnswerBuilder.updateNextNode);
 
       $(document).on('nested:fieldAdded:nodes', smartAnswerBuilder.initNode);
       $(document).on('nested:fieldRemoved:nodes', smartAnswerBuilder.reloadAllNextNodeLists);
@@ -241,8 +244,19 @@
       });
     },
     updateNextNode: function() {
-      var nextNode = $(this).val();
-      $(this).closest('.option').find('.next-node-id').val(nextNode);
+      var target = $(this);
+      var nextNode = target.val();
+      // target.closest('.option').find('.next-node-id').val(nextNode);
+
+      if(target.hasClass('next-node-list')){
+        target.closest('.option').find('.next-node-id').val(nextNode);
+      }
+      else if (target.hasClass('next-node-condition-list')) {
+        target.closest('.condition').find('.next-node-condition-id').val(nextNode);
+      }
+      else if (target.hasClass('previous-question-list')) {
+        target.closest('.condition').find('.previous-question-id').val(nextNode);
+      }
     },
 
     updateConditions: function(e) {

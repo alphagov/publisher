@@ -393,22 +393,29 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         find('a', text: 'Add an option').trigger('click')
 
         within ".option:nth-child(2)" do
-          find(:css, "input.option-label").set("A long time ago")
-          select "Outcome 3 (You can drive some of the things.)", :from => "next-node-list"
+          find('a', text: 'Add a condition').trigger('click')
+          find(:css, "input.option-label").set("Recently")
+          within ".condition:first-child" do
+            select "Outcome 2 (You can drive all the things.)", :from => "next-node-condition-list"
+            find(:css, "input.condition-label").set("Soon")
+            select "Question 1 (Which driving licence do you hold?)", :from => "previous-question-list"
+          end
         end
       end
 
       assert page.has_css?(".nodes .question", count: 2)
       assert page.has_css?(".nodes .outcome", count: 3)
       assert page.has_css?(".nodes .node", count: 5)
-
+      # assert page.has_css?(".nodes .question:nth-child(2) .option:nth-child(2) .condition", count: 1)
+      page.save_screenshot('tmp/capybara/before_save.png', full:true)
       save_edition
-
+      page.save_screenshot('tmp/capybara/after_save.png', full:true)
       assert page.has_content?("Simple smart answer edition was successfully updated.")
 
       assert page.has_css?(".nodes .question", count: 2)
       assert page.has_css?(".nodes .outcome", count: 3)
       assert page.has_css?(".nodes .node", count: 5)
+      # assert page.has_css?(".nodes .question:nth-child(2) .option:nth-child(2) .condition", count: 1)
     end
 
     should "preserve ordering of nodes when validation fails" do
