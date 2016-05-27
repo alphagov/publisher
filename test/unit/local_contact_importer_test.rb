@@ -58,18 +58,10 @@ class LocalContactImporterTest < ActiveSupport::TestCase
 
       auth2.reload
       assert_equal "Allerdale Borough Council", auth2.name
-      assert_equal ["Allerdale House", "Workington", "Cumbria", "CA14 3YJ"], auth2.contact_address
-      assert_equal "01900 702 702", auth2.contact_phone
-      assert_equal "enquiries@allerdale.gov.uk", auth2.contact_email
-      assert_equal "http://www.allerdale.gov.uk/contact-or-find-us.aspx", auth2.contact_url
       assert_equal "http://www.allerdale.gov.uk", auth2.homepage_url
 
       auth3 = LocalAuthority.find_by_snac("22UB")
       assert_equal "Basildon District Council", auth3.name
-      assert_equal ["The Basildon Centre", "St. Martin's Square", "Basildon", "Essex", "SS14 1DL"], auth3.contact_address
-      assert_equal "01268 533 333", auth3.contact_phone
-      assert_equal "mailroom@basildon.gov.uk", auth3.contact_email
-      assert_equal "http://www.basildon.gov.uk/contactus", auth3.contact_url
       assert_equal "http://www.basildon.gov.uk/", auth3.homepage_url
 
       assert_equal 2, LocalAuthority.count
@@ -89,37 +81,6 @@ Bedford Council &#40 Unitary&#41,http://www.bedford.gov.uk/,http://www.bedford.g
       assert_equal "Bedford Council ( Unitary)", auth.name
     end
 
-    should "handle HTML entities in phone numbers" do
-      source = StringIO.new(<<-END)
-Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
-Brighton & Hove City Council,http://www.brighton-hove.gov.uk/,http://www.brighton-hove.gov.uk/index.cfm?request=b1153064,00ML,Kings House,Grand Avenue,Hove,,East Sussex,BN3 2LS,,&#40;01273&#41; 290000,,,,&#40;01273&#41; 290111,,info@brighton-hove.gov.uk,Monday to Friday 9am to 5pm
-      END
-
-      auth = FactoryGirl.create(:local_authority, :snac => "00ML")
-
-      LocalContactImporter.new(source).run
-
-      auth.reload
-      assert_equal "(01273) 290000", auth.contact_phone
-    end
-
-    should "handle blank phone numbers" do
-      source = StringIO.new(<<-END)
-Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
-Stockport Metropolitan Borough Council,http://www.stockport.gov.uk/,http://www.stockport.gov.uk/contactus,00BS,Town Hall,Edward Street,Stockport,,Greater Manchester,SK1 3XE,,,,,,,,stockportdirect@stockport.gov.uk,8.30 - 5pm Mon - Thurs and 8.30 -4.30 on Friday
-      END
-
-      auth = FactoryGirl.create(:local_authority, :snac => "00BS")
-
-      # Call process_row directly to bypass the top-level error rescue
-      importer = LocalContactImporter.new(nil)
-      csv = CSV.new(source, :headers => true)
-      importer.send(:process_row, csv.shift)
-
-      auth.reload
-      assert_equal nil, auth.contact_phone
-    end
-
     should "add http:// to URLs without it" do
       source=StringIO.new(<<-END)
 Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
@@ -133,24 +94,7 @@ South Somerset District Council,www.southsomerset.gov.uk,www.southsomerset.gov.u
       importer.send(:process_row, csv.shift)
 
       auth.reload
-      assert_equal "http://www.southsomerset.gov.uk/get-in-touch", auth.contact_url
       assert_equal "http://www.southsomerset.gov.uk", auth.homepage_url
-    end
-
-    should "handle missing contact URLs" do
-      source=StringIO.new(<<-END)
-Name,Home page URL,Contact page URL,SNAC Code,Address Line 1,Address Line 2,Town,City,County,Postcode,Telephone Number 1 Description,Telephone Number 1,Telephone Number 2 Description,Telephone Number 2,Telephone Number 3 Description,Telephone Number 3,Fax,Main Contact Email,Opening Hours
-South Somerset District Council,http://www.southsomerset.gov.uk/,,40UD,Council Offices,Brympton Way,Yeovil,,Somerset,BA20 2HT,,01935 462 462,,,,,,,
-      END
-
-      auth = FactoryGirl.create(:local_authority, :snac => "40UD")
-      # Call process_row directly to bypass the top-level error rescue
-      importer = LocalContactImporter.new(nil)
-      csv = CSV.new(source, :headers => true)
-      importer.send(:process_row, csv.shift)
-
-      auth.reload
-      assert_equal nil, auth.contact_url
     end
 
     should "handle missing homepage URLs" do
