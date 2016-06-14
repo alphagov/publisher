@@ -1,11 +1,8 @@
-require "gds_api/publishing_api"
 require 'gds_api/panopticon'
 
-# Registers slugs for published editions with other apps
-# Currently, this is content store and panopticon (and panopticon in turn
-# updates search).
+# Registers slugs for published editions with Panopticon (which in turn updates
+# rummager/search).
 class PublishedSlugRegisterer
-
   attr_reader :logger
 
   def initialize(logger, slugs)
@@ -64,7 +61,7 @@ private
     logger.info "Registering #{slug} [#{@count}/#{@slugs.count}]"
     edition = published_edition(slug)
     if edition
-      if register_with_panopticon(edition) && register_with_publishing_api(edition)
+      if register_with_panopticon(edition)
         @success_slugs << slug
       else
         @errored_slugs << slug
@@ -73,19 +70,6 @@ private
       @not_found_slugs << slug
       logger.error "No published edition found with slug #{slug}"
     end
-  end
-
-  def register_with_publishing_api(edition)
-    presenter = PublishedEditionPresenter.new(edition)
-    document_for_publishing_api = presenter.render_for_publishing_api(republish: true)
-    base_path = document_for_publishing_api[:base_path]
-
-    publishing_api.put_content_item(base_path, document_for_publishing_api)
-    true
-  end
-
-  def publishing_api
-    @publishing_api ||= GdsApi::PublishingApi.new(Plek.find("publishing-api"))
   end
 
   def register_with_panopticon(edition)
