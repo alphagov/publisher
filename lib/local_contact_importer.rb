@@ -15,16 +15,8 @@ class LocalContactImporter < LocalAuthorityDataImporter
       return
     end
     authority.name = decode_broken_entities( row['Name'] )
-    authority.contact_address = parse_address(row)
-    authority.contact_phone = decode_broken_entities( row['Telephone Number 1'] )
-    authority.contact_url = parse_url( row['Contact page URL'] )
-    authority.contact_email = row['Main Contact Email']
     authority.homepage_url = parse_url( row['Home page URL'] )
     authority.save!
-  end
-
-  def parse_address(row)
-    [row['Address Line 1'], row['Address Line 2'], row['Town'], row['City'], row['County'], row['Postcode']].reject(&:blank?)
   end
 
   def parse_url(url)
