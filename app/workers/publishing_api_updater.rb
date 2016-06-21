@@ -1,7 +1,9 @@
 require 'services'
 
-class PublishingAPIUpdater < WorkerBase
-  def call(edition_id, update_type = "minor")
+class PublishingAPIUpdater
+  include Sidekiq::Worker
+
+  def perform(edition_id, update_type = "minor")
     edition = Edition.find(edition_id)
     presenter = PublishedEditionPresenter.new(edition)
     payload = presenter.render_for_publishing_api(republish: update_type == "republish")
