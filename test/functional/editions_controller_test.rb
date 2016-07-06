@@ -123,7 +123,7 @@ class EditionsControllerTest < ActionController::TestCase
     panopticon_has_metadata("id" => "test")
     Edition.expects(:find).returns(@guide)
     @guide.stubs(:update_attributes).returns(false)
-    @guide.expects(:errors).at_least_once.returns({:base => ["Editions scheduled for publishing can't be edited"]})
+    @guide.expects(:errors).at_least_once.returns(base: ["Editions scheduled for publishing can't be edited"])
 
     post :update, :id => @guide.id, :edition => {}
 
@@ -358,7 +358,6 @@ class EditionsControllerTest < ActionController::TestCase
       question = @edition.nodes.where(:kind => "question").first
       assert_equal 1, question.options.count
       assert_equal "Option One", question.options.first.label
-
     end
   end
 end

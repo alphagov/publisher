@@ -18,7 +18,6 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
     stub_linkables
   end
 
-
   teardown do
     GDS::SSO.test_user = nil
   end

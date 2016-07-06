@@ -5,16 +5,16 @@ class TabsHelperTest < ActionView::TestCase
 
   context 'Tab' do
     should 'return all tabs in order' do
-      assert_equal 4, tabs.count
-      assert_equal ['edit', 'metadata', 'history', 'admin'], tabs.map {|t| t.name}
+      assert_equal 5, tabs.count
+      assert_equal %w(edit tagging metadata history admin), tabs.map(&:name)
     end
 
     should 'return tabs with expected titles' do
-      assert_equal ['Edit', 'Metadata', 'History and notes', 'Admin'], tabs.map {|t| t.title}
+      assert_equal ["Edit", "Tagging", "Metadata", "History and notes", "Admin"], tabs.map(&:title)
     end
 
     should 'return tabs with expected paths' do
-      assert_equal ['path', 'path/metadata', 'path/history', 'path/admin'], tabs.map {|t| t.path('path')}
+      assert_equal %w(path path/tagging path/metadata path/history path/admin), tabs.map { |t| t.path('path') }
     end
 
     should 'return a single tab by name' do

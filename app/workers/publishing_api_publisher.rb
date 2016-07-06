@@ -6,8 +6,5 @@ class PublishingAPIPublisher < WorkerBase
     content_id = edition.artefact.content_id
 
     Services.publishing_api.publish(content_id, update_type)
-
-    presenter = EditionLinksPresenter.new(edition)
-    Services.publishing_api.patch_links(content_id, presenter.payload)
   end
 end

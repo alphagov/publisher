@@ -4,48 +4,120 @@ class TaggingToLinkablesTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+
+    @edition = FactoryGirl.create(:guide_edition)
+    @content_id = @edition.artefact.content_id
   end
 
   test "Tagging to browse pages" do
-    edition = FactoryGirl.create(:guide_edition)
+    visit edition_path(@edition)
+    switch_tab 'Tagging'
 
-    visit edition_path(edition)
+    select 'Tax / VAT', from: 'Mainstream browse pages'
+    select 'Tax / RTI (draft)', from: 'Mainstream browse pages'
 
-    selectize ['Tax / VAT', 'Tax / RTI (draft)'], 'Mainstream browse pages'
-
-    save_edition_and_assert_success
-    edition.reload
-
-    assert_equal ['tax/vat', 'tax/rti'], edition.browse_pages
+    save_tags_and_assert_success
+    assert_publishing_api_patch_links(
+      @content_id,
+      links: {
+        topics: [],
+        mainstream_browse_pages: ["CONTENT-ID-RTI", "CONTENT-ID-VAT"],
+        parent: [],
+      },
+      previous_version: 0
+    )
   end
 
   test "Tagging to topics" do
-    edition = FactoryGirl.create(:guide_edition)
+    visit edition_path(@edition)
+    switch_tab 'Tagging'
 
-    visit edition_path(edition)
+    select 'Oil and Gas / Fields', from: 'Topics'
+    select 'Oil and Gas / Distillation (draft)', from: 'Topics'
 
-    select 'Oil and Gas / Wells', from: 'Primary topic'
-    select 'Oil and Gas / Fields', from: 'Additional topics'
-    select 'Oil and Gas / Distillation (draft)', from: 'Additional topics'
-
-    save_edition_and_assert_success
-    edition.reload
-
-    assert_equal 'oil-and-gas/wells', edition.primary_topic
-    assert_equal ['oil-and-gas/distillation', 'oil-and-gas/fields'], edition.additional_topics
+    save_tags_and_assert_success
+    assert_publishing_api_patch_links(
+      @content_id,
+      links: {
+        topics: ['CONTENT-ID-DISTILL', 'CONTENT-ID-FIELDS'],
+        mainstream_browse_pages: [],
+        parent: [],
+      },
+      previous_version: 0
+    )
   end
 
-  test "Mistagging primary and additional topics with the same tag" do
-    edition = FactoryGirl.create(:guide_edition)
-    visit edition_path(edition)
+  test "Tagging to parent" do
+    visit edition_path(@edition)
+    switch_tab 'Tagging'
 
-    select 'Oil and Gas / Wells', from: 'Primary topic'
-    select 'Oil and Gas / Wells', from: 'Additional topics'
-    select 'Oil and Gas / Distillation (draft)', from: 'Additional topics'
+    select 'Tax / RTI', from: 'Breadcrumb'
 
-    save_edition_and_assert_error
+    save_tags_and_assert_success
+    assert_publishing_api_patch_links(
+      @content_id,
+      links: {
+        topics: [],
+        mainstream_browse_pages: [],
+        parent: ['CONTENT-ID-RTI'],
+      },
+      previous_version: 0
+    )
+  end
 
-    assert page.has_css?('#edition_additional_topics_input.has-error')
-    assert page.has_content?("can't have the primary topic set as an additional topic")
+  test "Mutating existing tags" do
+    publishing_api_has_links(
+      "content_id" => @content_id,
+      "links" => {
+        topics: ['CONTENT-ID-WELLS'],
+        mainstream_browse_pages: ['CONTENT-ID-RTI'],
+        parent: ['CONTENT-ID-RTI'],
+      },
+    )
+
+    visit edition_path(@edition)
+    switch_tab 'Tagging'
+
+    select 'Tax / RTI (draft)', from: 'Mainstream browse pages'
+    select 'Tax / VAT', from: 'Mainstream browse pages'
+
+    select 'Tax / Capital Gains Tax', from: 'Breadcrumb'
+    select 'Oil and Gas / Fields', from: 'Topics'
+
+    save_tags_and_assert_success
+
+    assert_publishing_api_patch_links(
+      @content_id,
+      links: {
+        topics: ['CONTENT-ID-FIELDS', 'CONTENT-ID-WELLS'],
+        mainstream_browse_pages: ['CONTENT-ID-RTI', 'CONTENT-ID-VAT'],
+        parent: ['CONTENT-ID-CAPITAL'],
+      },
+      previous_version: 0
+    )
+  end
+
+  test "User makes a conflicting change" do
+    publishing_api_has_links(
+      "content_id" => @content_id,
+      "links" => {
+        topics: ['CONTENT-ID-WELLS'],
+        mainstream_browse_pages: ['CONTENT-ID-RTI'],
+        parent: ['CONTENT-ID-RTI'],
+      },
+    )
+
+    visit edition_path(@edition)
+
+    switch_tab 'Tagging'
+
+    select 'Oil and Gas / Fields', from: 'Topics'
+
+    stub_request(:patch, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
+      .to_return(status: 409)
+
+    save_tags
+
+    assert page.has_content?('Somebody changed the tags before you could')
   end
 end

@@ -149,6 +149,8 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # clear any existing selections
     page.execute_script("$('.selectize-input a.remove').click()");
 
+    # find_field works by finding the label by text/id and then the input field associated
+    # with the label by its 'for' attribute. In our case this input will be invisible until interacted with.
     select_field = page.find_field(scope, visible: false)
     selectize_control = "select##{select_field[:id]} + .selectize-control"
 
@@ -159,6 +161,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
       page.execute_script("$('#{selectize_control} .selectize-input input').keyup();")
       page.execute_script("$('#{selectize_control} div.option').first().mousedown();")
     end
+  end
+
+  def switch_tab(tab)
+    page.click_on(tab)
   end
 
   def assert_all_edition_fields_disabled(page)
@@ -177,6 +183,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     else
       click_on 'Save'
     end
+  end
+
+  def save_tags
+    page.click_on('Update tags', visible: false)
   end
 
   def assert_save_attempted(with_ajax)
@@ -224,6 +234,11 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     save_edition
     assert_save_attempted(saving_with_ajax?)
     assert page.has_content? "We had some problems saving"
+  end
+
+  def save_tags_and_assert_success
+    save_tags
+    assert page.has_content? "Tags have been updated!"
   end
 
   def saving_with_ajax?

@@ -13,9 +13,13 @@ class EditionsController < InheritedResources::Base
   end
 
   def show
+    @linkables = Tagging::Linkables.new
+
     if @resource.is_a?(Parted)
       @ordered_parts = @resource.parts.in_order
     end
+
+    @tagging_update = tagging_update_form
     render :action => "show"
   end
   alias_method :metadata, :show
@@ -82,6 +86,8 @@ class EditionsController < InheritedResources::Base
       }
       failure.html {
         @resource = resource
+        @tagging_update = tagging_update_form
+        @linkables = Tagging::Linkables.new
         flash.now[:danger] = format_failure_message(resource)
         render :action => "show"
       }
@@ -92,6 +98,22 @@ class EditionsController < InheritedResources::Base
       }
       failure.json { render :json => resource.errors, :status=>406 }
     end
+  end
+
+  def tagging
+    @linkables = Tagging::Linkables.new
+    @tagging_update = tagging_update_form
+    render action: "show"
+  end
+
+  def update_tagging
+    Tagging::TaggingUpdateForm.new(params[:tagging_tagging_update_form]).publish!
+    redirect_to :back, flash: { success: "Tags have been updated!" }
+  rescue GdsApi::HTTPConflict
+    redirect_to :back,
+    flash: {
+      danger: "Somebody changed the tags before you could. Your changes have not been saved."
+    }
   end
 
   def review
@@ -289,6 +311,11 @@ protected
   end
 
 private
+
+  def tagging_update_form
+    Tagging::TaggingUpdateForm.build_from_publishing_api(@resource.artefact.content_id)
+  end
+
 
   def attempted_activity_params(attempted_activity)
     return unless attempted_activity
