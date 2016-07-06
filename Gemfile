@@ -52,7 +52,6 @@ gem 'null_logger'
 gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
 
-gem 'redis', '3.2.1', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers

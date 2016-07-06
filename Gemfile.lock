@@ -466,7 +466,6 @@ DEPENDENCIES
   rails (= 4.2.5.1)
   rails-perftest
   rails_autolink (= 1.1.6)
-  redis (= 3.2.1)
   rest-client
   retriable
   reverse_markdown (= 0.3.0)
