@@ -30,7 +30,7 @@
                        { include_blank: true },
                        { multiple: false,
                          class: 'select2',
-                         data: { module: "tagging", placeholder: 'Choose a primary mainstream browse page…' } } %>
+                         data: { module: "tagging", placeholder: 'Choose a breadcrumb…' } } %>
 
          <br />
          <div class="alert mainstream alert-warning hidden">
@@ -67,5 +67,5 @@
     </div>
 
     <hr/>
-    <%= f.submit 'Update tags' %>
+    <%= f.submit 'Update tags', class: "btn btn-success btn-large" %>
 <% end %>
