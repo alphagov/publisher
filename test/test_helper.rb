@@ -17,7 +17,7 @@ require 'govuk_content_models/test_helpers/action_processor_helpers'
 require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
 
-require 'govuk_sidekiq/testing'
+require 'sidekiq/testing'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
