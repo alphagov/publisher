@@ -52,6 +52,7 @@ gem 'null_logger'
 gem 'plek', '1.9.0'
 gem 'diffy', '3.0.6'
 
+gem 'redis', '3.0.7', require: false # Only used in some importers
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
@@ -63,7 +64,8 @@ gem 'whenever', require: false
 gem 'unicorn', '4.3.1'
 
 gem 'airbrake', '3.1.15'
-gem 'govuk_sidekiq', '0.0.4'
+gem 'sidekiq', '2.17.2'
+gem 'sidekiq-statsd', '0.1.2'
 
 group :test do
   gem 'minitest'

@@ -56,7 +56,8 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
         }
       }, inbound_headers
       assert_equal 302, response.status
-      worker_classes = Sidekiq::Worker.jobs.collect { |j| j["class"].constantize }.uniq
+
+      worker_classes = Sidekiq::Worker.jobs.map(&:first).uniq
       worker_classes.each do |worker_class|
         while worker_class.jobs.any?
           GdsApi::GovukHeaders.clear_headers
