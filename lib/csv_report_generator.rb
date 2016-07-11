@@ -1,7 +1,10 @@
 require 'redis'
 require 'redis-lock'
+require_relative 'redis_config'
 
 class CsvReportGenerator
+  include RedisConfig
+
   def self.csv_path
     "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
   end
@@ -52,7 +55,6 @@ class CsvReportGenerator
   end
 
   def redis
-    redis_config = YAML.load_file(Rails.root.join("config", "redis.yml"))
-    Redis.new(redis_config.symbolize_keys)
+    Redis.new(REDIS_CONFIG)
   end
 end
