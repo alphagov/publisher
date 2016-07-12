@@ -32,7 +32,7 @@ class DowntimeTest < JavascriptIntegrationTest
       click_on 'Schedule downtime'
 
       assert_equal 1, Sidekiq::ScheduledSet.new.size
-      assert_equal [Downtime.last.id.to_s], Sidekiq::ScheduledSet.new.first.args
+      assert_equal [Downtime.last.id.to_s, { "authenticated_user" => nil, "request_id" => nil }], Sidekiq::ScheduledSet.new.first.args
 
       assert page.has_content?('Apply to become a driving instructor downtime message scheduled')
       assert page.has_content?('Scheduled downtime')
@@ -45,7 +45,7 @@ class DowntimeTest < JavascriptIntegrationTest
       click_on 'Re-schedule downtime message'
 
       assert_equal 1, Sidekiq::ScheduledSet.new.size
-      assert_equal [Downtime.last.id.to_s], Sidekiq::ScheduledSet.new.first.args
+      assert_equal [Downtime.last.id.to_s, { "authenticated_user" => nil, "request_id" => nil }], Sidekiq::ScheduledSet.new.first.args
 
       assert page.has_content?('Apply to become a driving instructor downtime message re-scheduled')
       assert page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
