@@ -32,12 +32,10 @@ LGSL,Description,Providing Tier
 151,Find out about the right to buy scheme,district/unitary
 159,Find out about fostering a child,county/unitary
 160,Find out about adopting a child,county/unitary
-169,Find out about the council's interpreting and translation service,all
 178,Find out about equipment and adaptions to the home for disabled people,county/unitary
 209,Find out about a needs assessment by social services,county/unitary
 230,Find out about sheltered and supported housing,all
 260,Find out about short term breaks for carers of children,county/unitary
-266,Find your local authority's child protection team,county/unitary
 272,Find out about community transport schemes,district/unitary
 273,Find out about older person's bus pass,county/unitary
 274,Find out about parking bays for registered disabled drivers,county/unitary
@@ -51,7 +49,6 @@ LGSL,Description,Providing Tier
 328,Find out about the bereavement service,district/unitary
 353,Find out about complaints procedure,all
 358,Find out about your local councillors,all
-361,Find out about proxy votes,district/unitary
 364,Find out more about the electoral register,district/unitary
 372,Find out about abandoned vehicles,district/unitary
 412,Find out about noise nuisance,district/unitary
@@ -76,7 +73,6 @@ LGSL,Description,Providing Tier
 510,Find out about allotments,district/unitary
 512,Find out about carrying out works on a property in a conservation area,district/unitary
 516,Search the register of planning decisions,district/unitary
-521,Find out about skip permits,county/unitary
 524,Find out which day the refuse is collected,district/unitary
 528,Find out about special collections for large items,district/unitary
 530,Find out about disposing of garden waste,district/unitary
@@ -90,11 +86,9 @@ LGSL,Description,Providing Tier
 558,Find out personal injury caused by damage and/or hazards on roads and pavements,county/unitary
 559,Find out about street furniture,county/unitary
 561,Find out about road gritting,county/unitary
-562,Find out about the snow clearing service,county/unitary
 564,Find out about street lights,county/unitary
 567,Find out about traffic lights,county/unitary
 568,Find out about pedestrian crossings,county/unitary
-569,Find out about road works in your area,county/unitary
 571,Find out about speed limits,county/unitary
 576,Find out about dead animal removal,district/unitary
 577,Find out about dog fouling,district/unitary
@@ -107,12 +101,10 @@ LGSL,Description,Providing Tier
 600,Find out about dangerous buildings and structures,district/unitary
 603,Find out about nuisance caused by demolition work,district/unitary
 615,Find out about grants to local voluntary organisations,all
-630,Find out how to complain about a school,county/unitary
 631,Find out about the chaperone service,county/unitary
 664,Find out about blocked drains,district/unitary
 684,Find out about open and derelict properties,district/unitary
 703,Find out about emergency planning for a major incident,all
-705,Find out about the schools admissions appeals process,county/unitary
 831,"Find out about local support groups for children, young people and families",all
 850,Find out about hazardous waste collection,district/unitary
 852,Find out about citizenship ceremonies,county/unitary
