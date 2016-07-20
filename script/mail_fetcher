@@ -14,10 +14,10 @@ require 'fact_check_email_handler'
 
 require 'redis'
 require 'redis-lock'
+require_relative '../lib/redis_config'
 
 def redis
-  redis_config = YAML.load_file(File.join(Rails.root, "config", "redis.yml"))
-  Redis.new(redis_config.symbolize_keys)
+  Redis.new(RedisConfig::REDIS_CONFIG)
 end
 
 Rails.logger.info "Running MailFetcher in #{Rails.env} mode"

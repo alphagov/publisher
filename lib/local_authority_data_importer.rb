@@ -1,8 +1,10 @@
 require 'csv'
 require 'redis'
 require 'redis-lock'
+require_relative 'redis_config'
 
 class LocalAuthorityDataImporter
+  include RedisConfig
 
   def self.update_all
     redis.lock("publisher:#{Rails.env}:local_authority_data_importer_lock", :life => 2.hours) do
@@ -27,8 +29,7 @@ class LocalAuthorityDataImporter
   end
 
   def self.redis
-    redis_config = YAML.load_file(Rails.root.join("config", "redis.yml"))
-    Redis.new(redis_config.symbolize_keys)
+    Redis.new(REDIS_CONFIG)
   end
 
   def self.nagios_check(success, message)
