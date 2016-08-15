@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
   get '/healthcheck' => 'healthcheck#check'
 
-  namespace :api do
-    post 'reindex-topic-editions/*slug', to: 'search#reindex_topic_editions', as: 'reindex_topic_editions'
-  end
-
   resources :notes do
     put 'resolve', on: :member
   end
@@ -40,7 +36,7 @@ Rails.application.routes.draw do
   get 'reports/organisation-content' => 'reports#organisation_content', :as => :organisation_content_report
   get 'reports/edition-churn' => 'reports#edition_churn', as: "edition_churn_report"
   get 'reports/content_workflow' => 'reports#content_workflow', as: "content_workflow_report"
-  
+
   get 'user_search' => 'user_search#index'
 
   resources :publications
