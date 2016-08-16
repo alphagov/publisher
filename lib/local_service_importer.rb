@@ -1,6 +1,30 @@
-class LocalServiceImporter < LocalAuthorityDataImporter
+class LocalServiceImporter
+  def self.update
+    fh = fetch_data
+    begin
+      new(fh).run
+    ensure
+      fh.close
+    end
+  end
+
   def self.fetch_data
     File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
+  end
+
+  def initialize(fh)
+    @filehandle = fh
+  end
+
+  def run
+    CSV.new(@filehandle, headers: true).each do |row|
+      begin
+        process_row(row)
+      rescue => e
+        Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
+        Airbrake.notify_or_ignore(e, parameters: { row: row })
+      end
+    end
   end
 
   private

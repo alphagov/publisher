@@ -43,8 +43,6 @@ This is a Ruby on Rails application that publishes the content for mainstream do
 - [publishing-api](https://github.com/alphagov/publishing-api) - will provide workflow for all content published to GOV.UK - creating a new document, publishing it, etc. Content published here will end up in the content-store
 - [router-api](https://github.com/alphagov/router-api) - API for updating the [GOV.UK Router](https://github.com/alphagov/router.git)
 - [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) - defines the schemas for new-style document formats. Required to run the tests.
-- local transactions data - there is no UI or automated process for importing the source data for local transactions. The source data can be downloaded from [DirectGov](http://local.direct.gov.uk/Data/local_authority_service_details.CSV). It can then be imported using a rake task:
-- [mapit](https://github.com/alphagov/mapit) - provides authority type lookup for the `LocalInteractionImporter` class
 
 ```shell
 bundle exec rake local_transactions:import SOURCE=/path/to/local_authority_service_details.CSV
@@ -67,8 +65,6 @@ with other apps, here's how. This assumes you're using this [development setup](
 cd /var/govuk/development
 bowl publisher
 ```
-
-Note that if you need to run the `LocalInteractionImporter` (as part of the `local_transactions:` rake tasks), you will need to have [MapIt](https://github.com/alphagov/mapit) running locally. A valid dataset will have to be loaded for Mapit (this is part of the standard GOV.UK data replication steps), otherwise area lookups will not succeed and fail silently.
 
 ### Running the test suite
 
