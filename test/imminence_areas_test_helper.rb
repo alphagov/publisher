@@ -15,7 +15,6 @@ module ImminenceAreasTestHelper
   def regions_with_gss_codes
     [
       {
-        slug: "london",
         name: "London",
         type: "EUR",
         country_name: "England",
@@ -24,7 +23,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "scotland",
         name: "Scotland",
         type: "EUR",
         country_name: "Scotland",
@@ -37,7 +35,6 @@ module ImminenceAreasTestHelper
 
   def region_without_gss_code
     {
-      slug: "england",
       name: "England",
       type: "EUR",
       country_name: "England",
@@ -50,7 +47,6 @@ module ImminenceAreasTestHelper
   def counties
     [
       {
-        slug: "west-sussex-county-council",
         name: "West Sussex County Council",
         type: "CTY",
         codes: {
@@ -58,7 +54,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "devon-county-council",
         name: "Devon County Council",
         type: "CTY",
         codes: {
@@ -71,7 +66,6 @@ module ImminenceAreasTestHelper
   def districts
     [
       {
-        slug: "wycombe-district-council",
         name: "Wycombe District Council",
         type: "DIS",
         codes: {
@@ -79,7 +73,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "south-bucks-district-council",
         name: "South Bucks District Council",
         type: "DIS",
         codes: {
@@ -92,7 +85,6 @@ module ImminenceAreasTestHelper
   def london_boroughs
     [
       {
-        slug: "hackney-borough-council",
         name: "Hackney Borough Council",
         type: "LBO",
         codes: {
@@ -100,7 +92,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "camden-borough-council",
         name: "Camden Borough Council",
         type: "LBO",
         codes: {
@@ -113,7 +104,6 @@ module ImminenceAreasTestHelper
   def ni_councils
     [
       {
-        slug: "derry-city-council",
         name: "Derry City Council",
         type: "LGD",
         codes: {
@@ -121,7 +111,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "belfast-city-council",
         name: "Belfast City Council",
         type: "LGD",
         codes: {
@@ -134,7 +123,6 @@ module ImminenceAreasTestHelper
   def metropolitan_councils
     [
       {
-        slug: "birmingham-city-council",
         name: "Birmingham City Council",
         type: "MTD",
         codes: {
@@ -142,7 +130,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "leeds-city-council",
         name: "Leeds City Council",
         type: "MTD",
         codes: {
@@ -155,7 +142,6 @@ module ImminenceAreasTestHelper
   def unitary_authorities
     [
       {
-        slug: "glasgow-city-council",
         name: "Glasgow City Council",
         type: "UTA",
         codes: {
@@ -163,7 +149,6 @@ module ImminenceAreasTestHelper
         },
       },
       {
-        slug: "cardiff-council",
         name: "Cardiff Council",
         type: "UTA",
         codes: {
@@ -176,7 +161,6 @@ module ImminenceAreasTestHelper
   def isles_of_scilly
     [
       {
-        slug: "isles-of-scilly",
         name: "Isles of Scilly",
         type: "COI",
         codes: {
