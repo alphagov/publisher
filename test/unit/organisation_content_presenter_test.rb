@@ -11,6 +11,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     document = FactoryGirl.create(:artefact,
       name: "Important document",
       organisations: [hmrc.tag_id],
+      kind: "answer",
       need_ids: ["123456","123321","654321"]
     )
     FactoryGirl.create(:edition,
@@ -30,6 +31,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     assert_equal "business-tax/vat", data[0]["Primary topic"]
     assert_equal "oil-and-gas/licensing,environmental-management/boating", data[0]["Additional topics"]
     assert_equal "HMRC", data[0]["Organisations"]
+    assert_equal "answer", data[0]["Format"]
     assert_equal "123456,123321,654321", data[0]["Need ids"]
   end
 

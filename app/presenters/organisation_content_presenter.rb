@@ -4,6 +4,7 @@ class OrganisationContentPresenter < CSVPresenter
     self.column_headings = [
       :id,
       :name,
+      :format,
       :slug,
       :state,
       :browse_pages,
@@ -36,6 +37,8 @@ private
       artefact.organisations.map(&:title).join(", ")
     when :need_ids
       artefact.need_ids.join(',')
+    when :format
+      artefact.kind
     else
       super
     end
