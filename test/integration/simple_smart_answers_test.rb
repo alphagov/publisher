@@ -30,6 +30,9 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_no_css?(".nodes .outcome")
 
       within ".builder-container" do
+        assert page.has_content? "Start button text"
+        assert page.has_selector?("select#edition_start_button_text")
+
         assert page.has_content? "Question 1"
 
         assert page.has_link? "Add question"
