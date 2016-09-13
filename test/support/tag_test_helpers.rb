@@ -11,6 +11,7 @@ module TagTestHelpers
       { base_path: '/browse/tax/vat', internal_name: 'Tax / VAT', publication_state: 'published', content_id: 'CONTENT-ID-VAT' },
       { base_path: '/browse/tax/capital-gains', internal_name: 'Tax / Capital Gains Tax', publication_state: 'published', content_id: 'CONTENT-ID-CAPITAL' },
       { base_path: '/browse/tax/rti', internal_name: 'Tax / RTI', publication_state: 'draft', content_id: 'CONTENT-ID-RTI' },
+      { base_path: '/browse/tax/nil', internal_name: nil, publication_state: 'draft', content_id: 'CONTENT-ID-NIL' },
     ], document_type: "mainstream_browse_page")
 
     publishing_api_has_linkables([
