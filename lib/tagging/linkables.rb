@@ -61,7 +61,8 @@ module Tagging
     end
 
     def get_tags_of_type(document_type)
-      Services.publishing_api.get_linkables(format: document_type)
+      items = Services.publishing_api.get_linkables(format: document_type)
+      items.select { |item| item['internal_name'] }
     end
   end
 end
