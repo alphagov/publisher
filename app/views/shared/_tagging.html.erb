@@ -1,4 +1,4 @@
-<%= semantic_bootstrap_nested_form_for (@tagging_update || raise("No @tagging_update")), url: update_tagging_edition_path(@resource) do |f| %>
+<%= semantic_bootstrap_nested_form_for (@tagging_update), url: update_tagging_edition_path(@resource) do |f| %>
     <%= f.hidden_field :content_id %>
     <%= f.hidden_field :previous_version %>
 
@@ -68,4 +68,4 @@
 
     <hr/>
     <%= f.submit 'Update tags', class: "btn btn-success btn-large" %>
-<% end %>
+<% end %> 

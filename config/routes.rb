@@ -12,10 +12,12 @@ Rails.application.routes.draw do
       get 'diff'
       get 'metadata'
       get 'history'
-      get 'tagging'
       get 'admin'
+      get 'tagging', to: "editions#linking"
+      get 'related_external_links' , to: "editions#linking"
       post 'duplicate'
       post 'update_tagging'
+      patch 'update_related_external_links'
       post 'progress'
       put 'review'
       post 'skip_fact_check', to: 'editions#progress',

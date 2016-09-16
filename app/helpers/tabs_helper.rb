@@ -2,7 +2,8 @@ module TabsHelper
   def active_tab
     return @active_tab if @active_tab
 
-    tab_name = [action_name] & %w(metadata tagging history admin)
+    visited_tab = request.path.split("/").last
+    tab_name = [visited_tab] & %w(metadata tagging history admin related_external_links)
     @active_tab = tab_name.blank? ? Edition::Tab['edit'] : Edition::Tab[tab_name.first]
   end
 
@@ -21,7 +22,7 @@ module TabsHelper
   module Edition
     class Tab < Struct.new(:name)
 
-      TABS = %w(edit tagging metadata history admin)
+      TABS = %w(edit tagging metadata history admin related_external_links)
 
       def self.all
         @@all ||= TABS.map { |name| Tab.new(name) }
@@ -32,7 +33,14 @@ module TabsHelper
       end
 
       def title
-        name == 'history' ? 'History and notes' : name.capitalize
+        case name
+        when 'history'
+          'History and notes'
+        when 'related_external_links'
+          'Related external links'
+        else
+          name.capitalize
+        end
       end
 
       def path(edition_path)

@@ -17,16 +17,12 @@ class EditionTabTest < JavascriptIntegrationTest
     end
   end
 
-  def click_tab(tab)
-    click_on tab
-  end
-
   def assert_tab_active(name, title)
     assert page.has_css?('.nav-tabs .active', count: 1), 'More than one tab link active'
     assert page.has_css?('.tab-pane.active', count: 1), 'More than one tab content showing'
 
-    assert page.has_css?('.nav-tabs .active a', text: title), 'Tab link not active'
-    assert page.has_css?("##{name}.tab-pane.active"), 'Tab content not active'
+    assert page.has_css?('.nav-tabs .active a', text: title), "Tab link not active: #{title}"
+    assert page.has_css?("##{name}.tab-pane.active"), "Tab content not active: #{name}"
   end
 
   with_and_without_javascript do
@@ -58,25 +54,31 @@ class EditionTabTest < JavascriptIntegrationTest
 
       visit_tab('tagging')
       assert_tab_active('tagging', 'Tagging')
+
+      visit_tab('related_external_links')
+      assert_tab_active('related_external_links', 'Related external links')
     end
 
     should "show the correct tab when clicking tabs" do
       visit_edition @guide
 
-      click_tab('Metadata')
+      click_on('Metadata')
       assert_tab_active('metadata', 'Metadata')
 
-      click_tab('Admin')
+      click_on('Admin')
       assert_tab_active('admin', 'Admin')
 
-      click_tab('History and notes')
+      click_on('History and notes')
       assert_tab_active('history', 'History and notes')
 
-      click_tab('Edit')
+      click_on('Edit')
       assert_tab_active('edit', 'Edit')
 
-      click_tab('Tagging')
+      click_on('Tagging')
       assert_tab_active('tagging', 'Tagging')
+
+      click_on('Related external links')
+      assert_tab_active('related_external_links', 'Related external links')
     end
   end
 
