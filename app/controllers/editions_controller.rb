@@ -20,13 +20,14 @@ class EditionsController < InheritedResources::Base
     end
 
     @tagging_update = tagging_update_form
+    @artefact = @resource.artefact
+
     render :action => "show"
   end
   alias_method :metadata, :show
   alias_method :history, :show
   alias_method :admin, :show
 
-  # TODO: Clean this up via better use of instance var names here and in publications_controller.rb
   def new
     @publication = build_resource
     setup_view_paths_for(@publication)
@@ -88,6 +89,7 @@ class EditionsController < InheritedResources::Base
         @resource = resource
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
+        @artefact = @resource.artefact
         flash.now[:danger] = format_failure_message(resource)
         render :action => "show"
       }
@@ -100,9 +102,10 @@ class EditionsController < InheritedResources::Base
     end
   end
 
-  def tagging
+  def linking
     @linkables = Tagging::Linkables.new
     @tagging_update = tagging_update_form
+    @artefact = @resource.artefact
     render action: "show"
   end
 
@@ -114,6 +117,20 @@ class EditionsController < InheritedResources::Base
     flash: {
       danger: "Somebody changed the tags before you could. Your changes have not been saved."
     }
+  end
+
+  def update_related_external_links
+    artefact = resource.artefact
+    external_links = params.require(:artefact).permit(external_links_attributes: [:title, :url, :id, :_destroy])
+
+    artefact.external_links_attributes = external_links["external_links_attributes"]
+
+    if artefact.save
+      flash[:success] = "External links have been saved."
+    else
+      flash[:danger] = artefact.errors.full_messages.join("\n")
+    end
+    redirect_to :back
   end
 
   def review
@@ -316,7 +333,6 @@ private
   def tagging_update_form
     Tagging::TaggingUpdateForm.build_from_publishing_api(@resource.artefact.content_id)
   end
-
 
   def attempted_activity_params(attempted_activity)
     return unless attempted_activity

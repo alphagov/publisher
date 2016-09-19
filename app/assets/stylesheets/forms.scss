@@ -20,3 +20,34 @@
   position: absolute;
   left: -9999em;
 }
+
+.related-external-links {
+  input[type=text] {
+    margin-bottom: 0px;
+  }
+
+  .fields:last-of-type {
+    margin-bottom: 10px;
+  }
+}
+
+.nested-item {
+  background: #fff;
+  padding: 8px;
+  margin-bottom: 3px;
+
+  .remove-row {
+    @extend .btn;
+    @extend .btn-danger;
+
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+
+  .remove-row-related {
+    top: auto;
+    bottom: 0;
+    right: 15px
+  }
+}
