@@ -7,6 +7,12 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     setup do
       artefact = FactoryGirl.create(:artefact)
 
+      expected_external_related_links = [
+        { title: "GOVUK", url: "https://www.gov.uk" },
+        { title: "GOVUK", url: "https://www.gov.uk" },
+      ]
+      artefact.external_links = expected_external_related_links
+
       @edition = FactoryGirl.create(:edition, :published,
         browse_pages: ["tax/vat", "tax/capital-gains"],
         primary_topic: "oil-and-gas/wells",
@@ -40,7 +46,8 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
             primary_topic: ["oil-and-gas/wells"],
             additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"],
             topics: ["oil-and-gas/wells", "oil-and-gas/fields", "oil-and-gas/distillation"],
-          }
+          },
+          external_related_links: expected_external_related_links,
         },
         locale: 'en',
       }
