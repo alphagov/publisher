@@ -28,12 +28,22 @@ class PublishedEditionPresenter
           additional_topics: @edition.additional_topics,
           topics: (primary_topic + @edition.additional_topics)
         },
+        external_related_links: external_related_links,
       },
       locale: 'en',
     }
   end
 
 private
+
+  def external_related_links
+    @edition.artefact.external_links.map do |link|
+      {
+        "url": link["url"],
+        "title": link["title"]
+      }
+    end
+  end
 
   def base_path
     "/#{@edition.slug}"
