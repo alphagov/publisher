@@ -19,6 +19,7 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
         "third-original-slug" => "third-new-slug"
       })
     GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
+    SearchIndexer.stubs(:call)
 
     @it = EditionSlugMigrator.new( Logger.new("/dev/null") )
   end
@@ -31,10 +32,9 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
   end
 
   should "reregister the latest or published edition with Panopticon" do
-    GdsApi::Panopticon::Registerer.any_instance.unstub(:register)
-
     ["first-new-slug","second-new-slug","third-new-slug"].each do |slug|
       GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(responds_with(:slug, slug)).returns(true)
+      SearchIndexer.expects(:call).with(responds_with(:slug, slug))
     end
 
     @it.run

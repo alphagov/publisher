@@ -20,10 +20,12 @@ class EditionSlugMigrator
 
           # if there is a published edition, register the published edition
           # if there isn't a published edition, register the latest edition
-          if edition.published_edition.present?
-            edition.register_with_panopticon if edition == edition.published_edition
+          if edition.published_edition.present? && (edition == edition.published_edition)
+            edition.register_with_panopticon
+            edition.register_with_rummager
           elsif edition.latest_edition?
             edition.register_with_panopticon
+            edition.register_with_rummager
           end
 
           edition.actions.create!(

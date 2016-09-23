@@ -9,7 +9,7 @@ class MainstreamSlugUpdater
   def update
     update_slug_on_all_editions
     update_artefact_slug
-    reregister_slug_with_panopticon
+    reregister_slug
   end
 
   def published_edition
@@ -49,8 +49,9 @@ private
     artefact.save_as(user, validate: false)
   end
 
-  def reregister_slug_with_panopticon
-    logger.info "Re-registering with panopticon to re-create in search"
+  def reregister_slug
+    logger.info "Re-registering with panopticon and rummager"
     published_edition.register_with_panopticon
+    published_edition.register_with_rummager
   end
 end

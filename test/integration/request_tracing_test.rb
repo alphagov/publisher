@@ -7,6 +7,7 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
 
     stub_request(:any, /publishing-api/)
     stub_request(:put, /panopticon/)
+    stub_request(:post, /search/)
   end
 
   test "govuk_request_id is passed downstream across the worker boundary on publish" do

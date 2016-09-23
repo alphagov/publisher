@@ -67,6 +67,7 @@ class ActiveSupport::TestCase
 
   def stub_register_published_content
     WebMock.stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
+    WebMock.stub_request(:post, %r{search.dev.gov.uk/documents})
   end
 
   teardown do
