@@ -1,7 +1,7 @@
 require 'gds_api/panopticon'
+require 'gds_api/rummager'
 
-# Registers slugs for published editions with Panopticon (which in turn updates
-# rummager/search).
+# Registers slugs for published editions with Panopticon
 class PublishedSlugRegisterer
   attr_reader :logger
 
@@ -10,7 +10,7 @@ class PublishedSlugRegisterer
     @slugs = slugs.sort.uniq
   end
 
-  def run
+  def do_panopticon
     @success_slugs = []
     @not_found_slugs = []
     @errored_slugs = []
@@ -19,7 +19,46 @@ class PublishedSlugRegisterer
     logger.info "Registering #{@slugs.count} slugs"
 
     @slugs.each do |slug|
-      register(slug)
+      @count += 1
+      logger.info "Registering #{slug} with Panopticon [#{@count}/#{@slugs.count}]"
+      edition = published_edition(slug)
+      if edition
+        if register(edition) { edition.register_with_panopticon }
+          @success_slugs << slug
+        else
+          @errored_slugs << slug
+        end
+      else
+        @not_found_slugs << slug
+        logger.error "No published edition found with slug #{slug}"
+      end
+    end
+
+    log_result
+  end
+
+  def do_rummager
+    @success_slugs = []
+    @not_found_slugs = []
+    @errored_slugs = []
+    @count = 0
+
+    logger.info "Registering #{@slugs.count} slugs"
+
+    @slugs.each do |slug|
+      @count += 1
+      logger.info "Registering #{slug} with Rummager [#{@count}/#{@slugs.count}]"
+      edition = published_edition(slug)
+      if edition
+        if register(edition) { edition.register_with_rummager }
+          @success_slugs << slug
+        else
+          @errored_slugs << slug
+        end
+      else
+        @not_found_slugs << slug
+        logger.error "No published edition found with slug #{slug}"
+      end
     end
 
     log_result
@@ -49,33 +88,20 @@ private
       end
     end
 
-    logger.info "\nRegistration complete: processed #{@success_slugs.count} slugs successfully, #{@not_found_slugs.count} slugs not found, #{@errored_slugs.count} slugs had errors"
+    logger.info <<-COMPLETE
+    \nRegistration complete: processed #{@success_slugs.count} slugs successfully,
+    #{@not_found_slugs.count} slugs not found, #{@errored_slugs.count} slugs had errors
+    COMPLETE
   end
 
   def published_edition(slug)
     Edition.find_and_identify(slug, nil)
   end
 
-  def register(slug)
-    @count += 1
-    logger.info "Registering #{slug} [#{@count}/#{@slugs.count}]"
-    edition = published_edition(slug)
-    if edition
-      if register_with_panopticon(edition)
-        @success_slugs << slug
-      else
-        @errored_slugs << slug
-      end
-    else
-      @not_found_slugs << slug
-      logger.error "No published edition found with slug #{slug}"
-    end
-  end
-
-  def register_with_panopticon(edition)
+  def register(edition, &_block)
     retry_count = 0
     begin
-      edition.register_with_panopticon
+      yield
       return true
     rescue Mongoid::Errors::DocumentNotFound
       # This happens if an Edition doesn't have a corresponding Artefact

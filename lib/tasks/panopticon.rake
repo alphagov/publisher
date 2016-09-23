@@ -5,7 +5,7 @@ namespace :panopticon do
   task reregister_all: [:environment] do
     task_logger.info "Re-registering all published editions..."
     slugs = Edition.published.map(&:slug)
-    PublishedSlugRegisterer.new(task_logger, slugs).run
+    PublishedSlugRegisterer.new(task_logger, slugs).do_panopticon
   end
 
   def task_logger
