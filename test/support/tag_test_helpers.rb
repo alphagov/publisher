@@ -19,5 +19,18 @@ module TagTestHelpers
       { base_path: '/topic/oil-and-gas/fields', internal_name: 'Oil and Gas / Fields', publication_state: 'published', content_id: 'CONTENT-ID-FIELDS' },
       { base_path: '/topic/oil-and-gas/distillation', internal_name: 'Oil and Gas / Distillation', publication_state: 'draft', content_id: 'CONTENT-ID-DISTILL' },
     ], document_type: "topic")
+
+    publishing_api_has_linkables(
+      [
+        {
+          "public_updated_at" => "2014-10-15 14:35:22",
+          "title" => "Student Loans Company",
+          "content_id" => "9a9111aa-1db8-4025-8dd2-e08ec3175e72",
+          "publication_state" => "live",
+          "base_path" => "/government/organisations/student-loans-company",
+          "internal_name" => "Student Loans Company"
+        },
+      ],
+      document_type: "organisation")
   end
 end

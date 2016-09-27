@@ -2,7 +2,7 @@ module Tagging
   class TaggingUpdateForm
     include ActiveModel::Model
     attr_accessor :content_id, :previous_version
-    attr_accessor :topics, :mainstream_browse_pages, :parent
+    attr_accessor :topics, :organisations, :mainstream_browse_pages, :parent
 
     def self.build_from_publishing_api(content_id)
       link_set = LinkSet.find(content_id)
@@ -11,6 +11,7 @@ module Tagging
         content_id: content_id,
         previous_version: link_set.version,
         topics: link_set.links['topics'],
+        organisations: link_set.links['organisations'],
         mainstream_browse_pages: link_set.links['mainstream_browse_pages'],
         parent: link_set.links['parent'],
       )
@@ -27,6 +28,7 @@ module Tagging
     def links_payload
       {
         topics: clean_content_ids(topics),
+        organisations: clean_content_ids(organisations),
         mainstream_browse_pages: clean_content_ids(mainstream_browse_pages),
         parent: clean_content_ids(parent),
       }

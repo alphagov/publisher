@@ -32,11 +32,10 @@
                          class: 'select2',
                          data: { module: "tagging", placeholder: 'Choose a breadcrumb…' } } %>
 
-         <br />
          <div class="alert mainstream alert-warning hidden">
+           <br />
            The breadcrumb does not match the browse pages.
          </div>
-
 
           <p class='help-block'>
             If the page has a breadcrumb, it will be this browse page. For example
@@ -62,6 +61,20 @@
             <a href="https://www.gov.uk/topic/business-tax/vat/email-signup">email alert to subscribers</a>.
             Formerly called <i>specialist sectors</i>.
           </p>
+        </div>
+
+        <div class="form-group" id="edition_organisations_input">
+          <%= f.label :organisations, "Organisations", class: 'control-label' %>
+          <%= f.select :organisations, @linkables.organisations,
+                       {},
+                       { multiple: true,
+                         class: 'select2',
+                         data: { placeholder: 'Choose Organisations…' } } %>
+
+           <p class="help-block">
+           Tagging a page to an organisation will make it show up in search.
+           Example: <a href="https://www.gov.uk/search?q=taxes&amp;filter_organisations%5B%5D=hm-revenue-customs">search for documents published by HMRC</a>.
+           </p>
         </div>
       </div>
     </div>
