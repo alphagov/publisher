@@ -12,6 +12,7 @@ class MainstreamSlugUpdaterTest < ActiveSupport::TestCase
     @published_edition = FactoryGirl.create(:edition, slug: @old_slug, panopticon_id: @artefact.id, state: 'published', version_number: 2)
 
     AnswerEdition.any_instance.stubs(:register_with_panopticon)
+    AnswerEdition.any_instance.stubs(:register_with_rummager)
   end
 
   def test_slug_is_updated_on_relevent_editions
@@ -33,9 +34,10 @@ class MainstreamSlugUpdaterTest < ActiveSupport::TestCase
     assert_equal @published_edition, updater.published_edition
   end
 
-  def test_slug_is_registered_with_panopticon
+  def test_slug_is_reregistered
     updater = MainstreamSlugUpdater.new(@old_slug, @new_slug)
     updater.published_edition.expects(:register_with_panopticon)
+    updater.published_edition.expects(:register_with_rummager)
 
     updater.update
   end

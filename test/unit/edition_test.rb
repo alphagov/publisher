@@ -3,15 +3,17 @@ require 'test_helper'
 class EditionTest < ActiveSupport::TestCase
 
   context "single registration" do
-    should "register with panopticon when published" do
+    should "register with panopticon and rummager when published" do
       user = FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
 
       registerable = mock("registerable_edition")
       PublishingAPIPublisher.stubs(:perform_async)
-      RegisterableEdition.expects(:new).with(edition).returns(registerable)
+      RegisterableEdition.expects(:new).with(edition).twice.returns(registerable)
       GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(registerable)
+      SearchIndexer.expects(:call).with(registerable)
+
       publish(user, edition)
     end
 
@@ -25,10 +27,12 @@ class EditionTest < ActiveSupport::TestCase
           .expects(:new)
           .with(owning_app: "publisher", rendering_app: "frontend", kind: "local_transaction")
           .returns(stub("registerer", register: nil))
+      SearchIndexer.stubs(:call)
+
       publish(user, edition)
     end
 
-    should "not register with Panopticon if the artefact is archived" do
+    should "not register with Panopticon or Rummager if the artefact is archived" do
       user = FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
@@ -40,9 +44,13 @@ class EditionTest < ActiveSupport::TestCase
       registerable = mock("registerable_edition")
       RegisterableEdition.stubs(:new).with(edition).returns(registerable)
       GdsApi::Panopticon::Registerer.any_instance.expects(:register).never
+      SearchIndexer.expects(:call).with(registerable).never
 
       assert_raises Edition::ResurrectionError do
         edition.register_with_panopticon
+      end
+      assert_raises Edition::ResurrectionError do
+        edition.register_with_rummager
       end
     end
   end
@@ -63,6 +71,7 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryGirl.create(:guide_edition, state: "ready")
     PublishingAPIPublisher.expects(:perform_async).with(edition.id.to_s)
     GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
+    SearchIndexer.stubs(:call)
 
     user = FactoryGirl.create(:user)
     publish(user, edition)

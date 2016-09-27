@@ -41,11 +41,18 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
     @panopticon_registerer.expects(:register).with(responds_with(:slug, slug))
   end
 
-  def completion_message(success, not_found, errored)
-    "\nRegistration complete: processed #{success} slugs successfully, #{not_found} slugs not found, #{errored} slugs had errors"
+  def stub_search_indexer(slug)
+    SearchIndexer.expects(:call).with(responds_with(:slug, slug)).once
   end
 
-  def test_registers_published_editions
+  def completion_message(success, not_found, errored)
+    <<-COMPLETE
+    \nRegistration complete: processed #{success} slugs successfully,
+    #{not_found} slugs not found, #{errored} slugs had errors
+    COMPLETE
+  end
+
+  def test_registers_published_editions_with_panopticon
     @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
 
     @logger.expects(:info).at_least_once
@@ -56,7 +63,21 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       stub_panopticon(slug).once
     end
 
-    @registerer.run
+    @registerer.do_panopticon
+  end
+
+  def test_registers_published_editions_with_rummager
+    @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
+
+    @logger.expects(:info).at_least_once
+    @logger.expects(:info).with(completion_message(2, 1, 0))
+    @logger.expects(:error).with("No published edition found with slug slug3")
+
+    %w{slug1 slug2}.each do |slug|
+      stub_search_indexer(slug).once
+    end
+
+    @registerer.do_rummager
   end
 
   def test_handles_panopticon_timeout
@@ -74,7 +95,7 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       @logger.expects(:warn).with("Encountered timeout for '#{slug}', retrying (max 3 retries)")
     end
 
-    @registerer.run
+    @registerer.do_panopticon
   end
 
   def test_handles_panopticon_repeated_timeout
@@ -91,6 +112,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       @logger.expects(:error).with("Encountered 4 timeouts for '#{slug}', skipping")
     end
 
-    @registerer.run
+    @registerer.do_panopticon
   end
 end

@@ -1,7 +1,13 @@
 class RegisterableEdition
   extend Forwardable
 
-  def_delegators :@edition, :slug, :title, :indexable_content, :latest_change_note
+  def_delegators :@edition,
+    :slug,
+    :title,
+    :artefact,
+    :indexable_content,
+    :latest_change_note,
+    :format
 
   def initialize(edition)
     @edition = edition

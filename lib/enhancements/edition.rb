@@ -63,6 +63,7 @@ class Edition
   def was_published
     was_published_without_indexing
     register_with_panopticon
+    register_with_rummager
     notify_publishing_api
   end
 
@@ -74,16 +75,26 @@ class Edition
     Publisher::Application.fact_check_config.address(self.id)
   end
 
-  def register_with_panopticon
-    artefact = Artefact.find(self.panopticon_id)
+  def check_if_archived(artefact)
     if artefact.state == "archived"
       raise ResurrectionError, "Cannot register archived artefact '#{artefact.slug}'"
     end
+  end
 
+  def register_with_panopticon
+    artefact = Artefact.find(self.panopticon_id)
+    check_if_archived(artefact)
     format_as_kind = self.format.underscore
     registerer = GdsApi::Panopticon::Registerer.new(owning_app: "publisher", rendering_app: "frontend", kind: format_as_kind)
-    details = RegisterableEdition.new(self)
-    registerer.register(details)
+    registerable_edition = RegisterableEdition.new(self)
+    registerer.register(registerable_edition)
+  end
+
+  def register_with_rummager
+    artefact = Artefact.find(self.panopticon_id)
+    check_if_archived(artefact)
+    registerable_edition = RegisterableEdition.new(self)
+    SearchIndexer.call(registerable_edition)
   end
 
   def notify_publishing_api

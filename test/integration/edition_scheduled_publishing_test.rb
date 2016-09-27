@@ -52,7 +52,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
   test "should allow a scheduled edition to be published now" do
     edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
-    stub_artefact_registration(edition.slug)
+    stub_register_published_content
 
     visit_edition edition
     assert page.has_css?('.label', text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")
