@@ -24,6 +24,7 @@ class TaggingTest < JavascriptIntegrationTest
         @content_id,
         links: {
           topics: [],
+          organisations: [],
           mainstream_browse_pages: ["CONTENT-ID-RTI", "CONTENT-ID-VAT"],
           parent: [],
         },
@@ -43,6 +44,26 @@ class TaggingTest < JavascriptIntegrationTest
         @content_id,
         links: {
           topics: ['CONTENT-ID-DISTILL', 'CONTENT-ID-FIELDS'],
+          organisations: [],
+          mainstream_browse_pages: [],
+          parent: [],
+        },
+        previous_version: 0
+      )
+    end
+
+    should "tag to organisations" do
+      visit edition_path(@edition)
+      switch_tab 'Tagging'
+
+      select 'Student Loans Company', from: 'Organisations'
+
+      save_tags_and_assert_success
+      assert_publishing_api_patch_links(
+        @content_id,
+        links: {
+          topics: [],
+          organisations: ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
           mainstream_browse_pages: [],
           parent: [],
         },
@@ -61,6 +82,7 @@ class TaggingTest < JavascriptIntegrationTest
         @content_id,
         links: {
           topics: [],
+          organisations: [],
           mainstream_browse_pages: [],
           parent: ['CONTENT-ID-RTI'],
         },
@@ -93,6 +115,7 @@ class TaggingTest < JavascriptIntegrationTest
         @content_id,
         links: {
           topics: ['CONTENT-ID-FIELDS', 'CONTENT-ID-WELLS'],
+          organisations: [],
           mainstream_browse_pages: ['CONTENT-ID-RTI', 'CONTENT-ID-VAT'],
           parent: ['CONTENT-ID-CAPITAL'],
         },
