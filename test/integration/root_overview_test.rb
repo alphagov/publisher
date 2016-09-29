@@ -82,6 +82,36 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_css?('h1', text: "Amends needed")
   end
 
+  test "filtering by format" do
+    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
+      to_return(status: 200, body: "{}", headers: {})
+
+    FactoryGirl.create(:user)
+    FactoryGirl.create(:guide_edition, title: "Draft guide")
+    FactoryGirl.create(:transaction_edition, title: "Draft transaction")
+    FactoryGirl.create(:guide_edition, title: "Amends needed guide", state: 'amends_needed')
+    FactoryGirl.create(:transaction_edition, title: "Amends needed transaction", state: 'amends_needed')
+
+    visit "/"
+
+    filter_by_user("All")
+
+    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft transaction")
+
+    filter_by_format("Guide")
+
+    assert page.has_content?("Draft guide")
+    assert page.has_no_content?("Draft transaction")
+
+    click_on "Amends needed"
+
+    assert page.has_no_content?("Draft guide")
+    assert page.has_no_content?("Draft transaction")
+    assert page.has_content?("Amends needed guide")
+    assert page.has_no_content?("Amends needed transaction")
+  end
+
   test "invalid sibling_in_progress should not break archived view" do
     stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
       to_return(status: 200, body: "{}", headers: {})

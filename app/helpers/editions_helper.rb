@@ -24,4 +24,9 @@ module EditionsHelper
     possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
     possible_target_formats.map{|format_name| [format_name.humanize, format_name]}
   end
+
+  def format_filter_selection_options
+    [%w(All edition)] +
+      Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map { |format_name| [format_name.humanize, format_name] }
+  end
 end

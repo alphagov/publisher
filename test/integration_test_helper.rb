@@ -48,6 +48,13 @@ class ActionDispatch::IntegrationTest
     end
   end
 
+  def filter_by_format(format)
+    within ".user-filter-form" do
+      select format, from: "Format"
+      click_on "Filter publications"
+    end
+  end
+
   def using_javascript?
     Capybara.current_driver == Capybara.javascript_driver
   end
