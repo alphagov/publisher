@@ -16,3 +16,5 @@ PANOPTICON_API_CREDENTIALS = {
 Attachable.asset_api_client = GdsApi::AssetManager.new(Plek.current.find('asset-manager'), {
   bearer_token: ENV['PUBLISHER_ASSET_MANAGER_CLIENT_BEARER_TOKEN'] || 'also_set_at_deploy_time',
 })
+
+GdsApi.config.always_raise_for_not_found = true
