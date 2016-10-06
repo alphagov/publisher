@@ -16,9 +16,9 @@ class UserSearchController < ApplicationController
       clean_string_filter = params[:string_filter]
                                 .strip
                                 .gsub(/\s+/, ' ')
-      editions = Edition.user_search(@user, clean_string_filter)
+      editions = filtered_editions.user_search(@user, clean_string_filter)
     else
-      editions = Edition.for_user(@user)
+      editions = filtered_editions.for_user(@user)
     end
 
     editions = editions.excludes(state: 'archived')
@@ -29,5 +29,16 @@ class UserSearchController < ApplicationController
     # the resulting array
     @page_info = editions.page(params[:page]).per(20)
     @editions = @page_info.map { |e| UserSearchEditionDecorator.new e, @user }
+  end
+
+private
+
+  def format_filter
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].include?(params[:format_filter]) ? params[:format_filter] : 'edition'
+  end
+
+  def filtered_editions
+    return Edition if format_filter == 'edition'
+    Edition.where(_type: format_filter.camelcase + 'Edition')
   end
 end
