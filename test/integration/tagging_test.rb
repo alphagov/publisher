@@ -187,7 +187,7 @@ class TaggingTest < JavascriptIntegrationTest
       assert_equal 1, @artefact.external_links.length
     end
 
-    should "not save when no links are added" do # check both title and url
+    should "not save when no links are added" do
       visit edition_path(@edition)
       switch_tab 'Related external links'
       click_on "Save links"
