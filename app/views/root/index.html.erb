@@ -33,6 +33,12 @@
             %>
             <label for="string_filter" class="add-top-margin nav-header">Keyword</label>
             <%= text_field_tag "string_filter", params[:string_filter], class: 'form-control', type: "search" %>
+
+            <label for="format_filter" class="add-top-margin nav-header">Format</label>
+            <%= select_tag("format_filter", options_for_select(
+              format_filter_selection_options,
+              params[:format_filter]
+            ), class: 'form-control') %>
             <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
           </form>
         </div>

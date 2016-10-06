@@ -6,14 +6,20 @@
       <div class="col-md-2">
         <div class="well sidebar-nav">
         <form method="GET" action="" class="user-filter-form nav nav-list">
-          <label for="user_filter" class="nav-header">Filter by user</label>
+          <label for="user_filter" class="nav-header">User</label>
           <%=
             select_tag("user_filter", options_for_select(
               User.enabled.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
             ), :class => "form-control")
           %>
-          <label for="string_filter" class="add-top-margin nav-header">Filter by keyword</label>
+          <label for="string_filter" class="add-top-margin nav-header">Keyword</label>
           <%= text_field_tag "string_filter", params[:string_filter], class: "form-control", type: "search" %>
+
+          <label for="format_filter" class="add-top-margin nav-header">Format</label>
+          <%= select_tag("format_filter", options_for_select(
+            format_filter_selection_options,
+            params[:format_filter]
+          ), class: 'form-control') %>
           <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
         </form>
         </div>

@@ -49,7 +49,7 @@ module BaseHelper
 
 private
   def scope_path_options(scope)
-    opts = { :user_filter => params[:user_filter], :string_filter => params[:string_filter], :list => scope }
+    opts = { user_filter: params[:user_filter], string_filter: params[:string_filter], format_filter: params[:format_filter], list: scope }
     opts.merge!(in_review_url_defaults) if scope == :in_review
     opts
   end

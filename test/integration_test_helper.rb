@@ -33,17 +33,23 @@ class ActionDispatch::IntegrationTest
            "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}")
   end
 
-  def filter_by_user(option)
+  def filter_by_user(option, from: 'Assignee')
     within ".user-filter-form" do
-      select option, from: "Assignee"
+      select option, from: from
       click_on "Filter publications"
     end
-    click_on "Drafts"
   end
 
   def filter_by_content(substring)
     within ".user-filter-form" do
       fill_in "Keyword", with: substring
+      click_on "Filter publications"
+    end
+  end
+
+  def filter_by_format(format)
+    within ".user-filter-form" do
+      select format, from: "Format"
       click_on "Filter publications"
     end
   end

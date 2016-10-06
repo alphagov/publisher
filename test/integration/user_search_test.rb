@@ -26,6 +26,38 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     refute page.has_content? @guide.title
   end
 
+  test "filtering by format" do
+    guide = FactoryGirl.create(
+      :guide_edition, title: "Vehicle insurance")
+    @user.record_note guide, "I like this guide"
+    another_guide = FactoryGirl.create(
+      :guide_edition, title: "Growing your business")
+    @user.record_note another_guide, "I like this guide"
+    answer = FactoryGirl.create(
+      :answer_edition, title: "Vehicle answer")
+    @user.record_note answer, "I like this answer"
+
+    visit "/user_search"
+
+    filter_by_format("Guide")
+
+    assert page.has_content?("Vehicle insurance")
+    assert page.has_content?("Growing your business")
+    refute page.has_content?("Vehicle answer")
+
+    filter_by_content("Vehicle")
+
+    assert page.has_content?("Vehicle insurance")
+    refute page.has_content?("Growing your business")
+    refute page.has_content?("Vehicle answer")
+
+    filter_by_format("Answer")
+
+    refute page.has_content?("Vehicle insurance")
+    refute page.has_content?("Growing your business")
+    assert page.has_content?("Vehicle answer")
+  end
+
   test "filtering by keyword" do
     guide = FactoryGirl.create(
       :guide_edition, title: "Vehicle insurance")
@@ -35,23 +67,22 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     @user.record_note another_guide, "I like this guide"
 
     visit "/user_search"
-    within :css, "form.user-filter-form" do
-      fill_in :string_filter, with: "insurance"
-      click_button "Filter publications"
-    end
+
+    filter_by_content "insurance"
+
     assert page.has_content?("Vehicle insurance")
     refute page.has_content?("Growing your business")
   end
+
 
   test "excluding archived editions from keyword filtered results" do
     guide = FactoryGirl.create(
       :guide_edition, title: "Vehicle insurance", state: "archived")
     @user.record_note guide, "I like this guide"
     visit "/user_search"
-    within :css, "form.user-filter-form" do
-      fill_in :string_filter, with: "insurance"
-      click_button "Filter publications"
-    end
+
+    filter_by_content "insurance"
+
     refute page.has_content?("Vehicle insurance")
   end
 
@@ -64,10 +95,8 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     guides[0].save!
 
     visit "/user_search"
-    within :css, "form.user-filter-form" do
-      select other_user.name, from: "Filter by user"
-      click_button "Filter publications"
-    end
+
+    filter_by_user other_user.name, from: "User"
 
     assert page.has_content?("Search by user")
 
@@ -80,7 +109,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
     visit "/user_search"
 
-    select_box = find_field('Filter by user')
+    select_box = find_field('User')
     refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 end
