@@ -161,7 +161,7 @@ class TaggingTest < JavascriptIntegrationTest
         fill_in "URL", with: "https://www.gov.uk"
       end
 
-      click_on "Update related external links"
+      click_on "Save links"
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
@@ -181,10 +181,18 @@ class TaggingTest < JavascriptIntegrationTest
         fill_in "URL", with: "https://www.gov.uk", match: :first
       end
 
-      click_on "Update related external links"
+      click_on "Save links"
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
+    end
+
+    should "not save when no links are added" do # check both title and url
+      visit edition_path(@edition)
+      switch_tab 'Related external links'
+      click_on "Save links"
+
+      assert page.has_content?("There aren't any external related links yet")
     end
 
     should "delete links" do
@@ -194,7 +202,7 @@ class TaggingTest < JavascriptIntegrationTest
       visit edition_path(@edition)
       switch_tab "Related external links"
       click_on "Remove this URL"
-      click_on "Update related external links"
+      click_on "Save links"
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length
@@ -210,7 +218,7 @@ class TaggingTest < JavascriptIntegrationTest
         fill_in "URL", with: "an invalid url"
       end
 
-      click_on "Update related external links"
+      click_on "Save links"
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length

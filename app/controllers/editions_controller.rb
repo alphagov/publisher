@@ -121,15 +121,20 @@ class EditionsController < InheritedResources::Base
 
   def update_related_external_links
     artefact = resource.artefact
-    external_links = params.require(:artefact).permit(external_links_attributes: [:title, :url, :id, :_destroy])
 
-    artefact.external_links_attributes = external_links["external_links_attributes"]
+    if params.has_key?("artefact")
+      external_links = params.require(:artefact).permit(external_links_attributes: [:title, :url, :id, :_destroy])
+      artefact.external_links_attributes = external_links["external_links_attributes"]
 
-    if artefact.save
-      flash[:success] = "External links have been saved."
+      if artefact.save
+        flash[:success] = "External links have been saved."
+      else
+        flash[:danger] = artefact.errors.full_messages.join("\n")
+      end
     else
-      flash[:danger] = artefact.errors.full_messages.join("\n")
+      flash[:danger] = "There aren't any external related links yet"
     end
+
     redirect_to :back
   end
 
