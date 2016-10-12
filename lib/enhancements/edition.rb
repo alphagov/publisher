@@ -15,7 +15,8 @@ class Edition
     publish: "Send to publish",
     approve_review: "OK for publication",
     request_amendments: "Request amendments",
-    approve_fact_check: "Approve fact check"
+    approve_fact_check: "Approve fact check",
+    skip_review: "Skip review",
   }
   REVIEW_ACTIONS = ACTIONS.slice(:request_amendments, :approve_review)
   FACT_CHECK_ACTIONS = ACTIONS.slice(:request_amendments, :approve_fact_check)

@@ -9,7 +9,7 @@
             <%= link_to 'Create new edition', duplicate_edition_path(@resource), class: 'btn btn-primary btn-large', method: :post %>
           <% end %>
           <% if @resource.in_progress_sibling.present? %>
-            <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options = { "class" => "btn btn-primary btn-large"} %>
+            <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options: { "class" => "btn btn-primary btn-large"} %>
           <% end %>
           <%= progress_buttons(@resource, skip_disabled_buttons: true) %>
         <% else %>

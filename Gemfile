@@ -13,7 +13,7 @@ end
 if ENV['CONTENT_MODELS_DEV']
   gem "govuk_content_models", :path => '../govuk_content_models'
 else
-  gem "govuk_content_models", '41.0.0'
+  gem "govuk_content_models", '41.1.0'
 end
 
 if ENV['API_DEV']

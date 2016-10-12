@@ -9,12 +9,11 @@ module EditionActivityButtonsHelper
   end
 
   def review_buttons(edition)
-    [
-      ["Needs more work", "request_amendments"],
-      ["OK for publication", "approve_review"]
-    ].map{ |title, activity|
-      build_review_button(edition, activity, title)
-    }.join("\n").html_safe
+    buttons = []
+    buttons << build_review_button(edition, "request_amendments", "Needs more work")
+    buttons << build_review_button(edition, "skip_review", "Skip review") if skip_review?
+    buttons << build_review_button(edition, "approve_review", "OK for publication")
+    buttons.join("\n").html_safe
   end
 
   def fact_check_buttons(edition)
@@ -57,4 +56,7 @@ module EditionActivityButtonsHelper
     link_to('Preview', preview_edition_path(edition), class: 'btn btn-primary btn-large')
   end
 
+  def skip_review?
+    current_user.permissions.include?("skip_review")
+  end
 end
