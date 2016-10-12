@@ -5,6 +5,8 @@ module Tagging
     def self.find(content_id)
       link_set = Services.publishing_api.get_links(content_id)
       new(link_set.to_h)
+    rescue GdsApi::HTTPNotFound
+      new({})
     end
 
     def initialize(data)

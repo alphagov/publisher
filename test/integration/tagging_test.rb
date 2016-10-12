@@ -148,6 +148,17 @@ class TaggingTest < JavascriptIntegrationTest
     end
   end
 
+  context "Getting links" do
+    should "handle 404s from publishing-api (e.g. straight after a new artefact is created)" do
+      stub_request(:get, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
+        .to_return(status: 404)
+
+      visit edition_path(@edition)
+
+      assert page.has_content?('Test guide')
+    end
+  end
+
   context "Tagging to external links" do
     should "add new external links when the item is not tagged" do
       visit edition_path(@edition)
