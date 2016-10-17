@@ -1,0 +1,5 @@
+<%= @action.requester.name %> skipped reviewing "<%= @action.edition.title %>" (<%= @action.edition.format %>) at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
+
+Comment: <%= @action.comment %>
+
+<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
