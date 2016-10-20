@@ -3,6 +3,12 @@ require 'integration_test_helper'
 
 class SkipReviewTest < JavascriptIntegrationTest
   setup do
+    @permitted_user = FactoryGirl.create(:user,
+                                         name: "Vincent Panache",
+                                         email: "test@example.com",
+                                         permissions: ["skip_review"])
+
+
     stub_linkables
 
     @artefact = FactoryGirl.create(:artefact,
@@ -18,6 +24,8 @@ class SkipReviewTest < JavascriptIntegrationTest
                                review_requested_at: 1.hour.ago)
     @guide.parts.build(title: "Placeholder", body: "placeholder", slug: 'placeholder', order: 1)
     @guide.save!
+
+    @guide.new_action(@permitted_user, Action::REQUEST_REVIEW)
   end
 
   teardown do
@@ -25,17 +33,12 @@ class SkipReviewTest < JavascriptIntegrationTest
   end
 
   should "allow a user with the correct permissions to force publish" do
-    permitted_user = FactoryGirl.create(:user,
-                                        name: "Vincent Panache",
-                                        email: "test@example.com",
-                                        permissions: ["skip_review"])
 
-
-    login_as permitted_user
+    login_as @permitted_user
 
     visit "/publications/#{@artefact.id}"
 
-    within(".alert .workflow-buttons") do
+    within(".alert-info") do
       assert page.has_content? "Skip review"
       click_on "Skip review"
     end
@@ -63,7 +66,7 @@ class SkipReviewTest < JavascriptIntegrationTest
 
     visit "/publications/#{@artefact.id}"
 
-    within(".alert .workflow-buttons") do
+    within(".alert-info") do
       assert page.has_no_content? "Skip review"
     end
 

@@ -11,7 +11,6 @@ module EditionActivityButtonsHelper
   def review_buttons(edition)
     buttons = []
     buttons << build_review_button(edition, "request_amendments", "Needs more work")
-    buttons << build_review_button(edition, "skip_review", "Skip review") if skip_review?
     buttons << build_review_button(edition, "approve_review", "OK for publication")
     buttons.join("\n").html_safe
   end
