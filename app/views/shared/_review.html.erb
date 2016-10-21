@@ -3,6 +3,9 @@
     <p><%= @resource.latest_status_action(Action::REQUEST_REVIEW).requester.name %> has requested this edition be reviewed.</p>
     <% if @resource.latest_status_action.requester == current_user %>
       <p>That&rsquo;s you! You'll get an email when it has been reviewed.</p>
+      <% if skip_review? %>
+        <p><%= build_review_button(@resource, "skip_review", "Skip review").html_safe %></p>
+      <% end %>
     <% else %>
       <div class="workflow-buttons">
         <%= review_buttons(@resource)%>
