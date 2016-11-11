@@ -189,32 +189,6 @@ class EditionsControllerTest < ActionController::TestCase
       }
   end
 
-  test "should strip blank collection associations" do
-    artefact = FactoryGirl.create(:artefact)
-
-    edition_params = {
-      "kind" => "answer",
-      "panopticon_id" => artefact.id,
-      "title" => "a title",
-      "browse_pages" => ["", "tax/vat"],
-      "additional_topics" => ["", "oil-and-gas/wells"]
-    }
-
-    post :create, "edition" => edition_params
-
-    edition = Edition.order(updated_at: 1).last
-
-    assert_equal ["tax/vat"], edition.browse_pages
-    assert_equal ["oil-and-gas/wells"], edition.additional_topics
-
-    post :update, "id" => edition.id, "edition" => edition_params
-
-    edition.reload
-
-    assert_equal ["tax/vat"], edition.browse_pages
-    assert_equal ["oil-and-gas/wells"], edition.additional_topics
-  end
-
   context "with Business Support areas" do
     setup do
       artefact = FactoryGirl.create(:artefact)

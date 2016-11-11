@@ -58,27 +58,6 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     end
   end
 
-  context "sections" do
-    should "return the browse pages" do
-      @edition.update_attributes(
-        browse_pages: ["tax/vat", "tax/capital-gains"]
-      )
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal ["tax/vat", "tax/capital-gains"], registerable.sections
-    end
-  end
-
-  context "specialist_sectors" do
-    should "return the combined topics" do
-      @edition.update_attributes(
-        primary_topic: "oil-and-gas/wells",
-        additional_topics: ["oil-and-gas/licensing", "oil-and-gas/fields"]
-      )
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal ["oil-and-gas/wells", "oil-and-gas/licensing", "oil-and-gas/fields"], registerable.specialist_sectors
-    end
-  end
-
   context "latest changes" do
     setup do
       @edition_with_major_change = FactoryGirl.create(:answer_edition, major_change: true,

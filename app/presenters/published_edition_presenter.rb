@@ -22,12 +22,6 @@ class PublishedEditionPresenter
       update_type: update_type(options),
       details: {
         change_note: @edition.latest_change_note,
-        tags: {
-          browse_pages: @edition.browse_pages,
-          primary_topic: primary_topic,
-          additional_topics: @edition.additional_topics,
-          topics: (primary_topic + @edition.additional_topics)
-        },
         external_related_links: external_related_links,
       },
       locale: 'en',
@@ -65,12 +59,5 @@ private
 
   def public_updated_at
     @edition.public_updated_at || @edition.updated_at
-  end
-
-  def tags
-  end
-
-  def primary_topic
-    [@edition.primary_topic].select &:present?
   end
 end

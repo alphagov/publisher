@@ -14,9 +14,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       artefact.external_links = expected_external_related_links
 
       @edition = FactoryGirl.create(:edition, :published,
-        browse_pages: ["tax/vat", "tax/capital-gains"],
-        primary_topic: "oil-and-gas/wells",
-        additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"],
         major_change: true,
         updated_at: 1.minute.ago,
         change_note: 'Test',
@@ -41,12 +38,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         update_type: "major",
         details: {
           change_note: @edition.change_note,
-          tags: {
-            browse_pages: ["tax/vat", "tax/capital-gains"],
-            primary_topic: ["oil-and-gas/wells"],
-            additional_topics: ["oil-and-gas/fields", "oil-and-gas/distillation"],
-            topics: ["oil-and-gas/wells", "oil-and-gas/fields", "oil-and-gas/distillation"],
-          },
           external_related_links: expected_external_related_links,
         },
         locale: 'en',
@@ -104,11 +95,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     should 'use updated_at value if public_updated_at is nil' do
       assert_nil @edition.public_updated_at
       assert_equal @edition.updated_at, @output[:public_updated_at]
-    end
-
-    should "filter nil elements from topics" do
-      assert_equal [], @output[:details][:tags][:topics]
-      assert_equal [], @output[:details][:tags][:primary_topic]
     end
   end
 end
