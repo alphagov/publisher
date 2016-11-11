@@ -43,14 +43,6 @@ class RegisterableEdition
     end
   end
 
-  def sections
-    @edition.browse_pages
-  end
-
-  def specialist_sectors
-    [@edition.primary_topic] + @edition.additional_topics
-  end
-
   def public_timestamp
     @edition.public_updated_at
   end

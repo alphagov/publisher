@@ -4,9 +4,6 @@
       <%= content_tag :label, key.humanize, for: key %>
       <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
     <% end %>
-
-    <%= content_tag :label, 'Section', for: 'section' %>
-    <%= text_field_tag 'section', publication.artefact.section, class: "form-control add-bottom-margin", disabled: 'disabled' %>
   </div>
 </div>
 <%= link_to "Edit in Panopticon", panopticon_edit_url(publication), :class => "btn btn-primary" %>

@@ -7,10 +7,6 @@ class EditionChurnPresenter < CSVPresenter
       :name,
       :slug,
       :state,
-      :browse_pages,
-      :primary_topic,
-      :additional_topics,
-      :organisations,
       :need_ids,
       :editioned_on,
       :version_number
@@ -23,12 +19,6 @@ private
     case header
     when :name
       edition.title
-    when :browse_pages
-      edition.browse_pages.join(",")
-    when :additional_topics
-      edition.additional_topics.join(",")
-    when :organisations
-      edition.artefact.organisations.map(&:title).join(", ")
     when :need_ids
       edition.artefact.need_ids.join(',')
     when :editioned_on
