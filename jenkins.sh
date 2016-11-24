@@ -11,7 +11,7 @@ bundle exec rake stats
 
 # Clone govuk-content-schemas depedency for tests
 rm -rf tmp/govuk-content-schemas
-git clone git@github.com:alphagov/govuk-content-schemas.git tmp/govuk-content-schemas
+git clone --branch deployed-to-production git@github.com:alphagov/govuk-content-schemas.git tmp/govuk-content-schemas
 
 # Lint changes introduced in this branch, but not for master
 if [[ ${GIT_BRANCH} != "origin/master" ]]; then
