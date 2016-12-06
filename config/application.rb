@@ -66,6 +66,10 @@ module Publisher
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    # Observers will not be invoked unless they are instantiated
+    # first. Register them with the application.
+    config.mongoid.observers = :edition_observer
   end
 end
 
