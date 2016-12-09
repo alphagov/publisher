@@ -5,7 +5,9 @@ namespace :needs do
   desc "Send links to the Publishing API specifying which needs a piece of content is associated with"
   task send_content_ids_for_needs_to_publishingapi: :environment do
     @need_api = GdsApi::NeedApi.new(Plek.current.find('need-api'), bearer_token: ENV['NEED_API_BEARER_TOKEN'])
-    @publishing_api = GdsApi::PublishingApiV2.new(Plek.current.find('publishing-api'), timeout: 30)
+    @publishing_api = Services.publishing_api
+    @publishing_api.options[:timeout] = 30
+
 
     Artefact.where(owning_app: 'publisher').each do |a|
       if a.need_ids.present?
