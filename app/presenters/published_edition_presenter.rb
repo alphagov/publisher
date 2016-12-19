@@ -24,7 +24,7 @@ class PublishedEditionPresenter
         change_note: @edition.latest_change_note,
         external_related_links: external_related_links,
       },
-      locale: 'en',
+      locale: @artefact.language,
     }
   end
 
