@@ -15,9 +15,7 @@ class PublishedEditionPresenter
       public_updated_at: public_updated_at,
       publishing_app: "publisher",
       rendering_app: "frontend",
-      routes: [
-        {path: base_path, type: "exact"}
-      ],
+      routes: routes,
       redirects: [],
       update_type: update_type(options),
       details: {
@@ -39,8 +37,28 @@ private
     end
   end
 
+  def routes
+    [
+      { path: "#{base_path}", type: path_type },
+      { path: "#{json_path}", type: "exact" }
+    ]
+  end
+
   def base_path
     "/#{@edition.slug}"
+  end
+
+  def json_path
+    "#{base_path}.json"
+  end
+
+  def path_type
+    case @edition.class
+    when TransactionEdition, CampaignEdition, HelpPageEdition
+      "exact"
+    else
+      "prefix"
+    end
   end
 
   def update_type(options)

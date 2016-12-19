@@ -33,7 +33,10 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         public_updated_at: @edition.public_updated_at,
         publishing_app: "publisher",
         rendering_app: "frontend",
-        routes: [ { path: "/#{@edition.slug}", type: "exact" }],
+        routes: [
+          { path: "/#{@edition.slug}", type: "prefix" },
+          { path: "/#{@edition.slug}.json", type: "exact" }
+        ],
         redirects: [],
         update_type: "major",
         details: {
@@ -80,7 +83,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       )
       updated_at = 1.minute.ago
       @edition = FactoryGirl.create(
-        :edition,
+        :transaction_edition,
         state: "draft",
         updated_at: updated_at,
         panopticon_id: artefact.id,
@@ -95,6 +98,15 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     should 'use updated_at value if public_updated_at is nil' do
       assert_nil @edition.public_updated_at
       assert_equal @edition.updated_at, @output[:public_updated_at]
+    end
+
+    should "have a exact route type for both path and json path" do
+      exact_routes = [
+        { path: "/#{@edition.slug}", type: "exact" },
+        { path: "/#{@edition.slug}.json", type: "exact" }
+      ]
+
+      assert_equal @output[:routes], exact_routes
     end
   end
 end
