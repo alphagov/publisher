@@ -77,7 +77,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     setup do
       artefact = FactoryGirl.create(:artefact,
         content_id: SecureRandom.uuid,
-        language: 'cy',
       )
       updated_at = 1.minute.ago
       @edition = FactoryGirl.create(
@@ -96,10 +95,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     should 'use updated_at value if public_updated_at is nil' do
       assert_nil @edition.public_updated_at
       assert_equal @edition.updated_at, @output[:public_updated_at]
-    end
-
-    should 'choose locale based on the artefact language' do
-      assert_equal 'cy', @output[:locale]
     end
   end
 end
