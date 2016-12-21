@@ -5,12 +5,12 @@
   </th>
   <td>
     <% if @edition.send("#{format}_image") %>
-      <% if @edition.send("#{format}_image").state == "unscanned" %>
-        <p class="alert alert-info"><%= @edition.send("#{format}_image").name %> is being scanned for viruses</p>
+      <% if @edition.send("#{format}_image")["state"] == "unscanned" %>
+        <p class="alert alert-info"><%= @edition.send("#{format}_image")["name"] %> is being scanned for viruses</p>
       <% else %>
         <p>
-          <%= link_to @edition.send("#{format}_image").file_url do %>
-            <%= image_tag @edition.send("#{format}_image").file_url, :height => "200px" %>
+          <%= link_to @edition.send("#{format}_image")["file_url"] do %>
+            <%= image_tag @edition.send("#{format}_image")["file_url"], :height => "200px" %>
           <% end %>
         </p>
       <% end %>
