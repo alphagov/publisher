@@ -71,9 +71,9 @@ class CampaignEditTest < JavascriptIntegrationTest
       medium_image = File.open(Rails.root.join("test","fixtures","uploads","campaign_medium.jpg"))
       large_image = File.open(Rails.root.join("test","fixtures","uploads","campaign_large.jpg"))
 
-      asset_one = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_one', :file_url => 'http://path/to/campaign_small.jpg')
-      asset_two = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_two', :file_url => 'http://path/to/campaign_medium.jpg')
-      asset_three = OpenStruct.new(:id => 'http://asset-manager.dev.gov.uk/assets/asset_three', :file_url => 'http://path/to/campaign_large.jpg')
+      asset_one = { "id" => 'http://asset-manager.dev.gov.uk/assets/asset_one', "file_url" => 'http://path/to/campaign_small.jpg' }
+      asset_two = { "id" => 'http://asset-manager.dev.gov.uk/assets/asset_two', "file_url" => 'http://path/to/campaign_medium.jpg' }
+      asset_three = { "id" => 'http://asset-manager.dev.gov.uk/assets/asset_three', "file_url" => 'http://path/to/campaign_large.jpg' }
 
       # This matches against the original_filename attribute on ActionDispatch::Http::UploadedFile
       GdsApi::AssetManager.any_instance.stubs(:create_asset).with(has_entry(:file => responds_with(:original_filename, "campaign_small.jpg"))).returns(asset_one)
