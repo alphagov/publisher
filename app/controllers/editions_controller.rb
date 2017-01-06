@@ -126,7 +126,7 @@ class EditionsController < InheritedResources::Base
       artefact.external_links_attributes = external_links["external_links_attributes"]
 
       if artefact.save
-        flash[:success] = "External links have been saved."
+        flash[:success] = "External links have been saved. They will be visible the next time this publication is published."
       else
         flash[:danger] = artefact.errors.full_messages.join("\n")
       end
