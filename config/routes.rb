@@ -15,8 +15,10 @@ Rails.application.routes.draw do
       get 'admin'
       get 'tagging', to: "editions#linking"
       get 'related_external_links' , to: "editions#linking"
+      get 'unpublish'
       post 'duplicate'
       post 'update_tagging'
+      post 'process_unpublish'
       patch 'update_related_external_links'
       post 'progress'
       put 'review'
