@@ -1,14 +1,24 @@
-<div class="row">
-  <div class="col-md-7">
-    <% publication.attributes.slice('slug', 'kind').each do |key, value| %>
-      <%= content_tag :label, key.humanize, for: key %>
-      <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
-    <% end %>
+<% if publication.draft? %>
+  <%= semantic_bootstrap_nested_form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
+    <div class="row">
+      <div class="col-md-12">
+        <%= f.input :id, as: :hidden, input_html: { value: @artefact.id } %>
+        <%= f.input :slug, :input_html => { :class => "input-md-6" } %>
+      </div>
+    </div>
+    <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>
+    <%= link_to "Add user need", panopticon_edit_url(publication), class: "btn btn-primary" %>
+    <%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication), class: "btn btn-primary" %>
+  <% end %>
+<% else %>
+  <div class="row">
+    <div class="col-md-7">
+      <% @artefact.attributes.slice('slug', 'language').each do |key, value| %>
+        <%= content_tag :label, key.humanize, for: key %>
+        <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
+      <% end %>
+    </div>
   </div>
-</div>
-
-<ul class="list-unstyled">
-  <li><%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication)%></li>
-  <li><%= link_to "Add user need or mark Welsh content", panopticon_edit_url(publication)%></li>
-  <li><%= link_to "Withdraw and redirect content", panopticon_withdraw_url(publication)%></li>
-</ul>
+  <%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication), class: "btn btn-primary"%>
+  <%= link_to "Add user need", panopticon_edit_url(publication), class: "btn btn-primary"%>
+<% end %>

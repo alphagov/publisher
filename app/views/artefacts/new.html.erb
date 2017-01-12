@@ -1,0 +1,32 @@
+<%= content_for :page_title, "New artefact" %>
+<div class="page-header">
+  <h1><%= yield :page_title %></h1>
+</div>
+
+<% if @artefact.errors.count > 0 %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @artefact.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= semantic_bootstrap_nested_form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
+        <%= f.input :content_id, as: :hidden, input_html: {value: @artefact.content_id } %>
+        <%= f.input :name, :input_html => { :class => "input-md-6" } %>
+        <%= f.input :slug, :input_html => { :class => "input-md-6" } %>
+        <%= f.input :kind, :collection => formats.map { |s| [s.humanize, s]}, :as => :select, :prompt => "Select a kind", :input_html => { :class => "input-md-4" } %>
+        <%= f.input :owning_app, :as => :hidden, :input_html => {:value => 'publisher' } %>
+        <%= f.input :language, :collection => {"English" => "en", "Welsh" => "cy"}, :as => :select, :input_html => { :class => "input-md-4" }, :include_blank => false %>
+      </div>
+      <div class="form-actions">
+        <%= f.submit :value => "Save and go to item", :class => "add-left-margin btn btn-default" %>
+      </div>
+    </div>
+  </div>
+<% end %>

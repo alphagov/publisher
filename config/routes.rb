@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'downtimes' => 'downtimes#index'
 
+  resources :artefacts, only: [:new, :create, :update]
+
   resources :editions do
     member do
       get 'diff'
