@@ -6,4 +6,9 @@
     <% end %>
   </div>
 </div>
-<%= link_to "Edit in Panopticon", panopticon_edit_url(publication), :class => "btn btn-primary" %>
+
+<ul class="list-unstyled">
+  <li><%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication)%></li>
+  <li><%= link_to "Add user need or mark Welsh content", panopticon_edit_url(publication)%></li>
+  <li><%= link_to "Withdraw and redirect content", panopticon_withdraw_url(publication)%></li>
+</ul>
