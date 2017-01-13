@@ -39,6 +39,8 @@ class EditionsController < InheritedResources::Base
     @publication = current_user.create_edition(class_identifier, create_params[:edition])
 
     if @publication.persisted?
+      notify_update_publishing_api(@publication)
+
       flash[:success] = "#{description(@publication)} successfully created"
       redirect_to edition_path(@publication)
       return
@@ -56,7 +58,10 @@ class EditionsController < InheritedResources::Base
       flash[:warning] = 'Another person has created a newer edition'
       redirect_to edition_path(resource)
     elsif command.duplicate(target_edition_class_name, new_assignee)
-      return_to = params[:return_to] || edition_path(command.new_edition)
+      new_edition = command.new_edition
+      notify_update_publishing_api(new_edition)
+
+      return_to = params[:return_to] || edition_path(new_edition)
       flash[:success] = 'New edition created'
       redirect_to return_to
     else
@@ -81,7 +86,10 @@ class EditionsController < InheritedResources::Base
     update! do |success, failure|
       success.html {
         progress_edition(resource, activity_params) if attempted_activity
+
         update_assignment resource, assign_to
+        notify_update_publishing_api(resource)
+
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
       }
@@ -95,7 +103,10 @@ class EditionsController < InheritedResources::Base
       }
       success.json {
         progress_edition(resource, activity_params) if attempted_activity
+
         update_assignment resource, assign_to
+        notify_update_publishing_api(resource)
+
         render :json => resource
       }
       failure.json { render :json => resource.errors, :status=>406 }

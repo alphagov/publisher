@@ -27,6 +27,16 @@ class EditionsControllerTest < ActionController::TestCase
       }
     end
 
+    should "update publishing API upon creation of new edition" do
+      PublishingAPIUpdater.expects(:perform_async)
+
+      post :create, "edition" => {
+        "kind" => "answer",
+        "panopticon_id" => @artefact.id,
+        "title" => "a title"
+      }
+    end
+
     should "render the lgsl edit form successfully if creation fails" do
       lgsl_code = 800
       FactoryGirl.create(:local_service, lgsl_code: lgsl_code)
@@ -62,15 +72,19 @@ class EditionsControllerTest < ActionController::TestCase
   context "#duplicate" do
     setup do
       @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+      EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
     end
 
     should "delegate complexity of duplication to appropriate collaborator" do
-      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
-      EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
-
       post :duplicate, id: @guide.id
       assert_response 302
       assert_equal "New edition created", flash[:success]
+    end
+
+    should "update the publishing API upon duplication of an edition" do
+      PublishingAPIUpdater.expects(:perform_async).with(@guide.id.to_s)
+      post :duplicate, id: @guide.id
     end
   end
 
@@ -127,8 +141,8 @@ class EditionsControllerTest < ActionController::TestCase
         edition: {
           activity: {
             "request_type" => 'schedule_for_publishing'
-            }.merge(publish_at_params)
-          }
+          }.merge(publish_at_params)
+        }
     end
   end
 
@@ -202,6 +216,12 @@ class EditionsControllerTest < ActionController::TestCase
       assert_equal "Updated title", @guide.title
       assert_equal "in_review", @guide.state
       assert_equal "Please review the updated title", @guide.actions.last.comment
+    end
+
+    should "update the publishing API on successful update" do
+      PublishingAPIUpdater.expects(:perform_async).with(@guide.id.to_s)
+
+      post :update, id: @guide.id, edition: { title: "Updated title" }
     end
   end
 
