@@ -9,6 +9,10 @@
       </h1>
     </div>
 
+    <% if flash[:notice] %>
+      <%= flash[:notice] %>
+    <% end %>
+
     <div class="row">
 
       <div class="col-md-2">

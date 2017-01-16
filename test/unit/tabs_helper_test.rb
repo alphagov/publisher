@@ -5,16 +5,16 @@ class TabsHelperTest < ActionView::TestCase
 
   context 'Tab' do
     should 'return all tabs in order' do
-      assert_equal 6, tabs.count
-      assert_equal %w(edit tagging metadata history admin related_external_links), tabs.map(&:name)
+      assert_equal 7, tabs.count
+      assert_equal %w(edit tagging metadata history admin related_external_links unpublish), tabs.map(&:name)
     end
 
     should 'return tabs with expected titles' do
-      assert_equal ["Edit", "Tagging", "Metadata", "History and notes", "Admin", "Related external links"], tabs.map(&:title)
+      assert_equal ["Edit", "Tagging", "Metadata", "History and notes", "Admin", "Related external links", "Unpublish"], tabs.map(&:title)
     end
 
     should 'return tabs with expected paths' do
-      assert_equal %w(path path/tagging path/metadata path/history path/admin path/related_external_links), tabs.map { |t| t.path('path') }
+      assert_equal %w(path path/tagging path/metadata path/history path/admin path/related_external_links path/unpublish), tabs.map { |t| t.path('path') }
     end
 
     should 'return a single tab by name' do

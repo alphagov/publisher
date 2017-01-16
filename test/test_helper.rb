@@ -13,6 +13,7 @@ require 'gds_api/test_helpers/panopticon'
 require 'gds_api/test_helpers/publishing_api_v2'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
+require 'support/tab_test_helpers'
 require 'govuk_content_models/test_helpers/action_processor_helpers'
 require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
@@ -83,4 +84,5 @@ class ActiveSupport::TestCase
   include GdsApi::TestHelpers::Panopticon
   include GdsApi::TestHelpers::PublishingApiV2
   include TagTestHelpers
+  include TabTestHelpers
 end
