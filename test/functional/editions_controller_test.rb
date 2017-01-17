@@ -7,186 +7,219 @@ class EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
     stub_linkables
-    @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
-    artefact1 = FactoryGirl.create(:artefact, slug: "test",
-        kind: "transaction",
-        name: "test",
-        owning_app: "publisher")
-    @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
-
-    artefact2 = FactoryGirl.create(:artefact, slug: "test2",
-        kind: "programme",
-        name: "test",
-        owning_app: "publisher")
-    @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
-
-    stub_request(:delete, "#{Plek.current.find("arbiter")}/slugs/test").to_return(:status => 200)
   end
 
-  test "it renders the lgsl edit form successfully if creation fails" do
-    lgsl_code = 800
-    local_service = FactoryGirl.create(:local_service, :lgsl_code=>lgsl_code)
-    artefact = FactoryGirl.create(:artefact)
+  context "#create" do
+    setup do
+      @artefact = FactoryGirl.create(:artefact,
+          slug: "test",
+          kind: "answer",
+          name: "test",
+          owning_app: "publisher")
+    end
 
-    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code, "panopticon_id"=>artefact.id, "title"=>"a title"}
-    assert_equal '302', response.code
+    should "report publication counts on creation" do
+      Publisher::Application.edition_state_count_reporter.expects(:report)
+      post :create, "edition" => {
+        "kind" => "answer",
+        "panopticon_id" => @artefact.id,
+        "title" => "a title"
+      }
+    end
 
-    post :create, "edition" => {"kind" => "local_transaction", "lgsl_code"=>lgsl_code+1, "panopticon_id"=>artefact.id, "title"=>"a title"}
-    assert_equal '200', response.code
+    should "render the lgsl edit form successfully if creation fails" do
+      lgsl_code = 800
+      FactoryGirl.create(:local_service, lgsl_code: lgsl_code)
+      artefact = FactoryGirl.create(:artefact)
+
+      post :create, "edition" => {
+        "kind" => "local_transaction",
+        "lgsl_code" => lgsl_code,
+        "panopticon_id" => artefact.id,
+        "title" => "a title",
+      }
+      assert_equal '302', response.code
+
+      post :create, "edition" => {
+        "kind" => "local_transaction",
+        "lgsl_code" => lgsl_code + 1,
+        "panopticon_id" => artefact.id,
+        "title" => "a title"
+      }
+      assert_equal '200', response.code
+    end
   end
 
-  test "should be able to create a view path for a given publication" do
-    l = LocalTransactionEdition.new
-    assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-    g = GuideEdition.new
-    assert_equal "app/views/guides", @controller.template_folder_for(g)
+  context "#template_folder_for" do
+    should "be able to create a view path for a given publication" do
+      l = LocalTransactionEdition.new
+      assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
+      g = GuideEdition.new
+      assert_equal "app/views/guides", @controller.template_folder_for(g)
+    end
   end
 
-  test "delegates complexity of duplication to appropriate collaborator" do
-    EditionDuplicator.any_instance.expects(:duplicate).returns(true)
-    EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+  context "#duplicate" do
+    setup do
+      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    end
 
-    post :duplicate, :id => @guide.id
-    assert_response 302
-    assert_equal "New edition created", flash[:success]
+    should "delegate complexity of duplication to appropriate collaborator" do
+      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+      EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+
+      post :duplicate, id: @guide.id
+      assert_response 302
+      assert_equal "New edition created", flash[:success]
+    end
   end
 
-  test "should update status via progress and redirect to parent" do
-    EditionProgressor.any_instance.expects(:progress).returns(true)
-    EditionProgressor.any_instance.expects(:status_message).returns("Guide updated")
+  context "#progress" do
+    setup do
+      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    end
 
-    post :progress,
-      :id       => @guide.id,
-      :edition => {
-        :activity => {
-          "request_type"       => "send_fact_check",
-          "comment"            => "Blah",
-          "email_addresses"    => "user@example.com",
-          "customised_message" => "Hello"
+    should "update status via progress and redirect to parent" do
+      EditionProgressor.any_instance.expects(:progress).returns(true)
+      EditionProgressor.any_instance.expects(:status_message).returns("Guide updated")
+
+      post :progress,
+        id: @guide.id,
+        edition: {
+          activity: {
+            "request_type"       => "send_fact_check",
+            "comment"            => "Blah",
+            "email_addresses"    => "user@example.com",
+            "customised_message" => "Hello"
+          }
         }
+
+      assert_redirected_to controller: "editions", action: "show", id: @guide.id
+      assert_equal "Guide updated", flash[:success]
+    end
+
+    should "set an error message if it couldn't progress an edition" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+      EditionProgressor.any_instance.expects(:status_message).returns("I failed")
+
+      post :progress, id: @guide.id.to_s,
+        edition: {
+          activity: {
+            'request_type' => "send_fact_check",
+            "email_addresses" => ""
+          }
+        }
+      assert_equal "I failed", flash[:danger]
+    end
+
+    should "squash multiparameter attributes into a time field that has time-zone information" do
+      EditionProgressor.any_instance.expects(:progress).with(has_entry('publish_at', Time.zone.local(2014, 3, 4, 14, 47)))
+
+      publish_at_params = {
+        "publish_at(1i)" => "2014",
+        "publish_at(2i)" => "3",
+        "publish_at(3i)" => "4",
+        "publish_at(4i)" => "14",
+        "publish_at(5i)" => "47"
       }
 
-    assert_redirected_to :controller => "editions", :action => "show", :id => @guide.id
-    assert_equal "Guide updated", flash[:success]
+      post :progress, id: @guide.id.to_s,
+        edition: {
+          activity: {
+            "request_type" => 'schedule_for_publishing'
+            }.merge(publish_at_params)
+          }
+    end
   end
 
-  test "should update assignment" do
-    bob = User.create
+  context "#update" do
+    setup do
+      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    end
 
-    post :update,
-      :id       => @guide.id,
-      :edition  => { :assigned_to_id => bob.id }
+    should "update assignment" do
+      bob = User.create
 
-    @guide.reload
-    assert_equal bob, @guide.assigned_to
-  end
+      post :update,
+        id: @guide.id,
+        edition: { assigned_to_id: bob.id }
 
-  test "should not create a new action if the assignment is unchanged" do
-    bob = User.create
-    @user.assign(@guide, bob)
+      @guide.reload
+      assert_equal bob, @guide.assigned_to
+    end
 
-    post :update,
-      :id       => @guide.id,
-      :edition  => { :assigned_to_id => bob.id }
+    should "not create a new action if the assignment is unchanged" do
+      bob = User.create
+      @user.assign(@guide, bob)
 
-    @guide.reload
-    assert_equal 1, @guide.actions.select { |a| a.request_type == Action::ASSIGN }.length
-  end
+      post :update,
+        id: @guide.id,
+        edition: { assigned_to_id: bob.id }
 
-  test "should update the reviewer" do
-    bob = User.create
+      @guide.reload
+      assert_equal 1, @guide.actions.count { |a| a.request_type == Action::ASSIGN }
+    end
 
-    put :review,
-      :id       => @guide.id,
-      :edition  => { :reviewer => bob.name }
+    should "show the edit page again if updating fails" do
+      panopticon_has_metadata(
+        "id" => "test"
+      )
 
-    @guide.reload
-    assert_equal bob.name, @guide.reviewer
-  end
+      Edition.expects(:find).returns(@guide)
+      @guide.stubs(:update_attributes).returns(false)
+      @guide.expects(:errors).at_least_once.returns(title: ['values'])
 
-  test "should show the edit page again if updating fails" do
-    panopticon_has_metadata(
-      "id" => "test"
-    )
+      post :update,
+        id: @guide.id,
+        edition: { assigned_to_id: "" }
+      assert_response 200
+    end
 
-    Edition.expects(:find).returns(@guide)
-    @guide.stubs(:update_attributes).returns(false)
-    @guide.expects(:errors).at_least_once.returns({:title => ['values']})
+    should "show the resource base errors if present" do
+      panopticon_has_metadata("id" => "test")
+      Edition.expects(:find).returns(@guide)
+      @guide.stubs(:update_attributes).returns(false)
+      @guide.expects(:errors).at_least_once.returns(base: ["Editions scheduled for publishing can't be edited"])
 
-    post :update,
-      :id       => @guide.id,
-      :edition  => { :assigned_to_id => "" }
-    assert_response 200
-  end
+      post :update, id: @guide.id, edition: {}
 
-  test "should show the resource base errors if present" do
-    panopticon_has_metadata("id" => "test")
-    Edition.expects(:find).returns(@guide)
-    @guide.stubs(:update_attributes).returns(false)
-    @guide.expects(:errors).at_least_once.returns(base: ["Editions scheduled for publishing can't be edited"])
+      assert_equal "Editions scheduled for publishing can't be edited", flash[:danger]
+    end
 
-    post :update, :id => @guide.id, :edition => {}
+    should "save the edition changes while performing an activity" do
+      panopticon_has_metadata("id" => "test")
 
-    assert_equal "Editions scheduled for publishing can't be edited", flash[:danger]
-  end
-
-  test "should save the edition changes while performing an activity" do
-    panopticon_has_metadata("id" => "test")
-
-    post :update, id: @guide.id, commit: "Send to 2nd pair of eyes",
-      edition: {
-        title: "Updated title",
-        activity_request_review_attributes: {
-          request_type: "request_review",
-          comment: "Please review the updated title"
+      post :update, id: @guide.id, commit: "Send to 2nd pair of eyes",
+        edition: {
+          title: "Updated title",
+          activity_request_review_attributes: {
+            request_type: "request_review",
+            comment: "Please review the updated title"
+          }
         }
-      }
 
-    @guide.reload
-    assert_equal "Updated title", @guide.title
-    assert_equal "in_review", @guide.state
-    assert_equal "Please review the updated title", @guide.actions.last.comment
+      @guide.reload
+      assert_equal "Updated title", @guide.title
+      assert_equal "in_review", @guide.state
+      assert_equal "Please review the updated title", @guide.actions.last.comment
+    end
   end
 
-  test "should set an error message if it couldn't progress an edition" do
-    EditionProgressor.any_instance.expects(:progress).returns(false)
-    EditionProgressor.any_instance.expects(:status_message).returns("I failed")
+  context "#review" do
+    setup do
+      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    end
 
-    post :progress, {
-      :id       => @guide.id.to_s,
-      :edition => {
-        :activity => {
-          'request_type' => "send_fact_check",
-          "email_addresses" => ""
-        }
-      }
-    }
-    assert_equal "I failed", flash[:danger]
-  end
+    should "update the reviewer" do
+      bob = User.create
 
-  test "should report publication counts on creation" do
-    Publisher::Application.edition_state_count_reporter.expects(:report)
-    post :create, "edition" => {
-      "kind" => "answer",
-      "panopticon_id"=>Artefact.first.id,
-      "title"=>"a title"
-    }
-  end
+      put :review,
+        id: @guide.id,
+        edition: { reviewer: bob.name }
 
-  test "squashes multiparameter attributes into a time field that has time-zone information" do
-    EditionProgressor.any_instance.expects(:progress).with(has_entry('publish_at', Time.zone.local(2014, 3, 4, 14, 47)))
-
-    publish_at_params = { "publish_at(1i)"=>"2014", "publish_at(2i)"=>"3", "publish_at(3i)"=>"4",
-                          "publish_at(4i)"=>"14", "publish_at(5i)"=>"47" }
-
-    post :progress, {
-      id: @guide.id.to_s,
-      edition: {
-        activity: {
-          "request_type" => 'schedule_for_publishing'
-          }.merge(publish_at_params)
-        }
-      }
+      @guide.reload
+      assert_equal bob.name, @guide.reviewer
+    end
   end
 
   context "with Business Support areas" do
@@ -220,72 +253,104 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  test "destroy transaction" do
-    assert @transaction.can_destroy?
-    assert_difference('TransactionEdition.count', -1) do
-      delete :destroy, :id => @transaction.id
+  context "#destroy" do
+    setup do
+      artefact1 = FactoryGirl.create(:artefact, slug: "test",
+          kind: "transaction",
+          name: "test",
+          owning_app: "publisher")
+      @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
+
+      artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+          kind: "programme",
+          name: "test",
+          owning_app: "publisher")
+      @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+
+      stub_request(:delete, "#{Plek.current.find('arbiter')}/slugs/test").to_return(status: 200)
     end
-    assert_redirected_to(:controller => "root", "action" => "index")
-  end
 
-  test "can't destroy published transaction" do
-    @transaction.state = 'ready'
-    stub_register_published_content
-    @transaction.publish
-    assert !@transaction.can_destroy?
-    @transaction.save!
-    assert_difference('TransactionEdition.count', 0) do
-      delete :destroy, :id => @transaction.id
+    should "destroy transaction" do
+      assert @transaction.can_destroy?
+      assert_difference('TransactionEdition.count', -1) do
+        delete :destroy, id: @transaction.id
+      end
+      assert_redirected_to(:controller => "root", "action" => "index")
+    end
+
+    should "can't destroy published transaction" do
+      @transaction.state = 'ready'
+      stub_register_published_content
+      @transaction.publish
+      assert !@transaction.can_destroy?
+      @transaction.save!
+      assert_difference('TransactionEdition.count', 0) do
+        delete :destroy, id: @transaction.id
+      end
+    end
+
+    should "destroy programme" do
+      assert @programme.can_destroy?
+      assert_difference('ProgrammeEdition.count', -1) do
+        delete :destroy, id: @programme.id
+      end
+      assert_redirected_to(:controller => "root", "action" => "index")
+    end
+
+    should "can't destroy published programme" do
+      @programme.state = 'ready'
+      @programme.save!
+      stub_register_published_content
+      @programme.publish
+      @programme.save!
+      assert @programme.published?
+      assert !@programme.can_destroy?
+
+      assert_difference('ProgrammeEdition.count', 0) do
+        delete :destroy, id: @programme.id
+      end
     end
   end
 
-  test "editions index redirects to root" do
-    get :index
-    assert_response :redirect
-    assert_redirected_to(:controller => "root", "action" => "index")
-  end
-
-  test "requesting a publication that doesn't exist returns a 404" do
-    get :show, :id => '4e663834e2ba80480a0000e6'
-    assert_response 404
-  end
-
-  test "we can view a programme" do
-    get :show, :id => @programme.id
-    assert_response :success
-    refute_nil assigns(:resource)
-  end
-
-  test "destroy programme" do
-    assert @programme.can_destroy?
-    assert_difference('ProgrammeEdition.count', -1) do
-      delete :destroy, :id => @programme.id
-    end
-    assert_redirected_to(:controller => "root", "action" => "index")
-  end
-
-  test "can't destroy published programme" do
-    @programme.state = 'ready'
-    @programme.save!
-    stub_register_published_content
-    @programme.publish
-    @programme.save!
-    assert @programme.published?
-    assert !@programme.can_destroy?
-
-    assert_difference('ProgrammeEdition.count', 0) do
-      delete :destroy, :id => @programme.id
+  context "#index" do
+    should "editions index redirects to root" do
+      get :index
+      assert_response :redirect
+      assert_redirected_to(:controller => "root", "action" => "index")
     end
   end
 
-  test "we can diff the last edition" do
-    first_edition = FactoryGirl.create(:guide_edition, state: "published")
-    second_edition = first_edition.build_clone(GuideEdition)
-    second_edition.save
-    second_edition.reload
+  context "#show" do
+    setup do
+      artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+          kind: "programme",
+          name: "test",
+          owning_app: "publisher")
+      @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+    end
 
-    get :diff, :id => second_edition.id
-    assert_response :success
+    should "requesting a publication that doesn't exist returns a 404" do
+      get :show, id: '4e663834e2ba80480a0000e6'
+      assert_response 404
+    end
+
+    should "we can view a programme" do
+      get :show, id: @programme.id
+      assert_response :success
+      refute_nil assigns(:resource)
+    end
+  end
+
+  context "#diff" do
+    should "we can diff the last edition" do
+      first_edition = FactoryGirl.create(:guide_edition, state: "published")
+      second_edition = first_edition.build_clone(GuideEdition)
+      second_edition.save
+      second_edition.reload
+
+      get :diff, id: second_edition.id
+      assert_response :success
+    end
   end
 
   context "given a simple smart answer" do
