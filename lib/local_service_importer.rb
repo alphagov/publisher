@@ -1,3 +1,5 @@
+require 'csv'
+
 class LocalServiceImporter
   def self.update
     fh = fetch_data
