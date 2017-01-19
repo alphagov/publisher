@@ -10,9 +10,9 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
     visit root_path
     click_link "Add artefact"
 
-    fill_in "Name", with: "Thingy McThingface"
+    fill_in "Title", with: "Thingy McThingface"
     fill_in "Slug", with: "thingy-mc-thingface"
-    select "Help page", from: "Kind"
+    select "Help page", from: "Format"
 
     click_button "Save and go to item"
 
