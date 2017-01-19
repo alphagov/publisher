@@ -2,12 +2,8 @@ require 'integration_test_helper'
 
 class RequestTracingTest < ActionDispatch::IntegrationTest
   setup do
-    WebMock.reset!
     setup_users
-
-    stub_request(:any, /publishing-api/)
-    stub_request(:put, /panopticon/)
-    stub_request(:post, /search/)
+    stub_register_published_content
   end
 
   test "govuk_request_id is passed downstream across the worker boundary on publish" do
@@ -71,7 +67,6 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
 
       assert_requested(:put, %r|publishing-api.*content/#{content_id}|, times: 1, headers: onward_headers)
       assert_requested(:post, %r|publishing-api.*content/#{content_id}/publish|, headers: onward_headers)
-      assert_requested(:put, /panopticon/, headers: onward_headers)
     end
   end
 end

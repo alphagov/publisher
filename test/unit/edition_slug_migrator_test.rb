@@ -3,7 +3,6 @@ require 'edition_slug_migrator'
 require 'gds_api/panopticon'
 
 class EditionSlugMigratorTest < ActiveSupport::TestCase
-
   setup do
     @example_artefact = FactoryGirl.create(:artefact)
     @editions = [
@@ -18,7 +17,6 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
         "second-original-slug" => "second-new-slug",
         "third-original-slug" => "third-new-slug"
       })
-    GdsApi::Panopticon::Registerer.any_instance.stubs(:register)
     SearchIndexer.stubs(:call)
 
     @it = EditionSlugMigrator.new( Logger.new("/dev/null") )
@@ -31,9 +29,8 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
     assert_equal ["first-new-slug", "first-new-slug", "second-new-slug", "third-new-slug"], @editions.map(&:slug)
   end
 
-  should "reregister the latest or published edition with Panopticon" do
+  should "reregister the latest or published edition with Rummager / Publishing API / Router API" do
     ["first-new-slug","second-new-slug","third-new-slug"].each do |slug|
-      GdsApi::Panopticon::Registerer.any_instance.expects(:register).with(responds_with(:slug, slug)).returns(true)
       SearchIndexer.expects(:call).with(responds_with(:slug, slug))
     end
 
@@ -48,5 +45,4 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
       assert edition.actions.select {|a| a.request_type == Action::NOTE }.any?
     end
   end
-
 end

@@ -67,8 +67,23 @@ class ActiveSupport::TestCase
   end
 
   def stub_register_published_content
-    WebMock.stub_request(:put, %r{\A#{PANOPTICON_ENDPOINT}/artefacts/})
+    stub_register_with_router_api
+    stub_register_with_rummager
+    stub_register_with_publishing_api
+  end
+
+  def stub_register_with_publishing_api
+    WebMock.stub_request(:put, %r{publishing-api.dev.gov.uk/v2/content/.*})
+    WebMock.stub_request(:post, %r{publishing-api.dev.gov.uk/v2/content/.*/publish})
+  end
+
+  def stub_register_with_rummager
     WebMock.stub_request(:post, %r{search.dev.gov.uk/documents})
+  end
+
+  def stub_register_with_router_api
+    WebMock.stub_request(:put, %r{router-api.dev.gov.uk/routes})
+    WebMock.stub_request(:post, %r{router-api.dev.gov.uk/routes/commit})
   end
 
   teardown do
@@ -81,7 +96,6 @@ class ActiveSupport::TestCase
     request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => @user)
   end
 
-  include GdsApi::TestHelpers::Panopticon
   include GdsApi::TestHelpers::PublishingApiV2
   include TagTestHelpers
   include TabTestHelpers

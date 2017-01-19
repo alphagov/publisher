@@ -60,6 +60,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     end
 
     should "dequeue the scheduled job if present" do
+      stub_register_published_content
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
         @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)

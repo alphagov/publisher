@@ -175,10 +175,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "show the edit page again if updating fails" do
-      panopticon_has_metadata(
-        "id" => "test"
-      )
-
       Edition.expects(:find).returns(@guide)
       @guide.stubs(:update_attributes).returns(false)
       @guide.expects(:errors).at_least_once.returns(title: ['values'])
@@ -190,7 +186,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "show the resource base errors if present" do
-      panopticon_has_metadata("id" => "test")
       Edition.expects(:find).returns(@guide)
       @guide.stubs(:update_attributes).returns(false)
       @guide.expects(:errors).at_least_once.returns(base: ["Editions scheduled for publishing can't be edited"])
@@ -201,8 +196,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "save the edition changes while performing an activity" do
-      panopticon_has_metadata("id" => "test")
-
       post :update, id: @guide.id, commit: "Send to 2nd pair of eyes",
         edition: {
           title: "Updated title",

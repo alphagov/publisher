@@ -3,7 +3,6 @@ require 'integration_test_helper'
 class EditionWorkflowTest < JavascriptIntegrationTest
 
   setup do
-    panopticon_has_metadata("id" => '2356')
     stub_linkables
 
     %w(Alice Bob Charlie).each do |name|

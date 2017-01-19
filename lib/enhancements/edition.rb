@@ -61,7 +61,12 @@ class Edition
   # when the edition state changes to `published`
   def was_published
     was_published_without_indexing
-    register_with_panopticon
+    update_artefact
+    notify_publishing_platform_services
+  end
+
+  def notify_publishing_platform_services
+    register_with_router_api
     register_with_rummager
     notify_publishing_api
   end
@@ -74,30 +79,54 @@ class Edition
     Publisher::Application.fact_check_config.address(self.id)
   end
 
-  def check_if_archived(artefact)
+  def check_if_archived
     if artefact.state == "archived"
       raise ResurrectionError, "Cannot register archived artefact '#{artefact.slug}'"
     end
   end
 
-  def register_with_panopticon
-    artefact = Artefact.find(self.panopticon_id)
-    check_if_archived(artefact)
-    format_as_kind = self.format.underscore
-    registerer = GdsApi::Panopticon::Registerer.new(owning_app: "publisher", rendering_app: "frontend", kind: format_as_kind)
-    registerable_edition = RegisterableEdition.new(self)
-    registerer.register(registerable_edition)
+  def register_exact_route?
+    [TransactionEdition, CampaignEdition, HelpPageEdition].include? self.class
+  end
+
+  def paths
+    if register_exact_route?
+      ["/#{slug}", "/#{slug}.json"]
+    else
+      ["/#{slug}.json"]
+    end
+  end
+
+  def prefixes
+    if register_exact_route?
+      []
+    else
+      ["/#{slug}"]
+    end
+  end
+
+  def update_artefact
+    check_if_archived
+    artefact.update_from_edition(self)
+  end
+
+  def register_with_router_api
+    check_if_archived
+    RoutableArtefact.new(artefact).submit
   end
 
   def register_with_rummager
-    artefact = Artefact.find(self.panopticon_id)
-    check_if_archived(artefact)
+    check_if_archived
     registerable_edition = RegisterableEdition.new(self)
     SearchIndexer.call(registerable_edition)
   end
 
   def notify_publishing_api
     PublishingAPIPublisher.perform_async(self.id.to_s)
+  end
+
+  def artefact
+    @_artefact ||= Artefact.find(self.panopticon_id)
   end
 
   def self.convertible_formats

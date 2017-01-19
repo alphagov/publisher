@@ -1,7 +1,6 @@
 require 'gds_api/panopticon'
 
 class EditionSlugMigrator
-
   attr_reader :logger
 
   def initialize(logger = nil)
@@ -21,11 +20,9 @@ class EditionSlugMigrator
           # if there is a published edition, register the published edition
           # if there isn't a published edition, register the latest edition
           if edition.published_edition.present? && (edition == edition.published_edition)
-            edition.register_with_panopticon
-            edition.register_with_rummager
+            edition.notify_publishing_platform_services
           elsif edition.latest_edition?
-            edition.register_with_panopticon
-            edition.register_with_rummager
+            edition.notify_publishing_platform_services
           end
 
           edition.actions.create!(
@@ -42,14 +39,14 @@ class EditionSlugMigrator
     logger.info "Sequence complete."
   end
 
-  private
-    def slugs
-      @slugs ||= load_slugs
-    end
+private
 
-    def load_slugs
-      json = File.open(Rails.root.join('data','slugs_to_migrate.json')).read
-      JSON.parse(json) || [ ]
-    end
+  def slugs
+    @slugs ||= load_slugs
+  end
 
+  def load_slugs
+    json = File.open(Rails.root.join('data', 'slugs_to_migrate.json')).read
+    JSON.parse(json) || []
+  end
 end

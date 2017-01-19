@@ -5,7 +5,6 @@ require 'edition_duplicator'
 # the user and the edition, but for now at least those
 # are the clear, minimal dependencies.
 class EditionDuplicatorTest < ActiveSupport::TestCase
-
   setup do
     @laura = FactoryGirl.create(:user)
     @fred  = FactoryGirl.create(:user)
@@ -56,5 +55,4 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
 
     assert_equal "Failed to create new edition: couldn't initialise", command.error_message
   end
-
 end

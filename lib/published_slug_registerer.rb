@@ -1,40 +1,11 @@
-require 'gds_api/panopticon'
 require 'gds_api/rummager'
 
-# Registers slugs for published editions with Panopticon
 class PublishedSlugRegisterer
   attr_reader :logger
 
   def initialize(logger, slugs)
     @logger = logger
     @slugs = slugs.sort.uniq
-  end
-
-  def do_panopticon
-    @success_slugs = []
-    @not_found_slugs = []
-    @errored_slugs = []
-    @count = 0
-
-    logger.info "Registering #{@slugs.count} slugs"
-
-    @slugs.each do |slug|
-      @count += 1
-      logger.info "Registering #{slug} with Panopticon [#{@count}/#{@slugs.count}]"
-      edition = published_edition(slug)
-      if edition
-        if register(edition) { edition.register_with_panopticon }
-          @success_slugs << slug
-        else
-          @errored_slugs << slug
-        end
-      else
-        @not_found_slugs << slug
-        logger.error "No published edition found with slug #{slug}"
-      end
-    end
-
-    log_result
   end
 
   def do_rummager
