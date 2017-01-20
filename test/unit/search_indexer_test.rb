@@ -28,6 +28,7 @@ class SearchIndexerTest < ActiveSupport::TestCase
       indexable_content: "Indexable content",
       link: "/#{edition.slug}",
       public_timestamp: registerable_edition.public_timestamp,
+      content_store_document_type: "answer",
     )
 
     SearchIndexer.call(registerable_edition)

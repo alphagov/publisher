@@ -28,6 +28,7 @@ class SearchPayloadPresenter
       indexable_content: indexable_content,
       link: "/#{slug}",
       public_timestamp: public_timestamp,
+      content_store_document_type: artefact.kind,
     }
   end
 end
