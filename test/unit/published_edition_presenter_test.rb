@@ -114,4 +114,28 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       assert_equal @output[:routes], exact_routes
     end
   end
+
+  context ".render_for_publishing_api with a new format schema" do
+    setup do
+      artefact = FactoryGirl.create(
+        :artefact,
+        content_id: SecureRandom.uuid,
+        language: 'cy',
+        kind: 'help_page',
+        slug: 'help/me-im-trapped-in-an-artefact-factory'
+      )
+      updated_at = 1.minute.ago
+      @edition = FactoryGirl.create(
+        :help_page_edition,
+        state: "draft",
+        updated_at: updated_at,
+        panopticon_id: artefact.id,
+      )
+      @output = PublishedEditionPresenter.new(@edition).render_for_publishing_api
+    end
+
+    should "set the schema to generic_with_external_related_links" do
+      assert @output[:schema_name] == "generic_with_external_related_links"
+    end
+  end
 end
