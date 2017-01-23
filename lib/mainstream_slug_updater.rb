@@ -50,8 +50,7 @@ private
   end
 
   def reregister_slug
-    logger.info "Re-registering with panopticon and rummager"
-    published_edition.register_with_panopticon
-    published_edition.register_with_rummager
+    logger.info "Re-registering with rummager / router-api / publishing-api"
+    published_edition.notify_publishing_platform_services
   end
 end

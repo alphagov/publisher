@@ -11,8 +11,8 @@ class MainstreamSlugUpdaterTest < ActiveSupport::TestCase
     @other_edition = FactoryGirl.create(:edition, slug: @old_slug, panopticon_id: @artefact.id, state: 'archived', version_number: 1)
     @published_edition = FactoryGirl.create(:edition, slug: @old_slug, panopticon_id: @artefact.id, state: 'published', version_number: 2)
 
-    AnswerEdition.any_instance.stubs(:register_with_panopticon)
     AnswerEdition.any_instance.stubs(:register_with_rummager)
+    AnswerEdition.any_instance.stubs(:notify_publishing_api)
   end
 
   def test_slug_is_updated_on_relevent_editions
@@ -36,8 +36,8 @@ class MainstreamSlugUpdaterTest < ActiveSupport::TestCase
 
   def test_slug_is_reregistered
     updater = MainstreamSlugUpdater.new(@old_slug, @new_slug)
-    updater.published_edition.expects(:register_with_panopticon)
     updater.published_edition.expects(:register_with_rummager)
+    updater.published_edition.expects(:notify_publishing_api)
 
     updater.update
   end

@@ -37,10 +37,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       version_number: version)
   end
 
-  def stub_panopticon(slug)
-    @panopticon_registerer.expects(:register).with(responds_with(:slug, slug))
-  end
-
   def stub_search_indexer(slug)
     SearchIndexer.expects(:call).with(responds_with(:slug, slug)).once
   end
@@ -50,20 +46,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
     \nRegistration complete: processed #{success} slugs successfully,
     #{not_found} slugs not found, #{errored} slugs had errors
     COMPLETE
-  end
-
-  def test_registers_published_editions_with_panopticon
-    @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-
-    @logger.expects(:info).at_least_once
-    @logger.expects(:info).with(completion_message(2, 1, 0))
-    @logger.expects(:error).with("No published edition found with slug slug3")
-
-    %w{slug1 slug2}.each do |slug|
-      stub_panopticon(slug).once
-    end
-
-    @registerer.do_panopticon
   end
 
   def test_registers_published_editions_with_rummager
@@ -78,40 +60,5 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
     end
 
     @registerer.do_rummager
-  end
-
-  def test_handles_panopticon_timeout
-    @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-
-    @logger.expects(:info).at_least_once
-    @logger.expects(:info).with(completion_message(2, 1, 0))
-    @logger.expects(:error).with("No published edition found with slug slug3")
-
-    %w{slug1 slug2}.each do |slug|
-      s = sequence("#{slug} registrations")
-      stub_panopticon(slug).raises(GdsApi::TimedOutException).once.in_sequence(s)
-      stub_panopticon(slug).once.in_sequence(s)
-
-      @logger.expects(:warn).with("Encountered timeout for '#{slug}', retrying (max 3 retries)")
-    end
-
-    @registerer.do_panopticon
-  end
-
-  def test_handles_panopticon_repeated_timeout
-    @registerer = PublishedSlugRegisterer.new(@logger, @slugs)
-
-    @logger.expects(:info).at_least_once
-    @logger.expects(:info).with(completion_message(0, 1, 2))
-    @logger.expects(:error).with("No published edition found with slug slug3")
-
-    %w{slug1 slug2}.each do |slug|
-      stub_panopticon(slug).raises(GdsApi::TimedOutException).times(4)
-
-      @logger.expects(:warn).with("Encountered timeout for '#{slug}', retrying (max 3 retries)").times(3)
-      @logger.expects(:error).with("Encountered 4 timeouts for '#{slug}', skipping")
-    end
-
-    @registerer.do_panopticon
   end
 end

@@ -60,6 +60,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     end
 
     should "show differences after publishing" do
+      stub_register_published_content
       ScheduledPublisher.new.perform(@second_edition.id.to_s)
 
       @second_edition.reload

@@ -14,7 +14,6 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       guide.save!
       guide.update_attribute(:state, 'draft')
 
-      panopticon_has_metadata("id" => '2356')
       visit_edition guide
 
       add_new_part
@@ -187,8 +186,6 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     guide = FactoryGirl.create(:guide_edition, :title => random_name, :slug => 'test-guide')
     guide.save!
     guide.update_attribute(:state, 'draft')
-
-    panopticon_has_metadata("id" => '2356')
 
     visit_edition guide
 
