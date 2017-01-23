@@ -28,6 +28,7 @@ class SearchIndexerTest < ActiveSupport::TestCase
       indexable_content: "Indexable content",
       link: "/#{edition.slug}",
       public_timestamp: registerable_edition.public_timestamp,
+      content_store_document_type: "answer",
     )
 
     SearchIndexer.call(registerable_edition)
@@ -66,5 +67,34 @@ class SearchIndexerTest < ActiveSupport::TestCase
 
       SearchIndexer.call(registerable_edition)
     end
+  end
+
+  def test_rummager_document_type_matches_content_store
+    artefact = FactoryGirl.create(
+      :artefact,
+      kind: "answer",
+      content_id: "content-id",
+    )
+    edition = FactoryGirl.create(
+      :answer_edition,
+      title: "A title",
+      overview: "An overview",
+      panopticon_id: artefact.id,
+      body: "Indexable content",
+    )
+
+    document_type = PublishedEditionPresenter.new(edition).render_for_publishing_api[:document_type]
+
+    registerable_edition = RegisterableEdition.new(edition)
+
+    Services.rummager.expects(:add_document).with(
+      'edition',
+      "/#{edition.slug}",
+      has_entry(
+        content_store_document_type: document_type,
+      )
+    )
+
+    SearchIndexer.call(registerable_edition)
   end
 end
