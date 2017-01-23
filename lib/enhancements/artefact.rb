@@ -3,13 +3,32 @@ require "artefact"
 class Artefact
   before_destroy :discard_publishing_api_draft
 
-  def latest_edition_id
+  GENERIC_SCHEMA_FORMATS = %w(help_page)
+
+  def generic_schema?
+    GENERIC_SCHEMA_FORMATS.include?(kind)
+  end
+
+  def self.published_edition_ids_for_format(format)
+    artefact_ids = Artefact.where(kind: format).pluck(:id).map(&:to_s)
+
+    Edition
+      .where(panopticon_id: { '$in' => artefact_ids })
+      .where(state: 'published')
+      .map(&:id)
+      .map(&:to_s)
+  end
+
+  def latest_edition
     Edition
       .where(panopticon_id: id)
       .order(version_number: :desc)
       .first
-      .id
-      .to_s
+  end
+
+  def latest_edition_id
+    edition = latest_edition
+    edition.id.to_s if edition
   end
 
   def update_from_edition(edition)
