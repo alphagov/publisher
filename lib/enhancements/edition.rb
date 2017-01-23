@@ -66,13 +66,8 @@ class Edition
   end
 
   def notify_publishing_platform_services
-    register_with_router_api unless routes_managed_by_publishing_api?
     register_with_rummager
     notify_publishing_api
-  end
-
-  def routes_managed_by_publishing_api?
-    artefact.generic_schema?
   end
 
   def fact_check_skipped?

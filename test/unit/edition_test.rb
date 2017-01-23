@@ -9,12 +9,9 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
 
       registerable = mock("registerable_edition")
-      routable = stub
-      routable.expects(:submit)
       PublishingAPIPublisher.expects(:perform_async)
       RegisterableEdition.expects(:new).with(edition).returns(registerable)
       SearchIndexer.expects(:call).with(registerable)
-      RoutableArtefact.expects(:new).with(artefact).returns(routable)
 
       publish(user, edition)
     end

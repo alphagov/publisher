@@ -27,7 +27,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         title: @edition.title,
         base_path: "/#{@edition.slug}",
         description: "",
-        schema_name: "placeholder",
+        schema_name: "generic_with_external_related_links",
         document_type: artefact.kind,
         need_ids: [],
         public_updated_at: @edition.public_updated_at,
@@ -39,8 +39,8 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         ],
         redirects: [],
         update_type: "major",
+        change_note: @edition.change_note,
         details: {
-          change_note: @edition.change_note,
           external_related_links: expected_external_related_links,
         },
         locale: 'en',
@@ -57,7 +57,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       })
       presented_hash = @presenter.render_for_publishing_api(republish: true)
       assert_equal attributes_for_republish, presented_hash
-      assert_valid_against_schema(presented_hash, 'placeholder')
+      assert_valid_against_schema(presented_hash, 'generic_with_external_related_links')
     end
 
     should 'create an attributes hash for a minor change' do
@@ -93,7 +93,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "be valid against schema" do
-      assert_valid_against_schema(@output, 'placeholder')
+      assert_valid_against_schema(@output, 'generic_with_external_related_links')
     end
 
     should 'use updated_at value if public_updated_at is nil' do
@@ -112,30 +112,6 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       ]
 
       assert_equal @output[:routes], exact_routes
-    end
-  end
-
-  context ".render_for_publishing_api with a new format schema" do
-    setup do
-      artefact = FactoryGirl.create(
-        :artefact,
-        content_id: SecureRandom.uuid,
-        language: 'cy',
-        kind: 'help_page',
-        slug: 'help/me-im-trapped-in-an-artefact-factory'
-      )
-      updated_at = 1.minute.ago
-      @edition = FactoryGirl.create(
-        :help_page_edition,
-        state: "draft",
-        updated_at: updated_at,
-        panopticon_id: artefact.id,
-      )
-      @output = PublishedEditionPresenter.new(@edition).render_for_publishing_api
-    end
-
-    should "set the schema to generic_with_external_related_links" do
-      assert @output[:schema_name] == "generic_with_external_related_links"
     end
   end
 end
