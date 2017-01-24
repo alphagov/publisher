@@ -4,9 +4,14 @@ class Artefact
   before_destroy :discard_publishing_api_draft
 
   GENERIC_SCHEMA_FORMATS = %w(help_page)
+  MULTIPART_FORMATS = %w(guide local_transaction licence programme simple_smart_answer)
 
   def generic_schema?
-    GENERIC_SCHEMA_FORMATS.include?(kind)
+    !multipart_format? && GENERIC_SCHEMA_FORMATS.include?(kind)
+  end
+
+  def multipart_format?
+    MULTIPART_FORMATS.include?(kind)
   end
 
   def self.published_edition_ids_for_format(format)

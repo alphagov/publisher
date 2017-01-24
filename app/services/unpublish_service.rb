@@ -4,6 +4,7 @@ class UnpublishService
       return false if archived?(artefact)
 
       if update_artefact_in_shared_db(artefact, user, redirect_url)
+        artefact.reload
         remove_from_rummager_search artefact
         add_gone_route_in_router_api artefact
         unpublish_in_publishing_api artefact, redirect_url
@@ -33,6 +34,9 @@ class UnpublishService
     end
 
     def unpublish_in_publishing_api(artefact, redirect_url)
+      # workaround for <link to bug in trello>
+      return if artefact.multipart_format?
+
       if redirect_url.present?
         unpublish_with_redirect(artefact, redirect_url)
       else
