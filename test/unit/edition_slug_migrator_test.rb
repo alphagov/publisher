@@ -29,7 +29,7 @@ class EditionSlugMigratorTest < ActiveSupport::TestCase
     assert_equal ["first-new-slug", "first-new-slug", "second-new-slug", "third-new-slug"], @editions.map(&:slug)
   end
 
-  should "reregister the latest or published edition with Rummager / Publishing API / Router API" do
+  should "reregister the latest or published edition with Rummager / Publishing API" do
     ["first-new-slug","second-new-slug","third-new-slug"].each do |slug|
       SearchIndexer.expects(:call).with(responds_with(:slug, slug))
     end

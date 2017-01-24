@@ -2,8 +2,7 @@
 
 Publisher is the primary content design app for GOV.UK. It provides the user interface for
 entering all the key editorial formats and an API so other apps (primarily frontend) can
-access that data for display. It is intended to work in partnership with Panopticon which
-manages document creation, metadata, slugs, titles, etc. It is sometimes referred to as "mainstream publisher".
+access that data for display. It is sometimes referred to as "mainstream publisher".
 
 ##Screenshots
 
@@ -27,21 +26,19 @@ manages document creation, metadata, slugs, titles, etc. It is sometimes referre
 
 ## Nomenclature
 
-- Artefact: a document on GOV.UK. Artefacts shown in publisher were created in the [panopticon](https://github.com/alphagov/panopticon) app.
+- Artefact: a document on GOV.UK.
 
 ## Technical documentation
 
-This is a Ruby on Rails application that publishes the content for mainstream document formats to the shared mongo database. It manages content created in [panopticon](https://github.com/alphagov/panopticon). The `frontend` app reads this content from the [govuk_content_api](https://github.com/alphagov/govuk_content_api).
+This is a Ruby on Rails application that publishes the content for mainstream document formats to the shared mongo database. The `frontend` app reads this content from the [govuk_content_api](https://github.com/alphagov/govuk_content_api).
 
 ###Dependencies
 
-- [panopticon](https://github.com/alphagov/panopticon) - manages creation and tagging of artefacts/documents listed in publisher. It is being deprecated.
 - [imminence](https://github.com/alphagov/imminence) - provides geographical search tools
 - [rummager](https://github.com/alphagov/rummager) - search index for publisher. All changes are also sent to rummager to be indexed
 - [content-store](https://github.com/alphagov/content-store) - new central storage of published content on GOV.UK
 - [govuk_content_api](https://github.com/alphagov/govuk_content_api) - API providing content and metadata to frontend apps. Being deprecated in favour of content-store.
 - [publishing-api](https://github.com/alphagov/publishing-api) - will provide workflow for all content published to GOV.UK - creating a new document, publishing it, etc. Content published here will end up in the content-store
-- [router-api](https://github.com/alphagov/router-api) - API for updating the [GOV.UK Router](https://github.com/alphagov/router.git)
 - [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) - defines the schemas for new-style document formats. Required to run the tests.
 
 ```shell

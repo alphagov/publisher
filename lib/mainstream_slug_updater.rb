@@ -50,7 +50,7 @@ private
   end
 
   def reregister_slug
-    logger.info "Re-registering with rummager / router-api / publishing-api"
+    logger.info "Re-registering with rummager / publishing-api"
     published_edition.notify_publishing_platform_services
   end
 end

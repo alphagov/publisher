@@ -13,7 +13,6 @@ test:
     default:
       hosts:
         - localhost
-      # Don't want this interfering with a concurrent Panopticon test run
       database: govuk_content_publisher_test
       options:
         read:

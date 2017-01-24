@@ -109,11 +109,6 @@ class Edition
     artefact.update_from_edition(self)
   end
 
-  def register_with_router_api
-    check_if_archived
-    RoutableArtefact.new(artefact).submit
-  end
-
   def register_with_rummager
     check_if_archived
     registerable_edition = RegisterableEdition.new(self)

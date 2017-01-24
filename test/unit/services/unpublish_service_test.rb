@@ -6,10 +6,8 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live")
     @user = stub
     @publishing_api = stub(unpublish: true)
-    @router_api = stub(:submit)
     @rummager = stub(:delete_content)
 
-    RoutableArtefact.stubs(:new).returns(@router_api)
     Services.stubs(:publishing_api).returns(@publishing_api)
     Services.stubs(:rummager).returns(@rummager)
   end
@@ -18,13 +16,6 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     should "Rummager is not called" do
       @artefact.expects(:update_attributes_as).returns(false)
       @rummager.expects(:delete_content).never
-
-      UnpublishService.call(@artefact, @user)
-    end
-
-    should "Router API is not called" do
-      @artefact.expects(:update_attributes_as).returns(false)
-      @router_api.expects(:submit).never
 
       UnpublishService.call(@artefact, @user)
     end
@@ -55,12 +46,6 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
     should "remove the artefact from Rummager search" do
       @rummager.expects(:delete_content).with("/foo")
-
-      UnpublishService.call(@artefact, @user)
-    end
-
-    should "add gone route to router_api" do
-      @router_api.expects(:submit)
 
       UnpublishService.call(@artefact, @user)
     end
@@ -102,12 +87,6 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       UnpublishService.call(@artefact, @user, "/bar")
     end
 
-    should "add gone route to router_api" do
-      @router_api.expects(:submit)
-
-      UnpublishService.call(@artefact, @user, '/bar')
-    end
-
     should "return true" do
       @artefact.expects(:update_attributes_as).returns(true)
 
@@ -119,8 +98,8 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     should "return false early" do
       @artefact.expects(:state).returns("archived")
       @artefact.expects(:update_attributes_as).never
+
       @rummager.expects(:delete_content).never
-      @router_api.expects(:submit).never
       @publishing_api.expects(:unpublish).never
 
       result = UnpublishService.call(@artefact, @user)

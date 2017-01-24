@@ -24,9 +24,6 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
       make_edition("archived", "slug1", 3),
       make_edition("archived", "slug3", 1),
     ]
-
-    @panopticon_registerer = stub(:panopticon_registerer)
-    GdsApi::Panopticon::Registerer.stubs(:new).returns(@panopticon_registerer)
   end
 
   def make_edition(state, slug, version)

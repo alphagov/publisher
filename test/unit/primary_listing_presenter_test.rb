@@ -1,13 +1,6 @@
 require 'test_helper'
 
 class PrimaryListingPresenterTest < ActiveSupport::TestCase
-
-  setup do
-    json = JSON.dump("name" => "Childcare", "slug" => "childcare")
-    stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js}).
-      to_return(:status => 200, :body => json, :headers => {})
-  end
-
   def setup_users
     alice = User.create(uid: '123')
     bob = User.create(uid: '321')
