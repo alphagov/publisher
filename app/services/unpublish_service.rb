@@ -25,7 +25,7 @@ class UnpublishService
     end
 
     def remove_from_rummager_search(artefact)
-      RemoveFromSearch.call(artefact.slug)
+      Services.rummager.delete_content("/#{artefact.slug}")
     end
 
     def add_gone_route_in_router_api(artefact)

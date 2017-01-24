@@ -7,16 +7,17 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     @user = stub
     @publishing_api = stub(unpublish: true)
     @router_api = stub(:submit)
+    @rummager = stub(:delete_content)
 
-    RemoveFromSearch.stubs(:call)
     RoutableArtefact.stubs(:new).returns(@router_api)
     Services.stubs(:publishing_api).returns(@publishing_api)
+    Services.stubs(:rummager).returns(@rummager)
   end
 
   context "when an invalid redirect URL is provided" do
     should "Rummager is not called" do
       @artefact.expects(:update_attributes_as).returns(false)
-      RemoveFromSearch.expects(:call).never
+      @rummager.expects(:delete_content).never
 
       UnpublishService.call(@artefact, @user)
     end
@@ -53,7 +54,8 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     end
 
     should "remove the artefact from Rummager search" do
-      RemoveFromSearch.expects(:call).with(@artefact.slug)
+      @rummager.expects(:delete_content).with("/foo")
+
       UnpublishService.call(@artefact, @user)
     end
 
@@ -80,7 +82,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
   context "when a valid redirect URL is provided" do
     should "remove the artefact from Rummager search" do
-      RemoveFromSearch.expects(:call).with(@artefact.slug)
+      @rummager.expects(:delete_content).with("/foo")
       UnpublishService.call(@artefact, @user)
     end
 
@@ -117,7 +119,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     should "return false early" do
       @artefact.expects(:state).returns("archived")
       @artefact.expects(:update_attributes_as).never
-      RemoveFromSearch.expects(:call).never
+      @rummager.expects(:delete_content).never
       @router_api.expects(:submit).never
       @publishing_api.expects(:unpublish).never
 
