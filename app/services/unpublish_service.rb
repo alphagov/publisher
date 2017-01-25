@@ -5,7 +5,6 @@ class UnpublishService
 
       if update_artefact_in_shared_db(artefact, user, redirect_url)
         remove_from_rummager_search artefact
-        add_gone_route_in_router_api artefact
         unpublish_in_publishing_api artefact, redirect_url
       end
     end
@@ -26,10 +25,6 @@ class UnpublishService
 
     def remove_from_rummager_search(artefact)
       Services.rummager.delete_content("/#{artefact.slug}")
-    end
-
-    def add_gone_route_in_router_api(artefact)
-      RoutableArtefact.new(artefact).submit
     end
 
     def unpublish_in_publishing_api(artefact, redirect_url)

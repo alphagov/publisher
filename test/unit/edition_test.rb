@@ -3,18 +3,15 @@ require 'test_helper'
 class EditionTest < ActiveSupport::TestCase
 
   context "single registration" do
-    should "register with router-api, rummager, publising-api when published" do
+    should "register with rummager, publising-api when published" do
       user = FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
 
       registerable = mock("registerable_edition")
-      routable = stub
-      routable.expects(:submit)
       PublishingAPIPublisher.expects(:perform_async)
       RegisterableEdition.expects(:new).with(edition).returns(registerable)
       SearchIndexer.expects(:call).with(registerable)
-      RoutableArtefact.expects(:new).with(artefact).returns(routable)
 
       publish(user, edition)
     end
@@ -29,7 +26,7 @@ class EditionTest < ActiveSupport::TestCase
       publish(user, edition)
     end
 
-    should "not register with router-api, Rummager, publishing-api if the artefact is archived" do
+    should "not register with Rummager, publishing-api if the artefact is archived" do
       user = FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
       edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
@@ -44,10 +41,6 @@ class EditionTest < ActiveSupport::TestCase
 
       assert_raises Edition::ResurrectionError do
         edition.register_with_rummager
-      end
-
-      assert_raises Edition::ResurrectionError do
-        edition.register_with_router_api
       end
     end
   end
@@ -68,7 +61,6 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryGirl.create(:guide_edition, state: "ready")
     PublishingAPIPublisher.expects(:perform_async).with(edition.id.to_s)
     SearchIndexer.stubs(:call)
-    stub_register_with_router_api
     user = FactoryGirl.create(:user)
     publish(user, edition)
   end

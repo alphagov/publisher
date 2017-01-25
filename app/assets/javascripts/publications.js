@@ -4,7 +4,7 @@ $(function () {
 
   /*
     Mark the edition form as dirty to prevent accidental navigation away from
-    the edition form (such as by clicking the "Edit in Panopticon" link)
+    the edition form
   */
   GOVUKAdmin.Data = GOVUKAdmin.Data || {};
   GOVUKAdmin.Data.editionFormDirty = false;

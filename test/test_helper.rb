@@ -67,7 +67,6 @@ class ActiveSupport::TestCase
   end
 
   def stub_register_published_content
-    stub_register_with_router_api
     stub_register_with_rummager
     stub_register_with_publishing_api
   end
@@ -79,11 +78,6 @@ class ActiveSupport::TestCase
 
   def stub_register_with_rummager
     WebMock.stub_request(:post, %r{search.dev.gov.uk/documents})
-  end
-
-  def stub_register_with_router_api
-    WebMock.stub_request(:put, %r{router-api.dev.gov.uk/routes})
-    WebMock.stub_request(:post, %r{router-api.dev.gov.uk/routes/commit})
   end
 
   teardown do

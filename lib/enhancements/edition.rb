@@ -66,13 +66,8 @@ class Edition
   end
 
   def notify_publishing_platform_services
-    register_with_router_api unless routes_managed_by_publishing_api?
     register_with_rummager
     notify_publishing_api
-  end
-
-  def routes_managed_by_publishing_api?
-    artefact.generic_schema?
   end
 
   def fact_check_skipped?
@@ -112,11 +107,6 @@ class Edition
   def update_artefact
     check_if_archived
     artefact.update_from_edition(self)
-  end
-
-  def register_with_router_api
-    check_if_archived
-    RoutableArtefact.new(artefact).submit
   end
 
   def register_with_rummager

@@ -13,7 +13,6 @@ class LicenceContentImporter
     @imported = []
     @existing = []
     @failed = {}
-    @api = panopticon_api
     @data_path = data_path
     @user = User.where(name: importing_user).first
     raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
@@ -27,7 +26,7 @@ class LicenceContentImporter
         importer.send(method, row)
       end
     end
-    
+
     puts importer.formatted_result(method == :import)
 
   end
@@ -61,32 +60,26 @@ class LicenceContentImporter
       title = CGI.unescapeHTML(to_utf8(row['NAME']))
       slug = slug_for(title)
 
-      api_response = @api.artefact_for_slug(slug)
-      
-      unless api_response
-        api_response = @api.create_artefact(slug: slug, kind: 'licence', state: 'draft',
-          owning_app: 'publisher', name: title, rendering_app: "frontend", need_id: 1)
-      end
+      artefact = Artefact.find_by_slug(slug) ||
+        Artefact.create(
+          slug: slug, kind: 'licence', state: 'draft', owning_app: 'publisher',
+          name: title, rendering_app: "frontend", need_id: 1
+        )
 
-      if api_response and [200, 201].include?(api_response.code)
-        artefact_id = api_response.to_hash['id']
+      artefact_id = artefact['id']
 
-        puts "Artefact id: #{artefact_id}, slug: #{slug}."
+      puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
-        edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
-          licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
+      edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
+        licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
 
-        if edition
-          add_workflow(@user, edition)
-          puts "Created LicenceEdition in publisher with panopticon_id: #{artefact_id}, licence_identifier: #{identifier}"
-          @imported << edition
-        else
-          @failed[identifier] = slug
-          puts "Failed to import LicenceEdition into publisher. Identifier: #{identifier}, slug: #{slug}."
-        end
+      if edition
+        add_workflow(@user, edition)
+        puts "Created LicenceEdition in publisher with panopticon_id: #{artefact_id}, licence_identifier: #{identifier}"
+        @imported << edition
       else
         @failed[identifier] = slug
-        puts "Failed to import LicenceEdition via panopticon API. identifier: #{identifier}, slug: #{slug}\napi_response: #{api_response}"
+        puts "Failed to import LicenceEdition into publisher. Identifier: #{identifier}, slug: #{slug}."
       end
     end
   end

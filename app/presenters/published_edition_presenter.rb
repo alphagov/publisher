@@ -5,16 +5,6 @@ class PublishedEditionPresenter
   end
 
   def render_for_publishing_api(options={})
-    if @artefact.generic_schema?
-      render_for_generic_schema(options)
-    else
-      render_for_placeholder_content(options)
-    end
-  end
-
-private
-
-  def render_for_generic_schema(options)
     {
       title: @edition.title,
       base_path: base_path,
@@ -36,27 +26,7 @@ private
     }
   end
 
-  def render_for_placeholder_content(options)
-    {
-      title: @edition.title,
-      base_path: base_path,
-      description: @edition.overview || "",
-      schema_name: "placeholder",
-      document_type: @artefact.kind,
-      need_ids: [],
-      public_updated_at: public_updated_at,
-      publishing_app: "publisher",
-      rendering_app: "frontend",
-      routes: routes,
-      redirects: [],
-      update_type: update_type(options),
-      details: {
-        change_note: @edition.latest_change_note,
-        external_related_links: external_related_links,
-      },
-      locale: @artefact.language,
-    }
-  end
+private
 
   def external_related_links
     @edition.artefact.external_links.map do |link|
