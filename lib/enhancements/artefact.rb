@@ -3,6 +3,8 @@ require "artefact"
 class Artefact
   before_destroy :discard_publishing_api_draft
 
+  MULTIPART_FORMATS = %w(guide local_transaction licence programme simple_smart_answer)
+
   def self.published_edition_ids_for_format(format)
     artefact_ids = Artefact.where(kind: format).pluck(:id).map(&:to_s)
 
@@ -11,6 +13,18 @@ class Artefact
       .where(state: 'published')
       .map(&:id)
       .map(&:to_s)
+  end
+
+  def self.multipart_formats
+    where(kind: { '$in' => MULTIPART_FORMATS })
+  end
+
+  def self.archived
+    where(state: 'archived')
+  end
+
+  def self.with_redirect
+    where(:redirect_url.nin => [nil, ""])
   end
 
   def latest_edition
