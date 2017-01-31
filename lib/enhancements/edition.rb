@@ -23,6 +23,7 @@ class Edition
   CANCEL_SCHEDULED_PUBLISHING_ACTION = {
     cancel_scheduled_publishing: "Cancel scheduled publishing"
   }
+  PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
   def self.state_names
     state_machine.states.map &:name
@@ -55,6 +56,15 @@ class Edition
       save! # trigger denormalisation callbacks
     end
   end
+
+  def self.by_format(format)
+    artefact_ids = Artefact.where(kind: format).pluck(:id).map(&:to_s)
+
+    Edition.where(panopticon_id: { '$in' => artefact_ids })
+  end
+
+  scope :published, -> { where(state: 'published') }
+  scope :draft_in_publishing_api, -> { where(state: { '$in' => PUBLISHING_API_DRAFT_STATES }) }
 
   alias_method :was_published_without_indexing, :was_published
   # `was_published` is called from the state machine in govuk_content_models

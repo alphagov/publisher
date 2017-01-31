@@ -5,16 +5,6 @@ class Artefact
 
   MULTIPART_FORMATS = %w(guide local_transaction licence programme simple_smart_answer)
 
-  def self.published_edition_ids_for_format(format)
-    artefact_ids = Artefact.where(kind: format).pluck(:id).map(&:to_s)
-
-    Edition
-      .where(panopticon_id: { '$in' => artefact_ids })
-      .where(state: 'published')
-      .map(&:id)
-      .map(&:to_s)
-  end
-
   def self.multipart_formats
     where(kind: { '$in' => MULTIPART_FORMATS })
   end

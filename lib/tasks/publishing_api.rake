@@ -1,22 +1,37 @@
 namespace :publishing_api do
   task republish_content: [:environment] do
-    puts "Scheduling republishing of #{Edition.published.count} editions"
+    republish Edition.published
+    republish_draft Edition.draft_in_publishing_api
+  end
 
-    RepublishContent.schedule_republishing
+  task :republish_by_format, [:format] => :environment do |_, args|
+    format_editions = Edition.by_format(args[:format])
+
+    republish format_editions.published
+    republish_draft format_editions.draft_in_publishing_api
+  end
+
+  def republish(editions)
+    puts
+    puts "Scheduling republishing of #{editions.count} editions"
+
+    editions.each do |edition|
+      PublishingAPIRepublisher.perform_async(edition.id.to_s)
+      print "."
+    end
 
     puts "Scheduling finished"
   end
 
-  task :republish_by_format, [:format] => :environment do |_, args|
-    editions = Artefact.published_edition_ids_for_format(args[:format])
+  def republish_draft(draft_editions)
+    puts
+    puts "Scheduling republishing of #{draft_editions.count} draft editions"
 
-    puts "Scheduling republishing of #{editions.count} #{args[:format]}s."
-
-    editions.each do |edition_id|
-      PublishingAPIRepublisher.perform_async(edition_id)
+    draft_editions.each do |draft_edition|
+      PublishingAPIUpdater.perform_async(draft_edition.id.to_s)
       print "."
     end
 
-    puts "\nScheduling finished"
+    puts "Scheduling finished"
   end
 end
