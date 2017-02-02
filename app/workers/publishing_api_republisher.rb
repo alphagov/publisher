@@ -1,8 +1,8 @@
 class PublishingAPIRepublisher
   include Sidekiq::Worker
 
-  def perform(*args)
-    PublishingAPIUpdater.new.perform(*args)
-    PublishingAPIPublisher.new.perform(*args)
+  def perform(edition_id)
+    PublishingAPIUpdater.new.perform(edition_id, 'republish')
+    PublishingAPIPublisher.new.perform(edition_id, 'republish')
   end
 end
