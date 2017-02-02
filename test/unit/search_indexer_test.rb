@@ -83,7 +83,8 @@ class SearchIndexerTest < ActiveSupport::TestCase
       body: "Indexable content",
     )
 
-    document_type = PublishedEditionPresenter.new(edition).render_for_publishing_api[:document_type]
+    presenter = EditionPresenterFactory.get_presenter(edition)
+    document_type = presenter.render_for_publishing_api[:document_type]
 
     registerable_edition = RegisterableEdition.new(edition)
 

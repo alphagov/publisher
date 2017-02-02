@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PublishedEditionPresenterTest < ActiveSupport::TestCase
+class GenericEditionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
 
   context ".render_for_publishing_api with a published document" do
@@ -19,9 +19,9 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         change_note: 'Test',
         version_number: 2,
         panopticon_id: artefact.id,
-      )
+                                   )
 
-      @presenter = PublishedEditionPresenter.new(@edition)
+      @presenter = Formats::GenericEditionPresenter.new(@edition)
 
       @expected_attributes_for_publishing_api_hash = {
         title: @edition.title,
@@ -52,9 +52,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "create an attributes hash for the publishing api for a republish" do
-      attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge({
-        update_type: "republish",
-      })
+      attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge(update_type: "republish",)
       presented_hash = @presenter.render_for_publishing_api(republish: true)
       assert_equal attributes_for_republish, presented_hash
       assert_valid_against_schema(presented_hash, 'generic_with_external_related_links')
@@ -69,7 +67,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
 
     should 'always return a "major" update_type for a first edition' do
       first_edition = FactoryGirl.create(:edition, major_change: false, version_number: 1)
-      presenter = PublishedEditionPresenter.new(first_edition)
+      presenter = Formats::GenericEditionPresenter.new(first_edition)
 
       output = presenter.render_for_publishing_api(republish: false)
       assert_equal 'major', output[:update_type]
@@ -81,7 +79,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
       artefact = FactoryGirl.create(:artefact,
         content_id: SecureRandom.uuid,
         language: 'cy',
-      )
+                                   )
       updated_at = 1.minute.ago
       @edition = FactoryGirl.create(
         :transaction_edition,
@@ -89,7 +87,7 @@ class PublishedEditionPresenterTest < ActiveSupport::TestCase
         updated_at: updated_at,
         panopticon_id: artefact.id,
       )
-      @output = PublishedEditionPresenter.new(@edition).render_for_publishing_api
+      @output = Formats::GenericEditionPresenter.new(@edition).render_for_publishing_api
     end
 
     should "be valid against schema" do
