@@ -172,7 +172,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     click_on "In review"
 
     within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      click_on "Claim 2i"
+      find_button("Claim 2i").click
     end
 
     assert edition_url(edition), current_url
@@ -199,7 +199,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     edition.save!
 
     within("#publication-list-container tbody tr:first-child td:nth-child(6)") do
-      click_on "Claim 2i"
+      find_button("Claim 2i").click
     end
 
     assert edition_url(edition), current_url
