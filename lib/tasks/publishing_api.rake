@@ -20,6 +20,7 @@ namespace :publishing_api do
       print "."
     end
 
+    puts
     puts "Scheduling finished"
   end
 
@@ -32,6 +33,7 @@ namespace :publishing_api do
       print "."
     end
 
+    puts
     puts "Scheduling finished"
   end
 end

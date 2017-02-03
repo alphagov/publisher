@@ -1,5 +1,5 @@
 require "test_helper"
-require "securerandom"
+require "rake"
 
 class RepublishContentTest < ActiveSupport::TestCase
   setup do
@@ -13,6 +13,7 @@ class RepublishContentTest < ActiveSupport::TestCase
       PublishingAPIRepublisher.expects(:perform_async).with(@published_edition.id.to_s)
       PublishingAPIUpdater.expects(:perform_async).with(@draft_edition.id.to_s)
 
+      # This is to prevent the rake task ouputting to the console
       silence_stream(STDOUT) do
         silence_stream(STDERR) do
           Rake::Task['publishing_api:republish_content'].invoke
@@ -25,6 +26,7 @@ class RepublishContentTest < ActiveSupport::TestCase
     should "only republish items of that format" do
       PublishingAPIUpdater.expects(:perform_async).with(@draft_edition.id.to_s)
 
+      # This is to prevent the rake task ouputting to the console
       silence_stream(STDOUT) do
         silence_stream(STDERR) do
           Rake::Task['publishing_api:republish_by_format'].invoke('help_page')
