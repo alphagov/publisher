@@ -3,7 +3,7 @@ require 'test_helper'
 class UnpublishServiceTest < ActiveSupport::TestCase
   setup do
     @content_id = 'foo'
-    @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live")
+    @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en")
     @user = stub
     @publishing_api = stub(unpublish: true)
     @rummager = stub(:delete_content)
@@ -52,7 +52,10 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
     should "tell the publishing API about the change" do
       @publishing_api.expects(:unpublish)
-        .with(@content_id, type: 'gone', discard_drafts: true)
+        .with(@content_id,
+              locale: "en",
+              type: 'gone',
+              discard_drafts: true)
         .returns(true)
 
       UnpublishService.call(@artefact, @user)
@@ -73,7 +76,11 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
     should "tell the publishing API about the change" do
       @publishing_api.expects(:unpublish)
-        .with(@content_id, type: 'redirect', alternative_path: '/bar', discard_drafts: true)
+        .with(@content_id,
+              locale: "en",
+              type: 'redirect',
+              alternative_path: '/bar',
+              discard_drafts: true)
         .returns(true)
 
       UnpublishService.call(@artefact, @user, '/bar')
