@@ -31,7 +31,7 @@ module Formats
         schema_name: schema_name,
         document_type: artefact.kind,
         need_ids: [],
-        public_updated_at: public_updated_at,
+        public_updated_at: public_updated_at.to_datetime.rfc3339(3),
         publishing_app: "publisher",
         rendering_app: "frontend",
         routes: routes,
