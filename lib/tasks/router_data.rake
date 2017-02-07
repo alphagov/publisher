@@ -13,7 +13,7 @@ namespace :router_data do
 
     csv = "Source,Destination,Type\n"
     csv << artefacts
-      .map { |arr| "/#{arr[0]},#{arr[1]},prefix" }
+      .map { |arr| "/#{arr[0]},#{arr[1].gsub(/#.*/, '')},prefix" }
       .join("\n")
 
     File.write(filename, csv)
