@@ -49,6 +49,10 @@ class Edition
     all_of(for_user(user).selector, internal_search(term).selector)
   }
 
+  def migrated?
+    artefact.migrated_format?
+  end
+
   def publish_anonymously!
     if can_publish?
       publish!
