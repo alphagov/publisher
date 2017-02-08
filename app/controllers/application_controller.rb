@@ -31,8 +31,4 @@ class ApplicationController < ActionController::Base
     end
     params
   end
-
-  def notify_update_publishing_api(edition)
-    PublishingAPIUpdater.perform_async(edition.id.to_s)
-  end
 end

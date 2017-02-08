@@ -65,7 +65,10 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       onward_headers = { "GOVUK-Request-Id" => "12345-67890" }
       content_id = artefact.content_id
 
-      assert_requested(:put, %r|publishing-api.*content/#{content_id}|, times: 1, headers: onward_headers)
+      # We expect 2 `put_content` calls here, one before `publish` to save any
+      # prior state changes and one afterwards to create a new draft that
+      # mirrors the published edition
+      assert_requested(:put, %r|publishing-api.*content/#{content_id}|, times: 2, headers: onward_headers)
       assert_requested(:post, %r|publishing-api.*content/#{content_id}/publish|, headers: onward_headers)
     end
   end

@@ -39,7 +39,7 @@ class EditionsController < InheritedResources::Base
     @publication = current_user.create_edition(class_identifier, create_params[:edition])
 
     if @publication.persisted?
-      notify_update_publishing_api(@publication)
+      UpdateService.call(@publication)
 
       flash[:success] = "#{description(@publication)} successfully created"
       redirect_to edition_path(@publication)
@@ -59,7 +59,7 @@ class EditionsController < InheritedResources::Base
       redirect_to edition_path(resource)
     elsif command.duplicate(target_edition_class_name, new_assignee)
       new_edition = command.new_edition
-      notify_update_publishing_api(new_edition)
+      UpdateService.call(new_edition)
 
       return_to = params[:return_to] || edition_path(new_edition)
       flash[:success] = 'New edition created'
@@ -76,8 +76,7 @@ class EditionsController < InheritedResources::Base
     # it at the wrong time.
     assign_to = new_assignee
 
-    attempted_activity = Edition::ACTIONS.invert[params[:commit]]
-    activity_params = attempted_activity_params(attempted_activity)
+    activity_params = attempted_activity_params
     remove_activity_params
     coerce_business_support_params
 
@@ -88,7 +87,9 @@ class EditionsController < InheritedResources::Base
         progress_edition(resource, activity_params) if attempted_activity
 
         update_assignment resource, assign_to
-        notify_update_publishing_api(resource)
+
+        UpdateService.call(resource)
+        PublishService.call(resource) if update_action_is_publish?
 
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -105,7 +106,9 @@ class EditionsController < InheritedResources::Base
         progress_edition(resource, activity_params) if attempted_activity
 
         update_assignment resource, assign_to
-        notify_update_publishing_api(resource)
+
+        UpdateService.call(resource)
+        PublishService.call(resource) if update_action_is_publish?
 
         render :json => resource
       }
@@ -181,6 +184,8 @@ class EditionsController < InheritedResources::Base
 
   def progress
     if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
+      PublishService.call(resource) if progress_action_is_publish?
+
       flash[:success] = @command.status_message
     else
       flash[:danger] = @command.status_message
@@ -371,7 +376,7 @@ private
     Tagging::TaggingUpdateForm.build_from_publishing_api(@resource.artefact.content_id)
   end
 
-  def attempted_activity_params(attempted_activity)
+  def attempted_activity_params
     return unless attempted_activity
     params[:edition]["activity_#{attempted_activity}_attributes"].permit(
       :request_type, :email_addresses, :customised_message, :comment, :publish_at)
@@ -400,5 +405,23 @@ private
     if params[:edition][:area_gss_codes]
       params[:edition][:area_gss_codes] = params[:edition][:area_gss_codes].reject(&:empty?)
     end
+  end
+
+  def update_action_is_publish?
+    attempted_activity == :publish
+  end
+
+  def progress_action_is_publish?
+    progress_action_param == "publish"
+  end
+
+  def progress_action_param
+    params[:edition][:activity][:request_type]
+  rescue
+    nil
+  end
+
+  def attempted_activity
+    Edition::ACTIONS.invert[params[:commit]]
   end
 end
