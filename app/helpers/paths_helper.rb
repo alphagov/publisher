@@ -49,7 +49,7 @@ protected
 
   def preview_url(edition)
     if edition.migrated?
-      Plek.current.find("draft-frontend")
+      Plek.current.find("draft-origin")
     else
       Plek.current.find("private-frontend")
     end
