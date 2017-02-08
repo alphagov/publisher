@@ -1,11 +1,13 @@
 module PathsHelper
-  def publication_front_end_path(publication)
-    raise "Publication without slug: #{publication.id}" if publication.slug.blank?
-    "#{Plek.current.find("private-frontend")}/#{publication.slug}"
+  def edition_front_end_path(edition)
+    "#{preview_url(edition)}/#{edition.slug}"
   end
 
-  def preview_edition_path(edition)
-    publication_front_end_path(edition) + "?edition=#{edition.version_number}&cache=#{Time.zone.now().to_i}"
+  def preview_edition_path(edition, cache_bust = Time.zone.now.to_i)
+    path = edition_front_end_path(edition) + "?"
+    path << "edition=#{edition.version_number}&" unless edition.migrated?
+    path << "cache=#{cache_bust}"
+    path
   end
 
   def start_work_path(edition)
@@ -23,5 +25,13 @@ module PathsHelper
 protected
   def path_from_edition_class(edition)
     edition.format.underscore.pluralize
+  end
+
+  def preview_url(edition)
+    if edition.migrated?
+      Plek.current.find("draft-frontend")
+    else
+      Plek.current.find("private-frontend")
+    end
   end
 end

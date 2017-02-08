@@ -9,6 +9,10 @@ class Artefact
     where(kind: { '$in' => MULTIPART_FORMATS })
   end
 
+  def migrated_format?
+    %w(help_page).include?(kind)
+  end
+
   def self.archived
     where(state: 'archived')
   end
