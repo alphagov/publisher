@@ -5,7 +5,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
   context ".render_for_publishing_api with a published document" do
     setup do
-      artefact = FactoryGirl.create(:artefact)
+      artefact = FactoryGirl.create(:artefact, kind: :video)
 
       expected_external_related_links = [
         { title: "GOVUK", url: "https://www.gov.uk" },
