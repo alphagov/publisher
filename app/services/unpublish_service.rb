@@ -25,6 +25,8 @@ class UnpublishService
 
     def remove_from_rummager_search(artefact)
       Services.rummager.delete_content("/#{artefact.slug}")
+    rescue GdsApi::HTTPNotFound
+      return
     end
 
     def unpublish_in_publishing_api(artefact, redirect_url)
