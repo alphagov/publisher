@@ -113,4 +113,21 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       assert result == false
     end
   end
+
+  context "when an artefact is not in Rummager" do
+    should "continue to unpublish" do
+      @rummager.expects(:delete_content)
+        .with('/foo')
+        .raises(GdsApi::HTTPNotFound.new(404))
+
+      @publishing_api.expects(:unpublish)
+        .with(@content_id,
+              locale: "en",
+              type: 'gone',
+              discard_drafts: true)
+        .returns(true)
+
+      UnpublishService.call(@artefact, @user)
+    end
+  end
 end
