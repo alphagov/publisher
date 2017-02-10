@@ -43,6 +43,16 @@ module Formats
       }
     end
 
+  private
+
+    def schema_name
+      "override me"
+    end
+
+    def details
+      {}
+    end
+
     def external_related_links
       edition.artefact.external_links.map do |link|
         {

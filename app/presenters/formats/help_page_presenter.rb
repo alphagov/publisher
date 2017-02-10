@@ -11,7 +11,7 @@ module Formats
         body: [
           {
             content_type: "text/govspeak",
-            content: @edition.body,
+            content: @edition.body.to_s,
           },
         ],
         external_related_links: external_related_links,
