@@ -6,12 +6,30 @@ module Formats
     end
 
     def render_for_publishing_api(republish: false)
+      required_fields(republish).merge optional_fields
+    end
+
+  private
+
+    attr_reader :edition, :artefact
+
+    def optional_fields
+      fields = {}
+
+      if edition.fact_check_id
+        fields[:access_limited] = { fact_check_ids: [edition.fact_check_id] }
+      end
+
+      fields
+    end
+
+    def required_fields(republish)
       {
-        title: @edition.title,
+        title: edition.title,
         base_path: base_path,
-        description: @edition.overview || "",
+        description: edition.overview || "",
         schema_name: schema_name,
-        document_type: @artefact.kind,
+        document_type: artefact.kind,
         need_ids: [],
         public_updated_at: public_updated_at,
         publishing_app: "publisher",
@@ -19,16 +37,14 @@ module Formats
         routes: routes,
         redirects: [],
         update_type: update_type(republish),
-        change_note: @edition.latest_change_note,
+        change_note: edition.latest_change_note,
         details: details,
-        locale: @artefact.language,
+        locale: artefact.language,
       }
     end
 
-  private
-
     def external_related_links
-      @edition.artefact.external_links.map do |link|
+      edition.artefact.external_links.map do |link|
         {
           url: link["url"],
           title: link["title"]
@@ -44,7 +60,7 @@ module Formats
     end
 
     def base_path
-      "/#{@edition.slug}"
+      "/#{edition.slug}"
     end
 
     def json_path
@@ -73,11 +89,11 @@ module Formats
     end
 
     def major_change?
-      @edition.major_change || @edition.version_number == 1
+      edition.major_change || edition.version_number == 1
     end
 
     def public_updated_at
-      @edition.public_updated_at || @edition.updated_at
+      edition.public_updated_at || edition.updated_at
     end
   end
 end

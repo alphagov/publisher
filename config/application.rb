@@ -66,6 +66,8 @@ module Publisher
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    config.jwt_auth_secret = ENV['JWT_AUTH_SECRET']
   end
 end
 

@@ -13,14 +13,16 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
       ]
       artefact.external_links = expected_external_related_links
 
-      @edition = FactoryGirl.create(:help_page_edition, :published,
+      @edition = FactoryGirl.create(
+        :help_page_edition,
+        :published,
         major_change: true,
         updated_at: 1.minute.ago,
         change_note: 'Test',
         version_number: 2,
         panopticon_id: artefact.id,
         body: 'some content'
-                                   )
+      )
 
       @presenter = Formats::HelpPagePresenter.new(@edition)
 
@@ -79,18 +81,26 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
       output = presenter.render_for_publishing_api(republish: false)
       assert_equal 'major', output[:update_type]
     end
+
+    should 'not have an access_limited property' do
+      output = @presenter.render_for_publishing_api(republish: false)
+      assert_nil output[:access_limited]
+    end
   end
 
   context ".render_for_publishing_api with a draft document" do
     setup do
-      artefact = FactoryGirl.create(:artefact,
+      artefact = FactoryGirl.create(
+        :artefact,
         content_id: SecureRandom.uuid,
         language: 'cy',
-                                   )
+        kind: 'help_page',
+        slug: 'help/i_need_somebody'
+      )
       updated_at = 1.minute.ago
       @edition = FactoryGirl.create(
         :help_page_edition,
-        state: "draft",
+        state: "fact_check",
         updated_at: updated_at,
         panopticon_id: artefact.id,
       )
@@ -117,6 +127,11 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
       ]
 
       assert_equal @output[:routes], exact_routes
+    end
+
+    should "have a fact_check_id" do
+      assert_not_nil @output[:access_limited]
+      assert_not_nil @output[:access_limited][:fact_check_ids]
     end
   end
 end

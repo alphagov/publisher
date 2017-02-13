@@ -1,6 +1,6 @@
 require "edition"
 require "registerable_edition"
-require 'gds_api/panopticon'
+require 'digest'
 
 class Edition
   include BaseHelper
@@ -139,5 +139,14 @@ class Edition
 
   def self.convertible_formats
     Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"]
+  end
+
+  def fact_check_id
+    if %w(fact_check fact_check_received ready).include?(state) && migrated?
+      ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
+      ary[2] = (ary[2] & 0x0fff) | 0x4000
+      ary[3] = (ary[3] & 0x3fff) | 0x8000
+      "%08x-%04x-%04x-%04x-%04x%08x" % ary
+    end
   end
 end
