@@ -3,7 +3,7 @@ class PublicationsController < InheritedResources::Base
     edition = Edition.find_or_create_from_panopticon_data(params[:id], current_user)
 
     if edition.persisted?
-      notify_update_publishing_api(edition)
+      UpdateService.call(edition)
       redirect_with_return_to(edition) and return
     else
       render_new_form(edition) and return

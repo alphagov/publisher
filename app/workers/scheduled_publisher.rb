@@ -32,6 +32,9 @@ class ScheduledPublisher
   def perform(edition_id)
     edition = Edition.find(edition_id)
     edition.publish_anonymously!
+
+    PublishService.call(edition)
+
     report_state_counts
   end
 

@@ -23,13 +23,18 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
 
   context ".perform" do
     setup do
-      stub_register_published_content
+      PublishService.stubs(:call)
       @edition = FactoryGirl.create(:edition, :scheduled_for_publishing, body: "some text")
     end
 
     should "publish the edition" do
       ScheduledPublisher.new.perform(@edition.id.to_s)
       assert @edition.reload.published?
+    end
+
+    should "call downstream publish service" do
+      PublishService.expects(:call).with(@edition)
+      ScheduledPublisher.new.perform(@edition.id.to_s)
     end
 
     should "report on edition state counts" do

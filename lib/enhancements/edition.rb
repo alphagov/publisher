@@ -76,12 +76,6 @@ class Edition
   def was_published
     was_published_without_indexing
     update_artefact
-    notify_publishing_platform_services
-  end
-
-  def notify_publishing_platform_services
-    register_with_rummager
-    notify_publishing_api
   end
 
   def fact_check_skipped?
@@ -127,10 +121,6 @@ class Edition
     check_if_archived
     registerable_edition = RegisterableEdition.new(self)
     SearchIndexer.call(registerable_edition)
-  end
-
-  def notify_publishing_api
-    PublishingAPIPublisher.perform_async(self.id.to_s)
   end
 
   def artefact
