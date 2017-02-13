@@ -10,4 +10,4 @@ Rake.application.options.trace = true
 
 Rails.application.load_tasks
 
-task :default => [:test, :check_for_bad_time_handling, 'jasmine:ci']
+task :default => [:test, 'jasmine:ci']
