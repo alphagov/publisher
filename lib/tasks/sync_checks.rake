@@ -2,32 +2,33 @@ require 'sync_checker'
 
 namespace :sync_checks do
   desc "Check editions against their content item in the content store"
-  task check_help_page: [:environment] do
-    check_published
-    check_draft
+  task :check_format, [:format] => :environment do |_, args|
+    check_published(args[:format])
+    check_draft(args[:format])
   end
 
-  def check_published
+  def check_published(format)
     puts "Checking live content"
-    check_content(['published'], 'content-store')
+    check_content(format, ['published'], 'content-store')
   end
 
-  def check_draft
+  def check_draft(format)
     puts "Checking draft content"
-    check_content(Edition::PUBLISHING_API_DRAFT_STATES, 'draft-content-store')
+    check_content(format, Edition::PUBLISHING_API_DRAFT_STATES, 'draft-content-store')
   end
 
-  def check_content(states, store)
-    editions = HelpPageEdition.where(state: { '$in' => states })
+  def check_content(format, states, store)
+    scope = "#{format.classify}Edition".constantize
+    editions = scope.where(state: { '$in' => states })
     checker = SyncChecker.new(editions, store)
-    puts "#{editions.count} Help Pages from #{store}"
+    puts "#{editions.count} #{format.titleize} from #{store}"
 
     checker.add_expectation("schema_name") do |content_item, _|
-      content_item["schema_name"] == "help_page"
+      content_item["schema_name"] == format
     end
 
     checker.add_expectation("document_type") do |content_item, _|
-      content_item["document_type"] == "help_page"
+      content_item["document_type"] == format
     end
 
     checker.add_expectation("title") do |content_item, edition|
