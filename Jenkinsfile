@@ -43,29 +43,15 @@ node('mongodb-2.4') {
       return
     }
 
-    stage("Checkout") {
+    stage("Setup") {
       checkout scm
-    }
-
-    stage("Clean up workspace") {
       govuk.cleanupGit()
-    }
-
-    stage("git merge") {
       govuk.mergeMasterBranch()
-    }
-
-    stage("Configure Rails environment") {
       govuk.setEnvar("RAILS_ENV", "test")
-    }
-
-    stage("Set up content schema dependency") {
       govuk.contentSchemaDependency(env.SCHEMA_BRANCH)
       govuk.setEnvar("GOVUK_CONTENT_SCHEMAS_PATH", "tmp/govuk-content-schemas")
-    }
-
-    stage("bundle install") {
       govuk.bundleApp()
+      govuk.precompileAssets()
     }
 
     // we don't need linting if this is a downstream schema test.
@@ -73,10 +59,6 @@ node('mongodb-2.4') {
       stage("rubylinter") {
         govuk.rubyLinter("app test lib")
       }
-    }
-
-    stage("Precompile assets") {
-      govuk.precompileAssets()
     }
 
     stage("Run tests") {
