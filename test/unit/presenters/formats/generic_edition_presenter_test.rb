@@ -15,7 +15,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
       @edition = FactoryGirl.create(:edition, :published,
         major_change: true,
-        updated_at: 1.minute.ago,
+        updated_at: DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone,
         change_note: 'Test',
         version_number: 2,
         panopticon_id: artefact.id,
@@ -30,7 +30,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         schema_name: "generic_with_external_related_links",
         document_type: artefact.kind,
         need_ids: [],
-        public_updated_at: @edition.public_updated_at,
+        public_updated_at: '2017-02-06T17:36:58.000+00:00',
         publishing_app: "publisher",
         rendering_app: "frontend",
         routes: [
@@ -76,11 +76,12 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
   context ".render_for_publishing_api with a draft document" do
     setup do
-      artefact = FactoryGirl.create(:artefact,
+      artefact = FactoryGirl.create(
+        :artefact,
         content_id: SecureRandom.uuid,
         language: 'cy',
-                                   )
-      updated_at = 1.minute.ago
+      )
+      updated_at = DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone
       @edition = FactoryGirl.create(
         :transaction_edition,
         state: "draft",

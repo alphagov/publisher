@@ -17,7 +17,7 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
         :help_page_edition,
         :published,
         major_change: true,
-        updated_at: 1.minute.ago,
+        updated_at: DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone,
         change_note: 'Test',
         version_number: 2,
         panopticon_id: artefact.id,
@@ -33,7 +33,7 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
         schema_name: "help_page",
         document_type: artefact.kind,
         need_ids: [],
-        public_updated_at: @edition.public_updated_at,
+        public_updated_at: '2017-02-06T17:36:58.000+00:00',
         publishing_app: "publisher",
         rendering_app: "frontend",
         routes: [
@@ -97,7 +97,9 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
         kind: 'help_page',
         slug: 'help/i_need_somebody'
       )
-      updated_at = 1.minute.ago
+
+      updated_at = DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone
+
       @edition = FactoryGirl.create(
         :help_page_edition,
         state: "fact_check",
