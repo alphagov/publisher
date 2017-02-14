@@ -1,18 +1,18 @@
 require 'test_helper'
 
-class HelpPagePresenterTest < ActiveSupport::TestCase
+class AnswerPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
 
   def subject
-    Formats::HelpPagePresenter.new(edition)
+    Formats::AnswerPresenter.new(edition)
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(:help_page_edition, panopticon_id: artefact.id)
+    @_edition ||= FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "help_page", slug: "help/cookies")
+    @_artefact ||= FactoryGirl.create(:artefact, kind: "answer")
   end
 
   def result
@@ -20,11 +20,11 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'help_page')
+    assert_valid_against_schema(result, 'answer')
   end
 
   should "[:schema_name]" do
-    assert_equal 'help_page', result[:schema_name]
+    assert_equal 'answer', result[:schema_name]
   end
 
   context "[:details]" do

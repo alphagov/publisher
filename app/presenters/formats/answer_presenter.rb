@@ -1,9 +1,9 @@
 module Formats
-  class HelpPagePresenter < EditionFormatPresenter
+  class AnswerPresenter < EditionFormatPresenter
   private
 
     def schema_name
-      'help_page'
+      'answer'
     end
 
     def details

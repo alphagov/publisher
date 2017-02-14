@@ -20,6 +20,11 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase#
       assert result == "Formats::HelpPagePresenter"
     end
 
+    should "return a presenter for Answers" do
+      result = EditionPresenterFactory.presenter_class("AnswerEdition")
+      assert result == "Formats::AnswerPresenter"
+    end
+
     should "return default presenter for other pages" do
       result = EditionPresenterFactory.presenter_class("any_other_format")
       assert result == "Formats::GenericEditionPresenter"
