@@ -68,8 +68,11 @@ node('mongodb-2.4') {
       govuk.bundleApp()
     }
 
-    stage("rubylinter") {
-      govuk.rubyLinter("app test lib")
+    // we don't need linting if this is a downstream schema test.
+    if (false == env.IS_SCHEMA_TEST) {
+      stage("rubylinter") {
+        govuk.rubyLinter("app test lib")
+      }
     }
 
     stage("Precompile assets") {
