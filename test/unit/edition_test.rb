@@ -72,7 +72,8 @@ class EditionTest < ActiveSupport::TestCase
 
     context "for a format that has not yet been migrated" do
       should "return nil" do
-        edition = FactoryGirl.create(:edition, state: 'fact_check_received', id: 123)
+        artefact = FactoryGirl.create(:artefact, kind: 'licence')
+        edition = FactoryGirl.create(:edition, state: 'fact_check_received', panopticon_id: artefact.id)
         assert_nil edition.fact_check_id
       end
     end

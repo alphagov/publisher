@@ -10,7 +10,7 @@ class Artefact
   end
 
   def migrated_format?
-    %w(help_page).include?(kind)
+    %w(answer help_page).include?(kind)
   end
 
   def self.archived
