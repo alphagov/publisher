@@ -18,7 +18,7 @@ namespace :sync_checks do
   end
 
   def check_content(format, states, store)
-    scope = "#{format.classify}Edition".constantize
+    scope = Edition.by_format(format)
     editions = scope.where(state: { '$in' => states })
     checker = SyncChecker.new(editions, store)
     puts "#{editions.count} #{format.titleize} from #{store}"
