@@ -72,10 +72,26 @@ class EditionTest < ActiveSupport::TestCase
 
     context "for a format that has not yet been migrated" do
       should "return nil" do
-        artefact = FactoryGirl.create(:artefact, kind: 'licence')
-        edition = FactoryGirl.create(:edition, state: 'fact_check_received', panopticon_id: artefact.id)
+        edition = FactoryGirl.create(:licence_edition, state: 'fact_check_received')
         assert_nil edition.fact_check_id
       end
+    end
+  end
+
+  context "#migrated?" do
+    should "return true for a HelpPageEdition" do
+      edition = FactoryGirl.build(:help_page_edition)
+      assert edition.migrated?
+    end
+
+    should "return true for an AnswerEdition" do
+      edition = FactoryGirl.build(:answer_edition)
+      assert edition.migrated?
+    end
+
+    should "return false for an edition type that's not been migrated" do
+      edition = FactoryGirl.build(:licence_edition)
+      assert_not edition.migrated?
     end
   end
 end

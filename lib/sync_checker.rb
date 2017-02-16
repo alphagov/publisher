@@ -49,7 +49,8 @@ class SyncChecker
   private
 
     def filter_attributes(attrs)
-      attrs.symbolize_keys.select { |a| meaningful_attributes.include?(a) }
+      hash = attrs.symbolize_keys.select { |a| meaningful_attributes.include?(a) }
+      Hash[hash.sort]
     end
 
     def meaningful_attributes

@@ -25,6 +25,8 @@ class Edition
   }
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
+  MIGRATED_EDITION_CLASSES = [AnswerEdition, HelpPageEdition].freeze
+
   def self.state_names
     state_machine.states.map &:name
   end
@@ -50,7 +52,7 @@ class Edition
   }
 
   def migrated?
-    artefact.migrated_format?
+    MIGRATED_EDITION_CLASSES.include?(self.class)
   end
 
   def publish_anonymously!
@@ -62,9 +64,8 @@ class Edition
   end
 
   def self.by_format(format)
-    artefact_ids = Artefact.where(kind: format).pluck(:id).map(&:to_s)
-
-    Edition.where(panopticon_id: { '$in' => artefact_ids })
+    edition_class = "#{format}_edition".classify.constantize
+    edition_class.all
   end
 
   scope :published, -> { where(state: 'published') }

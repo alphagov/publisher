@@ -18,7 +18,7 @@ namespace :sync_checks do
   end
 
   def check_content(format, states, store)
-    scope = "#{format.classify}Edition".constantize
+    scope = Edition.by_format(format)
     editions = scope.where(state: { '$in' => states })
     checker = SyncChecker.new(editions, store)
     puts "#{editions.count} #{format.titleize} from #{store}"
@@ -27,8 +27,8 @@ namespace :sync_checks do
       content_item["schema_name"] == format
     end
 
-    checker.add_expectation("document_type") do |content_item, _|
-      content_item["document_type"] == format
+    checker.add_expectation("document_type") do |content_item, edition|
+      content_item["document_type"] == edition.artefact.kind
     end
 
     checker.add_expectation("title") do |content_item, edition|
@@ -37,7 +37,8 @@ namespace :sync_checks do
 
     checker.add_expectation("public_updated_at") do |content_item, edition|
       content_item_date = DateTime.parse(content_item['public_updated_at'])
-      content_item_date == edition.public_updated_at.to_s
+      content_item_date.change(usec: 0).utc ==
+        edition.public_updated_at.change(usec: 0).utc
     end
 
     checker.call
