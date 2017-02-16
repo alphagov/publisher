@@ -28,7 +28,7 @@ namespace :sync_checks do
     end
 
     checker.add_expectation("document_type") do |content_item, edition|
-      content_item["document_type"] == edition.artefact.kind
+      content_item["document_type"] == format
     end
 
     checker.add_expectation("title") do |content_item, edition|
