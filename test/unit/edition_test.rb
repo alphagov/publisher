@@ -89,6 +89,11 @@ class EditionTest < ActiveSupport::TestCase
       assert edition.migrated?
     end
 
+    should "return true for an LocalTransactionEdition" do
+      edition = FactoryGirl.build(:local_transaction_edition)
+      assert edition.migrated?
+    end
+
     should "return false for an edition type that's not been migrated" do
       edition = FactoryGirl.build(:licence_edition)
       assert_not edition.migrated?

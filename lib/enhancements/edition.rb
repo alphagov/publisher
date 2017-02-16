@@ -25,7 +25,11 @@ class Edition
   }
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
-  MIGRATED_EDITION_CLASSES = [AnswerEdition, HelpPageEdition].freeze
+  MIGRATED_EDITION_CLASSES = [
+    AnswerEdition,
+    HelpPageEdition,
+    LocalTransactionEdition
+  ].freeze
 
   def self.state_names
     state_machine.states.map &:name
