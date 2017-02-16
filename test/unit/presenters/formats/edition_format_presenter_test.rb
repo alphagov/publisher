@@ -29,7 +29,6 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :latest_change_note
       edition.stubs :fact_check_id
 
-      artefact.stubs :kind
       artefact.stubs :language
     end
 
@@ -59,8 +58,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:document_type]" do
-      artefact.expects(:kind).returns('foo')
-      assert_equal 'foo', result[:document_type]
+      assert_equal "override me", result[:document_type]
     end
 
     should "[:need_ids]" do

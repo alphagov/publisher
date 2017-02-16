@@ -29,7 +29,7 @@ module Formats
         base_path: base_path,
         description: edition.overview || "",
         schema_name: schema_name,
-        document_type: artefact.kind,
+        document_type: schema_name,
         need_ids: [],
         public_updated_at: public_updated_at.to_datetime.rfc3339(3),
         publishing_app: "publisher",
