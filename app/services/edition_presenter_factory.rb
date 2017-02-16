@@ -6,10 +6,12 @@ class EditionPresenterFactory
 
     def presenter_class(edition_class)
       case edition_class
-      when "HelpPageEdition"
-        "Formats::HelpPagePresenter"
       when "AnswerEdition"
         "Formats::AnswerPresenter"
+      when "HelpPageEdition"
+        "Formats::HelpPagePresenter"
+      when "LocalTransactionEdition"
+        "Formats::LocalTransactionPresenter"
       else
         "Formats::GenericEditionPresenter"
       end
