@@ -71,7 +71,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       save_edition_and_assert_success
 
       e = LocalTransactionEdition.find(edition.id)
-      assert_equal nil, e.lgil_override
+      assert_nil e.lgil_override
     end
 
     should "show an error when the title is empty" do

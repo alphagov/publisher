@@ -81,7 +81,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   should "be able to convert a Non Parted edition into a ProgrammeEdition and display default parts" do
-    edition = FactoryGirl.create(AnswerEdition, state: 'published')
+    edition = FactoryGirl.create(:answer_edition, state: 'published')
     visit_edition edition
 
     within "div.tabbable" do
@@ -104,7 +104,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   should "keep the additional information field when converting a BusinessSupportEdition into another edition" do
-    edition = FactoryGirl.create(BusinessSupportEdition,
+    edition = FactoryGirl.create(:business_support_edition,
       additional_information: "This is additional information text",
       state: 'published',
       panopticon_id: FactoryGirl.create(:artefact, kind: 'business_support').id,

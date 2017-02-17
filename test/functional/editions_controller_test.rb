@@ -1,9 +1,6 @@
 require 'test_helper'
-require 'gds_api/test_helpers/imminence'
 
 class EditionsControllerTest < ActionController::TestCase
-  include GdsApi::TestHelpers::Imminence
-
   setup do
     login_as_stub_user
     stub_linkables
@@ -152,7 +149,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update assignment" do
-      bob = User.create
+      bob = FactoryGirl.create(:user)
 
       post :update,
         id: @guide.id,
@@ -163,7 +160,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "not create a new action if the assignment is unchanged" do
-      bob = User.create
+      bob = FactoryGirl.create(:user)
       @user.assign(@guide, bob)
 
       post :update,
@@ -220,11 +217,18 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#review" do
     setup do
-      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      artefact = FactoryGirl.create(:artefact)
+
+      @guide = FactoryGirl.create(
+        :guide_edition,
+        state: "in_review",
+        review_requested_at: Time.zone.now,
+        panopticon_id: artefact.id
+      )
     end
 
     should "update the reviewer" do
-      bob = User.create
+      bob = FactoryGirl.create(:user, name: "bob")
 
       put :review,
         id: @guide.id,
