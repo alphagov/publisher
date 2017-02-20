@@ -91,7 +91,7 @@ private
 
     content_item = response.to_h
     compare_content(content_item, edition, base_path)
-  rescue
+  rescue GdsApi::HTTPErrorResponse
     NotFoundFailure.new(
       base_path: base_path,
       content_store: store_string
