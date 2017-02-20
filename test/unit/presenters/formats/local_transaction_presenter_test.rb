@@ -43,49 +43,81 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   context "[:details]" do
-    should "[:lgsl_code]" do
-      expected = 431
-      assert_equal expected, result[:details][:lgsl_code]
+    context "required details" do
+      should "[:lgsl_code]" do
+        expected = 431
+        assert_equal expected, result[:details][:lgsl_code]
+      end
+
+      should "[:service_tiers]" do
+        expected = %w{county unitary}
+        assert_equal expected, result[:details][:service_tiers]
+      end
     end
 
-    should "[:lgil_override]" do
-      expected = 8
-      assert_equal expected, result[:details][:lgil_override]
-    end
+    context "optional details" do
+      context "[:lgil_override]" do
+        should "present the data" do
+          expected = 8
+          assert_equal expected, result[:details][:lgil_override]
+        end
 
-    should "[:service_tiers]" do
-      expected = %w{county unitary}
-      assert_equal expected, result[:details][:service_tiers]
-    end
+        should "not present the data if nil" do
+          edition.update(lgil_override: nil)
+          refute_includes result[:details].keys, :lgil_override
+        end
+      end
 
-    should "[:introduction]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'hello'
-        }
-      ]
-      assert_equal expected, result[:details][:introduction]
-    end
+      context "[:introduction]" do
+        should "present the data" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: 'hello'
+            }
+          ]
+          assert_equal expected, result[:details][:introduction]
+        end
 
-    should "[:more_information]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'more info'
-        }
-      ]
-      assert_equal expected, result[:details][:more_information]
-    end
+        should "not present the data if nil" do
+          edition.update(introduction: nil)
+          refute_includes result[:details].keys, :introduction
+        end
+      end
 
-    should "[:need_to_know]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'for your eyes only'
-        }
-      ]
-      assert_equal expected, result[:details][:need_to_know]
+      context "[:more_information]" do
+        should "present the data" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: 'more info'
+            }
+          ]
+          assert_equal expected, result[:details][:more_information]
+        end
+
+        should "not present the data if nil" do
+          edition.update(more_information: nil)
+          refute_includes result[:details].keys, :more_information
+        end
+      end
+
+      context "[:need_to_know]" do
+        should "present the data" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: 'for your eyes only'
+            }
+          ]
+          assert_equal expected, result[:details][:need_to_know]
+        end
+
+        should "not present the data if nil" do
+          edition.update(need_to_know: nil)
+          refute_includes result[:details].keys, :need_to_know
+        end
+      end
     end
 
     should "[:external_related_links]" do
