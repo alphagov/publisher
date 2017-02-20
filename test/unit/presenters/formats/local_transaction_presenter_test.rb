@@ -58,34 +58,74 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       assert_equal expected, result[:details][:service_tiers]
     end
 
-    should "[:introduction]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'hello'
-        }
-      ]
-      assert_equal expected, result[:details][:introduction]
+    context "[:introduction]" do
+      should "convert text input" do
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: 'hello'
+          }
+        ]
+        assert_equal expected, result[:details][:introduction]
+      end
+
+      should "handle nil values" do
+        edition.update(introduction: nil)
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: ""
+          }
+        ]
+        assert_equal expected, result[:details][:introduction]
+      end
     end
 
-    should "[:more_information]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'more info'
-        }
-      ]
-      assert_equal expected, result[:details][:more_information]
+    context "[:more_information]" do
+      should "convert text input" do
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: 'more info'
+          }
+        ]
+        assert_equal expected, result[:details][:more_information]
+      end
+
+      should "handle nil values" do
+        edition.update(more_information: nil)
+        expected = [
+
+          {
+            content_type: "text/govspeak",
+            content: ""
+          }
+        ]
+        assert_equal expected, result[:details][:more_information]
+      end
     end
 
-    should "[:need_to_know]" do
-      expected = [
-        {
-          content_type: "text/govspeak",
-          content: 'for your eyes only'
-        }
-      ]
-      assert_equal expected, result[:details][:need_to_know]
+    context "[:need_to_know]" do
+      should "convert text input" do
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: 'for your eyes only'
+          }
+        ]
+        assert_equal expected, result[:details][:need_to_know]
+      end
+
+      should "handle nil values" do
+        edition.update(need_to_know: nil)
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: ""
+          }
+        ]
+        assert_equal expected, result[:details][:need_to_know]
+      end
     end
 
     should "[:external_related_links]" do
