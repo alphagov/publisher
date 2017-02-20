@@ -7,6 +7,10 @@ namespace :sync_checks do
     check_draft(args[:format])
   end
 
+  task :check_format_drafts, [:format] => :environment do |_, args|
+    check_draft(args[:format])
+  end
+
   def check_published(format)
     puts "Checking live content"
     check_content(format, ['published'], 'content-store')
@@ -38,7 +42,10 @@ namespace :sync_checks do
     checker.add_expectation("public_updated_at") do |content_item, edition|
       content_item_date = DateTime.parse(content_item['public_updated_at'])
       content_item_date.change(usec: 0).utc ==
-        edition.public_updated_at.change(usec: 0).utc
+        (
+          edition.public_updated_at ||
+          edition.updated_at
+        ).change(usec: 0).utc
     end
 
     checker.call
