@@ -7,8 +7,7 @@
       </div>
     </div>
     <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>
-    <%= link_to "Add user need", panopticon_edit_url(publication), class: "btn btn-primary" %>
-    <%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication), class: "btn btn-primary" %>
+    <%= link_to "Add or edit related GOV.UK links and user needs", content_tagger_url(publication), class: "btn btn-primary" %>
   <% end %>
 <% else %>
   <div class="row">
@@ -19,6 +18,5 @@
       <% end %>
     </div>
   </div>
-  <%= link_to "Add or edit related GOV.UK links", content_tagger_url(publication), class: "btn btn-primary"%>
-  <%= link_to "Add user need", panopticon_edit_url(publication), class: "btn btn-primary"%>
+  <%= link_to "Add or edit related GOV.UK links and user needs", content_tagger_url(publication), class: "btn btn-primary" %>
 <% end %>
