@@ -1,11 +1,6 @@
 require 'test_helper'
 
 class ProgrammeEditionTest < ActiveSupport::TestCase
-  setup do
-    stub_request(:get, /.*panopticon\.test\.gov\.uk\/artefacts\/.*\.js/).
-      to_return(:status => 200, :body => "{}", :headers => {})
-  end
-
   def template_programme
     p = ProgrammeEdition.new(:slug=>"childcare", :title=>"Children", :panopticon_id => FactoryGirl.create(:artefact).id)
     p.save

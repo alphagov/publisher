@@ -2,9 +2,6 @@ require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
   test "filtering by assigned user" do
-    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-      to_return(status: 200, body: "{}", headers: {})
-
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
@@ -52,9 +49,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content" do
-    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-      to_return(status: 200, body: "{}", headers: {})
-
     FactoryGirl.create(:user)
     FactoryGirl.create(:guide_edition, :title => "XXX")
     FactoryGirl.create(:guide_edition, :title => "YYY")
@@ -69,9 +63,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content should not lose the active section" do
-    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-      to_return(status: 200, body: "{}", headers: {})
-
     FactoryGirl.create(:user)
 
     visit "/"
@@ -83,9 +74,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by format" do
-    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-      to_return(status: 200, body: "{}", headers: {})
-
     FactoryGirl.create(:user)
     FactoryGirl.create(:guide_edition, title: "Draft guide")
     FactoryGirl.create(:transaction_edition, title: "Draft transaction")
@@ -113,9 +101,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    stub_request(:get, %r{^http://panopticon\.test\.gov\.uk/artefacts/.*\.js$}).
-      to_return(status: 200, body: "{}", headers: {})
-
     FactoryGirl.create(:user)
     FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'archived', :sibling_in_progress => 2)
 
