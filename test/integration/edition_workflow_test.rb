@@ -268,13 +268,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def send_for_generic_action(guide, button_text, &block)
     visit_edition guide
     action_button = page.find_link button_text
+    action_element_id = "##{path_segment(action_button['href'])}"
 
     click_on button_text
 
     # Forces the driver to wait for any async javascript to complete
     page.has_css?('.modal-header')
 
-    within :css, action_button['href'], &block
+    within :css, action_element_id, &block
 
     assert page.has_content?("updated"), "new page doesn't show 'updated' message"
     guide.reload
@@ -299,6 +300,10 @@ class EditionWorkflowTest < JavascriptIntegrationTest
         click_on modal_button_text
       end
     end
+  end
+
+  def path_segment(url)
+    url.split('#').last
   end
 
   def filter_for_all_users

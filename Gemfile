@@ -39,22 +39,22 @@ gem 'unicorn', '4.3.1'
 gem 'whenever', require: false
 
 group :test do
-  gem 'capybara', '2.6.2'
+  gem 'capybara', '2.12.1'
   gem 'ci_reporter_minitest', '1.0.0'
-  gem 'database_cleaner', '1.5.1'
+  gem 'database_cleaner', '1.5.3'
   gem 'factory_girl_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.4'
-  gem 'launchy', '2.1.1'
+  gem 'launchy', '2.4.3'
   gem 'minitest'
   gem 'minitest-reporters'
-  gem 'mocha', '1.1.0'
-  gem 'poltergeist', '1.5.0'
+  gem 'mocha', '1.2.1'
+  gem 'poltergeist', '1.13.0'
   gem 'rails-perftest'
   gem 'ruby-prof'
   gem 'shoulda', '3.5.0'
   gem 'simplecov', '~> 0.6.4', :require => false
   gem 'simplecov-rcov', '~> 0.2.3', :require => false
-  gem "timecop", '0.4.4'
+  gem "timecop", '0.8.0'
   gem 'webmock', '~> 1.22'
 end
 
