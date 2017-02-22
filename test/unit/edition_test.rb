@@ -98,5 +98,10 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryGirl.build(:licence_edition)
       assert_not edition.migrated?
     end
+
+    should "return true for a GuideEdition" do
+      edition = FactoryGirl.build(:guide_edition)
+      assert edition.migrated?
+    end
   end
 end
