@@ -28,7 +28,8 @@ class Edition
   MIGRATED_EDITION_CLASSES = [
     AnswerEdition,
     HelpPageEdition,
-    LocalTransactionEdition
+    LocalTransactionEdition,
+    SimpleSmartAnswerEdition,
   ].freeze
 
   def self.state_names
