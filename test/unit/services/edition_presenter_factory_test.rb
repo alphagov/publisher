@@ -15,14 +15,24 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase#
   end
 
   context ".presenter_class" do
+    should "return a presenter for Answers" do
+      result = EditionPresenterFactory.presenter_class("AnswerEdition")
+      assert result == "Formats::AnswerPresenter"
+    end
+
     should "return a presenter for Help pages" do
       result = EditionPresenterFactory.presenter_class("HelpPageEdition")
       assert result == "Formats::HelpPagePresenter"
     end
 
-    should "return a presenter for Answers" do
-      result = EditionPresenterFactory.presenter_class("AnswerEdition")
-      assert result == "Formats::AnswerPresenter"
+    should "return a presenter for LocalTransactions" do
+      result = EditionPresenterFactory.presenter_class("LocalTransactionEdition")
+      assert result == "Formats::LocalTransactionPresenter"
+    end
+
+    should "return a presenter for SimpleSmartAnswers" do
+      result = EditionPresenterFactory.presenter_class("SimpleSmartAnswerEdition")
+      assert result == "Formats::SimpleSmartAnswerPresenter"
     end
 
     should "return default presenter for other pages" do
