@@ -38,6 +38,14 @@ class UnpublishService
     end
 
     def unpublish_with_redirect(artefact, redirect_url)
+      if artefact.latest_edition.exact_route?
+        unpublish_with_exact_redirect(artefact, redirect_url)
+      else
+        unpublish_wth_prefix_redirect(artefact, redirect_url)
+      end
+    end
+
+    def unpublish_with_exact_redirect(artefact, redirect_url)
       Services.publishing_api.unpublish(
         artefact.content_id,
         locale: artefact.language,
@@ -47,12 +55,28 @@ class UnpublishService
       )
     end
 
-    def unpublish_without_redirect(artefact)
+    def unpublish_wth_prefix_redirect(artefact, redirect_url)
       Services.publishing_api.unpublish(
         artefact.content_id,
         locale: artefact.language,
-        type: 'gone',
+        type: 'redirect',
+        redirects: [
+          {
+            path: "/#{artefact.slug}",
+            type: 'prefix',
+            destination: redirect_url
+          }
+        ],
         discard_drafts: true
+      )
+    end
+
+    def unpublish_without_redirect(artefact)
+      Services.publishing_api.unpublish(
+      artefact.content_id,
+      locale: artefact.language,
+      type: 'gone',
+      discard_drafts: true
       )
     end
   end
