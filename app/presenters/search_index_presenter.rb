@@ -1,4 +1,4 @@
-class RegisterableEdition
+class SearchIndexPresenter
   extend Forwardable
 
   def_delegators :@edition,

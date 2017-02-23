@@ -1,7 +1,6 @@
 require "test_helper"
 
-class RegisterableEditionTest < ActiveSupport::TestCase
-
+class SearchIndexPresenterTest < ActiveSupport::TestCase
   def template_answer(version_number = 1)
     artefact = FactoryGirl.create(:artefact)
     AnswerEdition.create(state: 'ready', slug: "childcare", panopticon_id: artefact.id,
@@ -33,28 +32,28 @@ class RegisterableEditionTest < ActiveSupport::TestCase
 
   context "state" do
     should "return live if the edition is published" do
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal 'live', registerable.state
+      presenter = SearchIndexPresenter.new(@edition)
+      assert_equal 'live', presenter.state
     end
 
     should "return archived if the edition is archived" do
       @edition.state = 'archived'
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal 'archived', registerable.state
+      presenter = SearchIndexPresenter.new(@edition)
+      assert_equal 'archived', presenter.state
     end
 
     should "return draft if the edition is not published or archived" do
       @edition.state = 'other'
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal 'draft', registerable.state
+      presenter = SearchIndexPresenter.new(@edition)
+      assert_equal 'draft', presenter.state
     end
   end
 
   context "description" do
     should "return the overview" do
       @edition.update_attribute(:overview, "Overviewiness")
-      registerable = RegisterableEdition.new(@edition)
-      assert_equal "Overviewiness", registerable.description
+      presenter = SearchIndexPresenter.new(@edition)
+      assert_equal "Overviewiness", presenter.description
     end
   end
 
@@ -64,15 +63,15 @@ class RegisterableEditionTest < ActiveSupport::TestCase
                                                                        change_note: 'First edition',
                                                                        updated_at: 1.minute.ago,
                                                                        state: 'published')
-      @registerable = RegisterableEdition.new(@edition_with_major_change)
+      @presenter = SearchIndexPresenter.new(@edition_with_major_change)
     end
 
     should "return the latest_change_note" do
-      assert_equal 'First edition', @registerable.latest_change_note
+      assert_equal 'First edition', @presenter.latest_change_note
     end
 
     should 'return the public_timestamp' do
-      assert_equal @edition_with_major_change.updated_at.to_i, @registerable.public_timestamp.to_i
+      assert_equal @edition_with_major_change.updated_at.to_i, @presenter.public_timestamp.to_i
     end
   end
 
@@ -80,40 +79,40 @@ class RegisterableEditionTest < ActiveSupport::TestCase
     context "for a CampaignEdition" do
       should "generate /slug and /slug.json path" do
         edition = FactoryGirl.build(:campaign_edition, :slug => "a-slug")
-        registerable = RegisterableEdition.new(edition)
+        presenter = SearchIndexPresenter.new(edition)
 
-        assert_equal [], registerable.prefixes
-        assert_equal ["/a-slug", "/a-slug.json"], registerable.paths
+        assert_equal [], presenter.prefixes
+        assert_equal ["/a-slug", "/a-slug.json"], presenter.paths
       end
     end
 
     context "for a HelpPageEdition" do
       should "generate /slug and /slug.json path" do
         edition = FactoryGirl.build(:help_page_edition, :slug => "help/a-slug")
-        registerable = RegisterableEdition.new(edition)
+        presenter = SearchIndexPresenter.new(edition)
 
-        assert_equal [], registerable.prefixes
-        assert_equal ["/help/a-slug", "/help/a-slug.json"], registerable.paths
+        assert_equal [], presenter.prefixes
+        assert_equal ["/help/a-slug", "/help/a-slug.json"], presenter.paths
       end
     end
 
     context "for a TransactionEdition" do
       should "generate /slug and /slug.json path" do
         edition = FactoryGirl.build(:transaction_edition, :slug => "a-slug")
-        registerable = RegisterableEdition.new(edition)
+        presenter = SearchIndexPresenter.new(edition)
 
-        assert_equal [], registerable.prefixes
-        assert_equal ["/a-slug", "/a-slug.json"], registerable.paths
+        assert_equal [], presenter.prefixes
+        assert_equal ["/a-slug", "/a-slug.json"], presenter.paths
       end
     end
 
     context "for other edition types" do
       should "generate /slug prefix and /slug.json path" do
         edition = FactoryGirl.build(:answer_edition, :slug => "a-slug")
-        registerable = RegisterableEdition.new(edition)
+        presenter = SearchIndexPresenter.new(edition)
 
-        assert_equal ["/a-slug"], registerable.prefixes
-        assert_equal ["/a-slug.json"], registerable.paths
+        assert_equal ["/a-slug"], presenter.prefixes
+        assert_equal ["/a-slug.json"], presenter.paths
       end
     end
   end

@@ -14,7 +14,7 @@ class SearchIndexerTest < ActiveSupport::TestCase
       panopticon_id: artefact.id,
       body: "Indexable content",
     )
-    registerable_edition = RegisterableEdition.new(edition)
+    search_index_presenter = SearchIndexPresenter.new(edition)
 
     Services.rummager.expects(:add_document).with(
       'edition',
@@ -27,11 +27,11 @@ class SearchIndexerTest < ActiveSupport::TestCase
       description: "An overview",
       indexable_content: "Indexable content",
       link: "/#{edition.slug}",
-      public_timestamp: registerable_edition.public_timestamp,
+      public_timestamp: search_index_presenter.public_timestamp,
       content_store_document_type: "answer",
     )
 
-    SearchIndexer.call(registerable_edition)
+    SearchIndexer.call(search_index_presenter)
   end
 
   def test_format_exceptions_are_not_indexed
@@ -40,11 +40,11 @@ class SearchIndexerTest < ActiveSupport::TestCase
         :artefact, kind: format, content_id: "content-id",
       )
       edition = FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
-      registerable_edition = RegisterableEdition.new(edition)
+      search_index_presenter = SearchIndexPresenter.new(edition)
 
       Services.rummager.expects(:add_document).never
 
-      SearchIndexer.call(registerable_edition)
+      SearchIndexer.call(search_index_presenter)
     end
   end
 
@@ -61,11 +61,11 @@ class SearchIndexerTest < ActiveSupport::TestCase
         panopticon_id: artefact.id,
       )
 
-      registerable_edition = RegisterableEdition.new(edition)
+      search_index_presenter = SearchIndexPresenter.new(edition)
 
       Services.rummager.expects(:add_document).once
 
-      SearchIndexer.call(registerable_edition)
+      SearchIndexer.call(search_index_presenter)
     end
   end
 
@@ -86,7 +86,7 @@ class SearchIndexerTest < ActiveSupport::TestCase
     presenter = EditionPresenterFactory.get_presenter(edition)
     document_type = presenter.render_for_publishing_api[:document_type]
 
-    registerable_edition = RegisterableEdition.new(edition)
+    search_index_presenter = SearchIndexPresenter.new(edition)
 
     Services.rummager.expects(:add_document).with(
       'edition',
@@ -96,6 +96,6 @@ class SearchIndexerTest < ActiveSupport::TestCase
       )
     )
 
-    SearchIndexer.call(registerable_edition)
+    SearchIndexer.call(search_index_presenter)
   end
 end

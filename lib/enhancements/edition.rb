@@ -1,5 +1,5 @@
 require "edition"
-require "registerable_edition"
+require "search_index_presenter"
 require 'digest'
 
 class Edition
@@ -125,8 +125,8 @@ class Edition
 
   def register_with_rummager
     check_if_archived
-    registerable_edition = RegisterableEdition.new(self)
-    SearchIndexer.call(registerable_edition)
+    presenter = SearchIndexPresenter.new(self)
+    SearchIndexer.call(presenter)
   end
 
   def artefact
