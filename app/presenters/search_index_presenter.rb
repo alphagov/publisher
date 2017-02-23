@@ -1,20 +1,6 @@
-class SearchIndexPresenter
-  extend Forwardable
-
-  def_delegators :@edition,
-    :slug,
-    :title,
-    :artefact,
-    :indexable_content,
-    :latest_change_note,
-    :format
-
-  def initialize(edition)
-    @edition = edition
-  end
-
+class SearchIndexPresenter < SimpleDelegator
   def state
-    case @edition.state
+    case __getobj__.state
     when 'published' then 'live'
     when 'archived' then 'archived'
     else 'draft'
@@ -22,28 +8,26 @@ class SearchIndexPresenter
   end
 
   def description
-    @edition.overview
+    overview
   end
 
   def paths
-    case @edition.class
-    when TransactionEdition, CampaignEdition, HelpPageEdition
-      ["/#{@edition.slug}", "/#{@edition.slug}.json"]
+    if exact_route?
+      ["/#{slug}", "/#{slug}.json"]
     else
-      ["/#{@edition.slug}.json"]
+      ["/#{slug}.json"]
     end
   end
 
   def prefixes
-    case @edition.class
-    when TransactionEdition, CampaignEdition, HelpPageEdition
+    if exact_route?
       []
     else
-      ["/#{@edition.slug}"]
+      ["/#{slug}"]
     end
   end
 
   def public_timestamp
-    @edition.public_updated_at
+    public_updated_at
   end
 end

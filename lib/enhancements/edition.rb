@@ -32,6 +32,12 @@ class Edition
     LocalTransactionEdition
   ].freeze
 
+  EXACT_ROUTE_EDITION_CLASSES = [
+    CampaignEdition,
+    HelpPageEdition,
+    TransactionEdition
+  ].freeze
+
   def self.state_names
     state_machine.states.map &:name
   end
@@ -57,7 +63,11 @@ class Edition
   }
 
   def migrated?
-    MIGRATED_EDITION_CLASSES.include?(self.class)
+    self.class.in? MIGRATED_EDITION_CLASSES
+  end
+
+  def exact_route?
+    self.class.in? EXACT_ROUTE_EDITION_CLASSES
   end
 
   def publish_anonymously!
