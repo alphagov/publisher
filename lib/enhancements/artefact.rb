@@ -33,9 +33,7 @@ class Artefact
     update_attributes(
       state: state_from_edition(edition),
       description: edition.overview,
-      public_timestamp: edition.public_updated_at,
-      paths: edition.paths,
-      prefixes: edition.prefixes
+      public_timestamp: edition.public_updated_at
     )
   end
 

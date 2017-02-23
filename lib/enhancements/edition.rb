@@ -108,26 +108,6 @@ class Edition
     end
   end
 
-  def register_exact_route?
-    [TransactionEdition, CampaignEdition, HelpPageEdition].include? self.class
-  end
-
-  def paths
-    if register_exact_route?
-      ["/#{slug}", "/#{slug}.json"]
-    else
-      ["/#{slug}.json"]
-    end
-  end
-
-  def prefixes
-    if register_exact_route?
-      []
-    else
-      ["/#{slug}"]
-    end
-  end
-
   def update_artefact
     check_if_archived
     artefact.update_from_edition(self)

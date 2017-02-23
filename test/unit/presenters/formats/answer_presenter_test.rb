@@ -56,7 +56,7 @@ class AnswerPresenterTest < ActiveSupport::TestCase
   should "[:routes]" do
     edition.update_attribute(:slug, 'foo')
     expected = [
-      { path: '/foo', type: 'exact' },
+      { path: '/foo', type: 'prefix' },
       { path: '/foo.json', type: 'exact' }
     ]
     assert_equal expected, result[:routes]
