@@ -94,6 +94,11 @@ class EditionTest < ActiveSupport::TestCase
       assert edition.migrated?
     end
 
+    should "return true for an SimpleSmartAnswerEdition" do
+      edition = FactoryGirl.build(:simple_smart_answer_edition)
+      assert edition.migrated?
+    end
+
     should "return false for an edition type that's not been migrated" do
       edition = FactoryGirl.build(:licence_edition)
       assert_not edition.migrated?
