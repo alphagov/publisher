@@ -20,6 +20,11 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase#
       assert result == "Formats::AnswerPresenter"
     end
 
+    should "return a presenter for Completed Transactions" do
+      result = EditionPresenterFactory.presenter_class("CompletedTransactionEdition")
+      assert result == "Formats::CompletedTransactionPresenter"
+    end
+
     should "return a presenter for Help pages" do
       result = EditionPresenterFactory.presenter_class("HelpPageEdition")
       assert result == "Formats::HelpPagePresenter"

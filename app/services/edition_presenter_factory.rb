@@ -8,6 +8,8 @@ class EditionPresenterFactory
       case edition_class
       when "AnswerEdition"
         "Formats::AnswerPresenter"
+      when "CompletedTransactionEdition"
+        "Formats::CompletedTransactionPresenter"
       when "GuideEdition"
         "Formats::GuidePresenter"
       when "HelpPageEdition"
