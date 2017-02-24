@@ -9,7 +9,6 @@ require "minitest/autorun"
 require 'mocha/mini_test'
 require 'database_cleaner'
 require 'webmock/minitest'
-require 'gds_api/test_helpers/panopticon'
 require 'gds_api/test_helpers/publishing_api_v2'
 require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
