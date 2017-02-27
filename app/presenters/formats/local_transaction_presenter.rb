@@ -12,10 +12,6 @@ module Formats
       .merge(external_related_links: external_related_links)
     end
 
-    def registers_exact_route?
-      false
-    end
-
   private
 
     def required_details

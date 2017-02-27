@@ -28,6 +28,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :version_number
       edition.stubs :latest_change_note
       edition.stubs :fact_check_id
+      edition.stubs :exact_route?
 
       artefact.stubs :language
     end
@@ -88,13 +89,28 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       assert_equal "frontend", result[:rendering_app]
     end
 
-    should "[:routes]" do
-      edition.stubs(:slug).returns('foo')
-      expected = [
-        { path: '/foo', type: 'prefix' },
-        { path: '/foo.json', type: 'exact' }
-      ]
-      assert_equal expected, result[:routes]
+    context "for prefix routes" do
+      should "[:routes]" do
+        edition.stubs(:slug).returns('foo')
+        edition.stubs(:exact_route?).returns(false)
+        expected = [
+          { path: '/foo', type: 'prefix' },
+          { path: '/foo.json', type: 'exact' }
+        ]
+        assert_equal expected, result[:routes]
+      end
+    end
+
+    context "for exact routes" do
+      should "[:routes]" do
+        edition.stubs(:slug).returns('foo')
+        edition.stubs(:exact_route?).returns(true)
+        expected = [
+          { path: '/foo', type: 'exact' },
+          { path: '/foo.json', type: 'exact' }
+        ]
+        assert_equal expected, result[:routes]
+      end
     end
 
     should "[:redirects]" do

@@ -80,12 +80,7 @@ module Formats
     # TransactionEdition, CampaignEdition, HelpPageEdition
     # need to register exact routes...
     def path_type
-      registers_exact_route? ? 'exact' : 'prefix'
-    end
-
-    # the default mode for mainstream content
-    def registers_exact_route?
-      false
+      edition.exact_route? ? 'exact' : 'prefix'
     end
 
     def update_type(republish)

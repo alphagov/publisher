@@ -12,7 +12,7 @@ class EditionTest < ActiveSupport::TestCase
       artefact.update_attributes! state: "archived"
 
       registerable = mock("registerable_edition")
-      RegisterableEdition.stubs(:new).with(edition).returns(registerable)
+      SearchIndexPresenter.stubs(:new).with(edition).returns(registerable)
       SearchIndexer.expects(:call).with(registerable).never
 
       assert_raises Edition::ResurrectionError do

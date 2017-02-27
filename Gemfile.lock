@@ -90,7 +90,7 @@ GEM
     database_cleaner (1.5.3)
     diff-lcs (1.2.5)
     diffy (3.0.6)
-    domain_name (0.5.20160826)
+    domain_name (0.5.20170223)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.6.0)
@@ -105,7 +105,7 @@ GEM
       actionpack (>= 3.0)
     formtastic-bootstrap (3.0.0)
       formtastic (>= 2.2)
-    gds-api-adapters (38.0.0)
+    gds-api-adapters (40.1.0)
       link_header
       lrucache (~> 0.1.1)
       null_logger
@@ -159,7 +159,7 @@ GEM
     hashdiff (0.3.0)
     hashie (3.4.4)
     htmlentities (4.3.4)
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.8.0)
     inherited_resources (1.6.0)
@@ -275,7 +275,7 @@ GEM
     rack (1.6.5)
     rack-accept (0.4.5)
       rack (>= 0.4)
-    rack-cache (1.6.1)
+    rack-cache (1.7.0)
       rack (>= 0.4)
     rack-protection (1.5.3)
       rack
@@ -316,7 +316,7 @@ GEM
       redis (~> 3.0, >= 3.0.4)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
-    rest-client (2.0.0)
+    rest-client (2.0.1)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -452,7 +452,7 @@ DEPENDENCIES
   factory_girl_rails
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
-  gds-api-adapters (~> 38.0.0)
+  gds-api-adapters (~> 40.1.0)
   gds-sso (~> 11.2)
   govspeak (~> 3.4.0)
   govuk-content-schema-test-helpers (~> 1.4)

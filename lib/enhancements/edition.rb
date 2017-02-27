@@ -1,5 +1,5 @@
 require "edition"
-require "registerable_edition"
+require "search_index_presenter"
 require 'digest'
 
 class Edition
@@ -33,6 +33,12 @@ class Edition
     SimpleSmartAnswerEdition,
   ].freeze
 
+  EXACT_ROUTE_EDITION_CLASSES = [
+    CampaignEdition,
+    HelpPageEdition,
+    TransactionEdition
+  ].freeze
+
   def self.state_names
     state_machine.states.map &:name
   end
@@ -58,7 +64,11 @@ class Edition
   }
 
   def migrated?
-    MIGRATED_EDITION_CLASSES.include?(self.class)
+    self.class.in? MIGRATED_EDITION_CLASSES
+  end
+
+  def exact_route?
+    self.class.in? EXACT_ROUTE_EDITION_CLASSES
   end
 
   def publish_anonymously!
@@ -99,26 +109,6 @@ class Edition
     end
   end
 
-  def register_exact_route?
-    [TransactionEdition, CampaignEdition, HelpPageEdition].include? self.class
-  end
-
-  def paths
-    if register_exact_route?
-      ["/#{slug}", "/#{slug}.json"]
-    else
-      ["/#{slug}.json"]
-    end
-  end
-
-  def prefixes
-    if register_exact_route?
-      []
-    else
-      ["/#{slug}"]
-    end
-  end
-
   def update_artefact
     check_if_archived
     artefact.update_from_edition(self)
@@ -126,8 +116,8 @@ class Edition
 
   def register_with_rummager
     check_if_archived
-    registerable_edition = RegisterableEdition.new(self)
-    SearchIndexer.call(registerable_edition)
+    presenter = SearchIndexPresenter.new(self)
+    SearchIndexer.call(presenter)
   end
 
   def artefact

@@ -17,9 +17,5 @@ module Formats
         external_related_links: external_related_links,
       }
     end
-
-    def registers_exact_route?
-      true
-    end
   end
 end
