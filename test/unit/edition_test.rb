@@ -62,12 +62,6 @@ class EditionTest < ActiveSupport::TestCase
         edition.artefact.update_attribute(:kind, 'help_page')
         assert_equal edition.fact_check_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
       end
-
-      should "return nil if edition is in in any other state" do
-        edition = FactoryGirl.create(:edition, state: 'draft')
-        edition.artefact.update_attribute(:kind, 'help_page')
-        assert_nil edition.fact_check_id
-      end
     end
 
     context "for a format that has not yet been migrated" do
