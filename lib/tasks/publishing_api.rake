@@ -11,6 +11,12 @@ namespace :publishing_api do
     republish_draft format_editions.draft_in_publishing_api
   end
 
+  task :republish_drafts_by_format, [:format] => :environment do |_, args|
+    format_editions = Edition.by_format(args[:format])
+
+    republish_draft format_editions.draft_in_publishing_api
+  end
+
   def republish(editions)
     puts
     puts "Scheduling republishing of #{editions.count} editions"
