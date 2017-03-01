@@ -6,6 +6,10 @@ module Formats
       'answer'
     end
 
+    def document_type
+      'answer'
+    end
+
     def details
       {
         body: [

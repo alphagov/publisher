@@ -6,6 +6,10 @@ module Formats
       "generic_with_external_related_links"
     end
 
+    def document_type
+      @artefact.kind
+    end
+
     def path_type
       case @edition.class
       when TransactionEdition, CampaignEdition

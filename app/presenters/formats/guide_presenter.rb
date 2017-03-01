@@ -6,6 +6,10 @@ module Formats
       'guide'
     end
 
+    def document_type
+      'guide'
+    end
+
     def details
       {
         parts: parts,

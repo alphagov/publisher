@@ -6,6 +6,10 @@ module Formats
       'simple_smart_answer'
     end
 
+    def document_type
+      'simple_smart_answer'
+    end
+
     def details
       required_details
         .merge(optional_details)

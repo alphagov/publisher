@@ -6,6 +6,10 @@ module Formats
       'local_transaction'
     end
 
+    def document_type
+      'local_transaction'
+    end
+
     def details
       required_details
       .merge(optional_details)
