@@ -35,6 +35,11 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase#
       assert result == "Formats::LocalTransactionPresenter"
     end
 
+    should "return a presenter for Places" do
+      result = EditionPresenterFactory.presenter_class("PlaceEdition")
+      assert result == "Formats::PlacePresenter"
+    end
+
     should "return a presenter for SimpleSmartAnswers" do
       result = EditionPresenterFactory.presenter_class("SimpleSmartAnswerEdition")
       assert result == "Formats::SimpleSmartAnswerPresenter"
