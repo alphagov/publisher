@@ -129,7 +129,7 @@ class Edition
   end
 
   def fact_check_id
-    if %w(fact_check fact_check_received ready).include?(state) && migrated?
+    if migrated?
       ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000

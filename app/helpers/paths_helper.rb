@@ -3,21 +3,16 @@ module PathsHelper
     "#{preview_url(edition)}/#{edition.slug}"
   end
 
-  def fact_check_edition_path(edition)
-    if edition.fact_check_id
-      token = jwt_token(sub: edition.fact_check_id)
-      url = preview_edition_path(edition)
-      url << "&token=#{token}"
-      url
-    else
-      preview_edition_path(edition)
-    end
-  end
-
   def preview_edition_path(edition, cache_bust = Time.zone.now.to_i)
     path = edition_front_end_path(edition) + "?"
     path << "edition=#{edition.version_number}&" unless edition.migrated?
     path << "cache=#{cache_bust}"
+
+    if edition.migrated? && edition.state != "published" && edition.fact_check_id
+      token = jwt_token(sub: edition.fact_check_id)
+      path << "&token=#{token}"
+    end
+
     path
   end
 
