@@ -20,15 +20,22 @@ class SearchPayloadPresenter
   def present
     {
       content_id: artefact.content_id,
-      rendering_app: "publisher",
-      publishing_app: "publisher",
+      rendering_app: publishing_api_payload.fetch(:rendering_app),
+      publishing_app: publishing_api_payload.fetch(:publishing_app),
       format: format.underscore,
       title: title,
       description: description,
       indexable_content: indexable_content,
       link: "/#{slug}",
       public_timestamp: public_timestamp,
-      content_store_document_type: artefact.kind,
+      content_store_document_type: publishing_api_payload.fetch(:document_type),
     }
+  end
+
+  def publishing_api_payload
+    @publishing_api_payload ||= begin
+      presenter = EditionPresenterFactory.get_presenter(registerable_edition)
+      presenter.render_for_publishing_api
+    end
   end
 end

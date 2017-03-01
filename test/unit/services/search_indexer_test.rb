@@ -20,7 +20,7 @@ class SearchIndexerTest < ActiveSupport::TestCase
       'edition',
       "/#{edition.slug}",
       content_id: "content-id",
-      rendering_app: "publisher",
+      rendering_app: "frontend",
       publishing_app: "publisher",
       format: "answer",
       title: "A title",

@@ -6,6 +6,10 @@ module Formats
       'help_page'
     end
 
+    def document_type
+      'help_page'
+    end
+
     def details
       {
         body: [
