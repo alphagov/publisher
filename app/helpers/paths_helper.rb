@@ -8,7 +8,7 @@ module PathsHelper
     path << "edition=#{edition.version_number}&" unless edition.migrated?
     path << "cache=#{cache_bust}"
 
-    if edition.migrated? && edition.state != "published" && edition.fact_check_id
+    if should_have_fact_check_id?(edition)
       token = jwt_token(sub: edition.fact_check_id)
       path << "&token=#{token}"
     end
@@ -48,5 +48,13 @@ protected
     else
       Plek.current.find("private-frontend")
     end
+  end
+
+private
+
+  def should_have_fact_check_id?(edition)
+    edition.migrated? &&
+    %w(published archived).exclude?(edition.state) &&
+    edition.fact_check_id
   end
 end
