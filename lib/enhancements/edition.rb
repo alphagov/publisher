@@ -27,6 +27,7 @@ class Edition
 
   MIGRATED_EDITION_CLASSES = [
     AnswerEdition,
+    CompletedTransactionEdition,
     GuideEdition,
     HelpPageEdition,
     LocalTransactionEdition,

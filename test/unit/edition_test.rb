@@ -83,6 +83,11 @@ class EditionTest < ActiveSupport::TestCase
       assert edition.migrated?
     end
 
+    should "return true for a CompletedTransactionEdition" do
+      edition = FactoryGirl.build(:completed_transaction_edition)
+      assert edition.migrated?
+    end
+
     should "return true for an LocalTransactionEdition" do
       edition = FactoryGirl.build(:local_transaction_edition)
       assert edition.migrated?

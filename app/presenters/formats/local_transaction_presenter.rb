@@ -16,8 +16,6 @@ module Formats
       .merge(external_related_links: external_related_links)
     end
 
-  private
-
     def required_details
       {
         lgsl_code: edition.lgsl_code,
