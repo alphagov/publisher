@@ -117,5 +117,10 @@ class EditionTest < ActiveSupport::TestCase
       edition = FactoryGirl.build(:guide_edition)
       assert edition.migrated?
     end
+
+    should "return true for a TransactionEdition" do
+      edition = FactoryGirl.build(:transaction_edition)
+      assert edition.migrated?
+    end
   end
 end
