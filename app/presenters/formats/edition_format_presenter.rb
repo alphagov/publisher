@@ -20,6 +20,10 @@ module Formats
         fields[:access_limited] = { fact_check_ids: [edition.fact_check_id] }
       end
 
+      if edition.in_beta
+        fields[:phase] = "beta"
+      end
+
       fields
     end
 

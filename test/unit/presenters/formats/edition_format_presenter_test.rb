@@ -6,7 +6,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= stub(artefact: artefact)
+    @_edition ||= stub(artefact: artefact, in_beta: false)
   end
 
   def artefact
@@ -64,6 +64,20 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
     should "[:need_ids]" do
       assert_equal [], result[:need_ids]
+    end
+
+    context "when in beta" do
+      should "include phase" do
+        edition.expects(:in_beta).returns(true)
+        assert_equal "beta", result[:phase]
+      end
+    end
+
+    context "when not in beta" do
+      should "not include phase" do
+        edition.expects(:in_beta).returns(false)
+        refute_includes result.keys, :phase
+      end
     end
 
     context "[:public_updated_at]" do
