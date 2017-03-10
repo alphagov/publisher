@@ -15,6 +15,15 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     @_artefact ||= FactoryGirl.create(:artefact, kind: "transaction")
   end
 
+  def create_downtime(message, start_time: Time.zone.yesterday.at_midnight)
+    Downtime.create(
+      artefact: artefact,
+      start_time: start_time,
+      end_time: Time.zone.tomorrow.at_midnight,
+      message: message
+    )
+  end
+
   def result
     subject.render_for_publishing_api
   end
@@ -98,6 +107,27 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     should "[:department_analytics_profile]" do
       edition.update_attribute(:department_analytics_profile, 'UA-000000-2')
       assert_equal 'UA-000000-2', result[:details][:department_analytics_profile]
+    end
+
+    context "[:downtime_message]" do
+      context "when there is a downtime association" do
+        should "show if we're in the publicize window" do
+          message = 'this transaction is unavailable tomorrow'
+          create_downtime(message)
+          assert message, result[:details][:downtime_message]
+        end
+
+        should "not render downtime if we're outside the publicize window" do
+          create_downtime('foo', start_time: Time.zone.tomorrow.at_midday)
+          assert_nil result[:details][:downtime_message]
+        end
+      end
+
+      context "when there's no downtime scheduled" do
+        should "not render downtime" do
+          assert_nil result[:details][:downtime_message]
+        end
+      end
     end
   end
 

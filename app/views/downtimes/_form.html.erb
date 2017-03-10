@@ -9,7 +9,7 @@
 <div class="form-group form-inline js-start-time">
   <%= f.label :start_time, 'This service will be unavailable from' %><br />
   <span>
-  <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
+  <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour, ignore_date: true }, { class: 'date form-control' } %>
 </span>
   <b class="add-left-margin add-right-margin">on</b>
   <%= f.date_select :start_time, { order: [:day, :month, :year], default: Date.tomorrow,
@@ -19,7 +19,7 @@
 <div class="form-group form-inline js-stop-time">
   <%= f.label :end_time, 'to' %><br />
   <span>
-  <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour }, { class: 'date form-control' } %>
+  <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour, ignore_date: true }, { class: 'date form-control' } %>
   </span>
   <b class="add-left-margin add-right-margin">on</b>
   <%= f.date_select :end_time, { order: [:day, :month, :year], default: Date.tomorrow,

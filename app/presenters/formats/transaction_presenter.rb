@@ -19,7 +19,8 @@ module Formats
         other_ways_to_apply: govspeak(:alternate_methods),
         what_you_need_to_know: govspeak(:need_to_know),
         external_related_links: external_related_links,
-        department_analytics_profile: edition.department_analytics_profile
+        department_analytics_profile: edition.department_analytics_profile,
+        downtime_message: downtime_message
       }.delete_if { |_, value| value.nil? }
     end
 
@@ -31,6 +32,12 @@ module Formats
             content: edition.send(field).to_s
           }
         ]
+      end
+    end
+
+    def downtime_message
+      if artefact.downtime && artefact.downtime.publicise?
+        artefact.downtime.message
       end
     end
   end

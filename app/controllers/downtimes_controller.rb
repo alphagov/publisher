@@ -12,9 +12,8 @@ class DowntimesController < ApplicationController
 
   def create
     @downtime = Downtime.new(downtime_params)
-
     if @downtime.save
-      ExpiredDowntimeCleaner.enqueue(@downtime)
+      DowntimeScheduler.schedule_publish_and_expiry(@downtime)
       flash[:success] = "#{edition_link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
@@ -30,15 +29,11 @@ class DowntimesController < ApplicationController
     @downtime = Downtime.for(@edition.artefact)
 
     if params['commit'] == 'Cancel downtime'
-      @downtime.destroy
-      ExpiredDowntimeCleaner.dequeue_existing_jobs(@downtime)
+      DowntimeRemover.destroy_immediately(@downtime)
       flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
-      return
-    end
-
-    if @downtime.update_attributes(downtime_params)
-      ExpiredDowntimeCleaner.enqueue(@downtime)
+    elsif @downtime.update_attributes(downtime_params)
+      DowntimeScheduler.schedule_publish_and_expiry(@downtime)
       flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else

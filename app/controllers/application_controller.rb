@@ -24,9 +24,8 @@ class ApplicationController < ActionController::Base
 
   def squash_multiparameter_datetime_attributes(params, attribute_names)
     attribute_names.each do |attribute_name|
-      datetime_params = params.select { |k, v| k.include? attribute_name }.values.map(&:to_i)
-      params.delete_if { |k, v| k.include? attribute_name }
-
+      datetime_params = params.select { |k, _| k.include? attribute_name }.sort.map { |_, v| v.to_i }
+      params.delete_if { |k, _| k.include? attribute_name }
       params[attribute_name] = Time.zone.local(*datetime_params) if datetime_params.present?
     end
     params
