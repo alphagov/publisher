@@ -10,7 +10,7 @@ class RepublishContentTest < ActiveSupport::TestCase
 
   context "#publishing_api:republish_content" do
     should "republish both draft and published editions" do
-      PublishingAPIRepublisher.expects(:perform_async).with(@published_edition.id.to_s)
+      RepublishWorker.expects(:perform_async).with(@published_edition.id.to_s)
       UpdateWorker.expects(:perform_async).with(@draft_edition.id.to_s)
 
       # This is to prevent the rake task ouputting to the console

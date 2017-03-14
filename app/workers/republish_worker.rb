@@ -1,4 +1,4 @@
-class PublishingAPIRepublisher
+class RepublishWorker
   include Sidekiq::Worker
 
   def perform(edition_id)
