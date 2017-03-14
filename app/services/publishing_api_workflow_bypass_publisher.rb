@@ -32,12 +32,12 @@ private
   end
 
   def republish_currently_live_edition
-    PublishingAPIUpdater.new.perform(live_edition.id)
-    PublishService.call(edition, 'republish')
+    UpdateService.call(live_edition)
+    PublishService.call(live_edition, 'republish')
   end
 
   def put_draft_content
-    PublishingAPIUpdater.new.perform(draft_edition.id)
+    UpdateService.call(draft_edition)
   end
 
   def live_edition

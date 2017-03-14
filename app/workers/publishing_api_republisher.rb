@@ -3,7 +3,7 @@ class PublishingAPIRepublisher
 
   def perform(edition_id)
     edition = Edition.find(edition_id)
-    PublishingAPIUpdater.new.perform(edition_id, 'republish')
+    UpdateService.call(edition, 'republish')
     PublishService.call(edition, 'republish')
   end
 end

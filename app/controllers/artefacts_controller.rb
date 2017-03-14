@@ -15,7 +15,7 @@ class ArtefactsController < ApplicationController
   def update
     artefact = Artefact.find(updatable_params[:id])
     if artefact.update_attributes_as(current_user, updatable_params)
-      PublishingAPIUpdater.perform_async(artefact.latest_edition_id)
+      UpdateWorker.perform_async(artefact.latest_edition_id)
       flash[:notice] = "Metadata updated"
     else
       flash[:danger] = artefact.errors.full_messages.join("\n")

@@ -17,7 +17,7 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
 
     fill_in "Slug", with: "thingy-mc-thingface"
 
-    PublishingAPIUpdater.expects(:perform_async).with(edition.id.to_s)
+    UpdateWorker.expects(:perform_async).with(edition.id.to_s)
     click_button "Update metadata"
     edition.reload
 

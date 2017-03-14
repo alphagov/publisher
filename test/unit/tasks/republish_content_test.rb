@@ -11,7 +11,7 @@ class RepublishContentTest < ActiveSupport::TestCase
   context "#publishing_api:republish_content" do
     should "republish both draft and published editions" do
       PublishingAPIRepublisher.expects(:perform_async).with(@published_edition.id.to_s)
-      PublishingAPIUpdater.expects(:perform_async).with(@draft_edition.id.to_s)
+      UpdateWorker.expects(:perform_async).with(@draft_edition.id.to_s)
 
       # This is to prevent the rake task ouputting to the console
       silence_stream(STDOUT) do
@@ -24,7 +24,7 @@ class RepublishContentTest < ActiveSupport::TestCase
 
   context "#publishing_api:republish_by_format" do
     should "only republish items of that format" do
-      PublishingAPIUpdater.expects(:perform_async).with(@draft_edition.id.to_s)
+      UpdateWorker.expects(:perform_async).with(@draft_edition.id.to_s)
 
       # This is to prevent the rake task ouputting to the console
       silence_stream(STDOUT) do
