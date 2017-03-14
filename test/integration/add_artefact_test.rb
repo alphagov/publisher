@@ -28,4 +28,12 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
     assert edition.artefact.name == "Thingy McThingface"
     assert edition.artefact.slug == "help/thingy"
   end
+
+  should "not allow the creation of a retired format artefact" do
+    visit root_path
+    click_link "Add artefact"
+
+    options = find_field("Format").find_all('option').map(&:value)
+    assert_empty options & Artefact::RETIRED_FORMATS
+  end
 end
