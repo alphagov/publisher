@@ -4,7 +4,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
   setup do
     Services.publishing_api.stubs(:discard_draft)
     PublishingAPIUpdater.any_instance.stubs(:perform)
-    PublishingAPIPublisher.any_instance.stubs(:perform)
+    PublishService.stubs(:call)
   end
 
   context ".call" do
@@ -23,7 +23,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
 
       should "publish the currently live edition" do
         create_draft_and_live_editions
-        PublishingAPIPublisher.any_instance.expects(:perform).with(live_edition.id, 'republish').once
+        PublishService.expects(:call).with(live_edition.id, 'republish').once
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
 
@@ -49,7 +49,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
 
       should "publish the currently live edition" do
         create_live_edition
-        PublishingAPIPublisher.any_instance.expects(:perform).with(live_edition.id, 'republish').once
+        PublishService.expects(:call).with(live_edition.id, 'republish').once
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
     end
@@ -58,7 +58,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
       should "does nothing" do
         create_archived_edition
         PublishingAPIUpdater.any_instance.expects(:perform).never
-        PublishingAPIPublisher.any_instance.expects(:perform).never
+        PublishService.expects(:call).never
         Services.publishing_api.expects(:discard_draft).never
 
         PublishingApiWorkflowBypassPublisher.call(artefact)
@@ -68,7 +68,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
     context "when the artefact is nil" do
       should "does nothing" do
         PublishingAPIUpdater.any_instance.expects(:perform).never
-        PublishingAPIPublisher.any_instance.expects(:perform).never
+        PublishService.expects(:call).never
         Services.publishing_api.expects(:discard_draft).never
 
         PublishingApiWorkflowBypassPublisher.call(nil)

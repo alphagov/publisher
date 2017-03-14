@@ -2,26 +2,45 @@ require 'test_helper'
 
 class PublishServiceTest < ActiveSupport::TestCase
   setup do
-    @edition = stub(id: 123, register_with_rummager: true)
-    PublishingAPIPublisher.stubs(:perform_async)
-    PublishingAPIUpdater.stubs(:perform_async)
+    Services.publishing_api.stubs(:publish)
   end
 
   should "register edition with Rummager" do
-    @edition.expects(:register_with_rummager)
+    edition.expects(:register_with_rummager)
 
-    PublishService.call(@edition)
+    PublishService.call(edition)
   end
 
   should "publish edition to PublishingAPI" do
-    PublishingAPIPublisher.expects(:perform_async).with('123')
+    Services.publishing_api.expects(:publish).with(
+      content_id,
+      update_type,
+      locale: language
+    )
 
-    PublishService.call(@edition)
+    PublishService.call(edition, update_type)
   end
 
-  should "create new draft in PublishingAPI" do
-    PublishingAPIUpdater.expects(:perform_async).with('123')
+  def edition
+    @_edition ||= stub(
+      id: 123,
+      register_with_rummager: true,
+      artefact: stub(
+        content_id: content_id,
+        language: language
+      )
+    )
+  end
 
-    PublishService.call(@edition)
+  def content_id
+    'swans'
+  end
+
+  def update_type
+    'ducks'
+  end
+
+  def language
+    'foreign'
   end
 end

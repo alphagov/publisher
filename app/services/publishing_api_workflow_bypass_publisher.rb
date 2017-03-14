@@ -33,7 +33,7 @@ private
 
   def republish_currently_live_edition
     PublishingAPIUpdater.new.perform(live_edition.id)
-    PublishingAPIPublisher.new.perform(live_edition.id, 'republish')
+    PublishService.call(edition, 'republish')
   end
 
   def put_draft_content

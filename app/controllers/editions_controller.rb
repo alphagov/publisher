@@ -89,7 +89,7 @@ class EditionsController < InheritedResources::Base
         update_assignment resource, assign_to
 
         UpdateService.call(resource)
-        PublishService.call(resource) if update_action_is_publish?
+        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
 
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -108,7 +108,7 @@ class EditionsController < InheritedResources::Base
         update_assignment resource, assign_to
 
         UpdateService.call(resource)
-        PublishService.call(resource) if update_action_is_publish?
+        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
 
         render :json => resource
       }
@@ -184,7 +184,7 @@ class EditionsController < InheritedResources::Base
 
   def progress
     if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
-      PublishService.call(resource) if progress_action_is_publish?
+      PublishWorker.perform_async(resource.id.to_s) if progress_action_is_publish?
 
       flash[:success] = @command.status_message
     else
