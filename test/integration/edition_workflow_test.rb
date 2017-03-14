@@ -238,6 +238,16 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     assert page.has_text?('View this on the GOV.UK website')
+
+  test "cannot create a new edition for a retired format" do
+    FactoryGirl.create(:video_edition, state: 'archived')
+
+    visit '/'
+    select "Video", from: "Format"
+    filter_for_all_users
+    view_filtered_list "Archived"
+
+    assert_not page.has_content? "Create new edition"
   end
 
   test "should link to a newer sibling" do
