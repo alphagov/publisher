@@ -16,6 +16,8 @@ class EditionPresenterFactory
         "Formats::HelpPagePresenter"
       when "LocalTransactionEdition"
         "Formats::LocalTransactionPresenter"
+      when "LicenceEdition"
+        "Formats::LicencePresenter"
       when "PlaceEdition"
         "Formats::PlacePresenter"
       when "SimpleSmartAnswerEdition"
