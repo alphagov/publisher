@@ -67,7 +67,7 @@
     <% elsif resource.safe_to_preview? %>
       Preview edition at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.<br />
     <% else %>
-      This edition can’t be previewed yet.<br />
+      This edition can’t be previewed.<br />
     <% end %>
     Send fact check responses to <%= mail_to resource.fact_check_email_address %>
   </p>

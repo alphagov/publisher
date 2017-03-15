@@ -10,7 +10,7 @@ gem 'gds-sso', '~> 11.2'
 gem 'gds-api-adapters', '~> 40.1.0'
 gem 'govspeak', '~> 3.4.0'
 gem 'govuk_admin_template', '4.2.0'
-gem "govuk_content_models", "~> 43.2.0"
+gem "govuk_content_models", '44.0.0'
 gem 'govuk_sidekiq', '0.0.4'
 gem 'has_scope'
 gem 'inherited_resources'

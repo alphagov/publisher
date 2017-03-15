@@ -35,6 +35,16 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/#{@answer.slug}")
     end
 
+    should "not show the view link for archived editions" do
+      @answer.update_attribute(:state, 'archived')
+
+      visit "/editions/#{@answer.id}"
+      click_on "History and notes"
+
+      refute page.has_css?('#edition-history p.add-bottom-margin', text: "Preview edition at")
+      refute page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+    end
+
     should "have the first history actions visible" do
       visit "/editions/#{@guide.id}"
       click_on "History and notes"
