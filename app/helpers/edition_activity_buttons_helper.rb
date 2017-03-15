@@ -52,7 +52,11 @@ module EditionActivityButtonsHelper
   end
 
   def preview_button(edition)
-    link_to('Preview', preview_edition_path(edition), class: 'btn btn-primary btn-large')
+    if edition.published?
+      link_to('View this on the GOV.UK website', "#{Plek.new.website_root}/#{edition.slug}", class: 'btn btn-primary btn-large')
+    else
+      link_to('Preview', preview_edition_path(edition), class: 'btn btn-primary btn-large')
+    end
   end
 
   def skip_review?

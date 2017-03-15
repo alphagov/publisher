@@ -226,6 +226,20 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? "New edition created"
   end
 
+  test "can preview a draft article on draft-origin" do
+    guide.update_attribute(:state, 'draft')
+
+    visit_edition guide
+    assert page.has_text?('Preview')
+  end
+
+  test "can view a published article on the live site" do
+    guide.update_attribute(:state, 'published')
+
+    visit_edition guide
+    assert page.has_text?('View this on the GOV.UK website')
+  end
+
   test "should link to a newer sibling" do
     artefact = FactoryGirl.create(:artefact)
     old_edition = FactoryGirl.create(
