@@ -47,8 +47,6 @@ module Formats
       }
     end
 
-  private
-
     def schema_name
       "override me"
     end
@@ -62,7 +60,7 @@ module Formats
     end
 
     def external_related_links
-      edition.artefact.external_links.map do |link|
+      artefact.external_links.map do |link|
         {
           url: link["url"],
           title: link["title"]
