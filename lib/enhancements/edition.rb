@@ -31,6 +31,7 @@ class Edition
     GuideEdition,
     HelpPageEdition,
     LocalTransactionEdition,
+    PlaceEdition,
     SimpleSmartAnswerEdition,
   ].freeze
 
