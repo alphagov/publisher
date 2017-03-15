@@ -15,15 +15,9 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
 
-      should "put a new copy of the currently live edition" do
+      should "republish the currently live edition" do
         create_draft_and_live_editions
-        UpdateService.expects(:call).with(live_edition).once
-        PublishingApiWorkflowBypassPublisher.call(artefact)
-      end
-
-      should "publish the currently live edition" do
-        create_draft_and_live_editions
-        PublishService.expects(:call).with(live_edition.id, 'republish').once
+        RepublishService.expects(:call).with(live_edition).once
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
 
@@ -41,15 +35,9 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
 
-      should "put a new copy of the currently live edition" do
+      should "republish the currently live edition" do
         create_live_edition
-        UpdateService.expects(:call).with(live_edition).once
-        PublishingApiWorkflowBypassPublisher.call(artefact)
-      end
-
-      should "publish the currently live edition" do
-        create_live_edition
-        PublishService.expects(:call).with(live_edition.id, 'republish').once
+        RepublishService.expects(:call).with(live_edition).once
         PublishingApiWorkflowBypassPublisher.call(artefact)
       end
     end
@@ -58,7 +46,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
       should "does nothing" do
         create_archived_edition
         UpdateService.expects(:call).never
-        PublishService.expects(:call).never
+        RepublishService.expects(:call).never
         Services.publishing_api.expects(:discard_draft).never
 
         PublishingApiWorkflowBypassPublisher.call(artefact)
@@ -68,7 +56,7 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
     context "when the artefact is nil" do
       should "does nothing" do
         UpdateService.expects(:call).never
-        PublishService.expects(:call).never
+        RepublishService.expects(:call).never
         Services.publishing_api.expects(:discard_draft).never
 
         PublishingApiWorkflowBypassPublisher.call(nil)

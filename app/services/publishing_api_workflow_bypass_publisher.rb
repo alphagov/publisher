@@ -32,8 +32,7 @@ private
   end
 
   def republish_currently_live_edition
-    UpdateService.call(live_edition)
-    PublishService.call(live_edition, 'republish')
+    RepublishService.call(live_edition)
   end
 
   def put_draft_content

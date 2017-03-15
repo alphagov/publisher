@@ -3,7 +3,6 @@ class RepublishWorker
 
   def perform(edition_id)
     edition = Edition.find(edition_id)
-    UpdateService.call(edition, 'republish')
-    PublishService.call(edition, 'republish')
+    RepublishService.call(edition)
   end
 end
