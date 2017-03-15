@@ -36,7 +36,7 @@ class UnpublishTest < ActionDispatch::IntegrationTest
 
     within(".callout-danger") do
       assert page.has_content?("You can’t edit this publication")
-      assert page.has_content?("This publication’s artefact file has been archived")
+      assert page.has_content?("All editions have been archived.")
     end
   end
 
