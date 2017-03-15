@@ -4,15 +4,12 @@ class UnpublishTest < ActionDispatch::IntegrationTest
   setup do
     @artefact = FactoryGirl.create(:artefact,
        slug: "bertie-botts-every-flavour-beans",
-       kind: "video",
+       kind: "answer",
        name: "Bertie Bott's Every Flavour Beans",
        owning_app: "publisher")
 
-    @edition = FactoryGirl.create(:video_edition,
+    @edition = FactoryGirl.create(:answer_edition,
                                    panopticon_id: @artefact.id,
-                                   title: "Bertie Bott's Every Flavour Beans",
-                                   video_url: "http://www.youtube.com/watch?v=qySFp3qnVmM",
-                                   video_summary: "All about Bertie Bott's Every Flavour Beans",
                                    body: "They're quite gross.")
     setup_users
     stub_linkables
