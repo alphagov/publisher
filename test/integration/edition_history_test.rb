@@ -27,6 +27,13 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
     end
 
+    should "direct the user to view a published edition on GOV.UK directly, not draft" do
+      visit "/editions/#{@answer.id}"
+      click_on "History and notes"
+
+      assert page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+    end
+
     should "have the first history actions visible" do
       visit "/editions/#{@guide.id}"
       click_on "History and notes"

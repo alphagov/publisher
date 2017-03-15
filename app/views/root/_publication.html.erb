@@ -10,7 +10,9 @@
       <% end %>
     </h4>
 
-    <% if publication.safe_to_preview? %>
+    <% if publication.published? %>
+      <%= link_to "#{Plek.new.website_root}/#{publication.slug}", class: 'link-muted' %>
+    <% elsif publication.safe_to_preview? %>
       <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: 'link-muted' %>
     <% else %>
       <span class="text-muted"><%= publication.slug %></span>
