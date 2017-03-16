@@ -71,16 +71,11 @@ module Formats
     def routes
       [
         { path: "#{base_path}", type: path_type },
-        { path: "#{json_path}", type: "exact" }
       ]
     end
 
     def base_path
       "/#{edition.slug}"
-    end
-
-    def json_path
-      "#{base_path}.json"
     end
 
     # TransactionEdition, CampaignEdition, HelpPageEdition

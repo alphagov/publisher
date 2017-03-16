@@ -35,7 +35,6 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         rendering_app: "frontend",
         routes: [
           { path: "/#{@edition.slug}", type: "prefix" },
-          { path: "/#{@edition.slug}.json", type: "exact" }
         ],
         redirects: [],
         update_type: "major",
@@ -107,7 +106,6 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     should "have a exact route type for both path and json path" do
       exact_routes = [
         { path: "/#{@edition.slug}", type: "exact" },
-        { path: "/#{@edition.slug}.json", type: "exact" }
       ]
 
       assert_equal @output[:routes], exact_routes

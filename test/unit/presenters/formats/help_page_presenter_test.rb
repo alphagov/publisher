@@ -57,7 +57,6 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
     edition.update_attribute(:slug, 'foo')
     expected = [
       { path: '/foo', type: 'exact' },
-      { path: '/foo.json', type: 'exact' }
     ]
     assert_equal expected, result[:routes]
   end
