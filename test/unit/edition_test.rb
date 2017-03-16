@@ -43,31 +43,31 @@ class EditionTest < ActiveSupport::TestCase
     assert_match "Internal links must start with a forward slash", exception.message
   end
 
-  context "#fact_check_id" do
+  context "#auth_bypass_id" do
     context "for a migrated format" do
       should "return a deterministic hex id if edition is in fact-check state" do
         edition = FactoryGirl.create(:edition, state: 'fact_check', id: 123)
         edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.fact_check_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
+        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
       end
 
       should "return a deterministic hex id if edition is in fact-check-received state" do
         edition = FactoryGirl.create(:edition, state: 'fact_check_received', id: 123)
         edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.fact_check_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
+        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
       end
 
       should "return a deterministic hex id if edition is in ready state" do
         edition = FactoryGirl.create(:edition, state: 'ready', id: 123)
         edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.fact_check_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
+        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
       end
     end
 
     context "for a format that has not yet been migrated" do
       should "return nil" do
         edition = FactoryGirl.create(:video_edition, state: 'fact_check_received')
-        assert_nil edition.fact_check_id
+        assert_nil edition.auth_bypass_id
       end
     end
   end

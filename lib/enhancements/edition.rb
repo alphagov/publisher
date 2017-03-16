@@ -132,12 +132,14 @@ class Edition
     Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"] - Artefact::RETIRED_FORMATS
   end
 
-  def fact_check_id
-    if migrated?
-      ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
-      ary[2] = (ary[2] & 0x0fff) | 0x4000
-      ary[3] = (ary[3] & 0x3fff) | 0x8000
-      "%08x-%04x-%04x-%04x-%04x%08x" % ary
+  def auth_bypass_id
+    @_auth_bypass_id ||= begin
+      if migrated?
+        ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
+        ary[2] = (ary[2] & 0x0fff) | 0x4000
+        ary[3] = (ary[3] & 0x3fff) | 0x8000
+        "%08x-%04x-%04x-%04x-%04x%08x" % ary
+      end
     end
   end
 
