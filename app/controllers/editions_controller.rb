@@ -260,7 +260,7 @@ protected
         :organisation_brand_colour,
         :body,
       ]
-    when :guide_edition, :programme_edition
+    when :guide_edition
       [
         parts_attributes: [:title, :body, :slug, :order, :id, :_destroy]
       ]

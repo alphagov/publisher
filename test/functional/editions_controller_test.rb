@@ -279,10 +279,10 @@ class EditionsControllerTest < ActionController::TestCase
       @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
 
       artefact2 = FactoryGirl.create(:artefact, slug: "test2",
-          kind: "programme",
+          kind: "guide",
           name: "test",
           owning_app: "publisher")
-      @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
       stub_request(:delete, "#{Plek.current.find('arbiter')}/slugs/test").to_return(status: 200)
     end
@@ -306,25 +306,25 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
 
-    should "destroy programme" do
-      assert @programme.can_destroy?
-      assert_difference('ProgrammeEdition.count', -1) do
-        delete :destroy, id: @programme.id
+    should "destroy guide" do
+      assert @guide.can_destroy?
+      assert_difference('GuideEdition.count', -1) do
+        delete :destroy, id: @guide.id
       end
       assert_redirected_to(:controller => "root", "action" => "index")
     end
 
-    should "can't destroy published programme" do
-      @programme.state = 'ready'
-      @programme.save!
+    should "can't destroy published guide" do
+      @guide.state = 'ready'
+      @guide.save!
       stub_register_published_content
-      @programme.publish
-      @programme.save!
-      assert @programme.published?
-      assert !@programme.can_destroy?
+      @guide.publish
+      @guide.save!
+      assert @guide.published?
+      assert !@guide.can_destroy?
 
-      assert_difference('ProgrammeEdition.count', 0) do
-        delete :destroy, id: @programme.id
+      assert_difference('GuideEdition.count', 0) do
+        delete :destroy, id: @guide.id
       end
     end
   end
@@ -340,10 +340,10 @@ class EditionsControllerTest < ActionController::TestCase
   context "#show" do
     setup do
       artefact2 = FactoryGirl.create(:artefact, slug: "test2",
-          kind: "programme",
+          kind: "guide",
           name: "test",
           owning_app: "publisher")
-      @programme = ProgrammeEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
@@ -351,8 +351,8 @@ class EditionsControllerTest < ActionController::TestCase
       assert_response 404
     end
 
-    should "we can view a programme" do
-      get :show, id: @programme.id
+    should "we can view a guide" do
+      get :show, id: @guide.id
       assert_response :success
       refute_nil assigns(:resource)
     end
