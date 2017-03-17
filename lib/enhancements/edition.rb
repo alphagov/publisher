@@ -34,6 +34,7 @@ class Edition
     LicenceEdition,
     PlaceEdition,
     SimpleSmartAnswerEdition,
+    TransactionEdition,
   ].freeze
 
   EXACT_ROUTE_EDITION_CLASSES = [

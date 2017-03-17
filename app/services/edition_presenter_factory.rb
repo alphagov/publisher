@@ -22,6 +22,8 @@ class EditionPresenterFactory
         "Formats::PlacePresenter"
       when "SimpleSmartAnswerEdition"
         "Formats::SimpleSmartAnswerPresenter"
+      when "TransactionEdition"
+        "Formats::TransactionPresenter"
       else
         "Formats::GenericEditionPresenter"
       end

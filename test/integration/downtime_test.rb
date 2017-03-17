@@ -1,62 +1,114 @@
 require 'integration_test_helper'
 
 class DowntimeTest < JavascriptIntegrationTest
-  teardown do
-    Sidekiq::ScheduledSet.new.clear
+  setup do
+    setup_users
+
+    @edition = FactoryGirl.create(
+      :transaction_edition,
+      :published,
+      title: 'Apply to become a driving instructor',
+      slug: 'apply-to-become-a-driving-instructor'
+    )
+
+    WebMock.reset!
+    stub_any_publishing_api_put_content
+    stub_any_publishing_api_publish
   end
 
-  test "scheduling and removing downtime" do
-    Sidekiq::Testing.disable! do
-      setup_users
+  test "Scheduling new downtime" do
+    DowntimeScheduler.stubs(:schedule_publish_and_expiry)
 
-      transaction = FactoryGirl.create(:transaction_edition, :published,
-        title: 'Apply to become a driving instructor', slug: 'apply-to-become-a-driving-instructor')
+    visit root_path
+    click_link 'Downtime'
+    click_link 'Apply to become a driving instructor'
 
-      visit root_path
-      click_link 'Downtime'
-      click_link 'Apply to become a driving instructor'
+    enter_start_time first_of_july_next_year_at_midday_bst
+    enter_end_time first_of_july_next_year_at_six_pm_bst
 
-      tomorrow = Date.tomorrow
-      select tomorrow.year.to_s, from: 'downtime_start_time_1i'
-      select tomorrow.strftime('%B'), from: 'downtime_start_time_2i'
-      select tomorrow.day.to_s, from: 'downtime_start_time_3i'
-      select '12', from: 'downtime_start_time_4i'
-      select '00', from: 'downtime_start_time_5i'
+    assert_match("midday to 6pm on #{day} 1 July", page.find_field('Message').value)
+    click_button 'Schedule downtime message'
 
-      select tomorrow.year.to_s, from: 'downtime_end_time_1i'
-      select tomorrow.strftime('%B'), from: 'downtime_end_time_2i'
-      select tomorrow.day.to_s, from: 'downtime_end_time_3i'
-      select '18', from: 'downtime_end_time_4i'
-      select '00', from: 'downtime_end_time_5i'
-      assert_match("midday to 6pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
-      click_on 'Schedule downtime'
+    assert page.has_content?('Apply to become a driving instructor downtime message scheduled')
+    assert page.has_content?('Scheduled downtime')
+    assert page.has_content?("midday to 6pm on 1 July")
+  end
 
-      assert_equal 1, Sidekiq::ScheduledSet.new.size
-      assert_equal [Downtime.last.id.to_s, { "authenticated_user" => nil, "request_id" => nil }], Sidekiq::ScheduledSet.new.first.args
+  test "Rescheduling downtime" do
+    DowntimeScheduler.stubs(:schedule_publish_and_expiry)
+    create_downtime
 
-      assert page.has_content?('Apply to become a driving instructor downtime message scheduled')
-      assert page.has_content?('Scheduled downtime')
-      assert page.has_content?("midday to 6pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
+    visit root_path
+    click_link 'Downtime'
+    click_link 'Edit downtime'
+    enter_end_time first_of_july_next_year_at_nine_thirty_pm_bst
 
-      click_link 'Edit downtime'
-      select '21', from: 'downtime_end_time_4i'
-      select '30', from: 'downtime_end_time_5i'
-      assert_match("midday to 9:30pm on #{tomorrow.strftime('%A')} #{tomorrow.day} #{tomorrow.strftime('%b')}", page.find_field('Message').value)
-      click_on 'Re-schedule downtime message'
+    assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field('Message').value)
+    click_on 'Re-schedule downtime message'
 
-      assert_equal 1, Sidekiq::ScheduledSet.new.size
-      assert_equal [Downtime.last.id.to_s, { "authenticated_user" => nil, "request_id" => nil }], Sidekiq::ScheduledSet.new.first.args
+    assert page.has_content?('Apply to become a driving instructor downtime message re-scheduled')
+    assert page.has_content?("midday to 9:30pm on 1 July")
+  end
 
-      assert page.has_content?('Apply to become a driving instructor downtime message re-scheduled')
-      assert page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
+  test "Cancelling downtime" do
+    PublishingApiWorkflowBypassPublisher.stubs(:call)
+    create_downtime
 
-      click_link 'Edit downtime'
-      click_on 'Cancel downtime'
+    visit root_path
+    click_link 'Downtime'
+    click_link 'Edit downtime'
+    click_on 'Cancel downtime'
 
-      assert_equal 0, Sidekiq::ScheduledSet.new.size
+    assert page.has_content?('Apply to become a driving instructor downtime message cancelled')
+    assert_no_downtime_scheduled
+  end
 
-      assert page.has_content?('Apply to become a driving instructor downtime message cancelled')
-      refute page.has_content?("midday to 9:30pm on #{tomorrow.day} #{tomorrow.strftime('%b')}")
-    end
+  def enter_start_time(start_time)
+    complete_date_inputs('downtime_start_time', start_time)
+  end
+
+  def enter_end_time(end_time)
+    complete_date_inputs('downtime_end_time', end_time)
+  end
+
+  def complete_date_inputs(input_id, time)
+    select time.year.to_s, from: "#{input_id}_1i"
+    select time.strftime('%B'), from: "#{input_id}_2i"
+    select time.day.to_s, from: "#{input_id}_3i"
+    select time.hour.to_s, from: "#{input_id}_4i"
+    select time.strftime('%M'), from: "#{input_id}_5i"
+  end
+
+  def next_year
+    DateTime.now.next_year.year
+  end
+
+  def first_of_july_next_year_at_midday_bst
+    Time.new(next_year, 7, 1, 11, 0).in_time_zone
+  end
+
+  def first_of_july_next_year_at_six_pm_bst
+    Time.new(next_year, 7, 1, 17, 0).in_time_zone
+  end
+
+  def first_of_july_next_year_at_nine_thirty_pm_bst
+    Time.new(next_year, 7, 1, 20, 30).in_time_zone
+  end
+
+  def day
+    first_of_july_next_year_at_six_pm_bst.strftime('%A')
+  end
+
+  def create_downtime
+    Downtime.create!(
+      artefact: @edition.artefact,
+      start_time: first_of_july_next_year_at_midday_bst,
+      end_time: first_of_july_next_year_at_six_pm_bst,
+      message: 'foo'
+    )
+  end
+
+  def assert_no_downtime_scheduled
+    assert_equal 0, Downtime.count
   end
 end

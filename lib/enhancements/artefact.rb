@@ -37,6 +37,10 @@ class Artefact
     )
   end
 
+  def downtime
+    Downtime.for(self)
+  end
+
 private
 
   def state_from_edition(edition)
