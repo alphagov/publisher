@@ -218,4 +218,16 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
   end
+
+  test "filtering by published should show a table with an edition with a slug as a link" do
+    FactoryGirl.create(:user)
+    FactoryGirl.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
+
+    visit "/"
+    filter_by_user("All")
+
+    click_on "Published"
+
+    assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/test-slug")
+  end
 end

@@ -63,7 +63,7 @@
 
   <p class="add-bottom-margin">
     <% if resource.published? %>
-      View this on the GOV.UK website <%= link_to "#{Plek.new.website_root}/#{resource.slug}" %>.<br />
+      View this on the GOV.UK website <%= link_to "#{Plek.new.website_root}/#{resource.slug}", "#{Plek.new.website_root}/#{resource.slug}" %>.<br />
     <% elsif resource.safe_to_preview? %>
       Preview edition at <%= link_to preview_edition_path(resource), preview_edition_path(resource) %>.<br />
     <% else %>

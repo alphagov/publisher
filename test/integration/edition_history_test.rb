@@ -8,7 +8,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
   context "viewing the history and notes tab" do
     setup do
-      @answer = FactoryGirl.create(:answer_edition, :state => "published")
+      @answer = FactoryGirl.create(:answer_edition, state: "published", slug: "test-slug")
 
       @answer.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "first", :email_addresses => 'a@a.com, b@b.com'})
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "second"})
@@ -32,6 +32,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+      assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/#{@answer.slug}")
     end
 
     should "have the first history actions visible" do
