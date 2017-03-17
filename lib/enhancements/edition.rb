@@ -140,4 +140,8 @@ class Edition
       "%08x-%04x-%04x-%04x-%04x%08x" % ary
     end
   end
+
+  def content_id
+    artefact.content_id
+  end
 end

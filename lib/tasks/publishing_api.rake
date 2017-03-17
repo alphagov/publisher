@@ -22,7 +22,7 @@ namespace :publishing_api do
     puts "Scheduling republishing of #{editions.count} editions"
 
     editions.each do |edition|
-      PublishingAPIRepublisher.perform_async(edition.id.to_s)
+      RepublishWorker.perform_async(edition.id.to_s)
       print "."
     end
 
@@ -35,7 +35,7 @@ namespace :publishing_api do
     puts "Scheduling republishing of #{draft_editions.count} draft editions"
 
     draft_editions.each do |draft_edition|
-      PublishingAPIUpdater.perform_async(draft_edition.id.to_s)
+      UpdateWorker.perform_async(draft_edition.id.to_s)
       print "."
     end
 

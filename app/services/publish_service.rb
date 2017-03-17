@@ -1,20 +1,20 @@
 class PublishService
   class << self
-    def call(edition)
+    def call(edition, update_type = nil)
       edition.register_with_rummager
-
-      publish_current_draft(edition)
-      create_new_draft(edition)
+      publish_current_draft(edition, update_type)
     end
 
   private
 
-    def publish_current_draft(edition)
-      PublishingAPIPublisher.perform_async(edition.id.to_s)
-    end
+    def publish_current_draft(edition, update_type)
+      content_id = edition.artefact.content_id
 
-    def create_new_draft(edition)
-      PublishingAPIUpdater.perform_async(edition.id.to_s)
+      Services.publishing_api.publish(
+        content_id,
+        update_type,
+        locale: edition.artefact.language
+      )
     end
   end
 end

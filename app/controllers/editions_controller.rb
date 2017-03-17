@@ -39,7 +39,7 @@ class EditionsController < InheritedResources::Base
     @publication = current_user.create_edition(class_identifier, create_params[:edition])
 
     if @publication.persisted?
-      UpdateService.call(@publication)
+      UpdateWorker.perform_async(@publication.id.to_s)
 
       flash[:success] = "#{description(@publication)} successfully created"
       redirect_to edition_path(@publication)
@@ -59,7 +59,7 @@ class EditionsController < InheritedResources::Base
       redirect_to edition_path(resource)
     elsif command.duplicate(target_edition_class_name, new_assignee)
       new_edition = command.new_edition
-      UpdateService.call(new_edition)
+      UpdateWorker.perform_async(new_edition.id.to_s)
 
       return_to = params[:return_to] || edition_path(new_edition)
       flash[:success] = 'New edition created'
@@ -88,8 +88,8 @@ class EditionsController < InheritedResources::Base
 
         update_assignment resource, assign_to
 
-        UpdateService.call(resource)
-        PublishService.call(resource) if update_action_is_publish?
+        UpdateWorker.perform_async(resource.id.to_s)
+        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
 
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -107,8 +107,8 @@ class EditionsController < InheritedResources::Base
 
         update_assignment resource, assign_to
 
-        UpdateService.call(resource)
-        PublishService.call(resource) if update_action_is_publish?
+        UpdateWorker.perform_async(resource.id.to_s)
+        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
 
         render :json => resource
       }
@@ -184,7 +184,7 @@ class EditionsController < InheritedResources::Base
 
   def progress
     if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
-      PublishService.call(resource) if progress_action_is_publish?
+      PublishWorker.perform_async(resource.id.to_s) if progress_action_is_publish?
 
       flash[:success] = @command.status_message
     else

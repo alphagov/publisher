@@ -25,7 +25,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update publishing API upon creation of new edition" do
-      PublishingAPIUpdater.expects(:perform_async)
+      UpdateWorker.expects(:perform_async)
 
       post :create, "edition" => {
         "kind" => "answer",
@@ -80,7 +80,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update the publishing API upon duplication of an edition" do
-      PublishingAPIUpdater.expects(:perform_async).with(@guide.id.to_s)
+      UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
       post :duplicate, id: @guide.id
     end
   end
@@ -209,7 +209,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update the publishing API on successful update" do
-      PublishingAPIUpdater.expects(:perform_async).with(@guide.id.to_s)
+      UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
 
       post :update, id: @guide.id, edition: { title: "Updated title" }
     end

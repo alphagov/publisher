@@ -43,7 +43,7 @@ class PublicationsControllerTest < ActionController::TestCase
       end
 
       should "send updated content to the PublishingAPI" do
-        PublishingAPIUpdater.expects(:perform_async)
+        UpdateWorker.expects(:perform_async)
 
         get :show, id: @artefact.id
       end
