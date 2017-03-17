@@ -200,6 +200,8 @@ GEM
       PriorityQueue (~> 0.1.2)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    maxitest (2.4.0)
+      minitest (>= 5.0.0, < 5.11.0)
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (3.1)
@@ -467,6 +469,7 @@ DEPENDENCIES
   kaminari (= 0.13.0)
   launchy (= 2.4.3)
   logstasher (= 0.4.8)
+  maxitest (~> 2.4)
   minitest
   minitest-reporters
   mlanett-redis-lock (= 0.2.2)
@@ -501,4 +504,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.13.1
+   1.14.5

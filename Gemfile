@@ -45,6 +45,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.4'
   gem 'launchy', '2.4.3'
+  gem 'maxitest', '~> 2.4'
   gem 'minitest'
   gem 'minitest-reporters'
   gem 'mocha', '1.2.1'
