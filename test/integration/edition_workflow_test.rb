@@ -10,7 +10,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     @bob = FactoryGirl.create(:user, name: "Bob")
 
     @guide = FactoryGirl.create(:guide_edition)
-
     login_as "Alice"
   end
 
@@ -141,7 +140,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     save_edition_and_assert_success
   end
 
-
   test "can review another's guide" do
     guide.update_attribute(:state, 'in_review')
     guide.assigned_to = bob
@@ -240,6 +238,17 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_text?('View this on the GOV.UK website')
   end
 
+  test "cannot create a new edition for a retired format" do
+    FactoryGirl.create(:video_edition, state: 'archived')
+
+    visit '/'
+    select "Video", from: "Format"
+    filter_for_all_users
+    view_filtered_list "Archived"
+
+    assert_not page.has_content? "Create new edition"
+  end
+
   test "should link to a newer sibling" do
     artefact = FactoryGirl.create(:artefact)
     old_edition = FactoryGirl.create(
@@ -277,6 +286,23 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     assert page.has_content?("Another person has created a newer edition")
     assert page.has_css?('.label', text: 'Published')
+  end
+
+  test "should display a retired message if a format has been retired" do
+    artefact = FactoryGirl.create(:artefact)
+    edition = FactoryGirl.create(
+      :video_edition,
+      panopticon_id: artefact.id,
+      state: "archived",
+      version_number: 1
+    )
+    artefact.update_attribute(:state, "archived")
+
+    visit '/'
+    select "Video (Retired)", from: "Format"
+
+    visit_edition edition
+    assert page.has_content?("This content format has been retired.")
   end
 
   def send_for_generic_action(guide, button_text, &block)

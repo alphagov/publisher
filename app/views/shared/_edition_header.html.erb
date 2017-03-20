@@ -14,8 +14,12 @@
   <div class="callout callout-danger add-bottom-margin">
     <h2 class="callout-title">You can’t edit this publication</h2>
     <div class="callout-body">
-      This publication’s artefact file has been archived.<br />
-      It’s unpublished from the website but you can still see the latest edition here.
+      This content has been unpublished and is no longer available on the website.<br />
+      All editions have been archived.
+      <% if @resource.retired_format? %>
+        <br /><br />
+        This content format has been retired.
+      <% end %>
     </div>
   </div>
 <% else %>

@@ -129,7 +129,7 @@ class Edition
   end
 
   def self.convertible_formats
-    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"]
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"] - Artefact::RETIRED_FORMATS
   end
 
   def fact_check_id

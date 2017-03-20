@@ -22,7 +22,9 @@ access that data for display. It is sometimes referred to as "mainstream publish
 - [Programme](https://www.gov.uk/home-responsibilities-protection-hrp)
 - [Simple smart answer](https://www.gov.uk/qualify-tax-credits)
 - [Transaction](https://www.gov.uk/council-tax-bands)
-- [Video](https://www.gov.uk/renting-buying-business-premises)
+
+## Retired formats
+- Video
 
 ## Nomenclature
 

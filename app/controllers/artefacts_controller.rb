@@ -28,7 +28,7 @@ class ArtefactsController < ApplicationController
 private
 
   def formats
-    Artefact::FORMATS_BY_DEFAULT_OWNING_APP['publisher']
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP['publisher'] - Artefact::RETIRED_FORMATS
   end
 
   def metadata_artefact_path(artefact)

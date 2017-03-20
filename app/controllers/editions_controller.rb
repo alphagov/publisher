@@ -306,13 +306,6 @@ protected
         :need_to_know,
         :department_analytics_profile,
       ]
-    when :video_edition
-      [
-        :body,
-        :video_url,
-        :video_summary,
-        :caption_file,
-      ]
     when :completed_transaction_edition
       [
         :body,
