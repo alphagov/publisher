@@ -249,6 +249,13 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert_not page.has_content? "Create new edition"
   end
 
+  test "cannot preview an archived article" do
+    guide.update_attribute(:state, 'archived')
+
+    visit_edition guide
+    assert page.has_css?('#edit div div.navbar.navbar-inverse.navbar-fixed-bottom.text-center div div div a:nth-child(2)', text: 'Preview')
+  end
+
   test "should link to a newer sibling" do
     artefact = FactoryGirl.create(:artefact)
     old_edition = FactoryGirl.create(

@@ -14,8 +14,6 @@
       <%= link_to "/#{publication.slug}", "#{Plek.new.website_root}/#{publication.slug}", class: 'link-muted' %>
     <% elsif publication.safe_to_preview? %>
       <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: 'link-muted' %>
-    <% else %>
-      <span class="text-muted"><%= publication.slug %></span>
     <% end %>
 
     <span class="text-muted"> &middot; <span title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
