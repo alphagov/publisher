@@ -3,7 +3,7 @@ require "artefact"
 class Artefact
   before_destroy :discard_publishing_api_draft
 
-  MULTIPART_FORMATS = %w(guide local_transaction licence programme simple_smart_answer)
+  MULTIPART_FORMATS = %w(guide local_transaction licence simple_smart_answer)
 
   def self.multipart_formats
     where(kind: { '$in' => MULTIPART_FORMATS })

@@ -2,7 +2,7 @@
   <div>
     <p>No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new format it will still be available in the previous edition. Content in multiple fields might be combined into a single field.</p>
   <% if @edition.respond_to?(:parts) %>
-    <p>All parts of Guide Editions and Programme Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading. </p>
+    <p>All parts of Guide Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading. </p>
   <% end %>
   </div>
 
@@ -11,6 +11,4 @@
     <%= select_tag :to, options_for_select(format_conversion_select_options(@resource)), class: "form-control input-md-3 add-bottom-margin"%>
     <%= f.submit "Change format", class: "btn btn-default" %>
   <% end %>
-
 <% end %>
-
