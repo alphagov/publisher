@@ -4,16 +4,16 @@ module PathsHelper
   end
 
   def preview_edition_path(edition, cache_bust = Time.zone.now.to_i)
-    path = edition_front_end_path(edition) + "?"
-    path << "edition=#{edition.version_number}&" unless edition.migrated?
-    path << "cache=#{cache_bust}"
+    params = []
+    params << "edition=#{edition.version_number}" unless edition.migrated?
+    params << "cache=#{cache_bust}"
 
     if should_have_fact_check_id?(edition)
       token = jwt_token(sub: edition.fact_check_id)
-      path << "&token=#{token}"
+      params << "token=#{token}"
     end
 
-    path
+    edition_front_end_path(edition) + "?" + params.join("&")
   end
 
   def start_work_path(edition)
