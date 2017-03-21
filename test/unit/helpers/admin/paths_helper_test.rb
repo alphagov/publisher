@@ -15,8 +15,8 @@ class PathsHelperTest < ActionView::TestCase
     context "for non-migrated formats" do
       should "return path for private frontend" do
         edition = stub(version_number: 1, migrated?: false, id: 999, slug: "for-funzies")
-        expected_path = "#{private_frontend}/for-funzies?edition=1&cache=9876"
-        assert_equal expected_path, preview_edition_path(edition, 9876)
+        expected_path = "#{private_frontend}/for-funzies?edition=1"
+        assert_equal expected_path, preview_edition_path(edition)
       end
     end
 
@@ -25,7 +25,7 @@ class PathsHelperTest < ActionView::TestCase
         edition = stub(fact_check_id: '123', migrated?: true, state: 'draft', slug: 'foo')
         result = preview_edition_path(edition)
 
-        path = result.gsub(/^(.*)\?cache=.*&token=.*$/, '\1')
+        path = result.gsub(/^(.*)\?.*$/, '\1')
         assert_equal "#{draft_origin}/foo", path
 
         token = result.gsub(/.*token=(.*)$/, '\1')
