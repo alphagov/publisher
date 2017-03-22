@@ -10,6 +10,10 @@ module Formats
       'answer'
     end
 
+    def rendering_app
+      "government-frontend"
+    end
+
     def details
       {
         body: [

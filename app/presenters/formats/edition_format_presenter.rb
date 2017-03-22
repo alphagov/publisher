@@ -37,7 +37,7 @@ module Formats
         need_ids: [],
         public_updated_at: public_updated_at.to_datetime.rfc3339(3),
         publishing_app: "publisher",
-        rendering_app: "frontend",
+        rendering_app: rendering_app,
         routes: routes,
         redirects: [],
         update_type: update_type(republish),
@@ -57,6 +57,10 @@ module Formats
 
     def details
       {}
+    end
+
+    def rendering_app
+      "frontend"
     end
 
     def external_related_links
