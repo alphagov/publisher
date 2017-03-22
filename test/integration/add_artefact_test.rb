@@ -36,4 +36,17 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
     options = find_field("Format").find_all('option').map(&:value)
     assert_empty options & Artefact::RETIRED_FORMATS
   end
+
+  should "not allow creation of a done page without the /done prefix" do
+    visit root_path
+    click_link "Add artefact"
+
+    fill_in "Title", with: "Done thing"
+    fill_in "Slug", with: "done-thing"
+    select "Completed transaction", from: "Format"
+
+    click_button "Save and go to item"
+
+    assert page.has_content?("Done page slugs must have a done/ prefix")
+  end
 end

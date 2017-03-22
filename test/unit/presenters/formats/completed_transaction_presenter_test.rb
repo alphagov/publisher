@@ -18,7 +18,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "completed_transaction")
+    @_artefact ||= FactoryGirl.create(:artefact, kind: "completed_transaction", slug: "done/artefact")
   end
 
   def result

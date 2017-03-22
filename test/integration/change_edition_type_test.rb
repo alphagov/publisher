@@ -25,6 +25,8 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   def create_artefact_of_kind(kind)
     if kind == 'help_page'
       FactoryGirl.create(:artefact, slug: "help/foo", kind: kind)
+    elsif kind == 'completed_transaction'
+      FactoryGirl.create(:artefact, slug: "done/foo", kind: kind)
     else
       FactoryGirl.create(:artefact, kind: kind)
     end
