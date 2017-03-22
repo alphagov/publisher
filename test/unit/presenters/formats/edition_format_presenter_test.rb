@@ -109,7 +109,6 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
         edition.stubs(:exact_route?).returns(false)
         expected = [
           { path: '/foo', type: 'prefix' },
-          { path: '/foo.json', type: 'exact' }
         ]
         assert_equal expected, result[:routes]
       end
@@ -121,7 +120,6 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
         edition.stubs(:exact_route?).returns(true)
         expected = [
           { path: '/foo', type: 'exact' },
-          { path: '/foo.json', type: 'exact' }
         ]
         assert_equal expected, result[:routes]
       end
