@@ -16,8 +16,8 @@ module Formats
     def optional_fields
       fields = {}
 
-      if edition.fact_check_id
-        fields[:access_limited] = { fact_check_ids: [edition.fact_check_id] }
+      if edition.auth_bypass_id
+        fields[:access_limited] = { auth_bypass_ids: [edition.auth_bypass_id] }
       end
 
       if edition.in_beta

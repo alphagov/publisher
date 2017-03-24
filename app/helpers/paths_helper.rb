@@ -7,8 +7,8 @@ module PathsHelper
     params = []
     params << "edition=#{edition.version_number}" unless edition.migrated?
 
-    if should_have_fact_check_id?(edition)
-      token = jwt_token(sub: edition.fact_check_id)
+    if should_have_auth_bypass_id?(edition)
+      token = jwt_token(sub: edition.auth_bypass_id)
       params << "token=#{token}"
     end
 
@@ -51,9 +51,9 @@ protected
 
 private
 
-  def should_have_fact_check_id?(edition)
+  def should_have_auth_bypass_id?(edition)
     edition.migrated? &&
     %w(published archived).exclude?(edition.state) &&
-    edition.fact_check_id
+      edition.auth_bypass_id
   end
 end

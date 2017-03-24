@@ -27,7 +27,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :major_change
       edition.stubs :version_number
       edition.stubs :latest_change_note
-      edition.stubs :fact_check_id
+      edition.stubs :auth_bypass_id
       edition.stubs :exact_route?
 
       artefact.stubs :language
@@ -160,14 +160,14 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     end
 
     context "[:access_limited]" do
-      should "return fact_check_ids if present" do
-        edition.expects(:fact_check_id).twice.returns("foo")
-        expected = { fact_check_ids: ["foo"] }
+      should "return auth_bypass_ids if present" do
+        edition.expects(:auth_bypass_id).twice.returns("foo")
+        expected = { auth_bypass_ids: ["foo"] }
         assert_equal expected, result[:access_limited]
       end
 
-      should "not exist if no fact_check_id is present" do
-        edition.expects(:fact_check_id).returns(nil)
+      should "not exist if no auth_bypass_id is present" do
+        edition.expects(:auth_bypass_id).returns(nil)
         refute result.has_key?(:access_limited)
       end
     end
