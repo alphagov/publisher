@@ -36,9 +36,16 @@ class SearchIndexerTest < ActiveSupport::TestCase
 
   def test_format_exceptions_are_not_indexed
     SearchIndexer::FORMATS_NOT_TO_INDEX.each do |format|
-      artefact = FactoryGirl.create(
-        :artefact, kind: format, content_id: "content-id",
-      )
+      if format == 'completed_transaction'
+        artefact = FactoryGirl.create(
+          :artefact,
+          kind: format,
+          slug: "done/something",
+          content_id: "content-id")
+      else
+        artefact = FactoryGirl.create(:artefact, kind: format, content_id: "content_id")
+      end
+
       edition = FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
       search_index_presenter = SearchIndexPresenter.new(edition)
 
