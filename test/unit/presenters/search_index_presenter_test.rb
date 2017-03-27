@@ -76,16 +76,6 @@ class SearchIndexPresenterTest < ActiveSupport::TestCase
   end
 
   context "paths and prefixes" do
-    context "for a CampaignEdition" do
-      should "generate /slug and /slug.json path" do
-        edition = FactoryGirl.build(:campaign_edition, :slug => "a-slug")
-        presenter = SearchIndexPresenter.new(edition)
-
-        assert_equal [], presenter.prefixes
-        assert_equal ["/a-slug", "/a-slug.json"], presenter.paths
-      end
-    end
-
     context "for a HelpPageEdition" do
       should "generate /slug and /slug.json path" do
         edition = FactoryGirl.build(:help_page_edition, :slug => "help/a-slug")

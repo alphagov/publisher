@@ -12,7 +12,7 @@ module Formats
 
     def path_type
       case @edition.class
-      when TransactionEdition, CampaignEdition
+      when TransactionEdition
         "exact"
       else
         "prefix"
