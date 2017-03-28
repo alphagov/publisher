@@ -1,6 +1,4 @@
 class SearchIndexer
-  FORMATS_NOT_TO_INDEX = %w(business_support completed_transaction)
-
   attr_reader :edition
   delegate :slug, to: :edition
 
@@ -25,7 +23,7 @@ private
   end
 
   def indexable?
-    FORMATS_NOT_TO_INDEX.exclude?(kind) || EXCEPTIONAL_SLUGS.include?(slug)
+    kind != "completed_transaction"
   end
 
   def type
