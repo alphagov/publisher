@@ -10,10 +10,6 @@ class ReportsController < ApplicationController
     send_report "editorial_progress"
   end
 
-  def business_support_schemes_content
-    send_report "business_support_export"
-  end
-
   def organisation_content
     send_report "organisation_content"
   end
