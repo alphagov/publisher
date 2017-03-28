@@ -74,24 +74,5 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
         end
       end
     end
-
-    should "keep the additional information field when converting a BusinessSupportEdition into another edition" do
-      edition = FactoryGirl.create(:business_support_edition,
-        additional_information: "This is additional information text",
-        state: 'published',
-        panopticon_id: FactoryGirl.create(:artefact, kind: 'business_support').id,
-      )
-      visit_edition edition
-
-      within "div.tabbable" do
-        click_on "Admin"
-      end
-
-      select_target_edition("answer")
-
-      click_on "Change format"
-
-      assert_selector("form#edition-form .tab-pane textarea", text: edition.additional_information, visible: true)
-    end
   end
 end

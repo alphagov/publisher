@@ -78,7 +78,6 @@ class EditionsController < InheritedResources::Base
 
     activity_params = attempted_activity_params
     remove_activity_params
-    coerce_business_support_params
 
     # update! is from the Inherited Resources gem
     # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
@@ -223,32 +222,6 @@ protected
 
   def type_specific_params(subtype)
     case subtype
-    when :business_support_edition
-      [
-        :organiser,
-        :short_description,
-        :body,
-        :eligibility,
-        :evaluation,
-        :additional_information,
-        :contact_details,
-        :max_employees,
-        :min_value,
-        :max_value,
-        :will_continue_on,
-        :continuation_link,
-        :priority,
-        :start_date,
-        :end_date,
-        area_gss_codes: [],
-        business_types: [],
-        business_sizes: [],
-        locations: [],
-        purposes: [],
-        sectors: [],
-        stages: [],
-        support_types: [],
-      ]
     when :guide_edition
       [
         parts_attributes: [:title, :body, :slug, :order, :id, :_destroy]
@@ -381,12 +354,6 @@ private
 
   def report_state_counts
     Publisher::Application.edition_state_count_reporter.report
-  end
-
-  def coerce_business_support_params
-    if params[:edition][:area_gss_codes]
-      params[:edition][:area_gss_codes] = params[:edition][:area_gss_codes].reject(&:empty?)
-    end
   end
 
   def update_action_is_publish?

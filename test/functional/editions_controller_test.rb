@@ -239,37 +239,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "with Business Support areas" do
-    setup do
-      artefact = FactoryGirl.create(:artefact)
-
-      @business_support_edition = FactoryGirl.create(
-        :business_support_edition,
-        panopticon_id: artefact.id,
-      )
-
-      update_params = {
-        # select2 produces an array beginning with an empty string
-        "area_gss_codes" => [
-          "",
-          "N07000001",
-          "E15000003",
-        ],
-      }
-
-      post :update,
-        :id => @business_support_edition.id,
-        :edition => update_params
-
-      @business_support_edition.reload
-    end
-
-    should "update area GSS codes" do
-      assert_equal ["N07000001", "E15000003"],
-        @business_support_edition.area_gss_codes
-    end
-  end
-
   context "#destroy" do
     setup do
       artefact1 = FactoryGirl.create(:artefact, slug: "test",
