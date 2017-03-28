@@ -12,7 +12,6 @@ access that data for display. It is sometimes referred to as "mainstream publish
 ## Live examples
 - [Answer](https://www.gov.uk/smart-meters)
 - [Business support](https://www.gov.uk/waterborne-freight-grant-wfg-scotland)
-- [Campaign](https://www.gov.uk/mystatepension)
 - [Completed transaction](https://www.gov.uk/done/make-lpa)
 - [Guide](https://www.gov.uk/council-tax-appeals)
 - [Help page](https://www.gov.uk/help/accessibility)
@@ -23,6 +22,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 - [Transaction](https://www.gov.uk/council-tax-bands)
 
 ## Retired formats
+- Campaign
 - Programme
 - Video
 

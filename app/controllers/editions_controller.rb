@@ -249,17 +249,6 @@ protected
         stages: [],
         support_types: [],
       ]
-    when :campaign_edition
-      [
-        :small_image,
-        :medium_image,
-        :large_image,
-        :organisation_formatted_name,
-        :organisation_url,
-        :organisation_crest,
-        :organisation_brand_colour,
-        :body,
-      ]
     when :guide_edition
       [
         parts_attributes: [:title, :body, :slug, :order, :id, :_destroy]
