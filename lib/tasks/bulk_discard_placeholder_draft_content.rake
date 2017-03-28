@@ -14,7 +14,11 @@ task bulk_discard_placeholder_draft_content: :environment do
     ["/rural-payments", "82cb2e94-769f-4545-96f8-84c8010c7e04"],
     ["/sustainabuild", "2aefe932-8abf-4a4a-9ae4-468fd09d3d83"],
     ["/work-after-state-pension-age", "effa2e51-352e-4a4d-b974-c881283633c6"]
-  ].each do |(_, content_id)|
-    Services.publishing_api.discard_draft(content_id)
+  ].each do |(base_path, content_id)|
+    begin
+      Services.publishing_api.discard_draft(content_id)
+    rescue
+      puts "Failed to discard #{base_path} (#{content_id})"
+    end
   end
 end
