@@ -27,9 +27,6 @@ class CsvReportGenerator
       EditorialProgressPresenter.new(
         Edition.not_in(state: ["archived"])),
 
-      BusinessSupportExportPresenter.new(
-        BusinessSupportEdition.published.asc("title")),
-
       EditionChurnPresenter.new(
         Edition.not_in(state: ["archived"]).order(created_at: 1)),
 

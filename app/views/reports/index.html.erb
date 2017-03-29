@@ -16,10 +16,6 @@
   <%= report_last_updated("editorial_progress")%>
 </p>
 <p>
-  <strong><%= link_to 'Published business support editions', business_support_report_path(format: :csv) %></strong><br />
-  <%= report_last_updated("business_support_export")%>
-</p>
-<p>
   <strong><%= link_to 'Content summary and workflow history', content_workflow_report_path(format: :csv) %></strong><br />
   <%= report_last_updated("content_workflow")%>
 </p>

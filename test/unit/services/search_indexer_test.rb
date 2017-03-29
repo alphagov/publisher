@@ -34,46 +34,20 @@ class SearchIndexerTest < ActiveSupport::TestCase
     SearchIndexer.call(search_index_presenter)
   end
 
-  def test_format_exceptions_are_not_indexed
-    SearchIndexer::FORMATS_NOT_TO_INDEX.each do |format|
-      if format == 'completed_transaction'
-        artefact = FactoryGirl.create(
-          :artefact,
-          kind: format,
-          slug: "done/something",
-          content_id: "content-id")
-      else
-        artefact = FactoryGirl.create(:artefact, kind: format, content_id: "content_id")
-      end
+  def test_completed_transactions_are_not_indexed
+    artefact = FactoryGirl.create(
+      :artefact,
+      kind: "completed_transaction",
+      slug: "done/something",
+      content_id: "content-id"
+    )
 
-      edition = FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
-      search_index_presenter = SearchIndexPresenter.new(edition)
+    edition = FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
+    search_index_presenter = SearchIndexPresenter.new(edition)
 
-      Services.rummager.expects(:add_document).never
+    Services.rummager.expects(:add_document).never
 
-      SearchIndexer.call(search_index_presenter)
-    end
-  end
-
-  def test_exceptional_slugs_are_indexed_despite_their_format
-    SearchIndexer::EXCEPTIONAL_SLUGS.each do |slug|
-      artefact = FactoryGirl.create(
-        :artefact,
-        kind: SearchIndexer::FORMATS_NOT_TO_INDEX.first,
-        content_id: "content-id",
-      )
-      edition = FactoryGirl.create(
-        :answer_edition,
-        slug: slug,
-        panopticon_id: artefact.id,
-      )
-
-      search_index_presenter = SearchIndexPresenter.new(edition)
-
-      Services.rummager.expects(:add_document).once
-
-      SearchIndexer.call(search_index_presenter)
-    end
+    SearchIndexer.call(search_index_presenter)
   end
 
   def test_rummager_document_type_matches_content_store

@@ -38,7 +38,6 @@ Rails.application.routes.draw do
 
   get 'reports' => 'reports#index', as: :reports
   get 'reports/progress' => 'reports#progress', as: :progress_report
-  get 'reports/business_support_schemes_content' => 'reports#business_support_schemes_content', :as => :business_support_report
   get 'reports/organisation-content' => 'reports#organisation_content', :as => :organisation_content_report
   get 'reports/edition-churn' => 'reports#edition_churn', as: "edition_churn_report"
   get 'reports/content_workflow' => 'reports#content_workflow', as: "content_workflow_report"
