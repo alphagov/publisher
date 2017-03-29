@@ -4,15 +4,13 @@ module PathsHelper
   end
 
   def preview_edition_path(edition)
-    params = []
-    params << "edition=#{edition.version_number}" unless edition.migrated?
+    path = edition_front_end_path(edition)
 
     if should_have_auth_bypass_id?(edition)
       token = jwt_token(sub: edition.auth_bypass_id)
-      params << "token=#{token}"
+      path << "?token=#{token}"
     end
-
-    edition_front_end_path(edition) + "?" + params.join("&")
+    path
   end
 
   def start_work_path(edition)
@@ -42,18 +40,12 @@ protected
   end
 
   def preview_url(edition)
-    if edition.migrated?
-      Plek.current.find("draft-origin")
-    else
-      Plek.current.find("private-frontend")
-    end
+    Plek.current.find("draft-origin")
   end
 
 private
 
   def should_have_auth_bypass_id?(edition)
-    edition.migrated? &&
-    %w(published archived).exclude?(edition.state) &&
-      edition.auth_bypass_id
+    %w(published archived).exclude?(edition.state) && edition.auth_bypass_id
   end
 end

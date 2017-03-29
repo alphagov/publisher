@@ -1,11 +1,12 @@
 # encoding: utf-8
 
 class NoisyWorkflow < ActionMailer::Base
+  include PathsHelper
   default :from => "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   def make_noise(action)
     @action = action
-
+    @preview_url = preview_edition_path(@action.edition)
     subject = "[PUBLISHER] #{describe_action(@action)}"
     recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 

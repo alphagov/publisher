@@ -7,4 +7,4 @@ Response expected by: <%= ((Date.today)+7).to_s %>
 Comment: <%= @action.comment %>
 
 View:
-<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
+<%= "#{@preview_url}" %>

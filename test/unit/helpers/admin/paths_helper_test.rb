@@ -12,14 +12,6 @@ class PathsHelperTest < ActionView::TestCase
       )
     end
 
-    context "for non-migrated formats" do
-      should "return path for private frontend" do
-        edition = stub(version_number: 1, migrated?: false, id: 999, slug: "for-funzies")
-        expected_path = "#{private_frontend}/for-funzies?edition=1"
-        assert_equal expected_path, preview_edition_path(edition)
-      end
-    end
-
     context "when the edition returns an auth_bypass_id" do
       should "append a valid JWT token to the preview path" do
         edition = stub(auth_bypass_id: '123', migrated?: true, state: 'draft', slug: 'foo')
@@ -45,9 +37,5 @@ class PathsHelperTest < ActionView::TestCase
 
   def draft_origin
     Plek.current.find("draft-origin")
-  end
-
-  def private_frontend
-    Plek.current.find("private-frontend")
   end
 end

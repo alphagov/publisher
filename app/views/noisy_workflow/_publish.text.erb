@@ -1,3 +1,3 @@
 <%= @action.requester.name %> published "<%= @action.edition.title %>" (<%= @action.edition.format %>) at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
-<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}" %>
+<%= "#{@preview_url}" %>
