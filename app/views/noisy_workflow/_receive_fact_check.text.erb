@@ -1,4 +1,4 @@
 Fact check response received for "<%= @action.edition.title %>" (<%= @action.edition.format %>) at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
 
-<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
+<%= "#{@preview_url}" %>

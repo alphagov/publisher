@@ -3,4 +3,4 @@
 <% else -%>
 "<%= @action.edition.title %>" (<%= @action.edition.format %>) has been unassigned at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
 <% end -%>
-<%= "#{Plek.current.find("private-frontend")}/#{@action.edition.slug}?edition=#{@action.edition.version_number}" %>
+<%= "#{@preview_url}" %>
