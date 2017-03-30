@@ -15,7 +15,7 @@ class DowntimeScheduler
   end
 
   def perform(downtime_id)
-    downtime = Downtime.where(id: downtime_id).first
+    downtime = Downtime.where(id: downtime_id.to_s).first
     return if downtime.nil?
 
     artefact = downtime.artefact
