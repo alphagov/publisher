@@ -14,7 +14,7 @@ class PathsHelperTest < ActionView::TestCase
 
     context "when the edition returns an auth_bypass_id" do
       should "append a valid JWT token to the preview path" do
-        edition = stub(auth_bypass_id: '123', migrated?: true, state: 'draft', slug: 'foo')
+        edition = stub(auth_bypass_id: '123', state: 'draft', slug: 'foo')
         result = preview_edition_path(edition)
 
         path = result.gsub(/^(.*)\?.*$/, '\1')
@@ -28,7 +28,7 @@ class PathsHelperTest < ActionView::TestCase
 
     context "when the edition is published" do
       should "not append the JWT token" do
-        edition = stub(migrated?: true, state: 'published', slug: 'foo')
+        edition = stub(state: 'published', slug: 'foo')
         result = preview_edition_path(edition)
         assert_no_match %r(&token=), result
       end

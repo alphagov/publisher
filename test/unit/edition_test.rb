@@ -44,83 +44,22 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   context "#auth_bypass_id" do
-    context "for a migrated format" do
-      should "return a deterministic hex id if edition is in fact-check state" do
-        edition = FactoryGirl.create(:edition, state: 'fact_check', id: 123)
-        edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-      end
-
-      should "return a deterministic hex id if edition is in fact-check-received state" do
-        edition = FactoryGirl.create(:edition, state: 'fact_check_received', id: 123)
-        edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-      end
-
-      should "return a deterministic hex id if edition is in ready state" do
-        edition = FactoryGirl.create(:edition, state: 'ready', id: 123)
-        edition.artefact.update_attribute(:kind, 'help_page')
-        assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-      end
+    should "return a deterministic hex id if edition is in fact-check state" do
+      edition = FactoryGirl.create(:edition, state: 'fact_check', id: 123)
+      edition.artefact.update_attribute(:kind, 'help_page')
+      assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
-    context "for a format that has not yet been migrated" do
-      should "return nil" do
-        edition = FactoryGirl.create(:video_edition, state: 'fact_check_received')
-        assert_nil edition.auth_bypass_id
-      end
-    end
-  end
-
-  context "#migrated?" do
-    should "return true for a HelpPageEdition" do
-      edition = FactoryGirl.build(:help_page_edition)
-      assert edition.migrated?
+    should "return a deterministic hex id if edition is in fact-check-received state" do
+      edition = FactoryGirl.create(:edition, state: 'fact_check_received', id: 123)
+      edition.artefact.update_attribute(:kind, 'help_page')
+      assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
-    should "return true for an AnswerEdition" do
-      edition = FactoryGirl.build(:answer_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for a CompletedTransactionEdition" do
-      edition = FactoryGirl.build(:completed_transaction_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for an LocalTransactionEdition" do
-      edition = FactoryGirl.build(:local_transaction_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for an LicenceEdition" do
-      edition = FactoryGirl.build(:licence_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for an PlaceEdition" do
-      edition = FactoryGirl.build(:place_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for an SimpleSmartAnswerEdition" do
-      edition = FactoryGirl.build(:simple_smart_answer_edition)
-      assert edition.migrated?
-    end
-
-    should "return false for an edition type that's not been migrated" do
-      edition = FactoryGirl.build(:video_edition)
-      assert_not edition.migrated?
-    end
-
-    should "return true for a GuideEdition" do
-      edition = FactoryGirl.build(:guide_edition)
-      assert edition.migrated?
-    end
-
-    should "return true for a TransactionEdition" do
-      edition = FactoryGirl.build(:transaction_edition)
-      assert edition.migrated?
+    should "return a deterministic hex id if edition is in ready state" do
+      edition = FactoryGirl.create(:edition, state: 'ready', id: 123)
+      edition.artefact.update_attribute(:kind, 'help_page')
+      assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
   end
 end

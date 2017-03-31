@@ -25,18 +25,6 @@ class Edition
   }
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
-  MIGRATED_EDITION_CLASSES = [
-    AnswerEdition,
-    CompletedTransactionEdition,
-    GuideEdition,
-    HelpPageEdition,
-    LocalTransactionEdition,
-    LicenceEdition,
-    PlaceEdition,
-    SimpleSmartAnswerEdition,
-    TransactionEdition,
-  ].freeze
-
   EXACT_ROUTE_EDITION_CLASSES = [
     CampaignEdition,
     HelpPageEdition,
@@ -66,10 +54,6 @@ class Edition
   scope :user_search, lambda { |user, term|
     all_of(for_user(user).selector, internal_search(term).selector)
   }
-
-  def migrated?
-    self.class.in? MIGRATED_EDITION_CLASSES
-  end
 
   def exact_route?
     self.class.in? EXACT_ROUTE_EDITION_CLASSES
@@ -134,12 +118,10 @@ class Edition
 
   def auth_bypass_id
     @_auth_bypass_id ||= begin
-      if migrated?
-        ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
-        ary[2] = (ary[2] & 0x0fff) | 0x4000
-        ary[3] = (ary[3] & 0x3fff) | 0x8000
-        "%08x-%04x-%04x-%04x-%04x%08x" % ary
-      end
+      ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
+      ary[2] = (ary[2] & 0x0fff) | 0x4000
+      ary[3] = (ary[3] & 0x3fff) | 0x8000
+      "%08x-%04x-%04x-%04x-%04x%08x" % ary
     end
   end
 

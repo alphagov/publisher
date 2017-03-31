@@ -43,6 +43,9 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
           external_related_links: expected_external_related_links,
         },
         locale: 'en',
+        access_limited: {
+          auth_bypass_ids: [@edition.auth_bypass_id]
+        }
       }
     end
 
