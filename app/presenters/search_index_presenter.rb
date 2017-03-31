@@ -11,22 +11,6 @@ class SearchIndexPresenter < SimpleDelegator
     overview
   end
 
-  def paths
-    if exact_route?
-      ["/#{slug}", "/#{slug}.json"]
-    else
-      ["/#{slug}.json"]
-    end
-  end
-
-  def prefixes
-    if exact_route?
-      []
-    else
-      ["/#{slug}"]
-    end
-  end
-
   def public_timestamp
     public_updated_at
   end
