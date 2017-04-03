@@ -74,36 +74,4 @@ class SearchIndexPresenterTest < ActiveSupport::TestCase
       assert_equal @edition_with_major_change.updated_at.to_i, @presenter.public_timestamp.to_i
     end
   end
-
-  context "paths and prefixes" do
-    context "for a HelpPageEdition" do
-      should "generate /slug and /slug.json path" do
-        edition = FactoryGirl.build(:help_page_edition, :slug => "help/a-slug")
-        presenter = SearchIndexPresenter.new(edition)
-
-        assert_equal [], presenter.prefixes
-        assert_equal ["/help/a-slug", "/help/a-slug.json"], presenter.paths
-      end
-    end
-
-    context "for a TransactionEdition" do
-      should "generate /slug and /slug.json path" do
-        edition = FactoryGirl.build(:transaction_edition, :slug => "a-slug")
-        presenter = SearchIndexPresenter.new(edition)
-
-        assert_equal [], presenter.prefixes
-        assert_equal ["/a-slug", "/a-slug.json"], presenter.paths
-      end
-    end
-
-    context "for other edition types" do
-      should "generate /slug prefix and /slug.json path" do
-        edition = FactoryGirl.build(:answer_edition, :slug => "a-slug")
-        presenter = SearchIndexPresenter.new(edition)
-
-        assert_equal ["/a-slug"], presenter.prefixes
-        assert_equal ["/a-slug.json"], presenter.paths
-      end
-    end
-  end
 end
