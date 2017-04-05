@@ -24,16 +24,16 @@ module Formats
     end
 
     def optional_details
-      {}.merge(lgil_override)
+      {}.merge(lgil_code)
         .merge(introduction)
         .merge(more_information)
         .merge(need_to_know)
     end
 
-    def lgil_override
-      return {} if edition.lgil_override.nil?
+    def lgil_code
+      return {} if edition.lgil_code.nil?
 
-      { lgil_override: edition.lgil_override }
+      { lgil_code: edition.lgil_code }
     end
 
     def introduction

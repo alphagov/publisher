@@ -7,7 +7,7 @@ task :export_local_transactions => :environment do
     csv << ["slug","lgsl","lgil","title","state"]
 
     Edition.where(_type: "LocalTransactionEdition").each do |lte|
-      csv << [lte.slug,lte.lgsl_code,lte.lgil_override,lte.title,lte.state]
+      csv << [lte.slug, lte.lgsl_code, lte.lgil_code, lte.title, lte.state]
     end
   end
 

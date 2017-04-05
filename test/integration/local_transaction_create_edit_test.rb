@@ -57,21 +57,21 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
       assert page.has_content? 'Foo transaction #1'
       assert page.has_field?('LGSL code', :with => '1', disabled: true)
-      assert page.find_field('LGIL override').value.blank?
+      assert page.find_field('LGIL code').value.blank?
 
-      fill_in "LGIL override", :with => '7'
+      fill_in "LGIL code", with: '7'
 
       save_edition_and_assert_success
 
       e = LocalTransactionEdition.find(edition.id)
-      assert_equal 7, e.lgil_override
+      assert_equal 7, e.lgil_code
 
       # Ensure it gets set to nil when clearing field
-      fill_in "LGIL override", :with => ''
+      fill_in "LGIL code", with: ''
       save_edition_and_assert_success
 
       e = LocalTransactionEdition.find(edition.id)
-      assert_nil e.lgil_override
+      assert_nil e.lgil_code
     end
 
     should "show an error when the title is empty" do

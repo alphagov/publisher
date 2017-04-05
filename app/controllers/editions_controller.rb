@@ -237,7 +237,7 @@ protected
     when :local_transaction_edition
       [
         :lgsl_code,
-        :lgil_override,
+        :lgil_code,
         :introduction,
         :more_information,
         :need_to_know,
