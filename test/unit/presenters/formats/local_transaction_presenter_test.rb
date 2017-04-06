@@ -49,6 +49,11 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         assert_equal expected, result[:details][:lgsl_code]
       end
 
+      should "[:lgil_code]" do
+        expected = 8
+        assert_equal expected, result[:details][:lgil_code]
+      end
+
       should "[:service_tiers]" do
         expected = %w{county unitary}
         assert_equal expected, result[:details][:service_tiers]
@@ -56,18 +61,6 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     context "optional details" do
-      context "[:lgil_code]" do
-        should "present the data" do
-          expected = 8
-          assert_equal expected, result[:details][:lgil_code]
-        end
-
-        should "not present the data if nil" do
-          edition.update(lgil_code: nil)
-          refute_includes result[:details].keys, :lgil_code
-        end
-      end
-
       context "[:introduction]" do
         should "present the data" do
           expected = [
