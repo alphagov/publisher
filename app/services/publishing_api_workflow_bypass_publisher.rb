@@ -49,7 +49,7 @@ private
   def draft_edition
     Edition
       .where(panopticon_id: artefact.id)
-      .where(state: { "$nin" => %w(published, archived) })
+      .where(state: { "$nin" => %w(published archived) })
       .first
   end
 end
