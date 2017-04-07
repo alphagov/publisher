@@ -2,7 +2,6 @@ require 'test_helper'
 
 class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
   setup do
-    Services.publishing_api.stubs(:discard_draft)
     UpdateService.stubs(:call)
     PublishService.stubs(:call)
   end
