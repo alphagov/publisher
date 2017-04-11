@@ -34,14 +34,18 @@ class EditionsControllerTest < ActionController::TestCase
       }
     end
 
-    should "render the lgsl edit form successfully if creation fails" do
+    should "render the lgsl and lgil edit form successfully if creation fails" do
       lgsl_code = 800
-      FactoryGirl.create(:local_service, lgsl_code: lgsl_code)
+      FactoryGirl.create(
+        :local_service,
+        lgsl_code: lgsl_code
+      )
       artefact = FactoryGirl.create(:artefact)
 
       post :create, "edition" => {
         "kind" => "local_transaction",
         "lgsl_code" => lgsl_code,
+        "lgil_code" => 1,
         "panopticon_id" => artefact.id,
         "title" => "a title",
       }
@@ -50,6 +54,7 @@ class EditionsControllerTest < ActionController::TestCase
       post :create, "edition" => {
         "kind" => "local_transaction",
         "lgsl_code" => lgsl_code + 1,
+        "lgil_code" => 1,
         "panopticon_id" => artefact.id,
         "title" => "a title"
       }

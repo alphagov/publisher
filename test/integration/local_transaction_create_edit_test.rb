@@ -21,7 +21,8 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     visit "/publications/#{@artefact.id}"
 
-    fill_in 'Lgsl code', :with => '1'
+    fill_in 'Lgsl code', with: '1'
+    fill_in 'Lgil code', with: '2'
     click_button 'Create Local transaction'
     assert page.has_content? 'Foo bar #1'
 
@@ -58,28 +59,26 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         slug: @artefact.slug,
         title: "Foo transaction",
         lgsl_code: 1,
-        lgil_code: 1
+        lgil_code: 2
       )
 
       visit "/editions/#{edition.to_param}"
 
       assert page.has_content? 'Foo transaction #1'
       assert page.has_field?('LGSL code', with: '1', disabled: true)
-      assert page.find_field('LGIL code').value.blank?
-
-      fill_in "LGIL code", with: '7'
+      assert page.has_field?('LGIL code', with: '2')
 
       save_edition_and_assert_success
 
-      e = LocalTransactionEdition.find(edition.id)
-      assert_equal 7, e.lgil_code
+      edition = LocalTransactionEdition.find(edition.id)
+      assert_equal 2, edition.lgil_code
 
       # Ensure it gets set to nil when clearing field
-      fill_in "LGIL code", with: ''
+      fill_in "LGIL code", with: '3'
       save_edition_and_assert_success
 
-      e = LocalTransactionEdition.find(edition.id)
-      assert_nil e.lgil_code
+      edition.reload
+      assert_equal 3, edition.lgil_code
     end
 
     should "show an error when the title is empty" do

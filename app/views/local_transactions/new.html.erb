@@ -19,6 +19,13 @@
     <%= f.input :title, :as => :hidden %>
     <%= f.input :slug, :as => :hidden %>
   <% end %>
+  <%= f.inputs :lgil_code %>
+  <%= f.inputs do %>
+    <input type="hidden" name="edition[kind]" value="local_transaction">
+    <%= f.input :panopticon_id, :as => :hidden %>
+    <%= f.input :title, :as => :hidden %>
+    <%= f.input :slug, :as => :hidden %>
+  <% end %>
   <%= f.actions do %>
     <%= f.submit "Create Local transaction edition", class: 'btn btn-success' %>
   <% end %>
