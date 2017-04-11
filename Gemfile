@@ -44,6 +44,7 @@ gem 'whenever', require: false
 
 group :test do
   gem 'capybara', '2.12.1'
+  gem 'capybara-screenshot'
   gem 'ci_reporter_minitest', '1.0.0'
   gem 'database_cleaner', '1.5.3'
   gem 'factory_girl_rails'

@@ -16,6 +16,7 @@ require 'support/tab_test_helpers'
 require 'govuk_content_models/test_helpers/action_processor_helpers'
 require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
+require 'capybara-screenshot/minitest'
 
 require 'govuk_sidekiq/testing'
 
@@ -25,6 +26,8 @@ require 'minitest/reporters'
 Minitest::Reporters.use!(
   Minitest::Reporters::SpecReporter.new(color: true),
 )
+
+Capybara::Screenshot.autosave_on_failure = false
 
 DatabaseCleaner.strategy = :truncation
 # initial clean

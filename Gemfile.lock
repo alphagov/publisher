@@ -72,6 +72,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-screenshot (1.0.14)
+      capybara (>= 1.0, < 3)
+      launchy
     chronic (0.10.2)
     ci_reporter (2.0.0)
       builder (>= 2.1.2)
@@ -446,6 +449,7 @@ DEPENDENCIES
   airbrake (= 3.1.15)
   bootstrap-kaminari-views (= 0.0.3)
   capybara (= 2.12.1)
+  capybara-screenshot
   ci_reporter_minitest (= 1.0.0)
   ci_reporter_rspec
   database_cleaner (= 1.5.3)
