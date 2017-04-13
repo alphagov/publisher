@@ -19,21 +19,15 @@ module Formats
     def required_details
       {
         lgsl_code: edition.lgsl_code,
+        lgil_code: edition.lgil_code,
         service_tiers: service_tiers,
       }
     end
 
     def optional_details
-      {}.merge(lgil_override)
-        .merge(introduction)
+      {}.merge(introduction)
         .merge(more_information)
         .merge(need_to_know)
-    end
-
-    def lgil_override
-      return {} if edition.lgil_override.nil?
-
-      { lgil_override: edition.lgil_override }
     end
 
     def introduction

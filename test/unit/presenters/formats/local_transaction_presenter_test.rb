@@ -19,7 +19,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       slug: "pest-control",
       panopticon_id: artefact.id,
       lgsl_code: 431,
-      lgil_override: 8,
+      lgil_code: 8,
       introduction: 'hello',
       more_information: 'more info',
       need_to_know: 'for your eyes only'
@@ -49,6 +49,11 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         assert_equal expected, result[:details][:lgsl_code]
       end
 
+      should "[:lgil_code]" do
+        expected = 8
+        assert_equal expected, result[:details][:lgil_code]
+      end
+
       should "[:service_tiers]" do
         expected = %w{county unitary}
         assert_equal expected, result[:details][:service_tiers]
@@ -56,18 +61,6 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     context "optional details" do
-      context "[:lgil_override]" do
-        should "present the data" do
-          expected = 8
-          assert_equal expected, result[:details][:lgil_override]
-        end
-
-        should "not present the data if nil" do
-          edition.update(lgil_override: nil)
-          refute_includes result[:details].keys, :lgil_override
-        end
-      end
-
       context "[:introduction]" do
         should "present the data" do
           expected = [

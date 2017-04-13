@@ -10,7 +10,11 @@ gem 'gds-sso', '~> 11.2'
 gem 'gds-api-adapters', '~> 41.0.0'
 gem 'govspeak', '~> 3.4.0'
 gem 'govuk_admin_template', '4.2.0'
-gem "govuk_content_models", '44.2.1'
+if ENV["API_DEV"]
+  gem "govuk_content_models", path: "../govuk_content_models"
+else
+  gem 'govuk_content_models', "44.3.0"
+end
 gem 'govuk_sidekiq', '0.0.4'
 gem 'has_scope'
 gem 'inherited_resources'
@@ -40,6 +44,7 @@ gem 'whenever', require: false
 
 group :test do
   gem 'capybara', '2.12.1'
+  gem 'capybara-screenshot'
   gem 'ci_reporter_minitest', '1.0.0'
   gem 'database_cleaner', '1.5.3'
   gem 'factory_girl_rails'
