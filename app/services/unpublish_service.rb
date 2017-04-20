@@ -1,8 +1,6 @@
 class UnpublishService
   class << self
     def call(artefact, user, redirect_url = "")
-      return false if archived?(artefact)
-
       if update_artefact_in_shared_db(artefact, user, redirect_url)
         remove_from_rummager_search artefact
         unpublish_in_publishing_api artefact, redirect_url
@@ -10,10 +8,6 @@ class UnpublishService
     end
 
   private
-
-    def archived?(artefact)
-      artefact.state == 'archived'
-    end
 
     def update_artefact_in_shared_db(artefact, user, redirect_url)
       artefact.update_attributes_as(
