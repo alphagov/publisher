@@ -126,19 +126,6 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     end
   end
 
-  context "when an artefact is already archived" do
-    should "return false early" do
-      @artefact.expects(:state).returns("archived")
-      @artefact.expects(:update_attributes_as).never
-
-      @rummager.expects(:delete_content).never
-      @publishing_api.expects(:unpublish).never
-
-      result = UnpublishService.call(@artefact, @user)
-      assert result == false
-    end
-  end
-
   context "when an artefact is not in Rummager" do
     should "continue to unpublish" do
       @rummager.expects(:delete_content)
