@@ -13,7 +13,7 @@ gem 'govuk_admin_template', '4.2.0'
 if ENV["API_DEV"]
   gem "govuk_content_models", path: "../govuk_content_models"
 else
-  gem 'govuk_content_models', "44.3.0"
+  gem 'govuk_content_models', "44.4.0"
 end
 gem 'govuk_sidekiq', '0.0.4'
 gem 'has_scope'

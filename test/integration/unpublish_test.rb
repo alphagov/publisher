@@ -58,16 +58,5 @@ class UnpublishTest < ActionDispatch::IntegrationTest
         assert page.has_content?("Content unpublished and redirected")
       end
     end
-
-    should "show an error when using an external redirect" do
-      visit "editions/#{@edition.id}/unpublish"
-
-      fill_in "redirect_url", with: "https://www.example.com/bar"
-
-      click_button "Unpublish"
-
-      assert_selector ".alert-danger"
-      assert page.has_content?("Redirect URL is not a valid redirect target")
-    end
   end
 end
