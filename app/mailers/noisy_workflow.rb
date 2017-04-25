@@ -17,8 +17,8 @@ class NoisyWorkflow < ActionMailer::Base
     @edition = action.edition
     fact_check_address = @edition.fact_check_email_address
     mail(:to => action.email_addresses, :reply_to => fact_check_address,
-      :from => "GOV.UK Editorial Team <#{fact_check_address}>",
-      :subject => "[FACT CHECK REQUESTED] #{@edition.title}") do |format|
+      from: "GOV.UK Editorial Team <#{fact_check_address}>",
+      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition") do |format|
      format.text { render :text => action.customised_message }
     end
   end
