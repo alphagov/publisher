@@ -60,4 +60,8 @@ class AnswerPresenterTest < ActiveSupport::TestCase
     ]
     assert_equal expected, result[:routes]
   end
+
+  should "[:rendering_app]" do
+    assert_equal "government-frontend", result[:rendering_app]
+  end
 end
