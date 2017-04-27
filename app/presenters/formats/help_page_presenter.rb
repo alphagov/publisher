@@ -10,6 +10,10 @@ module Formats
       'help_page'
     end
 
+    def rendering_app
+      "government-frontend"
+    end
+
     def details
       {
         body: [
