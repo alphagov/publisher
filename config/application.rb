@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 # Pick the frameworks you want:
 # require "active_record/railtie"
@@ -33,7 +33,7 @@ module Publisher
     config.assets.prefix = '/assets'
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
+    config.eager_load_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
 
     config.assets.precompile += %W(views/business_support/areas_select.js)
 
