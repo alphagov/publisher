@@ -6,16 +6,16 @@ gem 'diffy', '3.0.6'
 gem 'erubis'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
-gem 'gds-sso', '~> 11.2'
-gem 'gds-api-adapters', '45.0.0'
+gem 'gds-sso', '~> 13.2'
+gem 'gds-api-adapters', '~> 41.0.0'
 gem 'govspeak', '~> 3.4.0'
-gem 'govuk_admin_template', '4.2.0'
+gem 'govuk_admin_template', '6.0.0'
 if ENV["API_DEV"]
   gem "govuk_content_models", path: "../govuk_content_models"
 else
   gem 'govuk_content_models', "44.4.0"
 end
-gem 'govuk_sidekiq', '0.0.4'
+gem 'govuk_sidekiq', '1.0.3'
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'jquery-ui-rails', '~> 5.0.3'
@@ -29,7 +29,7 @@ gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
 gem 'plek', '1.9.0'
-gem 'rails', '4.2.7.1'
+gem 'rails', '5.0.2'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
@@ -56,6 +56,7 @@ group :test do
   gem 'mocha', '1.2.1'
   gem 'poltergeist', '1.13.0'
   gem 'rails-perftest'
+  gem 'rails-controller-testing'
   gem 'ruby-prof'
   gem 'shoulda', '3.5.0'
   gem 'simplecov', '~> 0.6.4', require: false
@@ -67,6 +68,6 @@ end
 group :development, :test do
   gem 'ci_reporter_rspec'
   gem 'govuk-lint', '~> 0.7'
-  gem 'jasmine', '2.1.0'
+  gem 'jasmine', '2.5.2'
   gem 'pry-byebug'
 end
