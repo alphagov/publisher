@@ -27,6 +27,14 @@ class ActionDispatch::IntegrationTest
     super(user)
   end
 
+  def visit_edition(edition)
+    visit "/editions/#{edition.to_param}"
+  end
+
+  def visit_editions
+    visit "/editions"
+  end
+
   def assert_field_contains(expected, field)
     found_field = find_field(field)
     assert(found_field.value.include?(expected),
@@ -106,14 +114,6 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     end
     clear_cookies
     GDS::SSO.test_user = user
-  end
-
-  def visit_edition(edition)
-    visit "/editions/#{edition.to_param}"
-  end
-
-  def visit_editions
-    visit "/editions"
   end
 
   # Fill in some sample sections for a guide

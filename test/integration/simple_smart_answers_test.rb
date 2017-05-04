@@ -365,7 +365,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "not save using ajax" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
       save_edition
 
       assert page.has_no_css?('.workflow-message', text: 'Saving')
@@ -373,7 +373,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "correctly render the form" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       within ".page-title" do
         assert page.has_content? "Can I get a driving licence?"
@@ -427,7 +427,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "delete an existing node and option" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       within ".nodes .node:first-child .option:nth-child(2)" do
         click_link "Remove option"
@@ -451,7 +451,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "reset the next node value in options when a node is deleted" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       within ".nodes .outcome:nth-child(3)" do
         click_link "Remove node"
@@ -469,7 +469,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     should "correctly number new nodes" do
       @edition.nodes.where(:slug => "outcome-2").first.update_attribute(:slug, "outcome-3")
 
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       assert page.has_css?(".nodes .question", count: 1)
       assert page.has_css?(".nodes .outcome", count: 2)
@@ -483,7 +483,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "correctly order new nodes" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       within ".nodes" do
         assert_equal "1", find(:css, '.node:nth-child(1) .node-order', :visible => false).value
@@ -505,7 +505,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "highlight an error on the select field when the next node is blank" do
-      visit "/editions/#{@edition.id}"
+      visit_edition @edition
 
       within ".nodes .question:first-child .option:first-child" do
         select "Select a node..", :from => "next-node-list"

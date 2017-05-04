@@ -24,7 +24,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
   end
 
   test "deleting a draft edition discards the draft in the publishing api" do
-    visit "/editions/#{@edition.id}"
+    visit_edition @edition
 
     click_on "Admin"
 

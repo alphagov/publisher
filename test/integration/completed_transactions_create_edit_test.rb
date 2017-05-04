@@ -30,7 +30,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                    :panopticon_id => @artefact.id,
                                    :title => "All bar done")
 
-      visit "/editions/#{completed_transaction.to_param}"
+      visit_edition completed_transaction
 
       assert page.has_content? 'All bar done #1'
       assert page.has_field?("Title", :with => "All bar done")
@@ -49,7 +49,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                  :state => 'published',
                                  :title => "All bar done")
 
-    visit "/editions/#{completed_transaction.to_param}"
+    visit_edition completed_transaction
 
     click_on "Create new edition"
 
@@ -63,7 +63,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
                                   :state => 'published',
                                   :title => "All bar done")
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 
@@ -71,7 +71,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     edition = FactoryGirl.create(:completed_transaction_edition, :panopticon_id => @artefact.id)
     organ_donor_registration_promotion_url = "https://www.organdonation.nhs.uk/how_to_become_a_donor/registration/consent.asp?campaign=2244&v=7"
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert page.has_unchecked_field? "Promote organ donation"
 
     choose "Promote organ donation"
@@ -87,7 +87,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     edition = FactoryGirl.create(:completed_transaction_edition, panopticon_id: @artefact.id)
     register_to_vote_promotion_url = "https://gov.uk/register-to-vote"
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
 
     assert page.has_unchecked_field? "Promote register to vote"
 
