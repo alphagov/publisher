@@ -1,5 +1,6 @@
 require "gds_api/publishing_api_v2"
 require "gds_api/rummager"
+require "gds_api/calendars"
 
 module Services
   def self.publishing_api
@@ -11,5 +12,9 @@ module Services
 
   def self.rummager
     @rummager ||= GdsApi::Rummager.new(Plek.new.find("search"))
+  end
+
+  def self.calendars
+    @calendars ||= GdsApi::Calendars.new(Plek.new.find('calendars'))
   end
 end
