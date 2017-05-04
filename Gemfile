@@ -7,7 +7,7 @@ gem 'erubis'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'gds-sso', '~> 11.2'
-gem 'gds-api-adapters', '~> 41.0.0'
+gem 'gds-api-adapters', '45.0.0'
 gem 'govspeak', '~> 3.4.0'
 gem 'govuk_admin_template', '4.2.0'
 if ENV["API_DEV"]
