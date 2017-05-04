@@ -4,6 +4,7 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   should "create a new artefact" do

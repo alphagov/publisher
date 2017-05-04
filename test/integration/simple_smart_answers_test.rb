@@ -13,6 +13,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     setup_users
     GDS::SSO.test_user = @author
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   context "creating a new edition" do

@@ -12,6 +12,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     login_as @author
   end

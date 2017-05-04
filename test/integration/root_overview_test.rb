@@ -1,6 +1,10 @@
 require_relative '../integration_test_helper'
 
 class RootOverviewTest < ActionDispatch::IntegrationTest
+  setup do
+    stub_holidays_used_by_fact_check
+  end
+
   test "filtering by assigned user" do
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.

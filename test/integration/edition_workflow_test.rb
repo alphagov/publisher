@@ -7,6 +7,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   setup do
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @alice = FactoryGirl.create(:user, name: "Alice")
     @bob = FactoryGirl.create(:user, name: "Bob")

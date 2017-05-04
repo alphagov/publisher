@@ -4,6 +4,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   context 'creating a guide with parts' do

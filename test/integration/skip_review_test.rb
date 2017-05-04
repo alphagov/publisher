@@ -10,6 +10,7 @@ class SkipReviewTest < JavascriptIntegrationTest
 
 
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @artefact = FactoryGirl.create(:artefact,
                                     slug: "hedgehog-topiary",

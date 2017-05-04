@@ -12,6 +12,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   should "create a new LicenceEdition" do

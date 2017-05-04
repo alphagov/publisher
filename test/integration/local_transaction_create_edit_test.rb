@@ -14,6 +14,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   test "creating a local transaction sends the right emails" do
