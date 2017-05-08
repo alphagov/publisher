@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'airbrake', '3.1.15'
+gem 'airbrake', git: 'https://github.com/alphagov/airbrake.git', branch: 'silence-dep-warnings-for-rails-5'
 gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'diffy', '3.0.6'
 gem 'erubis'

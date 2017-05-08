@@ -19,7 +19,7 @@ class PublicationsControllerTest < ActionController::TestCase
         FactoryGirl.create(:edition, panopticon_id: artefact.id, state: 'published', version_number: 2)
         latest_edition = FactoryGirl.create(:edition, panopticon_id: artefact.id, state: 'draft', version_number: 3)
 
-        get :show, id: artefact.id
+        get :show, params: { id: artefact.id }
 
         assert_redirected_to(controller: 'editions', action: 'show', id: latest_edition.id)
       end
@@ -36,7 +36,7 @@ class PublicationsControllerTest < ActionController::TestCase
       end
 
       should "redirect to new edition when requesting a panopticon_id" do
-        get :show, id: @artefact.id
+        get :show, params: { id: @artefact.id }
 
         latest_edition = GuideEdition.find_by(slug: "hedgehog-topiary")
         assert_redirected_to(controller: 'editions', action: 'show', id: latest_edition.id)
@@ -45,7 +45,7 @@ class PublicationsControllerTest < ActionController::TestCase
       should "send updated content to the PublishingAPI" do
         UpdateWorker.expects(:perform_async)
 
-        get :show, id: @artefact.id
+        get :show, params: { id: @artefact.id }
       end
     end
 
@@ -58,7 +58,7 @@ class PublicationsControllerTest < ActionController::TestCase
                                    )
       assert Edition.where(panopticon_id: artefact.id).first.nil?
 
-      get :show, id: artefact.id
+      get :show, params: { id: artefact.id }
       assert Edition.where(panopticon_id: artefact.id).first.nil?
       assert_response :success
     end

@@ -1,7 +1,7 @@
 class ReportsController < ApplicationController
   include ActionView::Helpers::TagHelper
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def index
   end
@@ -51,7 +51,7 @@ private
         type: "text/csv",
         disposition: "attachment"
     else
-      render nothing: true, status: 404
+      return head(:not_found)
     end
   end
 end

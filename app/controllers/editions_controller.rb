@@ -3,9 +3,10 @@ require "edition_progressor"
 
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
+
   defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
-  before_filter :setup_view_paths, except: [:index, :new, :create]
-  after_filter :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
+  before_action :setup_view_paths, except: [:index, :new, :create]
+  after_action :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
 
   def index
     redirect_to root_path

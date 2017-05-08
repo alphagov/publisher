@@ -12,9 +12,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
   end
 
   def test_report
-    silence_stream(STDOUT) do
-      @importer.report(@row)
-    end
+    @importer.report(@row)
     assert_equal "12345", @importer.imported.first[:identifier]
     assert_equal 'licence-to-test', @importer.imported.first[:slug]
     assert_match(
@@ -25,9 +23,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
   end
 
   def test_import
-    silence_stream(STDOUT) do
-      @importer.import(@row)
-    end
+    @importer.import(@row)
     assert 12345, @importer.imported.first.licence_identifier
     assert_equal 'licence-to-test', @importer.imported.first.slug
     assert_equal @artefact.id.to_s, @importer.imported.first.panopticon_id
