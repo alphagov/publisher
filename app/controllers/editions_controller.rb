@@ -338,7 +338,7 @@ private
   end
 
   def remove_activity_params
-    params[:edition].delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
+    params.fetch(:edition, {}).delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
   end
 
   def tagging_update_form_params
