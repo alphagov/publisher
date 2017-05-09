@@ -3,7 +3,6 @@ require "edition_progressor"
 
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
-
   defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
   before_action :setup_view_paths, except: [:index, :new, :create]
   after_action :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
@@ -346,9 +345,9 @@ private
       :content_id,
       :previous_version,
       :parent,
-      { mainstream_browse_pages: [] },
-      { topics: [] },
-      { organisations: [] }
+      mainstream_browse_pages: [],
+      topics: [],
+      organisations: []
     ).to_h
   end
 

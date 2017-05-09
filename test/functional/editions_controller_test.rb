@@ -32,7 +32,7 @@ class EditionsControllerTest < ActionController::TestCase
       UpdateWorker.expects(:perform_async)
 
       post :create,
-        params:{
+        params: {
           "edition" => {
             "kind" => "answer",
             "panopticon_id" => @artefact.id,
@@ -360,7 +360,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
-      get :show, params: { id: '4e663834e2ba80480a0000e6'}
+      get :show, params: { id: '4e663834e2ba80480a0000e6' }
       assert_response 404
     end
 

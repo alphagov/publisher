@@ -17,7 +17,7 @@ class RootController < ApplicationController
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
     unless @presenter.acceptable_list?(@list)
-      render body: { 'raw' => 'Not Found'}, status: 404
+      render body: { 'raw' => 'Not Found' }, status: 404
       return
     end
 

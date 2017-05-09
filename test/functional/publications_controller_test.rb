@@ -27,12 +27,13 @@ class PublicationsControllerTest < ActionController::TestCase
 
     context "without existing edition" do
       setup do
-        @artefact = FactoryGirl.create(:artefact,
-            slug: "hedgehog-topiary",
-            kind: "guide",
-            name: "Foo bar",
-            owning_app: "publisher",
-                                      )
+        @artefact = FactoryGirl.create(
+          :artefact,
+          slug: "hedgehog-topiary",
+          kind: "guide",
+          name: "Foo bar",
+          owning_app: "publisher"
+        )
       end
 
       should "redirect to new edition when requesting a panopticon_id" do
@@ -50,12 +51,13 @@ class PublicationsControllerTest < ActionController::TestCase
     end
 
     should "show a page when saving publication fails" do
-      artefact = FactoryGirl.create(:artefact,
-          slug: "hedgehog-topiary",
-          kind: "local_transaction",
-          name: "Foo bar",
-          owning_app: "publisher",
-                                   )
+      artefact = FactoryGirl.create(
+        :artefact,
+        slug: "hedgehog-topiary",
+        kind: "local_transaction",
+        name: "Foo bar",
+        owning_app: "publisher"
+      )
       assert Edition.where(panopticon_id: artefact.id).first.nil?
 
       get :show, params: { id: artefact.id }
