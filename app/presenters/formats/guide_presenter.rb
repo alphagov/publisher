@@ -10,6 +10,10 @@ module Formats
       'guide'
     end
 
+    def rendering_app
+      "government-frontend"
+    end
+
     def details
       {
         parts: parts,
