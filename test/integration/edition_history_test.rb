@@ -4,6 +4,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   context "viewing the history and notes tab" do
@@ -28,7 +29,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "direct the user to view a published edition on GOV.UK directly, not draft" do
-      visit "/editions/#{@answer.id}"
+      visit_edition @answer
       click_on "History and notes"
 
       assert page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
@@ -38,7 +39,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     should "not show the view link for archived editions" do
       @answer.update_attribute(:state, 'archived')
 
-      visit "/editions/#{@answer.id}"
+      visit_edition @answer
       click_on "History and notes"
 
       refute page.has_css?('#edition-history p.add-bottom-margin', text: "Preview edition at")
@@ -46,14 +47,14 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "have the first history actions visible" do
-      visit "/editions/#{@guide.id}"
+      visit_edition @guide
       click_on "History and notes"
 
       assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
     end
 
     should "have clickable links in notes" do
-      visit "/editions/#{@guide.id}"
+      visit_edition @guide
       click_on "History and notes"
 
       assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
@@ -62,7 +63,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     should "hide everything but the latest reply in fact check responses behind a toggle" do
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
 
-      visit "/editions/#{@guide.id}"
+      visit_edition @guide
       click_on "History and notes"
 
       assert page.has_css?('p', text: 'email reply')
@@ -75,7 +76,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "include the email addresses of fact check request recipients" do
-      visit "/editions/#{@guide.id}"
+      visit_edition @guide
       click_on "History and notes"
       click_on "Edition 1"
       assert page.has_css?('p', text: "first")
@@ -84,7 +85,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "hide actions when the edition title is clicked" do
-      visit "/editions/#{@guide.id}"
+      visit_edition @guide
       click_on "History and notes"
       click_on "Edition 2"
       assert page.has_no_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
@@ -94,20 +95,20 @@ class EditionHistoryTest < JavascriptIntegrationTest
       should "be able to add and resolve a note" do
         add_important_note("This is an important note. Take note.")
 
-        visit "/editions/#{@guide.id}"
+        visit_edition @guide
         assert page.has_content? "This is an important note. Take note."
         assert page.has_css?('.callout-important-note')
 
         click_on "History and notes"
         click_on "Delete important note"
-        visit "/editions/#{@guide.id}"
+        visit_edition @guide
         assert page.has_no_css?('.callout-important-note')
       end
 
       should "prepopulate with an existing note" do
         add_important_note("This is an important note. Take note.")
 
-        visit "/editions/#{@guide.id}"
+        visit_edition @guide
         click_on "History and notes"
         click_on "Update important note"
 
@@ -134,7 +135,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         @edition.actions.create(:request_type => Action::IMPORTANT_NOTE,
                                 :comment => "This is an important note. Take note.")
 
-        visit "/editions/#{@edition.id}"
+        visit_edition @edition
         assert page.has_content? "This is an important note. Take note."
 
         click_on "Create new edition"
@@ -173,7 +174,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
   end
 
   def add_important_note(note)
-    visit "/editions/#{@guide.id}"
+    visit_edition @guide
     click_on "History and notes"
     click_on "Update important note"
 

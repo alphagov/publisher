@@ -8,6 +8,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     stub_linkables
     FactoryGirl.create(:user)
     stub_mapit_areas_requests(Plek.current.find('imminence'))
+    stub_holidays_used_by_fact_check
   end
 
   teardown do

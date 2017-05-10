@@ -16,6 +16,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   teardown do
@@ -23,7 +24,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
   end
 
   test "deleting a draft edition discards the draft in the publishing api" do
-    visit "/editions/#{@edition.id}"
+    visit_edition @edition
 
     click_on "Admin"
 

@@ -12,6 +12,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     login_as @author
   end
@@ -44,7 +45,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
                                    :introduction => "Become a space pilot",
                                    :will_continue_on => "UK Space Recruitment",)
 
-      visit "/editions/#{transaction.to_param}"
+      visit_edition transaction
 
       assert page.has_content? 'Register for space flight'
       assert page.has_field?("Introductory paragraph", :with => "Become a space pilot")
@@ -65,7 +66,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
                                    :panopticon_id => @artefact.id,
                                    :title => "Register for space flight")
 
-      visit "/editions/#{transaction.to_param}"
+      visit_edition transaction
 
       fill_in "Service analytics profile", :with => "UA-INVALID-SPACE-FLIGHT"
       save_edition_and_assert_error
@@ -86,7 +87,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
                                   :title => "Foo transaction"
                                 )
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 end

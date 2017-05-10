@@ -4,6 +4,7 @@ class TaggingTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @edition = FactoryGirl.create(:guide_edition)
     @artefact = @edition.artefact
@@ -13,7 +14,7 @@ class TaggingTest < JavascriptIntegrationTest
 
   context "Tagging to linkables" do
     should "tag to browse pages" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Tagging'
 
       select 'Tax / VAT', from: 'Mainstream browse pages'
@@ -33,7 +34,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "tag to topics" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Tagging'
 
       select 'Oil and Gas / Fields', from: 'Topics'
@@ -53,7 +54,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "tag to organisations" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Tagging'
 
       select 'Student Loans Company', from: 'Organisations'
@@ -72,7 +73,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "tag to parent" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Tagging'
 
       select 'Tax / RTI', from: 'Breadcrumb'
@@ -100,7 +101,7 @@ class TaggingTest < JavascriptIntegrationTest
         },
       )
 
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Tagging'
 
       select 'Tax / RTI (draft)', from: 'Mainstream browse pages'
@@ -133,7 +134,7 @@ class TaggingTest < JavascriptIntegrationTest
         },
       )
 
-      visit edition_path(@edition)
+      visit_edition @edition
 
       switch_tab 'Tagging'
 
@@ -153,7 +154,7 @@ class TaggingTest < JavascriptIntegrationTest
       stub_request(:get, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
         .to_return(status: 404)
 
-      visit edition_path(@edition)
+      visit_edition @edition
 
       assert page.has_content?('Test guide')
     end
@@ -161,7 +162,7 @@ class TaggingTest < JavascriptIntegrationTest
 
   context "Tagging to external links" do
     should "add new external links when the item is not tagged" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Related external links'
 
       assert 0, @artefact.external_links.count
@@ -183,7 +184,7 @@ class TaggingTest < JavascriptIntegrationTest
       @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
       assert 1, @artefact.external_links.count
 
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Related external links'
       click_on "Add related external link"
 
@@ -199,7 +200,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "not save when no links are added" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Related external links'
       click_on "Save links"
 
@@ -210,7 +211,7 @@ class TaggingTest < JavascriptIntegrationTest
       @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
       assert 1, @artefact.external_links.count
 
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab "Related external links"
       click_on "Remove this URL"
       click_on "Save links"
@@ -220,7 +221,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "not add invalid links" do
-      visit edition_path(@edition)
+      visit_edition @edition
       switch_tab 'Related external links'
 
       click_on "Add related external link"

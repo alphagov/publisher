@@ -14,6 +14,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   test "creating a local transaction sends the right emails" do
@@ -62,7 +63,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         lgil_code: 2
       )
 
-      visit "/editions/#{edition.to_param}"
+      visit_edition edition
 
       assert page.has_content? 'Foo transaction #1'
       assert page.has_field?('LGSL code', with: '1', disabled: true)
@@ -91,7 +92,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         lgil_code: 1
       )
 
-      visit "/editions/#{edition.to_param}"
+      visit_edition edition
       fill_in "Title", with: ""
 
       save_edition_and_assert_error
@@ -109,7 +110,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       lgil_code: 1
     )
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 end

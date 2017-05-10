@@ -12,6 +12,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   should "create a new LicenceEdition" do
@@ -41,7 +42,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                    :will_continue_on => "The HMRC website",
                                    :continuation_link => "http://www.hmrc.gov.uk")
 
-      visit "/editions/#{licence.to_param}"
+      visit_edition licence
 
       assert page.has_content? 'Foo bar #1'
 
@@ -77,7 +78,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                  :will_continue_on => "The HMRC website",
                                  :continuation_link => "http://www.hmrc.gov.uk")
 
-    visit "/editions/#{licence.to_param}"
+    visit_edition licence
     click_on "Create new edition"
 
     assert page.has_content? 'Foo bar #2'
@@ -100,7 +101,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
                                   :will_continue_on => "The HMRC website",
                                   :continuation_link => "http://www.hmrc.gov.uk")
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 end

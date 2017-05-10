@@ -5,6 +5,7 @@ class EditionTabTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @guide = FactoryGirl.create(:guide_edition, state: 'draft')
   end

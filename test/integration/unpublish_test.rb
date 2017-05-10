@@ -13,10 +13,11 @@ class UnpublishTest < ActionDispatch::IntegrationTest
                                    body: "They're quite gross.")
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   should "unpublishing an artefact archives all editions" do
-    visit "/editions/#{@edition.id}"
+    visit_edition @edition
 
     select_tab "Unpublish"
 
@@ -32,7 +33,7 @@ class UnpublishTest < ActionDispatch::IntegrationTest
 
     @artefact.update(state: 'archived')
 
-    visit "/editions/#{@edition.id}"
+    visit_edition @edition
 
     within(".callout-danger") do
       assert page.has_content?("You can’t edit this publication")

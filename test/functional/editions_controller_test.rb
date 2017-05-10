@@ -4,6 +4,7 @@ class EditionsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   context "#create" do

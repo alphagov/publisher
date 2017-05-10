@@ -5,6 +5,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @artefact = FactoryGirl.create(:artefact,
         slug: "hedgehog-topiary",
@@ -31,7 +32,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     guide.parts.build(:title => "Placeholder", :body => "placeholder", :slug => 'placeholder', :order => 1)
     guide.save!
 
-    visit "/editions/#{guide.to_param}"
+    visit_edition guide
 
     assert page.has_content? 'Foo bar #1'
 
@@ -63,7 +64,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar")
     guide.save!
 
-    visit "/editions/#{guide.to_param}"
+    visit_edition guide
     click_on "Create new edition"
 
     assert page.has_content? 'Foo bar #2'
@@ -79,7 +80,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
                                  :state => 'published',
                                  :title => "Foo bar")
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 end

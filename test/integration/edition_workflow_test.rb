@@ -1,10 +1,13 @@
 require 'integration_test_helper'
+require 'gds_api/test_helpers/calendars'
 
 class EditionWorkflowTest < JavascriptIntegrationTest
+  include GdsApi::TestHelpers::Calendars
   attr_reader :alice, :bob, :guide
 
   setup do
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @alice = FactoryGirl.create(:user, name: "Alice")
     @bob = FactoryGirl.create(:user, name: "Bob")
@@ -34,6 +37,24 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
 
     refute page.has_xpath?("//select[@id='edition_assigned_to_id']/option[text() = '#{disabled_user.name}']")
+  end
+
+  test "the customised message for fact-check is pre-loaded with a 5 working days deadline message" do
+    today = Date.parse('2017-04-28')
+    calendars_has_a_bank_holiday_on(Date.parse('2017-05-01'), in_division: 'england-and-wales')
+
+    Timecop.freeze(today) do
+      guide.update_attribute(:state, 'ready')
+      visit_edition guide
+
+      page.find_link('Fact check').trigger('click')
+
+      within "#send_fact_check_form" do
+        customised_message = page.find_field('Customised message')
+        assert customised_message
+        assert customised_message.value.include? 'Deadline: 8 May 2017 (5 working days from today - 28 April 2017)'
+      end
+    end
   end
 
   test "can send guide to fact-check when in ready state" do

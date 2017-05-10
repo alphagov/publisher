@@ -12,6 +12,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   should "create a new HelpPageEdition" do
@@ -29,7 +30,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                    :panopticon_id => @artefact.id,
                                    :title => "Foo bar",
                                    :body => "Body content")
-      visit "/editions/#{help_page.to_param}"
+      visit_edition help_page
 
       assert page.has_content? 'Foo bar #1'
       assert page.has_field?("Title", :with => "Foo bar")
@@ -51,7 +52,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                    :title => "Foo bar",
                                    :body => "This is really helpful")
 
-      visit "/editions/#{help_page.to_param}"
+      visit_edition help_page
       click_on "Create new edition"
 
       assert page.has_content? 'Foo bar #2'
@@ -66,7 +67,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
                                  :title => "Foo bar",
                                  :body => "This is really helpful")
 
-    visit "/editions/#{edition.to_param}"
+    visit_edition edition
     assert_all_edition_fields_disabled(page)
   end
 end

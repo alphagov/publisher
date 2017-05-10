@@ -4,6 +4,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
   end
 
   with_and_without_javascript do

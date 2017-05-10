@@ -5,6 +5,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     stub_register_published_content
     setup_users
     stub_linkables
+    stub_holidays_used_by_fact_check
 
     @first_edition = FactoryGirl.create(:answer_edition,
                                         :state => "published",
@@ -13,7 +14,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
 
   context "First edition" do
     should "not have a link to show changes" do
-      visit "/editions/#{@first_edition.id}"
+      visit_edition @first_edition
       click_on "History and notes"
 
       assert page.has_no_link?("Compare with previous")
@@ -26,7 +27,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       @second_edition.update_attributes(body: "Test Body 2")
       @second_edition.reload
 
-      visit "/editions/#{@second_edition.id}"
+      visit_edition @second_edition
       click_on "History and notes"
     end
 
@@ -66,7 +67,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
       @second_edition.reload
       assert_equal "published", @second_edition.state
 
-      visit "/editions/#{@second_edition.id}"
+      visit_edition @second_edition
       click_on "History and notes"
       click_on "Compare with edition 1"
 
