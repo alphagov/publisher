@@ -28,14 +28,39 @@ class SearchPayloadPresenter
       indexable_content: indexable_content,
       link: "/#{slug}",
       public_timestamp: public_timestamp,
-      content_store_document_type: publishing_api_payload.fetch(:document_type),
-    }
+      content_store_document_type: content_store_document_type,
+    }.merge(licence_details)
   end
 
   def publishing_api_payload
     @publishing_api_payload ||= begin
       presenter = EditionPresenterFactory.get_presenter(registerable_edition)
       presenter.render_for_publishing_api
+    end
+  end
+
+  def content_store_document_type
+    publishing_api_payload.fetch(:document_type)
+  end
+
+  def licence_details
+    return {} unless content_store_document_type == 'licence'
+
+    {
+      licence_identifier: licence_identifier,
+      licence_short_description: licence_short_description
+    }
+  end
+
+  def licence_short_description
+    if registerable_edition.respond_to?(:licence_short_description)
+      registerable_edition.licence_short_description
+    end
+  end
+
+  def licence_identifier
+    if registerable_edition.respond_to?(:licence_identifier)
+      registerable_edition.licence_identifier
     end
   end
 end
