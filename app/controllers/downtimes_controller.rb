@@ -44,7 +44,20 @@ class DowntimesController < ApplicationController
 private
 
   def downtime_params
-    params[:downtime].permit(:message, :artefact_id, :start_time, :end_time)
+    params[:downtime].permit([
+      'artefact_id',
+      'message',
+      'end_time(1i)',
+      'end_time(2i)',
+      'end_time(3i)',
+      'end_time(4i)',
+      'end_time(5i)',
+      'start_time(1i)',
+      'start_time(2i)',
+      'start_time(3i)',
+      'start_time(4i)',
+      'start_time(5i)'
+    ])
   end
 
   def load_edition
@@ -52,7 +65,7 @@ private
   end
 
   def process_params
-    squash_multiparameter_datetime_attributes(params[:downtime], %w(start_time end_time))
+    squash_multiparameter_datetime_attributes(downtime_params, %w(start_time end_time))
   end
 
   def edition_link
