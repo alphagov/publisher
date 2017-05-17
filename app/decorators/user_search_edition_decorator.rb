@@ -1,8 +1,8 @@
 # Decorator class around editions, to provide user history methods
 class UserSearchEditionDecorator
-
   def initialize(edition, user)
-    @edition, @user = edition, user
+    @edition = edition
+    @user = user
   end
 
   def method_missing(method_name, *args)
@@ -27,11 +27,11 @@ private
 
   def user_role(action)
     if action.requester == @user && action.recipient == @user
-      user_role = :both
+      :both
     elsif action.requester == @user
-      user_role = :requester
+      :requester
     elsif action.recipient == @user
-      user_role = :recipient
+      :recipient
     end
   end
 
@@ -47,33 +47,33 @@ private
 
     if action.requester == @user
       participle = case action.request_type
-      when Action::CREATE
-        "created"
-      when Action::REQUEST_REVIEW
-        "requested review"
-      when Action::APPROVE_REVIEW
-        "approved review"
-      when Action::APPROVE_FACT_CHECK
-        "approved fact check"
-      when Action::REQUEST_AMENDMENTS
-        "requested amendments"
-      when Action::SEND_FACT_CHECK
-        "sent fact check"
-      when Action::RECEIVE_FACT_CHECK
-        "received fact check"
-      when Action::PUBLISH
-        "published"
-      when Action::ARCHIVE
-        "archived"
-      when Action::NEW_VERSION
-        "made a new version"
-      when Action::NOTE
-        "made a note"
-      when Action::ASSIGN
-        "assigned to #{action.recipient.name}"
-      else
-        "made #{article} '#{action.request_type}' request"
-      end
+                   when Action::CREATE
+                     "created"
+                   when Action::REQUEST_REVIEW
+                     "requested review"
+                   when Action::APPROVE_REVIEW
+                     "approved review"
+                   when Action::APPROVE_FACT_CHECK
+                     "approved fact check"
+                   when Action::REQUEST_AMENDMENTS
+                     "requested amendments"
+                   when Action::SEND_FACT_CHECK
+                     "sent fact check"
+                   when Action::RECEIVE_FACT_CHECK
+                     "received fact check"
+                   when Action::PUBLISH
+                     "published"
+                   when Action::ARCHIVE
+                     "archived"
+                   when Action::NEW_VERSION
+                     "made a new version"
+                   when Action::NOTE
+                     "made a note"
+                   when Action::ASSIGN
+                     "assigned to #{action.recipient.name}"
+                   else
+                     "made #{article} '#{action.request_type}' request"
+                   end
       participle[0] = participle[0].capitalize
       "#{participle} on #{human_timestamp}"
     elsif action.recipient == @user
@@ -85,5 +85,4 @@ private
       end
     end
   end
-
 end

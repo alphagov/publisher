@@ -14,7 +14,7 @@ module GovukContentModels
         make_record_action_noises(new_action, action_name)
       end
 
-      private
+    private
 
       def make_record_action_noises(new_action, action_name)
         NoisyWorkflow.make_noise(new_action).deliver_now

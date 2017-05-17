@@ -22,10 +22,11 @@ class ReportsController < ApplicationController
     send_report "content_workflow"
   end
 
-  private
+private
 
   def report_last_updated(report)
-    if mtime = mtime_for(report)
+    mtime = mtime_for(report)
+    if mtime
       content_tag :span, "Generated #{mtime.to_s(:govuk_date)}", class: "text-muted"
     else
       content_tag :span, "Report currently unavailable", class: "text-muted"
@@ -34,7 +35,7 @@ class ReportsController < ApplicationController
   helper_method :report_last_updated
 
   def mtime_for(report)
-    mtime = File.stat(report_location(report)).mtime.in_time_zone(Time.zone)
+    File.stat(report_location(report)).mtime.in_time_zone(Time.zone)
   rescue Errno::ENOENT
     nil
   end
@@ -46,7 +47,7 @@ class ReportsController < ApplicationController
   def send_report(report)
     if File.exist?(report_location(report))
       send_file report_location(report),
-        filename: "#{report}-#{mtime_for(report).strftime("%Y%m%d%H%M%S")}.csv",
+        filename: "#{report}-#{mtime_for(report).strftime('%Y%m%d%H%M%S')}.csv",
         type: "text/csv",
         disposition: "attachment"
     else

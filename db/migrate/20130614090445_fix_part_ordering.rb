@@ -10,7 +10,7 @@ class FixPartOrdering < Mongoid::Migration
         puts "Fixing nil parts order for #{edition.title}(v#{edition.version_number})"
         puts "  broken order was: #{edition.parts.map(&:order).inspect}"
         edition.order_parts
-        edition.save! :validate => false # skip validations so that we can fix published and archived editions
+        edition.save! validate: false # skip validations so that we can fix published and archived editions
         count += 1
       end
     end

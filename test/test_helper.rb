@@ -21,7 +21,7 @@ require 'capybara-screenshot/minitest'
 
 require 'govuk_sidekiq/testing'
 
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.disable_net_connect!(allow_localhost: true)
 
 require 'minitest/reporters'
 Minitest::Reporters.use!(
@@ -62,10 +62,10 @@ class ActiveSupport::TestCase
     stub_any_publishing_api_call
   end
 
-  def without_metadata_denormalisation(*klasses, &block)
-    klasses.each {|klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
+  def without_metadata_denormalisation(*klasses, &_block)
+    klasses.each { |klass| klass.any_instance.stubs(:denormalise_metadata).returns(true) }
     result = yield
-    klasses.each {|klass| klass.any_instance.unstub(:denormalise_metadata) }
+    klasses.each { |klass| klass.any_instance.unstub(:denormalise_metadata) }
     result
   end
 
@@ -89,8 +89,8 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    @user = FactoryGirl.create(:user, :name => 'Stub User')
-    request.env['warden'] = stub(:authenticate! => true, :authenticated? => true, :user => @user)
+    @user = FactoryGirl.create(:user, name: 'Stub User')
+    request.env['warden'] = stub(authenticate!: true, authenticated?: true, user: @user)
   end
 
   include GdsApi::TestHelpers::PublishingApiV2

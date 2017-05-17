@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class HealthcheckControllerTest < ActionController::TestCase
-
   def json
     JSON.parse(response.body)
   end

@@ -11,43 +11,43 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
     @_edition ||= begin
       @edition = FactoryGirl.create(
         :simple_smart_answer_edition,
-        :start_button_text => "Start now",
-        :title => "Party time",
-        :body => "Are you ready to party?",
-        :state => "draft",
-        :slug => "ready-to-party",
-        :panopticon_id => artefact.id
+        start_button_text: "Start now",
+        title: "Party time",
+        body: "Are you ready to party?",
+        state: "draft",
+        slug: "ready-to-party",
+        panopticon_id: artefact.id
       )
 
       @edition.nodes.build(
-        :kind => "question",
-        :slug => "question-1",
-        :title => "Are you really though?",
-        :body => "It's going to be a big night",
-        :options_attributes => [
+        kind: "question",
+        slug: "question-1",
+        title: "Are you really though?",
+        body: "It's going to be a big night",
+        options_attributes: [
           {
-            :label => "Yes please",
-            :slug => "yes-please",
-            :next_node => "outcome-1",
+            label: "Yes please",
+            slug: "yes-please",
+            next_node: "outcome-1",
           },
           {
-            :label => "Not tonight",
-            :slug => "not-tonight",
-            :next_node => "outcome-2",
+            label: "Not tonight",
+            slug: "not-tonight",
+            next_node: "outcome-2",
           }
         ]
       )
       @edition.nodes.build(
-        :kind => "outcome",
-        :slug => "outcome-1",
-        :title => "Let's party!",
-        :body => "Good choice"
+        kind: "outcome",
+        slug: "outcome-1",
+        title: "Let's party!",
+        body: "Good choice"
       )
       @edition.nodes.build(
-        :kind => "outcome",
-        :slug => "outcome-2",
-        :title => "Maybe next time...",
-        :body => "What a shame"
+        kind: "outcome",
+        slug: "outcome-2",
+        title: "Maybe next time...",
+        body: "What a shame"
       )
       @edition.save!
       @edition

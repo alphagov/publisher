@@ -8,7 +8,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
         kind: "help_page",
         name: "Foo bar",
         owning_app: "publisher",
-    )
+                                  )
 
     setup_users
     stub_linkables
@@ -27,17 +27,17 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   with_and_without_javascript do
     should "allow editing HelpPageEdition" do
       help_page = FactoryGirl.create(:help_page_edition,
-                                   :panopticon_id => @artefact.id,
-                                   :title => "Foo bar",
-                                   :body => "Body content")
+                                     panopticon_id: @artefact.id,
+                                     title: "Foo bar",
+                                     body: "Body content")
       visit_edition help_page
 
       assert page.has_content? 'Foo bar #1'
-      assert page.has_field?("Title", :with => "Foo bar")
-      assert page.has_field?("Body", :with => "Body content")
+      assert page.has_field?("Title", with: "Foo bar")
+      assert page.has_field?("Body", with: "Body content")
 
-      fill_in "Body", :with => "This body has changed"
-      fill_in "Title", :with => "This title has changed"
+      fill_in "Body", with: "This body has changed"
+      fill_in "Title", with: "This title has changed"
       save_edition_and_assert_success
 
       h = HelpPageEdition.find(help_page.id)
@@ -47,25 +47,25 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     should "allow creating a new version of a HelpPageEdition" do
       help_page = FactoryGirl.create(:help_page_edition,
-                                   :panopticon_id => @artefact.id,
-                                   :state => 'published',
-                                   :title => "Foo bar",
-                                   :body => "This is really helpful")
+                                   panopticon_id: @artefact.id,
+                                   state: 'published',
+                                   title: "Foo bar",
+                                   body: "This is really helpful")
 
       visit_edition help_page
       click_on "Create new edition"
 
       assert page.has_content? 'Foo bar #2'
-      assert page.has_field?("Body", :with => "This is really helpful")
+      assert page.has_field?("Body", with: "This is really helpful")
     end
   end
 
   should "disable fields for a published edition" do
     edition = FactoryGirl.create(:help_page_edition,
-                                 :panopticon_id => @artefact.id,
-                                 :state => 'published',
-                                 :title => "Foo bar",
-                                 :body => "This is really helpful")
+                                 panopticon_id: @artefact.id,
+                                 state: 'published',
+                                 title: "Foo bar",
+                                 body: "This is really helpful")
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

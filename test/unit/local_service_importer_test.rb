@@ -19,15 +19,15 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
     end
 
     should "run it" do
-      instance = stub()
+      instance = stub
       instance.expects(:run)
       LocalServiceImporter.stubs(:new).returns(instance)
       LocalServiceImporter.update
     end
 
     should "close the filehandle when done" do
-      stub_fh = stub()
-      File.stubs(:open).with('data/local_services.csv', anything() ).returns(stub_fh)
+      stub_fh = stub
+      File.stubs(:open).with('data/local_services.csv', anything).returns(stub_fh)
       stub_fh.expects(:close)
       LocalServiceImporter.update
     end

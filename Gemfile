@@ -58,8 +58,8 @@ group :test do
   gem 'rails-perftest'
   gem 'ruby-prof'
   gem 'shoulda', '3.5.0'
-  gem 'simplecov', '~> 0.6.4', :require => false
-  gem 'simplecov-rcov', '~> 0.2.3', :require => false
+  gem 'simplecov', '~> 0.6.4', require: false
+  gem 'simplecov-rcov', '~> 0.2.3', require: false
   gem "timecop", '0.8.0'
   gem 'webmock', '~> 1.22'
 end

@@ -11,12 +11,12 @@ class MigrateHelpPages < Mongoid::Migration
   def self.up
     SLUGS.each do |slug|
       puts "Converting #{slug} to HelpPageEdition"
-      a = Artefact.where(:slug => slug).first
+      a = Artefact.where(slug: slug).first
       unless a
         puts "  artefact not found"
         next
       end
-      eds = Edition.where(:slug => slug)
+      eds = Edition.where(slug: slug)
       unless eds.count == 1
         puts "  multiple editions found, skipping..."
         next

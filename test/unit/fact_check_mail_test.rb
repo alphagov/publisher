@@ -19,9 +19,9 @@ class FactCheckMailTest < ActiveSupport::TestCase
   [
     ['Auto-Submitted', 'auto-replied'],
     ['Auto-Submitted', 'auto-generated'],
-    ['Precedence', 'bulk'],
-    ['Precedence', 'auto_reply'],
-    ['Precedence', 'junk'],
+    %w(Precedence bulk),
+    %w(Precedence auto_reply),
+    %w(Precedence junk),
     ['Return-Path', nil],
     ['Subject', 'Out of Office'],
     ['X-Precedence', 'bulk'],
@@ -38,7 +38,7 @@ class FactCheckMailTest < ActiveSupport::TestCase
 
   [
     ['Auto-Submitted', 'no'],
-    ['Precedence', 'foo'],
+    %w(Precedence foo),
     ['Subject', 'On holiday'],
     ['X-Precedence', 'bar'],
     ['X-Autoreply', 'no'],

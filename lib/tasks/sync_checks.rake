@@ -31,7 +31,7 @@ namespace :sync_checks do
       content_item["schema_name"] == format
     end
 
-    checker.add_expectation("document_type") do |content_item, edition|
+    checker.add_expectation("document_type") do |content_item, _edition|
       content_item["document_type"] == format
     end
 
@@ -40,7 +40,7 @@ namespace :sync_checks do
     end
 
     checker.add_expectation("public_updated_at") do |content_item, edition|
-      content_item_date = DateTime.parse(content_item['public_updated_at'])
+      content_item_date = DateTime.parse(content_item['public_updated_at']).in_time_zone
       content_item_date.change(usec: 0).utc ==
         (
           edition.public_updated_at ||

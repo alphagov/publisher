@@ -3,7 +3,7 @@ class NullTimestamp
     "never"
   end
 
-  def strftime(*anything)
+  def strftime(*_anything)
     "never"
   end
 end

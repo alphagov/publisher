@@ -5,7 +5,7 @@ class PublishedSlugRegistererTest < ActiveSupport::TestCase
     @logger = stub("logger")
 
     @slugs = %w{slug1 slug2 slug3}
-    @artefacts = Hash[ @slugs.map { |slug|
+    @artefacts = Hash[@slugs.map { |slug|
       [slug, FactoryGirl.create(:artefact, slug: slug)]
     }]
 

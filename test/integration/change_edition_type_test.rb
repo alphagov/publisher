@@ -39,12 +39,12 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       "body" => "This is some edition version text.",
       "slug" => "part-one"
       },
-      {
-        "title" => "PART !!",
-      "body" =>
-      "This is some more edition version text.",
-      "slug" =>  "part-two"
-      }
+    {
+      "title" => "PART !!",
+    "body" =>
+    "This is some more edition version text.",
+    "slug" =>  "part-two"
+    }
   ])
 
   without_javascript do
@@ -55,7 +55,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
         factory_name = (from + "_edition").to_sym
         artefact = create_artefact_of_kind(from)
         edition = FactoryGirl.create(factory_name, state: 'published', panopticon_id: artefact.id)
-        sample_parts.each {|part| edition.parts.create(part)} if edition.respond_to?(:parts)
+        sample_parts.each { |part| edition.parts.create(part) } if edition.respond_to?(:parts)
 
         visit "/editions/#{edition.to_param}/admin"
 

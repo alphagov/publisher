@@ -12,9 +12,9 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
   end
 
   test "#path makes a temp directory and returns the path" do
-    Timecop.freeze(Time.mktime(2015,1)) do
+    Timecop.freeze(Time.mktime(2015, 1)) do
       Process.stubs(:pid).returns 1234
-      expected = File.join(Dir.tmpdir,"publisher_reports-20150101000000-1234")
+      expected = File.join(Dir.tmpdir, "publisher_reports-20150101000000-1234")
       assert_equal expected, @generator.path
 
       # Check the call is memoized

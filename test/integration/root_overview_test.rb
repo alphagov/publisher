@@ -14,9 +14,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
     charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
 
-    x =  FactoryGirl.create(:guide_edition, :title => "XXX", :slug => "xxx")
-    y =  FactoryGirl.create(:guide_edition, :title => "YYY", :slug => "yyy")
-    z =  FactoryGirl.create(:guide_edition, :title => "ZZZ", :slug => "zzz")
+    x = FactoryGirl.create(:guide_edition, title: "XXX", slug: "xxx")
+    y = FactoryGirl.create(:guide_edition, title: "YYY", slug: "yyy")
+    FactoryGirl.create(:guide_edition, title: "ZZZ", slug: "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
@@ -54,8 +54,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
   test "filtering by title content" do
     FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, :title => "XXX")
-    FactoryGirl.create(:guide_edition, :title => "YYY")
+    FactoryGirl.create(:guide_edition, title: "XXX")
+    FactoryGirl.create(:guide_edition, title: "YYY")
 
     visit "/"
     filter_by_user("All")
@@ -106,7 +106,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
   test "invalid sibling_in_progress should not break archived view" do
     FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'archived', :sibling_in_progress => 2)
+    FactoryGirl.create(:guide_edition, title: "XXX", state: 'archived', sibling_in_progress: 2)
 
     visit "/"
     filter_by_user("All")
@@ -125,26 +125,26 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
   test "Publications in review are ordered correctly" do
     FactoryGirl.create(:user)
-    x =  FactoryGirl.create(:guide_edition, :title => "XXX", :slug => "xxx",
-                            :state => 'in_review', :review_requested_at => 4.days.ago)
-    y =  FactoryGirl.create(:guide_edition, :title => "YYY", :slug => "yyy",
-                            :state => 'in_review', :review_requested_at => 2.days.ago)
-    z =  FactoryGirl.create(:guide_edition, :title => "ZZZ", :slug => "zzz",
-                            :state => 'in_review', :review_requested_at => 20.minutes.ago)
+    FactoryGirl.create(:guide_edition, title: "XXX", slug: "xxx",
+                       state: 'in_review', review_requested_at: 4.days.ago)
+    FactoryGirl.create(:guide_edition, title: "YYY", slug: "yyy",
+                       state: 'in_review', review_requested_at: 2.days.ago)
+    FactoryGirl.create(:guide_edition, title: "ZZZ", slug: "zzz",
+                       state: 'in_review', review_requested_at: 20.minutes.ago)
 
     visit "/"
     filter_by_user("All")
     click_on "In review"
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", :text => "4 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", :text => "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", :text => "20 minutes")
+    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "4 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "20 minutes")
 
     click_on "Awaiting review"
 
-    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", :text => "20 minutes")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", :text => "2 days")
-    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", :text => "4 days")
+    assert page.has_css?("#publication-list-container table tbody tr:first-child td:nth-child(5)", text: "20 minutes")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(2) td:nth-child(5)", text: "2 days")
+    assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
   end
 
   test "allows a user to claim 2i" do
@@ -152,8 +152,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     user = FactoryGirl.create(:user)
     assignee = FactoryGirl.create(:user)
-    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
-                                 :review_requested_at => Time.zone.now, :assigned_to => assignee)
+    edition = FactoryGirl.create(:guide_edition, title: "XXX", state: 'in_review',
+                                 review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
     filter_by_user("All")
@@ -166,8 +166,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert edition_url(edition), current_url
     assert page.has_content?("You are the reviewer of this guide.")
-    assert page.has_select?("Reviewer", :selected => user.name)
-    assert page.has_select?("Assigned to", :selected => assignee.name)
+    assert page.has_select?("Reviewer", selected: user.name)
+    assert page.has_select?("Assigned to", selected: assignee.name)
   end
 
   test "prevents claiming 2i when someone else has" do
@@ -177,8 +177,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assignee = FactoryGirl.create(:user)
     another_user = FactoryGirl.create(:user, name: 'Another McPerson')
-    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
-                                 :review_requested_at => Time.zone.now, :assigned_to => assignee)
+    edition = FactoryGirl.create(:guide_edition, title: "XXX", state: 'in_review',
+                                 review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
     filter_by_user("All")
@@ -193,8 +193,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert edition_url(edition), current_url
     assert page.has_content?("Another McPerson has already claimed this 2i")
-    assert page.has_select?("Reviewer", :selected => another_user.name)
-    assert page.has_select?("Assigned to", :selected => assignee.name)
+    assert page.has_select?("Reviewer", selected: another_user.name)
+    assert page.has_select?("Assigned to", selected: assignee.name)
 
     select("", from: "Reviewer")
     click_on "Save"
@@ -212,8 +212,13 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
   test "prevents the assignee claiming 2i" do
     user = FactoryGirl.create(:user)
-    edition = FactoryGirl.create(:guide_edition, :title => "XXX", :state => 'in_review',
-                                 :review_requested_at => Time.zone.now, :assigned_to => user)
+    FactoryGirl.create(
+      :guide_edition,
+      title: "XXX",
+      state: 'in_review',
+      review_requested_at: Time.zone.now,
+      assigned_to: user
+    )
 
     visit "/"
     filter_by_user("All")

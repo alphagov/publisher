@@ -20,12 +20,16 @@ module TabsHelper
   end
 
   module Edition
-    class Tab < Struct.new(:name)
-
+    class Tab
       TABS = %w(edit tagging metadata history admin related_external_links unpublish)
+      attr_accessor :name
+
+      def initialize(name = nil)
+        @name = name
+      end
 
       def self.all
-        @@all ||= TABS.map { |name| Tab.new(name) }
+        @all ||= TABS.map { |name| Tab.new(name) }
       end
 
       def self.[](name)

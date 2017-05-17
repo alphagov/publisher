@@ -31,7 +31,7 @@ class NotesController < InheritedResources::Base
     parent
   end
 
-  private
+private
 
   def resolve_important_note
     if parent.important_note.present?
@@ -39,5 +39,4 @@ class NotesController < InheritedResources::Base
       flash[:success] = "Note resolved"
     end
   end
-
 end

@@ -15,6 +15,6 @@ EOS
 
     parser = CSVParser.new(StringIO.new(csv_string))
 
-    assert_equal [{slug: "/foo", tag: "/bar"}], parser.parse
+    assert_equal [{ slug: "/foo", tag: "/bar" }], parser.parse
   end
 end

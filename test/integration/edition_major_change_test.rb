@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class EditionMajorChangeTest < JavascriptIntegrationTest
-
   setup do
     setup_users
     stub_linkables

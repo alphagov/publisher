@@ -4,7 +4,6 @@ require 'retriable'
 require 'reverse_markdown'
 
 class LicenceContentImporter
-
   include GdsApi::Helpers
 
   attr_reader :data_path, :imported, :existing, :failed
@@ -18,17 +17,16 @@ class LicenceContentImporter
     raise "User #{importing_user} not found, please provide the name of a valid user." unless @user
   end
 
-  def self.run(method, data_path, importing_user=User.first)
+  def self.run(method, data_path, importing_user = User.first)
     importer = LicenceContentImporter.new(data_path, importing_user)
 
     importer.csv_data(data_path).each do |row|
-      retriable :on => GdsApi::TimedOutException, :tries => 5, :interval => 5 do
+      retriable on: GdsApi::TimedOutException, tries: 5, interval: 5 do
         importer.send(method, row)
       end
     end
 
     puts importer.formatted_result(method == :import)
-
   end
 
   def report row
@@ -86,16 +84,16 @@ class LicenceContentImporter
 
   def add_workflow(user, edition)
     type = Action.const_get(Action::CREATE.to_s.upcase)
-    action = edition.new_action(user, type, {})
+    edition.new_action(user, type, {})
     edition.save!
-    user.record_note(edition, "Imported via LicenceContentImporter: #{Date.today.to_s(:db)}")
+    user.record_note(edition, "Imported via LicenceContentImporter: #{Time.zone.today.to_s(:db)}")
   end
 
-  def formatted_result(import=true)
+  def formatted_result(import = true)
     puts "--------------------------------------------------------------------------"
     puts "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
     unless existing.empty?
-      existing.map!{ |e| "#{e.slug} (#{e.licence_identifier})" }
+      existing.map! { |e| "#{e.slug} (#{e.licence_identifier})" }
       existing.uniq!
       puts "#{existing.size} existing LicenceEditions:"
       puts existing
@@ -113,11 +111,11 @@ class LicenceContentImporter
     title.parameterize.gsub("-amp-", "-and-")
   end
 
-  def marked_down(str, unescape_html=false)
+  def marked_down(str, unescape_html = false)
     return str if str.nil?
     str = to_utf8(str)
     str = CGI.unescapeHTML(str) if unescape_html
-    ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|match|
+    ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|_match|
       "\n\n#{$1}"
     }
   end
@@ -129,5 +127,4 @@ class LicenceContentImporter
   def csv_data(data_path)
     CSV.read "#{Rails.root}/#{data_path}", headers: true
   end
-
 end

@@ -67,7 +67,7 @@ class UnpublishService
 
     def unpublish_without_redirect(artefact)
       Services.publishing_api.unpublish(
-      artefact.content_id,
+        artefact.content_id,
       locale: artefact.language,
       type: 'gone',
       discard_drafts: true

@@ -8,7 +8,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       kind: "transaction",
       name: "Register for space flight",
       owning_app: "publisher",
-    )
+                                  )
 
     setup_users
     stub_linkables
@@ -23,9 +23,9 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
       assert page.has_content? @artefact.name
 
-      fill_in "Introductory paragraph", :with => "Become a space pilot"
-      fill_in "Will continue on", :with => "UK Space Recruitment"
-      fill_in "More information", :with => "Take part in the final frontier"
+      fill_in "Introductory paragraph", with: "Become a space pilot"
+      fill_in "Will continue on", with: "UK Space Recruitment"
+      fill_in "More information", with: "Take part in the final frontier"
 
       save_edition_and_assert_success
       assert page.has_content? @artefact.name
@@ -40,19 +40,19 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     should "allow editing a TransactionEdition" do
       transaction = FactoryGirl.create(:transaction_edition,
-                                   :panopticon_id => @artefact.id,
-                                   :title => "Register for space flight",
-                                   :introduction => "Become a space pilot",
-                                   :will_continue_on => "UK Space Recruitment",)
+                                   panopticon_id: @artefact.id,
+                                   title: "Register for space flight",
+                                   introduction: "Become a space pilot",
+                                   will_continue_on: "UK Space Recruitment",)
 
       visit_edition transaction
 
       assert page.has_content? 'Register for space flight'
-      assert page.has_field?("Introductory paragraph", :with => "Become a space pilot")
-      assert page.has_field?("Will continue on", :with => "UK Space Recruitment")
+      assert page.has_field?("Introductory paragraph", with: "Become a space pilot")
+      assert page.has_field?("Will continue on", with: "UK Space Recruitment")
 
-      fill_in "Introductory paragraph", :with => "Get your licence to fly to Mars"
-      fill_in "Will continue on", :with => "UK Terrestrial Mars Office"
+      fill_in "Introductory paragraph", with: "Get your licence to fly to Mars"
+      fill_in "Will continue on", with: "UK Terrestrial Mars Office"
 
       save_edition_and_assert_success
 
@@ -63,15 +63,15 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     should "allow only a valid Service analytics profile" do
       transaction = FactoryGirl.create(:transaction_edition,
-                                   :panopticon_id => @artefact.id,
-                                   :title => "Register for space flight")
+                                   panopticon_id: @artefact.id,
+                                   title: "Register for space flight")
 
       visit_edition transaction
 
-      fill_in "Service analytics profile", :with => "UA-INVALID-SPACE-FLIGHT"
+      fill_in "Service analytics profile", with: "UA-INVALID-SPACE-FLIGHT"
       save_edition_and_assert_error
 
-      fill_in "Service analytics profile", :with => "UA-00100000-1"
+      fill_in "Service analytics profile", with: "UA-00100000-1"
       save_edition_and_assert_success
 
       t = TransactionEdition.find(transaction.id)
@@ -81,10 +81,10 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
   should "disable fields for a published edition" do
     edition = FactoryGirl.create(:transaction_edition,
-                                  :panopticon_id => @artefact.id,
-                                  :state => 'published',
-                                  :slug => @artefact.slug,
-                                  :title => "Foo transaction"
+                                  panopticon_id: @artefact.id,
+                                  state: 'published',
+                                  slug: @artefact.slug,
+                                  title: "Foo transaction"
                                 )
 
     visit_edition edition

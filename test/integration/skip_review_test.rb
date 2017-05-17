@@ -34,7 +34,6 @@ class SkipReviewTest < JavascriptIntegrationTest
   end
 
   should "allow a user with the correct permissions to force publish" do
-
     login_as @permitted_user
 
     visit "/publications/#{@artefact.id}"

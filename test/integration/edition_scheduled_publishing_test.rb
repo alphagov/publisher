@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class EditionScheduledPublishingTest < JavascriptIntegrationTest
-
   setup do
     setup_users
     stub_linkables
@@ -15,7 +14,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   end
 
   test "should schedule publishing of an edition" do
-    edition = FactoryGirl.create(:edition, state: 'ready', :assigned_to => @author)
+    edition = FactoryGirl.create(:edition, state: 'ready', assigned_to: @author)
     visit_edition edition
     click_on "Schedule"
 
@@ -81,5 +80,4 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
 
     assert page.has_css?('.label', text: 'Ready')
   end
-
 end

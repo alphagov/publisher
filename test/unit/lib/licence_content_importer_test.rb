@@ -1,14 +1,13 @@
 require 'test_helper'
 
 class LicenceContentImporterTest < ActiveSupport::TestCase
-
   def setup
-    @user = FactoryGirl.create(:user, :name => "Test user")
+    @user = FactoryGirl.create(:user, name: "Test user")
     @artefact = FactoryGirl.create(:artefact, slug: "licence-to-test",
       kind: "licence", name: "test", owning_app: "publisher")
 
     @importer = LicenceContentImporter.new('data/foo', @user.name)
-    @row = CSV::Row.new(['OID', 'NAME', 'LONGDESC'],
+    @row = CSV::Row.new(%w(OID NAME LONGDESC),
       [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
   end
 
@@ -18,8 +17,11 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     end
     assert_equal "12345", @importer.imported.first[:identifier]
     assert_equal 'licence-to-test', @importer.imported.first[:slug]
-    assert_match /\*\*Software testing\*\*/, @importer.imported.first[:description]
-    assert_match /\*validating\*/, @importer.imported.first[:description]
+    assert_match(
+      /\*\*Software testing\*\*/,
+      @importer.imported.first[:description]
+    )
+    assert_match(/\*validating\*/, @importer.imported.first[:description])
   end
 
   def test_import
@@ -46,5 +48,4 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
 
     assert_equal markdown, @importer.marked_down(content).strip
   end
-
 end

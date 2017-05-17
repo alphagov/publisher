@@ -7,7 +7,7 @@
 # there, so we can review that messages are getting processed properly by going into the
 # gmail account and having a look.
 #
-require File.expand_path('../../config/environment',  __FILE__)
+require File.expand_path('../../config/environment', __FILE__)
 Publisher::Application.mail_fetcher_config.configure
 
 require 'fact_check_email_handler'

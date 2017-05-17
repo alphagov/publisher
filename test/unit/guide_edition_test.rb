@@ -12,10 +12,10 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
 
   def publisher_and_guide
-    user = User.create(:uid => '123', :name => "Ben")
-    other_user = User.create(:uid => '321', :name => "James")
+    user = User.create(uid: '123', name: "Ben")
+    other_user = User.create(uid: '321', name: "James")
 
-    guide = user.create_edition(:guide, :panopticon_id => FactoryGirl.create(:artefact).id, :overview => 'My Overview', :title => 'My Title', :slug => 'my-title')
+    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: 'My Overview', title: 'My Title', slug: 'my-title')
     edition = guide
     request_review(user, edition)
     approve_review(other_user, edition)
@@ -24,13 +24,13 @@ class GuideEditionTest < ActiveSupport::TestCase
     approve_fact_check(other_user, edition)
     stub_register_published_content
     publish(user, edition)
-    return user, guide
+    [user, guide]
   end
 
   test "order parts shouldn't fail if one part's order attribute is nil" do
     edition = template_guide
     edition.parts.build
-    edition.parts.build(:order => 1)
+    edition.parts.build(order: 1)
     assert edition.order_parts
   end
 
@@ -54,5 +54,4 @@ class GuideEditionTest < ActiveSupport::TestCase
     new_edition = user.new_version(edition)
     assert_equal edition.overview, new_edition.overview
   end
-
 end

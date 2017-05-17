@@ -1,6 +1,6 @@
 # encoding: utf-8
 class FixBusinessSupportIntegerFields < Mongoid::Migration
-  FIELDS = [ :min_value, :max_value, :max_employees ]
+  FIELDS = [:min_value, :max_value, :max_employees]
   def self.up
     BusinessSupportEdition.all.each do |ed|
       FIELDS.each do |field|
@@ -16,7 +16,7 @@ class FixBusinessSupportIntegerFields < Mongoid::Migration
         end
       end
       if ed.changed?
-        ed.save! :validate => false # validate => false so we can save published/archived editions
+        ed.save! validate: false # validate => false so we can save published/archived editions
       end
     end
   end

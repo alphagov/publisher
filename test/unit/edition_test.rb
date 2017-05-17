@@ -3,9 +3,9 @@ require 'test_helper'
 class EditionTest < ActiveSupport::TestCase
   context "#register_with_rummager" do
     should "not register with Rummager, publishing-api if the artefact is archived" do
-      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user)
       artefact = FactoryGirl.create(:artefact)
-      edition = FactoryGirl.create(:guide_edition, :state => "ready", panopticon_id: artefact.id)
+      edition = FactoryGirl.create(:guide_edition, state: "ready", panopticon_id: artefact.id)
 
       # Doing this after creating the edition, so the edition doesn't try to
       # update the artefact

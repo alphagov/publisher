@@ -11,7 +11,7 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
     end
 
     should "queue up an edition for publishing at the specified publish_at time" do
-      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user)
       edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
 
       ScheduledPublisher.enqueue(edition)

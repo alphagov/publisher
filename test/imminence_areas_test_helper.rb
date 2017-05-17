@@ -1,8 +1,7 @@
 module ImminenceAreasTestHelper
-
   def areas_response(areas)
     {
-      "_response_info" => { "status" => "ok","links" => [] },
+      "_response_info" => { "status" => "ok", "links" => [] },
       "total" => areas.size,
       "start_index" => 1,
       "page_size" => areas.size,
@@ -171,7 +170,6 @@ module ImminenceAreasTestHelper
   end
 
   def stub_mapit_areas_requests(endpoint)
-
     stub_request(:get, %r{\A#{endpoint}/areas/EUR.json}).to_return(
       body: areas_response(regions_with_gss_codes.unshift(region_without_gss_code))
     )

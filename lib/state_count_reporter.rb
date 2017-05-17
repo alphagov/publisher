@@ -16,6 +16,7 @@ class StateCountReporter
   end
 
 private
+
   def state_count(state)
     @model_class.public_send(state).count
   end

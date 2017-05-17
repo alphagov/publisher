@@ -123,11 +123,11 @@ class DowntimesControllerTest < ActionController::TestCase
   end
 
   def next_year
-    (Time.now + 1.year).year
+    (Time.zone.now + 1.year).year
   end
 
   def last_year
-    (Time.now - 1.year).year
+    (Time.zone.now - 1.year).year
   end
 
   def downtime_params
