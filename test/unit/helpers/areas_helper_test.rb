@@ -24,12 +24,12 @@ class AreasHelperTest < ActionView::TestCase
     )
 
     edition = OpenStruct.new(
-      area_gss_codes: ["E15000007", "E15000001"],
+      area_gss_codes: %w(E15000007 E15000001),
     )
     assert_equal true, all_regions?(edition)
 
     edition = OpenStruct.new(
-      area_gss_codes: ["E15000007", "E15000001", "J99999999"],
+      area_gss_codes: %w(E15000007 E15000001 J99999999),
     )
     assert_equal false, all_regions?(edition)
   end
@@ -62,7 +62,7 @@ class AreasHelperTest < ActionView::TestCase
     assert_equal true, english_regions?(edition)
 
     edition = OpenStruct.new(
-      area_gss_codes: ["E15000003", "S15000001"],
+      area_gss_codes: %w(E15000003 S15000001),
     )
     assert_equal false, english_regions?(edition)
   end

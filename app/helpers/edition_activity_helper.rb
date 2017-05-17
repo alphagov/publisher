@@ -22,10 +22,10 @@ module EditionActivityHelper
 
   def edition_activity_fields(edition, title, activity, form_builder, options)
     render(
-      :partial => 'shared/edition_activity_fields',
-      :locals => {
-        :form_builder => form_builder, :title => title, :activity => activity,
-        :inline => options[:inline], :disabled => !edition.send("can_#{activity}?".to_sym)
+      partial: 'shared/edition_activity_fields',
+      locals: {
+        form_builder: form_builder, title: title, activity: activity,
+        inline: options[:inline], disabled: !edition.send("can_#{activity}?".to_sym)
       }
     )
   end
@@ -41,5 +41,4 @@ module EditionActivityHelper
   def modal_attributes
     { :role => 'dialog', :class => 'modal', :tabindex => -1, 'aria-hidden' => true }
   end
-
 end

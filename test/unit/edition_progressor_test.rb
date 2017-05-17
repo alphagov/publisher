@@ -12,10 +12,10 @@ class EditionProgressorTest < ActiveSupport::TestCase
     @guide.update_attribute(:state, :ready)
 
     activity = {
-      :request_type       => "send_fact_check",
-      :comment            => "Blah",
-      :email_addresses    => "user@example.com",
-      :customised_message => "Hello"
+      request_type: "send_fact_check",
+      comment: "Blah",
+      email_addresses: "user@example.com",
+      customised_message: "Hello"
     }
 
     command = EditionProgressor.new(@guide, @laura)
@@ -29,10 +29,10 @@ class EditionProgressorTest < ActiveSupport::TestCase
     @guide.update_attribute(:state, :ready)
 
     activity = {
-      :request_type       => "send_fact_check",
-      :comment            => "Blah",
-      :email_addresses    => "",
-      :customised_message => "Hello"
+      request_type: "send_fact_check",
+      comment: "Blah",
+      email_addresses: "",
+      customised_message: "Hello"
     }
 
     command = EditionProgressor.new(@guide, @laura)
@@ -43,10 +43,10 @@ class EditionProgressorTest < ActiveSupport::TestCase
     @guide.update_attribute(:state, :ready)
 
     activity = {
-      :request_type       => "send_fact_check",
-      :comment            => "Blah",
-      :email_addresses    => "nouseratexample.com",
-      :customised_message => "Hello"
+      request_type: "send_fact_check",
+      comment: "Blah",
+      email_addresses: "nouseratexample.com",
+      customised_message: "Hello"
     }
 
     command = EditionProgressor.new(@guide, @laura)

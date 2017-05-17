@@ -19,7 +19,7 @@ class CSVPresenter
   end
 
   def filename
-    "#{report_name}-#{Date.today.strftime("%F")}"
+    "#{report_name}-#{Time.zone.today.strftime('%F')}"
   end
 
   def report_name

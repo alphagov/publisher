@@ -22,7 +22,7 @@ module ActionHelper
     end
 
     if action.is_fact_check_request? && action.email_addresses.present?
-      notes << content_tag(:p, "Request sent to #{mail_to action.email_addresses.gsub(/\s/,''), action.email_addresses}".html_safe)
+      notes << content_tag(:p, "Request sent to #{mail_to action.email_addresses.gsub(/\s/, ''), action.email_addresses}".html_safe)
     end
 
     if action.recipient_id.present?
@@ -33,13 +33,13 @@ module ActionHelper
   end
 
   def action_class(action)
-    action.request_type.gsub(/_/, '-')
+    action.request_type.tr('_', '-')
   end
 
   def format_and_auto_link_plain_text(text)
     text = auto_link(escape_once(text), link: :urls, sanitize: false)
     text = auto_link_zendesk_tickets(text)
-    simple_format(text, {}, :sanitize => false).html_safe
+    simple_format(text, {}, sanitize: false).html_safe
   end
 
   def auto_link_zendesk_tickets(text)

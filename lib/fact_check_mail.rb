@@ -17,22 +17,22 @@ class FactCheckMail
     @message.public_send(m, *args, &block)
   end
 
-  private
+private
 
   def subject_is_out_of_office?
     @message['Subject'].to_s.downcase.start_with?("out of office")
   end
 
   def out_of_office_header_set?
-    header_names = @message.header_fields.map { |field| field.name }
+    header_names = @message.header_fields.map(&:name)
     return true if (['X-Autorespond', 'X-Auto-Response-Suppress'] & header_names).present?
 
     [
       ['Auto-Submitted', 'auto-replied'],
       ['Auto-Submitted', 'auto-generated'],
-      ['Precedence', 'bulk'],
-      ['Precedence', 'auto_reply'],
-      ['Precedence', 'junk'],
+      %w(Precedence bulk),
+      %w(Precedence auto_reply),
+      %w(Precedence junk),
       ['Return-Path', ''],
       ['X-Precedence', 'bulk'],
       ['X-Precedence', 'auto_reply'],
@@ -40,7 +40,7 @@ class FactCheckMail
       ['X-Autoreply', 'yes'],
     ].any? do |key, value|
       @message[key].class == Mail::Field &&
-      @message[key].to_s == value
+        @message[key].to_s == value
     end
   end
 end

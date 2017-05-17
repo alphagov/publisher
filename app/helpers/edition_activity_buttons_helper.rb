@@ -1,11 +1,10 @@
 module EditionActivityButtonsHelper
-
   def build_review_button(edition, activity, title)
     check_method = "can_#{activity}?".to_sym
     enabled = edition.send(check_method)
 
-    link_to title, "##{activity}_form", data: { toggle: 'modal'},
-      class: "btn btn-info #{"disabled" if !enabled} add-top-margin"
+    link_to title, "##{activity}_form", data: { toggle: 'modal' },
+      class: "btn btn-info #{'disabled' if !enabled} add-top-margin"
   end
 
   def review_buttons(edition)
@@ -19,7 +18,7 @@ module EditionActivityButtonsHelper
     [
       ["Needs major changes", "request_amendments"],
       ["Minor or no changes required", "approve_fact_check"]
-    ].map{ |title, activity|
+    ].map { |title, activity|
       build_review_button(edition, activity, title)
     }.join("\n").html_safe
   end
@@ -34,14 +33,14 @@ module EditionActivityButtonsHelper
       disabled = !edition.send("can_#{activity}?")
       next if disabled && options.fetch(:skip_disabled_buttons, false)
 
-      link_to title, "##{activity}_form", data: { toggle: 'modal'},
-        class: "btn btn-large btn-#{button_color} #{"disabled" if disabled}"
+      link_to title, "##{activity}_form", data: { toggle: 'modal' },
+        class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
     }.join("\n").html_safe
   end
 
   def scheduled_publishing_buttons(edition)
     buttons = []
-    buttons << ["Schedule", "schedule_for_publishing", 'warning'] if edition.can_schedule_for_publishing?
+    buttons << %w(Schedule schedule_for_publishing warning) if edition.can_schedule_for_publishing?
     buttons << ["Cancel scheduled publishing", "cancel_scheduled_publishing", 'danger'] if edition.can_cancel_scheduled_publishing?
     buttons
   end

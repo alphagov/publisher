@@ -20,7 +20,7 @@ class DowntimeScheduler
 
     artefact = downtime.artefact
 
-    if downtime.end_time.to_time <= Time.zone.now
+    if Time.zone.parse(downtime.end_time.to_s) <= Time.zone.now
       downtime.destroy
     end
 
@@ -31,7 +31,7 @@ class DowntimeScheduler
     if datetime.past?
       perform_async(downtime_id)
     else
-      perform_at(datetime.to_time.to_i, downtime_id)
+      perform_at(Time.zone.parse(datetime.to_s).to_i, downtime_id)
     end
   end
 end

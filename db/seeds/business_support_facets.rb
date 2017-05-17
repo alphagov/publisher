@@ -1,6 +1,6 @@
 def find_or_initialize_facets(klass, facet_names)
   facet_names.each do |slug, name|
-    facet = klass.find_or_initialize_by(:slug => slug)
+    facet = klass.find_or_initialize_by(slug: slug)
     facet.name = name
     facet.save!
   end
@@ -8,24 +8,24 @@ end
 
 # BusinessSupportBusinessType
 find_or_initialize_facets(BusinessSupport::BusinessType,
-                         {"private-company"         => "Private Company",
+                         "private-company"         => "Private Company",
                           "public-limited-company"  => "Public limited company",
                           "partnership"             => "Partnership",
                           "social-enterprise"       => "Social enterprise",
                           "charity"                 => "Charity",
-                          "sole-trader"             => "Sole trader"})
+                          "sole-trader"             => "Sole trader")
 
 # BusinessSupportBusinessSize
 find_or_initialize_facets(BusinessSupport::BusinessSize,
-                         {"under-10"             => "Under 10",
+                         "under-10"             => "Under 10",
                           "up-to-249"            => "Up to 249",
                           "between-250-and-500"  => "Between 250 and 500",
                           "between-501-and-1000" => "Between 501 and 1000",
-                          "over-1000"            => "Over 1000"})
+                          "over-1000"            => "Over 1000")
 
 # BusinessSupportSector
 find_or_initialize_facets(BusinessSupport::Sector,
-                          {"wholesale-and-retail" => "Wholesale and Retail",
+                          "wholesale-and-retail" => "Wholesale and Retail",
                            "manufacturing" => "Manufacturing",
                            "hospitality-and-catering" => "Hospitality and Catering",
                            "travel-and-leisure" => "Travel and Leisure",
@@ -40,26 +40,23 @@ find_or_initialize_facets(BusinessSupport::Sector,
                            "health" => "Health",
                            "service-industries" => "Service Industries",
                            "mining" => "Mining",
-                           "real-estate" => "Real Estate"})
+                           "real-estate" => "Real Estate")
 
 # BusinessSupportStage
-find_or_initialize_facets(BusinessSupport::Stage, {
-                          "pre-start" => "Pre-start",
+find_or_initialize_facets(BusinessSupport::Stage, "pre-start" => "Pre-start",
                           "start-up" => "Start-up",
-                          "grow-and-sustain" => "Grow and sustain" })
+                          "grow-and-sustain" => "Grow and sustain")
 
 # BusinessSupportType
-find_or_initialize_facets(BusinessSupport::SupportType, {
-                          "grant" => "Grant",
+find_or_initialize_facets(BusinessSupport::SupportType, "grant" => "Grant",
                           "finance" => "Finance",
                           "loan" => "Loan",
                           "expertise-and-advice" => "Expertise and Advice",
                           "recognition-award" => "Recognition Award",
-                          "equity" => "Equity"})
+                          "equity" => "Equity")
 
 # BusinessSupportPurpose
-find_or_initialize_facets(BusinessSupport::Purpose, {
-  "business-growth-and-expansion" => "Business growth and expansion",
+find_or_initialize_facets(BusinessSupport::Purpose, "business-growth-and-expansion" => "Business growth and expansion",
   "developing-new-product-or-service-ideas" => "Developing new product or service ideas",
   "energy-efficiency-and-the-environment" => "Energy efficiency and the environment",
   "exchanging-ideas-and-sharing-expertise" => "Exchanging ideas and sharing expertise",
@@ -70,5 +67,4 @@ find_or_initialize_facets(BusinessSupport::Purpose, {
   "performance-improvement-and-best-practice" => "Performance improvement and best practice",
   "setting-up-your-business" => "Setting up your business",
   "taking-new-products-or-services-to-market" => "Taking new products or services to market",
-  "taking-on-staff-and-developing-people" => "Taking on staff and developing people"
-})
+  "taking-on-staff-and-developing-people" => "Taking on staff and developing people")

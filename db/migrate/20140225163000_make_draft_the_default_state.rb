@@ -1,6 +1,6 @@
 class MakeDraftTheDefaultState < Mongoid::Migration
   def self.up
-    Edition.where(:state => "lined_up").each do |edition|
+    Edition.where(state: "lined_up").each do |edition|
       edition.state = "draft"
       edition.save!
     end

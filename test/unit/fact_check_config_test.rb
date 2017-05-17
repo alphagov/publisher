@@ -2,7 +2,6 @@ require 'test_helper'
 require 'fact_check_config'
 
 class FactCheckConfigTest < ActiveSupport::TestCase
-
   should "fail on a nil address format" do
     assert_raises ArgumentError do
       FactCheckConfig.new(nil)
@@ -22,12 +21,12 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   end
 
   should "accept an address format with an ID marker" do
-    config = FactCheckConfig.new("factcheck+{id}@example.com")
+    FactCheckConfig.new("factcheck+{id}@example.com")
   end
 
   should "fail on an address format with multiple ID markers" do
     assert_raises ArgumentError do
-      config = FactCheckConfig.new("factcheck+{id}+{id}@example.com")
+      FactCheckConfig.new("factcheck+{id}+{id}@example.com")
     end
   end
 

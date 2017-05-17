@@ -1,7 +1,6 @@
 require 'integration_test_helper'
 
 class EditionTabTest < JavascriptIntegrationTest
-
   setup do
     setup_users
     stub_linkables
@@ -11,7 +10,7 @@ class EditionTabTest < JavascriptIntegrationTest
   end
 
   def visit_tab(tab)
-    if (tab == "edit")
+    if tab == "edit"
       visit_edition @guide
     else
       visit "/editions/#{@guide.to_param}/#{tab}"
@@ -34,11 +33,11 @@ class EditionTabTest < JavascriptIntegrationTest
 
     should "show the edit tab after saving whether successful or not" do
       visit_edition @guide
-      fill_in 'Title', :with => 'New title'
+      fill_in 'Title', with: 'New title'
       save_edition_and_assert_success
       assert_tab_active('edit', 'Edit')
 
-      fill_in 'Title', :with => ''
+      fill_in 'Title', with: ''
       save_edition_and_assert_error
       assert_tab_active('edit', 'Edit')
     end
@@ -82,5 +81,4 @@ class EditionTabTest < JavascriptIntegrationTest
       assert_tab_active('related_external_links', 'Related external links')
     end
   end
-
 end

@@ -10,7 +10,7 @@ class CsvReportGenerator
   end
 
   def run!
-    redis.lock("publisher:#{Rails.env}:report_generation_lock", :life => 15.minutes) do
+    redis.lock("publisher:#{Rails.env}:report_generation_lock", life: 15.minutes) do
       reports.each do |report|
         puts "Generating #{path}/#{report.report_name}.csv"
         report.write_csv(path)
@@ -37,9 +37,9 @@ class CsvReportGenerator
   def path
     return @path if @path
     @path = File.join(Dir.tmpdir,
-      "publisher_reports-#{Time.zone.now.strftime("%Y%m%d%H%M%S")}-#{Process.pid}")
+      "publisher_reports-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}-#{Process.pid}")
     FileUtils.mkdir_p(@path)
-    return @path
+    @path
   end
 
   def move_temporary_reports_into_place

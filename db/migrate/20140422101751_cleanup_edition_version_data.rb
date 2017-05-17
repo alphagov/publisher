@@ -1,6 +1,6 @@
 class CleanupEditionVersionData < Mongoid::Migration
   def self.fixup_versions(artefact_id, duplicated_version, correct_id)
-    unless Edition.where(:panopticon_id => artefact_id, :version_number => duplicated_version).count > 1
+    unless Edition.where(panopticon_id: artefact_id, version_number: duplicated_version).count > 1
       puts "Editions for #{artefact_id} version #{duplicated_version} look correct, skipping"
       return false
     end
@@ -14,7 +14,7 @@ class CleanupEditionVersionData < Mongoid::Migration
         ed.inc(:sibling_in_progress, 1)
       end
     end
-    return true
+    true
   end
 
   def self.up
@@ -23,7 +23,7 @@ class CleanupEditionVersionData < Mongoid::Migration
     # This one had 2 published versions with version number 1.  This change will preserve
     # the one that's currently being served as the published one.
     updated = fixup_versions('5076c643ed915d119d000037', 1, '519b50fae5274a1bbf00005b')
-    if updated and ed = Edition.where(:_id => "519b50fae5274a1bbf00005b").first
+    if updated and ed = Edition.where(_id: "519b50fae5274a1bbf00005b").first
       ed.set(:state, 'archived')
     end
 

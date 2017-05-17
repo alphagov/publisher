@@ -80,7 +80,7 @@ class DowntimeTest < JavascriptIntegrationTest
   end
 
   def next_year
-    DateTime.now.next_year.year
+    Time.zone.now.next_year.year
   end
 
   def first_of_july_next_year_at_midday_bst

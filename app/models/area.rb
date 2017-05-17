@@ -6,7 +6,7 @@ class Area < OpenStruct
 
   # This list should stay in sync with Imminence's areas route constraint:
   # https://github.com/alphagov/imminence/blob/master/config/routes.rb#L13-L17
-  AREA_TYPES = ["EUR", "CTY", "DIS", "LBO", "LGD", "MTD", "UTA", "COI"]
+  AREA_TYPES = %w(EUR CTY DIS LBO LGD MTD UTA COI)
 
   def self.all
     areas
@@ -24,23 +24,21 @@ class Area < OpenStruct
     regions.select { |r| r.country_name == "England" }
   end
 
-  private
+  def self.areas
+    @areas ||= areas_with_gss_codes
+  end
 
-    def self.areas
-      @areas ||= areas_with_gss_codes
-    end
-
-    def self.all_areas
-      areas = []
-      AREA_TYPES.each do |type|
-        areas << imminence_api.areas_for_type(type)["results"].map do |area_hash|
-          self.new(area_hash)
-        end
+  def self.all_areas
+    areas = []
+    AREA_TYPES.each do |type|
+      areas << imminence_api.areas_for_type(type)["results"].map do |area_hash|
+        self.new(area_hash)
       end
-      areas.flatten
     end
+    areas.flatten
+  end
 
-    def self.areas_with_gss_codes
-      self.all_areas.select { |a| a.codes["gss"].present? }
-    end
+  def self.areas_with_gss_codes
+    self.all_areas.select { |a| a.codes["gss"].present? }
+  end
 end

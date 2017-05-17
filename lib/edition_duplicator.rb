@@ -30,7 +30,8 @@ class EditionDuplicator
     end
   end
 
-  protected
+protected
+
   def update_assignment(assign_to)
     if assign_to
       actor.assign(new_edition, assign_to)

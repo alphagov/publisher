@@ -13,7 +13,6 @@ Bundler.require(*Rails.groups)
 
 module Publisher
   class Application < Rails::Application
-
     # Configuration object for the fact check email fetch script
     # See `script/mail_fetcher`
     attr_accessor :mail_fetcher_config
@@ -39,9 +38,9 @@ module Publisher
     config.assets.precompile += %W(views/business_support/areas_select.js)
 
     config.generators do |g|
-        g.orm :mongoid
-        g.template_engine :erb # this could be :haml or whatever
-        g.test_framework :test_unit, :fixture => false # this could be :rpsec or whatever
+      g.orm :mongoid
+      g.template_engine :erb # this could be :haml or whatever
+      g.test_framework :test_unit, fixture: false # this could be :rpsec or whatever
     end
 
     config.action_dispatch.rack_cache = nil

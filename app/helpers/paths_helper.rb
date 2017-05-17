@@ -39,7 +39,7 @@ protected
     edition.format.underscore.pluralize
   end
 
-  def preview_url(edition)
+  def preview_url(_edition)
     Plek.current.find("draft-origin")
   end
 

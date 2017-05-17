@@ -1,6 +1,6 @@
 module ImportantNoteHelper
   def important_notes(edition)
-    edition.actions.reverse.select{|a| a.request_type == Action::IMPORTANT_NOTE }
+    edition.actions.reverse.select { |a| a.request_type == Action::IMPORTANT_NOTE }
   end
 
   def important_note_has_history?(edition)

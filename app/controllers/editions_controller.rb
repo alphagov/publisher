@@ -3,9 +3,9 @@ require "edition_progressor"
 
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
-  defaults :resource_class => Edition, :collection_name => 'editions', :instance_name => 'resource'
-  before_filter :setup_view_paths, :except => [:index, :new, :create]
-  after_filter :report_state_counts, :only => [:create, :duplicate, :progress, :destroy]
+  defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
+  before_filter :setup_view_paths, except: [:index, :new, :create]
+  after_filter :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
 
   def index
     redirect_to root_path
@@ -21,7 +21,7 @@ class EditionsController < InheritedResources::Base
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
 
-    render :action => "show"
+    render action: "show"
   end
   alias_method :metadata, :show
   alias_method :history, :show
@@ -46,7 +46,7 @@ class EditionsController < InheritedResources::Base
       return
     else
       setup_view_paths_for(@publication)
-      render :action => "new"
+      render action: "new"
     end
   end
 
@@ -99,7 +99,7 @@ class EditionsController < InheritedResources::Base
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
         flash.now[:danger] = format_failure_message(resource)
-        render :action => "show"
+        render action: "show"
       }
       success.json {
         progress_edition(resource, activity_params) if attempted_activity
@@ -109,9 +109,9 @@ class EditionsController < InheritedResources::Base
         UpdateWorker.perform_async(resource.id.to_s)
         PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
 
-        render :json => resource
+        render json: resource
       }
-      failure.json { render :json => resource.errors, :status=>406 }
+      failure.json { render json: resource.errors, status: 406 }
     end
   end
 

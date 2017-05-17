@@ -10,7 +10,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         kind: "local_transaction",
         name: "Foo bar",
         owning_app: "publisher",
-    )
+                                  )
 
     setup_users
     stub_linkables
@@ -28,14 +28,17 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? 'Foo bar #1'
 
     assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
-    assert_match /Created Local transaction: "Foo bar"/, ActionMailer::Base.deliveries.last.subject
+    assert_match(
+      /Created Local transaction: "Foo bar"/,
+      ActionMailer::Base.deliveries.last.subject
+    )
   end
 
   test "creating a local transaction with a bad LGSL code displays an appropriate error" do
     visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
-    fill_in "Lgsl code", :with => "2"
+    fill_in "Lgsl code", with: "2"
     click_on 'Create Local transaction edition'
 
     assert page.has_content? "Lgsl code 2 not recognised"

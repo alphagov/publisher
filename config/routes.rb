@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       get 'history'
       get 'admin'
       get 'tagging', to: "editions#linking"
-      get 'related_external_links' , to: "editions#linking"
+      get 'related_external_links', to: "editions#linking"
       get 'unpublish'
       post 'duplicate'
       post 'update_tagging'
@@ -45,12 +45,12 @@ Rails.application.routes.draw do
   get 'user_search' => 'user_search#index'
 
   resources :publications
-  root :to => 'root#index'
+  root to: 'root#index'
 
   # We used to nest all URLs under /admin so we now redirect that
   # in case people had bookmarks set up. Using a proc as otherwise the
   # path parameter gets escaped
-  get "/admin(/*path)", to: redirect { |params, req| "/#{params[:path]}" }
+  get "/admin(/*path)", to: redirect { |params, _req| "/#{params[:path]}" }
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
 end

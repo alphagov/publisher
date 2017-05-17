@@ -27,16 +27,16 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
 
     context "when the downtime display start time is in the future" do
       should "schedule to run at the beginning of the display window" do
-        start_time = Time.now + 1.week
-        end_time = Time.now + 2.weeks
+        start_time = Time.zone.now + 1.week
+        end_time = Time.zone.now + 2.weeks
         downtime = mock_downtime(start_time, end_time)
         DowntimeScheduler.schedule_publish_and_expiry(downtime)
         assert there_is_job_enqueued_to_run_at_time(DowntimeScheduler.jobs, start_time)
       end
 
       should "schedule a rerun for when the downtime display window ends" do
-        start_time = Time.now + 1.week
-        end_time = Time.now + 2.weeks
+        start_time = Time.zone.now + 1.week
+        end_time = Time.zone.now + 2.weeks
         downtime = mock_downtime(start_time, end_time)
         DowntimeScheduler.schedule_publish_and_expiry(downtime)
         assert there_is_job_enqueued_to_run_at_time(DowntimeScheduler.jobs, end_time)

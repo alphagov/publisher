@@ -1,7 +1,7 @@
 class FixLocalInteractionDuplication < Mongoid::Migration
   def self.up
     LocalAuthority.all.each do |la|
-      interactions = la.local_interactions.group_by {|i| [i.lgsl_code, i.lgil_code] }
+      interactions = la.local_interactions.group_by { |i| [i.lgsl_code, i.lgil_code] }
       interactions.each do |key, values|
         next if values.size <= 1
 

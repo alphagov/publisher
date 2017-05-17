@@ -9,9 +9,9 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
   context 'creating a guide with parts' do
     setup do
-      @random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
+      @random_name = (0...8).map { 65.+(rand(25)).chr }.join + " GUIDE"
 
-      guide = FactoryGirl.create(:guide_edition, :title => @random_name, :slug => 'test-guide')
+      guide = FactoryGirl.create(:guide_edition, title: @random_name, slug: 'test-guide')
       guide.save!
       guide.update_attribute(:state, 'draft')
 
@@ -19,27 +19,27 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
       add_new_part
       within :css, '#parts div.fields:first-of-type' do
-        fill_in 'Title', :with => 'Part One'
-        fill_in 'Body',  :with => 'Body text'
-        fill_in 'Slug',  :with => 'part-one'
+        fill_in 'Title', with: 'Part One'
+        fill_in 'Body',  with: 'Body text'
+        fill_in 'Slug',  with: 'part-one'
       end
 
       assert page.has_css?('#parts div.fields', count: 1)
 
       add_new_part
       within :css, '#parts div.fields:nth-of-type(2)' do
-        fill_in 'Title', :with => 'Part Two'
-        fill_in 'Body',  :with => 'Body text'
-        fill_in 'Slug',  :with => 'part-two'
+        fill_in 'Title', with: 'Part Two'
+        fill_in 'Body',  with: 'Body text'
+        fill_in 'Slug',  with: 'part-two'
       end
 
       assert page.has_css?('#parts div.fields', count: 2)
 
       add_new_part
       within :css, '#parts div.fields:nth-of-type(3)' do
-        fill_in 'Title', :with => 'Part Three'
-        fill_in 'Body',  :with => 'Body text'
-        fill_in 'Slug',  :with => 'part-three'
+        fill_in 'Title', with: 'Part Three'
+        fill_in 'Body',  with: 'Body text'
+        fill_in 'Slug',  with: 'part-three'
       end
     end
 
@@ -57,9 +57,9 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       save_edition_and_assert_success
       assert page.has_css?('#part-one[aria-expanded="true"]')
       within :css, '#parts div.fields:nth-of-type(1)' do
-        fill_in 'Title', :with => 'Part One (edited)'
-        fill_in 'Body',  :with => 'Body text'
-        fill_in 'Slug',  :with => 'part-one-edited'
+        fill_in 'Title', with: 'Part One (edited)'
+        fill_in 'Body',  with: 'Body text'
+        fill_in 'Slug',  with: 'part-one-edited'
       end
       save_edition_and_assert_success
 
@@ -153,12 +153,12 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
       should 'not save when a part is invalid' do
         within :css, '#parts div.fields:nth-of-type(2)' do
-          fill_in 'Slug',  :with => ''
+          fill_in 'Slug',  with: ''
         end
 
         within :css, '#parts div.fields:nth-of-type(3)' do
-          fill_in 'Title',  :with => ''
-          fill_in 'Slug',  :with => 'part-three'
+          fill_in 'Title', with: ''
+          fill_in 'Slug', with: 'part-three'
         end
 
         save_edition_and_assert_error
@@ -182,9 +182,9 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
   end
 
   test "slug for new parts should be automatically generated" do
-    random_name = (0...8).map{65.+(rand(25)).chr}.join + " GUIDE"
+    random_name = (0...8).map { 65.+(rand(25)).chr }.join + " GUIDE"
 
-    guide = FactoryGirl.create(:guide_edition, :title => random_name, :slug => 'test-guide')
+    guide = FactoryGirl.create(:guide_edition, title: random_name, slug: 'test-guide')
     guide.save!
     guide.update_attribute(:state, 'draft')
 
@@ -192,26 +192,26 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     add_new_part
     within :css, '#parts .fields:first-of-type .part' do
-      fill_in 'Title', :with => 'Part One'
-      fill_in 'Body',  :with => 'Body text'
+      fill_in 'Title', with: 'Part One'
+      fill_in 'Body',  with: 'Body text'
       assert_equal 'part-one', find(:css, ".slug").value
 
-      fill_in 'Title', :with => 'Part One changed'
-      fill_in 'Body',  :with => 'Body text'
+      fill_in 'Title', with: 'Part One changed'
+      fill_in 'Body',  with: 'Body text'
       assert_equal 'part-one-changed', find(:css, ".slug").value
     end
   end
 
   test "slug for edition which has been previously published shouldn't be generated" do
-    guide = FactoryGirl.create(:guide_edition_with_two_parts, :state => 'published', :title => "Foo bar")
+    guide = FactoryGirl.create(:guide_edition_with_two_parts, state: 'published', title: "Foo bar")
     guide.save!
     visit_edition guide
     click_on "Create new edition"
 
     within :css, '#parts .fields:first-of-type .part' do
       assert_equal 'part-one', find(:css, ".slug").value
-      fill_in 'Title', :with => 'Part One changed'
-      fill_in 'Body',  :with => 'Body text'
+      fill_in 'Title', with: 'Part One changed'
+      fill_in 'Body',  with: 'Body text'
       assert_equal 'part-one', find(:css, ".slug").value
     end
   end
@@ -221,17 +221,17 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     assert page.has_css?('#parts .panel-title', count: count)
     assert page.has_css?('#parts .panel-body', count: count)
 
-    if (count > 0)
+    if count > 0
       assert page.has_css?('#part-one', count: 1)
       assert_equal page.find('#part-one input.title').value, 'Part One'
     end
 
-    if (count > 1)
+    if count > 1
       assert page.has_css?('#part-two', count: 1)
       assert_equal page.find('#part-two input.title').value, 'Part Two'
     end
 
-    if (count > 2)
+    if count > 2
       assert page.has_css?('#part-three', count: 1)
       assert_equal page.find('#part-three input.title').value, 'Part Three'
     end

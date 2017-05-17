@@ -1,6 +1,6 @@
 namespace :editions do
   desc "Re-queue editions scheduled for publishing"
-  task :requeue_scheduled_for_publishing => :environment do
+  task requeue_scheduled_for_publishing: :environment do
     criteria = Edition.scheduled_for_publishing
     editions_scheduled_for_publishing_count = criteria.count
 

@@ -21,8 +21,8 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     end
   end
 
-  def sample_processor(body_text = "I approve")
-    basic_message = Mail.new(:to => 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', :subject => 'Fact Checked', :body => "I approve")
+  def sample_processor(_body_text = "I approve")
+    basic_message = Mail.new(to: 'factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk', subject: 'Fact Checked', body: "I approve")
     FactCheckMessageProcessor.new(basic_message)
   end
 
@@ -50,13 +50,13 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it takes the text part of multipart emails" do
     message = multipart_message
     message.text_part.content_type = 'text/plain; charset=UTF-8'
-    f =  FactCheckMessageProcessor.new(message)
+    f = FactCheckMessageProcessor.new(message)
     assert_equal f.body_as_utf8, 'This is plain text'
   end
 
   test "it assumes text is utf8 if no encoding is specified" do
     message = multipart_message
-    f =  FactCheckMessageProcessor.new(message)
+    f = FactCheckMessageProcessor.new(message)
     assert_equal f.body_as_utf8, 'This is plain text'
   end
 
@@ -89,7 +89,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     body = [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0xe2, 0x86, 0x90, 0xa3, 0x0a].pack("C*")
     message = Mail.new(body: body)
     f = FactCheckMessageProcessor.new(message)
-    assert_match /Hello/, f.body_as_utf8
+    assert_match(/Hello/, f.body_as_utf8)
   end
 
   # until we improve the validation to produce few or no false positives

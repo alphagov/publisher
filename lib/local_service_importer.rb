@@ -29,7 +29,7 @@ class LocalServiceImporter
     end
   end
 
-  private
+private
 
   def process_row(row)
     existing_service = LocalService.find_by_lgsl_code(row['LGSL'])
@@ -39,14 +39,14 @@ class LocalServiceImporter
       existing_service.update_attributes!(
         description: row['Description'],
         providing_tier: providing_tier(row)
-        )
+      )
     else
       Rails.logger.info("Import service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
       LocalService.create!(
         lgsl_code: row['LGSL'],
         description: row['Description'],
         providing_tier: providing_tier(row),
-        )
+      )
     end
   end
 

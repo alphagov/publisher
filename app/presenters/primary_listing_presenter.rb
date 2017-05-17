@@ -15,19 +15,19 @@ class PrimaryListingPresenter
   # names so we need a mapping (scope_name => partial_name) to
   # help identify acceptable names
   LIST_TRANSLATIONS = {
-    :draft => :drafts,
-    :fact_check => :out_for_fact_check,
+    draft: :drafts,
+    fact_check: :out_for_fact_check,
   }
 
   def initialize(editions, user)
     @scope = case user
-    when :all
-      editions
-    when :nobody
-      editions.assigned_to(nil)
-    else
-      editions.assigned_to(user)
-    end
+             when :all
+               editions
+             when :nobody
+               editions.assigned_to(nil)
+             else
+               editions.assigned_to(user)
+             end
   end
 
   attr_accessor :scope

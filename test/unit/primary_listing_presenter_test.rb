@@ -4,7 +4,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   def setup_users
     alice = User.create(uid: '123')
     bob = User.create(uid: '321')
-    return alice, bob
+    [alice, bob]
   end
 
   test "should filter by draft state" do
@@ -55,7 +55,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
   test "should filter by in_review state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    user = User.create
+    User.create
 
     a = FactoryGirl.create(:guide_edition)
     assert !a.in_review?
@@ -70,7 +70,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
   test "should filter by fact checking state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    user = User.create
+    User.create
 
     a = FactoryGirl.create(:guide_edition)
     assert !a.fact_check?

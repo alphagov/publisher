@@ -18,8 +18,8 @@ class ActionDispatch::IntegrationTest
     # This may not be the right way to do things. We rely on the gds-sso
     # having a strategy that uses the first user. We probably want some
     # tests that cover the oauth interaction properly
-    @author   = FactoryGirl.create(:user, :name=>"Author",   :email=>"test@example.com")
-    @reviewer = FactoryGirl.create(:user, :name=>"Reviewer", :email=>"test@example.com")
+    @author   = FactoryGirl.create(:user, name: "Author",   email: "test@example.com")
+    @reviewer = FactoryGirl.create(:user, name: "Reviewer", email: "test@example.com")
   end
 
   def login_as(user)
@@ -177,11 +177,11 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     selector = '#edit input:not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
     inputs = page.all(selector)
     input_description = ""
-    inputs.each{|i| input_description = "#{input_description}\n##{i['id']}"}
+    inputs.each { |i| input_description = "#{input_description}\n##{i['id']}" }
     assert_same(0, inputs.length, "#{inputs.length} field(s) on this edition need(s) disabling: #{input_description}")
   end
 
-  def save_edition(with_javascript=using_javascript?)
+  def save_edition(with_javascript = using_javascript?)
     # using trigger because poltergeist
     # thinks there are overlapping elements
     if with_javascript
@@ -252,7 +252,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def clear_cookies
-    Capybara.current_session.driver.browser.cookies.each do |k, v|
+    Capybara.current_session.driver.browser.cookies.each do |k, _v|
       Capybara.current_session.driver.browser.remove_cookie(k)
     end
   end

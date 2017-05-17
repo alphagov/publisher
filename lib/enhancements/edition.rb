@@ -37,7 +37,7 @@ class Edition
 
   scope :internal_search, lambda { |term|
     regex = Regexp.new(Regexp.escape(term), true) # case-insensitive
-    any_of({title: regex}, {slug: regex}, {overview: regex}, {licence_identifier: regex})
+    any_of({ title: regex }, { slug: regex }, { overview: regex }, licence_identifier: regex)
   }
 
   # Including recipient_id on actions will include anything that has been
@@ -47,7 +47,7 @@ class Edition
     any_of(
       { assigned_to_id: user.id },
       { 'actions.requester_id' => user.id },
-      { 'actions.recipient_id' => user.id }
+      'actions.recipient_id' => user.id
     )
   }
 
@@ -84,7 +84,7 @@ class Edition
   end
 
   def fact_check_skipped?
-    actions.any? and actions.last.request_type == 'skip_fact_check'
+    actions.any? && actions.last.request_type == 'skip_fact_check'
   end
 
   def fact_check_email_address

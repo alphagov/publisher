@@ -3,10 +3,10 @@ class HealthcheckController < ActionController::Base
   # authentication to access the health check
 
   def check
-    health_status = {"checks" => {}}
+    health_status = { "checks" => {} }
     health_status["checks"]["schedule_queue"] = schedule_queue_result
     health_status["status"] = health_status["checks"]["schedule_queue"]["status"]
-    render :json => health_status
+    render json: health_status
   end
 
 private

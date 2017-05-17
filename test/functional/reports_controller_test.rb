@@ -34,6 +34,6 @@ class ReportsControllerTest < ActionController::TestCase
   test "shows the mtime on the index page" do
     get :index
 
-    assert_match /Generated 1:00am, 1 June 2015/,  response.body
+    assert_match(/Generated 1:00am, 1 June 2015/, response.body)
   end
 end

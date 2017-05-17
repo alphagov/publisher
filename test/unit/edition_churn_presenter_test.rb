@@ -5,23 +5,23 @@ class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
   should "provide a CSV export of business support schemes" do
     document = FactoryGirl.create(:artefact,
       name: "Important document",
-      need_ids: ["123456","123321","654321"]
-    )
+      need_ids: %w(123456 123321 654321)
+                                 )
 
     edition_1 = FactoryGirl.create(:edition,
       title: "Important document",
       panopticon_id: document.id
-    )
+                                  )
 
     edition_2 = FactoryGirl.create(:edition,
       title: "Important tax document",
       panopticon_id: document.id
-    )
+                                  )
 
     csv = EditionChurnPresenter.new(
       Edition.not_in(state: ["archived"]).order(:title.asc)).to_csv
 
-    data = CSV.parse(csv, :headers => true)
+    data = CSV.parse(csv, headers: true)
 
     assert_equal 2, data.length
 

@@ -2,10 +2,10 @@ class ScheduledPublisher
   include Sidekiq::Worker
 
   # 5 retries over 10 mins
-  sidekiq_options :retry => 5
+  sidekiq_options retry: 5
   sidekiq_retry_in do |count|
     # 16s, 31s, 96s, 271s, 640s
-    count ** 4 + 15
+    count**4 + 15
   end
 
   def self.enqueue(edition)
@@ -15,9 +15,9 @@ class ScheduledPublisher
   # NOTE on ids: edition and actor id are enqueued
   # as String or else marshalling converts it to a hash
   def self.cancel_scheduled_publishing(cancel_edition_id)
-    queued_jobs.select do |scheduled_job|
+    queued_jobs.select { |scheduled_job|
       scheduled_job.args.first == cancel_edition_id
-    end.map(&:delete)
+    }.map(&:delete)
   end
 
   def self.queue_size
@@ -39,6 +39,7 @@ class ScheduledPublisher
   end
 
 private
+
   def report_state_counts
     Publisher::Application.edition_state_count_reporter.report
   end

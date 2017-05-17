@@ -11,19 +11,19 @@ class EditionHistoryTest < JavascriptIntegrationTest
     setup do
       @answer = FactoryGirl.create(:answer_edition, state: "published", slug: "test-slug")
 
-      @answer.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "first", :email_addresses => 'a@a.com, b@b.com'})
-      @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "second"})
-      @answer.new_action(@author, Action::PUBLISH, {:comment => "third"})
+      @answer.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: 'a@a.com, b@b.com')
+      @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
+      @answer.new_action(@author, Action::PUBLISH, comment: "third")
 
-      assert_equal ["first", "second", "third"], @answer.actions.map(&:comment)
+      assert_equal %w(first second third), @answer.actions.map(&:comment)
 
       @guide = @answer.build_clone(GuideEdition)
       @guide.save
 
-      @guide.new_action(@author, Action::SEND_FACT_CHECK, {:comment => "fourth"})
-      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "fifth"})
-      @guide.new_action(@author, Action::PUBLISH, {:comment => "sixth"})
-      @guide.new_action(@author, Action::NOTE, {:comment => "link http://www.some-link.com"})
+      @guide.new_action(@author, Action::SEND_FACT_CHECK, comment: "fourth")
+      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "fifth")
+      @guide.new_action(@author, Action::PUBLISH, comment: "sixth")
+      @guide.new_action(@author, Action::NOTE, comment: "link http://www.some-link.com")
 
       assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
     end
@@ -61,7 +61,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "hide everything but the latest reply in fact check responses behind a toggle" do
-      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, {:comment => "email reply\n-----Original Message-----\noriginal email request"})
+      @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "email reply\n-----Original Message-----\noriginal email request")
 
       visit_edition @guide
       click_on "History and notes"
@@ -131,9 +131,9 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
       should "not be carried forward to new editions" do
         @edition = FactoryGirl.create(:answer_edition,
-                                      :state => "published")
-        @edition.actions.create(:request_type => Action::IMPORTANT_NOTE,
-                                :comment => "This is an important note. Take note.")
+                                      state: "published")
+        @edition.actions.create(request_type: Action::IMPORTANT_NOTE,
+                                comment: "This is an important note. Take note.")
 
         visit_edition @edition
         assert page.has_content? "This is an important note. Take note."

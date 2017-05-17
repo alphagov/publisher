@@ -1,6 +1,6 @@
 class RemoveSpecialistDocuments < Mongoid::Migration
   def self.up
-    Edition.where(:_type => "SpecialistDocumentEdition").destroy_all
+    Edition.where(_type: "SpecialistDocumentEdition").destroy_all
   end
 
   def self.down

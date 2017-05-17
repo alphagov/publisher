@@ -2,7 +2,7 @@
 
 class NoisyWorkflow < ActionMailer::Base
   include PathsHelper
-  default :from => "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
+  default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   def make_noise(action)
     @action = action
@@ -10,25 +10,26 @@ class NoisyWorkflow < ActionMailer::Base
     subject = "[PUBLISHER] #{describe_action(@action)}"
     recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 
-    mail(:to => recipient_emails.join(', '), :subject => subject)
+    mail(to: recipient_emails.join(', '), subject: subject)
   end
 
   def request_fact_check(action)
     @edition = action.edition
     fact_check_address = @edition.fact_check_email_address
-    mail(:to => action.email_addresses, :reply_to => fact_check_address,
+    mail(to: action.email_addresses, reply_to: fact_check_address,
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
       subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition") do |format|
-     format.text { render :text => action.customised_message }
+      format.text { render text: action.customised_message }
     end
   end
 
   def report_errors(error_list)
     @errors = error_list
-    mail(:to => EMAIL_GROUPS[:dev], :subject => 'Errors in fact check email processing')
+    mail(to: EMAIL_GROUPS[:dev], subject: 'Errors in fact check email processing')
   end
 
-  protected
+protected
+
   def describe_action(action)
     edition = action.edition
     requester = action.requester

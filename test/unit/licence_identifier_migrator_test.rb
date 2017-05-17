@@ -4,12 +4,10 @@ require 'licence_identifier_migrator'
 class LicenceIdentifierMigratorTest < ActiveSupport::TestCase
   context "update_all" do
     setup do
-      LicenceIdentifierMigrator.stubs(:mappings_as_hash).returns({
-        1083741393 => "123-1-1",
+      LicenceIdentifierMigrator.stubs(:mappings_as_hash).returns(1083741393 => "123-1-1",
         1083741799 => "146-7-1",
         1084062157 => "898-1-1",
-        1075329002 => "999-4-1"
-      })
+        1075329002 => "999-4-1")
       @le1 = LicenceEdition.create(licence_identifier: "1083741799", title: "Licence One", panopticon_id: FactoryGirl.create(:artefact).id)
       @le2 = LicenceEdition.create(licence_identifier: "9999999999", title: "Licence Two", panopticon_id: FactoryGirl.create(:artefact).id)
     end
