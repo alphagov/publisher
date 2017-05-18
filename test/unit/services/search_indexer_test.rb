@@ -79,4 +79,40 @@ class SearchIndexerTest < ActiveSupport::TestCase
 
     SearchIndexer.call(search_index_presenter)
   end
+
+  def test_indexing_licences_to_rummager_includes_licence_identifier_and_short_description
+    artefact = FactoryGirl.create(
+      :artefact,
+      kind: "licence",
+      content_id: "content-id",
+    )
+    edition = FactoryGirl.create(
+      :licence_edition,
+      title: "A title",
+      overview: "An overview",
+      licence_identifier: '1258-4-1',
+      licence_short_description: 'This is a licence short description.',
+      panopticon_id: artefact.id,
+    )
+    search_index_presenter = SearchIndexPresenter.new(edition)
+
+    Services.rummager.expects(:add_document).with(
+      'edition',
+      "/#{edition.slug}",
+      content_id: "content-id",
+      rendering_app: "frontend",
+      publishing_app: "publisher",
+      format: "licence",
+      title: "A title",
+      description: "An overview",
+      indexable_content: "This is a licence short description. This is a licence overview.",
+      link: "/#{edition.slug}",
+      public_timestamp: search_index_presenter.public_timestamp,
+      content_store_document_type: "licence",
+      licence_identifier: "1258-4-1",
+      licence_short_description: 'This is a licence short description.'
+    )
+
+    SearchIndexer.call(search_index_presenter)
+  end
 end
