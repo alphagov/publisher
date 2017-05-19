@@ -7,13 +7,13 @@ gem 'erubis'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
 gem 'gds-sso', '~> 13.2'
-gem 'gds-api-adapters', '~> 41.0.0'
+gem 'gds-api-adapters', '~> 46.0.0'
 gem 'govspeak', '~> 3.4.0'
-gem 'govuk_admin_template', '6.0.0'
+gem 'govuk_admin_template', '4.3.0'
 if ENV["API_DEV"]
   gem "govuk_content_models", path: "../govuk_content_models"
 else
-  gem 'govuk_content_models', "44.4.0"
+  gem 'govuk_content_models', "45.0.0"
 end
 gem 'govuk_sidekiq', '1.0.3'
 gem 'has_scope'
@@ -69,5 +69,7 @@ group :development, :test do
   gem 'ci_reporter_rspec'
   gem 'govuk-lint', '~> 0.7'
   gem 'jasmine', '2.5.2'
+  gem 'jasmine-core', '2.5.2'
+  gem 'rack', '2.0.3'
   gem 'pry-byebug'
 end
