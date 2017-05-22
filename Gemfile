@@ -53,7 +53,6 @@ group :test do
   gem 'mocha', '1.2.1'
   gem 'poltergeist', '1.15.0'
   gem 'rails-controller-testing'
-  gem 'ruby-prof'
   gem 'shoulda', '3.5.0'
   gem 'simplecov', '~> 0.14.1', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
