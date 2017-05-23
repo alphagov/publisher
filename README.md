@@ -32,14 +32,13 @@ access that data for display. It is sometimes referred to as "mainstream publish
 
 ## Technical documentation
 
-This is a Ruby on Rails application that publishes the content for mainstream document formats to the shared mongo database. The `frontend` app reads this content from the [govuk_content_api](https://github.com/alphagov/govuk_content_api).
+This is a Ruby on Rails application that publishes the content for mainstream document formats to the shared mongo database. The `frontend` app reads this content from the [Content Store](https://github.com/alphagov/content-store).
 
 ###Dependencies
 
 - [imminence](https://github.com/alphagov/imminence) - provides geographical search tools
 - [rummager](https://github.com/alphagov/rummager) - search index for publisher. All changes are also sent to rummager to be indexed
 - [content-store](https://github.com/alphagov/content-store) - new central storage of published content on GOV.UK
-- [govuk_content_api](https://github.com/alphagov/govuk_content_api) - API providing content and metadata to frontend apps. Being deprecated in favour of content-store.
 - [publishing-api](https://github.com/alphagov/publishing-api) - will provide workflow for all content published to GOV.UK - creating a new document, publishing it, etc. Content published here will end up in the content-store
 - [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) - defines the schemas for new-style document formats. Required to run the tests.
 
