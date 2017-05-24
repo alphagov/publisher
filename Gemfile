@@ -21,16 +21,16 @@ gem 'inherited_resources'
 gem 'jquery-ui-rails', '~> 5.0.3'
 gem 'kaminari', '0.17.0'
 gem 'kaminari-mongoid', '1.0.1'
-gem 'logstasher', '0.4.8'
+gem 'logstasher', '1.2.1'
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
-gem 'momentjs-rails', '2.8.3'
-gem "mongoid_rails_migrations", "1.0.0"
+gem 'momentjs-rails', '2.17.1'
+gem "mongoid_rails_migrations", "1.1.0"
 gem "mongoid-sadstory"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
-gem 'plek', '1.9.0'
-gem 'rails', '5.0.2'
+gem 'plek', '2.0.0'
+gem 'rails', '5.0.3'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
@@ -38,9 +38,9 @@ gem 'reverse_markdown', '0.3.0', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'selectize-rails', '0.12.1'
-gem 'statsd-ruby', '~> 1.1.0', require: false
-gem 'uglifier', '2.7.2'
-gem 'unicorn', '4.3.1'
+gem 'statsd-ruby', '~> 1.4.0', require: false
+gem 'uglifier', '3.2.0'
+gem 'unicorn', '5.3.0'
 gem 'whenever', require: false
 
 group :test do
@@ -65,6 +65,6 @@ group :development, :test do
   gem 'govuk-lint', '~> 2.1.0'
   gem 'jasmine', '2.5.2'
   gem 'jasmine-core', '2.5.2'
-  gem 'rack', '2.0.1'
+  gem 'rack', '2.0.3'
   gem 'pry-byebug'
 end
