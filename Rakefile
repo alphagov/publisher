@@ -5,7 +5,6 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 require 'rake/testtask'
 require 'ci/reporter/rake/minitest' if Rails.env.test?
-require 'ci/reporter/rake/rspec' if Rails.env.test?
 
 Rake.application.options.trace = true
 

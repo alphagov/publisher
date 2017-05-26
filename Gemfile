@@ -44,33 +44,27 @@ gem 'unicorn', '4.3.1'
 gem 'whenever', require: false
 
 group :test do
-  gem 'capybara', '2.12.1'
-  gem 'capybara-screenshot'
+  gem 'capybara', '2.14.0'
   gem 'ci_reporter_minitest', '1.0.0'
-  gem 'database_cleaner', '1.5.3'
+  gem 'database_cleaner', '1.6.1'
   gem 'factory_girl_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.4'
-  gem 'launchy', '2.4.3'
-  gem 'maxitest', '~> 2.4'
-  gem 'minitest'
   gem 'minitest-reporters'
   gem 'mocha', '1.2.1'
-  gem 'poltergeist', '1.13.0'
-  gem 'rails-perftest'
+  gem 'poltergeist', '1.15.0'
   gem 'rails-controller-testing'
   gem 'ruby-prof'
   gem 'shoulda', '3.5.0'
-  gem 'simplecov', '~> 0.6.4', require: false
+  gem 'simplecov', '~> 0.14.1', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
-  gem "timecop", '0.8.0'
-  gem 'webmock', '~> 1.22'
+  gem "timecop", '0.8.1'
+  gem 'webmock', '~> 3.0.1'
 end
 
 group :development, :test do
-  gem 'ci_reporter_rspec'
-  gem 'govuk-lint', '~> 0.7'
+  gem 'govuk-lint', '~> 2.1.0'
   gem 'jasmine', '2.5.2'
   gem 'jasmine-core', '2.5.2'
-  gem 'rack', '2.0.3'
+  gem 'rack', '2.0.1'
   gem 'pry-byebug'
 end
