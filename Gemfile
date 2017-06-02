@@ -24,7 +24,7 @@ gem 'kaminari-mongoid', '1.0.1'
 gem 'logstasher', '1.2.1'
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
 gem 'momentjs-rails', '2.17.1'
-gem "mongoid_rails_migrations", "1.1.0"
+gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem "mongoid-sadstory"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
