@@ -12,46 +12,59 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       artefact = FactoryGirl.create(:artefact)
 
       # Create an edition.
-      post "/editions", {
-        edition: {
-          panopticon_id: artefact.id,
-          kind: "answer",
-          title: "a title"
-        }
-      }, inbound_headers
+      post "/editions",
+        params: {
+          edition: {
+            panopticon_id: artefact.id,
+            kind: "answer",
+            title: "a title"
+          }
+        },
+        headers: inbound_headers
+
       assert_equal 302, response.status
       edition = Edition.last
 
       # Transition the edition to 'in_review'
-      post "/editions/#{edition.id}/progress", {
-        edition: {
-          activity: {
-            request_type: :request_review
+      post "/editions/#{edition.id}/progress",
+        params: {
+          edition: {
+            activity: {
+              request_type: :request_review
+            }
           }
-        }
-      }, inbound_headers
+        },
+        headers: inbound_headers
+
       assert_equal 302, response.status
 
       login_as(@reviewer)
 
       # Transition the edition to 'ready'
-      post "/editions/#{edition.id}/progress", {
-        edition: {
-          activity: {
-            request_type: :approve_review
-          }
-        }
-      }, inbound_headers
+      post "/editions/#{edition.id}/progress",
+        params:
+          {
+            edition: {
+              activity: {
+                request_type: :approve_review
+              }
+            }
+          },
+          headers: inbound_headers
+
       assert_equal 302, response.status
 
       # Transition the edition to 'published'
-      post "/editions/#{edition.id}/progress", {
-        edition: {
-          activity: {
-            request_type: :publish
-          }
-        }
-      }, inbound_headers
+      post "/editions/#{edition.id}/progress",
+        params: {
+            edition: {
+              activity: {
+                request_type: :publish
+              }
+            }
+          },
+          headers: inbound_headers
+
       assert_equal 302, response.status
       worker_classes = Sidekiq::Worker.jobs.collect { |j| j["class"].constantize }.uniq
       worker_classes.each do |worker_class|

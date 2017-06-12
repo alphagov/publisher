@@ -4,8 +4,8 @@ require "edition_progressor"
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
-  before_filter :setup_view_paths, except: [:index, :new, :create]
-  after_filter :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
+  before_action :setup_view_paths, except: [:index, :new, :create]
+  after_action :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
 
   def index
     redirect_to root_path
@@ -123,10 +123,10 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    Tagging::TaggingUpdateForm.new(params[:tagging_tagging_update_form]).publish!
-    redirect_to :back, flash: { success: "Tags have been updated!" }
+    Tagging::TaggingUpdateForm.new(tagging_update_form_params).publish!
+    redirect_to tagging_edition_path, flash: { success: "Tags have been updated!" }
   rescue GdsApi::HTTPConflict
-    redirect_to :back,
+    redirect_to tagging_edition_path,
     flash: {
       danger: "Somebody changed the tags before you could. Your changes have not been saved."
     }
@@ -134,10 +134,9 @@ class EditionsController < InheritedResources::Base
 
   def update_related_external_links
     artefact = resource.artefact
-
     if params.has_key?("artefact")
       external_links = params.require(:artefact).permit(external_links_attributes: [:title, :url, :id, :_destroy])
-      artefact.external_links_attributes = external_links["external_links_attributes"]
+      artefact.external_links_attributes = external_links[:external_links_attributes].to_h
 
       if artefact.save
         flash[:success] = "External links have been saved. They will be visible the next time this publication is published."
@@ -148,7 +147,7 @@ class EditionsController < InheritedResources::Base
       flash[:danger] = "There aren't any external related links yet"
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: related_external_links_edition_path(resource.id))
   end
 
   def review
@@ -338,7 +337,18 @@ private
   end
 
   def remove_activity_params
-    params[:edition].delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
+    params.fetch(:edition, {}).delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
+  end
+
+  def tagging_update_form_params
+    params[:tagging_tagging_update_form].permit(
+      :content_id,
+      :previous_version,
+      :parent,
+      mainstream_browse_pages: [],
+      topics: [],
+      organisations: []
+    ).to_h
   end
 
   def format_failure_message(resource)

@@ -13,17 +13,13 @@ class LicenceIdentifierMigratorTest < ActiveSupport::TestCase
     end
 
     should "update licence editions with a matching licence identifier" do
-      silence_stream(STDOUT) do
-        LicenceIdentifierMigrator.update_all
-      end
+      LicenceIdentifierMigrator.update_all
       @le1.reload
       assert_equal "146-7-1", @le1.licence_identifier
     end
 
     should "ignore licence editions without a matching licence identifier" do
-      silence_stream(STDOUT) do
-        LicenceIdentifierMigrator.update_all
-      end
+      LicenceIdentifierMigrator.update_all
       @le2.reload
       assert_equal "9999999999", @le2.licence_identifier
     end

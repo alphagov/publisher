@@ -3,8 +3,8 @@ class ApplicationController < ActionController::Base
 
   include GDS::SSO::ControllerMethods
 
-  before_filter :authenticate_user!
-  before_filter :require_signin_permission!
+  before_action :authenticate_user!
+  before_action :require_signin_permission!
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
 
@@ -19,12 +19,12 @@ class ApplicationController < ActionController::Base
   end
 
   def record_not_found
-    render text: "404 Not Found", status: 404
+    render body: { 'raw': "404 Not Found" }, status: 404
   end
 
   def squash_multiparameter_datetime_attributes(params, attribute_names)
     attribute_names.each do |attribute_name|
-      datetime_params = params.select { |k, _| k.include? attribute_name }.sort.map { |_, v| v.to_i }
+      datetime_params = params.select { |k, _| k.include? attribute_name }.to_h.sort.map { |_, v| v.to_i }
       params.delete_if { |k, _| k.include? attribute_name }
       params[attribute_name] = Time.zone.local(*datetime_params) if datetime_params.present?
     end

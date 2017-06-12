@@ -7,6 +7,7 @@ development:
       database: govuk_content_development
   options:
     use_activesupport_time_zone: true
+    belongs_to_required_by_default: false
 
 test:
   clients:
@@ -20,6 +21,7 @@ test:
         max_pool_size: 1
   options:
     use_activesupport_time_zone: true
+    belongs_to_required_by_default: false
 
 # set these environment variables on your prod server
 production:
@@ -28,3 +30,4 @@ production:
       uri: <%= ENV['MONGODB_URI'] %>
   options:
     use_activesupport_time_zone: true
+    belongs_to_required_by_default: false

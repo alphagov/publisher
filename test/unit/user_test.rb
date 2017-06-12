@@ -19,8 +19,4 @@ class UserTest < ActiveSupport::TestCase
     stub_register_published_content
     publish user, trans
   end
-
-  test "use a custom collection for users" do
-    assert_equal "publisher_users", User.collection_name
-  end
 end

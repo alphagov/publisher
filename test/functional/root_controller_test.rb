@@ -10,7 +10,7 @@ class RootControllerTest < ActionController::TestCase
   end
 
   test "it returns a 404 for an unknown list" do
-    get :index, list: 'draFts'
+    get :index, params: { list: 'draFts' }
     assert response.not_found?
   end
 
@@ -18,26 +18,38 @@ class RootControllerTest < ActionController::TestCase
   # model, but some don't and we want to test that we allow those
   # through correctly
   test "it supports lists that don't match a model scope" do
-    get :index, list: 'drafts'
+    get :index, params: { list: 'drafts' }
     assert response.ok?
   end
 
   test "should strip leading/trailing whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff")
-    get(:index, list: "drafts", user_filter: "all", string_filter: " stuff")
+    get(:index, params: {
+      list: "drafts",
+      user_filter: "all",
+      string_filter: " stuff"
+    })
     assert_select "td.title", /Stuff/i
   end
 
   test "should strip excess interstitial whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff and things")
-    get(:index, list: "drafts", user_filter: "all", string_filter: "stuff   and things")
+    get(:index, params: {
+      list: "drafts",
+      user_filter: "all",
+      string_filter: "stuff   and things"
+    })
     assert_select "td.title", /Stuff and things/i
   end
 
   test "should search in slug with string_filter" do
     @guide.update_attribute(:title, "Stuff")
     @guide.update_attribute(:slug, "electric-banana")
-    get(:index, list: "drafts", user_filter: "all", string_filter: "electric-banana")
+    get(:index, params: {
+      list: "drafts",
+      user_filter: "all",
+      string_filter: "electric-banana"
+    })
     assert_select "td.title", /Stuff/i
   end
 end

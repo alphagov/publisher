@@ -1,1 +1,1 @@
-USER_COLLECTION_NAME = "publisher_users"
+USER_COLLECTION_NAME = :publisher_users
