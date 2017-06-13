@@ -51,5 +51,8 @@ namespace :calculators do
 
     edition.save!
     puts "Draft edition created: https://publisher.integration.publishing.service.gov.uk/editions/#{edition.id}"
+
+    UpdateWorker.perform_async(edition.id.to_s)
+    puts "Pushing draft to publishing API: https://draft-origin.integration.publishing.service.gov.uk/child-benefit-tax-calculator"
   end
 end
