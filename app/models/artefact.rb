@@ -92,6 +92,8 @@ class Artefact
     "find my nearest"                  => "place",
   }.tap { |h| h.default_proc = -> (_, k) { k } }.freeze
 
+  MULTIPART_FORMATS = %w(guide local_transaction licence simple_smart_answer).freeze
+
   embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
 
   embeds_many :external_links, class_name: "ArtefactExternalLink"
@@ -103,6 +105,7 @@ class Artefact
   before_create :record_create_action
   before_update :record_update_action
   after_update :update_editions
+  before_destroy :discard_publishing_api_draft
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, slug: true
@@ -120,6 +123,18 @@ class Artefact
 
   def self.find_by_slug(s)
     where(slug: s).first # rubocop:disable Rails/FindBy
+  end
+
+  def self.multipart_formats
+    where(kind: { '$in' => MULTIPART_FORMATS })
+  end
+
+  def self.archived
+    where(state: 'archived')
+  end
+
+  def self.with_redirect
+    where(:redirect_url.nin => [nil, ""])
   end
 
   # Fallback to english if no language is present
@@ -255,6 +270,30 @@ class Artefact
     new_need_id
   end
 
+  def latest_edition
+    Edition
+      .where(panopticon_id: id)
+      .order(version_number: :desc)
+      .first
+  end
+
+  def latest_edition_id
+    edition = latest_edition
+    edition.id.to_s if edition
+  end
+
+  def update_from_edition(edition)
+    update_attributes(
+      state: state_from_edition(edition),
+      description: edition.overview,
+      public_timestamp: edition.public_updated_at
+    )
+  end
+
+  def downtime
+    Downtime.for(self)
+  end
+
 private
 
   def validate_prefixes_and_paths
@@ -289,5 +328,17 @@ private
     uri.path == path && path !~ %r{//} && path !~ %r{./\z}
   rescue URI::InvalidURIError
     false
+  end
+
+  def state_from_edition(edition)
+    case edition.state
+    when 'published' then 'live'
+    when 'archived' then 'archived'
+    else 'draft'
+    end
+  end
+
+  def discard_publishing_api_draft
+    Services.publishing_api.discard_draft(self.content_id)
   end
 end
