@@ -15,6 +15,7 @@ require 'support/tab_test_helpers'
 require 'support/holidays_test_helpers'
 require 'support/action_processor_helpers'
 require 'support/factories'
+require 'support/local_services'
 require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
 

@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-class DowntimeTest < JavascriptIntegrationTest
+class DowntimeIntegrationTest < JavascriptIntegrationTest
   setup do
     setup_users
 
