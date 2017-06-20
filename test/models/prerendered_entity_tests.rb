@@ -17,7 +17,7 @@ module PrerenderedEntityTests
     slug = "a-slug"
     original_title = "Original title"
 
-    version1_attrs= {
+    version1_attrs = {
       slug: slug,
       title: original_title,
     }

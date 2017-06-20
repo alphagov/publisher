@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class TransactionEditionTest < ActiveSupport::TestCase
-
   setup do
     @artefact = FactoryGirl.create(:artefact)
   end

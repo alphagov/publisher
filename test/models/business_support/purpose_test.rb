@@ -25,5 +25,4 @@ class BusinessSupport::PurposeTest < ActiveSupport::TestCase
                                                  slug: "setting-up-your-business")
     refute another_scheme.valid?, "should validate uniqueness of name."
   end
-
 end

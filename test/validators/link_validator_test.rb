@@ -8,7 +8,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
 
     field "body", type: String
     field "assignee", type: String
-    GOVSPEAK_FIELDS = [:body]
+    GOVSPEAK_FIELDS = [:body].freeze
 
     validates_with LinkValidator
   end
@@ -49,7 +49,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
     end
 
     should "validate smart quotes as normal quotes" do
-      doc = Dummy.new(body: %q<abc [foobar](http://foobar.com “hover”)>)
+      doc = Dummy.new(body: 'abc [foobar](http://foobar.com “hover”)')
       assert doc.invalid?
       assert_includes doc.errors.keys, :body
     end

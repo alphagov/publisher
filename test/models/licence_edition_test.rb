@@ -36,14 +36,14 @@ class LicenceEditionTest < ActiveSupport::TestCase
     context "licence identifier uniqueness" do
       should "require a unique licence identifier" do
         artefact2 = FactoryGirl.create(:artefact)
-        FactoryGirl.create(:licence_edition, :licence_identifier => "wibble", panopticon_id: artefact2.id)
+        FactoryGirl.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id)
         @l.licence_identifier = "wibble"
         assert ! @l.valid?, "expected licence edition not to be valid"
       end
 
       should "not consider archived editions when evaluating uniqueness" do
         artefact2 = FactoryGirl.create(:artefact)
-        FactoryGirl.create(:licence_edition, :licence_identifier => "wibble", panopticon_id: artefact2.id, :state => "archived")
+        FactoryGirl.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id, state: "archived")
         @l.licence_identifier = "wibble"
         assert @l.valid?, "expected licence edition to be valid"
       end
@@ -75,13 +75,13 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
   should "clone extra fields when cloning edition" do
     licence = FactoryGirl.create(:licence_edition,
-                                 :panopticon_id => @artefact.id,
-                                 :state => "published",
-                                 :licence_identifier => "1234",
-                                 :licence_short_description => "Short description of licence",
-                                 :licence_overview => "Overview to be cloned",
-                                 :will_continue_on => "Continuation text to be cloned",
-                                 :continuation_link => "http://www.gov.uk")
+                                 panopticon_id: @artefact.id,
+                                 state: "published",
+                                 licence_identifier: "1234",
+                                 licence_short_description: "Short description of licence",
+                                 licence_overview: "Overview to be cloned",
+                                 will_continue_on: "Continuation text to be cloned",
+                                 continuation_link: "http://www.gov.uk")
     new_licence = licence.build_clone
 
     assert_equal licence.licence_identifier, new_licence.licence_identifier

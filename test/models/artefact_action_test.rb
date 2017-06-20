@@ -16,7 +16,6 @@ def merge_attributes(original, *update_hashes)
 end
 
 class ArtefactActionTest < ActiveSupport::TestCase
-
   DEFAULTS = {
     "active" => false,
     "need_ids" => [],
@@ -24,7 +23,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     "paths" => [],
     "prefixes" => [],
     "language" => "en",
-  }
+  }.freeze
 
   def base_fields
     {
@@ -55,7 +54,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     @artefact.reload
 
     assert_equal 2, @artefact.actions.size
-    assert_equal ["create", "update"], @artefact.actions.map(&:action_type)
+    assert_equal %w(create update), @artefact.actions.map(&:action_type)
     create_snapshot = merge_attributes(DEFAULTS, base_fields)
     update_snapshot = create_snapshot.merge("description" => @artefact.description)
     assert_equal create_snapshot, @artefact.actions[0].snapshot
@@ -73,16 +72,16 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
   test "updating attributes as a user should record a user action" do
     user = FactoryGirl.create :user
-    updates = {description: "Shiny shiny description"}
+    updates = { description: "Shiny shiny description" }
     @artefact.update_attributes_as user, updates
     @artefact.reload
 
     assert_equal "Shiny shiny description", @artefact.description
     assert_equal 2, @artefact.actions.size
-    assert_equal ["create", "update"], @artefact.actions.map(&:action_type)
+    assert_equal %w(create update), @artefact.actions.map(&:action_type)
     assert_equal user, @artefact.actions.last.user
     assert_equal(
-        merge_attributes(DEFAULTS, base_fields, updates),
+      merge_attributes(DEFAULTS, base_fields, updates),
         @artefact.actions.last.snapshot
     )
   end
@@ -93,7 +92,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     @artefact.reload
 
     assert_equal 2, @artefact.actions.size
-    assert_equal ["create", "update"], @artefact.actions.map(&:action_type)
+    assert_equal %w(create update), @artefact.actions.map(&:action_type)
 
     assert_equal 'TaggingUpdater', @artefact.actions.last.task_performed_by
     assert_nil @artefact.actions.last.user
@@ -101,24 +100,24 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
   test "saving as a user should record a user action" do
     user = FactoryGirl.create :user
-    updates = {description: "Shiny shiny description"}
+    updates = { description: "Shiny shiny description" }
     @artefact.description = updates[:description]
     @artefact.save_as user
     @artefact.reload
 
     assert_equal "Shiny shiny description", @artefact.description
     assert_equal 2, @artefact.actions.size
-    assert_equal ["create", "update"], @artefact.actions.map(&:action_type)
+    assert_equal %w(create update), @artefact.actions.map(&:action_type)
     assert_equal user, @artefact.actions.last.user
     assert_equal(
-        merge_attributes(DEFAULTS, base_fields, updates),
+      merge_attributes(DEFAULTS, base_fields, updates),
         @artefact.actions.last.snapshot
     )
   end
 
   test "saving as a user with an action type" do
     user = FactoryGirl.create :user
-    updates = {description: "Shiny shiny description"}
+    updates = { description: "Shiny shiny description" }
     @artefact.description = updates[:description]
     @artefact.save_as user, action_type: "awesome"
     @artefact.reload
@@ -126,5 +125,4 @@ class ArtefactActionTest < ActiveSupport::TestCase
     assert_equal user, @artefact.actions.last.user
     assert_equal "awesome", @artefact.actions.last.action_type
   end
-
 end

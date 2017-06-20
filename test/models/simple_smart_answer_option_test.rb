@@ -1,13 +1,12 @@
 require "test_helper"
 
 class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
-
   context "given a smart answer exists with a node" do
     setup do
-      @node = SimpleSmartAnswerEdition::Node.new(:slug => "question1", :title => "Question One?", :kind => "question")
-      @edition = FactoryGirl.create(:simple_smart_answer_edition, :nodes => [
+      @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question")
+      @edition = FactoryGirl.create(:simple_smart_answer_edition, nodes: [
         @node,
-        SimpleSmartAnswerEdition::Node.new(:slug => "outcome1", :title => "Outcome One", :kind => "outcome")
+        SimpleSmartAnswerEdition::Node.new(slug: "outcome1", title: "Outcome One", kind: "outcome")
       ])
 
       @atts = {
@@ -49,13 +48,13 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
 
     should "return in order" do
       @options = [
-        @node.options.create(@atts.merge(:label => "Third", :next_node => "baz", :order => 3)),
-        @node.options.create(@atts.merge(:label => "First", :next_node => "foo", :order => 1)),
-        @node.options.create(@atts.merge(:label => "Second", :next_node => "bar", :order => 2)),
+        @node.options.create(@atts.merge(label: "Third", next_node: "baz", order: 3)),
+        @node.options.create(@atts.merge(label: "First", next_node: "foo", order: 1)),
+        @node.options.create(@atts.merge(label: "Second", next_node: "bar", order: 2)),
       ]
 
-      assert_equal ["First","Second","Third"], @node.options.all.map(&:label)
-      assert_equal ["foo","bar","baz"], @node.options.all.map(&:next_node)
+      assert_equal %w(First Second Third), @node.options.all.map(&:label)
+      assert_equal %w(foo bar baz), @node.options.all.map(&:next_node)
     end
 
     context "slug" do
@@ -74,7 +73,7 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
       end
 
       should "not overwrite a given slug" do
-        @option = @node.options.build(@atts.merge(:slug => "fooey"))
+        @option = @node.options.build(@atts.merge(slug: "fooey"))
 
         assert @option.valid?
         assert_equal "fooey", @option.slug

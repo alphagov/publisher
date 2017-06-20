@@ -3,13 +3,12 @@
 require "test_helper"
 
 class TravelAdviceEditionTest < ActiveSupport::TestCase
-
   should "have correct fields" do
     ed = TravelAdviceEdition.new
     ed.title = "Travel advice for Aruba"
     ed.overview = "This gives travel advice for Aruba"
     ed.country_slug = 'aruba'
-    ed.alert_status = [ 'avoid_all_but_essential_travel_to_parts', 'avoid_all_travel_to_parts' ]
+    ed.alert_status = %w(avoid_all_but_essential_travel_to_parts avoid_all_travel_to_parts)
     ed.summary = "This is the summary of stuff going on in Aruba"
     ed.version_number = 4
     ed.image_id = "id_from_the_asset_manager_for_an_image"
@@ -17,22 +16,22 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     ed.published_at = Time.zone.parse('2013-02-21T14:56:22Z')
     ed.minor_update = true
     ed.change_description = "Some things"
-    ed.synonyms = ["Foo", "Bar"]
-    ed.parts.build(:title => "Part One", :slug => "one")
+    ed.synonyms = %w(Foo Bar)
+    ed.parts.build(title: "Part One", slug: "one")
     ed.save!
 
     ed = TravelAdviceEdition.first
     assert_equal "Travel advice for Aruba", ed.title
     assert_equal "This gives travel advice for Aruba", ed.overview
     assert_equal 'aruba', ed.country_slug
-    assert_equal [ 'avoid_all_but_essential_travel_to_parts', 'avoid_all_travel_to_parts' ], ed.alert_status
+    assert_equal %w(avoid_all_but_essential_travel_to_parts avoid_all_travel_to_parts), ed.alert_status
     assert_equal "This is the summary of stuff going on in Aruba", ed.summary
     assert_equal 4, ed.version_number
     assert_equal "id_from_the_asset_manager_for_an_image", ed.image_id
     assert_equal "id_from_the_asset_manager_for_a_document", ed.document_id
     assert_equal Time.zone.parse('2013-02-21T14:56:22Z'), ed.published_at
     assert_equal true, ed.minor_update
-    assert_equal ["Foo", "Bar"], ed.synonyms
+    assert_equal %w(Foo Bar), ed.synonyms
     assert_equal "Some things", ed.change_description
     assert_equal "Part One", ed.parts.first.title
   end
@@ -56,24 +55,24 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     context "on state" do
       should "only allow one edition in draft per slug" do
-        another_edition = FactoryGirl.create(:travel_advice_edition,
-                                             :country_slug => @ta.country_slug)
+        FactoryGirl.create(:travel_advice_edition,
+                                             country_slug: @ta.country_slug)
         @ta.state = 'draft'
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
 
       should "only allow one edition in published per slug" do
-        another_edition = FactoryGirl.create(:published_travel_advice_edition,
-                                             :country_slug => @ta.country_slug)
+        FactoryGirl.create(:published_travel_advice_edition,
+                                             country_slug: @ta.country_slug)
         @ta.state = 'published'
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
 
       should "allow multiple editions in archived per slug" do
-        another_edition = FactoryGirl.create(:archived_travel_advice_edition,
-                                             :country_slug => @ta.country_slug)
+        FactoryGirl.create(:archived_travel_advice_edition,
+                                             country_slug: @ta.country_slug)
         @ta.save!
         @ta.state = 'archived'
         assert @ta.valid?
@@ -127,13 +126,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     context "on alert status" do
       should "not permit invalid values in the array" do
-        @ta.alert_status = [ 'avoid_all_but_essential_travel_to_parts', 'something_else', 'blah' ]
+        @ta.alert_status = %w(avoid_all_but_essential_travel_to_parts something_else blah)
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:alert_status], "is not in the list"
       end
 
       should "permit an empty array" do
-        @ta.alert_status = [ ]
+        @ta.alert_status = []
         assert @ta.valid?
       end
 
@@ -141,7 +140,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       # mongoid/dirty#changes method is patched in lib/mongoid/monkey_patches.rb
       # See https://github.com/mongoid/mongoid/issues/2311 for details.
       should "track changes to alert status accurately" do
-        @ta.alert_status = [ ]
+        @ta.alert_status = []
         @ta.alert_status
         assert @ta.valid?
       end
@@ -156,18 +155,18 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       end
 
       should "require a unique version_number per slug" do
-        another_edition = FactoryGirl.create(:archived_travel_advice_edition,
-                                             :country_slug => @ta.country_slug,
-                                             :version_number => 3)
+        FactoryGirl.create(:archived_travel_advice_edition,
+                                             country_slug: @ta.country_slug,
+                                             version_number: 3)
         @ta.version_number = 3
         refute @ta.valid?
         assert_includes @ta.errors.messages[:version_number], "is already taken"
       end
 
       should "allow matching version_numbers for different slugs" do
-        another_edition = FactoryGirl.create(:archived_travel_advice_edition,
-                                             :country_slug => 'wibble',
-                                             :version_number => 3)
+        FactoryGirl.create(:archived_travel_advice_edition,
+                                             country_slug: 'wibble',
+                                             version_number: 3)
         @ta.version_number = 3
         assert @ta.valid?
       end
@@ -181,7 +180,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       end
 
       should "allow other versions to be minor updates" do
-        FactoryGirl.create(:published_travel_advice_edition, :country_slug => @ta.country_slug)
+        FactoryGirl.create(:published_travel_advice_edition, country_slug: @ta.country_slug)
         @ta.minor_update = true
         assert @ta.valid?
       end
@@ -197,7 +196,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       end
 
       should "not be required on publish for a minor update" do
-        FactoryGirl.create(:archived_travel_advice_edition, :country_slug => @ta.country_slug)
+        FactoryGirl.create(:archived_travel_advice_edition, country_slug: @ta.country_slug)
         @ta.version_number = 2 # version one can't be minor update
         @ta.save! # Can't save directly as published, have to save as draft first
         @ta.change_description = ""
@@ -214,9 +213,9 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   end
 
   should "have a published scope" do
-    e1 = FactoryGirl.create(:draft_travel_advice_edition)
+    FactoryGirl.create(:draft_travel_advice_edition)
     e2 = FactoryGirl.create(:published_travel_advice_edition)
-    e3 = FactoryGirl.create(:archived_travel_advice_edition)
+    FactoryGirl.create(:archived_travel_advice_edition)
     e4 = FactoryGirl.create(:published_travel_advice_edition)
 
     assert_equal [e2, e4].sort, TravelAdviceEdition.published.to_a.sort
@@ -229,29 +228,29 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     context "populating version_number" do
       should "set version_number to 1 if there are no existing versions for the country" do
-        ed = TravelAdviceEdition.new(:country_slug => 'foo')
+        ed = TravelAdviceEdition.new(country_slug: 'foo')
         ed.valid?
         assert_equal 1, ed.version_number
       end
 
       should "set version_number to the next available version" do
-        FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo', :version_number => 1)
-        FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo', :version_number => 2)
-        FactoryGirl.create(:published_travel_advice_edition, :country_slug => 'foo', :version_number => 4)
+        FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo', version_number: 1)
+        FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo', version_number: 2)
+        FactoryGirl.create(:published_travel_advice_edition, country_slug: 'foo', version_number: 4)
 
-        ed = TravelAdviceEdition.new(:country_slug => 'foo')
+        ed = TravelAdviceEdition.new(country_slug: 'foo')
         ed.valid?
         assert_equal 5, ed.version_number
       end
 
       should "do nothing if version_number is already set" do
-        ed = TravelAdviceEdition.new(:country_slug => 'foo', :version_number => 42)
+        ed = TravelAdviceEdition.new(country_slug: 'foo', version_number: 42)
         ed.valid?
         assert_equal 42, ed.version_number
       end
 
       should "do nothing if country_slug is not set" do
-        ed = TravelAdviceEdition.new(:country_slug => '')
+        ed = TravelAdviceEdition.new(country_slug: '')
         ed.valid?
         assert_nil ed.version_number
       end
@@ -265,15 +264,15 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   context "building a new version" do
     setup do
       @ed = FactoryGirl.create(:travel_advice_edition,
-                               :title => "Aruba",
-                               :overview => "Aruba is not near Wales",
-                               :country_slug => "aruba",
-                               :summary => "## The summary",
-                               :alert_status => ["avoid_all_but_essential_travel_to_whole_country", "avoid_all_travel_to_parts"],
-                               :image_id => "id_from_the_asset_manager_for_an_image",
-                               :document_id => "id_from_the_asset_manager_for_a_document")
-      @ed.parts.build(:title => "Fooey", :slug => 'fooey', :body => "It's all about Fooey")
-      @ed.parts.build(:title => "Gooey", :slug => 'gooey', :body => "It's all about Gooey")
+                               title: "Aruba",
+                               overview: "Aruba is not near Wales",
+                               country_slug: "aruba",
+                               summary: "## The summary",
+                               alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
+                               image_id: "id_from_the_asset_manager_for_an_image",
+                               document_id: "id_from_the_asset_manager_for_a_document")
+      @ed.parts.build(title: "Fooey", slug: 'fooey', body: "It's all about Fooey")
+      @ed.parts.build(title: "Gooey", slug: 'gooey', body: "It's all about Gooey")
       @ed.save!
       @ed.publish!
     end
@@ -293,15 +292,15 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     should "copy the edition's parts" do
       new_ed = @ed.build_clone
-      assert_equal ['Fooey', 'Gooey'], new_ed.parts.map(&:title)
+      assert_equal %w(Fooey Gooey), new_ed.parts.map(&:title)
     end
   end
 
   context "previous_version" do
     setup do
-      @ed1 = FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo')
-      @ed2 = FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo')
-      @ed3 = FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo')
+      @ed1 = FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo')
+      @ed2 = FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo')
+      @ed3 = FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo')
     end
 
     should "return the previous version" do
@@ -316,9 +315,9 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
   context "publishing" do
     setup do
-      @published = FactoryGirl.create(:published_travel_advice_edition, :country_slug => 'aruba',
-                                      :published_at => 3.days.ago, :change_description => 'Stuff changed')
-      @ed = FactoryGirl.create(:travel_advice_edition, :country_slug => 'aruba')
+      @published = FactoryGirl.create(:published_travel_advice_edition, country_slug: 'aruba',
+                                      published_at: 3.days.ago, change_description: 'Stuff changed')
+      @ed = FactoryGirl.create(:travel_advice_edition, country_slug: 'aruba')
       @published.reload
     end
 
@@ -355,16 +354,16 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
   context "setting the reviewed at date" do
     setup do
-      @published = FactoryGirl.create(:published_travel_advice_edition, :country_slug => 'aruba',
-                                      :published_at => 3.days.ago, :change_description => 'Stuff changed')
+      @published = FactoryGirl.create(:published_travel_advice_edition, country_slug: 'aruba',
+                                      published_at: 3.days.ago, change_description: 'Stuff changed')
       @published.reviewed_at = 2.days.ago
       @published.save!
       @published.reload
 
-      Timecop.freeze(1.days.ago) do
+      Timecop.freeze(1.day.ago) do
         # this is done to make sure there's a significant difference in time
         # between creating the edition and it being published
-        @edition = FactoryGirl.create(:travel_advice_edition, :country_slug => 'aruba')
+        @edition = FactoryGirl.create(:travel_advice_edition, country_slug: 'aruba')
       end
     end
 
@@ -408,14 +407,14 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     should "return summary and all part titles and bodies" do
       @edition.summary = "The Summary"
-      @edition.parts << Part.new(:title => "Part One", :body => "Some text")
-      @edition.parts << Part.new(:title => "More info", :body => "Some more information")
+      @edition.parts << Part.new(title: "Part One", body: "Some text")
+      @edition.parts << Part.new(title: "More info", body: "Some more information")
       assert_equal "The Summary Part One Some text More info Some more information", @edition.indexable_content
     end
 
     should "convert govspeak to plain text" do
       @edition.summary = "## The Summary"
-      @edition.parts << Part.new(:title => "Part One", :body => "* Some text")
+      @edition.parts << Part.new(title: "Part One", body: "* Some text")
       assert_equal "The Summary Part One Some text", @edition.indexable_content
     end
   end
@@ -423,8 +422,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   context "actions" do
     setup do
       @user = FactoryGirl.create(:user)
-      @old = FactoryGirl.create(:archived_travel_advice_edition, :country_slug => 'foo')
-      @edition = FactoryGirl.create(:draft_travel_advice_edition, :country_slug => 'foo')
+      @old = FactoryGirl.create(:archived_travel_advice_edition, country_slug: 'foo')
+      @edition = FactoryGirl.create(:draft_travel_advice_edition, country_slug: 'foo')
     end
 
     should "not have any actions by default" do

@@ -31,7 +31,7 @@ class DowntimeTest < ActiveSupport::TestCase
     end
 
     should "validate end time is in future" do
-      downtime = FactoryGirl.build(:downtime, end_time: Date.today - 1)
+      downtime = FactoryGirl.build(:downtime, end_time: Time.zone.yesterday)
 
       refute downtime.valid?
       assert_includes downtime.errors[:end_time], 'must be in the future'
@@ -39,13 +39,13 @@ class DowntimeTest < ActiveSupport::TestCase
 
     should "validate end time is in future only on create" do
       downtime = FactoryGirl.create(:downtime)
-      downtime.assign_attributes(start_time: Date.today - 3, end_time: Date.today - 1)
+      downtime.assign_attributes(start_time: Time.zone.today - 3, end_time: Time.zone.yesterday)
 
       assert downtime.valid?
     end
 
     should "validate start time is earlier than end time" do
-      downtime = FactoryGirl.build(:downtime, start_time: Date.today + 2, end_time: Date.today + 1)
+      downtime = FactoryGirl.build(:downtime, start_time: Time.zone.today + 2, end_time: Time.zone.today + 1)
 
       refute downtime.valid?
       assert_includes downtime.errors[:start_time], "must be earlier than end time"

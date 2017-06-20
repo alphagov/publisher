@@ -7,25 +7,25 @@ class ArtefactExternalLinkTest < ActiveSupport::TestCase
     end
 
     should "not be valid with URL missing" do
-      refute ArtefactExternalLink.new(:title => "Foo").valid?
+      refute ArtefactExternalLink.new(title: "Foo").valid?
     end
 
     should "not be valid with title missing" do
-      refute ArtefactExternalLink.new(:url => "http://bar.com").valid?
+      refute ArtefactExternalLink.new(url: "http://bar.com").valid?
     end
 
     should "be valid with both fields supplied" do
-      link = ArtefactExternalLink.new(:title => "Foo", :url => "http://bar.com")
+      link = ArtefactExternalLink.new(title: "Foo", url: "http://bar.com")
       assert link.valid?
     end
 
     should "only be valid if the URL is valid" do
-      link = ArtefactExternalLink.new(:title => "Foo", :url => "notreal://foo.com")
+      link = ArtefactExternalLink.new(title: "Foo", url: "notreal://foo.com")
       refute link.valid?
     end
 
     should "be valid with an https URL" do
-      link = ArtefactExternalLink.new(:title => "Foo", :url => "https://bar.com")
+      link = ArtefactExternalLink.new(title: "Foo", url: "https://bar.com")
       assert link.valid?
     end
   end

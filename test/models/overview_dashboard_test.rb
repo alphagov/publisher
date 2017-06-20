@@ -1,7 +1,6 @@
 require "test_helper"
 
 class OverviewDashboardTest < ActiveSupport::TestCase
-
   test "Can create and retrieve dashboard overview objects" do
     overview = create_test_overview
 
@@ -11,6 +10,7 @@ class OverviewDashboardTest < ActiveSupport::TestCase
   end
 
 private
+
   def create_test_overview
     overview = OverviewDashboard.create dashboard_type: "Format", result_group: "Guide"
 
@@ -39,7 +39,7 @@ private
   end
 
   def check_status_equal(actual_object, expected_hash)
-    expected_hash.each do |k, v|
+    expected_hash.each do |k, _v|
       assert_equal actual_object[k], expected_hash[k]
     end
   end

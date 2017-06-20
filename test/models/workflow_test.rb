@@ -9,11 +9,11 @@ class WorkflowTest < ActiveSupport::TestCase
   def template_users
     user = FactoryGirl.create(:user, name: "Bob")
     other_user = FactoryGirl.create(:user, name: "James")
-    return user, other_user
+    [user, other_user]
   end
 
   def template_programme
-    p = ProgrammeEdition.new(slug:"childcare", title:"Children", panopticon_id: @artefact.id)
+    p = ProgrammeEdition.new(slug: "childcare", title: "Children", panopticon_id: @artefact.id)
     p.save
     p
   end
@@ -35,9 +35,9 @@ class WorkflowTest < ActiveSupport::TestCase
     approve_review(other_user, edition)
     send_fact_check(user, edition)
     receive_fact_check(user, edition)
-    other_user.progress(edition, { request_type: :approve_fact_check, comment: "Looks good to me" })
-    user.progress(edition, { request_type: :publish, comment: "PUBLISHED!" })
-    return user, guide
+    other_user.progress(edition, request_type: :approve_fact_check, comment: "Looks good to me")
+    user.progress(edition, request_type: :publish, comment: "PUBLISHED!")
+    [user, guide]
   end
 
   def template_user_and_published_transaction
@@ -51,9 +51,9 @@ class WorkflowTest < ActiveSupport::TestCase
     transaction.save
     approve_review(other_user, transaction)
     transaction.save
-    user.progress(transaction, { request_type: :publish, comment: "Let's go"})
+    user.progress(transaction, request_type: :publish, comment: "Let's go")
     transaction.save
-    return user, transaction
+    [user, transaction]
   end
 
   context "#status_text" do
@@ -175,7 +175,7 @@ class WorkflowTest < ActiveSupport::TestCase
     approve_review(other_user, edition)
     send_fact_check(user, edition)
 
-    assert other_user.progress(edition, { request_type: :skip_fact_check, comment: 'Fact check not received in time' })
+    assert other_user.progress(edition, request_type: :skip_fact_check, comment: 'Fact check not received in time')
     edition.reload
     assert edition.can_publish?
     assert edition.actions.detect { |e| e.request_type == 'skip_fact_check' }
@@ -210,7 +210,7 @@ class WorkflowTest < ActiveSupport::TestCase
     receive_fact_check(user, edition, "Text.<l>content that the SafeHtml validator would catch</l>")
     send_fact_check(user, edition, "Out of office reply triggered receive_fact_check")
 
-    assert(edition.actions.last.comment.include? "Out of office reply triggered receive_fact_check")
+    assert(edition.actions.last.comment.include?("Out of office reply triggered receive_fact_check"))
   end
 
   test "when processing fact check, an edition can request for amendments" do
@@ -299,7 +299,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
   test "a programme should be marked as having reviewables if requested for review" do
     programme = template_programme
-    user, other_user = template_users
+    user, _other_user = template_users
 
     refute programme.in_review?
     request_review(user, programme)
@@ -325,7 +325,7 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "user should not be able to okay a programme they requested review for" do
-    user, other_user = template_users
+    user, _other_user = template_users
 
     edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
 
@@ -335,17 +335,17 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "you can only create a new edition from a published edition" do
-    user, other_user = template_users
+    user, _other_user = template_users
     edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
     refute edition.published?
     refute user.new_version(edition)
   end
 
   test "an edition can be moved into archive state" do
-    user, other_user = template_users
+    user, _other_user = template_users
 
     edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
-    user.progress(edition, { request_type: :archive })
+    user.progress(edition, request_type: :archive)
     assert_equal "archived", edition.state
   end
 
@@ -368,18 +368,18 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "User can request amendments for an edition they just approved" do
-    user_1, user_2 = template_users
-    edition = user_1.create_edition(:answer, panopticon_id: @artefact.id, title: "Answer foo", slug: "answer-foo")
+    user1, user2 = template_users
+    edition = user1.create_edition(:answer, panopticon_id: @artefact.id, title: "Answer foo", slug: "answer-foo")
     edition.body = "body content"
 
-    user_1.assign(edition, user_2)
-    request_review(user_1, edition)
+    user1.assign(edition, user2)
+    request_review(user1, edition)
     assert edition.in_review?
 
-    approve_review(user_2, edition)
+    approve_review(user2, edition)
     assert edition.ready?
 
-    request_amendments(user_2, edition)
+    request_amendments(user2, edition)
     assert edition.amends_needed?
   end
 
@@ -488,7 +488,6 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "record the action" do
       edition = FactoryGirl.create(:edition, state: 'ready')
-      options = { comment: "Go schedule !", request_details: { scheduled_time: @publish_at } }
 
       assert_difference 'edition.actions.count', 1 do
         schedule_for_publishing(@user, edition, @activity_details)

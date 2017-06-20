@@ -54,18 +54,18 @@ class ArtefactTest < ActiveSupport::TestCase
 
     context "help page special case" do
       should "allow a help page to have a help/ prefix on the slug" do
-        a = FactoryGirl.build(:artefact, :slug => "help/foo", :kind => "help_page")
+        a = FactoryGirl.build(:artefact, slug: "help/foo", kind: "help_page")
         assert a.valid?
       end
 
       should "require a help page to have a help/ prefix on the slug" do
-        a = FactoryGirl.build(:artefact, :slug => "foo", :kind => "help_page")
+        a = FactoryGirl.build(:artefact, slug: "foo", kind: "help_page")
         refute a.valid?
         assert_equal 1, a.errors[:slug].count
       end
 
       should "not allow other kinds to have a help/ prefix" do
-        a = FactoryGirl.build(:artefact, :slug => "help/foo", :kind => "answer")
+        a = FactoryGirl.build(:artefact, slug: "help/foo", kind: "answer")
         refute a.valid?
         assert_equal 1, a.errors[:slug].count
       end
@@ -90,8 +90,8 @@ class ArtefactTest < ActiveSupport::TestCase
     end
 
     should "store multiple needs related to an artefact" do
-      artefact = FactoryGirl.create(:artefact, need_ids: ["100001", "100002"])
-      assert_equal ["100001", "100002"], artefact.reload.need_ids
+      artefact = FactoryGirl.create(:artefact, need_ids: %w(100001 100002))
+      assert_equal %w(100001 100002), artefact.reload.need_ids
     end
 
     should "be six-digit integers" do
@@ -205,7 +205,7 @@ class ArtefactTest < ActiveSupport::TestCase
       # This validation can be expensive, so skip it where unnecessary.
       @a.paths = ["foo"]
       @a.prefixes = ["bar"]
-      @a.save :validate => false
+      @a.save validate: false
 
       assert @a.valid?
     end
@@ -243,7 +243,8 @@ class ArtefactTest < ActiveSupport::TestCase
   should "not touch the updated_at field on the editions when the artefact is saved but the slug hasn't changed" do
     artefact = FactoryGirl.create(:draft_artefact)
     edition = FactoryGirl.create(:answer_edition, panopticon_id: artefact.id)
-    old_updated_at = 2.days.ago.to_time
+    two_days_ago = Time.zone.today - 2
+    old_updated_at = Time.zone.local(two_days_ago.year, two_days_ago.month, two_days_ago.day).time
     edition.set(updated_at: old_updated_at)
 
     artefact.language = "cy"
@@ -280,8 +281,7 @@ class ArtefactTest < ActiveSupport::TestCase
         kind: "answer",
         name: "Foo bar",
         owning_app: "publisher",
-        state: "live"
-    )
+        state: "live")
 
     artefact.slug = "belated-correction"
     refute artefact.save
@@ -296,8 +296,7 @@ class ArtefactTest < ActiveSupport::TestCase
         slug: "foo-bar",
         kind: "answer",
         name: "Foo bar",
-        owning_app: "publisher",
-    )
+        owning_app: "publisher",)
 
     user1 = FactoryGirl.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
@@ -318,8 +317,7 @@ class ArtefactTest < ActiveSupport::TestCase
         slug: "foo-bar",
         kind: "answer",
         name: "Foo bar",
-        owning_app: "publisher",
-    )
+        owning_app: "publisher",)
     user1 = FactoryGirl.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
 
@@ -348,7 +346,7 @@ class ArtefactTest < ActiveSupport::TestCase
 
   test "should archive all editions when archived" do
     artefact = FactoryGirl.create(:artefact, state: "live")
-    editions = ["draft", "ready", "published", "archived"].map { |state|
+    editions = %w(draft ready published archived).map { |state|
       FactoryGirl.create(:programme_edition, panopticon_id: artefact.id, state: state)
     }
     user1 = FactoryGirl.create(:user)
@@ -388,7 +386,7 @@ class ArtefactTest < ActiveSupport::TestCase
     artefact.state = "archived"
     artefact.save
     assert_raise RuntimeError do
-      edition.update_attributes({state: "archived", title: "Shabba", slug: "do-not-allow"})
+      edition.update_attributes(state: "archived", title: "Shabba", slug: "do-not-allow")
     end
   end
 
@@ -417,8 +415,8 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   should "have an archived? helper method" do
-    published_artefact = FactoryGirl.create(:artefact, :slug => "scooby", :state => "live")
-    archived_artefact = FactoryGirl.create(:artefact, :slug => "doo", :state => "archived")
+    published_artefact = FactoryGirl.create(:artefact, slug: "scooby", state: "live")
+    archived_artefact = FactoryGirl.create(:artefact, slug: "doo", state: "archived")
 
     refute published_artefact.archived?
     assert archived_artefact.archived?

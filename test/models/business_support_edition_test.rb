@@ -51,14 +51,14 @@ class BusinessSupportEditionTest < ActiveSupport::TestCase
 
     assert_equal 2, support.priority
 
-    assert_equal ["G123","G345","G45","G9"], support.area_gss_codes
+    assert_equal %w(G123 G345 G45 G9), support.area_gss_codes
     assert_equal ["up-to-249"], support.business_sizes
     assert_equal ["charity"], support.business_types
-    assert_equal ["scotland", "england"], support.locations
+    assert_equal %w(scotland england), support.locations
     assert_equal ["making-the-most-of-the-internet"], support.purposes
-    assert_equal ["education", "manufacturing"], support.sectors
+    assert_equal %w(education manufacturing), support.sectors
     assert_equal ["start-up"], support.stages
-    assert_equal ["grant", "loan"], support.support_types
+    assert_equal %w(grant loan), support.support_types
     assert_equal Date.parse("1 Jan 2000"), support.start_date
     assert_equal Date.parse("1 Jan 2020"), support.end_date
   end
@@ -107,7 +107,6 @@ class BusinessSupportEditionTest < ActiveSupport::TestCase
   end
 
   context "continuation_link validation" do
-
     setup do
       @bs = FactoryGirl.create(
         :business_support_edition,
@@ -133,65 +132,57 @@ class BusinessSupportEditionTest < ActiveSupport::TestCase
     setup do
       @e1 = FactoryGirl.create(
         :business_support_edition,
-        :area_gss_codes => ['G2345', 'G1234'],
-        :business_sizes => ['1', 'up-to-1000000'],
-        :locations => ['narnia'],
-        :purposes => ['world-domination'],
-        :sectors => ['agriculture', 'healthcare'],
-        :stages => ['pivoting'],
-        :support_types => ['award', 'grant', 'loan'],
+        area_gss_codes: %w(G2345 G1234),
+        business_sizes: ['1', 'up-to-1000000'],
+        locations: ['narnia'],
+        purposes: ['world-domination'],
+        sectors: %w(agriculture healthcare),
+        stages: ['pivoting'],
+        support_types: %w(award grant loan),
       )
       @e2 = FactoryGirl.create(
         :business_support_edition,
-        :area_gss_codes => ['G1212', 'G1234', 'G999'],
-        :business_sizes => ['1', 'up-to-1000000'],
-        :locations => ['hades', 'narnia'],
-        :purposes => ['business-growth-and-expansion'],
-        :sectors => ['education', 'healthcare'],
-        :stages => ['start-up', 'pivoting'],
-        :support_types => ['grant', 'loan', 'equity'],
+        area_gss_codes: %w(G1212 G1234 G999),
+        business_sizes: ['1', 'up-to-1000000'],
+        locations: %w(hades narnia),
+        purposes: ['business-growth-and-expansion'],
+        sectors: %w(education healthcare),
+        stages: ['start-up', 'pivoting'],
+        support_types: %w(grant loan equity),
       )
       @e3 = FactoryGirl.create(
         :business_support_edition,
-        :area_gss_codes => ['G1234'],
-        :business_sizes => ['up-to-249', 'up-to-1000000'],
-        :locations => ['hades', 'chicken-town'],
-        :purposes => ['making-the-most-of-the-internet'],
-        :sectors => ['utilities'],
-        :stages => ['start-up'],
-        :support_types => ['grant'],
+        area_gss_codes: ['G1234'],
+        business_sizes: ['up-to-249', 'up-to-1000000'],
+        locations: ['hades', 'chicken-town'],
+        purposes: ['making-the-most-of-the-internet'],
+        sectors: ['utilities'],
+        stages: ['start-up'],
+        support_types: ['grant'],
       )
     end
 
     should "only return editions matching the facet values provided" do
-      editions = BusinessSupportEdition.for_facets({
-        :purposes => 'business-growth-and-expansion',
-        :support_types => 'equity',
-      })
+      editions = BusinessSupportEdition.for_facets(purposes: 'business-growth-and-expansion',
+        support_types: 'equity')
       assert_equal [@e2], editions
-      editions = BusinessSupportEdition.for_facets({
-        :business_sizes => '1,up-to-1000000',
-        :locations => 'narnia',
-      })
+      editions = BusinessSupportEdition.for_facets(business_sizes: '1,up-to-1000000',
+        locations: 'narnia')
       assert_equal [@e1, @e2], editions
     end
     should "support searching with all the facet values" do
-      editions = BusinessSupportEdition.for_facets({
-        :area_gss_codes => 'G1234',
-        :business_sizes => 'up-to-1000000',
-        :locations => 'narnia,hades,chicken-town',
-        :purposes => 'business-growth-and-expansion,making-the-most-of-the-internet,world-domination',
-        :sectors => 'agriculture,healthcare,utilities',
-        :stages => 'pivoting,start-up',
-        :support_types => 'award,grant,loan',
-      })
+      editions = BusinessSupportEdition.for_facets(area_gss_codes: 'G1234',
+        business_sizes: 'up-to-1000000',
+        locations: 'narnia,hades,chicken-town',
+        purposes: 'business-growth-and-expansion,making-the-most-of-the-internet,world-domination',
+        sectors: 'agriculture,healthcare,utilities',
+        stages: 'pivoting,start-up',
+        support_types: 'award,grant,loan')
       assert_equal [@e1, @e2, @e3], editions
     end
     should "return nothing where no facet values match" do
-      editions = BusinessSupportEdition.for_facets({
-        :business_sizes => 'up-to-a-bizillion',
-        :locations => 'ecclefechan',
-      })
+      editions = BusinessSupportEdition.for_facets(business_sizes: 'up-to-a-bizillion',
+        locations: 'ecclefechan')
       assert_empty editions
     end
   end

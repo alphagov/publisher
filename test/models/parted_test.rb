@@ -11,8 +11,8 @@ class PartedTest < ActiveSupport::TestCase
 
     refute edition.valid?
 
-    assert_equal({title: ["can't be blank"]}, edition.errors[:parts][0]['54c10d4d759b743528000010:1'])
-    assert_equal({slug: ["can't be blank", "is invalid"]}, edition.errors[:parts][0]['54c10d4d759b743528000011:2'])
+    assert_equal({ title: ["can't be blank"] }, edition.errors[:parts][0]['54c10d4d759b743528000010:1'])
+    assert_equal({ slug: ["can't be blank", "is invalid"] }, edition.errors[:parts][0]['54c10d4d759b743528000011:2'])
     assert_equal 2, edition.errors[:parts][0].length
   end
 

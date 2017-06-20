@@ -62,8 +62,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should find and update the user with oauth params" do
-    attributes = {uid: "1234abcd", name: "Old", email: "old@m.com",
-        permissions: ["everything"]}
+    attributes = { uid: "1234abcd", name: "Old", email: "old@m.com",
+        permissions: ["everything"] }
     User.create!(attributes)
     auth_hash = {
       "uid" => "1234abcd",
@@ -105,13 +105,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "creating a transaction with the initial details creates a valid transaction" do
-    user = User.create(:name => "bob")
+    user = User.create(name: "bob")
     trans = user.create_edition(:transaction, title: "test", slug: "test", panopticon_id: @artefact.id)
     assert trans.valid?
   end
 
   test "user can't okay a publication they've sent for review" do
-    user = User.create(:name => "bob")
+    user = User.create(name: "bob")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     request_review(user, trans)
@@ -119,8 +119,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "Edition becomes assigned to user when user is assigned an edition" do
-    boss_user = FactoryGirl.create(:user, :name => "Mat")
-    worker_user = FactoryGirl.create(:user, :name => "Grunt")
+    boss_user = FactoryGirl.create(:user, name: "Mat")
+    worker_user = FactoryGirl.create(:user, name: "Grunt")
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)
@@ -131,8 +131,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "Edition can be unassigned" do
-    boss_user = FactoryGirl.create(:user, :name => "Mat")
-    worker_user = FactoryGirl.create(:user, :name => "Grunt")
+    boss_user = FactoryGirl.create(:user, name: "Mat")
+    worker_user = FactoryGirl.create(:user, name: "Grunt")
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)
