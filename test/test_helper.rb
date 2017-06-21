@@ -10,11 +10,12 @@ require 'mocha/mini_test'
 require 'database_cleaner'
 require 'webmock/minitest'
 require 'gds_api/test_helpers/publishing_api_v2'
-require 'govuk_content_models/test_helpers/factories'
 require 'support/tag_test_helpers'
 require 'support/tab_test_helpers'
 require 'support/holidays_test_helpers'
-require 'govuk_content_models/test_helpers/action_processor_helpers'
+require 'support/action_processor_helpers'
+require 'support/factories'
+require 'support/local_services'
 require 'govuk-content-schema-test-helpers'
 require 'govuk-content-schema-test-helpers/test_unit'
 
@@ -46,7 +47,6 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   include MiniTest::Assertions
-  include GovukContentModels::TestHelpers::ActionProcessorHelpers
   include WebMock::API
 
   def clean_db
@@ -94,4 +94,5 @@ class ActiveSupport::TestCase
   include TagTestHelpers
   include TabTestHelpers
   include HolidaysTestHelpers
+  include ActionProcessorHelpers
 end

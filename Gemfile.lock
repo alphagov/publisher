@@ -81,7 +81,6 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
     bson (4.2.1)
-    bson_ext (1.5.1)
     builder (3.2.3)
     byebug (9.0.6)
     capybara (2.14.0)
@@ -152,15 +151,6 @@ GEM
       bootstrap-sass (= 3.3.5.1)
       jquery-rails (~> 4.1.1)
       rails (>= 3.2.0)
-    govuk_content_models (47.0.0)
-      bson_ext
-      gds-api-adapters (>= 10.9.0)
-      gds-sso (~> 13.2)
-      govspeak (~> 3.1)
-      mongoid (= 6.1.0)
-      plek
-      state_machines (~> 0.4)
-      state_machines-mongoid (~> 0.1)
     govuk_sidekiq (1.0.3)
       airbrake (>= 3.1.0)
       gds-api-adapters (>= 19.1.0)
@@ -452,7 +442,6 @@ DEPENDENCIES
   govuk-content-schema-test-helpers (~> 1.4)
   govuk-lint (~> 2.1.0)
   govuk_admin_template (= 4.3.0)
-  govuk_content_models (= 47.0.0)
   govuk_sidekiq (= 1.0.3)
   has_scope
   inherited_resources
@@ -487,6 +476,8 @@ DEPENDENCIES
   shoulda (= 3.5.0)
   simplecov (~> 0.14.1)
   simplecov-rcov (~> 0.2.3)
+  state_machines (~> 0.4)
+  state_machines-mongoid (~> 0.1)
   statsd-ruby (~> 1.4.0)
   timecop (= 0.8.1)
   uglifier (= 3.2.0)

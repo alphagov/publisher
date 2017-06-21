@@ -10,11 +10,6 @@ gem 'gds-sso', '~> 13.2'
 gem 'gds-api-adapters', '~> 46.0.0'
 gem 'govspeak', '~> 3.4.0'
 gem 'govuk_admin_template', '4.3.0'
-if ENV["API_DEV"]
-  gem "govuk_content_models", path: "../govuk_content_models"
-else
-  gem 'govuk_content_models', "47.0.0"
-end
 gem 'govuk_sidekiq', '1.0.3'
 gem 'has_scope'
 gem 'inherited_resources'
@@ -38,6 +33,8 @@ gem 'reverse_markdown', '0.3.0', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'selectize-rails', '0.12.1'
+gem 'state_machines', '~> 0.4'
+gem 'state_machines-mongoid', '~> 0.1'
 gem 'statsd-ruby', '~> 1.4.0', require: false
 gem 'uglifier', '3.2.0'
 gem 'unicorn', '5.3.0'

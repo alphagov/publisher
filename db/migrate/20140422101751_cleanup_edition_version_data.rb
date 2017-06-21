@@ -23,7 +23,7 @@ class CleanupEditionVersionData < Mongoid::Migration
     # This one had 2 published versions with version number 1.  This change will preserve
     # the one that's currently being served as the published one.
     updated = fixup_versions('5076c643ed915d119d000037', 1, '519b50fae5274a1bbf00005b')
-    if updated and ed = Edition.where(_id: "519b50fae5274a1bbf00005b").first
+    if updated && ed = Edition.where(_id: "519b50fae5274a1bbf00005b").first
       ed.set(:state, 'archived')
     end
 
