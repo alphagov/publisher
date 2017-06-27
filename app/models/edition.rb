@@ -92,9 +92,9 @@ class Edition
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
   EXACT_ROUTE_EDITION_CLASSES = [
-    CampaignEdition,
-    HelpPageEdition,
-    TransactionEdition
+    "CampaignEdition",
+    "HelpPageEdition",
+    "TransactionEdition"
   ].freeze
 
   validates :title, presence: true
@@ -396,7 +396,7 @@ class Edition
   end
 
   def exact_route?
-    self.class.in? EXACT_ROUTE_EDITION_CLASSES
+    self.class.name.in? EXACT_ROUTE_EDITION_CLASSES
   end
 
   def publish_anonymously!
