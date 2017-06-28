@@ -32,7 +32,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".builder-container" do
         assert page.has_content? "Start button text"
-        assert page.has_selector?("select#edition_start_button_text")
+        assert page.has_select?("edition_start_button_text", options: ["Start now", "Continue", "Find contact details", "Next"])
 
         assert page.has_content? "Question 1"
 
