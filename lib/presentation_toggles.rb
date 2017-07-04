@@ -1,7 +1,7 @@
 module PresentationToggles
   extend ActiveSupport::Concern
 
-  PROMOTIONS = %w(organ_donor register_to_vote).freeze
+  PROMOTIONS = %w(organ_donor register_to_vote mot_reminders).freeze
 
   included do
     field :presentation_toggles, type: Hash, default: default_presentation_toggles
