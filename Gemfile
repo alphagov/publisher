@@ -59,6 +59,7 @@ end
 
 group :development, :test do
   gem 'govuk-lint', '~> 2.1.0'
+  gem 'govuk_schemas'
   gem 'jasmine', '2.5.2'
   gem 'jasmine-core', '2.5.2'
   gem 'rack', '2.0.3'

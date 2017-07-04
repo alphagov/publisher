@@ -151,6 +151,8 @@ GEM
       bootstrap-sass (= 3.3.5.1)
       jquery-rails (~> 4.1.1)
       rails (>= 3.2.0)
+    govuk_schemas (2.1.1)
+      json-schema (~> 2.5.0)
     govuk_sidekiq (1.0.3)
       airbrake (>= 3.1.0)
       gds-api-adapters (>= 19.1.0)
@@ -442,6 +444,7 @@ DEPENDENCIES
   govuk-content-schema-test-helpers (~> 1.4)
   govuk-lint (~> 2.1.0)
   govuk_admin_template (= 4.3.0)
+  govuk_schemas
   govuk_sidekiq (= 1.0.3)
   has_scope
   inherited_resources
