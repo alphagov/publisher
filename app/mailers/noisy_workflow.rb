@@ -22,7 +22,7 @@ class NoisyWorkflow < ActionMailer::Base
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
       subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition"
     ) do |format|
-      format.text { render html: "<strong>HTML</strong> #{action.customised_message}" }
+      format.text { render plain: action.customised_message }
     end
   end
 
