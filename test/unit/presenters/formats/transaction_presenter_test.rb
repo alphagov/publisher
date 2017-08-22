@@ -109,6 +109,11 @@ class TransactionPresenterTest < ActiveSupport::TestCase
       assert_equal 'UA-000000-2', result[:details][:department_analytics_profile]
     end
 
+    should "[:start_button_text]" do
+      edition.update_attribute(:start_button_text, 'Sign in')
+      assert_equal 'Sign in', result[:details][:start_button_text]
+    end
+
     context "[:downtime_message]" do
       context "when there is a downtime association" do
         should "show if we're in the publicize window" do

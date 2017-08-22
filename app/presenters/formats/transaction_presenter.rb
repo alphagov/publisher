@@ -13,6 +13,7 @@ module Formats
     def details
       {
         introductory_paragraph: govspeak(:introduction),
+        start_button_text: edition.start_button_text,
         will_continue_on: edition.will_continue_on,
         transaction_start_link: edition.link,
         more_information: govspeak(:more_information),

@@ -24,6 +24,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       assert page.has_content? @artefact.name
 
       fill_in "Introductory paragraph", with: "Become a space pilot"
+      select "Sign in", from: "Start button text"
       fill_in "Will continue on", with: "UK Space Recruitment"
       fill_in "More information", with: "Take part in the final frontier"
 
@@ -34,6 +35,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       assert_equal @artefact.id.to_s, transaction.panopticon_id
 
       assert_equal "Become a space pilot", transaction.introduction
+      assert_equal "Sign in", transaction.start_button_text
       assert_equal "UK Space Recruitment", transaction.will_continue_on
       assert_equal "Take part in the final frontier", transaction.more_information
     end

@@ -7,6 +7,15 @@
               :hint => 'Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")',
               :input_html => { :rows => 8, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
 
+  <div class="form-group">
+    <label for="edition_start_button_text">Start button text</label>
+    <%= f.select :start_button_text,
+        ["Start now", "Sign in"],
+        {},
+        class: "form-control input-md-7",
+        disabled: @resource.locked_for_edits? %>
+  </div>
+
   <%= f.input :will_continue_on,
               :hint => 'Text to follow the statement "This will continue on". eg. "the HMRC website"',
               :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
