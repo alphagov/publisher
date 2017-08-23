@@ -260,6 +260,7 @@ protected
     when :transaction_edition
       [
         :introduction,
+        :start_button_text,
         :will_continue_on,
         :link,
         :more_information,

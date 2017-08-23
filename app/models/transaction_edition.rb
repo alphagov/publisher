@@ -8,10 +8,12 @@ class TransactionEdition < Edition
   field :need_to_know, type: String
   field :department_analytics_profile, type: String
   field :alternate_methods, type: String
+  field :start_button_text, type: String, default: "Start now"
 
   GOVSPEAK_FIELDS = [:introduction, :more_information, :alternate_methods, :need_to_know].freeze
 
   validates_format_of :department_analytics_profile, with: /UA-\d+-\d+/i, allow_blank: true
+  validates_presence_of :start_button_text
   validates_with SafeHtml
 
   def indexable_content
