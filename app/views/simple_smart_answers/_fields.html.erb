@@ -10,8 +10,12 @@
 <div class="builder-container">
   <div class="row">
     <div class="col-md-8">
-      <label for="edition_start_button_text" class="control-label">Start button text</label>
-      <%= f.select :start_button_text, ["Start now", "Continue", "Find contact details", "Next"], {}, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
+    <label for="edition_start_button_text" class="control-label">Start button text:</label><br>
+      <% ["Start now", "Continue", "Find contact details", "Next"].each do |option| %>
+        <%= f.radio_button :start_button_text, option, disabled: @resource.locked_for_edits? %>
+        <%= f.label "start_button_text_#{option.gsub(" ","_").underscore}", option, class: "control-label input-md-3" %><br>
+      <% end %>
+      <br>
     </div>
   </div>
   <div class="nodes" id="nodes">
