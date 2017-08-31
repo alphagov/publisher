@@ -31,8 +31,11 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       assert page.has_no_css?(".nodes .outcome")
 
       within ".builder-container" do
-        assert page.has_content? "Start button text"
-        assert page.has_select?("edition_start_button_text", options: ["Start now", "Continue", "Find contact details", "Next"])
+        assert page.has_content? "Start now"
+        assert page.has_checked_field? "edition_start_button_text_start_now"
+        ["Continue", "Find contact details", "Next"].each do |option|
+          assert page.has_unchecked_field? "edition_start_button_text_#{option.tr(' ', '_').underscore}"
+        end
 
         assert page.has_content? "Question 1"
 

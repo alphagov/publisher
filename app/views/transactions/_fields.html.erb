@@ -8,12 +8,12 @@
               :input_html => { :rows => 8, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
 
   <div class="form-group">
-    <label for="edition_start_button_text">Start button text</label>
-    <%= f.select :start_button_text,
-        ["Start now", "Sign in"],
-        {},
-        class: "form-control input-md-7",
-        disabled: @resource.locked_for_edits? %>
+    <label for="edition_start_button_text">Start button text:</label><br/>
+    <% ["Start now", "Sign in"].each do |option| %>
+      <%# radio_button(object_name, method, tag_value, options = {}) %>
+      <%= f.radio_button :start_button_text, option, {class: "input-md-7", disabled: @resource.locked_for_edits?} %>
+      <%= f.label "start_button_text_#{option.gsub(" ","_").underscore}", option %><br>
+    <% end %>
   </div>
 
   <%= f.input :will_continue_on,
