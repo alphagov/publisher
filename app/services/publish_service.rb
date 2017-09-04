@@ -1,7 +1,6 @@
 class PublishService
   class << self
     def call(edition, update_type = nil)
-      edition.register_with_rummager
       publish_current_draft(edition, update_type)
     end
 
