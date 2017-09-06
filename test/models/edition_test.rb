@@ -1,10 +1,5 @@
 require "test_helper"
 
-class Edition
-  def update_in_search_index
-  end
-end
-
 class EditionTest < ActiveSupport::TestCase
   def setup
     @artefact = FactoryGirl.create(:artefact)

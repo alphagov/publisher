@@ -1,5 +1,5 @@
 require_dependency "workflow"
-require "search_index_presenter"
+
 require 'digest'
 
 class Edition
@@ -419,12 +419,6 @@ class Edition
     if artefact.state == "archived"
       raise ResurrectionError, "Cannot register archived artefact '#{artefact.slug}'"
     end
-  end
-
-  def register_with_rummager
-    check_if_archived
-    presenter = SearchIndexPresenter.new(self)
-    SearchIndexer.call(presenter)
   end
 
   def auth_bypass_id
