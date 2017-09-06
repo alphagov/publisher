@@ -71,7 +71,10 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     organ_donor_registration_promotion_url = "https://www.organdonation.nhs.uk/how_to_become_a_donor/registration/consent.asp?campaign=2244&v=7"
 
     visit_edition edition
+    assert page.has_checked_field? "Don't promote anything on this page"
     assert page.has_unchecked_field? "Promote organ donation"
+    assert page.has_unchecked_field? "Promote register to vote"
+    assert page.has_unchecked_field? "Promote MOT reminders"
 
     choose "Promote organ donation"
     fill_in "Promotion choice URL", with: organ_donor_registration_promotion_url
@@ -88,7 +91,10 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     visit_edition edition
 
+    assert page.has_checked_field? "Don't promote anything on this page"
+    assert page.has_unchecked_field? "Promote organ donation"
     assert page.has_unchecked_field? "Promote register to vote"
+    assert page.has_unchecked_field? "Promote MOT reminders"
 
     choose "Promote register to vote"
     fill_in "Promotion choice URL", with: register_to_vote_promotion_url
@@ -96,6 +102,8 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_checked_field? "Promote register to vote"
     assert page.has_field? "Promotion choice URL", with: register_to_vote_promotion_url
+    assert page.has_unchecked_field? "Don't promote anything on this page"
     assert page.has_unchecked_field? "Promote organ donation"
+    assert page.has_unchecked_field? "Promote MOT reminders"
   end
 end

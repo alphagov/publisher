@@ -6,7 +6,6 @@
               :input_html => { :disabled => 'disabled', class: 'input-md-10' } %>
 <% end %>
 
-
 <hr />
 <div class="row">
   <div class="col-md-8">
@@ -27,6 +26,10 @@
       <%= f.radio_button :promotion_choice, 'register_to_vote',
         { checked: (f.object.promotion_choice == "register_to_vote"), disabled: @resource.locked_for_edits? } %>
       <%= f.label :promotion_choice, "Promote register to vote", value: 'register_to_vote' %>
+      <br />
+      <%= f.radio_button :promotion_choice, 'mot_reminders',
+        { checked: (f.object.promotion_choice == "mot_reminders"), disabled: @resource.locked_for_edits? } %>
+      <%= f.label :promotion_choice, "Promote MOT reminders", value: 'mot_reminders' %>
 
       <%= f.input :promotion_choice_url,
           required: false,
