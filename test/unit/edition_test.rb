@@ -1,6 +1,26 @@
 require 'test_helper'
 
 class EditionTest < ActiveSupport::TestCase
+  context "#register_with_rummager" do
+    should "not register with Rummager, publishing-api if the artefact is archived" do
+      FactoryGirl.create(:user)
+      artefact = FactoryGirl.create(:artefact)
+      edition = FactoryGirl.create(:guide_edition, state: "ready", panopticon_id: artefact.id)
+
+      # Doing this after creating the edition, so the edition doesn't try to
+      # update the artefact
+      artefact.update_attributes! state: "archived"
+
+      registerable = mock("registerable_edition")
+      SearchIndexPresenter.stubs(:new).with(edition).returns(registerable)
+      SearchIndexer.expects(:call).with(registerable).never
+
+      assert_raises Edition::ResurrectionError do
+        edition.register_with_rummager
+      end
+    end
+  end
+
   context "state names" do
     should "return an array of symbols" do
       assert Edition.state_names.is_a? Array

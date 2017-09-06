@@ -2,6 +2,7 @@ class UnpublishService
   class << self
     def call(artefact, user, redirect_url = "")
       if update_artefact_in_shared_db(artefact, user, redirect_url)
+        remove_from_rummager_search artefact
         unpublish_in_publishing_api artefact, redirect_url
       end
     end
@@ -14,6 +15,12 @@ class UnpublishService
         state: "archived",
         redirect_url: redirect_url
       )
+    end
+
+    def remove_from_rummager_search(artefact)
+      Services.rummager.delete_content("/#{artefact.slug}")
+    rescue GdsApi::HTTPNotFound
+      return
     end
 
     def unpublish_in_publishing_api(artefact, redirect_url)

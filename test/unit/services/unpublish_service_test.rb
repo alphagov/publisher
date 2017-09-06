@@ -7,11 +7,20 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", latest_edition: @edition)
     @user = stub
     @publishing_api = stub(unpublish: true)
+    @rummager = stub(:delete_content)
 
     Services.stubs(:publishing_api).returns(@publishing_api)
+    Services.stubs(:rummager).returns(@rummager)
   end
 
   context "when an invalid redirect URL is provided" do
+    should "Rummager is not called" do
+      @artefact.expects(:update_attributes_as).returns(false)
+      @rummager.expects(:delete_content).never
+
+      UnpublishService.call(@artefact, @user)
+    end
+
     should "Publishing API is not called" do
       @artefact.expects(:update_attributes_as).returns(false)
       @publishing_api.expects(:unpublish).never
@@ -36,6 +45,12 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       UnpublishService.call(@artefact, @user)
     end
 
+    should "remove the artefact from Rummager search" do
+      @rummager.expects(:delete_content).with("/foo")
+
+      UnpublishService.call(@artefact, @user)
+    end
+
     should "tell the publishing API about the change" do
       @publishing_api.expects(:unpublish)
         .with(@content_id,
@@ -55,6 +70,11 @@ class UnpublishServiceTest < ActiveSupport::TestCase
   end
 
   context "when a valid redirect URL is provided" do
+    should "remove the artefact from Rummager search" do
+      @rummager.expects(:delete_content).with("/foo")
+      UnpublishService.call(@artefact, @user)
+    end
+
     context "for an artefact with prefix routes" do
       should "tell the publishing API about the change" do
         @edition.expects(:exact_route?).returns(false)
@@ -103,6 +123,23 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       @artefact.expects(:update_attributes_as).returns(true)
 
       assert UnpublishService.call(@artefact, @user, '/bar')
+    end
+  end
+
+  context "when an artefact is not in Rummager" do
+    should "continue to unpublish" do
+      @rummager.expects(:delete_content)
+        .with('/foo')
+        .raises(GdsApi::HTTPNotFound.new(404))
+
+      @publishing_api.expects(:unpublish)
+        .with(@content_id,
+              locale: "en",
+              type: 'gone',
+              discard_drafts: true)
+        .returns(true)
+
+      UnpublishService.call(@artefact, @user)
     end
   end
 end

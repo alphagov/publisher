@@ -37,6 +37,7 @@ This is a Ruby on Rails application that publishes the content for mainstream do
 ###Dependencies
 
 - [imminence](https://github.com/alphagov/imminence) - provides geographical search tools
+- [rummager](https://github.com/alphagov/rummager) - search index for publisher. All changes are also sent to rummager to be indexed
 - [content-store](https://github.com/alphagov/content-store) - new central storage of published content on GOV.UK
 - [publishing-api](https://github.com/alphagov/publishing-api) - will provide workflow for all content published to GOV.UK - creating a new document, publishing it, etc. Content published here will end up in the content-store
 - [govuk-content-schemas](http://github.com/alphagov/govuk-content-schemas) - defines the schemas for new-style document formats. Required to run the tests.
