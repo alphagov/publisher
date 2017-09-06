@@ -5,6 +5,12 @@ class PublishServiceTest < ActiveSupport::TestCase
     Services.publishing_api.stubs(:publish)
   end
 
+  should "register edition with Rummager" do
+    edition.expects(:register_with_rummager)
+
+    PublishService.call(edition)
+  end
+
   should "publish edition to PublishingAPI" do
     Services.publishing_api.expects(:publish).with(
       content_id,
@@ -18,6 +24,7 @@ class PublishServiceTest < ActiveSupport::TestCase
   def edition
     @_edition ||= stub(
       id: 123,
+      register_with_rummager: true,
       artefact: stub(
         content_id: content_id,
         language: language

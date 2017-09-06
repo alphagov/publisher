@@ -67,12 +67,17 @@ class ActiveSupport::TestCase
   end
 
   def stub_register_published_content
+    stub_register_with_rummager
     stub_register_with_publishing_api
   end
 
   def stub_register_with_publishing_api
     WebMock.stub_request(:put, %r{publishing-api.dev.gov.uk/v2/content/.*})
     WebMock.stub_request(:post, %r{publishing-api.dev.gov.uk/v2/content/.*/publish})
+  end
+
+  def stub_register_with_rummager
+    WebMock.stub_request(:post, %r{search.dev.gov.uk/documents})
   end
 
   teardown do
