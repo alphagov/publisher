@@ -47,7 +47,7 @@ begin
 rescue Redis::Lock::LockNotAcquired => e
   Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
 rescue => e
-  Airbrake.notify_or_ignore(e)
+  GovukError.notify(e)
   raise
 end
 

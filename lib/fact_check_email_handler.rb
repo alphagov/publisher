@@ -28,7 +28,7 @@ class FactCheckEmailHandler
     return false
   rescue => e
     errors << "Failed to process message #{message.subject}: #{e.message}"
-    Airbrake.notify_or_ignore(e)
+    GovukError.notify(e)
     return false
   end
 
@@ -39,7 +39,7 @@ class FactCheckEmailHandler
       begin
         after_each_message.call(message) if after_each_message
       rescue => e
-        Airbrake.notify_or_ignore(e)
+        GovukError.notify(e)
       end
     end
   end

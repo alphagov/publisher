@@ -24,7 +24,7 @@ class LocalServiceImporter
         process_row(row)
       rescue => e
         Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
-        Airbrake.notify_or_ignore(e, parameters: { row: row })
+        GovukError.notify(e, extra: { row: row })
       end
     end
   end
