@@ -30,6 +30,10 @@ class CsvReportGenerator
       EditionChurnPresenter.new(
         Edition.not_in(state: ["archived"]).order(created_at: 1)),
 
+      OrganisationContentPresenter.new(
+        Artefact.where(owning_app: "publisher").not_in(state: ["archived"])
+      ),
+
       ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
     ]
   end
