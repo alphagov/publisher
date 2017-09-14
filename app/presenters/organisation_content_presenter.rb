@@ -52,8 +52,8 @@ private
   end
 
   def join_strings(response, keys, pattern_to_remove)
-    results = response.dig('expanded_links', keys[0])
-    values = results.map { |result| result.dig(*keys.drop(1)) }
+    results = response.fetch('expanded_links', {}).fetch(keys[0], {})
+    values = results.map { |result| result.dig(*keys.drop(1)) }.compact
     values = values.map { |value| value.gsub(pattern_to_remove, '') } unless pattern_to_remove.nil?
     values.join(',')
   end
