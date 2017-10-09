@@ -328,6 +328,10 @@ class Edition
     format
   end
 
+  def kind_for_artefact
+    format.underscore
+  end
+
   def has_video?
     false
   end
