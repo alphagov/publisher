@@ -8,7 +8,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
   setup do
     @laura = FactoryGirl.create(:user)
     @fred  = FactoryGirl.create(:user)
-    @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    @guide = FactoryGirl.create(:guide_edition)
     stub_register_published_content
   end
 
@@ -27,7 +27,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
   end
 
   test "should be possible to create a new draft of an invalid edition" do
-    guide = FactoryGirl.create(:guide_edition_with_two_parts, panopticon_id: FactoryGirl.create(:artefact).id)
+    guide = FactoryGirl.create(:guide_edition_with_two_parts)
     publish_item(guide, @laura)
 
     # invalid link in body having a {:rel="external"}
@@ -54,5 +54,29 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     refute command.duplicate(nil, @fred)
 
     assert_equal "Failed to create new edition: couldn't initialise", command.error_message
+  end
+
+  test "changing the format while duplicating will make the latest edition into a new type of edition" do
+    publish_item(@guide, @laura)
+    artefact = @guide.artefact
+
+    assert_equal GuideEdition, artefact.latest_edition.class
+
+    command = EditionDuplicator.new(@guide, @laura)
+    assert command.duplicate('answer_edition', @fred)
+
+    assert_equal AnswerEdition, artefact.reload.latest_edition.class
+  end
+
+  test "changing the format while duplicating will also update the kind of the artefact" do
+    publish_item(@guide, @laura)
+    artefact = @guide.artefact
+
+    assert_equal 'guide', artefact.kind
+
+    command = EditionDuplicator.new(@guide, @laura)
+    assert command.duplicate('answer_edition', @fred)
+
+    assert_equal 'answer', artefact.reload.kind
   end
 end
