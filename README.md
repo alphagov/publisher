@@ -21,10 +21,15 @@ access that data for display. It is sometimes referred to as "mainstream publish
 - [Transaction](https://www.gov.uk/council-tax-bands)
 
 ## Retired formats
-- Business Support
 - Campaign
 - Programme
 - Video
+
+## Removed formats
+- Business Support - used to be retired, and the documents remained visible, now
+  they're fully removed as editions and no longer visible in the app (although
+  the artefacts do still exist).  They have been fully migrated to
+  specialist-publisher.
 
 ## Nomenclature
 

@@ -118,9 +118,6 @@ FactoryGirl.define do
   factory :video_edition, traits: [:with_body], parent: :edition, class: 'VideoEdition' do
   end
 
-  factory :business_support_edition, traits: [:with_body], parent: :edition, class: "BusinessSupportEdition" do
-  end
-
   factory :guide_edition, parent: :edition, class: "GuideEdition" do
     sequence(:title) { |n| "Test guide #{n}" }
   end
