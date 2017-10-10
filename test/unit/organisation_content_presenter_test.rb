@@ -47,7 +47,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     }
   end
 
-  should "provide a CSV export of business support schemes" do
+  should "provide a CSV export of content tagged to an organisation" do
     document = FactoryGirl.create(:artefact,
                                   name: "Important document",
                                   kind: "answer")
