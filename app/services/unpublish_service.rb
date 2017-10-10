@@ -25,7 +25,7 @@ class UnpublishService
     end
 
     def unpublish_with_redirect(artefact, redirect_url)
-      if artefact.latest_edition.exact_route?
+      if artefact.exact_route?
         unpublish_with_exact_redirect(artefact, redirect_url)
       else
         unpublish_wth_prefix_redirect(artefact, redirect_url)

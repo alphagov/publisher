@@ -3,8 +3,7 @@ require 'test_helper'
 class UnpublishServiceTest < ActiveSupport::TestCase
   setup do
     @content_id = 'foo'
-    @edition = stub(exact_route?: true)
-    @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", latest_edition: @edition)
+    @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", exact_route?: true)
     @user = stub
     @publishing_api = stub(unpublish: true)
 
@@ -57,7 +56,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
   context "when a valid redirect URL is provided" do
     context "for an artefact with prefix routes" do
       should "tell the publishing API about the change" do
-        @edition.expects(:exact_route?).returns(false)
+        @artefact.expects(:exact_route?).returns(false)
 
         @publishing_api.expects(:unpublish)
           .with(@content_id,
