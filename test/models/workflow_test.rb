@@ -349,24 +349,6 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_equal "archived", edition.state
   end
 
-  # Mongoid 2.x marks array fields as dirty whenever they are accessed.
-  # See https://github.com/mongoid/mongoid/issues/2311
-  # This behaviour has been patched in lib/mongoid/monkey_patches.rb
-  # in order to prevent workflow validation failures for editions
-  # with array fields.
-  #
-  test "not_editing_published_item should not consider unchanged array fields as changes" do
-    bs = FactoryGirl.create(:business_support_edition, state: 'published', sectors: [])
-    assert_empty bs.errors
-    bs.sectors # Access the Array field
-    bs.valid?
-    assert_empty bs.errors
-    bs.sectors << 'education'
-    assert_equal ['sectors'], bs.changes.keys
-    bs.valid?
-    assert_equal "Published editions can't be edited", bs.errors[:base].first
-  end
-
   test "User can request amendments for an edition they just approved" do
     user1, user2 = template_users
     edition = user1.create_edition(:answer, panopticon_id: @artefact.id, title: "Answer foo", slug: "answer-foo")
