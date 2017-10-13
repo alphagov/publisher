@@ -150,6 +150,67 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
     end
   end
 
+  def self.handle_archived_business_support_artefacts_not_in_router(archived_artefacts_not_in_router_and_router_responses)
+    archived_artefacts_not_in_router = archived_artefacts_not_in_router_and_router_responses.map { |(a, _r)| a }
+    raise "Didn't expect there to be no archived artefacts missing from the router" if archived_artefacts_not_in_router.empty?
+
+    archived_editions_not_in_router_by_edition_presence = archived_artefacts_not_in_router.group_by { |a| a.latest_edition.present? }
+
+    handle_archived_business_support_artefacts_not_in_router_with_editions(archived_editions_not_in_router_by_edition_presence.fetch(true, []))
+    handle_archived_business_support_artefacts_not_in_router_with_no_editions(archived_editions_not_in_router_by_edition_presence.fetch(false, []))
+  end
+
+  def self.handle_archived_business_support_artefacts_not_in_router_with_editions(archived_editions_with_editions)
+    raise "Didn't expect there to be no archived artefacts missing from the router without editions" if archived_editions_with_editions.empty?
+
+    archived_editions_with_editions_by_publish_event_presence = archived_editions_with_editions.group_by { |a| Edition.where(panopticon_id: a.id).flat_map { |e| e.actions.map(&:request_type) }.uniq.include?('publish') }
+
+    handle_archived_business_support_artefacts_not_in_router_with_editions_published(archived_editions_with_editions_by_publish_event_presence.fetch(true, []))
+    handle_archived_business_support_artefacts_not_in_router_with_editions_never_published(archived_editions_with_editions_by_publish_event_presence.fetch(false, []))
+  end
+
+  def self.handle_archived_business_support_artefacts_not_in_router_with_editions_published(archived_artefacts_been_published)
+    # If it's archived and has editions and we've recorded a publish event
+    # then it's like a live one that's missing from the publishing-api so we
+    # should issue a redirect content_item for it
+    raise "Didn't expect there to be no archived artefacts missing from the router with editions that had been published" if archived_artefacts_been_published.empty?
+    raise "Didn't expect any entries in publishing-api for archived artefacts missing from the router with editions that had been published" if archived_artefacts_been_published.any? { |a| publishing_api_response(a).present? }
+
+    say_with_time "Unpublishing #{archived_artefacts_been_published.size} archived artefacts missing from the router that have editions and have been published before (but are not in the publishing-api) as redirects to '/business-finance-support' via publishing-api" do
+      archived_artefacts_been_published.each do |artefact|
+        artefact.update_attributes_as(nil, state: "archived", redirect_url: '/business-finance-support')
+        create_redirect_item_in_publishing_api(artefact)
+      end
+    end
+  end
+
+  def self.handle_archived_business_support_artefacts_not_in_router_with_editions_never_published(archived_artefacts_never_published)
+    # If it's archived and has editions but we've not recorded a publish event
+    # then it's similar to a draft - it's never been published and we can just
+    # delete it
+    raise "Didn't expect there to be no archived artefacts missing from the router with editions that had never been published" if archived_artefacts_never_published.empty?
+    raise "Didn't expect any entries in publishing-api for archived artefacts missing from the router with editions that had never been published" if archived_artefacts_never_published.any? { |a| publishing_api_response(a).present? }
+
+    Artefact.skip_callback(:destroy, :before, :discard_publishing_api_draft)
+    say_with_time "Removing #{archived_artefacts_never_published.size} archived artefacts missing from the router that have editions, but have never been published" do
+      archived_artefacts_never_published.each { |a| a.destroy }
+    end
+    Artefact.set_callback(:destroy, :before, :discard_publishing_api_draft)
+  end
+
+  def self.handle_archived_business_support_artefacts_not_in_router_with_no_editions(archived_artefacts_with_no_editions)
+    # If it's archived and has no editions then it's similar to a draft - it's
+    # never been published and we can just delete it
+    raise "Didn't expect there to be no archived artefacts missing from the router without editions" if archived_artefacts_with_no_editions.empty?
+    raise "Didn't expect any entries in publishing-api for archived artefacts missing from the router without editions" if archived_artefacts_with_no_editions.any? { |a| publishing_api_response(a).present? }
+
+    Artefact.skip_callback(:destroy, :before, :discard_publishing_api_draft)
+    say_with_time "Removing #{archived_artefacts_with_no_editions.size} archived artefacts missing from the router that have no editions" do
+      archived_artefacts_with_no_editions.each { |a| a.destroy }
+    end
+    Artefact.set_callback(:destroy, :before, :discard_publishing_api_draft)
+  end
+
   def self.create_redirect_item_in_publishing_api(artefact)
     publishing_api.put_content(
       artefact.content_id,
