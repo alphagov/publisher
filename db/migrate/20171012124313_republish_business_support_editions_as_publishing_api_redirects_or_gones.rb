@@ -79,6 +79,118 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
     handle_archived_business_support_artefacts_not_in_router(archived_artefacts_by_router_availabilty.fetch(false, []))
   end
 
+  def self.handle_archived_business_support_artefacts_in_router(archived_artefacts_in_router)
+    raise "Didn't expect there to be no archived artefacts in the router" if archived_artefacts_in_router.empty?
+    archived_artefacts_by_router_handler = archived_artefacts_in_router.group_by { |(a, r)| r['handler'] }
+    raise "Didn't expect archived artefacts with a router handler other than 'redirect', 'gone', 'backend'" unless (archived_artefacts_by_router_handler.keys - ['redirect', 'gone', 'backend']).empty?
+
+    handle_archived_business_support_artefacts_redirected_in_router(archived_artefacts_by_router_handler.fetch('redirect', []))
+    handle_archived_business_support_artefacts_gone_in_router(archived_artefacts_by_router_handler.fetch('gone', []))
+    handle_archived_business_support_artefacts_live_in_router(archived_artefacts_by_router_handler.fetch('backend', []))
+  end
+
+  def self.handle_archived_business_support_artefacts_redirected_in_router(redirected_archived_artefacts_and_router_responses)
+    # 1. For the redirects
+    #   a) set redirect_uri according to this result (we need to cross reference this with router-data)
+    #   b) if the artefact's content_id is in publishing-api already push the
+    #      artefact through UnpublishService to create a publishing-api redirect
+    #   c) if the artefact's content_id is not in publishing-api already send
+    #      a new content_item of type redirect
+    raise "Didn't expect there to be no archived artefacts stored as redirects in the router" if redirected_archived_artefacts_and_router_responses.empty?
+
+    say_with_time "Unpublishing #{redirected_archived_artefacts_and_router_responses.size} archived artefacts listed as redirects in the router as redirects via publishing-api" do
+      redirected_archived_artefacts_and_router_responses.each do |(artefact, router_response)|
+        artefact.redirect_url = router_response['redirect_to']
+        if publishing_api_response(artefact).present?
+          UnpublishService.call(artefact, nil, artefact.redirect_url)
+        else
+          create_redirect_item_in_publishing_api(artefact)
+        end
+      end
+    end
+  end
+
+  def self.handle_archived_business_support_artefacts_gone_in_router(gone_archived_artefacts_and_router_responses)
+    # 2. For the gones
+    #   a) leave redirect_uri alone
+    #   b) if the artefact's content_id is in publishing-api already push the
+    #      artefact through UnpublishService to create a publishing-api gone
+    #   c) if the artefact's content_id is not in publishing-api already send
+    #      a new content_item of type gone
+    raise "Didn't expect there to be no archived artefacts stored as gones in the router" if gone_archived_artefacts_and_router_responses.empty?
+
+    say_with_time "Unpublishing #{gone_archived_artefacts_and_router_responses.size} archived artefacts listed as gone items in the router as gone items via publishing-api" do
+      gone_archived_artefacts_and_router_responses.each do |(artefact, _router_response)|
+        if publishing_api_response(artefact).present?
+          UnpublishService.call(artefact, nil, nil)
+        else
+          create_gone_item_in_publishing_api(artefact)
+        end
+      end
+    end
+  end
+
+  def self.handle_archived_business_support_artefacts_live_in_router(live_archived_artefacts_and_router_responses)
+    # 3. For the live ones
+    #   a) set redirect_uri to the default `/business-finance-support`
+    #   b) if the artefact's content_id is in publishing-api already push the
+    #      artefact through UnpublishService to create a publishing-api redirect
+    #   c) if the artefact's content_id is not in publishing-api already send
+    #      break as we don't expect any of these
+    raise "Didn't expect there to be no archived artefacts stored as live in the router" if live_archived_artefacts_and_router_responses.empty?
+
+    say_with_time "Unpublishing #{live_archived_artefacts_and_router_responses.size} archived artefacts still listed as live by the router as redirects to '/business-finance-support' via publishing-api" do
+      live_archived_artefacts_and_router_responses.each do |(artefact, _router_responses)|
+        if publishing_api_response(artefact).present?
+          UnpublishService.call(artefact, nil, '/business-finance-support')
+        else
+          raise "Didn't expect any archived artefacts listed as live routes in router to not have content items in the publishing-api"
+        end
+      end
+    end
+  end
+
+  def self.create_redirect_item_in_publishing_api(artefact)
+    publishing_api.put_content(
+      artefact.content_id,
+      {
+        "base_path" => "/#{artefact.slug}",
+        "document_type" => "redirect",
+        "schema_name" => "redirect",
+        "publishing_app" => "publisher",
+        "update_type" => "major",
+        "redirects" => [
+          {
+            "path" => "/#{artefact.slug}",
+            "type" => artefact.exact_route? ? 'exact' : 'prefix',
+            "destination" => artefact.redirect_url,
+          },
+        ],
+      }
+    )
+    publishing_api.publish(artefact.content_id)
+  end
+
+  def self.create_gone_item_in_publishing_api(artefact)
+    publishing_api.put_content(
+      artefact.content_id,
+      {
+        "base_path" => "/#{artefact.slug}",
+        "document_type" => "gone",
+        "schema_name" => "gone",
+        "publishing_app" => "publisher",
+        "update_type" => "major",
+        "routes" => [
+          {
+            "path" => "/#{artefact.slug}",
+            "type" => artefact.exact_route? ? 'exact' : 'prefix',
+          },
+        ],
+      }
+    )
+    publishing_api.publish(artefact.content_id)
+  end
+
   def self.router
     @router ||= GdsApi::Router.new(Plek.find('router-api'))
   end
