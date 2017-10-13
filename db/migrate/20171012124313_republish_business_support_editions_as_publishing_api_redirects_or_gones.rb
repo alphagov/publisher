@@ -68,6 +68,17 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
     Artefact.set_callback(:destroy, :before, :discard_publishing_api_draft)
   end
 
+  def self.handle_archived_business_support_artefacts(archived_artefacts)
+    archived_artects_and_router_responses = say_with_time "Fetching router response for archived_artefacts" do
+      archived_artefacts.map { |a| [a, router_response(a)] }
+    end
+
+    archived_artefacts_by_router_availabilty = archived_artects_and_router_responses.group_by { |(a, r)| r.present? }
+
+    handle_archived_business_support_artefacts_in_router(archived_artefacts_by_router_availabilty.fetch(true, []))
+    handle_archived_business_support_artefacts_not_in_router(archived_artefacts_by_router_availabilty.fetch(false, []))
+  end
+
   def self.router
     @router ||= GdsApi::Router.new(Plek.find('router-api'))
   end
