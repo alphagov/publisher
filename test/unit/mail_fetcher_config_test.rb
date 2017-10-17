@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'mail_fetcher_config'
+require 'mail'
 
 class MailFetcherConfigTest < ActiveSupport::TestCase
   # Because the `defaults` method on `Mail` calls `instance_eval` with a block,
@@ -9,6 +10,15 @@ class MailFetcherConfigTest < ActiveSupport::TestCase
     def defaults(&block)
       instance_eval(&block)
     end
+  end
+
+  setup do
+    @env_run_fact_check_fetcher = ENV["RUN_FACT_CHECK_FETCHER"]
+    ENV["RUN_FACT_CHECK_FETCHER"] = "1"
+  end
+
+  teardown do
+    ENV["RUN_FACT_CHECK_FETCHER"] = @env_run_fact_check_fetcher
   end
 
   should "raise an error if given strings as keys" do
@@ -32,5 +42,12 @@ class MailFetcherConfigTest < ActiveSupport::TestCase
     mail = StubMail.new
     mail.expects(:defaults).never
     MailFetcherConfig.new({}).configure(mail)
+  end
+
+  should "not configure email settings if RUN_FACT_CHECKER_FETCHER is not set" do
+    mail = StubMail.new
+    mail.expects(:defaults).never
+    ENV.delete("RUN_FACT_CHECK_FETCHER")
+    MailFetcherConfig.new(user_name: "bob@example.com").configure(mail)
   end
 end
