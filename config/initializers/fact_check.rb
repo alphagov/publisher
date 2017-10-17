@@ -3,7 +3,10 @@ require 'mail_fetcher_config'
 require 'fact_check_config'
 
 config_file_path = Rails.root.join("config", "fact_check.yml")
-config = YAML.load_file(config_file_path)
+
+config = YAML.load(
+  ERB.new(File.read(config_file_path)).result
+)
 
 Publisher::Application.fact_check_config = FactCheckConfig.new(
   config.fetch("address_format")
