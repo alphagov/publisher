@@ -67,7 +67,7 @@ FactoryGirl.define do
 
   factory :edition, class: AnswerEdition do
     panopticon_id {
-      a = create(:artefact)
+      a = create(:artefact, kind: kind_for_artefact)
       a.id
     }
     transient do
@@ -108,6 +108,11 @@ FactoryGirl.define do
   end
 
   factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: 'CompletedTransactionEdition' do
+    sequence(:slug) { |n| "done/slug-#{n}" }
+    panopticon_id {
+      a = create(:artefact, kind: kind_for_artefact, slug: slug)
+      a.id
+    }
   end
 
   factory :video_edition, traits: [:with_body], parent: :edition, class: 'VideoEdition' do

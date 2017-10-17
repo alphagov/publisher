@@ -16,6 +16,7 @@ class EditionDuplicator
 
     if new_edition && new_edition.save(validate: false)
       update_assignment(assign_to)
+      new_edition.artefact.update_attribute(:kind, new_edition.kind_for_artefact) if new_format.present?
       true
     else
       false
