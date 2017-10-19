@@ -421,4 +421,66 @@ class ArtefactTest < ActiveSupport::TestCase
     refute published_artefact.archived?
     assert archived_artefact.archived?
   end
+
+  context "#exact_route?" do
+    context 'for artefacts without a latest edition' do
+      should 'be true if its owning_app is not publisher and it has no prefixes' do
+        assert FactoryGirl.build(:artefact, :non_publisher, prefixes: []).exact_route?
+      end
+
+      should 'be false if its owning_app is not publisher and it has prefixes' do
+        refute FactoryGirl.build(:artefact, :non_publisher, prefixes: ['/hats']).exact_route?
+      end
+
+      should 'be true if its owning_app is publisher and its kind is that of an exact route edition' do
+        assert FactoryGirl.build(:artefact, kind: 'campaign', prefixes: []).exact_route?
+        assert FactoryGirl.build(:artefact, kind: 'help_page', prefixes: []).exact_route?
+        assert FactoryGirl.build(:artefact, kind: 'transaction', prefixes: []).exact_route?
+
+        # regardless of prefixes
+        assert FactoryGirl.build(:artefact, kind: 'campaign', prefixes: ['/hats']).exact_route?
+        assert FactoryGirl.build(:artefact, kind: 'help_page', prefixes: ['/shoes']).exact_route?
+        assert FactoryGirl.build(:artefact, kind: 'transaction', prefixes: ['/scarves']).exact_route?
+      end
+
+      should 'be false if its owning_app is not publisher and its kind is not that of an exact route edition' do
+        refute FactoryGirl.build(:artefact, kind: 'answer', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'business_support', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'completed_transaction', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'guide', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'licence', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'local_transaction', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'place', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'programme', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'simple_smart_answer', prefixes: []).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'video', prefixes: []).exact_route?
+
+        # regardless of prefixes
+        refute FactoryGirl.build(:artefact, kind: 'answer', prefixes: ['/hats']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'business_support', prefixes: ['/shoes']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'completed_transaction', prefixes: ['/scarves']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'guide', prefixes: ['/underwear']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'licence', prefixes: ['/jumpers']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'local_transaction', prefixes: ['/gloves']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'place', prefixes: ['/belts']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'programme', prefixes: ['/socks']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'simple_smart_answer', prefixes: ['/onesies']).exact_route?
+        refute FactoryGirl.build(:artefact, kind: 'video', prefixes: ['/all-other-clothing']).exact_route?
+      end
+    end
+
+    context 'for artefacts with a latest edition' do
+      should 'delegate to it' do
+        latest_edition = mock
+        artefact = FactoryGirl.build(:artefact)
+        artefact.stubs(:latest_edition).returns(latest_edition)
+
+        latest_edition.expects(:exact_route?).returns true
+        assert artefact.exact_route?
+
+        latest_edition.expects(:exact_route?).returns false
+        refute artefact.exact_route?
+      end
+    end
+  end
 end

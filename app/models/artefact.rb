@@ -294,7 +294,18 @@ class Artefact
     Downtime.for(self)
   end
 
+  def exact_route?
+    le = latest_edition
+    return le.exact_route? if le.present?
+    return edition_class_name.in? Edition::EXACT_ROUTE_EDITION_CLASSES if owning_app == 'publisher'
+    prefixes.empty?
+  end
+
 private
+
+  def edition_class_name
+    "#{kind.camelcase}Edition"
+  end
 
   def validate_prefixes_and_paths
     if ! self.prefixes.nil? && self.prefixes_changed?
