@@ -44,7 +44,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
   end
 
   def self.handle_jobcentre_plus_vacancy_filling_system_uk(live_artefacts)
-    jobcentre_plus_vacany_fill_system_uk = live_artefacts.detect { |x| x.slug = 'jobcentre-plus-vacancy-filling-system-uk'}
+    jobcentre_plus_vacany_fill_system_uk = live_artefacts.detect { |x| x.slug == 'jobcentre-plus-vacancy-filling-system-uk'}
     raise "Didn't expect 'jobcentre-plus-vacancy-filling-system-uk' to be missing from live business support artefacts" if jobcentre_plus_vacany_fill_system_uk.nil?
 
     say_with_time "Checking 'jobcentre-plus-vacancy-filling-system-uk' is already migrated by short-url-manager" do
