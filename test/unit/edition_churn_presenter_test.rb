@@ -2,7 +2,7 @@
 require "test_helper"
 
 class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
-  should "provide a CSV export of business support schemes" do
+  should "provide a CSV export of the churn in editions" do
     document = FactoryGirl.create(:artefact,
       name: "Important document",
       need_ids: %w(123456 123321 654321)

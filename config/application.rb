@@ -35,8 +35,6 @@ module Publisher
     # Custom directories with classes and modules you want to be autoloadable.
     config.eager_load_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
 
-    config.assets.precompile += %W(views/business_support/areas_select.js)
-
     config.generators do |g|
       g.orm :mongoid
       g.template_engine :erb # this could be :haml or whatever

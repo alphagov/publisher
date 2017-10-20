@@ -5,7 +5,6 @@ class Part
 
   embedded_in :guide_edition
   embedded_in :programme_edition
-  embedded_in :business_support_edition
 
   scope :in_order, lambda { order_by(order: :asc) }
 

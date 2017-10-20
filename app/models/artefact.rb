@@ -56,7 +56,6 @@ class Artefact
 
   FORMATS_BY_DEFAULT_OWNING_APP = {
     "publisher"               => %w(answer
-                                    business_support
                                     campaign
                                     completed_transaction
                                     guide
@@ -74,9 +73,12 @@ class Artefact
     "specialist-publisher"    => ["manual"],
     "finder-api"              => %w(finder
                                     finder_email_signup),
+    # business support was converted into a format owned by specialist publisher
+    # but it's not a direct swap so we don't claim that is the owning app
+    "replaced"                => ['business_support'],
   }.freeze
 
-  RETIRED_FORMATS = %w[business_support campaign programme video].freeze
+  RETIRED_FORMATS = %w[campaign programme video].freeze
 
   FORMATS = FORMATS_BY_DEFAULT_OWNING_APP.values.flatten
 

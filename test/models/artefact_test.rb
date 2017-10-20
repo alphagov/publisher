@@ -445,7 +445,6 @@ class ArtefactTest < ActiveSupport::TestCase
 
       should 'be false if its owning_app is not publisher and its kind is not that of an exact route edition' do
         refute FactoryGirl.build(:artefact, kind: 'answer', prefixes: []).exact_route?
-        refute FactoryGirl.build(:artefact, kind: 'business_support', prefixes: []).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'completed_transaction', prefixes: []).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'guide', prefixes: []).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'licence', prefixes: []).exact_route?
@@ -457,7 +456,6 @@ class ArtefactTest < ActiveSupport::TestCase
 
         # regardless of prefixes
         refute FactoryGirl.build(:artefact, kind: 'answer', prefixes: ['/hats']).exact_route?
-        refute FactoryGirl.build(:artefact, kind: 'business_support', prefixes: ['/shoes']).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'completed_transaction', prefixes: ['/scarves']).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'guide', prefixes: ['/underwear']).exact_route?
         refute FactoryGirl.build(:artefact, kind: 'licence', prefixes: ['/jumpers']).exact_route?
