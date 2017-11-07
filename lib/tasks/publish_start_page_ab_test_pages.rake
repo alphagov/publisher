@@ -1,9 +1,9 @@
 namespace :start_page_ab_test_pages do
-  desc "Publish interstitial page"
-  task publish_interstitial_page: :environment do
+  desc "Publish choose how to sign in page"
+  task publish_choose_sign_in_page: :environment do
     content_id = "f34ebcbc-4955-4f57-89bd-4d6aa7e72edf"
     params = {
-      base_path: "/log-in-file-self-assessment-tax-return/interstitial",
+      base_path: "/log-in-file-self-assessment-tax-return/choose-sign-in",
       document_type: "generic_with_external_related_links",
       locale: "en",
       public_updated_at: "2016-11-10T12:58:31.000+00:00",
@@ -11,10 +11,10 @@ namespace :start_page_ab_test_pages do
       rendering_app: "government-frontend",
       schema_name: "generic",
       update_type: "major",
-      title: "Pick method",
+      title: "Choose how to sign in",
       routes: [
         {
-          path: "/log-in-file-self-assessment-tax-return/interstitial",
+          path: "/log-in-file-self-assessment-tax-return/choose-sign-in",
           type: "exact"
         }
       ],
@@ -26,11 +26,11 @@ namespace :start_page_ab_test_pages do
     Services.publishing_api.publish(content_id)
   end
 
-  desc "Publish create account page"
-  task publish_create_account_page: :environment do
+  desc "Publish not registered page"
+  task publish_not_registered_page: :environment do
     content_id = "8897173c-583a-47c7-b23f-c8624434dd1a"
     params = {
-      base_path: "/log-in-file-self-assessment-tax-return/create-account",
+      base_path: "/log-in-file-self-assessment-tax-return/not-registered",
       document_type: "generic_with_external_related_links",
       locale: "en",
       public_updated_at: "2016-11-10T12:58:31.000+00:00",
@@ -38,10 +38,10 @@ namespace :start_page_ab_test_pages do
       rendering_app: "government-frontend",
       schema_name: "generic",
       update_type: "major",
-      title: "Create an account",
+      title: "Register for Self Assessment",
       routes: [
         {
-          path: "/log-in-file-self-assessment-tax-return/create-account",
+          path: "/log-in-file-self-assessment-tax-return/not-registered",
           type: "exact"
         }
       ],
