@@ -2,9 +2,7 @@
 development:
   clients:
     default:
-      hosts:
-        - localhost
-      database: govuk_content_development
+      uri: <%= ENV["MONGODB_URI"] || "mongodb://localhost/govuk_content_development" %>
   options:
     use_activesupport_time_zone: true
     belongs_to_required_by_default: false
@@ -12,9 +10,7 @@ development:
 test:
   clients:
     default:
-      hosts:
-        - localhost
-      database: govuk_content_publisher_test
+      uri: <%= ENV["TEST_MONGODB_URI"] || "mongodb://localhost/govuk_content_publisher_test" %>
       options:
         read:
           mode: :primary
