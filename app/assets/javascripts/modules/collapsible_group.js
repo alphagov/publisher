@@ -17,6 +17,7 @@
 
       element.on('click', '.js-toggle-all', toggleAll);
       element.on('shown.bs.collapse hidden.bs.collapse nested:fieldRemoved nested:fieldAdded', updateLinkText);
+      updateLinkText();
 
       function toggleAll(event) {
         var action = hasOpenItems() ? 'hide' : 'show';
