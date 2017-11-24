@@ -39,7 +39,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 
 This is a Ruby on Rails application that publishes the content for mainstream document formats to the shared mongo database. The `frontend` app reads this content from the [Content Store](https://github.com/alphagov/content-store).
 
-###Dependencies
+### Dependencies
 
 - [imminence](https://github.com/alphagov/imminence) - provides geographical search tools
 - [content-store](https://github.com/alphagov/content-store) - new central storage of published content on GOV.UK
@@ -58,6 +58,9 @@ Otherwise, to obtain this bearer token you should create an API user in the sign
 ```shell
 rake api_clients:create[publisher,publisher@example.com,asset-manager,signin]
 ```
+
+- [calendars](https://github.com/alphagov/calendars) - provides bank holiday information to feed into working days calculator.  Working days calculator is used to generate deadlines for fact checks.
+
 ### Running the application
 
 If you're just interested in running the Publisher locally, with a minimum of interaction
