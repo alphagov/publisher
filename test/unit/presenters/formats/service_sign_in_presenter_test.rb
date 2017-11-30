@@ -58,4 +58,11 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:base_path]" do
     assert_equal base_path, result[:base_path]
   end
+
+  should "[:routes]" do
+    expected = [
+      { path: base_path, type: "prefix" },
+    ]
+    assert_equal expected, result[:routes]
+  end
 end
