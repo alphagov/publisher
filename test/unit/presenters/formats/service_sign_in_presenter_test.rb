@@ -79,4 +79,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:title]" do
     assert_equal @parent.title, result[:title]
   end
+
+  should "[:description]" do
+    assert_equal @parent.overview, result[:description]
+  end
 end

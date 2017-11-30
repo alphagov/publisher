@@ -18,6 +18,7 @@ module Formats
         base_path: base_path,
         routes: routes,
         title: title,
+        description: description,
       }
     end
 
@@ -46,7 +47,15 @@ module Formats
     end
 
     def title
-      Edition.where(slug: parent_slug).last.title
+      parent.title
+    end
+
+    def description
+      parent.overview
+    end
+
+    def parent
+      @parent ||= Edition.where(slug: parent_slug).last
     end
 
     def parent_slug
