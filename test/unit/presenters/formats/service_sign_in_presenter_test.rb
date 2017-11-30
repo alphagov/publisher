@@ -18,4 +18,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:rendering_app]" do
     assert_equal 'government-frontend', result[:rendering_app]
   end
+
+  should "[:publishing_app]" do
+    assert_equal 'publisher', result[:publishing_app]
+  end
 end
