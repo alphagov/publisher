@@ -14,6 +14,7 @@ module Formats
         document_type: "service_sign_in",
         locale: locale,
         update_type: update_type,
+        change_note: change_note,
       }
     end
 
@@ -25,6 +26,10 @@ module Formats
 
     def update_type
       content[:update_type]
+    end
+
+    def change_note
+      content[:change_note]
     end
   end
 end

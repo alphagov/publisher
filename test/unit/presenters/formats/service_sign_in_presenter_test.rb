@@ -46,4 +46,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:update_type]" do
     assert_equal @content[:update_type], result[:update_type]
   end
+
+  should "[:change_note]" do
+    assert_equal @content[:change_note], result[:change_note]
+  end
 end
