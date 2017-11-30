@@ -83,4 +83,19 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:description]" do
     assert_equal @parent.overview, result[:description]
   end
+
+  context "[:public_updated_at]" do
+    should "return current timestamp when update_type is 'major'" do
+      Timecop.freeze do
+        assert_equal DateTime.now.rfc3339, result[:public_updated_at]
+      end
+    end
+
+    should "not be present in the payload when update_type is not 'major'" do
+      @content[:update_type] = "minor"
+      Timecop.freeze do
+        refute_includes result, public_updated_at: DateTime.now.rfc3339
+      end
+    end
+  end
 end

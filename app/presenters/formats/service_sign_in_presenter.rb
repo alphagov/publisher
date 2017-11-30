@@ -7,7 +7,7 @@ module Formats
     end
 
     def render_for_publishing_api
-      {
+      payload = {
         schema_name: "service_sign_in",
         rendering_app: "government-frontend",
         publishing_app: "publisher",
@@ -20,6 +20,8 @@ module Formats
         title: title,
         description: description,
       }
+      payload[:public_updated_at] = public_updated_at if public_updated_at.present?
+      payload
     end
 
   private
@@ -52,6 +54,10 @@ module Formats
 
     def description
       parent.overview
+    end
+
+    def public_updated_at
+      DateTime.now.rfc3339 if update_type == "major"
     end
 
     def parent
