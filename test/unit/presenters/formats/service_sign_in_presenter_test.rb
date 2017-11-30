@@ -22,4 +22,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:publishing_app]" do
     assert_equal 'publisher', result[:publishing_app]
   end
+
+  should "[:document_type]" do
+    assert_equal 'service_sign_in', result[:document_type]
+  end
 end
