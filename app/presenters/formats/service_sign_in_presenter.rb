@@ -15,6 +15,7 @@ module Formats
         locale: locale,
         update_type: update_type,
         change_note: change_note,
+        base_path: base_path,
       }
     end
 
@@ -30,6 +31,10 @@ module Formats
 
     def change_note
       content[:change_note]
+    end
+
+    def base_path
+      "/#{content[:start_page_slug]}/sign-in"
     end
   end
 end
