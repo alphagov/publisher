@@ -17,6 +17,7 @@ module Formats
         change_note: change_note,
         base_path: base_path,
         routes: routes,
+        title: title,
       }
     end
 
@@ -35,13 +36,21 @@ module Formats
     end
 
     def base_path
-      "/#{content[:start_page_slug]}/sign-in"
+      "/#{parent_slug}/sign-in"
     end
 
     def routes
       [
         { path: base_path.to_s, type: "prefix" },
       ]
+    end
+
+    def title
+      Edition.where(slug: parent_slug).last.title
+    end
+
+    def parent_slug
+      content[:start_page_slug]
     end
   end
 end
