@@ -14,4 +14,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:schema_name]" do
     assert_equal 'service_sign_in', result[:schema_name]
   end
+
+  should "[:rendering_app]" do
+    assert_equal 'government-frontend', result[:rendering_app]
+  end
 end
