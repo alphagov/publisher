@@ -42,4 +42,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
   should "[:locale]" do
     assert_equal @content[:locale], result[:locale]
   end
+
+  should "[:update_type]" do
+    assert_equal @content[:update_type], result[:update_type]
+  end
 end
