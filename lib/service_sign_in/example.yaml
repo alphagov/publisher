@@ -1,0 +1,46 @@
+start_page_slug: log-in-file-self-assessment-tax-return
+locale: en
+choose_sign_in:
+  title: Prove your identity to continue
+  slug: choose-sign-in
+  description: Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
+  options:
+    - text: Use Government Gateway
+      url: https://www.tax.service.gov.uk/account
+      hint_text: You'll have a user ID if you've registered to file your Self Assessment tax return online before.
+    - text: Use GOV.UK Verify
+      url: https://www.tax.service.gov.uk/ida/sa/login
+      hint_text: Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
+    - text: Create an account
+      slug: create-new-account
+create_new_account:
+  title: Create an account
+  slug: create-new-account
+  body: |
+    To use this service, you need to create either a Government Gateway or GOV.UK Verify account. These are used to help fight identity theft.
+
+    Once you have an account, you can use it to access other government services online.
+
+    ##Choose a way to prove your identity
+
+    ###Government Gateway
+
+    Registering with Government Gateway usually takes about 10 minutes. It works best if you have:
+
+    - your National Insurance number
+    - a recent payslip or a P60 or valid UK passport
+
+    [Create a Government Gateway account](#)
+
+    ###GOV.UK Verify
+
+    Registering with GOV.UK Verify usually takes about 15 minutes. It works best if you have:
+
+    - a UK address
+    - a valid passport or photocard driving licence
+
+    [Create a GOV.UK Verify account](#)
+
+    A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
+update_type: major
+change_note: Some reason...
