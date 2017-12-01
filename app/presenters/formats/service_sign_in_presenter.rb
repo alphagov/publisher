@@ -19,6 +19,7 @@ module Formats
         routes: routes,
         title: title,
         description: description,
+        details: details,
       }
       payload[:public_updated_at] = public_updated_at if public_updated_at.present?
       payload
@@ -68,6 +69,18 @@ module Formats
 
     def public_updated_at
       DateTime.now.rfc3339 if update_type == "major"
+    end
+
+    def details
+      {
+        choose_sign_in: choose_sign_in,
+      }
+    end
+
+    def choose_sign_in
+      {
+        title: content[:choose_sign_in][:title],
+      }
     end
 
     def parent

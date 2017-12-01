@@ -122,4 +122,13 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
     assert_equal expected, subject.links
   end
+
+  context "[:details]" do
+    context "[:choose_sign_in]" do
+      should "[:title]" do
+        assert_equal @content[:choose_sign_in][:title],
+          result[:details][:choose_sign_in][:title]
+      end
+    end
+  end
 end
