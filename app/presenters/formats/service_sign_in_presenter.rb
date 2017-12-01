@@ -74,6 +74,7 @@ module Formats
     def details
       {
         choose_sign_in: choose_sign_in,
+        create_new_account: create_new_account,
       }
     end
 
@@ -99,6 +100,12 @@ module Formats
           option[:url] = option.delete :slug
         end
       end
+    end
+
+    def create_new_account
+      {
+        title: content[:create_new_account][:title],
+      }
     end
 
     def parent
