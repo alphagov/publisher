@@ -81,6 +81,12 @@ module Formats
       {
         title: content[:choose_sign_in][:title],
         slug: content[:choose_sign_in][:slug],
+        description: [
+          {
+            content_type: "text/govspeak",
+            content: content[:choose_sign_in][:description]
+          }
+        ],
       }
     end
 

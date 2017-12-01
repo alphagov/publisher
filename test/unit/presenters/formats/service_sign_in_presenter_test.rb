@@ -134,6 +134,16 @@ class ServiceSignInTest < ActiveSupport::TestCase
         assert_equal @content[:choose_sign_in][:slug],
           result[:details][:choose_sign_in][:slug]
       end
+
+      should "[:description]" do
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: @content[:choose_sign_in][:description]
+          }
+        ]
+        assert_equal expected, result[:details][:choose_sign_in][:description]
+      end
     end
   end
 end
