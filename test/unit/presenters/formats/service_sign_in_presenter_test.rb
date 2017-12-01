@@ -144,6 +144,39 @@ class ServiceSignInTest < ActiveSupport::TestCase
         ]
         assert_equal expected, result[:details][:choose_sign_in][:description]
       end
+
+      context "[:options]" do
+        should "include standard options with an external url" do
+          option_one = @content[:choose_sign_in][:options][0]
+          option_two = @content[:choose_sign_in][:options][1]
+
+          expected = [
+            {
+              text: option_one[:text],
+              url: option_one[:url],
+              hint_text: option_one[:hint_text],
+            },
+            {
+              text: option_two[:text],
+              url: option_two[:url],
+              hint_text: option_two[:hint_text],
+            },
+          ]
+          assert_includes result[:details][:choose_sign_in][:options], expected[0]
+          assert_includes result[:details][:choose_sign_in][:options], expected[1]
+        end
+
+        should "convert internal slug to url and prepend content item base_path" do
+          option_three = @content[:choose_sign_in][:options][2]
+
+          expected = {
+            text: option_three[:text],
+            url: "#{base_path}/#{option_three[:slug]}",
+          }
+
+          assert_includes result[:details][:choose_sign_in][:options], expected
+        end
+      end
     end
   end
 end
