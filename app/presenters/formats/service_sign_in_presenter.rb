@@ -82,12 +82,7 @@ module Formats
       {
         title: content[:choose_sign_in][:title],
         slug: content[:choose_sign_in][:slug],
-        description: [
-          {
-            content_type: "text/govspeak",
-            content: content[:choose_sign_in][:description]
-          }
-        ],
+        description: govspeak_content(content[:choose_sign_in][:description]),
         options: options,
       }
     end
@@ -106,7 +101,17 @@ module Formats
       {
         title: content[:create_new_account][:title],
         slug: content[:create_new_account][:slug],
+        body: govspeak_content(content[:create_new_account][:body])
       }
+    end
+
+    def govspeak_content(content)
+      [
+        {
+          content_type: "text/govspeak",
+          content: content,
+        }
+      ]
     end
 
     def parent

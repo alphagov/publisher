@@ -189,6 +189,17 @@ class ServiceSignInTest < ActiveSupport::TestCase
         assert_equal @content[:create_new_account][:slug],
           result[:details][:create_new_account][:slug]
       end
+
+      should "[:body]" do
+        expected = [
+          {
+            content_type: "text/govspeak",
+            content: @content[:create_new_account][:body],
+          }
+        ]
+
+        assert_equal expected, result[:details][:create_new_account][:body]
+      end
     end
   end
 end
