@@ -129,6 +129,11 @@ class ServiceSignInTest < ActiveSupport::TestCase
         assert_equal @content[:choose_sign_in][:title],
           result[:details][:choose_sign_in][:title]
       end
+
+      should "[:slug]" do
+        assert_equal @content[:choose_sign_in][:slug],
+          result[:details][:choose_sign_in][:slug]
+      end
     end
   end
 end

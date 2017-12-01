@@ -80,6 +80,7 @@ module Formats
     def choose_sign_in
       {
         title: content[:choose_sign_in][:title],
+        slug: content[:choose_sign_in][:slug],
       }
     end
 
