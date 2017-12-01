@@ -114,4 +114,12 @@ class ServiceSignInTest < ActiveSupport::TestCase
       end
     end
   end
+
+  should "#links" do
+    expected = {
+      parent: [@parent.content_id]
+    }
+
+    assert_equal expected, subject.links
+  end
 end

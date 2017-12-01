@@ -28,6 +28,12 @@ module Formats
       @content_id ||= existing_content_id || SecureRandom.uuid
     end
 
+    def links
+      {
+        parent: [parent.content_id]
+      }
+    end
+
   private
 
     def locale
