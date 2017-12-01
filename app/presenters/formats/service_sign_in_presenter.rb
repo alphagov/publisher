@@ -24,6 +24,10 @@ module Formats
       payload
     end
 
+    def content_id
+      @content_id ||= existing_content_id || SecureRandom.uuid
+    end
+
   private
 
     def locale
@@ -66,6 +70,10 @@ module Formats
 
     def parent_slug
       content[:start_page_slug]
+    end
+
+    def existing_content_id
+      Services.publishing_api.lookup_content_id(base_path: base_path)
     end
   end
 end

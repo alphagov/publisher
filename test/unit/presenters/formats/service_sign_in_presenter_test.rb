@@ -37,6 +37,22 @@ class ServiceSignInTest < ActiveSupport::TestCase
     subject.render_for_publishing_api
   end
 
+  context "#content_id" do
+    should "create a new content id if we are creating a new content item" do
+      SecureRandom.stub :uuid, "random-uuid-string" do
+        publishing_api_has_lookups(base_path => nil)
+        assert_equal "random-uuid-string", subject.content_id
+      end
+    end
+
+    should "use existing content_id if content_item already exists in content-store" do
+      content_id = "random-content-id"
+      publishing_api_has_lookups(base_path => content_id)
+
+      assert_equal content_id, subject.content_id
+    end
+  end
+
   should "[:schema_name]" do
     assert_equal 'service_sign_in', result[:schema_name]
   end
