@@ -105,6 +105,7 @@ module Formats
     def create_new_account
       {
         title: content[:create_new_account][:title],
+        slug: content[:create_new_account][:slug],
       }
     end
 

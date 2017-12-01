@@ -184,6 +184,11 @@ class ServiceSignInTest < ActiveSupport::TestCase
         assert_equal @content[:create_new_account][:title],
           result[:details][:create_new_account][:title]
       end
+
+      should "[:slug]" do
+        assert_equal @content[:create_new_account][:slug],
+          result[:details][:create_new_account][:slug]
+      end
     end
   end
 end
