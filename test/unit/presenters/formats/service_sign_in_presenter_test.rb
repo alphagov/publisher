@@ -53,6 +53,10 @@ class ServiceSignInTest < ActiveSupport::TestCase
     end
   end
 
+  should "be valid against schema" do
+    assert_valid_against_schema(result, 'service_sign_in')
+  end
+
   should "[:schema_name]" do
     assert_equal 'service_sign_in', result[:schema_name]
   end
