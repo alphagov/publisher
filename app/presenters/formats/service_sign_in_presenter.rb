@@ -72,10 +72,11 @@ module Formats
     end
 
     def details
-      {
-        choose_sign_in: choose_sign_in,
-        create_new_account: create_new_account,
-      }
+      details = { choose_sign_in: choose_sign_in }
+      if content[:create_new_account].present?
+        details[:create_new_account] = create_new_account
+      end
+      details
     end
 
     def choose_sign_in
