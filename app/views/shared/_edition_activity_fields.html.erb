@@ -18,6 +18,15 @@
         <textarea id="edition_activity_send_fact_check_attributes_customised_message"
                   name="edition[activity_send_fact_check_attributes][customised_message]"
                   class="form-control" cols="60" rows="14"><%= render :template => 'noisy_workflow/request_fact_check', formats: [:text] %></textarea>
+      <% elsif activity == :resend_fact_check %>
+        <% latest_status_action = form_builder.object.latest_status_action %>
+        <% if latest_status_action&.is_fact_check_request? %>
+          <%= activity_fields.label :email_addresses %>
+          <p class="form-control-static"><%= latest_status_action.email_addresses %></p>
+
+          <%= activity_fields.label :customised_message %>
+          <div class="form-control-static"><%= format_and_auto_link_plain_text(latest_status_action.customised_message) %></div>
+        <% end %>
       <% else %>
         <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
       <% end %>

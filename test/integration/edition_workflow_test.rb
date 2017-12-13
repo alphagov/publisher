@@ -63,6 +63,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     page.find_link('Fact check').trigger('click')
 
+    ActionMailer::Base.deliveries.clear
+
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
       fill_in "Email address", with: "user@example.com"
@@ -70,8 +72,18 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     end
 
     assert page.has_css?('.label', text: 'Fact check')
+
+    click_on "History and notes"
+    assert page.has_content? 'Send fact check by Alice'
+    assert page.has_content? 'Request sent to user@example.com'
+
     guide.reload
     assert guide.fact_check?
+
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? 'user@example.com' }.last
+    assert fact_check_email
+    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email.subject
+    assert_equal "Blah", fact_check_email.body.to_s
   end
 
   test "a guide in the ready state can be requested to make more amendments" do
@@ -94,6 +106,37 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     view_filtered_list "Amends needed"
 
     assert page.has_content? guide.title
+  end
+
+  test "a guide in the fact-check state can resend the email" do
+    guide.update_attribute(:state, 'ready')
+    visit_edition guide
+
+    page.find_link('Fact check').trigger('click')
+
+    within "#send_fact_check_form" do
+      fill_in "Customised message", with: "Blah blah fact check message"
+      fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
+      click_on "Send"
+    end
+
+    ActionMailer::Base.deliveries.clear
+
+    visit_edition guide
+    send_for_generic_action guide, "Resend fact check email" do
+      assert page.has_content? 'Blah blah fact check message'
+      assert page.has_content? 'user-to-ask-for-fact-check@example.com'
+      click_on 'Resend'
+    end
+
+    visit_edition guide
+    click_on "History and notes"
+    assert page.has_content? 'Resend fact check by Alice'
+
+    resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? 'user-to-ask-for-fact-check@example.com' }.last
+    assert resent_fact_check_email
+    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", resent_fact_check_email.subject
+    assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
   end
 
   test "can flag guide for review" do

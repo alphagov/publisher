@@ -11,6 +11,10 @@ module ActionProcessorHelpers
     user.progress(edition, request_type: :send_fact_check, comment: comment, email_addresses: "test@test.com")
   end
 
+  def resend_fact_check(user, edition)
+    user.progress(edition, request_type: :resend_fact_check)
+  end
+
   def receive_fact_check(user, edition, comment = "Please verify these facts.")
     user.progress(edition, request_type: :receive_fact_check, comment: comment)
   end
