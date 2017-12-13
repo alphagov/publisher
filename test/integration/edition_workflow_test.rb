@@ -85,7 +85,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
-  test "a guide in the fact check state can be requested to make more amendments" do
+  test "a guide in the fact-check state can be requested to make more amendments" do
     guide.update_attribute(:state, 'fact_check')
 
     visit_edition guide
@@ -193,7 +193,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
-  test "can skip fact check" do
+  test "can skip fact-check" do
     guide.update_attribute(:state, 'fact_check')
 
     visit_edition guide
@@ -213,7 +213,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? "Needs more work"
   end
 
-  test "can progress from fact check" do
+  test "can progress from fact-check" do
     guide.update_attribute(:state, 'fact_check_received')
 
     visit_edition guide
@@ -224,7 +224,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
-  test "can go back to fact check from fact check received" do
+  test "can go back to fact-check from fact-check received" do
     guide.update_attribute(:state, 'fact_check_received')
 
     visit_edition guide
