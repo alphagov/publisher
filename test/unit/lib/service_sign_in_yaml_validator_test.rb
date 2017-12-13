@@ -13,6 +13,10 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     "invalid/file/path.yaml"
   end
 
+  def invalid_file_type
+    "test/fixtures/service_sign_in/invalid.txt"
+  end
+
   def content
     @file ||= YAML.load_file(valid_yaml_file)
   end
@@ -29,6 +33,13 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
       should "log an 'Invalid file path' error" do
         validator = service_sign_in_yaml_validator(invalid_file_path)
         assert_includes validator.validate, "Invalid file path: #{invalid_file_path}"
+      end
+    end
+
+    context "when a file is provided that is not YAML" do
+      should "log an 'Invalid file type' error" do
+        validator = service_sign_in_yaml_validator(invalid_file_type)
+        assert_includes validator.validate, "Invalid file type"
       end
     end
   end

@@ -14,14 +14,17 @@ private
 
   def valid?
     load_yaml_file
+    @errors.empty?
   end
 
   def load_yaml_file
     begin
       @yaml_file = YAML.load_file(@file_name)
+      unless @yaml_file.present?
+        @errors << "Invalid file type"
+      end
     rescue SystemCallError
       @errors << "Invalid file path: #{@file_name}"
-      return false
     end
   end
 end
