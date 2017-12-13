@@ -184,25 +184,34 @@ class ServiceSignInTest < ActiveSupport::TestCase
     end
 
     context "[:create_new_account]" do
-      should "[:title]" do
-        assert_equal @content[:create_new_account][:title],
+      context "when create_new_account is not present in the file" do
+        should "not be present in the payload" do
+          @content.delete(:create_new_account)
+          refute result.has_key?(:create_new_account)
+        end
+      end
+
+      context "when create_new_account is present in the file" do
+        should "[:title]" do
+          assert_equal @content[:create_new_account][:title],
           result[:details][:create_new_account][:title]
-      end
+        end
 
-      should "[:slug]" do
-        assert_equal @content[:create_new_account][:slug],
+        should "[:slug]" do
+          assert_equal @content[:create_new_account][:slug],
           result[:details][:create_new_account][:slug]
-      end
+        end
 
-      should "[:body]" do
-        expected = [
-          {
-            content_type: "text/govspeak",
-            content: @content[:create_new_account][:body],
-          }
-        ]
+        should "[:body]" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: @content[:create_new_account][:body],
+            }
+          ]
 
-        assert_equal expected, result[:details][:create_new_account][:body]
+          assert_equal expected, result[:details][:create_new_account][:body]
+        end
       end
     end
   end
