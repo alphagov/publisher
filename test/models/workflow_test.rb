@@ -197,6 +197,36 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_equal "Text.<l>content that the SafeHtml validator would catch</l>", edition.actions.last.comment
   end
 
+  test "fact_check editions can resend the email" do
+    user = FactoryGirl.create(:user, name: "Ben")
+    other_user = FactoryGirl.create(:user, name: "James")
+
+    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    edition = guide
+
+    request_review(user, edition)
+    approve_review(other_user, edition)
+    send_fact_check(user, edition)
+
+    assert guide.reload.can_resend_fact_check?
+  end
+
+  test "fact_check editions can't resend the email if their most recent status action somehow isn't a fact check one" do
+    user = FactoryGirl.create(:user, name: "Ben")
+    other_user = FactoryGirl.create(:user, name: "James")
+
+    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    edition = guide
+
+    request_review(user, edition)
+    approve_review(other_user, edition)
+    send_fact_check(user, edition)
+
+    edition.new_action(user, 'request_amendments')
+
+    refute guide.reload.can_resend_fact_check?
+  end
+
   test "fact_check_received can go back to out for fact_check" do
     user = FactoryGirl.create(:user, name: "Ben")
     other_user = FactoryGirl.create(:user, name: "James")

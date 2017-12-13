@@ -8,6 +8,7 @@ module GovukContentModels
       request_review: 'RequestReviewProcessor',
       approve_review: 'ApproveReviewProcessor',
       send_fact_check: 'SendFactCheckProcessor',
+      resend_fact_check: 'ResendFactCheckProcessor',
       receive_fact_check: 'ReceiveFactCheckProcessor',
       approve_fact_check: 'ApproveFactCheckProcessor',
       skip_fact_check: 'SkipFactCheckProcessor',
