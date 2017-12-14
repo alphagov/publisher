@@ -58,6 +58,10 @@ group :test do
   gem 'webmock', '~> 3.0.1'
 end
 
+group :development do
+  gem 'state_machines-graphviz'
+end
+
 group :development, :test do
   gem 'govuk-lint', '~> 2.1.0'
   gem 'jasmine', '2.5.2'
