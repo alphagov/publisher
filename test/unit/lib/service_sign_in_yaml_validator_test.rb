@@ -41,6 +41,14 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     "test/fixtures/service_sign_in/no_choose_sign_in_fields.yaml"
   end
 
+  def missing_choose_sign_in_option_fields
+    "test/fixtures/service_sign_in/missing_choose_sign_in_option_fields.yaml"
+  end
+
+  def no_choose_sign_in_option_fields
+    "test/fixtures/service_sign_in/no_choose_sign_in_option_fields.yaml"
+  end
+
   context "#validate" do
     context "when a YAML file is valid" do
       should "return the YAML file as a hash" do
@@ -86,6 +94,22 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
         validator = service_sign_in_yaml_validator(no_choose_sign_in_fields)
         assert_includes validator.validate,
           "Missing choose_sign_in field: #{required_choose_sign_in_fields.join(', ')}"
+      end
+    end
+
+    context "when a required choose_sign_in option field is missing in the YAML file" do
+      should "log a 'Missing choose sign_in field: option > field_name' error" do
+        validator = service_sign_in_yaml_validator(missing_choose_sign_in_option_fields)
+        assert_includes validator.validate, "Missing choose_sign_in field: option > text"
+        assert_includes validator.validate, "Missing choose_sign_in field: option > slug or url"
+      end
+    end
+
+    context "when the choose_sign_in option field is not an array of options" do
+      should "log a 'Missing choose sign_in field: option > text, slug or url' error" do
+        validator = service_sign_in_yaml_validator(no_choose_sign_in_option_fields)
+        assert_includes validator.validate,
+          "Missing choose_sign_in field: option > text, slug or url"
       end
     end
   end

@@ -48,9 +48,30 @@ private
       return
     end
 
+    check_choose_sign_in_top_level_fields(error_message)
+    return unless choose_sign_in["options"].present?
+    check_choose_sign_in_options_fields(error_message)
+  end
+
+  def check_choose_sign_in_top_level_fields(error_message)
     REQUIRED_CHOOSE_SIGN_IN_FIELDS.each do |field|
       unless choose_sign_in.has_key?(field)
         @errors << error_message + field
+      end
+    end
+  end
+
+  def check_choose_sign_in_options_fields(error_message)
+    error_message += "option > "
+    unless choose_sign_in["options"].is_a?(Array)
+      @errors << error_message + "text, slug or url"
+      return
+    end
+
+    choose_sign_in["options"].each do |option|
+      @errors << error_message + "text" unless option.has_key?("text")
+      unless option.has_key?("slug") || option.has_key?("url")
+        @errors << error_message + "slug or url"
       end
     end
   end
