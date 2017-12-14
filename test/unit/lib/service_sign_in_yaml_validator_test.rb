@@ -29,6 +29,10 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     ServiceSignInYamlValidator::REQUIRED_CHOOSE_SIGN_IN_FIELDS
   end
 
+  def required_create_new_account_fields
+    ServiceSignInYamlValidator::REQUIRED_CREATE_NEW_ACCOUNT_FIELDS
+  end
+
   def missing_top_level_fields
     "test/fixtures/service_sign_in/missing_top_level_fields.yaml"
   end
@@ -47,6 +51,10 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
 
   def no_choose_sign_in_option_fields
     "test/fixtures/service_sign_in/no_choose_sign_in_option_fields.yaml"
+  end
+
+  def missing_create_new_account_fields
+    "test/fixtures/service_sign_in/missing_create_new_account_fields.yaml"
   end
 
   context "#validate" do
@@ -110,6 +118,15 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
         validator = service_sign_in_yaml_validator(no_choose_sign_in_option_fields)
         assert_includes validator.validate,
           "Missing choose_sign_in field: option > text, slug or url"
+      end
+    end
+
+    context "when create_new_account is present but required fields are missing in the YAML file" do
+      should "log a 'Missing create_new_account: field_name' error" do
+        validator = service_sign_in_yaml_validator(missing_create_new_account_fields)
+        required_create_new_account_fields.each do |field|
+          assert_includes validator.validate, "Missing create_new_account field: #{field}"
+        end
       end
     end
   end

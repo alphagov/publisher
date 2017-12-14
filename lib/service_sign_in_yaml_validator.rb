@@ -4,6 +4,7 @@ class ServiceSignInYamlValidator
   REQUIRED_TOP_LEVEL_FIELDS =
     %w(change_note choose_sign_in locale start_page_slug update_type).freeze
   REQUIRED_CHOOSE_SIGN_IN_FIELDS = %w(options slug title).freeze
+  REQUIRED_CREATE_NEW_ACCOUNT_FIELDS = %w(body slug title).freeze
 
   def initialize(file_name)
     @file_name = file_name
@@ -21,6 +22,7 @@ private
     return unless @yaml_file.present?
     check_for_top_level_required_fields
     check_for_choose_sign_in_required_fields if choose_sign_in.present?
+    check_for_create_new_account_required_fields if create_new_account.present?
     @errors.empty?
   end
 
@@ -76,7 +78,19 @@ private
     end
   end
 
+  def check_for_create_new_account_required_fields
+    REQUIRED_CREATE_NEW_ACCOUNT_FIELDS.each do |field|
+      unless create_new_account.has_key?(field)
+        @errors << "Missing create_new_account field: #{field}"
+      end
+    end
+  end
+
   def choose_sign_in
     @yaml_file["choose_sign_in"]
+  end
+
+  def create_new_account
+    @yaml_file["create_new_account"]
   end
 end
