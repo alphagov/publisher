@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
+  def setup
+    publishing_api_has_lookups("/" => nil)
+  end
+
   def service_sign_in_yaml_validator(file)
     ServiceSignInYamlValidator.new(file)
   end
@@ -57,9 +61,15 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     "test/fixtures/service_sign_in/missing_create_new_account_fields.yaml"
   end
 
+  def invalid_start_page_slug
+    "test/fixtures/service_sign_in/invalid_start_page_slug.yaml"
+  end
+
   context "#validate" do
     context "when a YAML file is valid" do
       should "return the YAML file as a hash" do
+        slug = content["start_page_slug"]
+        publishing_api_has_lookups("/#{slug}" => "a-content-id")
         validator = service_sign_in_yaml_validator(valid_yaml_file)
         assert_equal content, validator.validate
       end
@@ -127,6 +137,15 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
         required_create_new_account_fields.each do |field|
           assert_includes validator.validate, "Missing create_new_account field: #{field}"
         end
+      end
+    end
+
+    context "when the start_page_slug doesn't exist in the Publishing API" do
+      should "log a 'start_page_slug 'slug_name' cannot be found in Publishing API' error" do
+        slug = YAML.load_file(invalid_start_page_slug)["start_page_slug"]
+        publishing_api_has_lookups("/#{slug}" => nil)
+        validator = service_sign_in_yaml_validator(invalid_start_page_slug)
+        assert_includes validator.validate, "start_page_slug '#{slug}' cannot be found in Publishing API"
       end
     end
   end

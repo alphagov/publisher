@@ -21,6 +21,7 @@ private
     load_yaml_file
     return unless @yaml_file.present?
     check_for_top_level_required_fields
+    check_for_valid_start_page_slug
     check_for_choose_sign_in_required_fields if choose_sign_in.present?
     check_for_create_new_account_required_fields if create_new_account.present?
     @errors.empty?
@@ -40,6 +41,14 @@ private
   def check_for_top_level_required_fields
     REQUIRED_TOP_LEVEL_FIELDS.each do |field|
       @errors << "Missing field: #{field}" unless @yaml_file.has_key?(field)
+    end
+  end
+
+  def check_for_valid_start_page_slug
+    slug = @yaml_file["start_page_slug"]
+    content = Services.publishing_api.lookup_content_id(base_path: "/#{slug}")
+    unless content.present?
+      @errors << "start_page_slug '#{slug}' cannot be found in Publishing API"
     end
   end
 
