@@ -29,7 +29,7 @@ gem 'rails', '5.0.3'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
-gem 'reverse_markdown', '0.3.0', require: false # Only used in some importers
+gem 'reverse_markdown', '1.0.4', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'selectize-rails', '0.12.1'
