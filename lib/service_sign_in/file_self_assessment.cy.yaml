@@ -1,0 +1,38 @@
+start_page_slug: mewngofnodi-chyflwynoch-ffurflen-dreth-huanasesiad
+locale: cy
+choose_sign_in:
+  title: Profwch pwy ydych chi i fwrw ymlaen
+  slug: profi-pwy-ydw-i
+  description: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
+  options:
+    - text: Defnyddio Porth y Llywodraeth
+      url: https://www.tax.service.gov.uk/account
+      hint_text: Bydd gennych chi ID defnyddiwr os ydych chi wedi cofrestru ar gyfer Hunanasesiad neu wedi ffeilio ffurflen dreth ar-lein yn y gorffennol.
+    - text: Defnyddio GOV.UK Verify
+      url: https://www.tax.service.gov.uk/ida/sa/login
+      hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
+    - text: Cofrestru ar gyfer Hunanasesiad
+      slug: cofrestru-hunan-asesiad
+create_new_account:
+  title: Cofrestru ar gyfer Hunanasesiad
+  slug: cofrestru-hunan-asesiad
+  body: |
+    Mae ffyrdd gwahanol o gofrestru os ydych chi:
+
+    - [yn hunangyflogedig neu’n unig fasnachwr](/mewngofnodi-chyflwynoch-ffurflen-dreth-huanasesiad/cofrestru-os-ydych-yn-hunangyflogedig)
+    - [ddim yn hunangyflogedig](/mewngofnodi-chyflwynoch-ffurflen-dreth-huanasesiad/cofrestru-os-nad-ydych-yn-hunangyflogedig)
+    - [yn cofrestru partner neu bartneriaeth](/mewngofnodi-chyflwynoch-ffurflen-dreth-huanasesiad/cofrestru-os-ydych-yn-bartner-neun-bartneriaeth)
+
+    Rhowch ddigon o amser i chi gwblhau’r broses gofrestru er mwyn i chi ddychwelyd eich ffurflen erbyn y [dyddiad cau](/ffurflenni-treth-hunanasesiad/dyddiadau-cau).
+
+    ##Os ydych chi wedi cofrestru’n barod
+
+    Unwaith y byddwch chi wedi cofrestru, bydd angen i chi roi eich cyfrif Porth y Llywodraeth ar waith drwy ei gysylltu â’ch Cyfeirnod Trethdalwr Unigryw (UTR).  Fe gewch chi lythyr a fydd yn dweud wrthych chi sut mae gwneud hyn.
+
+    Gallwch [greu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/government-gateway-registration-frontend/route?continue=%2Faccount&origin=unknown) os nad oes gennych chi un.
+
+    ^ Peidiwch â chreu cyfrif newydd os ydych chi wedi rhoi un ar waith yn barod. Gallwch gysylltu eich UTR ag un cyfrif Porth y Llywodraeth yn unig. ^
+
+    *[UTR]: Cyfeirnod Trethdalwr Unigryw
+update_type: major
+change_note: First publish
