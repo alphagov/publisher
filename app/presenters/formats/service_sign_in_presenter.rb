@@ -35,11 +35,11 @@ module Formats
       }
     end
 
-  private
-
     def locale
       content[:locale]
     end
+
+  private
 
     def update_type
       content[:update_type]
