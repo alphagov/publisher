@@ -1,0 +1,38 @@
+start_page_slug: log-in-file-self-assessment-tax-return
+locale: en
+choose_sign_in:
+  title: Prove your identity to continue
+  slug: prove-identity
+  description: If you’re filing online for the first time, you need to register for Self Assessment first.
+  options:
+    - text: Use Government Gateway
+      url: https://www.tax.service.gov.uk/account
+      hint_text: You’ll have a user ID if you’ve registered for Self Assessment or filed a tax return online before.
+    - text: Use GOV.UK Verify
+      url: https://www.tax.service.gov.uk/ida/sa/login
+      hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
+    - text: Register for Self Assessment
+      slug: register-self-assessment
+create_new_account:
+  title: Register for Self Assessment
+  slug: register-self-assessment
+  body: |
+    There are different ways to register if you’re:
+
+    - [self-employed or a sole trader](/log-in-file-self-assessment-tax-return/register-if-youre-self-employed)
+    - [not self-employed](/log-in-file-self-assessment-tax-return/register-if-youre-not-self-employed)
+    - [registering a partner or partnership](/log-in-file-self-assessment-tax-return/register-if-youre-a-partner-or-partnership)
+
+    Allow enough time to complete the registration process so you can send your return by the [deadline](/self-assessment-tax-returns/deadlines).
+
+    ##If you’ve already registered
+
+    Once you’ve registered, you need to ‘activate’ your Government Gateway account by linking it with your Unique Taxpayer Reference (UTR). You’ll get a letter that tells you how to do this.
+
+    You can [create a Government Gateway account](https://www.tax.service.gov.uk/government-gateway-registration-frontend/route?continue=%2Faccount&origin=unknown) if you don’t have one.
+
+    ^ Don’t create a new account if you’ve activated one before. You can only link your UTR to one Government Gateway account. ^
+
+    *[UTR]: Unique Taxpayer Reference
+update_type: major
+change_note: First publish
