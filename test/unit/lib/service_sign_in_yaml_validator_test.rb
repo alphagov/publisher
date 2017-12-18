@@ -10,7 +10,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
   end
 
   def valid_yaml_file
-    "lib/service_sign_in/example.yaml"
+    "lib/service_sign_in/example.en.yaml"
   end
 
   def invalid_file_path
