@@ -53,6 +53,20 @@ class EditionProgressorTest < ActiveSupport::TestCase
     refute command.progress(activity)
   end
 
+  test "should not progress to fact check if any of the email addresses were invalid" do
+    @guide.update_attribute(:state, :ready)
+
+    activity = {
+      request_type: "send_fact_check",
+      comment: "Blah",
+      email_addresses: "user1@example.com, another-user AT example DOT com",
+      customised_message: "Hello"
+    }
+
+    command = EditionProgressor.new(@guide, @laura)
+    refute command.progress(activity)
+  end
+
   context "publishing" do
     teardown do
       ScheduledPublisher.jobs.clear

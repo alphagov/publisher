@@ -1,4 +1,6 @@
 class EditionProgressor
+  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
+
   attr_accessor :edition, :actor, :activity, :status_message
 
   # existing_edition: The existing edition to be duplicated
@@ -44,12 +46,12 @@ protected
 
   def invalid_email_addresses?(addresses)
     addresses.split(",").any? do |address|
-      !address.include?("@")
+      address.strip !~ EMAIL_REGEX
     end
   end
 
-  def fact_check_error_message(activity)
-    "Couldn't #{activity.to_s.humanize.downcase} for " +
+  def fact_check_error_message(_activity)
+    "Couldn't send to fact check for " +
       "#{description(edition).downcase}. The email addresses " +
       "you entered appear to be invalid."
   end
