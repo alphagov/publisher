@@ -9,15 +9,41 @@ namespace :service_sign_in do
 
     abort USAGE_MESSAGE unless args[:yaml_file]
 
+    validator = ServiceSignInYamlValidator.new("lib/service_sign_in/#{args[:yaml_file]}")
+
     begin
-      file = YAML.load_file("lib/service_sign_in/#{args[:yaml_file]}")
+      file = validator.validate
+
+      if file.is_a?(Hash)
+        content = Formats::ServiceSignInPresenter.new(file)
+      else
+        puts "Validation errors occurred:"
+        puts file
+        abort
+      end
     rescue SystemCallError
       abort VALID_FILE_MESSAGE + USAGE_MESSAGE
     end
 
-    content = Formats::ServiceSignInPresenter.new(file)
     ServiceSignInPublishService.call(content)
-
     puts "> #{args[:yaml_file]} has been published"
+  end
+
+  desc "Validate a service_sign_in YAML file"
+  task :validate, [:yaml_file] => :environment do |_, args|
+    USAGE_MESSAGE = "> usage: rake service_sign_in:validate[example.yaml]\n".freeze +
+      "> service_sign_in YAML files live here: lib/service_sign_in"
+
+    abort USAGE_MESSAGE unless args[:yaml_file]
+
+    validator = ServiceSignInYamlValidator.new("lib/service_sign_in/#{args[:yaml_file]}")
+    file = validator.validate
+
+    if file.is_a?(Hash)
+      puts "This is a valid YAML file"
+    else
+      puts "Validation errors occurred:"
+      puts file
+    end
   end
 end
