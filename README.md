@@ -4,7 +4,7 @@ Publisher is the primary content design app for GOV.UK. It provides the user int
 entering all the key editorial formats and an API so other apps (primarily frontend) can
 access that data for display. It is sometimes referred to as "mainstream publisher".
 
-##Screenshots
+## Screenshots
 
 ![alt tag](doc/publisher_document_screenshot.png)
 ![alt tag](doc/publisher_admin_screenshot.png)
@@ -33,7 +33,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 
 ## Nomenclature
 
-- Artefact: a document on GOV.UK.
+- **Artefact**: a document on GOV.UK.
 
 ## Technical documentation
 
@@ -81,6 +81,16 @@ repository. If should be at the same directory level as the government-frontend 
 Or to specify the location explicitly:
 
 `GOVUK_CONTENT_SCHEMAS_PATH=/some/dir/govuk-content-schemas bundle exec rake`
+
+### State machine 
+
+Maps out the transitions between states for the `Edition` class. These transitions are defined in the [workflow](app/models/workflow.rb) module.
+A diagram of the current state machine can be seen here: [state machine diagram](doc/state_machines/state_machine_diagram_for_edition.png). 
+The diagram can be (re)generated using the [state_machines-graphviz gem](https://github.com/state-machines/state_machines-graphviz), by doing:
+
+`bundle exec rake state_machines:draw CLASS=Edition`
+
+This will generate a diagram in the `doc/state_machines` folder. 
 
 ## Licence
 
