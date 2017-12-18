@@ -80,12 +80,18 @@ module Formats
     end
 
     def choose_sign_in
-      {
+      choose_sign_in = {
         title: content[:choose_sign_in][:title],
         slug: content[:choose_sign_in][:slug],
-        description: govspeak_content(content[:choose_sign_in][:description]),
         options: options,
       }
+
+      description = content[:choose_sign_in][:description]
+      if description.present?
+        choose_sign_in[:description] = govspeak_content(description)
+      end
+
+      choose_sign_in
     end
 
     def options

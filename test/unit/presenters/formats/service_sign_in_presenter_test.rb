@@ -139,14 +139,21 @@ class ServiceSignInTest < ActiveSupport::TestCase
           result[:details][:choose_sign_in][:slug]
       end
 
-      should "[:description]" do
-        expected = [
-          {
-            content_type: "text/govspeak",
-            content: @content[:choose_sign_in][:description]
-          }
-        ]
-        assert_equal expected, result[:details][:choose_sign_in][:description]
+      context "[:description]" do
+        should "be present in the payload when it is present in the YAML file" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: @content[:choose_sign_in][:description]
+            }
+          ]
+          assert_equal expected, result[:details][:choose_sign_in][:description]
+        end
+
+        should "not be present in the payload when it is not present in the YAML file" do
+          @content[:choose_sign_in].delete(:description)
+          refute result[:details][:choose_sign_in].has_key?(:description)
+        end
       end
 
       context "[:options]" do
