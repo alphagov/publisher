@@ -10,17 +10,16 @@
 <div class="well">
   <%= form_tag("/editions/#{@resource.id}/process_unpublish", method: "post") do %>
     <h3 class="remove-top-margin add-bottom-margin">Unpublish</h3>
-      <div class="form-group">
-        <label>Redirect to</label>
-        <span class="normal">
-          For example: <code>https://www.gov.uk/redirect-to-replacement-page</code>
-        </span>
-        <%= text_field_tag 'redirect_url', '', class: "form-control input-md-12" %>
-      </div>
-      <%= button_tag 'Unpublish',
+    <div class="form-group">
+      <label>Redirect to</label>
+      <span class="normal">
+        For example: <code>https://www.gov.uk/redirect-to-replacement-page</code>
+      </span>
+      <%= text_field_tag 'redirect_url', '', class: "form-control input-md-12" %>
+    </div>
+    <%= button_tag 'Unpublish',
       "data-module" => 'confirm',
       "data-message" => "This will remove ‘#{@artefact.name}’ from the website.\n\n Are you sure?",
       :class => "btn btn-danger" %>
-    </div>
   <% end %>
 </div>
