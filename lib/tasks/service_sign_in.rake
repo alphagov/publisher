@@ -9,15 +9,23 @@ namespace :service_sign_in do
 
     abort USAGE_MESSAGE unless args[:yaml_file]
 
+    validator = ServiceSignInYamlValidator.new("lib/service_sign_in/#{args[:yaml_file]}")
+
     begin
-      file = YAML.load_file("lib/service_sign_in/#{args[:yaml_file]}")
+      file = validator.validate
+
+      if file.is_a?(Hash)
+        content = Formats::ServiceSignInPresenter.new(file)
+      else
+        puts "Validation errors occurred:"
+        puts file
+        abort
+      end
     rescue SystemCallError
       abort VALID_FILE_MESSAGE + USAGE_MESSAGE
     end
 
-    content = Formats::ServiceSignInPresenter.new(file)
     ServiceSignInPublishService.call(content)
-
     puts "> #{args[:yaml_file]} has been published"
   end
 end
