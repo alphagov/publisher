@@ -17,35 +17,34 @@ create_new_account:
   title: Create an account
   slug: create-account
   body: |
-    To use this service, you need to create either a Government Gateway or GOV.UK Verify account. These are used to help fight identity theft. 
+    To use this service, you need to create either a Government Gateway or GOV.UK Verify account. These are used to help fight identity theft.
 
-Once you have an account, you can use it to access other government services online. 
+    Once you have an account, you can use it to access other government services online.
 
-## Choose a way to prove your identity 
+    ## Choose a way to prove your identity
 
-### Government Gateway 
+    ### Government Gateway
 
-Registering with Government Gateway usually takes about 10 minutes. It works best if you have:
+    Registering with Government Gateway usually takes about 10 minutes. It works best if you have:
 
-* your National Insurance number
-* a recent payslip or P60 or a valid UK passport 
+    * your National Insurance number
+    * a recent payslip or P60 or a valid UK passport
 
-[Create a Government Gateway account](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway).
+    [Create a Government Gateway account](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway).
 
-### GOV.UK Verify  
+    ### GOV.UK Verify
 
-Registering with GOV.UK Verify usually takes about 15 minutes. It works best if you have: 
+    Registering with GOV.UK Verify usually takes about 15 minutes. It works best if you have:
 
-- a UK address
-- a valid passport or photocard driving licence 
+    - a UK address
+    - a valid passport or photocard driving licence
 
-[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/paye/company-car/start-verify).
+    [Create a GOV.UK Verify account](https://www.tax.service.gov.uk/paye/company-car/start-verify).
 
-A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government. 
+    A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 
-## Personal tax account
+    ## Personal tax account
 
-Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details. 
-
+    Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
 update_type: major
 change_note: First published.
