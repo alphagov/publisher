@@ -64,7 +64,7 @@ GEM
     ast (2.3.0)
     autoprefixer-rails (7.1.6)
       execjs
-    bootstrap-kaminari-views (0.0.3)
+    bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
       rails (>= 3.1)
     bootstrap-sass (3.3.5.1)
@@ -434,7 +434,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootstrap-kaminari-views (= 0.0.3)
+  bootstrap-kaminari-views (= 0.0.5)
   capybara (= 2.14.0)
   ci_reporter_minitest (= 1.0.0)
   database_cleaner (= 1.6.1)
