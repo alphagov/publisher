@@ -90,7 +90,12 @@ The diagram can be (re)generated using the [state_machines-graphviz gem](https:/
 
 `bundle exec rake state_machines:draw CLASS=Edition`
 
-This will generate a diagram in the `doc/state_machines` folder. 
+This will generate a diagram in the `doc/state_machines` folder.
+
+### How to publish Service Sign-in pages
+These pages do not have an admin interface and are instead published through rake tasks.
+
+See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Licence
 
