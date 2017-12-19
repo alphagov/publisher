@@ -218,7 +218,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    mlanett-redis-lock (0.2.2)
+    mlanett-redis-lock (0.2.7)
       redis
     mocha (1.2.1)
       metaclass (~> 0.0.1)
@@ -460,7 +460,7 @@ DEPENDENCIES
   kaminari-mongoid (= 1.0.1)
   logstasher (= 1.2.1)
   minitest-reporters
-  mlanett-redis-lock (= 0.2.2)
+  mlanett-redis-lock (= 0.2.7)
   mocha (= 1.2.1)
   momentjs-rails (= 2.17.1)
   mongoid (= 6.1.0)
