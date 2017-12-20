@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bootstrap-kaminari-views', '0.0.5'
-gem 'diffy', '3.0.6'
+gem 'diffy', '3.2.0'
 gem 'erubis'
 gem 'formtastic', '2.3.0'
 gem 'formtastic-bootstrap', '3.0.0'
