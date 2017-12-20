@@ -55,7 +55,7 @@ group :test do
   gem 'simplecov', '~> 0.14.1', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
   gem "timecop", '0.8.1'
-  gem 'webmock', '~> 3.0.1'
+  gem 'webmock', '~> 3.1.1'
 end
 
 group :development do
