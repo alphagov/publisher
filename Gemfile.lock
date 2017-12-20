@@ -94,7 +94,7 @@ GEM
       safe_yaml (~> 1.0.0)
     crass (1.0.3)
     database_cleaner (1.6.1)
-    diffy (3.0.6)
+    diffy (3.2.0)
     docile (1.1.5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
@@ -443,7 +443,7 @@ DEPENDENCIES
   capybara (= 2.14.0)
   ci_reporter_minitest (= 1.0.0)
   database_cleaner (= 1.6.1)
-  diffy (= 3.0.6)
+  diffy (= 3.2.0)
   erubis
   factory_girl_rails
   formtastic (= 2.3.0)
