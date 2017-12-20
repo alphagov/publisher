@@ -14,7 +14,7 @@ gem 'govuk_sidekiq', '~> 2.0.0'
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'jquery-ui-rails', '~> 5.0.3'
-gem 'kaminari', '0.17.0'
+gem 'kaminari', '1.1.1'
 gem 'kaminari-mongoid', '1.0.1'
 gem 'logstasher', '1.2.1'
 gem 'mlanett-redis-lock', '0.2.2' # Only used in some importers
