@@ -46,7 +46,7 @@ group :test do
   gem 'ci_reporter_minitest', '1.0.0'
   gem 'database_cleaner', '1.6.1'
   gem 'factory_girl_rails'
-  gem 'govuk-content-schema-test-helpers', '~> 1.4'
+  gem 'govuk-content-schema-test-helpers', '~> 1.6'
   gem 'minitest-reporters'
   gem 'mocha', '1.2.1'
   gem 'poltergeist', '1.15.0'
