@@ -44,5 +44,18 @@ namespace :service_sign_in do
     end
   end
 
+  desc "Unpublish service_sign_in content with type 'gone'"
+  task :unpublish_without_redirect, %i(content_id locale) => :environment do |_, args|
+    USAGE_MESSAGE =
+      "> usage: rake service_sign_in:unpublish_without_redirect[content-id-example,cy]\n".freeze
+
+    content_id = args[:content_id]
+    locale = args[:locale]
+    abort USAGE_MESSAGE unless content_id && locale
+
+    ServiceSignInUnpublishService.call(content_id, locale)
+    puts "> #{content_id} has been unpublished"
+  end
+
   YAML_LOCATION = "> service_sign_in YAML files live here: lib/service_sign_in".freeze
 end
