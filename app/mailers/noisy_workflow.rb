@@ -26,6 +26,34 @@ class NoisyWorkflow < ActionMailer::Base
     end
   end
 
+  def self.resend_fact_check(action)
+    edition = action.edition
+    latest_status_action = edition.latest_status_action
+    if latest_status_action.is_fact_check_request? && action.request_type == Action::RESEND_FACT_CHECK
+      self.request_fact_check(latest_status_action)
+    else
+      Rails.logger.info("Asked to resend fact check for #{edition.content_id}, but its most recent status action is not a fact check, it's a #{latest_status_action.request_type}")
+      NoMail.new
+    end
+  end
+
+  class NoMail
+    # Provide a no-op object that has enough of the
+    # ActionMailer::MessageDelivery API that callers who get one are
+    # unlikely to react badly if we give them it
+    def deliver_now; end
+
+    def deliver_now!; end
+
+    def deliver_later; end
+
+    def deliver_later!; end
+
+    def message; end
+
+    def processed?; true; end
+  end
+
   def report_errors(error_list)
     @errors = error_list
     mail(to: EMAIL_GROUPS[:dev], subject: 'Errors in fact check email processing')
@@ -63,6 +91,8 @@ protected
       "New version: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::NOTE
       "Note added by #{requester.name}"
+    when Action::RESEND_FACT_CHECK
+      "Fact check resent: \"#{edition.title}\" (#{edition.format_name}) by #{requester.name}"
     when Action::ASSIGN
       if recipient
         "Assigned: \"#{edition.title}\" (#{edition.format_name}) to #{recipient.name}"

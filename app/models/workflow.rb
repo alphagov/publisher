@@ -105,6 +105,16 @@ module Workflow
     end
   end
 
+  def can_resend_fact_check?
+    fact_check? && latest_status_action&.is_fact_check_request?
+  end
+
+  def resend_fact_check
+    # no-op because the fact check is resent by the action processor
+    # as that's where all emails are handled
+    true
+  end
+
   def fact_checked?
     self.actions.where(request_type: Action::APPROVE_FACT_CHECK).count.positive?
   end

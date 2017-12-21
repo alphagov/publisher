@@ -23,6 +23,10 @@ module EditionActivityButtonsHelper
     }.join("\n").html_safe
   end
 
+  def resend_fact_check_buttons(edition)
+    build_review_button(edition, 'resend_fact_check', 'Resend fact check email')
+  end
+
   def progress_buttons(edition, options = {})
     [
       ["Fact check", "send_fact_check"],

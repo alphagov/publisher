@@ -24,6 +24,7 @@ class Action
     IMPORTANT_NOTE       = "important_note".freeze,
     IMPORTANT_NOTE_RESOLVED = "important_note_resolved".freeze,
     ASSIGN = "assign".freeze,
+    RESEND_FACT_CHECK = "resend_fact_check".freeze
   ].freeze
 
   embedded_in :edition
