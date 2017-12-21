@@ -57,5 +57,25 @@ namespace :service_sign_in do
     puts "> #{content_id} has been unpublished"
   end
 
+  desc "Unpublish service_sign_in content with type 'redirect'"
+  task :unpublish_with_redirect, %i(content_id locale redirect_path) => :environment do |_, args|
+    USAGE_MESSAGE =
+      "> usage: rake service_sign_in:unpublish_with_redirect[content-id-example,cy,/redirect/path]\n".freeze
+
+    content_id = args[:content_id]
+    locale = args[:locale]
+    redirect_path = args[:redirect_path]
+
+    abort USAGE_MESSAGE unless content_id && locale && redirect_path
+
+    ServiceSignInUnpublishService.call(
+      content_id,
+      locale,
+      redirect_path: redirect_path
+    )
+
+    puts "> #{content_id} has been unpublished"
+  end
+
   YAML_LOCATION = "> service_sign_in YAML files live here: lib/service_sign_in".freeze
 end
