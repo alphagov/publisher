@@ -38,7 +38,7 @@ gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
 gem 'statsd-ruby', '~> 1.4.0', require: false
 gem 'uglifier', '3.2.0'
-gem 'unicorn', '5.3.1'
+gem 'unicorn', '5.4.0'
 gem 'whenever', require: false
 
 group :test do
