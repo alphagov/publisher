@@ -262,7 +262,7 @@ GEM
       ast (~> 2.3)
     phantomjs (2.1.1.0)
     plek (2.0.0)
-    poltergeist (1.15.0)
+    poltergeist (1.17.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
@@ -477,7 +477,7 @@ DEPENDENCIES
   nested_form!
   null_logger
   plek (= 2.0.0)
-  poltergeist (= 1.15.0)
+  poltergeist (= 1.17.0)
   pry-byebug
   rack (= 2.0.3)
   rails (= 5.0.3)
