@@ -44,7 +44,7 @@ gem 'whenever', require: false
 group :test do
   gem 'capybara', '2.14.0'
   gem 'ci_reporter_minitest', '1.0.0'
-  gem 'database_cleaner', '1.6.1'
+  gem 'database_cleaner', '1.6.2'
   gem 'factory_girl_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.6'
   gem 'minitest-reporters'

@@ -94,7 +94,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.3)
-    database_cleaner (1.6.1)
+    database_cleaner (1.6.2)
     diffy (3.2.0)
     docile (1.1.5)
     domain_name (0.5.20170404)
@@ -444,7 +444,7 @@ DEPENDENCIES
   bootstrap-kaminari-views (= 0.0.5)
   capybara (= 2.14.0)
   ci_reporter_minitest (= 1.0.0)
-  database_cleaner (= 1.6.1)
+  database_cleaner (= 1.6.2)
   diffy (= 3.2.0)
   erubis
   factory_girl_rails
