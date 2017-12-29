@@ -37,7 +37,7 @@ gem 'mongoid', '6.1.0'
 gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
 gem 'statsd-ruby', '~> 1.4.0', require: false
-gem 'uglifier', '3.2.0'
+gem 'uglifier', '4.1.0'
 gem 'unicorn', '5.4.0'
 gem 'whenever', require: false
 
