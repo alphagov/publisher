@@ -412,7 +412,7 @@ GEM
     timecop (0.8.1)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    uglifier (3.2.0)
+    uglifier (4.1.2)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -497,7 +497,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   statsd-ruby (~> 1.4.0)
   timecop (= 0.8.1)
-  uglifier (= 3.2.0)
+  uglifier (= 4.1.2)
   unicorn (= 5.4.0)
   webmock (~> 3.0.1)
   whenever
