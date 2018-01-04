@@ -97,8 +97,24 @@ FactoryGirl.define do
     trait :with_body do
       body 'Some body text'
     end
+
+    trait :with_link_check_report do
+      transient do
+        batch_id 1
+        link_uris []
+      end
+
+      link_check_reports do
+        [FactoryGirl.build(:link_check_report, :with_links,
+                                               batch_id: batch_id,
+                                               link_uris: link_uris)]
+      end
+    end
   end
   factory :answer_edition, traits: [:with_body], parent: :edition do
+  end
+
+  factory :answer_edition_with_link_check_report, traits: [:with_link_check_report], parent: :answer_edition do
   end
 
   factory :help_page_edition, traits: [:with_body], parent: :edition, class: 'HelpPageEdition' do
@@ -106,6 +122,10 @@ FactoryGirl.define do
 
   factory :campaign_edition, traits: [:with_body], parent: :edition, class: 'CampaignEdition' do
   end
+
+  factory :campaign_edition_with_link_check_report, traits: [:with_link_check_report], parent: :campaign_edition do
+  end
+
 
   factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: 'CompletedTransactionEdition' do
     sequence(:slug) { |n| "done/slug-#{n}" }
@@ -254,6 +274,16 @@ FactoryGirl.define do
     trait :completed do
       status "completed"
       completed_at Time.now.iso8601
+    end
+
+    trait :with_links do
+      transient do
+        link_uris []
+      end
+
+      links do
+        link_uris.map { |uri| FactoryGirl.build(:link, uri: uri) }
+      end
     end
   end
 end
