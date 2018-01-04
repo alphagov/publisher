@@ -3,7 +3,6 @@ locale: en
 choose_sign_in:
   title: Prove your identity to continue
   slug: prove-identity
-  description:
   options:
     - text: Sign in with Government Gateway
       url: https://www.tax.service.gov.uk/account
