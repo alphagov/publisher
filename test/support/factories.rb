@@ -235,4 +235,25 @@ FactoryGirl.define do
     title "Simple smart answer"
     body "Introduction to the smart answer"
   end
+
+  factory :link do
+    uri "https://www.gov.uk"
+    status "ok"
+    checked_at Time.parse("2017-12-01").iso8601
+    check_warnings ["example check warnings"]
+    check_errors ["example check errors"]
+    problem_summary "example problem"
+    suggested_fix "example fix"
+  end
+
+  factory :link_check_report do
+    batch_id 1
+    status "in_progress"
+    links { [FactoryGirl.build(:link)] }
+
+    trait :completed do
+      status "completed"
+      completed_at Time.now.iso8601
+    end
+  end
 end

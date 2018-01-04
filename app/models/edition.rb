@@ -35,6 +35,8 @@ class Edition
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
+  embeds_many :link_check_reports
+
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
     scope state, lambda { where(state: state) }
