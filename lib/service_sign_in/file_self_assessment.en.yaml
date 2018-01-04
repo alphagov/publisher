@@ -3,16 +3,17 @@ locale: en
 choose_sign_in:
   title: Prove your identity to continue
   slug: prove-identity
-  description: If you’re filing online for the first time, you need to register for Self Assessment first.
+  description:
   options:
-    - text: Use Government Gateway
+    - text: Sign in with Government Gateway
       url: https://www.tax.service.gov.uk/account
       hint_text: You’ll have a user ID if you’ve registered for Self Assessment or filed a tax return online before.
-    - text: Use GOV.UK Verify
+    - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/ida/sa/login
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Register for Self Assessment
       slug: register-self-assessment
+      hint_text: You must register before you can file your first tax return.
 create_new_account:
   title: Register for Self Assessment
   slug: register-self-assessment
@@ -34,5 +35,5 @@ create_new_account:
     ^ Don’t create a new account if you’ve activated one before. You can only link your UTR to one Government Gateway account. ^
 
     *[UTR]: Unique Taxpayer Reference
-update_type: major
-change_note: First publish
+update_type: minor
+change_note: Updated option text
