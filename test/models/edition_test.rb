@@ -1107,4 +1107,17 @@ class EditionTest < ActiveSupport::TestCase
       assert_equal edition1, edition3.first_edition_of_published
     end
   end
+
+  context "link_check_reports" do
+    should "not have any link_check_reports by default" do
+      edition = FactoryGirl.create(:edition, :published)
+      assert_equal 0, edition.link_check_reports.size
+    end
+
+    should "add a new link_check_report" do
+      edition = FactoryGirl.create(:edition, :published)
+      edition.link_check_reports.build(FactoryGirl.attributes_for(:link_check_report))
+      assert_equal 1, edition.link_check_reports.size
+    end
+  end
 end
