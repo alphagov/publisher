@@ -35,3 +35,31 @@ As the option text is parameterized to provide an option value for the radio
 button, failing to purge the page for the cache will result in a mismatch
 between the option value provided by the form and the option text in the content
 item, resulting in a 500 error.
+
+# How to unpublish Service Sign In pages
+
+1. Find the `content_id` and `locale` of the page you would like to unpublish.
+
+2. Go to the Jenkins Rake task job on  [Staging](https://deploy.staging.publishing.service.gov.uk/job/run-rake-task/build?delay=0sec) or [Production](https://deploy.publishing.service.gov.uk/job/run-rake-task/build?delay=0sec)
+
+There are two ways to unpublish a Service Sign In Page; with a redirect, and without a redirect (410 gone).
+
+## Unpublishing with a redirect
+
+3. Run the task with the following parameters, replacing the content-id, locale and /redirect/path with your own values.
+
+| Field              | Value                                                                     |
+|--------------------|---------------------------------------------------------------------------|
+| TARGET_APPLICATION | publisher                                                                 |
+| MACHINE_CLASS      | backend                                                                   |
+| RAKE_TASK          | service_sign_in:unpublish_with_redirect[content-id,locale,/redirect/path] |
+
+## Unpublishing without a redirect
+
+3. Run the task with the following parameters, replacing the content-id and locale with your own values.
+
+| Field              | Value                                                                     |
+|--------------------|---------------------------------------------------------------------------|
+| TARGET_APPLICATION | publisher                                                                 |
+| MACHINE_CLASS      | backend                                                                   |
+| RAKE_TASK          | service_sign_in:unpublish_without_redirect[content-id,locale]             |
