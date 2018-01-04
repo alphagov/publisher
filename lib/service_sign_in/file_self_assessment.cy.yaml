@@ -3,16 +3,16 @@ locale: cy
 choose_sign_in:
   title: Profwch pwy ydych chi i fwrw ymlaen
   slug: profi-pwy-ydw-i
-  description: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
   options:
-    - text: Defnyddio Porth y Llywodraeth
+    - text: Mewngofnodi gan ddefnyddio Porth y Llywodraeth
       url: https://www.tax.service.gov.uk/account
       hint_text: Bydd gennych chi ID defnyddiwr os ydych chi wedi cofrestru ar gyfer Hunanasesiad neu wedi ffeilio ffurflen dreth ar-lein yn y gorffennol.
-    - text: Defnyddio GOV.UK Verify
+    - text: Mewngofnodi gan ddefnyddio GOV.UK Verify
       url: https://www.tax.service.gov.uk/ida/sa/login
       hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
     - text: Cofrestru ar gyfer Hunanasesiad
       slug: cofrestru-hunan-asesiad
+      hint_text: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
 create_new_account:
   title: Cofrestru ar gyfer Hunanasesiad
   slug: cofrestru-hunan-asesiad
@@ -34,5 +34,5 @@ create_new_account:
     ^ Peidiwch â chreu cyfrif newydd os ydych chi wedi rhoi un ar waith yn barod. Gallwch gysylltu eich UTR ag un cyfrif Porth y Llywodraeth yn unig. ^
 
     *[UTR]: Cyfeirnod Trethdalwr Unigryw
-update_type: major
-change_note: First publish
+update_type: minor
+change_note: Updated option and hint text
