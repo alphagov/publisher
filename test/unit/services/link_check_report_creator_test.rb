@@ -6,7 +6,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
 
   def create_edition(govspeak)
-    @edition ||= FactoryGirl.create(:place_edition, introduction: govspeak)
+    FactoryGirl.create(:place_edition, introduction: govspeak)
   end
 
   setup do
@@ -20,26 +20,30 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
 
   context ".call" do
     should "make a request the link checker api when the edition has links" do
+      edition = create_edition("This is [link](https://www.gov.uk) text.")
+
       LinkCheckReportCreator.new(
-        edition: create_edition("This is [link](https://www.gov.uk) text.")
+        edition: edition
       ).call
 
-      @edition.reload
+      edition.reload
 
       assert_requested(@stubbed_api_request)
-      assert @edition.link_check_reports
-      assert "a-batch-id", @edition.link_check_reports.first.batch_id
+      assert edition.link_check_reports
+      assert "a-batch-id", edition.link_check_reports.first.batch_id
     end
 
     should "not make a request the link checker api when the edition has no links" do
+      edition = create_edition("This is had no links.")
+
       LinkCheckReportCreator.new(
-        edition: create_edition("This is had no links.")
+        edition: edition
       ).call
 
-      @edition.reload
+      edition.reload
 
       assert_not_requested(@stubbed_api_request)
-      assert @edition.link_check_reports.empty?
+      assert edition.link_check_reports.empty?
     end
   end
 end
