@@ -13,7 +13,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
     @stubbed_api_request = link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],
       id: "a-batch-id",
-      webhook_uri: link_checker_api_callback_url(host: Plek.find("manuals-publisher")),
+      webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
     )
   end
