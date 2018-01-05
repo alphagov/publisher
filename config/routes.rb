@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   get 'user_search' => 'user_search#index'
 
+  post "/link-checker-api-callback" => "link_checker_api#callback", as: "link_checker_api_callback"
+
   resources :publications
   root to: 'root#index'
 
