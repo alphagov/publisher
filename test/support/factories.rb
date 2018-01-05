@@ -245,6 +245,18 @@ FactoryGirl.define do
     end
   end
 
+  factory :travel_advice_edition_with_parts, parent: :travel_advice_edition do
+    summary "This is [link](https://www.gov.uk) text."
+
+    after :create do |getp|
+      getp.parts.build(title: "Some Part Title!",
+                       body: "This is some **version** text.", slug: "part-one")
+      getp.parts.build(title: "Another Part Title",
+                       body: "This is [link](http://example.com) text.",
+                       slug: "part-two")
+    end
+  end
+
   factory :rendered_manual do
     sequence(:slug) { |n| "test-rendered-manual-#{n}" }
     sequence(:title) { |n| "Test Rendered Manual #{n}" }
