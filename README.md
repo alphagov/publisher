@@ -17,6 +17,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 - [Licence](https://www.gov.uk/day-nurseries-wales)
 - [Local transactions](https://www.gov.uk/complain-about-your-council)
 - [Place](https://www.gov.uk/ukonline-centre-internet-access-computer-training)
+- [Service sign in](https://www.gov.uk/log-in-file-self-assessment-tax-return/sign-in)
 - [Simple smart answer](https://www.gov.uk/qualify-tax-credits)
 - [Transaction](https://www.gov.uk/council-tax-bands)
 
@@ -30,6 +31,11 @@ access that data for display. It is sometimes referred to as "mainstream publish
   they're fully removed as editions and no longer visible in the app (although
   the artefacts do still exist).  They have been fully migrated to
   specialist-publisher.
+
+## Working with Service Sign In pages
+These pages do not have an admin interface and are instead managed through rake tasks.
+
+See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Nomenclature
 
@@ -82,20 +88,15 @@ Or to specify the location explicitly:
 
 `GOVUK_CONTENT_SCHEMAS_PATH=/some/dir/govuk-content-schemas bundle exec rake`
 
-### State machine 
+### State machine
 
 Maps out the transitions between states for the `Edition` class. These transitions are defined in the [workflow](app/models/workflow.rb) module.
-A diagram of the current state machine can be seen here: [state machine diagram](doc/state_machines/state_machine_diagram_for_edition.png). 
+A diagram of the current state machine can be seen here: [state machine diagram](doc/state_machines/state_machine_diagram_for_edition.png).
 The diagram can be (re)generated using the [state_machines-graphviz gem](https://github.com/state-machines/state_machines-graphviz), by doing:
 
 `bundle exec rake state_machines:draw CLASS=Edition`
 
 This will generate a diagram in the `doc/state_machines` folder.
-
-### How to publish Service Sign-in pages
-These pages do not have an admin interface and are instead published through rake tasks.
-
-See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Licence
 
