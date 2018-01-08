@@ -6,16 +6,28 @@ class EditionLinkExtractor
   end
 
   def call
+    convert_paths_to_urls(find_links_in_edition)
+  end
+
+private
+
+  attr_reader :edition
+
+  def convert_paths_to_urls(links)
+    links.map { |link| link.starts_with?('/') ? "#{public_root}#{link}" : link }
+  end
+
+  def public_root
+    @public_root ||= Plek.new.website_root
+  end
+
+  def find_links_in_edition
     if has_parts?
       links_in_govspeak_fields + links_in_parts
     else
       links_in_govspeak_fields
     end
   end
-
-private
-
-  attr_reader :edition
 
   def has_parts?
     edition.parts.any?
