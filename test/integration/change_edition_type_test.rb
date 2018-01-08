@@ -71,7 +71,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
         if edition.respond_to?(:parts)
           assert(sample_parts.subset?(edition_parts(edition)))
         else
-          assert_selector("form#edition-form .tab-pane textarea", text: /\s*#{Regexp.quote(edition_whole_body)}\s*/, visible: true)
+          assert_selector("form#edition-form .well textarea", text: /\s*#{Regexp.quote(edition_whole_body)}\s*/, visible: true)
         end
       end
     end
