@@ -1120,4 +1120,19 @@ class EditionTest < ActiveSupport::TestCase
       assert_equal 1, edition.link_check_reports.size
     end
   end
+
+  context "latest_link_check_report" do
+    should "be nil if no reports" do
+      edition = FactoryGirl.create(:edition, :published)
+      assert_nil edition.latest_link_check_report
+    end
+
+    should "return the last report created" do
+      edition = FactoryGirl.create(:edition, :published)
+      edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report))
+      latest_report = edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report, batch_id: 2))
+
+      assert latest_report, edition.latest_link_check_report
+    end
+  end
 end
