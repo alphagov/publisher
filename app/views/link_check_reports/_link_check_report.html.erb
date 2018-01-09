@@ -6,9 +6,11 @@
     </section>
   <% elsif report.in_progress? %>
     <section class="alert alert-info alert-link-info">
-      <%= image_tag('admin/ajax_loader_blue_32.gif', width: 24, height: 24, class: 'pull-left add-right-margin') %>
       Broken link report in progress.<br />Please wait.
-      Refresh the page to view to see the result.
+      <%= link_to "Refresh",
+                  link_check_report_path(report.id, edition_id: edition.id),
+                  class: 'js-broken-links-refresh js-hidden',
+                  remote: true %>
     </section>
   <% elsif report.broken_links.any? || report.caution_links.any? %>
     <section class="alert alert-warning">
