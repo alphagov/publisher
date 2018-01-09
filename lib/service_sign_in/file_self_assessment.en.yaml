@@ -25,14 +25,10 @@ create_new_account:
 
     Allow enough time to complete the registration process so you can send your return by the [deadline](/self-assessment-tax-returns/deadlines).
 
-    ##If you’ve already registered
+    ##If you've already registered
 
-    Once you’ve registered, you need to ‘activate’ your Government Gateway account by linking it with your Unique Taxpayer Reference (UTR). You’ll get a letter that tells you how to do this.
-
-    You can [create a Government Gateway account](https://www.tax.service.gov.uk/government-gateway-registration-frontend/route?continue=%2Faccount&origin=unknown) if you don’t have one.
-
-    ^ Don’t create a new account if you’ve activated one before. You can only link your UTR to one Government Gateway account. ^
+    Once you've registered, you'll get a letter that tells you what to do next. It will include your Unique Taxpayer Reference (UTR).
 
     *[UTR]: Unique Taxpayer Reference
 update_type: minor
-change_note: Updated option text
+change_note: Corrected the section 'If you're already registered'.
