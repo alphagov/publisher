@@ -25,19 +25,21 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
 
       @edition.reload
 
-      assert_redirected_to(controller: 'editions', action: 'show', id: @edition.id)
+      assert_redirected_to(controller: "editions", action: "show", id: @edition.id)
       assert @edition.link_check_reports.any?
-      assert 'a-batch-id', @edition.link_check_reports.last.batch_id
+      assert "a-batch-id", @edition.link_check_reports.last.batch_id
     end
 
-    should 'create and render the create template on AJAX' do
+    should "create and render the create template on AJAX" do
       post :create, params: { edition_id: @edition.id }, xhr: true
 
       assert_response :success
       assert_template :create
 
+      @edition.reload
+
       assert @edition.link_check_reports.any?
-      assert 'a-batch-id', @edition.link_check_reports.last.batch_id
+      assert "a-batch-id", @edition.link_check_reports.last.batch_id
     end
   end
 end
