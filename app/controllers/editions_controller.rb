@@ -83,7 +83,13 @@ class EditionsController < InheritedResources::Base
     # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
     update! do |success, failure|
       success.html {
-        progress_edition(resource, activity_params) if attempted_activity
+        if attempted_activity
+          if progress_edition(resource, activity_params)
+            flash[:success] = @command.status_message
+          else
+            flash[:danger] = @command.status_message
+          end
+        end
 
         update_assignment resource, assign_to
 

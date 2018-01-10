@@ -10,7 +10,7 @@
       <%= activity_fields.hidden_field :request_type, value: activity %>
 
       <% if activity == :send_fact_check %>
-        <%= activity_fields.input :email_addresses %>
+        <%= activity_fields.input :email_addresses, hint: 'You can enter multiple email addresses if you comma separate them as follows: <code>fact-checker-one@example.com, fact-checker-two@example.com</code>.'.html_safe %>
 
         <%= activity_fields.label :customised_message do %>
           Customised message<abbr title="required">*</abbr>
