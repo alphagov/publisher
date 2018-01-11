@@ -1,0 +1,42 @@
+<div class="broken-links-report">
+  <% if !report.present? %>
+    <section class="alert alert-info alert-link-info">
+      <p>Check this edition for broken links. The report will take a few moments to complete. It only runs against GovSpeak fields.</p>
+      <%= render 'link_check_reports/form', edition: edition, button_text: 'Check for broken links' %>
+    </section>
+  <% elsif report.in_progress? %>
+    <section class="alert alert-info alert-link-info">
+      <%= image_tag('admin/ajax_loader_blue_32.gif', width: 24, height: 24, class: 'pull-left add-right-margin') %>
+      Broken link report in progress.<br />Please wait.
+      Refresh the page to view to see the result.
+    </section>
+  <% elsif report.broken_links.any? || report.caution_links.any? %>
+    <section class="alert alert-warning">
+      <h3 class="remove-top-margin">Links</h3>
+      <% report.links.sort_by(&:status).group_by(&:status).each do |status, links| %>
+        <% next unless %w(broken caution).include? status %>
+        <p class="issue-status-description"><%= status.capitalize %></p>
+        <ul class="issue-list">
+          <% links.each do |link| %>
+            <li>
+              <%= link_to link.uri.truncate(50), link.uri, title: link.uri, class: 'link-inherit' %>
+              <details>
+                <summary class="display-issue-details">See more details about this link</summary>
+                <p class="issue-summary"><%= link.problem_summary %></p>
+                <% if link.suggested_fix %>
+                  <p class="issue-summary">Suggested fix: <%= link.suggested_fix %></p>
+                <% end %>
+              </details>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+      <%= render 'link_check_reports/form', edition: edition, button_text: 'Check again' %>
+    </section>
+  <% else %>
+    <section class='alert alert-success'>
+      <p><span class="glyphicon glyphicon-ok add-right-margin"></span> This edition contains no broken links.</p>
+      <%= render 'link_check_reports/form', edition: edition, button_text: 'Check again' %>
+    </section>
+  <% end %>
+</div>

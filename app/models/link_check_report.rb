@@ -14,4 +14,20 @@ class LinkCheckReport
   validates :batch_id, presence: true, uniqueness: true
   validates :status, presence: true
   validates :links, presence: true
+
+  def completed?
+    status == "completed"
+  end
+
+  def in_progress?
+    !completed?
+  end
+
+  def broken_links
+    links.select { |l| l.status == "broken" }
+  end
+
+  def caution_links
+    links.select { |l| l.status == "caution" }
+  end
 end

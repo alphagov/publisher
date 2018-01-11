@@ -1,22 +1,26 @@
-<%= f.inputs do %>
-  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+<div class="row">
+  <div class="col-md-8">
+    <%= f.inputs do %>
+      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
-  <%= f.input :place_type,
-    :hint => "This is the 'slug' assigned in the imminence app",
-    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+      <%= f.input :place_type,
+        :hint => "This is the 'slug' assigned in the imminence app",
+        :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
 
-  <%= f.input :introduction,
-    :as => :text,
-    :input_html => {:rows => 5, :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
+      <%= f.input :introduction,
+        :as => :text,
+        :input_html => {:rows => 5, :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
 
-  <%= f.input :more_information,
-    :as => :text,
-    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
+      <%= f.input :more_information,
+        :as => :text,
+        :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
 
-  <%= f.input :need_to_know,
-    :as => :text,
-    :label => 'What you need to know',
-    :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
-<% end %>
+      <%= f.input :need_to_know,
+        :as => :text,
+        :label => 'What you need to know',
+        :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
+    <% end %>
+  </div>
+</div>
 
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

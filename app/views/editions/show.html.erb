@@ -10,14 +10,19 @@
     </ul>
 
     <div class="tab-content add-top-margin">
-      <%= resource_form do |f| %>
         <div role="tabpanel" class="tab-pane <% if active_tab.name == 'edit'%>active<% end %>" id="edit">
-          <div class="well">
-            <%= render resource_fields, f: f %>
+          <div class="link-check-report col-md-4">
+            <%= render 'link_check_reports/link_check_report', edition: @edition, report: @edition.latest_link_check_report %>
           </div>
-        </div>
-        <%= edition_activities_fields(f, @resource) %>
-      <% end %>
+
+          <%= resource_form do |f| %>
+            <div class="well">
+              <%= render resource_fields, f: f %>
+            </div>
+
+            <%= edition_activities_fields(f, @resource) %>
+          <% end %>
+      </div>
       <%= # cancel scheduled publishing doesn't require the edition to be saved when requesting an activity,
         # because this action is triggered from a view where editing is not allowed.
         edition_activities_forms(@resource, Edition::CANCEL_SCHEDULED_PUBLISHING_ACTION) %>

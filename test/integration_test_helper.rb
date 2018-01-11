@@ -174,7 +174,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def assert_all_edition_fields_disabled(page)
-    selector = '#edit input:not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
+    selector = '#edit input:not(#link-check-report):not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
     inputs = page.all(selector)
     input_description = ""
     inputs.each { |i| input_description = "#{input_description}\n##{i['id']}" }
