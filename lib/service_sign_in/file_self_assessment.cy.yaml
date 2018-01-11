@@ -27,12 +27,8 @@ create_new_account:
 
     ##Os ydych chi wedi cofrestru’n barod
 
-    Unwaith y byddwch chi wedi cofrestru, bydd angen i chi roi eich cyfrif Porth y Llywodraeth ar waith drwy ei gysylltu â’ch Cyfeirnod Trethdalwr Unigryw (UTR).  Fe gewch chi lythyr a fydd yn dweud wrthych chi sut mae gwneud hyn.
-
-    Gallwch [greu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/government-gateway-registration-frontend/route?continue=%2Faccount&origin=unknown) os nad oes gennych chi un.
-
-    ^ Peidiwch â chreu cyfrif newydd os ydych chi wedi rhoi un ar waith yn barod. Gallwch gysylltu eich UTR ag un cyfrif Porth y Llywodraeth yn unig. ^
+    Unwaith eich bod wedi cofrestru, byddwch yn cael llythyr a fydd yn rhoi gwybod i chi beth i'w wneud nesaf. Bydd yn cynnwys eich Cyfeirnod Unigryw y Trethdalwr (UTR). 
 
     *[UTR]: Cyfeirnod Trethdalwr Unigryw
 update_type: minor
-change_note: Updated option and hint text
+change_note: Corrected 'Os ydych chi wedi cofrestru’n barod' (If you're already registered)
