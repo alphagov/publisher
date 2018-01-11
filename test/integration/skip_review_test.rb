@@ -38,7 +38,7 @@ class SkipReviewTest < JavascriptIntegrationTest
 
     visit "/publications/#{@artefact.id}"
 
-    within(".alert-info") do
+    within(".alert-info:not(.alert-link-info)") do
       assert page.has_content? "Skip review"
       click_on "Skip review"
     end
@@ -66,7 +66,7 @@ class SkipReviewTest < JavascriptIntegrationTest
 
     visit "/publications/#{@artefact.id}"
 
-    within(".alert-info") do
+    within(".alert-info:not(.alert-link-info)") do
       assert page.has_no_content? "Skip review"
     end
 

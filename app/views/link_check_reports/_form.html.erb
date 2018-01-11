@@ -1,0 +1,4 @@
+<%= form_tag link_check_reports_path, id: "link-checker-form", remote: true do %>
+  <%= hidden_field_tag :edition_id, edition.id %>
+  <%= submit_tag button_text, id: "link-check-report", class: "btn btn-default add-top-margin remove-bottom-margin" %>
+<% end %>

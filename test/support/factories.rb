@@ -291,10 +291,11 @@ FactoryGirl.define do
     trait :with_links do
       transient do
         link_uris []
+        link_status "pending"
       end
 
       links do
-        link_uris.map { |uri| FactoryGirl.build(:link, uri: uri) }
+        link_uris.map { |uri| FactoryGirl.build(:link, uri: uri, status: link_status) }
       end
     end
   end

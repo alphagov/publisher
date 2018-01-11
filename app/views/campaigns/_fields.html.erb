@@ -1,5 +1,9 @@
 <%= f.inputs do %>
-  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+  <div class="row">
+    <div class="col-md-8">
+      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+    </div>
+  </div>
 
   <%= f.inputs "Campaign images" do %>
     <table class="table table-bordered image-upload remove-bottom-margin">

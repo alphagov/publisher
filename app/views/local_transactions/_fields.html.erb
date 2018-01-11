@@ -1,25 +1,29 @@
-<%= f.inputs do %>
-  <%= f.input :lgsl_code,
-    :label => 'LGSL code',
-    :input_html => {:disabled => true, class: 'input-md-4'} %>
+<div class="row">
+  <div class="col-md-8">
+    <%= f.inputs do %>
+      <%= f.input :lgsl_code,
+        :label => 'LGSL code',
+        :input_html => {:disabled => true, class: 'input-md-4'} %>
 
-  <%= f.input :lgil_code,
-    :label => 'LGIL code',
-    :hint => 'LGIL code',
-    :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-4' } %>
+      <%= f.input :lgil_code,
+        :label => 'LGIL code',
+        :hint => 'LGIL code',
+        :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-4' } %>
 
-  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
-  <%= f.input :introduction, :label => 'Introductory paragraph', :hint => 'Set the scene for the user. Explain that it\'s the responsibility of the local council and that we\'ll take you there.', :as => :text, :input_html => {:rows => 8, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+      <%= f.input :introduction, :label => 'Introductory paragraph', :hint => 'Set the scene for the user. Explain that it\'s the responsibility of the local council and that we\'ll take you there.', :as => :text, :input_html => {:rows => 8, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
 
-  <%= f.input :more_information,
-    :as => :text,
-    :input_html => { :disabled => @resource.locked_for_edits?,  class: 'input-md-10' } %>
+      <%= f.input :more_information,
+        :as => :text,
+        :input_html => { :disabled => @resource.locked_for_edits?,  class: 'input-md-10' } %>
 
-  <%= f.input :need_to_know,
-    :as => :text,
-    :label => 'What you need to know',
-    :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
-<% end %>
+      <%= f.input :need_to_know,
+        :as => :text,
+        :label => 'What you need to know',
+        :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
+    <% end %>
+  </div>
+</div>
 
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

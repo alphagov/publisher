@@ -26,4 +26,11 @@ $(function () {
       return 'You have unsaved changes to this edition.';
     }
   });
+
+  $('.link-check-report').on('submit', '#link-checker-form', function () {
+    if (GOVUKAdmin.Data.editionFormDirty) {
+      alert('Please save your changes before running a link check.');
+      return false;
+    }
+  });
 });

@@ -1,7 +1,7 @@
 class LinkCheckReportCreator
   include Rails.application.routes.url_helpers
 
-  CALLBACK_HOST = Plek.find("manuals-publisher")
+  CALLBACK_HOST = Plek.find("publisher")
 
   class InvalidReport < RuntimeError
     def initialize(original_error)

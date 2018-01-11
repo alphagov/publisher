@@ -1,11 +1,15 @@
-<%= f.inputs do %>
-  <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-  <div class="row">
-    <div class="col-md-10">
-      <%= f.input :body, :as => :text, :input_html => { :rows => 5, :disabled => @resource.locked_for_edits? } %>
-    </div>
+<div class="row">
+  <div class="col-md-8">
+    <%= f.inputs do %>
+      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <div class="row">
+        <div class="col-md-10">
+          <%= f.input :body, :as => :text, :input_html => { :rows => 5, :disabled => @resource.locked_for_edits? } %>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
 
 <div class="builder-container">
   <div class="row">
