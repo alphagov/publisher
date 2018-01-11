@@ -2,6 +2,9 @@
   <% if !report.present? %>
     <section class="alert alert-info alert-link-info">
       <p>Check this edition for broken links. The report will take a few moments to complete. It only runs against GovSpeak fields.</p>
+      <noscript>
+        <p>Please save ensure you have saved your changes before running a link check.</p>
+      </noscript>
       <%= render 'link_check_reports/form', edition: edition, button_text: 'Check for broken links' %>
     </section>
   <% elsif report.in_progress? %>
