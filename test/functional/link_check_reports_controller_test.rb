@@ -42,4 +42,23 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
       assert "a-batch-id", @edition.link_check_reports.last.batch_id
     end
   end
+
+  context "#show" do
+    setup do
+      @link_check_report = @edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report))
+    end
+
+    should "find the link_check_report and redirect on a GET request" do
+      get :show, params: { id: @link_check_report.id, edition_id: @edition.id }
+
+      assert_redirected_to(controller: "editions", action: "show", id: @edition.id)
+    end
+
+    should "find the link_check_report and render the show template on AJAX" do
+      get :show, params: { id: @link_check_report.id, edition_id: @edition.id }, xhr: true
+
+      assert_response :success
+      assert_template :show
+    end
+  end
 end
