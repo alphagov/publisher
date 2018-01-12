@@ -6,19 +6,15 @@ class EditionLinkExtractor
   end
 
   def call
-    convert_paths_to_urls(find_links_in_edition)
+    find_links_in_edition
   end
 
 private
 
   attr_reader :edition
 
-  def convert_paths_to_urls(links)
-    links.map { |link| link.starts_with?('/') ? "#{public_root}#{link}" : link }
-  end
-
-  def public_root
-    @public_root ||= Plek.new.website_root
+  def website_root
+    @website_root ||= Plek.new.website_root
   end
 
   def find_links_in_edition
@@ -39,14 +35,18 @@ private
     edition.class::GOVSPEAK_FIELDS.flat_map do |govspeak_field_name|
       govspeak_body = edition.read_attribute(govspeak_field_name)
 
-      govspeak_document(govspeak_body).extracted_links
+      extract_links_from_document(govspeak_body)
     end
   end
 
   def links_in_parts
     edition.parts.flat_map do |part|
-      govspeak_document(part.body).extracted_links
+      extract_links_from_document(part.body)
     end
+  end
+
+  def extract_links_from_document(body)
+    govspeak_document(body).extracted_links(website_root: website_root)
   end
 
   def govspeak_document(string)
