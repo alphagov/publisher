@@ -66,6 +66,7 @@ rake api_clients:create[publisher,publisher@example.com,asset-manager,signin]
 ```
 
 - [calendars](https://github.com/alphagov/calendars) - provides bank holiday information to feed into working days calculator.  Working days calculator is used to generate deadlines for fact checks.
+- [link-checker-api](https://github.com/alphagov/link-checker-api) - checks all the links in an edition on request from the edition show page.
 
 ### Running the application
 
@@ -97,6 +98,10 @@ The diagram can be (re)generated using the [state_machines-graphviz gem](https:/
 `bundle exec rake state_machines:draw CLASS=Edition`
 
 This will generate a diagram in the `doc/state_machines` folder.
+
+### LinkCheckerAPI
+
+The `link-checker-api` has been integrated on the show page for editions. It extracts all links from within any GovSpeak fields and sends them to the `/batch` endpoint of the API. In this request it also sends across a `webhook_callback` which then populates any information about broken/warning links. More reading about the endpoints can be found [here](https://docs.publishing.service.gov.uk/apis/link-checker-api.html)
 
 ## Licence
 
