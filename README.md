@@ -8,6 +8,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 
 ![alt tag](doc/publisher_document_screenshot.png)
 ![alt tag](doc/publisher_admin_screenshot.png)
+![alt tag](doc/publisher_edit_screenshot.png)
 
 ## Live examples
 - [Answer](https://www.gov.uk/smart-meters)
