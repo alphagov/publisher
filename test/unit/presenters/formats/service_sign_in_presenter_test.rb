@@ -8,7 +8,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
   end
 
   def file_name
-    "example.yaml"
+    "example.en.yaml"
   end
 
   def load_content_from_file(file_name)
