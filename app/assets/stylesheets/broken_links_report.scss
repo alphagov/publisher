@@ -1,6 +1,11 @@
 .link-check-report {
-  float: right;
   margin-top: 25px;
+}
+
+@media (min-width: $screen-md-min) {
+  .link-check-report {
+    float: right;
+  }
 }
 
 .broken-links-report {
