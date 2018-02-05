@@ -24,7 +24,7 @@ gem "mongoid-sadstory"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
-gem 'plek', '2.0.0'
+gem 'plek', '2.1.0'
 gem 'rails', '5.0.3'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
