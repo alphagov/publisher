@@ -115,9 +115,7 @@ class LicenceContentImporter
     return str if str.nil?
     str = to_utf8(str)
     str = CGI.unescapeHTML(str) if unescape_html
-    ReverseMarkdown.parse(str).gsub(/\n((\-.*\n)+)/) {|_match|
-      "\n\n#{$1}"
-    }
+    ReverseMarkdown.convert(str).strip
   end
 
   def to_utf8(str)
