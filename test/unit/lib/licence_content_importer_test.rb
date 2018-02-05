@@ -19,7 +19,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
       /\*\*Software testing\*\*/,
       @importer.imported.first[:description]
     )
-    assert_match(/\*validating\*/, @importer.imported.first[:description])
+    assert_match(/\_validating\_/, @importer.imported.first[:description])
   end
 
   def test_import
