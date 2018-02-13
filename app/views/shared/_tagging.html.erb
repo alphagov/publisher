@@ -76,9 +76,25 @@
            Example: <a href="https://www.gov.uk/search?q=taxes&amp;filter_organisations%5B%5D=hm-revenue-customs">search for documents published by HMRC</a>.
            </p>
         </div>
+
+        <div class="form-group">
+          <%= f.label :meets_user_needs, 'User Needs', class: 'control-label' %>
+          <%= f.select :meets_user_needs,
+                       @linkables.meets_user_needs,
+                       {},
+                       { multiple: true,
+                         class: 'select2',
+                         data: { module: "tagging", placeholder: 'Choose user needs…' } } %>
+
+           <p class='help-block'>
+             Needs are managed through Maslow, and the list of user needs which a
+             item of content meets is displayed on the info page for that
+             content.
+           </p>
+        </div>
       </div>
     </div>
 
     <hr/>
     <%= f.submit 'Update tags', class: "btn btn-success btn-large" %>
-<% end %> 
+<% end %>

@@ -354,7 +354,8 @@ private
       :parent,
       mainstream_browse_pages: [],
       topics: [],
-      organisations: []
+      organisations: [],
+      meets_user_needs: [],
     ).to_h
   end
 

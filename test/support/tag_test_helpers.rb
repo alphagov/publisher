@@ -32,5 +32,10 @@ module TagTestHelpers
         },
       ],
       document_type: "organisation")
+
+    publishing_api_has_linkables([
+      { internal_name: 'As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)',
+        publication_state: 'published', content_id: 'CONTENT-ID-USER-NEED', },
+    ], document_type: 'need')
   end
 end

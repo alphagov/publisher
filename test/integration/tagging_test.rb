@@ -26,6 +26,7 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: ["CONTENT-ID-RTI", "CONTENT-ID-VAT"],
           parent: [],
         },
@@ -46,6 +47,7 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: ['CONTENT-ID-DISTILL', 'CONTENT-ID-FIELDS'],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: [],
           parent: [],
         },
@@ -65,6 +67,27 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
+          meets_user_needs: [],
+          mainstream_browse_pages: [],
+          parent: [],
+        },
+        previous_version: 0
+      )
+    end
+
+    should 'tag to user needs' do
+      visit_edition @edition
+      switch_tab 'Tagging'
+
+      select 'As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)', from: 'User Needs'
+
+      save_tags_and_assert_success
+      assert_publishing_api_patch_links(
+        @edition.artefact.content_id,
+        links: {
+          topics: [],
+          organisations: [],
+          meets_user_needs: ['CONTENT-ID-USER-NEED'],
           mainstream_browse_pages: [],
           parent: [],
         },
@@ -84,6 +107,7 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: [],
           parent: ['CONTENT-ID-RTI'],
         },
@@ -117,6 +141,7 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: ['CONTENT-ID-FIELDS', 'CONTENT-ID-WELLS'],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: ['CONTENT-ID-RTI', 'CONTENT-ID-VAT'],
           parent: ['CONTENT-ID-CAPITAL'],
         },
