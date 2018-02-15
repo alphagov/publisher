@@ -4,7 +4,7 @@ module TagTestHelpers
   include GdsApi::TestHelpers::PublishingApiV2
 
   def stub_linkables
-    stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/links/.+})
+    stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/expanded-links/.+})
       .to_return(status: 200, body: "{}", headers: {})
 
     publishing_api_has_linkables([

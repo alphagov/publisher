@@ -129,8 +129,14 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    Tagging::TaggingUpdateForm.new(tagging_update_form_params).publish!
-    redirect_to tagging_edition_path, flash: { success: "Tags have been updated!" }
+    form = Tagging::TaggingUpdateForm.new(tagging_update_form_params)
+    if form.valid?
+      form.publish!
+      flash[:success] = "Tags have been updated!"
+    else
+      flash[:danger] = form.errors.full_messages.join("\n")
+    end
+    redirect_to tagging_edition_path
   rescue GdsApi::HTTPConflict
     redirect_to tagging_edition_path,
     flash: {
@@ -356,6 +362,7 @@ private
       topics: [],
       organisations: [],
       meets_user_needs: [],
+      ordered_related_items: [],
     ).to_h
   end
 

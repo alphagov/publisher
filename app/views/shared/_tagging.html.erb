@@ -92,6 +92,35 @@
              content.
            </p>
         </div>
+
+        <div class="form-group">
+          <label>
+            Related content items
+          </label>
+
+          <fieldset>
+            <ul class="list-unstyled">
+            <% Array(@tagging_update.ordered_related_items).each do |related_item| %>
+              <li>
+                <%= text_field_tag 'tagging_tagging_update_form[ordered_related_items][]',
+                      related_item['base_path'],
+                      class: 'form-control',
+                      data: { title: related_item['title'] } %>
+              </li>
+            <% end %>
+            <% 5.times do %>
+              <li>
+                <%= text_field_tag 'tagging_tagging_update_form[ordered_related_items][]', '',
+                      class: 'form-control' %>
+              </li>
+            <% end %>
+            </ul>
+          </fieldset>
+
+          <p class='help-block'>
+            Related items are displayed in the sidebar. Enter the URL or path of a GOV.UK page, such as /pay-vat or /benefit-cap-calculator
+          </p>
+        </div>
       </div>
     </div>
 
