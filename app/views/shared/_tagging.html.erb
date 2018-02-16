@@ -98,8 +98,8 @@
             Related content items
           </label>
 
-          <fieldset>
-            <ul class="list-unstyled">
+          <fieldset data-module="related-content-items-select">
+            <ul class="list-unstyled js-list-sortable">
             <% Array(@tagging_update.ordered_related_items).each do |related_item| %>
               <li>
                 <%= text_field_tag 'tagging_tagging_update_form[ordered_related_items][]',
