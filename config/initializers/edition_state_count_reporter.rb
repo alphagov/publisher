@@ -8,7 +8,7 @@ module Publisher
       @edition_state_count_reporter ||= StateCountReporter.new(
         Edition,
         Edition.state_names,
-        Publisher::Application.statsd,
+        GovukStatsd,
       )
     end
   end
