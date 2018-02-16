@@ -99,7 +99,7 @@
           </label>
 
           <fieldset data-module="related-content-items-select">
-            <ul class="list-unstyled js-list-sortable">
+            <ul class="list-unstyled js-list-sortable js-base-path-list">
             <% Array(@tagging_update.ordered_related_items).each do |related_item| %>
               <li>
                 <%= text_field_tag 'tagging_tagging_update_form[ordered_related_items][]',
@@ -116,6 +116,10 @@
             <% end %>
             </ul>
           </fieldset>
+
+          <p class='error-block js-add-path-error hide'>
+            Not a known URL or path on GOV.UK
+          </p>
 
           <p class='help-block'>
             Related items are displayed in the sidebar. Enter the URL or path of a GOV.UK page, such as /pay-vat or /benefit-cap-calculator

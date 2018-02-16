@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   resources :link_check_reports, only: %i(create show)
 
   post "/link-checker-api-callback" => "link_checker_api#callback", as: "link_checker_api_callback"
+  get 'api/lookup-by-base-path', to: "publishing_api_proxy#lookup_by_base_path"
 
   resources :publications
   root to: 'root#index'

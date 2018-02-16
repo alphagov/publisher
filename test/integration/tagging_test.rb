@@ -114,11 +114,6 @@ class TaggingTest < JavascriptIntegrationTest
         },
       )
 
-      publishing_api_has_lookups(
-        '/vat-returns' => 'CONTENT-ID-VAT-RETURNS',
-        '/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT',
-      )
-
       visit_edition @edition
       switch_tab 'Tagging'
 
@@ -127,7 +122,25 @@ class TaggingTest < JavascriptIntegrationTest
       )
 
       assert ordered_related_items_fields[0].value, '/vat-returns'
-      ordered_related_items_fields[1].set('/reclaim-vat')
+
+      find('.js-path-field').set('/reclaim-vat')
+
+      # Web request that JS makes to check the path is a valid GOV.UK base path
+      publishing_api_has_lookups('/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT')
+      click_on 'Add related item'
+
+      within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[1]' do
+        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/vat-returns')
+      end
+
+      within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[2]' do
+        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/reclaim-vat')
+      end
+
+      publishing_api_has_lookups(
+        '/vat-returns' => 'CONTENT-ID-VAT-RETURNS',
+        '/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT',
+      )
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -148,11 +161,10 @@ class TaggingTest < JavascriptIntegrationTest
       visit_edition @edition
       switch_tab 'Tagging'
 
-      find('input[name="tagging_tagging_update_form[ordered_related_items][]"]', match: :first)
-        .set('/a-page-that-does-not-exist')
+      find('.js-path-field').set('/a-page-that-does-not-exist')
+      click_on 'Add related item'
 
-      save_tags
-      assert page.has_content?('/a-page-that-does-not-exist is not a known URL on GOV.UK')
+      assert page.has_content?('Not a known URL or path on GOV.UK')
     end
 
     should "tag to parent" do
