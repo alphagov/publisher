@@ -123,7 +123,7 @@ GEM
       plek (>= 1.9.0)
       rack-cache
       rest-client (~> 2.0)
-    gds-sso (13.5.1)
+    gds-sso (13.6.0)
       multi_json (~> 1.0)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
@@ -171,7 +171,7 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.9.3)
+    i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     inherited_resources (1.8.0)
       actionpack (>= 4.2, <= 5.2)
@@ -209,7 +209,7 @@ GEM
       activesupport (>= 4.0)
       logstash-event (~> 1.2.0)
       request_store
-    loofah (2.1.1)
+    loofah (2.2.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lrucache (0.1.4)
@@ -223,7 +223,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.11.1)
+    minitest (5.11.3)
     minitest-reporters (1.1.19)
       ansi
       builder
@@ -421,7 +421,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.8.1)
-    tzinfo (1.2.4)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.5)
       execjs (>= 0.3.0, < 3)
@@ -462,7 +462,7 @@ DEPENDENCIES
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
   gds-api-adapters (~> 51.2.0)
-  gds-sso (~> 13.5)
+  gds-sso (~> 13.6)
   govspeak (~> 5.4.0)
   govuk-content-schema-test-helpers (~> 1.6)
   govuk-lint (~> 3.6.0)
