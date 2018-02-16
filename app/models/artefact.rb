@@ -149,11 +149,6 @@ class Artefact
     self.kind = KIND_TRANSLATIONS[kind.to_s.downcase.strip]
   end
 
-  def admin_url(options = {})
-    ["#{Plek.current.find(owning_app)}/admin/publications/#{id}",
-     options.to_query].reject(&:blank?).join("?")
-  end
-
   def as_json(options = {})
     super.tap { |hash|
       hash["id"] = hash.delete("_id")
