@@ -20,9 +20,6 @@ module Publisher
     # Configuration object for fact check address construction and parsing
     attr_accessor :fact_check_config
 
-    # Configured, namespaced Statsd instance
-    attr_accessor :statsd
-
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

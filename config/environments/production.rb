@@ -76,30 +76,8 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: "www.gov.uk" }
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  # config.log_formatter = ::Logger::Formatter.new
-
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
-  end
-
   # Generate digests for assets URLs.
   config.assets.digest = true
-
-  # Enable JSON-style logging
-  config.logstasher.enabled = true
-  config.logstasher.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.json.log")
-  config.logstasher.supress_app_log = true
-
-  # We don't use ActiveRecord, this is a Mongo app.
-  # Do not dump schema after migrations.
-  # config.active_record.dump_schema_after_migration = false
 end
 
 if ENV['DISABLE_EMAIL']

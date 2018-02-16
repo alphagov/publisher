@@ -9,14 +9,13 @@ gem 'gds-sso', '~> 13.5'
 gem 'gds-api-adapters', '~> 51.2.0'
 gem 'govspeak', '~> 5.4.0'
 gem 'govuk_admin_template', '4.3.0'
-gem 'govuk_app_config', '~> 0.2.0'
+gem 'govuk_app_config', '~> 1.3.0'
 gem 'govuk_sidekiq', '~> 2.0.0'
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'jquery-ui-rails', '~> 5.0.3'
 gem 'kaminari', '0.17.0'
 gem 'kaminari-mongoid', '1.0.1'
-gem 'logstasher', '1.2.1'
 gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.17.1'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
@@ -36,9 +35,7 @@ gem 'selectize-rails', '0.12.4.1'
 gem 'mongoid', '6.1.0'
 gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
-gem 'statsd-ruby', '~> 1.4.0', require: false
 gem 'uglifier', '4.1.5'
-gem 'unicorn', '5.4.0'
 gem 'whenever', require: false
 
 group :test do
