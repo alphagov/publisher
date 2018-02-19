@@ -62,3 +62,7 @@
   font-weight: bold;
   color: $state-danger-text;
 }
+
+.vertical-drag {
+  cursor: ns-resize;
+}

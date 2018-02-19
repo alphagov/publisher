@@ -7,7 +7,7 @@
       var $inputFields = element.find("input");
       $inputFields.prop('readonly', true);
       $inputFields.wrap('<div class="input-group"></div>');
-      $inputFields.before('<span class="input-group-addon">&updownarrow;</span>');
+      $inputFields.before('<span class="input-group-addon vertical-drag">&updownarrow;</span>');
       $inputFields.after(buildRemoveRelaltedItemEl());
 
       $('.js-list-sortable').sortable();
