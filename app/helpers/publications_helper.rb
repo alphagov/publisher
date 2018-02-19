@@ -10,7 +10,7 @@ module PublicationsHelper
 
   def content_tagger_url(edition)
     content_id = edition.artefact.content_id
-    Plek.current.find("content-tagger") + "/content/#{content_id}"
+    Plek.new.external_url_for("content-tagger") + "/content/#{content_id}"
   end
 
   def enabled_users_select_options(empty_value = true)
