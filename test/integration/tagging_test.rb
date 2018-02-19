@@ -101,18 +101,20 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should 'tag to related content items' do
-      publishing_api_has_expanded_links(
-        'content_id' => @edition.artefact.content_id,
-        'expanded_links' => {
-          'ordered_related_items' => [
-            {
-              'content_id' => 'CONTENT-ID-VAT-RETURNS',
-              'base_path' => '/vat-returns',
-              'internal_name' => 'VAT Returns',
-            }
-          ],
-        },
-      )
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@edition.artefact.content_id}?generate=true"
+      stub_request(:get, expanded_links_url)
+        .to_return(status: 200, body: {
+          'content_id' => @edition.artefact.content_id,
+          'expanded_links' => {
+            'ordered_related_items' => [
+              {
+                'content_id' => 'CONTENT-ID-VAT-RETURNS',
+                'base_path' => '/vat-returns',
+                'internal_name' => 'VAT Returns',
+              }
+            ],
+          },
+        }.to_json)
 
       visit_edition @edition
       switch_tab 'Tagging'
@@ -189,31 +191,33 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "mutate existing tags" do
-      publishing_api_has_expanded_links(
-        "content_id" => @content_id,
-        "expanded_links" => {
-          'topics' => [
-            {
-              'content_id' => 'CONTENT-ID-WELLS',
-              'base_path' => '/topic/oil-and-gas/wells',
-              'internal_name' => 'Oil and Gas / Wells',
-            }
-          ],
-          'mainstream_browse_pages' => [
-            {
-              'content_id' => 'CONTENT-ID-RTI',
-              'base_path' => '/browse/tax/rti',
-              'internal_name' => 'Tax / RTI',
-            }
-          ],
-          'parent' => [
-            {
-              'content_id' => 'CONTENT-ID-RTI',
-              'document_type' => 'mainstream_browse_pages',
-            }
-          ],
-        },
-      )
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@content_id}?generate=true"
+      stub_request(:get, expanded_links_url)
+        .to_return(status: 200, body: {
+          "content_id" => @content_id,
+          "expanded_links" => {
+            'topics' => [
+              {
+                'content_id' => 'CONTENT-ID-WELLS',
+                'base_path' => '/topic/oil-and-gas/wells',
+                'internal_name' => 'Oil and Gas / Wells',
+              }
+            ],
+            'mainstream_browse_pages' => [
+              {
+                'content_id' => 'CONTENT-ID-RTI',
+                'base_path' => '/browse/tax/rti',
+                'internal_name' => 'Tax / RTI',
+              }
+            ],
+            'parent' => [
+              {
+                'content_id' => 'CONTENT-ID-RTI',
+                'document_type' => 'mainstream_browse_pages',
+              }
+            ],
+          },
+        }.to_json)
 
       visit_edition @edition
       switch_tab 'Tagging'
