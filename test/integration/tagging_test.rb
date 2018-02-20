@@ -5,6 +5,7 @@ class TaggingTest < JavascriptIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+    publishing_api_has_lookups({})
 
     @edition = FactoryGirl.create(:guide_edition)
     @artefact = @edition.artefact
@@ -26,7 +27,9 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: ["CONTENT-ID-RTI", "CONTENT-ID-VAT"],
+          ordered_related_items: [],
           parent: [],
         },
         previous_version: 0
@@ -46,7 +49,9 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: ['CONTENT-ID-DISTILL', 'CONTENT-ID-FIELDS'],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: [],
+          ordered_related_items: [],
           parent: [],
         },
         previous_version: 0
@@ -65,11 +70,103 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
+          meets_user_needs: [],
           mainstream_browse_pages: [],
+          ordered_related_items: [],
           parent: [],
         },
         previous_version: 0
       )
+    end
+
+    should 'tag to user needs' do
+      visit_edition @edition
+      switch_tab 'Tagging'
+
+      select 'As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)', from: 'User Needs'
+
+      save_tags_and_assert_success
+      assert_publishing_api_patch_links(
+        @edition.artefact.content_id,
+        links: {
+          topics: [],
+          organisations: [],
+          meets_user_needs: ['CONTENT-ID-USER-NEED'],
+          mainstream_browse_pages: [],
+          ordered_related_items: [],
+          parent: [],
+        },
+        previous_version: 0
+      )
+    end
+
+    should 'tag to related content items' do
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@edition.artefact.content_id}?generate=true"
+      stub_request(:get, expanded_links_url)
+        .to_return(status: 200, body: {
+          'content_id' => @edition.artefact.content_id,
+          'expanded_links' => {
+            'ordered_related_items' => [
+              {
+                'content_id' => 'CONTENT-ID-VAT-RETURNS',
+                'base_path' => '/vat-returns',
+                'internal_name' => 'VAT Returns',
+              }
+            ],
+          },
+        }.to_json)
+
+      visit_edition @edition
+      switch_tab 'Tagging'
+
+      ordered_related_items_fields = all(
+        'input[name="tagging_tagging_update_form[ordered_related_items][]"]'
+      )
+
+      assert ordered_related_items_fields[0].value, '/vat-returns'
+
+      find('.js-path-field').set('/reclaim-vat')
+
+      # Web request that JS makes to check the path is a valid GOV.UK base path
+      publishing_api_has_lookups('/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT')
+      click_on 'Add related item'
+
+      within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[1]' do
+        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/vat-returns')
+      end
+
+      within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[2]' do
+        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/reclaim-vat')
+      end
+
+      publishing_api_has_lookups(
+        '/vat-returns' => 'CONTENT-ID-VAT-RETURNS',
+        '/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT',
+      )
+
+      save_tags_and_assert_success
+      assert_publishing_api_patch_links(
+        @content_id,
+        links: {
+          topics: [],
+          organisations: [],
+          meets_user_needs: [],
+          mainstream_browse_pages: [],
+          ordered_related_items: ['CONTENT-ID-VAT-RETURNS', 'CONTENT-ID-RECLAIM-VAT'],
+          parent: [],
+        },
+        previous_version: 0
+      )
+    end
+
+    should 'show an error state when attempting to tag to an invalid related link' do
+      visit_edition @edition
+      switch_tab 'Tagging'
+
+      find('.js-path-field').set('/a-page-that-does-not-exist')
+      click_on 'Add related item'
+
+      assert page.has_content?('Not a known URL or path on GOV.UK')
     end
 
     should "tag to parent" do
@@ -84,7 +181,9 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: [],
+          ordered_related_items: [],
           parent: ['CONTENT-ID-RTI'],
         },
         previous_version: 0
@@ -92,14 +191,33 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "mutate existing tags" do
-      publishing_api_has_links(
-        "content_id" => @content_id,
-        "links" => {
-          topics: ['CONTENT-ID-WELLS'],
-          mainstream_browse_pages: ['CONTENT-ID-RTI'],
-          parent: ['CONTENT-ID-RTI'],
-        },
-      )
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@content_id}?generate=true"
+      stub_request(:get, expanded_links_url)
+        .to_return(status: 200, body: {
+          "content_id" => @content_id,
+          "expanded_links" => {
+            'topics' => [
+              {
+                'content_id' => 'CONTENT-ID-WELLS',
+                'base_path' => '/topic/oil-and-gas/wells',
+                'internal_name' => 'Oil and Gas / Wells',
+              }
+            ],
+            'mainstream_browse_pages' => [
+              {
+                'content_id' => 'CONTENT-ID-RTI',
+                'base_path' => '/browse/tax/rti',
+                'internal_name' => 'Tax / RTI',
+              }
+            ],
+            'parent' => [
+              {
+                'content_id' => 'CONTENT-ID-RTI',
+                'document_type' => 'mainstream_browse_pages',
+              }
+            ],
+          },
+        }.to_json)
 
       visit_edition @edition
       switch_tab 'Tagging'
@@ -117,7 +235,9 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: ['CONTENT-ID-FIELDS', 'CONTENT-ID-WELLS'],
           organisations: [],
+          meets_user_needs: [],
           mainstream_browse_pages: ['CONTENT-ID-RTI', 'CONTENT-ID-VAT'],
+          ordered_related_items: [],
           parent: ['CONTENT-ID-CAPITAL'],
         },
         previous_version: 0

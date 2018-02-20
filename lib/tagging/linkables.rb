@@ -20,6 +20,10 @@ module Tagging
       @organisations ||= for_document_type('organisation')
     end
 
+    def meets_user_needs
+      @meets_user_needs ||= for_document_type('need')
+    end
+
     def mainstream_browse_pages
       @mainstream_browse_pages ||= for_nested_document_type('mainstream_browse_page')
     end
