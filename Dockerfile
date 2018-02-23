@@ -1,9 +1,9 @@
 FROM ruby:2.4.2
 RUN apt-get update -qq && apt-get upgrade -y
-
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y build-essential nodejs && apt-get clean
 RUN npm install -g phantomjs-prebuilt@2 --unsafe-perm
+RUN gem install foreman
 
 ENV GOVUK_APP_NAME publisher
 ENV MONGODB_URI mongodb://mongo/govuk_content_development
@@ -24,4 +24,4 @@ RUN GOVUK_APP_DOMAIN=www.gov.uk RAILS_ENV=production bundle exec rails assets:pr
 
 HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
 
-CMD bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p $PORT -b '0.0.0.0'"
+CMD foreman run web
