@@ -340,7 +340,10 @@ private
   end
 
   def tagging_update_form
-    Tagging::TaggingUpdateForm.build_from_publishing_api(@resource.artefact.content_id)
+    Tagging::TaggingUpdateForm.build_from_publishing_api(
+      @resource.artefact.content_id,
+      @resource.artefact.language,
+    )
   end
 
   def attempted_activity_params

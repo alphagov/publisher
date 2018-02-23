@@ -6,8 +6,8 @@ module Tagging
 
     validate :ordered_related_items_paths_exist
 
-    def self.build_from_publishing_api(content_id)
-      link_set = LinkSet.find(content_id)
+    def self.build_from_publishing_api(content_id, locale)
+      link_set = LinkSet.find(content_id, locale)
 
       new(
         content_id: content_id,

@@ -2,8 +2,12 @@ module Tagging
   class LinkSet
     attr_reader :links, :expanded_links, :version
 
-    def self.find(content_id)
-      link_set = Services.publishing_api.get_expanded_links(content_id, generate: true)
+    def self.find(content_id, locale)
+      link_set = Services.publishing_api.get_expanded_links(
+        content_id,
+        locale: locale,
+        generate: true
+      )
       new(link_set.to_h)
     rescue GdsApi::HTTPNotFound
       new({})
