@@ -1,7 +1,6 @@
 class LinkCheckerApiController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
-  skip_before_action :require_signin_permission!
   before_action :verify_signature
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :render_no_content
