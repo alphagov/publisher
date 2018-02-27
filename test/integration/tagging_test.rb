@@ -101,7 +101,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should 'tag to related content items' do
-      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@edition.artefact.content_id}?generate=true"
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@edition.artefact.content_id}?locale=#{@edition.artefact.language}&generate=true"
       stub_request(:get, expanded_links_url)
         .to_return(status: 200, body: {
           'content_id' => @edition.artefact.content_id,
@@ -191,7 +191,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "mutate existing tags" do
-      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@content_id}?generate=true"
+      expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@content_id}?locale=#{@edition.artefact.language}&generate=true"
       stub_request(:get, expanded_links_url)
         .to_return(status: 200, body: {
           "content_id" => @content_id,
