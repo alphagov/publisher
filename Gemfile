@@ -35,7 +35,7 @@ gem 'selectize-rails', '0.12.4.1'
 gem 'mongoid', '6.1.0'
 gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
-gem 'uglifier', '4.1.5'
+gem 'uglifier', '4.1.6'
 gem 'whenever', require: false
 
 group :test do
