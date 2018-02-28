@@ -51,7 +51,7 @@ group :test do
   gem 'shoulda', '3.5.0'
   gem 'simplecov', '~> 0.15.1', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
-  gem "timecop", '0.8.1'
+  gem "timecop", '0.9.1'
   gem 'webmock', '~> 3.3.0'
 end
 
