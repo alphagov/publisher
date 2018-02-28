@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include GDS::SSO::ControllerMethods
 
   before_action :authenticate_user!
-  before_action :require_signin_permission!
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
 
