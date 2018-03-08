@@ -1,7 +1,7 @@
 start_page_slug: log-in-file-self-assessment-tax-return
 locale: en
 choose_sign_in:
-  title: Prove your identity to continue
+  title: How do you want to sign in?
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
@@ -31,4 +31,4 @@ create_new_account:
 
     *[UTR]: Unique Taxpayer Reference
 update_type: minor
-change_note: Corrected the section 'If you're already registered'.
+change_note: Updated the wording of the page title to be sign-in focused (baseline test for Verify).

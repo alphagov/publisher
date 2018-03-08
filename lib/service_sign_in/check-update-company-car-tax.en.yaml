@@ -1,13 +1,13 @@
 start_page_slug: update-company-car-details
 locale: en
 choose_sign_in:
-  title: Prove your identity to continue
+  title: How do you want to sign in?
   slug: prove-identity
   options:
-    - text: Use Government Gateway
+    - text: Sign in with Government Gateway
       url: https://www.tax.service.gov.uk/paye/company-car/start-government-gateway
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
-    - text: Use GOV.UK Verify
+    - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/paye/company-car/start-verify
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Create an account
@@ -45,5 +45,5 @@ create_new_account:
     ## Personal tax account
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
-update_type: major
-change_note: First published.
+update_type: minor
+change_note: Updated the wording of the sign-in options (baseline test for Verify).
