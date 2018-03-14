@@ -24,7 +24,7 @@ gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
 gem 'plek', '2.1.1'
-gem 'rails', '5.0.3'
+gem 'rails', '5.1.5'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
