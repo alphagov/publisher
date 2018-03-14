@@ -1,8 +1,8 @@
-start_page_slug: personal-tax-account
-locale: en
+start_page_slug: cyfrif-treth-personol
+locale: cy
 choose_sign_in:
   title: Prove your identity to continue
-  slug: prove-identity
+  slug: profi-pwy-ydw-i
   options:
     - text: Use Government Gateway
       url: https://www.tax.service.gov.uk/personal-account/start-government-gateway
@@ -11,10 +11,10 @@ choose_sign_in:
       url: https://www.tax.service.gov.uk/personal-account/start-verify
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Create an account
-      slug: create-account
+      slug: cofrestru-hunan-asesiad
 create_new_account:
   title: Create an account
-  slug: create-account
+  slug: cofrestru-hunan-asesiad
   body: |
     To use this service, you need to create either a Government Gateway or GOV.UK Verify account. These are used to help fight identity theft.
 
