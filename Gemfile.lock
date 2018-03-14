@@ -111,8 +111,8 @@ GEM
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
-    formtastic (2.3.0)
-      actionpack (>= 3.0)
+    formtastic (3.1.5)
+      actionpack (>= 3.2.13)
     formtastic-bootstrap (3.0.0)
       formtastic (>= 2.2)
     gds-api-adapters (52.1.0)
@@ -463,7 +463,7 @@ DEPENDENCIES
   diffy (= 3.2.0)
   erubis
   factory_bot_rails
-  formtastic (= 2.3.0)
+  formtastic (= 3.1.5)
   formtastic-bootstrap (= 3.0.0)
   gds-api-adapters (~> 52)
   gds-sso (~> 13.6)
