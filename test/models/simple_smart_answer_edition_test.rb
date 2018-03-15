@@ -2,11 +2,11 @@ require "test_helper"
 
 class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   should "be created with valid nodes" do
-    edition = FactoryGirl.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+    edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
     edition.body = "This is a simple smart answer."
 
     edition.nodes.build(slug: "question1", title: "You approach two locked doors. Which do you choose?", kind: "question", order: 1)
@@ -22,7 +22,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "copy the body and nodes when cloning an edition" do
-    edition = FactoryGirl.create(:simple_smart_answer_edition,
+    edition = FactoryBot.create(:simple_smart_answer_edition,
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published")
@@ -45,7 +45,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "not copy nodes when new edition is not a smart answer" do
-    edition = FactoryGirl.create(:simple_smart_answer_edition,
+    edition = FactoryBot.create(:simple_smart_answer_edition,
       panopticon_id: @artefact.id,
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published")
@@ -61,7 +61,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "select the first node as the starting node" do
-    edition = FactoryGirl.create(:simple_smart_answer_edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition)
     edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
     edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 2)
     edition.nodes.build(slug: "foo", title: "Outcome 1.", order: 3, kind: "outcome")
@@ -71,7 +71,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "create nodes with nested attributes" do
-    edition = FactoryGirl.create(:simple_smart_answer_edition, nodes_attributes: [
+    edition = FactoryBot.create(:simple_smart_answer_edition, nodes_attributes: [
       { slug: "question1", title: "Question 1", kind: "question", order: 1 },
       { slug: "foo", title: "Outcome 1", kind: "outcome", order: 2 },
     ])
@@ -81,7 +81,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "destroy nodes using nested attributes" do
-    edition = FactoryGirl.create(:simple_smart_answer_edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition)
     edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
     edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
     edition.save!
@@ -105,7 +105,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
     context "with default text" do
       setup do
-        edition = FactoryGirl.build(:simple_smart_answer_edition, @edition_attributes)
+        edition = FactoryBot.build(:simple_smart_answer_edition, @edition_attributes)
         edition.save!
       end
 
@@ -120,7 +120,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     context "when button text changes" do
       setup do
-        edition = FactoryGirl.build(
+        edition = FactoryBot.build(
           :simple_smart_answer_edition,
           @edition_attributes.merge(start_button_text: "Click to start")
         )
@@ -140,7 +140,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   context "update_attributes method" do
     setup do
-      @edition = FactoryGirl.create(:simple_smart_answer_edition)
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
       @edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
       @edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
       @edition.nodes.first.options.build(

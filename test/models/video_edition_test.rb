@@ -2,11 +2,11 @@ require "test_helper"
 
 class VideoEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   should "have correct extra fields" do
-    v = FactoryGirl.build(:video_edition, panopticon_id: @artefact.id)
+    v = FactoryBot.build(:video_edition, panopticon_id: @artefact.id)
     v.video_url = "http://www.youtube.com/watch?v=qySFp3qnVmM"
     v.video_summary = "Coke smoothie"
     v.body = "Description of video"
@@ -27,7 +27,7 @@ class VideoEditionTest < ActiveSupport::TestCase
 
   context "whole_body" do
     should "combine the video_summary, video_url and body" do
-      v = FactoryGirl.build(:video_edition,
+      v = FactoryBot.build(:video_edition,
                             panopticon_id: @artefact.id,
                             video_summary: "Coke smoothie",
                             video_url: "http://www.youtube.com/watch?v=qySFp3qnVmM",
@@ -37,7 +37,7 @@ class VideoEditionTest < ActiveSupport::TestCase
     end
 
     should "cope with a field being nil" do
-      v = FactoryGirl.build(:video_edition,
+      v = FactoryBot.build(:video_edition,
                             panopticon_id: @artefact.id,
                             video_summary: nil,
                             video_url: "http://www.youtube.com/watch?v=qySFp3qnVmM",

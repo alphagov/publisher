@@ -30,7 +30,7 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
   end
 
   def create_edition_with_link_check_report
-    FactoryGirl.create(:edition, :with_link_check_report,
+    FactoryBot.create(:edition, :with_link_check_report,
                                  batch_id: 1,
                                  link_uris: ['http://www.example.com', 'http://www.gov.com'])
   end

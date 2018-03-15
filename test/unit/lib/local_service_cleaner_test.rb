@@ -34,7 +34,7 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
 
       context 'but lgsl used by local transaction edition' do
         setup do
-          @edition = FactoryGirl.create(
+          @edition = FactoryBot.create(
             :local_transaction_edition,
             lgsl_code: 9012,
             lgil_code: 1

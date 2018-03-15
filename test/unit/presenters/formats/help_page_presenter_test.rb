@@ -8,11 +8,11 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(:help_page_edition, panopticon_id: artefact.id)
+    @_edition ||= FactoryBot.create(:help_page_edition, panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "help_page", slug: "help/cookies")
+    @_artefact ||= FactoryBot.create(:artefact, kind: "help_page", slug: "help/cookies")
   end
 
   def result

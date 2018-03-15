@@ -9,7 +9,7 @@ end
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   test "should convert to string using name by preference" do
@@ -28,11 +28,11 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return enabled users" do
-    disabled = FactoryGirl.create(:user, disabled: true)
+    disabled = FactoryBot.create(:user, disabled: true)
 
-    FactoryGirl.create(:user).unset(:disabled)
-    FactoryGirl.create(:user, disabled: false)
-    FactoryGirl.create(:user, disabled: nil)
+    FactoryBot.create(:user).unset(:disabled)
+    FactoryBot.create(:user, disabled: false)
+    FactoryBot.create(:user, disabled: nil)
 
     assert_equal 3, User.enabled.count
     refute User.enabled.include? disabled
@@ -119,8 +119,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "Edition becomes assigned to user when user is assigned an edition" do
-    boss_user = FactoryGirl.create(:user, name: "Mat")
-    worker_user = FactoryGirl.create(:user, name: "Grunt")
+    boss_user = FactoryBot.create(:user, name: "Mat")
+    worker_user = FactoryBot.create(:user, name: "Grunt")
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)
@@ -131,8 +131,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "Edition can be unassigned" do
-    boss_user = FactoryGirl.create(:user, name: "Mat")
-    worker_user = FactoryGirl.create(:user, name: "Grunt")
+    boss_user = FactoryBot.create(:user, name: "Mat")
+    worker_user = FactoryBot.create(:user, name: "Grunt")
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)

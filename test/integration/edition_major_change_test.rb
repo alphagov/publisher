@@ -12,7 +12,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
   end
 
   test "doesn't show change note until an edition has been published" do
-    edition = FactoryGirl.create(:answer_edition)
+    edition = FactoryBot.create(:answer_edition)
     visit_edition edition
     refute page.has_field?("edition_change_note")
     refute page.has_field?("edition_major_change")
@@ -21,7 +21,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
   with_and_without_javascript do
     context "change note fields" do
       setup do
-        @edition = FactoryGirl.create(:answer_edition, state: 'published')
+        @edition = FactoryBot.create(:answer_edition, state: 'published')
       end
 
       should "show change note fields once an edition has been published" do

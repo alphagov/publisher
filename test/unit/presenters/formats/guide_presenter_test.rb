@@ -8,11 +8,11 @@ class GuidePresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(:guide_edition, panopticon_id: artefact.id)
+    @_edition ||= FactoryBot.create(:guide_edition, panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "guide", slug: "national-curriculum")
+    @_artefact ||= FactoryBot.create(:artefact, kind: "guide", slug: "national-curriculum")
   end
 
   def add_part(num)

@@ -6,7 +6,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
   setup do
     stub_linkables
-    FactoryGirl.create(:user)
+    FactoryBot.create(:user)
     stub_mapit_areas_requests(Plek.current.find('imminence'))
     stub_holidays_used_by_fact_check
   end
@@ -25,11 +25,11 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
   def create_artefact_of_kind(kind)
     if kind == 'help_page'
-      FactoryGirl.create(:artefact, slug: "help/foo", kind: kind)
+      FactoryBot.create(:artefact, slug: "help/foo", kind: kind)
     elsif kind == 'completed_transaction'
-      FactoryGirl.create(:artefact, slug: "done/foo", kind: kind)
+      FactoryBot.create(:artefact, slug: "done/foo", kind: kind)
     else
-      FactoryGirl.create(:artefact, kind: kind)
+      FactoryBot.create(:artefact, kind: kind)
     end
   end
 
@@ -54,7 +54,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       should "be able to convert #{from} into #{to}" do
         factory_name = (from + "_edition").to_sym
         artefact = create_artefact_of_kind(from)
-        edition = FactoryGirl.create(factory_name, state: 'published', panopticon_id: artefact.id)
+        edition = FactoryBot.create(factory_name, state: 'published', panopticon_id: artefact.id)
         sample_parts.each { |part| edition.parts.create(part) } if edition.respond_to?(:parts)
 
         visit "/editions/#{edition.to_param}/admin"

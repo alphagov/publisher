@@ -6,7 +6,7 @@ class EditionTabTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @guide = FactoryGirl.create(:guide_edition, state: 'draft')
+    @guide = FactoryBot.create(:guide_edition, state: 'draft')
   end
 
   def visit_tab(tab)

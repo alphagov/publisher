@@ -5,7 +5,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     @user = User.create uid: "123", name: "Grandmaster Flash"
     @other_user = User.create uid: "321", name: "Furious Five"
 
-    @artefact = FactoryGirl.create(:artefact, name: "Childcare", slug: "childcare")
+    @artefact = FactoryBot.create(:artefact, name: "Childcare", slug: "childcare")
   end
 
   def fact_check_and_publish(edition = nil)
@@ -20,7 +20,7 @@ class EditionCloneTest < ActiveSupport::TestCase
   test "should clone a published GuideEdition to an AnswerEdition" do
     stub_register_published_content
 
-    guide_edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    guide_edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     guide_edition.save
 
     fact_check_and_publish(guide_edition)
@@ -36,7 +36,7 @@ class EditionCloneTest < ActiveSupport::TestCase
   test "should be able to switch from an AnswerEdition to a GuideEdition" do
     stub_register_published_content
 
-    answer_edition = FactoryGirl.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    answer_edition = FactoryBot.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     answer_edition.save
 
     fact_check_and_publish(answer_edition)
@@ -52,7 +52,7 @@ class EditionCloneTest < ActiveSupport::TestCase
   test "should convert GuideEdition with parts into an AnswerEdition" do
     stub_register_published_content
 
-    guide_edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    guide_edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     guide_edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
     guide_edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
     guide_edition.save
@@ -72,7 +72,7 @@ class EditionCloneTest < ActiveSupport::TestCase
   test "should convert AnswerEdition into a GuideEdition" do
     stub_register_published_content
 
-    answer_edition = FactoryGirl.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    answer_edition = FactoryBot.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     answer_edition.body = "Bleep, bloop, blop"
     answer_edition.save
 

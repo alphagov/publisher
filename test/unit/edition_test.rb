@@ -14,7 +14,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   should "raise an exception when publish_anonymously! fails to publish" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, state: "ready")
+    edition = FactoryBot.create(:guide_edition_with_two_parts, state: "ready")
     # simulate validation error causing failure to publish anonymously
     edition.parts.first.update_attribute(:body, "[register your vehicle](registering-an-imported-vehicle)")
 
@@ -25,19 +25,19 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#auth_bypass_id" do
     should "return a deterministic hex id if edition is in fact-check state" do
-      edition = FactoryGirl.create(:edition, state: 'fact_check', id: 123)
+      edition = FactoryBot.create(:edition, state: 'fact_check', id: 123)
       edition.artefact.update_attribute(:kind, 'help_page')
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
     should "return a deterministic hex id if edition is in fact-check-received state" do
-      edition = FactoryGirl.create(:edition, state: 'fact_check_received', id: 123)
+      edition = FactoryBot.create(:edition, state: 'fact_check_received', id: 123)
       edition.artefact.update_attribute(:kind, 'help_page')
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
     should "return a deterministic hex id if edition is in ready state" do
-      edition = FactoryGirl.create(:edition, state: 'ready', id: 123)
+      edition = FactoryBot.create(:edition, state: 'ready', id: 123)
       edition.artefact.update_attribute(:kind, 'help_page')
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end

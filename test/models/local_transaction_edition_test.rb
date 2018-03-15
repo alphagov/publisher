@@ -7,7 +7,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
   NONEXISTENT = 999
 
   def setup
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   test "should be a transaction search format" do

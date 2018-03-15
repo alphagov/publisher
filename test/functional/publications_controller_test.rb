@@ -8,16 +8,16 @@ class PublicationsControllerTest < ActionController::TestCase
   context "#show" do
     context "with existing edition" do
       should "redirect to the latest edition when requesting a panopticon_id" do
-        artefact = FactoryGirl.create(:artefact,
+        artefact = FactoryBot.create(:artefact,
           slug: "hedgehog-topiary",
           kind: "guide",
           name: "Foo bar",
           owning_app: "publisher",
                                      )
 
-        FactoryGirl.create(:edition, panopticon_id: artefact.id, state: 'archived', version_number: 1)
-        FactoryGirl.create(:edition, panopticon_id: artefact.id, state: 'published', version_number: 2)
-        latest_edition = FactoryGirl.create(:edition, panopticon_id: artefact.id, state: 'draft', version_number: 3)
+        FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'archived', version_number: 1)
+        FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'published', version_number: 2)
+        latest_edition = FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'draft', version_number: 3)
 
         get :show, params: { id: artefact.id }
 
@@ -27,7 +27,7 @@ class PublicationsControllerTest < ActionController::TestCase
 
     context "without existing edition" do
       setup do
-        @artefact = FactoryGirl.create(
+        @artefact = FactoryBot.create(
           :artefact,
           slug: "hedgehog-topiary",
           kind: "guide",
@@ -51,7 +51,7 @@ class PublicationsControllerTest < ActionController::TestCase
     end
 
     should "show a page when saving publication fails" do
-      artefact = FactoryGirl.create(
+      artefact = FactoryBot.create(
         :artefact,
         slug: "hedgehog-topiary",
         kind: "local_transaction",

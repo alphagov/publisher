@@ -9,7 +9,7 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
   test "govuk_request_id is passed downstream across the worker boundary on publish" do
     Sidekiq::Testing.fake! do
       inbound_headers = { "HTTP_GOVUK_REQUEST_ID" => "12345-67890" }
-      artefact = FactoryGirl.create(:artefact)
+      artefact = FactoryBot.create(:artefact)
 
       # Create an edition.
       post "/editions",

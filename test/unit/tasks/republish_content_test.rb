@@ -3,9 +3,9 @@ require "rake"
 
 class RepublishContentTest < ActiveSupport::TestCase
   setup do
-    @published_edition = FactoryGirl.create(:answer_edition, state: 'published')
-    draft_artefact = FactoryGirl.create(:draft_artefact, kind: 'help_page', slug: 'help/me')
-    @draft_edition = FactoryGirl.create(:help_page_edition, state: 'draft', panopticon_id: draft_artefact.id)
+    @published_edition = FactoryBot.create(:answer_edition, state: 'published')
+    draft_artefact = FactoryBot.create(:draft_artefact, kind: 'help_page', slug: 'help/me')
+    @draft_edition = FactoryBot.create(:help_page_edition, state: 'draft', panopticon_id: draft_artefact.id)
 
     $stdout.stubs(puts: '')
   end

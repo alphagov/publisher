@@ -9,7 +9,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow marking an edition as in beta" do
-      edition = FactoryGirl.create(:edition)
+      edition = FactoryBot.create(:edition)
       visit_edition edition
 
       refute find('#edition_in_beta').checked?
@@ -24,7 +24,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
     end
 
     should "allow marking an edition as not in beta" do
-      edition = FactoryGirl.create(:edition, in_beta: true)
+      edition = FactoryBot.create(:edition, in_beta: true)
       visit_edition edition
 
       assert find('#edition_in_beta').checked?

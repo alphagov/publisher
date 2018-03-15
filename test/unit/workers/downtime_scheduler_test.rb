@@ -53,7 +53,7 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
 
   context "#perform" do
     should "call the PublishingApiWorkflowBypassPublisher with the associated artefact" do
-      downtime = FactoryGirl.create(:downtime)
+      downtime = FactoryBot.create(:downtime)
       artefact = downtime.artefact
 
       PublishingApiWorkflowBypassPublisher
@@ -65,7 +65,7 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
 
     context "when the display window has ended" do
       should "remove the downtime" do
-        downtime = FactoryGirl.create(:downtime)
+        downtime = FactoryBot.create(:downtime)
         PublishingApiWorkflowBypassPublisher.expects(:call)
 
         Timecop.freeze(downtime.end_time + 1.minute) do

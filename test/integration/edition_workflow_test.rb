@@ -9,10 +9,10 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @alice = FactoryGirl.create(:user, name: "Alice")
-    @bob = FactoryGirl.create(:user, name: "Bob")
+    @alice = FactoryBot.create(:user, name: "Alice")
+    @bob = FactoryBot.create(:user, name: "Bob")
 
-    @guide = FactoryGirl.create(:guide_edition)
+    @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
   end
 
@@ -32,7 +32,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "doesn't show disabled users in 'Assigned to' select box" do
-    disabled_user = FactoryGirl.create(:disabled_user)
+    disabled_user = FactoryBot.create(:disabled_user)
 
     visit_edition guide
 
@@ -369,7 +369,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "cannot create a new edition for a retired format" do
-    FactoryGirl.create(:video_edition, state: 'archived')
+    FactoryBot.create(:video_edition, state: 'archived')
 
     visit '/'
     select "Video", from: "Format"
@@ -387,14 +387,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should link to a newer sibling" do
-    artefact = FactoryGirl.create(:artefact)
-    old_edition = FactoryGirl.create(
+    artefact = FactoryBot.create(:artefact)
+    old_edition = FactoryBot.create(
       :guide_edition,
       panopticon_id: artefact.id,
       state: "published",
       version_number: 1
     )
-    new_edition = FactoryGirl.create(
+    new_edition = FactoryBot.create(
       :guide_edition,
       panopticon_id: artefact.id,
       state: "draft",
@@ -426,8 +426,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should display a retired message if a format has been retired" do
-    artefact = FactoryGirl.create(:artefact)
-    edition = FactoryGirl.create(
+    artefact = FactoryBot.create(:artefact)
+    edition = FactoryBot.create(
       :video_edition,
       panopticon_id: artefact.id,
       state: "archived",

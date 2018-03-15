@@ -2,11 +2,11 @@ require "test_helper"
 
 class EditionTest < ActiveSupport::TestCase
   def setup
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   def template_answer(version_number = 1)
-    artefact = FactoryGirl.create(:artefact,
+    artefact = FactoryBot.create(:artefact,
         kind: "answer",
         name: "Foo bar",
         owning_app: "publisher")
@@ -46,11 +46,11 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "it is not in beta by default" do
-    refute FactoryGirl.build(:guide_edition).in_beta?
+    refute FactoryBot.build(:guide_edition).in_beta?
   end
 
   test "it can be in beta" do
-    assert FactoryGirl.build(:guide_edition, in_beta: true).in_beta?
+    assert FactoryBot.build(:guide_edition, in_beta: true).in_beta?
   end
 
   test "it should give a friendly (legacy supporting) description of its format" do
@@ -59,48 +59,48 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "it should be able to find its siblings" do
-    artefact2 = FactoryGirl.create(:artefact)
-    g1 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
-    g2 = FactoryGirl.create(:guide_edition, panopticon_id: artefact2.id, version_number: 1)
-    g3 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
+    artefact2 = FactoryBot.create(:artefact)
+    g1 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
+    g2 = FactoryBot.create(:guide_edition, panopticon_id: artefact2.id, version_number: 1)
+    g3 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
     assert_equal [], g2.siblings.to_a
     assert_equal [g3], g1.siblings.to_a
   end
 
   test "it should be able to find its previous siblings" do
-    artefact2 = FactoryGirl.create(:artefact)
-    g1 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
-    FactoryGirl.create(:guide_edition, panopticon_id: artefact2.id, version_number: 1)
-    g3 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
+    artefact2 = FactoryBot.create(:artefact)
+    g1 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
+    FactoryBot.create(:guide_edition, panopticon_id: artefact2.id, version_number: 1)
+    g3 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
 
     assert_equal [], g1.previous_siblings.to_a
     assert_equal [g1], g3.previous_siblings.to_a
   end
 
   test "subsequent and previous siblings are in order" do
-    g4 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 4)
-    g2 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
-    g1 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
-    g3 = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, version_number: 3)
+    g4 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 4)
+    g2 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 2)
+    g1 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 1)
+    g3 = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, version_number: 3)
 
     assert_equal [g2, g3, g4], g1.subsequent_siblings.to_a
     assert_equal [g1, g2, g3], g4.previous_siblings.to_a
   end
 
   test "A programme should have default parts" do
-    programme = FactoryGirl.create(:programme_edition, panopticon_id: @artefact.id)
+    programme = FactoryBot.create(:programme_edition, panopticon_id: @artefact.id)
     assert_equal programme.parts.count, ProgrammeEdition::DEFAULT_PARTS.length
   end
 
   context "link validation" do
     should "not be done when the edition is created" do
       assert_difference 'AnswerEdition.count', 1 do
-        FactoryGirl.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
+        FactoryBot.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
       end
     end
 
     should "be done when an existing edition is updated" do
-      edition = FactoryGirl.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
+      edition = FactoryBot.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
 
       edition.body += "some update"
 
@@ -109,7 +109,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "allow archiving an edition with invalid links" do
-      edition = FactoryGirl.create(:answer_edition, state: 'published', body: 'abc [foobar](http://foobar.com "hover")')
+      edition = FactoryBot.create(:answer_edition, state: 'published', body: 'abc [foobar](http://foobar.com "hover")')
 
       assert_difference 'AnswerEdition.archived.count', 1 do
         edition.archive!
@@ -141,7 +141,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "reviewer cannot be the assignee" do
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
     edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123,
                           state: "in_review", review_requested_at: Time.zone.now, assigned_to: user)
     edition.reviewer = user.name
@@ -150,7 +150,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "it should build a clone" do
-    edition = FactoryGirl.create(:guide_edition,
+    edition = FactoryBot.create(:guide_edition,
                                   state: "published",
                                   panopticon_id: @artefact.id,
                                   version_number: 1,
@@ -161,7 +161,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "cloning can only occur from a published edition" do
-    edition = FactoryGirl.create(:guide_edition,
+    edition = FactoryBot.create(:guide_edition,
                                   panopticon_id: @artefact.id,
                                   version_number: 1)
     assert_raise(RuntimeError) do
@@ -170,12 +170,12 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "cloning can only occur from a published edition with no subsequent in progress siblings" do
-    edition = FactoryGirl.create(:guide_edition,
+    edition = FactoryBot.create(:guide_edition,
                                   panopticon_id: @artefact.id,
                                   state: "published",
                                   version_number: 1)
 
-    FactoryGirl.create(:guide_edition,
+    FactoryBot.create(:guide_edition,
                         panopticon_id: @artefact.id,
                         state: "draft",
                         version_number: 2)
@@ -186,11 +186,11 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "cloning from an earlier edition should give you a safe version number" do
-    edition = FactoryGirl.create(:guide_edition,
+    edition = FactoryBot.create(:guide_edition,
                                   state: "published",
                                   panopticon_id: @artefact.id,
                                   version_number: 1)
-    FactoryGirl.create(:guide_edition,
+    FactoryBot.create(:guide_edition,
                         state: "published",
                         panopticon_id: @artefact.id,
                         version_number: 2)
@@ -207,7 +207,7 @@ class EditionTest < ActiveSupport::TestCase
       # This is OK because when Publisher saves the clone, it already skips
       # validations. The user will then be required to populate those values
       # before they save the edition again.
-      source_edition = FactoryGirl.create(:edition, _type: source_class.to_s, state: "published")
+      source_edition = FactoryBot.create(:edition, _type: source_class.to_s, state: "published")
 
       assert_nothing_raised do
         source_edition.build_clone(destination_class)
@@ -216,7 +216,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from GuideEdition into AnswerEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :guide_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -235,7 +235,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from LicenceEdition into AnswerEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :licence_edition,
       state: "published",
       panopticon_id: @artefact.id,
@@ -258,7 +258,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from TransactionEdition into AnswerEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :transaction_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -278,7 +278,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from SimpleSmartAnswerEdition into AnswerEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :simple_smart_answer_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -296,7 +296,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from AnswerEdition into TransactionEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :answer_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -315,7 +315,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from AnswerEdition into SimpleSmartAnswerEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :answer_edition,
       state: "published",
       panopticon_id: @artefact.id,
@@ -334,7 +334,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from GuideEdition into TransactionEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :guide_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -353,7 +353,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "Cloning from AnswerEdition into GuideEdition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :answer_edition,
         state: "published",
         panopticon_id: @artefact.id,
@@ -398,7 +398,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should create a publication based on data imported from panopticon" do
-    artefact = FactoryGirl.create(:artefact,
+    artefact = FactoryBot.create(:artefact,
         slug: "foo-bar",
         kind: "answer",
         name: "Foo bar",
@@ -416,13 +416,13 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should not change edition metadata if archived" do
-    artefact = FactoryGirl.create(:artefact,
+    artefact = FactoryBot.create(:artefact,
         slug: "foo-bar",
         kind: "answer",
         name: "Foo bar",
         owning_app: "publisher",)
 
-    guide = FactoryGirl.create(:guide_edition,
+    guide = FactoryBot.create(:guide_edition,
       panopticon_id: artefact.id,
       title: "Original title",
       slug: "original-title",
@@ -437,10 +437,10 @@ class EditionTest < ActiveSupport::TestCase
     stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js}).
         to_return(status: 200, body: "{}", headers: {})
 
-    a, b = 2.times.map { FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id) }
+    a, b = 2.times.map { FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map { |s|
-      FactoryGirl.create(:user, name: s)
+      FactoryBot.create(:user, name: s)
     }
     alice.assign(a, bob)
     alice.assign(a, charlie)
@@ -481,7 +481,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "deleting a newer draft of a published edition removes sibling information" do
-    user1 = FactoryGirl.create(:user)
+    user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update_attribute(:state, "published")
     second_edition = edition.build_clone
@@ -497,7 +497,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "the latest edition should remove sibling_in_progress details if it is present" do
-    user1 = FactoryGirl.create(:user)
+    user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update_attribute(:state, "published")
 
@@ -509,7 +509,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should also delete associated artefact" do
-    user1 = FactoryGirl.create(:user)
+    user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
 
     assert_difference "Artefact.count", -1 do
@@ -518,7 +518,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should not delete associated artefact if there are other editions of this publication" do
-    user1 = FactoryGirl.create(:user)
+    user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update_attribute(:state, "published")
 
@@ -535,10 +535,10 @@ class EditionTest < ActiveSupport::TestCase
     stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js}).
         to_return(status: 200, body: "{}", headers: {})
 
-    a, b = 2.times.map { |_i| FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id) }
+    a, b = 2.times.map { |_i| FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map { |s|
-      FactoryGirl.create(:user, name: s)
+      FactoryBot.create(:user, name: s)
     }
 
     alice.assign(a, bob)
@@ -556,7 +556,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "given multiple editions, can return the most recent published edition" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, slug: "hedgehog-topiary", state: "published")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, slug: "hedgehog-topiary", state: "published")
 
     second_edition = edition.build_clone
     edition.update_attribute(:state, "archived")
@@ -569,19 +569,19 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "editions, by default, return their title for use in the admin-interface lists of publications" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     assert_equal edition.title, edition.admin_list_title
   end
 
   test "editions can have notes stored for the history tab" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     user = User.new
     assert edition.new_action(user, "note", comment: "Something important")
   end
 
   test "status should not be affected by notes" do
     user = User.create(name: "bob")
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.new_action(user, Action::APPROVE_REVIEW)
     edition.new_action(user, Action::NOTE, comment: "Something important")
 
@@ -589,32 +589,32 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should have no assignee by default" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     assert_nil edition.assigned_to
   end
 
   test "should be assigned to the last assigned recipient" do
-    alice = FactoryGirl.create(:user, name: "alice")
-    bob = FactoryGirl.create(:user, name: "bob")
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    alice = FactoryBot.create(:user, name: "alice")
+    bob = FactoryBot.create(:user, name: "bob")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     alice.assign(edition, bob)
     assert_equal bob, edition.assigned_to
   end
 
   test "new edition should have an incremented version number" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     new_edition = edition.build_clone
     assert_equal edition.version_number + 1, new_edition.version_number
   end
 
   test "new edition should have an empty list of actions" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     new_edition = edition.build_clone
     assert_equal [], new_edition.actions
   end
 
   test "new editions should have the same text when created" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
+    edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
     new_edition = edition.build_clone
     original_text = edition.parts.map(&:body).join(" ")
     new_text = new_edition.parts.map(&:body).join(" ")
@@ -622,7 +622,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "changing text in a new edition should not change text in old edition" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
+    edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "published")
     new_edition = edition.build_clone
     new_edition.parts.first.body = "Some other version text"
     original_text = edition.parts.map(&:body).join(" ")
@@ -631,18 +631,18 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a new guide has no published edition" do
-    guide = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    guide = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     assert_nil GuideEdition.where(state: "published", panopticon_id: guide.panopticon_id).first
   end
 
   test "an edition of a guide can be published" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.publish
     assert_not_nil GuideEdition.where(state: "published", panopticon_id: edition.panopticon_id).first
   end
 
   test "should archive older editions, even if there are validation errors, when a new edition is published" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "ready")
 
     user = User.create name: "bob"
     publish(user, edition, "First publication")
@@ -674,8 +674,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "when an edition is published, publish_at is cleared" do
-    user = FactoryGirl.create(:user)
-    edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+    user = FactoryBot.create(:user)
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing)
 
     publish(user, edition, "First publication")
 
@@ -683,7 +683,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "edition can return latest status action of a specified request type" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
     user = User.create(name: "George")
     request_review(user, edition)
 
@@ -692,7 +692,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a published edition can't be edited" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     edition.title = "My New Title"
 
     assert ! edition.save
@@ -700,7 +700,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "edition's publish history is recorded" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
     user = User.create name: "bob"
     publish(user, edition, "First publication")
@@ -728,7 +728,7 @@ class EditionTest < ActiveSupport::TestCase
 
 
   test "a series with all editions published should not have siblings in progress" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
     user = User.create name: "bob"
     publish(user, edition, "First publication")
@@ -744,7 +744,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a series with one published and one draft edition should have a sibling in progress" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.save!
 
     user = User.create name: "bob"
@@ -802,20 +802,20 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "a draft edition cannot be published" do
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
     refute edition.can_publish?
   end
 
   # test denormalisation
 
   test "should denormalise an edition with an assigned user and action requesters" do
-    user1 = FactoryGirl.create(:user, name: "Morwenna")
-    user2 = FactoryGirl.create(:user, name: "John")
-    user3 = FactoryGirl.create(:user, name: "Nick")
+    user1 = FactoryBot.create(:user, name: "Morwenna")
+    user2 = FactoryBot.create(:user, name: "John")
+    user3 = FactoryBot.create(:user, name: "Nick")
 
-    FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
+    FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
 
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "archived", assigned_to_id: user1.id)
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived", assigned_to_id: user1.id)
     edition.actions.create request_type: Action::CREATE, requester: user2
     edition.actions.create request_type: Action::PUBLISH, requester: user3
     edition.actions.create request_type: Action::ARCHIVE, requester: user1
@@ -828,10 +828,10 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise an assignee's name when an edition is assigned" do
-    user1 = FactoryGirl.create(:user)
-    user2 = FactoryGirl.create(:user)
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
 
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
     user1.assign edition, user2
 
     assert_equal user2, edition.assigned_to
@@ -839,8 +839,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise a creator's name when an edition is created" do
-    user = FactoryGirl.create(:user)
-    artefact = FactoryGirl.create(:artefact,
+    user = FactoryBot.create(:user)
+    artefact = FactoryBot.create(:artefact,
         slug: "foo-bar",
         kind: "answer",
         name: "Foo bar",
@@ -852,26 +852,26 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise a publishing user's name when an edition is published" do
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
 
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     publish(user, edition, "First publication")
 
     assert_equal user.name, edition.publisher
   end
 
   test "should set siblings in progress to nil for new editions" do
-    FactoryGirl.create(:user)
-    edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
-    FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    FactoryBot.create(:user)
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     assert_equal 1, edition.version_number
     assert_nil edition.sibling_in_progress
   end
 
   test "should update previous editions when new edition is added" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
-    published_edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
+    published_edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     new_edition = published_edition.build_clone
     new_edition.save!
     published_edition.reload
@@ -881,9 +881,9 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should update previous editions when new edition is published" do
-    user = FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
-    published_edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    user = FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
+    published_edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
 
     new_edition = published_edition.build_clone
     new_edition.save!
@@ -905,7 +905,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should convert a GuideEdition to an AnswerEdition" do
-    guide_edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
+    guide_edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     answer_edition = guide_edition.build_clone(AnswerEdition)
 
     assert_equal guide_edition.whole_body, answer_edition.whole_body
@@ -921,8 +921,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should not allow any changes to an edition with an archived artefact" do
-    artefact = FactoryGirl.create(:artefact)
-    guide_edition = FactoryGirl.create(:guide_edition, state: 'draft', panopticon_id: artefact.id)
+    artefact = FactoryBot.create(:artefact)
+    guide_edition = FactoryBot.create(:guide_edition, state: 'draft', panopticon_id: artefact.id)
     artefact.state = 'archived'
     artefact.save
 
@@ -938,30 +938,30 @@ class EditionTest < ActiveSupport::TestCase
 
   context "validating version_number" do
     should "be required" do
-      ed = FactoryGirl.build(:edition, panopticon_id: @artefact.id)
+      ed = FactoryBot.build(:edition, panopticon_id: @artefact.id)
       ed.version_number = nil
       assert !ed.valid?, "Expected edition not to be valid with no version_number"
     end
 
     should "be unique" do
-      ed1 = FactoryGirl.create(:edition, panopticon_id: @artefact.id)
-      ed2 = FactoryGirl.build(:edition, panopticon_id: @artefact.id)
+      ed1 = FactoryBot.create(:edition, panopticon_id: @artefact.id)
+      ed2 = FactoryBot.build(:edition, panopticon_id: @artefact.id)
       ed2.version_number = ed1.version_number
 
       assert !ed2.valid?, "Expected edition not to be valid with conflicting version_number"
     end
 
     should "allow editions belonging to different artefacts to have matching version_numbers" do
-      ed1 = FactoryGirl.create(:edition, panopticon_id: @artefact.id)
-      ed2 = FactoryGirl.build(:edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      ed1 = FactoryBot.create(:edition, panopticon_id: @artefact.id)
+      ed2 = FactoryBot.build(:edition, panopticon_id: FactoryBot.create(:artefact).id)
       ed2.version_number = ed1.version_number
 
       assert ed2.valid?, "Expected edition to be valid"
     end
 
     should "have a database-level constraint on the uniqueness" do
-      ed1 = FactoryGirl.create(:edition, panopticon_id: @artefact.id)
-      ed2 = FactoryGirl.build(:edition, panopticon_id: @artefact.id)
+      ed1 = FactoryBot.create(:edition, panopticon_id: @artefact.id)
+      ed2 = FactoryBot.build(:edition, panopticon_id: @artefact.id)
       ed2.version_number = ed1.version_number
 
       assert_raises Mongo::Error::OperationFailure do
@@ -973,14 +973,14 @@ class EditionTest < ActiveSupport::TestCase
   context "indexable_content" do
     context "editions with a 'body'" do
       should "include the body with markup removed" do
-        edition = FactoryGirl.create(:answer_edition, body: "## Title", panopticon_id: FactoryGirl.create(:artefact).id)
+        edition = FactoryBot.create(:answer_edition, body: "## Title", panopticon_id: FactoryBot.create(:artefact).id)
         assert_equal "Title", edition.indexable_content
       end
     end
 
     context "for a single part thing" do
       should "have an empty string for an edition with no body" do
-        edition = FactoryGirl.create(:guide_edition, state: 'ready', title: 'one part thing', panopticon_id: FactoryGirl.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition, state: 'ready', title: 'one part thing', panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
         assert_equal "", edition.indexable_content
       end
@@ -988,7 +988,7 @@ class EditionTest < ActiveSupport::TestCase
 
     context "for a multi part thing" do
       should "have the normalised content of all parts" do
-        edition = FactoryGirl.create(:guide_edition_with_two_parts, state: 'ready', panopticon_id: FactoryGirl.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition_with_two_parts, state: 'ready', panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
         assert_equal "PART ! This is some version text. PART !! This is some more version text.", edition.indexable_content
       end
@@ -996,7 +996,7 @@ class EditionTest < ActiveSupport::TestCase
 
     context "indexable_content would contain govspeak" do
       should "convert it to plaintext" do
-        edition = FactoryGirl.create(:guide_edition_with_two_govspeak_parts, state: 'ready', panopticon_id: FactoryGirl.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition_with_two_govspeak_parts, state: 'ready', panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
 
         expected = "Some Part Title! This is some version text. Another Part Title This is link text."
@@ -1007,7 +1007,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#latest_major_update" do
     should 'return the most recent published edition with a major change' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: true,
+      edition1 = FactoryBot.create(:answer_edition, major_change: true,
                                                      change_note: 'published',
                                                      state: 'published',
                                                      version_number: 1)
@@ -1024,7 +1024,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#latest_change_note" do
     should 'return the change note of the latest major update' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: true,
+      edition1 = FactoryBot.create(:answer_edition, major_change: true,
                                                      change_note: 'a change note',
                                                      state: 'published')
       edition2 = edition1.build_clone
@@ -1033,7 +1033,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should 'return nil if there is no major update in the edition series' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition1 = FactoryBot.create(:answer_edition, major_change: false,
                                                      state: 'published')
       assert_nil edition1.latest_change_note
     end
@@ -1041,7 +1041,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context '#public_updated_at' do
     should 'return the updated_at timestamp of the latest major update' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: true,
+      edition1 = FactoryBot.create(:answer_edition, major_change: true,
                                                      change_note: 'a change note',
                                                      updated_at: 1.minute.ago,
                                                      state: 'published')
@@ -1051,7 +1051,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should 'return the timestamp of the first published edition when there are no major updates' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition1 = FactoryBot.create(:answer_edition, major_change: false,
                                                      updated_at: 2.minutes.ago,
                                                      state: 'published')
       edition2 = edition1.build_clone
@@ -1066,7 +1066,7 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should 'return nil if there are no major updates and no published editions' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition1 = FactoryBot.create(:answer_edition, major_change: false,
                                                      updated_at: 1.minute.ago,
                                                      state: 'draft')
 
@@ -1076,12 +1076,12 @@ class EditionTest < ActiveSupport::TestCase
 
   context '#has_ever_been_published?' do
     should 'return true if any edition has a published state' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition1 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
         state: 'published')
       edition2 = edition1.build_clone
       edition2.update_attributes!(state: 'archived', major_change: false)
-      edition4 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition4 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
         state: 'draft')
 
@@ -1093,7 +1093,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context '#first_edition_of_published' do
     should 'return the first edition of a series that has at least one edition state published' do
-      edition1 = FactoryGirl.create(:answer_edition, major_change: false,
+      edition1 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
         state: 'published')
       edition2 = edition1.build_clone
@@ -1110,27 +1110,27 @@ class EditionTest < ActiveSupport::TestCase
 
   context "link_check_reports" do
     should "not have any link_check_reports by default" do
-      edition = FactoryGirl.create(:edition, :published)
+      edition = FactoryBot.create(:edition, :published)
       assert_equal 0, edition.link_check_reports.size
     end
 
     should "add a new link_check_report" do
-      edition = FactoryGirl.create(:edition, :published)
-      edition.link_check_reports.build(FactoryGirl.attributes_for(:link_check_report))
+      edition = FactoryBot.create(:edition, :published)
+      edition.link_check_reports.build(FactoryBot.attributes_for(:link_check_report))
       assert_equal 1, edition.link_check_reports.size
     end
   end
 
   context "latest_link_check_report" do
     should "be nil if no reports" do
-      edition = FactoryGirl.create(:edition, :published)
+      edition = FactoryBot.create(:edition, :published)
       assert_nil edition.latest_link_check_report
     end
 
     should "return the last report created" do
-      edition = FactoryGirl.create(:edition, :published)
-      edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report))
-      latest_report = edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report, batch_id: 2))
+      edition = FactoryBot.create(:edition, :published)
+      edition.link_check_reports.create(FactoryBot.attributes_for(:link_check_report))
+      latest_report = edition.link_check_reports.create(FactoryBot.attributes_for(:link_check_report, batch_id: 2))
 
       assert latest_report, edition.latest_link_check_report
     end

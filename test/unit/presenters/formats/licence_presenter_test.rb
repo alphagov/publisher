@@ -8,7 +8,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(
+    @_edition ||= FactoryBot.create(
       :licence_edition,
       :published,
       title: "Licence to catch all rats",
@@ -23,7 +23,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "licence")
+    @_artefact ||= FactoryBot.create(:artefact, kind: "licence")
   end
 
   def result

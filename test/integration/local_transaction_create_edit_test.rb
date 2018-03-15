@@ -5,7 +5,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
 
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
         slug: "hedgehog-topiary",
         kind: "local_transaction",
         name: "Foo bar",
@@ -57,7 +57,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "save the LGSL and LGIL fields" do
-      edition = FactoryGirl.create(
+      edition = FactoryBot.create(
         :local_transaction_edition,
         panopticon_id: @artefact.id,
         slug: @artefact.slug,
@@ -86,7 +86,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     end
 
     should "show an error when the title is empty" do
-      edition = FactoryGirl.create(
+      edition = FactoryBot.create(
         :local_transaction_edition,
         panopticon_id: @artefact.id,
         slug: @artefact.slug,
@@ -103,7 +103,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(
+    edition = FactoryBot.create(
       :local_transaction_edition,
       panopticon_id: @artefact.id,
       state: 'published',

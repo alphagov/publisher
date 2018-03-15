@@ -7,8 +7,8 @@ class DowntimesControllerTest < ActionController::TestCase
 
   context "#index" do
     should "list all published transaction editions" do
-      unpublished_transaction_edition = FactoryGirl.create(:transaction_edition)
-      transaction_editions = FactoryGirl.create_list(:transaction_edition, 2, :published)
+      unpublished_transaction_edition = FactoryBot.create(:transaction_edition)
+      transaction_editions = FactoryBot.create_list(:transaction_edition, 2, :published)
 
       get :index
 
@@ -111,11 +111,11 @@ class DowntimesControllerTest < ActionController::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(:transaction_edition)
+    @_edition ||= FactoryBot.create(:transaction_edition)
   end
 
   def downtime
-    @_downtime ||= FactoryGirl.create(:downtime, artefact: edition.artefact)
+    @_downtime ||= FactoryBot.create(:downtime, artefact: edition.artefact)
   end
 
   def create_downtime

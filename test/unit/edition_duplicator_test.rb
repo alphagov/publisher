@@ -6,9 +6,9 @@ require 'edition_duplicator'
 # are the clear, minimal dependencies.
 class EditionDuplicatorTest < ActiveSupport::TestCase
   setup do
-    @laura = FactoryGirl.create(:user)
-    @fred  = FactoryGirl.create(:user)
-    @guide = FactoryGirl.create(:guide_edition)
+    @laura = FactoryBot.create(:user)
+    @fred  = FactoryBot.create(:user)
+    @guide = FactoryBot.create(:guide_edition)
     stub_register_published_content
   end
 
@@ -27,7 +27,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
   end
 
   test "should be possible to create a new draft of an invalid edition" do
-    guide = FactoryGirl.create(:guide_edition_with_two_parts)
+    guide = FactoryBot.create(:guide_edition_with_two_parts)
     publish_item(guide, @laura)
 
     # invalid link in body having a {:rel="external"}

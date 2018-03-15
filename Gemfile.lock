@@ -103,10 +103,10 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.7.0)
-    factory_girl (4.9.0)
+    factory_bot (4.8.2)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
+    factory_bot_rails (4.8.2)
+      factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
     faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
@@ -462,7 +462,7 @@ DEPENDENCIES
   database_cleaner (= 1.6.2)
   diffy (= 3.2.0)
   erubis
-  factory_girl_rails
+  factory_bot_rails
   formtastic (= 2.3.0)
   formtastic-bootstrap (= 3.0.0)
   gds-api-adapters (~> 52)
@@ -515,4 +515,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

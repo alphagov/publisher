@@ -2,8 +2,8 @@ require 'test_helper'
 
 class LicenceContentImporterTest < ActiveSupport::TestCase
   def setup
-    @user = FactoryGirl.create(:user, name: "Test user")
-    @artefact = FactoryGirl.create(:artefact, slug: "licence-to-test",
+    @user = FactoryBot.create(:user, name: "Test user")
+    @artefact = FactoryBot.create(:artefact, slug: "licence-to-test",
       kind: "licence", name: "test", owning_app: "publisher")
 
     @importer = LicenceContentImporter.new('data/foo', @user.name)

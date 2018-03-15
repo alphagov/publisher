@@ -4,14 +4,14 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   tests NoisyWorkflow
 
   def fact_check_email
-    guide = FactoryGirl.create(:guide_edition)
+    guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: 'jys@ketlai.co.uk', customised_message: "Blah")
     email = NoisyWorkflow.request_fact_check(action)
     [guide, email]
   end
 
   def action_email(action)
-    guide = FactoryGirl.create(:guide_edition, title: 'Test Guide 2')
+    guide = FactoryBot.create(:guide_edition, title: 'Test Guide 2')
     requester = User.new(name: 'Testing Person')
     action = guide.actions.create(request_type: action, requester: requester)
     NoisyWorkflow.make_noise(action)
@@ -21,7 +21,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     user = User.create(uid: "123", name: "Ben")
     other_user = User.create(uid: "321", name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: 'My Overview', title: 'My Title', slug: 'my-title')
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: 'My Overview', title: 'My Title', slug: 'my-title')
     edition = guide
     request_review(user, edition)
     approve_review(other_user, edition)
@@ -37,7 +37,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     stub_mailer = stub('mailer', deliver_now: true)
     NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(name: "Ben")
-    artefact = FactoryGirl.create(:artefact)
+    artefact = FactoryBot.create(:artefact)
     guide = user.create_edition(:guide, title: 'My Title', slug: 'my-title', panopticon_id: artefact.id)
     edition = guide
     edition.state = 'ready'
@@ -56,7 +56,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   test "should send an email on fact check received" do
     user = User.create(name: "Ben")
     guide = user.create_edition(:guide,
-      panopticon_id: FactoryGirl.create(:artefact).id,
+      panopticon_id: FactoryBot.create(:artefact).id,
       overview: 'My Overview',
       title: 'My Title', slug: 'my-title-b')
 
@@ -79,7 +79,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       @user = User.create(uid: "123", name: "Ben")
       @other_user = User.create(uid: "321", name: "James")
 
-      @edition = @user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: 'My Overview', title: 'My Title', slug: 'my-title')
+      @edition = @user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: 'My Overview', title: 'My Title', slug: 'my-title')
       request_review(@user, @edition)
       approve_review(@other_user, @edition)
     end

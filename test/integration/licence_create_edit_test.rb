@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class LicenceCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
         slug: "hedgehog-topiary",
         kind: "licence",
         name: "Foo bar",
@@ -33,7 +33,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow editing LicenceEdition" do
-      licence = FactoryGirl.create(:licence_edition,
+      licence = FactoryBot.create(:licence_edition,
                                    panopticon_id: @artefact.id,
                                    title: "Foo bar",
                                    licence_identifier: "ab2345",
@@ -68,7 +68,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a LicenceEdition" do
-    licence = FactoryGirl.create(:licence_edition,
+    licence = FactoryBot.create(:licence_edition,
                                  panopticon_id: @artefact.id,
                                  state: 'published',
                                  title: "Foo bar",
@@ -91,7 +91,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(:licence_edition,
+    edition = FactoryBot.create(:licence_edition,
                                   panopticon_id: @artefact.id,
                                   state: 'published',
                                   title: "Foo bar",

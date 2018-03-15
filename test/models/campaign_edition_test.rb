@@ -2,11 +2,11 @@ require "test_helper"
 
 class CampaignEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryGirl.create(:artefact, kind: 'campaign', slug: "start-all-the-campaigns")
+    @artefact = FactoryBot.create(:artefact, kind: 'campaign', slug: "start-all-the-campaigns")
   end
 
   should "have correct extra fields" do
-    c = FactoryGirl.create(
+    c = FactoryBot.create(
       :campaign_edition,
       panopticon_id: @artefact.id,
       body: "Start all the campaigns!",
@@ -35,14 +35,14 @@ class CampaignEditionTest < ActiveSupport::TestCase
   end
 
   should "return the body as whole_body" do
-    campaign = FactoryGirl.build(:campaign_edition,
+    campaign = FactoryBot.build(:campaign_edition,
                           panopticon_id: @artefact.id,
                           body: "Something")
     assert_equal campaign.body, campaign.whole_body
   end
 
   should "be not valid with an organisation brand colour from outside the list" do
-    campaign = FactoryGirl.build(:campaign_edition, panopticon_id: @artefact.id)
+    campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_brand_colour = "something-else"
 
     refute campaign.valid?
@@ -50,7 +50,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
   end
 
   should "be not valid with an organisation crest from outside the list" do
-    campaign = FactoryGirl.build(:campaign_edition, panopticon_id: @artefact.id)
+    campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_crest = "something-else"
 
     refute campaign.valid?
@@ -58,7 +58,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
   end
 
   should "be valid with a blank organisation crest and brand colour" do
-    campaign = FactoryGirl.build(:campaign_edition, panopticon_id: @artefact.id)
+    campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_crest = ''
     campaign.organisation_brand_colour = ''
 

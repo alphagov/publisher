@@ -2,11 +2,11 @@ require "test_helper"
 
 class HelpPageEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryGirl.create(:artefact, kind: 'help_page', slug: "help/foo")
+    @artefact = FactoryBot.create(:artefact, kind: 'help_page', slug: "help/foo")
   end
 
   should "have correct extra fields" do
-    h = FactoryGirl.create(
+    h = FactoryBot.create(
       :help_page_edition,
       panopticon_id: @artefact.id,
       body: "I'm a help page.",
@@ -21,7 +21,7 @@ class HelpPageEditionTest < ActiveSupport::TestCase
   end
 
   should "return the body as whole_body" do
-    h = FactoryGirl.build(
+    h = FactoryBot.build(
       :help_page_edition,
       panopticon_id: @artefact.id,
       body: "Something",
@@ -30,7 +30,7 @@ class HelpPageEditionTest < ActiveSupport::TestCase
   end
 
   should "clone extra fields when cloning edition" do
-    help_page = FactoryGirl.create(
+    help_page = FactoryBot.create(
       :help_page_edition,
       panopticon_id: @artefact.id,
       state: "published",

@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
         slug: "done/stick-a-fork-in-me-im",
         kind: "completed_transaction",
         name: "All bar done",
@@ -26,7 +26,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow editing CompletedTransactionEdition" do
-      completed_transaction = FactoryGirl.create(:completed_transaction_edition,
+      completed_transaction = FactoryBot.create(:completed_transaction_edition,
                                    panopticon_id: @artefact.id,
                                    title: "All bar done")
 
@@ -44,7 +44,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a CompletedTransactionEdition" do
-    completed_transaction = FactoryGirl.create(:completed_transaction_edition,
+    completed_transaction = FactoryBot.create(:completed_transaction_edition,
                                  panopticon_id: @artefact.id,
                                  state: 'published',
                                  title: "All bar done")
@@ -57,7 +57,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(:completed_transaction_edition,
+    edition = FactoryBot.create(:completed_transaction_edition,
                                   panopticon_id: @artefact.id,
                                   state: 'published',
                                   title: "All bar done")
@@ -67,7 +67,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow controlling display of promotions on this page" do
-    edition = FactoryGirl.create(:completed_transaction_edition, panopticon_id: @artefact.id)
+    edition = FactoryBot.create(:completed_transaction_edition, panopticon_id: @artefact.id)
     organ_donor_registration_promotion_url = "https://www.organdonation.nhs.uk/how_to_become_a_donor/registration/consent.asp?campaign=2244&v=7"
 
     visit_edition edition
@@ -83,7 +83,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "only allow one promotion to be displayed at once" do
-    edition = FactoryGirl.create(:completed_transaction_edition, panopticon_id: @artefact.id)
+    edition = FactoryBot.create(:completed_transaction_edition, panopticon_id: @artefact.id)
     register_to_vote_promotion_url = "https://gov.uk/register-to-vote"
 
     visit_edition edition

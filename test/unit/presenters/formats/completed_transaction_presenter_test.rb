@@ -8,7 +8,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(
+    @_edition ||= FactoryBot.create(
       :completed_transaction_edition,
       :published,
       title: "Whacked all moles",
@@ -18,7 +18,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "completed_transaction", slug: "done/artefact")
+    @_artefact ||= FactoryBot.create(:artefact, kind: "completed_transaction", slug: "done/artefact")
   end
 
   def result

@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class HelpPageCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
         slug: "help/hedgehog-topiary",
         kind: "help_page",
         name: "Foo bar",
@@ -26,7 +26,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow editing HelpPageEdition" do
-      help_page = FactoryGirl.create(:help_page_edition,
+      help_page = FactoryBot.create(:help_page_edition,
                                      panopticon_id: @artefact.id,
                                      title: "Foo bar",
                                      body: "Body content")
@@ -46,7 +46,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
     end
 
     should "allow creating a new version of a HelpPageEdition" do
-      help_page = FactoryGirl.create(:help_page_edition,
+      help_page = FactoryBot.create(:help_page_edition,
                                    panopticon_id: @artefact.id,
                                    state: 'published',
                                    title: "Foo bar",
@@ -61,7 +61,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(:help_page_edition,
+    edition = FactoryBot.create(:help_page_edition,
                                  panopticon_id: @artefact.id,
                                  state: 'published',
                                  title: "Foo bar",

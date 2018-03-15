@@ -17,8 +17,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
   def setup
     load_content_from_file(file_name)
-    @artefact ||= FactoryGirl.create(:artefact, kind: "transaction")
-    @parent ||= FactoryGirl.create(
+    @artefact ||= FactoryBot.create(:artefact, kind: "transaction")
+    @parent ||= FactoryBot.create(
       :transaction_edition,
       panopticon_id: @artefact.id,
       slug: parent_slug

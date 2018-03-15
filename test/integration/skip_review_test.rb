@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class SkipReviewTest < JavascriptIntegrationTest
   setup do
-    @permitted_user = FactoryGirl.create(:user,
+    @permitted_user = FactoryBot.create(:user,
                                          name: "Vincent Panache",
                                          email: "test@example.com",
                                          permissions: ["skip_review"])
@@ -12,13 +12,13 @@ class SkipReviewTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
                                     slug: "hedgehog-topiary",
                                     kind: "guide",
                                     name: "Foo bar",
                                     owning_app: "publisher")
 
-    @guide = FactoryGirl.build(:guide_edition,
+    @guide = FactoryBot.build(:guide_edition,
                                panopticon_id: @artefact.id,
                                title: "Foo bar",
                                state: "in_review",
@@ -57,7 +57,7 @@ class SkipReviewTest < JavascriptIntegrationTest
   end
 
   should "not allow a user without permissions to force publish" do
-    editor = FactoryGirl.create(:user,
+    editor = FactoryBot.create(:user,
                                 name: "Editor",
                                 email: "thingy@example.com",
                                 permissions: ["editor"])

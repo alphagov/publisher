@@ -7,7 +7,7 @@ class TaggingTest < JavascriptIntegrationTest
     stub_holidays_used_by_fact_check
     publishing_api_has_lookups({})
 
-    @edition = FactoryGirl.create(:guide_edition)
+    @edition = FactoryBot.create(:guide_edition)
     @artefact = @edition.artefact
     @artefact.external_links = []
     @content_id = @edition.artefact.content_id

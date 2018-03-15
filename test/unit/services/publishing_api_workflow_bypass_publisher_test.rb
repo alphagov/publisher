@@ -65,21 +65,21 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
 
   def live_edition
     @_live_edition ||=
-      FactoryGirl.create(:transaction_edition, :published, panopticon_id: artefact.id)
+      FactoryBot.create(:transaction_edition, :published, panopticon_id: artefact.id)
   end
 
   def draft_edition
     @_draft_edition ||=
-      FactoryGirl.create(:transaction_edition, state: 'ready', panopticon_id: artefact.id)
+      FactoryBot.create(:transaction_edition, state: 'ready', panopticon_id: artefact.id)
   end
 
   def archived_edition
     @_archived_edition ||=
-      FactoryGirl.create(:transaction_edition, state: 'archived', panopticon_id: artefact.id)
+      FactoryBot.create(:transaction_edition, state: 'archived', panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact)
+    @_artefact ||= FactoryBot.create(:artefact)
   end
 
   def create_draft_and_live_editions

@@ -2,13 +2,13 @@ require "test_helper"
 
 class WorkflowTest < ActiveSupport::TestCase
   def setup
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
     GovukContentModels::ActionProcessors::BaseProcessor.any_instance.stubs(:make_record_action_noises)
   end
 
   def template_users
-    user = FactoryGirl.create(:user, name: "Bob")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Bob")
+    other_user = FactoryBot.create(:user, name: "James")
     [user, other_user]
   end
 
@@ -19,14 +19,14 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   def template_guide
-    edition = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     edition.save
     edition
   end
 
   def publisher_and_guide
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
     guide = user.create_edition(:guide, panopticon_id: @artefact.id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
@@ -41,8 +41,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   def template_user_and_published_transaction
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
     transaction = user.create_edition(:transaction, title: "My title", slug: "my-title", panopticon_id: @artefact.id, need_to_know: "Credit card required")
     transaction.save
@@ -58,11 +58,11 @@ class WorkflowTest < ActiveSupport::TestCase
 
   context "#status_text" do
     should "return a capitalized text representation of the state" do
-      assert_equal 'Ready', FactoryGirl.build(:edition, state: 'ready').status_text
+      assert_equal 'Ready', FactoryBot.build(:edition, state: 'ready').status_text
     end
 
     should "also return scheduled publishing time when the state is scheduled for publishing" do
-      edition = FactoryGirl.build(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
       expected_status_text = 'Scheduled for publishing on ' + edition.publish_at.strftime("%d/%m/%Y %H:%M")
 
       assert_equal expected_status_text, edition.status_text
@@ -71,12 +71,12 @@ class WorkflowTest < ActiveSupport::TestCase
 
   context "#locked_for_edit?" do
     should "return true if edition is scheduled for publishing for published" do
-      assert FactoryGirl.build(:edition, :scheduled_for_publishing).locked_for_edits?
-      assert FactoryGirl.build(:edition, :published).locked_for_edits?
+      assert FactoryBot.build(:edition, :scheduled_for_publishing).locked_for_edits?
+      assert FactoryBot.build(:edition, :published).locked_for_edits?
     end
 
     should "return false if in draft state" do
-      refute FactoryGirl.build(:edition, state: 'draft').locked_for_edits?
+      refute FactoryBot.build(:edition, state: 'draft').locked_for_edits?
     end
   end
 
@@ -104,14 +104,14 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "a new guide has draft but isn't published" do
-    g = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id)
+    g = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)
     assert g.draft?
     refute g.published?
   end
 
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
-    user = FactoryGirl.create(:user, name: "Ben")
+    user = FactoryBot.create(:user, name: "Ben")
     refute guide.in_review?
     assert_nil guide.review_requested_at
 
@@ -132,8 +132,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "guide workflow" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
     edition = guide
@@ -151,8 +151,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "skip review workflow" do
-    user = FactoryGirl.create(:user, name: "Ben", permissions: ["skip_review"])
-    other = FactoryGirl.create(:user, name: "Ben", permissions: ["signin"])
+    user = FactoryBot.create(:user, name: "Ben", permissions: ["skip_review"])
+    other = FactoryBot.create(:user, name: "Ben", permissions: ["signin"])
 
     edition = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
 
@@ -166,8 +166,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "when fact check has been initiated it can be skipped" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
     edition = user.create_edition(:guide, panopticon_id: @artefact.id, overview: "My Overview", title: "My Title", slug: "my-title")
 
@@ -183,10 +183,10 @@ class WorkflowTest < ActiveSupport::TestCase
 
   # until we improve the validation to produce few or no false positives
   test "when processing fact check, it is not validated" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -198,10 +198,10 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "fact_check editions can resend the email" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -212,10 +212,10 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "fact_check editions can't resend the email if their most recent status action somehow isn't a fact check one" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -228,10 +228,10 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "fact_check_received can go back to out for fact_check" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -244,10 +244,10 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "when processing fact check, an edition can request for amendments" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -260,11 +260,11 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "ready items may require further amendments" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
-    FactoryGirl.create(:user, name: "Fiona")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
+    FactoryBot.create(:user, name: "Fiona")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryGirl.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
 
     request_review(user, edition)
@@ -280,8 +280,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "check counting reviews" do
-    user = FactoryGirl.create(:user, name: "Ben")
-    other_user = FactoryGirl.create(:user, name: "James")
+    user = FactoryBot.create(:user, name: "Ben")
+    other_user = FactoryBot.create(:user, name: "James")
 
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
     edition = guide
@@ -300,7 +300,7 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "user should not be able to review a guide they requested review for" do
-    user = FactoryGirl.create(:user, name: "Ben")
+    user = FactoryBot.create(:user, name: "Ben")
 
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
     edition = guide
@@ -311,7 +311,7 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "user should not be able to okay a guide they requested review for" do
-    user = FactoryGirl.create(:user, name: "Ben")
+    user = FactoryBot.create(:user, name: "Ben")
 
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
     edition = guide
@@ -396,7 +396,7 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "important_note returns last non-resolved important note" do
-    user = FactoryGirl.create(:user, name: "Ben")
+    user = FactoryBot.create(:user, name: "Ben")
     edition = template_guide
     user.record_note(edition, 'this is an important note', Action::IMPORTANT_NOTE)
     request_review(user, edition)
@@ -409,7 +409,7 @@ class WorkflowTest < ActiveSupport::TestCase
   context "creating a new version of an edition" do
     setup do
       @user = User.new
-      @edition = FactoryGirl.create(:edition, state: :published)
+      @edition = FactoryBot.create(:edition, state: :published)
     end
 
     should "return false if the edition is not published" do
@@ -457,7 +457,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
   context "#receive_fact_check" do
     setup do
-      @edition = FactoryGirl.create(:guide_edition_with_two_parts, state: :fact_check)
+      @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
       @edition.parts.first.update_attribute(:body,
         "[register and tax your vehicle](registering-an-imported-vehicle)")
@@ -479,18 +479,18 @@ class WorkflowTest < ActiveSupport::TestCase
 
   context "#schedule_for_publishing" do
     setup do
-      @user = FactoryGirl.build(:user)
+      @user = FactoryBot.build(:user)
       @publish_at = 1.day.from_now.utc
       @activity_details = { publish_at: @publish_at, comment: "Go schedule !" }
     end
 
     should "return false when scheduling an already published edition" do
-      edition = FactoryGirl.create(:edition, state: 'published')
+      edition = FactoryBot.create(:edition, state: 'published')
       refute schedule_for_publishing(@user, edition, @activity_details)
     end
 
     should "schedule an edition for publishing if it is ready" do
-      edition = FactoryGirl.create(:edition, state: 'ready')
+      edition = FactoryBot.create(:edition, state: 'ready')
 
       schedule_for_publishing(@user, edition, @activity_details)
 
@@ -499,7 +499,7 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "record the action" do
-      edition = FactoryGirl.create(:edition, state: 'ready')
+      edition = FactoryBot.create(:edition, state: 'ready')
 
       assert_difference 'edition.actions.count', 1 do
         schedule_for_publishing(@user, edition, @activity_details)

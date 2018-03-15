@@ -22,7 +22,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   def assert_correct_state(key, value, state)
-    answer = FactoryGirl.create(:answer_edition, state: 'fact_check')
+    answer = FactoryBot.create(:answer_edition, state: 'fact_check')
     message = fact_check_mail_for(answer)
     message[key] = value
 
@@ -34,7 +34,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up an email and add an action to the edition, and advance the state to 'fact_check_received'" do
-    answer = FactoryGirl.create(:answer_edition, state: 'fact_check')
+    answer = FactoryBot.create(:answer_edition, state: 'fact_check')
 
     message = fact_check_mail_for(answer)
     Mail.stubs(:all).yields(message)
@@ -53,7 +53,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up an email and add an action to the edition, even if it's not in 'fact_check' state" do
-    answer = FactoryGirl.create(:answer_edition, state: 'fact_check_received')
+    answer = FactoryBot.create(:answer_edition, state: 'fact_check_received')
 
     Mail.stubs(:all).yields(fact_check_mail_for(answer))
 
@@ -69,8 +69,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should pick up multiple emails and update the relevant publications" do
-    answer1 = FactoryGirl.create(:answer_edition, state: 'fact_check')
-    answer2 = FactoryGirl.create(:answer_edition, state: 'in_review',
+    answer1 = FactoryBot.create(:answer_edition, state: 'fact_check')
+    answer2 = FactoryBot.create(:answer_edition, state: 'in_review',
                                  review_requested_at: Time.zone.now)
 
     Mail.stubs(:all).multiple_yields(
@@ -112,11 +112,11 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should look for fact-check address cc or bcc fields" do
-    edition_cc = FactoryGirl.create(:answer_edition, state: 'fact_check')
+    edition_cc = FactoryBot.create(:answer_edition, state: 'fact_check')
     # Test that it ignores irrelevant recipients
     message_cc  = fact_check_mail_for(edition_cc, to: "something@example.com", cc: edition_cc.fact_check_email_address)
 
-    edition_bcc = FactoryGirl.create(:answer_edition, state: 'fact_check')
+    edition_bcc = FactoryBot.create(:answer_edition, state: 'fact_check')
     # Test that it doesn't fail on a nil recipient field
     message_bcc = fact_check_mail_for(edition_bcc, to: nil, bcc: edition_bcc.fact_check_email_address)
 
@@ -130,8 +130,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   end
 
   test "should invoke the supplied block after each message" do
-    answer1 = FactoryGirl.create(:answer_edition, state: 'fact_check')
-    answer2 = FactoryGirl.create(:answer_edition, state: 'in_review',
+    answer1 = FactoryBot.create(:answer_edition, state: 'fact_check')
+    answer2 = FactoryBot.create(:answer_edition, state: 'in_review',
                                  review_requested_at: Time.zone.now)
 
     Mail.stubs(:all).multiple_yields(

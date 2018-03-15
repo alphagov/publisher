@@ -8,11 +8,11 @@ class PlacePresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryGirl.create(:place_edition, panopticon_id: artefact.id)
+    @_edition ||= FactoryBot.create(:place_edition, panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryGirl.create(:artefact, kind: "place", slug: "find-food")
+    @_artefact ||= FactoryBot.create(:artefact, kind: "place", slug: "find-food")
   end
 
   def result
