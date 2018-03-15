@@ -4,7 +4,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
   setup do
     setup_users
 
-    @edition = FactoryGirl.create(
+    @edition = FactoryBot.create(
       :transaction_edition,
       :published,
       title: 'Apply to become a driving instructor',

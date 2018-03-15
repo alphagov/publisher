@@ -10,11 +10,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should filter by draft state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     a.update_attribute(:state, 'draft')
     assert a.draft?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     b.update_attribute(:state, 'published')
     b.save
     b.reload
@@ -26,10 +26,10 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should filter by published state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert !a.published?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     b.update_attribute(:state, 'published')
     b.reload
     assert b.published?
@@ -40,10 +40,10 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should filter by archived state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert ! a.archived?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     b.update_attribute(:state, 'published')
     b.archive
     b.save
@@ -57,10 +57,10 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     presenter = PrimaryListingPresenter.new(Edition, :all)
     User.create
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert !a.in_review?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     b.update_attribute(:state, 'in_review')
     b.reload
     assert b.in_review?
@@ -72,10 +72,10 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     presenter = PrimaryListingPresenter.new(Edition, :all)
     User.create
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert !a.fact_check?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     b.update_attribute(:state, 'fact_check')
     b.reload
     assert b.fact_check?
@@ -86,11 +86,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should select publications assigned to a user" do
     alice, bob = setup_users
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.draft?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.draft?
@@ -102,11 +102,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should select publications assigned to nobody" do
     alice, bob = setup_users
 
-    a = FactoryGirl.create(:guide_edition, title: 'My First Guide')
+    a = FactoryBot.create(:guide_edition, title: 'My First Guide')
     assert_nil a.assigned_to
     assert a.draft?
 
-    b = FactoryGirl.create(:guide_edition, title: 'My Second Guide')
+    b = FactoryBot.create(:guide_edition, title: 'My Second Guide')
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.draft?
@@ -118,11 +118,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should select all publications" do
     alice, bob = setup_users
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.draft?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.draft?
@@ -134,16 +134,16 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should select and filter" do
     alice, bob = setup_users
 
-    a = FactoryGirl.create(:guide_edition)
+    a = FactoryBot.create(:guide_edition)
     assert_nil a.assigned_to
     assert a.draft?
 
-    b = FactoryGirl.create(:guide_edition)
+    b = FactoryBot.create(:guide_edition)
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.draft?
 
-    c = FactoryGirl.create(:guide_edition)
+    c = FactoryBot.create(:guide_edition)
     alice.assign(c, bob)
     assert_equal bob, c.assigned_to
     assert c.draft?
@@ -159,9 +159,9 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   end
 
   test "can filter publications by title substring" do
-    FactoryGirl.create(:guide_edition, title: "First")
+    FactoryBot.create(:guide_edition, title: "First")
 
-    FactoryGirl.create(:guide_edition, title: "Second")
+    FactoryBot.create(:guide_edition, title: "Second")
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
     presenter.filter_by_substring("Sec")
@@ -169,9 +169,9 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   end
 
   test "can filter publications by title substring regardless of capitalization" do
-    FactoryGirl.create(:guide_edition, title: "First")
+    FactoryBot.create(:guide_edition, title: "First")
 
-    FactoryGirl.create(:guide_edition, title: "Second")
+    FactoryBot.create(:guide_edition, title: "Second")
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
     presenter.filter_by_substring("sec")
@@ -179,9 +179,9 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   end
 
   test "Can handle regexp reserved characters for title filter" do
-    FactoryGirl.create(:guide_edition, title: "First")
+    FactoryBot.create(:guide_edition, title: "First")
 
-    FactoryGirl.create(:guide_edition, title: "(Second")
+    FactoryBot.create(:guide_edition, title: "(Second")
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
     presenter.filter_by_substring("(sec")

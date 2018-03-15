@@ -4,7 +4,7 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
   context "#schedule_for_publishing" do
     context "when publish_at is not specified" do
       setup do
-        @edition = FactoryGirl.create(:edition, state: 'ready')
+        @edition = FactoryBot.create(:edition, state: 'ready')
         @edition.schedule_for_publishing
       end
 
@@ -19,7 +19,7 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
 
     context "when publish_at is specified" do
       setup do
-        @edition = FactoryGirl.create(:edition, state: 'ready')
+        @edition = FactoryBot.create(:edition, state: 'ready')
         @publish_when = 1.day.from_now
         @edition.schedule_for_publishing(@publish_when)
         @edition.reload
@@ -35,7 +35,7 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
     end
 
     should "not allow scheduling at a time in the past" do
-      edition = FactoryGirl.create(:edition, state: 'ready')
+      edition = FactoryBot.create(:edition, state: 'ready')
 
       edition.schedule_for_publishing(1.hour.ago)
 
@@ -45,7 +45,7 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
 
   context "when scheduled_for_publishing" do
     should "not allow editing fields like title" do
-      edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
 
       edition.title = 'a new title'
 
@@ -54,24 +54,24 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
     end
 
     should "return false for #can_destroy?" do
-      edition = FactoryGirl.build(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
       refute edition.can_destroy?
     end
 
     should "return false for #can_create_new_edition?" do
-      edition = FactoryGirl.build(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
       refute edition.can_create_new_edition?
     end
 
     should "allow transition to published state" do
-      edition = FactoryGirl.build(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
       assert edition.can_publish?
     end
   end
 
   context "#cancel_scheduled_publishing" do
     should "remove the publish_at stored against the edition and transition back to ready" do
-      edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
       edition.cancel_scheduled_publishing
       edition.reload
 
@@ -80,7 +80,7 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
     end
 
     should "work with editions that have passed publish_at time" do
-      edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
       edition.update_attribute :publish_at, 2.days.ago
 
       edition.cancel_scheduled_publishing

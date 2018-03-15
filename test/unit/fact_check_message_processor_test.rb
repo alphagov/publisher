@@ -27,7 +27,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   def sample_publication
-    FactoryGirl.create(:guide_edition, title: 'Hello', slug: "hello-#{Time.zone.now.to_i}")
+    FactoryBot.create(:guide_edition, title: 'Hello', slug: "hello-#{Time.zone.now.to_i}")
   end
 
   test "processing returns false if the publication isn't found" do

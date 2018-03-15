@@ -11,8 +11,8 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
     end
 
     should "queue up an edition for publishing at the specified publish_at time" do
-      FactoryGirl.create(:user)
-      edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+      FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
 
       ScheduledPublisher.enqueue(edition)
 
@@ -24,7 +24,7 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
   context ".perform" do
     setup do
       PublishService.stubs(:call)
-      @edition = FactoryGirl.create(:edition, :scheduled_for_publishing, body: "some text")
+      @edition = FactoryBot.create(:edition, :scheduled_for_publishing, body: "some text")
     end
 
     should "publish the edition" do

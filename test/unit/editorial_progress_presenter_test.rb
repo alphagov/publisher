@@ -2,8 +2,8 @@ require 'test_helper'
 
 class EditoriaProgressPresenterTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryGirl.create(:artefact, name: "Childcare", slug: "childcare")
-    @guide = FactoryGirl.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    @artefact = FactoryBot.create(:artefact, name: "Childcare", slug: "childcare")
+    @guide = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
   end
 
   test "produces CSV output even if items aren't assigned" do

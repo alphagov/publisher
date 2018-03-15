@@ -14,7 +14,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   end
 
   test "should schedule publishing of an edition" do
-    edition = FactoryGirl.create(:edition, state: 'ready', assigned_to: @author)
+    edition = FactoryBot.create(:edition, state: 'ready', assigned_to: @author)
     visit_edition edition
     click_on "Schedule"
 
@@ -51,7 +51,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   end
 
   test "should allow a scheduled edition to be published now" do
-    edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing)
     stub_register_published_content
 
     visit_edition edition
@@ -67,7 +67,7 @@ class EditionScheduledPublishingTest < JavascriptIntegrationTest
   end
 
   test "should cancel the publishing of a scheduled edition" do
-    edition = FactoryGirl.create(:edition, :scheduled_for_publishing)
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing)
 
     visit_edition edition
     assert page.has_css?('.label', text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")

@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class SimpleSmartAnswersTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
       slug: "can-i-get-a-driving-licence",
       kind: "simple_smart_answer",
       owning_app: "publisher",
@@ -352,7 +352,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
   context "editing an existing edition" do
     setup do
-      @edition = FactoryGirl.build(:simple_smart_answer_edition,
+      @edition = FactoryBot.build(:simple_smart_answer_edition,
         title: "Can I get a driving licence?",
         panopticon_id: @artefact.id,
         slug: "can-i-get-a-driving-licence"

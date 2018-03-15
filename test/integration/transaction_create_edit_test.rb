@@ -3,7 +3,7 @@ require 'integration_test_helper'
 
 class TransactionCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
       slug: "register-for-space-flight",
       kind: "transaction",
       name: "Register for space flight",
@@ -41,7 +41,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
     end
 
     should "allow editing a TransactionEdition" do
-      transaction = FactoryGirl.create(:transaction_edition,
+      transaction = FactoryBot.create(:transaction_edition,
                                    panopticon_id: @artefact.id,
                                    title: "Register for space flight",
                                    introduction: "Become a space pilot",
@@ -64,7 +64,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
     end
 
     should "allow only a valid Service analytics profile" do
-      transaction = FactoryGirl.create(:transaction_edition,
+      transaction = FactoryBot.create(:transaction_edition,
                                    panopticon_id: @artefact.id,
                                    title: "Register for space flight")
 
@@ -82,7 +82,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(:transaction_edition,
+    edition = FactoryBot.create(:transaction_edition,
                                   panopticon_id: @artefact.id,
                                   state: 'published',
                                   slug: @artefact.slug,

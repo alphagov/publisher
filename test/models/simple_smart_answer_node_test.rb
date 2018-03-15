@@ -3,7 +3,7 @@ require "test_helper"
 class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
   context "given a smart answer exists" do
     setup do
-      @edition = FactoryGirl.create(:simple_smart_answer_edition)
+      @edition = FactoryBot.create(:simple_smart_answer_edition)
 
       @atts = {
         title: "How much wood could a woodchuck chuck if a woodchuck could chuck wood?",

@@ -39,22 +39,22 @@ class EditionLinkExtractorTest < ActiveSupport::TestCase
   end
 
   def edition_with_no_links
-    FactoryGirl.create(:place_edition, introduction: "No Links Here")
+    FactoryBot.create(:place_edition, introduction: "No Links Here")
   end
 
   def edition_with_links_in_govspeak_fields
-    FactoryGirl.create(:place_edition, introduction: "This is [link](https://www.example.co.uk) text.")
+    FactoryBot.create(:place_edition, introduction: "This is [link](https://www.example.co.uk) text.")
   end
 
   def edition_with_absolute_paths_in_govspeak_fields
-    FactoryGirl.create(:place_edition, introduction: "This is [link](https://www.example.co.uk) text. This is an [absolute link](/id-for-driving-licence) text.")
+    FactoryBot.create(:place_edition, introduction: "This is [link](https://www.example.co.uk) text. This is an [absolute link](/id-for-driving-licence) text.")
   end
 
   def edition_with_links_in_parts
-    FactoryGirl.create(:guide_edition_with_two_govspeak_parts)
+    FactoryBot.create(:guide_edition_with_two_govspeak_parts)
   end
 
   def edition_with_links_in_govspeak_fields_and_parts
-    FactoryGirl.create(:travel_advice_edition_with_parts)
+    FactoryBot.create(:travel_advice_edition_with_parts)
   end
 end

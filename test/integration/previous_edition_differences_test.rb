@@ -7,7 +7,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @first_edition = FactoryGirl.create(:answer_edition,
+    @first_edition = FactoryBot.create(:answer_edition,
                                         state: "published",
                                         body: "test body 1")
   end

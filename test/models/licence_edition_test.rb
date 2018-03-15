@@ -2,11 +2,11 @@ require_relative '../test_helper'
 
 class LicenceEditionTest < ActiveSupport::TestCase
   def setup
-    @artefact = FactoryGirl.create(:artefact)
+    @artefact = FactoryBot.create(:artefact)
   end
 
   should "have correct extra fields" do
-    l = FactoryGirl.create(
+    l = FactoryBot.create(
       :licence_edition,
       panopticon_id: @artefact.id,
       licence_identifier: "AB1234",
@@ -25,7 +25,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
   context "validations" do
     setup do
-      @l = FactoryGirl.build(:licence_edition, panopticon_id: @artefact.id)
+      @l = FactoryBot.build(:licence_edition, panopticon_id: @artefact.id)
     end
 
     should "require a licence identifier" do
@@ -35,15 +35,15 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
     context "licence identifier uniqueness" do
       should "require a unique licence identifier" do
-        artefact2 = FactoryGirl.create(:artefact)
-        FactoryGirl.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id)
+        artefact2 = FactoryBot.create(:artefact)
+        FactoryBot.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id)
         @l.licence_identifier = "wibble"
         assert ! @l.valid?, "expected licence edition not to be valid"
       end
 
       should "not consider archived editions when evaluating uniqueness" do
-        artefact2 = FactoryGirl.create(:artefact)
-        FactoryGirl.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id, state: "archived")
+        artefact2 = FactoryBot.create(:artefact)
+        FactoryBot.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id, state: "archived")
         @l.licence_identifier = "wibble"
         assert @l.valid?, "expected licence edition to be valid"
       end
@@ -74,7 +74,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
   end
 
   should "clone extra fields when cloning edition" do
-    licence = FactoryGirl.create(:licence_edition,
+    licence = FactoryBot.create(:licence_edition,
                                  panopticon_id: @artefact.id,
                                  state: "published",
                                  licence_identifier: "1234",
@@ -93,12 +93,12 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
   context "indexable_content" do
     should "include the licence_overview, removing markup" do
-      licence = FactoryGirl.create(:licence_edition)
+      licence = FactoryBot.create(:licence_edition)
       assert_includes licence.indexable_content, "This is a licence overview"
     end
 
     should "include the licence_short_description" do
-      licence = FactoryGirl.create(:licence_edition)
+      licence = FactoryBot.create(:licence_edition)
       assert_includes licence.indexable_content, "This is a licence short description."
     end
   end

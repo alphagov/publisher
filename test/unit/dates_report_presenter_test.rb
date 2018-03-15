@@ -18,7 +18,7 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
     )
 
     #edition published 1
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
       title: "Cancel your visa, immigration or citizenship application",
       slug: "cancel-visa",
       state: "published",
@@ -27,7 +27,7 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
       actions: [publish_action])
 
     #edition published 2
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
       title: "Family Visitor visa",
       slug: "family-visit-visa",
       state: "published",
@@ -36,7 +36,7 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
       actions: [publish_action])
 
     #edition archived
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
       title: "The national curriculum",
       slug: "national-curriculum",
       state: "archived",
@@ -45,7 +45,7 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
       actions: [publish_action])
 
     #edition out of dates
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
       title: "Family Visitor visa 2",
       slug: "family-visit-visa-2",
       state: "published",
@@ -54,7 +54,7 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
       actions: [out_of_dates_action])
 
     #edition not published
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
       title: "Family Visitor visa 3",
       slug: "family-visit-visa-3",
       state: "ready",

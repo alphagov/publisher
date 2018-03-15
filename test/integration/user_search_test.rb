@@ -2,13 +2,13 @@ require_relative '../integration_test_helper'
 
 class UserSearchTest < ActionDispatch::IntegrationTest
   setup do
-    alice = FactoryGirl.create(:user, name: "Alice", uid: "alice")
+    alice = FactoryBot.create(:user, name: "Alice", uid: "alice")
     GDS::SSO.test_user = alice
     @user = alice
   end
 
   test "filtering by assigned user" do
-    @guide = FactoryGirl.create(:guide_edition)
+    @guide = FactoryBot.create(:guide_edition)
     @user.record_note @guide, "I like this guide"
 
     visit "/user_search"
@@ -17,7 +17,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "excluding archived editions" do
-    @guide = FactoryGirl.create(:guide_edition, state: 'archived')
+    @guide = FactoryBot.create(:guide_edition, state: 'archived')
     @user.record_note @guide, "I like this guide"
 
     visit "/user_search"
@@ -26,13 +26,13 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by format" do
-    guide = FactoryGirl.create(
+    guide = FactoryBot.create(
       :guide_edition, title: "Vehicle insurance")
     @user.record_note guide, "I like this guide"
-    another_guide = FactoryGirl.create(
+    another_guide = FactoryBot.create(
       :guide_edition, title: "Growing your business")
     @user.record_note another_guide, "I like this guide"
-    answer = FactoryGirl.create(
+    answer = FactoryBot.create(
       :answer_edition, title: "Vehicle answer")
     @user.record_note answer, "I like this answer"
 
@@ -58,10 +58,10 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by keyword" do
-    guide = FactoryGirl.create(
+    guide = FactoryBot.create(
       :guide_edition, title: "Vehicle insurance")
     @user.record_note guide, "I like this guide"
-    another_guide = FactoryGirl.create(
+    another_guide = FactoryBot.create(
       :guide_edition, title: "Growing your business")
     @user.record_note another_guide, "I like this guide"
 
@@ -75,7 +75,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
 
   test "excluding archived editions from keyword filtered results" do
-    guide = FactoryGirl.create(
+    guide = FactoryBot.create(
       :guide_edition, title: "Vehicle insurance", state: "archived")
     @user.record_note guide, "I like this guide"
     visit "/user_search"
@@ -86,8 +86,8 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "selecting another user" do
-    guides = FactoryGirl.build_list(:guide_edition, 2)
-    other_user = FactoryGirl.create(:user, name: "Bob", uid: "bob")
+    guides = FactoryBot.build_list(:guide_edition, 2)
+    other_user = FactoryBot.create(:user, name: "Bob", uid: "bob")
 
     # Assigning manually so it doesn't show up in Alice's list too
     guides[0].assigned_to_id = other_user.id
@@ -104,7 +104,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "doesn't show disabled users in 'Filter by user' select box" do
-    disabled_user = FactoryGirl.create(:disabled_user)
+    disabled_user = FactoryBot.create(:disabled_user)
 
     visit "/user_search"
 

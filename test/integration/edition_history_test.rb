@@ -9,7 +9,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
   context "viewing the history and notes tab" do
     setup do
-      @answer = FactoryGirl.create(:answer_edition, state: "published", slug: "test-slug")
+      @answer = FactoryBot.create(:answer_edition, state: "published", slug: "test-slug")
 
       @answer.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: 'a@a.com, b@b.com')
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
@@ -130,7 +130,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       end
 
       should "not be carried forward to new editions" do
-        @edition = FactoryGirl.create(:answer_edition,
+        @edition = FactoryBot.create(:answer_edition,
                                       state: "published")
         @edition.actions.create(request_type: Action::IMPORTANT_NOTE,
                                 comment: "This is an important note. Take note.")

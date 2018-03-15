@@ -7,7 +7,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
         slug: "hedgehog-topiary",
         kind: "guide",
         name: "Foo bar",
@@ -26,7 +26,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "editing a GuideEdition, and adding some parts" do
-    guide = FactoryGirl.build(:guide_edition,
+    guide = FactoryBot.build(:guide_edition,
                                panopticon_id: @artefact.id,
                                title: "Foo bar")
     guide.parts.build(title: "Placeholder", body: "placeholder", slug: 'placeholder', order: 1)
@@ -58,7 +58,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a GuideEdition" do
-    guide = FactoryGirl.create(:guide_edition_with_two_parts,
+    guide = FactoryBot.create(:guide_edition_with_two_parts,
                                  panopticon_id: @artefact.id,
                                  state: 'published',
                                  title: "Foo bar")
@@ -75,7 +75,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryGirl.create(:guide_edition_with_two_parts,
+    edition = FactoryBot.create(:guide_edition_with_two_parts,
                                  panopticon_id: @artefact.id,
                                  state: 'published',
                                  title: "Foo bar")

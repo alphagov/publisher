@@ -42,7 +42,7 @@ group :test do
   gem 'capybara', '2.17.0'
   gem 'ci_reporter_minitest', '1.0.0'
   gem 'database_cleaner', '1.6.2'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.6'
   gem 'minitest-reporters'
   gem 'mocha', '1.3.0'

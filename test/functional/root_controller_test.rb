@@ -2,11 +2,11 @@ require 'test_helper'
 
 class RootControllerTest < ActionController::TestCase
   setup do
-    @users = FactoryGirl.create_list(:user, 3)
+    @users = FactoryBot.create_list(:user, 3)
     login_as_stub_user
     session[:user_filter] = @users[0].uid
 
-    @guide = FactoryGirl.create(:guide_edition, state: 'draft')
+    @guide = FactoryBot.create(:guide_edition, state: 'draft')
   end
 
   test "it returns a 404 for an unknown list" do

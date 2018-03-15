@@ -4,7 +4,7 @@ require "test_helper"
 
 class PartedTest < ActiveSupport::TestCase
   test "should merge part validation errors with parent document's errors" do
-    edition = FactoryGirl.create(:guide_edition)
+    edition = FactoryBot.create(:guide_edition)
     edition.parts.build(_id: '54c10d4d759b743528000010', order: '1', title: "", slug: "overview")
     edition.parts.build(_id: '54c10d4d759b743528000011', order: '2', title: "Prepare for your appointment", slug: "")
     edition.parts.build(_id: '54c10d4d759b743528000012', order: '3', title: "Valid", slug: "valid")
@@ -17,7 +17,7 @@ class PartedTest < ActiveSupport::TestCase
   end
 
   test "#whole_body returns ordered parts" do
-    edition = FactoryGirl.create(:guide_edition)
+    edition = FactoryBot.create(:guide_edition)
     edition.parts.build(_id: '54c10d4d759b743528000010', order: '1', title: "Part 1", slug: "part_1")
     edition.parts.build(_id: '54c10d4d759b743528000011', order: '3', title: "Part 3", slug: "part_3")
     edition.parts.build(_id: '54c10d4d759b743528000012', order: '2', title: "Part 2", slug: "part_2")

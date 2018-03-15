@@ -9,7 +9,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#create" do
     setup do
-      @artefact = FactoryGirl.create(:artefact,
+      @artefact = FactoryBot.create(:artefact,
           slug: "test",
           kind: "answer",
           name: "test",
@@ -43,11 +43,11 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "render the lgsl and lgil edit form successfully if creation fails" do
       lgsl_code = 800
-      FactoryGirl.create(
+      FactoryBot.create(
         :local_service,
         lgsl_code: lgsl_code
       )
-      artefact = FactoryGirl.create(:artefact)
+      artefact = FactoryBot.create(:artefact)
 
       post :create,
         params: {
@@ -86,7 +86,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#duplicate" do
     setup do
-      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
       EditionDuplicator.any_instance.expects(:duplicate).returns(true)
       EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
     end
@@ -105,7 +105,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#progress" do
     setup do
-      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
     end
 
     should "update status via progress and redirect to parent" do
@@ -171,11 +171,11 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#update" do
     setup do
-      @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
     end
 
     should "update assignment" do
-      bob = FactoryGirl.create(:user)
+      bob = FactoryBot.create(:user)
 
       post :update,
         params: {
@@ -188,7 +188,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "not create a new action if the assignment is unchanged" do
-      bob = FactoryGirl.create(:user)
+      bob = FactoryBot.create(:user)
       @user.assign(@guide, bob)
 
       post :update,
@@ -259,9 +259,9 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#review" do
     setup do
-      artefact = FactoryGirl.create(:artefact)
+      artefact = FactoryBot.create(:artefact)
 
-      @guide = FactoryGirl.create(
+      @guide = FactoryBot.create(
         :guide_edition,
         state: "in_review",
         review_requested_at: Time.zone.now,
@@ -270,7 +270,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update the reviewer" do
-      bob = FactoryGirl.create(:user, name: "bob")
+      bob = FactoryBot.create(:user, name: "bob")
 
       put :review,
         params: {
@@ -285,13 +285,13 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#destroy" do
     setup do
-      artefact1 = FactoryGirl.create(:artefact, slug: "test",
+      artefact1 = FactoryBot.create(:artefact, slug: "test",
           kind: "transaction",
           name: "test",
           owning_app: "publisher")
       @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
 
-      artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+      artefact2 = FactoryBot.create(:artefact, slug: "test2",
           kind: "guide",
           name: "test",
           owning_app: "publisher")
@@ -352,7 +352,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     setup do
-      artefact2 = FactoryGirl.create(:artefact, slug: "test2",
+      artefact2 = FactoryBot.create(:artefact, slug: "test2",
           kind: "guide",
           name: "test",
           owning_app: "publisher")
@@ -373,7 +373,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#diff" do
     should "we can diff the last edition" do
-      first_edition = FactoryGirl.create(:guide_edition, state: "published")
+      first_edition = FactoryBot.create(:guide_edition, state: "published")
       second_edition = first_edition.build_clone(GuideEdition)
       second_edition.save
       second_edition.reload
@@ -385,8 +385,8 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "given a simple smart answer" do
     setup do
-      @artefact = FactoryGirl.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
-      @edition = FactoryGirl.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
+      @artefact = FactoryBot.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
+      @edition = FactoryBot.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
       @edition.nodes.build(kind: "question", slug: "question-1", title: "Question One", options_attributes: [
         { label: "Option One", next_node: "outcome-1" },
         { label: "Option Two", next_node: "outcome-2" }

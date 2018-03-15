@@ -6,7 +6,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
 
   def create_edition(govspeak)
-    FactoryGirl.create(:place_edition, introduction: govspeak)
+    FactoryBot.create(:place_edition, introduction: govspeak)
   end
 
   setup do

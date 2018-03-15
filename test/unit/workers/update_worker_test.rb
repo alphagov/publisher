@@ -3,7 +3,7 @@ require 'test_helper'
 class UpdateWorkerTest < ActiveSupport::TestCase
   context "#perform" do
     should "call the UpdateService" do
-      edition = FactoryGirl.create(:edition)
+      edition = FactoryBot.create(:edition)
       update_type = 'foo'
       UpdateService.expects(:call).with(edition, update_type)
 

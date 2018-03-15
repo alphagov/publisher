@@ -9,14 +9,14 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
-    alice   = FactoryGirl.create(:user, name: "Alice", uid: "alice")
+    alice   = FactoryBot.create(:user, name: "Alice", uid: "alice")
 
-    bob     = FactoryGirl.create(:user, name: "Bob", uid: "bob")
-    charlie = FactoryGirl.create(:user, name: "Charlie", uid: "charlie")
+    bob     = FactoryBot.create(:user, name: "Bob", uid: "bob")
+    charlie = FactoryBot.create(:user, name: "Charlie", uid: "charlie")
 
-    x = FactoryGirl.create(:guide_edition, title: "XXX", slug: "xxx")
-    y = FactoryGirl.create(:guide_edition, title: "YYY", slug: "yyy")
-    FactoryGirl.create(:guide_edition, title: "ZZZ", slug: "zzz")
+    x = FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
+    y = FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy")
+    FactoryBot.create(:guide_edition, title: "ZZZ", slug: "zzz")
 
     bob.assign(x, alice)
     bob.assign(y, charlie)
@@ -53,9 +53,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, title: "XXX")
-    FactoryGirl.create(:guide_edition, title: "YYY")
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, title: "XXX")
+    FactoryBot.create(:guide_edition, title: "YYY")
 
     visit "/"
     filter_by_user("All")
@@ -67,7 +67,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content should not lose the active section" do
-    FactoryGirl.create(:user)
+    FactoryBot.create(:user)
 
     visit "/"
     click_on "Amends needed"
@@ -78,11 +78,11 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by format" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, title: "Draft guide")
-    FactoryGirl.create(:transaction_edition, title: "Draft transaction")
-    FactoryGirl.create(:guide_edition, title: "Amends needed guide", state: 'amends_needed')
-    FactoryGirl.create(:transaction_edition, title: "Amends needed transaction", state: 'amends_needed')
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:transaction_edition, title: "Draft transaction")
+    FactoryBot.create(:guide_edition, title: "Amends needed guide", state: 'amends_needed')
+    FactoryBot.create(:transaction_edition, title: "Amends needed transaction", state: 'amends_needed')
 
     visit "/"
 
@@ -105,8 +105,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, title: "XXX", state: 'archived', sibling_in_progress: 2)
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, title: "XXX", state: 'archived', sibling_in_progress: 2)
 
     visit "/"
     filter_by_user("All")
@@ -116,7 +116,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "doesn't show disabled users in 'Assignee' select box" do
-    disabled_user = FactoryGirl.create(:disabled_user)
+    disabled_user = FactoryBot.create(:disabled_user)
 
     visit "/"
     select_box = find_field('Assignee')
@@ -124,12 +124,12 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "Publications in review are ordered correctly" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, title: "XXX", slug: "xxx",
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx",
                        state: 'in_review', review_requested_at: 4.days.ago)
-    FactoryGirl.create(:guide_edition, title: "YYY", slug: "yyy",
+    FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy",
                        state: 'in_review', review_requested_at: 2.days.ago)
-    FactoryGirl.create(:guide_edition, title: "ZZZ", slug: "zzz",
+    FactoryBot.create(:guide_edition, title: "ZZZ", slug: "zzz",
                        state: 'in_review', review_requested_at: 20.minutes.ago)
 
     visit "/"
@@ -150,9 +150,9 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "allows a user to claim 2i" do
     stub_linkables
 
-    user = FactoryGirl.create(:user)
-    assignee = FactoryGirl.create(:user)
-    edition = FactoryGirl.create(:guide_edition, title: "XXX", state: 'in_review',
+    user = FactoryBot.create(:user)
+    assignee = FactoryBot.create(:user)
+    edition = FactoryBot.create(:guide_edition, title: "XXX", state: 'in_review',
                                  review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
@@ -173,11 +173,11 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "prevents claiming 2i when someone else has" do
     stub_linkables
 
-    FactoryGirl.create(:user)
+    FactoryBot.create(:user)
 
-    assignee = FactoryGirl.create(:user)
-    another_user = FactoryGirl.create(:user, name: 'Another McPerson')
-    edition = FactoryGirl.create(:guide_edition, title: "XXX", state: 'in_review',
+    assignee = FactoryBot.create(:user)
+    another_user = FactoryBot.create(:user, name: 'Another McPerson')
+    edition = FactoryBot.create(:guide_edition, title: "XXX", state: 'in_review',
                                  review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
@@ -211,8 +211,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "prevents the assignee claiming 2i" do
-    user = FactoryGirl.create(:user)
-    FactoryGirl.create(
+    user = FactoryBot.create(:user)
+    FactoryBot.create(
       :guide_edition,
       title: "XXX",
       state: 'in_review',
@@ -229,8 +229,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do
-    FactoryGirl.create(:user)
-    FactoryGirl.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
+    FactoryBot.create(:user)
+    FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
 
     visit "/"
     filter_by_user("All")

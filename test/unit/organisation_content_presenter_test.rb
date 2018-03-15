@@ -48,14 +48,14 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
   end
 
   should "provide a CSV export of content tagged to an organisation" do
-    document = FactoryGirl.create(:artefact,
+    document = FactoryBot.create(:artefact,
                                   name: "Important document",
                                   kind: "answer")
 
     @response['content_id'] = document.content_id
     publishing_api_has_expanded_links(@response)
 
-    FactoryGirl.create(:edition,
+    FactoryBot.create(:edition,
                        panopticon_id: document.id)
 
     csv = OrganisationContentPresenter.new(
@@ -72,7 +72,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
   end
 
   should "handle artefacts without editions" do
-    FactoryGirl.create(:artefact,
+    FactoryBot.create(:artefact,
                        name: "Important document",
                        need_ids: ["123456"])
 

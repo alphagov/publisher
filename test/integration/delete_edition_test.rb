@@ -3,7 +3,7 @@ require 'integration_test_helper'
 class DeleteEditionTest < ActionDispatch::IntegrationTest
   setup do
     content_id = SecureRandom.uuid
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
       slug: "i-dont-want-this",
       content_id: content_id,
       kind: "guide",
@@ -11,7 +11,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
       owning_app: "publisher",
                                   )
 
-    @edition = FactoryGirl.create(:guide_edition, panopticon_id: @artefact.id)
+    @edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)
 
     setup_users
     stub_linkables

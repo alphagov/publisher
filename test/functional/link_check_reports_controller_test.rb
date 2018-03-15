@@ -7,7 +7,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
 
   setup do
     login_as_stub_user
-    @edition = FactoryGirl.create(:place_edition, introduction: "[link](https://www.gov.uk)")
+    @edition = FactoryBot.create(:place_edition, introduction: "[link](https://www.gov.uk)")
   end
 
   context "#create" do
@@ -45,7 +45,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
 
   context "#show" do
     setup do
-      @link_check_report = @edition.link_check_reports.create(FactoryGirl.attributes_for(:link_check_report))
+      @link_check_report = @edition.link_check_reports.create(FactoryBot.attributes_for(:link_check_report))
     end
 
     should "find the link_check_report and redirect on a GET request" do

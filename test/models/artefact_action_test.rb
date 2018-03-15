@@ -71,7 +71,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
   end
 
   test "updating attributes as a user should record a user action" do
-    user = FactoryGirl.create :user
+    user = FactoryBot.create :user
     updates = { description: "Shiny shiny description" }
     @artefact.update_attributes_as user, updates
     @artefact.reload
@@ -99,7 +99,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
   end
 
   test "saving as a user should record a user action" do
-    user = FactoryGirl.create :user
+    user = FactoryBot.create :user
     updates = { description: "Shiny shiny description" }
     @artefact.description = updates[:description]
     @artefact.save_as user
@@ -116,7 +116,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
   end
 
   test "saving as a user with an action type" do
-    user = FactoryGirl.create :user
+    user = FactoryBot.create :user
     updates = { description: "Shiny shiny description" }
     @artefact.description = updates[:description]
     @artefact.save_as user, action_type: "awesome"

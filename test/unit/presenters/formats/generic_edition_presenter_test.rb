@@ -5,7 +5,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
   context ".render_for_publishing_api with a published document" do
     setup do
-      artefact = FactoryGirl.create(:artefact)
+      artefact = FactoryBot.create(:artefact)
 
       expected_external_related_links = [
         { title: "GOVUK", url: "https://www.gov.uk" },
@@ -13,7 +13,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       ]
       artefact.external_links = expected_external_related_links
 
-      @edition = FactoryGirl.create(:video_edition, :published,
+      @edition = FactoryBot.create(:video_edition, :published,
         major_change: true,
         updated_at: DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone,
         change_note: 'Test',
@@ -68,7 +68,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should 'always return a "major" update_type for a first edition' do
-      first_edition = FactoryGirl.create(:edition, major_change: false, version_number: 1)
+      first_edition = FactoryBot.create(:edition, major_change: false, version_number: 1)
       presenter = Formats::GenericEditionPresenter.new(first_edition)
 
       output = presenter.render_for_publishing_api(republish: false)
@@ -78,13 +78,13 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
 
   context ".render_for_publishing_api with a draft document" do
     setup do
-      artefact = FactoryGirl.create(
+      artefact = FactoryBot.create(
         :artefact,
         content_id: SecureRandom.uuid,
         language: 'cy',
       )
       updated_at = DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone
-      @edition = FactoryGirl.create(
+      @edition = FactoryBot.create(
         :transaction_edition,
         state: "draft",
         updated_at: updated_at,

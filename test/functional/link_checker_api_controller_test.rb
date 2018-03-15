@@ -9,18 +9,18 @@ class LinkCheckerApiControllerTest < ActionController::TestCase
   end
 
   def create_edition_link_check_report
-    FactoryGirl.create(:edition, :with_link_check_report,
+    FactoryBot.create(:edition, :with_link_check_report,
                                  batch_id: 5,
                                  link_uris: ['https://www.gov.uk']).link_check_reports.first
   end
 
   def create_answer_edition_with_link_check_report
-    FactoryGirl.create(:answer_edition_with_link_check_report, batch_id: 5,
+    FactoryBot.create(:answer_edition_with_link_check_report, batch_id: 5,
                                                                link_uris: ['https://www.gov.uk']).link_check_reports.first
   end
 
   def create_campaign_edition_with_link_check_report
-    FactoryGirl.create(:campaign_edition_with_link_check_report, batch_id: 5,
+    FactoryBot.create(:campaign_edition_with_link_check_report, batch_id: 5,
                                                                  link_uris: ['https://www.gov.uk']).link_check_reports.first
   end
 

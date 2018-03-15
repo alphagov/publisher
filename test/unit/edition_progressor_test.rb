@@ -3,8 +3,8 @@ require 'edition_progressor'
 
 class EditionProgressorTest < ActiveSupport::TestCase
   setup do
-    @laura = FactoryGirl.create(:user)
-    @guide = FactoryGirl.create(:guide_edition, panopticon_id: FactoryGirl.create(:artefact).id)
+    @laura = FactoryBot.create(:user)
+    @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
     stub_register_published_content
   end
 

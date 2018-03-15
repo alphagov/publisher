@@ -8,7 +8,7 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
   end
 
   should "edit a draft artefact" do
-    edition = FactoryGirl.create(:edition)
+    edition = FactoryBot.create(:edition)
     visit metadata_edition_path(edition)
 
     fill_in "Slug", with: ""
@@ -27,7 +27,7 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
   end
 
   should "not be able to edit metadata for a published edition" do
-    edition = FactoryGirl.create(:edition, :published)
+    edition = FactoryBot.create(:edition, :published)
     visit metadata_edition_path(edition)
 
     assert !page.has_button?("Update metadata")

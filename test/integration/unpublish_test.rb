@@ -2,13 +2,13 @@ require "integration_test_helper"
 
 class UnpublishTest < ActionDispatch::IntegrationTest
   setup do
-    @artefact = FactoryGirl.create(:artefact,
+    @artefact = FactoryBot.create(:artefact,
        slug: "bertie-botts-every-flavour-beans",
        kind: "answer",
        name: "Bertie Bott's Every Flavour Beans",
        owning_app: "publisher")
 
-    @edition = FactoryGirl.create(:answer_edition,
+    @edition = FactoryBot.create(:answer_edition,
                                    panopticon_id: @artefact.id,
                                    body: "They're quite gross.")
     setup_users

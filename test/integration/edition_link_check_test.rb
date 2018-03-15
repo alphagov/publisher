@@ -17,7 +17,7 @@ class EditionLinkCheckTest < JavascriptIntegrationTest
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
     )
 
-    @place = FactoryGirl.create(:place_edition, introduction: "This is [link](https://www.gov.uk) text.")
+    @place = FactoryBot.create(:place_edition, introduction: "This is [link](https://www.gov.uk) text.")
   end
 
   with_and_without_javascript do
