@@ -29,7 +29,7 @@ create_new_account:
     * your National Insurance number
     * a recent payslip or P60 or a valid UK passport
 
-    [Create a Government Gateway account](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway).
+    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway){/button}
 
     ### GOV.UK Verify
 
@@ -38,7 +38,7 @@ create_new_account:
     - a UK address
     - a valid passport or photocard driving licence
 
-    [Create a GOV.UK Verify account](https://www.tax.service.gov.uk/paye/company-car/start-verify).
+    {button}[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/paye/company-car/start-verify){/button}
 
     A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 
@@ -46,4 +46,4 @@ create_new_account:
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
 update_type: minor
-change_note: Updated the wording of the sign-in options (baseline test for Verify).
+change_note: added a button instead of the links to gov gateway and verify.
