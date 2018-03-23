@@ -45,7 +45,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'govuk-content-schema-test-helpers', '~> 1.6'
   gem 'minitest-reporters'
-  gem 'mocha', '1.3.0'
+  gem 'mocha', '1.4.0'
   gem 'poltergeist', '1.17.0'
   gem 'rails-controller-testing'
   gem 'shoulda', '3.5.0'
