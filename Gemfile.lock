@@ -212,7 +212,7 @@ GEM
       activesupport (>= 4.0)
       logstash-event (~> 1.2.0)
       request_store
-    loofah (2.2.1)
+    loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lrucache (0.1.4)
@@ -236,7 +236,7 @@ GEM
       redis
     mocha (1.4.0)
       metaclass (~> 0.0.1)
-    momentjs-rails (2.17.1)
+    momentjs-rails (2.20.1)
       railties (>= 3.1)
     money (6.10.1)
       i18n (>= 0.6.4, < 1.0)
@@ -314,8 +314,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.0.4)
+      loofah (~> 2.2, >= 2.2.2)
     rails_autolink (1.1.6)
       rails (> 3.1)
     railties (5.0.3)
@@ -327,7 +327,7 @@ GEM
     rainbow (2.2.2)
       rake
     raindrops (0.19.0)
-    rake (12.3.0)
+    rake (12.3.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -483,7 +483,7 @@ DEPENDENCIES
   minitest-reporters
   mlanett-redis-lock (= 0.2.7)
   mocha (= 1.4.0)
-  momentjs-rails (= 2.17.1)
+  momentjs-rails (= 2.20.1)
   mongoid (= 6.1.0)
   mongoid-sadstory
   mongoid_rails_migrations!
