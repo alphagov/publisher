@@ -115,7 +115,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
-    gds-api-adapters (52.4.0)
+    gds-api-adapters (52.5.0)
       addressable
       link_header
       lrucache (~> 0.1.1)
