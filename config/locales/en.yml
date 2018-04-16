@@ -24,6 +24,6 @@ en:
   formtastic:
     hints:
       guide:
-        slug: "eg ‘title-of-part’ (no spaces, apostrophes, etc)"
+        slug: "for example, title-of-part (no spaces, apostrophes or acronyms)"
       part:
-        slug: "eg ‘title-of-part’ (no spaces, apostrophes, etc)"
+        slug: "for example, title-of-part (no spaces, apostrophes or acronyms)"
