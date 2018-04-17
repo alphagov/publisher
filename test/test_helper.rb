@@ -6,7 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
 require "minitest/autorun"
-require 'mocha/mini_test'
+require 'mocha/minitest'
 require 'database_cleaner'
 require 'webmock/minitest'
 require 'gds_api/test_helpers/publishing_api_v2'
