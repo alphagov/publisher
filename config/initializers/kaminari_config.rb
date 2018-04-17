@@ -1,1 +1,0 @@
-::Kaminari::Hooks.init

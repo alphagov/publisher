@@ -14,7 +14,7 @@ gem 'govuk_sidekiq', '~> 3.0.0'
 gem 'has_scope'
 gem 'inherited_resources'
 gem 'jquery-ui-rails', '~> 5.0.3'
-gem 'kaminari', '0.17.0'
+gem 'kaminari', '~> 1.1'
 gem 'kaminari-mongoid', '1.0.1'
 gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.20.1'
