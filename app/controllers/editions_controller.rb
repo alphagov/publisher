@@ -377,7 +377,7 @@ private
 
   def progress_edition(resource, activity_params)
     @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params, ['publish_at']))
+    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, ['publish_at']))
   end
 
   def report_state_counts
