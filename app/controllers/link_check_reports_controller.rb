@@ -1,5 +1,5 @@
 class LinkCheckReportsController < ApplicationController
-  before_filter :find_edition
+  before_action :find_edition
 
   def create
     service = LinkCheckReportCreator.new(
