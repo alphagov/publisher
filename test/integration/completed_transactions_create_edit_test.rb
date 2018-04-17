@@ -98,4 +98,15 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_field? "Promotion choice URL", with: register_to_vote_promotion_url
     assert page.has_unchecked_field? "Promote organ donation"
   end
+
+  should "show list of promotion options" do
+    edition = FactoryBot.create(:completed_transaction_edition, panopticon_id: @artefact.id)
+
+    visit_edition edition
+
+    assert page.has_content? "Don't promote anything on this page"
+    assert page.has_content? "Promote organ donation"
+    assert page.has_content? "Promote register to vote"
+    assert page.has_content? "Promote MOT Reminders"
+  end
 end

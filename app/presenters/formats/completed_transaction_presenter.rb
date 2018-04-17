@@ -2,7 +2,7 @@ module Formats
   class CompletedTransactionPresenter < EditionFormatPresenter
   private
 
-    PROMOTIONS = %w(organ_donor register_to_vote)
+    PROMOTIONS = %w(organ_donor register_to_vote mot_reminder)
 
     def schema_name
       'completed_transaction'
