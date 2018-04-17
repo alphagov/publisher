@@ -18,13 +18,15 @@ gem 'kaminari', '~> 1.1'
 gem 'kaminari-mongoid', '1.0.1'
 gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.20.1'
+gem 'mongo', '2.4.3'
+gem 'mongoid', '~> 6.1'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem "mongoid-sadstory"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
 gem 'plek', '2.1.1'
-gem 'rails', '5.0.3'
+gem 'rails', '~> 5.1.0'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
@@ -32,7 +34,6 @@ gem 'reverse_markdown', '1.0.5', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '3.5.9.1'
 gem 'selectize-rails', '0.12.4.1'
-gem 'mongoid', '6.1.0'
 gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
 gem 'uglifier', '4.1.9'
