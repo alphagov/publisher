@@ -150,7 +150,7 @@ describe('An ajax save module', function() {
       spyOn(window.GOVUKAdmin, 'trackEvent');
       element.find('.js-save').trigger('click');
 
-      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save-error', 'abort: Not Found');
+      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save', 'error', { value: 'abort: Not Found' });
     });
   });
 
