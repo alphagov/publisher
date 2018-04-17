@@ -1,5 +1,5 @@
 //= require select2
-//= require jquery-ui/sortable
+//= require jquery-ui/widgets/sortable
 //= require selectize
 //= require moment
 //= require mousetrap
