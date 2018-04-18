@@ -8,31 +8,32 @@ gem 'formtastic-bootstrap', '3.1.1'
 gem 'gds-sso', '~> 13.6'
 gem 'gds-api-adapters', '~> 52'
 gem 'govspeak', '~> 5.6.0'
-gem 'govuk_admin_template', '4.3.0'
+gem 'govuk_admin_template', '~> 6.6'
 gem 'govuk_app_config', '~> 1.4.2'
 gem 'govuk_sidekiq', '~> 3.0.0'
 gem 'has_scope'
 gem 'inherited_resources'
-gem 'jquery-ui-rails', '~> 5.0.3'
-gem 'kaminari', '0.17.0'
+gem 'jquery-ui-rails', '~> 6.0'
+gem 'kaminari', '~> 1.1'
 gem 'kaminari-mongoid', '1.0.1'
 gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.20.1'
+gem 'mongo', '2.4.3'
+gem 'mongoid', '~> 6.1'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem "mongoid-sadstory"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
 gem 'plek', '2.1.1'
-gem 'rails', '5.0.3'
+gem 'rails', '~> 5.2'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
 gem 'reverse_markdown', '1.0.5', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
-gem 'select2-rails', '3.5.9.1'
+gem 'select2-rails', '3.5.9.1' # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem 'selectize-rails', '0.12.4.1'
-gem 'mongoid', '6.1.0'
 gem 'state_machines', '~> 0.4'
 gem 'state_machines-mongoid', '~> 0.1'
 gem 'uglifier', '4.1.9'

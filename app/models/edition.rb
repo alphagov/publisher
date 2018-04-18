@@ -53,7 +53,7 @@ class Edition
   scope :major_updates, lambda { where(major_change: true) }
 
   scope :internal_search, lambda { |term|
-    regex = Regexp.new(Regexp.escape(term), true) # case-insensitive
+    regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
     any_of({ title: regex }, { slug: regex }, { overview: regex }, licence_identifier: regex)
   }
 

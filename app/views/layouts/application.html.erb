@@ -1,8 +1,10 @@
 <% content_for :page_title, ' | GOV.UK Publisher' %>
 <% content_for :favicon do %>
   <% environment_style = GovukAdminTemplate.environment_style %>
-  <%= favicon_link_tag environment_style ?
-        "favicon-#{environment_style}.png" : "favicon.png" %>
+  <%= favicon_link_tag(
+    environment_style ? "favicon-#{environment_style}.png" : "favicon.png",
+    skip_pipeline: true
+  ) %>
 <% end %>
 <% content_for :head do %>
   <%= stylesheet_link_tag "application", :media => "all" %>
