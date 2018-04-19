@@ -5,7 +5,7 @@ choose_sign_in:
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
-      url: https://www.tax.service.gov.uk/paye/company-car/start-government-gateway
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/paye/company-car/details&accountType=individual&origin=PERTAX&origin=PTA-companycar
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/paye/company-car/start-verify
