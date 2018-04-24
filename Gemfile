@@ -30,7 +30,7 @@ gem 'rails', '~> 5.2'
 gem 'rails_autolink', '1.1.6'
 gem 'rest-client', require: false # Only used in some importers
 gem 'retriable', require: false # Only used in some importers
-gem 'reverse_markdown', '1.0.5', require: false # Only used in some importers
+gem 'reverse_markdown', '1.1.0', require: false # Only used in some importers
 gem 'sass-rails', '~> 5.0'
 gem 'select2-rails', '3.5.9.1' # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem 'selectize-rails', '0.12.4.1'
