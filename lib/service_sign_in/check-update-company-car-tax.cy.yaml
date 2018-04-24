@@ -5,10 +5,10 @@ choose_sign_in:
   slug: profi-pwy-ydych
   options:
     - text: Defnyddio Porth y Llywodraeth
-      url: https://www.tax.service.gov.uk/account
+      url: https://www.tax.service.gov.uk/paye/company-car/start-government-gateway
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
-      url: https://www.tax.service.gov.uk/ida/sa/login
+      url: https://www.tax.service.gov.uk/paye/company-car/start-verify
       hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
     - text: Creu cyfrif
       slug: creu-cyfrif
@@ -29,7 +29,7 @@ create_new_account:
     - eich rhif Yswiriant Gwladol
     - slip cyflog diweddar, P60 neu basbort y DU sy'n ddilys
 
-    [Creu cyfrif Porth y llywodraeth.]((https://www.tax.service.gov.uk/paye/company-car/start-government-gateway])
+    [Creu cyfrif Porth y llywodraeth.](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway])
 
     ###GOV.UK Verify
 
