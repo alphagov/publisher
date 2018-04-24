@@ -64,6 +64,6 @@ group :development, :test do
   gem 'govuk-lint', '~> 3.8.0'
   gem 'jasmine', '2.5.2'
   gem 'jasmine-core', '2.5.2'
-  gem 'rack', '2.0.4'
+  gem 'rack', '2.0.5'
   gem 'pry-byebug'
 end

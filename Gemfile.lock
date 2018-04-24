@@ -307,7 +307,7 @@ GEM
       byebug (~> 9.1)
       pry (~> 0.10)
     public_suffix (3.0.2)
-    rack (2.0.4)
+    rack (2.0.5)
     rack-cache (1.7.1)
       rack (>= 0.4)
     rack-protection (2.0.1)
@@ -515,7 +515,7 @@ DEPENDENCIES
   plek (= 2.1.1)
   poltergeist (= 1.17.0)
   pry-byebug
-  rack (= 2.0.4)
+  rack (= 2.0.5)
   rails (~> 5.2)
   rails-controller-testing
   rails_autolink (= 1.1.6)
