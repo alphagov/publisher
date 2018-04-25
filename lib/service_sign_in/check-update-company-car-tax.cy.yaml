@@ -1,0 +1,51 @@
+start_page_slug: diweddaru-manylion-car-cwmni
+locale: cy
+choose_sign_in:
+  title: Profi pwy ydych er mwyn mynd yn eich blaen
+  slug: profi-pwy-ydych
+  options:
+    - text: Defnyddio Porth y Llywodraeth
+      url: https://www.tax.service.gov.uk/paye/company-car/start-government-gateway
+      hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
+    - text: Defnyddio GOV.UK Verify
+      url: https://www.tax.service.gov.uk/paye/company-car/start-verify
+      hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
+    - text: Creu cyfrif
+      slug: creu-cyfrif
+create_new_account:
+  title: Creu cyfrif
+  slug: creu-cyfrif
+  body: |
+    I ddefnyddio'r gwasanaeth hwn, bydd angen i chi greu naill ai cyfrif Porth y Llywodraeth neu gyfrif GOV.UK Verify. Caiff y rhain eu defnyddio i helpu i ddiogelu rhag twyll dwyn hunaniaeth.
+
+    Unwaith y bydd cyfrif gennych, gallwch ei ddefnyddio i gyrchu gwasanaethau ar-lein eraill y Llywodraeth.
+
+    ##Dewiswch ffordd o brofi pwy ydych
+
+    ###Porth y Llywodraeth
+
+    Fel arfer mae'n cymryd tua 10 munud i greu cyfrif Porth y Llywodraeth. Bydd yn gweithio orau os oes gennych y canlynol:
+
+    - eich rhif Yswiriant Gwladol
+    - slip cyflog diweddar, P60 neu basbort y DU sy'n ddilys
+
+    [Creu cyfrif Porth y llywodraeth.](https://www.tax.service.gov.uk/paye/company-car/start-government-gateway])
+
+    ###GOV.UK Verify
+
+    Fel arfer mae'n cymryd tua 15 munud i gofrestru gyda GOV.UK Verify. Bydd yn gweithio orau os oes gennych y canlynol:
+
+    - cyfeiriad yn y DU
+    - pasbort neu drwydded cerdyn-llun dilys
+
+    [Creu cyfrif Porth y Llywodraeth](www.tax.service.gov.uk/paye/company-car/start-verify).
+
+    Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
+    
+    ##Cyfrif treth personol
+    
+    Bydd mewngofnodi am y tro cyntaf, yn cychwyn eich cyfrif treth personol. Gallwch ddefnyddio hwn i wirio'ch cofnodion gyda CThEM a rheoli'ch manylion eraill.
+
+
+update_type: major
+change_note: First published.
