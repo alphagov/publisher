@@ -33,7 +33,7 @@
       <br />
       <%= f.radio_button :promotion_choice, 'mot_reminder',
         { checked: (f.object.promotion_choice == "mot_reminder"), disabled: @resource.locked_for_edits? } %>
-      <%= f.label :promotion_choice, "Promote MOT Reminders", value: 'mot_reminder' %>
+      <%= f.label :promotion_choice, "Promote MOT reminders", value: 'mot_reminder' %>
 
       <%= f.input :promotion_choice_url,
           required: false,
