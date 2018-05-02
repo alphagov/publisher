@@ -4,7 +4,7 @@ module PresentationToggles
   included do
     field :presentation_toggles, type: Hash, default: default_presentation_toggles
     validates :promotion_choice_url, presence: true, if: :promotes_something?
-    validates :promotion_choice, inclusion: { in: %w(none organ_donor register_to_vote) }
+    validates :promotion_choice, inclusion: { in: %w(none organ_donor register_to_vote mot_reminder) }
   end
 
   def promotion_choice=(value)

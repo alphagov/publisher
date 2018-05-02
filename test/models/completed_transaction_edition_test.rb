@@ -52,5 +52,12 @@ class CompletedTransactionEditionTest < ActiveSupport::TestCase
 
     assert_equal "register_to_vote", completed_transaction_edition.reload.promotion_choice
     assert_equal "https://www.gov.uk/register-to-vote", completed_transaction_edition.promotion_choice_url
+
+    completed_transaction_edition.promotion_choice = "mot_reminder"
+    completed_transaction_edition.promotion_choice_url = "https://www.gov.uk/mot-reminder"
+    completed_transaction_edition.save!
+
+    assert_equal "mot_reminder", completed_transaction_edition.reload.promotion_choice
+    assert_equal "https://www.gov.uk/mot-reminder", completed_transaction_edition.promotion_choice_url
   end
 end
