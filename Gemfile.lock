@@ -159,7 +159,7 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (1.4.2)
+    govuk_app_config (1.5.0)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
       statsd-ruby (~> 1.4.0)
@@ -398,7 +398,7 @@ GEM
     select2-rails (3.5.9.1)
       thor (~> 0.14)
     selectize-rails (0.12.4.1)
-    sentry-raven (2.7.2)
+    sentry-raven (2.7.3)
       faraday (>= 0.7.6, < 1.0)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
@@ -492,7 +492,7 @@ DEPENDENCIES
   govuk-content-schema-test-helpers (~> 1.6)
   govuk-lint (~> 3.8.0)
   govuk_admin_template (~> 6.6)
-  govuk_app_config (~> 1.4.2)
+  govuk_app_config (~> 1.5.0)
   govuk_sidekiq (~> 3.0.0)
   has_scope
   inherited_resources
