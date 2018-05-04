@@ -18,7 +18,7 @@ gem 'kaminari', '~> 1.1'
 gem 'kaminari-mongoid', '1.0.1'
 gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.20.1'
-gem 'mongo', '2.4.3'
+gem 'mongo', '2.5.2'
 gem 'mongoid', '~> 6.1'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem "mongoid-sadstory"
