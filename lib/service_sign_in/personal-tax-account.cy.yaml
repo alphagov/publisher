@@ -5,7 +5,7 @@ choose_sign_in:
   slug: profi-pwy-ydych
   options:
     - text: Defnyddio Porth y Llywodraeth
-      url: https://www.tax.service.gov.uk/personal-account/start-government-gateway
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
       url: https://www.tax.service.gov.uk/personal-account/start-verify
