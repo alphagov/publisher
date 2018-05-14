@@ -15,6 +15,11 @@ class PublishServiceTest < ActiveSupport::TestCase
     PublishService.call(edition, update_type)
   end
 
+  should "set links" do
+    Services.publishing_api.expects(:patch_links)
+    PublishService.call(edition, update_type)
+  end
+
   def edition
     @_edition ||= stub(
       id: 123,
