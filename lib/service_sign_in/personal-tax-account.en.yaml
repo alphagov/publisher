@@ -29,7 +29,7 @@ create_new_account:
     - your National Insurance number
     - a recent payslip or P60 or a valid UK passport
 
-    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/personal-account/start-government-gateway){/button}
+    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend){/button}
 
     ### GOV.UK Verify
 
