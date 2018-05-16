@@ -28,7 +28,7 @@ create_new_account:
     - eich rhif Yswiriant Gwladol
     - slip cyflog diweddar, P60 neu basbort dilys y DU
 
-    {button}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/personal-account/start-government-gateway){/button}
+    {button}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend){/button}
 
     ### GOV.UK Verify
 
