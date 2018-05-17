@@ -4,14 +4,15 @@ choose_sign_in:
   title: Prove your identity to continue
   slug: prove-identity
   options:
-    - text: Use Government Gateway
+    - text: Sign in with Government Gateway
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
-    - text: Use GOV.UK Verify
+    - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/personal-account/start-verify
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Create an account
       slug: create-account
+      hint_text: If you do not already have one of these accounts, we'll help you choose whether to use Government Gateway or GOV.UK Verify.
 create_new_account:
   title: Create an account
   slug: create-account
@@ -46,4 +47,4 @@ create_new_account:
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
 update_type: minor
-change_note: added a button instead of the links to gov gateway and verify.
+change_note: Update title and added hint text for service sign in page for consistency.
