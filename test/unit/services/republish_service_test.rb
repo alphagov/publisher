@@ -8,7 +8,7 @@ class RepublishServiceTest < ActiveSupport::TestCase
 
   context ".call" do
     should "call the UpdateService with the provided edition" do
-      UpdateService.expects(:call).with(edition, 'republish')
+      UpdateService.expects(:call).with(edition, republish: true)
       RepublishService.call(edition)
     end
 

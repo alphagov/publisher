@@ -1,8 +1,8 @@
 class UpdateWorker
   include Sidekiq::Worker
 
-  def perform(edition_id, update_type = "minor")
+  def perform(edition_id)
     edition = Edition.find(edition_id)
-    UpdateService.call(edition, update_type)
+    UpdateService.call(edition)
   end
 end
