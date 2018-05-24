@@ -2,6 +2,7 @@ start_page_slug: check-income-tax-current-year
 locale: en
 choose_sign_in:
   title: Prove your identity to continue
+  description: You’ll need an account to prove your identity and check your income tax for the current year.
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
@@ -47,4 +48,4 @@ create_new_account:
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
 update_type: minor
-change_note: Update title and added hint text for service sign in page for consistency.
+change_note: Added description text for service sign in page including service name.

@@ -2,6 +2,7 @@ start_page_slug: log-in-file-self-assessment-tax-return
 locale: en
 choose_sign_in:
   title: How do you want to sign in?
+  description: You’ll need an account to prove your identity and complete your Self Assessment.
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
@@ -31,4 +32,4 @@ create_new_account:
 
     *[UTR]: Unique Taxpayer Reference
 update_type: minor
-change_note: Updated the wording of the page title to be sign-in focused (baseline test for Verify).
+change_note: Added description text for service sign in page including service name.
