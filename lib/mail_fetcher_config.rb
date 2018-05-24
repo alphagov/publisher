@@ -6,9 +6,7 @@ class MailFetcherConfig
       raise ArgumentError, "Non-symbolic keys: #{keys_string}"
     end
 
-    @imap_details = if ENV["RUN_FACT_CHECK_FETCHER"] && config_hash.present?
-                      config_hash.dup
-                    end
+    @imap_details = config_hash.dup if config_hash.present?
   end
 
   def configure(mail_module = Mail)

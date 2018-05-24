@@ -1,6 +1,15 @@
 require 'integration_test_helper'
 
 class FactCheckEmailTest < ActionDispatch::IntegrationTest
+  setup do
+    @run_fact_check_fetcher = ENV["RUN_FACT_CHECK_FETCHER"]
+    ENV["RUN_FACT_CHECK_FETCHER"] = "1"
+  end
+
+  teardown do
+    ENV["RUN_FACT_CHECK_FETCHER"] = @run_fact_check_fetcher
+  end
+
   def fact_check_mail_for(edition, attrs = {})
     message = Mail.new do
       from    attrs.fetch(:from,    'foo@example.com')
@@ -156,6 +165,16 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     should "progress to Fact Check Received state if email is a genuine reply" do
       assert_correct_state("X-Some-Header", "some-value", "fact_check_received")
+    end
+  end
+
+  context "when RUN_FACT_CHECK_FETCHER is not set" do
+    should "not attempt to retrieve mail" do
+      ENV.delete("RUN_FACT_CHECK_FETCHER")
+      Mail.expects(:all).never
+
+      handler = FactCheckEmailHandler.new(fact_check_config)
+      handler.process
     end
   end
 end

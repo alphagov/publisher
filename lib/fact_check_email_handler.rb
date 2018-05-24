@@ -34,12 +34,14 @@ class FactCheckEmailHandler
 
   # &after_each_message: an optional block to call after processing each message
   def process(&after_each_message)
-    Mail.all(read_only: false, delete_after_find: true) do |message|
-      message.skip_deletion unless process_message(message)
-      begin
-        after_each_message.call(message) if after_each_message
-      rescue => e
-        GovukError.notify(e)
+    if ENV.include?("RUN_FACT_CHECK_FETCHER")
+      Mail.all(read_only: false, delete_after_find: true) do |message|
+        message.skip_deletion unless process_message(message)
+        begin
+          yield(message) if block_given?
+        rescue StandardError => e
+          GovukError.notify(e)
+        end
       end
     end
   end

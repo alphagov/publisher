@@ -12,15 +12,6 @@ class MailFetcherConfigTest < ActiveSupport::TestCase
     end
   end
 
-  setup do
-    @env_run_fact_check_fetcher = ENV["RUN_FACT_CHECK_FETCHER"]
-    ENV["RUN_FACT_CHECK_FETCHER"] = "1"
-  end
-
-  teardown do
-    ENV["RUN_FACT_CHECK_FETCHER"] = @env_run_fact_check_fetcher
-  end
-
   should "raise an error if given strings as keys" do
     assert_raises ArgumentError do
       MailFetcherConfig.new("user_name" => "bob@example.com")
@@ -42,12 +33,5 @@ class MailFetcherConfigTest < ActiveSupport::TestCase
     mail = StubMail.new
     mail.expects(:defaults).never
     MailFetcherConfig.new({}).configure(mail)
-  end
-
-  should "not configure email settings if RUN_FACT_CHECKER_FETCHER is not set" do
-    mail = StubMail.new
-    mail.expects(:defaults).never
-    ENV.delete("RUN_FACT_CHECK_FETCHER")
-    MailFetcherConfig.new(user_name: "bob@example.com").configure(mail)
   end
 end
