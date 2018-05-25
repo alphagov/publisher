@@ -245,7 +245,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update the publishing API on successful update" do
-      UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
+      UpdateWorker.expects(:perform_async).with(@guide.id.to_s, false)
 
       post :update,
         params: {

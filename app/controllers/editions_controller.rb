@@ -93,8 +93,7 @@ class EditionsController < InheritedResources::Base
 
         update_assignment resource, assign_to
 
-        UpdateWorker.perform_async(resource.id.to_s)
-        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
+        UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
@@ -112,8 +111,7 @@ class EditionsController < InheritedResources::Base
 
         update_assignment resource, assign_to
 
-        UpdateWorker.perform_async(resource.id.to_s)
-        PublishWorker.perform_async(resource.id.to_s) if update_action_is_publish?
+        UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
         render json: resource
       }
