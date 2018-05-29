@@ -47,7 +47,7 @@ group :test do
   gem 'govuk-content-schema-test-helpers', '~> 1.6'
   gem 'minitest-reporters'
   gem 'mocha', '1.5.0'
-  gem 'poltergeist', '1.18.0'
+  gem 'poltergeist', '1.18.1'
   gem 'rails-controller-testing'
   gem 'shoulda', '3.5.0'
   gem 'simplecov', '~> 0.16.1', require: false
