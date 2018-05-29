@@ -5,7 +5,7 @@ choose_sign_in:
   slug: profi-pwy-ydych
   options:
     - text: Defnyddio Porth y Llywodraeth
-      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
       url: https://www.tax.service.gov.uk/personal-account/start-verify
@@ -28,7 +28,7 @@ create_new_account:
     - eich rhif Yswiriant Gwladol
     - slip cyflog diweddar, P60 neu basbort dilys y DU
 
-    {button}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend){/button}
+    {button}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
 
     ### GOV.UK Verify
 
