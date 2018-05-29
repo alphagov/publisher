@@ -6,7 +6,7 @@ choose_sign_in:
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
-      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/personal-account/start-verify
@@ -31,7 +31,7 @@ create_new_account:
     - your National Insurance number
     - a recent payslip or P60 or a valid UK passport
 
-    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PERTAX&origin=PTA-frontend){/button}
+    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
 
     ### GOV.UK Verify
 
