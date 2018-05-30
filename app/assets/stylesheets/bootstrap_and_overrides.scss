@@ -69,10 +69,24 @@ select.date {
  * required to apply correct display attributes to .tab-pane
  * elements wrapped inside the edition form in .tab-content.
  * See: edition/show.html.erb
+ *
+ * Uses visibility: rather than display: modifiers so that modal forms
+ * embedded in hidden tabs can be displayed.
  */
 .tab-content .tab-pane {
-  display: none;
+  overflow: hidden;
+  position: absolute;
+  visibility: hidden;
+  width: 0px;
 }
 .tab-content .active {
-  display: block;
+  visibility: visible;
+  position: relative;
+  width: 100%;
+}
+.tab-content>.tab-pane {
+  display: inline-block;
+}
+.modal.in {
+  visibility: visible;
 }
