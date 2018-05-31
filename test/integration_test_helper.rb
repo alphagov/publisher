@@ -267,4 +267,5 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 end
 
+Capybara.server = :webrick
 Capybara.javascript_driver = :poltergeist
