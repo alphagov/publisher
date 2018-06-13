@@ -20,6 +20,11 @@ namespace :publishing_api do
     republish_draft format_editions.draft_in_publishing_api
   end
 
+  desc 'Publish the experimental knowledge API'
+  task :publish_knowledge do
+    KnowledgeApi.new.publish
+  end
+
   def republish(editions)
     puts
     puts "Scheduling republishing of #{editions.count} editions"
