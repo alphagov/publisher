@@ -1,0 +1,48 @@
+- id: minimum-wage
+  title: Minimum wage rates
+  source: https://www.gov.uk/national-minimum-wage-rates
+  data:
+    - age_range: 25 and over
+      minimum_wage: 7.83
+    - age_range: 21 to 24
+      minimum_wage: 7.38
+    - age_range: 18 to 20
+      minimum_wage: 5.90
+    - age_range: Under 18
+      minimum_wage: 4.20
+    - age_range: Apprentice
+      minimum_wage: 3.70
+
+- id: income-tax
+  title: Income Tax rates and bands
+  source: https://www.gov.uk/income-tax-rates
+  data:
+    - band: Personal Allowance
+      taxable_income: Up to £11,850
+      tax_rate: 0%
+    - band: Basic rate
+      taxable_income: £11,851 to £46,350
+      tax_rate: 20%
+    - band: Higher rate
+      taxable_income: £46,351 to £150,000
+      tax_rate: 40%
+    - band: Additional rate
+      taxable_income: over £150,000
+      tax_rate: 45%
+
+- id: tax-return-deadlines
+  title: Self Assessment tax return deadlines
+  source: https://www.gov.uk/self-assessment-tax-returns/deadlines
+  data:
+    - event: Register for Self Assessment
+      deadline: 2018-10-05
+      description: Register for Self Assessment if you’re self-employed or a sole trader, not self-employed, or registering a partner or partnership
+    - event: Paper tax returns
+      deadline: 2018-10-31
+      description: Midnight 31 October 2018
+    - event: Online tax returns
+      deadline: 2019-01-31
+      description: Midnight 31 January 2019
+    - event: Pay the tax you owe
+      deadline: 2019-01-31
+      description: Midnight 31 January 2019
