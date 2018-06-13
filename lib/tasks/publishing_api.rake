@@ -21,7 +21,7 @@ namespace :publishing_api do
   end
 
   desc 'Publish the experimental knowledge API'
-  task :publish_knowledge do
+  task publish_knowledge: [:environment] do
     KnowledgeApi.new.publish
   end
 
