@@ -2,14 +2,6 @@ require "plek"
 require "artefact_action" # Require this when running outside Rails
 require_dependency "safe_html"
 
-class CannotEditSlugIfEverPublished < ActiveModel::Validator
-  def validate(record)
-    if record.changes.keys.include?("slug") && record.state_was == "live"
-      record.errors[:slug] << "Cannot edit slug for live artefacts"
-    end
-  end
-end
-
 class Artefact
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -115,7 +107,6 @@ class Artefact
   validates :state, inclusion: { in: %w(draft live archived) }
   validates :owning_app, presence: true
   validates :language, inclusion: { in: %w(en cy) }
-  validates_with CannotEditSlugIfEverPublished
   validate :validate_prefixes_and_paths
   validate :format_of_new_need_ids, if: :need_ids_changed?
 

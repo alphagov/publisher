@@ -275,20 +275,6 @@ class ArtefactTest < ActiveSupport::TestCase
     assert_equal "something-else", edition.slug
   end
 
-  test "should not let you edit the slug if the artefact is live" do
-    artefact = FactoryBot.create(:artefact,
-        slug: "too-late-to-edit",
-        kind: "answer",
-        name: "Foo bar",
-        owning_app: "publisher",
-        state: "live")
-
-    artefact.slug = "belated-correction"
-    refute artefact.save
-
-    assert_equal "too-late-to-edit", artefact.reload.slug
-  end
-
   # should continue to work in the way it has been:
   # i.e. you can edit everything but the name/title for published content in panop
   test "on save title should not be applied to already published content" do
