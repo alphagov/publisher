@@ -18,7 +18,6 @@ end
 class ArtefactActionTest < ActiveSupport::TestCase
   DEFAULTS = {
     "active" => false,
-    "need_ids" => [],
     "state" => "draft",
     "paths" => [],
     "prefixes" => [],

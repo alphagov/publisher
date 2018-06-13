@@ -10,7 +10,6 @@ class OrganisationContentPresenter < CSVPresenter
       browse_pages
       topics
       organisations
-      need_ids
     ]
   end
 
@@ -32,8 +31,6 @@ private
       expanded_links(content_id, %w(topics base_path), /\/topic\//)
     when :organisations
       expanded_links(content_id, %w(organisations title))
-    when :need_ids
-      expanded_links(content_id, %w(meets_user_needs details need_id))
     when :format
       artefact.kind
     else

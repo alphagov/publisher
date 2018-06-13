@@ -62,10 +62,6 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       assert_equal "override me", result[:document_type]
     end
 
-    should "[:need_ids]" do
-      assert_equal [], result[:need_ids]
-    end
-
     context "when in beta" do
       should "include phase" do
         edition.expects(:in_beta).returns(true)
