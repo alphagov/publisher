@@ -156,16 +156,12 @@ class Artefact
   end
 
   def update_editions
-    case state
-    when 'draft'
-      if self.slug_changed?
-        Edition.where(:state.nin => ["archived"],
-                      panopticon_id: self.id).each do |edition| # rubocop:disable Rails/FindEach
-          edition.update_slug_from_artefact(self)
-        end
+    return archive_editions if state == 'archived'
+
+    if self.slug_changed?
+      Edition.draft_in_publishing_api.where(panopticon_id: self.id).each do |edition| # rubocop:disable Rails/FindEach
+        edition.update_slug_from_artefact(self)
       end
-    when 'archived'
-      archive_editions
     end
   end
 
