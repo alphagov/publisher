@@ -1,4 +1,4 @@
-<% if publication.draft? %>
+<% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
   <%= semantic_bootstrap_nested_form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
     <div class="row">
       <div class="col-md-12">
