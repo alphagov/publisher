@@ -1,16 +1,18 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
     LocalService.create(lgsl_code: 1, providing_tier: %w{county unitary})
 
-    @artefact = FactoryBot.create(:artefact,
-        slug: "hedgehog-topiary",
-        kind: "local_transaction",
-        name: "Foo bar",
-        owning_app: "publisher",
-                                  )
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "hedgehog-topiary",
+      kind: "local_transaction",
+      name: "Foo bar",
+      owning_app: "publisher"
+    )
 
     setup_users
     stub_linkables

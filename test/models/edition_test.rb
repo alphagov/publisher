@@ -370,7 +370,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "knows the common fields of two edition subclasses" do
-    to_copy = Set.new([:introduction, :need_to_know, :more_information])
+    to_copy = Set.new(%i[introduction need_to_know more_information])
     result = Set.new(TransactionEdition.new.fields_to_copy(PlaceEdition))
     assert to_copy.proper_subset?(result)
   end

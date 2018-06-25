@@ -31,7 +31,8 @@ module TagTestHelpers
           "internal_name" => "Student Loans Company"
         },
       ],
-      document_type: "organisation")
+      document_type: "organisation"
+    )
 
     publishing_api_has_linkables([
       { internal_name: 'As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)',

@@ -21,7 +21,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
       slug: "slug-#{num}",
       body: "body-#{num}",
       order: num,
-      guide_edition: edition)
+      guide_edition: edition
+    )
   end
 
   def result

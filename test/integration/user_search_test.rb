@@ -27,13 +27,16 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
   test "filtering by format" do
     guide = FactoryBot.create(
-      :guide_edition, title: "Vehicle insurance")
+      :guide_edition, title: "Vehicle insurance"
+    )
     @user.record_note guide, "I like this guide"
     another_guide = FactoryBot.create(
-      :guide_edition, title: "Growing your business")
+      :guide_edition, title: "Growing your business"
+    )
     @user.record_note another_guide, "I like this guide"
     answer = FactoryBot.create(
-      :answer_edition, title: "Vehicle answer")
+      :answer_edition, title: "Vehicle answer"
+    )
     @user.record_note answer, "I like this answer"
 
     visit "/user_search"
@@ -59,10 +62,12 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
   test "filtering by keyword" do
     guide = FactoryBot.create(
-      :guide_edition, title: "Vehicle insurance")
+      :guide_edition, title: "Vehicle insurance"
+    )
     @user.record_note guide, "I like this guide"
     another_guide = FactoryBot.create(
-      :guide_edition, title: "Growing your business")
+      :guide_edition, title: "Growing your business"
+    )
     @user.record_note another_guide, "I like this guide"
 
     visit "/user_search"
@@ -76,7 +81,8 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
   test "excluding archived editions from keyword filtered results" do
     guide = FactoryBot.create(
-      :guide_edition, title: "Vehicle insurance", state: "archived")
+      :guide_edition, title: "Vehicle insurance", state: "archived"
+    )
     @user.record_note guide, "I like this guide"
     visit "/user_search"
 

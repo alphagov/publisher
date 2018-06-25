@@ -1,15 +1,15 @@
 class ContentWorkflowPresenter < CSVPresenter
   def initialize(scope = Edition.published)
     super(scope)
-    self.column_headings = [
-      :content_title,
-      :content_slug,
-      :content_url,
-      :current_status,
-      :stage,
-      :format,
-      :current_assignee,
-      :created_at,
+    self.column_headings = %i[
+      content_title
+      content_slug
+      content_url
+      current_status
+      stage
+      format
+      current_assignee
+      created_at
     ]
   end
 

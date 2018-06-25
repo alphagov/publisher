@@ -20,7 +20,7 @@ private
 
     overview.save
 
-    found_overviews = OverviewDashboard.where(dashboard_type:  "Format")
+    found_overviews = OverviewDashboard.where(dashboard_type: "Format")
     assert_equal found_overviews.size, 1
     found_overviews.first
   end

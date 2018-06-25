@@ -26,7 +26,7 @@ class FactCheckEmailHandler
       end
     end
     return false
-  rescue => e
+  rescue StandardError => e
     errors << "Failed to process message #{message.subject}: #{e.message}"
     GovukError.notify(e)
     return false

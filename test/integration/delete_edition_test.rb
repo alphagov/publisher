@@ -3,13 +3,14 @@ require 'integration_test_helper'
 class DeleteEditionTest < ActionDispatch::IntegrationTest
   setup do
     content_id = SecureRandom.uuid
-    @artefact = FactoryBot.create(:artefact,
+    @artefact = FactoryBot.create(
+      :artefact,
       slug: "i-dont-want-this",
       content_id: content_id,
       kind: "guide",
       name: "Foo bar",
-      owning_app: "publisher",
-                                  )
+      owning_app: "publisher"
+    )
 
     @edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)
 

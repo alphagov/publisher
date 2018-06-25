@@ -6,7 +6,7 @@ class Area < OpenStruct
 
   # This list should stay in sync with Imminence's areas route constraint:
   # https://github.com/alphagov/imminence/blob/master/config/routes.rb#L13-L17
-  AREA_TYPES = %w(EUR CTY DIS LBO LGD MTD UTA COI)
+  AREA_TYPES = %w(EUR CTY DIS LBO LGD MTD UTA COI).freeze
 
   def self.all
     areas

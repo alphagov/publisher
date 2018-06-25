@@ -2,7 +2,7 @@ require "net/http"
 require "uri"
 
 class LicenceIdentifierMigrator
-  LICENCE_MAPPING_URL = "https://raw.github.com/alphagov/licence-finder/correlation_id_migration/data/licence_gds_ids.yaml"
+  LICENCE_MAPPING_URL = "https://raw.github.com/alphagov/licence-finder/correlation_id_migration/data/licence_gds_ids.yaml".freeze
 
   def self.update_all
     counter = 0
@@ -28,7 +28,7 @@ class LicenceIdentifierMigrator
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(uri.request_uri)
     response = http.request(request)
-    YAML.load(response.body)
+    YAML.safe_load(response.body)
   end
 
   def self.done(counter, nl)

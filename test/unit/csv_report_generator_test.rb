@@ -46,6 +46,7 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
     @generator.move_temporary_reports_into_place
 
     assert_equal "bar", File.read(
-      File.join(CsvReportGenerator.csv_path, "example.csv"))
+      File.join(CsvReportGenerator.csv_path, "example.csv")
+    )
   end
 end

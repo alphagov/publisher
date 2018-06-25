@@ -1,11 +1,12 @@
 namespace :orphaned_editions do
   QUALIFYING_EDITION_STATES = %w(
-ready
-amends_needed
-fact_check_received
-fact_check
-draft
-in_review)
+    ready
+    amends_needed
+    fact_check_received
+    fact_check
+    draft
+    in_review
+  ).freeze
 
   def orphaned_editions(state)
     Edition.where(state: state).select { |e|

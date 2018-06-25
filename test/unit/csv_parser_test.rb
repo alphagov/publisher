@@ -8,9 +8,9 @@ class CSVParserTest < ActiveSupport::TestCase
   end
 
   test "can convert a CSV into an Array of Hash objects" do
-    csv_string = <<EOS
-slug,tag
-/foo,/bar
+    csv_string = <<~EOS
+      slug,tag
+      /foo,/bar
 EOS
 
     parser = CSVParser.new(StringIO.new(csv_string))

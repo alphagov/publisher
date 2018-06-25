@@ -22,7 +22,7 @@ class LocalServiceImporter
     CSV.new(@filehandle, headers: true).each do |row|
       begin
         process_row(row)
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
         GovukError.notify(e, extra: { row: row })
       end

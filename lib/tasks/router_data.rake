@@ -18,7 +18,7 @@ namespace :router_data do
 
     File.write(filename, csv)
 
-    puts "#{filename}"
+    puts filename.to_s
     puts "Complete."
   end
 end

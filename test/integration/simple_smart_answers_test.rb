@@ -1,14 +1,16 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class SimpleSmartAnswersTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
+    @artefact = FactoryBot.create(
+      :artefact,
       slug: "can-i-get-a-driving-licence",
       kind: "simple_smart_answer",
       owning_app: "publisher",
       name: "Can I get a driving licence?"
-                                  )
+    )
 
     setup_users
     GDS::SSO.test_user = @author
@@ -352,11 +354,12 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
   context "editing an existing edition" do
     setup do
-      @edition = FactoryBot.build(:simple_smart_answer_edition,
+      @edition = FactoryBot.build(
+        :simple_smart_answer_edition,
         title: "Can I get a driving licence?",
         panopticon_id: @artefact.id,
         slug: "can-i-get-a-driving-licence"
-                                  )
+      )
       @edition.nodes.build(slug: "question-1", order: 1, title: "To be or not to be?", kind: "question", options_attributes: [
         { label: "That is the question", next_node: "outcome-1" },
         { label: "That is not the question", next_node: "outcome-2" }
@@ -397,18 +400,22 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
           within ".options > div:nth-of-type(1)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_0_label", with: "That is the question")
-            assert page.has_select?("next-node-list",
-              options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+            assert page.has_select?(
+              "next-node-list",
+              options: [
+                "Select a node..",
+                "Outcome 1 (Outcome One)",
+                "Outcome 2 (Outcome Two)"
+              ],
               selected: "Outcome 1 (Outcome One)"
-                                   )
+            )
           end
 
           within ".options > div:nth-of-type(2)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", with: "That is not the question")
             assert page.has_select?("next-node-list",
               options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
-              selected: "Outcome 2 (Outcome Two)"
-                                   )
+              selected: "Outcome 2 (Outcome Two)")
           end
         end
 
@@ -461,10 +468,11 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".nodes .node:first-child .option:nth-child(2)" do
         assert_equal "", page.find_by_id('edition_nodes_attributes_0_options_attributes_1_next_node', visible: false).value
-        assert page.has_select?("next-node-list",
+        assert page.has_select?(
+          "next-node-list",
           options: ["Select a node..", "Outcome 1 (Outcome One)"],
           selected: "Select a node.."
-                               )
+        )
       end
     end
 

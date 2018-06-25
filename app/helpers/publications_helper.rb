@@ -14,7 +14,7 @@ module PublicationsHelper
   end
 
   def enabled_users_select_options(empty_value = true)
-    options = User.enabled.order_by([[:name, :asc]]).collect { |u| [u.name, u.id] }
+    options = User.enabled.order_by([%i[name asc]]).collect { |u| [u.name, u.id] }
     options.unshift(["", ""]) if empty_value
     options
   end

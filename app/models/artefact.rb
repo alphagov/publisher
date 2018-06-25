@@ -84,7 +84,7 @@ class Artefact
     "completed/done transaction" => "completed_transaction",
     "benefit / scheme"                 => "programme",
     "find my nearest"                  => "place",
-  }.tap { |h| h.default_proc = -> (_, k) { k } }.freeze
+  }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
   MULTIPART_FORMATS = %w(guide local_transaction licence simple_smart_answer).freeze
 

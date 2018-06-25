@@ -8,12 +8,13 @@ class PublicationsControllerTest < ActionController::TestCase
   context "#show" do
     context "with existing edition" do
       should "redirect to the latest edition when requesting a panopticon_id" do
-        artefact = FactoryBot.create(:artefact,
+        artefact = FactoryBot.create(
+          :artefact,
           slug: "hedgehog-topiary",
           kind: "guide",
           name: "Foo bar",
-          owning_app: "publisher",
-                                     )
+          owning_app: "publisher"
+        )
 
         FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'archived', version_number: 1)
         FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'published', version_number: 2)

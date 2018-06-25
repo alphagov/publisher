@@ -21,7 +21,7 @@ module TabsHelper
 
   module Edition
     class Tab
-      TABS = %w(edit tagging metadata history admin related_external_links unpublish)
+      TABS = %w(edit tagging metadata history admin related_external_links unpublish).freeze
       attr_accessor :name
 
       def initialize(name = nil)

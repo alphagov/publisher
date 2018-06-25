@@ -1,15 +1,15 @@
 class PrimaryListingPresenter
-  AVAILABLE_LISTS = [
-    :draft,
-    :amends_needed,
-    :in_review,
-    :fact_check,
-    :fact_check_received,
-    :ready,
-    :scheduled_for_publishing,
-    :published,
-    :archived,
-  ]
+  AVAILABLE_LISTS = %i[
+    draft
+    amends_needed
+    in_review
+    fact_check
+    fact_check_received
+    ready
+    scheduled_for_publishing
+    published
+    archived
+  ].freeze
 
   # There's some discrepancy between the scope names and partial
   # names so we need a mapping (scope_name => partial_name) to
@@ -17,7 +17,7 @@ class PrimaryListingPresenter
   LIST_TRANSLATIONS = {
     draft: :drafts,
     fact_check: :out_for_fact_check,
-  }
+  }.freeze
 
   def initialize(editions, user)
     @scope = case user

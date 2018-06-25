@@ -9,7 +9,7 @@ class LocalTransactionEdition < Edition
   field :more_information, type: String
   field :need_to_know, type: String
 
-  GOVSPEAK_FIELDS = [:introduction, :more_information, :need_to_know].freeze
+  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   validate :valid_lgsl_code
   validates :lgil_code, numericality: { only_integer: true, message: "can only be whole number between 0 and 999." }

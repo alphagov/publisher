@@ -39,11 +39,11 @@ private
   def summary(action)
     human_timestamp = action.created_at.strftime "%d/%m/%Y %H:%M"
 
-    if %w(a e i o u).include? action.request_type[0]
-      article = "an"
-    else
-      article = "a"
-    end
+    article = if %w(a e i o u).include? action.request_type[0]
+                "an"
+              else
+                "a"
+              end
 
     if action.requester == @user
       participle = case action.request_type

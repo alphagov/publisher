@@ -3,16 +3,16 @@ class EditorialProgressPresenter < CSVPresenter
 
   def initialize(scope = Edition.all)
     super(scope)
-    self.column_headings = [
-      :title,
-      :slug,
-      :preview_url,
-      :state,
-      :format,
-      :version_number,
-      :assigned_to,
-      :sibling_in_progress,
-      :panopticon_id
+    self.column_headings = %i[
+      title
+      slug
+      preview_url
+      state
+      format
+      version_number
+      assigned_to
+      sibling_in_progress
+      panopticon_id
     ]
   end
 

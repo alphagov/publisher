@@ -31,7 +31,7 @@ class DowntimeRemoverTest < ActiveSupport::TestCase
     context "when the Downtime is nil" do
       should "return without enqueueing a job" do
         DowntimeRemover.destroy_immediately(nil)
-        assert DowntimeRemover.jobs.size == 0
+        assert DowntimeRemover.jobs.empty?
       end
     end
   end

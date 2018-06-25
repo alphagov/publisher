@@ -94,10 +94,10 @@ class Edition
   }.freeze
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
-  EXACT_ROUTE_EDITION_CLASSES = [
-    "CampaignEdition",
-    "HelpPageEdition",
-    "TransactionEdition"
+  EXACT_ROUTE_EDITION_CLASSES = %w[
+    CampaignEdition
+    HelpPageEdition
+    TransactionEdition
   ].freeze
 
   validates :title, presence: true
@@ -137,7 +137,7 @@ class Edition
   end
 
   def history
-    series.order([:version_number, :desc])
+    series.order(%i[version_number desc])
   end
 
   def siblings
@@ -256,7 +256,7 @@ class Edition
              is not allowed"
     end
 
-    target_class = self.class unless target_class
+    target_class ||= self.class
     new_edition = target_class.new(version_number: get_next_version_number)
 
     fields_to_copy(target_class).each do |attr|
@@ -448,11 +448,11 @@ class Edition
 private
 
   def base_field_keys
-    [
-      :title,
-      :panopticon_id,
-      :overview,
-      :slug,
+    %i[
+      title
+      panopticon_id
+      overview
+      slug
     ]
   end
 

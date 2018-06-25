@@ -1,14 +1,16 @@
 # encoding: utf-8
+
 require 'integration_test_helper'
 
 class TransactionCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
+    @artefact = FactoryBot.create(
+      :artefact,
       slug: "register-for-space-flight",
       kind: "transaction",
       name: "Register for space flight",
-      owning_app: "publisher",
-                                  )
+      owning_app: "publisher"
+    )
 
     setup_users
     stub_linkables
@@ -82,12 +84,13 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryBot.create(:transaction_edition,
-                                  panopticon_id: @artefact.id,
-                                  state: 'published',
-                                  slug: @artefact.slug,
-                                  title: "Foo transaction"
-                                )
+    edition = FactoryBot.create(
+      :transaction_edition,
+      panopticon_id: @artefact.id,
+      state: 'published',
+      slug: @artefact.slug,
+      title: "Foo transaction"
+    )
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

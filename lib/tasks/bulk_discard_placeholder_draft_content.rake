@@ -15,7 +15,7 @@ task bulk_discard_placeholder_draft_content: :environment do
   ].each do |(base_path, content_id)|
     begin
       Services.publishing_api.discard_draft(content_id)
-    rescue
+    rescue StandardError
       puts "Failed to discard #{base_path} (#{content_id})"
     end
   end
