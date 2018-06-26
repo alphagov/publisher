@@ -17,7 +17,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         :video_edition,
         :published,
         major_change: true,
-        updated_at: DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone,
+        updated_at: DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone,
         change_note: 'Test',
         version_number: 2,
         panopticon_id: artefact.id
@@ -85,7 +85,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         content_id: SecureRandom.uuid,
         language: 'cy',
       )
-      updated_at = DateTime.new(2017, 2, 06, 17, 36, 58).in_time_zone
+      updated_at = DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone
       @edition = FactoryBot.create(
         :transaction_edition,
         state: "draft",
