@@ -86,24 +86,6 @@ class UserTest < ActiveSupport::TestCase
     assert user.disabled?
   end
 
-  test "should create insecure gravatar URL" do
-    user = User.new(email: "User@example.com")
-    expected = "http://www.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af"
-    assert_equal expected, user.gravatar_url
-  end
-
-  test "should create secure gravatar URL" do
-    user = User.new(email: "user@example.com")
-    expected = "https://secure.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af"
-    assert_equal expected, user.gravatar_url(ssl: true)
-  end
-
-  test "should add escaped s parameter if supplied" do
-    user = User.new(email: "user@example.com")
-    expected = "http://www.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af?s=foo+bar"
-    assert_equal expected, user.gravatar_url(s: "foo bar")
-  end
-
   test "creating a transaction with the initial details creates a valid transaction" do
     user = User.create(name: "bob")
     trans = user.create_edition(:transaction, title: "test", slug: "test", panopticon_id: @artefact.id)
