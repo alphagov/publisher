@@ -1,5 +1,5 @@
 class EditionDuplicator
-  attr_accessor :existing_edition, :actor, :error_message, :new_edition
+  attr_accessor :existing_edition, :actor, :new_edition
 
   # existing_edition: The existing edition to be duplicated
   # actor:            The WorkflowActor (usually a user) to perform the action
