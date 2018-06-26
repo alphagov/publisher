@@ -14,7 +14,7 @@ class NotesController < InheritedResources::Base
     elsif comment.blank?
       flash[:warning] = "Didn’t save empty note"
     else
-      if current_user.record_note(resource, comment, type)
+      if current_user.record_note(resource, comment, type) # rubocop:disable Style/IfInsideElse
         flash[:success] = "Note recorded"
       else
         flash[:danger] = "Note failed to save"
