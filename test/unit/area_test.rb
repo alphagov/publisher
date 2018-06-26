@@ -11,7 +11,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_api_data_memoization
-    Area.class_eval('@areas = nil')
+    Area.class_eval('@areas = nil') # rubocop:disable Style/EvalWithLocation
 
     3.times { Area.all }
 
