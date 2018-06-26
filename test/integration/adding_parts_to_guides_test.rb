@@ -221,7 +221,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     assert page.has_css?('#parts .panel-title', count: count)
     assert page.has_css?('#parts .panel-body', count: count)
 
-    if count > 0
+    if count > 0 # rubocop:disable Style/NumericPredicate
       assert page.has_css?('#part-one', count: 1)
       assert_equal page.find('#part-one input.title').value, 'Part One'
     end
