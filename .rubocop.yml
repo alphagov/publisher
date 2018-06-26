@@ -3,3 +3,19 @@ Lint/UnneededDisable:
 
 Metrics/BlockLength:
   Enabled: false
+
+# Not sure what this is, but it doesn't seem to be a big issue.
+Naming/VariableNumber:
+  Enabled: false
+
+# Quite a few cases of this, so not fixing now.
+Style/DateTime:
+  Enabled: false
+
+# Some false positives, and quite a minor issue
+Style/FormatStringToken:
+  Enabled: false
+
+# There are a few cases of this, could be useful to fix at some point
+Style/MethodMissing:
+  Enabled: false
