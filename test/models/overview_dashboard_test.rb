@@ -39,7 +39,7 @@ private
   end
 
   def check_status_equal(actual_object, expected_hash)
-    expected_hash.each do |k, _v|
+    expected_hash.each_key do |k|
       assert_equal actual_object[k], expected_hash[k]
     end
   end

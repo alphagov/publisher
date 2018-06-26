@@ -21,7 +21,7 @@ class SafeHtml < ActiveModel::Validator
 
   def check_struct(record, field_name, value)
     if value.respond_to?(:values) # e.g. Hash
-      value.values.each { |entry| check_struct(record, field_name, entry) }
+      value.each_value { |entry| check_struct(record, field_name, entry) }
     elsif value.respond_to?(:each) # e.g. Array
       value.each { |entry| check_struct(record, field_name, entry) }
     elsif value.is_a?(String)
