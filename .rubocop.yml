@@ -1,2 +1,5 @@
 Lint/UnneededDisable:
   Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
