@@ -38,16 +38,17 @@ class ScheduledPublisher
     report_state_counts
   end
 
+  def self.queued_jobs
+    Sidekiq::ScheduledSet.new.select { |job| job['class'] == self.name }
+  end
+
+  class << self
+    private :queued_jobs
+  end
+
 private
 
   def report_state_counts
     Publisher::Application.edition_state_count_reporter.report
-  end
-
-  def self.queued_jobs
-    Sidekiq::ScheduledSet.new.select { |job| job['class'] == self.name }
-  end
-  class << self
-    private :queued_jobs
   end
 end
