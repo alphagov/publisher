@@ -251,7 +251,6 @@ class Artefact
     super
 
     need_ids << new_need_id if new_need_id.present? && ! need_ids.include?(new_need_id)
-    new_need_id
   end
 
   def latest_edition
