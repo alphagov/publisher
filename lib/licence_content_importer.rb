@@ -100,7 +100,7 @@ class LicenceContentImporter
     end
     unless failed.empty?
       puts "#{failed.keys.size} failed imports:"
-      failed.keys.each do |k|
+      failed.each_key do |k|
         puts "#{k} : #{failed[k]}"
       end
     end
