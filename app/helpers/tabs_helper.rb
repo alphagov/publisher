@@ -51,8 +51,8 @@ module TabsHelper
         name == 'edit' ? edition_path : "#{edition_path}/#{name}"
       end
 
-      def ==(other_tab)
-        name == other_tab.name
+      def ==(other)
+        name == other.name
       end
     end
   end
