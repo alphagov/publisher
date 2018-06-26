@@ -1,4 +1,7 @@
-require 'simplecov'
+# TODO: Enable simplecov again, once the encoding issue is fixed
+# https://github.com/fguillen/simplecov-rcov/issues/20
+#
+# require 'simplecov'
 
 ENV["RAILS_ENV"] = "test"
 
