@@ -24,11 +24,11 @@ module Workflow
         edition.publish_at = transition.args.first
       end
 
-      before_transition on: [:publish, :cancel_scheduled_publishing] do |edition, _transition|
+      before_transition on: %i[publish cancel_scheduled_publishing] do |edition, _transition|
         edition.publish_at = nil
       end
 
-      before_transition on: [:approve_review, :skip_review, :request_amendments] do |edition, _transition|
+      before_transition on: %i[approve_review skip_review request_amendments] do |edition, _transition|
         edition.reviewer = nil
       end
 
@@ -41,7 +41,7 @@ module Workflow
       end
 
       event :request_review do
-        transition [:draft, :amends_needed] => :in_review
+        transition %i[draft amends_needed] => :in_review
       end
 
       event :approve_review do
@@ -53,7 +53,7 @@ module Workflow
       end
 
       event :request_amendments do
-        transition [:fact_check_received, :in_review, :ready, :fact_check] => :amends_needed
+        transition %i[fact_check_received in_review ready fact_check] => :amends_needed
       end
 
       event :skip_review do
@@ -62,7 +62,7 @@ module Workflow
 
       # Editions can optionally be sent out for fact check
       event :send_fact_check do
-        transition [:ready, :fact_check_received] => :fact_check
+        transition %i[ready fact_check_received] => :fact_check
       end
 
       # If no response is received to a fact check request we can skip
@@ -87,7 +87,7 @@ module Workflow
       end
 
       event :publish do
-        transition [:ready, :scheduled_for_publishing] => :published
+        transition %i[ready scheduled_for_publishing] => :published
       end
 
       event :archive do

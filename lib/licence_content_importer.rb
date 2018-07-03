@@ -33,7 +33,7 @@ class LicenceContentImporter
     identifier = row['OID'].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
-    if existing_editions.size > 0
+    if !existing_editions.empty?
       @existing << existing_editions
       @existing.flatten!
     else
@@ -51,7 +51,7 @@ class LicenceContentImporter
     identifier = row['OID'].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
-    if existing_editions.size > 0
+    if !existing_editions.empty?
       @existing << existing_editions
       @existing.flatten!
     else
@@ -100,7 +100,7 @@ class LicenceContentImporter
     end
     unless failed.empty?
       puts "#{failed.keys.size} failed imports:"
-      failed.keys.each do |k|
+      failed.each_key do |k|
         puts "#{k} : #{failed[k]}"
       end
     end

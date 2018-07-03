@@ -9,7 +9,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
   context 'creating a guide with parts' do
     setup do
-      @random_name = (0...8).map { 65.+(rand(25)).chr }.join + " GUIDE"
+      @random_name = (0...8).map { rand(65..89).chr }.join + " GUIDE"
 
       guide = FactoryBot.create(:guide_edition, title: @random_name, slug: 'test-guide')
       guide.save!
@@ -182,7 +182,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
   end
 
   test "slug for new parts should be automatically generated" do
-    random_name = (0...8).map { 65.+(rand(25)).chr }.join + " GUIDE"
+    random_name = (0...8).map { rand(65..89).chr }.join + " GUIDE"
 
     guide = FactoryBot.create(:guide_edition, title: random_name, slug: 'test-guide')
     guide.save!
@@ -221,7 +221,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
     assert page.has_css?('#parts .panel-title', count: count)
     assert page.has_css?('#parts .panel-body', count: count)
 
-    if count > 0
+    if count > 0 # rubocop:disable Style/NumericPredicate
       assert page.has_css?('#part-one', count: 1)
       assert_equal page.find('#part-one input.title').value, 'Part One'
     end

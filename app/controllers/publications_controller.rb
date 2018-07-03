@@ -5,10 +5,8 @@ class PublicationsController < InheritedResources::Base
     if edition.persisted?
       UpdateWorker.perform_async(edition.id.to_s)
       redirect_with_return_to(edition)
-      return
     else
       render_new_form(edition)
-      return
     end
   end
 

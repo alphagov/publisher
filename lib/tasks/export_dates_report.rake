@@ -1,8 +1,8 @@
 desc "Export Published Mainstream Content title and URL between 2 dates, as CSV"
 
-task :export_dates_report, [:start_date, :end_date] => :environment do |_, args|
+task :export_dates_report, %i[start_date end_date] => :environment do |_, args|
   USAGE_MESSAGE = "usage: rake export_dates_report[<start_date>, <end_date>]\n"\
-    "dates format: YYYY-MM-DD"
+    "dates format: YYYY-MM-DD".freeze
   abort USAGE_MESSAGE unless args[:start_date] && args[:end_date]
   begin
     start_date = Date.parse(args[:start_date])

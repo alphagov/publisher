@@ -1,7 +1,5 @@
 module Formats
   class SimpleSmartAnswerPresenter < EditionFormatPresenter
-  private
-
     def schema_name
       'simple_smart_answer'
     end

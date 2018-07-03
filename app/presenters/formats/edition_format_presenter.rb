@@ -74,7 +74,7 @@ module Formats
 
     def routes
       [
-        { path: "#{base_path}", type: path_type },
+        { path: base_path.to_s, type: path_type },
       ]
     end
 

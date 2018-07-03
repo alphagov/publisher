@@ -15,7 +15,7 @@ private
     scheduled_editions = Edition.scheduled_for_publishing.count
     queue_size = ScheduledPublisher.queue_size
 
-    status = (scheduled_editions == queue_size) ? "ok" : "warning"
+    status = scheduled_editions == queue_size ? "ok" : "warning"
 
     {
       "status" => status,

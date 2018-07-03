@@ -1,14 +1,16 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class HelpPageCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
-        slug: "help/hedgehog-topiary",
-        kind: "help_page",
-        name: "Foo bar",
-        owning_app: "publisher",
-                                  )
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "help/hedgehog-topiary",
+      kind: "help_page",
+      name: "Foo bar",
+      owning_app: "publisher"
+    )
 
     setup_users
     stub_linkables

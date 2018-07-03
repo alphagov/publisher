@@ -6,7 +6,7 @@ class PlaceEdition < Edition
   field :need_to_know, type: String
   field :place_type, type: String
 
-  GOVSPEAK_FIELDS = [:introduction, :more_information, :need_to_know].freeze
+  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   def whole_body
     self.introduction

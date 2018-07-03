@@ -10,7 +10,7 @@ class StateCountReporterTest < ActiveSupport::TestCase
       draft: draft_scope_stub,
       published: published_scope_stub,
     )
-    @states = [:draft, :published]
+    @states = %i[draft published]
   end
 
   should "report a count for each state" do

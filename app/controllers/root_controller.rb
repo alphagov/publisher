@@ -5,7 +5,7 @@ class RootController < ApplicationController
 
   ITEMS_PER_PAGE = 20
 
-  STATE_NAME_LISTS = { "draft" => "drafts", "fact_check" => "out_for_fact_check" }
+  STATE_NAME_LISTS = { "draft" => "drafts", "fact_check" => "out_for_fact_check" }.freeze
 
   def index
     user_filter           = params[:user_filter] || session[:user_filter]
@@ -55,7 +55,7 @@ private
     if user_filter.blank?
       user_filter = current_user.uid
       user = current_user
-    elsif %w[ all nobody ].include?(user_filter)
+    elsif %w[all nobody].include?(user_filter)
       user = user_filter.to_sym
     else
       user = User.where(uid: user_filter).first

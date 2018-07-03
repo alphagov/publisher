@@ -252,7 +252,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def clear_cookies
-    Capybara.current_session.driver.browser.cookies.each do |k, _v|
+    Capybara.current_session.driver.browser.cookies.each_key do |k|
       Capybara.current_session.driver.browser.remove_cookie(k)
     end
   end

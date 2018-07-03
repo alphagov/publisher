@@ -178,7 +178,7 @@ class WorkflowTest < ActiveSupport::TestCase
     assert other_user.progress(edition, request_type: :skip_fact_check, comment: 'Fact check not received in time')
     edition.reload
     assert edition.can_publish?
-    assert edition.actions.detect { |e| e.request_type == 'skip_fact_check' }
+    assert(edition.actions.detect { |e| e.request_type == 'skip_fact_check' })
   end
 
   # until we improve the validation to produce few or no false positives

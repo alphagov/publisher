@@ -39,15 +39,6 @@ class User
     name || email || ""
   end
 
-  def gravatar_url(opts = {})
-    opts.symbolize_keys!
-    "%s.gravatar.com/avatar/%s%s" % [
-      opts[:ssl] ? "https://secure" : "http://www",
-      Digest::MD5.hexdigest(email.downcase),
-      opts[:s] ? "?s=#{CGI.escape(opts[:s])}" : ""
-    ]
-  end
-
   def progress(edition, action_attributes)
     request_type = action_attributes.delete(:request_type)
 

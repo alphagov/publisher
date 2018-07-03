@@ -21,7 +21,7 @@ module TabsHelper
 
   module Edition
     class Tab
-      TABS = %w(edit tagging metadata history admin related_external_links unpublish)
+      TABS = %w(edit tagging metadata history admin related_external_links unpublish).freeze
       attr_accessor :name
 
       def initialize(name = nil)
@@ -51,8 +51,8 @@ module TabsHelper
         name == 'edit' ? edition_path : "#{edition_path}/#{name}"
       end
 
-      def ==(other_tab)
-        name == other_tab.name
+      def ==(other)
+        name == other.name
       end
     end
   end

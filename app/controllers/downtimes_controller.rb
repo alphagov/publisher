@@ -1,9 +1,9 @@
 class DowntimesController < ApplicationController
   before_action :load_edition, except: [:index]
-  before_action :process_params, only: [:create, :update]
+  before_action :process_params, only: %i[create update]
 
   def index
-    @transactions = TransactionEdition.published.order_by([:title, :asc])
+    @transactions = TransactionEdition.published.order_by(%i[title asc])
   end
 
   def new

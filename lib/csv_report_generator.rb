@@ -25,10 +25,12 @@ class CsvReportGenerator
   def reports
     @reports ||= [
       EditorialProgressPresenter.new(
-        Edition.not_in(state: ["archived"])),
+        Edition.not_in(state: ["archived"])
+      ),
 
       EditionChurnPresenter.new(
-        Edition.not_in(state: ["archived"]).order(created_at: 1)),
+        Edition.not_in(state: ["archived"]).order(created_at: 1)
+      ),
 
       OrganisationContentPresenter.new(
         Artefact.where(owning_app: "publisher").not_in(state: ["archived"])

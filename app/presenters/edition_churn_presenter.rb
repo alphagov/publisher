@@ -1,15 +1,15 @@
 class EditionChurnPresenter < CSVPresenter
   def initialize(scope = Edition.all)
     super(scope)
-    self.column_headings = [
-      :id,
-      :panopticon_id,
-      :name,
-      :slug,
-      :state,
-      :need_ids,
-      :editioned_on,
-      :version_number
+    self.column_headings = %i[
+      id
+      panopticon_id
+      name
+      slug
+      state
+      need_ids
+      editioned_on
+      version_number
     ]
   end
 

@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
@@ -7,8 +8,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
         slug: "done/stick-a-fork-in-me-im",
         kind: "completed_transaction",
         name: "All bar done",
-        owning_app: "publisher",
-                                  )
+        owning_app: "publisher")
 
     setup_users
     stub_linkables

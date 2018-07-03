@@ -3,8 +3,7 @@ class ReportsController < ApplicationController
 
   before_action :authenticate_user!
 
-  def index
-  end
+  def index; end
 
   def progress
     send_report "editorial_progress"
@@ -51,7 +50,7 @@ private
         type: "text/csv",
         disposition: "attachment"
     else
-      return head(:not_found)
+      head(:not_found)
     end
   end
 end

@@ -1,25 +1,30 @@
 # encoding: utf-8
+
 require "test_helper"
 
 class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
   should "provide a CSV export of the churn in editions" do
-    document = FactoryBot.create(:artefact,
+    document = FactoryBot.create(
+      :artefact,
       name: "Important document",
       need_ids: %w(123456 123321 654321)
-                                 )
+    )
 
-    edition1 = FactoryBot.create(:edition,
+    edition1 = FactoryBot.create(
+      :edition,
       title: "Important document",
       panopticon_id: document.id
-                                  )
+    )
 
-    edition2 = FactoryBot.create(:edition,
+    edition2 = FactoryBot.create(
+      :edition,
       title: "Important tax document",
       panopticon_id: document.id
-                                  )
+    )
 
     csv = EditionChurnPresenter.new(
-      Edition.not_in(state: ["archived"]).order(:title.asc)).to_csv
+      Edition.not_in(state: ["archived"]).order(:title.asc)
+    ).to_csv
 
     data = CSV.parse(csv, headers: true)
 

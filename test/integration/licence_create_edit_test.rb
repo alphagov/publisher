@@ -1,14 +1,16 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class LicenceCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
-        slug: "hedgehog-topiary",
-        kind: "licence",
-        name: "Foo bar",
-        owning_app: "publisher",
-                                  )
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "hedgehog-topiary",
+      kind: "licence",
+      name: "Foo bar",
+      owning_app: "publisher"
+    )
 
     setup_users
     stub_linkables

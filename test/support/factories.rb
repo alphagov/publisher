@@ -60,7 +60,7 @@ FactoryBot.define do
     factory :live_artefact, traits: [:live]
     factory :archived_artefact, traits: [:archived]
 
-    factory :live_artefact_with_edition, traits: [:live, :with_published_edition]
+    factory :live_artefact_with_edition, traits: %i[live with_published_edition]
 
     factory :non_publisher_artefact, traits: [:non_publisher]
   end

@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 require 'integration_test_helper'
 
 class GuideCreateEditTest < JavascriptIntegrationTest
@@ -7,12 +8,13 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @artefact = FactoryBot.create(:artefact,
-        slug: "hedgehog-topiary",
-        kind: "guide",
-        name: "Foo bar",
-        owning_app: "publisher",
-                                  )
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "hedgehog-topiary",
+      kind: "guide",
+      name: "Foo bar",
+      owning_app: "publisher"
+    )
   end
 
   should "create a new GuideEdition" do

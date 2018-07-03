@@ -4,7 +4,7 @@ def merge_attributes(original, *update_hashes)
   # Merge multiple attribute hashes: this also differs from Hash#merge in that
   # it converts symbolic keys to strings
   if update_hashes.empty?
-    return original
+    original
   else
     first_update, *other_updates = update_hashes
     updated = first_update.reduce(original) do |old, pair|

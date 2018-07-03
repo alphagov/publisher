@@ -1,6 +1,6 @@
 require "test_helper"
 
-class EditionPresenterFactoryTest < ActiveSupport::TestCase#
+class EditionPresenterFactoryTest < ActiveSupport::TestCase
   context ".get_presenter" do
     should "return an object" do
       edition = stub(class: "foo")

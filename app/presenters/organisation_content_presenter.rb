@@ -1,16 +1,16 @@
 class OrganisationContentPresenter < CSVPresenter
   def initialize(scope = Artefact.where(owning_app: "publisher"))
     super(scope)
-    self.column_headings = [
-        :id,
-        :name,
-        :format,
-        :slug,
-        :state,
-        :browse_pages,
-        :topics,
-        :organisations,
-        :need_ids
+    self.column_headings = %i[
+      id
+      name
+      format
+      slug
+      state
+      browse_pages
+      topics
+      organisations
+      need_ids
     ]
   end
 
@@ -40,7 +40,6 @@ private
       super
     end
   end
-
 
   def expanded_links(content_id, keys, pattern_to_remove = nil)
     begin

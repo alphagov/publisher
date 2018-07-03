@@ -50,7 +50,7 @@ avoid_all_travel_to_whole_country
   scope :published, lambda { where(state: "published") }
 
   class << self; attr_accessor :fields_to_clone end
-  @fields_to_clone = [:title, :country_slug, :overview, :alert_status, :summary, :image_id, :document_id, :synonyms]
+  @fields_to_clone = %i[title country_slug overview alert_status summary image_id document_id synonyms]
 
   state_machine initial: :draft do
     before_transition draft: :published do |edition, _|
@@ -90,7 +90,6 @@ avoid_all_travel_to_whole_country
     end
     strings.join(" ").strip
   end
-
 
   def build_clone
     new_edition = self.class.new

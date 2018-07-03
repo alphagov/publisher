@@ -4,8 +4,8 @@ require "edition_progressor"
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
-  before_action :setup_view_paths, except: [:index, :new, :create]
-  after_action :report_state_counts, only: [:create, :duplicate, :progress, :destroy]
+  before_action :setup_view_paths, except: %i[index new create]
+  after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
   def index
     redirect_to root_path
@@ -145,7 +145,7 @@ class EditionsController < InheritedResources::Base
   def update_related_external_links
     artefact = resource.artefact
     if params.has_key?("artefact")
-      external_links = params.require(:artefact).permit(external_links_attributes: [:title, :url, :id, :_destroy])
+      external_links = params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
       artefact.external_links_attributes = external_links[:external_links_attributes].to_h
 
       if artefact.save
@@ -186,7 +186,7 @@ class EditionsController < InheritedResources::Base
     else
       flash[:danger] = "Cannot delete a #{description(resource).downcase} that has ever been published."
       redirect_to edition_path(resource)
-      return
+      nil
     end
   end
 
@@ -233,30 +233,30 @@ protected
     case subtype
     when :guide_edition
       [
-        parts_attributes: [:title, :body, :slug, :order, :id, :_destroy]
+        parts_attributes: %i[title body slug order id _destroy]
       ]
     when :licence_edition
-      [
-        :licence_identifier,
-        :will_continue_on,
-        :continuation_link,
-        :licence_short_description,
-        :licence_overview,
+      %i[
+        licence_identifier
+        will_continue_on
+        continuation_link
+        licence_short_description
+        licence_overview
       ]
     when :local_transaction_edition
-      [
-        :lgsl_code,
-        :lgil_code,
-        :introduction,
-        :more_information,
-        :need_to_know,
+      %i[
+        lgsl_code
+        lgil_code
+        introduction
+        more_information
+        need_to_know
       ]
     when :place_edition
-      [
-        :place_type,
-        :introduction,
-        :more_information,
-        :need_to_know,
+      %i[
+        place_type
+        introduction
+        more_information
+        need_to_know
       ]
     when :simple_smart_answer_edition
       [
@@ -264,25 +264,25 @@ protected
         :start_button_text,
         nodes_attributes: [
           :slug, :title, :body, :order, :kind, :id, :_destroy,
-          options_attributes: [:label, :next_node, :id, :_destroy]
+          options_attributes: %i[label next_node id _destroy]
         ],
       ]
     when :transaction_edition
-      [
-        :introduction,
-        :start_button_text,
-        :will_continue_on,
-        :link,
-        :more_information,
-        :alternate_methods,
-        :need_to_know,
-        :department_analytics_profile,
+      %i[
+        introduction
+        start_button_text
+        will_continue_on
+        link
+        more_information
+        alternate_methods
+        need_to_know
+        department_analytics_profile
       ]
     when :completed_transaction_edition
-      [
-        :body,
-        :promotion_choice,
-        :promotion_choice_url,
+      %i[
+        body
+        promotion_choice
+        promotion_choice_url
       ]
     else # answer_edition, help_page_edition
       [
@@ -292,17 +292,17 @@ protected
   end
 
   def common_params
-    [
-      :assigned_to_id,
-      :reviewer,
-      :panopticon_id,
-      :slug,
-      :change_note,
-      :major_change,
-      :title,
-      :in_beta,
-      :overview,
-    ]
+    %i[
+       assigned_to_id
+       reviewer
+       panopticon_id
+       slug
+       change_note
+       major_change
+       title
+       in_beta
+       overview
+     ]
   end
 
   def new_assignee
@@ -347,7 +347,8 @@ private
   def attempted_activity_params
     return unless attempted_activity
     params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-      :request_type, :email_addresses, :customised_message, :comment, :publish_at)
+      :request_type, :email_addresses, :customised_message, :comment, :publish_at
+)
   end
 
   def remove_activity_params
@@ -392,7 +393,7 @@ private
 
   def progress_action_param
     params[:edition][:activity][:request_type]
-  rescue
+  rescue StandardError
     nil
   end
 

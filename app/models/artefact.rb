@@ -84,7 +84,7 @@ class Artefact
     "completed/done transaction" => "completed_transaction",
     "benefit / scheme"                 => "programme",
     "find my nearest"                  => "place",
-  }.tap { |h| h.default_proc = -> (_, k) { k } }.freeze
+  }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
   MULTIPART_FORMATS = %w(guide local_transaction licence simple_smart_answer).freeze
 
@@ -251,7 +251,6 @@ class Artefact
     super
 
     need_ids << new_need_id if new_need_id.present? && ! need_ids.include?(new_need_id)
-    new_need_id
   end
 
   def latest_edition
