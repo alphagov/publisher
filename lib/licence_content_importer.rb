@@ -61,7 +61,7 @@ class LicenceContentImporter
       artefact = Artefact.find_by_slug(slug) ||
         Artefact.create(
           slug: slug, kind: 'licence', state: 'draft', owning_app: 'publisher',
-          name: title, rendering_app: "frontend", need_id: 1
+          name: title, rendering_app: "frontend"
         )
 
       artefact_id = artefact['id']

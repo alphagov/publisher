@@ -31,7 +31,6 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         description: "",
         schema_name: "generic_with_external_related_links",
         document_type: "answer",
-        need_ids: [],
         public_updated_at: '2017-02-06T17:36:58.000+00:00',
         publishing_app: "publisher",
         rendering_app: "frontend",

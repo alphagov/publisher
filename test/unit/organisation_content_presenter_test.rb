@@ -13,26 +13,6 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
                   "base_path" => "/browse/tax/vat",
                 }
               ],
-              "meets_user_needs" => [
-                {
-                  "details" =>
-                  {
-                    "need_id" => '123456'
-                  }
-                },
-                {
-                  "details" =>
-                  {
-                    "need_id" => '123321'
-                  }
-                },
-                {
-                  "details" =>
-                  {
-                    "need_id" => '654321'
-                  }
-                }
-              ],
               "organisations" => [
                 {
                   "title" => "HMRC"
@@ -65,7 +45,6 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
 
     assert_equal "Important document", data[0]["Name"]
     assert_equal "answer", data[0]["Format"]
-    assert_equal "123456,123321,654321", data[0]["Need ids"]
     assert_equal "HMRC", data[0]["Organisations"]
     assert_equal "business-tax/vat", data[0]["Topics"]
     assert_equal "business/support,tax/vat", data[0]["Browse pages"]
@@ -73,8 +52,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
 
   should "handle artefacts without editions" do
     FactoryBot.create(:artefact,
-                       name: "Important document",
-                       need_ids: ["123456"])
+                       name: "Important document")
 
     csv = OrganisationContentPresenter.new(
       Artefact.where(owning_app: "publisher").not_in(state: ["archived"])

@@ -15,11 +15,6 @@ class Artefact
   field "rendering_app",        type: String
   field "active",               type: Boolean, default: false
 
-  # will be removed once multiple need_ids
-  # gets deployed and tested.
-  field "need_id",              type: String
-
-  field "need_ids",             type: Array, default: []
   field "publication_id",       type: String
   field "description",          type: String
   field "state",                type: String,  default: "draft"
@@ -95,7 +90,6 @@ class Artefact
     reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
 
   before_validation :normalise, on: :create
-  before_validation :filter_out_empty_need_ids, if: :need_ids_changed?
   before_create :record_create_action
   before_update :record_update_action
   after_update :update_editions
@@ -108,7 +102,6 @@ class Artefact
   validates :owning_app, presence: true
   validates :language, inclusion: { in: %w(en cy) }
   validate :validate_prefixes_and_paths
-  validate :format_of_new_need_ids, if: :need_ids_changed?
 
   def self.in_alphabetical_order
     order_by(name: :asc)
@@ -247,12 +240,6 @@ class Artefact
       .except("_id", "created_at", "updated_at", "actions")
   end
 
-  def need_id=(new_need_id)
-    super
-
-    need_ids << new_need_id if new_need_id.present? && ! need_ids.include?(new_need_id)
-  end
-
   def latest_edition
     Edition
       .where(panopticon_id: id)
@@ -301,19 +288,6 @@ private
         errors.add(:paths, "are not all valid absolute URL paths")
       end
     end
-  end
-
-  def filter_out_empty_need_ids
-    return if need_ids.blank?
-    need_ids.reject!(&:blank?)
-  end
-
-  def format_of_new_need_ids
-    return if need_ids.blank?
-
-    # http://api.rubyonrails.org/classes/ActiveModel/Dirty.html
-    new_need_ids = need_ids_was.blank? ? need_ids : need_ids - need_ids_was
-    errors.add(:need_ids, "must be six-digit integer strings") if new_need_ids.any? { |need_id| need_id !~ /\A\d{6}\z/ }
   end
 
   def valid_url_path?(path)
