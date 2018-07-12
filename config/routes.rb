@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  get '/healthcheck' => 'healthcheck#check'
+  get "/healthcheck", to: GovukHealthcheck.rack_response(
+    GovukHealthcheck::SidekiqRedis,
+    Healthcheck::ScheduledPublishing,
+  )
 
   resources :notes do
     put 'resolve', on: :member
