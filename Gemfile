@@ -49,7 +49,7 @@ group :test do
   gem 'mocha', '1.5.0'
   gem 'poltergeist', '1.18.1'
   gem 'rails-controller-testing'
-  gem 'shoulda', '3.5.0'
+  gem 'shoulda', '3.6.0'
   gem 'simplecov', '~> 0.16.1', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
   gem "timecop", '0.9.1'
