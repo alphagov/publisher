@@ -308,5 +308,7 @@ private
 
   def discard_publishing_api_draft
     Services.publishing_api.discard_draft(self.content_id)
+  rescue GdsApi::HTTPNotFound
+    nil
   end
 end
