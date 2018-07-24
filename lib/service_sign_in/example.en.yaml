@@ -6,7 +6,7 @@ choose_sign_in:
   description: Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
   options:
     - text: Use Government Gateway
-      url: https://www.tax.service.gov.uk/account
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/account/&origin=SA-frontend
       hint_text: You'll have a user ID if you've registered to file your Self Assessment tax return online before.
     - text: Use GOV.UK Verify
       url: https://www.tax.service.gov.uk/ida/sa/login
