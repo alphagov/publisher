@@ -178,7 +178,7 @@ class Edition
   end
 
   def major_updates_in_series
-    history.published.major_updates
+    history.archived_or_published.major_updates
   end
 
   def latest_major_update
