@@ -25,7 +25,7 @@ class LicenceIdentifierMigrator
     uri = URI.parse(LICENCE_MAPPING_URL)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     request = Net::HTTP::Get.new(uri.request_uri)
     response = http.request(request)
     YAML.safe_load(response.body)
