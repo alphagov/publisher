@@ -59,6 +59,6 @@
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
     }
   ],
-  "updated": "2018-08-02 14:03:50 +0100",
+  "updated": "2018-08-02 14:09:22 +0100",
   "brakeman_version": "4.3.1"
 }
