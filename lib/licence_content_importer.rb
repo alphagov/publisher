@@ -83,7 +83,7 @@ class LicenceContentImporter
   end
 
   def add_workflow(user, edition)
-    type = Action.const_get(Action::CREATE.to_s.upcase)
+    type = Action::CREATE
     edition.new_action(user, type, {})
     edition.save!
     user.record_note(edition, "Imported via LicenceContentImporter: #{Time.zone.today.to_s(:db)}")
