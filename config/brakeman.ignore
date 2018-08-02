@@ -1,0 +1,26 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "1dd7580ea4eb3c303e870dad82dc5223592fd36c4b44bec6ab6ea0a0c1affbc0",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/csv_report_generator.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "redis.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CsvReportGenerator",
+        "method": "run!"
+      },
+      "user_input": "Rails.env",
+      "confidence": "Weak",
+      "note": "We don't pass any user data to this string."
+    }
+  ],
+  "updated": "2018-08-02 13:57:57 +0100",
+  "brakeman_version": "4.3.1"
+}
