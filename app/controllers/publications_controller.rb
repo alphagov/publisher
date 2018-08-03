@@ -13,9 +13,12 @@ class PublicationsController < InheritedResources::Base
 protected
 
   def redirect_with_return_to(edition)
-    destination = "/editions/#{edition.id}"
-    destination += '?return_to=' + params[:return_to] if params[:return_to]
-    redirect_to destination
+    redirect_to(
+      controller: "editions",
+      action: "show",
+      id: edition.id,
+      return_to: params.fetch(:return_to, nil)
+    )
   end
 
   def render_new_form(edition)
