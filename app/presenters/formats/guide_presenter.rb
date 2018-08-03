@@ -31,7 +31,8 @@ module Formats
               content_type: "text/govspeak",
               content: part.body.to_s,
             }
-          ]
+          ],
+          hide_chapter_navigation: part.hide_chapter_navigation
         }
       end
     end

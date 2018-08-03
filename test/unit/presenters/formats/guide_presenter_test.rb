@@ -20,6 +20,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
       title: "title-#{num}",
       slug: "slug-#{num}",
       body: "body-#{num}",
+      hide_chapter_navigation: true,
       order: num,
       guide_edition: edition
     )
@@ -51,7 +52,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
               content_type: 'text/govspeak',
               content: 'body-1'
             }
-          ]
+          ],
+          hide_chapter_navigation: true
         },
         {
           title: 'title-2',
@@ -61,7 +63,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
               content_type: 'text/govspeak',
               content: 'body-2'
             }
-          ]
+          ],
+          hide_chapter_navigation: true
         }
       ]
 
@@ -77,7 +80,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
         body: [{
           content_type: 'text/govspeak',
           content: ""
-        }]
+        }],
+        hide_chapter_navigation: nil
       }]
 
       assert_equal expected, result[:details][:parts]
