@@ -40,7 +40,7 @@ gem 'uglifier', '4.1.15'
 gem 'whenever', require: false
 
 group :test do
-  gem 'capybara', '2.18.0'
+  gem 'capybara', '3.5.1'
   gem 'ci_reporter_minitest', '1.0.0'
   gem 'database_cleaner', '1.7.0'
   gem 'factory_bot_rails'
