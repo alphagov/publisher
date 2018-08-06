@@ -18,6 +18,7 @@ module Formats
       {
         parts: parts,
         external_related_links: external_related_links,
+        hide_chapter_navigation: !!edition.hide_chapter_navigation
       }
     end
 

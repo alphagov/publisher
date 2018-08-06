@@ -7,6 +7,13 @@
   </div>
 </div>
 
+<%= f.input :hide_chapter_navigation,
+            as: :boolean,
+            label: 'Hide chapter navigation and arrows',
+            input_html: { disabled: @resource.locked_for_edits? },
+            :hint => 'Only do this when every chapter is included in a step by step navigation.',
+            wrapper_html: { class: "emphasised-field form-group" } %>
+
 <hr>
 
 <div class="row">

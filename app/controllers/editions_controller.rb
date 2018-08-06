@@ -233,6 +233,7 @@ protected
     case subtype
     when :guide_edition
       [
+        :hide_chapter_navigation,
         parts_attributes: %i[title body slug order id _destroy]
       ]
     when :licence_edition

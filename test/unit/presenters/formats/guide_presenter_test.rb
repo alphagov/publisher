@@ -95,6 +95,12 @@ class GuidePresenterTest < ActiveSupport::TestCase
 
       assert_equal expected, result[:details][:external_related_links]
     end
+
+    should "[:hide_chapter_navigation]" do
+      edition.update_attribute(:hide_chapter_navigation, true)
+
+      assert_equal true, result[:details][:hide_chapter_navigation]
+    end
   end
 
   should "[:routes]" do
