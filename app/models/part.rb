@@ -12,6 +12,7 @@ class Part
   field :title,      type: String
   field :body,       type: String
   field :slug,       type: String
+  field :hide_chapter_navigation, type: Boolean
   field :created_at, type: DateTime, default: lambda { Time.zone.now }
 
   GOVSPEAK_FIELDS = [:body].freeze

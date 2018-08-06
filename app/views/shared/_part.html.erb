@@ -32,6 +32,12 @@
                       :required => true,
                       :input_html => {:rows => '25', :disabled => @resource.locked_for_edits? } %>
 
+          <%= f.input :hide_chapter_navigation,
+                      as: :boolean,
+                      label: 'Hide chapter navigation',
+                      :hint => 'If this guide part is in a step by step navigation, hide the guide chapter links and next/previous navigation arrows.',
+                      wrapper_html: { class: "emphasised-field form-group" } %>
+
           <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
 
           <% unless @resource.locked_for_edits? %>
