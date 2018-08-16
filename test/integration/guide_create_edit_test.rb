@@ -27,6 +27,37 @@ class GuideCreateEditTest < JavascriptIntegrationTest
     assert_equal "Foo bar", g.title
   end
 
+  should "editing a GuideEdition, and hiding chapter navigation" do
+    guide = FactoryBot.create(:guide_edition,
+                               panopticon_id: @artefact.id,
+                               state: 'draft',
+                               title: "Foo bar #0")
+
+    visit_edition guide
+    refute find('#edition_hide_chapter_navigation').checked?
+
+    # using 'check' and similar capybara approaches does not work here for some reason
+    page.execute_script("$('#edition_hide_chapter_navigation').attr('checked', 'checked')")
+
+    assert find('#edition_hide_chapter_navigation').checked?
+    save_edition_and_assert_success
+
+    visit_edition guide
+    assert find('#edition_hide_chapter_navigation').checked?
+  end
+
+  should "show hide_chapter_navigation as selected" do
+    guide = FactoryBot.build(:guide_edition,
+                               panopticon_id: @artefact.id,
+                               state: 'draft',
+                               title: "Foo bar #0")
+    guide.hide_chapter_navigation = true
+    guide.save!
+
+    visit_edition guide
+    assert find('#edition_hide_chapter_navigation').checked?
+  end
+
   should "editing a GuideEdition, and adding some parts" do
     guide = FactoryBot.build(:guide_edition,
                                panopticon_id: @artefact.id,
