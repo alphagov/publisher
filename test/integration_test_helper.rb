@@ -210,8 +210,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def clear_cookies
-    Capybara.current_session.driver.browser.cookies.each_key do |k|
-      Capybara.current_session.driver.browser.remove_cookie(k)
+    browser = Capybara.current_session.driver.browser
+    if browser.respond_to?(:clear_cookies)
+      # Rack::MockSession
+      browser.clear_cookies
+    elsif browser.respond_to?(:manage) && browser.manage.respond_to?(:delete_all_cookies)
+      # Selenium::WebDriver
+      browser.manage.delete_all_cookies
     end
   end
 
