@@ -47,7 +47,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       guide.update_attribute(:state, 'ready')
       visit_edition guide
 
-      page.find_link('Fact check').trigger('click')
+      click_link('Fact check')
 
       within "#send_fact_check_form" do
         customised_message = page.find_field('Customised message')
@@ -61,7 +61,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     visit_edition guide
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     ActionMailer::Base.deliveries.clear
 
@@ -90,7 +90,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     visit_edition guide
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     ActionMailer::Base.deliveries.clear
 
@@ -115,7 +115,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     visit_edition guide
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -127,7 +127,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.reload
     refute guide.fact_check?
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -139,7 +139,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.reload
     refute guide.fact_check?
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -178,7 +178,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update_attribute(:state, 'ready')
     visit_edition guide
 
-    page.find_link('Fact check').trigger('click')
+    click_link('Fact check')
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah blah fact check message"
