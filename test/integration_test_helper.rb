@@ -182,7 +182,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def save_edition(with_javascript = using_javascript?)
-    click_on 'Save'
+    # It is possible for workflow messages to obscure the workflow buttons.
+    # Trigger a click on the save button for these cases.
+    if with_javascript && page.has_css?(".workflow-message", visible: true)
+      page.execute_script("$('#save-edition').trigger('click');")
+    else
+      click_on('Save')
+    end
   end
 
   def save_tags
