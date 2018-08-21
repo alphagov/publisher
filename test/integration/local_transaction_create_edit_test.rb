@@ -27,7 +27,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     fill_in 'Lgsl code', with: '1'
     fill_in 'Lgil code', with: '2'
     click_button 'Create Local transaction'
-    assert page.has_content? 'Foo bar #1'
+    assert page.has_content?(/Foo bar\W#1/)
 
     assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
     assert_match(
@@ -54,7 +54,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     fill_in 'Lgil code', with: '2'
 
     click_button 'Create Local transaction'
-    assert page.has_content? 'Foo bar #1'
+    assert page.has_content?(/Foo bar\W#1/)
   end
 
   with_and_without_javascript do
@@ -70,7 +70,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
       visit_edition edition
 
-      assert page.has_content? 'Foo transaction #1'
+      assert page.has_content?(/Foo transaction\W#1/)
       assert page.has_field?('LGSL code', with: '1', disabled: true)
       assert page.has_field?('LGIL code', with: '2')
 

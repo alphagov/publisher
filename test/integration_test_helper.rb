@@ -2,7 +2,7 @@
 
 require 'test_helper'
 require 'capybara/rails'
-require 'capybara/poltergeist'
+require 'support/govuk_test'
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
@@ -182,12 +182,12 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def save_edition(with_javascript = using_javascript?)
-    # using trigger because poltergeist
-    # thinks there are overlapping elements
-    if with_javascript
-      page.find_button('Save').trigger('click')
+    # It is possible for workflow messages to obscure the workflow buttons.
+    # Trigger a click on the save button for these cases.
+    if with_javascript && page.has_css?(".workflow-message", visible: true)
+      page.execute_script("$('#save-edition').trigger('click');")
     else
-      click_on 'Save'
+      click_on('Save')
     end
   end
 
@@ -195,50 +195,18 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     page.click_on('Update tags', visible: false)
   end
 
-  def assert_save_attempted(with_ajax)
-    if with_ajax
-      assert page.has_selector?('.workflow-message-saving', text: 'Saving'), "Failed to trigger a dynamic saving message"
-    else
-      # using .trigger("click") causes race conditions,
-      # hence we need to explicitly wait till the page reloads.
-      # save button is disabled after one click, so refreshing should enable it.
-      assert page.has_selector?("input[type=submit]#save-edition:enabled"), "Failed to save edition."
-    end
-  end
-
   def save_edition_and_assert_success
     save_edition
-    assert_save_attempted(saving_with_ajax?)
 
-    if saving_with_ajax?
-      assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with ajax"
+    if using_javascript?
+      assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with javascript"
     else
       assert page.has_content? "edition was successfully updated."
     end
   end
 
-  def save_edition_and_assert_success_slow
-    save_edition
-
-    save_attempted = (page.has_selector?('.workflow-message-saving', text: 'Saving') ||
-                      page.has_selector?("input[type=submit]#save-edition:enabled"))
-    assert save_attempted, "Failed to attempt saving the edition"
-
-    saved = (page.has_content?("edition was successfully updated.") ||
-             page.has_css?('.workflow-message', text: 'Saved'))
-    assert saved, "Failed to save the edition"
-  end
-
-  def save_edition_and_assert_success_without_ajax
-    with_javascript = false
-    save_edition(with_javascript)
-    assert_save_attempted(with_javascript)
-    assert page.has_content? "edition was successfully updated."
-  end
-
   def save_edition_and_assert_error
     save_edition
-    assert_save_attempted(saving_with_ajax?)
     assert page.has_content? "We had some problems saving"
   end
 
@@ -247,13 +215,14 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Tags have been updated!"
   end
 
-  def saving_with_ajax?
-    using_javascript?
-  end
-
   def clear_cookies
-    Capybara.current_session.driver.browser.cookies.each_key do |k|
-      Capybara.current_session.driver.browser.remove_cookie(k)
+    browser = Capybara.current_session.driver.browser
+    if browser.respond_to?(:clear_cookies)
+      # Rack::MockSession
+      browser.clear_cookies
+    elsif browser.respond_to?(:manage) && browser.manage.respond_to?(:delete_all_cookies)
+      # Selenium::WebDriver
+      browser.manage.delete_all_cookies
     end
   end
 
@@ -266,5 +235,3 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     page.execute_script "window.scrollBy(0,10000)"
   end
 end
-
-Capybara.javascript_driver = :poltergeist
