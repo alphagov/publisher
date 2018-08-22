@@ -256,7 +256,7 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
-    minitest-reporters (1.3.1)
+    minitest-reporters (1.3.2)
       ansi
       builder
       minitest (>= 5.0)
@@ -384,7 +384,7 @@ GEM
     rubocop-rspec (1.19.0)
       rubocop (>= 0.51.0)
     ruby-graphviz (1.2.3)
-    ruby-progressbar (1.9.0)
+    ruby-progressbar (1.10.0)
     rubyzip (1.2.1)
     safe_yaml (1.0.4)
     sanitize (4.6.5)
