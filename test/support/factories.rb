@@ -10,7 +10,7 @@ FactoryBot.define do
     sequence(:email) { |n| "joe#{n}@bloggs.com" }
     if defined?(GDS::SSO::Config)
       # Grant permission to signin to the app using the gem
-      permissions { ["signin"] }
+      permissions { %w[signin] }
     end
   end
 

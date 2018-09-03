@@ -29,14 +29,14 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
       @option = @node.options.build(@atts.merge(label: nil))
 
       assert !@option.valid?
-      assert @option.errors.keys.include?(:label)
+      assert @option.errors.key?(:label)
     end
 
     should "not be valid without the next node" do
       @option = @node.options.build(@atts.merge(next_node: nil))
 
       assert !@option.valid?
-      assert @option.errors.keys.include?(:next_node)
+      assert @option.errors.key?(:next_node)
     end
 
     should "expose the node" do

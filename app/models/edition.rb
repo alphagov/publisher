@@ -129,7 +129,7 @@ class Edition
   end
 
   def self.convertible_formats
-    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - ["local_transaction"] - Artefact::RETIRED_FORMATS
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - %w[local_transaction] - Artefact::RETIRED_FORMATS
   end
 
   def series
@@ -317,7 +317,7 @@ class Edition
     if edition.present? && (edition == "latest")
       scope.order_by(version_number: :asc).last
     elsif edition.present?
-      scope.where(version_number: edition).first # rubocop:disable Rails/FindBy
+      scope.where(version_number: edition).first
     else
       scope.where(state: "published").order(version_number: :desc).first
     end

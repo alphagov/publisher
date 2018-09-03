@@ -126,8 +126,8 @@ class ArtefactTest < ActiveSupport::TestCase
 
     should "skip validating these if they haven't changed" do
       # This validation can be expensive, so skip it where unnecessary.
-      @a.paths = ["foo"]
-      @a.prefixes = ["bar"]
+      @a.paths = %w[foo]
+      @a.prefixes = %w[bar]
       @a.save validate: false
 
       assert @a.valid?

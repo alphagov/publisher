@@ -73,6 +73,6 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_english_regions
-    assert_equal ["London"], Area.english_regions.map(&:name)
+    assert_equal %w[London], Area.english_regions.map(&:name)
   end
 end

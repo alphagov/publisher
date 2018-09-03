@@ -7,7 +7,7 @@ class SkipReviewTest < JavascriptIntegrationTest
     @permitted_user = FactoryBot.create(:user,
                                          name: "Vincent Panache",
                                          email: "test@example.com",
-                                         permissions: ["skip_review"])
+                                         permissions: %w[skip_review])
 
 
     stub_linkables
@@ -61,7 +61,7 @@ class SkipReviewTest < JavascriptIntegrationTest
     editor = FactoryBot.create(:user,
                                 name: "Editor",
                                 email: "thingy@example.com",
-                                permissions: ["editor"])
+                                permissions: %w[editor])
 
     login_as editor
 

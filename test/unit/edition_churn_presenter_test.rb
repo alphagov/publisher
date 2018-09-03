@@ -22,7 +22,7 @@ class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
     )
 
     csv = EditionChurnPresenter.new(
-      Edition.not_in(state: ["archived"]).order(:title.asc)
+      Edition.not_in(state: %w[archived]).order(:title.asc)
     ).to_csv
 
     data = CSV.parse(csv, headers: true)

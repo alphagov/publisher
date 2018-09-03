@@ -165,7 +165,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
     presenter.filter_by_substring("Sec")
-    assert_equal ["Second"], presenter.all.map(&:title)
+    assert_equal %w[Second], presenter.all.map(&:title)
   end
 
   test "can filter publications by title substring regardless of capitalization" do
@@ -175,7 +175,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
     presenter.filter_by_substring("sec")
-    assert_equal ["Second"], presenter.all.map(&:title)
+    assert_equal %w[Second], presenter.all.map(&:title)
   end
 
   test "Can handle regexp reserved characters for title filter" do

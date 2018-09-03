@@ -151,8 +151,8 @@ class WorkflowTest < ActiveSupport::TestCase
   end
 
   test "skip review workflow" do
-    user = FactoryBot.create(:user, name: "Ben", permissions: ["skip_review"])
-    other = FactoryBot.create(:user, name: "Ben", permissions: ["signin"])
+    user = FactoryBot.create(:user, name: "Ben", permissions: %w[skip_review])
+    other = FactoryBot.create(:user, name: "Ben", permissions: %w[signin])
 
     edition = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: @artefact.id)
 

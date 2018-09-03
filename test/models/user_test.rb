@@ -48,7 +48,7 @@ class UserTest < ActiveSupport::TestCase
       },
       "extra" => {
         "user" => {
-          "permissions" => ["signin"],
+          "permissions" => %w[signin],
           "disabled" => false,
         }
       }
@@ -57,13 +57,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "1234abcd", user.uid
     assert_equal "user@example.com", user.email
     assert_equal "Luther Blisset", user.name
-    assert_equal(["signin"], user.permissions)
+    assert_equal(%w[signin], user.permissions)
     refute user.disabled?
   end
 
   test "should find and update the user with oauth params" do
     attributes = { uid: "1234abcd", name: "Old", email: "old@m.com",
-        permissions: ["everything"] }
+        permissions: %w[everything] }
     User.create!(attributes)
     auth_hash = {
       "uid" => "1234abcd",

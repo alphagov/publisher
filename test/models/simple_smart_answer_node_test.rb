@@ -91,8 +91,8 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
       @node.reload
 
       assert_equal 1, @node.options.count
-      assert_equal ["No"], @node.options.all.map(&:label)
-      assert_equal ["no"], @node.options.all.map(&:next_node)
+      assert_equal %w[No], @node.options.all.map(&:label)
+      assert_equal %w[no], @node.options.all.map(&:next_node)
     end
 
     should "not be valid if an outcome has options" do
