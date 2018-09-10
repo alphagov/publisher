@@ -79,7 +79,7 @@ GEM
     bson (4.3.0)
     builder (3.2.3)
     byebug (10.0.2)
-    capybara (3.7.0)
+    capybara (3.7.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -487,7 +487,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-kaminari-views (= 0.0.5)
-  capybara (= 3.7.0)
+  capybara (= 3.7.1)
   ci_reporter_minitest (= 1.0.0)
   database_cleaner (= 1.7.0)
   diffy (= 3.2.1)
