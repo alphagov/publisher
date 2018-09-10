@@ -31,11 +31,11 @@ class PrimaryListingPresenter
   end
 
   attr_accessor :scope
-  private :scope
+private :scope
 
   def acceptable_list?(list)
     available_partials = AVAILABLE_LISTS.map do |scope|
-      LIST_TRANSLATIONS[scope] ? LIST_TRANSLATIONS[scope] : scope
+      LIST_TRANSLATIONS[scope] || scope
     end
 
     available_partials.include?(list.to_sym)

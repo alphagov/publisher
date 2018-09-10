@@ -68,7 +68,7 @@ class AttachableTest < ActiveSupport::TestCase
     end
 
     should "assign a file and detect it has changed" do
-      file = File.open(File.expand_path("../../fixtures/uploads/image.jpg", __FILE__))
+      file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
       @edition.image = file
       assert @edition.image_has_changed?
     end
@@ -76,7 +76,7 @@ class AttachableTest < ActiveSupport::TestCase
 
   context "saving an edition without update_existing set" do
     setup do
-      @file = File.open(File.expand_path("../../fixtures/uploads/image.jpg", __FILE__))
+      @file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
       @asset = {
         "id" => 'http://asset-manager.dev.gov.uk/assets/an_image_id',
         "file_url" => 'http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg'
@@ -182,7 +182,7 @@ class AttachableTest < ActiveSupport::TestCase
 
   context "with update_existing option set" do
     setup do
-      @file = File.open(File.expand_path("../../fixtures/uploads/image.jpg", __FILE__))
+      @file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
 
       @asset_id = 'an_image_id'
 

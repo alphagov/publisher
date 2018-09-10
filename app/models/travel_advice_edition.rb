@@ -63,7 +63,7 @@ avoid_all_travel_to_whole_country
         edition.published_at = Time.zone.now.utc
         edition.reviewed_at = edition.published_at
       end
-      edition.class.where(country_slug: edition.country_slug, state: 'published').each(&:archive) # rubocop:disable Rails/FindEach
+      edition.class.where(country_slug: edition.country_slug, state: 'published').each(&:archive)
     end
 
     event :publish do
@@ -148,7 +148,7 @@ private
   end
 
   def anything_other_than_state_changed?(*additional_allowed_fields)
-    self.changed? && ((changes.keys - ['state'] - additional_allowed_fields) != [] || self.parts.any?(&:changed?))
+    self.changed? && ((changes.keys - %w[state] - additional_allowed_fields) != [] || self.parts.any?(&:changed?))
   end
 
   def alert_status_contains_valid_values

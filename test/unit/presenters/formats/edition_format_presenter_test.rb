@@ -158,7 +158,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     context "[:access_limited]" do
       should "return auth_bypass_ids if present" do
         edition.expects(:auth_bypass_id).twice.returns("foo")
-        expected = { auth_bypass_ids: ["foo"] }
+        expected = { auth_bypass_ids: %w[foo] }
         assert_equal expected, result[:access_limited]
       end
 

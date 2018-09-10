@@ -57,7 +57,7 @@ class AreasHelperTest < ActionView::TestCase
     )
 
     edition = OpenStruct.new(
-      area_gss_codes: ["E15000003"],
+      area_gss_codes: %w[E15000003],
     )
     assert_equal true, english_regions?(edition)
 
