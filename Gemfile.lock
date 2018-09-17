@@ -487,7 +487,6 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-kaminari-views (= 0.0.5)
-  capybara (= 3.7.2)
   ci_reporter_minitest (= 1.0.0)
   database_cleaner (= 1.7.0)
   diffy (= 3.2.1)
