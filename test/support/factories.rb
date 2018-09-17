@@ -15,22 +15,22 @@ FactoryBot.define do
   end
 
   factory :disabled_user, parent: :user do
-    disabled true
+    disabled { true }
   end
 
   factory :downtime do
-    message "This service will be unavailable from 3pm to 6pm tomorrow"
+    message { "This service will be unavailable from 3pm to 6pm tomorrow" }
     tomorrow = Time.zone.tomorrow
-    start_time Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 15).time
-    end_time Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 18).time
+    start_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 15).time }
+    end_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 18).time }
     artefact
   end
 
   factory :artefact do
     sequence(:name) { |n| "Artefact #{n}" }
     sequence(:slug) { |n| "slug-#{n}" }
-    kind            Artefact::FORMATS.first
-    owning_app      'publisher'
+    kind            { Artefact::FORMATS.first }
+    owning_app      { 'publisher' }
     content_id      { SecureRandom.uuid }
 
     trait :with_published_edition do
@@ -40,20 +40,20 @@ FactoryBot.define do
     end
 
     trait :non_publisher do
-      kind 'smart-answer'
-      owning_app 'smartanswers'
+      kind { 'smart-answer' }
+      owning_app { 'smartanswers' }
     end
 
     trait :draft do
-      state "draft"
+      state { "draft" }
     end
 
     trait :live do
-      state "live"
+      state { "live" }
     end
 
     trait :archived do
-      state "archived"
+      state { "archived" }
     end
 
     factory :draft_artefact, traits: [:draft]
@@ -71,7 +71,7 @@ FactoryBot.define do
       a.id
     }
     transient do
-      version_number nil
+      version_number { nil }
     end
 
     sequence(:slug) { |n| "slug-#{n}" }
@@ -86,22 +86,22 @@ FactoryBot.define do
     end
 
     trait :scheduled_for_publishing do
-      state 'scheduled_for_publishing'
-      publish_at 1.day.from_now
+      state { 'scheduled_for_publishing' }
+      publish_at { 1.day.from_now }
     end
 
     trait :published do
-      state 'published'
+      state { 'published' }
     end
 
     trait :with_body do
-      body 'Some body text'
+      body { 'Some body text' }
     end
 
     trait :with_link_check_report do
       transient do
-        batch_id 1
-        link_uris []
+        batch_id { 1 }
+        link_uris { [] }
       end
 
       link_check_reports do
@@ -180,22 +180,22 @@ FactoryBot.define do
     sequence(:lgsl_code) { |nlgsl| nlgsl }
     introduction { "Test introduction" }
     more_information { "This is more information" }
-    need_to_know "This service is only available in England and Wales"
+    need_to_know { "This service is only available in England and Wales" }
   end
 
   factory :transaction_edition, parent: :edition, class: "TransactionEdition" do
     introduction { "Test introduction" }
     more_information { "This is more information" }
-    need_to_know "This service is only available in England and Wales"
-    link "http://continue.com"
-    will_continue_on "To be continued..."
-    alternate_methods "Method A or Method B"
+    need_to_know { "This service is only available in England and Wales" }
+    link { "http://continue.com" }
+    will_continue_on { "To be continued..." }
+    alternate_methods { "Method A or Method B" }
   end
 
   factory :licence_edition, parent: :edition, class: "LicenceEdition" do
-    licence_identifier "AB1234"
-    licence_short_description "This is a licence short description."
-    licence_overview "This is a licence overview."
+    licence_identifier { "AB1234" }
+    licence_short_description { "This is a licence short description." }
+    licence_overview { "This is a licence overview." }
   end
 
   factory :local_service do |ls|
@@ -204,18 +204,18 @@ FactoryBot.define do
   end
 
   factory :local_authority do
-    name "Some Council"
+    name { "Some Council" }
     sequence(:snac) { |n| "%02dAA" % n }
     sequence(:local_directgov_id)
-    tier "county"
+    tier { "county" }
   end
 
   factory :place_edition, parent: :edition, class: 'PlaceEdition' do
-    title "Far far away"
-    introduction "Test introduction"
-    more_information "More information"
-    need_to_know "This service is only available in England and Wales"
-    place_type "Location location location"
+    title { "Far far away" }
+    introduction { "Test introduction" }
+    more_information { "More information" }
+    need_to_know { "This service is only available in England and Wales" }
+    place_type { "Location location location" }
   end
 
   factory :curated_list do
@@ -225,7 +225,7 @@ FactoryBot.define do
   factory :travel_advice_edition do
     sequence(:country_slug) { |n| "test-country-#{n}" }
     sequence(:title) { |n| "Test Country #{n}" }
-    change_description "Stuff changed"
+    change_description { "Stuff changed" }
   end
 
   # These factories only work when used with FactoryBot.create
@@ -246,7 +246,7 @@ FactoryBot.define do
   end
 
   factory :travel_advice_edition_with_parts, parent: :travel_advice_edition do
-    summary "This is [link](https://www.gov.uk) text."
+    summary { "This is [link](https://www.gov.uk) text." }
 
     after :create do |getp|
       getp.parts.build(title: "Some Part Title!",
@@ -260,38 +260,38 @@ FactoryBot.define do
   factory :rendered_manual do
     sequence(:slug) { |n| "test-rendered-manual-#{n}" }
     sequence(:title) { |n| "Test Rendered Manual #{n}" }
-    summary "My summary"
+    summary { "My summary" }
   end
 
   factory :simple_smart_answer_edition, parent: :edition, class: "SimpleSmartAnswerEdition" do
-    title "Simple smart answer"
-    body "Introduction to the smart answer"
+    title { "Simple smart answer" }
+    body { "Introduction to the smart answer" }
   end
 
   factory :link do
-    uri "https://www.gov.uk"
-    status "ok"
-    checked_at Time.parse("2017-12-01").iso8601
-    check_warnings ["example check warnings"]
-    check_errors ["example check errors"]
-    problem_summary "example problem"
-    suggested_fix "example fix"
+    uri { "https://www.gov.uk" }
+    status { "ok" }
+    checked_at { Time.parse("2017-12-01").iso8601 }
+    check_warnings { ["example check warnings"] }
+    check_errors { ["example check errors"] }
+    problem_summary { "example problem" }
+    suggested_fix { "example fix" }
   end
 
   factory :link_check_report do
-    batch_id 1
-    status "in_progress"
+    batch_id { 1 }
+    status { "in_progress" }
     links { [FactoryBot.build(:link)] }
 
     trait :completed do
-      status "completed"
-      completed_at Time.now.iso8601
+      status { "completed" }
+      completed_at { Time.now.iso8601 }
     end
 
     trait :with_links do
       transient do
-        link_uris []
-        link_status "pending"
+        link_uris { [] }
+        link_status { "pending" }
       end
 
       links do
