@@ -238,6 +238,18 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
           assert_equal expected, result[:details][:create_new_account][:body]
         end
+
+        should "[:body] for cross-domain trackable content" do
+          ga_universal_id = ENV["GA_UNIVERSAL_ID"]
+          ENV["GA_UNIVERSAL_ID"] = "UA-12345-678"
+          @content[:cross_domain_trackable] = true
+
+          assert_match(/\{button cross-domain-tracking:UA-12345-678\}\[.*?\]\(.*?\)\{\/button\}/,
+                       result[:details][:create_new_account][:body].first[:content])
+
+          # Restore any previous config
+          ENV["GA_UNIVERSAL_ID"] = ga_universal_id
+        end
       end
     end
   end
