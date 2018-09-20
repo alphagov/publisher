@@ -244,8 +244,11 @@ class ServiceSignInTest < ActiveSupport::TestCase
           ENV["GA_UNIVERSAL_ID"] = "UA-12345-678"
           @content[:cross_domain_trackable] = true
 
-          assert_match(/\{button cross-domain-tracking:UA-12345-678\}\[.*?\]\(.*?\)\{\/button\}/,
-                       result[:details][:create_new_account][:body].first[:content])
+          govspeak = result[:details][:create_new_account][:body].first[:content]
+
+          assert_match(/data-module="cross-domain-tracking"/, govspeak)
+          assert_match(/data-tracking-code="UA-12345-678"/, govspeak)
+          assert_match(/data-track-category="ServiceSignIn"/, govspeak)
 
           # Restore any previous config
           ENV["GA_UNIVERSAL_ID"] = ga_universal_id

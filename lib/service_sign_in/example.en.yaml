@@ -30,7 +30,7 @@ create_new_account:
     - your National Insurance number
     - a recent payslip or a P60 or valid UK passport
 
-    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/check-your-state-pension&accountType=individual){/button}
+    <a role="button" class="button" href="https://www.tax.service.gov.uk/gg/sign-in?continue=/check-your-state-pension&accountType=individual" data-module="cross-domain-tracking" data-tracking-code="UA-xxxx" data-tracking-name="govspeakButtonTracker" data-track-category="ServiceSignIn" data-track-action="Gateway" data-track-label="/check-state-pension/sign-in/create-account">Create a Government Gateway account</a>
 
     ###GOV.UK Verify
 
@@ -39,7 +39,7 @@ create_new_account:
     - a UK address
     - a valid passport or photocard driving licence
 
-    {button}[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=registration){/button}
+    <a role="button" class="button" href="https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=registration" data-module="cross-domain-tracking" data-tracking-code="UA-xxxx" data-tracking-name="govspeakButtonTracker" data-track-category="ServiceSignIn" data-track-action="Verify" data-track-label="/check-state-pension/sign-in/create-account">Create a GOV.UK Verify account</a>
 
     A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 update_type: major

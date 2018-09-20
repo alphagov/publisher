@@ -2,8 +2,6 @@ module Formats
   class ServiceSignInPresenter
     attr_reader :content
 
-    BUTTON_REGEX = /(\{button\}\[(.*?)\]\((.*?)\)\{\/button\})/
-
     def initialize(content)
       @content = content.deep_symbolize_keys
     end
@@ -149,11 +147,8 @@ module Formats
     end
 
     def content_with_trackable_buttons(content)
-      # Replace all buttons with cross-domain-trackable versions.
-      content.scan(BUTTON_REGEX) do |match|
-        continue unless match.size == 3
-        trackable_button = "{button cross-domain-tracking:#{ga_universal_id}}[#{match[1]}](#{match[2]}){/button}"
-        content = content.gsub(match[0], trackable_button)
+      content.scan(/UA-xxxx/) do |match|
+        content = content.gsub(match, ga_universal_id)
       end
       content
     end
