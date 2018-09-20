@@ -115,6 +115,7 @@ module Formats
     end
 
     def govspeak_content(content)
+      content = content_with_trackable_buttons(content) if cross_domain_trackable?
       [
         {
           content_type: "text/govspeak",
@@ -142,7 +143,18 @@ module Formats
     def trackable_url(url)
       uri = URI(url)
       url += uri.query.present? ? "&" : "?"
-      url + "clientId=#{ENV['GA_UNIVERSAL_ID']}"
+      url + "clientId=#{ga_universal_id}"
+    end
+
+    def content_with_trackable_buttons(content)
+      content.scan(/UA-xxxx/) do |match|
+        content = content.gsub(match, ga_universal_id)
+      end
+      content
+    end
+
+    def ga_universal_id
+      ENV["GA_UNIVERSAL_ID"]
     end
   end
 end
