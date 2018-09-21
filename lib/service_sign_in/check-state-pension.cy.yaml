@@ -1,17 +1,18 @@
-start_page_slug: personal-tax-account
+start_page_slug: check-state-pension
+cross_domain_trackable: true
 locale: en
 choose_sign_in:
   title: Prove your identity to continue
   slug: prove-identity
   options:
     - text: Sign in with Government Gateway
-      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
-      url: https://www.tax.service.gov.uk/personal-account/start-verify
+      url: https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=uk_idp_sign_in
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Sign in with a digital identity from another European country
-      url: https://www.tax.service.gov.uk/personal-account/start-verify?journey_hint=eidas_sign_in
+      url: https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=eidas_sign_in
       hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Create an account
       slug: create-account
@@ -30,10 +31,10 @@ create_new_account:
 
     Registering with Government Gateway usually takes about 10 minutes. It works best if you have:
 
-    - your National Insurance number
-    - a recent payslip or P60 or a valid UK passport
+    * your National Insurance number
+    * a recent payslip or P60 or a valid UK passport
 
-    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
+    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/check-your-state-pension&accountType=individual){/button}
 
     ### GOV.UK Verify
 
@@ -42,12 +43,12 @@ create_new_account:
     - a UK address
     - a valid passport or photocard driving licence
 
-    {button}[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/personal-account/start-verify){/button}
+    {button}[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=registration){/button}
 
     A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 
     ## Personal tax account
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
-update_type: minor
-change_note: Removed description text for service sign in pages as per results of baseline test.
+update_type: major
+change_note: First published.

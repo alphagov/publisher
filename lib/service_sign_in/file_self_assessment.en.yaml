@@ -11,6 +11,9 @@ choose_sign_in:
     - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/ida/sa/login
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
+    - text: Sign in with a digital identity from another European country
+      url: https://www.tax.service.gov.uk/ida/sa/login?journey_hint=eidas_sign_in
+      hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Register for Self Assessment
       slug: register-self-assessment
       hint_text: You must register before you can file your first tax return.
