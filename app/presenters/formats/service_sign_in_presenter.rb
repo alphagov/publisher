@@ -103,8 +103,6 @@ module Formats
           option[:slug] = "#{base_path}/#{option[:slug]}"
           option[:url] = option.delete :slug
         end
-
-        option[:url] = trackable_url(option[:url]) if cross_domain_trackable?
       end
     end
 
@@ -140,12 +138,6 @@ module Formats
 
     def cross_domain_trackable?
       !!content[:cross_domain_trackable]
-    end
-
-    def trackable_url(url)
-      uri = URI(url)
-      url += uri.query.present? ? "&" : "?"
-      url + "clientId=#{ga_universal_id}"
     end
 
     def content_with_trackable_buttons(content)
