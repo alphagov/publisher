@@ -101,8 +101,6 @@ module Formats
           option[:slug] = "#{base_path}/#{option[:slug]}"
           option[:url] = option.delete :slug
         end
-
-        option[:url] = trackable_url(option[:url]) if cross_domain_trackable?
       end
     end
 
@@ -133,16 +131,6 @@ module Formats
 
     def existing_content_id
       Services.publishing_api.lookup_content_id(base_path: base_path)
-    end
-
-    def cross_domain_trackable?
-      !!content[:cross_domain_trackable]
-    end
-
-    def trackable_url(url)
-      uri = URI(url)
-      url += uri.query.present? ? "&" : "?"
-      url + "clientId=#{ENV['GA_UNIVERSAL_ID']}"
     end
   end
 end
