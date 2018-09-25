@@ -34,5 +34,5 @@ create_new_account:
     Once you've registered, you'll get a letter that tells you what to do next. It will include your Unique Taxpayer Reference (UTR).
 
     *[UTR]: Unique Taxpayer Reference
-update_type: minor
-change_note: Update HMRC self-assessment signin URL.
+update_type: major
+change_note: Add eidas option radio button.

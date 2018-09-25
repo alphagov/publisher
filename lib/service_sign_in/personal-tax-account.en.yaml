@@ -49,5 +49,5 @@ create_new_account:
     ## Personal tax account
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
-update_type: minor
-change_note: Removed description text for service sign in pages as per results of baseline test.
+update_type: major
+change_note: Add eidas option radio button.

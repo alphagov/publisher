@@ -45,4 +45,4 @@ create_new_account:
     Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
 
 update_type: major
-change_note: First published.
+change_note: Add eidas option radio button, remove unwanted text regarding personal tax

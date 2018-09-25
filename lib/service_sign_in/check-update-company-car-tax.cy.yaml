@@ -43,11 +43,11 @@ create_new_account:
     [Creu cyfrif Porth y Llywodraeth](www.tax.service.gov.uk/paye/company-car/start-verify).
 
     Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
-    
+
     ##Cyfrif treth personol
-    
+
     Bydd mewngofnodi am y tro cyntaf, yn cychwyn eich cyfrif treth personol. Gallwch ddefnyddio hwn i wirio'ch cofnodion gyda CThEM a rheoli'ch manylion eraill.
 
 
 update_type: major
-change_note: First published.
+change_note: Add eidas option radio button.
