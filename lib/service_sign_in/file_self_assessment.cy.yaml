@@ -10,6 +10,8 @@ choose_sign_in:
     - text: Mewngofnodi gan ddefnyddio GOV.UK Verify
       url: https://www.tax.service.gov.uk/ida/sa/login
       hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
+    - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
+      url: https://www.tax.service.gov.uk/ida/sa/login?journey_hint=eidas_sign_in
     - text: Cofrestru ar gyfer Hunanasesiad
       slug: cofrestru-hunan-asesiad
       hint_text: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
@@ -27,8 +29,8 @@ create_new_account:
 
     ##Os ydych chi wedi cofrestru’n barod
 
-    Unwaith eich bod wedi cofrestru, byddwch yn cael llythyr a fydd yn rhoi gwybod i chi beth i'w wneud nesaf. Bydd yn cynnwys eich Cyfeirnod Unigryw y Trethdalwr (UTR). 
+    Unwaith eich bod wedi cofrestru, byddwch yn cael llythyr a fydd yn rhoi gwybod i chi beth i'w wneud nesaf. Bydd yn cynnwys eich Cyfeirnod Unigryw y Trethdalwr (UTR).
 
     *[UTR]: Cyfeirnod Trethdalwr Unigryw
-update_type: minor
-change_note: Corrected 'Os ydych chi wedi cofrestru’n barod' (If you're already registered)
+update_type: major
+change_note: Add eidas option radio button.

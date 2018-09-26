@@ -10,6 +10,9 @@ choose_sign_in:
     - text: Sign in with GOV.UK Verify
       url: https://www.tax.service.gov.uk/paye/company-car/start-verify
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
+    - text: Sign in with a digital identity from another European country
+      url: https://www.tax.service.gov.uk/paye/company-car/start-verify?journey_hint=eidas_sign_in
+      hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Create an account
       slug: create-account
       hint_text: If you do not already have one of these accounts, we'll help you choose whether to use Government Gateway or GOV.UK Verify.
@@ -46,5 +49,5 @@ create_new_account:
     ## Personal tax account
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
-update_type: minor
-change_note: Removed description text for service sign in pages as per results of baseline test.
+update_type: major
+change_note: Add eidas option radio button.

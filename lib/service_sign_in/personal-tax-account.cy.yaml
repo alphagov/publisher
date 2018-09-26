@@ -10,14 +10,16 @@ choose_sign_in:
     - text: Defnyddio GOV.UK Verify
       url: https://www.tax.service.gov.uk/personal-account/start-verify
       hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
+    - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
+      url: https://www.tax.service.gov.uk/personal-account/start-verify?journey_hint=eidas_sign_in
     - text: Creu cyfrif
       slug: creu-cyfrif
 create_new_account:
   title: Creu cyfrif
   slug: creu-cyfrif
   body: |
-    I ddefnyddio'r gwasanaeth hwn, bydd angen i chi greu naill ai cyfrif Porth y Llywodraeth neu gyfrif GOV.UK Verify. Caiff y rhain eu defnyddio i helpu i ddiogelu rhag twyll dwyn hunaniaeth. 
-    
+    I ddefnyddio'r gwasanaeth hwn, bydd angen i chi greu naill ai cyfrif Porth y Llywodraeth neu gyfrif GOV.UK Verify. Caiff y rhain eu defnyddio i helpu i ddiogelu rhag twyll dwyn hunaniaeth.
+
     Unwaith y bydd cyfrif gennych, gallwch ei ddefnyddio i gyrchu gwasanaethau ar-lein eraill y Llywodraeth.
 
     ## Dewiswch ffordd o brofi pwy ydych
@@ -45,4 +47,4 @@ create_new_account:
 
     Bydd mewngofnodi am y tro cyntaf, yn cychwyn eich cyfrif treth personol. Gallwch ddefnyddio hwn i wirio'ch cofnodion gyda CThEM a rheoli'ch manylion eraill.
 update_type: major
-change_note: First published.
+change_note: Add eidas option radio button.
