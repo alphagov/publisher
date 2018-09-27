@@ -2,6 +2,8 @@ module Formats
   class ServiceSignInPresenter
     attr_reader :content
 
+    BUTTON_REGEX = /(\{button\}\[(.*?)\]\((.*?)\)\{\/button\})/
+
     def initialize(content)
       @content = content.deep_symbolize_keys
     end
@@ -101,8 +103,6 @@ module Formats
           option[:slug] = "#{base_path}/#{option[:slug]}"
           option[:url] = option.delete :slug
         end
-
-        option[:url] = trackable_url(option[:url]) if cross_domain_trackable?
       end
     end
 
@@ -115,6 +115,7 @@ module Formats
     end
 
     def govspeak_content(content)
+      content = content_with_trackable_buttons(content) if cross_domain_trackable?
       [
         {
           content_type: "text/govspeak",
@@ -139,10 +140,18 @@ module Formats
       !!content[:cross_domain_trackable]
     end
 
-    def trackable_url(url)
-      uri = URI(url)
-      url += uri.query.present? ? "&" : "?"
-      url + "clientId=#{ENV['GA_UNIVERSAL_ID']}"
+    def content_with_trackable_buttons(content)
+      # Replace all buttons with cross-domain-trackable versions.
+      content.scan(BUTTON_REGEX) do |match|
+        continue unless match.size == 3
+        trackable_button = "{button cross-domain-tracking:#{ga_universal_id}}[#{match[1]}](#{match[2]}){/button}"
+        content = content.gsub(match[0], trackable_button)
+      end
+      content
+    end
+
+    def ga_universal_id
+      ENV["GA_UNIVERSAL_ID"]
     end
   end
 end

@@ -187,25 +187,6 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
           assert_includes result[:details][:choose_sign_in][:options], expected
         end
-
-        should "append GA tracking params to specific items" do
-          ga_universal_id = ENV["GA_UNIVERSAL_ID"]
-          ENV["GA_UNIVERSAL_ID"] = "UA-12345-678"
-          @content[:cross_domain_trackable] = true
-
-          option_two = @content[:choose_sign_in][:options][1]
-
-          expected = {
-            text: option_two[:text],
-            url: "#{option_two[:url]}?clientId=UA-12345-678",
-            hint_text: option_two[:hint_text],
-          }
-
-          assert_includes result[:details][:choose_sign_in][:options], expected
-
-          # Restore any previous config
-          ENV["GA_UNIVERSAL_ID"] = ga_universal_id
-        end
       end
     end
 
@@ -237,6 +218,18 @@ class ServiceSignInTest < ActiveSupport::TestCase
           ]
 
           assert_equal expected, result[:details][:create_new_account][:body]
+        end
+
+        should "[:body] for cross-domain trackable content" do
+          ga_universal_id = ENV["GA_UNIVERSAL_ID"]
+          ENV["GA_UNIVERSAL_ID"] = "UA-12345-678"
+          @content[:cross_domain_trackable] = true
+
+          assert_match(/\{button cross-domain-tracking:UA-12345-678\}\[.*?\]\(.*?\)\{\/button\}/,
+                       result[:details][:create_new_account][:body].first[:content])
+
+          # Restore any previous config
+          ENV["GA_UNIVERSAL_ID"] = ga_universal_id
         end
       end
     end
