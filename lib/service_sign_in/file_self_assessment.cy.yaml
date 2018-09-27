@@ -12,6 +12,7 @@ choose_sign_in:
       hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
     - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
       url: https://www.tax.service.gov.uk/ida/sa/login?journey_hint=eidas_sign_in
+      hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.
     - text: Cofrestru ar gyfer Hunanasesiad
       slug: cofrestru-hunan-asesiad
       hint_text: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
@@ -33,4 +34,4 @@ create_new_account:
 
     *[UTR]: Cyfeirnod Trethdalwr Unigryw
 update_type: major
-change_note: Add eidas option radio button.
+change_note: Add hint text to eidas option
