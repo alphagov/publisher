@@ -12,6 +12,7 @@ choose_sign_in:
       hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
     - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
       url: https://www.tax.service.gov.uk/personal-account/start-verify?journey_hint=eidas_sign_in
+      hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.
     - text: Creu cyfrif
       slug: creu-cyfrif
 create_new_account:
@@ -47,4 +48,4 @@ create_new_account:
 
     Bydd mewngofnodi am y tro cyntaf, yn cychwyn eich cyfrif treth personol. Gallwch ddefnyddio hwn i wirio'ch cofnodion gyda CThEM a rheoli'ch manylion eraill.
 update_type: major
-change_note: Add eidas option radio button.
+change_note: Add hint text to eidas option
