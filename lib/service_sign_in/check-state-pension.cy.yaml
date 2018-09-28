@@ -3,6 +3,8 @@ locale: cy
 choose_sign_in:
   title: Profi pwy ydych er mwyn mynd yn eich blaen
   slug: profi-pwy-ydych
+  tracking_code: UA-43414424-1
+  tracking_name: govspeakButtonTracker
   options:
     - text: Defnyddio Porth y Llywodraeth
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend
@@ -32,7 +34,7 @@ create_new_account:
     - eich rhif Yswiriant Gwladol
     - slip cyflog diweddar, P60 neu basbort dilys y DU
 
-    {button}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
+    {button cross-domain-tracking:UA-43414424-1}[Creu cyfrif Porth y Llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
 
     ### GOV.UK Verify
 
@@ -41,7 +43,7 @@ create_new_account:
     - cyfeiriad yn y DU
     - pasbort neu drwydded cerdyn-llun dilys
 
-    {button}[Creu cyfrif GOV.UK Verify](https://www.tax.service.gov.uk/personal-account/start-verify){/button}
+    {button cross-domain-tracking:UA-43414424-1}[Creu cyfrif GOV.UK Verify](https://www.tax.service.gov.uk/personal-account/start-verify){/button}
 
     Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
 
