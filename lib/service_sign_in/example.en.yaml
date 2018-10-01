@@ -4,6 +4,8 @@ choose_sign_in:
   title: Prove your identity to continue
   slug: choose-sign-in
   description: Your State Pension forecast is provided for your information only and the service does not offer financial advice. When planning for your retirement, you should seek professional advice.
+  tracking_code: UA-xxxxxx
+  tracking_name: somethingClicky
   options:
     - text: Use Government Gateway
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/account/&origin=SA-frontend
