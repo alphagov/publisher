@@ -165,7 +165,7 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (1.9.3)
+    govuk_app_config (1.10.0)
       aws-xray-sdk (~> 0.10.0)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
@@ -504,7 +504,7 @@ DEPENDENCIES
   govuk-content-schema-test-helpers (~> 1.6)
   govuk-lint (~> 3.8.0)
   govuk_admin_template (~> 6.6)
-  govuk_app_config (~> 1.9.3)
+  govuk_app_config (~> 1.10.0)
   govuk_sidekiq (~> 3.0.2)
   govuk_test
   has_scope
