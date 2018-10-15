@@ -4,6 +4,7 @@ choose_sign_in:
   title: Profi pwy ydych er mwyn mynd yn eich blaen
   slug: profi-pwy-ydych
   tracking_code: UA-43414424-1
+  tracking_domain: www.tax.service.gov.uk
   tracking_name: govspeakButtonTracker
   options:
     - text: Defnyddio Porth y Llywodraeth
