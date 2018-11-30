@@ -133,13 +133,39 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
     within :css, '#parts div.part:first-of-type' do
       fill_in 'Title', with: 'Part One'
-      fill_in 'Body',  with: 'Body text'
-      fill_in 'Slug',  with: 'part-one'
+      fill_in 'Body', with: 'Body text'
+      fill_in 'Slug', with: 'part-one'
     end
 
     save_edition_and_assert_success
 
     guide.reload
+  end
+
+  # Fill in some sample variants for a transaction
+  def fill_in_variants(transaction)
+    visit_edition transaction
+
+    unless page.has_css?('#parts div.part:first-of-type input')
+      add_new_variant
+    end
+
+    # Toggle the first variant to be open, presuming the first variant
+    # is called 'Untitled variant'
+    unless page.has_css?('#parts div.part:first-of-type input')
+      scroll_to_bottom
+      click_on 'Untitled variant'
+    end
+
+    within :css, '#parts div.part:first-of-type' do
+      fill_in 'Title', with: 'Variant One'
+      fill_in 'Introductory paragraph', with: 'Body text'
+      fill_in 'Slug', with: 'variant-one'
+    end
+
+    save_edition_and_assert_success
+
+    transaction.reload
   end
 
   def select2(value, scope)
@@ -229,6 +255,11 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def add_new_part
     scroll_to_bottom
     click_on 'Add new part'
+  end
+
+  def add_new_variant
+    scroll_to_bottom
+    click_on 'Add new variant'
   end
 
   def scroll_to_bottom

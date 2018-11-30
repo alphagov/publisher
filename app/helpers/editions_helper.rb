@@ -9,7 +9,7 @@ module EditionsHelper
   def resource_form(&form_definition)
     html_options = { id: 'edition-form' }
     unless @resource.locked_for_edits? || @resource.archived?
-      if @resource.is_a?(Parted)
+      if @resource.is_a?(Parted) || @resource.is_a?(Varianted)
         html_options['data-module'] = 'ajax-save-with-parts'
       elsif @resource.format != 'SimpleSmartAnswer'
         html_options['data-module'] = 'ajax-save'

@@ -97,7 +97,6 @@ class Edition
   EXACT_ROUTE_EDITION_CLASSES = %w[
     CampaignEdition
     HelpPageEdition
-    TransactionEdition
   ].freeze
 
   validates :title, presence: true

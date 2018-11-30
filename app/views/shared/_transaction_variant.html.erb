@@ -1,0 +1,61 @@
+<div class="panel panel-part part">
+  <div class="panel-heading js-sort-handle">
+    <h4 class="panel-title">
+      <a class="js-part-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug || 'untitled-part' %>">
+        <i class="glyphicon glyphicon-chevron-down pull-left add-right-margin"></i>
+        <span class="js-part-title"><%= f.object.title.present? ? f.object.title : 'Untitled variant' %></span>
+      </a>
+    </h4>
+  </div>
+  <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse collapse in" aria-expanded="true">
+    <div class="panel-body">
+        <%= f.inputs do %>
+          <%= f.input :title,
+                      :input_html => { :class => 'title', :disabled => @resource.locked_for_edits? },
+                      :hint => false,
+                      :required => true %>
+
+          <%
+            slug_input_html = { :class => 'slug', :disabled => ! editable }
+            if @resource.version_number == 1
+              slug_input_html['data-accepts-generated-value'] = true
+            end
+          %>
+
+          <%= f.input :slug,
+                      :input_html => slug_input_html,
+                      :hint => true,
+                      :required => true %>
+
+          <%= f.input :introduction,
+                      :as => :text,
+                      :label => 'Introductory paragraph',
+                      :hint => 'Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")',
+                      :input_html => { :rows => 8, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
+
+          <%= f.input :link,
+                      :label => 'Link to start of transaction',
+                      :hint => 'Link as deep as possible.',
+                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
+
+          <%= f.input :more_information,
+                      :as => :text,
+                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-10' } %>
+
+          <%= f.input :alternate_methods,
+                      :as => :text,
+                      :label => "Other ways to apply",
+                      :hint => "Alternative ways of completing this transaction. Not displayed on front end if left blank.",
+                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-10' } %>
+
+          <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
+
+          <% unless @resource.locked_for_edits? %>
+            <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
+              <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this variant
+            <% end %>
+          <% end %>
+        <% end %>
+    </div>
+  </div>
+</div>
