@@ -9,7 +9,7 @@
       ajaxSave.start(element);
 
       function success(evt, response) {
-        var parts = response.parts;
+        var parts = response.parts || response.variants;
         if (parts) {
           for (var i = 0, l = parts.length; i < l; i++) {
             updatePart(parts[i]);
@@ -19,7 +19,7 @@
 
       function error(evt, response) {
         var responseJSON = response.responseJSON,
-            partErrors = typeof responseJSON === "object" && responseJSON.parts;
+            partErrors = typeof responseJSON === "object" && (responseJSON.parts || responseJSON.variants);
 
         if (partErrors) {
           $.each(partErrors[0], showPartErrors);

@@ -18,6 +18,10 @@ class EditionsController < InheritedResources::Base
       @ordered_parts = @resource.parts.in_order
     end
 
+    if @resource.is_a?(Varianted)
+      @ordered_variants = @resource.variants.in_order
+    end
+
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
 
@@ -269,15 +273,16 @@ protected
         ],
       ]
     when :transaction_edition
-      %i[
-        introduction
-        start_button_text
-        will_continue_on
-        link
-        more_information
-        alternate_methods
-        need_to_know
-        department_analytics_profile
+      [
+        :introduction,
+        :start_button_text,
+        :will_continue_on,
+        :link,
+        :more_information,
+        :alternate_methods,
+        :need_to_know,
+        :department_analytics_profile,
+        variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy]
       ]
     when :completed_transaction_edition
       %i[

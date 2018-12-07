@@ -1,6 +1,9 @@
 require "edition"
+require "varianted"
 
 class TransactionEdition < Edition
+  include Varianted
+
   field :introduction, type: String
   field :will_continue_on, type: String
   field :link, type: String

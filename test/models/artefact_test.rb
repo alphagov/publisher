@@ -382,12 +382,10 @@ class ArtefactTest < ActiveSupport::TestCase
       should 'be true if its owning_app is publisher and its kind is that of an exact route edition' do
         assert FactoryBot.build(:artefact, kind: 'campaign', prefixes: []).exact_route?
         assert FactoryBot.build(:artefact, kind: 'help_page', prefixes: []).exact_route?
-        assert FactoryBot.build(:artefact, kind: 'transaction', prefixes: []).exact_route?
 
         # regardless of prefixes
         assert FactoryBot.build(:artefact, kind: 'campaign', prefixes: ['/hats']).exact_route?
         assert FactoryBot.build(:artefact, kind: 'help_page', prefixes: ['/shoes']).exact_route?
-        assert FactoryBot.build(:artefact, kind: 'transaction', prefixes: ['/scarves']).exact_route?
       end
 
       should 'be false if its owning_app is not publisher and its kind is not that of an exact route edition' do
@@ -399,6 +397,7 @@ class ArtefactTest < ActiveSupport::TestCase
         refute FactoryBot.build(:artefact, kind: 'place', prefixes: []).exact_route?
         refute FactoryBot.build(:artefact, kind: 'programme', prefixes: []).exact_route?
         refute FactoryBot.build(:artefact, kind: 'simple_smart_answer', prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: 'transaction', prefixes: []).exact_route?
         refute FactoryBot.build(:artefact, kind: 'video', prefixes: []).exact_route?
 
         # regardless of prefixes
@@ -410,6 +409,7 @@ class ArtefactTest < ActiveSupport::TestCase
         refute FactoryBot.build(:artefact, kind: 'place', prefixes: ['/belts']).exact_route?
         refute FactoryBot.build(:artefact, kind: 'programme', prefixes: ['/socks']).exact_route?
         refute FactoryBot.build(:artefact, kind: 'simple_smart_answer', prefixes: ['/onesies']).exact_route?
+        refute FactoryBot.build(:artefact, kind: 'transaction', prefixes: ['/scarves']).exact_route?
         refute FactoryBot.build(:artefact, kind: 'video', prefixes: ['/all-other-clothing']).exact_route?
       end
     end

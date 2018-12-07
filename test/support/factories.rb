@@ -192,6 +192,17 @@ FactoryBot.define do
     alternate_methods { "Method A or Method B" }
   end
 
+  factory :transaction_edition_with_two_variants, parent: :transaction_edition do
+    after :create do |getp|
+      getp.variants.build(title: "VARIANT !",
+                          introduction: "This is some version text.",
+                          slug: "variant-one")
+      getp.variants.build(title: "VARIANT !!",
+                          introduction: "This is some more version text.",
+                          slug: "variant-two")
+    end
+  end
+
   factory :licence_edition, parent: :edition, class: "LicenceEdition" do
     licence_identifier { "AB1234" }
     licence_short_description { "This is a licence short description." }
