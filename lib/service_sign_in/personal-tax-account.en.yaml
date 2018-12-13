@@ -8,10 +8,10 @@ choose_sign_in:
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
-      url: https://www.tax.service.gov.uk/personal-account/start-verify
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=uk_idp_sign_in
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Sign in with a digital identity from another European country
-      url: https://www.tax.service.gov.uk/personal-account/start-verify?journey_hint=eidas_sign_in
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=eidas_sign_in
       hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Create an account
       slug: create-account
@@ -42,12 +42,12 @@ create_new_account:
     - a UK address
     - a valid passport or photocard driving licence
 
-    {button}[Create a GOV.UK Verify account](https://www.tax.service.gov.uk/personal-account/start-verify){/button}
+    {button}[Create a GOV.UK Verify account](https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=registration){/button}
 
     A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 
     ## Personal tax account
 
     Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
-update_type: major
-change_note: Add eidas option radio button.
+update_type: minor
+change_note: Updated Verify links to use correct hints and redirects
