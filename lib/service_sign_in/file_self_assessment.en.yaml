@@ -9,10 +9,10 @@ choose_sign_in:
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/account/&origin=SA-frontend
       hint_text: You’ll have a user ID if you’ve registered for Self Assessment or filed a tax return online before.
     - text: Sign in with GOV.UK Verify
-      url: https://www.tax.service.gov.uk/ida/sa/login
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=uk_idp_sign_in
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Sign in with a digital identity from another European country
-      url: https://www.tax.service.gov.uk/ida/sa/login?journey_hint=eidas_sign_in
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=eidas_sign_in
       hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Register for Self Assessment
       slug: register-self-assessment
@@ -34,5 +34,5 @@ create_new_account:
     Once you've registered, you'll get a letter that tells you what to do next. It will include your Unique Taxpayer Reference (UTR).
 
     *[UTR]: Unique Taxpayer Reference
-update_type: major
-change_note: Add eidas option radio button.
+update_type: minor
+change_note: Updated Verify links to use correct hints and redirects

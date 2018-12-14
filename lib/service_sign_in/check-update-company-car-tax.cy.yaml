@@ -8,10 +8,10 @@ choose_sign_in:
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=/paye/company-car/details&accountType=individual&origin=PTA-companycar
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
-      url: https://www.tax.service.gov.uk/paye/company-car/start-verify
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-company-car-tax?journey_hint=uk_idp_sign_in
       hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
     - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
-      url: https://www.tax.service.gov.uk/paye/company-car/start-verify?journey_hint=eidas_sign_in
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-company-car-tax?journey_hint=eidas_sign_in
       hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.
     - text: Creu cyfrif
       slug: creu-cyfrif
@@ -32,7 +32,7 @@ create_new_account:
     - eich rhif Yswiriant Gwladol
     - slip cyflog diweddar, P60 neu basbort y DU sy'n ddilys
 
-    [Creu cyfrif Porth y llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/paye/company-car/details&accountType=individual&origin=PTA-companycar).
+    {button}[Creu cyfrif Porth y llywodraeth](https://www.tax.service.gov.uk/gg/sign-in?continue=/paye/company-car/details&accountType=individual&origin=PTA-companycar){/button}
 
     ###GOV.UK Verify
 
@@ -41,7 +41,7 @@ create_new_account:
     - cyfeiriad yn y DU
     - pasbort neu drwydded cerdyn-llun dilys
 
-    [Creu cyfrif Porth y Llywodraeth](www.tax.service.gov.uk/paye/company-car/start-verify).
+    {button}[Creu cyfrif Porth y Llywodraeth](https://www.signin.service.gov.uk/initiate-journey/hmrc-company-car-tax?journey_hint=registration){/button}
 
     Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
 
@@ -50,5 +50,5 @@ create_new_account:
     Bydd mewngofnodi am y tro cyntaf, yn cychwyn eich cyfrif treth personol. Gallwch ddefnyddio hwn i wirio'ch cofnodion gyda CThEM a rheoli'ch manylion eraill.
 
 
-update_type: major
-change_note: Add hint text to eidas option
+update_type: minor
+change_note: Updated Verify links to use correct hints and redirects

@@ -11,10 +11,10 @@ choose_sign_in:
       url: https://www.tax.service.gov.uk/gg/sign-in?continue=%2Fcheck-your-state-pension%2Faccount&origin=nisp-frontend&accountType=individual
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
-      url: https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=uk_idp_sign_in
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-your-state-pension?journey_hint=uk_idp_sign_in
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
     - text: Sign in with a digital identity from another European country
-      url: https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=eidas_sign_in
+      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-your-state-pension?journey_hint=eidas_sign_in
       hint_text: If you are part of Germany’s Online-Ausweis you can use it here. Identity schemes from other countries will become available later.
     - text: Create an account
       slug: create-account
@@ -45,9 +45,9 @@ create_new_account:
     - a UK address
     - a valid passport or photocard driving licence
 
-    <a role="button" class="button" href="https://www.tax.service.gov.uk/check-your-state-pension/signin/verify?journey_hint=registration" data-module="cross-domain-tracking" data-tracking-code="UA-43414424-1" data-tracking-name="govspeakButtonTracker" data-tracking-track-event="true">Create a GOV.UK Verify account</a>
+    <a role="button" class="button" href="https://www.signin.service.gov.uk/initiate-journey/hmrc-your-state-pension?journey_hint=registration" data-module="cross-domain-tracking" data-tracking-code="UA-43414424-1" data-tracking-name="govspeakButtonTracker" data-tracking-track-event="true">Create a GOV.UK Verify account</a>
 
     A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
 
-update_type: major
-change_note: Add eidas option radio button, remove unwanted text regarding personal tax
+update_type: minor
+change_note: Updated Verify links to use correct hints and redirects
