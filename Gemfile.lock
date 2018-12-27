@@ -478,7 +478,7 @@ GEM
       rack (>= 1.0)
     warden-oauth2 (0.0.1)
       warden
-    webmock (3.4.2)
+    webmock (3.5.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -549,7 +549,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   timecop (= 0.9.1)
   uglifier (= 4.1.20)
-  webmock (~> 3.4.2)
+  webmock (~> 3.5.1)
   whenever
 
 BUNDLED WITH
