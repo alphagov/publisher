@@ -18,7 +18,7 @@ choose_sign_in:
       hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.
     - text: Creu cyfrif
       slug: creu-cyfrif
-
+      hint_text: Os nad oes gennych un o'r cyfrifon hyn eisoes, gallwn eich helpu i ddewis p'un ai i ddefnyddio Porth y Llywodraeth neu GOV.UK Verify
 create_new_account:
   title: Creu cyfrif
   slug: creu-cyfrif
