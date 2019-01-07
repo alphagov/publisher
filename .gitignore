@@ -8,12 +8,12 @@ test/reports
 .generators
 .rakeTasks
 *iml
+.idea/*
 *.daemonette-dump
 data/local_interactions.csv
 config/initializers/dev_*.rb
 reports/*
 .byebug_history
-
 # Local transactions import reports
 removed_ghosts*.csv
 ghosts*.csv
