@@ -1,9 +1,6 @@
 require "ostruct"
-require "gds_api/helpers"
 
 class Area < OpenStruct
-  extend GdsApi::Helpers
-
   # This list should stay in sync with Imminence's areas route constraint:
   # https://github.com/alphagov/imminence/blob/master/config/routes.rb#L13-L17
   AREA_TYPES = %w(EUR CTY DIS LBO LGD MTD UTA COI).freeze
@@ -31,7 +28,7 @@ class Area < OpenStruct
   def self.all_areas
     areas = []
     AREA_TYPES.each do |type|
-      areas << imminence_api.areas_for_type(type)["results"].map do |area_hash|
+      areas << Services.imminence.areas_for_type(type)["results"].map do |area_hash|
         self.new(area_hash)
       end
     end

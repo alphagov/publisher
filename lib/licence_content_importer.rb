@@ -1,11 +1,8 @@
 require 'csv'
-require 'gds_api/helpers'
 require 'retriable'
 require 'reverse_markdown'
 
 class LicenceContentImporter
-  include GdsApi::Helpers
-
   attr_reader :data_path, :imported, :existing, :failed
 
   def initialize(data_path, importing_user)
