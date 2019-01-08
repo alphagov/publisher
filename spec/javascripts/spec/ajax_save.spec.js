@@ -22,6 +22,10 @@ describe('An ajax save module', function() {
     $('body').append(element);
     ajaxSave = new GOVUKAdmin.Modules.AjaxSave();
     ajaxSave.start(element);
+
+    var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false);
+    element.submit(submitCallbackSpy);
+
   });
 
   afterEach(function() {
