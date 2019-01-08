@@ -124,7 +124,7 @@ describe('An ajax save with parts module', function() {
 
   describe('when the form save errors', function() {
     beforeEach(function() {
-      element.trigger('error.ajaxsave.admin', {responseJSON: {"parts":
+      element.trigger('errors.ajaxsave.admin', {responseJSON: {"parts":
         [
           {
             "5f00000001:1":{"slug":["can't be blank","is invalid"]},

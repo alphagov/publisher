@@ -110,7 +110,7 @@
         // Save errored, form still has unsaved changes
         GOVUKAdmin.Data.editionFormDirty = true;
 
-        element.trigger('error.ajaxsave.admin', response);
+        element.trigger('errors.ajaxsave.admin', response);
       }
 
       function showErrors(errors) {
