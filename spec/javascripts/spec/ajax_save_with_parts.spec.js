@@ -4,8 +4,20 @@ describe('An ajax save with parts module', function() {
   var ajaxSaveWithParts,
       element;
 
-  beforeEach(function() {
+  beforeAll(function() {
+    // Stub a bootstrap collapse method on jQuery
+    $.fn.collapse = function (str) {
+      if (str === "show") {
+        $(this).addClass('in');
+        element.trigger('shown.bs.collapse');
+      } else if (str === "hide") {
+        $(this).removeClass('in');
+        element.trigger('hidden.bs.collapse');
+      }
+    }
+  })
 
+  beforeEach(function() {
     element = $('<form action="some/url">\
       <div class="js-status-message"></div>\
       <div class="fields">\
@@ -63,6 +75,11 @@ describe('An ajax save with parts module', function() {
   afterEach(function() {
     element.remove();
   });
+
+  afterAll(function(){
+    // Delete bootstrap stub
+    delete $.fn.collapse;
+  })
 
   describe('it does everything ajax save does', function() {
     describe('ie when clicking a save link', function() {
