@@ -22,6 +22,10 @@ describe('An ajax save module', function() {
     $('body').append(element);
     ajaxSave = new GOVUKAdmin.Modules.AjaxSave();
     ajaxSave.start(element);
+
+    var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false);
+    element.submit(submitCallbackSpy);
+
   });
 
   afterEach(function() {
@@ -227,7 +231,7 @@ describe('An ajax save module', function() {
 
     it('triggers an error.ajaxsave.admin dom event', function() {
       var errorResponse = false;
-      element.on('error.ajaxsave.admin', function(evt, response) {
+      element.on('errors.ajaxsave.admin', function(evt, response) {
         errorResponse = response;
       });
       ajaxError({not_a_field: ['nonsense']});

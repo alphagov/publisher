@@ -5,7 +5,7 @@
       var ajaxSave = new GOVUKAdmin.Modules.AjaxSave();
 
       element.on('success.ajaxsave.admin', success);
-      element.on('error.ajaxsave.admin', error);
+      element.on('errors.ajaxsave.admin', error);
       ajaxSave.start(element);
 
       function success(evt, response) {
