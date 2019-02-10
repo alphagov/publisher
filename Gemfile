@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby File.read(".ruby-version").chomp
+
 gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'diffy', '3.3.0'
 gem 'erubis'
