@@ -38,6 +38,6 @@ class ServiceSignInPublishServiceTest < ActiveSupport::TestCase
   end
 
   def payload
-    @_payload ||= stub
+    @payload ||= stub
   end
 end

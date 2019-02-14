@@ -20,7 +20,7 @@ class LocalServiceCleaner
   end
 
   def lgsls_from_csv
-    @_lgsls_from_csv ||= fetch_lgsls_from_csv
+    @lgsls_from_csv ||= fetch_lgsls_from_csv
   end
 
 private

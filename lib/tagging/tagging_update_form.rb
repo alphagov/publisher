@@ -55,7 +55,7 @@ module Tagging
     end
 
     def ordered_related_items_path_by_ids
-      @_ordered_related_items_path_by_ids ||= begin
+      @ordered_related_items_path_by_ids ||= begin
         Services.publishing_api.lookup_content_ids(base_paths: ordered_related_items)
       end
     end

@@ -12,7 +12,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryBot.create(
+    @edition ||= FactoryBot.create(
       :local_transaction_edition,
       :published,
       title: "Catch all rats",
@@ -27,7 +27,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def artefact
-    @_artefact ||= FactoryBot.create(:artefact, kind: "local_transaction")
+    @artefact ||= FactoryBot.create(:artefact, kind: "local_transaction")
   end
 
   def result

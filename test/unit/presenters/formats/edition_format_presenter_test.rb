@@ -6,11 +6,11 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= stub(artefact: artefact, in_beta: false)
+    @edition ||= stub(artefact: artefact, in_beta: false)
   end
 
   def artefact
-    @_artefact ||= stub
+    @artefact ||= stub
   end
 
   def result

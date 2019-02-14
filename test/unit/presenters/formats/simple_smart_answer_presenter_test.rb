@@ -8,7 +8,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= begin
+    @edition ||= begin
       @edition = FactoryBot.create(
         :simple_smart_answer_edition,
         start_button_text: "Start now",
@@ -55,7 +55,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
   end
 
   def artefact
-    @_artefact ||= FactoryBot.create(:artefact, kind: "simple_smart_answer")
+    @artefact ||= FactoryBot.create(:artefact, kind: "simple_smart_answer")
   end
 
   def result

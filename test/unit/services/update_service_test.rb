@@ -22,11 +22,11 @@ class UpdateServiceTest < ActiveSupport::TestCase
   end
 
   def payload
-    @_payload ||= stub
+    @payload ||= stub
   end
 
   def edition
-    @_edition ||= stub(content_id: content_id)
+    @edition ||= stub(content_id: content_id)
   end
 
   def content_id

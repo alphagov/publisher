@@ -10,11 +10,11 @@ class DowntimeRemoverTest < ActiveSupport::TestCase
   end
 
   def downtime
-    @_downtime ||= stub(artefact: artefact, destroy: nil)
+    @downtime ||= stub(artefact: artefact, destroy: nil)
   end
 
   def artefact
-    @_artefact ||= stub(id: 123)
+    @artefact ||= stub(id: 123)
   end
 
   context ".destroy_immediately" do

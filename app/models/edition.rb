@@ -387,7 +387,7 @@ class Edition
   end
 
   def artefact
-    @_artefact ||= Artefact.find(self.panopticon_id)
+    @artefact ||= Artefact.find(self.panopticon_id)
   end
 
   # When we delete an edition is the only one in its series
@@ -431,7 +431,7 @@ class Edition
   end
 
   def auth_bypass_id
-    @_auth_bypass_id ||= begin
+    @auth_bypass_id ||= begin
       ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
