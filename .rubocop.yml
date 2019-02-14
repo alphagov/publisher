@@ -17,5 +17,8 @@ Style/FormatStringToken:
   Enabled: false
 
 # There are a few cases of this, could be useful to fix at some point
-Style/MethodMissing:
+Style/MethodMissingSuper:
+  Enabled: false
+
+Style/MissingRespondToMissing:
   Enabled: false
