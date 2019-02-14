@@ -14,6 +14,7 @@ module Formats
 
     def details
       return optional_details.merge(required_details) if PROMOTIONS.include?(promotion_choice["choice"])
+
       required_details
     end
 

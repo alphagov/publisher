@@ -13,7 +13,7 @@ namespace :sync_checks do
 
   def check_published(format)
     puts "Checking live content"
-    check_content(format, ['published'], 'content-store')
+    check_content(format, %w[published], 'content-store')
   end
 
   def check_draft(format)

@@ -8,6 +8,6 @@ module PrerenderedEntity
   end
 
   def find_by_slug(slug)
-    where(slug: slug).first # rubocop:disable Rails/FindBy
+    where(slug: slug).first
   end
 end

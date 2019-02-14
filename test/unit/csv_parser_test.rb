@@ -11,7 +11,7 @@ class CSVParserTest < ActiveSupport::TestCase
     csv_string = <<~CSV
       slug,tag
       /foo,/bar
-CSV
+    CSV
 
     parser = CSVParser.new(StringIO.new(csv_string))
 

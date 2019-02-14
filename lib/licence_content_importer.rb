@@ -110,6 +110,7 @@ class LicenceContentImporter
 
   def marked_down(str, unescape_html = false)
     return str if str.nil?
+
     str = to_utf8(str)
     str = CGI.unescapeHTML(str) if unescape_html
     ReverseMarkdown.convert(str).strip

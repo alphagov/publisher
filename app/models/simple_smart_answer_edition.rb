@@ -45,7 +45,7 @@ class SimpleSmartAnswerEdition < Edition
   def update_attributes(attributes)
     nodes_attrs = attributes.delete(:nodes_attributes)
     if nodes_attrs
-      nodes_attrs.each do |_index, node_attrs| # rubocop:disable Performance/HashEachMethods
+      nodes_attrs.each do |_index, node_attrs|
                                                # as this isn't a Hash
         node_id = node_attrs['id']
         if node_id

@@ -61,13 +61,13 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   test "it handles windows-1252 email wrongly declared as iso-8859-1" do
-    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/pound_symbol.txt", __FILE__))
+    message = Mail.read(File.expand_path('../fixtures/fact_check_emails/pound_symbol.txt', __dir__))
     f = FactCheckMessageProcessor.new(message)
     assert f.process_for_publication(sample_publication.id)
   end
 
   test "it handles an email with wrongly declared character set after base 64 encoding" do
-    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/base64.txt", __FILE__))
+    message = Mail.read(File.expand_path('../fixtures/fact_check_emails/base64.txt', __dir__))
     f = FactCheckMessageProcessor.new(message)
     assert f.process_for_publication(sample_publication.id)
   end
@@ -95,7 +95,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   # until we improve the validation to produce few or no false positives
   test "it should temporarily allow comments that would fail Govspeak/HTML validation" do
     edition = sample_publication
-    message = Mail.read(File.expand_path("../../fixtures/fact_check_emails/hidden_nasty.txt", __FILE__))
+    message = Mail.read(File.expand_path('../fixtures/fact_check_emails/hidden_nasty.txt', __dir__))
     f = FactCheckMessageProcessor.new(message)
     assert f.process_for_publication(edition.id)
 

@@ -25,11 +25,11 @@ class FactCheckEmailHandler
         return FactCheckMessageProcessor.process(message, edition_id)
       end
     end
-    return false
+    false
   rescue StandardError => e
     errors << "Failed to process message #{message.subject}: #{e.message}"
     GovukError.notify(e)
-    return false
+    false
   end
 
   # takes an optional block to call after processing each message

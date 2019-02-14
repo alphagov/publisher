@@ -15,6 +15,6 @@ class LocalService
   }
 
   def self.find_by_lgsl_code(lgsl_code)
-    LocalService.where(lgsl_code: lgsl_code).first # rubocop:disable Rails/FindBy
+    LocalService.where(lgsl_code: lgsl_code).first
   end
 end

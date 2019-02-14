@@ -49,6 +49,7 @@ module Tagging
     def ordered_related_items_paths_exist
       (Array(ordered_related_items) - ordered_related_items_path_by_ids.keys).each do |missing_path|
         next if missing_path.blank?
+
         errors.add(:ordered_related_items, "#{missing_path} is not a known URL on GOV.UK")
       end
     end
@@ -62,6 +63,7 @@ module Tagging
     def transform_base_paths_to_content_ids(base_paths)
       Array(base_paths).reject!(&:blank?)
       return [] if base_paths.blank?
+
       base_paths.map { |base_path| ordered_related_items_path_by_ids[base_path] }
     end
   end

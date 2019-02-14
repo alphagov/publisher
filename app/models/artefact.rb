@@ -39,7 +39,7 @@ class Artefact
         _type: 1,
         _id: 1
 
-  scope :not_archived, lambda { where(:state.nin => ["archived"]) }
+  scope :not_archived, lambda { where(:state.nin => %w[archived]) }
 
   FORMATS_BY_DEFAULT_OWNING_APP = {
     "publisher"               => %w(answer
@@ -57,12 +57,12 @@ class Artefact
     "smartanswers"            => ["smart-answer"],
     "custom-application"      => ["custom-application"], # In this case the owning_app is overriden. eg calendars, licencefinder
     "travel-advice-publisher" => ["travel-advice"],
-    "specialist-publisher"    => ["manual"],
+    "specialist-publisher"    => %w[manual],
     "finder-api"              => %w(finder
                                     finder_email_signup),
     # business support was converted into a format owned by specialist publisher
     # but it's not a direct swap so we don't claim that is the owning app
-    "replaced"                => ['business_support'],
+    "replaced"                => %w[business_support],
   }.freeze
 
   RETIRED_FORMATS = %w[campaign programme video].freeze
@@ -108,7 +108,7 @@ class Artefact
   end
 
   def self.find_by_slug(s)
-    where(slug: s).first # rubocop:disable Rails/FindBy
+    where(slug: s).first
   end
 
   def self.multipart_formats
@@ -130,6 +130,7 @@ class Artefact
 
   def normalise
     return unless kind.present?
+
     self.kind = KIND_TRANSLATIONS[kind.to_s.downcase.strip]
   end
 
@@ -152,7 +153,7 @@ class Artefact
     return archive_editions if state == 'archived'
 
     if self.slug_changed?
-      Edition.draft_in_publishing_api.where(panopticon_id: self.id).each do |edition| # rubocop:disable Rails/FindEach
+      Edition.draft_in_publishing_api.where(panopticon_id: self.id).each do |edition|
         edition.update_slug_from_artefact(self)
       end
     end
@@ -160,7 +161,7 @@ class Artefact
 
   def archive_editions
     if state == 'archived'
-      Edition.where(panopticon_id: self.id, :state.nin => ["archived"]).each do |edition| # rubocop:disable Rails/FindEach
+      Edition.where(panopticon_id: self.id, :state.nin => %w[archived]).each do |edition|
         edition.new_action(self, "note", comment: "Artefact has been archived. Archiving this edition.")
         edition.perform_event_without_validations(:archive!)
       end
@@ -268,6 +269,7 @@ class Artefact
     le = latest_edition
     return le.exact_route? if le.present?
     return edition_class_name.in? Edition::EXACT_ROUTE_EDITION_CLASSES if owning_app == 'publisher'
+
     prefixes.empty?
   end
 
@@ -292,6 +294,7 @@ private
 
   def valid_url_path?(path)
     return false unless path.starts_with?("/")
+
     uri = URI.parse(path)
     uri.path == path && path !~ %r{//} && path !~ %r{./\z}
   rescue URI::InvalidURIError

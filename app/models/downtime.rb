@@ -13,7 +13,7 @@ class Downtime
   validate :start_time_precedes_end_time
 
   def self.for(artefact)
-    where(artefact_id: artefact.id).first # rubocop:disable Rails/FindBy
+    where(artefact_id: artefact.id).first
   end
 
   def publicise?

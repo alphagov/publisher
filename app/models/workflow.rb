@@ -210,6 +210,7 @@ private
     errors.add(:base, "Archived editions can't be edited") if archived?
 
     return unless locked_for_edits?
+
     errors.add(:base, "#{error_description} can't be edited") if disallowable_change?
   end
 

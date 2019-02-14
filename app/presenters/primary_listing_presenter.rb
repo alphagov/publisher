@@ -30,12 +30,9 @@ class PrimaryListingPresenter
              end
   end
 
-  attr_accessor :scope
-  private :scope
-
   def acceptable_list?(list)
     available_partials = AVAILABLE_LISTS.map do |scope|
-      LIST_TRANSLATIONS[scope] ? LIST_TRANSLATIONS[scope] : scope
+      LIST_TRANSLATIONS[scope] || scope
     end
 
     available_partials.include?(list.to_sym)
@@ -57,4 +54,8 @@ class PrimaryListingPresenter
 
   alias_method :drafts, :draft
   alias_method :out_for_fact_check, :fact_check
+
+private
+
+  attr_accessor :scope
 end
