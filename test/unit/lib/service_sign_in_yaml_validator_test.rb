@@ -21,10 +21,6 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     "test/fixtures/service_sign_in/invalid.txt"
   end
 
-  def content
-    @file ||= YAML.load_file(valid_yaml_file)
-  end
-
   def required_top_level_fields
     ServiceSignInYamlValidator::REQUIRED_TOP_LEVEL_FIELDS
   end
@@ -68,6 +64,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
   context "#validate" do
     context "when a YAML file is valid" do
       should "return the YAML file as a hash" do
+        content = YAML.load_file(valid_yaml_file)
         slug = content["start_page_slug"]
         publishing_api_has_lookups("/#{slug}" => "a-content-id")
         validator = service_sign_in_yaml_validator(valid_yaml_file)

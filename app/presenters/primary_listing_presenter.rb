@@ -48,8 +48,8 @@ class PrimaryListingPresenter
     end
   end
 
-  def filter_by_substring(s)
-    @scope = @scope.internal_search(s)
+  def filter_by_substring(string)
+    @scope = @scope.internal_search(string)
   end
 
   alias_method :drafts, :draft

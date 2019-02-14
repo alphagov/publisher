@@ -107,8 +107,8 @@ class Artefact
     order_by(name: :asc)
   end
 
-  def self.find_by_slug(s)
-    where(slug: s).first
+  def self.find_by_slug(slug)
+    where(slug: slug).first
   end
 
   def self.multipart_formats

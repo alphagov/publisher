@@ -74,7 +74,7 @@ protected
     end
   end
 
-  def description(r)
-    r.format.underscore.humanize
+  def description(edition)
+    edition.format.underscore.humanize
   end
 end

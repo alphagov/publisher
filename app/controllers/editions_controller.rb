@@ -330,8 +330,8 @@ protected
     setup_view_paths_for(resource)
   end
 
-  def description(r)
-    r.format.underscore.humanize
+  def description(resource)
+    resource.format.underscore.humanize
   end
 
 private

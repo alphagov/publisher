@@ -49,20 +49,21 @@ private
     ].compact.uniq
   end
 
-  def normalize_line_endings(s)
-    s.gsub(/\r\n|\r/, "\n")
+  def normalize_line_endings(string)
+    string.gsub(/\r\n|\r/, "\n")
   end
 
-  def try_decode(s, *encodings)
+  def try_decode(string, *encodings)
     encodings.each do |encoding|
       begin
-        return s.force_encoding(encoding).
+        return string.force_encoding(encoding).
           encode(Encoding::UTF_32BE).
           encode(Encoding::UTF_8)
       rescue EncodingError => e
         Rails.logger.info e.inspect
       end
     end
-    s.encode(Encoding::US_ASCII, invalid: :replace)
+
+    string.encode(Encoding::US_ASCII, invalid: :replace)
   end
 end

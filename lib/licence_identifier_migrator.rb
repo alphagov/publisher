@@ -31,7 +31,7 @@ class LicenceIdentifierMigrator
     YAML.safe_load(response.body)
   end
 
-  def self.done(counter, nl)
-    print "Migrated #{counter} LicenceEditions.#{nl}"
+  def self.done(counter, line_ending)
+    print "Migrated #{counter} LicenceEditions.#{line_ending}"
   end
 end
