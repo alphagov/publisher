@@ -18,3 +18,13 @@ Style/MethodMissingSuper:
   Enabled: false
 Style/MissingRespondToMissing:
   Enabled: false
+
+# (this version of) ActiveRecord/MongoDB does not support `find_each`
+Rails/FindEach:
+  Enabled: false
+
+# `find_by` in (this version of) ActiveRecord/MongoDB behaves
+# differently to normal Rails, raising an exception instead of
+# returning `nil`, so we have to use `where(condition: "value").first` instead
+Rails/FindBy:
+  Enabled: false
