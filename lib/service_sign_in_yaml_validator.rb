@@ -20,6 +20,7 @@ private
   def valid?
     load_yaml_file
     return unless @yaml_file.present?
+
     check_for_top_level_required_fields
     check_for_valid_start_page_slug
     check_for_choose_sign_in_required_fields if choose_sign_in.present?
@@ -61,6 +62,7 @@ private
 
     check_choose_sign_in_top_level_fields(error_message)
     return unless choose_sign_in["options"].present?
+
     check_choose_sign_in_options_fields(error_message)
   end
 

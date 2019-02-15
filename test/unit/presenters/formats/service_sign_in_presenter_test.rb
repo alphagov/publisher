@@ -13,6 +13,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
   def load_content_from_file(file_name)
     @content ||= YAML.load_file(Rails.root.join("lib", "service_sign_in", file_name)).deep_symbolize_keys
+
+    nil
   end
 
   def setup
@@ -23,6 +25,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       slug: parent_slug
     )
+
+    nil
   end
 
   def parent_slug

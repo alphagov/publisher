@@ -1,5 +1,5 @@
 class EditionProgressor
-  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
+  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/.freeze
 
   attr_accessor :edition, :actor, :activity, :status_message
 
@@ -74,7 +74,7 @@ protected
     end
   end
 
-  def description(r)
-    r.format.underscore.humanize
+  def description(edition)
+    edition.format.underscore.humanize
   end
 end

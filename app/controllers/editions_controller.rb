@@ -318,6 +318,7 @@ protected
 
   def update_assignment(edition, assignee)
     return if edition.assigned_to == assignee
+
     if assignee
       current_user.assign(edition, assignee)
     else
@@ -329,8 +330,8 @@ protected
     setup_view_paths_for(resource)
   end
 
-  def description(r)
-    r.format.underscore.humanize
+  def description(resource)
+    resource.format.underscore.humanize
   end
 
 private
@@ -352,6 +353,7 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
+
     params[:edition]["activity_#{attempted_activity}_attributes"].permit(
       :request_type, :email_addresses, :customised_message, :comment, :publish_at
 )
@@ -377,12 +379,13 @@ private
   def format_failure_message(resource)
     resource_base_errors = resource.errors[:base]
     return resource.errors[:base].join('<br />') if resource_base_errors.present?
+
     "We had some problems saving. Please check the form below."
   end
 
   def progress_edition(resource, activity_params)
     @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, ['publish_at']))
+    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
   end
 
   def report_state_counts

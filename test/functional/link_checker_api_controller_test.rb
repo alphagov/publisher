@@ -33,7 +33,7 @@ class LinkCheckerApiControllerTest < ActionController::TestCase
   end
 
   def campaign_edition_link_check_report
-    @campaign_edition_with_link_check_report ||= create_campaign_edition_with_link_check_report
+    @campaign_edition_link_check_report ||= create_campaign_edition_with_link_check_report
   end
 
   def set_headers(post_body)

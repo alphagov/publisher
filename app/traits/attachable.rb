@@ -31,6 +31,7 @@ module Attachable
 
         define_method(field) do
           raise ApiClientNotPresent unless Attachable.asset_api_client
+
           unless self.send("#{field}_id").nil?
             @attachments ||= {}
             @attachments[field] ||= Attachable.asset_api_client.asset(self.send("#{field}_id"))
@@ -52,8 +53,11 @@ module Attachable
           end
         end
 
+      private
+
         define_method("upload_#{field}") do
           raise ApiClientNotPresent unless Attachable.asset_api_client
+
           begin
             if options[:update_existing] && !self.send("#{field}_id").nil?
               response = Attachable.asset_api_client.update_asset(self.send("#{field}_id"), file: instance_variable_get("@#{field}_file"))
@@ -67,7 +71,6 @@ module Attachable
             errors.add("#{field}_id".to_sym, "could not be uploaded")
           end
         end
-        private "upload_#{field}".to_sym
       end
     end
   end

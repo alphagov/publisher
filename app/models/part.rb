@@ -18,7 +18,7 @@ class Part
 
   validates_presence_of :title
   validates_presence_of :slug
-  validates_exclusion_of :slug, in: ["video"], message: "Can not be video"
+  validates_exclusion_of :slug, in: %w[video], message: "Can not be video"
   validates_format_of :slug, with: /\A[a-z0-9\-]+\Z/i
   validates_with SafeHtml
   validates_with LinkValidator

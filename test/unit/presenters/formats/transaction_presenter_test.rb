@@ -8,11 +8,11 @@ class TransactionPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= FactoryBot.create(:transaction_edition, panopticon_id: artefact.id)
+    @edition ||= FactoryBot.create(:transaction_edition, panopticon_id: artefact.id)
   end
 
   def artefact
-    @_artefact ||= FactoryBot.create(:artefact, kind: "transaction")
+    @artefact ||= FactoryBot.create(:artefact, kind: "transaction")
   end
 
   def create_downtime(message, start_time: Time.zone.yesterday.at_midnight)

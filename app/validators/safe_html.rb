@@ -15,6 +15,7 @@ class SafeHtml < ActiveModel::Validator
   def validate(record)
     record.changes.each do |field_name, (_old_value, new_value)|
       next unless record.class::GOVSPEAK_FIELDS.include?(field_name.to_sym)
+
       check_struct(record, field_name, new_value)
     end
   end

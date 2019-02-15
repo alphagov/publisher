@@ -14,8 +14,8 @@ class LocalServiceImporter
     File.open('data/local_services.csv', 'r:Windows-1252:UTF-8')
   end
 
-  def initialize(fh)
-    @filehandle = fh
+  def initialize(filehandle)
+    @filehandle = filehandle
   end
 
   def run

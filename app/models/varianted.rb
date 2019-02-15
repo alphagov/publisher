@@ -21,7 +21,7 @@ module Varianted
   end
 
   def order_variants
-    ordered_variants = variants.sort_by { |p| p.order ? p.order : 99999 }
+    ordered_variants = variants.sort_by { |p| p.order || 99999 }
     ordered_variants.each_with_index do |obj, i|
       obj.order = i + 1
     end

@@ -37,6 +37,7 @@ private
 
   def filtered_editions
     return Edition if format_filter == 'edition'
+
     Edition.where(_type: format_filter.camelcase + 'Edition')
   end
 

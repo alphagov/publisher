@@ -19,6 +19,6 @@ class RepublishServiceTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= stub
+    @edition ||= stub
   end
 end

@@ -10,6 +10,7 @@ class WorkingDaysCalculator
     days = (@starting_from.tomorrow..(@starting_from + how_many_days + skip_days))
     calculated_skip_days = days.count { |day| holiday?(day) }
     return days.last if calculated_skip_days == skip_days
+
     after(how_many_days, skip_days: calculated_skip_days)
   end
 

@@ -111,11 +111,11 @@ class DowntimesControllerTest < ActionController::TestCase
   end
 
   def edition
-    @_edition ||= FactoryBot.create(:transaction_edition)
+    @edition ||= FactoryBot.create(:transaction_edition)
   end
 
   def downtime
-    @_downtime ||= FactoryBot.create(:downtime, artefact: edition.artefact)
+    @downtime ||= FactoryBot.create(:downtime, artefact: edition.artefact)
   end
 
   def create_downtime

@@ -5,12 +5,11 @@ class SafeHtmlTest < ActiveSupport::TestCase
     include Mongoid::Document
 
     field :i_am_govspeak, type: String
+    embeds_one :i_am_embedded_govspeak, class_name: 'SafeHtmlTest::DummyEmbeddedSingle'
 
     GOVSPEAK_FIELDS = [:i_am_govspeak].freeze
 
     validates_with SafeHtml
-
-    embeds_one :dummy_embedded_single, class_name: 'SafeHtmlTest::DummyEmbeddedSingle'
   end
 
   class DummyEmbeddedSingle
@@ -28,10 +27,10 @@ class SafeHtmlTest < ActiveSupport::TestCase
   context "we don't quite trust mongoid (2)" do
     should "validate embedded documents automatically" do
       embedded = DummyEmbeddedSingle.new(i_am_govspeak: "<script>")
-      dummy = Dummy.new(i_am_govspeak: embedded)
+      dummy = Dummy.new(i_am_embedded_govspeak: embedded)
       # Can't invoke embedded.valid? because that would run the validations
       assert dummy.invalid?
-      assert_includes dummy.errors.keys, :i_am_govspeak
+      assert_includes dummy.errors.keys, :i_am_embedded_govspeak
     end
   end
 

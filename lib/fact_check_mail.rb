@@ -13,8 +13,8 @@ class FactCheckMail
     subject_is_out_of_office? || out_of_office_header_set?
   end
 
-  def method_missing(m, *args, &block)
-    @message.public_send(m, *args, &block)
+  def method_missing(method_name, *args, &block)
+    @message.public_send(method_name, *args, &block)
   end
 
 private

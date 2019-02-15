@@ -21,7 +21,7 @@ class PublishServiceTest < ActiveSupport::TestCase
   end
 
   def edition
-    @_edition ||= stub(
+    @edition ||= stub(
       id: 123,
       artefact: stub(
         content_id: content_id,
