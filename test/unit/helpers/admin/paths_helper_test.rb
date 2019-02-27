@@ -21,7 +21,7 @@ class PathsHelperTest < ActionView::TestCase
         assert_equal "#{draft_origin}/foo", path
 
         token = result.gsub(/.*token=(.*)$/, '\1')
-        jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.qev-lRek9IUTvoMW1Hx2KUDUmmbnAVXzoFJL1Gvm0pg"
+        jwt = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.ZulDHod_QzOlKE-D-B2KuZVAHhx91yvKF23G2Fhfmro"
         assert_equal jwt, token
       end
     end
