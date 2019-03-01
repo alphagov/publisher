@@ -120,13 +120,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_parts(guide)
     visit_edition guide
 
-    unless page.has_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?('#parts div.part:first-of-type input')
       add_new_part
     end
 
     # Toggle the first part to be open, presuming the first part
     # is called 'Untitled part'
-    unless page.has_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?('#parts div.part:first-of-type input')
       scroll_to_bottom
       click_on 'Untitled part'
     end
@@ -146,13 +146,13 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_variants(transaction)
     visit_edition transaction
 
-    unless page.has_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?('#parts div.part:first-of-type input')
       add_new_variant
     end
 
     # Toggle the first variant to be open, presuming the first variant
     # is called 'Untitled variant'
-    unless page.has_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?('#parts div.part:first-of-type input')
       scroll_to_bottom
       click_on 'Untitled variant'
     end
@@ -201,10 +201,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
   def assert_all_edition_fields_disabled(page)
     selector = '#edit input:not(#link-check-report):not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
-    inputs = page.all(selector)
-    input_description = ""
-    inputs.each { |i| input_description = "#{input_description}\n##{i['id']}" }
-    assert_same(0, inputs.length, "#{inputs.length} field(s) on this edition need(s) disabling: #{input_description}")
+    assert page.has_no_selector?(selector)
   end
 
   def save_edition(with_javascript = using_javascript?)

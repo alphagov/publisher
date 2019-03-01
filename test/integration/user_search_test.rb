@@ -22,7 +22,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
     visit "/user_search"
 
-    refute page.has_content? @guide.title
+    assert page.has_no_content? @guide.title
   end
 
   test "filtering by format" do
@@ -45,18 +45,18 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?("Vehicle insurance")
     assert page.has_content?("Growing your business")
-    refute page.has_content?("Vehicle answer")
+    assert page.has_no_content?("Vehicle answer")
 
     filter_by_content("Vehicle")
 
     assert page.has_content?("Vehicle insurance")
-    refute page.has_content?("Growing your business")
-    refute page.has_content?("Vehicle answer")
+    assert page.has_no_content?("Growing your business")
+    assert page.has_no_content?("Vehicle answer")
 
     filter_by_format("Answer")
 
-    refute page.has_content?("Vehicle insurance")
-    refute page.has_content?("Growing your business")
+    assert page.has_no_content?("Vehicle insurance")
+    assert page.has_no_content?("Growing your business")
     assert page.has_content?("Vehicle answer")
   end
 
@@ -75,7 +75,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     filter_by_content "insurance"
 
     assert page.has_content?("Vehicle insurance")
-    refute page.has_content?("Growing your business")
+    assert page.has_no_content?("Growing your business")
   end
 
 
@@ -88,7 +88,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
     filter_by_content "insurance"
 
-    refute page.has_content?("Vehicle insurance")
+    assert page.has_no_content?("Vehicle insurance")
   end
 
   test "selecting another user" do
@@ -106,7 +106,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Search by user")
 
     assert page.has_content?(guides[0].title)
-    refute page.has_content?(guides[1].title)
+    assert page.has_no_content?(guides[1].title)
   end
 
   test "doesn't show disabled users in 'Filter by user' select box" do
@@ -115,6 +115,6 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     visit "/user_search"
 
     select_box = find_field('User')
-    refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
+    assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 end

@@ -42,8 +42,8 @@ class EditionHistoryTest < JavascriptIntegrationTest
       visit_edition @answer
       click_on "History and notes"
 
-      refute page.has_css?('#edition-history p.add-bottom-margin', text: "Preview edition at")
-      refute page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+      assert page.has_no_css?('#edition-history p.add-bottom-margin', text: "Preview edition at")
+      assert page.has_no_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
     end
 
     should "have the first history actions visible" do
@@ -67,7 +67,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?('p', text: 'email reply')
-      refute page.has_css?('p', text: 'original email request')
+      assert page.has_no_css?('p', text: 'original email request')
       assert page.has_css?('.panel a', text: 'Toggle earlier messages')
 
       click_on "Toggle earlier messages"

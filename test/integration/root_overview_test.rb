@@ -120,7 +120,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     visit "/"
     select_box = find_field('Assignee')
-    refute page.has_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
+    assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 
   test "Publications in review are ordered correctly" do

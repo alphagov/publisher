@@ -35,7 +35,7 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
       refute find('#edition_in_beta').checked?
 
       visit "/?user_filter=all"
-      refute page.has_text?("#{edition.title} beta")
+      assert page.has_no_text?("#{edition.title} beta")
     end
   end
 end
