@@ -12,7 +12,7 @@ choose_sign_in:
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-your-state-pension?journey_hint=uk_idp_sign_in
-      hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, CitizenSafe, Digidentity, Experian, Swyddfa'r Post, y Post Brenhinol neu SecureIdentity.
+      hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, Digidentity, Experian, Swyddfa'r Post neu SecureIdentity.
     - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-your-state-pension?journey_hint=eidas_sign_in
       hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.

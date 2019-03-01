@@ -10,7 +10,7 @@ choose_sign_in:
       hint_text: You'll have a CRN and password if you've already registered for the Rural Payments service.
     - text: Sign in with GOV.UK Verify
       url: https://www.ruralpayments.service.gov.uk/auth/ida/request
-      hint_text: You'll have an account if you've already proved your identity with either Barclays, CitizenSafe, Digidentity, Experian, Post Office, Royal Mail or SecureIdentity.
+      hint_text: You'll have an account if you've already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
     - text: Register for the Rural Payments service
       url: https://www.gov.uk/guidance/register-for-rural-payments
       hint_text: You must register before you can make a rural payment claim.
