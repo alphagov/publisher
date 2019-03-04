@@ -90,35 +90,6 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
       assert_correct_variants
     end
 
-    context 'removing variants' do
-      setup do
-        save_edition_and_assert_success
-        visit current_path
-      end
-
-      should 'remove the appropriate variant' do
-        within :css, '#parts div.fields:nth-of-type(3)' do
-          click_on 'Remove this variant'
-        end
-
-        save_edition_and_assert_success
-        assert_correct_variants(2)
-
-        visit current_path
-        assert_correct_variants(2)
-
-        within :css, '#parts div.fields:nth-of-type(2)' do
-          click_on 'Remove this variant'
-        end
-
-        save_edition_and_assert_success
-        assert_correct_variants(1)
-
-        visit current_path
-        assert_correct_variants(1)
-      end
-    end
-
     context 'when removing variants' do
       setup do
         save_edition_and_assert_success

@@ -36,7 +36,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
 
-    refute page.has_xpath?("//select[@id='edition_assigned_to_id']/option[text() = '#{disabled_user.name}']")
+    assert page.has_no_xpath?("//select[@id='edition_assigned_to_id']/option[text() = '#{disabled_user.name}']")
   end
 
   test "the customised message for fact-check is pre-loaded with a 5 working days deadline message" do
@@ -223,7 +223,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
 
     assert page.has_selector?(".alert-info")
-    refute has_link? "OK for publication"
+    assert has_no_link? "OK for publication"
   end
 
   test "cannot be the guide reviewer and assignee" do
@@ -376,7 +376,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     filter_for_all_users
     view_filtered_list "Archived"
 
-    assert_not page.has_content? "Create new edition"
+    assert page.has_no_content? "Create new edition"
   end
 
   test "cannot preview an archived article" do

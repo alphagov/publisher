@@ -87,35 +87,6 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
       assert_correct_parts
     end
 
-    context 'removing parts' do
-      setup do
-        save_edition_and_assert_success
-        visit current_path
-      end
-
-      should 'remove the appropriate part' do
-        within :css, '#parts div.fields:nth-of-type(3)' do
-          click_on 'Remove this part'
-        end
-
-        save_edition_and_assert_success
-        assert_correct_parts(2)
-
-        visit current_path
-        assert_correct_parts(2)
-
-        within :css, '#parts div.fields:nth-of-type(2)' do
-          click_on 'Remove this part'
-        end
-
-        save_edition_and_assert_success
-        assert_correct_parts(1)
-
-        visit current_path
-        assert_correct_parts(1)
-      end
-    end
-
     context 'when removing parts' do
       setup do
         save_edition_and_assert_success
