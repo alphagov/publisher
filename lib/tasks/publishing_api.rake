@@ -25,6 +25,12 @@ namespace :publishing_api do
     KnowledgeApi.new.publish
   end
 
+  desc "Republish an edition"
+  task :republish_edition, %w(slug) => :environment do |_, args|
+    republish Edition.published.where(slug: args[:slug])
+    republish_draft Edition.draft_in_publishing_api.where(slug: args[:slug])
+  end
+
   def republish(editions)
     puts
     puts "Scheduling republishing of #{editions.count} editions"
