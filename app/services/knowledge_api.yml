@@ -3,15 +3,15 @@
   source: https://www.gov.uk/national-minimum-wage-rates
   data:
     - age_range: 25 and over
-      minimum_wage: 7.83
+      minimum_wage: 8.21
     - age_range: 21 to 24
-      minimum_wage: 7.38
+      minimum_wage: 7.70
     - age_range: 18 to 20
-      minimum_wage: 5.90
+      minimum_wage: 6.15
     - age_range: Under 18
-      minimum_wage: 4.20
+      minimum_wage: 4.35
     - age_range: Apprentice
-      minimum_wage: 3.70
+      minimum_wage: 3.90
 
 - id: income-tax
   title: Income Tax rates and bands
