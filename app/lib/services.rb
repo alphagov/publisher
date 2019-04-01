@@ -11,10 +11,6 @@ module Services
     )
   end
 
-  def self.calendars
-    @calendars ||= GdsApi::Calendars.new(Plek.new.find("calendars"))
-  end
-
   def self.link_checker_api
     @link_checker_api ||= GdsApi::LinkCheckerApi.new(
       Plek.new.find("link-checker-api"),
