@@ -61,6 +61,7 @@ end
 
 group :development, :test do
   gem 'govuk-lint', '~> 3.11'
+  gem 'chrome_remote'
   gem 'jasmine', '~> 3.4.0'
   gem 'jasmine-core', '~> 3.4.0'
   gem 'rack', '2.0.7'
