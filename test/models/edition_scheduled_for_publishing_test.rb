@@ -49,18 +49,18 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
 
       edition.title = 'a new title'
 
-      refute edition.valid?
+      assert_not edition.valid?
       assert_includes edition.errors.full_messages, "Editions scheduled for publishing can't be edited"
     end
 
     should "return false for #can_destroy?" do
       edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      refute edition.can_destroy?
+      assert_not edition.can_destroy?
     end
 
     should "return false for #can_create_new_edition?" do
       edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      refute edition.can_create_new_edition?
+      assert_not edition.can_create_new_edition?
     end
 
     should "allow transition to published state" do

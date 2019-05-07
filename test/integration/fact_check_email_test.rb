@@ -84,8 +84,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),
-          fact_check_mail_for(answer2, body: "Second Message"),
-          fact_check_mail_for(answer1, body: "Third Message")
+      fact_check_mail_for(answer2, body: "Second Message"),
+      fact_check_mail_for(answer1, body: "Third Message")
     )
 
     handler = FactCheckEmailHandler.new(fact_check_config)
@@ -117,7 +117,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
-    assert ! message.is_marked_for_delete?
+    assert_not message.is_marked_for_delete?
   end
 
   test "should look for fact-check address cc or bcc fields" do
@@ -145,7 +145,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),
-          fact_check_mail_for(answer2, body: "Second Message")
+      fact_check_mail_for(answer2, body: "Second Message")
     )
 
     handler = FactCheckEmailHandler.new(fact_check_config)

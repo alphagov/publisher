@@ -1,6 +1,6 @@
 module Formats
   class HelpPagePresenter < EditionFormatPresenter
-  private
+  private # rubocop:disable Layout/IndentationWidth
 
     def schema_name
       'help_page'

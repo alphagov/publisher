@@ -1,6 +1,6 @@
 module Formats
   class GenericEditionPresenter < EditionFormatPresenter
-  private
+  private # rubocop:disable Layout/IndentationWidth
 
     def schema_name
       "generic_with_external_related_links"

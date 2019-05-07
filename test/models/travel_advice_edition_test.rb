@@ -43,36 +43,36 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     should "require a country slug" do
       @ta.country_slug = ''
-      assert ! @ta.valid?
+      assert_not @ta.valid?
       assert_includes @ta.errors.messages[:country_slug], "can't be blank"
     end
 
     should "require a title" do
       @ta.title = ''
-      assert ! @ta.valid?
+      assert_not @ta.valid?
       assert_includes @ta.errors.messages[:title], "can't be blank"
     end
 
     context "on state" do
       should "only allow one edition in draft per slug" do
         FactoryBot.create(:travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.state = 'draft'
-        assert ! @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
 
       should "only allow one edition in published per slug" do
         FactoryBot.create(:published_travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.state = 'published'
-        assert ! @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
 
       should "allow multiple editions in archived per slug" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.save!
         @ta.state = 'archived'
         assert @ta.valid?
@@ -89,14 +89,14 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       should "not allow published editions to be edited" do
         ta = FactoryBot.create(:published_travel_advice_edition)
         ta.title = "Fooey"
-        assert ! ta.valid?
+        assert_not ta.valid?
         assert_includes ta.errors.messages[:state], "must be draft to modify"
       end
 
       should "not allow archived editions to be edited" do
         ta = FactoryBot.create(:archived_travel_advice_edition)
         ta.title = "Fooey"
-        assert ! ta.valid?
+        assert_not ta.valid?
         assert_includes ta.errors.messages[:state], "must be draft to modify"
       end
 
@@ -119,7 +119,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       should "NOT allow 'save & archive'" do
         ta = FactoryBot.create(:published_travel_advice_edition)
         ta.title = 'Foo'
-        assert ! ta.archive
+        assert_not ta.archive
         assert_includes ta.errors.messages[:state], "must be draft to modify"
       end
     end
@@ -127,7 +127,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     context "on alert status" do
       should "not permit invalid values in the array" do
         @ta.alert_status = %w(avoid_all_but_essential_travel_to_parts something_else blah)
-        assert ! @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:alert_status], "is not in the list"
       end
 
@@ -150,23 +150,23 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       should "require a version_number" do
         @ta.save # version_number is automatically populated on create, so save it first.
         @ta.version_number = ''
-        refute @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:version_number], "can't be blank"
       end
 
       should "require a unique version_number per slug" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: @ta.country_slug,
-                                             version_number: 3)
+                          country_slug: @ta.country_slug,
+                          version_number: 3)
         @ta.version_number = 3
-        refute @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:version_number], "is already taken"
       end
 
       should "allow matching version_numbers for different slugs" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: 'wibble',
-                                             version_number: 3)
+                          country_slug: 'wibble',
+                          version_number: 3)
         @ta.version_number = 3
         assert @ta.valid?
       end
@@ -175,7 +175,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     context "on minor update" do
       should "not allow first version to be minor update" do
         @ta.minor_update = true
-        refute @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:minor_update], "can't be set for first version"
       end
 
@@ -191,7 +191,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
         @ta.save! # Can't save directly as published, have to save as draft first
         @ta.change_description = ""
         @ta.state = "published"
-        refute @ta.valid?
+        assert_not @ta.valid?
         assert_includes @ta.errors.messages[:change_description], "can't be blank on publish"
       end
 
@@ -264,13 +264,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   context "building a new version" do
     setup do
       @ed = FactoryBot.create(:travel_advice_edition,
-                               title: "Aruba",
-                               overview: "Aruba is not near Wales",
-                               country_slug: "aruba",
-                               summary: "## The summary",
-                               alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
-                               image_id: "id_from_the_asset_manager_for_an_image",
-                               document_id: "id_from_the_asset_manager_for_a_document")
+                              title: "Aruba",
+                              overview: "Aruba is not near Wales",
+                              country_slug: "aruba",
+                              summary: "## The summary",
+                              alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
+                              image_id: "id_from_the_asset_manager_for_an_image",
+                              document_id: "id_from_the_asset_manager_for_a_document")
       @ed.parts.build(title: "Fooey", slug: 'fooey', body: "It's all about Fooey")
       @ed.parts.build(title: "Gooey", slug: 'gooey', body: "It's all about Gooey")
       @ed.save!

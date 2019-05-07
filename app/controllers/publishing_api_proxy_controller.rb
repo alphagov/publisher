@@ -5,7 +5,7 @@ class PublishingApiProxyController < ActionController::Base
     if content_id.present?
       render json: { content_id: content_id }
     else
-      render json: {}, status: 404
+      render json: {}, status: :not_found
     end
   end
 end

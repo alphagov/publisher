@@ -76,7 +76,7 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "return false if in draft state" do
-      refute FactoryBot.build(:edition, state: 'draft').locked_for_edits?
+      assert_not FactoryBot.build(:edition, state: 'draft').locked_for_edits?
     end
   end
 
@@ -106,13 +106,13 @@ class WorkflowTest < ActiveSupport::TestCase
   test "a new guide has draft but isn't published" do
     g = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)
     assert g.draft?
-    refute g.published?
+    assert_not g.published?
   end
 
   test "a guide should be marked as having reviewables if requested for review" do
     guide = template_guide
     user = FactoryBot.create(:user, name: "Ben")
-    refute guide.in_review?
+    assert_not guide.in_review?
     assert_nil guide.review_requested_at
 
     now = Time.zone.now
@@ -125,9 +125,9 @@ class WorkflowTest < ActiveSupport::TestCase
 
   test "a guide not in review cannot have a reviewer" do
     guide = template_guide
-    refute guide.in_review?
+    assert_not guide.in_review?
     guide.reviewer = "Bob"
-    refute guide.valid?
+    assert_not guide.valid?
     assert guide.errors.has_key?(:reviewer)
   end
 
@@ -140,10 +140,10 @@ class WorkflowTest < ActiveSupport::TestCase
 
     assert edition.can_request_review?
     request_review(user, edition)
-    refute edition.can_request_review?
+    assert_not edition.can_request_review?
     assert edition.can_request_amendments?
     request_amendments(other_user, edition)
-    refute edition.can_request_amendments?
+    assert_not edition.can_request_amendments?
     request_review(user, edition)
     assert edition.can_approve_review?
     approve_review(other_user, edition)
@@ -159,7 +159,7 @@ class WorkflowTest < ActiveSupport::TestCase
     assert edition.can_request_review?
     request_review(user, edition)
     assert edition.can_skip_review?
-    refute skip_review(other, edition)
+    assert_not skip_review(other, edition)
     assert skip_review(user, edition)
     assert edition.ready?
     assert edition.can_publish?
@@ -224,7 +224,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     edition.new_action(user, 'request_amendments')
 
-    refute guide.reload.can_resend_fact_check?
+    assert_not guide.reload.can_resend_fact_check?
   end
 
   test "fact_check_received can go back to out for fact_check" do
@@ -307,7 +307,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     assert edition.can_request_review?
     request_review(user, edition)
-    refute request_amendments(user, edition)
+    assert_not request_amendments(user, edition)
   end
 
   test "user should not be able to okay a guide they requested review for" do
@@ -318,20 +318,20 @@ class WorkflowTest < ActiveSupport::TestCase
 
     assert edition.can_request_review?
     request_review(user, edition)
-    refute approve_review(user, edition)
+    assert_not approve_review(user, edition)
   end
 
   test "a new programme has drafts but isn't published" do
     p = template_programme
     assert p.draft?
-    refute p.published?
+    assert_not p.published?
   end
 
   test "a programme should be marked as having reviewables if requested for review" do
     programme = template_programme
     user, _other_user = template_users
 
-    refute programme.in_review?
+    assert_not programme.in_review?
     request_review(user, programme)
     assert programme.in_review?, "A review was not requested for this programme."
   end
@@ -343,10 +343,10 @@ class WorkflowTest < ActiveSupport::TestCase
 
     assert edition.can_request_review?
     request_review(user, edition)
-    refute edition.can_request_review?
+    assert_not edition.can_request_review?
     assert edition.can_request_amendments?
     request_amendments(other_user, edition)
-    refute edition.can_request_amendments?
+    assert_not edition.can_request_amendments?
     request_review(user, edition)
     assert edition.can_approve_review?
     approve_review(other_user, edition)
@@ -361,14 +361,14 @@ class WorkflowTest < ActiveSupport::TestCase
 
     assert edition.can_request_review?
     request_review(user, edition)
-    refute approve_review(user, edition)
+    assert_not approve_review(user, edition)
   end
 
   test "you can only create a new edition from a published edition" do
     user, _other_user = template_users
     edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
-    refute edition.published?
-    refute user.new_version(edition)
+    assert_not edition.published?
+    assert_not user.new_version(edition)
   end
 
   test "an edition can be moved into archive state" do
@@ -460,7 +460,7 @@ class WorkflowTest < ActiveSupport::TestCase
       @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
       @edition.parts.first.update_attribute(:body,
-        "[register and tax your vehicle](registering-an-imported-vehicle)")
+                                            "[register and tax your vehicle](registering-an-imported-vehicle)")
     end
 
     should "transition an edition with link validation errors to fact_check_received state" do
@@ -486,7 +486,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "return false when scheduling an already published edition" do
       edition = FactoryBot.create(:edition, state: 'published')
-      refute schedule_for_publishing(@user, edition, @activity_details)
+      assert_not schedule_for_publishing(@user, edition, @activity_details)
     end
 
     should "schedule an edition for publishing if it is ready" do

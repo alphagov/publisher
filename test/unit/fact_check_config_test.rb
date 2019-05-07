@@ -37,12 +37,12 @@ class FactCheckConfigTest < ActiveSupport::TestCase
 
   should "not recognise an invalid fact check address" do
     config = FactCheckConfig.new("factcheck+{id}@example.com")
-    refute config.valid_address?("not-factcheck@example.com")
+    assert_not config.valid_address?("not-factcheck@example.com")
   end
 
   should "not recognise a fact check address with an empty ID" do
     config = FactCheckConfig.new("factcheck+{id}@example.com")
-    refute config.valid_address?("factcheck+@example.com")
+    assert_not config.valid_address?("factcheck+@example.com")
   end
 
   should "extract an item ID from a valid address" do

@@ -1,1 +1,1 @@
-MAPIT_BASE_URL = "#{Plek.current.find('mapit')}/"
+MAPIT_BASE_URL = "#{Plek.current.find('mapit')}/".freeze

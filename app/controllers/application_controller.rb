@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   end
 
   def record_not_found
-    render body: { 'raw': "404 Not Found" }, status: 404
+    render body: { 'raw': "404 Not Found" }, status: :not_found
   end
 
   def squash_multiparameter_datetime_attributes(params, attribute_names)

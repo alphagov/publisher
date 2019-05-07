@@ -39,7 +39,7 @@ class ScheduledPublisher
   end
 
   class << self
-  private
+  private # rubocop:disable Layout/IndentationWidth
 
     def queued_jobs
       Sidekiq::ScheduledSet.new.select { |job| job['class'] == self.name }

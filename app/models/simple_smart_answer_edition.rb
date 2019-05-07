@@ -53,7 +53,7 @@ class SimpleSmartAnswerEdition < Edition
           if destroy_in_attrs?(node_attrs)
             node.destroy
           else
-            node.update_attributes(node_attrs)
+            node.update(node_attrs)
           end
         else
           nodes << Node.new(node_attrs) unless destroy_in_attrs?(node_attrs)

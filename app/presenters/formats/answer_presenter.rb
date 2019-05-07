@@ -1,6 +1,6 @@
 module Formats
   class AnswerPresenter < EditionFormatPresenter
-  private
+  private # rubocop:disable Layout/IndentationWidth
 
     def schema_name
       'answer'

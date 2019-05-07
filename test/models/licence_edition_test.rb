@@ -38,7 +38,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
         artefact2 = FactoryBot.create(:artefact)
         FactoryBot.create(:licence_edition, licence_identifier: "wibble", panopticon_id: artefact2.id)
         @l.licence_identifier = "wibble"
-        assert ! @l.valid?, "expected licence edition not to be valid"
+        assert_not @l.valid?, "expected licence edition not to be valid"
       end
 
       should "not consider archived editions when evaluating uniqueness" do
@@ -65,7 +65,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
     end
     should "fail validation when the continuation link has an invalid url" do
       @l.continuation_link = "not&a+valid_url"
-      assert !@l.valid?, "continuation link validation should fail with a invalid url"
+      assert_not @l.valid?, "continuation link validation should fail with a invalid url"
     end
     should "pass validation with a valid continuation link url" do
       @l.continuation_link = "http://www.hmrc.gov.uk"
@@ -75,13 +75,13 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
   should "clone extra fields when cloning edition" do
     licence = FactoryBot.create(:licence_edition,
-                                 panopticon_id: @artefact.id,
-                                 state: "published",
-                                 licence_identifier: "1234",
-                                 licence_short_description: "Short description of licence",
-                                 licence_overview: "Overview to be cloned",
-                                 will_continue_on: "Continuation text to be cloned",
-                                 continuation_link: "http://www.gov.uk")
+                                panopticon_id: @artefact.id,
+                                state: "published",
+                                licence_identifier: "1234",
+                                licence_short_description: "Short description of licence",
+                                licence_overview: "Overview to be cloned",
+                                will_continue_on: "Continuation text to be cloned",
+                                continuation_link: "http://www.gov.uk")
     new_licence = licence.build_clone
 
     assert_equal licence.licence_identifier, new_licence.licence_identifier

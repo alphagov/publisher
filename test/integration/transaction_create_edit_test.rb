@@ -44,10 +44,10 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     should "allow editing a TransactionEdition" do
       transaction = FactoryBot.create(:transaction_edition,
-                                   panopticon_id: @artefact.id,
-                                   title: "Register for space flight",
-                                   introduction: "Become a space pilot",
-                                   will_continue_on: "UK Space Recruitment",)
+                                      panopticon_id: @artefact.id,
+                                      title: "Register for space flight",
+                                      introduction: "Become a space pilot",
+                                      will_continue_on: "UK Space Recruitment",)
 
       visit_edition transaction
 
@@ -67,8 +67,8 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
 
     should "allow only a valid Service analytics profile" do
       transaction = FactoryBot.create(:transaction_edition,
-                                   panopticon_id: @artefact.id,
-                                   title: "Register for space flight")
+                                      panopticon_id: @artefact.id,
+                                      title: "Register for space flight")
 
       visit_edition transaction
 

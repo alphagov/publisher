@@ -44,7 +44,7 @@ class FactCheckMailTest < ActiveSupport::TestCase
     ['X-Autoreply', 'no'],
   ].each do |key, value|
     should "return false when the #{key} header isn't an auto-reply value" do
-      refute email_with_header(key, value).out_of_office?
+      assert_not email_with_header(key, value).out_of_office?
     end
   end
 
