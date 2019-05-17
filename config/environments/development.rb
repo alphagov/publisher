@@ -18,7 +18,7 @@ Rails.application.configure do
   config.jwt_auth_secret = '123'
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp/caching-dev.txt').exist?
+  if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = false
 
     config.cache_store = :memory_store

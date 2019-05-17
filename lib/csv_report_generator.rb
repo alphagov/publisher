@@ -6,7 +6,8 @@ class CsvReportGenerator
   include RedisConfig
 
   def self.csv_path
-    "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
+    root = ENV['GOVUK_APP_ROOT'] || Rails.root
+    File.join(root, "reports")
   end
 
   def run!
