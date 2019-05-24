@@ -42,7 +42,7 @@ create_new_account:
     - cyfeiriad yn y DU
     - pasbort neu drwydded cerdyn-llun dilys
 
-    {button}[Creu cyfrif Porth y Llywodraeth](https://www.signin.service.gov.uk/initiate-journey/hmrc-tax-estimate?journey_hint=registration){/button}
+    {button}[Creu cyfrif GOV.UK Verify](https://www.signin.service.gov.uk/initiate-journey/hmrc-tax-estimate?journey_hint=registration){/button}
 
     Bydd cwmni ardystiedig bob tro'n gwirio pwy ydych pan fyddwch yn cofrestru gyda GOV.UK Verify. Mae pob un ohonynt yn bodloni safonau diogelwch sydd wedi'u gosod gan y Llywodraeth.
 
