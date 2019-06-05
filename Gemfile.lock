@@ -180,7 +180,7 @@ GEM
     has_scope (0.7.2)
       actionpack (>= 4.1)
       activesupport (>= 4.1)
-    hashdiff (0.3.7)
+    hashdiff (0.4.0)
     hashie (3.6.0)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
@@ -307,7 +307,7 @@ GEM
     pry-byebug (3.7.0)
       byebug (~> 11.0)
       pry (~> 0.10)
-    public_suffix (3.0.3)
+    public_suffix (3.1.0)
     puma (3.12.1)
     rack (2.0.7)
     rack-cache (1.9.0)
@@ -382,7 +382,7 @@ GEM
     ruby-graphviz (1.2.3)
     ruby-progressbar (1.10.0)
     rubyzip (1.2.2)
-    safe_yaml (1.0.4)
+    safe_yaml (1.0.5)
     sanitize (5.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
@@ -477,10 +477,10 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
-    webmock (3.5.1)
+    webmock (3.6.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-      hashdiff
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -548,7 +548,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   timecop (= 0.9.1)
   uglifier (= 4.1.20)
-  webmock (~> 3.5.1)
+  webmock (~> 3.6.0)
   whenever
 
 BUNDLED WITH
