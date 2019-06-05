@@ -299,7 +299,7 @@ GEM
     parser (2.6.0.0)
       ast (~> 2.4.0)
     phantomjs (2.1.1.0)
-    plek (2.1.1)
+    plek (3.0.0)
     powerpack (0.1.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
@@ -528,7 +528,7 @@ DEPENDENCIES
   mousetrap-rails (= 1.4.6)
   nested_form!
   null_logger
-  plek (= 2.1.1)
+  plek (= 3.0.0)
   pry-byebug
   rack (= 2.0.7)
   rails (~> 5.2)
