@@ -5,32 +5,30 @@ module Formats
     PROMOTIONS = %w(organ_donor register_to_vote mot_reminder).freeze
 
     def schema_name
-      'completed_transaction'
+      "completed_transaction"
     end
 
     def document_type
-      'completed_transaction'
+      "completed_transaction"
     end
 
     def details
-      return optional_details.merge(required_details) if PROMOTIONS.include?(promotion_choice["choice"])
-
-      required_details
+      optional_details.merge(required_details)
     end
 
     def required_details
-      {
-        external_related_links: external_related_links
-      }
+      { external_related_links: external_related_links }
     end
 
     def optional_details
-      {
-        promotion: {
-          category: promotion_choice.fetch("choice"),
-          url: promotion_choice.fetch("url", '')
-        }
-      }
+      { promotion: promotion_details }.compact
+    end
+
+    def promotion_details
+      return unless PROMOTIONS.include?(promotion_choice["choice"])
+
+      { category: promotion_choice.fetch("choice") }
+        .merge(promotion_choice.slice("url").symbolize_keys.compact)
     end
 
     def promotion_choice
