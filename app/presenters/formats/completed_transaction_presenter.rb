@@ -28,7 +28,12 @@ module Formats
       return unless PROMOTIONS.include?(promotion_choice["choice"])
 
       { category: promotion_choice.fetch("choice") }
-        .merge(promotion_choice.slice("url").symbolize_keys.compact)
+        .merge(
+          promotion_choice
+            .slice("url", "opt_in_url", "opt_out_url")
+            .symbolize_keys
+            .compact
+        )
     end
 
     def promotion_choice

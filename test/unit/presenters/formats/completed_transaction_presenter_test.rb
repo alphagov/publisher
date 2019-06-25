@@ -36,13 +36,31 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   context "[:details]" do
     should "[:promotion]" do
       edition.presentation_toggles["promotion_choice"] = {
-        'choice' => 'organ_donor',
+        'choice' => 'mot_reminder',
         'url' => 'http://www.foo.com'
       }
 
       expected = {
-        category: 'organ_donor',
+        category: 'mot_reminder',
         url: 'http://www.foo.com'
+      }
+
+      assert_equal expected, result[:details][:promotion]
+    end
+
+    should "opt in and opt out [:promotion]" do
+      edition.presentation_toggles["promotion_choice"] = {
+        'choice' => 'organ_donor',
+        'url' => 'http://www.foo.com',
+        'opt_in_url' => 'http://www.bar.com',
+        'opt_out_url' => 'http://www.baz.com',
+      }
+
+      expected = {
+        category: 'organ_donor',
+        url: 'http://www.foo.com',
+        opt_in_url: 'http://www.bar.com',
+        opt_out_url: 'http://www.baz.com',
       }
 
       assert_equal expected, result[:details][:promotion]

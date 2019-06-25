@@ -289,6 +289,8 @@ protected
         body
         promotion_choice
         promotion_choice_url
+        promotion_choice_opt_in_url
+        promotion_choice_opt_out_url
       ]
     else # answer_edition, help_page_edition
       [

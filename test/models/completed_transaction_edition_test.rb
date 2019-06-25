@@ -41,10 +41,14 @@ class CompletedTransactionEditionTest < ActiveSupport::TestCase
 
     completed_transaction_edition.promotion_choice = "organ_donor"
     completed_transaction_edition.promotion_choice_url = "https://www.organdonation.nhs.uk/registration/"
+    completed_transaction_edition.promotion_choice_opt_in_url = "https://www.organdonation.nhs.uk/registration/in/"
+    completed_transaction_edition.promotion_choice_opt_out_url = "https://www.organdonation.nhs.uk/registration/out/"
     completed_transaction_edition.save!
 
     assert_equal "organ_donor", completed_transaction_edition.reload.promotion_choice
     assert_equal "https://www.organdonation.nhs.uk/registration/", completed_transaction_edition.promotion_choice_url
+    assert_equal "https://www.organdonation.nhs.uk/registration/in/", completed_transaction_edition.promotion_choice_opt_in_url
+    assert_equal "https://www.organdonation.nhs.uk/registration/out/", completed_transaction_edition.promotion_choice_opt_out_url
 
     completed_transaction_edition.promotion_choice = "register_to_vote"
     completed_transaction_edition.promotion_choice_url = "https://www.gov.uk/register-to-vote"
