@@ -15,6 +15,14 @@ module PresentationToggles
     promotion_choice_key['url'] = value
   end
 
+  def promotion_choice_opt_in_url=(value)
+    promotion_choice_key["opt_in_url"] = value
+  end
+
+  def promotion_choice_opt_out_url=(value)
+    promotion_choice_key["opt_out_url"] = value
+  end
+
   def promotion_choice
     choice = promotion_choice_key["choice"]
     choice.empty? ? "none" : choice
@@ -28,10 +36,19 @@ module PresentationToggles
     promotion_choice_key["url"]
   end
 
+  def promotion_choice_opt_in_url
+    promotion_choice_key["opt_in_url"]
+  end
+
+  def promotion_choice_opt_out_url
+    promotion_choice_key["opt_out_url"]
+  end
+
   def promotion_choice_key
     unless presentation_toggles.key? 'promotion_choice'
       presentation_toggles['promotion_choice'] = self.class.default_presentation_toggles['promotion_choice']
     end
+
     presentation_toggles['promotion_choice']
   end
 
