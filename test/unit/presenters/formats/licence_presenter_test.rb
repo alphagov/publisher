@@ -55,7 +55,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(will_continue_on: nil)
-          refute_includes result[:details].keys, :will_continue_on
+          assert_not_includes result[:details].keys, :will_continue_on
         end
       end
 
@@ -67,7 +67,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(continuation_link: nil)
-          refute_includes result[:details].keys, :continuation_link
+          assert_not_includes result[:details].keys, :continuation_link
         end
       end
 
@@ -79,7 +79,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(licence_short_description: nil)
-          refute_includes result[:details].keys, :licence_short_description
+          assert_not_includes result[:details].keys, :licence_short_description
         end
       end
 
@@ -96,7 +96,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(licence_overview: nil)
-          refute_includes result[:details].keys, :licence_overview
+          assert_not_includes result[:details].keys, :licence_overview
         end
       end
     end

@@ -25,19 +25,19 @@ private
 
   def out_of_office_header_set?
     header_names = @message.header_fields.map(&:name)
-    return true if (['X-Autorespond', 'X-Auto-Response-Suppress'] & header_names).present?
+    return true if (%w[X-Autorespond X-Auto-Response-Suppress] & header_names).present?
 
     [
-      ['Auto-Submitted', 'auto-replied'],
-      ['Auto-Submitted', 'auto-generated'],
+      %w[Auto-Submitted auto-replied],
+      %w[Auto-Submitted auto-generated],
       %w(Precedence bulk),
       %w(Precedence auto_reply),
       %w(Precedence junk),
       ['Return-Path', ''],
-      ['X-Precedence', 'bulk'],
-      ['X-Precedence', 'auto_reply'],
-      ['X-Precedence', 'junk'],
-      ['X-Autoreply', 'yes'],
+      %w[X-Precedence bulk],
+      %w[X-Precedence auto_reply],
+      %w[X-Precedence junk],
+      %w[X-Autoreply yes],
     ].any? do |key, value|
       @message[key].class == Mail::Field &&
         @message[key].to_s == value

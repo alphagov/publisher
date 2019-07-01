@@ -36,7 +36,7 @@ class GuideEditionTest < ActiveSupport::TestCase
 
   test 'a guide without a video url should not have a video' do
     g = FactoryBot.create(:guide_edition)
-    assert !g.has_video?
+    assert_not g.has_video?
   end
 
   test 'a guide with a video url should have a video' do
@@ -49,7 +49,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     user, guide = publisher_and_guide
     edition = guide.published_edition
 
-    assert ! edition.overview.blank?
+    assert_not edition.overview.blank?
 
     new_edition = user.new_version(edition)
     assert_equal edition.overview, new_edition.overview

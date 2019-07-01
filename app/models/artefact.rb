@@ -54,9 +54,9 @@ class Artefact
                                     simple_smart_answer
                                     transaction
                                     video),
-    "smartanswers"            => ["smart-answer"],
-    "custom-application"      => ["custom-application"], # In this case the owning_app is overriden. eg calendars, licencefinder
-    "travel-advice-publisher" => ["travel-advice"],
+    "smartanswers"            => %w[smart-answer],
+    "custom-application"      => %w[custom-application], # In this case the owning_app is overriden. eg calendars, licencefinder
+    "travel-advice-publisher" => %w[travel-advice],
     "specialist-publisher"    => %w[manual],
     "finder-api"              => %w(finder
                                     finder_email_signup),
@@ -129,7 +129,7 @@ class Artefact
   end
 
   def normalise
-    return unless kind.present?
+    return if kind.blank?
 
     self.kind = KIND_TRANSLATIONS[kind.to_s.downcase.strip]
   end
@@ -169,7 +169,7 @@ class Artefact
   end
 
   def self.from_param(slug_or_id)
-    find_by_slug(slug_or_id) || find(slug_or_id)
+    find_by(slug: slug_or_id) || find(slug_or_id)
   end
 
   def update_attributes_as(user, *args)
@@ -254,7 +254,7 @@ class Artefact
   end
 
   def update_from_edition(edition)
-    update_attributes(
+    update(
       state: state_from_edition(edition),
       description: edition.overview,
       public_timestamp: edition.public_updated_at

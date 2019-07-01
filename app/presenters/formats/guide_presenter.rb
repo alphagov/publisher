@@ -1,6 +1,6 @@
 module Formats
   class GuidePresenter < EditionFormatPresenter
-  private
+    private # rubocop:disable Layout/AccessModifierIndentation
 
     def schema_name
       'guide'

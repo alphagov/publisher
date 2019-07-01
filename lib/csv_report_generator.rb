@@ -44,7 +44,7 @@ class CsvReportGenerator
     return @path if @path
 
     @path = File.join(Dir.tmpdir,
-      "publisher_reports-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}-#{Process.pid}")
+                      "publisher_reports-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}-#{Process.pid}")
     FileUtils.mkdir_p(@path)
     @path
   end

@@ -58,7 +58,7 @@ module Formats
     end
 
     def presented_node_body(node_body)
-      return {} unless node_body.present?
+      return {} if node_body.blank?
 
       {
         body: [

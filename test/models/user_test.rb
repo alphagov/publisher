@@ -35,7 +35,7 @@ class UserTest < ActiveSupport::TestCase
     FactoryBot.create(:user, disabled: nil)
 
     assert_equal 3, User.enabled.count
-    refute User.enabled.include? disabled
+    assert_not User.enabled.include? disabled
   end
 
   test "should create new user with oauth params" do
@@ -58,7 +58,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "user@example.com", user.email
     assert_equal "Luther Blisset", user.name
     assert_equal(%w[signin], user.permissions)
-    refute user.disabled?
+    assert_not user.disabled?
   end
 
   test "should find and update the user with oauth params" do
@@ -97,7 +97,7 @@ class UserTest < ActiveSupport::TestCase
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     request_review(user, trans)
-    refute approve_review(user, trans)
+    assert_not approve_review(user, trans)
   end
 
   test "Edition becomes assigned to user when user is assigned an edition" do

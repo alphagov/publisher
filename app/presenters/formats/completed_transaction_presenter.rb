@@ -1,6 +1,6 @@
 module Formats
   class CompletedTransactionPresenter < EditionFormatPresenter
-  private
+    private # rubocop:disable Layout/AccessModifierIndentation
 
     PROMOTIONS = %w(organ_donor register_to_vote mot_reminder).freeze
 

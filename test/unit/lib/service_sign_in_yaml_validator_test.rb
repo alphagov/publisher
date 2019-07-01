@@ -108,7 +108,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
       should "log a 'Missing choose_sign_in field: title, slug, options' error" do
         validator = service_sign_in_yaml_validator(no_choose_sign_in_fields)
         assert_includes validator.validate,
-          "Missing choose_sign_in field: #{required_choose_sign_in_fields.join(', ')}"
+                        "Missing choose_sign_in field: #{required_choose_sign_in_fields.join(', ')}"
       end
     end
 
@@ -124,7 +124,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
       should "log a 'Missing choose sign_in field: option > text, slug or url' error" do
         validator = service_sign_in_yaml_validator(no_choose_sign_in_option_fields)
         assert_includes validator.validate,
-          "Missing choose_sign_in field: option > text, slug or url"
+                        "Missing choose_sign_in field: option > text, slug or url"
       end
     end
 

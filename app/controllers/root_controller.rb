@@ -11,13 +11,13 @@ class RootController < ApplicationController
     user_filter           = params[:user_filter] || session[:user_filter]
     session[:user_filter] = user_filter
 
-    @list = params[:list].blank? ? 'drafts' : params[:list]
+    @list = params[:list].presence || 'drafts'
     @presenter, @user_filter = build_presenter(user_filter, params[:page])
 
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
     unless @presenter.acceptable_list?(@list)
-      render body: { 'raw' => 'Not Found' }, status: 404
+      render body: { 'raw' => 'Not Found' }, status: :not_found
       return
     end
 

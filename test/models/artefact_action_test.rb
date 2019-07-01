@@ -81,7 +81,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),
-        @artefact.actions.last.snapshot
+      @artefact.actions.last.snapshot
     )
   end
 
@@ -110,7 +110,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),
-        @artefact.actions.last.snapshot
+      @artefact.actions.last.snapshot
     )
   end
 

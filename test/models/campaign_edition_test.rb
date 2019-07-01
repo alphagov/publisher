@@ -36,8 +36,8 @@ class CampaignEditionTest < ActiveSupport::TestCase
 
   should "return the body as whole_body" do
     campaign = FactoryBot.build(:campaign_edition,
-                          panopticon_id: @artefact.id,
-                          body: "Something")
+                                panopticon_id: @artefact.id,
+                                body: "Something")
     assert_equal campaign.body, campaign.whole_body
   end
 
@@ -45,7 +45,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_brand_colour = "something-else"
 
-    refute campaign.valid?
+    assert_not campaign.valid?
     assert campaign.errors.has_key?(:organisation_brand_colour)
   end
 
@@ -53,7 +53,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_crest = "something-else"
 
-    refute campaign.valid?
+    assert_not campaign.valid?
     assert campaign.errors.has_key?(:organisation_crest)
   end
 

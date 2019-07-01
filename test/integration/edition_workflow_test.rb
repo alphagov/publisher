@@ -125,7 +125,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     assert page.has_content? 'The email addresses you entered appear to be invalid.'
     guide.reload
-    refute guide.fact_check?
+    assert_not guide.fact_check?
 
     click_link('Fact check')
 
@@ -137,7 +137,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     assert page.has_content? 'The email addresses you entered appear to be invalid.'
     guide.reload
-    refute guide.fact_check?
+    assert_not guide.fact_check?
 
     click_link('Fact check')
 
@@ -149,7 +149,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     assert page.has_content? 'The email addresses you entered appear to be invalid.'
     guide.reload
-    refute guide.fact_check?
+    assert_not guide.fact_check?
   end
 
   test "a guide in the ready state can be requested to make more amendments" do
@@ -495,8 +495,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def view_filtered_list(filter_label)
     visit "/"
     filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
-    refute filter_link.nil?, "Tab link #{filter_label} not found"
-    refute filter_link['href'].nil?, "Tab link #{filter_label} has no target"
+    assert_not filter_link.nil?, "Tab link #{filter_label} not found"
+    assert_not filter_link['href'].nil?, "Tab link #{filter_label} has no target"
 
     filter_link.click
 

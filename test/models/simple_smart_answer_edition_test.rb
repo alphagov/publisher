@@ -23,9 +23,9 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   should "copy the body and nodes when cloning an edition" do
     edition = FactoryBot.create(:simple_smart_answer_edition,
-      panopticon_id: @artefact.id,
-      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-      state: "published")
+                                panopticon_id: @artefact.id,
+                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+                                state: "published")
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.nodes.build(slug: "left", title: "As you wander through the door, it slams shut behind you, as a lion starts pacing towards you...", order: 2, kind: "outcome")
     edition.nodes.build(slug: "right", title: "As you wander through the door, it slams shut behind you, as a tiger starts pacing towards you...", order: 3, kind: "outcome")
@@ -46,9 +46,9 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   should "not copy nodes when new edition is not a smart answer" do
     edition = FactoryBot.create(:simple_smart_answer_edition,
-      panopticon_id: @artefact.id,
-      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-      state: "published")
+                                panopticon_id: @artefact.id,
+                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+                                state: "published")
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.save!
 
@@ -57,7 +57,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nquestion: You approach two open doors. Which do you choose? \n\n ", new_edition.body
 
     assert new_edition.is_a?(AnswerEdition)
-    assert ! new_edition.respond_to?(:nodes)
+    assert_not new_edition.respond_to?(:nodes)
   end
 
   should "select the first node as the starting node" do
@@ -88,7 +88,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     assert_equal 2, edition.nodes.size
 
-    edition.update_attributes(nodes_attributes: {
+    edition.update(nodes_attributes: {
         "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" }
       })
     edition.reload
@@ -130,7 +130,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       should "be created with the text given by the content creator" do
         edition = SimpleSmartAnswerEdition.first
 
-        refute_equal "Start Now", edition.start_button_text
+        assert_not_equal "Start Now", edition.start_button_text
         assert_equal "Click to start", edition.start_button_text
         assert_equal "This is a simple smart answer with a default text for start button.", edition.body
         assert_equal @artefact.id.to_s, edition.panopticon_id
@@ -150,7 +150,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "update edition and nested node and option attributes" do
-      @edition.update_attributes(title: "Smarter than the average answer",
+      @edition.update(title: "Smarter than the average answer",
         body: "No developers were involved in the changing of this copy",
         nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
@@ -167,7 +167,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "create and destroy nodes and options using nested attributes" do
-      @edition.update_attributes(nodes_attributes: {
+      @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
               "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" }
             } },
@@ -189,7 +189,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "ignore new nodes if they are to be destroyed" do
-      @edition.update_attributes(nodes_attributes: {
+      @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
           "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" }
         })

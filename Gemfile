@@ -5,8 +5,8 @@ gem 'diffy', '3.3.0'
 gem 'erubis'
 gem 'formtastic', '3.1.5'
 gem 'formtastic-bootstrap', '3.1.1'
-gem 'gds-sso', '~> 14.0'
 gem 'gds-api-adapters', '~> 59.5'
+gem 'gds-sso', '~> 14.0'
 gem 'govspeak', '~> 6.0.0'
 gem 'govuk_admin_template', '~> 6.7'
 gem 'govuk_app_config', '~> 1.19.0'
@@ -20,8 +20,8 @@ gem 'mlanett-redis-lock', '0.2.7' # Only used in some importers
 gem 'momentjs-rails', '2.20.1'
 gem 'mongo', '2.4.3'
 gem 'mongoid', '~> 6.1'
-gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem "mongoid-sadstory"
+gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 gem 'mousetrap-rails', '1.4.6'
 gem "nested_form", git: 'https://github.com/alphagov/nested_form.git', branch: 'add-wrapper-class'
 gem 'null_logger'
@@ -63,6 +63,6 @@ group :development, :test do
   gem 'govuk-lint', '~> 3.11'
   gem 'jasmine', '~> 3.4.0'
   gem 'jasmine-core', '~> 3.4.0'
-  gem 'rack', '2.0.7'
   gem 'pry-byebug'
+  gem 'rack', '2.0.7'
 end

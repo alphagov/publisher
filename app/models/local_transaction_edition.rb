@@ -29,7 +29,7 @@ class LocalTransactionEdition < Edition
   end
 
   def service
-    LocalService.find_by_lgsl_code(lgsl_code)
+    LocalService.find_by(lgsl_code: lgsl_code)
   end
 
   def whole_body

@@ -1,6 +1,6 @@
 module Formats
   class LocalTransactionPresenter < EditionFormatPresenter
-  private
+    private # rubocop:disable Layout/AccessModifierIndentation
 
     def schema_name
       'local_transaction'

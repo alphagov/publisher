@@ -36,7 +36,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   test "should not progress to fact check if the email addresses were invalid" do
@@ -50,7 +50,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   test "should not progress to fact check if any of the email addresses were invalid" do
@@ -64,7 +64,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   context "publishing" do
@@ -77,7 +77,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       stub_register_published_content
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update(state: :scheduled_for_publishing, publish_at: publish_at)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "publish", comment: "go live now!" }
@@ -90,7 +90,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     end
 
     should "not fail if there is no scheduled job for the edition being published" do
-      @guide.update_attributes(state: :ready)
+      @guide.update(state: :ready)
 
       activity = { request_type: "publish", comment: "go live!" }
       command = EditionProgressor.new(@guide, @laura)
@@ -122,7 +122,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     should "dequeue a scheduled job" do
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update_attributes(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update(state: :scheduled_for_publishing, publish_at: publish_at)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }

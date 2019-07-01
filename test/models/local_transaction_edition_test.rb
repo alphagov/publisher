@@ -26,7 +26,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
 
     local_transaction = LocalTransactionEdition.new(lgsl_code: NONEXISTENT, lgil_code: 1, title: "Foo", slug: "foo", panopticon_id: @artefact.id)
     local_transaction.save
-    assert !local_transaction.valid?
+    assert_not local_transaction.valid?
 
     local_transaction = LocalTransactionEdition.new(lgsl_code: service.lgsl_code, lgil_code: 1, title: "Bar", slug: "bar", panopticon_id: @artefact.id)
     local_transaction.save

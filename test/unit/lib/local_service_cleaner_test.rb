@@ -28,7 +28,7 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
       context 'and lgsl not used by local transaction edition' do
         should 'destroy service' do
           LocalServiceCleaner.new(@input).run
-          refute LocalService.where(id: @service.id).any?
+          assert_not LocalService.where(id: @service.id).any?
         end
       end
 

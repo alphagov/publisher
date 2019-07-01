@@ -1,6 +1,6 @@
 module Formats
   class LicencePresenter < EditionFormatPresenter
-  private
+    private # rubocop:disable Layout/AccessModifierIndentation
 
     def schema_name
       'licence'

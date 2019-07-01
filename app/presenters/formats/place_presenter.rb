@@ -1,6 +1,6 @@
 module Formats
   class PlacePresenter < EditionFormatPresenter
-  private
+    private # rubocop:disable Layout/AccessModifierIndentation
 
     def schema_name
       'place'

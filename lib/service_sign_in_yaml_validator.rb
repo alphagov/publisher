@@ -19,7 +19,7 @@ private
 
   def valid?
     load_yaml_file
-    return unless @yaml_file.present?
+    return if @yaml_file.blank?
 
     check_for_top_level_required_fields
     check_for_valid_start_page_slug
@@ -31,7 +31,7 @@ private
   def load_yaml_file
     begin
       @yaml_file = YAML.load_file(@file_name)
-      unless @yaml_file.present?
+      if @yaml_file.blank?
         @errors << "Invalid file type"
       end
     rescue SystemCallError
@@ -48,7 +48,7 @@ private
   def check_for_valid_start_page_slug
     slug = @yaml_file["start_page_slug"]
     content = Services.publishing_api.lookup_content_id(base_path: "/#{slug}")
-    unless content.present?
+    if content.blank?
       @errors << "start_page_slug '#{slug}' cannot be found in Publishing API"
     end
   end
@@ -61,7 +61,7 @@ private
     end
 
     check_choose_sign_in_top_level_fields(error_message)
-    return unless choose_sign_in["options"].present?
+    return if choose_sign_in["options"].blank?
 
     check_choose_sign_in_options_fields(error_message)
   end
