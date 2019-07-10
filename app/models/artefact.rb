@@ -313,5 +313,8 @@ private
     Services.publishing_api.discard_draft(self.content_id)
   rescue GdsApi::HTTPNotFound
     nil
+  rescue GdsApi::HTTPUnprocessableEntity
+    # This error can also occur when there is no draft to discard
+    nil
   end
 end
