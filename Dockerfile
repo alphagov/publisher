@@ -1,7 +1,7 @@
 FROM ruby:2.6.3
 RUN apt-get update -qq && apt-get upgrade -y
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
-RUN apt-get install -y build-essential nodejs && apt-get clean
+RUN apt-get update && apt-get install -y nodejs && apt-get install npm -y
 RUN npm install -g phantomjs-prebuilt@2 --unsafe-perm
 RUN gem install foreman
 
