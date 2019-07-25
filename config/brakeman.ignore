@@ -10,7 +10,19 @@
       "line": 52,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => (\"drafts\" or params[:list]), {})",
-      "render_path": [{"type":"controller","class":"RootController","method":"index","line":20,"file":"app/controllers/root_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "RootController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/root_controller.rb",
+          "rendered": {
+            "name": "root/index",
+            "file": "app/views/root/index.html.erb"
+          }
+        }
+      ],
       "location": {
         "type": "template",
         "template": "root/index"
@@ -49,7 +61,19 @@
       "line": 53,
       "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "@presenter.send((\"drafts\" or params[:list]))",
-      "render_path": [{"type":"controller","class":"RootController","method":"index","line":20,"file":"app/controllers/root_controller.rb"}],
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "RootController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/root_controller.rb",
+          "rendered": {
+            "name": "root/index",
+            "file": "app/views/root/index.html.erb"
+          }
+        }
+      ],
       "location": {
         "type": "template",
         "template": "root/index"
@@ -57,8 +81,24 @@
       "user_input": "params[:list]",
       "confidence": "High",
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 110,
+      "fingerprint": "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
+      "check_name": "CookieSerialization",
+      "message": "Use of unsafe cookie serialization strategy `:hybrid` might lead to remote code execution",
+      "file": "config/initializers/cookies_serializer.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Rails.application.config.action_dispatch.cookies_serializer = :hybrid",
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2018-08-02 14:09:22 +0100",
-  "brakeman_version": "4.3.1"
+  "updated": "2019-07-25 16:39:31 +0100",
+  "brakeman_version": "4.6.1"
 }
