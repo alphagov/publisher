@@ -20,7 +20,7 @@ ADD Gemfile* $APP_HOME/
 RUN bundle install
 ADD . $APP_HOME
 
-RUN GOVUK_APP_DOMAIN=www.gov.uk RAILS_ENV=production bundle exec rails assets:precompile
+RUN GOVUK_APP_DOMAIN=www.gov.uk GOVUK_WEBSITE_ROOT=www.gov.uk RAILS_ENV=production bundle exec rails assets:precompile
 
 HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
 
