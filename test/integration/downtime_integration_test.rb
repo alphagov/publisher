@@ -29,7 +29,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     assert_match("midday to 6pm on #{day} 1 July", page.find_field('Message').value)
     click_button 'Schedule downtime message'
 
-    assert page.has_content?('Apply to become a driving instructor downtime message scheduled')
+    assert page.has_content?('downtime message scheduled')
     assert page.has_content?('Scheduled downtime')
     assert page.has_content?("midday to 6pm on 1 July")
   end
@@ -46,7 +46,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field('Message').value)
     click_on 'Re-schedule downtime message'
 
-    assert page.has_content?('Apply to become a driving instructor downtime message re-scheduled')
+    assert page.has_content?('downtime message re-scheduled')
     assert page.has_content?("midday to 9:30pm on 1 July")
   end
 
@@ -59,7 +59,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     click_link 'Edit downtime'
     click_on 'Cancel downtime'
 
-    assert page.has_content?('Apply to become a driving instructor downtime message cancelled')
+    assert page.has_content?('downtime message cancelled')
     assert_no_downtime_scheduled
   end
 
