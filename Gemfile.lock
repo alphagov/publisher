@@ -194,7 +194,7 @@ GEM
     has_scope (0.7.2)
       actionpack (>= 4.1)
       activesupport (>= 4.1)
-    hashdiff (0.4.0)
+    hashdiff (1.0.0)
     hashie (3.6.0)
     htmlentities (4.3.4)
     http-accept (1.7.0)
@@ -497,7 +497,7 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.6.0)
+    webmock (3.6.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -568,7 +568,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   timecop (= 0.9.1)
   uglifier (= 4.1.20)
-  webmock (~> 3.6.0)
+  webmock (~> 3.6.2)
   whenever
 
 BUNDLED WITH
