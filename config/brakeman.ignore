@@ -57,6 +57,22 @@
       "user_input": "params[:list]",
       "confidence": "High",
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 110,
+      "fingerprint": "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
+      "check_name": "CookieSerialization",
+      "message": "Use of unsafe cookie serialization strategy `:hybrid` might lead to remote code execution",
+      "file": "config/initializers/cookies_serializer.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Rails.application.config.action_dispatch.cookies_serializer = :hybrid",
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
     }
   ],
   "updated": "2018-08-02 14:09:22 +0100",
