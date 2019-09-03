@@ -213,7 +213,12 @@ class EditionsController < InheritedResources::Base
   def process_unpublish
     edition = Edition.find(params[:id])
     artefact = edition.artefact
-    success = UnpublishService.call(artefact, current_user, redirect_url)
+
+    if validate_redirect(redirect_url) || redirect_url.blank?
+      success = UnpublishService.call(artefact, current_user, redirect_url)
+    else
+      flash[:danger] = "Redirect path is invalid. #{description(resource)} has not been unpublished."
+    end
 
     if success
       notice = "Content unpublished"
@@ -343,7 +348,12 @@ private
   end
 
   def make_govuk_url_relative(url = "")
-    url.sub(%r{^https?://(www\.)?gov\.uk/}, "/")
+    url.sub(%r{^(https?://)?(www\.)?gov\.uk/}, "/")
+  end
+
+  def validate_redirect(redirect_url)
+    regex = /(\/([a-z0-9]+-)*[a-z0-9]+)+/
+    redirect_url =~ regex
   end
 
   def tagging_update_form
