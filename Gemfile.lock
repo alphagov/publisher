@@ -493,7 +493,7 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (>= 3.0, < 4.0)
-    webmock (3.7.1)
+    webmock (3.7.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -564,7 +564,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   timecop (= 0.9.1)
   uglifier (= 4.1.20)
-  webmock (~> 3.7.1)
+  webmock (~> 3.7.2)
   whenever
 
 BUNDLED WITH
