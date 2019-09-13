@@ -50,8 +50,8 @@ class LinkCheckReportTest < ActiveSupport::TestCase
   context "#broken_links" do
     should "return an array of broken links" do
       link_check_report = FactoryBot.build(:link_check_report, :with_links,
-                                                                link_uris: ["https://www.gov.uk"],
-                                                                link_status: "broken")
+                                           link_uris: ["https://www.gov.uk"],
+                                           link_status: "broken")
       assert_kind_of Array, link_check_report.broken_links
       assert link_check_report.broken_links.any?
       assert "https://www.gov.uk", link_check_report.broken_links.first.uri
@@ -61,8 +61,8 @@ class LinkCheckReportTest < ActiveSupport::TestCase
   context "#caution_links" do
     should "return an array of caution links" do
       link_check_report = FactoryBot.build(:link_check_report, :with_links,
-                                                                link_uris: ["https://www.gov.uk"],
-                                                                link_status: "caution")
+                                           link_uris: ["https://www.gov.uk"],
+                                           link_status: "caution")
       assert_kind_of Array, link_check_report.caution_links
       assert link_check_report.caution_links.any?
       assert "https://www.gov.uk", link_check_report.caution_links.first.uri

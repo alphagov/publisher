@@ -23,9 +23,9 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   should "copy the body and nodes when cloning an edition" do
     edition = FactoryBot.create(:simple_smart_answer_edition,
-      panopticon_id: @artefact.id,
-      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-      state: "published")
+                                panopticon_id: @artefact.id,
+                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+                                state: "published")
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.nodes.build(slug: "left", title: "As you wander through the door, it slams shut behind you, as a lion starts pacing towards you...", order: 2, kind: "outcome")
     edition.nodes.build(slug: "right", title: "As you wander through the door, it slams shut behind you, as a tiger starts pacing towards you...", order: 3, kind: "outcome")
@@ -46,9 +46,9 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
   should "not copy nodes when new edition is not a smart answer" do
     edition = FactoryBot.create(:simple_smart_answer_edition,
-      panopticon_id: @artefact.id,
-      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-      state: "published")
+                                panopticon_id: @artefact.id,
+                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+                                state: "published")
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.save!
 

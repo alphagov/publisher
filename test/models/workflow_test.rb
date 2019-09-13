@@ -460,7 +460,7 @@ class WorkflowTest < ActiveSupport::TestCase
       @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
       @edition.parts.first.update_attribute(:body,
-        "[register and tax your vehicle](registering-an-imported-vehicle)")
+                                            "[register and tax your vehicle](registering-an-imported-vehicle)")
     end
 
     should "transition an edition with link validation errors to fact_check_received state" do

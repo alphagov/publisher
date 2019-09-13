@@ -30,7 +30,7 @@ class ServiceSignInPublishServiceTest < ActiveSupport::TestCase
   end
 
   def links
-    { parent: ["6a2bf66e-2313-4204-afd5-9940de5e1d66"] }
+    { parent: %w[6a2bf66e-2313-4204-afd5-9940de5e1d66] }
   end
 
   def locale

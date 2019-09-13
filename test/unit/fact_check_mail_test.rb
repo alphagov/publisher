@@ -17,17 +17,17 @@ class FactCheckMailTest < ActiveSupport::TestCase
   end
 
   [
-    ['Auto-Submitted', 'auto-replied'],
-    ['Auto-Submitted', 'auto-generated'],
+    %w[Auto-Submitted auto-replied],
+    %w[Auto-Submitted auto-generated],
     %w(Precedence bulk),
     %w(Precedence auto_reply),
     %w(Precedence junk),
     ['Return-Path', nil],
     ['Subject', 'Out of Office'],
-    ['X-Precedence', 'bulk'],
-    ['X-Precedence', 'auto_reply'],
-    ['X-Precedence', 'junk'],
-    ['X-Autoreply', 'yes'],
+    %w[X-Precedence bulk],
+    %w[X-Precedence auto_reply],
+    %w[X-Precedence junk],
+    %w[X-Autoreply yes],
     ['X-Autorespond', nil],
     ['X-Auto-Response-Suppress', nil]
   ].each do |key, value|
@@ -37,11 +37,11 @@ class FactCheckMailTest < ActiveSupport::TestCase
   end
 
   [
-    ['Auto-Submitted', 'no'],
+    %w[Auto-Submitted no],
     %w(Precedence foo),
     ['Subject', 'On holiday'],
-    ['X-Precedence', 'bar'],
-    ['X-Autoreply', 'no'],
+    %w[X-Precedence bar],
+    %w[X-Autoreply no],
   ].each do |key, value|
     should "return false when the #{key} header isn't an auto-reply value" do
       refute email_with_header(key, value).out_of_office?

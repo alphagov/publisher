@@ -141,9 +141,9 @@ class EditionsController < InheritedResources::Base
     redirect_to tagging_edition_path
   rescue GdsApi::HTTPConflict
     redirect_to tagging_edition_path,
-    flash: {
-      danger: "Somebody changed the tags before you could. Your changes have not been saved."
-    }
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved."
+                }
   end
 
   def update_related_external_links

@@ -56,7 +56,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     context "on state" do
       should "only allow one edition in draft per slug" do
         FactoryBot.create(:travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.state = 'draft'
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
@@ -64,7 +64,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "only allow one edition in published per slug" do
         FactoryBot.create(:published_travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.state = 'published'
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
@@ -72,7 +72,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "allow multiple editions in archived per slug" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: @ta.country_slug)
+                          country_slug: @ta.country_slug)
         @ta.save!
         @ta.state = 'archived'
         assert @ta.valid?
@@ -156,8 +156,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "require a unique version_number per slug" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: @ta.country_slug,
-                                             version_number: 3)
+                          country_slug: @ta.country_slug,
+                          version_number: 3)
         @ta.version_number = 3
         refute @ta.valid?
         assert_includes @ta.errors.messages[:version_number], "is already taken"
@@ -165,8 +165,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "allow matching version_numbers for different slugs" do
         FactoryBot.create(:archived_travel_advice_edition,
-                                             country_slug: 'wibble',
-                                             version_number: 3)
+                          country_slug: 'wibble',
+                          version_number: 3)
         @ta.version_number = 3
         assert @ta.valid?
       end
@@ -264,13 +264,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   context "building a new version" do
     setup do
       @ed = FactoryBot.create(:travel_advice_edition,
-                               title: "Aruba",
-                               overview: "Aruba is not near Wales",
-                               country_slug: "aruba",
-                               summary: "## The summary",
-                               alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
-                               image_id: "id_from_the_asset_manager_for_an_image",
-                               document_id: "id_from_the_asset_manager_for_a_document")
+                              title: "Aruba",
+                              overview: "Aruba is not near Wales",
+                              country_slug: "aruba",
+                              summary: "## The summary",
+                              alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
+                              image_id: "id_from_the_asset_manager_for_an_image",
+                              document_id: "id_from_the_asset_manager_for_a_document")
       @ed.parts.build(title: "Fooey", slug: 'fooey', body: "It's all about Fooey")
       @ed.parts.build(title: "Gooey", slug: 'gooey', body: "It's all about Gooey")
       @ed.save!

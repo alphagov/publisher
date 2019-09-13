@@ -29,9 +29,9 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   with_and_without_javascript do
     should "allow editing HelpPageEdition" do
       help_page = FactoryBot.create(:help_page_edition,
-                                     panopticon_id: @artefact.id,
-                                     title: "Foo bar",
-                                     body: "Body content")
+                                    panopticon_id: @artefact.id,
+                                    title: "Foo bar",
+                                    body: "Body content")
       visit_edition help_page
 
       assert page.has_content?(/Foo bar\W#1/)
@@ -49,10 +49,10 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
     should "allow creating a new version of a HelpPageEdition" do
       help_page = FactoryBot.create(:help_page_edition,
-                                   panopticon_id: @artefact.id,
-                                   state: 'published',
-                                   title: "Foo bar",
-                                   body: "This is really helpful")
+                                    panopticon_id: @artefact.id,
+                                    state: 'published',
+                                    title: "Foo bar",
+                                    body: "This is really helpful")
 
       visit_edition help_page
       click_on "Create new edition"
@@ -64,10 +64,10 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
 
   should "disable fields for a published edition" do
     edition = FactoryBot.create(:help_page_edition,
-                                 panopticon_id: @artefact.id,
-                                 state: 'published',
-                                 title: "Foo bar",
-                                 body: "This is really helpful")
+                                panopticon_id: @artefact.id,
+                                state: 'published',
+                                title: "Foo bar",
+                                body: "This is really helpful")
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

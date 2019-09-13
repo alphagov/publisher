@@ -10,35 +10,35 @@ class EditionsControllerTest < ActionController::TestCase
   context "#create" do
     setup do
       @artefact = FactoryBot.create(:artefact,
-          slug: "test",
-          kind: "answer",
-          name: "test",
-          owning_app: "publisher")
+                                    slug: "test",
+                                    kind: "answer",
+                                    name: "test",
+                                    owning_app: "publisher")
     end
 
     should "report publication counts on creation" do
       Publisher::Application.edition_state_count_reporter.expects(:report)
       post :create,
-        params: {
-          "edition" => {
-            "kind" => "answer",
-            "panopticon_id" => @artefact.id,
-            "title" => "a title"
-          }
-        }
+           params: {
+             "edition" => {
+               "kind" => "answer",
+               "panopticon_id" => @artefact.id,
+               "title" => "a title"
+             }
+           }
     end
 
     should "update publishing API upon creation of new edition" do
       UpdateWorker.expects(:perform_async)
 
       post :create,
-        params: {
-          "edition" => {
-            "kind" => "answer",
-            "panopticon_id" => @artefact.id,
-            "title" => "a title"
-          }
-        }
+           params: {
+             "edition" => {
+               "kind" => "answer",
+               "panopticon_id" => @artefact.id,
+               "title" => "a title"
+             }
+           }
     end
 
     should "render the lgsl and lgil edit form successfully if creation fails" do
@@ -50,27 +50,27 @@ class EditionsControllerTest < ActionController::TestCase
       artefact = FactoryBot.create(:artefact)
 
       post :create,
-        params: {
-          "edition" => {
-            "kind" => "local_transaction",
-            "lgsl_code" => lgsl_code,
-            "lgil_code" => 1,
-            "panopticon_id" => artefact.id,
-            "title" => "a title",
-          }
-        }
+           params: {
+             "edition" => {
+               "kind" => "local_transaction",
+               "lgsl_code" => lgsl_code,
+               "lgil_code" => 1,
+               "panopticon_id" => artefact.id,
+               "title" => "a title",
+             }
+           }
       assert_equal '302', response.code
 
       post :create,
-        params: {
-          "edition" => {
-            "kind" => "local_transaction",
-            "lgsl_code" => lgsl_code + 1,
-            "lgil_code" => 1,
-            "panopticon_id" => artefact.id,
-            "title" => "a title"
-          }
-        }
+           params: {
+             "edition" => {
+               "kind" => "local_transaction",
+               "lgsl_code" => lgsl_code + 1,
+               "lgil_code" => 1,
+               "panopticon_id" => artefact.id,
+               "title" => "a title"
+             }
+           }
       assert_equal '200', response.code
     end
   end
@@ -113,17 +113,17 @@ class EditionsControllerTest < ActionController::TestCase
       EditionProgressor.any_instance.expects(:status_message).returns("Guide updated")
 
       post :progress,
-        params: {
-          id: @guide.id,
-          edition: {
-            activity: {
-              "request_type"       => "send_fact_check",
-              "comment"            => "Blah",
-              "email_addresses"    => "user@example.com",
-              "customised_message" => "Hello"
-            }
-          }
-        }
+           params: {
+             id: @guide.id,
+             edition: {
+               activity: {
+                 "request_type"       => "send_fact_check",
+                 "comment"            => "Blah",
+                 "email_addresses"    => "user@example.com",
+                 "customised_message" => "Hello"
+               }
+             }
+           }
 
       assert_redirected_to controller: "editions", action: "show", id: @guide.id
       assert_equal "Guide updated", flash[:success]
@@ -134,15 +134,15 @@ class EditionsControllerTest < ActionController::TestCase
       EditionProgressor.any_instance.expects(:status_message).returns("I failed")
 
       post :progress,
-        params: {
-          id: @guide.id.to_s,
-          edition: {
-            activity: {
-              'request_type' => "send_fact_check",
-              "email_addresses" => ""
-            }
-          }
-        }
+           params: {
+             id: @guide.id.to_s,
+             edition: {
+               activity: {
+                 'request_type' => "send_fact_check",
+                 "email_addresses" => ""
+               }
+             }
+           }
       assert_equal "I failed", flash[:danger]
     end
 
@@ -158,14 +158,14 @@ class EditionsControllerTest < ActionController::TestCase
       }
 
       post :progress,
-        params: {
-          id: @guide.id.to_s,
-          edition: {
-            activity: {
-              "request_type" => 'schedule_for_publishing'
-            }.merge(publish_at_params)
-          }
-        }
+           params: {
+             id: @guide.id.to_s,
+             edition: {
+               activity: {
+                 "request_type" => 'schedule_for_publishing'
+               }.merge(publish_at_params)
+             }
+           }
     end
   end
 
@@ -178,10 +178,10 @@ class EditionsControllerTest < ActionController::TestCase
       bob = FactoryBot.create(:user)
 
       post :update,
-        params: {
-          id: @guide.id,
-          edition: { assigned_to_id: bob.id }
-        }
+           params: {
+             id: @guide.id,
+             edition: { assigned_to_id: bob.id }
+           }
 
       @guide.reload
       assert_equal bob, @guide.assigned_to
@@ -192,10 +192,10 @@ class EditionsControllerTest < ActionController::TestCase
       @user.assign(@guide, bob)
 
       post :update,
-        params: {
-          id: @guide.id,
-          edition: { assigned_to_id: bob.id }
-        }
+           params: {
+             id: @guide.id,
+             edition: { assigned_to_id: bob.id }
+           }
 
       @guide.reload
       assert_equal 1, (@guide.actions.count { |a| a.request_type == Action::ASSIGN })
@@ -207,10 +207,10 @@ class EditionsControllerTest < ActionController::TestCase
       @guide.expects(:errors).at_least_once.returns(title: %w[values])
 
       post :update,
-        params: {
-          id: @guide.id,
-          edition: { assigned_to_id: "" }
-        }
+           params: {
+             id: @guide.id,
+             edition: { assigned_to_id: "" }
+           }
       assert_response 200
     end
 
@@ -226,17 +226,17 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "save the edition changes while performing an activity" do
       post :update,
-        params: {
-          id: @guide.id,
-          commit: "Send to 2nd pair of eyes",
-          edition: {
-            title: "Updated title",
-            activity_request_review_attributes: {
-              request_type: "request_review",
-              comment: "Please review the updated title"
-            }
-          }
-        }
+           params: {
+             id: @guide.id,
+             commit: "Send to 2nd pair of eyes",
+             edition: {
+               title: "Updated title",
+               activity_request_review_attributes: {
+                 request_type: "request_review",
+                 comment: "Please review the updated title"
+               }
+             }
+           }
 
       @guide.reload
       assert_equal "Updated title", @guide.title
@@ -248,12 +248,12 @@ class EditionsControllerTest < ActionController::TestCase
       UpdateWorker.expects(:perform_async).with(@guide.id.to_s, false)
 
       post :update,
-        params: {
-          id: @guide.id,
-          edition: {
-            title: "Updated title"
-          }
-        }
+           params: {
+             id: @guide.id,
+             edition: {
+               title: "Updated title"
+             }
+           }
     end
   end
 
@@ -273,10 +273,10 @@ class EditionsControllerTest < ActionController::TestCase
       bob = FactoryBot.create(:user, name: "bob")
 
       put :review,
-        params: {
-          id: @guide.id,
-          edition: { reviewer: bob.name }
-        }
+          params: {
+            id: @guide.id,
+            edition: { reviewer: bob.name }
+          }
 
       @guide.reload
       assert_equal bob.name, @guide.reviewer
@@ -416,10 +416,10 @@ class EditionsControllerTest < ActionController::TestCase
         }
       }
       put :update,
-        params: {
-          id: @edition.id,
-          edition: atts
-        }
+          params: {
+            id: @edition.id,
+            edition: atts
+          }
       assert_redirected_to edition_path(@edition)
 
       @edition.reload

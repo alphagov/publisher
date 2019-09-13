@@ -55,7 +55,7 @@ class AreaTest < ActiveSupport::TestCase
       )
 
       assert_equal ["London", "Hackney Borough Council"],
-        Area.areas_for_edition(edition).map(&:name)
+                   Area.areas_for_edition(edition).map(&:name)
     end
 
     should "not return duplicate Areas" do
@@ -64,7 +64,7 @@ class AreaTest < ActiveSupport::TestCase
       )
 
       assert_equal ["London", "Hackney Borough Council"],
-        Area.areas_for_edition(edition).map(&:name)
+                   Area.areas_for_edition(edition).map(&:name)
     end
   end
 

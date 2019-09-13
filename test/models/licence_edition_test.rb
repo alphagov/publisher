@@ -75,13 +75,13 @@ class LicenceEditionTest < ActiveSupport::TestCase
 
   should "clone extra fields when cloning edition" do
     licence = FactoryBot.create(:licence_edition,
-                                 panopticon_id: @artefact.id,
-                                 state: "published",
-                                 licence_identifier: "1234",
-                                 licence_short_description: "Short description of licence",
-                                 licence_overview: "Overview to be cloned",
-                                 will_continue_on: "Continuation text to be cloned",
-                                 continuation_link: "http://www.gov.uk")
+                                panopticon_id: @artefact.id,
+                                state: "published",
+                                licence_identifier: "1234",
+                                licence_short_description: "Short description of licence",
+                                licence_overview: "Overview to be cloned",
+                                will_continue_on: "Continuation text to be cloned",
+                                continuation_link: "http://www.gov.uk")
     new_licence = licence.build_clone
 
     assert_equal licence.licence_identifier, new_licence.licence_identifier
