@@ -434,8 +434,8 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           within ".options > div:nth-of-type(2)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", with: "That is not the question")
             assert page.has_select?("next-node-list",
-              options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
-              selected: "Outcome 2 (Outcome Two)")
+                                    options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+                                    selected: "Outcome 2 (Outcome Two)")
           end
         end
 

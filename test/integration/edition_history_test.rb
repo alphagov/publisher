@@ -131,7 +131,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
       should "not be carried forward to new editions" do
         @edition = FactoryBot.create(:answer_edition,
-                                      state: "published")
+                                     state: "published")
         @edition.actions.create(request_type: Action::IMPORTANT_NOTE,
                                 comment: "This is an important note. Take note.")
 

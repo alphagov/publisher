@@ -54,9 +54,9 @@ class Artefact
                                     simple_smart_answer
                                     transaction
                                     video),
-    "smartanswers"            => ["smart-answer"],
-    "custom-application"      => ["custom-application"], # In this case the owning_app is overriden. eg calendars, licencefinder
-    "travel-advice-publisher" => ["travel-advice"],
+    "smartanswers"            => %w[smart-answer],
+    "custom-application"      => %w[custom-application], # In this case the owning_app is overriden. eg calendars, licencefinder
+    "travel-advice-publisher" => %w[travel-advice],
     "specialist-publisher"    => %w[manual],
     "finder-api"              => %w(finder
                                     finder_email_signup),

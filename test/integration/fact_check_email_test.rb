@@ -84,8 +84,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),
-          fact_check_mail_for(answer2, body: "Second Message"),
-          fact_check_mail_for(answer1, body: "Third Message")
+      fact_check_mail_for(answer2, body: "Second Message"),
+      fact_check_mail_for(answer1, body: "Third Message")
     )
 
     handler = FactCheckEmailHandler.new(fact_check_config)
@@ -123,7 +123,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
   test "should look for fact-check address cc or bcc fields" do
     edition_cc = FactoryBot.create(:answer_edition, state: 'fact_check')
     # Test that it ignores irrelevant recipients
-    message_cc  = fact_check_mail_for(edition_cc, to: "something@example.com", cc: edition_cc.fact_check_email_address)
+    message_cc = fact_check_mail_for(edition_cc, to: "something@example.com", cc: edition_cc.fact_check_email_address)
 
     edition_bcc = FactoryBot.create(:answer_edition, state: 'fact_check')
     # Test that it doesn't fail on a nil recipient field
@@ -145,7 +145,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),
-          fact_check_mail_for(answer2, body: "Second Message")
+      fact_check_mail_for(answer2, body: "Second Message")
     )
 
     handler = FactCheckEmailHandler.new(fact_check_config)

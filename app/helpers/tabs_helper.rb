@@ -9,10 +9,10 @@ module TabsHelper
 
   def tab_link(tab, edition_path)
     link_to tab.title, tab.path(edition_path),
-      'data-target' => "##{tab.name}",
-      'data-toggle' => 'tab',
-      'role' => 'tab',
-      'aria-controls' => tab.name
+            'data-target' => "##{tab.name}",
+            'data-toggle' => 'tab',
+            'role' => 'tab',
+            'aria-controls' => tab.name
   end
 
   def tabs

@@ -28,7 +28,7 @@ class TaggingTest < JavascriptIntegrationTest
           topics: [],
           organisations: [],
           meets_user_needs: [],
-          mainstream_browse_pages: ["CONTENT-ID-RTI", "CONTENT-ID-VAT"],
+          mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
           ordered_related_items: [],
           parent: [],
         },
@@ -47,7 +47,7 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: ['CONTENT-ID-DISTILL', 'CONTENT-ID-FIELDS'],
+          topics: %w[CONTENT-ID-DISTILL CONTENT-ID-FIELDS],
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: [],
@@ -69,7 +69,7 @@ class TaggingTest < JavascriptIntegrationTest
         @content_id,
         links: {
           topics: [],
-          organisations: ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
+          organisations: %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
           meets_user_needs: [],
           mainstream_browse_pages: [],
           ordered_related_items: [],
@@ -91,7 +91,7 @@ class TaggingTest < JavascriptIntegrationTest
         links: {
           topics: [],
           organisations: [],
-          meets_user_needs: ['CONTENT-ID-USER-NEED'],
+          meets_user_needs: %w[CONTENT-ID-USER-NEED],
           mainstream_browse_pages: [],
           ordered_related_items: [],
           parent: [],
@@ -152,7 +152,7 @@ class TaggingTest < JavascriptIntegrationTest
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: [],
-          ordered_related_items: ['CONTENT-ID-VAT-RETURNS', 'CONTENT-ID-RECLAIM-VAT'],
+          ordered_related_items: %w[CONTENT-ID-VAT-RETURNS CONTENT-ID-RECLAIM-VAT],
           parent: [],
         },
         previous_version: 0
@@ -184,7 +184,7 @@ class TaggingTest < JavascriptIntegrationTest
           meets_user_needs: [],
           mainstream_browse_pages: [],
           ordered_related_items: [],
-          parent: ['CONTENT-ID-RTI'],
+          parent: %w[CONTENT-ID-RTI],
         },
         previous_version: 0
       )
@@ -233,12 +233,12 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: ['CONTENT-ID-FIELDS', 'CONTENT-ID-WELLS'],
+          topics: %w[CONTENT-ID-FIELDS CONTENT-ID-WELLS],
           organisations: [],
           meets_user_needs: [],
-          mainstream_browse_pages: ['CONTENT-ID-RTI', 'CONTENT-ID-VAT'],
+          mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
           ordered_related_items: [],
-          parent: ['CONTENT-ID-CAPITAL'],
+          parent: %w[CONTENT-ID-CAPITAL],
         },
         previous_version: 0
       )
@@ -248,9 +248,9 @@ class TaggingTest < JavascriptIntegrationTest
       publishing_api_has_links(
         "content_id" => @content_id,
         "links" => {
-          topics: ['CONTENT-ID-WELLS'],
-          mainstream_browse_pages: ['CONTENT-ID-RTI'],
-          parent: ['CONTENT-ID-RTI'],
+          topics: %w[CONTENT-ID-WELLS],
+          mainstream_browse_pages: %w[CONTENT-ID-RTI],
+          parent: %w[CONTENT-ID-RTI],
         },
       )
 

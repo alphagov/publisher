@@ -106,8 +106,8 @@ FactoryBot.define do
 
       link_check_reports do
         [FactoryBot.build(:link_check_report, :with_links,
-                                               batch_id: batch_id,
-                                               link_uris: link_uris)]
+                          batch_id: batch_id,
+                          link_uris: link_uris)]
       end
     end
   end

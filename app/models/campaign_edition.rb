@@ -14,34 +14,34 @@ class CampaignEdition < Edition
 
   GOVSPEAK_FIELDS = [:body].freeze
 
-  BRAND_COLOURS = [
-    "attorney-generals-office",
-    "cabinet-office",
-    "department-for-business-innovation-skills",
-    "department-for-communities-and-local-government",
-    "department-for-culture-media-sport",
-    "department-for-education",
-    "department-for-environment-food-rural-affairs",
-    "department-for-international-development",
-    "department-for-transport",
-    "department-for-work-pensions",
-    "department-of-energy-climate-change",
-    "department-of-health",
-    "foreign-commonwealth-office",
-    "hm-government",
-    "hm-revenue-customs",
-    "hm-treasury",
-    "home-office",
-    "ministry-of-defence",
-    "ministry-of-justice",
-    "northern-ireland-office",
-    "office-of-the-advocate-general-for-scotland",
-    "office-of-the-leader-of-the-house-of-lords",
-    "scotland-office",
-    "the-office-of-the-leader-of-the-house-of-commons",
-    "uk-export-finance",
-    "uk-trade-investment",
-    "wales-office"
+  BRAND_COLOURS = %w[
+    attorney-generals-office
+    cabinet-office
+    department-for-business-innovation-skills
+    department-for-communities-and-local-government
+    department-for-culture-media-sport
+    department-for-education
+    department-for-environment-food-rural-affairs
+    department-for-international-development
+    department-for-transport
+    department-for-work-pensions
+    department-of-energy-climate-change
+    department-of-health
+    foreign-commonwealth-office
+    hm-government
+    hm-revenue-customs
+    hm-treasury
+    home-office
+    ministry-of-defence
+    ministry-of-justice
+    northern-ireland-office
+    office-of-the-advocate-general-for-scotland
+    office-of-the-leader-of-the-house-of-lords
+    scotland-office
+    the-office-of-the-leader-of-the-house-of-commons
+    uk-export-finance
+    uk-trade-investment
+    wales-office
   ].freeze
   CRESTS = {
     "No identity" => "no-identity",

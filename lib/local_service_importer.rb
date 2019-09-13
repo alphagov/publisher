@@ -53,9 +53,9 @@ private
   def providing_tier(row)
     value = row['Providing Tier']
     case value
-    when "county/unitary", "district/unitary" then
+    when "county/unitary", "district/unitary"
       value.split('/')
-    when "all" then
+    when "all"
       %w{district unitary county}
     else
       raise "Illegal 'Providing Tier' '#{value}'"

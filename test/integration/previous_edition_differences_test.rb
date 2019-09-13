@@ -8,8 +8,8 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
     stub_holidays_used_by_fact_check
 
     @first_edition = FactoryBot.create(:answer_edition,
-                                        state: "published",
-                                        body: "test body 1")
+                                       state: "published",
+                                       body: "test body 1")
   end
 
   context "First edition" do

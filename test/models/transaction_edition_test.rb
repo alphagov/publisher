@@ -9,12 +9,12 @@ class TransactionEditionTest < ActiveSupport::TestCase
     should "only allow valid Google Analytics profiles" do
       transaction = FactoryBot.create(:transaction_edition, panopticon_id: @artefact.id)
 
-      ['invalid', 'ua-12345', 'UA-1234A-1'].each do |id|
+      %w[invalid ua-12345 UA-1234A-1].each do |id|
         transaction.department_analytics_profile = id
         refute transaction.valid?
       end
 
-      ['ua-123456-1', 'UA-00-10'].each do |id|
+      %w[ua-123456-1 UA-00-10].each do |id|
         transaction.department_analytics_profile = id
         assert transaction.valid?
       end

@@ -13,28 +13,28 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
 
       # Create an edition.
       post "/editions",
-        params: {
-          edition: {
-            panopticon_id: artefact.id,
-            kind: "answer",
-            title: "a title"
-          }
-        },
-        headers: inbound_headers
+           params: {
+             edition: {
+               panopticon_id: artefact.id,
+               kind: "answer",
+               title: "a title"
+             }
+           },
+           headers: inbound_headers
 
       assert_equal 302, response.status
       edition = Edition.last
 
       # Transition the edition to 'in_review'
       post "/editions/#{edition.id}/progress",
-        params: {
-          edition: {
-            activity: {
-              request_type: :request_review
-            }
-          }
-        },
-        headers: inbound_headers
+           params: {
+             edition: {
+               activity: {
+                 request_type: :request_review
+               }
+             }
+           },
+           headers: inbound_headers
 
       assert_equal 302, response.status
 
@@ -42,28 +42,28 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
 
       # Transition the edition to 'ready'
       post "/editions/#{edition.id}/progress",
-        params:
-          {
-            edition: {
-              activity: {
-                request_type: :approve_review
-              }
-            }
-          },
-          headers: inbound_headers
+           params:
+             {
+               edition: {
+                 activity: {
+                   request_type: :approve_review
+                 }
+               }
+             },
+             headers: inbound_headers
 
       assert_equal 302, response.status
 
       # Transition the edition to 'published'
       post "/editions/#{edition.id}/progress",
-        params: {
-            edition: {
-              activity: {
-                request_type: :publish
-              }
-            }
-          },
-          headers: inbound_headers
+           params: {
+               edition: {
+                 activity: {
+                   request_type: :publish
+                 }
+               }
+             },
+             headers: inbound_headers
 
       assert_equal 302, response.status
       worker_classes = Sidekiq::Worker.jobs.collect { |j| j["class"].constantize }.uniq

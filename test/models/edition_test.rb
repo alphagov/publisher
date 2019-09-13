@@ -7,9 +7,9 @@ class EditionTest < ActiveSupport::TestCase
 
   def template_answer(version_number = 1)
     artefact = FactoryBot.create(:artefact,
-        kind: "answer",
-        name: "Foo bar",
-        owning_app: "publisher")
+                                 kind: "answer",
+                                 name: "Foo bar",
+                                 owning_app: "publisher")
 
     AnswerEdition.create(state: "ready", slug: "childcare", panopticon_id: artefact.id,
       title: "Child care stuff", body: "Lots of info", version_number: version_number)
@@ -151,10 +151,10 @@ class EditionTest < ActiveSupport::TestCase
 
   test "it should build a clone" do
     edition = FactoryBot.create(:guide_edition,
-                                  state: "published",
-                                  panopticon_id: @artefact.id,
-                                  version_number: 1,
-                                  overview: "I am a test overview")
+                                state: "published",
+                                panopticon_id: @artefact.id,
+                                version_number: 1,
+                                overview: "I am a test overview")
     clone_edition = edition.build_clone
     assert_equal "I am a test overview", clone_edition.overview
     assert_equal 2, clone_edition.version_number
@@ -162,8 +162,8 @@ class EditionTest < ActiveSupport::TestCase
 
   test "cloning can only occur from a published edition" do
     edition = FactoryBot.create(:guide_edition,
-                                  panopticon_id: @artefact.id,
-                                  version_number: 1)
+                                panopticon_id: @artefact.id,
+                                version_number: 1)
     assert_raise(RuntimeError) do
       edition.build_clone
     end
@@ -171,14 +171,14 @@ class EditionTest < ActiveSupport::TestCase
 
   test "cloning can only occur from a published edition with no subsequent in progress siblings" do
     edition = FactoryBot.create(:guide_edition,
-                                  panopticon_id: @artefact.id,
-                                  state: "published",
-                                  version_number: 1)
+                                panopticon_id: @artefact.id,
+                                state: "published",
+                                version_number: 1)
 
     FactoryBot.create(:guide_edition,
-                        panopticon_id: @artefact.id,
-                        state: "draft",
-                        version_number: 2)
+                      panopticon_id: @artefact.id,
+                      state: "draft",
+                      version_number: 2)
 
     assert_raise(RuntimeError) do
       edition.build_clone
@@ -187,13 +187,13 @@ class EditionTest < ActiveSupport::TestCase
 
   test "cloning from an earlier edition should give you a safe version number" do
     edition = FactoryBot.create(:guide_edition,
-                                  state: "published",
-                                  panopticon_id: @artefact.id,
-                                  version_number: 1)
+                                state: "published",
+                                panopticon_id: @artefact.id,
+                                version_number: 1)
     FactoryBot.create(:guide_edition,
-                        state: "published",
-                        panopticon_id: @artefact.id,
-                        version_number: 2)
+                      state: "published",
+                      panopticon_id: @artefact.id,
+                      version_number: 2)
 
     clone1 = edition.build_clone
     assert_equal 3, clone1.version_number
@@ -218,11 +218,11 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from GuideEdition into AnswerEdition" do
     edition = FactoryBot.create(
       :guide_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
-        video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
+      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -260,12 +260,12 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from TransactionEdition into AnswerEdition" do
     edition = FactoryBot.create(
       :transaction_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
-        more_information: "More information",
-        alternate_methods: "Alternate methods"
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
+      more_information: "More information",
+      alternate_methods: "Alternate methods"
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -280,10 +280,10 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from SimpleSmartAnswerEdition into AnswerEdition" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -298,11 +298,11 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from AnswerEdition into TransactionEdition" do
     edition = FactoryBot.create(
       :answer_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
-        body: "Test body"
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
+      body: "Test body"
     )
     new_edition = edition.build_clone TransactionEdition
 
@@ -336,11 +336,11 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from GuideEdition into TransactionEdition" do
     edition = FactoryBot.create(
       :guide_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
-        video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
+      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
     )
     new_edition = edition.build_clone TransactionEdition
 
@@ -355,10 +355,10 @@ class EditionTest < ActiveSupport::TestCase
   test "Cloning from AnswerEdition into GuideEdition" do
     edition = FactoryBot.create(
       :answer_edition,
-        state: "published",
-        panopticon_id: @artefact.id,
-        version_number: 1,
-        overview: "I am a test overview",
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
     )
     new_edition = edition.build_clone GuideEdition
 
@@ -399,10 +399,10 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should create a publication based on data imported from panopticon" do
     artefact = FactoryBot.create(:artefact,
-        slug: "foo-bar",
-        kind: "answer",
-        name: "Foo bar",
-        owning_app: "publisher",)
+                                 slug: "foo-bar",
+                                 kind: "answer",
+                                 name: "Foo bar",
+                                 owning_app: "publisher",)
     artefact.save!
 
     Artefact.find(artefact.id)
@@ -417,16 +417,16 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should not change edition metadata if archived" do
     artefact = FactoryBot.create(:artefact,
-        slug: "foo-bar",
-        kind: "answer",
-        name: "Foo bar",
-        owning_app: "publisher",)
+                                 slug: "foo-bar",
+                                 kind: "answer",
+                                 name: "Foo bar",
+                                 owning_app: "publisher",)
 
     guide = FactoryBot.create(:guide_edition,
-      panopticon_id: artefact.id,
-      title: "Original title",
-      slug: "original-title",
-      state: "archived")
+                              panopticon_id: artefact.id,
+                              title: "Original title",
+                              slug: "original-title",
+                              state: "archived")
     artefact.slug = "new-slug"
     artefact.save
 
@@ -841,10 +841,10 @@ class EditionTest < ActiveSupport::TestCase
   test "should denormalise a creator's name when an edition is created" do
     user = FactoryBot.create(:user)
     artefact = FactoryBot.create(:artefact,
-        slug: "foo-bar",
-        kind: "answer",
-        name: "Foo bar",
-        owning_app: "publisher",)
+                                 slug: "foo-bar",
+                                 kind: "answer",
+                                 name: "Foo bar",
+                                 owning_app: "publisher",)
 
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user)
 

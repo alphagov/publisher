@@ -9,7 +9,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
-    alice   = FactoryBot.create(:user, name: "Alice", uid: "alice")
+    alice = FactoryBot.create(:user, name: "Alice", uid: "alice")
 
     bob     = FactoryBot.create(:user, name: "Bob", uid: "bob")
     charlie = FactoryBot.create(:user, name: "Charlie", uid: "charlie")

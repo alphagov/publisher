@@ -308,9 +308,9 @@ class Edition
     raise "Artefact not found" unless metadata
 
     importing_user.create_edition(metadata.kind.to_sym,
-      panopticon_id: metadata.id,
-      slug: metadata.slug,
-      title: metadata.name)
+                                  panopticon_id: metadata.id,
+                                  slug: metadata.slug,
+                                  title: metadata.name)
   end
 
   def self.find_and_identify(slug, edition)

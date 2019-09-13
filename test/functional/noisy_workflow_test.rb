@@ -56,9 +56,9 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   test "should send an email on fact check received" do
     user = User.create(name: "Ben")
     guide = user.create_edition(:guide,
-      panopticon_id: FactoryBot.create(:artefact).id,
-      overview: 'My Overview',
-      title: 'My Title', slug: 'my-title-b')
+                                panopticon_id: FactoryBot.create(:artefact).id,
+                                overview: 'My Overview',
+                                title: 'My Title', slug: 'my-title-b')
 
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
     receive_fact_check(user, guide)

@@ -135,12 +135,12 @@ class ServiceSignInTest < ActiveSupport::TestCase
     context "[:choose_sign_in]" do
       should "[:title]" do
         assert_equal @content[:choose_sign_in][:title],
-          result[:details][:choose_sign_in][:title]
+                     result[:details][:choose_sign_in][:title]
       end
 
       should "[:slug]" do
         assert_equal @content[:choose_sign_in][:slug],
-          result[:details][:choose_sign_in][:slug]
+                     result[:details][:choose_sign_in][:slug]
       end
 
       context "[:description]" do
@@ -222,12 +222,12 @@ class ServiceSignInTest < ActiveSupport::TestCase
       context "when create_new_account is present in the file" do
         should "[:title]" do
           assert_equal @content[:create_new_account][:title],
-          result[:details][:create_new_account][:title]
+                       result[:details][:create_new_account][:title]
         end
 
         should "[:slug]" do
           assert_equal @content[:create_new_account][:slug],
-          result[:details][:create_new_account][:slug]
+                       result[:details][:create_new_account][:slug]
         end
 
         should "[:body]" do

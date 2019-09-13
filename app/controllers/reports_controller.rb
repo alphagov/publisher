@@ -46,9 +46,9 @@ private
   def send_report(report)
     if File.exist?(report_location(report))
       send_file report_location(report),
-        filename: "#{report}-#{mtime_for(report).strftime('%Y%m%d%H%M%S')}.csv",
-        type: "text/csv",
-        disposition: "attachment"
+                filename: "#{report}-#{mtime_for(report).strftime('%Y%m%d%H%M%S')}.csv",
+                type: "text/csv",
+                disposition: "attachment"
     else
       head(:not_found)
     end

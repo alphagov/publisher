@@ -19,48 +19,48 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
 
     #edition published 1
     FactoryBot.create(:edition,
-      title: "Cancel your visa, immigration or citizenship application",
-      slug: "cancel-visa",
-      state: "published",
-      created_at: "2015-04-01 14:08:36",
-      updated_at: "2015-04-02 14:08:36",
-      actions: [publish_action])
+                      title: "Cancel your visa, immigration or citizenship application",
+                      slug: "cancel-visa",
+                      state: "published",
+                      created_at: "2015-04-01 14:08:36",
+                      updated_at: "2015-04-02 14:08:36",
+                      actions: [publish_action])
 
     #edition published 2
     FactoryBot.create(:edition,
-      title: "Family Visitor visa",
-      slug: "family-visit-visa",
-      state: "published",
-      created_at:  "2015-04-29 16:16:03",
-      updated_at:  "2015-04-29 16:16:03",
-      actions: [publish_action])
+                      title: "Family Visitor visa",
+                      slug: "family-visit-visa",
+                      state: "published",
+                      created_at:  "2015-04-29 16:16:03",
+                      updated_at:  "2015-04-29 16:16:03",
+                      actions: [publish_action])
 
     #edition archived
     FactoryBot.create(:edition,
-      title: "The national curriculum",
-      slug: "national-curriculum",
-      state: "archived",
-      created_at:  "2015-04-15 16:16:03",
-      updated_at:  "2015-04-15 16:16:03",
-      actions: [publish_action])
+                      title: "The national curriculum",
+                      slug: "national-curriculum",
+                      state: "archived",
+                      created_at:  "2015-04-15 16:16:03",
+                      updated_at:  "2015-04-15 16:16:03",
+                      actions: [publish_action])
 
     #edition out of dates
     FactoryBot.create(:edition,
-      title: "Family Visitor visa 2",
-      slug: "family-visit-visa-2",
-      state: "published",
-      created_at:  "2015-04-15 16:16:03",
-      updated_at:  "2015-04-15 16:16:03",
-      actions: [out_of_dates_action])
+                      title: "Family Visitor visa 2",
+                      slug: "family-visit-visa-2",
+                      state: "published",
+                      created_at:  "2015-04-15 16:16:03",
+                      updated_at:  "2015-04-15 16:16:03",
+                      actions: [out_of_dates_action])
 
     #edition not published
     FactoryBot.create(:edition,
-      title: "Family Visitor visa 3",
-      slug: "family-visit-visa-3",
-      state: "ready",
-      created_at:  "2015-04-03 16:16:03",
-      updated_at:  "2015-04-03 16:16:03",
-      actions: [create_action])
+                      title: "Family Visitor visa 3",
+                      slug: "family-visit-visa-3",
+                      state: "ready",
+                      created_at:  "2015-04-03 16:16:03",
+                      updated_at:  "2015-04-03 16:16:03",
+                      actions: [create_action])
 
     csv = DatesReportPresenter.new(Date.parse("2015-04-01"), Date.parse("2015-04-30")).to_csv
     data = CSV.parse(csv, headers: true)

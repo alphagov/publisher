@@ -8,7 +8,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
 
     @importer = LicenceContentImporter.new('data/foo', @user.name)
     @row = CSV::Row.new(%w(OID NAME LONGDESC),
-      [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
+                        [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
   end
 
   def test_report
