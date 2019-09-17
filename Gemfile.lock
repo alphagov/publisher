@@ -447,7 +447,7 @@ GEM
       activesupport
       sidekiq (>= 2.6)
       statsd-ruby (>= 1.1.0)
-    simplecov (0.17.0)
+    simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
@@ -559,7 +559,7 @@ DEPENDENCIES
   select2-rails (= 3.5.9.1)
   selectize-rails (= 0.12.6)
   shoulda (= 3.6.0)
-  simplecov (~> 0.17.0)
+  simplecov (~> 0.17.1)
   simplecov-rcov (~> 0.2.3)
   state_machines (~> 0.4)
   state_machines-graphviz
