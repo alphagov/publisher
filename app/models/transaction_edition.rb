@@ -4,6 +4,8 @@ require "varianted"
 class TransactionEdition < Edition
   include Varianted
 
+  strip_attributes only: :link
+
   field :introduction, type: String
   field :will_continue_on, type: String
   field :link, type: String
