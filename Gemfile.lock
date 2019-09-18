@@ -472,6 +472,8 @@ GEM
       mongoid (>= 4.0.0)
       state_machines-activemodel (>= 0.5.0)
     statsd-ruby (1.4.0)
+    strip_attributes (1.9.0)
+      activemodel (>= 3.0, < 7.0)
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.9)
@@ -564,6 +566,7 @@ DEPENDENCIES
   state_machines (~> 0.4)
   state_machines-graphviz
   state_machines-mongoid (~> 0.1)
+  strip_attributes (~> 1.9)
   timecop (= 0.9.1)
   uglifier (= 4.1.20)
   webmock (~> 3.7.4)
