@@ -28,5 +28,11 @@ class ArtefactExternalLinkTest < ActiveSupport::TestCase
       link = ArtefactExternalLink.new(title: "Foo", url: "https://bar.com")
       assert link.valid?
     end
+
+    should "trim whitespace from URLs" do
+      link = ArtefactExternalLink.new(title: "Test", url: " http://example.org ")
+      assert link.valid?
+      assert link.url == "http://example.org"
+    end
   end
 end
