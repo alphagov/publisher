@@ -35,16 +35,6 @@ class SlugTest < ActiveSupport::TestCase
     end
   end
 
-  context "Foreign travel advice pages" do
-    should "allow a travel-advice page to start with 'foreign-travel-advice/'" do
-      assert document_with_slug("foreign-travel-advice/aruba", kind: "travel-advice").valid?
-    end
-
-    should "not allow other types to start with 'foreign-travel-advice/'" do
-      refute document_with_slug("foreign-travel-advice/aruba", kind: "answer").valid?
-    end
-  end
-
   context "Help pages" do
     should "must start with help/" do
       refute document_with_slug("test", kind: "help_page").valid?

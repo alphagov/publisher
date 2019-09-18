@@ -21,12 +21,6 @@ class EditionLinkExtractorTest < ActiveSupport::TestCase
       assert_same_elements ["http://example.net/"], result
     end
 
-    should "extract links from editions with links in parts and govspeak" do
-      result = call_edition_link_extractor(edition_with_links_in_govspeak_fields_and_parts)
-
-      assert_same_elements ["https://www.gov.uk", "http://example.com"], result
-    end
-
     should "convert absolute paths to full urls" do
       result = call_edition_link_extractor(edition_with_absolute_paths_in_govspeak_fields)
 
@@ -52,9 +46,5 @@ class EditionLinkExtractorTest < ActiveSupport::TestCase
 
   def edition_with_links_in_parts
     FactoryBot.create(:guide_edition_with_two_govspeak_parts)
-  end
-
-  def edition_with_links_in_govspeak_fields_and_parts
-    FactoryBot.create(:travel_advice_edition_with_parts)
   end
 end

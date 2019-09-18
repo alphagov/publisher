@@ -3,7 +3,6 @@ class SlugValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     validators = [
       DonePageValidator,
-      ForeignTravelAdvicePageValidator,
       HelpPageValidator,
       FinderEmailSignupValidator,
       ManualPageValidator,
@@ -55,16 +54,6 @@ class SlugValidator < ActiveModel::EachValidator
 
     def validate!
       record.errors[attribute] << "Done page slugs must have a done/ prefix" unless starts_with?("done/")
-      url_after_first_slash_is_valid_slug!
-    end
-  end
-
-  class ForeignTravelAdvicePageValidator < InstanceValidator
-    def applicable?
-      starts_with?("foreign-travel-advice/") && of_kind?("travel-advice")
-    end
-
-    def validate!
       url_after_first_slash_is_valid_slug!
     end
   end
