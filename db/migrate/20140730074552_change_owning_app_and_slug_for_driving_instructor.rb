@@ -10,7 +10,7 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
     if changeling
       # change the kind and owning app
       puts "Updating owning app, kind and rendering app"
-      changeling.update_attributes(kind: "simple_smart_answer", owning_app: "publisher", rendering_app: "frontend")
+      changeling.update(kind: "simple_smart_answer", owning_app: "publisher", rendering_app: "frontend")
 
       # update the slug on all editions
       puts "Updating the slug on all editions"
@@ -35,7 +35,7 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
     if reverse_changeling
       # change the kind and owning app
 
-      reverse_changeling.update_attributes(kind: "smart-answer", owning_app: "smartanswers", rendering_app: nil)
+      reverse_changeling.update(kind: "smart-answer", owning_app: "smartanswers", rendering_app: nil)
       puts "Reverting owning app, kind and rendering app"
 
       # update the slug on all editions

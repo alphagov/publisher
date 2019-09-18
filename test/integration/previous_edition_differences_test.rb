@@ -24,7 +24,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   context "Subsequent editions" do
     setup do
       @second_edition = @first_edition.build_clone(AnswerEdition)
-      @second_edition.update_attributes(body: "Test Body 2")
+      @second_edition.update(body: "Test Body 2")
       @second_edition.reload
 
       visit_edition @second_edition
@@ -56,7 +56,7 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   context "Editions scheduled for publishing" do
     setup do
       @second_edition = @first_edition.build_clone(AnswerEdition)
-      @second_edition.update_attributes(body: "Test Body 2")
+      @second_edition.update(body: "Test Body 2")
       @second_edition.update_attribute(:state, :scheduled_for_publishing)
     end
 

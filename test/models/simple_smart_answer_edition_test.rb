@@ -88,7 +88,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     assert_equal 2, edition.nodes.size
 
-    edition.update_attributes(nodes_attributes: {
+    edition.update(nodes_attributes: {
         "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" }
       })
     edition.reload
@@ -138,7 +138,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
   end
 
-  context "update_attributes method" do
+  context "update method" do
     setup do
       @edition = FactoryBot.create(:simple_smart_answer_edition)
       @edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
@@ -150,7 +150,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "update edition and nested node and option attributes" do
-      @edition.update_attributes(title: "Smarter than the average answer",
+      @edition.update(title: "Smarter than the average answer",
         body: "No developers were involved in the changing of this copy",
         nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
@@ -167,7 +167,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "create and destroy nodes and options using nested attributes" do
-      @edition.update_attributes(nodes_attributes: {
+      @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
               "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" }
             } },
@@ -189,7 +189,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "ignore new nodes if they are to be destroyed" do
-      @edition.update_attributes(nodes_attributes: {
+      @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
           "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" }
         })

@@ -37,12 +37,12 @@ class SimpleSmartAnswerEdition < Edition
 
   # Workaround mongoid conflicting mods error
   # See https://jira.mongodb.org/browse/MONGOID-1220
-  # Override update_attributes so that nested nodes are updated individually.
+  # Override update so that nested nodes are updated individually.
   # This get around the problem of mongoid issuing a query with conflicting modifications
   # to the same document.
-  alias_method :original_update_attributes, :update_attributes
+  alias_method :original_update, :update
 
-  def update_attributes(attributes)
+  def update(attributes)
     nodes_attrs = attributes.delete(:nodes_attributes)
     if nodes_attrs
       nodes_attrs.each do |_index, node_attrs|
@@ -53,7 +53,7 @@ class SimpleSmartAnswerEdition < Edition
           if destroy_in_attrs?(node_attrs)
             node.destroy
           else
-            node.update_attributes(node_attrs)
+            node.update(node_attrs)
           end
         else
           nodes << Node.new(node_attrs) unless destroy_in_attrs?(node_attrs)
@@ -61,7 +61,7 @@ class SimpleSmartAnswerEdition < Edition
       end
     end
 
-    original_update_attributes(attributes)
+    original_update(attributes)
   end
 
   def initial_node

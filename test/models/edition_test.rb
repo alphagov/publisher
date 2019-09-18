@@ -1013,8 +1013,8 @@ class EditionTest < ActiveSupport::TestCase
                                                      version_number: 1)
       edition2 = edition1.build_clone
 
-      edition2.update_attributes!(major_change: true, change_note: 'changed', state: 'published')
-      edition1.update_attributes!(state: 'archived')
+      edition2.update!(major_change: true, change_note: 'changed', state: 'published')
+      edition1.update!(state: 'archived')
 
       edition3 = edition2.build_clone
 
@@ -1057,9 +1057,9 @@ class EditionTest < ActiveSupport::TestCase
       edition2 = edition1.build_clone
       Timecop.freeze(1.minute.ago) do
         #added to allow significant amount of time between edition updated_at values
-        edition2.update_attributes!(state: 'published', major_change: false)
+        edition2.update!(state: 'published', major_change: false)
       end
-      edition1.update_attributes!(state: 'archived', major_change: false)
+      edition1.update!(state: 'archived', major_change: false)
 
       assert_in_delta edition1.updated_at, edition2.public_updated_at, 1.second
       assert_not_in_delta edition2.updated_at, edition2.public_updated_at, 1.second
@@ -1080,7 +1080,7 @@ class EditionTest < ActiveSupport::TestCase
         updated_at: 2.minutes.ago,
         state: 'published')
       edition2 = edition1.build_clone
-      edition2.update_attributes!(state: 'archived', major_change: false)
+      edition2.update!(state: 'archived', major_change: false)
       edition4 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
         state: 'draft')
@@ -1097,10 +1097,10 @@ class EditionTest < ActiveSupport::TestCase
         updated_at: 2.minutes.ago,
         state: 'published')
       edition2 = edition1.build_clone
-      edition1.update_attributes!(state: 'archived', major_change: false)
-      edition2.update_attributes!(state: 'published', major_change: false)
+      edition1.update!(state: 'archived', major_change: false)
+      edition2.update!(state: 'published', major_change: false)
       edition3 = edition2.build_clone
-      edition3.update_attributes!(state: 'archived', major_change: false)
+      edition3.update!(state: 'archived', major_change: false)
 
       assert_equal edition1, edition1.first_edition_of_published
       assert_equal edition1, edition2.first_edition_of_published

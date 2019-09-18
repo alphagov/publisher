@@ -72,7 +72,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
   test "updating attributes as a user should record a user action" do
     user = FactoryBot.create :user
     updates = { description: "Shiny shiny description" }
-    @artefact.update_attributes_as user, updates
+    @artefact.update_as user, updates
     @artefact.reload
 
     assert_equal "Shiny shiny description", @artefact.description

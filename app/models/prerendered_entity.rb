@@ -3,7 +3,7 @@ module PrerenderedEntity
     find_or_initialize_by(
       slug: attributes.fetch(:slug)
     ).tap do |doc|
-      doc.update_attributes!(attributes)
+      doc.update!(attributes)
     end
   end
 

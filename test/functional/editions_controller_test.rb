@@ -203,7 +203,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "show the edit page again if updating fails" do
       Edition.expects(:find).returns(@guide)
-      @guide.stubs(:update_attributes).returns(false)
+      @guide.stubs(:update).returns(false)
       @guide.expects(:errors).at_least_once.returns(title: %w[values])
 
       post :update,
@@ -216,7 +216,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "show the resource base errors if present" do
       Edition.expects(:find).returns(@guide)
-      @guide.stubs(:update_attributes).returns(false)
+      @guide.stubs(:update).returns(false)
       @guide.expects(:errors).at_least_once.returns(base: ["Editions scheduled for publishing can't be edited"])
 
       post :update, params: { id: @guide.id, edition: {} }

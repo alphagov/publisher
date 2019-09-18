@@ -32,7 +32,7 @@ class DowntimesController < ApplicationController
       DowntimeRemover.destroy_immediately(@downtime)
       flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
-    elsif @downtime.update_attributes(downtime_params)
+    elsif @downtime.update(downtime_params)
       DowntimeScheduler.schedule_publish_and_expiry(@downtime)
       flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path

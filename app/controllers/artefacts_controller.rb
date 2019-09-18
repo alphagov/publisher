@@ -5,7 +5,7 @@ class ArtefactsController < ApplicationController
 
   def create
     @artefact = Artefact.new
-    if @artefact.update_attributes_as(current_user, creatable_params)
+    if @artefact.update_as(current_user, creatable_params)
       redirect_to publication_path(@artefact)
     else
       render "new"
@@ -14,7 +14,7 @@ class ArtefactsController < ApplicationController
 
   def update
     artefact = Artefact.find(updatable_params[:id])
-    if artefact.update_attributes_as(current_user, updatable_params)
+    if artefact.update_as(current_user, updatable_params)
       UpdateWorker.perform_async(artefact.latest_edition_id)
       flash[:notice] = "Metadata updated"
     else

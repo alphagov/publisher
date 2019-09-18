@@ -9,7 +9,7 @@ class UnpublishService
   private
 
     def update_artefact_in_shared_db(artefact, user, redirect_url)
-      artefact.update_attributes_as(
+      artefact.update_as(
         user,
         state: "archived",
         redirect_url: redirect_url

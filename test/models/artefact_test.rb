@@ -298,7 +298,7 @@ class ArtefactTest < ActiveSupport::TestCase
     }
     user1 = FactoryBot.create(:user)
 
-    artefact.update_attributes_as(user1, state: "archived")
+    artefact.update_as(user1, state: "archived")
     artefact.save!
 
     editions.each(&:reload)
@@ -321,7 +321,7 @@ class ArtefactTest < ActiveSupport::TestCase
     edition.update_attribute(:title, nil)
     assert_nil edition.reload.title
 
-    artefact.update_attributes_as(user1, state: "archived")
+    artefact.update_as(user1, state: "archived")
     artefact.save!
 
     assert_equal("archived", edition.reload.state)
@@ -333,7 +333,7 @@ class ArtefactTest < ActiveSupport::TestCase
     artefact.state = "archived"
     artefact.save
     assert_raise RuntimeError do
-      edition.update_attributes(state: "archived", title: "Shabba", slug: "do-not-allow")
+      edition.update(state: "archived", title: "Shabba", slug: "do-not-allow")
     end
   end
 

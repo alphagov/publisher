@@ -36,7 +36,7 @@ private
 
     if existing_service
       Rails.logger.info("Update service %s: '%s' provided by %s" % [row['LGSL'], row['Description'], providing_tier(row)])
-      existing_service.update_attributes!(
+      existing_service.update!(
         description: row['Description'],
         providing_tier: providing_tier(row)
       )
