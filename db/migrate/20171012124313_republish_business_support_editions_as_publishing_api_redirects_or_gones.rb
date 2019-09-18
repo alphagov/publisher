@@ -178,7 +178,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
 
     say_with_time "Unpublishing #{archived_artefacts_been_published.size} archived artefacts missing from the router that have editions and have been published before (but are not in the publishing-api) as redirects to '/business-finance-support' via publishing-api" do
       archived_artefacts_been_published.each do |artefact|
-        artefact.update_attributes_as(nil, state: "archived", redirect_url: '/business-finance-support')
+        artefact.update_as(nil, state: "archived", redirect_url: '/business-finance-support')
         create_redirect_item_in_publishing_api(artefact)
       end
     end

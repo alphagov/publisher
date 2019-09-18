@@ -85,7 +85,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
       ]))
       assert_equal 2, @node.options.count
 
-      @node.update_attributes!(options_attributes: {
+      @node.update!(options_attributes: {
         "1" => { "id" => @node.options.first.id, "_destroy" => "1" }
       })
       @node.reload

@@ -3,7 +3,7 @@ require 'test_helper'
 class UnpublishServiceTest < ActiveSupport::TestCase
   setup do
     @content_id = 'foo'
-    @artefact = stub(update_attributes_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", exact_route?: true)
+    @artefact = stub(update_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", exact_route?: true)
     @user = stub
     @publishing_api = stub(unpublish: true)
 
@@ -12,14 +12,14 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
   context "when an invalid redirect URL is provided" do
     should "Publishing API is not called" do
-      @artefact.expects(:update_attributes_as).returns(false)
+      @artefact.expects(:update_as).returns(false)
       @publishing_api.expects(:unpublish).never
 
       UnpublishService.call(@artefact, @user)
     end
 
     should "return nil" do
-      @artefact.expects(:update_attributes_as).returns(false)
+      @artefact.expects(:update_as).returns(false)
 
       result = UnpublishService.call(@artefact, @user)
       assert result == nil
@@ -28,7 +28,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
 
   context "when no redirect URL is provided" do
     should "archive the artefact" do
-      @artefact.expects(:update_attributes_as)
+      @artefact.expects(:update_as)
         .with(@user, state: 'archived', redirect_url: "")
         .returns(true)
 
@@ -47,7 +47,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     end
 
     should "return true" do
-      @artefact.expects(:update_attributes_as).returns(true)
+      @artefact.expects(:update_as).returns(true)
 
       assert UnpublishService.call(@artefact, @user)
     end
@@ -91,7 +91,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     end
 
     should "allow a redirect_url to be passed in" do
-      @artefact.expects(:update_attributes_as)
+      @artefact.expects(:update_as)
         .with(@user, state: 'archived', redirect_url: '/bar')
         .returns(true)
 
@@ -99,7 +99,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     end
 
     should "return true" do
-      @artefact.expects(:update_attributes_as).returns(true)
+      @artefact.expects(:update_as).returns(true)
 
       assert UnpublishService.call(@artefact, @user, '/bar')
     end

@@ -174,7 +174,7 @@ class Artefact
     find_by_slug(slug_or_id) || find(slug_or_id)
   end
 
-  def update_attributes_as(user, *args)
+  def update_as(user, *args)
     assign_attributes(*args)
     save_as user
   end
@@ -256,7 +256,7 @@ class Artefact
   end
 
   def update_from_edition(edition)
-    update_attributes(
+    update(
       state: state_from_edition(edition),
       description: edition.overview,
       public_timestamp: edition.public_updated_at
