@@ -64,4 +64,10 @@ class CampaignEditionTest < ActiveSupport::TestCase
 
     assert campaign.valid?
   end
+
+  should "trim whitespace from URLs" do
+    campaign = FactoryBot.build(:campaign_edition, organisation_url: " https://www.gov.uk ")
+    assert campaign.valid?
+    assert campaign.organisation_url == "https://www.gov.uk"
+  end
 end

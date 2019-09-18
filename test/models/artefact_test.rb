@@ -70,6 +70,12 @@ class ArtefactTest < ActiveSupport::TestCase
         assert_equal 1, a.errors[:slug].count
       end
     end
+
+    should "trim whitespace from URLs" do
+      artefact = FactoryBot.build(:artefact, redirect_url: " https://www.gov.uk ")
+      assert artefact.valid?
+      assert artefact.redirect_url == "https://www.gov.uk"
+    end
   end
 
   context "validating paths and prefixes" do

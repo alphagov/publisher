@@ -46,4 +46,10 @@ class VideoEditionTest < ActiveSupport::TestCase
       assert_equal expected, v.whole_body
     end
   end
+
+  should "trim whitespace from URLs" do
+    video = FactoryBot.build(:video_edition, video_url: " https://youtube.com ")
+    assert video.valid?
+    assert video.video_url == "https://youtube.com"
+  end
 end

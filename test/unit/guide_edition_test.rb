@@ -54,4 +54,10 @@ class GuideEditionTest < ActiveSupport::TestCase
     new_edition = user.new_version(edition)
     assert_equal edition.overview, new_edition.overview
   end
+
+  test "it should trim whitespace from URLs" do
+    guide = FactoryBot.create(:guide_edition, video_url: " https://youtube.com ")
+    assert guide.valid?
+    assert guide.video_url == "https://youtube.com"
+  end
 end

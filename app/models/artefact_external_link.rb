@@ -1,6 +1,8 @@
 class ArtefactExternalLink
   include Mongoid::Document
 
+  strip_attributes only: :url
+
   field "title", type: String
   field "url", type: String
 

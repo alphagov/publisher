@@ -32,4 +32,10 @@ class TransactionEditionTest < ActiveSupport::TestCase
       assert_equal "more info", transaction.indexable_content
     end
   end
+
+  should "trim whitespace from URLs" do
+    transaction = FactoryBot.build(:transaction_edition, link: " https://www.gov.uk ")
+    assert transaction.valid?
+    assert transaction.link == "https://www.gov.uk"
+  end
 end
