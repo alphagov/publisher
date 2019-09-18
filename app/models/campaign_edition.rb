@@ -4,6 +4,8 @@ require 'edition'
 class CampaignEdition < Edition
   include Attachable
 
+  strip_attributes only: :organisation_url
+
   field :body, type: String
   field :organisation_formatted_name, type: String
   field :organisation_url, type: String
