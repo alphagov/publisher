@@ -147,6 +147,16 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_css?("#publication-list-container table tbody tr:nth-child(3) td:nth-child(5)", text: "4 days")
   end
 
+  test "Shows link to Collections Publisher when reviewing in review documents" do
+    FactoryBot.create(:user)
+
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    assert page.has_link?("Check Collections publisher", href: "#{Plek.current.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
+  end
+
   test "allows a user to claim 2i" do
     stub_linkables
 
