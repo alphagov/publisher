@@ -25,11 +25,6 @@ class ArtefactTest < ActiveSupport::TestCase
       assert a.errors[:slug].any?
     end
 
-    should "allow travel-advice to have a slug prefixed with 'foreign-travel-advice/'" do
-      a = FactoryBot.build(:artefact, slug: "foreign-travel-advice/aruba", kind: "travel-advice")
-      assert a.valid?
-    end
-
     should "allow help pages to have a slug prefixed with 'help/'" do
       a = FactoryBot.build(:artefact, slug: "help/a-page", kind: "help_page")
       assert a.valid?
@@ -38,18 +33,6 @@ class ArtefactTest < ActiveSupport::TestCase
     should "allow done pages to have a slug prefixed with 'done/'" do
       a = FactoryBot.build(:artefact, slug: "done/a-page", kind: "completed_transaction")
       assert a.valid?
-    end
-
-    should "not allow multiple slashes in travel-advice artefacts" do
-      a = FactoryBot.build(:artefact, slug: "foreign-travel-advice/aruba/foo", kind: "travel-advice")
-      refute a.valid?
-      assert a.errors[:slug].any?
-    end
-
-    should "not allow a foreign-travel-advice prefix for non-travel-advice artefacts" do
-      a = FactoryBot.build(:artefact, slug: "foreign-travel-advice/aruba", kind: "answer")
-      refute a.valid?
-      assert a.errors[:slug].any?
     end
 
     context "help page special case" do

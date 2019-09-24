@@ -233,41 +233,6 @@ FactoryBot.define do
     sequence(:slug) { |n| "slug-#{n}" }
   end
 
-  factory :travel_advice_edition do
-    sequence(:country_slug) { |n| "test-country-#{n}" }
-    sequence(:title) { |n| "Test Country #{n}" }
-    change_description { "Stuff changed" }
-  end
-
-  # These factories only work when used with FactoryBot.create
-  factory :draft_travel_advice_edition, parent: :travel_advice_edition do
-  end
-  factory :published_travel_advice_edition, parent: :travel_advice_edition do
-    after :create do |tae|
-      tae.published_at ||= Time.zone.now.utc
-      tae.state = "published"
-      tae.save!
-    end
-  end
-  factory :archived_travel_advice_edition, parent: :travel_advice_edition do
-    after :create do |tae|
-      tae.state = "archived"
-      tae.save!
-    end
-  end
-
-  factory :travel_advice_edition_with_parts, parent: :travel_advice_edition do
-    summary { "This is [link](https://www.gov.uk) text." }
-
-    after :create do |getp|
-      getp.parts.build(title: "Some Part Title!",
-                       body: "This is some **version** text.", slug: "part-one")
-      getp.parts.build(title: "Another Part Title",
-                       body: "This is [link](http://example.com) text.",
-                       slug: "part-two")
-    end
-  end
-
   factory :rendered_manual do
     sequence(:slug) { |n| "test-rendered-manual-#{n}" }
     sequence(:title) { |n| "Test Rendered Manual #{n}" }
