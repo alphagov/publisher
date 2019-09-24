@@ -1,4 +1,4 @@
-require 'sync_checker'
+require "sync_checker"
 
 namespace :sync_checks do
   desc "Check editions against their content item in the content store"
@@ -13,17 +13,17 @@ namespace :sync_checks do
 
   def check_published(format)
     puts "Checking live content"
-    check_content(format, %w[published], 'content-store')
+    check_content(format, %w[published], "content-store")
   end
 
   def check_draft(format)
     puts "Checking draft content"
-    check_content(format, Edition::PUBLISHING_API_DRAFT_STATES, 'draft-content-store')
+    check_content(format, Edition::PUBLISHING_API_DRAFT_STATES, "draft-content-store")
   end
 
   def check_content(format, states, store)
     scope = Edition.by_format(format)
-    editions = scope.where(state: { '$in' => states })
+    editions = scope.where(state: { "$in" => states })
     checker = SyncChecker.new(editions, store)
     puts "#{editions.count} #{format.titleize} from #{store}"
 
@@ -40,7 +40,7 @@ namespace :sync_checks do
     end
 
     checker.add_expectation("public_updated_at") do |content_item, edition|
-      content_item_date = DateTime.parse(content_item['public_updated_at']).in_time_zone
+      content_item_date = DateTime.parse(content_item["public_updated_at"]).in_time_zone
       content_item_date.change(usec: 0).utc ==
         (
           edition.public_updated_at ||

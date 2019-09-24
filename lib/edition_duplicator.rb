@@ -25,7 +25,7 @@ class EditionDuplicator
 
   def error_message
     unless new_edition.is_a?(Edition) && new_edition.errors.empty?
-      alert = 'Failed to create new edition'
+      alert = "Failed to create new edition"
       alert += new_edition ? ": #{new_edition.errors.inspect}" : ": couldn't initialise"
       alert
     end

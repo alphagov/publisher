@@ -9,7 +9,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
         title: "How much wood could a woodchuck chuck if a woodchuck could chuck wood?",
         slug: "how-much-wood-could-a-woodchuck-chuck-if-a-woodchuck-could-chuck-wood",
         body: "This is a serious question.",
-        kind: "question"
+        kind: "question",
       }
     end
 
@@ -36,9 +36,9 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
       @node = @edition.nodes.build(@atts)
 
       [
-        'under_score',
-        'space space',
-        'punct.u&ation',
+        "under_score",
+        "space space",
+        "punct.u&ation",
       ].each do |slug|
         @node.slug = slug
         refute @node.valid?
@@ -60,7 +60,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     end
 
     should "not be valid with a kind other than 'question' or 'outcome'" do
-      @node = @edition.nodes.build(@atts.merge(kind: 'blah'))
+      @node = @edition.nodes.build(@atts.merge(kind: "blah"))
       assert ! @node.valid?
 
       assert_equal [:kind], @node.errors.keys
@@ -69,7 +69,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     should "create options using nested attributes" do
       @node = @edition.nodes.create!(@atts.merge(options_attributes: [
         { label: "Yes", next_node: "yes" },
-        { label: "No", next_node: "no" }
+        { label: "No", next_node: "no" },
       ]))
 
       @node.reload
@@ -81,12 +81,12 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     should "destroy options using nested attributes" do
       @node = @edition.nodes.create!(@atts.merge(options_attributes: [
         { label: "Yes", next_node: "yes" },
-        { label: "No", next_node: "no" }
+        { label: "No", next_node: "no" },
       ]))
       assert_equal 2, @node.options.count
 
       @node.update!(options_attributes: {
-        "1" => { "id" => @node.options.first.id, "_destroy" => "1" }
+        "1" => { "id" => @node.options.first.id, "_destroy" => "1" },
       })
       @node.reload
 
@@ -96,9 +96,9 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     end
 
     should "not be valid if an outcome has options" do
-      @node = @edition.nodes.build(@atts.merge(kind: 'outcome', options_attributes: [
+      @node = @edition.nodes.build(@atts.merge(kind: "outcome", options_attributes: [
         { label: "Yes", next_node: "yes" },
-        { label: "No", next_node: "no" }
+        { label: "No", next_node: "no" },
       ]))
       assert ! @node.valid?
 
@@ -106,7 +106,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     end
 
     should "be able to create an outcome without options" do
-      @node = @edition.nodes.build(@atts.merge(kind: 'outcome', options_attributes: []))
+      @node = @edition.nodes.build(@atts.merge(kind: "outcome", options_attributes: []))
 
       assert @node.valid?
       assert @node.save!

@@ -10,7 +10,7 @@ namespace :orphaned_editions do
 
   def orphaned_editions(state)
     Edition.where(state: state).select { |e|
-      e.artefact.state == 'archived'
+      e.artefact.state == "archived"
     }
   end
 

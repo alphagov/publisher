@@ -15,7 +15,7 @@ Rails.application.configure do
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => 'public, max-age=3600'
+    "Cache-Control" => "public, max-age=3600",
   }
 
   # Log error messages when you accidentally call methods on nil.
@@ -45,5 +45,5 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.jwt_auth_secret = '123'
+  config.jwt_auth_secret = "123"
 end

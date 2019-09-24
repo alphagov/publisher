@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 # Pick the frameworks you want:
 # require "active_record/railtie"
@@ -26,8 +26,8 @@ module Publisher
 
     # Enable the asset pipeline
     config.assets.enabled = true
-    config.assets.version = '1.0'
-    config.assets.prefix = '/assets'
+    config.assets.version = "1.0"
+    config.assets.prefix = "/assets"
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.eager_load_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
@@ -42,7 +42,7 @@ module Publisher
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'London'
+    config.time_zone = "London"
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
@@ -61,9 +61,9 @@ module Publisher
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    config.jwt_auth_secret = ENV['JWT_AUTH_SECRET']
+    config.jwt_auth_secret = ENV["JWT_AUTH_SECRET"]
   end
 end
 
-require 'open-uri'
-require 'builder'
+require "open-uri"
+require "builder"

@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class DeleteEditionTest < ActionDispatch::IntegrationTest
   setup do
@@ -9,7 +9,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
       content_id: content_id,
       kind: "guide",
       name: "Foo bar",
-      owning_app: "publisher"
+      owning_app: "publisher",
     )
 
     @edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)

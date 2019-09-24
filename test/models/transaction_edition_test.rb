@@ -1,11 +1,11 @@
-require 'test_helper'
+require "test_helper"
 
 class TransactionEditionTest < ActiveSupport::TestCase
   setup do
     @artefact = FactoryBot.create(:artefact)
   end
 
-  context 'Department analytics profiles' do
+  context "Department analytics profiles" do
     should "only allow valid Google Analytics profiles" do
       transaction = FactoryBot.create(:transaction_edition, panopticon_id: @artefact.id)
 

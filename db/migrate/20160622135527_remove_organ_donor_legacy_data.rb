@@ -31,15 +31,15 @@ class RemoveOrganDonorLegacyData < Mongoid::Migration
       puts "Migrating organ donor registration choice data for #{edition.slug} (#{edition.state})"
 
       edition.presentation_toggles["organ_donor_registration"] =
-        if edition.promotion_choice == 'organ_donor'
+        if edition.promotion_choice == "organ_donor"
           {
             "promote_organ_donor_registration" => true,
-            "organ_donor_registration_url" => edition.promotion_choice_url
+            "organ_donor_registration_url" => edition.promotion_choice_url,
           }
         else
           {
             "promote_organ_donor_registration" => false,
-            "organ_donor_registration_url" => ''
+            "organ_donor_registration_url" => "",
           }
         end
 

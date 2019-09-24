@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EditionFormatPresenterTest < ActiveSupport::TestCase
   def subject
@@ -34,19 +34,19 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:title]" do
-      edition.expects(:title).returns('foo')
-      assert_equal 'foo', result[:title]
+      edition.expects(:title).returns("foo")
+      assert_equal "foo", result[:title]
     end
 
     should "[:base_path]" do
-      edition.expects(:slug).returns('foo')
-      assert_equal '/foo', result[:base_path]
+      edition.expects(:slug).returns("foo")
+      assert_equal "/foo", result[:base_path]
     end
 
     context "[:description]" do
       should "return edition.overview if present" do
-        edition.expects(:overview).returns('foo')
-        assert_equal 'foo', result[:description]
+        edition.expects(:overview).returns("foo")
+        assert_equal "foo", result[:description]
       end
 
       should "return '' if overview is nil" do
@@ -101,10 +101,10 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
     context "for prefix routes" do
       should "[:routes]" do
-        edition.stubs(:slug).returns('foo')
+        edition.stubs(:slug).returns("foo")
         edition.stubs(:exact_route?).returns(false)
         expected = [
-          { path: '/foo', type: 'prefix' },
+          { path: "/foo", type: "prefix" },
         ]
         assert_equal expected, result[:routes]
       end
@@ -112,10 +112,10 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
     context "for exact routes" do
       should "[:routes]" do
-        edition.stubs(:slug).returns('foo')
+        edition.stubs(:slug).returns("foo")
         edition.stubs(:exact_route?).returns(true)
         expected = [
-          { path: '/foo', type: 'exact' },
+          { path: "/foo", type: "exact" },
         ]
         assert_equal expected, result[:routes]
       end
@@ -128,22 +128,22 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     context "[:update_type]" do
       should "return 'republish' if asked" do
         result = subject.render_for_publishing_api(republish: true)
-        assert_equal 'republish', result[:update_type]
+        assert_equal "republish", result[:update_type]
       end
 
       should "return 'major' if edition.major_change is set" do
         edition.expects(:major_change).returns(true)
-        assert_equal 'major', result[:update_type]
+        assert_equal "major", result[:update_type]
       end
 
       should "return 'minor' otherwise" do
-        assert_equal 'minor', result[:update_type]
+        assert_equal "minor", result[:update_type]
       end
     end
 
     should "[:change_note]" do
-      edition.expects(:latest_change_note).returns('foo')
-      assert_equal 'foo', result[:change_note]
+      edition.expects(:latest_change_note).returns("foo")
+      assert_equal "foo", result[:change_note]
     end
 
     should "[:details]" do
@@ -151,8 +151,8 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:locale]" do
-      artefact.expects(:language).returns('foo')
-      assert_equal 'foo', result[:locale]
+      artefact.expects(:language).returns("foo")
+      assert_equal "foo", result[:locale]
     end
 
     context "[:access_limited]" do

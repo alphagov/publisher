@@ -7,10 +7,10 @@ module ColumnSortable
 private
 
   def sort_column
-    Edition.fields.key?(params[:sort]) ? params[:sort] : 'updated_at'
+    Edition.fields.key?(params[:sort]) ? params[:sort] : "updated_at"
   end
 
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
 end

@@ -1,11 +1,11 @@
-require 'test_helper'
+require "test_helper"
 
 class SafeHtmlTest < ActiveSupport::TestCase
   class Dummy
     include Mongoid::Document
 
     field :i_am_govspeak, type: String
-    embeds_one :i_am_embedded_govspeak, class_name: 'SafeHtmlTest::DummyEmbeddedSingle'
+    embeds_one :i_am_embedded_govspeak, class_name: "SafeHtmlTest::DummyEmbeddedSingle"
 
     GOVSPEAK_FIELDS = [:i_am_govspeak].freeze
 
@@ -15,7 +15,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
   class DummyEmbeddedSingle
     include Mongoid::Document
 
-    embedded_in :dummy, class_name: 'SafeHtmlTest::Dummy'
+    embedded_in :dummy, class_name: "SafeHtmlTest::Dummy"
 
     field :i_am_govspeak, type: String
 

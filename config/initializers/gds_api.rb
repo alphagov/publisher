@@ -1,6 +1,6 @@
-require 'gds_api/base'
-require 'gds_api/asset_manager'
-require 'plek'
+require "gds_api/base"
+require "gds_api/asset_manager"
+require "plek"
 
 GdsApi::Base.logger = Logger.new(Rails.root.join("log/#{Rails.env}.api_client.log"))
 
@@ -10,6 +10,6 @@ GdsApi::Base.logger = Logger.new(Rails.root.join("log/#{Rails.env}.api_client.lo
 # See README.md for details of how to generate a bearer token.
 
 Attachable.asset_api_client = GdsApi::AssetManager.new(
-  Plek.current.find('asset-manager'),
-  bearer_token: ENV['ASSET_MANAGER_BEARER_TOKEN'] || 'example',
+  Plek.current.find("asset-manager"),
+  bearer_token: ENV["ASSET_MANAGER_BEARER_TOKEN"] || "example",
 )

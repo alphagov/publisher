@@ -1,5 +1,5 @@
-require 'attachable'
-require 'edition'
+require "attachable"
+require "edition"
 
 class CampaignEdition < Edition
   include Attachable
@@ -58,7 +58,7 @@ class CampaignEdition < Edition
     "UK Hydrographic Office" => "ukho",
     "Executive Office" => "eo",
     "HM Revenue and Customs" => "hmrc",
-    "UK Atomic Energy Authority" => "ukaea"
+    "UK Atomic Energy Authority" => "ukaea",
   }.freeze
 
   validates :organisation_brand_colour, inclusion: { in: BRAND_COLOURS, allow_blank: true }

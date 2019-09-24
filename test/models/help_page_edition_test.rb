@@ -2,7 +2,7 @@ require "test_helper"
 
 class HelpPageEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryBot.create(:artefact, kind: 'help_page', slug: "help/foo")
+    @artefact = FactoryBot.create(:artefact, kind: "help_page", slug: "help/foo")
   end
 
   should "have correct extra fields" do

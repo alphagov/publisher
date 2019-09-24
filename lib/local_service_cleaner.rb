@@ -1,4 +1,4 @@
-require 'set'
+require "set"
 
 class LocalServiceCleaner
   def initialize(input_data = LocalServiceImporter.fetch_data)
@@ -37,7 +37,7 @@ private
     output = Set.new
     CSV.new(@input_data, headers: true).
       each.with_object(output) do |row, lgsls|
-        lgsls.add row['LGSL'].to_i
+        lgsls.add row["LGSL"].to_i
       end
     output
   ensure

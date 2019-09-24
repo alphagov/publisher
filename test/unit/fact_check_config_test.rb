@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'fact_check_config'
+require "test_helper"
+require "fact_check_config"
 
 class FactCheckConfigTest < ActiveSupport::TestCase
   should "fail on a nil address format" do

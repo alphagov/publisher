@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class HealthcheckTest < ActionDispatch::IntegrationTest
   def json
@@ -50,7 +50,7 @@ class HealthcheckTest < ActionDispatch::IntegrationTest
       assert_includes json["checks"], "schedule_queue"
       assert_equal(
         "0 scheduled edition(s); 0 item(s) queued",
-        json["checks"]["schedule_queue"]["message"]
+        json["checks"]["schedule_queue"]["message"],
       )
     end
   end
@@ -72,7 +72,7 @@ class HealthcheckTest < ActionDispatch::IntegrationTest
       assert_includes json["checks"], "schedule_queue"
       assert_equal(
         "5 scheduled edition(s); 3 item(s) queued",
-        json["checks"]["schedule_queue"]["message"]
+        json["checks"]["schedule_queue"]["message"],
       )
     end
 

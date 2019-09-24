@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'edition_progressor'
+require "test_helper"
+require "edition_progressor"
 
 class EditionProgressorTest < ActiveSupport::TestCase
   setup do
@@ -15,14 +15,14 @@ class EditionProgressorTest < ActiveSupport::TestCase
       request_type: "send_fact_check",
       comment: "Blah",
       email_addresses: "user@example.com",
-      customised_message: "Hello"
+      customised_message: "Hello",
     }
 
     command = EditionProgressor.new(@guide, @laura)
     assert command.progress(activity)
 
     @guide.reload
-    assert_equal 'fact_check', @guide.state
+    assert_equal "fact_check", @guide.state
   end
 
   test "should not progress to fact check if the email addresses were blank" do
@@ -32,7 +32,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       request_type: "send_fact_check",
       comment: "Blah",
       email_addresses: "",
-      customised_message: "Hello"
+      customised_message: "Hello",
     }
 
     command = EditionProgressor.new(@guide, @laura)
@@ -46,7 +46,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       request_type: "send_fact_check",
       comment: "Blah",
       email_addresses: "nouseratexample.com",
-      customised_message: "Hello"
+      customised_message: "Hello",
     }
 
     command = EditionProgressor.new(@guide, @laura)
@@ -60,7 +60,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       request_type: "send_fact_check",
       comment: "Blah",
       email_addresses: "user1@example.com, another-user AT example DOT com",
-      customised_message: "Hello"
+      customised_message: "Hello",
     }
 
     command = EditionProgressor.new(@guide, @laura)
@@ -115,7 +115,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
         command = EditionProgressor.new(@guide, @laura)
         assert command.progress(activity)
 
-        assert_equal publish_at.to_i, ScheduledPublisher.jobs.first['at'].to_i
+        assert_equal publish_at.to_i, ScheduledPublisher.jobs.first["at"].to_i
       end
     end
 

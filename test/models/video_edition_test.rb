@@ -10,14 +10,14 @@ class VideoEditionTest < ActiveSupport::TestCase
     v.video_url = "http://www.youtube.com/watch?v=qySFp3qnVmM"
     v.video_summary = "Coke smoothie"
     v.body = "Description of video"
-    v.caption_file_id = 'file-to-an-asset-of-the-caption-file'
+    v.caption_file_id = "file-to-an-asset-of-the-caption-file"
     v.save!
 
     v = VideoEdition.first
     assert_equal "http://www.youtube.com/watch?v=qySFp3qnVmM", v.video_url
     assert_equal "Coke smoothie", v.video_summary
     assert_equal "Description of video", v.body
-    assert_equal 'file-to-an-asset-of-the-caption-file', v.caption_file_id
+    assert_equal "file-to-an-asset-of-the-caption-file", v.caption_file_id
   end
 
   should "give a friendly (legacy supporting) description of its format" do

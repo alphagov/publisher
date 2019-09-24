@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'edition_duplicator'
+require "test_helper"
+require "edition_duplicator"
 
 # We might want to consider decoupling this test from
 # the user and the edition, but for now at least those
@@ -13,7 +13,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
   end
 
   def publish_item(item, actor)
-    item.state = 'ready'
+    item.state = "ready"
     publish(actor, item)
   end
 
@@ -63,7 +63,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     assert_equal GuideEdition, artefact.latest_edition.class
 
     command = EditionDuplicator.new(@guide, @laura)
-    assert command.duplicate('answer_edition', @fred)
+    assert command.duplicate("answer_edition", @fred)
 
     assert_equal AnswerEdition, artefact.reload.latest_edition.class
   end
@@ -72,11 +72,11 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     publish_item(@guide, @laura)
     artefact = @guide.artefact
 
-    assert_equal 'guide', artefact.kind
+    assert_equal "guide", artefact.kind
 
     command = EditionDuplicator.new(@guide, @laura)
-    assert command.duplicate('answer_edition', @fred)
+    assert command.duplicate("answer_edition", @fred)
 
-    assert_equal 'answer', artefact.reload.kind
+    assert_equal "answer", artefact.reload.kind
   end
 end

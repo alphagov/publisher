@@ -121,7 +121,7 @@ module Workflow
 
   def status_text
     text = human_state_name.capitalize
-    text += ' on ' + publish_at.strftime("%d/%m/%Y %H:%M") if scheduled_for_publishing?
+    text += " on " + publish_at.strftime("%d/%m/%Y %H:%M") if scheduled_for_publishing?
     text
   end
 
@@ -163,7 +163,7 @@ module Workflow
   end
 
   def error_description
-    published? ? 'Published editions' : 'Editions scheduled for publishing'
+    published? ? "Published editions" : "Editions scheduled for publishing"
   end
 
   def perform_event_without_validations(event)

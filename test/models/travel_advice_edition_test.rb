@@ -7,13 +7,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     ed = TravelAdviceEdition.new
     ed.title = "Travel advice for Aruba"
     ed.overview = "This gives travel advice for Aruba"
-    ed.country_slug = 'aruba'
+    ed.country_slug = "aruba"
     ed.alert_status = %w(avoid_all_but_essential_travel_to_parts avoid_all_travel_to_parts)
     ed.summary = "This is the summary of stuff going on in Aruba"
     ed.version_number = 4
     ed.image_id = "id_from_the_asset_manager_for_an_image"
     ed.document_id = "id_from_the_asset_manager_for_a_document"
-    ed.published_at = Time.zone.parse('2013-02-21T14:56:22Z')
+    ed.published_at = Time.zone.parse("2013-02-21T14:56:22Z")
     ed.minor_update = true
     ed.change_description = "Some things"
     ed.synonyms = %w(Foo Bar)
@@ -23,13 +23,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     ed = TravelAdviceEdition.first
     assert_equal "Travel advice for Aruba", ed.title
     assert_equal "This gives travel advice for Aruba", ed.overview
-    assert_equal 'aruba', ed.country_slug
+    assert_equal "aruba", ed.country_slug
     assert_equal %w(avoid_all_but_essential_travel_to_parts avoid_all_travel_to_parts), ed.alert_status
     assert_equal "This is the summary of stuff going on in Aruba", ed.summary
     assert_equal 4, ed.version_number
     assert_equal "id_from_the_asset_manager_for_an_image", ed.image_id
     assert_equal "id_from_the_asset_manager_for_a_document", ed.document_id
-    assert_equal Time.zone.parse('2013-02-21T14:56:22Z'), ed.published_at
+    assert_equal Time.zone.parse("2013-02-21T14:56:22Z"), ed.published_at
     assert_equal true, ed.minor_update
     assert_equal %w(Foo Bar), ed.synonyms
     assert_equal "Some things", ed.change_description
@@ -42,13 +42,13 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     end
 
     should "require a country slug" do
-      @ta.country_slug = ''
+      @ta.country_slug = ""
       assert ! @ta.valid?
       assert_includes @ta.errors.messages[:country_slug], "can't be blank"
     end
 
     should "require a title" do
-      @ta.title = ''
+      @ta.title = ""
       assert ! @ta.valid?
       assert_includes @ta.errors.messages[:title], "can't be blank"
     end
@@ -57,7 +57,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       should "only allow one edition in draft per slug" do
         FactoryBot.create(:travel_advice_edition,
                           country_slug: @ta.country_slug)
-        @ta.state = 'draft'
+        @ta.state = "draft"
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
@@ -65,7 +65,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       should "only allow one edition in published per slug" do
         FactoryBot.create(:published_travel_advice_edition,
                           country_slug: @ta.country_slug)
-        @ta.state = 'published'
+        @ta.state = "published"
         assert ! @ta.valid?
         assert_includes @ta.errors.messages[:state], "is already taken"
       end
@@ -74,12 +74,12 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
         FactoryBot.create(:archived_travel_advice_edition,
                           country_slug: @ta.country_slug)
         @ta.save!
-        @ta.state = 'archived'
+        @ta.state = "archived"
         assert @ta.valid?
       end
 
       should "not conflict with itself when validating uniqueness" do
-        @ta.state = 'draft'
+        @ta.state = "draft"
         @ta.save!
         assert @ta.valid?
       end
@@ -107,7 +107,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "allow 'save & publish'" do
         ta = FactoryBot.create(:travel_advice_edition)
-        ta.title = 'Foo'
+        ta.title = "Foo"
         assert ta.publish
       end
 
@@ -118,7 +118,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "NOT allow 'save & archive'" do
         ta = FactoryBot.create(:published_travel_advice_edition)
-        ta.title = 'Foo'
+        ta.title = "Foo"
         assert ! ta.archive
         assert_includes ta.errors.messages[:state], "must be draft to modify"
       end
@@ -149,7 +149,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
     context "on version_number" do
       should "require a version_number" do
         @ta.save # version_number is automatically populated on create, so save it first.
-        @ta.version_number = ''
+        @ta.version_number = ""
         refute @ta.valid?
         assert_includes @ta.errors.messages[:version_number], "can't be blank"
       end
@@ -165,7 +165,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
       should "allow matching version_numbers for different slugs" do
         FactoryBot.create(:archived_travel_advice_edition,
-                          country_slug: 'wibble',
+                          country_slug: "wibble",
                           version_number: 3)
         @ta.version_number = 3
         assert @ta.valid?
@@ -228,29 +228,29 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
     context "populating version_number" do
       should "set version_number to 1 if there are no existing versions for the country" do
-        ed = TravelAdviceEdition.new(country_slug: 'foo')
+        ed = TravelAdviceEdition.new(country_slug: "foo")
         ed.valid?
         assert_equal 1, ed.version_number
       end
 
       should "set version_number to the next available version" do
-        FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo', version_number: 1)
-        FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo', version_number: 2)
-        FactoryBot.create(:published_travel_advice_edition, country_slug: 'foo', version_number: 4)
+        FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo", version_number: 1)
+        FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo", version_number: 2)
+        FactoryBot.create(:published_travel_advice_edition, country_slug: "foo", version_number: 4)
 
-        ed = TravelAdviceEdition.new(country_slug: 'foo')
+        ed = TravelAdviceEdition.new(country_slug: "foo")
         ed.valid?
         assert_equal 5, ed.version_number
       end
 
       should "do nothing if version_number is already set" do
-        ed = TravelAdviceEdition.new(country_slug: 'foo', version_number: 42)
+        ed = TravelAdviceEdition.new(country_slug: "foo", version_number: 42)
         ed.valid?
         assert_equal 42, ed.version_number
       end
 
       should "do nothing if country_slug is not set" do
-        ed = TravelAdviceEdition.new(country_slug: '')
+        ed = TravelAdviceEdition.new(country_slug: "")
         ed.valid?
         assert_nil ed.version_number
       end
@@ -271,8 +271,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
                               alert_status: %w(avoid_all_but_essential_travel_to_whole_country avoid_all_travel_to_parts),
                               image_id: "id_from_the_asset_manager_for_an_image",
                               document_id: "id_from_the_asset_manager_for_a_document")
-      @ed.parts.build(title: "Fooey", slug: 'fooey', body: "It's all about Fooey")
-      @ed.parts.build(title: "Gooey", slug: 'gooey', body: "It's all about Gooey")
+      @ed.parts.build(title: "Fooey", slug: "fooey", body: "It's all about Fooey")
+      @ed.parts.build(title: "Gooey", slug: "gooey", body: "It's all about Gooey")
       @ed.save!
       @ed.publish!
     end
@@ -298,9 +298,9 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
   context "previous_version" do
     setup do
-      @ed1 = FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo')
-      @ed2 = FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo')
-      @ed3 = FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo')
+      @ed1 = FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo")
+      @ed2 = FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo")
+      @ed3 = FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo")
     end
 
     should "return the previous version" do
@@ -315,9 +315,9 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
   context "publishing" do
     setup do
-      @published = FactoryBot.create(:published_travel_advice_edition, country_slug: 'aruba',
-                                      published_at: 3.days.ago, change_description: 'Stuff changed')
-      @ed = FactoryBot.create(:travel_advice_edition, country_slug: 'aruba')
+      @published = FactoryBot.create(:published_travel_advice_edition, country_slug: "aruba",
+                                      published_at: 3.days.ago, change_description: "Stuff changed")
+      @ed = FactoryBot.create(:travel_advice_edition, country_slug: "aruba")
       @published.reload
     end
 
@@ -354,8 +354,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
 
   context "setting the reviewed at date" do
     setup do
-      @published = FactoryBot.create(:published_travel_advice_edition, country_slug: 'aruba',
-                                      published_at: 3.days.ago, change_description: 'Stuff changed')
+      @published = FactoryBot.create(:published_travel_advice_edition, country_slug: "aruba",
+                                      published_at: 3.days.ago, change_description: "Stuff changed")
       @published.reviewed_at = 2.days.ago
       @published.save!
       @published.reload
@@ -363,7 +363,7 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
       Timecop.freeze(1.day.ago) do
         # this is done to make sure there's a significant difference in time
         # between creating the edition and it being published
-        @edition = FactoryBot.create(:travel_advice_edition, country_slug: 'aruba')
+        @edition = FactoryBot.create(:travel_advice_edition, country_slug: "aruba")
       end
     end
 
@@ -422,8 +422,8 @@ class TravelAdviceEditionTest < ActiveSupport::TestCase
   context "actions" do
     setup do
       @user = FactoryBot.create(:user)
-      @old = FactoryBot.create(:archived_travel_advice_edition, country_slug: 'foo')
-      @edition = FactoryBot.create(:draft_travel_advice_edition, country_slug: 'foo')
+      @old = FactoryBot.create(:archived_travel_advice_edition, country_slug: "foo")
+      @edition = FactoryBot.create(:draft_travel_advice_edition, country_slug: "foo")
     end
 
     should "not have any actions by default" do

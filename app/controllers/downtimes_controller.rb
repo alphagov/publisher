@@ -28,7 +28,7 @@ class DowntimesController < ApplicationController
   def update
     @downtime = Downtime.for(@edition.artefact)
 
-    if params['commit'] == 'Cancel downtime'
+    if params["commit"] == "Cancel downtime"
       DowntimeRemover.destroy_immediately(@downtime)
       flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
@@ -45,18 +45,18 @@ private
 
   def downtime_params
     params[:downtime].permit([
-      'artefact_id',
-      'message',
-      'end_time(1i)',
-      'end_time(2i)',
-      'end_time(3i)',
-      'end_time(4i)',
-      'end_time(5i)',
-      'start_time(1i)',
-      'start_time(2i)',
-      'start_time(3i)',
-      'start_time(4i)',
-      'start_time(5i)'
+      "artefact_id",
+      "message",
+      "end_time(1i)",
+      "end_time(2i)",
+      "end_time(3i)",
+      "end_time(4i)",
+      "end_time(5i)",
+      "start_time(1i)",
+      "start_time(2i)",
+      "start_time(3i)",
+      "start_time(4i)",
+      "start_time(5i)",
     ])
   end
 
@@ -69,6 +69,6 @@ private
   end
 
   def edition_link
-    view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: 'link-inherit bold')
+    view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: "link-inherit bold")
   end
 end

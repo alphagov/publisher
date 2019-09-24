@@ -1,7 +1,7 @@
-require 'attachable'
-require 'parted'
-require 'state_machines-mongoid'
-require_dependency 'safe_html'
+require "attachable"
+require "parted"
+require "state_machines-mongoid"
+require_dependency "safe_html"
 
 class TravelAdviceEdition
   include Mongoid::Document
@@ -63,7 +63,7 @@ avoid_all_travel_to_whole_country
         edition.published_at = Time.zone.now.utc
         edition.reviewed_at = edition.published_at
       end
-      edition.class.where(country_slug: edition.country_slug, state: 'published').each(&:archive)
+      edition.class.where(country_slug: edition.country_slug, state: "published").each(&:archive)
     end
 
     event :publish do
@@ -105,7 +105,7 @@ avoid_all_travel_to_whole_country
   end
 
   def publish_as(user)
-    comment = self.minor_update ? 'Minor update' : Govspeak::Document.new(self.change_description).to_text
+    comment = self.minor_update ? "Minor update" : Govspeak::Document.new(self.change_description).to_text
     build_action_as(user, Action::PUBLISH, comment) && publish
   end
 
@@ -136,7 +136,7 @@ private
   end
 
   def cannot_edit_published
-    if anything_other_than_state_changed?('reviewed_at') && self.state_was != 'draft'
+    if anything_other_than_state_changed?("reviewed_at") && self.state_was != "draft"
       errors.add(:state, "must be draft to modify")
     end
   end

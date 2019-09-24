@@ -8,9 +8,9 @@ class FactCheckConfig
     @pattern = Regexp.new(
       '\A' +
       Regexp.escape(@prefix) +
-      '(.+?)' +
+      "(.+?)" +
       Regexp.escape(@suffix) +
-      '\Z'
+      '\Z',
     )
   end
 

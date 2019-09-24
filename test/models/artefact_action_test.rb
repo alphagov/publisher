@@ -29,7 +29,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
       slug: "an-artefact",
       name: "An artefact",
       kind: "answer",
-      owning_app: "publisher"
+      owning_app: "publisher",
     }
   end
 
@@ -81,19 +81,19 @@ class ArtefactActionTest < ActiveSupport::TestCase
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),
-      @artefact.actions.last.snapshot
+      @artefact.actions.last.snapshot,
     )
   end
 
   test "saving a task should record the task action" do
     @artefact.description = "Updated automatically"
-    @artefact.save_as_task!('TaggingUpdater')
+    @artefact.save_as_task!("TaggingUpdater")
     @artefact.reload
 
     assert_equal 2, @artefact.actions.size
     assert_equal %w(create update), @artefact.actions.map(&:action_type)
 
-    assert_equal 'TaggingUpdater', @artefact.actions.last.task_performed_by
+    assert_equal "TaggingUpdater", @artefact.actions.last.task_performed_by
     assert_nil @artefact.actions.last.user
   end
 
@@ -110,7 +110,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),
-      @artefact.actions.last.snapshot
+      @artefact.actions.last.snapshot,
     )
   end
 

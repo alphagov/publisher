@@ -11,7 +11,7 @@ class LocalService
   validates_presence_of :lgsl_code, :providing_tier
   validates_uniqueness_of :lgsl_code
   validates :providing_tier, inclusion: {
-    in: [%w{county unitary}, %w{district unitary}, %w{district unitary county}]
+    in: [%w{county unitary}, %w{district unitary}, %w{district unitary county}],
   }
 
   def self.find_by_lgsl_code(lgsl_code)

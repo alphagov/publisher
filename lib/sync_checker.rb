@@ -1,4 +1,4 @@
-require 'gds_api/content_store'
+require "gds_api/content_store"
 
 class SyncChecker
   class Success
@@ -94,7 +94,7 @@ private
   rescue GdsApi::HTTPErrorResponse
     NotFoundFailure.new(
       base_path: base_path,
-      content_store: store_string
+      content_store: store_string,
     )
   end
 
@@ -112,7 +112,7 @@ private
         content_item: content_item,
         base_path: base_path,
         failed_expectations: failed_expectation_descriptions,
-        content_store: store_string
+        content_store: store_string,
       )
     end
   end

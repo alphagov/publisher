@@ -44,14 +44,14 @@ class UserTest < ActiveSupport::TestCase
       "info" => {
         "uid"     => "1234abcd",
         "email"   => "user@example.com",
-        "name"    => "Luther Blisset"
+        "name"    => "Luther Blisset",
       },
       "extra" => {
         "user" => {
           "permissions" => %w[signin],
           "disabled" => false,
-        }
-      }
+        },
+      },
     }
     user = User.find_for_gds_oauth(auth_hash).reload
     assert_equal "1234abcd", user.uid
@@ -69,14 +69,14 @@ class UserTest < ActiveSupport::TestCase
       "uid" => "1234abcd",
       "info" => {
         "email"   => "new@m.com",
-        "name"    => "New"
+        "name"    => "New",
       },
       "extra" => {
         "user" => {
           "permissions" => [],
-          "disabled" => true
-        }
-      }
+          "disabled" => true,
+        },
+      },
     }
     user = User.find_for_gds_oauth(auth_hash).reload
     assert_equal "1234abcd", user.uid

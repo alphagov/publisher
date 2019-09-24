@@ -6,12 +6,12 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
       @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question")
       @edition = FactoryBot.create(:simple_smart_answer_edition, nodes: [
         @node,
-        SimpleSmartAnswerEdition::Node.new(slug: "outcome1", title: "Outcome One", kind: "outcome")
+        SimpleSmartAnswerEdition::Node.new(slug: "outcome1", title: "Outcome One", kind: "outcome"),
       ])
 
       @atts = {
         label: "Yes",
-        next_node: "yes"
+        next_node: "yes",
       }
     end
 
@@ -83,9 +83,9 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
         @option = @node.options.build(@atts)
 
         [
-          'under_score',
-          'space space',
-          'punct.u&ation',
+          "under_score",
+          "space space",
+          "punct.u&ation",
         ].each do |slug|
           @option.slug = slug
           refute @option.valid?

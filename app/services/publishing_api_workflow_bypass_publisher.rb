@@ -42,7 +42,7 @@ private
   def live_edition
     Edition
       .where(panopticon_id: artefact.id)
-      .where(state: 'published')
+      .where(state: "published")
       .first
   end
 

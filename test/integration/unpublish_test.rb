@@ -21,7 +21,7 @@ class UnpublishTest < ActionDispatch::IntegrationTest
 
     select_tab "Unpublish"
 
-    UnpublishService.expects(:call).with(@artefact, User.first, '').returns(true)
+    UnpublishService.expects(:call).with(@artefact, User.first, "").returns(true)
 
     click_button "Unpublish"
 
@@ -31,7 +31,7 @@ class UnpublishTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Content unpublished")
     end
 
-    @artefact.update(state: 'archived')
+    @artefact.update(state: "archived")
 
     visit_edition @edition
 
@@ -47,9 +47,9 @@ class UnpublishTest < ActionDispatch::IntegrationTest
 
       select_tab "Unpublish"
 
-      fill_in 'redirect_url', with: 'https://gov.uk/beans'
+      fill_in "redirect_url", with: "https://gov.uk/beans"
 
-      UnpublishService.expects(:call).with(@artefact, User.first, '/beans').returns(true)
+      UnpublishService.expects(:call).with(@artefact, User.first, "/beans").returns(true)
 
       click_button "Unpublish"
 

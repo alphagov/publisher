@@ -6,7 +6,7 @@ module Tagging
       link_set = Services.publishing_api.get_expanded_links(
         content_id,
         locale: locale,
-        generate: true
+        generate: true,
       )
       new(link_set.to_h)
     rescue GdsApi::HTTPNotFound
@@ -14,13 +14,13 @@ module Tagging
     end
 
     def initialize(data)
-      @links = extract_content_ids(data['expanded_links'] || {})
-      @expanded_links = data['expanded_links'] || {}
-      @version = data['version'] || 0
+      @links = extract_content_ids(data["expanded_links"] || {})
+      @expanded_links = data["expanded_links"] || {}
+      @version = data["version"] || 0
     end
 
     def extract_content_ids(expanded_links)
-      expanded_links.transform_values { |v| v.collect { |h| h['content_id'] } }
+      expanded_links.transform_values { |v| v.collect { |h| h["content_id"] } }
     end
   end
 end

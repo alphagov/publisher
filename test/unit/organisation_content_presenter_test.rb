@@ -11,19 +11,19 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
                 },
                 {
                   "base_path" => "/browse/tax/vat",
-                }
+                },
               ],
               "organisations" => [
                 {
-                  "title" => "HMRC"
-                }
+                  "title" => "HMRC",
+                },
               ],
               "topics" => [
                 {
-                  "base_path" => "/topic/business-tax/vat"
-                }
-              ]
-            }
+                  "base_path" => "/topic/business-tax/vat",
+                },
+              ],
+            },
     }
   end
 
@@ -32,14 +32,14 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
                                  name: "Important document",
                                  kind: "answer")
 
-    @response['content_id'] = document.content_id
+    @response["content_id"] = document.content_id
     publishing_api_has_expanded_links(@response)
 
     FactoryBot.create(:edition,
                       panopticon_id: document.id)
 
     csv = OrganisationContentPresenter.new(
-      Artefact.where(owning_app: "publisher").not_in(state: %w[archived])
+      Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
     ).to_csv
     data = CSV.parse(csv, headers: true)
 
@@ -55,7 +55,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
                       name: "Important document")
 
     csv = OrganisationContentPresenter.new(
-      Artefact.where(owning_app: "publisher").not_in(state: %w[archived])
+      Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
     ).to_csv
     data = CSV.parse(csv, headers: true)
 

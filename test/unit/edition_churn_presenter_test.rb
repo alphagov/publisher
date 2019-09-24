@@ -12,17 +12,17 @@ class EditionChurnPresenterTest < ActionDispatch::IntegrationTest
     edition1 = FactoryBot.create(
       :edition,
       title: "Important document",
-      panopticon_id: document.id
+      panopticon_id: document.id,
     )
 
     edition2 = FactoryBot.create(
       :edition,
       title: "Important tax document",
-      panopticon_id: document.id
+      panopticon_id: document.id,
     )
 
     csv = EditionChurnPresenter.new(
-      Edition.not_in(state: %w[archived]).order(:title.asc)
+      Edition.not_in(state: %w[archived]).order(:title.asc),
     ).to_csv
 
     data = CSV.parse(csv, headers: true)

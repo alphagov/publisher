@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class RequestTracingTest < ActionDispatch::IntegrationTest
   setup do
@@ -17,8 +17,8 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
              edition: {
                panopticon_id: artefact.id,
                kind: "answer",
-               title: "a title"
-             }
+               title: "a title",
+             },
            },
            headers: inbound_headers
 
@@ -30,9 +30,9 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
            params: {
              edition: {
                activity: {
-                 request_type: :request_review
-               }
-             }
+                 request_type: :request_review,
+               },
+             },
            },
            headers: inbound_headers
 
@@ -46,9 +46,9 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
              {
                edition: {
                  activity: {
-                   request_type: :approve_review
-                 }
-               }
+                   request_type: :approve_review,
+                 },
+               },
              },
              headers: inbound_headers
 
@@ -59,9 +59,9 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
            params: {
                edition: {
                  activity: {
-                   request_type: :publish
-                 }
-               }
+                   request_type: :publish,
+                 },
+               },
              },
              headers: inbound_headers
 

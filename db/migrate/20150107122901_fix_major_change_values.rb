@@ -3,7 +3,7 @@ class FixMajorChangeValues < Mongoid::Migration
     Edition.collection.update(
       { "major_change" => nil },
       { "$set" => { "major_change" => false } },
-      multi: true
+      multi: true,
     )
   end
 

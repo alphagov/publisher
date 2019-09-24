@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class HelpPageCreateEditTest < JavascriptIntegrationTest
   setup do
@@ -9,7 +9,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
       slug: "help/hedgehog-topiary",
       kind: "help_page",
       name: "Foo bar",
-      owning_app: "publisher"
+      owning_app: "publisher",
     )
 
     setup_users
@@ -50,7 +50,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
     should "allow creating a new version of a HelpPageEdition" do
       help_page = FactoryBot.create(:help_page_edition,
                                     panopticon_id: @artefact.id,
-                                    state: 'published',
+                                    state: "published",
                                     title: "Foo bar",
                                     body: "This is really helpful")
 
@@ -65,7 +65,7 @@ class HelpPageCreateEditTest < JavascriptIntegrationTest
   should "disable fields for a published edition" do
     edition = FactoryBot.create(:help_page_edition,
                                 panopticon_id: @artefact.id,
-                                state: 'published',
+                                state: "published",
                                 title: "Foo bar",
                                 body: "This is really helpful")
 

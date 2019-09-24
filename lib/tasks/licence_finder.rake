@@ -1,4 +1,4 @@
-require 'gds_api/publishing_api_v2'
+require "gds_api/publishing_api_v2"
 
 namespace :licence_finder do
   desc "Create draft start page for licence finder"
@@ -25,7 +25,7 @@ namespace :licence_finder do
       owning_app: "publisher",
       kind: "transaction",
       state: "draft",
-      language: "en"
+      language: "en",
     )
 
     artefact.save!

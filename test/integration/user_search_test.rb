@@ -1,4 +1,4 @@
-require_relative '../integration_test_helper'
+require_relative "../integration_test_helper"
 
 class UserSearchTest < ActionDispatch::IntegrationTest
   setup do
@@ -17,7 +17,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
   end
 
   test "excluding archived editions" do
-    @guide = FactoryBot.create(:guide_edition, state: 'archived')
+    @guide = FactoryBot.create(:guide_edition, state: "archived")
     @user.record_note @guide, "I like this guide"
 
     visit "/user_search"
@@ -114,7 +114,7 @@ class UserSearchTest < ActionDispatch::IntegrationTest
 
     visit "/user_search"
 
-    select_box = find_field('User')
+    select_box = find_field("User")
     assert page.has_no_xpath?(select_box.path + "/option[text() = '#{disabled_user.name}']")
   end
 end

@@ -1,6 +1,6 @@
 require "edition"
-require_dependency 'simple_smart_answer_edition/node'
-require_dependency 'simple_smart_answer_edition/node/option'
+require_dependency "simple_smart_answer_edition/node"
+require_dependency "simple_smart_answer_edition/node/option"
 
 class SimpleSmartAnswerEdition < Edition
   include Mongoid::Document
@@ -47,7 +47,7 @@ class SimpleSmartAnswerEdition < Edition
     if nodes_attrs
       nodes_attrs.each do |_index, node_attrs|
                                                # as this isn't a Hash
-        node_id = node_attrs['id']
+        node_id = node_attrs["id"]
         if node_id
           node = nodes.find(node_id)
           if destroy_in_attrs?(node_attrs)
@@ -69,6 +69,6 @@ class SimpleSmartAnswerEdition < Edition
   end
 
   def destroy_in_attrs?(attrs)
-    attrs.delete('_destroy') == '1'
+    attrs.delete("_destroy") == "1"
   end
 end

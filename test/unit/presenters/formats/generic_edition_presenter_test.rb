@@ -18,9 +18,9 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         :published,
         major_change: true,
         updated_at: DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone,
-        change_note: 'Test',
+        change_note: "Test",
         version_number: 2,
-        panopticon_id: artefact.id
+        panopticon_id: artefact.id,
       )
 
       @presenter = Formats::GenericEditionPresenter.new(@edition)
@@ -31,7 +31,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         description: "",
         schema_name: "generic_with_external_related_links",
         document_type: "answer",
-        public_updated_at: '2017-02-06T17:36:58.000+00:00',
+        public_updated_at: "2017-02-06T17:36:58.000+00:00",
         publishing_app: "publisher",
         rendering_app: "frontend",
         routes: [
@@ -43,10 +43,10 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         details: {
           external_related_links: expected_external_related_links,
         },
-        locale: 'en',
+        locale: "en",
         access_limited: {
-          auth_bypass_ids: [@edition.auth_bypass_id]
-        }
+          auth_bypass_ids: [@edition.auth_bypass_id],
+        },
       }
     end
 
@@ -55,17 +55,17 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "create an attributes hash for the publishing api for a republish" do
-      attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge(update_type: "republish",)
+      attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge(update_type: "republish")
       presented_hash = @presenter.render_for_publishing_api(republish: true)
       assert_equal attributes_for_republish, presented_hash
-      assert_valid_against_schema(presented_hash, 'generic_with_external_related_links')
+      assert_valid_against_schema(presented_hash, "generic_with_external_related_links")
     end
 
-    should 'create an attributes hash for a minor change' do
+    should "create an attributes hash for a minor change" do
       @edition.update_attribute(:major_change, false)
 
       output = @presenter.render_for_publishing_api(republish: false)
-      assert_equal 'minor', output[:update_type]
+      assert_equal "minor", output[:update_type]
     end
 
     should 'always return a "major" update_type for a first edition' do
@@ -73,7 +73,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       presenter = Formats::GenericEditionPresenter.new(first_edition)
 
       output = presenter.render_for_publishing_api(republish: false)
-      assert_equal 'major', output[:update_type]
+      assert_equal "major", output[:update_type]
     end
   end
 
@@ -82,7 +82,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       artefact = FactoryBot.create(
         :artefact,
         content_id: SecureRandom.uuid,
-        language: 'cy',
+        language: "cy",
       )
       updated_at = DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone
       @edition = FactoryBot.create(
@@ -95,16 +95,16 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "be valid against schema" do
-      assert_valid_against_schema(@output, 'generic_with_external_related_links')
+      assert_valid_against_schema(@output, "generic_with_external_related_links")
     end
 
-    should 'use updated_at value if public_updated_at is nil' do
+    should "use updated_at value if public_updated_at is nil" do
       assert_nil @edition.public_updated_at
       assert_equal @edition.updated_at, @output[:public_updated_at]
     end
 
-    should 'choose locale based on the artefact language' do
-      assert_equal 'cy', @output[:locale]
+    should "choose locale based on the artefact language" do
+      assert_equal "cy", @output[:locale]
     end
 
     should "have a exact route type for both path and json path" do

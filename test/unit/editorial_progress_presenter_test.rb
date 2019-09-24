@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EditoriaProgressPresenterTest < ActiveSupport::TestCase
   setup do
@@ -17,11 +17,11 @@ class EditoriaProgressPresenterTest < ActiveSupport::TestCase
     result = presenter.to_csv
 
     parsed = CSV.parse(result, headers: true)
-    assert parsed['Preview url'].present?
+    assert parsed["Preview url"].present?
   end
 
   test "lists out each separate edition of an item" do
-    @guide.update_attribute :state, 'published'
+    @guide.update_attribute :state, "published"
     second_guide = @guide.build_clone
     second_guide.save
 

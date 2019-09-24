@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class LocalTransactionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -20,9 +20,9 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       panopticon_id: artefact.id,
       lgsl_code: 431,
       lgil_code: 8,
-      introduction: 'hello',
-      more_information: 'more info',
-      need_to_know: 'for your eyes only'
+      introduction: "hello",
+      more_information: "more info",
+      need_to_know: "for your eyes only",
     )
   end
 
@@ -35,11 +35,11 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'local_transaction')
+    assert_valid_against_schema(result, "local_transaction")
   end
 
   should "[:schema_name]" do
-    assert_equal 'local_transaction', result[:schema_name]
+    assert_equal "local_transaction", result[:schema_name]
   end
 
   context "[:details]" do
@@ -66,8 +66,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
           expected = [
             {
               content_type: "text/govspeak",
-              content: 'hello'
-            }
+              content: "hello",
+            },
           ]
           assert_equal expected, result[:details][:introduction]
         end
@@ -83,8 +83,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
           expected = [
             {
               content_type: "text/govspeak",
-              content: 'more info'
-            }
+              content: "more info",
+            },
           ]
           assert_equal expected, result[:details][:more_information]
         end
@@ -100,8 +100,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
           expected = [
             {
               content_type: "text/govspeak",
-              content: 'for your eyes only'
-            }
+              content: "for your eyes only",
+            },
           ]
           assert_equal expected, result[:details][:need_to_know]
         end
@@ -114,22 +114,22 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { 'url' => 'www.foo.com', 'title' => 'foo' }
+      link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.update_attribute(:external_links, [link])
       expected = [
         {
-          url: link['url'],
-          title: link['title']
-        }
+          url: link["url"],
+          title: link["title"],
+        },
       ]
 
       assert_equal expected, result[:details][:external_related_links]
     end
 
     should "[:routes]" do
-      edition.update_attribute(:slug, 'foo')
+      edition.update_attribute(:slug, "foo")
       expected = [
-        { path: '/foo', type: 'prefix' },
+        { path: "/foo", type: "prefix" },
       ]
       assert_equal expected, result[:routes]
     end

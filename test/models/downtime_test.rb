@@ -34,7 +34,7 @@ class DowntimeTest < ActiveSupport::TestCase
       downtime = FactoryBot.build(:downtime, end_time: Time.zone.yesterday)
 
       refute downtime.valid?
-      assert_includes downtime.errors[:end_time], 'must be in the future'
+      assert_includes downtime.errors[:end_time], "must be in the future"
     end
 
     should "validate end time is in future only on create" do

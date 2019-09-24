@@ -28,7 +28,7 @@ module PathsHelper
 protected
 
   def jwt_token(sub:)
-    JWT.encode({ 'sub' => sub }, jwt_auth_secret, 'HS256')
+    JWT.encode({ "sub" => sub }, jwt_auth_secret, "HS256")
   end
 
   def jwt_auth_secret

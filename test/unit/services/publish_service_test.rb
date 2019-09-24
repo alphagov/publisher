@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PublishServiceTest < ActiveSupport::TestCase
   setup do
@@ -9,7 +9,7 @@ class PublishServiceTest < ActiveSupport::TestCase
     Services.publishing_api.expects(:publish).with(
       content_id,
       update_type,
-      locale: language
+      locale: language,
     )
 
     PublishService.call(edition, update_type)
@@ -25,20 +25,20 @@ class PublishServiceTest < ActiveSupport::TestCase
       id: 123,
       artefact: stub(
         content_id: content_id,
-        language: language
-      )
+        language: language,
+      ),
     )
   end
 
   def content_id
-    'swans'
+    "swans"
   end
 
   def update_type
-    'ducks'
+    "ducks"
   end
 
   def language
-    'foreign'
+    "foreign"
   end
 end

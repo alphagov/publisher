@@ -11,20 +11,20 @@ class RootController < ApplicationController
     user_filter           = params[:user_filter] || session[:user_filter]
     session[:user_filter] = user_filter
 
-    @list = params[:list].blank? ? 'drafts' : params[:list]
+    @list = params[:list].blank? ? "drafts" : params[:list]
     @presenter, @user_filter = build_presenter(user_filter, params[:page])
 
     # Looking at another class, but the whole approach taken by this method and its
     # associated presenter needs revisiting.
     unless @presenter.acceptable_list?(@list)
-      render body: { 'raw' => 'Not Found' }, status: 404
+      render body: { "raw" => "Not Found" }, status: 404
       return
     end
 
     if params[:string_filter].present?
       clean_string_filter = params[:string_filter]
         .strip
-        .gsub(/\s+/, ' ')
+        .gsub(/\s+/, " ")
       @presenter.filter_by_substring(clean_string_filter)
     end
   end
@@ -32,13 +32,13 @@ class RootController < ApplicationController
 private
 
   def format_filter
-    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].include?(params[:format_filter]) ? params[:format_filter] : 'edition'
+    Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].include?(params[:format_filter]) ? params[:format_filter] : "edition"
   end
 
   def filtered_editions
-    return Edition if format_filter == 'edition'
+    return Edition if format_filter == "edition"
 
-    Edition.where(_type: format_filter.camelcase + 'Edition')
+    Edition.where(_type: format_filter.camelcase + "Edition")
   end
 
   def list_parameter_from_state(state)

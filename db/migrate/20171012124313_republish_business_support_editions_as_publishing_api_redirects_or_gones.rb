@@ -1,13 +1,13 @@
-require 'gds_api/router'
+require "gds_api/router"
 
 class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid::Migration
   def self.up
-    business_support_by_state = Artefact.where(kind: 'business_support').group_by(&:state)
-    raise "Didn't expect any artefacts not in live, archived, or draft state" unless (business_support_by_state.keys - ['live', 'draft', 'archived']).empty?
+    business_support_by_state = Artefact.where(kind: "business_support").group_by(&:state)
+    raise "Didn't expect any artefacts not in live, archived, or draft state" unless (business_support_by_state.keys - ["live", "draft", "archived"]).empty?
 
-    handle_live_business_support_artefacts(business_support_by_state['live'])
-    handle_draft_business_support_artefacts(business_support_by_state['draft'])
-    handle_archived_business_support_artefacts(business_support_by_state['archived'])
+    handle_live_business_support_artefacts(business_support_by_state["live"])
+    handle_draft_business_support_artefacts(business_support_by_state["draft"])
+    handle_archived_business_support_artefacts(business_support_by_state["archived"])
   end
 
   def self.handle_live_business_support_artefacts(live_artefacts)
@@ -23,14 +23,14 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
         content_id = publishing_api.lookup_content_id(base_path: "/#{live_artefact.slug}", exclude_unpublishing_types: [], exclude_document_types: [])
         raise "Didn't expect publishing-api to think some other content_id is the owner of a live artefact's path (#{live_artefact.slug}, #{live_artefact.content_id}, #{content_id})" if live_artefact.content_id != content_id
         content_item = publishing_api.get_content(content_id).to_hash
-        raise "Didn't expect publishing-api content for live artefact not to be a business_support (#{live_artefact.slug}, #{live_artefact.content_id}, #{content_item['document_type']})" if content_item['document_type'] != 'business_support'
+        raise "Didn't expect publishing-api content for live artefact not to be a business_support (#{live_artefact.slug}, #{live_artefact.content_id}, #{content_item['document_type']})" if content_item["document_type"] != "business_support"
         current_route = router_response(live_artefact)
         raise "Didn't exxpect any live artefacts not to have a route in router-api (#{live_artefact.slug}, #{live_artefact.content_id})" if current_route.nil?
 
-        if current_route['handler'] == 'redirect'
-          live_artefact.redirect_url = current_route['redirect_to']
+        if current_route["handler"] == "redirect"
+          live_artefact.redirect_url = current_route["redirect_to"]
         else
-          live_artefact.redirect_url = '/business-finance-support'
+          live_artefact.redirect_url = "/business-finance-support"
         end
       end
     end
@@ -44,14 +44,14 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
   end
 
   def self.handle_jobcentre_plus_vacancy_filling_system_uk(live_artefacts)
-    jobcentre_plus_vacany_fill_system_uk = live_artefacts.detect { |x| x.slug == 'jobcentre-plus-vacancy-filling-system-uk'}
+    jobcentre_plus_vacany_fill_system_uk = live_artefacts.detect { |x| x.slug == "jobcentre-plus-vacancy-filling-system-uk"}
     raise "Didn't expect 'jobcentre-plus-vacancy-filling-system-uk' to be missing from live business support artefacts" if jobcentre_plus_vacany_fill_system_uk.nil?
 
     say_with_time "Checking 'jobcentre-plus-vacancy-filling-system-uk' is already migrated by short-url-manager" do
       content_id = publishing_api.lookup_content_id(base_path: "/jobcentre-plus-vacancy-filling-system-uk", exclude_unpublishing_types: [], exclude_document_types: [])
       raise "Didn't expect publishing-api to think artefact is the content_id for /jobcentre-plus-vacancy-filling-system-uk path" if jobcentre_plus_vacany_fill_system_uk.content_id == content_id
       content_item = publishing_api.get_content(content_id).to_hash
-      raise "Didn't expect publishing-api content for /jobcentre_plus_vacany_fill_system_uk not to be a redirect" if content_item['document_type'] != 'redirect'
+      raise "Didn't expect publishing-api content for /jobcentre_plus_vacany_fill_system_uk not to be a redirect" if content_item["document_type"] != "redirect"
     end
     live_artefacts.reject { |x| x.slug == jobcentre_plus_vacany_fill_system_uk.slug }
   end
@@ -81,12 +81,12 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
 
   def self.handle_archived_business_support_artefacts_in_router(archived_artefacts_in_router)
     raise "Didn't expect there to be no archived artefacts in the router" if archived_artefacts_in_router.empty?
-    archived_artefacts_by_router_handler = archived_artefacts_in_router.group_by { |(a, r)| r['handler'] }
-    raise "Didn't expect archived artefacts with a router handler other than 'redirect', 'gone', 'backend'" unless (archived_artefacts_by_router_handler.keys - ['redirect', 'gone', 'backend']).empty?
+    archived_artefacts_by_router_handler = archived_artefacts_in_router.group_by { |(a, r)| r["handler"] }
+    raise "Didn't expect archived artefacts with a router handler other than 'redirect', 'gone', 'backend'" unless (archived_artefacts_by_router_handler.keys - ["redirect", "gone", "backend"]).empty?
 
-    handle_archived_business_support_artefacts_redirected_in_router(archived_artefacts_by_router_handler.fetch('redirect', []))
-    handle_archived_business_support_artefacts_gone_in_router(archived_artefacts_by_router_handler.fetch('gone', []))
-    handle_archived_business_support_artefacts_live_in_router(archived_artefacts_by_router_handler.fetch('backend', []))
+    handle_archived_business_support_artefacts_redirected_in_router(archived_artefacts_by_router_handler.fetch("redirect", []))
+    handle_archived_business_support_artefacts_gone_in_router(archived_artefacts_by_router_handler.fetch("gone", []))
+    handle_archived_business_support_artefacts_live_in_router(archived_artefacts_by_router_handler.fetch("backend", []))
   end
 
   def self.handle_archived_business_support_artefacts_redirected_in_router(redirected_archived_artefacts_and_router_responses)
@@ -100,7 +100,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
 
     say_with_time "Unpublishing #{redirected_archived_artefacts_and_router_responses.size} archived artefacts listed as redirects in the router as redirects via publishing-api" do
       redirected_archived_artefacts_and_router_responses.each do |(artefact, router_response)|
-        artefact.redirect_url = router_response['redirect_to']
+        artefact.redirect_url = router_response["redirect_to"]
         if publishing_api_response(artefact).present?
           UnpublishService.call(artefact, nil, artefact.redirect_url)
         else
@@ -142,7 +142,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
     say_with_time "Unpublishing #{live_archived_artefacts_and_router_responses.size} archived artefacts still listed as live by the router as redirects to '/business-finance-support' via publishing-api" do
       live_archived_artefacts_and_router_responses.each do |(artefact, _router_responses)|
         if publishing_api_response(artefact).present?
-          UnpublishService.call(artefact, nil, '/business-finance-support')
+          UnpublishService.call(artefact, nil, "/business-finance-support")
         else
           raise "Didn't expect any archived artefacts listed as live routes in router to not have content items in the publishing-api"
         end
@@ -163,7 +163,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
   def self.handle_archived_business_support_artefacts_not_in_router_with_editions(archived_editions_with_editions)
     raise "Didn't expect there to be no archived artefacts missing from the router without editions" if archived_editions_with_editions.empty?
 
-    archived_editions_with_editions_by_publish_event_presence = archived_editions_with_editions.group_by { |a| Edition.where(panopticon_id: a.id).flat_map { |e| e.actions.map(&:request_type) }.uniq.include?('publish') }
+    archived_editions_with_editions_by_publish_event_presence = archived_editions_with_editions.group_by { |a| Edition.where(panopticon_id: a.id).flat_map { |e| e.actions.map(&:request_type) }.uniq.include?("publish") }
 
     handle_archived_business_support_artefacts_not_in_router_with_editions_published(archived_editions_with_editions_by_publish_event_presence.fetch(true, []))
     handle_archived_business_support_artefacts_not_in_router_with_editions_never_published(archived_editions_with_editions_by_publish_event_presence.fetch(false, []))
@@ -178,7 +178,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
 
     say_with_time "Unpublishing #{archived_artefacts_been_published.size} archived artefacts missing from the router that have editions and have been published before (but are not in the publishing-api) as redirects to '/business-finance-support' via publishing-api" do
       archived_artefacts_been_published.each do |artefact|
-        artefact.update_as(nil, state: "archived", redirect_url: '/business-finance-support')
+        artefact.update_as(nil, state: "archived", redirect_url: "/business-finance-support")
         create_redirect_item_in_publishing_api(artefact)
       end
     end
@@ -223,7 +223,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
         "redirects" => [
           {
             "path" => "/#{artefact.slug}",
-            "type" => artefact.exact_route? ? 'exact' : 'prefix',
+            "type" => artefact.exact_route? ? "exact" : "prefix",
             "destination" => artefact.redirect_url,
           },
         ],
@@ -244,7 +244,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
         "routes" => [
           {
             "path" => "/#{artefact.slug}",
-            "type" => artefact.exact_route? ? 'exact' : 'prefix',
+            "type" => artefact.exact_route? ? "exact" : "prefix",
           },
         ],
       }
@@ -253,7 +253,7 @@ class RepublishBusinessSupportEditionsAsPublishingApiRedirectsOrGones < Mongoid:
   end
 
   def self.router
-    @router ||= GdsApi::Router.new(Plek.find('router-api'))
+    @router ||= GdsApi::Router.new(Plek.find("router-api"))
   end
 
   def self.router_response(artefact)

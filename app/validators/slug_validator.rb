@@ -7,7 +7,7 @@ class SlugValidator < ActiveModel::EachValidator
       HelpPageValidator,
       FinderEmailSignupValidator,
       ManualPageValidator,
-      DefaultValidator
+      DefaultValidator,
     ].map { |klass| klass.new(record, attribute, value) }
 
     validators.find(&:applicable?).validate!
@@ -27,7 +27,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def url_after_first_slash
-      value.to_s.split('/', 2)[1]
+      value.to_s.split("/", 2)[1]
     end
 
     def url_after_first_slash_is_valid_slug!
@@ -61,7 +61,7 @@ class SlugValidator < ActiveModel::EachValidator
 
   class ForeignTravelAdvicePageValidator < InstanceValidator
     def applicable?
-      starts_with?("foreign-travel-advice/") && of_kind?('travel-advice')
+      starts_with?("foreign-travel-advice/") && of_kind?("travel-advice")
     end
 
     def validate!
@@ -81,7 +81,7 @@ class SlugValidator < ActiveModel::EachValidator
 
   class HelpPageValidator < InstanceValidator
     def applicable?
-      of_kind?('help_page')
+      of_kind?("help_page")
     end
 
     def validate!
@@ -92,7 +92,7 @@ class SlugValidator < ActiveModel::EachValidator
 
   class ManualPageValidator < InstanceValidator
     def applicable?
-      of_kind?('manual')
+      of_kind?("manual")
     end
 
     def validate!
@@ -105,19 +105,19 @@ class SlugValidator < ActiveModel::EachValidator
 
     def validate_number_of_parts!
       unless [2, 3].include?(url_parts.size)
-        record.errors[attribute] << 'must contains two or three path parts'
+        record.errors[attribute] << "must contains two or three path parts"
       end
     end
 
     def validate_guidance_prefix!
-      unless starts_with?('guidance/')
-        record.errors[attribute] << 'must have a guidance/ prefix'
+      unless starts_with?("guidance/")
+        record.errors[attribute] << "must have a guidance/ prefix"
       end
     end
 
     def validate_parts_as_slugs!
       unless url_parts.all? { |url_part| valid_slug?(url_part) }
-        record.errors[attribute] << 'must be usable in a URL'
+        record.errors[attribute] << "must be usable in a URL"
       end
     end
   end

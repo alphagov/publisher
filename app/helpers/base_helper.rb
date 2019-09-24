@@ -1,21 +1,21 @@
 module BaseHelper
   def publication_tab_list(options)
     state_names = {
-      drafts: 'Drafts',
-      in_review: 'In review',
-      amends_needed: 'Amends needed',
-      out_for_fact_check: 'Out for fact check',
-      fact_check_received: 'Fact check received',
-      ready: 'Ready',
-      scheduled_for_publishing: 'Scheduled',
-      published: 'Published',
-      archived: 'Archived',
+      drafts: "Drafts",
+      in_review: "In review",
+      amends_needed: "Amends needed",
+      out_for_fact_check: "Out for fact check",
+      fact_check_received: "Fact check received",
+      ready: "Ready",
+      scheduled_for_publishing: "Scheduled",
+      published: "Published",
+      archived: "Archived",
     }
     output = state_names.collect do |scope, status_label|
-      li_classes = ['status-option', scope]
-      li_classes << 'active' if scope == options[:current]
+      li_classes = ["status-option", scope]
+      li_classes << "active" if scope == options[:current]
 
-      content_tag(:li, class: li_classes.join(' ')) do
+      content_tag(:li, class: li_classes.join(" ")) do
         url = root_path(scope_path_options(scope))
 
         content_tag(:a, href: url) do
@@ -55,7 +55,7 @@ private
   end
 
   def in_review_url_defaults
-    { direction: 'asc', sort: 'review_requested_at' }
+    { direction: "asc", sort: "review_requested_at" }
   end
 
   include PathsHelper

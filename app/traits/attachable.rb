@@ -63,7 +63,7 @@ module Attachable
               response = Attachable.asset_api_client.update_asset(self.send("#{field}_id"), file: instance_variable_get("@#{field}_file"))
             else
               response = Attachable.asset_api_client.create_asset(file: instance_variable_get("@#{field}_file"))
-              self.send("#{field}_id=", response["id"].split('/').last)
+              self.send("#{field}_id=", response["id"].split("/").last)
             end
 
             self.send("#{field}_url=", response["file_url"]) if self.respond_to?("#{field}_url=")

@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class CSVPresenter
   def initialize(scope)
@@ -23,7 +23,7 @@ class CSVPresenter
   end
 
   def report_name
-    self.class.name.gsub(/Presenter/, '').underscore
+    self.class.name.gsub(/Presenter/, "").underscore
   end
 
 protected

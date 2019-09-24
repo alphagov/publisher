@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class GuidePresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -21,7 +21,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
       slug: "slug-#{num}",
       body: "body-#{num}",
       order: num,
-      guide_edition: edition
+      guide_edition: edition,
     )
   end
 
@@ -30,11 +30,11 @@ class GuidePresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'guide')
+    assert_valid_against_schema(result, "guide")
   end
 
   should "[:schema_name]" do
-    assert_equal 'guide', result[:schema_name]
+    assert_equal "guide", result[:schema_name]
   end
 
   context "[:details]" do
@@ -44,25 +44,25 @@ class GuidePresenterTest < ActiveSupport::TestCase
 
       expected = [
         {
-          title: 'title-1',
-          slug: 'slug-1',
+          title: "title-1",
+          slug: "slug-1",
           body: [
             {
-              content_type: 'text/govspeak',
-              content: 'body-1'
-            }
-          ]
+              content_type: "text/govspeak",
+              content: "body-1",
+            },
+          ],
         },
         {
-          title: 'title-2',
-          slug: 'slug-2',
+          title: "title-2",
+          slug: "slug-2",
           body: [
             {
-              content_type: 'text/govspeak',
-              content: 'body-2'
-            }
-          ]
-        }
+              content_type: "text/govspeak",
+              content: "body-2",
+            },
+          ],
+        },
       ]
 
       assert_equal expected, result[:details][:parts]
@@ -75,22 +75,22 @@ class GuidePresenterTest < ActiveSupport::TestCase
         title: "",
         slug: "",
         body: [{
-          content_type: 'text/govspeak',
-          content: ""
-        }]
+          content_type: "text/govspeak",
+          content: "",
+        }],
       }]
 
       assert_equal expected, result[:details][:parts]
     end
 
     should "[:external_related_links]" do
-      link = { 'url' => 'www.foo.com', 'title' => 'foo' }
+      link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.update_attribute(:external_links, [link])
       expected = [
         {
-          url: link['url'],
-          title: link['title']
-        }
+          url: link["url"],
+          title: link["title"],
+        },
       ]
 
       assert_equal expected, result[:details][:external_related_links]
@@ -104,9 +104,9 @@ class GuidePresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update_attribute(:slug, 'foo')
+    edition.update_attribute(:slug, "foo")
     expected = [
-      { path: '/foo', type: 'prefix' },
+      { path: "/foo", type: "prefix" },
     ]
     assert_equal expected, result[:routes]
   end

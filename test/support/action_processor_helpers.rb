@@ -27,14 +27,14 @@ module ActionProcessorHelpers
     user.progress(edition, request_type: :request_amendments, comment: "More amendments are required")
   end
 
-  def publish(user, edition, comment = 'Yo!')
+  def publish(user, edition, comment = "Yo!")
     user.progress(edition, request_type: :publish, comment: comment)
   end
 
   def schedule_for_publishing(user, edition, action_attributes)
     user.progress(edition, request_type: :schedule_for_publishing,
       publish_at: action_attributes[:publish_at] || Time.zone.now.utc,
-      comment: action_attributes[:comment] || 'Schedule!')
+      comment: action_attributes[:comment] || "Schedule!")
   end
 
   def skip_review(user, edition)

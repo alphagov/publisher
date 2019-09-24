@@ -1,5 +1,5 @@
-require 'integration_test_helper'
-require 'imminence_areas_test_helper'
+require "integration_test_helper"
+require "imminence_areas_test_helper"
 
 class ChangeEditionTypeTest < JavascriptIntegrationTest
   include ImminenceAreasTestHelper
@@ -7,7 +7,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   setup do
     stub_linkables
     FactoryBot.create(:user)
-    stub_mapit_areas_requests(Plek.current.find('imminence'))
+    stub_mapit_areas_requests(Plek.current.find("imminence"))
     stub_holidays_used_by_fact_check
   end
 
@@ -16,7 +16,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   def select_target_edition(format)
-    select(format.to_s.humanize, from: 'to')
+    select(format.to_s.humanize, from: "to")
   end
 
   def edition_parts(edition)
@@ -24,9 +24,9 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   def create_artefact_of_kind(kind)
-    if kind == 'help_page'
+    if kind == "help_page"
       FactoryBot.create(:artefact, slug: "help/foo", kind: kind)
-    elsif kind == 'completed_transaction'
+    elsif kind == "completed_transaction"
       FactoryBot.create(:artefact, slug: "done/foo", kind: kind)
     else
       FactoryBot.create(:artefact, kind: kind)
@@ -37,14 +37,14 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
     {
       "title" => "PART !",
       "body" => "This is some edition version text.",
-      "slug" => "part-one"
+      "slug" => "part-one",
       },
     {
       "title" => "PART !!",
     "body" =>
     "This is some more edition version text.",
-    "slug" =>  "part-two"
-    }
+    "slug" =>  "part-two",
+    },
   ])
 
   without_javascript do
@@ -54,7 +54,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       should "be able to convert #{from} into #{to}" do
         factory_name = (from + "_edition").to_sym
         artefact = create_artefact_of_kind(from)
-        edition = FactoryBot.create(factory_name, state: 'published', panopticon_id: artefact.id)
+        edition = FactoryBot.create(factory_name, state: "published", panopticon_id: artefact.id)
         sample_parts.each { |part| edition.parts.create(part) } if edition.respond_to?(:parts)
 
         visit "/editions/#{edition.to_param}/admin"

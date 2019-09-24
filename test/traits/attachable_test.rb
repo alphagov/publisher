@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ModelWithAttachments
   include Attachable
@@ -68,7 +68,7 @@ class AttachableTest < ActiveSupport::TestCase
     end
 
     should "assign a file and detect it has changed" do
-      file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
+      file = File.open(File.expand_path("../fixtures/uploads/image.jpg", __dir__))
       @edition.image = file
       assert @edition.image_has_changed?
     end
@@ -76,10 +76,10 @@ class AttachableTest < ActiveSupport::TestCase
 
   context "saving an edition without update_existing set" do
     setup do
-      @file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
+      @file = File.open(File.expand_path("../fixtures/uploads/image.jpg", __dir__))
       @asset = {
-        "id" => 'http://asset-manager.dev.gov.uk/assets/an_image_id',
-        "file_url" => 'http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg'
+        "id" => "http://asset-manager.dev.gov.uk/assets/an_image_id",
+        "file_url" => "http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg",
       }
     end
 
@@ -116,7 +116,7 @@ class AttachableTest < ActiveSupport::TestCase
 
       @edition_with_url_field.image = @file
       @edition_with_url_field.save!
-      assert_equal 'http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg', @edition_with_url_field["image_url"]
+      assert_equal "http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg", @edition_with_url_field["image_url"]
     end
 
     should "not create the attachment url attribute if not requested" do
@@ -162,7 +162,7 @@ class AttachableTest < ActiveSupport::TestCase
 
   context "removing an asset" do
     should "remove an asset when remove_* set to true" do
-      @edition.image_id = 'an_image_id'
+      @edition.image_id = "an_image_id"
       @edition.remove_image = true
       @edition.save!
 
@@ -170,7 +170,7 @@ class AttachableTest < ActiveSupport::TestCase
     end
 
     should "not remove an asset when remove_* set to false or empty" do
-      @edition.image_id = 'an_image_id'
+      @edition.image_id = "an_image_id"
       @edition.remove_image = false
       @edition.remove_image = ""
       @edition.remove_image = nil
@@ -182,13 +182,13 @@ class AttachableTest < ActiveSupport::TestCase
 
   context "with update_existing option set" do
     setup do
-      @file = File.open(File.expand_path('../fixtures/uploads/image.jpg', __dir__))
+      @file = File.open(File.expand_path("../fixtures/uploads/image.jpg", __dir__))
 
-      @asset_id = 'an_image_id'
+      @asset_id = "an_image_id"
 
       @asset_response = {
         "id" => "http://asset-manager.dev.gov.uk/assets/#{@asset_id}",
-        "file_url" => 'http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg'
+        "file_url" => "http://asset-manager.dev.gov.uk/media/an_image_id/image.jpg",
       }
     end
 
@@ -215,7 +215,7 @@ class AttachableTest < ActiveSupport::TestCase
       setup do
         @existing_asset = {
           "id" => "http://asset-manager.dev.gov.uk/assets/#{@asset_id}",
-          "file_url" => 'http://asset-manager.dev.gov.uk/media/an_image_id/old_image.jpg'
+          "file_url" => "http://asset-manager.dev.gov.uk/media/an_image_id/old_image.jpg",
         }
 
         @edition_with_update_option.image_id = @asset_id

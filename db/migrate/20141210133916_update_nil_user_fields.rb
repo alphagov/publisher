@@ -4,9 +4,9 @@ class UpdateNilUserFields < Mongoid::Migration
   # a convenient way to unassign content.
   #
   def self.up
-    user = User.find('4fdef980a4254a0ef6000001')
-    user.uid = '42'
-    user.name = 'Nil (deprecated)'
+    user = User.find("4fdef980a4254a0ef6000001")
+    user.uid = "42"
+    user.name = "Nil (deprecated)"
     user.disabled = true
     user.save!
   end

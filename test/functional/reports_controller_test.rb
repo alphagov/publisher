@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class ReportsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @report_dir = File.join(Dir.tmpdir, 'publisher-test-reports')
+    @report_dir = File.join(Dir.tmpdir, "publisher-test-reports")
     CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
     path = File.join(@report_dir, "editorial_progress.csv")
 

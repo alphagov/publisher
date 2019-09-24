@@ -1,6 +1,6 @@
-set :output, error: 'log/cron.error.log', standard: 'log/cron.log'
+set :output, error: "log/cron.error.log", standard: "log/cron.log"
 
-schedule_task_prefix = ENV.fetch('SCHEDULE_TASK_PREFIX', '/usr/local/bin/govuk_setenv publisher')
+schedule_task_prefix = ENV.fetch("SCHEDULE_TASK_PREFIX", "/usr/local/bin/govuk_setenv publisher")
 job_type :rake, "cd :path && #{schedule_task_prefix} bundle exec rake :task :output"
 job_type :run_script, "cd :path && RAILS_ENV=:environment #{schedule_task_prefix} script/:task :output"
 

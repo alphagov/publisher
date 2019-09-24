@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'state_count_reporter'
+require "test_helper"
+require "state_count_reporter"
 
 class StateCountReporterTest < ActiveSupport::TestCase
   setup do

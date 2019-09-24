@@ -44,7 +44,7 @@ class ServiceSignInUnpublishService
             type: "prefix",
             destination: redirect_path,
           },
-        ]
+        ],
       )
     end
   end

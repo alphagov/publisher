@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'licence'
+      "licence"
     end
 
     def document_type
-      'licence'
+      "licence"
     end
 
     def details
@@ -55,8 +55,8 @@ module Formats
           {
             content_type: "text/govspeak",
             content: edition.licence_overview,
-          }
-        ]
+          },
+        ],
       }
     end
   end

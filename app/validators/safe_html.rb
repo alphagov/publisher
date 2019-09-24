@@ -8,8 +8,8 @@ class SafeHtml < ActiveModel::Validator
     URI.parse(Plek.new.asset_root).host,   # eg assets-origin.preview.alphagov.co.uk
 
     # Hardcode production URLs so that content copied from production is valid
-    'www.gov.uk',
-    'assets.digital.cabinet-office.gov.uk'
+    "www.gov.uk",
+    "assets.digital.cabinet-office.gov.uk",
   ].freeze
 
   def validate(record)

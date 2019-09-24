@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require_relative "../test_helper"
 
 class LicenceEditionTest < ActiveSupport::TestCase
   def setup
@@ -13,7 +13,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
       licence_short_description: "Short description of licence",
       licence_overview: "Markdown overview of licence...",
       will_continue_on: "The HMRC website",
-      continuation_link: "http://www.hmrc.gov.uk"
+      continuation_link: "http://www.hmrc.gov.uk",
     )
 
     assert_equal "AB1234", l.licence_identifier
@@ -29,7 +29,7 @@ class LicenceEditionTest < ActiveSupport::TestCase
     end
 
     should "require a licence identifier" do
-      @l.licence_identifier = ''
+      @l.licence_identifier = ""
       assert_equal false, @l.valid?, "expected licence edition not to be valid"
     end
 
@@ -50,12 +50,12 @@ class LicenceEditionTest < ActiveSupport::TestCase
     end
 
     should "not require a unique licence identifier for different versions of the same licence edition" do
-      @l.state = 'published'
-      @l.licence_identifier = 'wibble'
+      @l.state = "published"
+      @l.licence_identifier = "wibble"
       @l.save!
 
       new_version = @l.build_clone
-      assert_equal 'wibble', new_version.licence_identifier
+      assert_equal "wibble", new_version.licence_identifier
       assert new_version.valid?, "Expected clone to be valid"
     end
 

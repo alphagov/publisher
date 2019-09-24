@@ -32,7 +32,7 @@ module Formats
           promotion_choice
             .slice("url", "opt_in_url", "opt_out_url")
             .symbolize_keys
-            .compact
+            .compact,
         )
     end
 

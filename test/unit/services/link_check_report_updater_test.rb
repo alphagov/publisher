@@ -7,9 +7,9 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
 
   def payload
     {
-      status: 'complete',
+      status: "complete",
       completed_at: completed_at,
-      links: links_payload
+      links: links_payload,
     }.with_indifferent_access
   end
 
@@ -19,27 +19,27 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
       status: "ok",
       checked: completed_at.try(:iso8601),
       problem_summary: nil,
-      suggested_fix: nil
+      suggested_fix: nil,
     }, {
       uri: "http://www.gov.com",
       status: "broken",
       checked: completed_at.try(:iso8601),
       problem_summary: "Page Not Found",
-      suggested_fix: "Contact site administrator"
+      suggested_fix: "Contact site administrator",
     }]
   end
 
   def create_edition_with_link_check_report
     FactoryBot.create(:edition, :with_link_check_report,
                       batch_id: 1,
-                      link_uris: ['http://www.example.com', 'http://www.gov.com'])
+                      link_uris: ["http://www.example.com", "http://www.gov.com"])
   end
 
   def link_check_report
     @link_check_report ||= create_edition_with_link_check_report.link_check_reports.first
   end
 
-  should 'update the link check report' do
+  should "update the link check report" do
     LinkCheckReportUpdater.new(report: link_check_report, payload: payload).call
 
     link_check_report.reload
@@ -48,7 +48,7 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
     assert completed_at, link_check_report.completed_at
   end
 
-  should 'update the links status' do
+  should "update the links status" do
     LinkCheckReportUpdater.new(report: link_check_report, payload: payload).call
 
     link_check_report.reload

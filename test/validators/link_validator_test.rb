@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require 'test_helper'
+require "test_helper"
 
 class LinkValidatorTest < ActiveSupport::TestCase
   class Dummy
@@ -49,7 +49,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
     end
 
     should "validate smart quotes as normal quotes" do
-      doc = Dummy.new(body: 'abc [foobar](http://foobar.com “hover”)')
+      doc = Dummy.new(body: "abc [foobar](http://foobar.com “hover”)")
       assert doc.invalid?
       assert_includes doc.errors.keys, :body
     end
@@ -67,14 +67,14 @@ class LinkValidatorTest < ActiveSupport::TestCase
     end
 
     should "only show each error once" do
-      doc = Dummy.new(body: 'abc [link1](foobar.com), ghi [link2](bazquux.com)')
+      doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
       assert doc.invalid?
       assert_equal 1, doc.errors[:body].first.length
     end
 
     should "be validated when any attribute of the document changes" do
       # already published document having link validation errors
-      doc = Dummy.new(body: 'abc [link1](foobar.com), ghi [link2](bazquux.com)')
+      doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
       doc.save(validate: false)
 
       doc.assignee = "4fdef0000000000000000001"

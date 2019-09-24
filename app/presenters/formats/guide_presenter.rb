@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'guide'
+      "guide"
     end
 
     def document_type
-      'guide'
+      "guide"
     end
 
     def rendering_app
@@ -18,7 +18,7 @@ module Formats
       {
         parts: parts,
         external_related_links: external_related_links,
-        hide_chapter_navigation: !!edition.hide_chapter_navigation
+        hide_chapter_navigation: !!edition.hide_chapter_navigation,
       }
     end
 
@@ -31,8 +31,8 @@ module Formats
             {
               content_type: "text/govspeak",
               content: part.body.to_s,
-            }
-          ]
+            },
+          ],
         }
       end
     end

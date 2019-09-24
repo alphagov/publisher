@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DowntimeRemoverTest < ActiveSupport::TestCase
   setup do
@@ -38,9 +38,9 @@ class DowntimeRemoverTest < ActiveSupport::TestCase
 
   context "#perform" do
     should "call the PublishingApiWorkflowBypassPublisher with the given artefact" do
-      Artefact.stubs(:find_by).with(id: '123').returns(artefact)
+      Artefact.stubs(:find_by).with(id: "123").returns(artefact)
       PublishingApiWorkflowBypassPublisher.expects(:call).with(artefact)
-      DowntimeRemover.new.perform('123')
+      DowntimeRemover.new.perform("123")
     end
   end
 end

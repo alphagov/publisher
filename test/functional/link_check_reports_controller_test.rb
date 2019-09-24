@@ -16,7 +16,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
         uris: ["https://www.gov.uk"],
         id: "a-batch-id",
         webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
-        webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
+        webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
       )
     end
 

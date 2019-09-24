@@ -1,32 +1,32 @@
 # encoding: utf-8
 
-require 'test_helper'
+require "test_helper"
 
 class ContentWorkflowPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
     action_1 = Action.new(
       request_type: "create",
-      created_at: "2016-01-07 17:41:57"
+      created_at: "2016-01-07 17:41:57",
     )
 
     action_2 = Action.new(
       request_type: "request_review",
-      created_at: "2016-01-11 10:21:00"
+      created_at: "2016-01-11 10:21:00",
     )
 
     action_3 = Action.new(
       request_type: "send_fact_check",
-      created_at: "2016-01-17 12:11:33"
+      created_at: "2016-01-17 12:11:33",
     )
 
     action_4 = Action.new(
       request_type: "request_amendments",
-      created_at: "2016-01-20 17:41:28"
+      created_at: "2016-01-20 17:41:28",
     )
 
     action_5 = Action.new(
       request_type: "send_fact_check",
-      created_at: "2016-03-07 17:31:44"
+      created_at: "2016-03-07 17:31:44",
     )
 
     transaction_edition = TransactionEdition.new(
@@ -34,7 +34,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       slug: "register-to-vote-armed-forces",
       state: "published",
       assignee: "Ray Khan",
-      actions: [action_1, action_2, action_3, action_4, action_5]
+      actions: [action_1, action_2, action_3, action_4, action_5],
     )
 
     guide_edition = GuideEdition.new(
@@ -42,7 +42,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       slug: "queens-awards-for-enterprise",
       state: "published",
       assignee: "Constance Cerf",
-      actions: [action_1, action_2, action_3, action_4, action_5]
+      actions: [action_1, action_2, action_3, action_4, action_5],
     )
 
     Edition.stubs(:published).returns([transaction_edition, guide_edition])

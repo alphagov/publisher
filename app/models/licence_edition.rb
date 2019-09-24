@@ -25,9 +25,9 @@ private
 
   def licence_identifier_unique
     if self.class.where(
-      :state.ne => 'archived',
+      :state.ne => "archived",
       :licence_identifier => licence_identifier,
-      :panopticon_id.ne => panopticon_id
+      :panopticon_id.ne => panopticon_id,
     ).any?
       errors.add(:licence_identifier, :taken)
     end

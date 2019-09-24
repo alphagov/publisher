@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
 
   def template_folder_for(publication)
-    tmpl_folder = publication.class.to_s.underscore.pluralize.downcase.gsub('_edition', '')
+    tmpl_folder = publication.class.to_s.underscore.pluralize.downcase.gsub("_edition", "")
     "app/views/#{tmpl_folder}"
   end
 

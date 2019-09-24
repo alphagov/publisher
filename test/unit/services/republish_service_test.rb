@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RepublishServiceTest < ActiveSupport::TestCase
   setup do
@@ -13,7 +13,7 @@ class RepublishServiceTest < ActiveSupport::TestCase
     end
 
     should "call the PublishService with the provided edition" do
-      PublishService.expects(:call).with(edition, 'republish')
+      PublishService.expects(:call).with(edition, "republish")
       RepublishService.call(edition)
     end
   end

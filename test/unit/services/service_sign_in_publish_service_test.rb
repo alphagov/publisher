@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ServiceSignInPublishServiceTest < ActiveSupport::TestCase
   setup do
@@ -21,12 +21,12 @@ class ServiceSignInPublishServiceTest < ActiveSupport::TestCase
       render_for_publishing_api: payload,
       content_id: content_id,
       links: links,
-      locale: locale
+      locale: locale,
     )
   end
 
   def content_id
-    'a-content-id'
+    "a-content-id"
   end
 
   def links

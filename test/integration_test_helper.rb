@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require 'test_helper'
-require 'capybara/rails'
-require 'support/govuk_test'
+require "test_helper"
+require "capybara/rails"
+require "support/govuk_test"
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
@@ -41,7 +41,7 @@ class ActionDispatch::IntegrationTest
            "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}")
   end
 
-  def filter_by_user(option, from: 'Assignee')
+  def filter_by_user(option, from: "Assignee")
     within ".user-filter-form" do
       select option, from: from
       click_on "Filter publications"
@@ -120,21 +120,21 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_parts(guide)
     visit_edition guide
 
-    if page.has_no_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?("#parts div.part:first-of-type input")
       add_new_part
     end
 
     # Toggle the first part to be open, presuming the first part
     # is called 'Untitled part'
-    if page.has_no_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?("#parts div.part:first-of-type input")
       scroll_to_bottom
-      click_on 'Untitled part'
+      click_on "Untitled part"
     end
 
-    within :css, '#parts div.part:first-of-type' do
-      fill_in 'Title', with: 'Part One'
-      fill_in 'Body', with: 'Body text'
-      fill_in 'Slug', with: 'part-one'
+    within :css, "#parts div.part:first-of-type" do
+      fill_in "Title", with: "Part One"
+      fill_in "Body", with: "Body text"
+      fill_in "Slug", with: "part-one"
     end
 
     save_edition_and_assert_success
@@ -146,21 +146,21 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   def fill_in_variants(transaction)
     visit_edition transaction
 
-    if page.has_no_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?("#parts div.part:first-of-type input")
       add_new_variant
     end
 
     # Toggle the first variant to be open, presuming the first variant
     # is called 'Untitled variant'
-    if page.has_no_css?('#parts div.part:first-of-type input')
+    if page.has_no_css?("#parts div.part:first-of-type input")
       scroll_to_bottom
-      click_on 'Untitled variant'
+      click_on "Untitled variant"
     end
 
-    within :css, '#parts div.part:first-of-type' do
-      fill_in 'Title', with: 'Variant One'
-      fill_in 'Introductory paragraph', with: 'Body text'
-      fill_in 'Slug', with: 'variant-one'
+    within :css, "#parts div.part:first-of-type" do
+      fill_in "Title", with: "Variant One"
+      fill_in "Introductory paragraph", with: "Body text"
+      fill_in "Slug", with: "variant-one"
     end
 
     save_edition_and_assert_success
@@ -208,18 +208,18 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     # Ensure that there are no workflow messages as they may obscure the
     # workflow buttons.
     page.has_no_css?(".workflow-message", visible: true)
-    click_on('Save')
+    click_on("Save")
   end
 
   def save_tags
-    page.click_on('Update tags', visible: false)
+    page.click_on("Update tags", visible: false)
   end
 
   def save_edition_and_assert_success
     save_edition
 
     if using_javascript?
-      assert page.has_css?('.workflow-message', text: 'Saved'), "Edition didn’t successfully save with javascript"
+      assert page.has_css?(".workflow-message", text: "Saved"), "Edition didn’t successfully save with javascript"
     else
       assert page.has_content? "edition was successfully updated."
     end
@@ -248,12 +248,12 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
   def add_new_part
     scroll_to_bottom
-    click_on 'Add new part'
+    click_on "Add new part"
   end
 
   def add_new_variant
     scroll_to_bottom
-    click_on 'Add new variant'
+    click_on "Add new variant"
   end
 
   def scroll_to_bottom

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'licence_identifier_migrator'
+require "test_helper"
+require "licence_identifier_migrator"
 
 class LicenceIdentifierMigratorTest < ActiveSupport::TestCase
   context "update_all" do

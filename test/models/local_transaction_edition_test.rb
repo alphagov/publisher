@@ -15,7 +15,7 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
       lgsl_code:     BINS,
       title:         "Transaction",
       slug:          "slug",
-      panopticon_id: @artefact.id
+      panopticon_id: @artefact.id,
     )
     assert_equal "transaction", bins_transaction.search_format
   end

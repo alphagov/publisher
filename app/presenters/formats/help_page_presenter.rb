@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'help_page'
+      "help_page"
     end
 
     def document_type
-      'help_page'
+      "help_page"
     end
 
     def rendering_app

@@ -10,7 +10,7 @@ class NoisyWorkflow < ActionMailer::Base
     subject = "[PUBLISHER] #{describe_action(@action)}"
     recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 
-    mail(to: recipient_emails.join(', '), subject: subject)
+    mail(to: recipient_emails.join(", "), subject: subject)
   end
 
   def request_fact_check(action)
@@ -20,7 +20,7 @@ class NoisyWorkflow < ActionMailer::Base
       to: action.email_addresses,
       reply_to: fact_check_address,
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
-      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition"
+      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition",
     ) do |format|
       format.text { render plain: action.customised_message }
     end
@@ -56,7 +56,7 @@ class NoisyWorkflow < ActionMailer::Base
 
   def report_errors(error_list)
     @errors = error_list
-    mail(to: EMAIL_GROUPS[:dev], subject: 'Errors in fact check email processing')
+    mail(to: EMAIL_GROUPS[:dev], subject: "Errors in fact check email processing")
   end
 
 protected
