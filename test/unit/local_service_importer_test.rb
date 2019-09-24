@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'local_service_importer'
+require "test_helper"
+require "local_service_importer"
 
 class LocalServiceImporterTest < ActiveSupport::TestCase
   def fixture_file(file)
@@ -13,7 +13,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
 
     should "create a new instance with a filehandle on the services csv, and run it" do
       stub_fh = stub(:close)
-      File.expects(:open).with('data/local_services.csv', 'r:Windows-1252:UTF-8').returns(stub_fh)
+      File.expects(:open).with("data/local_services.csv", "r:Windows-1252:UTF-8").returns(stub_fh)
       LocalServiceImporter.expects(:new).with(stub_fh).returns(stub(:run))
       LocalServiceImporter.update
     end
@@ -27,7 +27,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
 
     should "close the filehandle when done" do
       stub_fh = stub
-      File.stubs(:open).with('data/local_services.csv', anything).returns(stub_fh)
+      File.stubs(:open).with("data/local_services.csv", anything).returns(stub_fh)
       stub_fh.expects(:close)
       LocalServiceImporter.update
     end
@@ -35,7 +35,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
 
   context "CSV of service definitions" do
     setup do
-      @sample_csv = File.open(fixture_file('local_services_sample.csv'))
+      @sample_csv = File.open(fixture_file("local_services_sample.csv"))
     end
 
     should "import the definitions" do
@@ -43,7 +43,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
         LocalServiceImporter.new(@sample_csv).run
       end
       s = LocalService.first
-      assert_equal 'Find out about hazardous waste collection', s.description
+      assert_equal "Find out about hazardous waste collection", s.description
       assert_equal 850, s.lgsl_code
       assert_equal %w{county unitary}, s.providing_tier
     end
@@ -58,8 +58,8 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
 
   context "updates to service definitions" do
     setup do
-      @sample_csv = File.open(fixture_file('local_services_sample.csv'))
-      @update_csv = File.open(fixture_file('local_services_update_sample.csv'))
+      @sample_csv = File.open(fixture_file("local_services_sample.csv"))
+      @update_csv = File.open(fixture_file("local_services_update_sample.csv"))
       LocalServiceImporter.new(@sample_csv).run
     end
 
@@ -67,7 +67,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       LocalServiceImporter.new(@update_csv).run
       s = LocalService.first
       assert_equal 850, s.lgsl_code
-      assert_equal 'Updated hazardous waste collection description', s.description
+      assert_equal "Updated hazardous waste collection description", s.description
       assert_equal %w{district unitary}, s.providing_tier
     end
   end

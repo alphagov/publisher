@@ -4,7 +4,7 @@ class RemoveBusinessSupportEditionsAndSupportObjects < Mongoid::Migration
 
     say_with_time "Removing business support editions from editions collection" do
       editions = db[:editions]
-      editions.delete_many(_type: 'BusinessSupportEdition').deleted_count
+      editions.delete_many(_type: "BusinessSupportEdition").deleted_count
     end
 
     say_with_time "Removing business support business sizes collection" do

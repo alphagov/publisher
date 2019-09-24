@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
@@ -11,7 +11,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       slug: "hedgehog-topiary",
       kind: "local_transaction",
       name: "Foo bar",
-      owning_app: "publisher"
+      owning_app: "publisher",
     )
 
     setup_users
@@ -24,15 +24,15 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
 
     visit "/publications/#{@artefact.id}"
 
-    fill_in 'Lgsl code', with: '1'
-    fill_in 'Lgil code', with: '2'
-    click_button 'Create Local transaction'
+    fill_in "Lgsl code", with: "1"
+    fill_in "Lgil code", with: "2"
+    click_button "Create Local transaction"
     assert page.has_content?(/Foo bar\W#1/)
 
     assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
     assert_match(
       /Created Local transaction: "Foo bar"/,
-      ActionMailer::Base.deliveries.last.subject
+      ActionMailer::Base.deliveries.last.subject,
     )
   end
 
@@ -41,7 +41,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? "We need a bit more information to create your local transaction."
 
     fill_in "Lgsl code", with: "2"
-    click_on 'Create Local transaction edition'
+    click_on "Create Local transaction edition"
 
     assert page.has_content? "Lgsl code 2 not recognised"
   end
@@ -50,10 +50,10 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
-    fill_in 'Lgsl code', with: '1'
-    fill_in 'Lgil code', with: '2'
+    fill_in "Lgsl code", with: "1"
+    fill_in "Lgil code", with: "2"
 
-    click_button 'Create Local transaction'
+    click_button "Create Local transaction"
     assert page.has_content?(/Foo bar\W#1/)
   end
 
@@ -65,14 +65,14 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         slug: @artefact.slug,
         title: "Foo transaction",
         lgsl_code: 1,
-        lgil_code: 2
+        lgil_code: 2,
       )
 
       visit_edition edition
 
       assert page.has_content?(/Foo transaction\W#1/)
-      assert page.has_field?('LGSL code', with: '1', disabled: true)
-      assert page.has_field?('LGIL code', with: '2')
+      assert page.has_field?("LGSL code", with: "1", disabled: true)
+      assert page.has_field?("LGIL code", with: "2")
 
       save_edition_and_assert_success
 
@@ -80,7 +80,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       assert_equal 2, edition.lgil_code
 
       # Ensure it gets set to nil when clearing field
-      fill_in "LGIL code", with: '3'
+      fill_in "LGIL code", with: "3"
       save_edition_and_assert_success
 
       edition.reload
@@ -94,7 +94,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
         slug: @artefact.slug,
         title: "Foo transaction",
         lgsl_code: 1,
-        lgil_code: 1
+        lgil_code: 1,
       )
 
       visit_edition edition
@@ -108,11 +108,11 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     edition = FactoryBot.create(
       :local_transaction_edition,
       panopticon_id: @artefact.id,
-      state: 'published',
+      state: "published",
       slug: @artefact.slug,
       title: "Foo transaction",
       lgsl_code: 1,
-      lgil_code: 1
+      lgil_code: 1,
     )
 
     visit_edition edition

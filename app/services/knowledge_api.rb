@@ -20,7 +20,7 @@ class KnowledgeApi
         entries: KNOWLEDGE_ENTRIES,
       },
       routes: [
-        { path: "/knowledge-alpha", type: "exact" }
+        { path: "/knowledge-alpha", type: "exact" },
       ],
     }
   end

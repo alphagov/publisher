@@ -114,11 +114,11 @@ class Artefact
   end
 
   def self.multipart_formats
-    where(kind: { '$in' => MULTIPART_FORMATS })
+    where(kind: { "$in" => MULTIPART_FORMATS })
   end
 
   def self.archived
-    where(state: 'archived')
+    where(state: "archived")
   end
 
   def self.with_redirect
@@ -127,7 +127,7 @@ class Artefact
 
   # Fallback to english if no language is present
   def language
-    attributes['language'] || "en"
+    attributes["language"] || "en"
   end
 
   def normalise
@@ -143,7 +143,7 @@ class Artefact
   end
 
   def any_editions_published?
-    Edition.where(panopticon_id: self.id, state: 'published').any?
+    Edition.where(panopticon_id: self.id, state: "published").any?
   end
 
   def any_editions_ever_published?
@@ -152,7 +152,7 @@ class Artefact
   end
 
   def update_editions
-    return archive_editions if state == 'archived'
+    return archive_editions if state == "archived"
 
     if self.slug_changed?
       Edition.draft_in_publishing_api.where(panopticon_id: self.id).each do |edition|
@@ -162,7 +162,7 @@ class Artefact
   end
 
   def archive_editions
-    if state == 'archived'
+    if state == "archived"
       Edition.where(panopticon_id: self.id, :state.nin => %w[archived]).each do |edition|
         edition.new_action(self, "note", comment: "Artefact has been archived. Archiving this edition.")
         edition.perform_event_without_validations(:archive!)
@@ -259,7 +259,7 @@ class Artefact
     update(
       state: state_from_edition(edition),
       description: edition.overview,
-      public_timestamp: edition.public_updated_at
+      public_timestamp: edition.public_updated_at,
     )
   end
 
@@ -270,7 +270,7 @@ class Artefact
   def exact_route?
     le = latest_edition
     return le.exact_route? if le.present?
-    return edition_class_name.in? Edition::EXACT_ROUTE_EDITION_CLASSES if owning_app == 'publisher'
+    return edition_class_name.in? Edition::EXACT_ROUTE_EDITION_CLASSES if owning_app == "publisher"
 
     prefixes.empty?
   end
@@ -305,9 +305,9 @@ private
 
   def state_from_edition(edition)
     case edition.state
-    when 'published' then 'live'
-    when 'archived' then 'archived'
-    else 'draft'
+    when "published" then "live"
+    when "archived" then "archived"
+    else "draft"
     end
   end
 

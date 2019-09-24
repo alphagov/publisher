@@ -1,4 +1,4 @@
-require 'yaml'
+require "yaml"
 
 namespace :service_sign_in do
   desc "publish service_sign_in format"
@@ -71,7 +71,7 @@ namespace :service_sign_in do
     ServiceSignInUnpublishService.call(
       content_id,
       locale,
-      redirect_path: redirect_path
+      redirect_path: redirect_path,
     )
 
     puts "> #{content_id} has been unpublished"

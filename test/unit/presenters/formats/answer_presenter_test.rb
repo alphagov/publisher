@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class AnswerPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -20,33 +20,33 @@ class AnswerPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'answer')
+    assert_valid_against_schema(result, "answer")
   end
 
   should "[:schema_name]" do
-    assert_equal 'answer', result[:schema_name]
+    assert_equal "answer", result[:schema_name]
   end
 
   context "[:details]" do
     should "[:body]" do
-      edition.update_attribute(:body, 'foo')
+      edition.update_attribute(:body, "foo")
       expected = [
         {
-          content_type: 'text/govspeak',
-          content: 'foo'
-        }
+          content_type: "text/govspeak",
+          content: "foo",
+        },
       ]
       assert_equal expected, result[:details][:body]
     end
 
     should "[:external_related_links]" do
-      link = { 'url' => 'www.foo.com', 'title' => 'foo' }
+      link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.update_attribute(:external_links, [link])
       expected = [
         {
-          url: link['url'],
-          title: link['title']
-        }
+          url: link["url"],
+          title: link["title"],
+        },
       ]
 
       assert_equal expected, result[:details][:external_related_links]
@@ -54,9 +54,9 @@ class AnswerPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update_attribute(:slug, 'foo')
+    edition.update_attribute(:slug, "foo")
     expected = [
-      { path: '/foo', type: 'prefix' },
+      { path: "/foo", type: "prefix" },
     ]
     assert_equal expected, result[:routes]
   end

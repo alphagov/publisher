@@ -6,7 +6,7 @@ class DatesReportPresenter < CSVPresenter
     scope = Edition.any_of({ state: "published" }, state: "archived")
       .where(:updated_at.gte => start_date)
       .where(:created_at.lte => end_date)
-      .order_by(created_at: 'asc')
+      .order_by(created_at: "asc")
       .select { |item|
         item.actions.select { |a|
           a.request_type == "publish" &&

@@ -1,4 +1,4 @@
-require File.expand_path('production.rb', File.dirname(__FILE__))
+require File.expand_path("production.rb", File.dirname(__FILE__))
 
 Publisher::Application.configure do
   config.action_mailer.smtp_settings = { enable_starttls_auto: false }

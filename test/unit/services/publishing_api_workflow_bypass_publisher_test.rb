@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
   setup do
@@ -70,12 +70,12 @@ class PublishingApiWorkflowBypassPublisherTest < ActiveSupport::TestCase
 
   def draft_edition
     @draft_edition ||=
-      FactoryBot.create(:transaction_edition, state: 'ready', panopticon_id: artefact.id)
+      FactoryBot.create(:transaction_edition, state: "ready", panopticon_id: artefact.id)
   end
 
   def archived_edition
     @archived_edition ||=
-      FactoryBot.create(:transaction_edition, state: 'archived', panopticon_id: artefact.id)
+      FactoryBot.create(:transaction_edition, state: "archived", panopticon_id: artefact.id)
   end
 
   def artefact

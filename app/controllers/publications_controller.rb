@@ -17,13 +17,13 @@ protected
       controller: "editions",
       action: "show",
       id: edition.id,
-      return_to: params.fetch(:return_to, nil)
+      return_to: params.fetch(:return_to, nil),
     )
   end
 
   def render_new_form(edition)
     @publication = edition
     setup_view_paths_for(edition)
-    render template: 'new'
+    render template: "new"
   end
 end

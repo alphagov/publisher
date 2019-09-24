@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class TransactionCreateEditTest < JavascriptIntegrationTest
   setup do
@@ -9,7 +9,7 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       slug: "register-for-space-flight",
       kind: "transaction",
       name: "Register for space flight",
-      owning_app: "publisher"
+      owning_app: "publisher",
     )
 
     setup_users
@@ -47,11 +47,11 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
                                       panopticon_id: @artefact.id,
                                       title: "Register for space flight",
                                       introduction: "Become a space pilot",
-                                      will_continue_on: "UK Space Recruitment",)
+                                      will_continue_on: "UK Space Recruitment")
 
       visit_edition transaction
 
-      assert page.has_content? 'Register for space flight'
+      assert page.has_content? "Register for space flight"
       assert page.has_field?("Introductory paragraph", with: "Become a space pilot")
       assert page.has_field?("Will continue on", with: "UK Space Recruitment")
 
@@ -87,9 +87,9 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
     edition = FactoryBot.create(
       :transaction_edition,
       panopticon_id: @artefact.id,
-      state: 'published',
+      state: "published",
       slug: @artefact.slug,
-      title: "Foo transaction"
+      title: "Foo transaction",
     )
 
     visit_edition edition

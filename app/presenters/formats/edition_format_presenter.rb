@@ -66,7 +66,7 @@ module Formats
       artefact.external_links.map do |link|
         {
           url: link["url"],
-          title: link["title"]
+          title: link["title"],
         }
       end
     end
@@ -84,7 +84,7 @@ module Formats
     # TransactionEdition, CampaignEdition, HelpPageEdition
     # need to register exact routes...
     def path_type
-      edition.exact_route? ? 'exact' : 'prefix'
+      edition.exact_route? ? "exact" : "prefix"
     end
 
     def update_type(republish)

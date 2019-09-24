@@ -1,5 +1,5 @@
-require 'integration_test_helper'
-require 'gds_api/test_helpers/calendars'
+require "integration_test_helper"
+require "gds_api/test_helpers/calendars"
 
 class EditionWorkflowTest < JavascriptIntegrationTest
   include GdsApi::TestHelpers::Calendars
@@ -40,28 +40,28 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "the customised message for fact-check is pre-loaded with a 5 working days deadline message" do
-    today = Date.parse('2017-04-28')
-    calendars_has_a_bank_holiday_on(Date.parse('2017-05-01'), in_division: 'england-and-wales')
+    today = Date.parse("2017-04-28")
+    calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
 
     Timecop.freeze(today) do
-      guide.update_attribute(:state, 'ready')
+      guide.update_attribute(:state, "ready")
       visit_edition guide
 
-      click_link('Fact check')
+      click_link("Fact check")
 
       within "#send_fact_check_form" do
-        customised_message = page.find_field('Customised message')
+        customised_message = page.find_field("Customised message")
         assert customised_message
-        assert customised_message.value.include? 'Deadline: 8 May 2017 (5 working days from today - 28 April 2017)'
+        assert customised_message.value.include? "Deadline: 8 May 2017 (5 working days from today - 28 April 2017)"
       end
     end
   end
 
   test "can send guide to fact-check when in ready state" do
-    guide.update_attribute(:state, 'ready')
+    guide.update_attribute(:state, "ready")
     visit_edition guide
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     ActionMailer::Base.deliveries.clear
 
@@ -71,26 +71,26 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_css?('.label', text: 'Fact check')
+    assert page.has_css?(".label", text: "Fact check")
 
     click_on "History and notes"
-    assert page.has_content? 'Send fact check by Alice'
-    assert page.has_content? 'Request sent to user@example.com'
+    assert page.has_content? "Send fact check by Alice"
+    assert page.has_content? "Request sent to user@example.com"
 
     guide.reload
     assert guide.fact_check?
 
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? 'user@example.com' }.last
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
     assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email.subject
     assert_equal "Blah", fact_check_email.body.to_s
   end
 
   test "can send guide to several fact-check recipients with comma separated emails" do
-    guide.update_attribute(:state, 'ready')
+    guide.update_attribute(:state, "ready")
     visit_edition guide
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     ActionMailer::Base.deliveries.clear
 
@@ -100,22 +100,22 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_css?('.label', text: 'Fact check')
+    assert page.has_css?(".label", text: "Fact check")
     guide.reload
     assert guide.fact_check?
 
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? 'user1@example.com' }.last
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
     assert fact_check_email
-    assert_includes fact_check_email.to, 'user2@example.com'
+    assert_includes fact_check_email.to, "user2@example.com"
     assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email.subject
     assert_equal "Blah", fact_check_email.body.to_s
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
-    guide.update_attribute(:state, 'ready')
+    guide.update_attribute(:state, "ready")
     visit_edition guide
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -123,11 +123,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_content? 'The email addresses you entered appear to be invalid.'
+    assert page.has_content? "The email addresses you entered appear to be invalid."
     guide.reload
     refute guide.fact_check?
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -135,11 +135,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_content? 'The email addresses you entered appear to be invalid.'
+    assert page.has_content? "The email addresses you entered appear to be invalid."
     guide.reload
     refute guide.fact_check?
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah"
@@ -147,13 +147,13 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       click_on "Send"
     end
 
-    assert page.has_content? 'The email addresses you entered appear to be invalid.'
+    assert page.has_content? "The email addresses you entered appear to be invalid."
     guide.reload
     refute guide.fact_check?
   end
 
   test "a guide in the ready state can be requested to make more amendments" do
-    guide.update_attribute(:state, 'ready')
+    guide.update_attribute(:state, "ready")
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
@@ -164,7 +164,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "a guide in the fact-check state can be requested to make more amendments" do
-    guide.update_attribute(:state, 'fact_check')
+    guide.update_attribute(:state, "fact_check")
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
@@ -175,10 +175,10 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "a guide in the fact-check state can resend the email" do
-    guide.update_attribute(:state, 'ready')
+    guide.update_attribute(:state, "ready")
     visit_edition guide
 
-    click_link('Fact check')
+    click_link("Fact check")
 
     within "#send_fact_check_form" do
       fill_in "Customised message", with: "Blah blah fact check message"
@@ -190,16 +190,16 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_for_generic_action guide, "Resend fact check email" do
-      assert page.has_content? 'Blah blah fact check message'
-      assert page.has_content? 'user-to-ask-for-fact-check@example.com'
-      click_on 'Resend'
+      assert page.has_content? "Blah blah fact check message"
+      assert page.has_content? "user-to-ask-for-fact-check@example.com"
+      click_on "Resend"
     end
 
     visit_edition guide
     click_on "History and notes"
-    assert page.has_content? 'Resend fact check by Alice'
+    assert page.has_content? "Resend fact check by Alice"
 
-    resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? 'user-to-ask-for-fact-check@example.com' }.last
+    resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user-to-ask-for-fact-check@example.com" }.last
     assert resent_fact_check_email
     assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", resent_fact_check_email.subject
     assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
@@ -228,7 +228,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "cannot be the guide reviewer and assignee" do
     guide.assigned_to = bob
-    guide.update_attribute(:state, 'in_review')
+    guide.update_attribute(:state, "in_review")
 
     visit_edition guide
     select("Bob", from: "Reviewer")
@@ -271,7 +271,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can review another's guide" do
-    guide.update_attribute(:state, 'in_review')
+    guide.update_attribute(:state, "in_review")
     guide.assigned_to = bob
 
     visit_edition guide
@@ -281,7 +281,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "review failed" do
-    guide.update_attribute(:state, 'in_review')
+    guide.update_attribute(:state, "in_review")
     guide.assigned_to = bob
 
     visit_edition guide
@@ -293,7 +293,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "review passed" do
-    guide.update_attribute(:state, 'in_review')
+    guide.update_attribute(:state, "in_review")
 
     visit_edition guide
     send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
@@ -303,7 +303,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can skip fact-check" do
-    guide.update_attribute(:state, 'fact_check')
+    guide.update_attribute(:state, "fact_check")
 
     visit_edition guide
 
@@ -323,7 +323,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can progress from fact-check" do
-    guide.update_attribute(:state, 'fact_check_received')
+    guide.update_attribute(:state, "fact_check_received")
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
@@ -334,19 +334,19 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can go back to fact-check from fact-check received" do
-    guide.update_attribute(:state, 'fact_check_received')
+    guide.update_attribute(:state, "fact_check_received")
 
     visit_edition guide
     send_for_fact_check guide
     visit_edition guide
 
-    assert page.has_css?('.label', text: 'Fact check')
+    assert page.has_css?(".label", text: "Fact check")
   end
 
   test "can create a new edition from the listings screens" do
-    guide.update_attribute(:state, 'published')
+    guide.update_attribute(:state, "published")
 
-    visit '/'
+    visit "/"
     filter_for_all_users
     view_filtered_list "Published"
     click_on "Create new edition"
@@ -355,23 +355,23 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can preview a draft article on draft-origin" do
-    guide.update_attribute(:state, 'draft')
+    guide.update_attribute(:state, "draft")
 
     visit_edition guide
-    assert page.has_text?('Preview')
+    assert page.has_text?("Preview")
   end
 
   test "can view a published article on the live site" do
-    guide.update_attribute(:state, 'published')
+    guide.update_attribute(:state, "published")
 
     visit_edition guide
-    assert page.has_text?('View this on the GOV.UK website')
+    assert page.has_text?("View this on the GOV.UK website")
   end
 
   test "cannot create a new edition for a retired format" do
-    FactoryBot.create(:video_edition, state: 'archived')
+    FactoryBot.create(:video_edition, state: "archived")
 
-    visit '/'
+    visit "/"
     select "Video", from: "Format"
     filter_for_all_users
     view_filtered_list "Archived"
@@ -380,10 +380,10 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "cannot preview an archived article" do
-    guide.update_attribute(:state, 'archived')
+    guide.update_attribute(:state, "archived")
 
     visit_edition guide
-    assert page.has_css?('#edit div div.navbar.navbar-inverse.navbar-fixed-bottom.text-center div div div a:nth-child(2)', text: 'Preview')
+    assert page.has_css?("#edit div div.navbar.navbar-inverse.navbar-fixed-bottom.text-center div div div a:nth-child(2)", text: "Preview")
   end
 
   test "should link to a newer sibling" do
@@ -392,23 +392,23 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       :guide_edition,
       panopticon_id: artefact.id,
       state: "published",
-      version_number: 1
+      version_number: 1,
     )
     new_edition = FactoryBot.create(
       :guide_edition,
       panopticon_id: artefact.id,
       state: "draft",
-      version_number: 2
+      version_number: 2,
     )
     visit_edition old_edition
     assert page.has_link?(
       "Edit existing newer edition",
-      href: edition_path(new_edition)
+      href: edition_path(new_edition),
     ), "Page should have edit link"
   end
 
   test "should show an alert if another person has created a newer edition" do
-    guide.update_attribute(:state, 'published')
+    guide.update_attribute(:state, "published")
 
     filter_for_all_users
     view_filtered_list "Published"
@@ -422,7 +422,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on "Create new edition"
 
     assert page.has_content?("Another person has created a newer edition")
-    assert page.has_css?('.label', text: 'Published')
+    assert page.has_css?(".label", text: "Published")
   end
 
   test "should display a retired message if a format has been retired" do
@@ -431,11 +431,11 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       :video_edition,
       panopticon_id: artefact.id,
       state: "archived",
-      version_number: 1
+      version_number: 1,
     )
     artefact.update_attribute(:state, "archived")
 
-    visit '/'
+    visit "/"
     select "Video (Retired)", from: "Format"
 
     visit_edition edition
@@ -450,7 +450,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on button_text
 
     # Forces the driver to wait for any async javascript to complete
-    page.has_css?('.modal-header')
+    page.has_css?(".modal-header")
 
     within :css, action_element_id, &block
 
@@ -459,9 +459,9 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   def send_for_fact_check(guide)
-    button_text = 'Fact check'
-    email = 'test@example.com'
-    message = 'Let us know what you think'
+    button_text = "Fact check"
+    email = "test@example.com"
+    message = "Let us know what you think"
 
     send_for_generic_action(guide, button_text) do
       fill_in "Email", with: email
@@ -473,20 +473,20 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def send_action(guide, button_text, modal_button_text, message)
     send_for_generic_action(guide, button_text) do
       fill_in "Comment", with: message
-      within :css, '.modal-footer' do
+      within :css, ".modal-footer" do
         click_on modal_button_text
       end
     end
   end
 
   def path_segment(url)
-    url.split('#').last
+    url.split("#").last
   end
 
   def filter_for_all_users
     visit "/"
     within :css, ".user-filter-form" do
-      select "All", from: 'user_filter'
+      select "All", from: "user_filter"
       click_on "Filter publications"
     end
     assert page.has_content?("Publications")
@@ -496,7 +496,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit "/"
     filter_link = find(:xpath, "//a[contains(., '#{filter_label}')]")
     refute filter_link.nil?, "Tab link #{filter_label} not found"
-    refute filter_link['href'].nil?, "Tab link #{filter_label} has no target"
+    refute filter_link["href"].nil?, "Tab link #{filter_label} has no target"
 
     filter_link.click
 

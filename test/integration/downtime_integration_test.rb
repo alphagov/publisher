@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class DowntimeIntegrationTest < JavascriptIntegrationTest
   setup do
@@ -7,8 +7,8 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     @edition = FactoryBot.create(
       :transaction_edition,
       :published,
-      title: 'Apply to become a driving instructor',
-      slug: 'apply-to-become-a-driving-instructor'
+      title: "Apply to become a driving instructor",
+      slug: "apply-to-become-a-driving-instructor",
     )
 
     WebMock.reset!
@@ -20,17 +20,17 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     DowntimeScheduler.stubs(:schedule_publish_and_expiry)
 
     visit root_path
-    click_link 'Downtime'
-    click_link 'Apply to become a driving instructor'
+    click_link "Downtime"
+    click_link "Apply to become a driving instructor"
 
     enter_start_time first_of_july_next_year_at_midday_bst
     enter_end_time first_of_july_next_year_at_six_pm_bst
 
-    assert_match("midday to 6pm on #{day} 1 July", page.find_field('Message').value)
-    click_button 'Schedule downtime message'
+    assert_match("midday to 6pm on #{day} 1 July", page.find_field("Message").value)
+    click_button "Schedule downtime message"
 
-    assert page.has_content?('downtime message scheduled')
-    assert page.has_content?('Scheduled downtime')
+    assert page.has_content?("downtime message scheduled")
+    assert page.has_content?("Scheduled downtime")
     assert page.has_content?("midday to 6pm on 1 July")
   end
 
@@ -39,14 +39,14 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     create_downtime
 
     visit root_path
-    click_link 'Downtime'
-    click_link 'Edit downtime'
+    click_link "Downtime"
+    click_link "Edit downtime"
     enter_end_time first_of_july_next_year_at_nine_thirty_pm_bst
 
-    assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field('Message').value)
-    click_on 'Re-schedule downtime message'
+    assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field("Message").value)
+    click_on "Re-schedule downtime message"
 
-    assert page.has_content?('downtime message re-scheduled')
+    assert page.has_content?("downtime message re-scheduled")
     assert page.has_content?("midday to 9:30pm on 1 July")
   end
 
@@ -55,28 +55,28 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     create_downtime
 
     visit root_path
-    click_link 'Downtime'
-    click_link 'Edit downtime'
-    click_on 'Cancel downtime'
+    click_link "Downtime"
+    click_link "Edit downtime"
+    click_on "Cancel downtime"
 
-    assert page.has_content?('downtime message cancelled')
+    assert page.has_content?("downtime message cancelled")
     assert_no_downtime_scheduled
   end
 
   def enter_start_time(start_time)
-    complete_date_inputs('downtime_start_time', start_time)
+    complete_date_inputs("downtime_start_time", start_time)
   end
 
   def enter_end_time(end_time)
-    complete_date_inputs('downtime_end_time', end_time)
+    complete_date_inputs("downtime_end_time", end_time)
   end
 
   def complete_date_inputs(input_id, time)
     select time.year.to_s, from: "#{input_id}_1i"
-    select time.strftime('%B'), from: "#{input_id}_2i"
+    select time.strftime("%B"), from: "#{input_id}_2i"
     select time.day.to_s, from: "#{input_id}_3i"
     select time.hour.to_s, from: "#{input_id}_4i"
-    select time.strftime('%M'), from: "#{input_id}_5i"
+    select time.strftime("%M"), from: "#{input_id}_5i"
   end
 
   def next_year
@@ -96,7 +96,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
   end
 
   def day
-    first_of_july_next_year_at_six_pm_bst.strftime('%A')
+    first_of_july_next_year_at_six_pm_bst.strftime("%A")
   end
 
   def create_downtime
@@ -104,7 +104,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
       artefact: @edition.artefact,
       start_time: first_of_july_next_year_at_midday_bst,
       end_time: first_of_july_next_year_at_six_pm_bst,
-      message: 'foo'
+      message: "foo",
     )
   end
 

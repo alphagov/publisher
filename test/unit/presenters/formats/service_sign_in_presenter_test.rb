@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ServiceSignInTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -23,7 +23,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
     @parent ||= FactoryBot.create(
       :transaction_edition,
       panopticon_id: @artefact.id,
-      slug: parent_slug
+      slug: parent_slug,
     )
 
     nil
@@ -58,23 +58,23 @@ class ServiceSignInTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'service_sign_in')
+    assert_valid_against_schema(result, "service_sign_in")
   end
 
   should "[:schema_name]" do
-    assert_equal 'service_sign_in', result[:schema_name]
+    assert_equal "service_sign_in", result[:schema_name]
   end
 
   should "[:rendering_app]" do
-    assert_equal 'government-frontend', result[:rendering_app]
+    assert_equal "government-frontend", result[:rendering_app]
   end
 
   should "[:publishing_app]" do
-    assert_equal 'publisher', result[:publishing_app]
+    assert_equal "publisher", result[:publishing_app]
   end
 
   should "[:document_type]" do
-    assert_equal 'service_sign_in', result[:document_type]
+    assert_equal "service_sign_in", result[:document_type]
   end
 
   should "[:locale]" do
@@ -125,7 +125,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
   should "#links" do
     expected = {
-      parent: [@parent.content_id]
+      parent: [@parent.content_id],
     }
 
     assert_equal expected, subject.links
@@ -148,8 +148,8 @@ class ServiceSignInTest < ActiveSupport::TestCase
           expected = [
             {
               content_type: "text/govspeak",
-              content: @content[:choose_sign_in][:description]
-            }
+              content: @content[:choose_sign_in][:description],
+            },
           ]
           assert_equal expected, result[:details][:choose_sign_in][:description]
         end
@@ -235,7 +235,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
             {
               content_type: "text/govspeak",
               content: @content[:create_new_account][:body],
-            }
+            },
           ]
 
           assert_equal expected, result[:details][:create_new_account][:body]

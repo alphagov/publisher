@@ -14,7 +14,7 @@ class EditionLinkCheckTest < JavascriptIntegrationTest
       uris: ["https://www.gov.uk"],
       id: "a-batch-id",
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
-      webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
+      webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
     )
 
     @place = FactoryBot.create(:place_edition, introduction: "This is [link](https://www.gov.uk) text.")

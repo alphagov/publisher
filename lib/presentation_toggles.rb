@@ -12,7 +12,7 @@ module PresentationToggles
   end
 
   def promotion_choice_url=(value)
-    promotion_choice_key['url'] = value
+    promotion_choice_key["url"] = value
   end
 
   def promotion_choice_opt_in_url=(value)
@@ -29,7 +29,7 @@ module PresentationToggles
   end
 
   def promotes_something?
-    promotion_choice != 'none'
+    promotion_choice != "none"
   end
 
   def promotion_choice_url
@@ -45,21 +45,21 @@ module PresentationToggles
   end
 
   def promotion_choice_key
-    unless presentation_toggles.key? 'promotion_choice'
-      presentation_toggles['promotion_choice'] = self.class.default_presentation_toggles['promotion_choice']
+    unless presentation_toggles.key? "promotion_choice"
+      presentation_toggles["promotion_choice"] = self.class.default_presentation_toggles["promotion_choice"]
     end
 
-    presentation_toggles['promotion_choice']
+    presentation_toggles["promotion_choice"]
   end
 
   module ClassMethods
     def default_presentation_toggles
       {
-        'promotion_choice' =>
+        "promotion_choice" =>
           {
-            'choice' => 'none',
-            'url' => ''
-          }
+            "choice" => "none",
+            "url" => "",
+          },
       }
     end
   end

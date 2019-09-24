@@ -1,6 +1,6 @@
-require 'redis'
-require 'redis-lock'
-require_relative 'redis_config'
+require "redis"
+require "redis-lock"
+require_relative "redis_config"
 
 class CsvReportGenerator
   include RedisConfig
@@ -25,15 +25,15 @@ class CsvReportGenerator
   def reports
     @reports ||= [
       EditorialProgressPresenter.new(
-        Edition.not_in(state: %w[archived])
+        Edition.not_in(state: %w[archived]),
       ),
 
       EditionChurnPresenter.new(
-        Edition.not_in(state: %w[archived]).order(created_at: 1)
+        Edition.not_in(state: %w[archived]).order(created_at: 1),
       ),
 
       OrganisationContentPresenter.new(
-        Artefact.where(owning_app: "publisher").not_in(state: %w[archived])
+        Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
       ),
 
       ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),

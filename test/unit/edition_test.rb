@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EditionTest < ActiveSupport::TestCase
   context "state names" do
@@ -25,20 +25,20 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#auth_bypass_id" do
     should "return a deterministic hex id if edition is in fact-check state" do
-      edition = FactoryBot.create(:edition, state: 'fact_check', id: 123)
-      edition.artefact.update_attribute(:kind, 'help_page')
+      edition = FactoryBot.create(:edition, state: "fact_check", id: 123)
+      edition.artefact.update_attribute(:kind, "help_page")
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
     should "return a deterministic hex id if edition is in fact-check-received state" do
-      edition = FactoryBot.create(:edition, state: 'fact_check_received', id: 123)
-      edition.artefact.update_attribute(:kind, 'help_page')
+      edition = FactoryBot.create(:edition, state: "fact_check_received", id: 123)
+      edition.artefact.update_attribute(:kind, "help_page")
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
 
     should "return a deterministic hex id if edition is in ready state" do
-      edition = FactoryBot.create(:edition, state: 'ready', id: 123)
-      edition.artefact.update_attribute(:kind, 'help_page')
+      edition = FactoryBot.create(:edition, state: "ready", id: 123)
+      edition.artefact.update_attribute(:kind, "help_page")
       assert_equal edition.auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
     end
   end

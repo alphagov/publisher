@@ -11,7 +11,7 @@ task bulk_discard_placeholder_draft_content: :environment do
     ["/low-carbon-building-project", "8b883728-1ec8-4383-b8fb-981cbba71c82"],
     ["/ready-for-business", "4a159e85-6848-492c-8f2e-28d24e9989eb"],
     ["/sustainabuild", "2aefe932-8abf-4a4a-9ae4-468fd09d3d83"],
-    ["/work-after-state-pension-age", "effa2e51-352e-4a4d-b974-c881283633c6"]
+    ["/work-after-state-pension-age", "effa2e51-352e-4a4d-b974-c881283633c6"],
   ].each do |(base_path, content_id)|
     begin
       Services.publishing_api.discard_draft(content_id)

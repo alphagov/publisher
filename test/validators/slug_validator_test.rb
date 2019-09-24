@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SlugTest < ActiveSupport::TestCase
   class Dummy
@@ -15,7 +15,7 @@ class SlugTest < ActiveSupport::TestCase
   def document_with_slug(slug, override_options = {})
     default_options = {
       name: "Test",
-      slug: slug
+      slug: slug,
     }
     Dummy.new(default_options.merge(override_options))
   end

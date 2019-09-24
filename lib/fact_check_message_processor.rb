@@ -1,4 +1,4 @@
-require 'govspeak/html_sanitizer'
+require "govspeak/html_sanitizer"
 
 class FactCheckMessageProcessor
   attr_accessor :message
@@ -9,7 +9,7 @@ class FactCheckMessageProcessor
 
   def body_as_utf8
     if message.parts.any?
-      character_set = @message.text_part.content_type_parameters['charset']
+      character_set = @message.text_part.content_type_parameters["charset"]
       messy_notes = @message.text_part.body.to_s
     else
       character_set = @message.body.charset
@@ -45,7 +45,7 @@ private
       expected,
       Encoding::UTF_8,
       Encoding::ISO_8859_15,
-      Encoding::Windows_1252
+      Encoding::Windows_1252,
     ].compact.uniq
   end
 

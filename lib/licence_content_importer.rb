@@ -1,6 +1,6 @@
-require 'csv'
-require 'retriable'
-require 'reverse_markdown'
+require "csv"
+require "retriable"
+require "reverse_markdown"
 
 class LicenceContentImporter
   attr_reader :data_path, :imported, :existing, :failed
@@ -27,46 +27,46 @@ class LicenceContentImporter
   end
 
   def report row
-    identifier = row['OID'].to_s.strip
+    identifier = row["OID"].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
     if !existing_editions.empty?
       @existing << existing_editions
       @existing.flatten!
     else
-      puts slug_for(row['NAME'])
-      if row['LONGDESC']
+      puts slug_for(row["NAME"])
+      if row["LONGDESC"]
         puts "---------------------------- marked down ---------------------------------"
-        puts marked_down(row['LONGDESC'])
+        puts marked_down(row["LONGDESC"])
         puts "------------------------------- end --------------------------------------\n\n"
       end
-      @imported << { identifier: identifier, slug: slug_for(row['NAME']), description: marked_down(row['LONGDESC']) }
+      @imported << { identifier: identifier, slug: slug_for(row["NAME"]), description: marked_down(row["LONGDESC"]) }
     end
   end
 
   def import row
-    identifier = row['OID'].to_s.strip
+    identifier = row["OID"].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
     if !existing_editions.empty?
       @existing << existing_editions
       @existing.flatten!
     else
-      title = CGI.unescapeHTML(to_utf8(row['NAME']))
+      title = CGI.unescapeHTML(to_utf8(row["NAME"]))
       slug = slug_for(title)
 
       artefact = Artefact.find_by_slug(slug) ||
         Artefact.create(
-          slug: slug, kind: 'licence', state: 'draft', owning_app: 'publisher',
+          slug: slug, kind: "licence", state: "draft", owning_app: "publisher",
           name: title, rendering_app: "frontend"
         )
 
-      artefact_id = artefact['id']
+      artefact_id = artefact["id"]
 
       puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
       edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
-        licence_identifier: identifier, licence_overview: marked_down(row['LONGDESC'])
+        licence_identifier: identifier, licence_overview: marked_down(row["LONGDESC"])
 
       if edition
         add_workflow(@user, edition)

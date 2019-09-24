@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class ActionHelperTest < ActionView::TestCase
   test "it converts zendesk tickets to links" do
-    expected_link = 'https://govuk.zendesk.com/tickets/1234'
-    texts = ['Zendesk ticket #1234', 'zendesk 1234', 'Zen 1234', 'zen #1234', 'zen#1234', 'zen:1234', 'zendesk: 1234']
+    expected_link = "https://govuk.zendesk.com/tickets/1234"
+    texts = ["Zendesk ticket #1234", "zendesk 1234", "Zen 1234", "zen #1234", "zen#1234", "zen:1234", "zendesk: 1234"]
 
     texts.each do |text|
       assert_equal auto_link_zendesk_tickets(text), "<a href=\"#{expected_link}\">#{text}</a>"
@@ -22,7 +22,7 @@ class ActionHelperTest < ActionView::TestCase
       "reply\nOn 20 October\nPaul wrote:\noriginal",
       "reply\nOn 20 October Paul wrote:\noriginal",
       "reply\nSent from my iPhone\noriginal",
-      "reply\nSent from my BlackBerry\noriginal"
+      "reply\nSent from my BlackBerry\noriginal",
     ]
 
     emails.each do |text|

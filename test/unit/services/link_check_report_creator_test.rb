@@ -14,7 +14,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       uris: ["https://www.gov.uk"],
       id: "a-batch-id",
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
-      webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
+      webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
     )
   end
 
@@ -23,7 +23,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       edition = create_edition("This is [link](https://www.gov.uk) text.")
 
       LinkCheckReportCreator.new(
-        edition: edition
+        edition: edition,
       ).call
 
       edition.reload
@@ -37,7 +37,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       edition = create_edition("This is had no links.")
 
       LinkCheckReportCreator.new(
-        edition: edition
+        edition: edition,
       ).call
 
       edition.reload

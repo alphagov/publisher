@@ -24,7 +24,7 @@ class Action
     IMPORTANT_NOTE       = "important_note".freeze,
     IMPORTANT_NOTE_RESOLVED = "important_note_resolved".freeze,
     ASSIGN = "assign".freeze,
-    RESEND_FACT_CHECK = "resend_fact_check".freeze
+    RESEND_FACT_CHECK = "resend_fact_check".freeze,
   ].freeze
 
   embedded_in :edition
@@ -53,7 +53,7 @@ class Action
   def to_s
     if request_type == SCHEDULE_FOR_PUBLISHING
       string = "Scheduled for publishing"
-      string += " on #{request_details['scheduled_time'].to_datetime.in_time_zone('London').strftime('%d/%m/%Y %H:%M')}" if request_details['scheduled_time'].present?
+      string += " on #{request_details['scheduled_time'].to_datetime.in_time_zone('London').strftime('%d/%m/%Y %H:%M')}" if request_details["scheduled_time"].present?
       string
     else
       request_type.humanize.capitalize

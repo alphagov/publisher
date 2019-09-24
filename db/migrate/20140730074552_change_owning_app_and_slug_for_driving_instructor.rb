@@ -1,7 +1,7 @@
 class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
   # select the slug to be changed
-  SSA_SLUG = 'become-driving-instructor'
-  SA_SLUG = 'become-a-driving-instructor'
+  SSA_SLUG = "become-driving-instructor"
+  SA_SLUG = "become-a-driving-instructor"
 
 
   def self.up

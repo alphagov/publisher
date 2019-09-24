@@ -1,6 +1,6 @@
-require 'test_helper'
-require 'mail_fetcher_config'
-require 'mail'
+require "test_helper"
+require "mail_fetcher_config"
+require "mail"
 
 class MailFetcherConfigTest < ActiveSupport::TestCase
   # Because the `defaults` method on `Mail` calls `instance_eval` with a block,

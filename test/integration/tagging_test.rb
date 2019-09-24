@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class TaggingTest < JavascriptIntegrationTest
   setup do
@@ -16,10 +16,10 @@ class TaggingTest < JavascriptIntegrationTest
   context "Tagging to linkables" do
     should "tag to browse pages" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Tax / VAT', from: 'Mainstream browse pages'
-      select 'Tax / RTI (draft)', from: 'Mainstream browse pages'
+      select "Tax / VAT", from: "Mainstream browse pages"
+      select "Tax / RTI (draft)", from: "Mainstream browse pages"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -32,16 +32,16 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: [],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
     should "tag to topics" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Oil and Gas / Fields', from: 'Topics'
-      select 'Oil and Gas / Distillation (draft)', from: 'Topics'
+      select "Oil and Gas / Fields", from: "Topics"
+      select "Oil and Gas / Distillation (draft)", from: "Topics"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -54,15 +54,15 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: [],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
     should "tag to organisations" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Student Loans Company', from: 'Organisations'
+      select "Student Loans Company", from: "Organisations"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -75,15 +75,15 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: [],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
-    should 'tag to user needs' do
+    should "tag to user needs" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)', from: 'User Needs'
+      select "As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)", from: "User Needs"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -96,52 +96,52 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: [],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
-    should 'tag to related content items' do
+    should "tag to related content items" do
       expanded_links_url = "#{Plek.current.find('publishing-api')}/v2/expanded-links/#{@edition.artefact.content_id}?locale=#{@edition.artefact.language}&generate=true"
       stub_request(:get, expanded_links_url)
         .to_return(status: 200, body: {
-          'content_id' => @edition.artefact.content_id,
-          'expanded_links' => {
-            'ordered_related_items' => [
+          "content_id" => @edition.artefact.content_id,
+          "expanded_links" => {
+            "ordered_related_items" => [
               {
-                'content_id' => 'CONTENT-ID-VAT-RETURNS',
-                'base_path' => '/vat-returns',
-                'internal_name' => 'VAT Returns',
-              }
+                "content_id" => "CONTENT-ID-VAT-RETURNS",
+                "base_path" => "/vat-returns",
+                "internal_name" => "VAT Returns",
+              },
             ],
           },
         }.to_json)
 
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
       ordered_related_items_fields = all(
-        'input[name="tagging_tagging_update_form[ordered_related_items][]"]'
+        'input[name="tagging_tagging_update_form[ordered_related_items][]"]',
       )
 
-      assert ordered_related_items_fields[0].value, '/vat-returns'
+      assert ordered_related_items_fields[0].value, "/vat-returns"
 
-      find('.js-path-field').set('/reclaim-vat')
+      find(".js-path-field").set("/reclaim-vat")
 
       # Web request that JS makes to check the path is a valid GOV.UK base path
-      publishing_api_has_lookups('/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT')
-      click_on 'Add related item'
+      publishing_api_has_lookups("/reclaim-vat" => "CONTENT-ID-RECLAIM-VAT")
+      click_on "Add related item"
 
       within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[1]' do
-        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/vat-returns')
+        assert page.has_field?("tagging_tagging_update_form[ordered_related_items][]", with: "/vat-returns")
       end
 
       within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[2]' do
-        assert page.has_field?('tagging_tagging_update_form[ordered_related_items][]', with: '/reclaim-vat')
+        assert page.has_field?("tagging_tagging_update_form[ordered_related_items][]", with: "/reclaim-vat")
       end
 
       publishing_api_has_lookups(
-        '/vat-returns' => 'CONTENT-ID-VAT-RETURNS',
-        '/reclaim-vat' => 'CONTENT-ID-RECLAIM-VAT',
+        "/vat-returns" => "CONTENT-ID-VAT-RETURNS",
+        "/reclaim-vat" => "CONTENT-ID-RECLAIM-VAT",
       )
 
       save_tags_and_assert_success
@@ -155,25 +155,25 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: %w[CONTENT-ID-VAT-RETURNS CONTENT-ID-RECLAIM-VAT],
           parent: [],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
-    should 'show an error state when attempting to tag to an invalid related link' do
+    should "show an error state when attempting to tag to an invalid related link" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      find('.js-path-field').set('/a-page-that-does-not-exist')
-      click_on 'Add related item'
+      find(".js-path-field").set("/a-page-that-does-not-exist")
+      click_on "Add related item"
 
-      assert page.has_content?('Not a known URL or path on GOV.UK')
+      assert page.has_content?("Not a known URL or path on GOV.UK")
     end
 
     should "tag to parent" do
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Tax / RTI', from: 'Breadcrumb'
+      select "Tax / RTI", from: "Breadcrumb"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -186,7 +186,7 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: %w[CONTENT-ID-RTI],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
@@ -196,37 +196,37 @@ class TaggingTest < JavascriptIntegrationTest
         .to_return(status: 200, body: {
           "content_id" => @content_id,
           "expanded_links" => {
-            'topics' => [
+            "topics" => [
               {
-                'content_id' => 'CONTENT-ID-WELLS',
-                'base_path' => '/topic/oil-and-gas/wells',
-                'internal_name' => 'Oil and Gas / Wells',
-              }
+                "content_id" => "CONTENT-ID-WELLS",
+                "base_path" => "/topic/oil-and-gas/wells",
+                "internal_name" => "Oil and Gas / Wells",
+              },
             ],
-            'mainstream_browse_pages' => [
+            "mainstream_browse_pages" => [
               {
-                'content_id' => 'CONTENT-ID-RTI',
-                'base_path' => '/browse/tax/rti',
-                'internal_name' => 'Tax / RTI',
-              }
+                "content_id" => "CONTENT-ID-RTI",
+                "base_path" => "/browse/tax/rti",
+                "internal_name" => "Tax / RTI",
+              },
             ],
-            'parent' => [
+            "parent" => [
               {
-                'content_id' => 'CONTENT-ID-RTI',
-                'document_type' => 'mainstream_browse_pages',
-              }
+                "content_id" => "CONTENT-ID-RTI",
+                "document_type" => "mainstream_browse_pages",
+              },
             ],
           },
         }.to_json)
 
       visit_edition @edition
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Tax / RTI (draft)', from: 'Mainstream browse pages'
-      select 'Tax / VAT', from: 'Mainstream browse pages'
+      select "Tax / RTI (draft)", from: "Mainstream browse pages"
+      select "Tax / VAT", from: "Mainstream browse pages"
 
-      select 'Tax / Capital Gains Tax', from: 'Breadcrumb'
-      select 'Oil and Gas / Fields', from: 'Topics'
+      select "Tax / Capital Gains Tax", from: "Breadcrumb"
+      select "Oil and Gas / Fields", from: "Topics"
 
       save_tags_and_assert_success
 
@@ -240,7 +240,7 @@ class TaggingTest < JavascriptIntegrationTest
           ordered_related_items: [],
           parent: %w[CONTENT-ID-CAPITAL],
         },
-        previous_version: 0
+        previous_version: 0,
       )
     end
 
@@ -256,16 +256,16 @@ class TaggingTest < JavascriptIntegrationTest
 
       visit_edition @edition
 
-      switch_tab 'Tagging'
+      switch_tab "Tagging"
 
-      select 'Oil and Gas / Fields', from: 'Topics'
+      select "Oil and Gas / Fields", from: "Topics"
 
       stub_request(:patch, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
         .to_return(status: 409)
 
       save_tags
 
-      assert page.has_content?('Somebody changed the tags before you could')
+      assert page.has_content?("Somebody changed the tags before you could")
     end
   end
 
@@ -276,14 +276,14 @@ class TaggingTest < JavascriptIntegrationTest
 
       visit_edition @edition
 
-      assert page.has_content?('Test guide')
+      assert page.has_content?("Test guide")
     end
   end
 
   context "Tagging to external links" do
     should "add new external links when the item is not tagged" do
       visit_edition @edition
-      switch_tab 'Related external links'
+      switch_tab "Related external links"
 
       assert 0, @artefact.external_links.count
 
@@ -305,7 +305,7 @@ class TaggingTest < JavascriptIntegrationTest
       assert 1, @artefact.external_links.count
 
       visit_edition @edition
-      switch_tab 'Related external links'
+      switch_tab "Related external links"
       click_on "Add related external link"
 
       within ".related-external-links" do
@@ -321,7 +321,7 @@ class TaggingTest < JavascriptIntegrationTest
 
     should "not save when no links are added" do
       visit_edition @edition
-      switch_tab 'Related external links'
+      switch_tab "Related external links"
       click_on "Save links"
 
       assert page.has_content?("There aren't any external related links yet")
@@ -342,7 +342,7 @@ class TaggingTest < JavascriptIntegrationTest
 
     should "not add invalid links" do
       visit_edition @edition
-      switch_tab 'Related external links'
+      switch_tab "Related external links"
 
       click_on "Add related external link"
       within ".related-external-links" do

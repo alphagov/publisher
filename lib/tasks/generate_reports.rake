@@ -1,4 +1,4 @@
-require 'csv_report_generator'
+require "csv_report_generator"
 
 namespace :reports do
   desc "Generate long-running CSV reports for use by users."

@@ -1,6 +1,6 @@
-require 'test_helper'
-require 'gds_api/test_helpers/imminence'
-require 'imminence_areas_test_helper'
+require "test_helper"
+require "gds_api/test_helpers/imminence"
+require "imminence_areas_test_helper"
 
 class AreaTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::Imminence
@@ -11,7 +11,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_api_data_memoization
-    Area.class_eval('@areas = nil') # rubocop:disable Style/EvalWithLocation
+    Area.class_eval("@areas = nil") # rubocop:disable Style/EvalWithLocation
 
     3.times { Area.all }
 

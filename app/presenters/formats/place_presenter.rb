@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'place'
+      "place"
     end
 
     def document_type
-      'place'
+      "place"
     end
 
     def details
@@ -21,8 +21,8 @@ module Formats
         details[field] = [
           {
             content_type: "text/govspeak",
-            content: edition[field]
-          }
+            content: edition[field],
+          },
         ]
       end
 

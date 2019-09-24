@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class LicenceContentImporterTest < ActiveSupport::TestCase
   def setup
@@ -6,18 +6,18 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
     @artefact = FactoryBot.create(:artefact, slug: "licence-to-test",
       kind: "licence", name: "test", owning_app: "publisher")
 
-    @importer = LicenceContentImporter.new('data/foo', @user.name)
+    @importer = LicenceContentImporter.new("data/foo", @user.name)
     @row = CSV::Row.new(%w(OID NAME LONGDESC),
-                        [12345, 'Licence to test', '<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>'])
+                        [12345, "Licence to test", "<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>"])
   end
 
   def test_report
     @importer.report(@row)
     assert_equal "12345", @importer.imported.first[:identifier]
-    assert_equal 'licence-to-test', @importer.imported.first[:slug]
+    assert_equal "licence-to-test", @importer.imported.first[:slug]
     assert_match(
       /\*\*Software testing\*\*/,
-      @importer.imported.first[:description]
+      @importer.imported.first[:description],
     )
     assert_match(/\_validating\_/, @importer.imported.first[:description])
   end
@@ -25,7 +25,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
   def test_import
     @importer.import(@row)
     assert 12345, @importer.imported.first.licence_identifier
-    assert_equal 'licence-to-test', @importer.imported.first.slug
+    assert_equal "licence-to-test", @importer.imported.first.slug
     assert_equal @artefact.id.to_s, @importer.imported.first.panopticon_id
   end
 

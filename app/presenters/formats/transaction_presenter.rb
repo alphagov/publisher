@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'transaction'
+      "transaction"
     end
 
     def document_type
-      'transaction'
+      "transaction"
     end
 
     def details
@@ -22,7 +22,7 @@ module Formats
         what_you_need_to_know: govspeak(edition.need_to_know),
         external_related_links: external_related_links,
         department_analytics_profile: edition.department_analytics_profile,
-        downtime_message: downtime_message
+        downtime_message: downtime_message,
       }.delete_if { |_, value| value.nil? }
     end
 
@@ -34,7 +34,7 @@ module Formats
           introductory_paragraph: govspeak(variant.introduction),
           transaction_start_link: variant.link.to_s,
           more_information: govspeak(variant.more_information),
-          other_ways_to_apply: govspeak(variant.alternate_methods)
+          other_ways_to_apply: govspeak(variant.alternate_methods),
         }.delete_if { |_, value| value.nil? }
       end
     end
@@ -44,8 +44,8 @@ module Formats
         [
           {
             content_type: "text/govspeak",
-            content: field.to_s
-          }
+            content: field.to_s,
+          },
         ]
       end
     end

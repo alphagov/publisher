@@ -14,14 +14,14 @@ class PublishService
       Services.publishing_api.publish(
         content_id,
         update_type,
-        locale: edition.artefact.language
+        locale: edition.artefact.language,
       )
 
       Services.publishing_api.patch_links(
         content_id,
         links: {
-          "primary_publishing_organisation" => [GDS_ORGANISATION_ID]
-        }
+          "primary_publishing_organisation" => [GDS_ORGANISATION_ID],
+        },
       )
     end
   end

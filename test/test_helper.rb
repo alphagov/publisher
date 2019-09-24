@@ -5,28 +5,28 @@
 
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path('../config/environment', __dir__)
+require File.expand_path("../config/environment", __dir__)
 
-require 'rails/test_help'
+require "rails/test_help"
 require "minitest/autorun"
-require 'mocha/minitest'
-require 'database_cleaner'
-require 'webmock/minitest'
-require 'gds_api/test_helpers/publishing_api_v2'
-require 'support/tag_test_helpers'
-require 'support/tab_test_helpers'
-require 'support/holidays_test_helpers'
-require 'support/action_processor_helpers'
-require 'support/factories'
-require 'support/local_services'
-require 'govuk-content-schema-test-helpers'
-require 'govuk-content-schema-test-helpers/test_unit'
+require "mocha/minitest"
+require "database_cleaner"
+require "webmock/minitest"
+require "gds_api/test_helpers/publishing_api_v2"
+require "support/tag_test_helpers"
+require "support/tab_test_helpers"
+require "support/holidays_test_helpers"
+require "support/action_processor_helpers"
+require "support/factories"
+require "support/local_services"
+require "govuk-content-schema-test-helpers"
+require "govuk-content-schema-test-helpers/test_unit"
 
-require 'govuk_sidekiq/testing'
+require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
-require 'minitest/reporters'
+require "minitest/reporters"
 Minitest::Reporters.use!(
   Minitest::Reporters::SpecReporter.new(color: true),
 )
@@ -36,7 +36,7 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 GovukContentSchemaTestHelpers.configure do |config|
-  config.schema_type = 'publisher_v2'
+  config.schema_type = "publisher_v2"
   config.project_root = Rails.root
 end
 
@@ -84,8 +84,8 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    @user = FactoryBot.create(:user, name: 'Stub User')
-    request.env['warden'] = stub(authenticate!: true, authenticated?: true, user: @user)
+    @user = FactoryBot.create(:user, name: "Stub User")
+    request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: @user)
   end
 
   include GdsApi::TestHelpers::PublishingApiV2

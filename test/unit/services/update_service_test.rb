@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UpdateServiceTest < ActiveSupport::TestCase
   setup do
@@ -10,7 +10,7 @@ class UpdateServiceTest < ActiveSupport::TestCase
     should "send the rendered Edition to the publishing api" do
       Services.publishing_api.expects(:put_content).with(
         content_id,
-        payload
+        payload,
       )
 
       UpdateService.call(edition)
@@ -30,6 +30,6 @@ class UpdateServiceTest < ActiveSupport::TestCase
   end
 
   def content_id
-    'content_id_yo'
+    "content_id_yo"
   end
 end

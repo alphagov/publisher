@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ServiceSignInUnpublishServiceTest < ActiveSupport::TestCase
   setup do
@@ -27,15 +27,15 @@ class ServiceSignInUnpublishServiceTest < ActiveSupport::TestCase
         {
           path: base_path,
           type: "prefix",
-          destination: redirect_path
-        }
-      ]
+          destination: redirect_path,
+        },
+      ],
     )
 
     ServiceSignInUnpublishService.call(
       content_id,
       locale,
-      redirect_path: redirect_path
+      redirect_path: redirect_path,
     )
   end
 

@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class MarkEditionInBetaTest < JavascriptIntegrationTest
   setup do
@@ -12,12 +12,12 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
       edition = FactoryBot.create(:edition)
       visit_edition edition
 
-      refute find('#edition_in_beta').checked?
-      check 'Content is in beta'
+      refute find("#edition_in_beta").checked?
+      check "Content is in beta"
 
       save_edition_and_assert_success
 
-      assert find('#edition_in_beta').checked?
+      assert find("#edition_in_beta").checked?
 
       visit "/?user_filter=all"
       assert page.has_text?("#{edition.title} beta")
@@ -27,12 +27,12 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
       edition = FactoryBot.create(:edition, in_beta: true)
       visit_edition edition
 
-      assert find('#edition_in_beta').checked?
-      uncheck 'Content is in beta'
+      assert find("#edition_in_beta").checked?
+      uncheck "Content is in beta"
 
       save_edition_and_assert_success
 
-      refute find('#edition_in_beta').checked?
+      refute find("#edition_in_beta").checked?
 
       visit "/?user_filter=all"
       assert page.has_no_text?("#{edition.title} beta")

@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'local_transaction'
+      "local_transaction"
     end
 
     def document_type
-      'local_transaction'
+      "local_transaction"
     end
 
     def details
@@ -38,8 +38,8 @@ module Formats
           {
             content_type: "text/govspeak",
             content: edition.introduction,
-          }
-        ]
+          },
+        ],
       }
     end
 
@@ -51,8 +51,8 @@ module Formats
           {
             content_type: "text/govspeak",
             content: edition.more_information,
-          }
-        ]
+          },
+        ],
       }
     end
 
@@ -64,8 +64,8 @@ module Formats
           {
             content_type: "text/govspeak",
             content: edition.need_to_know,
-          }
-        ]
+          },
+        ],
       }
     end
 

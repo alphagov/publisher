@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class EditionHistoryTest < JavascriptIntegrationTest
   setup do
@@ -11,7 +11,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     setup do
       @answer = FactoryBot.create(:answer_edition, state: "published", slug: "test-slug")
 
-      @answer.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: 'a@a.com, b@b.com')
+      @answer.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: "a@a.com, b@b.com")
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
       @answer.new_action(@author, Action::PUBLISH, comment: "third")
 
@@ -32,32 +32,32 @@ class EditionHistoryTest < JavascriptIntegrationTest
       visit_edition @answer
       click_on "History and notes"
 
-      assert page.has_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+      assert page.has_css?("#edition-history p.add-bottom-margin", text: "View this on the GOV.UK website")
       assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/#{@answer.slug}")
     end
 
     should "not show the view link for archived editions" do
-      @answer.update_attribute(:state, 'archived')
+      @answer.update_attribute(:state, "archived")
 
       visit_edition @answer
       click_on "History and notes"
 
-      assert page.has_no_css?('#edition-history p.add-bottom-margin', text: "Preview edition at")
-      assert page.has_no_css?('#edition-history p.add-bottom-margin', text: "View this on the GOV.UK website")
+      assert page.has_no_css?("#edition-history p.add-bottom-margin", text: "Preview edition at")
+      assert page.has_no_css?("#edition-history p.add-bottom-margin", text: "View this on the GOV.UK website")
     end
 
     should "have the first history actions visible" do
       visit_edition @guide
       click_on "History and notes"
 
-      assert page.has_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
+      assert page.has_css?("#edition-history div.panel:first-of-type div.panel-collapse.in")
     end
 
     should "have clickable links in notes" do
       visit_edition @guide
       click_on "History and notes"
 
-      assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: 'http://www.some-link.com')
+      assert page.has_css?('.panel a[href="http://www.some-link.com"]', text: "http://www.some-link.com")
     end
 
     should "hide everything but the latest reply in fact check responses behind a toggle" do
@@ -66,29 +66,29 @@ class EditionHistoryTest < JavascriptIntegrationTest
       visit_edition @guide
       click_on "History and notes"
 
-      assert page.has_css?('p', text: 'email reply')
-      assert page.has_no_css?('p', text: 'original email request')
-      assert page.has_css?('.panel a', text: 'Toggle earlier messages')
+      assert page.has_css?("p", text: "email reply")
+      assert page.has_no_css?("p", text: "original email request")
+      assert page.has_css?(".panel a", text: "Toggle earlier messages")
 
       click_on "Toggle earlier messages"
 
-      assert page.has_css?('p', text: 'original email request')
+      assert page.has_css?("p", text: "original email request")
     end
 
     should "include the email addresses of fact check request recipients" do
       visit_edition @guide
       click_on "History and notes"
       click_on "Edition 1"
-      assert page.has_css?('p', text: "first")
-      assert page.has_css?('p', text: "Request sent to a@a.com, b@b.com")
-      assert page.has_css?('.panel a[href="mailto:a@a.com%2Cb@b.com"]', text: 'a@a.com, b@b.com')
+      assert page.has_css?("p", text: "first")
+      assert page.has_css?("p", text: "Request sent to a@a.com, b@b.com")
+      assert page.has_css?('.panel a[href="mailto:a@a.com%2Cb@b.com"]', text: "a@a.com, b@b.com")
     end
 
     should "hide actions when the edition title is clicked" do
       visit_edition @guide
       click_on "History and notes"
       click_on "Edition 2"
-      assert page.has_no_css?('#edition-history div.panel:first-of-type div.panel-collapse.in')
+      assert page.has_no_css?("#edition-history div.panel:first-of-type div.panel-collapse.in")
     end
 
     context "Important note" do
@@ -97,12 +97,12 @@ class EditionHistoryTest < JavascriptIntegrationTest
 
         visit_edition @guide
         assert page.has_content? "This is an important note. Take note."
-        assert page.has_css?('.callout-important-note')
+        assert page.has_css?(".callout-important-note")
 
         click_on "History and notes"
         click_on "Delete important note"
         visit_edition @guide
-        assert page.has_no_css?('.callout-important-note')
+        assert page.has_no_css?(".callout-important-note")
       end
 
       should "prepopulate with an existing note" do
@@ -121,12 +121,12 @@ class EditionHistoryTest < JavascriptIntegrationTest
         add_important_note("Note")
         add_important_note("")
 
-        assert page.has_no_css?('.callout-important-note')
+        assert page.has_no_css?(".callout-important-note")
       end
 
       should "have clickable links and zendesk tickets" do
         add_important_note("Note http://www.google.com zen 123456")
-        assert page.has_css?('.callout-important-note .callout-body a', count: 2)
+        assert page.has_css?(".callout-important-note .callout-body a", count: 2)
       end
 
       should "not be carried forward to new editions" do
@@ -153,22 +153,22 @@ class EditionHistoryTest < JavascriptIntegrationTest
         add_important_note("")
         add_important_note("Another note")
 
-        assert page.has_no_css?('.action-important-note')
-        assert page.has_no_css?('.action-important-note-resolved')
+        assert page.has_no_css?(".action-important-note")
+        assert page.has_no_css?(".action-important-note-resolved")
       end
 
       should "shows a history of important notes behind a toggle when there are modifications" do
         add_important_note("First note")
-        assert page.has_content?('Note created')
+        assert page.has_content?("Note created")
 
         add_important_note("An updated note")
-        assert page.has_content?('Note updated')
-        assert page.has_no_css?('.callout-important-note table')
+        assert page.has_content?("Note updated")
+        assert page.has_no_css?(".callout-important-note table")
 
         click_on "See history"
-        assert page.has_css?('.callout-important-note table tbody tr', count: 2)
-        assert page.has_css?('.callout-important-note tr:last-child td', text: 'First note')
-        assert page.has_css?('.callout-important-note tr:first-child td', text: 'An updated note')
+        assert page.has_css?(".callout-important-note table tbody tr", count: 2)
+        assert page.has_css?(".callout-important-note tr:last-child td", text: "First note")
+        assert page.has_css?(".callout-important-note tr:first-child td", text: "An updated note")
       end
     end
   end

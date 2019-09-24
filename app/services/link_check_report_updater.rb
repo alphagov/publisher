@@ -39,7 +39,7 @@ private
       check_warnings: link.fetch(:warnings, []),
       check_errors: link.fetch(:errors, []),
       problem_summary: link.fetch(:problem_summary),
-      suggested_fix: link.fetch(:suggested_fix)
+      suggested_fix: link.fetch(:suggested_fix),
     }
   end
 end

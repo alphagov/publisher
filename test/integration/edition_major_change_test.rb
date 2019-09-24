@@ -1,4 +1,4 @@
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class EditionMajorChangeTest < JavascriptIntegrationTest
   setup do
@@ -21,7 +21,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
   with_and_without_javascript do
     context "change note fields" do
       setup do
-        @edition = FactoryBot.create(:answer_edition, state: 'published')
+        @edition = FactoryBot.create(:answer_edition, state: "published")
       end
 
       should "show change note fields once an edition has been published" do

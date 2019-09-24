@@ -94,7 +94,7 @@ class EditionTest < ActiveSupport::TestCase
 
   context "link validation" do
     should "not be done when the edition is created" do
-      assert_difference 'AnswerEdition.count', 1 do
+      assert_difference "AnswerEdition.count", 1 do
         FactoryBot.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
       end
     end
@@ -109,9 +109,9 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "allow archiving an edition with invalid links" do
-      edition = FactoryBot.create(:answer_edition, state: 'published', body: 'abc [foobar](http://foobar.com "hover")')
+      edition = FactoryBot.create(:answer_edition, state: "published", body: 'abc [foobar](http://foobar.com "hover")')
 
-      assert_difference 'AnswerEdition.archived.count', 1 do
+      assert_difference "AnswerEdition.archived.count", 1 do
         edition.archive!
       end
     end
@@ -222,7 +222,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
-      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -244,7 +244,7 @@ class EditionTest < ActiveSupport::TestCase
       licence_identifier: "Test identifier",
       licence_short_description: "I am a test short description",
       will_continue_on: "test will continue on",
-      continuation_link: "https://github.com/alphagov/"
+      continuation_link: "https://github.com/alphagov/",
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -265,7 +265,7 @@ class EditionTest < ActiveSupport::TestCase
       version_number: 1,
       overview: "I am a test overview",
       more_information: "More information",
-      alternate_methods: "Alternate methods"
+      alternate_methods: "Alternate methods",
     )
     new_edition = edition.build_clone AnswerEdition
 
@@ -302,7 +302,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
-      body: "Test body"
+      body: "Test body",
     )
     new_edition = edition.build_clone TransactionEdition
 
@@ -321,7 +321,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
-      body: "Test body"
+      body: "Test body",
     )
     new_edition = edition.build_clone SimpleSmartAnswerEdition
 
@@ -340,7 +340,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
-      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      video_url: "http://www.youtube.com/watch?v=dQw4w9WgXcQ",
     )
     new_edition = edition.build_clone TransactionEdition
 
@@ -402,7 +402,7 @@ class EditionTest < ActiveSupport::TestCase
                                  slug: "foo-bar",
                                  kind: "answer",
                                  name: "Foo bar",
-                                 owning_app: "publisher",)
+                                 owning_app: "publisher")
     artefact.save!
 
     Artefact.find(artefact.id)
@@ -420,7 +420,7 @@ class EditionTest < ActiveSupport::TestCase
                                  slug: "foo-bar",
                                  kind: "answer",
                                  name: "Foo bar",
-                                 owning_app: "publisher",)
+                                 owning_app: "publisher")
 
     guide = FactoryBot.create(:guide_edition,
                               panopticon_id: artefact.id,
@@ -844,7 +844,7 @@ class EditionTest < ActiveSupport::TestCase
                                  slug: "foo-bar",
                                  kind: "answer",
                                  name: "Foo bar",
-                                 owning_app: "publisher",)
+                                 owning_app: "publisher")
 
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user)
 
@@ -922,8 +922,8 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should not allow any changes to an edition with an archived artefact" do
     artefact = FactoryBot.create(:artefact)
-    guide_edition = FactoryBot.create(:guide_edition, state: 'draft', panopticon_id: artefact.id)
-    artefact.state = 'archived'
+    guide_edition = FactoryBot.create(:guide_edition, state: "draft", panopticon_id: artefact.id)
+    artefact.state = "archived"
     artefact.save
 
     assert_raise(RuntimeError) do
@@ -980,7 +980,7 @@ class EditionTest < ActiveSupport::TestCase
 
     context "for a single part thing" do
       should "have an empty string for an edition with no body" do
-        edition = FactoryBot.create(:guide_edition, state: 'ready', title: 'one part thing', panopticon_id: FactoryBot.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition, state: "ready", title: "one part thing", panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
         assert_equal "", edition.indexable_content
       end
@@ -988,7 +988,7 @@ class EditionTest < ActiveSupport::TestCase
 
     context "for a multi part thing" do
       should "have the normalised content of all parts" do
-        edition = FactoryBot.create(:guide_edition_with_two_parts, state: 'ready', panopticon_id: FactoryBot.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition_with_two_parts, state: "ready", panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
         assert_equal "PART ! This is some version text. PART !! This is some more version text.", edition.indexable_content
       end
@@ -996,7 +996,7 @@ class EditionTest < ActiveSupport::TestCase
 
     context "indexable_content would contain govspeak" do
       should "convert it to plaintext" do
-        edition = FactoryBot.create(:guide_edition_with_two_govspeak_parts, state: 'ready', panopticon_id: FactoryBot.create(:artefact).id)
+        edition = FactoryBot.create(:guide_edition_with_two_govspeak_parts, state: "ready", panopticon_id: FactoryBot.create(:artefact).id)
         edition.publish
 
         expected = "Some Part Title! This is some version text. Another Part Title This is link text."
@@ -1006,15 +1006,15 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   context "#latest_major_update" do
-    should 'return the most recent published edition with a major change' do
+    should "return the most recent published edition with a major change" do
       edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                     change_note: 'published',
-                                                     state: 'published',
+                                                     change_note: "published",
+                                                     state: "published",
                                                      version_number: 1)
       edition2 = edition1.build_clone
 
-      edition2.update!(major_change: true, change_note: 'changed', state: 'published')
-      edition1.update!(state: 'archived')
+      edition2.update!(major_change: true, change_note: "changed", state: "published")
+      edition1.update!(state: "archived")
 
       edition3 = edition2.build_clone
 
@@ -1023,67 +1023,67 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   context "#latest_change_note" do
-    should 'return the change note of the latest major update' do
+    should "return the change note of the latest major update" do
       edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                     change_note: 'a change note',
-                                                     state: 'published')
+                                                     change_note: "a change note",
+                                                     state: "published")
       edition2 = edition1.build_clone
 
-      assert_equal 'a change note', edition2.latest_change_note
+      assert_equal "a change note", edition2.latest_change_note
     end
 
-    should 'return nil if there is no major update in the edition series' do
+    should "return nil if there is no major update in the edition series" do
       edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                     state: 'published')
+                                                     state: "published")
       assert_nil edition1.latest_change_note
     end
   end
 
-  context '#public_updated_at' do
-    should 'return the updated_at timestamp of the latest major update' do
+  context "#public_updated_at" do
+    should "return the updated_at timestamp of the latest major update" do
       edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                     change_note: 'a change note',
+                                                     change_note: "a change note",
                                                      updated_at: 1.minute.ago,
-                                                     state: 'published')
+                                                     state: "published")
       edition2 = edition1.build_clone
 
       assert_in_delta edition1.updated_at, edition2.public_updated_at, 1.second
     end
 
-    should 'return the timestamp of the first published edition when there are no major updates' do
+    should "return the timestamp of the first published edition when there are no major updates" do
       edition1 = FactoryBot.create(:answer_edition, major_change: false,
                                                      updated_at: 2.minutes.ago,
-                                                     state: 'published')
+                                                     state: "published")
       edition2 = edition1.build_clone
       Timecop.freeze(1.minute.ago) do
         #added to allow significant amount of time between edition updated_at values
-        edition2.update!(state: 'published', major_change: false)
+        edition2.update!(state: "published", major_change: false)
       end
-      edition1.update!(state: 'archived', major_change: false)
+      edition1.update!(state: "archived", major_change: false)
 
       assert_in_delta edition1.updated_at, edition2.public_updated_at, 1.second
       assert_not_in_delta edition2.updated_at, edition2.public_updated_at, 1.second
     end
 
-    should 'return nil if there are no major updates and no published editions' do
+    should "return nil if there are no major updates and no published editions" do
       edition1 = FactoryBot.create(:answer_edition, major_change: false,
                                                      updated_at: 1.minute.ago,
-                                                     state: 'draft')
+                                                     state: "draft")
 
       assert_nil edition1.public_updated_at
     end
   end
 
-  context '#has_ever_been_published?' do
-    should 'return true if any edition has a published state' do
+  context "#has_ever_been_published?" do
+    should "return true if any edition has a published state" do
       edition1 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
-        state: 'published')
+        state: "published")
       edition2 = edition1.build_clone
-      edition2.update!(state: 'archived', major_change: false)
+      edition2.update!(state: "archived", major_change: false)
       edition4 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
-        state: 'draft')
+        state: "draft")
 
       assert_equal true, edition1.has_ever_been_published?
       assert_equal true, edition2.has_ever_been_published?
@@ -1091,16 +1091,16 @@ class EditionTest < ActiveSupport::TestCase
     end
   end
 
-  context '#first_edition_of_published' do
-    should 'return the first edition of a series that has at least one edition state published' do
+  context "#first_edition_of_published" do
+    should "return the first edition of a series that has at least one edition state published" do
       edition1 = FactoryBot.create(:answer_edition, major_change: false,
         updated_at: 2.minutes.ago,
-        state: 'published')
+        state: "published")
       edition2 = edition1.build_clone
-      edition1.update!(state: 'archived', major_change: false)
-      edition2.update!(state: 'published', major_change: false)
+      edition1.update!(state: "archived", major_change: false)
+      edition2.update!(state: "published", major_change: false)
       edition3 = edition2.build_clone
-      edition3.update!(state: 'archived', major_change: false)
+      edition3.update!(state: "archived", major_change: false)
 
       assert_equal edition1, edition1.first_edition_of_published
       assert_equal edition1, edition2.first_edition_of_published

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DowntimeSchedulerTest < ActiveSupport::TestCase
   setup do
@@ -85,11 +85,11 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
   end
 
   def there_is_job_enqueued_to_run_immediately(jobs)
-    jobs.one? { |job| !job.has_key? 'at' }
+    jobs.one? { |job| !job.has_key? "at" }
   end
 
   def there_is_job_enqueued_to_run_at_time(jobs, time)
-    jobs.one? { |job| job.fetch('at', -1).between?(time.to_i, time.to_i + 60) }
+    jobs.one? { |job| job.fetch("at", -1).between?(time.to_i, time.to_i + 60) }
   end
 
   def assert_changes_value_from_one_to_zero(proc)
@@ -102,7 +102,7 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
     stub(
       id: 123,
       display_start_time: start_time,
-      end_time: end_time
+      end_time: end_time,
     )
   end
 

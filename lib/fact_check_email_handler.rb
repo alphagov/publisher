@@ -1,5 +1,5 @@
-require 'fact_check_message_processor'
-require_relative 'fact_check_mail'
+require "fact_check_message_processor"
+require_relative "fact_check_mail"
 
 # A class to pull messages from an email account and send relevant ones
 # to a processor.

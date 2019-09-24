@@ -3,7 +3,7 @@ class MoveMinutesToCompleteToNeedToKnowField < Mongoid::Migration
     Edition.where(:minutes_to_complete.nin => ["", nil]).each do |edition|
       language = edition.artefact.language
 
-      if language == 'cy'
+      if language == "cy"
         edition.set(:need_to_know, "- Mae'n cymryd tua #{edition.minutes_to_complete} munud\r\n#{edition.need_to_know}")
       else
         edition.set(:need_to_know, "- Takes around #{edition.minutes_to_complete} minutes\r\n#{edition.need_to_know}")

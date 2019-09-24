@@ -31,7 +31,7 @@ module Formats
 
     def links
       {
-        parent: [parent.content_id]
+        parent: [parent.content_id],
       }
     end
 
@@ -115,7 +115,7 @@ module Formats
       {
         title: content[:create_new_account][:title],
         slug: content[:create_new_account][:slug],
-        body: govspeak_content(content[:create_new_account][:body])
+        body: govspeak_content(content[:create_new_account][:body]),
       }
     end
 
@@ -124,7 +124,7 @@ module Formats
         {
           content_type: "text/govspeak",
           content: content,
-        }
+        },
       ]
     end
 

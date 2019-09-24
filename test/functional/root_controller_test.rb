@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RootControllerTest < ActionController::TestCase
   setup do
@@ -6,11 +6,11 @@ class RootControllerTest < ActionController::TestCase
     login_as_stub_user
     session[:user_filter] = @users[0].uid
 
-    @guide = FactoryBot.create(:guide_edition, state: 'draft')
+    @guide = FactoryBot.create(:guide_edition, state: "draft")
   end
 
   test "it returns a 404 for an unknown list" do
-    get :index, params: { list: 'draFts' }
+    get :index, params: { list: "draFts" }
     assert response.not_found?
   end
 
@@ -18,7 +18,7 @@ class RootControllerTest < ActionController::TestCase
   # model, but some don't and we want to test that we allow those
   # through correctly
   test "it supports lists that don't match a model scope" do
-    get :index, params: { list: 'drafts' }
+    get :index, params: { list: "drafts" }
     assert response.ok?
   end
 
@@ -27,7 +27,7 @@ class RootControllerTest < ActionController::TestCase
     get(:index, params: {
       list: "drafts",
       user_filter: "all",
-      string_filter: " stuff"
+      string_filter: " stuff",
     })
     assert_select "td.title", /Stuff/i
   end
@@ -37,7 +37,7 @@ class RootControllerTest < ActionController::TestCase
     get(:index, params: {
       list: "drafts",
       user_filter: "all",
-      string_filter: "stuff   and things"
+      string_filter: "stuff   and things",
     })
     assert_select "td.title", /Stuff and things/i
   end
@@ -48,7 +48,7 @@ class RootControllerTest < ActionController::TestCase
     get(:index, params: {
       list: "drafts",
       user_filter: "all",
-      string_filter: "electric-banana"
+      string_filter: "electric-banana",
     })
     assert_select "td.title", /Stuff/i
   end

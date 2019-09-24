@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EditionsControllerTest < ActionController::TestCase
   setup do
@@ -23,8 +23,8 @@ class EditionsControllerTest < ActionController::TestCase
              "edition" => {
                "kind" => "answer",
                "panopticon_id" => @artefact.id,
-               "title" => "a title"
-             }
+               "title" => "a title",
+             },
            }
     end
 
@@ -36,8 +36,8 @@ class EditionsControllerTest < ActionController::TestCase
              "edition" => {
                "kind" => "answer",
                "panopticon_id" => @artefact.id,
-               "title" => "a title"
-             }
+               "title" => "a title",
+             },
            }
     end
 
@@ -45,7 +45,7 @@ class EditionsControllerTest < ActionController::TestCase
       lgsl_code = 800
       FactoryBot.create(
         :local_service,
-        lgsl_code: lgsl_code
+        lgsl_code: lgsl_code,
       )
       artefact = FactoryBot.create(:artefact)
 
@@ -57,9 +57,9 @@ class EditionsControllerTest < ActionController::TestCase
                "lgil_code" => 1,
                "panopticon_id" => artefact.id,
                "title" => "a title",
-             }
+             },
            }
-      assert_equal '302', response.code
+      assert_equal "302", response.code
 
       post :create,
            params: {
@@ -68,10 +68,10 @@ class EditionsControllerTest < ActionController::TestCase
                "lgsl_code" => lgsl_code + 1,
                "lgil_code" => 1,
                "panopticon_id" => artefact.id,
-               "title" => "a title"
-             }
+               "title" => "a title",
+             },
            }
-      assert_equal '200', response.code
+      assert_equal "200", response.code
     end
   end
 
@@ -120,9 +120,9 @@ class EditionsControllerTest < ActionController::TestCase
                  "request_type"       => "send_fact_check",
                  "comment"            => "Blah",
                  "email_addresses"    => "user@example.com",
-                 "customised_message" => "Hello"
-               }
-             }
+                 "customised_message" => "Hello",
+               },
+             },
            }
 
       assert_redirected_to controller: "editions", action: "show", id: @guide.id
@@ -138,23 +138,23 @@ class EditionsControllerTest < ActionController::TestCase
              id: @guide.id.to_s,
              edition: {
                activity: {
-                 'request_type' => "send_fact_check",
-                 "email_addresses" => ""
-               }
-             }
+                 "request_type" => "send_fact_check",
+                 "email_addresses" => "",
+               },
+             },
            }
       assert_equal "I failed", flash[:danger]
     end
 
     should "squash multiparameter attributes into a time field that has time-zone information" do
-      EditionProgressor.any_instance.expects(:progress).with(has_entry('publish_at', Time.zone.local(2014, 3, 4, 14, 47)))
+      EditionProgressor.any_instance.expects(:progress).with(has_entry("publish_at", Time.zone.local(2014, 3, 4, 14, 47)))
 
       publish_at_params = {
         "publish_at(1i)" => "2014",
         "publish_at(2i)" => "3",
         "publish_at(3i)" => "4",
         "publish_at(4i)" => "14",
-        "publish_at(5i)" => "47"
+        "publish_at(5i)" => "47",
       }
 
       post :progress,
@@ -162,9 +162,9 @@ class EditionsControllerTest < ActionController::TestCase
              id: @guide.id.to_s,
              edition: {
                activity: {
-                 "request_type" => 'schedule_for_publishing'
-               }.merge(publish_at_params)
-             }
+                 "request_type" => "schedule_for_publishing",
+               }.merge(publish_at_params),
+             },
            }
     end
   end
@@ -180,7 +180,7 @@ class EditionsControllerTest < ActionController::TestCase
       post :update,
            params: {
              id: @guide.id,
-             edition: { assigned_to_id: bob.id }
+             edition: { assigned_to_id: bob.id },
            }
 
       @guide.reload
@@ -194,7 +194,7 @@ class EditionsControllerTest < ActionController::TestCase
       post :update,
            params: {
              id: @guide.id,
-             edition: { assigned_to_id: bob.id }
+             edition: { assigned_to_id: bob.id },
            }
 
       @guide.reload
@@ -209,7 +209,7 @@ class EditionsControllerTest < ActionController::TestCase
       post :update,
            params: {
              id: @guide.id,
-             edition: { assigned_to_id: "" }
+             edition: { assigned_to_id: "" },
            }
       assert_response 200
     end
@@ -233,9 +233,9 @@ class EditionsControllerTest < ActionController::TestCase
                title: "Updated title",
                activity_request_review_attributes: {
                  request_type: "request_review",
-                 comment: "Please review the updated title"
-               }
-             }
+                 comment: "Please review the updated title",
+               },
+             },
            }
 
       @guide.reload
@@ -251,8 +251,8 @@ class EditionsControllerTest < ActionController::TestCase
            params: {
              id: @guide.id,
              edition: {
-               title: "Updated title"
-             }
+               title: "Updated title",
+             },
            }
     end
   end
@@ -265,7 +265,7 @@ class EditionsControllerTest < ActionController::TestCase
         :guide_edition,
         state: "in_review",
         review_requested_at: Time.zone.now,
-        panopticon_id: artefact.id
+        panopticon_id: artefact.id,
       )
     end
 
@@ -275,7 +275,7 @@ class EditionsControllerTest < ActionController::TestCase
       put :review,
           params: {
             id: @guide.id,
-            edition: { reviewer: bob.name }
+            edition: { reviewer: bob.name },
           }
 
       @guide.reload
@@ -302,33 +302,33 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "destroy transaction" do
       assert @transaction.can_destroy?
-      assert_difference('TransactionEdition.count', -1) do
+      assert_difference("TransactionEdition.count", -1) do
         delete :destroy, params: { id: @transaction.id }
       end
       assert_redirected_to(:controller => "root", "action" => "index")
     end
 
     should "can't destroy published transaction" do
-      @transaction.state = 'ready'
+      @transaction.state = "ready"
       stub_register_published_content
       @transaction.publish
       assert !@transaction.can_destroy?
       @transaction.save!
-      assert_difference('TransactionEdition.count', 0) do
+      assert_difference("TransactionEdition.count", 0) do
         delete :destroy, params: { id: @transaction.id }
       end
     end
 
     should "destroy guide" do
       assert @guide.can_destroy?
-      assert_difference('GuideEdition.count', -1) do
+      assert_difference("GuideEdition.count", -1) do
         delete :destroy, params: { id: @guide.id }
       end
       assert_redirected_to(:controller => "root", "action" => "index")
     end
 
     should "can't destroy published guide" do
-      @guide.state = 'ready'
+      @guide.state = "ready"
       @guide.save!
       stub_register_published_content
       @guide.publish
@@ -336,7 +336,7 @@ class EditionsControllerTest < ActionController::TestCase
       assert @guide.published?
       assert !@guide.can_destroy?
 
-      assert_difference('GuideEdition.count', 0) do
+      assert_difference("GuideEdition.count", 0) do
         delete :destroy, params: { id: @guide.id }
       end
     end
@@ -360,7 +360,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
-      get :show, params: { id: '4e663834e2ba80480a0000e6' }
+      get :show, params: { id: "4e663834e2ba80480a0000e6" }
       assert_response 404
     end
 
@@ -389,7 +389,7 @@ class EditionsControllerTest < ActionController::TestCase
       @edition = FactoryBot.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
       @edition.nodes.build(kind: "question", slug: "question-1", title: "Question One", options_attributes: [
         { label: "Option One", next_node: "outcome-1" },
-        { label: "Option Two", next_node: "outcome-2" }
+        { label: "Option Two", next_node: "outcome-2" },
       ])
       @edition.nodes.build(kind: "outcome", slug: "outcome-1", title: "Outcome One")
       @edition.nodes.build(kind: "outcome", slug: "outcome-2", title: "Outcome Two")
@@ -403,22 +403,22 @@ class EditionsControllerTest < ActionController::TestCase
             "id" => @edition.nodes.all[0].id,
             "options_attributes" => {
               "0" => { "id" => @edition.nodes.first.options.all[0].id },
-              "1" => { "id" => @edition.nodes.first.options.all[1].id, "_destroy" => "1" }
+              "1" => { "id" => @edition.nodes.first.options.all[1].id, "_destroy" => "1" },
             },
           },
           "1" => {
-            "id" => @edition.nodes.all[1].id
+            "id" => @edition.nodes.all[1].id,
           },
           "2" => {
             "id" => @edition.nodes.all[2].id,
-            "_destroy" => "1"
-          }
-        }
+            "_destroy" => "1",
+          },
+        },
       }
       put :update,
           params: {
             id: @edition.id,
-            edition: atts
+            edition: atts,
           }
       assert_redirected_to edition_path(@edition)
 

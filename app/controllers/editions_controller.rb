@@ -3,7 +3,7 @@ require "edition_progressor"
 
 class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
-  defaults resource_class: Edition, collection_name: 'editions', instance_name: 'resource'
+  defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
   after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
@@ -59,14 +59,14 @@ class EditionsController < InheritedResources::Base
     target_edition_class_name = (params[:to] + "_edition").classify if params[:to]
 
     if !resource.can_create_new_edition?
-      flash[:warning] = 'Another person has created a newer edition'
+      flash[:warning] = "Another person has created a newer edition"
       redirect_to edition_path(resource)
     elsif command.duplicate(target_edition_class_name, new_assignee)
       new_edition = command.new_edition
       UpdateWorker.perform_async(new_edition.id.to_s)
 
       return_to = params[:return_to] || edition_path(new_edition)
-      flash[:success] = 'New edition created'
+      flash[:success] = "New edition created"
       redirect_to return_to
     else
       flash[:danger] = command.error_message
@@ -142,7 +142,7 @@ class EditionsController < InheritedResources::Base
   rescue GdsApi::HTTPConflict
     redirect_to tagging_edition_path,
                 flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved."
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
   end
 
@@ -243,7 +243,7 @@ protected
     when :guide_edition
       [
         :hide_chapter_navigation,
-        parts_attributes: %i[title body slug order id _destroy]
+        parts_attributes: %i[title body slug order id _destroy],
       ]
     when :licence_edition
       %i[
@@ -287,7 +287,7 @@ protected
         :alternate_methods,
         :need_to_know,
         :department_analytics_profile,
-        variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy]
+        variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy],
       ]
     when :completed_transaction_edition
       %i[
@@ -390,7 +390,7 @@ private
 
   def format_failure_message(resource)
     resource_base_errors = resource.errors[:base]
-    return resource.errors[:base].join('<br />') if resource_base_errors.present?
+    return resource.errors[:base].join("<br />") if resource_base_errors.present?
 
     "We had some problems saving. Please check the form below."
   end

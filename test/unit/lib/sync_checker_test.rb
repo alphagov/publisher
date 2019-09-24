@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'gds_api/test_helpers/content_store'
+require "test_helper"
+require "gds_api/test_helpers/content_store"
 
 class SyncCheckerTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::ContentStore
@@ -19,7 +19,7 @@ class SyncCheckerTest < ActiveSupport::TestCase
         content_store_has_item("/help/cookies", schema_name: "help_page")
       end
 
-      should 'succeed for matching expectation' do
+      should "succeed for matching expectation" do
         SyncChecker::Success.stubs(new: stub(to_s: "yay"))
         SyncChecker::Success.expects(:new).once
 
@@ -30,7 +30,7 @@ class SyncCheckerTest < ActiveSupport::TestCase
         @sync_checker.call
       end
 
-      should 'fail for non-matching expectation' do
+      should "fail for non-matching expectation" do
         SyncChecker::Failure.stubs(new: stub(to_s: "boo"))
         SyncChecker::Failure.expects(:new).once
 
@@ -47,7 +47,7 @@ class SyncCheckerTest < ActiveSupport::TestCase
         content_store_does_not_have_item("/help/cookies")
       end
 
-      should 'fail' do
+      should "fail" do
         SyncChecker::NotFoundFailure.stubs(new: stub(to_s: "not found"))
         SyncChecker::NotFoundFailure.expects(:new).once
 

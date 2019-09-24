@@ -11,21 +11,21 @@ class CompletedTransactionEditionTest < ActiveSupport::TestCase
     completed_transaction_edition.save!
     assert completed_transaction_edition.reload.promotes_something?
 
-    completed_transaction_edition.promotion_choice = ''
+    completed_transaction_edition.promotion_choice = ""
     completed_transaction_edition.save!
     refute completed_transaction_edition.reload.promotes_something?
   end
 
   test "invalid if promotion_choice_url is not specified when a promotion choice is made" do
     completed_transaction_edition = FactoryBot.build(:completed_transaction_edition,
-                                                     promotion_choice: 'organ_donor', promotion_choice_url: "")
+                                                     promotion_choice: "organ_donor", promotion_choice_url: "")
 
     assert completed_transaction_edition.invalid?
     assert_includes completed_transaction_edition.errors[:promotion_choice_url], "can't be blank"
   end
 
   test "invalid if promotion_choice is not one of the allowed ones" do
-    completed_transaction_edition = FactoryBot.build(:completed_transaction_edition, promotion_choice: 'cheese')
+    completed_transaction_edition = FactoryBot.build(:completed_transaction_edition, promotion_choice: "cheese")
 
     assert completed_transaction_edition.invalid?
     assert_includes completed_transaction_edition.errors[:promotion_choice], "is not included in the list"

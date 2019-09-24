@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
@@ -38,15 +38,15 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
       save_edition_and_assert_success
 
-      assert page.has_css?('.label', text: 'Draft')
-      assert 'Changed title', completed_transaction.title
+      assert page.has_css?(".label", text: "Draft")
+      assert "Changed title", completed_transaction.title
     end
   end
 
   should "allow creating a new version of a CompletedTransactionEdition" do
     completed_transaction = FactoryBot.create(:completed_transaction_edition,
                                               panopticon_id: @artefact.id,
-                                              state: 'published',
+                                              state: "published",
                                               title: "All bar done")
 
     visit_edition completed_transaction
@@ -59,7 +59,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   should "disable fields for a published edition" do
     edition = FactoryBot.create(:completed_transaction_edition,
                                 panopticon_id: @artefact.id,
-                                state: 'published',
+                                state: "published",
                                 title: "All bar done")
 
     visit_edition edition
@@ -79,7 +79,7 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     visit current_path # Refresh the page to check that the boxes are still ticked.
     assert page.has_checked_field? "Promote organ donation"
-    assert page.has_field? 'Promotion choice URL', with: organ_donor_registration_promotion_url
+    assert page.has_field? "Promotion choice URL", with: organ_donor_registration_promotion_url
   end
 
   should "only allow one promotion to be displayed at once" do

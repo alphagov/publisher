@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class TransactionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -20,7 +20,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
       artefact: artefact,
       start_time: start_time,
       end_time: Time.zone.tomorrow.at_midnight,
-      message: message
+      message: message,
     )
   end
 
@@ -31,7 +31,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
       introduction: "introduction-#{num}",
       link: "http://www.example.com/#{num}",
       order: num,
-      transaction_edition: edition
+      transaction_edition: edition,
     )
   end
 
@@ -40,11 +40,11 @@ class TransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'transaction')
+    assert_valid_against_schema(result, "transaction")
   end
 
   should "[:schema_name]" do
-    assert_equal 'transaction', result[:schema_name]
+    assert_equal "transaction", result[:schema_name]
   end
 
   context "[:details]" do
@@ -54,27 +54,27 @@ class TransactionPresenterTest < ActiveSupport::TestCase
 
       expected = [
         {
-          title: 'title-1',
-          slug: 'slug-1',
+          title: "title-1",
+          slug: "slug-1",
           introductory_paragraph: [
             {
-              content_type: 'text/govspeak',
-              content: 'introduction-1'
-            }
+              content_type: "text/govspeak",
+              content: "introduction-1",
+            },
           ],
-          transaction_start_link: 'http://www.example.com/1'
+          transaction_start_link: "http://www.example.com/1",
         },
         {
-          title: 'title-2',
-          slug: 'slug-2',
+          title: "title-2",
+          slug: "slug-2",
           introductory_paragraph: [
             {
-              content_type: 'text/govspeak',
-              content: 'introduction-2'
-            }
+              content_type: "text/govspeak",
+              content: "introduction-2",
+            },
           ],
-          transaction_start_link: 'http://www.example.com/2'
-        }
+          transaction_start_link: "http://www.example.com/2",
+        },
       ]
 
       assert_equal expected, result[:details][:variants]
@@ -86,64 +86,64 @@ class TransactionPresenterTest < ActiveSupport::TestCase
       expected = [{
         title: "",
         slug: "",
-        transaction_start_link: ""
+        transaction_start_link: "",
       }]
 
       assert_equal expected, result[:details][:variants]
     end
 
     should "[:introductory_paragraph]" do
-      edition.update_attribute(:introduction, 'foo')
+      edition.update_attribute(:introduction, "foo")
       expected = [
         {
-          content_type: 'text/govspeak',
-          content: 'foo'
-        }
+          content_type: "text/govspeak",
+          content: "foo",
+        },
       ]
       assert_equal expected, result[:details][:introductory_paragraph]
     end
 
     should "[:more_information]" do
-      edition.update_attribute(:more_information, 'foo')
+      edition.update_attribute(:more_information, "foo")
       expected = [
         {
-          content_type: 'text/govspeak',
-          content: 'foo'
-        }
+          content_type: "text/govspeak",
+          content: "foo",
+        },
       ]
       assert_equal expected, result[:details][:more_information]
     end
 
     should "[:other_ways_to_apply]" do
-      edition.update_attribute(:alternate_methods, 'foo')
+      edition.update_attribute(:alternate_methods, "foo")
       expected = [
         {
-          content_type: 'text/govspeak',
-          content: 'foo'
-        }
+          content_type: "text/govspeak",
+          content: "foo",
+        },
       ]
       assert_equal expected, result[:details][:other_ways_to_apply]
     end
 
     should "[:what_you_need_to_know]" do
-      edition.update_attribute(:need_to_know, 'foo')
+      edition.update_attribute(:need_to_know, "foo")
       expected = [
         {
-          content_type: 'text/govspeak',
-          content: 'foo'
-        }
+          content_type: "text/govspeak",
+          content: "foo",
+        },
       ]
       assert_equal expected, result[:details][:what_you_need_to_know]
     end
 
     should "[:external_related_links]" do
-      link = { 'url' => 'www.foo.com', 'title' => 'foo' }
+      link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.update_attribute(:external_links, [link])
       expected = [
         {
-          url: link['url'],
-          title: link['title']
-        }
+          url: link["url"],
+          title: link["title"],
+        },
       ]
 
       assert_equal expected, result[:details][:external_related_links]
@@ -160,25 +160,25 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:department_analytics_profile]" do
-      edition.update_attribute(:department_analytics_profile, 'UA-000000-2')
-      assert_equal 'UA-000000-2', result[:details][:department_analytics_profile]
+      edition.update_attribute(:department_analytics_profile, "UA-000000-2")
+      assert_equal "UA-000000-2", result[:details][:department_analytics_profile]
     end
 
     should "[:start_button_text]" do
-      edition.update_attribute(:start_button_text, 'Sign in')
-      assert_equal 'Sign in', result[:details][:start_button_text]
+      edition.update_attribute(:start_button_text, "Sign in")
+      assert_equal "Sign in", result[:details][:start_button_text]
     end
 
     context "[:downtime_message]" do
       context "when there is a downtime association" do
         should "show if we're in the publicize window" do
-          message = 'this transaction is unavailable tomorrow'
+          message = "this transaction is unavailable tomorrow"
           create_downtime(message)
           assert message, result[:details][:downtime_message]
         end
 
         should "not render downtime if we're outside the publicize window" do
-          create_downtime('foo', start_time: Time.zone.tomorrow.at_midday)
+          create_downtime("foo", start_time: Time.zone.tomorrow.at_midday)
           assert_nil result[:details][:downtime_message]
         end
       end
@@ -192,9 +192,9 @@ class TransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update_attribute(:slug, 'foo')
+    edition.update_attribute(:slug, "foo")
     expected = [
-      { path: '/foo', type: 'prefix' },
+      { path: "/foo", type: "prefix" },
     ]
     assert_equal expected, result[:routes]
   end

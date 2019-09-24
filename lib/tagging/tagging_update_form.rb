@@ -12,12 +12,12 @@ module Tagging
       new(
         content_id: content_id,
         previous_version: link_set.version,
-        topics: link_set.links['topics'],
-        organisations: link_set.links['organisations'],
-        meets_user_needs: link_set.links['meets_user_needs'],
-        mainstream_browse_pages: link_set.links['mainstream_browse_pages'],
-        ordered_related_items: link_set.expanded_links['ordered_related_items'],
-        parent: link_set.links['parent'],
+        topics: link_set.links["topics"],
+        organisations: link_set.links["organisations"],
+        meets_user_needs: link_set.links["meets_user_needs"],
+        mainstream_browse_pages: link_set.links["mainstream_browse_pages"],
+        ordered_related_items: link_set.expanded_links["ordered_related_items"],
+        parent: link_set.links["parent"],
       )
     end
 

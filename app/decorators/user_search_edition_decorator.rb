@@ -18,7 +18,7 @@ class UserSearchEditionDecorator
         request_type: last_action.request_type,
         user_role: user_role(last_action),
         summary: summary(last_action),
-        timestamp: last_action.created_at
+        timestamp: last_action.created_at,
       }
     end
   end

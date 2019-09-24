@@ -7,7 +7,7 @@ class FixBusinessSupportIntegerFields < Mongoid::Migration
         if (value = ed.send(field)).is_a?(String)
           puts "Fixing string in #{field} field for #{ed.slug} version:#{ed.version_number}"
 
-          new_value = value.gsub(/[£,]/, '')
+          new_value = value.gsub(/[£,]/, "")
           if new_value =~ /\A\d+\z/
             ed.send("#{field}=", new_value.to_i)
           else

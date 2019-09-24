@@ -1,11 +1,11 @@
 module Formats
   class SimpleSmartAnswerPresenter < EditionFormatPresenter
     def schema_name
-      'simple_smart_answer'
+      "simple_smart_answer"
     end
 
     def document_type
-      'simple_smart_answer'
+      "simple_smart_answer"
     end
 
     def details
@@ -35,8 +35,8 @@ module Formats
           {
             content_type: "text/govspeak",
             content: @edition.body.to_s,
-          }
-        ]
+          },
+        ],
       }
     end
 
@@ -44,7 +44,7 @@ module Formats
       return {} if edition.nodes.empty?
 
       {
-        nodes: edition.nodes.map { |n| presented_node(n) }
+        nodes: edition.nodes.map { |n| presented_node(n) },
       }
     end
 
@@ -63,9 +63,9 @@ module Formats
       {
         body: [
           {
-            content_type: 'text/govspeak',
+            content_type: "text/govspeak",
             content: node_body.to_s,
-          }
+          },
         ],
       }
     end
@@ -78,7 +78,7 @@ module Formats
       {
         label: option.label.to_s,
         slug: option.slug.to_s,
-        next_node: option.next_node.to_s
+        next_node: option.next_node.to_s,
       }
     end
   end

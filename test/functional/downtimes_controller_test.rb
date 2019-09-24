@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DowntimesControllerTest < ActionController::TestCase
   setup do
@@ -13,9 +13,9 @@ class DowntimesControllerTest < ActionController::TestCase
       get :index
 
       assert_response :ok
-      assert_select 'h4.publication-table-title', count: 0, text: unpublished_transaction_edition.title
+      assert_select "h4.publication-table-title", count: 0, text: unpublished_transaction_edition.title
       transaction_editions.each do |edition|
-        assert_select 'h4.publication-table-title', text: edition.title
+        assert_select "h4.publication-table-title", text: edition.title
       end
     end
   end
@@ -77,12 +77,12 @@ class DowntimesControllerTest < ActionController::TestCase
     context "cancelling scheduled downtime" do
       should "invoke the DowntimeRemover" do
         DowntimeRemover.expects(:destroy_immediately).with(downtime)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: 'Cancel downtime' }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
       end
 
       should "redirect to the downtime index" do
         DowntimeRemover.stubs(:destroy_immediately)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: 'Cancel downtime' }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
         assert_redirected_to controller: "downtimes", action: "index"
       end
     end
@@ -90,13 +90,13 @@ class DowntimesControllerTest < ActionController::TestCase
     context "rescheduling planned downtime" do
       should "schedule the changes for publication and expiration" do
         DowntimeScheduler.expects(:schedule_publish_and_expiry).with(downtime)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: 'Re-schedule downtime message' }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
       end
 
       should "redirect to the downtime index" do
         create_downtime
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: 'Re-schedule downtime message' }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
         assert_redirected_to controller: "downtimes", action: "index"
       end
     end
@@ -104,7 +104,7 @@ class DowntimesControllerTest < ActionController::TestCase
     context "with invalid form data" do
       should "rerender the page" do
         create_downtime
-        put :update, params: { edition_id: edition.id, downtime: invalid_params, commit: 'Re-schedule downtime message' }
+        put :update, params: { edition_id: edition.id, downtime: invalid_params, commit: "Re-schedule downtime message" }
         assert_template :edit
       end
     end
@@ -143,7 +143,7 @@ class DowntimesControllerTest < ActionController::TestCase
       'end_time(3i)': 14,
       'end_time(2i)': 3,
       'end_time(1i)': next_year,
-      'message': 'foo'
+      'message': "foo",
     }
   end
 

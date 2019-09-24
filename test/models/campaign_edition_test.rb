@@ -2,7 +2,7 @@ require "test_helper"
 
 class CampaignEditionTest < ActiveSupport::TestCase
   setup do
-    @artefact = FactoryBot.create(:artefact, kind: 'campaign', slug: "start-all-the-campaigns")
+    @artefact = FactoryBot.create(:artefact, kind: "campaign", slug: "start-all-the-campaigns")
   end
 
   should "have correct extra fields" do
@@ -59,8 +59,8 @@ class CampaignEditionTest < ActiveSupport::TestCase
 
   should "be valid with a blank organisation crest and brand colour" do
     campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
-    campaign.organisation_crest = ''
-    campaign.organisation_brand_colour = ''
+    campaign.organisation_crest = ""
+    campaign.organisation_brand_colour = ""
 
     assert campaign.valid?
   end

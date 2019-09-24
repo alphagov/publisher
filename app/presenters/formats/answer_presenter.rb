@@ -3,11 +3,11 @@ module Formats
   private
 
     def schema_name
-      'answer'
+      "answer"
     end
 
     def document_type
-      'answer'
+      "answer"
     end
 
     def rendering_app

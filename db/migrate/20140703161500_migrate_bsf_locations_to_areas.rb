@@ -4,7 +4,7 @@ class MigrateBsfLocationsToAreas < Mongoid::Migration
   end
 
   def self.down
-    BusinessSupportEdition.excludes(state: 'archived').each do |bs|
+    BusinessSupportEdition.excludes(state: "archived").each do |bs|
       bs.update_attribute(:areas, [])
     end
   end

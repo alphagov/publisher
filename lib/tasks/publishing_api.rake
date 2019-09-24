@@ -1,11 +1,11 @@
 namespace :publishing_api do
-  desc 'republish content'
+  desc "republish content"
   task republish_content: [:environment] do
     republish Edition.published
     republish_draft Edition.draft_in_publishing_api
   end
 
-  desc 'republish by format'
+  desc "republish by format"
   task :republish_by_format, [:format] => :environment do |_, args|
     format_editions = Edition.by_format(args[:format])
 
@@ -13,14 +13,14 @@ namespace :publishing_api do
     republish_draft format_editions.draft_in_publishing_api
   end
 
-  desc 'republish drafts by format'
+  desc "republish drafts by format"
   task :republish_drafts_by_format, [:format] => :environment do |_, args|
     format_editions = Edition.by_format(args[:format])
 
     republish_draft format_editions.draft_in_publishing_api
   end
 
-  desc 'Publish the experimental knowledge API'
+  desc "Publish the experimental knowledge API"
   task publish_knowledge: [:environment] do
     KnowledgeApi.new.publish
   end

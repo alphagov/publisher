@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class TimeZoneTest < ActiveSupport::TestCase
   def first_day_of_summer_time
@@ -17,15 +17,15 @@ class TimeZoneTest < ActiveSupport::TestCase
     should "still store the date in UTC" do
       Timecop.freeze(wintertime) do
         FactoryBot.create(:artefact)
-        assert_equal 'UTC', Artefact.last[:created_at].zone
-        assert_equal 'GMT', Artefact.last.created_at.zone
+        assert_equal "UTC", Artefact.last[:created_at].zone
+        assert_equal "GMT", Artefact.last.created_at.zone
       end
     end
 
     should "use the Time.zone time zone for dot-methods" do
       Timecop.freeze(wintertime) do
         FactoryBot.create(:artefact)
-        assert_equal 'GMT', Artefact.last.created_at.zone
+        assert_equal "GMT", Artefact.last.created_at.zone
       end
     end
 
@@ -33,14 +33,14 @@ class TimeZoneTest < ActiveSupport::TestCase
       should "still store the date in UTC" do
         Timecop.freeze(first_day_of_summer_time) do
           FactoryBot.create(:artefact)
-          assert_equal 'UTC', Artefact.last[:created_at].zone
+          assert_equal "UTC", Artefact.last[:created_at].zone
         end
       end
 
       should "use the time zone with offset for dot-methods" do
         Timecop.freeze(first_day_of_summer_time) do
           FactoryBot.create(:artefact)
-          assert_equal 'BST', Artefact.last.created_at.zone
+          assert_equal "BST", Artefact.last.created_at.zone
         end
       end
     end

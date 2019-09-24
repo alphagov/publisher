@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   test "it doesn't try to send a fact check email if no addresses were given" do
@@ -9,8 +9,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "when an user publishes a guide, a status message is sent on the message bus" do
-    user = User.create(uid: '123', name: "bob")
-    second_user = User.create(uid: '321', name: "dave")
+    user = User.create(uid: "123", name: "bob")
+    second_user = User.create(uid: "321", name: "dave")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryBot.create(:artefact).id)
     request_review(user, trans)

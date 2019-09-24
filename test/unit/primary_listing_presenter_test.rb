@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class PrimaryListingPresenterTest < ActiveSupport::TestCase
   def setup_users
-    alice = User.create(uid: '123')
-    bob = User.create(uid: '321')
+    alice = User.create(uid: "123")
+    bob = User.create(uid: "321")
     [alice, bob]
   end
 
@@ -11,11 +11,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
     a = FactoryBot.create(:guide_edition)
-    a.update_attribute(:state, 'draft')
+    a.update_attribute(:state, "draft")
     assert a.draft?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, 'published')
+    b.update_attribute(:state, "published")
     b.save
     b.reload
     assert !b.draft?
@@ -30,7 +30,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert !a.published?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, 'published')
+    b.update_attribute(:state, "published")
     b.reload
     assert b.published?
 
@@ -44,7 +44,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert ! a.archived?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, 'published')
+    b.update_attribute(:state, "published")
     b.archive
     b.save
 
@@ -61,7 +61,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert !a.in_review?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, 'in_review')
+    b.update_attribute(:state, "in_review")
     b.reload
     assert b.in_review?
 
@@ -76,7 +76,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert !a.fact_check?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, 'fact_check')
+    b.update_attribute(:state, "fact_check")
     b.reload
     assert b.fact_check?
 
@@ -102,11 +102,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
   test "should select publications assigned to nobody" do
     alice, bob = setup_users
 
-    a = FactoryBot.create(:guide_edition, title: 'My First Guide')
+    a = FactoryBot.create(:guide_edition, title: "My First Guide")
     assert_nil a.assigned_to
     assert a.draft?
 
-    b = FactoryBot.create(:guide_edition, title: 'My Second Guide')
+    b = FactoryBot.create(:guide_edition, title: "My Second Guide")
     alice.assign(b, bob)
     assert_equal bob, b.assigned_to
     assert b.draft?

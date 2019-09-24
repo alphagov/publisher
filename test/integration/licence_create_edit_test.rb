@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class LicenceCreateEditTest < JavascriptIntegrationTest
   setup do
@@ -9,7 +9,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
       slug: "hedgehog-topiary",
       kind: "licence",
       name: "Foo bar",
-      owning_app: "publisher"
+      owning_app: "publisher",
     )
 
     setup_users
@@ -30,7 +30,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
     l = LicenceEdition.first
     assert_equal @artefact.id.to_s, l.panopticon_id
-    assert_equal 'AB1234', l.licence_identifier
+    assert_equal "AB1234", l.licence_identifier
   end
 
   with_and_without_javascript do
@@ -72,7 +72,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   should "allow creating a new version of a LicenceEdition" do
     licence = FactoryBot.create(:licence_edition,
                                 panopticon_id: @artefact.id,
-                                state: 'published',
+                                state: "published",
                                 title: "Foo bar",
                                 licence_identifier: "ab2345",
                                 licence_short_description: "Short description content",
@@ -95,7 +95,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   should "disable fields for a published edition" do
     edition = FactoryBot.create(:licence_edition,
                                 panopticon_id: @artefact.id,
-                                state: 'published',
+                                state: "published",
                                 title: "Foo bar",
                                 licence_identifier: "ab2345",
                                 licence_short_description: "Short description content",

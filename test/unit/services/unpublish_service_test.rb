@@ -1,8 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class UnpublishServiceTest < ActiveSupport::TestCase
   setup do
-    @content_id = 'foo'
+    @content_id = "foo"
     @artefact = stub(update_as: true, content_id: @content_id, slug: "foo", state: "live", language: "en", exact_route?: true)
     @user = stub
     @publishing_api = stub(unpublish: true)
@@ -29,7 +29,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
   context "when no redirect URL is provided" do
     should "archive the artefact" do
       @artefact.expects(:update_as)
-        .with(@user, state: 'archived', redirect_url: "")
+        .with(@user, state: "archived", redirect_url: "")
         .returns(true)
 
       UnpublishService.call(@artefact, @user)
@@ -39,7 +39,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       @publishing_api.expects(:unpublish)
         .with(@content_id,
               locale: "en",
-              type: 'gone',
+              type: "gone",
               discard_drafts: true)
         .returns(true)
 
@@ -61,18 +61,18 @@ class UnpublishServiceTest < ActiveSupport::TestCase
         @publishing_api.expects(:unpublish)
           .with(@content_id,
                 locale: "en",
-                type: 'redirect',
+                type: "redirect",
                 redirects: [
                   {
                     path: "/foo",
-                    type: 'prefix',
-                    destination: '/bar'
-                  }
+                    type: "prefix",
+                    destination: "/bar",
+                  },
                 ],
                 discard_drafts: true)
           .returns(true)
 
-        UnpublishService.call(@artefact, @user, '/bar')
+        UnpublishService.call(@artefact, @user, "/bar")
       end
     end
 
@@ -81,18 +81,18 @@ class UnpublishServiceTest < ActiveSupport::TestCase
         @publishing_api.expects(:unpublish)
           .with(@content_id,
                 locale: "en",
-                type: 'redirect',
-                alternative_path: '/bar',
+                type: "redirect",
+                alternative_path: "/bar",
                 discard_drafts: true)
           .returns(true)
 
-        UnpublishService.call(@artefact, @user, '/bar')
+        UnpublishService.call(@artefact, @user, "/bar")
       end
     end
 
     should "allow a redirect_url to be passed in" do
       @artefact.expects(:update_as)
-        .with(@user, state: 'archived', redirect_url: '/bar')
+        .with(@user, state: "archived", redirect_url: "/bar")
         .returns(true)
 
       UnpublishService.call(@artefact, @user, "/bar")
@@ -101,7 +101,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
     should "return true" do
       @artefact.expects(:update_as).returns(true)
 
-      assert UnpublishService.call(@artefact, @user, '/bar')
+      assert UnpublishService.call(@artefact, @user, "/bar")
     end
   end
 end

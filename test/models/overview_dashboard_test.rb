@@ -34,7 +34,7 @@ private
       fact_check_recieved: 1,
       fact_check: 1,
       published: 1,
-      archived: 1
+      archived: 1,
     }
   end
 

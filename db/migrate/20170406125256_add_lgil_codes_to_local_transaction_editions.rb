@@ -8,7 +8,7 @@ class AddLgilCodesToLocalTransactionEditions < Mongoid::Migration
         .where(state: { '$in': %w(draft published) })
         .last
       p "no edition found for #{slug}" if edition == nil
-      p n if edition.update_attribute('lgil_code', lgil_code_value)
+      p n if edition.update_attribute("lgil_code", lgil_code_value)
     end
   end
 
@@ -145,6 +145,6 @@ class AddLgilCodesToLocalTransactionEditions < Mongoid::Migration
         "apply-hold-street-party" =>  0,
         "find-free-early-education" =>  8,
         "find-weighbridge" =>  8,
-        "help-care-support" => 8
+        "help-care-support" => 8,
       }
 end

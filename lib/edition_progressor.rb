@@ -23,7 +23,7 @@ class EditionProgressor
       self.status_message = fact_check_error_message(activity)
       return false
     elsif actor.progress(edition, activity.dup)
-      if activity[:request_type] == 'schedule_for_publishing'
+      if activity[:request_type] == "schedule_for_publishing"
         ScheduledPublisher.enqueue(edition)
       end
       self.status_message = success_message(action)
@@ -59,8 +59,8 @@ protected
     # TODO: This could probably live in the i18n layer?
   def failure_message(activity)
     case activity
-    when 'skip_fact_check' then "Could not skip fact check for this publication."
-    when 'start_work' then "Couldn't start work on #{description(edition).downcase}"
+    when "skip_fact_check" then "Could not skip fact check for this publication."
+    when "start_work" then "Couldn't start work on #{description(edition).downcase}"
     else "Couldn't #{activity.to_s.humanize.downcase} for #{description(edition).downcase}"
     end
   end
@@ -68,8 +68,8 @@ protected
     # TODO: This could probably live in the i18n layer?
   def success_message(activity)
     case activity
-    when 'start_work' then "Work started on #{description(edition)}"
-    when 'skip_fact_check' then "The fact check has been skipped for this publication."
+    when "start_work" then "Work started on #{description(edition)}"
+    when "skip_fact_check" then "The fact check has been skipped for this publication."
     else "#{description(edition)} updated"
     end
   end

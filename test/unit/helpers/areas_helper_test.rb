@@ -20,7 +20,7 @@ class AreasHelperTest < ActionView::TestCase
             "gss" => "E15000001",
           },
         ),
-      ]
+      ],
     )
 
     edition = OpenStruct.new(
@@ -53,7 +53,7 @@ class AreasHelperTest < ActionView::TestCase
             "gss" => "S15000001",
           },
         ),
-      ]
+      ],
     )
 
     edition = OpenStruct.new(

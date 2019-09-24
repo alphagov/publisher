@@ -1,4 +1,4 @@
-require 'licence_identifier_migrator'
+require "licence_identifier_migrator"
 
 desc "Maps old correlation_ids stored in the LicenceEdition licence_identifier field to legal_ref_ids"
 task licence_identifier_migrate: ["licence_identifier_migrate:update_all"]

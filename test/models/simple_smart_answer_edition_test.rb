@@ -89,7 +89,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal 2, edition.nodes.size
 
     edition.update(nodes_attributes: {
-        "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" }
+        "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" },
       })
     edition.reload
 
@@ -100,7 +100,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     setup do
       @edition_attributes = {
         panopticon_id: @artefact.id,
-        body: "This is a simple smart answer with a default text for start button."
+        body: "This is a simple smart answer with a default text for start button.",
       }
     end
     context "with default text" do
@@ -122,7 +122,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       setup do
         edition = FactoryBot.build(
           :simple_smart_answer_edition,
-          @edition_attributes.merge(start_button_text: "Click to start")
+          @edition_attributes.merge(start_button_text: "Click to start"),
         )
         edition.save!
       end
@@ -144,7 +144,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       @edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
       @edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
       @edition.nodes.first.options.build(
-        label: "Option 1", next_node: "question2", order: 1
+        label: "Option 1", next_node: "question2", order: 1,
 )
       @edition.save!
     end
@@ -154,8 +154,8 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
         body: "No developers were involved in the changing of this copy",
         nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
-            "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" }
-          } }
+            "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
+          } },
       })
 
       @edition.reload
@@ -169,13 +169,13 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     should "create and destroy nodes and options using nested attributes" do
       @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
-              "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" }
+              "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
             } },
           "1" => { "id" => @edition.nodes.second.id, "_destroy" => "1" },
           "2" => { "kind" => "question", "title" => "Question 3", "slug" => "question3", "options_attributes" => {
-            "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" }
+            "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" },
           } },
-          "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" }
+          "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" },
         })
 
       @edition.reload
@@ -191,7 +191,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     should "ignore new nodes if they are to be destroyed" do
       @edition.update(nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
-          "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" }
+          "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" },
         })
       @edition.reload
 

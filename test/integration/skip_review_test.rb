@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'integration_test_helper'
+require "integration_test_helper"
 
 class SkipReviewTest < JavascriptIntegrationTest
   setup do
@@ -24,7 +24,7 @@ class SkipReviewTest < JavascriptIntegrationTest
                               title: "Foo bar",
                               state: "in_review",
                               review_requested_at: 1.hour.ago)
-    @guide.parts.build(title: "Placeholder", body: "placeholder", slug: 'placeholder', order: 1)
+    @guide.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
     @guide.save!
 
     @guide.new_action(@permitted_user, Action::REQUEST_REVIEW)

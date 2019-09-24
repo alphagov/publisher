@@ -43,14 +43,14 @@ private
       response = Services.publishing_api.get_expanded_links(content_id)
       join_strings(response.to_hash, keys, pattern_to_remove)
     rescue GdsApi::HTTPNotFound, GdsApi::HTTPClientError
-      return ''
+      return ""
     end
   end
 
   def join_strings(response, keys, pattern_to_remove)
-    results = response.fetch('expanded_links', {}).fetch(keys[0], {})
+    results = response.fetch("expanded_links", {}).fetch(keys[0], {})
     values = results.map { |result| result.dig(*keys.drop(1)) }.compact
-    values = values.map { |value| value.gsub(pattern_to_remove, '') } unless pattern_to_remove.nil?
-    values.join(',')
+    values = values.map { |value| value.gsub(pattern_to_remove, "") } unless pattern_to_remove.nil?
+    values.join(",")
   end
 end

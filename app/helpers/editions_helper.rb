@@ -3,16 +3,16 @@ module EditionsHelper
   # we need to render activity forms to allow edition transitions on views
   # where the edition form is not present i.e. editions diff view.
   def activity_forms_required?
-    params[:action] == 'diff'
+    params[:action] == "diff"
   end
 
   def resource_form(&form_definition)
-    html_options = { id: 'edition-form' }
+    html_options = { id: "edition-form" }
     unless @resource.locked_for_edits? || @resource.archived?
       if @resource.is_a?(Parted) || @resource.is_a?(Varianted)
-        html_options['data-module'] = 'ajax-save-with-parts'
-      elsif @resource.format != 'SimpleSmartAnswer'
-        html_options['data-module'] = 'ajax-save'
+        html_options["data-module"] = "ajax-save-with-parts"
+      elsif @resource.format != "SimpleSmartAnswer"
+        html_options["data-module"] = "ajax-save"
       end
     end
 

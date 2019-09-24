@@ -32,7 +32,7 @@ module ApplicationHelper
       :format_filter,
       :controller,
       :action,
-      :direction
+      :direction,
     )
   end
 end

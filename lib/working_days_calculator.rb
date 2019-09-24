@@ -1,4 +1,4 @@
-require 'gds_api/calendars'
+require "gds_api/calendars"
 
 class WorkingDaysCalculator
   def initialize(starting_from, in_division: :england_and_wales)
@@ -26,6 +26,6 @@ private
 
   def fetch_public_holidays
     public_holidays_json = GdsApi.calendars.bank_holidays(@calendar_division)
-    public_holidays_json['events'].map { |event| Date.parse(event["date"]) }
+    public_holidays_json["events"].map { |event| Date.parse(event["date"]) }
   end
 end

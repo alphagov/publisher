@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
@@ -26,23 +26,23 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, 'completed_transaction')
+    assert_valid_against_schema(result, "completed_transaction")
   end
 
   should "[:schema_name]" do
-    assert_equal 'completed_transaction', result[:schema_name]
+    assert_equal "completed_transaction", result[:schema_name]
   end
 
   context "[:details]" do
     should "[:promotion]" do
       edition.presentation_toggles["promotion_choice"] = {
-        'choice' => 'mot_reminder',
-        'url' => 'http://www.foo.com'
+        "choice" => "mot_reminder",
+        "url" => "http://www.foo.com",
       }
 
       expected = {
-        category: 'mot_reminder',
-        url: 'http://www.foo.com'
+        category: "mot_reminder",
+        url: "http://www.foo.com",
       }
 
       assert_equal expected, result[:details][:promotion]
@@ -50,17 +50,17 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
 
     should "opt in and opt out [:promotion]" do
       edition.presentation_toggles["promotion_choice"] = {
-        'choice' => 'organ_donor',
-        'url' => 'http://www.foo.com',
-        'opt_in_url' => 'http://www.bar.com',
-        'opt_out_url' => 'http://www.baz.com',
+        "choice" => "organ_donor",
+        "url" => "http://www.foo.com",
+        "opt_in_url" => "http://www.bar.com",
+        "opt_out_url" => "http://www.baz.com",
       }
 
       expected = {
-        category: 'organ_donor',
-        url: 'http://www.foo.com',
-        opt_in_url: 'http://www.bar.com',
-        opt_out_url: 'http://www.baz.com',
+        category: "organ_donor",
+        url: "http://www.foo.com",
+        opt_in_url: "http://www.bar.com",
+        opt_out_url: "http://www.baz.com",
       }
 
       assert_equal expected, result[:details][:promotion]
@@ -68,21 +68,21 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
 
     should "no [:promotion]" do
       edition.presentation_toggles["promotion_choice"] = {
-        'choice' => 'none',
-        'url' => ''
+        "choice" => "none",
+        "url" => "",
       }
 
       assert_nil result[:details][:promotion]
     end
 
     should "[:external_related_links]" do
-      link = { 'url' => 'www.foo.com', 'title' => 'foo' }
+      link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.update_attribute(:external_links, [link])
       expected = [
         {
-          url: link['url'],
-          title: link['title']
-        }
+          url: link["url"],
+          title: link["title"],
+        },
       ]
 
       assert_equal expected, result[:details][:external_related_links]
@@ -90,9 +90,9 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update_attribute(:slug, 'foo')
+    edition.update_attribute(:slug, "foo")
     expected = [
-      { path: '/foo', type: 'prefix' },
+      { path: "/foo", type: "prefix" },
     ]
     assert_equal expected, result[:routes]
   end

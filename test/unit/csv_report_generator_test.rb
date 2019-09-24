@@ -2,7 +2,7 @@ require "test_helper"
 
 class CsvReportGeneratorTest < ActiveSupport::TestCase
   setup do
-    @report_dir = File.join(Dir.tmpdir, 'publisher-test-reports')
+    @report_dir = File.join(Dir.tmpdir, "publisher-test-reports")
     CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
     @generator = CsvReportGenerator.new
   end
@@ -46,7 +46,7 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
     @generator.move_temporary_reports_into_place
 
     assert_equal "bar", File.read(
-      File.join(CsvReportGenerator.csv_path, "example.csv")
+      File.join(CsvReportGenerator.csv_path, "example.csv"),
     )
   end
 end

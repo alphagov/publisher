@@ -1,20 +1,20 @@
-require 'test_helper'
+require "test_helper"
 
 class DatesReportPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
     publish_action = Action.new(
       request_type: "publish",
-      created_at: "2015-04-30 09:16:03"
+      created_at: "2015-04-30 09:16:03",
     )
 
     out_of_dates_action = Action.new(
       request_type: "publish",
-      created_at: "2015-05-02 14:08:36"
+      created_at: "2015-05-02 14:08:36",
     )
 
     create_action = Action.new(
       request_type: "create",
-      created_at: "2015-05-02 14:08:36"
+      created_at: "2015-05-02 14:08:36",
     )
 
     #edition published 1

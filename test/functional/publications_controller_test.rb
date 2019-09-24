@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PublicationsControllerTest < ActionController::TestCase
   setup do
@@ -13,16 +13,16 @@ class PublicationsControllerTest < ActionController::TestCase
           slug: "hedgehog-topiary",
           kind: "guide",
           name: "Foo bar",
-          owning_app: "publisher"
+          owning_app: "publisher",
         )
 
-        FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'archived', version_number: 1)
-        FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'published', version_number: 2)
-        latest_edition = FactoryBot.create(:edition, panopticon_id: artefact.id, state: 'draft', version_number: 3)
+        FactoryBot.create(:edition, panopticon_id: artefact.id, state: "archived", version_number: 1)
+        FactoryBot.create(:edition, panopticon_id: artefact.id, state: "published", version_number: 2)
+        latest_edition = FactoryBot.create(:edition, panopticon_id: artefact.id, state: "draft", version_number: 3)
 
         get :show, params: { id: artefact.id }
 
-        assert_redirected_to(controller: 'editions', action: 'show', id: latest_edition.id)
+        assert_redirected_to(controller: "editions", action: "show", id: latest_edition.id)
       end
     end
 
@@ -33,7 +33,7 @@ class PublicationsControllerTest < ActionController::TestCase
           slug: "hedgehog-topiary",
           kind: "guide",
           name: "Foo bar",
-          owning_app: "publisher"
+          owning_app: "publisher",
         )
       end
 
@@ -41,7 +41,7 @@ class PublicationsControllerTest < ActionController::TestCase
         get :show, params: { id: @artefact.id }
 
         latest_edition = GuideEdition.find_by(slug: "hedgehog-topiary")
-        assert_redirected_to(controller: 'editions', action: 'show', id: latest_edition.id)
+        assert_redirected_to(controller: "editions", action: "show", id: latest_edition.id)
       end
 
       should "send updated content to the PublishingAPI" do
@@ -57,7 +57,7 @@ class PublicationsControllerTest < ActionController::TestCase
         slug: "hedgehog-topiary",
         kind: "local_transaction",
         name: "Foo bar",
-        owning_app: "publisher"
+        owning_app: "publisher",
       )
       assert Edition.where(panopticon_id: artefact.id).first.nil?
 

@@ -22,7 +22,7 @@ class MigrateHelpPages < Mongoid::Migration
         next
       end
       ed = eds.first
-      unless a.state == 'draft'
+      unless a.state == "draft"
         puts "  artefact isn't draft, skipping..."
         next
       end

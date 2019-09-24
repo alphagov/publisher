@@ -1,6 +1,6 @@
 require_dependency "workflow"
 
-require 'digest'
+require "digest"
 
 class Edition
   include Mongoid::Document
@@ -63,8 +63,8 @@ class Edition
   scope :for_user, lambda { |user|
     any_of(
       { assigned_to_id: user.id },
-      { 'actions.requester_id' => user.id },
-      'actions.recipient_id' => user.id
+      { "actions.requester_id" => user.id },
+      "actions.recipient_id" => user.id,
     )
   }
 
@@ -72,8 +72,8 @@ class Edition
     all_of(for_user(user).selector, internal_search(term).selector)
   }
 
-  scope :published, -> { where(state: 'published') }
-  scope :draft_in_publishing_api, -> { where(state: { '$in' => PUBLISHING_API_DRAFT_STATES }) }
+  scope :published, -> { where(state: "published") }
+  scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
 
   ACTIONS = {
     send_fact_check: "Send to Fact check",
@@ -90,7 +90,7 @@ class Edition
   REVIEW_ACTIONS = ACTIONS.slice(:request_amendments, :approve_review)
   FACT_CHECK_ACTIONS = ACTIONS.slice(:request_amendments, :approve_fact_check)
   CANCEL_SCHEDULED_PUBLISHING_ACTION = {
-    cancel_scheduled_publishing: "Cancel scheduled publishing"
+    cancel_scheduled_publishing: "Cancel scheduled publishing",
   }.freeze
   PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
 
@@ -200,7 +200,7 @@ class Edition
   end
 
   def has_ever_been_published?
-    series.map(&:state).include?('published')
+    series.map(&:state).include?("published")
   end
 
   def first_edition_of_published
@@ -417,7 +417,7 @@ class Edition
   end
 
   def fact_check_skipped?
-    actions.any? && actions.last.request_type == 'skip_fact_check'
+    actions.any? && actions.last.request_type == "skip_fact_check"
   end
 
   def fact_check_email_address
@@ -432,7 +432,7 @@ class Edition
 
   def auth_bypass_id
     @auth_bypass_id ||= begin
-      ary = Digest::SHA256.digest(id.to_s).unpack('NnnnnN')
+      ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
       "%08x-%04x-%04x-%04x-%04x%08x" % ary

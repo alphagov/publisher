@@ -58,12 +58,12 @@ class WorkflowTest < ActiveSupport::TestCase
 
   context "#status_text" do
     should "return a capitalized text representation of the state" do
-      assert_equal 'Ready', FactoryBot.build(:edition, state: 'ready').status_text
+      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").status_text
     end
 
     should "also return scheduled publishing time when the state is scheduled for publishing" do
       edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      expected_status_text = 'Scheduled for publishing on ' + edition.publish_at.strftime("%d/%m/%Y %H:%M")
+      expected_status_text = "Scheduled for publishing on " + edition.publish_at.strftime("%d/%m/%Y %H:%M")
 
       assert_equal expected_status_text, edition.status_text
     end
@@ -76,7 +76,7 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "return false if in draft state" do
-      refute FactoryBot.build(:edition, state: 'draft').locked_for_edits?
+      refute FactoryBot.build(:edition, state: "draft").locked_for_edits?
     end
   end
 
@@ -175,10 +175,10 @@ class WorkflowTest < ActiveSupport::TestCase
     approve_review(other_user, edition)
     send_fact_check(user, edition)
 
-    assert other_user.progress(edition, request_type: :skip_fact_check, comment: 'Fact check not received in time')
+    assert other_user.progress(edition, request_type: :skip_fact_check, comment: "Fact check not received in time")
     edition.reload
     assert edition.can_publish?
-    assert(edition.actions.detect { |e| e.request_type == 'skip_fact_check' })
+    assert(edition.actions.detect { |e| e.request_type == "skip_fact_check" })
   end
 
   # until we improve the validation to produce few or no false positives
@@ -222,7 +222,7 @@ class WorkflowTest < ActiveSupport::TestCase
     approve_review(other_user, edition)
     send_fact_check(user, edition)
 
-    edition.new_action(user, 'request_amendments')
+    edition.new_action(user, "request_amendments")
 
     refute guide.reload.can_resend_fact_check?
   end
@@ -255,7 +255,7 @@ class WorkflowTest < ActiveSupport::TestCase
     send_fact_check(user, edition)
     request_amendments(other_user, edition)
 
-    assert_equal 'request_amendments', edition.actions.last.request_type
+    assert_equal "request_amendments", edition.actions.last.request_type
     assert_equal "More amendments are required", edition.actions.last.comment
   end
 
@@ -398,9 +398,9 @@ class WorkflowTest < ActiveSupport::TestCase
   test "important_note returns last non-resolved important note" do
     user = FactoryBot.create(:user, name: "Ben")
     edition = template_guide
-    user.record_note(edition, 'this is an important note', Action::IMPORTANT_NOTE)
+    user.record_note(edition, "this is an important note", Action::IMPORTANT_NOTE)
     request_review(user, edition)
-    assert_equal edition.important_note.comment, 'this is an important note'
+    assert_equal edition.important_note.comment, "this is an important note"
 
     user.record_note(edition, nil, Action::IMPORTANT_NOTE_RESOLVED)
     assert_nil edition.important_note
@@ -419,7 +419,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "record the action" do
       new_version = @user.new_version(@edition)
-      assert_equal 'new_version', new_version.actions.last.request_type
+      assert_equal "new_version", new_version.actions.last.request_type
     end
 
     should "return the new edition" do
@@ -434,7 +434,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
       should "record the action" do
         new_version = @user.new_version(@edition)
-        assert_equal 'new_version', new_version.actions.last.request_type
+        assert_equal "new_version", new_version.actions.last.request_type
       end
     end
 
@@ -444,7 +444,7 @@ class WorkflowTest < ActiveSupport::TestCase
       end
 
       should "not record the action" do
-        assert_no_difference '@edition.actions.count' do
+        assert_no_difference "@edition.actions.count" do
           @user.new_version(@edition)
         end
       end
@@ -470,7 +470,7 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "record the action" do
-      assert_difference '@edition.actions.count', 1 do
+      assert_difference "@edition.actions.count", 1 do
         receive_fact_check(User.new, @edition)
       end
       assert_equal "receive_fact_check", @edition.actions.last.request_type
@@ -485,12 +485,12 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "return false when scheduling an already published edition" do
-      edition = FactoryBot.create(:edition, state: 'published')
+      edition = FactoryBot.create(:edition, state: "published")
       refute schedule_for_publishing(@user, edition, @activity_details)
     end
 
     should "schedule an edition for publishing if it is ready" do
-      edition = FactoryBot.create(:edition, state: 'ready')
+      edition = FactoryBot.create(:edition, state: "ready")
 
       schedule_for_publishing(@user, edition, @activity_details)
 
@@ -499,12 +499,12 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "record the action" do
-      edition = FactoryBot.create(:edition, state: 'ready')
+      edition = FactoryBot.create(:edition, state: "ready")
 
-      assert_difference 'edition.actions.count', 1 do
+      assert_difference "edition.actions.count", 1 do
         schedule_for_publishing(@user, edition, @activity_details)
       end
-      assert_equal 'schedule_for_publishing', edition.actions.last.request_type
+      assert_equal "schedule_for_publishing", edition.actions.last.request_type
     end
   end
 end

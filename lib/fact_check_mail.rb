@@ -20,7 +20,7 @@ class FactCheckMail
 private
 
   def subject_is_out_of_office?
-    @message['Subject'].to_s.downcase.start_with?("out of office")
+    @message["Subject"].to_s.downcase.start_with?("out of office")
   end
 
   def out_of_office_header_set?
@@ -33,7 +33,7 @@ private
       %w(Precedence bulk),
       %w(Precedence auto_reply),
       %w(Precedence junk),
-      ['Return-Path', ''],
+      ["Return-Path", ""],
       %w[X-Precedence bulk],
       %w[X-Precedence auto_reply],
       %w[X-Precedence junk],

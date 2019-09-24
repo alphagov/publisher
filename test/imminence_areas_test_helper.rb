@@ -7,7 +7,7 @@ module ImminenceAreasTestHelper
       "page_size" => areas.size,
       "current_page" => 1,
       "pages" => 1,
-      "results" => areas
+      "results" => areas,
     }.to_json
   end
 
@@ -39,7 +39,7 @@ module ImminenceAreasTestHelper
       country_name: "England",
       codes: {
         "gss" => nil,
-      }
+      },
     }
   end
 
@@ -171,28 +171,28 @@ module ImminenceAreasTestHelper
 
   def stub_mapit_areas_requests(endpoint)
     stub_request(:get, %r{\A#{endpoint}/areas/EUR.json}).to_return(
-      body: areas_response(regions_with_gss_codes.unshift(region_without_gss_code))
+      body: areas_response(regions_with_gss_codes.unshift(region_without_gss_code)),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/CTY.json}).to_return(
-      body: areas_response(counties)
+      body: areas_response(counties),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/DIS.json}).to_return(
-      body: areas_response(districts)
+      body: areas_response(districts),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/LBO.json}).to_return(
-      body: areas_response(london_boroughs)
+      body: areas_response(london_boroughs),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/LGD.json}).to_return(
-      body: areas_response(ni_councils)
+      body: areas_response(ni_councils),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/MTD.json}).to_return(
-      body: areas_response(metropolitan_councils)
+      body: areas_response(metropolitan_councils),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/UTA.json}).to_return(
-      body: areas_response(unitary_authorities)
+      body: areas_response(unitary_authorities),
     )
     stub_request(:get, %r{\A#{endpoint}/areas/COI.json}).to_return(
-      body: areas_response(isles_of_scilly)
+      body: areas_response(isles_of_scilly),
     )
   end
 end

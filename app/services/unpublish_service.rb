@@ -12,7 +12,7 @@ class UnpublishService
       artefact.update_as(
         user,
         state: "archived",
-        redirect_url: redirect_url
+        redirect_url: redirect_url,
       )
     end
 
@@ -36,9 +36,9 @@ class UnpublishService
       Services.publishing_api.unpublish(
         artefact.content_id,
         locale: artefact.language,
-        type: 'redirect',
+        type: "redirect",
         alternative_path: redirect_url,
-        discard_drafts: true
+        discard_drafts: true,
       )
     end
 
@@ -46,15 +46,15 @@ class UnpublishService
       Services.publishing_api.unpublish(
         artefact.content_id,
         locale: artefact.language,
-        type: 'redirect',
+        type: "redirect",
         redirects: [
           {
             path: "/#{artefact.slug}",
-            type: 'prefix',
-            destination: redirect_url
-          }
+            type: "prefix",
+            destination: redirect_url,
+          },
         ],
-        discard_drafts: true
+        discard_drafts: true,
       )
     end
 
@@ -62,8 +62,8 @@ class UnpublishService
       Services.publishing_api.unpublish(
         artefact.content_id,
         locale: artefact.language,
-        type: 'gone',
-        discard_drafts: true
+        type: "gone",
+        discard_drafts: true,
       )
     end
   end

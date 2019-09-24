@@ -197,7 +197,7 @@ class ArtefactTest < ActiveSupport::TestCase
     artefact = FactoryBot.create(:live_artefact, slug: "something-something-live")
     edition = FactoryBot.create(:answer_edition, panopticon_id: artefact.id, slug: "something-else")
 
-    artefact.state = 'archived'
+    artefact.state = "archived"
     artefact.save!
 
     edition.reload
@@ -211,7 +211,7 @@ class ArtefactTest < ActiveSupport::TestCase
                                  slug: "foo-bar",
                                  kind: "answer",
                                  name: "Foo bar",
-                                 owning_app: "publisher",)
+                                 owning_app: "publisher")
 
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
@@ -270,7 +270,7 @@ class ArtefactTest < ActiveSupport::TestCase
                                  slug: "foo-bar",
                                  kind: "answer",
                                  name: "Foo bar",
-                                 owning_app: "publisher",)
+                                 owning_app: "publisher")
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
 
@@ -320,7 +320,7 @@ class ArtefactTest < ActiveSupport::TestCase
 
   test "should not run validations on editions when archiving" do
     artefact = FactoryBot.create(:artefact, state: "live")
-    edition = FactoryBot.create(:help_page_edition, panopticon_id: artefact.id, state: 'published')
+    edition = FactoryBot.create(:help_page_edition, panopticon_id: artefact.id, state: "published")
     user1 = FactoryBot.create(:user)
 
     # Make the edition invalid, check that it persisted the invalid state
@@ -347,21 +347,21 @@ class ArtefactTest < ActiveSupport::TestCase
     should "return english by default" do
       a = FactoryBot.create(:artefact)
 
-      assert_equal 'en', a.language
+      assert_equal "en", a.language
     end
 
     should "accept welsh language" do
       a = FactoryBot.build(:artefact)
-      a.language = 'cy'
+      a.language = "cy"
       a.save
 
       a = Artefact.first
-      assert_equal 'cy', a.language
+      assert_equal "cy", a.language
     end
 
     should "reject a language which is not english or welsh" do
       a = FactoryBot.build(:artefact)
-      a.language = 'pirate'
+      a.language = "pirate"
 
       assert ! a.valid?
     end
@@ -376,52 +376,52 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   context "#exact_route?" do
-    context 'for artefacts without a latest edition' do
-      should 'be true if its owning_app is not publisher and it has no prefixes' do
+    context "for artefacts without a latest edition" do
+      should "be true if its owning_app is not publisher and it has no prefixes" do
         assert FactoryBot.build(:artefact, :non_publisher, prefixes: []).exact_route?
       end
 
-      should 'be false if its owning_app is not publisher and it has prefixes' do
-        refute FactoryBot.build(:artefact, :non_publisher, prefixes: ['/hats']).exact_route?
+      should "be false if its owning_app is not publisher and it has prefixes" do
+        refute FactoryBot.build(:artefact, :non_publisher, prefixes: ["/hats"]).exact_route?
       end
 
-      should 'be true if its owning_app is publisher and its kind is that of an exact route edition' do
-        assert FactoryBot.build(:artefact, kind: 'campaign', prefixes: []).exact_route?
-        assert FactoryBot.build(:artefact, kind: 'help_page', prefixes: []).exact_route?
+      should "be true if its owning_app is publisher and its kind is that of an exact route edition" do
+        assert FactoryBot.build(:artefact, kind: "campaign", prefixes: []).exact_route?
+        assert FactoryBot.build(:artefact, kind: "help_page", prefixes: []).exact_route?
 
         # regardless of prefixes
-        assert FactoryBot.build(:artefact, kind: 'campaign', prefixes: ['/hats']).exact_route?
-        assert FactoryBot.build(:artefact, kind: 'help_page', prefixes: ['/shoes']).exact_route?
+        assert FactoryBot.build(:artefact, kind: "campaign", prefixes: ["/hats"]).exact_route?
+        assert FactoryBot.build(:artefact, kind: "help_page", prefixes: ["/shoes"]).exact_route?
       end
 
-      should 'be false if its owning_app is not publisher and its kind is not that of an exact route edition' do
-        refute FactoryBot.build(:artefact, kind: 'answer', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'completed_transaction', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'guide', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'licence', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'local_transaction', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'place', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'programme', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'simple_smart_answer', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'transaction', prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'video', prefixes: []).exact_route?
+      should "be false if its owning_app is not publisher and its kind is not that of an exact route edition" do
+        refute FactoryBot.build(:artefact, kind: "answer", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "guide", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "licence", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "local_transaction", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "place", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "programme", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "transaction", prefixes: []).exact_route?
+        refute FactoryBot.build(:artefact, kind: "video", prefixes: []).exact_route?
 
         # regardless of prefixes
-        refute FactoryBot.build(:artefact, kind: 'answer', prefixes: ['/hats']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'completed_transaction', prefixes: ['/scarves']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'guide', prefixes: ['/underwear']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'licence', prefixes: ['/jumpers']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'local_transaction', prefixes: ['/gloves']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'place', prefixes: ['/belts']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'programme', prefixes: ['/socks']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'simple_smart_answer', prefixes: ['/onesies']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'transaction', prefixes: ['/scarves']).exact_route?
-        refute FactoryBot.build(:artefact, kind: 'video', prefixes: ['/all-other-clothing']).exact_route?
+        refute FactoryBot.build(:artefact, kind: "answer", prefixes: ["/hats"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: ["/scarves"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "guide", prefixes: ["/underwear"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "licence", prefixes: ["/jumpers"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "local_transaction", prefixes: ["/gloves"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "place", prefixes: ["/belts"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "programme", prefixes: ["/socks"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: ["/onesies"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "transaction", prefixes: ["/scarves"]).exact_route?
+        refute FactoryBot.build(:artefact, kind: "video", prefixes: ["/all-other-clothing"]).exact_route?
       end
     end
 
-    context 'for artefacts with a latest edition' do
-      should 'delegate to it' do
+    context "for artefacts with a latest edition" do
+      should "delegate to it" do
         latest_edition = mock
         artefact = FactoryBot.build(:artefact)
         artefact.stubs(:latest_edition).returns(latest_edition)

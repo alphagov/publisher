@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class CSVParser
   def initialize(file)

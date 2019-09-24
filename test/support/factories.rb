@@ -30,7 +30,7 @@ FactoryBot.define do
     sequence(:name) { |n| "Artefact #{n}" }
     sequence(:slug) { |n| "slug-#{n}" }
     kind            { Artefact::FORMATS.first }
-    owning_app      { 'publisher' }
+    owning_app      { "publisher" }
     content_id      { SecureRandom.uuid }
 
     trait :with_published_edition do
@@ -40,8 +40,8 @@ FactoryBot.define do
     end
 
     trait :non_publisher do
-      kind { 'smart-answer' }
-      owning_app { 'smartanswers' }
+      kind { "smart-answer" }
+      owning_app { "smartanswers" }
     end
 
     trait :draft do
@@ -86,16 +86,16 @@ FactoryBot.define do
     end
 
     trait :scheduled_for_publishing do
-      state { 'scheduled_for_publishing' }
+      state { "scheduled_for_publishing" }
       publish_at { 1.day.from_now }
     end
 
     trait :published do
-      state { 'published' }
+      state { "published" }
     end
 
     trait :with_body do
-      body { 'Some body text' }
+      body { "Some body text" }
     end
 
     trait :with_link_check_report do
@@ -117,17 +117,17 @@ FactoryBot.define do
   factory :answer_edition_with_link_check_report, traits: [:with_link_check_report], parent: :answer_edition do
   end
 
-  factory :help_page_edition, traits: [:with_body], parent: :edition, class: 'HelpPageEdition' do
+  factory :help_page_edition, traits: [:with_body], parent: :edition, class: "HelpPageEdition" do
   end
 
-  factory :campaign_edition, traits: [:with_body], parent: :edition, class: 'CampaignEdition' do
+  factory :campaign_edition, traits: [:with_body], parent: :edition, class: "CampaignEdition" do
   end
 
   factory :campaign_edition_with_link_check_report, traits: [:with_link_check_report], parent: :campaign_edition do
   end
 
 
-  factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: 'CompletedTransactionEdition' do
+  factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: "CompletedTransactionEdition" do
     sequence(:slug) { |n| "done/slug-#{n}" }
     panopticon_id {
       a = create(:artefact, kind: kind_for_artefact, slug: slug)
@@ -135,7 +135,7 @@ FactoryBot.define do
     }
   end
 
-  factory :video_edition, traits: [:with_body], parent: :edition, class: 'VideoEdition' do
+  factory :video_edition, traits: [:with_body], parent: :edition, class: "VideoEdition" do
   end
 
   factory :guide_edition, parent: :edition, class: "GuideEdition" do
@@ -221,7 +221,7 @@ FactoryBot.define do
     tier { "county" }
   end
 
-  factory :place_edition, parent: :edition, class: 'PlaceEdition' do
+  factory :place_edition, parent: :edition, class: "PlaceEdition" do
     title { "Far far away" }
     introduction { "Test introduction" }
     more_information { "More information" }
@@ -245,13 +245,13 @@ FactoryBot.define do
   factory :published_travel_advice_edition, parent: :travel_advice_edition do
     after :create do |tae|
       tae.published_at ||= Time.zone.now.utc
-      tae.state = 'published'
+      tae.state = "published"
       tae.save!
     end
   end
   factory :archived_travel_advice_edition, parent: :travel_advice_edition do
     after :create do |tae|
-      tae.state = 'archived'
+      tae.state = "archived"
       tae.save!
     end
   end
