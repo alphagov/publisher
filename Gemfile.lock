@@ -480,7 +480,7 @@ GEM
     timecop (0.9.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (4.1.20)
+    uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -568,7 +568,7 @@ DEPENDENCIES
   state_machines-mongoid (~> 0.1)
   strip_attributes (~> 1.9)
   timecop (= 0.9.1)
-  uglifier (= 4.1.20)
+  uglifier (= 4.2.0)
   webmock (~> 3.7.5)
   whenever
 
