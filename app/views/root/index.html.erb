@@ -48,6 +48,14 @@
         </div>
       </div>
 
+      <% if params[:list] == "in_review" %>
+        <div class="col-md-10">
+          <p>
+            <%= link_to "Check Collections publisher", @presenter.step_by_step_review_url %> for step by steps that are waiting for review
+          </p>
+        </div>
+      <% end %>
+
       <div id="publication-list-container" class="col-md-10">
         <%= render @list %>
         <%= paginate @presenter.send(@list), theme: 'twitter-bootstrap-3' %>
