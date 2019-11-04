@@ -13,7 +13,7 @@ choose_sign_in:
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
     - text: Sign in with a digital identity from another European country
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=eidas_sign_in
-      hint_text: If you’re part of an ID scheme in Germany or Italy you may be able to use it here.
+      hint_text: If you’re part of an ID scheme in a participating country, you may be able to use it here.
     - text: Register for Self Assessment
       slug: register-self-assessment
       hint_text: You must register before you can file your first tax return.
@@ -35,4 +35,4 @@ create_new_account:
 
     *[UTR]: Unique Taxpayer Reference
 update_type: minor
-change_note: Updated Verify links to use correct hints and redirects
+change_note: Updated eIDAS content because more than two countries are connected now.
