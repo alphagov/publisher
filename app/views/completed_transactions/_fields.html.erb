@@ -34,6 +34,10 @@
       <%= f.radio_button :promotion_choice, 'mot_reminder',
         { checked: (f.object.promotion_choice == "mot_reminder"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-mot-reminder' } %>
       <%= f.label :promotion_choice, "Promote MOT reminders", value: 'mot_reminder' %>
+      <br />
+      <%= f.radio_button :promotion_choice, 'electric_vehicle',
+        { checked: (f.object.promotion_choice == "electric_vehicle"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-electric-vehicle' } %>
+      <%= f.label :promotion_choice, "Promote electric vehicles", value: 'electric_vehicle' %>
 
       <%= f.input :promotion_choice_url,
           required: false,
