@@ -74,7 +74,7 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
-    brakeman (4.6.1)
+    brakeman (4.7.1)
     bson (4.3.0)
     builder (3.2.3)
     byebug (11.0.0)
