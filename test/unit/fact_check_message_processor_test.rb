@@ -73,11 +73,11 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   test "it should turn each paragraph to UTF-8, even if they have different encodings" do
-    utf_8 = "Breatainn Mhòr"
-    iso = utf_8.encode(Encoding::ISO_8859_15)
-    expected = [utf_8, utf_8].join("\n\n")
+    utf8 = "Breatainn Mhòr"
+    iso = utf8.encode(Encoding::ISO_8859_15)
+    expected = [utf8, utf8].join("\n\n")
     body = [
-      utf_8.force_encoding(Encoding::ASCII_8BIT),
+      utf8.force_encoding(Encoding::ASCII_8BIT),
       iso.force_encoding(Encoding::ASCII_8BIT),
     ].join("\n\n")
     message = Mail.new(body: body)

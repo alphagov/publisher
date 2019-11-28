@@ -5,9 +5,15 @@ class UserSearchEditionDecorator
     @user = user
   end
 
+  # rubocop:disable Style/MethodMissingSuper
   def method_missing(method_name, *args)
     @edition.send method_name, *args
   end
+
+  def respond_to_missing?(method_name, *)
+    @edition.respond_to?(method_name)
+  end
+  # rubocop:enable Style/MethodMissingSuper
 
   def user_last_action
     # Note reverse sort
