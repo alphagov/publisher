@@ -18,15 +18,13 @@ Rails.application.configure do
   config.jwt_auth_secret = "123"
 
   # Enable/disable caching. By default caching is disabled.
+  config.action_controller.perform_caching = false
   if Rails.root.join("tmp/caching-dev.txt").exist?
-    config.action_controller.perform_caching = false
-
     config.cache_store = :memory_store
     config.public_file_server.headers = {
      "Cache-Control" => "public, max-age=172800",
     }
   else
-    config.action_controller.perform_caching = false
     config.cache_store = :null_store
   end
 

@@ -85,6 +85,10 @@ class EditionsController < InheritedResources::Base
 
     # update! is from the Inherited Resources gem
     # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
+    # TODO: We should refactor this block as it dates back to 2011 and it grew
+    # quite a bit since then.
+    # For the moment, I'll just disable the Metrics/BlockLength check ¯\_(ツ)_/¯
+    # rubocop:disable Metrics/BlockLength
     update! do |success, failure|
       success.html {
         if attempted_activity
@@ -121,6 +125,7 @@ class EditionsController < InheritedResources::Base
       }
       failure.json { render json: resource.errors, status: 406 }
     end
+    # rubocop:enable Metrics/BlockLength
   end
 
   def linking

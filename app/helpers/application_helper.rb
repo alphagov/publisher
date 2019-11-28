@@ -20,8 +20,8 @@ module ApplicationHelper
     link_to title, permitted_params.merge(sort: column, direction: direction), class: css_class
   end
 
-  def diff_html(version_1, version_2)
-    Diffy::Diff.new(version_1, version_2, allow_empty_diff: false).to_s(:html).html_safe
+  def diff_html(version1, version2)
+    Diffy::Diff.new(version1, version2, allow_empty_diff: false).to_s(:html).html_safe
   end
 
   def permitted_params

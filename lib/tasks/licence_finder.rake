@@ -1,5 +1,19 @@
 require "gds_api/publishing_api_v2"
 
+def create_artefact!
+  artefact = Artefact.new(
+    content_id: "69af22e0-da49-4810-9ee4-22b4666ac627",
+    slug: "licence-finder",
+    name: "Licence finder",
+    owning_app: "publisher",
+    kind: "transaction",
+    state: "draft",
+    language: "en",
+  )
+
+  artefact.save!
+end
+
 namespace :licence_finder do
   desc "Create draft start page for licence finder"
   task licence_finder_draft: :environment do
@@ -18,17 +32,7 @@ namespace :licence_finder do
     end
 
     puts "Creating Artefact matching old content_id: 69af22e0-da49-4810-9ee4-22b4666ac627"
-    artefact = Artefact.new(
-      content_id: "69af22e0-da49-4810-9ee4-22b4666ac627",
-      slug: "licence-finder",
-      name: "Licence finder",
-      owning_app: "publisher",
-      kind: "transaction",
-      state: "draft",
-      language: "en",
-    )
-
-    artefact.save!
+    create_artefact!
     puts "Artefact saved"
     puts "Creating Edition from Artefact"
 
