@@ -53,8 +53,8 @@ class ActionHelperTest < ActionView::TestCase
       assert_equal unformatted_email.length, 3
 
       assert_match(/reply/, unformatted_email.first)
-      refute_match(/original/, unformatted_email.first)
-      refute_match(/older/, unformatted_email.first)
+      assert_no_match(/original/, unformatted_email.first)
+      assert_no_match(/older/, unformatted_email.first)
 
       assert_match(/original/, unformatted_email.last)
       assert_match(/older/, unformatted_email.last)

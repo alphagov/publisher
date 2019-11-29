@@ -58,7 +58,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
 
     should "check only specified fields as Govspeak" do
       nasty_govspeak = '[Numberwang](script:nasty(); "Wangernum")'
-      assert ! Govspeak::Document.new(nasty_govspeak).valid?, "expected this to be identified as bad"
+      assert_not Govspeak::Document.new(nasty_govspeak).valid?, "expected this to be identified as bad"
 
       dummy = Dummy.new(i_am_govspeak: nasty_govspeak)
       assert dummy.invalid?

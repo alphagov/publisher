@@ -50,7 +50,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     edition = guide.published_edition
     NoisyWorkflow.expects(:make_noise).never
     edition.expects(:build_clone).returns(false)
-    assert ! user.new_version(edition)
+    assert_not user.new_version(edition)
   end
 
   test "should send an email on fact check received" do

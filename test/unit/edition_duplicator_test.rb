@@ -51,7 +51,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     @laura.stubs(:new_version).with(@guide, nil).returns(false)
 
     command = EditionDuplicator.new(@guide, @laura)
-    refute command.duplicate(nil, @fred)
+    assert_not command.duplicate(nil, @fred)
 
     assert_equal "Failed to create new edition: couldn't initialise", command.error_message
   end

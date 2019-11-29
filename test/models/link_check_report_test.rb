@@ -14,17 +14,17 @@ class LinkCheckReportTest < ActiveSupport::TestCase
 
     should "be invalid without links" do
       link_check_report = FactoryBot.build(:link_check_report, links: [])
-      refute link_check_report.valid?
+      assert_not link_check_report.valid?
     end
 
     should "be invalid without a batch id" do
       link_check_report = FactoryBot.build(:link_check_report, batch_id: nil)
-      refute link_check_report.valid?
+      assert_not link_check_report.valid?
     end
 
     should "be invalid without a status" do
       link_check_report = FactoryBot.build(:link_check_report, status: nil)
-      refute link_check_report.valid?
+      assert_not link_check_report.valid?
     end
   end
 
@@ -36,7 +36,7 @@ class LinkCheckReportTest < ActiveSupport::TestCase
 
     should "return false when not complete" do
       link_check_report = FactoryBot.build(:link_check_report)
-      refute link_check_report.completed?
+      assert_not link_check_report.completed?
     end
   end
 

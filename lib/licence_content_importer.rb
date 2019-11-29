@@ -55,7 +55,7 @@ class LicenceContentImporter
       title = CGI.unescapeHTML(to_utf8(row["NAME"]))
       slug = slug_for(title)
 
-      artefact = Artefact.find_by_slug(slug) ||
+      artefact = Artefact.find_by(slug: slug) ||
         Artefact.create(
           slug: slug, kind: "licence", state: "draft", owning_app: "publisher",
           name: title, rendering_app: "frontend"

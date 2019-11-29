@@ -123,7 +123,7 @@ class EditionsController < InheritedResources::Base
 
         render json: resource
       }
-      failure.json { render json: resource.errors, status: 406 }
+      failure.json { render json: resource.errors, status: :not_acceptable }
     end
     # rubocop:enable Metrics/BlockLength
   end

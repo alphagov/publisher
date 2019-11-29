@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.create(name: "bob")
     NoisyWorkflow.expects(:request_fact_check).never
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryBot.create(:artefact).id)
-    refute send_fact_check(user, trans)
+    assert_not send_fact_check(user, trans)
   end
 
   test "when an user publishes a guide, a status message is sent on the message bus" do

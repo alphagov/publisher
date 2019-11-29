@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class NoisyWorkflow < ActionMailer::Base
+class NoisyWorkflow < ApplicationMailer
   include PathsHelper
   default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 

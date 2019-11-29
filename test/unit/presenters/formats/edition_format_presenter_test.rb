@@ -72,7 +72,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     context "when not in beta" do
       should "not include phase" do
         edition.expects(:in_beta).returns(false)
-        refute_includes result.keys, :phase
+        assert_not_includes result.keys, :phase
       end
     end
 
@@ -164,7 +164,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
       should "not exist if no auth_bypass_id is present" do
         edition.expects(:auth_bypass_id).returns(nil)
-        refute result.has_key?(:access_limited)
+        assert_not result.has_key?(:access_limited)
       end
     end
   end

@@ -34,7 +34,7 @@ class GuideCreateEditTest < JavascriptIntegrationTest
                               title: "Foo bar #0")
 
     visit_edition guide
-    refute find("#edition_hide_chapter_navigation").checked?
+    assert_not find("#edition_hide_chapter_navigation").checked?
 
     # using 'check' and similar capybara approaches does not work here for some reason
     page.execute_script("$('#edition_hide_chapter_navigation').attr('checked', 'checked')")

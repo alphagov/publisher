@@ -125,7 +125,7 @@ class AttachableTest < ActiveSupport::TestCase
       @edition.image = @file
       @edition.save!
 
-      refute @edition.respond_to?(:image_url)
+      assert_not @edition.respond_to?(:image_url)
     end
 
     should "raise an exception if there is no api client present" do

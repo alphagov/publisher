@@ -55,7 +55,7 @@ class PlacePresenterTest < ActiveSupport::TestCase
     should "not send through nil fields" do
       edition.update_attribute(:need_to_know, nil)
 
-      refute_includes result[:details].keys, :need_to_know
+      assert_not_includes result[:details].keys, :need_to_know
     end
   end
 
