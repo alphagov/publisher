@@ -117,7 +117,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     handler = FactCheckEmailHandler.new(fact_check_config)
     handler.process
 
-    assert ! message.is_marked_for_delete?
+    assert_not message.is_marked_for_delete?
   end
 
   test "should look for fact-check address cc or bcc fields" do

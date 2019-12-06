@@ -312,7 +312,7 @@ class EditionsControllerTest < ActionController::TestCase
       @transaction.state = "ready"
       stub_register_published_content
       @transaction.publish
-      assert !@transaction.can_destroy?
+      assert_not @transaction.can_destroy?
       @transaction.save!
       assert_difference("TransactionEdition.count", 0) do
         delete :destroy, params: { id: @transaction.id }
@@ -334,7 +334,7 @@ class EditionsControllerTest < ActionController::TestCase
       @guide.publish
       @guide.save!
       assert @guide.published?
-      assert !@guide.can_destroy?
+      assert_not @guide.can_destroy?
 
       assert_difference("GuideEdition.count", 0) do
         delete :destroy, params: { id: @guide.id }
@@ -367,7 +367,7 @@ class EditionsControllerTest < ActionController::TestCase
     should "we can view a guide" do
       get :show, params: { id: @guide.id }
       assert_response :success
-      refute_nil assigns(:resource)
+      assert_not_nil assigns(:resource)
     end
   end
 

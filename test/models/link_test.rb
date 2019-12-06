@@ -34,12 +34,12 @@ class LinkTest < ActiveSupport::TestCase
 
     should "be invalid without a uri" do
       link = FactoryBot.build(:link, uri: nil)
-      refute link.valid?
+      assert_not link.valid?
     end
 
     should "be invalid without a status" do
       link = FactoryBot.build(:link, status: nil)
-      refute link.valid?
+      assert_not link.valid?
     end
 
     should "store warnings as an array" do

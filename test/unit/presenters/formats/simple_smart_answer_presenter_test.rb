@@ -92,7 +92,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(body: nil)
-          refute_includes result[:details].keys, :body
+          assert_not_includes result[:details].keys, :body
         end
       end
 

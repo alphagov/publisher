@@ -36,7 +36,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   test "should not progress to fact check if the email addresses were invalid" do
@@ -50,7 +50,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   test "should not progress to fact check if any of the email addresses were invalid" do
@@ -64,7 +64,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     }
 
     command = EditionProgressor.new(@guide, @laura)
-    refute command.progress(activity)
+    assert_not command.progress(activity)
   end
 
   context "publishing" do

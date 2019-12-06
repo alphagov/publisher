@@ -30,6 +30,6 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
     edition = FactoryBot.create(:edition, :published)
     visit metadata_edition_path(edition)
 
-    assert !page.has_button?("Update metadata")
+    assert_not page.has_button?("Update metadata")
   end
 end

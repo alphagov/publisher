@@ -41,12 +41,12 @@ class EditionTest < ActiveSupport::TestCase
 
   test "it must have a title" do
     a = LocalTransactionEdition.new
-    refute a.valid?
+    assert_not a.valid?
     assert a.errors[:title].any?
   end
 
   test "it is not in beta by default" do
-    refute FactoryBot.build(:guide_edition).in_beta?
+    assert_not FactoryBot.build(:guide_edition).in_beta?
   end
 
   test "it can be in beta" do
@@ -104,7 +104,7 @@ class EditionTest < ActiveSupport::TestCase
 
       edition.body += "some update"
 
-      refute edition.valid?
+      assert_not edition.valid?
       assert_includes edition.errors.full_messages, %q<Body ["Don't include hover text in links. Delete the text in quotation marks eg \\"This appears when you hover over the link.\\""]>
     end
 
@@ -119,11 +119,11 @@ class EditionTest < ActiveSupport::TestCase
 
   context "change note" do
     should "be a minor change by default" do
-      refute AnswerEdition.new.major_change
+      assert_not AnswerEdition.new.major_change
     end
     should "not be valid for major changes with a blank change note" do
       edition = AnswerEdition.new(major_change: true, change_note: "")
-      refute edition.valid?
+      assert_not edition.valid?
       assert edition.errors.has_key?(:change_note)
     end
     should "be valid for major changes with a change note" do
@@ -145,7 +145,7 @@ class EditionTest < ActiveSupport::TestCase
     edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123,
                           state: "in_review", review_requested_at: Time.zone.now, assigned_to: user)
     edition.reviewer = user.name
-    refute edition.valid?
+    assert_not edition.valid?
     assert edition.errors.has_key?(:reviewer)
   end
 
@@ -394,7 +394,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "a publication should not have a video" do
     dummy_publication = template_published_answer
-    assert !dummy_publication.has_video?
+    assert_not dummy_publication.has_video?
   end
 
   test "should create a publication based on data imported from panopticon" do
@@ -454,7 +454,7 @@ class EditionTest < ActiveSupport::TestCase
     loaded_answer = AnswerEdition.where(slug: "childcare").first
 
     assert_equal loaded_answer, dummy_answer
-    assert ! dummy_answer.can_destroy?
+    assert_not dummy_answer.can_destroy?
     assert_raise Workflow::CannotDeletePublishedPublication do
       dummy_answer.destroy
     end
@@ -695,7 +695,7 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     edition.title = "My New Title"
 
-    assert ! edition.save
+    assert_not edition.save
     assert_equal ["Published editions can't be edited"], edition.errors[:base]
   end
 
@@ -787,12 +787,12 @@ class EditionTest < ActiveSupport::TestCase
     edition = ProgrammeEdition.create(title: "Childcare", slug: "childcare", panopticon_id: @artefact.id)
     assert edition.can_request_review?
     request_review(user, edition)
-    refute request_amendments(user, edition)
+    assert_not request_amendments(user, edition)
   end
 
   test "a published publication with a draft edition is in progress" do
     dummy_answer = template_published_answer
-    assert !dummy_answer.has_sibling_in_progress?
+    assert_not dummy_answer.has_sibling_in_progress?
 
     edition = dummy_answer.build_clone
     edition.save
@@ -803,7 +803,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "a draft edition cannot be published" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
-    refute edition.can_publish?
+    assert_not edition.can_publish?
   end
 
   # test denormalisation
@@ -940,7 +940,7 @@ class EditionTest < ActiveSupport::TestCase
     should "be required" do
       ed = FactoryBot.build(:edition, panopticon_id: @artefact.id)
       ed.version_number = nil
-      assert !ed.valid?, "Expected edition not to be valid with no version_number"
+      assert_not ed.valid?, "Expected edition not to be valid with no version_number"
     end
 
     should "be unique" do
@@ -948,7 +948,7 @@ class EditionTest < ActiveSupport::TestCase
       ed2 = FactoryBot.build(:edition, panopticon_id: @artefact.id)
       ed2.version_number = ed1.version_number
 
-      assert !ed2.valid?, "Expected edition not to be valid with conflicting version_number"
+      assert_not ed2.valid?, "Expected edition not to be valid with conflicting version_number"
     end
 
     should "allow editions belonging to different artefacts to have matching version_numbers" do

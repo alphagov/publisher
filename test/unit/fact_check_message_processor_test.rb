@@ -32,7 +32,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
 
   test "processing returns false if the publication isn't found" do
     f = sample_processor
-    assert ! f.process_for_publication("4e1dac78e2ba80076000000ea")
+    assert_not f.process_for_publication("4e1dac78e2ba80076000000ea")
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do

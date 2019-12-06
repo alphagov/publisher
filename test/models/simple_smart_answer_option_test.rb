@@ -28,14 +28,14 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
     should "not be valid without a label" do
       @option = @node.options.build(@atts.merge(label: nil))
 
-      assert !@option.valid?
+      assert_not @option.valid?
       assert @option.errors.key?(:label)
     end
 
     should "not be valid without the next node" do
       @option = @node.options.build(@atts.merge(next_node: nil))
 
-      assert !@option.valid?
+      assert_not @option.valid?
       assert @option.errors.key?(:next_node)
     end
 
@@ -88,7 +88,7 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
           "punct.u&ation",
         ].each do |slug|
           @option.slug = slug
-          refute @option.valid?
+          assert_not @option.valid?
         end
       end
     end

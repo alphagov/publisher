@@ -57,7 +57,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nquestion: You approach two open doors. Which do you choose? \n\n ", new_edition.body
 
     assert new_edition.is_a?(AnswerEdition)
-    assert ! new_edition.respond_to?(:nodes)
+    assert_not new_edition.respond_to?(:nodes)
   end
 
   should "select the first node as the starting node" do
@@ -130,7 +130,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       should "be created with the text given by the content creator" do
         edition = SimpleSmartAnswerEdition.first
 
-        refute_equal "Start Now", edition.start_button_text
+        assert_not_equal "Start Now", edition.start_button_text
         assert_equal "Click to start", edition.start_button_text
         assert_equal "This is a simple smart answer with a default text for start button.", edition.body
         assert_equal @artefact.id.to_s, edition.panopticon_id

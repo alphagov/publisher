@@ -5,12 +5,12 @@ module PrerenderedEntityTests
     model_class.create(slug: "my-slug")
     second = model_class.create(slug: "my-slug")
 
-    refute second.valid?
+    assert_not second.valid?
     assert_equal 1, model_class.count
   end
 
   def test_has_no_govspeak_fields
-    refute model_class.const_defined?(:GOVSPEAK_FIELDS)
+    assert_not model_class.const_defined?(:GOVSPEAK_FIELDS)
   end
 
   def test_create_or_update_by_slug
@@ -39,7 +39,7 @@ module PrerenderedEntityTests
 
   def test_find_by_slug
     created = model_class.create!(slug: "find-by-this-slug")
-    found = model_class.find_by_slug("find-by-this-slug")
+    found = model_class.find_by(slug: "find-by-this-slug")
 
     assert_equal created, found
   end

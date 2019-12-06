@@ -45,7 +45,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_brand_colour = "something-else"
 
-    refute campaign.valid?
+    assert_not campaign.valid?
     assert campaign.errors.has_key?(:organisation_brand_colour)
   end
 
@@ -53,7 +53,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign = FactoryBot.build(:campaign_edition, panopticon_id: @artefact.id)
     campaign.organisation_crest = "something-else"
 
-    refute campaign.valid?
+    assert_not campaign.valid?
     assert campaign.errors.has_key?(:organisation_crest)
   end
 

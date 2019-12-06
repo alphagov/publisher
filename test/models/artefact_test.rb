@@ -9,19 +9,19 @@ class ArtefactTest < ActiveSupport::TestCase
 
     should "not allow apostrophes in slugs" do
       a = FactoryBot.build(:artefact, slug: "it's-a-nice-day")
-      refute a.valid?
+      assert_not a.valid?
       assert a.errors[:slug].any?
     end
 
     should "not allow spaces in slugs" do
       a = FactoryBot.build(:artefact, slug: "it is-a-nice-day")
-      refute a.valid?
+      assert_not a.valid?
       assert a.errors[:slug].any?
     end
 
     should "not allow slashes in slugs when the namespace is not 'done' or 'help'" do
       a = FactoryBot.build(:artefact, slug: "something-else/its-a-nice-day")
-      refute a.valid?
+      assert_not a.valid?
       assert a.errors[:slug].any?
     end
 
@@ -43,13 +43,13 @@ class ArtefactTest < ActiveSupport::TestCase
 
       should "require a help page to have a help/ prefix on the slug" do
         a = FactoryBot.build(:artefact, slug: "foo", kind: "help_page")
-        refute a.valid?
+        assert_not a.valid?
         assert_equal 1, a.errors[:slug].count
       end
 
       should "not allow other kinds to have a help/ prefix" do
         a = FactoryBot.build(:artefact, slug: "help/foo", kind: "answer")
-        refute a.valid?
+        assert_not a.valid?
         assert_equal 1, a.errors[:slug].count
       end
     end
@@ -91,7 +91,7 @@ class ArtefactTest < ActiveSupport::TestCase
       ].each do |path|
         @a.paths = ["/foo.json", path]
         @a.prefixes = ["/foo", path]
-        refute @a.valid?
+        assert_not @a.valid?
         assert_equal 1, @a.errors[:paths].count
         assert_equal 1, @a.errors[:prefixes].count
       end
@@ -107,7 +107,7 @@ class ArtefactTest < ActiveSupport::TestCase
       ].each do |path|
         @a.paths = ["/foo.json", path]
         @a.prefixes = ["/foo", path]
-        refute @a.valid?
+        assert_not @a.valid?
         assert_equal 1, @a.errors[:paths].count
         assert_equal 1, @a.errors[:prefixes].count
       end
@@ -257,7 +257,7 @@ class ArtefactTest < ActiveSupport::TestCase
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
 
-    refute artefact.any_editions_published?
+    assert_not artefact.any_editions_published?
 
     edition.state = "published"
     edition.save!
@@ -276,7 +276,7 @@ class ArtefactTest < ActiveSupport::TestCase
   test "should allow creation of artefacts with 'video' as the kind" do
     artefact = Artefact.create!(slug: "omlette-du-fromage", name: "Omlette du fromage", kind: "video", owning_app: "Dexter's Lab")
 
-    refute artefact.nil?
+    assert_not artefact.nil?
     assert_equal "video", artefact.kind
   end
 
@@ -346,7 +346,7 @@ class ArtefactTest < ActiveSupport::TestCase
       a = FactoryBot.build(:artefact)
       a.language = "pirate"
 
-      assert ! a.valid?
+      assert_not a.valid?
     end
   end
 
@@ -354,7 +354,7 @@ class ArtefactTest < ActiveSupport::TestCase
     published_artefact = FactoryBot.create(:artefact, slug: "scooby", state: "live")
     archived_artefact = FactoryBot.create(:artefact, slug: "doo", state: "archived")
 
-    refute published_artefact.archived?
+    assert_not published_artefact.archived?
     assert archived_artefact.archived?
   end
 
@@ -365,7 +365,7 @@ class ArtefactTest < ActiveSupport::TestCase
       end
 
       should "be false if its owning_app is not publisher and it has prefixes" do
-        refute FactoryBot.build(:artefact, :non_publisher, prefixes: ["/hats"]).exact_route?
+        assert_not FactoryBot.build(:artefact, :non_publisher, prefixes: ["/hats"]).exact_route?
       end
 
       should "be true if its owning_app is publisher and its kind is that of an exact route edition" do
@@ -378,28 +378,28 @@ class ArtefactTest < ActiveSupport::TestCase
       end
 
       should "be false if its owning_app is not publisher and its kind is not that of an exact route edition" do
-        refute FactoryBot.build(:artefact, kind: "answer", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "guide", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "licence", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "local_transaction", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "place", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "programme", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "transaction", prefixes: []).exact_route?
-        refute FactoryBot.build(:artefact, kind: "video", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "answer", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "guide", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "licence", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "local_transaction", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "place", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "programme", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "transaction", prefixes: []).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "video", prefixes: []).exact_route?
 
         # regardless of prefixes
-        refute FactoryBot.build(:artefact, kind: "answer", prefixes: ["/hats"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: ["/scarves"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "guide", prefixes: ["/underwear"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "licence", prefixes: ["/jumpers"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "local_transaction", prefixes: ["/gloves"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "place", prefixes: ["/belts"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "programme", prefixes: ["/socks"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: ["/onesies"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "transaction", prefixes: ["/scarves"]).exact_route?
-        refute FactoryBot.build(:artefact, kind: "video", prefixes: ["/all-other-clothing"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "answer", prefixes: ["/hats"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: ["/scarves"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "guide", prefixes: ["/underwear"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "licence", prefixes: ["/jumpers"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "local_transaction", prefixes: ["/gloves"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "place", prefixes: ["/belts"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "programme", prefixes: ["/socks"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: ["/onesies"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "transaction", prefixes: ["/scarves"]).exact_route?
+        assert_not FactoryBot.build(:artefact, kind: "video", prefixes: ["/all-other-clothing"]).exact_route?
       end
     end
 
@@ -413,7 +413,7 @@ class ArtefactTest < ActiveSupport::TestCase
         assert artefact.exact_route?
 
         latest_edition.expects(:exact_route?).returns false
-        refute artefact.exact_route?
+        assert_not artefact.exact_route?
       end
     end
   end

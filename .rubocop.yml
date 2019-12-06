@@ -1,3 +1,17 @@
 inherit_gem:
   rubocop-govuk:
     - config/default.yml
+    - config/rails.yml
+
+Rails/FindEach:
+  Enabled: false
+Rails/OutputSafety:
+  Enabled: false
+Rails/HelperInstanceVariable:
+  Enabled: false
+Rails/FindBy:
+  Enabled: false
+
+Rails/DynamicFindBy:
+  Whitelist:
+    - find_by_lgsl_code

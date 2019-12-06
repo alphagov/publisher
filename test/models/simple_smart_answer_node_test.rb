@@ -28,7 +28,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     should "not be valid without a slug" do
       @node = @edition.nodes.build(@atts.merge(slug: ""))
 
-      assert ! @node.valid?
+      assert_not @node.valid?
       assert_equal [:slug], @node.errors.keys
     end
 
@@ -41,27 +41,27 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
         "punct.u&ation",
       ].each do |slug|
         @node.slug = slug
-        refute @node.valid?
+        assert_not @node.valid?
       end
     end
 
     should "not be valid without a title" do
       @node = @edition.nodes.build(@atts.merge(title: ""))
 
-      assert ! @node.valid?
+      assert_not @node.valid?
       assert_equal [:title], @node.errors.keys
     end
 
     should "not be valid without a kind" do
       @node = @edition.nodes.build(@atts.merge(kind: nil))
-      assert ! @node.valid?
+      assert_not @node.valid?
 
       assert_equal [:kind], @node.errors.keys
     end
 
     should "not be valid with a kind other than 'question' or 'outcome'" do
       @node = @edition.nodes.build(@atts.merge(kind: "blah"))
-      assert ! @node.valid?
+      assert_not @node.valid?
 
       assert_equal [:kind], @node.errors.keys
     end
@@ -100,7 +100,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
         { label: "Yes", next_node: "yes" },
         { label: "No", next_node: "no" },
       ]))
-      assert ! @node.valid?
+      assert_not @node.valid?
 
       assert_equal [:options], @node.errors.keys
     end

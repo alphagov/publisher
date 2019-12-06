@@ -9,7 +9,7 @@ class VariantedTest < ActiveSupport::TestCase
     edition.variants.build(_id: "54c10d4d759b743528000011", order: "2", title: "Prepare for your appointment", slug: "")
     edition.variants.build(_id: "54c10d4d759b743528000012", order: "3", title: "Valid", slug: "valid")
 
-    refute edition.valid?
+    assert_not edition.valid?
 
     assert_equal({ title: ["can't be blank"] }, edition.errors[:variants][0]["54c10d4d759b743528000010:1"])
     assert_equal({ slug: ["can't be blank", "is invalid"] }, edition.errors[:variants][0]["54c10d4d759b743528000011:2"])

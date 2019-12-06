@@ -11,7 +11,7 @@ class TransactionEditionTest < ActiveSupport::TestCase
 
       %w[invalid ua-12345 UA-1234A-1].each do |id|
         transaction.department_analytics_profile = id
-        refute transaction.valid?
+        assert_not transaction.valid?
       end
 
       %w[ua-123456-1 UA-00-10].each do |id|

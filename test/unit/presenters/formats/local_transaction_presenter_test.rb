@@ -74,7 +74,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(introduction: nil)
-          refute_includes result[:details].keys, :introduction
+          assert_not_includes result[:details].keys, :introduction
         end
       end
 
@@ -91,7 +91,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(more_information: nil)
-          refute_includes result[:details].keys, :more_information
+          assert_not_includes result[:details].keys, :more_information
         end
       end
 
@@ -108,7 +108,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
 
         should "not present the data if nil" do
           edition.update(need_to_know: nil)
-          refute_includes result[:details].keys, :need_to_know
+          assert_not_includes result[:details].keys, :need_to_know
         end
       end
     end
