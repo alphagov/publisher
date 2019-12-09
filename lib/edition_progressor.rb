@@ -21,16 +21,16 @@ class EditionProgressor
 
     if invalid_fact_check_email_addresses?(activity)
       self.status_message = fact_check_error_message(activity)
-      return false
+      false
     elsif actor.progress(edition, activity.dup)
       if activity[:request_type] == "schedule_for_publishing"
         ScheduledPublisher.enqueue(edition)
       end
       self.status_message = success_message(action)
-      return true
+      true
     else
       self.status_message = failure_message(action)
-      return false
+      false
     end
   end
 

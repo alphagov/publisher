@@ -2,7 +2,7 @@ require "yaml"
 require "mail_fetcher_config"
 require "fact_check_config"
 
-config_file_path = Rails.root.join("config", "fact_check.yml")
+config_file_path = Rails.root.join("config/fact_check.yml")
 
 config = YAML.safe_load(
   ERB.new(File.read(config_file_path)).result,

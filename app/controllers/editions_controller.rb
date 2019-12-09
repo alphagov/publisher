@@ -47,7 +47,6 @@ class EditionsController < InheritedResources::Base
 
       flash[:success] = "#{description(@publication)} successfully created"
       redirect_to edition_path(@publication)
-      return
     else
       setup_view_paths_for(@publication)
       render action: "new"

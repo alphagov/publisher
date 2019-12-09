@@ -1,6 +1,6 @@
 class KnowledgeApi
   CONTENT_ID = "4dbbc2d1-a0db-441b-96c9-a743d067f724".freeze
-  KNOWLEDGE_ENTRIES = YAML.load_file(Rails.root.join("app", "services", "knowledge_api.yml")).freeze
+  KNOWLEDGE_ENTRIES = YAML.load_file(Rails.root.join("app/services/knowledge_api.yml")).freeze
 
   def publish
     Services.publishing_api.put_content(CONTENT_ID, payload)
