@@ -43,7 +43,7 @@ private
       response = Services.publishing_api.get_expanded_links(content_id)
       join_strings(response.to_hash, keys, pattern_to_remove)
     rescue GdsApi::HTTPNotFound, GdsApi::HTTPClientError
-      return ""
+      ""
     end
   end
 

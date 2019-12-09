@@ -20,7 +20,7 @@ class UserSearchEditionDecorator
     actions = @edition.actions.sort { |a, b| b.created_at <=> a.created_at }
     last_action = actions.find { |a| [a.requester, a.recipient].include? @user }
     if last_action
-      return {
+      {
         request_type: last_action.request_type,
         user_role: user_role(last_action),
         summary: summary(last_action),
