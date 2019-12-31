@@ -1,7 +1,7 @@
 require "gds_api/test_helpers/publishing_api_v2"
 
 module TagTestHelpers
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
 
   def stub_linkables
     stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/expanded-links/.+})

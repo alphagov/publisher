@@ -88,7 +88,7 @@ class ActiveSupport::TestCase
     request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: @user)
   end
 
-  include GdsApi::TestHelpers::PublishingApiV2
+  include GdsApi::TestHelpers::PublishingApi
   include TagTestHelpers
   include TabTestHelpers
   include HolidaysTestHelpers
