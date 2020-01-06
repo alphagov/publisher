@@ -48,7 +48,7 @@ group :test do
   gem "govuk-content-schema-test-helpers", "~> 1.6"
   gem "govuk_test"
   gem "minitest-reporters"
-  gem "mocha", "1.9.0"
+  gem "mocha", "1.11.2"
   gem "rails-controller-testing"
   gem "shoulda", "3.6.0"
   gem "simplecov", "~> 0.18.5", require: false
