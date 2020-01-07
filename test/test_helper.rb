@@ -40,6 +40,10 @@ GovukContentSchemaTestHelpers.configure do |config|
   config.project_root = Rails.root
 end
 
+Mocha.configure do |config|
+  config.reinstate_undocumented_behaviour_from_v1_9 = true
+end
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
