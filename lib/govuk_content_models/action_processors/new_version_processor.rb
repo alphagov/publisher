@@ -2,7 +2,7 @@ module GovukContentModels
   module ActionProcessors
     class NewVersionProcessor < BaseProcessor
       def process?
-        edition.published?
+        edition.published? || edition.archived?
       end
 
       def process
@@ -12,6 +12,9 @@ module GovukContentModels
                    else
                      edition.build_clone
                    end
+
+        @edition.artefact.update_from_edition(@edition) \
+          if @edition.artefact.archived?
 
         @edition.save(validate: false) if record_action?
       end
