@@ -312,7 +312,7 @@ GEM
     public_suffix (4.0.3)
     puma (4.3.1)
       nio4r (~> 2.0)
-    rack (2.0.8)
+    rack (2.1.1)
     rack-cache (1.11.0)
       rack (>= 0.4)
     rack-protection (2.0.8.1)
@@ -543,7 +543,7 @@ DEPENDENCIES
   null_logger
   plek (= 3.0.0)
   pry-byebug
-  rack (= 2.0.8)
+  rack (= 2.1.1)
   rails (~> 5.2)
   rails-controller-testing
   rails_autolink (= 1.1.6)
