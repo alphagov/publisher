@@ -94,7 +94,6 @@ class Artefact
   before_create :record_create_action
   before_update :record_update_action
   after_update :update_editions
-  before_destroy :discard_publishing_api_draft
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, slug: true
@@ -308,14 +307,5 @@ private
     when "archived" then "archived"
     else "draft"
     end
-  end
-
-  def discard_publishing_api_draft
-    Services.publishing_api.discard_draft(self.content_id)
-  rescue GdsApi::HTTPNotFound
-    nil
-  rescue GdsApi::HTTPUnprocessableEntity
-    # This error can also occur when there is no draft to discard
-    nil
   end
 end

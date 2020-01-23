@@ -2,18 +2,6 @@ require "integration_test_helper"
 
 class DeleteEditionTest < ActionDispatch::IntegrationTest
   setup do
-    content_id = SecureRandom.uuid
-    @artefact = FactoryBot.create(
-      :artefact,
-      slug: "i-dont-want-this",
-      content_id: content_id,
-      kind: "guide",
-      name: "Foo bar",
-      owning_app: "publisher",
-    )
-
-    @edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id)
-
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
@@ -23,17 +11,41 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  test "deleting a draft edition discards the draft in the publishing api" do
-    visit_edition @edition
+  context "when an artefact has multiple editions" do
+    should "discard the draft in the publishing api" do
+      artefact = FactoryBot.create(:artefact, kind: "guide")
+      edition = FactoryBot.create(:guide_edition, panopticon_id: artefact.id)
 
-    click_on "Admin"
+      visit_edition edition
 
-    Services.publishing_api.expects(:discard_draft).with(@artefact.content_id)
+      click_on "Admin"
 
-    click_button "Delete this edition – #1"
+      Services.publishing_api.expects(:discard_draft).with(artefact.content_id)
 
-    within(".alert-success") do
-      assert page.has_content?("Guide destroyed")
+      click_button "Delete this edition – #1"
+
+      within(".alert-success") do
+        assert page.has_content?("Guide destroyed")
+      end
+    end
+  end
+
+  context "when an artefact has only one edition" do
+    should "discard the draft in the publishing api" do
+      artefact = FactoryBot.create(:artefact, :with_published_edition, kind: "guide")
+      edition = FactoryBot.create(:guide_edition, panopticon_id: artefact.id)
+
+      visit_edition edition
+
+      click_on "Admin"
+
+      Services.publishing_api.expects(:discard_draft).with(artefact.content_id)
+
+      click_button "Delete this edition – #2"
+
+      within(".alert-success") do
+        assert page.has_content?("Guide destroyed")
+      end
     end
   end
 end
