@@ -154,9 +154,9 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (2.0.1)
+    govuk_app_config (2.0.2)
       logstasher (>= 1.2.2, < 1.4.0)
-      sentry-raven (>= 2.7.1, < 2.12.0)
+      sentry-raven (>= 2.7.1, < 2.14.0)
       statsd-ruby (~> 1.4.0)
       unicorn (>= 5.4, < 5.6)
     govuk_publishing_components (21.14.0)
@@ -230,7 +230,7 @@ GEM
     kaminari-mongoid (1.0.1)
       kaminari-core (~> 1.0)
       mongoid
-    kgio (2.11.2)
+    kgio (2.11.3)
     kramdown (1.15.0)
     link_header (0.0.8)
     logstash-event (1.2.02)
@@ -253,7 +253,7 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.13.0)
+    minitest (5.14.0)
     minitest-reporters (1.4.2)
       ansi
       builder
@@ -350,7 +350,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
-    raindrops (0.19.0)
+    raindrops (0.19.1)
     rake (13.0.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
@@ -423,7 +423,7 @@ GEM
     selenium-webdriver (3.142.6)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sentry-raven (2.11.3)
+    sentry-raven (2.13.0)
       faraday (>= 0.7.6, < 1.0)
     shoulda (3.6.0)
       shoulda-context (~> 1.0, >= 1.0.1)
@@ -520,7 +520,7 @@ DEPENDENCIES
   govspeak (~> 6.5.2)
   govuk-content-schema-test-helpers (~> 1.6)
   govuk_admin_template (~> 6.7)
-  govuk_app_config (~> 2.0.1)
+  govuk_app_config (~> 2.0.2)
   govuk_sidekiq (~> 3.0.5)
   govuk_test
   has_scope
