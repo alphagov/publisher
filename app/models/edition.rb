@@ -108,7 +108,11 @@ class Edition
   validates_presence_of :change_note, if: :major_change
 
   before_save :check_for_archived_artefact
-  before_destroy :destroy_artefact
+
+  before_destroy do
+    destroy_publishing_api_draft
+    destroy_artefact
+  end
 
   index assigned_to_id: 1
   index({ panopticon_id: 1, version_number: 1 }, unique: true)
@@ -402,6 +406,17 @@ class Edition
     if can_destroy? && siblings.empty?
       Artefact.find(self.panopticon_id).destroy
     end
+  end
+
+  def destroy_publishing_api_draft
+    return unless can_destroy?
+
+    Services.publishing_api.discard_draft(self.content_id)
+  rescue GdsApi::HTTPNotFound
+    nil
+  rescue GdsApi::HTTPUnprocessableEntity
+    nil
+    # This error can also occur when there is no draft to discard
   end
 
   def exact_route?
