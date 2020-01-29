@@ -50,7 +50,7 @@ group :test do
   gem 'mocha', '1.9.0'
   gem 'rails-controller-testing'
   gem 'shoulda', '3.6.0'
-  gem 'simplecov', '~> 0.17.1', require: false
+  gem 'simplecov', '~> 0.18.0', require: false
   gem 'simplecov-rcov', '~> 0.2.3', require: false
   gem "timecop", '0.9.1'
   gem 'webmock', '~> 3.8.0'
