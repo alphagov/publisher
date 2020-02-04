@@ -15,6 +15,7 @@
             updatePart(parts[i]);
           }
         }
+        removeDeletedParts();
       }
 
       function error(evt, response) {
@@ -24,6 +25,11 @@
         if (partErrors) {
           $.each(partErrors[0], showPartErrors);
         }
+      }
+
+      function removeDeletedParts() {
+        var deletedParts = $("[id*='__destroy'][value='1']")
+        deletedParts.parents(".fields").remove();
       }
 
       function showPartErrors(partKey, partErrors) {
