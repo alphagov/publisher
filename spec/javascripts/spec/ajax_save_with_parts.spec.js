@@ -48,6 +48,7 @@ describe('An ajax save with parts module', function() {
             <input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">\
           </div>\
           <input type="hidden" id="edition_part_101_id" name="edition[part][101][id]" value="5f00000002">\
+          <input id="edition_parts_attributes_101__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="false">\
         </div>\
       </div>\
       <div class="fields">\
@@ -61,6 +62,20 @@ describe('An ajax save with parts module', function() {
           <input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">\
           <div id="edition_parts_attributes_4535667_slug_input">\
             <input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">\
+          </div>\
+        </div>\
+      </div>\
+      <div class="fields">\
+        <a href="#" class="js-part-toggle">\
+          <span class="js-part-title">Deleted part</span>\
+        </a>\
+        <div class="js-part-toggle-target" id="deleted-part">\
+          <div id="edition_parts_attributes_deleted_title_input">\
+            <input class="title" type="text" id="edition_part_deleted_title" name="edition[part][deleted][title]" value="Deleted Part">\
+          </div>\
+          <input class="order" type="hidden" id="edition_part_deleted_order" name="edition[part][deleted][order]" value="4">\
+          <div id="edition_parts_attributes_deleted_slug_input">\
+            <input id="edition_parts_attributes_deleted__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="1">\
           </div>\
         </div>\
       </div>\
@@ -110,6 +125,11 @@ describe('An ajax save with parts module', function() {
       expect(element.find('.js-part-toggle').eq(0).attr('href')).toBe('#updated-title-1');
       expect(element.find('.js-part-toggle').eq(1).attr('href')).toBe('#updated-title-2');
     });
+
+    it('removes deleted parts from the DOM to prevent inclusion in subsequent posts', function(){
+      expect(element.find('#edition_parts_attributes_101_title_input').length).toBe(1);
+      expect(element.find('#edition_parts_attributes_deleted_title_input').length).toBe(0);
+    })
   });
 
   describe('when a new part is added and the form is saved', function() {
