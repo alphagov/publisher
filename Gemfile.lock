@@ -199,7 +199,7 @@ GEM
       railties (>= 5.0, < 6.1)
       responders (>= 2, < 4)
     jaro_winkler (1.5.4)
-    jasmine (3.5.0)
+    jasmine (3.5.1)
       jasmine-core (~> 3.5.0)
       phantomjs
       rack (>= 1.2.1)
@@ -523,7 +523,7 @@ DEPENDENCIES
   govuk_test
   has_scope
   inherited_resources
-  jasmine (~> 3.5.0)
+  jasmine (~> 3.5.1)
   jasmine-core (~> 3.5.0)
   jquery-ui-rails (~> 6.0)
   kaminari (~> 1.2)
