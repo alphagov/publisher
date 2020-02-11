@@ -64,6 +64,6 @@ group :development, :test do
   gem 'rubocop-govuk'
   gem 'jasmine', '~> 3.5.1'
   gem 'jasmine-core', '~> 3.5.0'
-  gem 'rack', '2.2.1'
+  gem 'rack', '2.2.2'
   gem 'pry-byebug'
 end
