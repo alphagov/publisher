@@ -9,6 +9,10 @@
     <div class="modal-body">
       <%= activity_fields.hidden_field :request_type, value: activity %>
 
+      <% if activity == :skip_review %>
+        <p class="alert alert-warning">You should only skip review in exceptional circumstances, for example if you're the only person responding to an emergency out of hours call.</p>
+      <% end %>
+
       <% if activity == :send_fact_check %>
         <%= activity_fields.input :email_addresses, hint: 'You can enter multiple email addresses if you comma separate them as follows: <code>fact-checker-one@example.com, fact-checker-two@example.com</code>.'.html_safe %>
 

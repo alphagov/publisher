@@ -13,6 +13,14 @@ class NoisyWorkflow < ApplicationMailer
     mail(to: recipient_emails.join(", "), subject: subject)
   end
 
+  def skip_review(action)
+    @edition = action.edition
+    mail(
+      to: EMAIL_GROUPS[:force_publish_alerts],
+      subject: "[PUBLISHER] Review has been skipped on #{@edition.title}",
+    )
+  end
+
   def request_fact_check(action)
     @edition = action.edition
     fact_check_address = @edition.fact_check_email_address
