@@ -110,6 +110,16 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     end
   end
 
+  context ".skip_review" do
+    should "should send an email on skipping review" do
+      user = FactoryBot.create(:user, name: "Ben", permissions: %w[skip_review])
+      guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+      request_review(user, guide)
+      NoisyWorkflow.expects(:skip_review).returns(mock("noise maker", deliver_now: nil))
+      skip_review(user, guide)
+    end
+  end
+
   context "make_noise" do
     context "Setting the subject" do
       should "set a subject containing the description" do

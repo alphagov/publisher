@@ -61,6 +61,7 @@ module GovukContentModels
         NoisyWorkflow.make_noise(new_action).deliver_now
         NoisyWorkflow.request_fact_check(new_action).deliver_now if action_name.to_s == "send_fact_check"
         NoisyWorkflow.resend_fact_check(new_action).deliver_now if action_name.to_s == "resend_fact_check"
+        NoisyWorkflow.skip_review(new_action).deliver_now if action_name.to_s == "skip_review"
       end
     end
   end
