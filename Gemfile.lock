@@ -440,10 +440,10 @@ GEM
     sidekiq-statsd (2.1.0)
       activesupport
       sidekiq (>= 3.3.1)
-    simplecov (0.18.1)
+    simplecov (0.18.2)
       docile (~> 1.1)
-      simplecov-html (~> 0.11.0)
-    simplecov-html (0.11.0)
+      simplecov-html (~> 0.11)
+    simplecov-html (0.12.0)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     sprockets (3.7.2)
@@ -553,7 +553,7 @@ DEPENDENCIES
   select2-rails (= 3.5.9.1)
   selectize-rails (= 0.12.6)
   shoulda (= 3.6.0)
-  simplecov (~> 0.18.1)
+  simplecov (~> 0.18.2)
   simplecov-rcov (~> 0.2.3)
   state_machines (~> 0.4)
   state_machines-graphviz
