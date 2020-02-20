@@ -15,6 +15,7 @@ class NoisyWorkflow < ApplicationMailer
 
   def skip_review(action)
     @edition = action.edition
+    @edition_url = edition_url(@edition.id, host: Plek.find("publisher"), external: true)
     mail(
       to: EMAIL_GROUPS[:force_publish_alerts],
       subject: "[PUBLISHER] Review has been skipped on #{@edition.title}",
