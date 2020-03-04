@@ -1,4 +1,4 @@
-Dir[File.join(File.dirname(__FILE__), "action_processors", "*.rb")].each { |f| require f }
+Dir[File.join(File.dirname(__FILE__), "action_processors", "*.rb")].sort.each { |f| require f }
 
 module GovukContentModels
   module ActionProcessors
