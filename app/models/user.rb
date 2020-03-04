@@ -32,7 +32,7 @@ class User
   scope :alphabetized, lambda { order_by(name: :asc) }
   scope :enabled, lambda {
     any_of({ :disabled.exists => false },
-           { :disabled.in => [false, nil] }) # rubocop:disable Style/BracesAroundHashParameters
+           { :disabled.in => [false, nil] })
   }
 
   def to_s
