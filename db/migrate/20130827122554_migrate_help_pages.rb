@@ -6,7 +6,7 @@ class MigrateHelpPages < Mongoid::Migration
     privacy-policy
     accessibility
     terms-and-conditions
-  )
+  ).freeze
 
   def self.up
     SLUGS.each do |slug|
@@ -32,11 +32,11 @@ class MigrateHelpPages < Mongoid::Migration
       end
 
       a.kind = "help_page"
-      if slug == "terms-and-conditions"
-        a.slug = "help/terms-conditions"
-      else
-        a.slug = "help/#{a.slug}"
-      end
+      a.slug = if slug == "terms-and-conditions"
+                 "help/terms-conditions"
+               else
+                 "help/#{a.slug}"
+               end
       a.save!
 
       ed.slug = a.slug
@@ -45,6 +45,5 @@ class MigrateHelpPages < Mongoid::Migration
     end
   end
 
-  def self.down
-  end
+  def self.down; end
 end

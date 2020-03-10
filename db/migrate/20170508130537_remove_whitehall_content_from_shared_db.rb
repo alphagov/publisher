@@ -10,6 +10,5 @@ class RemoveWhitehallContentFromSharedDb < Mongoid::Migration
     Artefact.set_callback(:destroy, :before, :discard_publishing_api_draft)
   end
 
-  def self.down
-  end
+  def self.down; end
 end

@@ -7,7 +7,7 @@ else
   User.create!(
     name: "Test user",
     uid: user_id,
-    permissions: ["signin", "editor", "skip_review"],
+    permissions: %w[signin editor skip_review],
     organisation_content_id: gds_organisation_id,
   )
 end

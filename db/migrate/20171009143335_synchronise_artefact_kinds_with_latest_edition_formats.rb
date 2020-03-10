@@ -16,6 +16,5 @@ class SynchroniseArtefactKindsWithLatestEditionFormats < Mongoid::Migration
     Artefact.set_callback(:update, :after, :update_editions)
   end
 
-  def self.down
-  end
+  def self.down; end
 end

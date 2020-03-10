@@ -7,14 +7,14 @@
 # there, so we can review that messages are getting processed properly by going into the
 # gmail account and having a look.
 #
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path("../config/environment", __dir__)
 Publisher::Application.mail_fetcher_config.configure
 
-require 'fact_check_email_handler'
+require "fact_check_email_handler"
 
-require 'redis'
-require 'redis-lock'
-require_relative '../lib/redis_config'
+require "redis"
+require "redis-lock"
+require_relative "../lib/redis_config"
 
 def redis
   Redis.new(RedisConfig::REDIS_CONFIG)
@@ -46,7 +46,7 @@ begin
   end
 rescue Redis::Lock::LockNotAcquired => e
   Rails.logger.debug("Failed to get lock for fact check processing (#{e.message}). Another process probably got there first.")
-rescue => e
+rescue StandardError => e
   GovukError.notify(e)
   raise
 end

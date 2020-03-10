@@ -7,6 +7,5 @@ class ConvertImportantNotesToActions < Mongoid::Migration
     end
   end
 
-  def self.down
-  end
+  def self.down; end
 end

@@ -32,6 +32,5 @@ class CleanupEditionVersionData < Mongoid::Migration
     Edition.collection.drop_index("panopticon_id_1")
   end
 
-  def self.down
-  end
+  def self.down; end
 end

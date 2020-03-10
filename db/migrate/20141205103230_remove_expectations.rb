@@ -4,6 +4,5 @@ class RemoveExpectations < Mongoid::Migration
     Mongoid.master.collection(:expectations).drop
   end
 
-  def self.down
-  end
+  def self.down; end
 end

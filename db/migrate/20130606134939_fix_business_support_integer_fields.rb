@@ -1,6 +1,7 @@
 # encoding: utf-8
+
 class FixBusinessSupportIntegerFields < Mongoid::Migration
-  FIELDS = [:min_value, :max_value, :max_employees]
+  FIELDS = %i[min_value max_value max_employees].freeze
   def self.up
     BusinessSupportEdition.all.each do |ed|
       FIELDS.each do |field|
@@ -21,6 +22,5 @@ class FixBusinessSupportIntegerFields < Mongoid::Migration
     end
   end
 
-  def self.down
-  end
+  def self.down; end
 end
