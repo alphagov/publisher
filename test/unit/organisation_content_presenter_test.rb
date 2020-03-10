@@ -33,7 +33,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
                                  kind: "answer")
 
     @response["content_id"] = document.content_id
-    publishing_api_has_expanded_links(@response)
+    stub_publishing_api_has_expanded_links(@response)
 
     FactoryBot.create(:edition,
                       panopticon_id: document.id)

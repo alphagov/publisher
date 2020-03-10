@@ -35,7 +35,7 @@ class WorkingDaysCalculatorTest < ActiveSupport::TestCase
   end
 
   setup do
-    calendars_has_no_bank_holidays(in_division: "england-and-wales")
+    stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
   end
 
   test ".after returns the correct weekday" do
@@ -59,25 +59,25 @@ class WorkingDaysCalculatorTest < ActiveSupport::TestCase
   end
 
   test ".after returns the Tuesday if the next day is a holiday Monday" do
-    calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
+    stub_calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
     calculator = WorkingDaysCalculator.new(Date.parse("2017-04-21"))
     assert_equal Date.parse("2017-05-2"), calculator.after(6)
   end
 
   test ".after returns the Monday if the next day is a holiday Friday" do
-    calendars_has_a_bank_holiday_on(Date.parse("2016-01-01"), in_division: "england-and-wales")
+    stub_calendars_has_a_bank_holiday_on(Date.parse("2016-01-01"), in_division: "england-and-wales")
     calculator = WorkingDaysCalculator.new(Date.parse("2015-12-31"))
     assert_equal Date.parse("2016-01-4"), calculator.after(1)
   end
 
   test ".after returns the Tuesday if the next day is a holiday on both Friday and Monday" do
-    calendars_has_bank_holidays_on([Date.parse("2017-04-14"), Date.parse("2017-04-17")], in_division: "england-and-wales")
+    stub_calendars_has_bank_holidays_on([Date.parse("2017-04-14"), Date.parse("2017-04-17")], in_division: "england-and-wales")
     calculator = WorkingDaysCalculator.new(Date.parse("2017-04-13"))
     assert_equal Date.parse("2017-04-18"), calculator.after(1)
   end
 
   test ".after accounts for holidays crossed even if they're not the 'next day'" do
-    calendars_has_a_bank_holiday_on(Date.parse("2014-01-01"), in_division: "england-and-wales")
+    stub_calendars_has_a_bank_holiday_on(Date.parse("2014-01-01"), in_division: "england-and-wales")
     calculator = WorkingDaysCalculator.new(Date.parse("2013-12-31"))
     assert_equal Date.parse("2014-01-03"), calculator.after(2)
   end

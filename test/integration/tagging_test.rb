@@ -5,7 +5,7 @@ class TaggingTest < JavascriptIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
-    publishing_api_has_lookups({})
+    stub_publishing_api_has_lookups({})
 
     @edition = FactoryBot.create(:guide_edition)
     @artefact = @edition.artefact
@@ -128,7 +128,7 @@ class TaggingTest < JavascriptIntegrationTest
       find(".js-path-field").set("/reclaim-vat")
 
       # Web request that JS makes to check the path is a valid GOV.UK base path
-      publishing_api_has_lookups("/reclaim-vat" => "CONTENT-ID-RECLAIM-VAT")
+      stub_publishing_api_has_lookups("/reclaim-vat" => "CONTENT-ID-RECLAIM-VAT")
       click_on "Add related item"
 
       within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[1]' do
@@ -139,7 +139,7 @@ class TaggingTest < JavascriptIntegrationTest
         assert page.has_field?("tagging_tagging_update_form[ordered_related_items][]", with: "/reclaim-vat")
       end
 
-      publishing_api_has_lookups(
+      stub_publishing_api_has_lookups(
         "/vat-returns" => "CONTENT-ID-VAT-RETURNS",
         "/reclaim-vat" => "CONTENT-ID-RECLAIM-VAT",
       )
@@ -245,7 +245,7 @@ class TaggingTest < JavascriptIntegrationTest
     end
 
     should "User makes a conflicting change" do
-      publishing_api_has_links(
+      stub_publishing_api_has_links(
         "content_id" => @content_id,
         "links" => {
           topics: %w[CONTENT-ID-WELLS],
