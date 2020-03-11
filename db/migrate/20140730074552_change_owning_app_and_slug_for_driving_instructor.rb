@@ -1,11 +1,11 @@
 class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
   # select the slug to be changed
-  SSA_SLUG = "become-driving-instructor"
-  SA_SLUG = "become-a-driving-instructor"
+  SSA_SLUG = "become-driving-instructor".freeze
+  SA_SLUG = "become-a-driving-instructor".freeze
 
 
   def self.up
-    changeling = Artefact.find_by_slug(SA_SLUG)
+    changeling = Artefact.find_by(slug: SA_SLUG)
 
     if changeling
       # change the kind and owning app
@@ -30,7 +30,7 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
   end
 
   def self.down
-    reverse_changeling = Artefact.find_by_slug(SA_SLUG)
+    reverse_changeling = Artefact.find_by(slug: SA_SLUG)
 
     if reverse_changeling
       # change the kind and owning app
@@ -40,7 +40,7 @@ class ChangeOwningAppAndSlugForDrivingInstructor < Mongoid::Migration
 
       # update the slug on all editions
       puts "Reverting the slug on all editions"
-      artefact = Artefact.find_by_slug(SSA_SLUG)
+      artefact = Artefact.find_by(slug: SSA_SLUG)
       Edition.where(slug: SA_SLUG).each do |e|
         e.slug = SSA_SLUG
         e.panopticon_id = artefact._id

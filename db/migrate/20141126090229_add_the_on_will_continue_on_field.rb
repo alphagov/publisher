@@ -8,6 +8,5 @@ class AddTheOnWillContinueOnField < Mongoid::Migration
     puts "Done."
   end
 
-  def self.down
-  end
+  def self.down; end
 end

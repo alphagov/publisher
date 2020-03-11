@@ -7,6 +7,5 @@ class FixMajorChangeValues < Mongoid::Migration
     )
   end
 
-  def self.down
-  end
+  def self.down; end
 end

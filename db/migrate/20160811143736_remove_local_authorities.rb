@@ -3,6 +3,5 @@ class RemoveLocalAuthorities < Mongoid::Migration
     Mongoid.default_client["local_authorities"].drop
   end
 
-  def self.down
-  end
+  def self.down; end
 end

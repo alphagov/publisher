@@ -7,6 +7,5 @@ class SetInBetaOnEditionsWhereNotSet < Mongoid::Migration
     puts "Updated #{result['n']} editions to have the :in_beta field set to false"
   end
 
-  def self.down
-  end
+  def self.down; end
 end

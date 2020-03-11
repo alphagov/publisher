@@ -6,6 +6,7 @@ class FixPartOrdering < Mongoid::Migration
 
     Edition.all.each do |edition|
       next unless edition.is_a?(Parted)
+
       if edition.parts.map(&:order).any?(&:nil?)
         puts "Fixing nil parts order for #{edition.title}(v#{edition.version_number})"
         puts "  broken order was: #{edition.parts.map(&:order).inspect}"
@@ -17,6 +18,5 @@ class FixPartOrdering < Mongoid::Migration
     puts "#{count} Editions fixed"
   end
 
-  def self.down
-  end
+  def self.down; end
 end

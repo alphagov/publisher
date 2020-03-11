@@ -146,5 +146,5 @@ class AddLgilCodesToLocalTransactionEditions < Mongoid::Migration
         "find-free-early-education" =>  8,
         "find-weighbridge" =>  8,
         "help-care-support" => 8,
-      }
+      }.freeze
 end

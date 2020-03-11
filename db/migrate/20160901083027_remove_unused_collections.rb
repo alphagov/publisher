@@ -5,6 +5,5 @@ class RemoveUnusedCollections < Mongoid::Migration
     Mongoid.default_client["local_transactions_sources"].drop
   end
 
-  def self.down
-  end
+  def self.down; end
 end

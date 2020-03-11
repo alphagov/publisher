@@ -11,6 +11,5 @@ class UpdateNilUserFields < Mongoid::Migration
     user.save!
   end
 
-  def self.down
-  end
+  def self.down; end
 end
