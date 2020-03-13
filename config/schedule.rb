@@ -4,10 +4,10 @@ schedule_task_prefix = ENV.fetch("SCHEDULE_TASK_PREFIX", "/usr/local/bin/govuk_s
 job_type :rake, "cd :path && #{schedule_task_prefix} bundle exec rake :task :output"
 job_type :run_script, "cd :path && RAILS_ENV=:environment #{schedule_task_prefix} script/:task :output"
 
-every 5.minutes do
-  run_script "mail_fetcher"
-end
-
-every 1.hour do
-  rake "reports:generate"
-end
+# every 5.minutes do
+#   run_script "mail_fetcher"
+# end
+#
+# every 1.hour do
+#   rake "reports:generate"
+# end
