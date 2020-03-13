@@ -2,7 +2,7 @@ require "test_helper"
 
 class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
   def setup
-    publishing_api_has_lookups("/" => nil)
+    stub_publishing_api_has_lookups("/" => nil)
   end
 
   def service_sign_in_yaml_validator(file)
@@ -66,7 +66,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
       should "return the YAML file as a hash" do
         content = YAML.load_file(valid_yaml_file)
         slug = content["start_page_slug"]
-        publishing_api_has_lookups("/#{slug}" => "a-content-id")
+        stub_publishing_api_has_lookups("/#{slug}" => "a-content-id")
         validator = service_sign_in_yaml_validator(valid_yaml_file)
         assert_equal content, validator.validate
       end
@@ -140,7 +140,7 @@ class ServiceSignInYamlValidatorTest < ActiveSupport::TestCase
     context "when the start_page_slug doesn't exist in the Publishing API" do
       should "log a 'start_page_slug 'slug_name' cannot be found in Publishing API' error" do
         slug = YAML.load_file(invalid_start_page_slug)["start_page_slug"]
-        publishing_api_has_lookups("/#{slug}" => nil)
+        stub_publishing_api_has_lookups("/#{slug}" => nil)
         validator = service_sign_in_yaml_validator(invalid_start_page_slug)
         assert_includes validator.validate, "start_page_slug '#{slug}' cannot be found in Publishing API"
       end

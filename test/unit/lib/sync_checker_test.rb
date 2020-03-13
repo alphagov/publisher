@@ -16,7 +16,7 @@ class SyncCheckerTest < ActiveSupport::TestCase
 
     context "for content present in content store" do
       setup do
-        content_store_has_item("/help/cookies", schema_name: "help_page")
+        stub_content_store_has_item("/help/cookies", schema_name: "help_page")
       end
 
       should "succeed for matching expectation" do
@@ -44,7 +44,7 @@ class SyncCheckerTest < ActiveSupport::TestCase
 
     context "for content missing in content store" do
       setup do
-        content_store_does_not_have_item("/help/cookies")
+        stub_content_store_does_not_have_item("/help/cookies")
       end
 
       should "fail" do

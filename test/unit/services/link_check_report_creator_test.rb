@@ -10,7 +10,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
   end
 
   setup do
-    @stubbed_api_request = link_checker_api_create_batch(
+    @stubbed_api_request = stub_link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],
       id: "a-batch-id",
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),

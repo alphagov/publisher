@@ -41,7 +41,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "the customised message for fact-check is pre-loaded with a 5 working days deadline message" do
     today = Date.parse("2017-04-28")
-    calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
+    stub_calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
 
     Timecop.freeze(today) do
       guide.update_attribute(:state, "ready")
