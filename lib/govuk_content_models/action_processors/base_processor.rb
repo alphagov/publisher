@@ -58,10 +58,10 @@ module GovukContentModels
     private
 
       def make_record_action_noises(new_action, action_name)
-        NoisyWorkflow.make_noise(new_action).deliver_now
-        NoisyWorkflow.request_fact_check(new_action).deliver_now if action_name.to_s == "send_fact_check"
-        NoisyWorkflow.resend_fact_check(new_action).deliver_now if action_name.to_s == "resend_fact_check"
-        NoisyWorkflow.skip_review(new_action).deliver_now if action_name.to_s == "skip_review"
+        MultiNoisyWorkflow.make_noise(new_action).map(&:deliver_now)
+        MultiNoisyWorkflow.request_fact_check(new_action).map(&:deliver_now) if action_name.to_s == "send_fact_check"
+        MultiNoisyWorkflow.resend_fact_check(new_action).map(&:deliver_now) if action_name.to_s == "resend_fact_check"
+        MultiNoisyWorkflow.skip_review(new_action).map(&:deliver_now) if action_name.to_s == "skip_review"
       end
     end
   end

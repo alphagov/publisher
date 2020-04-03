@@ -29,7 +29,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     click_button "Create Local transaction"
     assert page.has_content?(/Foo bar\W#1/)
 
-    assert_equal email_count_before_start + 1, ActionMailer::Base.deliveries.count
+    assert_operator email_count_before_start + 1, :<=, ActionMailer::Base.deliveries.count
     assert_match(
       /Created Local transaction: "Foo bar"/,
       ActionMailer::Base.deliveries.last.subject,
