@@ -36,7 +36,7 @@ gem "select2-rails", "3.5.9.1" # Updating this will mean updating the styling as
 gem "selectize-rails", "0.12.6"
 gem "state_machines", "~> 0.4"
 gem "state_machines-mongoid", "~> 0.1"
-gem "strip_attributes", "~> 1.9"
+gem "strip_attributes", "~> 1.11"
 gem "uglifier", "4.2.0"
 gem "whenever", require: false
 
