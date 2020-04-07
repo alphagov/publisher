@@ -6,7 +6,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   def fact_check_email
     guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: "jys@ketlai.co.uk", customised_message: "Blah")
-    email = NoisyWorkflow.request_fact_check(action)
+    email = NoisyWorkflow.request_fact_check(action, action.email_addresses)
     [guide, email]
   end
 
@@ -14,7 +14,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
     action = guide.actions.create(request_type: action, requester: requester)
-    NoisyWorkflow.make_noise(action)
+    NoisyWorkflow.make_noise(action, action.email_addresses)
   end
 
   def publisher_and_guide
@@ -61,6 +61,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
                                 title: "My Title", slug: "my-title-b")
 
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
+    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
     receive_fact_check(user, guide)
   end
 
@@ -72,42 +73,6 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   test "fact checking emails should go from appropriate email addresses" do
     guide, email = fact_check_email
     assert_equal ["factcheck+dev-#{guide.id}@alphagov.co.uk"], email.from
-  end
-
-  context ".resend_fact_check" do
-    setup do
-      @user = User.create(uid: "123", name: "Ben")
-      @other_user = User.create(uid: "321", name: "James")
-
-      @edition = @user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
-      request_review(@user, @edition)
-      approve_review(@other_user, @edition)
-    end
-
-    should "resend the fact check email for an edition in fact check state" do
-      send_fact_check(@user, @edition)
-      stubbed_fact_check_mail = stub("mailer", deliver_now: true)
-      NoisyWorkflow.expects(:request_fact_check).returns(stubbed_fact_check_mail)
-      resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
-
-      mail = NoisyWorkflow.resend_fact_check(resend_fact_check_action)
-      assert_equal stubbed_fact_check_mail, mail
-    end
-
-    should "return a NoMail instance if the edition is not in fact check state" do
-      NoisyWorkflow.expects(:request_fact_check).never
-      resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
-
-      mail = NoisyWorkflow.resend_fact_check(resend_fact_check_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
-    end
-
-    should "return a NoMail instance if the supplied action is not a resend fact check one" do
-      NoisyWorkflow.expects(:request_fact_check).never
-
-      mail = NoisyWorkflow.resend_fact_check(@edition.latest_status_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
-    end
   end
 
   context ".skip_review" do
@@ -125,15 +90,6 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       should "set a subject containing the description" do
         email = action_email(Action::APPROVE_REVIEW)
         assert_equal email.subject, "[PUBLISHER] Okayed for publication: \"Test Guide 2\" (Guide) by Testing Person"
-      end
-    end
-
-    context "Setting the recipients" do
-      should "send to 'publisher-alerts-citizen'" do
-        email = action_email(Action::PUBLISH)
-        assert email.to.include?("publisher-alerts-citizen@digital.cabinet-office.gov.uk")
-        email = action_email(Action::REQUEST_REVIEW)
-        assert email.to.include?("publisher-alerts-citizen@digital.cabinet-office.gov.uk")
       end
     end
   end

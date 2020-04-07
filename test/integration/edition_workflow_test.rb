@@ -104,11 +104,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.reload
     assert guide.fact_check?
 
-    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
-    assert fact_check_email
-    assert_includes fact_check_email.to, "user2@example.com"
-    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email.subject
-    assert_equal "Blah", fact_check_email.body.to_s
+    fact_check_email1 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user1@example.com" }.last
+    assert fact_check_email1
+    fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
+    assert fact_check_email2
+    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email1.subject
+    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email2.subject
+    assert_equal "Blah", fact_check_email1.body.to_s
+    assert_equal "Blah", fact_check_email2.body.to_s
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
