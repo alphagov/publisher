@@ -3,10 +3,6 @@ require "test_helper"
 class NoisyWorkflowTest < ActionMailer::TestCase
   tests NoisyWorkflow
 
-  setup do
-    stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
-  end
-
   def fact_check_email
     guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: "jys@ketlai.co.uk", customised_message: "Blah")
