@@ -3,6 +3,7 @@ require "test_helper"
 class GuideEditionTest < ActiveSupport::TestCase
   setup do
     @artefact = FactoryBot.create(:artefact, name: "Childcare", slug: "childcare")
+    stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
   end
 
   def template_guide

@@ -16,6 +16,7 @@ gem "inherited_resources"
 gem "jquery-ui-rails", "~> 6.0"
 gem "kaminari", "~> 1.2"
 gem "kaminari-mongoid", "1.0.1"
+gem "mail-notify"
 gem "mlanett-redis-lock", "0.2.7" # Only used in some importers
 gem "momentjs-rails", "2.20.1"
 gem "mongo", "2.4.3"
