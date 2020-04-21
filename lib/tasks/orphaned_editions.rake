@@ -8,25 +8,18 @@ namespace :orphaned_editions do
     in_review
   ).freeze
 
-  def orphaned_editions(state)
-    Edition.where(state: state).select { |e|
-      e.artefact.state == "archived"
-    }
-  end
-
-  def about_edition(edition)
-    "Id: #{edition.id} Type: #{edition._type} Title: #{edition.title}"
-  end
-
   desc "Report on editions having an artefact with the state 'archived'"
   task report: :environment do
     puts "Searching for orphaned editions..."
-    orphans = []
-    QUALIFYING_EDITION_STATES.each do |state|
-      orphans.concat(orphaned_editions(state))
+
+    orphans = QUALIFYING_EDITION_STATES.flat_map do |state|
+      Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
+
     if orphans.any?
-      orphans.each { |o| puts "Found orphan - " + about_edition(o) }
+      orphans.each do |o|
+        puts "Found orphan - Id: #{o.id} Type: #{o._type} o: #{edition.title}"
+      end
     else
       puts "No orphaned editions found"
     end
@@ -35,15 +28,14 @@ namespace :orphaned_editions do
   desc "Remove editions having an artefact with the state 'archived'"
   task destroy: :environment do
     puts "Searching for orphaned editions..."
-    orphans = []
-    QUALIFYING_EDITION_STATES.each do |state|
-      orphaned_editions(state).each do |oe|
-        orphans << oe
-      end
+
+    orphans = QUALIFYING_EDITION_STATES.flat_map do |state|
+      Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
+
     if orphans.any?
       orphans.each do |o|
-        puts "Destroying orphan - " + about_edition(o)
+        puts "Destroying orphan - Id: #{o.id} Type: #{o._type} o: #{edition.title}"
         o.destroy
       end
     else
