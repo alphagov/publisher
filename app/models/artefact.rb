@@ -82,8 +82,6 @@ class Artefact
     "find my nearest"                  => "place",
   }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
-  MULTIPART_FORMATS = %w(guide local_transaction licence simple_smart_answer).freeze
-
   embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
 
   embeds_many :external_links, class_name: "ArtefactExternalLink"
@@ -109,18 +107,6 @@ class Artefact
 
   def self.find_by_slug(slug)
     where(slug: slug).first
-  end
-
-  def self.multipart_formats
-    where(kind: { "$in" => MULTIPART_FORMATS })
-  end
-
-  def self.archived
-    where(state: "archived")
-  end
-
-  def self.with_redirect
-    where(:redirect_url.nin => [nil, ""])
   end
 
   # Fallback to english if no language is present
