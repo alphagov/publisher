@@ -6,7 +6,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @edition ||= stub(artefact: artefact, in_beta: false)
+    @edition ||= stub(artefact: artefact)
   end
 
   def artefact
@@ -29,6 +29,8 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :latest_change_note
       edition.stubs :auth_bypass_id
       edition.stubs :exact_route?
+      edition.stubs :live?
+      edition.stubs :phase
 
       artefact.stubs :language
     end
@@ -62,17 +64,18 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       assert_equal "override me", result[:document_type]
     end
 
-    context "when in beta" do
-      should "include phase" do
-        edition.expects(:in_beta).returns(true)
-        assert_equal "beta", result[:phase]
+    context "when not live" do
+      should "include phase name" do
+        edition.expects(:live?).returns(false)
+        edition.expects(:phase).returns("phase name")
+        assert_equal "phase name", result[:phase]
       end
     end
 
-    context "when not in beta" do
-      should "not include phase" do
-        edition.expects(:in_beta).returns(false)
-        assert_not_includes result.keys, :phase
+    context "when live" do
+      should "not include phase name" do
+        edition.expects(:live?).returns(true)
+        assert_equal nil, result[:phase]
       end
     end
 

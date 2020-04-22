@@ -14,17 +14,10 @@ module Formats
     attr_reader :edition, :artefact
 
     def optional_fields
-      fields = {}
-
-      if edition.auth_bypass_id
-        fields[:access_limited] = { auth_bypass_ids: [edition.auth_bypass_id] }
-      end
-
-      if edition.in_beta
-        fields[:phase] = "beta"
-      end
-
-      fields
+      {
+        access_limited: access_limited,
+        phase: phase,
+      }.compact
     end
 
     def required_fields(republish)
@@ -43,6 +36,7 @@ module Formats
         change_note: edition.latest_change_note,
         details: details,
         locale: artefact.language,
+        phase: edition.phase,
       }
     end
 
@@ -56,6 +50,14 @@ module Formats
 
     def details
       {}
+    end
+
+    def phase
+      edition.phase if !edition.live?
+    end
+
+    def access_limited
+      { auth_bypass_ids: [edition.auth_bypass_id] } if edition.auth_bypass_id
     end
 
     def rendering_app

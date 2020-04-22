@@ -8,34 +8,45 @@ class MarkEditionInBetaTest < JavascriptIntegrationTest
   end
 
   with_and_without_javascript do
+    should "allow marking an edition as in alpha" do
+      edition = FactoryBot.create(:edition)
+      visit_edition edition
+
+      select("alpha")
+
+      save_edition_and_assert_success
+
+      visit "/?user_filter=all"
+
+      assert page.has_text?("alpha")
+    end
+
     should "allow marking an edition as in beta" do
       edition = FactoryBot.create(:edition)
       visit_edition edition
 
-      assert_not find("#edition_in_beta").checked?
-      check "Content is in beta"
+      select("beta")
 
       save_edition_and_assert_success
 
-      assert find("#edition_in_beta").checked?
-
       visit "/?user_filter=all"
-      assert page.has_text?("#{edition.title} beta")
+
+      assert page.has_text?("beta")
     end
 
-    should "allow marking an edition as not in beta" do
-      edition = FactoryBot.create(:edition, in_beta: true)
+    should "allow marking an edition as live" do
+      edition = FactoryBot.create(:edition, phase: "beta")
       visit_edition edition
 
-      assert find("#edition_in_beta").checked?
-      uncheck "Content is in beta"
+      select("live")
 
       save_edition_and_assert_success
 
-      assert_not find("#edition_in_beta").checked?
-
       visit "/?user_filter=all"
-      assert page.has_no_text?("#{edition.title} beta")
+
+      assert page.has_text?(edition.title)
+      assert page.has_no_text?("alpha")
+      assert page.has_no_text?("beta")
     end
   end
 end

@@ -45,12 +45,16 @@ class EditionTest < ActiveSupport::TestCase
     assert a.errors[:title].any?
   end
 
-  test "it is not in beta by default" do
-    assert_not FactoryBot.build(:guide_edition).in_beta?
+  test "it is live by default" do
+    assert FactoryBot.build(:guide_edition).live?
+  end
+
+  test "it can be in alpha" do
+    assert FactoryBot.build(:guide_edition, phase: "alpha").in_alpha?
   end
 
   test "it can be in beta" do
-    assert FactoryBot.build(:guide_edition, in_beta: true).in_beta?
+    assert FactoryBot.build(:guide_edition, phase: "beta").in_beta?
   end
 
   test "it should give a friendly (legacy supporting) description of its format" do

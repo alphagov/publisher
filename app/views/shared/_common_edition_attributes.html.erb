@@ -1,22 +1,27 @@
 <%= hidden_field_tag "return_to", params[:return_to] if params[:return_to] %>
+
 <div class="form-group">
   <label for="edition_assigned_to_id">Assigned to</label>
   <%= f.select :assigned_to_id, enabled_users_select_options, {}, {:class => 'form-control input-md-3', :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
 </div>
+
 <%= render partial: 'reviewer_field', locals: { f: f } if @resource.in_review? %>
 <%= render partial: 'major_change_fields', locals: { f: f } if @resource.published_edition %>
 
 <%= f.input :title,
-      :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+  :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
 
-<%= f.input :in_beta,
-      as: :boolean,
-      label: 'Content is in beta',
-      input_html: { disabled: @resource.locked_for_edits? },
-      wrapper_html: { class: "emphasised-field form-group add-bottom-margin input-md-7" } %>
+<div class="form-group">
+  <%= f.label :phase, "Content phase" %>
+  <%= f.select :phase, @resource.phase_names, {},
+    :class => "form-control input-md-3",
+    :disabled => @resource.locked_for_edits? %>
+</div>
 
-<%= f.input :overview,
-      :as => :text,
-      :label => 'Meta tag description',
-      :hint => 'Some search engines will display this if they cannot find what they need in the main text',
-      :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+<div class="form-group">
+  <%= f.input :overview,
+    :as => :text,
+    :label => 'Meta tag description',
+    :hint => 'Some search engines will display this if they cannot find what they need in the main text',
+    :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+</div>

@@ -317,8 +317,8 @@ protected
        change_note
        major_change
        title
-       in_beta
        overview
+       phase
      ]
   end
 

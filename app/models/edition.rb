@@ -17,7 +17,8 @@ class Edition
   field :sibling_in_progress,  type: Integer,  default: nil
 
   field :title,                type: String
-  field :in_beta,              type: Boolean,  default: false
+  field :in_beta,              type: Boolean, default: false
+  field :phase,                type: String, default: "live"
   field :created_at,           type: DateTime, default: lambda { Time.zone.now }
   field :publish_at,           type: DateTime
   field :overview,             type: String
@@ -133,6 +134,10 @@ class Edition
 
   def self.convertible_formats
     Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - %w[local_transaction] - Artefact::RETIRED_FORMATS
+  end
+
+  def phase_names
+    %w[live alpha beta].freeze
   end
 
   def series
@@ -458,6 +463,18 @@ class Edition
 
   def latest_link_check_report
     link_check_reports.last
+  end
+
+  def live?
+    phase == "live"
+  end
+
+  def in_alpha?
+    phase == "alpha"
+  end
+
+  def in_beta?
+    in_beta || phase == "beta"
   end
 
 private
