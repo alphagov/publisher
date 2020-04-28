@@ -31,7 +31,8 @@ class NoisyWorkflow < ApplicationMailer
     view_mail(
       template_id,
       to: recipient_email,
-      reply_to_id: fact_check_address,
+      reply_to: fact_check_address,
+      from: "GOV.UK Editorial Team <#{fact_check_address}>",
       subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition",
     )
   end

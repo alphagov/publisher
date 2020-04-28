@@ -71,7 +71,12 @@ class NoisyWorkflowTest < ActionMailer::TestCase
 
   test "fact checking emails should set appropriate reply-to address" do
     guide, email = fact_check_email
-    assert_equal "factcheck+dev-#{guide.id}@alphagov.co.uk", email["reply_to_id"].value
+    assert_equal ["factcheck+dev-#{guide.id}@alphagov.co.uk"], email.reply_to
+  end
+
+  test "fact checking emails should go from appropriate email addresses" do
+    guide, email = fact_check_email
+    assert_equal ["factcheck+dev-#{guide.id}@alphagov.co.uk"], email.from
   end
 
   context ".skip_review" do
