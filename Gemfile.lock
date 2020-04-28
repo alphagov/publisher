@@ -242,9 +242,6 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
-    mail-notify (1.0.2)
-      actionmailer (>= 5.2.4.2, < 6.1)
-      notifications-ruby-client (~> 5.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     metaclass (0.0.4)
@@ -284,8 +281,6 @@ GEM
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
-    notifications-ruby-client (5.1.2)
-      jwt (>= 1.5, < 3)
     null_logger (0.0.1)
     oauth2 (1.4.4)
       faraday (>= 0.8, < 2.0)
@@ -539,7 +534,6 @@ DEPENDENCIES
   jquery-ui-rails (~> 6.0)
   kaminari (~> 1.2)
   kaminari-mongoid (= 1.0.1)
-  mail-notify
   minitest-reporters
   mlanett-redis-lock (= 0.2.7)
   mocha (= 1.9.0)
