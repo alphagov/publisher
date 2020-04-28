@@ -2,23 +2,19 @@
 
 class NoisyWorkflow < ApplicationMailer
   include PathsHelper
-
-  add_template_helper(PathsHelper)
-  add_template_helper(WorkingDaysHelper)
   default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   def make_noise(action, recipient_email)
     @action = action
     @preview_url = preview_edition_path(@action.edition)
     subject = "[PUBLISHER] #{describe_action(@action)}"
-    view_mail(template_id, to: recipient_email, subject: subject)
+    mail(to: recipient_email, subject: subject)
   end
 
   def skip_review(action, recipient_email)
     @edition = action.edition
     @edition_url = edition_url(@edition.id, host: Plek.find("publisher"), external: true)
-    view_mail(
-      template_id,
+    mail(
       to: recipient_email,
       subject: "[PUBLISHER] Review has been skipped on #{@edition.title}",
     )
@@ -27,14 +23,14 @@ class NoisyWorkflow < ApplicationMailer
   def request_fact_check(action, recipient_email)
     @edition = action.edition
     fact_check_address = @edition.fact_check_email_address
-    @customised_message = action.customised_message
-    view_mail(
-      template_id,
+    mail(
       to: recipient_email,
       reply_to: fact_check_address,
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
       subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition",
-    )
+    ) do |format|
+      format.text { render plain: action.customised_message }
+    end
   end
 
   class NoMail
