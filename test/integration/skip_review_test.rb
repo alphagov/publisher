@@ -9,7 +9,6 @@ class SkipReviewTest < JavascriptIntegrationTest
                                         email: "test@example.com",
                                         permissions: %w[skip_review])
 
-
     stub_linkables
     stub_holidays_used_by_fact_check
 

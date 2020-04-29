@@ -34,7 +34,6 @@ class SimpleSmartAnswerEdition < Edition
     new_edition
   end
 
-
   # Workaround mongoid conflicting mods error
   # See https://jira.mongodb.org/browse/MONGOID-1220
   # Override update so that nested nodes are updated individually.

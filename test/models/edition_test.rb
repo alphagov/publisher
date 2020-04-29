@@ -726,7 +726,6 @@ class EditionTest < ActiveSupport::TestCase
     assert third_edition.published?
   end
 
-
   test "a series with all editions published should not have siblings in progress" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
