@@ -78,7 +78,6 @@ class UserSearchTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?("Growing your business")
   end
 
-
   test "excluding archived editions from keyword filtered results" do
     guide = FactoryBot.create(
       :guide_edition, title: "Vehicle insurance", state: "archived"

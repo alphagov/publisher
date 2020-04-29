@@ -20,7 +20,6 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     assert_equal "transaction", bins_transaction.search_format
   end
 
-
   test "should validate on save that a LocalService exists for that lgsl_code" do
     service = LocalService.create!(lgsl_code: BINS, providing_tier: %w{county unitary})
 

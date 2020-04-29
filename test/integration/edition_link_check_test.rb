@@ -1,7 +1,6 @@
 require "integration_test_helper"
 require "gds_api/test_helpers/link_checker_api"
 
-
 class EditionLinkCheckTest < JavascriptIntegrationTest
   include GdsApi::TestHelpers::LinkCheckerApi
 

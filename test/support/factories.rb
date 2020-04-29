@@ -126,7 +126,6 @@ FactoryBot.define do
   factory :campaign_edition_with_link_check_report, traits: [:with_link_check_report], parent: :campaign_edition do
   end
 
-
   factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: "CompletedTransactionEdition" do
     sequence(:slug) { |n| "done/slug-#{n}" }
     panopticon_id {
