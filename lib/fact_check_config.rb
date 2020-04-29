@@ -4,8 +4,8 @@ class FactCheckConfig
       raise ArgumentError, "Expected '#{address_format}' to contain exactly one '{id}'"
     end
 
-    unless subject_format && subject_format.scan("{id}").count == 1
-      raise ArgumentError, "Expected '#{subject_format}' to contain exactly one '{id}'"
+    unless subject_format && subject_format.scan("?<id>").count == 1
+      raise ArgumentError, "Expected '#{subject_format}' to contain exactly one '?<id>'"
     end
 
     @address_prefix, @address_suffix = address_format.split("{id}")
@@ -17,12 +17,9 @@ class FactCheckConfig
       '\Z',
     )
 
-    @subject_prefix, @subject_suffix = subject_format.split("{id}")
     @subject_pattern = Regexp.new(
-      '\A' +
-      Regexp.escape(@subject_prefix) +
-      "(.+?)" +
-      Regexp.escape(@subject_suffix) +
+      '\A.*' +
+      subject_format +
       '\Z',
     )
   end
@@ -49,13 +46,9 @@ class FactCheckConfig
 
   def item_id_from_subject(subject)
     if (match = @subject_pattern.match(subject))
-      match.captures[0]
+      match[:id]
     else
       raise ArgumentError, "'#{subject}' is not a valid fact check address"
     end
-  end
-
-  def subject(item_id)
-    @subject_prefix + item_id.to_s + @subject_suffix
   end
 end

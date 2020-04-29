@@ -4,8 +4,8 @@ require "fact_check_config"
 class FactCheckConfigTest < ActiveSupport::TestCase
   valid_address = "factcheck+1234@example.com"
   valid_address_pattern = "factcheck+{id}@example.com"
-  valid_subject = "GOV.UK preview of new edition [1234]"
-  valid_subject_pattern = "GOV.UK preview of new edition [{id}]"
+  valid_subject = "[Some title] GOV.UK preview of new edition [1234]"
+  valid_subject_pattern = "\\[.+?\\] GOV.UK preview of new edition \\[(?<id>.+?)\\]"
 
   should "fail on a nil address format" do
     assert_raises ArgumentError do
@@ -97,7 +97,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
 
   should "fail on an subject format with multiple ID markers" do
     assert_raises ArgumentError do
-      FactCheckConfig.new(valid_address_pattern, "Fact check subject [{id}] [{id}]")
+      FactCheckConfig.new(valid_address_pattern, "Fact check subject [(?<id>.+?)] [(?<id>.+?)]")
     end
   end
 
@@ -109,6 +109,11 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "not recognise an invalid fact check subject" do
     config = FactCheckConfig.new(valid_address_pattern, valid_subject_pattern)
     assert_not config.valid_subject?("Not a valid subject")
+  end
+
+  should "treat a subject prefixed with Re: as valid" do
+    config = FactCheckConfig.new(valid_address_pattern, valid_subject_pattern)
+    assert config.valid_subject?("Re: " + valid_subject)
   end
 
   should "not recognise a fact check subject with an empty ID" do
@@ -126,16 +131,5 @@ class FactCheckConfigTest < ActiveSupport::TestCase
     assert_raises ArgumentError do
       config.item_id_from_subject("Not a valid subject [1234]")
     end
-  end
-
-  should "construct an subject from an item ID" do
-    config = FactCheckConfig.new(valid_address_pattern, valid_subject_pattern)
-    assert_equal valid_subject, config.subject("1234")
-  end
-
-  should "accept item IDs that aren't strings" do
-    # For example, Mongo IDs, but let's not tie this test to Mongo
-    config = FactCheckConfig.new(valid_address_pattern, valid_subject_pattern)
-    assert_equal valid_subject, config.subject(1234)
   end
 end
