@@ -4,8 +4,8 @@ require "fact_check_config"
 class FactCheckConfigTest < ActiveSupport::TestCase
   valid_address = "factcheck+1234@example.com"
   valid_address_pattern = "factcheck+{id}@example.com"
-  valid_subject = "[Some title] GOV.UK preview of new edition [1234]"
-  valid_subject_pattern = "\\[.+?\\] GOV.UK preview of new edition \\[(?<id>.+?)\\]"
+  valid_subject = "‘[Some title]’ GOV.UK preview of new edition [1234]"
+  valid_subject_pattern = "‘\\[.+?\\]’ GOV.UK preview of new edition \\[(?<id>.+?)\\]"
 
   should "fail on a nil address format" do
     assert_raises ArgumentError do
