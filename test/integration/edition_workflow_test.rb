@@ -82,7 +82,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
-    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email.subject
+    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email.subject)
     assert_equal "Blah", fact_check_email.body.to_s
   end
 
@@ -108,8 +108,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert fact_check_email1
     fact_check_email2 = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user2@example.com" }.last
     assert fact_check_email2
-    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email1.subject
-    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", fact_check_email2.subject
+    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email1.subject)
+    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, fact_check_email2.subject)
     assert_equal "Blah", fact_check_email1.body.to_s
     assert_equal "Blah", fact_check_email2.body.to_s
   end
@@ -204,7 +204,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     resent_fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user-to-ask-for-fact-check@example.com" }.last
     assert resent_fact_check_email
-    assert_equal "‘[#{guide.title}]’ GOV.UK preview of new edition", resent_fact_check_email.subject
+    assert_match(/‘\[#{guide.title}\]’ GOV.UK preview of new edition \[[a-z0-9-]+\]/, resent_fact_check_email.subject)
     assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
   end
 
