@@ -154,9 +154,11 @@ class EditionTest < ActiveSupport::TestCase
                                 state: "published",
                                 panopticon_id: @artefact.id,
                                 version_number: 1,
-                                overview: "I am a test overview")
+                                overview: "I am a test overview",
+                                in_beta: true)
     clone_edition = edition.build_clone
     assert_equal "I am a test overview", clone_edition.overview
+    assert_equal true, clone_edition.in_beta
     assert_equal 2, clone_edition.version_number
   end
 
