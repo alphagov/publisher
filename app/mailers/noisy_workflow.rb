@@ -27,7 +27,7 @@ class NoisyWorkflow < ApplicationMailer
       to: recipient_email,
       reply_to: fact_check_address,
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
-      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition",
+      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{Rails.env}-#{@edition.id}]",
     ) do |format|
       format.text { render plain: action.customised_message }
     end

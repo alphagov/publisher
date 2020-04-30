@@ -7,7 +7,7 @@ require_relative "fact_check_mail"
 # It presumes that the mail class has already been configured in an
 # initializer and is typically called from the mail_fetcher script
 class FactCheckEmailHandler
-  attr_accessor :errors
+  attr_accessor :errors, :fact_check_config
 
   def initialize(fact_check_config)
     @fact_check_config = fact_check_config
@@ -19,9 +19,14 @@ class FactCheckEmailHandler
 
     return false if message.out_of_office?
 
+    if @fact_check_config.valid_subject?(message.subject)
+      edition_id = @fact_check_config.item_id_from_subject(message.subject)
+      return FactCheckMessageProcessor.process(message, edition_id)
+    end
+
     message.recipients.each do |recipient|
       if @fact_check_config.valid_address?(recipient.to_s)
-        edition_id = @fact_check_config.item_id(recipient.to_s)
+        edition_id = @fact_check_config.item_id_from_address(recipient.to_s)
         return FactCheckMessageProcessor.process(message, edition_id)
       end
     end
