@@ -4,7 +4,7 @@ module Varianted
   def self.included(klass)
     klass.embeds_many :variants
     klass.accepts_nested_attributes_for :variants, allow_destroy: true,
-      reject_if: proc { |attrs| attrs["title"].blank? && attrs["slug"].blank? }
+                                                   reject_if: proc { |attrs| attrs["title"].blank? && attrs["slug"].blank? }
     klass.after_validation :merge_embedded_variants_errors
   end
 
@@ -14,7 +14,7 @@ module Varianted
     # If the new edition is of the same type or another type that has variants,
     # copy over the variants from this edition
     if target_class.nil? || target_class.include?(Varianted)
-      new_edition.variants = self.variants.map(&:dup)
+      new_edition.variants = variants.map(&:dup)
     end
 
     new_edition
@@ -33,9 +33,8 @@ private
     return if variants.empty?
 
     if errors.delete(:variants) == ["is invalid"]
-      variants_errors = variants.inject({}) do |result, variant|
+      variants_errors = variants.each_with_object({}) do |variant, result|
         result["#{variant._id}:#{variant.order}"] = variant.errors.messages if variant.errors.present?
-        result
       end
       errors.add(:variants, variants_errors)
     end

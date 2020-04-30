@@ -33,9 +33,9 @@ module Attachable
         define_method(field) do
           raise ApiClientNotPresent unless Attachable.asset_api_client
 
-          unless self.send("#{field}_id").nil?
+          unless send("#{field}_id").nil?
             @attachments ||= {}
-            @attachments[field] ||= Attachable.asset_api_client.asset(self.send("#{field}_id"))
+            @attachments[field] ||= Attachable.asset_api_client.asset(send("#{field}_id"))
           end
         end
 
@@ -50,7 +50,7 @@ module Attachable
 
         define_method("remove_#{field}=") do |value|
           unless value.nil? || value == false || (value.respond_to?(:empty?) && value.empty?)
-            self.send("#{field}_id=", nil)
+            send("#{field}_id=", nil)
           end
         end
 
@@ -60,14 +60,14 @@ module Attachable
           raise ApiClientNotPresent unless Attachable.asset_api_client
 
           begin
-            if options[:update_existing] && !self.send("#{field}_id").nil?
-              response = Attachable.asset_api_client.update_asset(self.send("#{field}_id"), file: instance_variable_get("@#{field}_file"))
+            if options[:update_existing] && !send("#{field}_id").nil?
+              response = Attachable.asset_api_client.update_asset(send("#{field}_id"), file: instance_variable_get("@#{field}_file"))
             else
               response = Attachable.asset_api_client.create_asset(file: instance_variable_get("@#{field}_file"))
-              self.send("#{field}_id=", response["id"].split("/").last)
+              send("#{field}_id=", response["id"].split("/").last)
             end
 
-            self.send("#{field}_url=", response["file_url"]) if self.respond_to?("#{field}_url=")
+            send("#{field}_url=", response["file_url"]) if respond_to?("#{field}_url=")
           rescue StandardError
             errors.add("#{field}_id".to_sym, "could not be uploaded")
           end

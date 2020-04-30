@@ -45,7 +45,7 @@ namespace :service_sign_in do
   end
 
   desc "Unpublish service_sign_in content with type 'gone'"
-  task :unpublish_without_redirect, %i(content_id locale) => :environment do |_, args|
+  task :unpublish_without_redirect, %i[content_id locale] => :environment do |_, args|
     USAGE_MESSAGE =
       "> usage: rake service_sign_in:unpublish_without_redirect[content-id-example,cy]\n".freeze
 
@@ -58,7 +58,7 @@ namespace :service_sign_in do
   end
 
   desc "Unpublish service_sign_in content with type 'redirect'"
-  task :unpublish_with_redirect, %i(content_id locale redirect_path) => :environment do |_, args|
+  task :unpublish_with_redirect, %i[content_id locale redirect_path] => :environment do |_, args|
     USAGE_MESSAGE =
       "> usage: rake service_sign_in:unpublish_with_redirect[content-id-example,cy,/redirect/path]\n".freeze
 

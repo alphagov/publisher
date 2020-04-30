@@ -4,10 +4,10 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
   def setup
     @user = FactoryBot.create(:user, name: "Test user")
     @artefact = FactoryBot.create(:artefact, slug: "licence-to-test",
-      kind: "licence", name: "test", owning_app: "publisher")
+                                             kind: "licence", name: "test", owning_app: "publisher")
 
     @importer = LicenceContentImporter.new("data/foo", @user.name)
-    @row = CSV::Row.new(%w(OID NAME LONGDESC),
+    @row = CSV::Row.new(%w[OID NAME LONGDESC],
                         [12345, "Licence to test", "<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>"])
   end
 

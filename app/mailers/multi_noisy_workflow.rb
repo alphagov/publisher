@@ -25,7 +25,7 @@ class MultiNoisyWorkflow < ApplicationMailer
     edition = action.edition
     latest_status_action = edition.latest_status_action
     if latest_status_action.is_fact_check_request? && action.request_type == Action::RESEND_FACT_CHECK
-      self.request_fact_check(latest_status_action)
+      request_fact_check(latest_status_action)
     else
       Rails.logger.info("Asked to resend fact check for #{edition.content_id}, but its most recent status action is not a fact check, it's a #{latest_status_action.request_type}")
       NoisyWorkflow::NoMail.new

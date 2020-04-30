@@ -1,12 +1,12 @@
 namespace :orphaned_editions do
-  QUALIFYING_EDITION_STATES = %w(
+  QUALIFYING_EDITION_STATES = %w[
     ready
     amends_needed
     fact_check_received
     fact_check
     draft
     in_review
-  ).freeze
+  ].freeze
 
   desc "Report on editions having an artefact with the state 'archived'"
   task report: :environment do

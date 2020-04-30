@@ -8,10 +8,10 @@ class LocalService
   field :lgsl_code,      type: Integer
   field :providing_tier, type: Array
 
-  validates_presence_of :lgsl_code, :providing_tier
-  validates_uniqueness_of :lgsl_code
+  validates :lgsl_code, :providing_tier, presence: true
+  validates :lgsl_code, uniqueness: true
   validates :providing_tier, inclusion: {
-    in: [%w{county unitary}, %w{district unitary}, %w{district unitary county}],
+    in: [%w[county unitary], %w[district unitary], %w[district unitary county]],
   }
 
   def self.find_by_lgsl_code(lgsl_code)

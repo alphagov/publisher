@@ -44,26 +44,26 @@ class Artefact
   scope :not_archived, lambda { where(:state.nin => %w[archived]) }
 
   FORMATS_BY_DEFAULT_OWNING_APP = {
-    "publisher"               => %w(answer
-                                    campaign
-                                    completed_transaction
-                                    guide
-                                    help_page
-                                    licence
-                                    local_transaction
-                                    place
-                                    programme
-                                    simple_smart_answer
-                                    transaction
-                                    video),
-    "smartanswers"            => %w[smart-answer],
-    "custom-application"      => %w[custom-application], # In this case the owning_app is overriden. eg calendars, licencefinder
-    "specialist-publisher"    => %w[manual],
-    "finder-api"              => %w(finder
-                                    finder_email_signup),
+    "publisher" => %w[answer
+                      campaign
+                      completed_transaction
+                      guide
+                      help_page
+                      licence
+                      local_transaction
+                      place
+                      programme
+                      simple_smart_answer
+                      transaction
+                      video],
+    "smartanswers" => %w[smart-answer],
+    "custom-application" => %w[custom-application], # In this case the owning_app is overriden. eg calendars, licencefinder
+    "specialist-publisher" => %w[manual],
+    "finder-api" => %w[finder
+                       finder_email_signup],
     # business support was converted into a format owned by specialist publisher
     # but it's not a direct swap so we don't claim that is the owning app
-    "replaced"                => %w[business_support],
+    "replaced" => %w[business_support],
   }.freeze
 
   RETIRED_FORMATS = %w[campaign programme video].freeze
@@ -75,18 +75,18 @@ class Artefact
   end
 
   KIND_TRANSLATIONS = {
-    "standard transaction link"        => "transaction",
+    "standard transaction link" => "transaction",
     "local authority transaction link" => "local_transaction",
     "completed/done transaction" => "completed_transaction",
-    "benefit / scheme"                 => "programme",
-    "find my nearest"                  => "place",
+    "benefit / scheme" => "programme",
+    "find my nearest" => "place",
   }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
   embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
 
   embeds_many :external_links, class_name: "ArtefactExternalLink"
   accepts_nested_attributes_for :external_links, allow_destroy: true,
-    reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
+                                                 reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
 
   before_validation :normalise, on: :create
   before_create :record_create_action
@@ -96,9 +96,9 @@ class Artefact
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, slug: true
   validates :kind, inclusion: { in: lambda { |_x| FORMATS } }
-  validates :state, inclusion: { in: %w(draft live archived) }
+  validates :state, inclusion: { in: %w[draft live archived] }
   validates :owning_app, presence: true
-  validates :language, inclusion: { in: %w(en cy) }
+  validates :language, inclusion: { in: %w[en cy] }
   validate :validate_prefixes_and_paths
 
   def self.in_alphabetical_order
@@ -127,19 +127,19 @@ class Artefact
   end
 
   def any_editions_published?
-    Edition.where(panopticon_id: self.id, state: "published").any?
+    Edition.where(panopticon_id: id, state: "published").any?
   end
 
   def any_editions_ever_published?
-    Edition.where(panopticon_id: self.id,
-                  :state.in => %w(published archived)).any?
+    Edition.where(panopticon_id: id,
+                  :state.in => %w[published archived]).any?
   end
 
   def update_editions
     return archive_editions if state == "archived"
 
-    if self.slug_changed?
-      Edition.draft_in_publishing_api.where(panopticon_id: self.id).each do |edition|
+    if slug_changed?
+      Edition.draft_in_publishing_api.where(panopticon_id: id).each do |edition|
         edition.update_slug_from_artefact(self)
       end
     end
@@ -147,7 +147,7 @@ class Artefact
 
   def archive_editions
     if state == "archived"
-      Edition.where(panopticon_id: self.id, :state.nin => %w[archived]).each do |edition|
+      Edition.where(panopticon_id: id, :state.nin => %w[archived]).each do |edition|
         edition.new_action(self, "note", comment: "Artefact has been archived. Archiving this edition.")
         edition.perform_event_without_validations(:archive!)
       end
@@ -215,11 +215,11 @@ class Artefact
   end
 
   def archived?
-    self.state == "archived"
+    state == "archived"
   end
 
   def live?
-    self.state == "live"
+    state == "live"
   end
 
   def snapshot
@@ -266,13 +266,13 @@ private
   end
 
   def validate_prefixes_and_paths
-    if ! self.prefixes.nil? && self.prefixes_changed?
-      if self.prefixes.any? { |p| ! valid_url_path?(p) }
+    if !prefixes.nil? && prefixes_changed?
+      if prefixes.any? { |p| !valid_url_path?(p) }
         errors.add(:prefixes, "are not all valid absolute URL paths")
       end
     end
-    if ! self.paths.nil? && self.paths_changed?
-      if self.paths.any? { |p| ! valid_url_path?(p) }
+    if !paths.nil? && paths_changed?
+      if paths.any? { |p| !valid_url_path?(p) }
         errors.add(:paths, "are not all valid absolute URL paths")
       end
     end

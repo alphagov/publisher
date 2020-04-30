@@ -53,7 +53,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     @artefact.reload
 
     assert_equal 2, @artefact.actions.size
-    assert_equal %w(create update), @artefact.actions.map(&:action_type)
+    assert_equal %w[create update], @artefact.actions.map(&:action_type)
     create_snapshot = merge_attributes(DEFAULTS, base_fields)
     update_snapshot = create_snapshot.merge("description" => @artefact.description)
     assert_equal create_snapshot, @artefact.actions[0].snapshot
@@ -77,7 +77,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
     assert_equal "Shiny shiny description", @artefact.description
     assert_equal 2, @artefact.actions.size
-    assert_equal %w(create update), @artefact.actions.map(&:action_type)
+    assert_equal %w[create update], @artefact.actions.map(&:action_type)
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),
@@ -91,7 +91,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     @artefact.reload
 
     assert_equal 2, @artefact.actions.size
-    assert_equal %w(create update), @artefact.actions.map(&:action_type)
+    assert_equal %w[create update], @artefact.actions.map(&:action_type)
 
     assert_equal "TaggingUpdater", @artefact.actions.last.task_performed_by
     assert_nil @artefact.actions.last.user
@@ -106,7 +106,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
     assert_equal "Shiny shiny description", @artefact.description
     assert_equal 2, @artefact.actions.size
-    assert_equal %w(create update), @artefact.actions.map(&:action_type)
+    assert_equal %w[create update], @artefact.actions.map(&:action_type)
     assert_equal user, @artefact.actions.last.user
     assert_equal(
       merge_attributes(DEFAULTS, base_fields, updates),

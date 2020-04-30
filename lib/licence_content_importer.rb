@@ -66,7 +66,7 @@ class LicenceContentImporter
       puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
       edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
-        licence_identifier: identifier, licence_overview: marked_down(row["LONGDESC"])
+                                      licence_identifier: identifier, licence_overview: marked_down(row["LONGDESC"])
 
       if edition
         add_workflow(@user, edition)

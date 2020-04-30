@@ -372,7 +372,7 @@ private
 
     params[:edition]["activity_#{attempted_activity}_attributes"].permit(
       :request_type, :email_addresses, :customised_message, :comment, :publish_at
-)
+    )
   end
 
   def remove_activity_params

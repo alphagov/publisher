@@ -4,7 +4,7 @@ module EditionActivityButtonsHelper
     enabled = edition.send(check_method)
 
     link_to title, "##{activity}_form", data: { toggle: "modal" },
-      class: "btn btn-info #{'disabled' if !enabled} add-top-margin"
+                                        class: "btn btn-info #{'disabled' if !enabled} add-top-margin"
   end
 
   def review_buttons(edition)
@@ -38,13 +38,13 @@ module EditionActivityButtonsHelper
       next if disabled && options.fetch(:skip_disabled_buttons, false)
 
       link_to title, "##{activity}_form", data: { toggle: "modal" },
-        class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
+                                          class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
     }.join("\n").html_safe
   end
 
   def scheduled_publishing_buttons(edition)
     buttons = []
-    buttons << %w(Schedule schedule_for_publishing warning) if edition.can_schedule_for_publishing?
+    buttons << %w[Schedule schedule_for_publishing warning] if edition.can_schedule_for_publishing?
     buttons << ["Cancel scheduled publishing", "cancel_scheduled_publishing", "danger"] if edition.can_cancel_scheduled_publishing?
     buttons
   end

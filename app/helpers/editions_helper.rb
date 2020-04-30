@@ -17,7 +17,7 @@ module EditionsHelper
     end
 
     semantic_bootstrap_nested_form_for @resource, as: :edition, url: edition_path(@resource),
-      html: html_options, &form_definition
+                                                  html: html_options, &form_definition
   end
 
   def format_conversion_select_options(edition)
@@ -26,7 +26,7 @@ module EditionsHelper
   end
 
   def format_filter_selection_options
-    [%w(All edition)] +
+    [%w[All edition]] +
       Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
         displayed_format_name = format_name.humanize
         displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)

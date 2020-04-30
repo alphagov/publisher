@@ -45,7 +45,7 @@ private
   def summary(action)
     human_timestamp = action.created_at.strftime "%d/%m/%Y %H:%M"
 
-    article = if %w(a e i o u).include? action.request_type[0]
+    article = if %w[a e i o u].include? action.request_type[0]
                 "an"
               else
                 "a"

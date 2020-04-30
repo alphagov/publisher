@@ -42,9 +42,9 @@ class UserTest < ActiveSupport::TestCase
     auth_hash = {
       "uid" => "1234abcd",
       "info" => {
-        "uid"     => "1234abcd",
-        "email"   => "user@example.com",
-        "name"    => "Luther Blisset",
+        "uid" => "1234abcd",
+        "email" => "user@example.com",
+        "name" => "Luther Blisset",
       },
       "extra" => {
         "user" => {
@@ -63,13 +63,13 @@ class UserTest < ActiveSupport::TestCase
 
   test "should find and update the user with oauth params" do
     attributes = { uid: "1234abcd", name: "Old", email: "old@m.com",
-        permissions: %w[everything] }
+                   permissions: %w[everything] }
     User.create!(attributes)
     auth_hash = {
       "uid" => "1234abcd",
       "info" => {
-        "email"   => "new@m.com",
-        "name"    => "New",
+        "email" => "new@m.com",
+        "name" => "New",
       },
       "extra" => {
         "user" => {

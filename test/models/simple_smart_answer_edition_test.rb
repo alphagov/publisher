@@ -18,7 +18,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     assert_equal "This is a simple smart answer.", edition.body
     assert_equal 3, edition.nodes.count
-    assert_equal %w(question1 left right), edition.nodes.all.map(&:slug)
+    assert_equal %w[question1 left right], edition.nodes.all.map(&:slug)
   end
 
   should "copy the body and nodes when cloning an edition" do
@@ -35,13 +35,13 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     cloned_edition.save!
 
     old_edition = SimpleSmartAnswerEdition.find(edition.id)
-    assert_equal %w(question outcome outcome), old_edition.nodes.all.map(&:kind)
-    assert_equal %w(question1 left right), old_edition.nodes.all.map(&:slug)
+    assert_equal %w[question outcome outcome], old_edition.nodes.all.map(&:kind)
+    assert_equal %w[question1 left right], old_edition.nodes.all.map(&:slug)
 
     new_edition = SimpleSmartAnswerEdition.find(cloned_edition.id)
     assert_equal edition.body, new_edition.body
-    assert_equal %w(question outcome outcome), new_edition.nodes.all.map(&:kind)
-    assert_equal %w(question1 left right), new_edition.nodes.all.map(&:slug)
+    assert_equal %w[question outcome outcome], new_edition.nodes.all.map(&:kind)
+    assert_equal %w[question1 left right], new_edition.nodes.all.map(&:slug)
   end
 
   should "not copy nodes when new edition is not a smart answer" do
@@ -77,7 +77,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     ])
 
     assert_equal 2, edition.nodes.size
-    assert_equal %w(question1 foo), edition.nodes.all.map(&:slug)
+    assert_equal %w[question1 foo], edition.nodes.all.map(&:slug)
   end
 
   should "destroy nodes using nested attributes" do
@@ -145,14 +145,14 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       @edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
       @edition.nodes.first.options.build(
         label: "Option 1", next_node: "question2", order: 1,
-)
+      )
       @edition.save!
     end
 
     should "update edition and nested node and option attributes" do
       @edition.update(title: "Smarter than the average answer",
-        body: "No developers were involved in the changing of this copy",
-        nodes_attributes: {
+                      body: "No developers were involved in the changing of this copy",
+                      nodes_attributes: {
           "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
             "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
           } },

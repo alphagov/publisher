@@ -6,6 +6,6 @@ class AnswerEdition < Edition
   GOVSPEAK_FIELDS = [:body].freeze
 
   def whole_body
-    self.body
+    body
   end
 end

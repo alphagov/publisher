@@ -3,7 +3,7 @@ require "ostruct"
 class Area < OpenStruct
   # This list should stay in sync with Imminence's areas route constraint:
   # https://github.com/alphagov/imminence/blob/master/config/routes.rb#L13-L17
-  AREA_TYPES = %w(EUR CTY DIS LBO LGD MTD UTA COI).freeze
+  AREA_TYPES = %w[EUR CTY DIS LBO LGD MTD UTA COI].freeze
 
   def self.all
     areas
@@ -29,13 +29,13 @@ class Area < OpenStruct
     areas = []
     AREA_TYPES.each do |type|
       areas << Services.imminence.areas_for_type(type)["results"].map do |area_hash|
-        self.new(area_hash)
+        new(area_hash)
       end
     end
     areas.flatten
   end
 
   def self.areas_with_gss_codes
-    self.all_areas.select { |a| a.codes["gss"].present? }
+    all_areas.select { |a| a.codes["gss"].present? }
   end
 end

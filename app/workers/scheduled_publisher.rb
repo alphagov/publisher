@@ -42,7 +42,7 @@ class ScheduledPublisher
   private
 
     def queued_jobs
-      Sidekiq::ScheduledSet.new.select { |job| job["class"] == self.name }
+      Sidekiq::ScheduledSet.new.select { |job| job["class"] == name }
     end
   end
 

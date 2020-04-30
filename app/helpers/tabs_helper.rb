@@ -3,7 +3,7 @@ module TabsHelper
     return @active_tab if @active_tab
 
     visited_tab = request.path.split("/").last
-    tab_name = [visited_tab] & %w(metadata tagging history admin related_external_links unpublish)
+    tab_name = [visited_tab] & %w[metadata tagging history admin related_external_links unpublish]
     @active_tab = tab_name.blank? ? Edition::Tab["edit"] : Edition::Tab[tab_name.first]
   end
 
@@ -21,7 +21,7 @@ module TabsHelper
 
   module Edition
     class Tab
-      TABS = %w(edit tagging metadata history admin related_external_links unpublish).freeze
+      TABS = %w[edit tagging metadata history admin related_external_links unpublish].freeze
       attr_accessor :name
 
       def initialize(name = nil)

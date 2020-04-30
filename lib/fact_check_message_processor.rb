@@ -55,13 +55,11 @@ private
 
   def try_decode(string, *encodings)
     encodings.each do |encoding|
-      begin
-        return string.force_encoding(encoding).
-          encode(Encoding::UTF_32BE).
-          encode(Encoding::UTF_8)
-      rescue EncodingError => e
-        Rails.logger.info e.inspect
-      end
+      return string.force_encoding(encoding)
+        .encode(Encoding::UTF_32BE)
+        .encode(Encoding::UTF_8)
+    rescue EncodingError => e
+      Rails.logger.info e.inspect
     end
 
     string.encode(Encoding::US_ASCII, invalid: :replace)

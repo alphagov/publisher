@@ -26,11 +26,11 @@ private
 
     case header
     when :browse_pages
-      expanded_links(content_id, %w(mainstream_browse_pages base_path), /\/browse\//)
+      expanded_links(content_id, %w[mainstream_browse_pages base_path], /\/browse\//)
     when :topics
-      expanded_links(content_id, %w(topics base_path), /\/topic\//)
+      expanded_links(content_id, %w[topics base_path], /\/topic\//)
     when :organisations
-      expanded_links(content_id, %w(organisations title))
+      expanded_links(content_id, %w[organisations title])
     when :format
       artefact.kind
     else
@@ -39,12 +39,10 @@ private
   end
 
   def expanded_links(content_id, keys, pattern_to_remove = nil)
-    begin
-      response = Services.publishing_api.get_expanded_links(content_id)
-      join_strings(response.to_hash, keys, pattern_to_remove)
-    rescue GdsApi::HTTPNotFound, GdsApi::HTTPClientError
-      ""
-    end
+    response = Services.publishing_api.get_expanded_links(content_id)
+    join_strings(response.to_hash, keys, pattern_to_remove)
+  rescue GdsApi::HTTPNotFound, GdsApi::HTTPClientError
+    ""
   end
 
   def join_strings(response, keys, pattern_to_remove)

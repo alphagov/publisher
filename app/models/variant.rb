@@ -20,10 +20,10 @@ class Variant
 
   GOVSPEAK_FIELDS = %i[introduction more_information alternate_methods].freeze
 
-  validates_presence_of :title
-  validates_presence_of :slug
-  validates_exclusion_of :slug, in: %w[video], message: "Can not be video"
-  validates_format_of :slug, with: /\A[a-z0-9\-]+\Z/i
+  validates :title, presence: true
+  validates :slug, presence: true
+  validates :slug, exclusion: { in: %w[video], message: "Can not be video" }
+  validates :slug, format: { with: /\A[a-z0-9\-]+\Z/i }
   validates_with SafeHtml
   validates_with LinkValidator
 end

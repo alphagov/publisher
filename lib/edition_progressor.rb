@@ -15,7 +15,7 @@ class EditionProgressor
   def progress(activity)
     action = activity[:request_type]
 
-    if %w(cancel_scheduled_publishing publish).include?(action)
+    if %w[cancel_scheduled_publishing publish].include?(action)
       ScheduledPublisher.cancel_scheduled_publishing(edition.id.to_s)
     end
 
@@ -51,12 +51,12 @@ protected
   end
 
   def fact_check_error_message(_activity)
-    "Couldn't send to fact check for " +
-      "#{description(edition).downcase}. The email addresses " +
+    "Couldn't send to fact check for " \
+      "#{description(edition).downcase}. The email addresses " \
       "you entered appear to be invalid."
   end
 
-    # TODO: This could probably live in the i18n layer?
+  # TODO: This could probably live in the i18n layer?
   def failure_message(activity)
     case activity
     when "skip_fact_check" then "Could not skip fact check for this publication."
@@ -65,7 +65,7 @@ protected
     end
   end
 
-    # TODO: This could probably live in the i18n layer?
+  # TODO: This could probably live in the i18n layer?
   def success_message(activity)
     case activity
     when "start_work" then "Work started on #{description(edition)}"

@@ -41,8 +41,8 @@ class Edition
   state_machine.states.map(&:name).each do |state|
     scope state, lambda { where(state: state) }
   end
-  scope :archived_or_published, lambda { where(:state.in => %w(archived published)) }
-  scope :in_progress, lambda { where(:state.nin => %w(archived published)) }
+  scope :archived_or_published, lambda { where(:state.in => %w[archived published]) }
+  scope :in_progress, lambda { where(:state.nin => %w[archived published]) }
   scope :assigned_to, lambda { |user|
     if user
       where(assigned_to_id: user.id)
@@ -92,7 +92,7 @@ class Edition
   CANCEL_SCHEDULED_PUBLISHING_ACTION = {
     cancel_scheduled_publishing: "Cancel scheduled publishing",
   }.freeze
-  PUBLISHING_API_DRAFT_STATES = %w(fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing).freeze
+  PUBLISHING_API_DRAFT_STATES = %w[fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing].freeze
 
   EXACT_ROUTE_EDITION_CLASSES = %w[
     CampaignEdition
@@ -105,7 +105,7 @@ class Edition
   validates_with SafeHtml
   validates_with LinkValidator, on: :update, unless: :archived?
   validates_with ReviewerValidator
-  validates_presence_of :change_note, if: :major_change
+  validates :change_note, presence: { if: :major_change }
 
   before_save :check_for_archived_artefact
 
@@ -266,7 +266,7 @@ class Edition
     new_edition = target_class.new(version_number: get_next_version_number)
 
     fields_to_copy(target_class).each do |attr|
-      new_edition[attr] = read_attribute(attr)
+      new_edition[attr] = self[attr]
     end
 
     # If the type is changing, then take the combined body (whole_body) from
@@ -285,14 +285,14 @@ class Edition
   end
 
   def clone_whole_body_from(origin_edition)
-    if self.respond_to?(:parts)
-      self.setup_default_parts if self.respond_to?(:setup_default_parts)
-      self.parts.build(title: "Part One", body: origin_edition.whole_body, slug: "part-one")
-    elsif self.respond_to?(:more_information=)
+    if respond_to?(:parts)
+      setup_default_parts if respond_to?(:setup_default_parts)
+      parts.build(title: "Part One", body: origin_edition.whole_body, slug: "part-one")
+    elsif respond_to?(:more_information=)
       self.more_information = origin_edition.whole_body
-    elsif self.respond_to?(:body=)
+    elsif respond_to?(:body=)
       self.body = origin_edition.whole_body
-    elsif self.respond_to?(:licence_overview=)
+    elsif respond_to?(:licence_overview=)
       self.licence_overview = origin_edition.whole_body
     else
       raise "Nowhere to copy whole_body content for conversion from: #{origin_edition.class} to: #{self.class}"
@@ -300,7 +300,7 @@ class Edition
   end
 
   def cloning_between_parted_types?(new_edition)
-    self.respond_to?(:parts) && new_edition.respond_to?(:parts)
+    respond_to?(:parts) && new_edition.respond_to?(:parts)
   end
 
   def self.find_or_create_from_panopticon_data(panopticon_id, importing_user)
@@ -355,7 +355,7 @@ class Edition
 
   # Stop broadcasting a delete message unless there are no siblings.
   def broadcast_action(callback_action)
-    unless (callback_action == "destroyed") && self.siblings.any?
+    unless (callback_action == "destroyed") && siblings.any?
       super(callback_action)
     end
   end
@@ -373,7 +373,7 @@ class Edition
 
   def update_slug_from_artefact(artefact)
     self.slug = artefact.slug
-    self.save!
+    save!
   end
 
   def check_for_archived_artefact
@@ -382,7 +382,7 @@ class Edition
       if (a.state == "archived") && changes.any?
         # If we're only changing the state to archived, that's ok
         # Any other changes are not allowed
-        allowed_keys = %w(state updated_at)
+        allowed_keys = %w[state updated_at]
         unless (changes.keys - allowed_keys).empty? && (state == "archived")
           raise "Editing of an edition with an Archived artefact is not allowed"
         end
@@ -391,7 +391,7 @@ class Edition
   end
 
   def artefact
-    @artefact ||= Artefact.find(self.panopticon_id)
+    @artefact ||= Artefact.find(panopticon_id)
   end
 
   # When we delete an edition is the only one in its series
@@ -404,14 +404,14 @@ class Edition
   # system.
   def destroy_artefact
     if can_destroy? && siblings.empty?
-      Artefact.find(self.panopticon_id).destroy
+      Artefact.find(panopticon_id).destroy
     end
   end
 
   def destroy_publishing_api_draft
     return unless can_destroy?
 
-    Services.publishing_api.discard_draft(self.content_id)
+    Services.publishing_api.discard_draft(content_id)
   rescue GdsApi::HTTPNotFound
     nil
   rescue GdsApi::HTTPUnprocessableEntity
@@ -436,7 +436,7 @@ class Edition
   end
 
   def fact_check_email_address
-    Publisher::Application.fact_check_config.address(self.id)
+    Publisher::Application.fact_check_config.address(id)
   end
 
   def check_if_archived
@@ -454,9 +454,7 @@ class Edition
     end
   end
 
-  def content_id
-    artefact.content_id
-  end
+  delegate :content_id, to: :artefact
 
   def latest_link_check_report
     link_check_reports.last
@@ -474,10 +472,10 @@ private
   end
 
   def type_specific_field_keys
-    (self.fields.keys - Edition.fields.keys).map(&:to_sym)
+    (fields.keys - Edition.fields.keys).map(&:to_sym)
   end
 
   def common_type_specific_field_keys(target_class)
-    ((self.fields.keys & target_class.fields.keys) - Edition.fields.keys).map(&:to_sym)
+    ((fields.keys & target_class.fields.keys) - Edition.fields.keys).map(&:to_sym)
   end
 end

@@ -179,7 +179,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
   def selectize(with, scope)
     # clear any existing selections
-    page.execute_script("$('.selectize-input a.remove').click()");
+    page.execute_script("$('.selectize-input a.remove').click()")
 
     # find_field works by finding the label by text/id and then the input field associated
     # with the label by its 'for' attribute. In our case this input will be invisible until interacted with.

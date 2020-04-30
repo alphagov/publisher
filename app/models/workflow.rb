@@ -96,11 +96,11 @@ module Workflow
       end
 
       state :in_review do
-        validates_presence_of :review_requested_at
+        validates :review_requested_at, presence: true
       end
 
       state :scheduled_for_publishing do
-        validates_presence_of :publish_at
+        validates :publish_at, presence: true
         validate :publish_at_is_in_the_future
       end
     end
@@ -118,7 +118,7 @@ module Workflow
   end
 
   def fact_checked?
-    self.actions.where(request_type: Action::APPROVE_FACT_CHECK).count.positive?
+    actions.where(request_type: Action::APPROVE_FACT_CHECK).count.positive?
   end
 
   def status_text
@@ -137,7 +137,7 @@ module Workflow
   end
 
   def can_destroy?
-    ! scheduled_for_publishing? && ! published? && ! archived?
+    !scheduled_for_publishing? && !published? && !archived?
   end
 
   def check_can_delete_and_notify
@@ -145,19 +145,19 @@ module Workflow
   end
 
   def mark_as_rejected
-    self.inc(rejected_count: 1)
+    inc(rejected_count: 1)
   end
 
   def previous_edition
-    self.previous_published_edition || false
+    previous_published_edition || false
   end
 
   def notify_siblings_of_new_edition
-    siblings.update_all(sibling_in_progress: self.version_number)
+    siblings.update_all(sibling_in_progress: version_number)
   end
 
   def in_progress?
-    ! %w(archived published).include? self.state
+    !%w[archived published].include? state
   end
 
   def locked_for_edits?
@@ -217,7 +217,7 @@ private
   end
 
   def disallowable_change?
-    allowed_to_change = %w(slug publish_at)
+    allowed_to_change = %w[slug publish_at]
     (changes.keys - allowed_to_change).present?
   end
 end

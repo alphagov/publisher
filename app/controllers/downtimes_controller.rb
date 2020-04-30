@@ -65,7 +65,7 @@ private
   end
 
   def process_params
-    squash_multiparameter_datetime_attributes(downtime_params, %w(start_time end_time))
+    squash_multiparameter_datetime_attributes(downtime_params, %w[start_time end_time])
   end
 
   def edition_link

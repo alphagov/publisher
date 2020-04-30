@@ -18,10 +18,10 @@ class SimpleSmartAnswerEdition < Edition
 
     GOVSPEAK_FIELDS = [:body].freeze
 
-    KINDS = %w(
+    KINDS = %w[
 question
 outcome
-).freeze
+].freeze
 
     validates :title, :kind, presence: true
     validates :kind, inclusion: { in: KINDS }

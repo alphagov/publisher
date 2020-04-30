@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       post "progress"
       put "review"
       post "skip_fact_check", to: "editions#progress",
-        edition: {
+                              edition: {
           activity: {
             request_type: "skip_fact_check",
             comment: "Fact check skipped by request.",
@@ -49,7 +49,7 @@ Rails.application.routes.draw do
 
   get "user_search" => "user_search#index"
 
-  resources :link_check_reports, only: %i(create show)
+  resources :link_check_reports, only: %i[create show]
 
   post "/link-checker-api-callback" => "link_checker_api#callback", as: "link_checker_api_callback"
   get "api/lookup-by-base-path", to: "publishing_api_proxy#lookup_by_base_path"

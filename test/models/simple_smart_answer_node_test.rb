@@ -74,8 +74,8 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
 
       @node.reload
       assert_equal 2, @node.options.count
-      assert_equal %w(Yes No), @node.options.all.map(&:label)
-      assert_equal %w(yes no), @node.options.all.map(&:next_node)
+      assert_equal %w[Yes No], @node.options.all.map(&:label)
+      assert_equal %w[yes no], @node.options.all.map(&:next_node)
     end
 
     should "destroy options using nested attributes" do
@@ -119,7 +119,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
         @edition.nodes.create(@atts.merge(title: "Second", order: 2)),
       ]
 
-      assert_equal %w(First Second Third), @edition.nodes.all.map(&:title)
+      assert_equal %w[First Second Third], @edition.nodes.all.map(&:title)
     end
 
     should "expose the simple smart answer edition" do

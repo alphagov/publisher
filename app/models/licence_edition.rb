@@ -11,7 +11,7 @@ class LicenceEdition < Edition
 
   validates :licence_identifier, presence: true
   validate :licence_identifier_unique
-  validates_format_of :continuation_link, with: URI::DEFAULT_PARSER.make_regexp(%w(http https)), allow_blank: true
+  validates :continuation_link, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true }
 
   def whole_body
     [licence_short_description, licence_overview].join("\n\n")

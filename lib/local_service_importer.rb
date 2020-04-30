@@ -20,12 +20,10 @@ class LocalServiceImporter
 
   def run
     CSV.new(@filehandle, headers: true).each do |row|
-      begin
-        process_row(row)
-      rescue StandardError => e
-        Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
-        GovukError.notify(e, extra: { row: row })
-      end
+      process_row(row)
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
+      GovukError.notify(e, extra: { row: row })
     end
   end
 
@@ -56,7 +54,7 @@ private
     when "county/unitary", "district/unitary"
       value.split("/")
     when "all"
-      %w{district unitary county}
+      %w[district unitary county]
     else
       raise "Illegal 'Providing Tier' '#{value}'"
     end

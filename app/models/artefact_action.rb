@@ -18,5 +18,5 @@ class ArtefactAction
   # of this, requests made through the API are not yet tied to a user. If we
   # find out that there are no such circumstances in practice, we can add a
   # validator for :user.
-  validates_presence_of :action_type, :snapshot
+  validates :action_type, :snapshot, presence: true
 end
