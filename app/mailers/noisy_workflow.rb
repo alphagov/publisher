@@ -23,11 +23,12 @@ class NoisyWorkflow < ApplicationMailer
   def request_fact_check(action, recipient_email)
     @edition = action.edition
     fact_check_address = @edition.fact_check_email_address
+    fact_check_prefix = ENV.fetch("FACT_CHECK_SUBJECT_PREFIX", "")
     mail(
       to: recipient_email,
       reply_to: fact_check_address,
       from: "GOV.UK Editorial Team <#{fact_check_address}>",
-      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{Rails.env}-#{@edition.id}]",
+      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{fact_check_prefix.present? ? fact_check_prefix + '-' : ''}#{@edition.id}]",
     ) do |format|
       format.text { render plain: action.customised_message }
     end

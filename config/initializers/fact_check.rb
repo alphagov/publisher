@@ -10,7 +10,7 @@ config = YAML.safe_load(
 
 Publisher::Application.fact_check_config = FactCheckConfig.new(
   config.fetch("address_format"),
-  config.fetch("subject_format"),
+  config.fetch("subject_prefix"),
 )
 
 fetcher_config = config.fetch("fetcher", {})

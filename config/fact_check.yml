@@ -4,7 +4,7 @@
 # If we ever want to change this format, we'll need to support some notion of
 # legacy formats, so we still pick up emails to old addresses
 address_format: <%=ENV.fetch("FACT_CHECK_ADDRESS_FORMAT", "factcheck+dev-{id}@alphagov.co.uk") %>
-subject_format: <%=ENV.fetch("FACT_CHECK_SUBJECT_FORMAT", "‘\\[.+?\\]’ GOV.UK preview of new edition \\[dev-(?<id>.+?)\\]") %>
+subject_prefix: <%=ENV.fetch("FACT_CHECK_SUBJECT_PREFIX", "") %>
 
 fetcher:
   address: <%=ENV.fetch("FACT_CHECK_ADDRESS", "imap.gmail.com") %>
