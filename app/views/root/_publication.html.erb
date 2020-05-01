@@ -6,7 +6,7 @@
     <h4 class="publication-table-title">
       <%= link_to publication.admin_list_title, edition_path(publication) %>
       <% if !publication.live? %>
-        <span class="badge badge-beta"><%= publication.phase %></span>
+        <span class="badge badge-phase"><%= publication.phase %></span>
       <% end %>
     </h4>
 
