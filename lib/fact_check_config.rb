@@ -1,12 +1,13 @@
 class FactCheckConfig
-  def initialize(address_format, subject_format)
+  attr_reader :subject_prefix
+
+  def initialize(address_format, subject_prefix = "")
     unless address_format && address_format.scan("{id}").count == 1
       raise ArgumentError, "Expected '#{address_format}' to contain exactly one '{id}'"
     end
 
-    unless subject_format && subject_format.scan("?<id>").count == 1
-      raise ArgumentError, "Expected '#{subject_format}' to contain exactly one '?<id>'"
-    end
+    @subject_prefix = subject_prefix.present? ? subject_prefix + "-" : ""
+    subject_format = "‘\\[.+?\\]’ GOV.UK preview of new edition \\[#{@subject_prefix}(?<id>.+?)\\]"
 
     @address_prefix, @address_suffix = address_format.split("{id}")
     @address_pattern = Regexp.new(
