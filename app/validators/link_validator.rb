@@ -28,7 +28,7 @@ class LinkValidator < ActiveModel::Validator
         errors << "Internal links must start with a forward slash eg [link text](/link-destination). External links must start with http://, https://, or mailto: eg [external link text](https://www.google.co.uk)."
       end
       if match[1]
-        errors << %q-Don't include hover text in links. Delete the text in quotation marks eg "This appears when you hover over the link."-
+        errors << %q(Don't include hover text in links. Delete the text in quotation marks eg "This appears when you hover over the link.")
       end
       if match[2]
         errors << 'Delete {:rel="external"} in links.'

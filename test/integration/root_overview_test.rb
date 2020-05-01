@@ -126,11 +126,11 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "Publications in review are ordered correctly" do
     FactoryBot.create(:user)
     FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx",
-                       state: "in_review", review_requested_at: 4.days.ago)
+                                      state: "in_review", review_requested_at: 4.days.ago)
     FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy",
-                       state: "in_review", review_requested_at: 2.days.ago)
+                                      state: "in_review", review_requested_at: 2.days.ago)
     FactoryBot.create(:guide_edition, title: "ZZZ", slug: "zzz",
-                       state: "in_review", review_requested_at: 20.minutes.ago)
+                                      state: "in_review", review_requested_at: 20.minutes.ago)
 
     visit "/"
     filter_by_user("All")
@@ -163,7 +163,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     user = FactoryBot.create(:user)
     assignee = FactoryBot.create(:user)
     edition = FactoryBot.create(:guide_edition, title: "XXX", state: "in_review",
-                                 review_requested_at: Time.zone.now, assigned_to: assignee)
+                                                review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
     filter_by_user("All")
@@ -188,7 +188,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assignee = FactoryBot.create(:user)
     another_user = FactoryBot.create(:user, name: "Another McPerson")
     edition = FactoryBot.create(:guide_edition, title: "XXX", state: "in_review",
-                                 review_requested_at: Time.zone.now, assigned_to: assignee)
+                                                review_requested_at: Time.zone.now, assigned_to: assignee)
 
     visit "/"
     filter_by_user("All")

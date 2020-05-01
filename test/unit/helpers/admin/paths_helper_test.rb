@@ -30,7 +30,7 @@ class PathsHelperTest < ActionView::TestCase
       should "not append the JWT token" do
         edition = stub(state: "published", slug: "foo")
         result = preview_edition_path(edition)
-        assert_no_match %r(&token=), result
+        assert_no_match %r{&token=}, result
       end
     end
   end

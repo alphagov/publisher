@@ -2,9 +2,9 @@ class ServiceSignInYamlValidator
   attr_reader :yaml_file
 
   REQUIRED_TOP_LEVEL_FIELDS =
-    %w(change_note choose_sign_in locale start_page_slug update_type).freeze
-  REQUIRED_CHOOSE_SIGN_IN_FIELDS = %w(options slug title).freeze
-  REQUIRED_CREATE_NEW_ACCOUNT_FIELDS = %w(body slug title).freeze
+    %w[change_note choose_sign_in locale start_page_slug update_type].freeze
+  REQUIRED_CHOOSE_SIGN_IN_FIELDS = %w[options slug title].freeze
+  REQUIRED_CREATE_NEW_ACCOUNT_FIELDS = %w[body slug title].freeze
 
   def initialize(file_name)
     @file_name = file_name
@@ -29,14 +29,12 @@ private
   end
 
   def load_yaml_file
-    begin
-      @yaml_file = YAML.load_file(@file_name)
-      if @yaml_file.blank?
-        @errors << "Invalid file type"
-      end
-    rescue SystemCallError
-      @errors << "Invalid file path: #{@file_name}"
+    @yaml_file = YAML.load_file(@file_name)
+    if @yaml_file.blank?
+      @errors << "Invalid file type"
     end
+  rescue SystemCallError
+    @errors << "Invalid file path: #{@file_name}"
   end
 
   def check_for_top_level_required_fields

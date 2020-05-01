@@ -44,7 +44,7 @@ namespace :publishing_api do
   end
 
   desc "Republish an edition"
-  task :republish_edition, %w(slug) => :environment do |_, args|
+  task :republish_edition, %w[slug] => :environment do |_, args|
     editions = Edition.published.where(slug: args[:slug])
     draft_editions = Edition.draft_in_publishing_api.where(slug: args[:slug])
 

@@ -35,7 +35,7 @@ module BaseHelper
   end
 
   def edition_can_be_deleted?(edition)
-    ! edition.published?
+    !edition.published?
   end
 
   def friendly_date(date)

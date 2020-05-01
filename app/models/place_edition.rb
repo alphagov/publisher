@@ -9,6 +9,6 @@ class PlaceEdition < Edition
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   def whole_body
-    self.introduction
+    introduction
   end
 end

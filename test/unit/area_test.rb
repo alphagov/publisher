@@ -26,7 +26,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_area_types
-    assert_equal %w(EUR CTY DIS LBO LGD MTD UTA COI), Area::AREA_TYPES
+    assert_equal %w[EUR CTY DIS LBO LGD MTD UTA COI], Area::AREA_TYPES
   end
 
   context ".all" do
@@ -51,7 +51,7 @@ class AreaTest < ActiveSupport::TestCase
   context ".areas_for_edition" do
     should "return correct Areas" do
       edition = OpenStruct.new(
-        area_gss_codes: %w(E15000007 E09000012),
+        area_gss_codes: %w[E15000007 E09000012],
       )
 
       assert_equal ["London", "Hackney Borough Council"],
@@ -60,7 +60,7 @@ class AreaTest < ActiveSupport::TestCase
 
     should "not return duplicate Areas" do
       edition = OpenStruct.new(
-        area_gss_codes: %w(E15000007 E09000012 E15000007),
+        area_gss_codes: %w[E15000007 E09000012 E15000007],
       )
 
       assert_equal ["London", "Hackney Borough Council"],
@@ -69,7 +69,7 @@ class AreaTest < ActiveSupport::TestCase
   end
 
   def test_regions
-    assert_equal %w(London Scotland), Area.regions.map(&:name)
+    assert_equal %w[London Scotland], Area.regions.map(&:name)
   end
 
   def test_english_regions

@@ -117,9 +117,9 @@ class EditionsControllerTest < ActionController::TestCase
              id: @guide.id,
              edition: {
                activity: {
-                 "request_type"       => "send_fact_check",
-                 "comment"            => "Blah",
-                 "email_addresses"    => "user@example.com",
+                 "request_type" => "send_fact_check",
+                 "comment" => "Blah",
+                 "email_addresses" => "user@example.com",
                  "customised_message" => "Hello",
                },
              },
@@ -286,15 +286,15 @@ class EditionsControllerTest < ActionController::TestCase
   context "#destroy" do
     setup do
       artefact1 = FactoryBot.create(:artefact, slug: "test",
-          kind: "transaction",
-          name: "test",
-          owning_app: "publisher")
+                                               kind: "transaction",
+                                               name: "test",
+                                               owning_app: "publisher")
       @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
 
       artefact2 = FactoryBot.create(:artefact, slug: "test2",
-          kind: "guide",
-          name: "test",
-          owning_app: "publisher")
+                                               kind: "guide",
+                                               name: "test",
+                                               owning_app: "publisher")
       @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
       stub_request(:delete, "#{Plek.current.find('arbiter')}/slugs/test").to_return(status: 200)
@@ -353,9 +353,9 @@ class EditionsControllerTest < ActionController::TestCase
   context "#show" do
     setup do
       artefact2 = FactoryBot.create(:artefact, slug: "test2",
-          kind: "guide",
-          name: "test",
-          owning_app: "publisher")
+                                               kind: "guide",
+                                               name: "test",
+                                               owning_app: "publisher")
       @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 

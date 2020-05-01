@@ -35,8 +35,8 @@ private
 
   def fetch_lgsls_from_csv
     output = Set.new
-    CSV.new(@input_data, headers: true).
-      each.with_object(output) do |row, lgsls|
+    CSV.new(@input_data, headers: true)
+      .each.with_object(output) do |row, lgsls|
         lgsls.add row["LGSL"].to_i
       end
     output

@@ -8,7 +8,7 @@ class SimpleSmartAnswerEdition < Edition
   field :body,              type: String
   field :start_button_text, type: String, default: "Start now"
 
-  validates_presence_of :start_button_text
+  validates :start_button_text, presence: true
 
   embeds_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
 
@@ -28,7 +28,7 @@ class SimpleSmartAnswerEdition < Edition
     new_edition = super(target_class)
 
     if new_edition.is_a?(SimpleSmartAnswerEdition)
-      self.nodes.each { |n| new_edition.nodes << n.clone }
+      nodes.each { |n| new_edition.nodes << n.clone }
     end
 
     new_edition
@@ -45,7 +45,7 @@ class SimpleSmartAnswerEdition < Edition
     nodes_attrs = attributes.delete(:nodes_attributes)
     if nodes_attrs
       nodes_attrs.each do |_index, node_attrs|
-                                               # as this isn't a Hash
+        # as this isn't a Hash
         node_id = node_attrs["id"]
         if node_id
           node = nodes.find(node_id)
@@ -64,7 +64,7 @@ class SimpleSmartAnswerEdition < Edition
   end
 
   def initial_node
-    self.nodes.first
+    nodes.first
   end
 
   def destroy_in_attrs?(attrs)

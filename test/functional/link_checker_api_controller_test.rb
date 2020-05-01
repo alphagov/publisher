@@ -16,12 +16,12 @@ class LinkCheckerApiControllerTest < ActionController::TestCase
 
   def create_answer_edition_with_link_check_report
     FactoryBot.create(:answer_edition_with_link_check_report, batch_id: 5,
-                                                               link_uris: ["https://www.gov.uk"]).link_check_reports.first
+                                                              link_uris: ["https://www.gov.uk"]).link_check_reports.first
   end
 
   def create_campaign_edition_with_link_check_report
     FactoryBot.create(:campaign_edition_with_link_check_report, batch_id: 5,
-                                                                 link_uris: ["https://www.gov.uk"]).link_check_reports.first
+                                                                link_uris: ["https://www.gov.uk"]).link_check_reports.first
   end
 
   def edition_link_check_report

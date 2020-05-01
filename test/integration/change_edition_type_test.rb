@@ -41,9 +41,9 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       },
     {
       "title" => "PART !!",
-    "body" =>
+      "body" =>
     "This is some more edition version text.",
-    "slug" =>  "part-two",
+      "slug" => "part-two",
     },
   ])
 

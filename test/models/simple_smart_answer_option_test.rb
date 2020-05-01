@@ -53,8 +53,8 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
         @node.options.create(@atts.merge(label: "Second", next_node: "bar", order: 2)),
       ]
 
-      assert_equal %w(First Second Third), @node.options.all.map(&:label)
-      assert_equal %w(foo bar baz), @node.options.all.map(&:next_node)
+      assert_equal %w[First Second Third], @node.options.all.map(&:label)
+      assert_equal %w[foo bar baz], @node.options.all.map(&:next_node)
     end
 
     context "slug" do

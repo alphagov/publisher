@@ -3,7 +3,7 @@
 # Note that the functionality to fetch tags from the publishing-api and
 # transform them into a structure for a dropdown in a form is duplicated
 # across apps like content-tagger and Whitehall.
-# Example: https://github.com/alphagov/content-tagger/blob/master/lib/linkables.rb
+# Example: https://github.com/alphagov/content-tagger/blob/master/lib/linkables.rb
 # Once we've migrated all apps
 # to use `content_id`, we may move this functionality into a gem.
 module Tagging

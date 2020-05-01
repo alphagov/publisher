@@ -9,7 +9,7 @@ module RecordableActions
 
     def latest_status_action(type = nil)
       if type
-        self.actions.where(request_type: type).last
+        actions.where(request_type: type).last
       else
         most_recent_action(&:status_action?)
       end
@@ -31,7 +31,7 @@ module RecordableActions
     end
 
     def most_recent_action(&blk)
-      self.actions.sort_by(&:created_at).reverse.find(&blk)
+      actions.sort_by(&:created_at).reverse.find(&blk)
     end
 
     def created_by

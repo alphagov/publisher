@@ -26,7 +26,7 @@ class DatesReportPresenter < CSVPresenter
 private
 
   def build_csv(csv)
-    csv << %w(created_at title url)
+    csv << %w[created_at title url]
     scope.each do |item|
       item.actions.each do |action|
         if action.request_type == "publish"

@@ -15,7 +15,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
       @answer.new_action(@author, Action::PUBLISH, comment: "third")
 
-      assert_equal %w(first second third), @answer.actions.map(&:comment)
+      assert_equal %w[first second third], @answer.actions.map(&:comment)
 
       @guide = @answer.build_clone(GuideEdition)
       @guide.save

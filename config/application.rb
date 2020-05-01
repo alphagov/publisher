@@ -30,7 +30,7 @@ module Publisher
     config.assets.prefix = "/assets"
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.eager_load_paths += %W(#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators)
+    config.eager_load_paths += %W[#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators]
 
     config.generators do |g|
       g.orm :mongoid

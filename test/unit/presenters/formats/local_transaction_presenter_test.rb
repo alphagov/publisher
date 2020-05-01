@@ -4,7 +4,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   include GovukContentSchemaTestHelpers::TestUnit
 
   setup do
-    LocalService.create(lgsl_code: 431, providing_tier: %w{county unitary})
+    LocalService.create(lgsl_code: 431, providing_tier: %w[county unitary])
   end
 
   def subject
@@ -55,7 +55,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       end
 
       should "[:service_tiers]" do
-        expected = %w{county unitary}
+        expected = %w[county unitary]
         assert_equal expected, result[:details][:service_tiers]
       end
     end

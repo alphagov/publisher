@@ -66,6 +66,6 @@ class CampaignEdition < Edition
   validates_with SafeHtml
 
   def whole_body
-    self.body
+    body
   end
 end

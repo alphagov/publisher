@@ -8,7 +8,7 @@ class Downtime
 
   belongs_to :artefact, optional: true
 
-  validates_presence_of :message, :start_time, :end_time, :artefact
+  validates :message, :start_time, :end_time, :artefact, presence: true
   validate :end_time_is_in_future, on: :create
   validate :start_time_precedes_end_time
 
@@ -27,7 +27,7 @@ class Downtime
 private
 
   def end_time_is_in_future
-    errors.add(:end_time, "must be in the future") if end_time && ! end_time.future?
+    errors.add(:end_time, "must be in the future") if end_time && !end_time.future?
   end
 
   def start_time_precedes_end_time

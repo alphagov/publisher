@@ -11,7 +11,7 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       inbound_headers = { "HTTP_GOVUK_REQUEST_ID" => "12345-67890" }
       artefact = FactoryBot.create(:artefact)
 
-      # Create an edition.
+      # Create an edition.
       post "/editions",
            params: {
              edition: {
@@ -50,7 +50,7 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
                  },
                },
              },
-             headers: inbound_headers
+           headers: inbound_headers
 
       assert_equal 302, response.status
 
@@ -63,7 +63,7 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
                  },
                },
              },
-             headers: inbound_headers
+           headers: inbound_headers
 
       assert_equal 302, response.status
       worker_classes = Sidekiq::Worker.jobs.collect { |j| j["class"].constantize }.uniq
@@ -78,8 +78,8 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       onward_headers = { "GOVUK-Request-Id" => "12345-67890" }
       content_id = artefact.content_id
 
-      assert_requested(:put, %r|publishing-api.*content/#{content_id}|, headers: onward_headers)
-      assert_requested(:post, %r|publishing-api.*content/#{content_id}/publish|, headers: onward_headers)
+      assert_requested(:put, %r{publishing-api.*content/#{content_id}}, headers: onward_headers)
+      assert_requested(:post, %r{publishing-api.*content/#{content_id}/publish}, headers: onward_headers)
     end
   end
 end

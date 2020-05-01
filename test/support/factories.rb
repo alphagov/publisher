@@ -35,7 +35,7 @@ FactoryBot.define do
 
     trait :with_published_edition do
       after(:create) { |object|
-        self.create("#{object.kind}_edition".to_sym, panopticon_id: object.id, slug: object.slug, state: "published")
+        create("#{object.kind}_edition".to_sym, panopticon_id: object.id, slug: object.slug, state: "published")
       }
     end
 
@@ -210,7 +210,7 @@ FactoryBot.define do
 
   factory :local_service do |ls|
     ls.sequence(:lgsl_code)
-    providing_tier { %w{district unitary county} }
+    providing_tier { %w[district unitary county] }
   end
 
   factory :local_authority do

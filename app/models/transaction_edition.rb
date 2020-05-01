@@ -17,8 +17,8 @@ class TransactionEdition < Edition
 
   GOVSPEAK_FIELDS = %i[introduction more_information alternate_methods need_to_know].freeze
 
-  validates_format_of :department_analytics_profile, with: /UA-\d+-\d+/i, allow_blank: true
-  validates_presence_of :start_button_text
+  validates :department_analytics_profile, format: { with: /UA-\d+-\d+/i, allow_blank: true }
+  validates :start_button_text, presence: true
   validates_with SafeHtml
 
   def indexable_content
@@ -26,6 +26,6 @@ class TransactionEdition < Edition
   end
 
   def whole_body
-    [self.link, self.introduction, self.more_information, self.alternate_methods].join("\n\n")
+    [link, introduction, more_information, alternate_methods].join("\n\n")
   end
 end

@@ -45,7 +45,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       s = LocalService.first
       assert_equal "Find out about hazardous waste collection", s.description
       assert_equal 850, s.lgsl_code
-      assert_equal %w{county unitary}, s.providing_tier
+      assert_equal %w[county unitary], s.providing_tier
     end
 
     should "not duplicate definitions if running the import again" do
@@ -68,7 +68,7 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       s = LocalService.first
       assert_equal 850, s.lgsl_code
       assert_equal "Updated hazardous waste collection description", s.description
-      assert_equal %w{district unitary}, s.providing_tier
+      assert_equal %w[district unitary], s.providing_tier
     end
   end
 end

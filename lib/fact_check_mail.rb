@@ -21,7 +21,7 @@ class FactCheckMail
   def respond_to_missing?(method_name, *)
     @message.respond_to?(method_name)
   end
-  # rubocop:enable Style/MethodMissingSuper
+# rubocop:enable Style/MethodMissingSuper
 
 private
 
@@ -36,9 +36,9 @@ private
     [
       %w[Auto-Submitted auto-replied],
       %w[Auto-Submitted auto-generated],
-      %w(Precedence bulk),
-      %w(Precedence auto_reply),
-      %w(Precedence junk),
+      %w[Precedence bulk],
+      %w[Precedence auto_reply],
+      %w[Precedence junk],
       ["Return-Path", ""],
       %w[X-Precedence bulk],
       %w[X-Precedence auto_reply],

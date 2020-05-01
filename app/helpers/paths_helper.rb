@@ -46,6 +46,6 @@ protected
 private
 
   def should_have_auth_bypass_id?(edition)
-    %w(published archived).exclude?(edition.state) && edition.auth_bypass_id
+    %w[published archived].exclude?(edition.state) && edition.auth_bypass_id
   end
 end

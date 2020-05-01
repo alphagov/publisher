@@ -13,7 +13,7 @@ task export_alternate_title: :environment do
   }
 
   csv_string = CSV.generate do |csv|
-    csv << %w(bson_id title alternative_title slug)
+    csv << %w[bson_id title alternative_title slug]
 
     editions_with_alternative_titles.each do |e|
       csv << [e[:bson_id], e[:title], e[:alternative_title], e[:slug]]
