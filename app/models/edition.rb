@@ -465,6 +465,7 @@ private
   def base_field_keys
     %i[
       title
+      in_beta
       panopticon_id
       overview
       slug
