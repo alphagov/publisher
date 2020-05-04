@@ -474,7 +474,7 @@ class Edition
   end
 
   def in_beta?
-    in_beta || phase == "beta"
+    phase == "beta"
   end
 
 private
@@ -482,7 +482,7 @@ private
   def base_field_keys
     %i[
       title
-      in_beta
+      phase
       panopticon_id
       overview
       slug
