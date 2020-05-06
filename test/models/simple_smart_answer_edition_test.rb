@@ -89,8 +89,8 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal 2, edition.nodes.size
 
     edition.update(nodes_attributes: {
-        "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" },
-      })
+      "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" },
+    })
     edition.reload
 
     assert_equal 1, edition.nodes.size
@@ -153,10 +153,10 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       @edition.update(title: "Smarter than the average answer",
                       body: "No developers were involved in the changing of this copy",
                       nodes_attributes: {
-          "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
-            "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
-          } },
-      })
+                        "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
+                          "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
+                        } },
+                      })
 
       @edition.reload
 
@@ -168,15 +168,15 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     should "create and destroy nodes and options using nested attributes" do
       @edition.update(nodes_attributes: {
-          "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
-              "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
-            } },
-          "1" => { "id" => @edition.nodes.second.id, "_destroy" => "1" },
-          "2" => { "kind" => "question", "title" => "Question 3", "slug" => "question3", "options_attributes" => {
-            "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" },
-          } },
-          "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" },
-        })
+        "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
+          "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
+        } },
+        "1" => { "id" => @edition.nodes.second.id, "_destroy" => "1" },
+        "2" => { "kind" => "question", "title" => "Question 3", "slug" => "question3", "options_attributes" => {
+          "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" },
+        } },
+        "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" },
+      })
 
       @edition.reload
 
@@ -190,9 +190,9 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     should "ignore new nodes if they are to be destroyed" do
       @edition.update(nodes_attributes: {
-          "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
-          "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" },
-        })
+        "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
+        "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" },
+      })
       @edition.reload
 
       assert_equal "Question the first", @edition.nodes.first.title

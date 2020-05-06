@@ -57,12 +57,12 @@ class RequestTracingTest < ActionDispatch::IntegrationTest
       # Transition the edition to 'published'
       post "/editions/#{edition.id}/progress",
            params: {
-               edition: {
-                 activity: {
-                   request_type: :publish,
-                 },
+             edition: {
+               activity: {
+                 request_type: :publish,
                },
              },
+           },
            headers: inbound_headers
 
       assert_equal 302, response.status

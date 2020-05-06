@@ -310,16 +310,16 @@ protected
 
   def common_params
     %i[
-       assigned_to_id
-       reviewer
-       panopticon_id
-       slug
-       change_note
-       major_change
-       title
-       in_beta
-       overview
-     ]
+      assigned_to_id
+      reviewer
+      panopticon_id
+      slug
+      change_note
+      major_change
+      title
+      in_beta
+      overview
+    ]
   end
 
   def new_assignee
