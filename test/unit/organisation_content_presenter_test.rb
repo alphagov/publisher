@@ -3,27 +3,27 @@ require "test_helper"
 class OrganisationContentPresenterTest < ActiveSupport::TestCase
   setup do
     @response = {
-            "content_id" => "",
-            "expanded_links" => {
-              "mainstream_browse_pages" => [
-                {
-                  "base_path" => "/browse/business/support",
-                },
-                {
-                  "base_path" => "/browse/tax/vat",
-                },
-              ],
-              "organisations" => [
-                {
-                  "title" => "HMRC",
-                },
-              ],
-              "topics" => [
-                {
-                  "base_path" => "/topic/business-tax/vat",
-                },
-              ],
-            },
+      "content_id" => "",
+      "expanded_links" => {
+        "mainstream_browse_pages" => [
+          {
+            "base_path" => "/browse/business/support",
+          },
+          {
+            "base_path" => "/browse/tax/vat",
+          },
+        ],
+        "organisations" => [
+          {
+            "title" => "HMRC",
+          },
+        ],
+        "topics" => [
+          {
+            "base_path" => "/topic/business-tax/vat",
+          },
+        ],
+      },
     }
   end
 

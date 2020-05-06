@@ -38,7 +38,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
       "title" => "PART !",
       "body" => "This is some edition version text.",
       "slug" => "part-one",
-      },
+    },
     {
       "title" => "PART !!",
       "body" =>
