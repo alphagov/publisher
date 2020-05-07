@@ -3,10 +3,6 @@ require "test_helper"
 class NoisyWorkflowTest < ActionMailer::TestCase
   tests NoisyWorkflow
 
-  setup do
-    stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
-  end
-
   def fact_check_email
     guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: "jys@ketlai.co.uk", customised_message: "Blah")
@@ -67,6 +63,16 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
     NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
     receive_fact_check(user, guide)
+  end
+
+  test "fact checking emails should set appropriate reply-to address" do
+    guide, email = fact_check_email
+    assert_equal ["factcheck+dev-#{guide.id}@alphagov.co.uk"], email.reply_to
+  end
+
+  test "fact checking emails should go from appropriate email addresses" do
+    guide, email = fact_check_email
+    assert_equal ["factcheck+dev-#{guide.id}@alphagov.co.uk"], email.from
   end
 
   context ".skip_review" do
