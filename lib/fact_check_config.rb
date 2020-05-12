@@ -1,10 +1,12 @@
 class FactCheckConfig
-  attr_reader :subject_prefix
+  attr_reader :subject_prefix, :reply_to_id
 
-  def initialize(address_format, subject_prefix = "")
+  def initialize(address_format, subject_prefix = "", reply_to_id = nil)
     unless address_format && address_format.scan("{id}").count == 1
       raise ArgumentError, "Expected '#{address_format}' to contain exactly one '{id}'"
     end
+
+    @reply_to_id = reply_to_id
 
     @subject_prefix = subject_prefix.present? ? subject_prefix + "-" : ""
     subject_format = "‘\\[.+?\\]’ GOV.UK preview of new edition \\[#{@subject_prefix}(?<id>.+?)\\]"

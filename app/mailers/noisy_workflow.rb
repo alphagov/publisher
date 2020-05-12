@@ -27,11 +27,13 @@ class NoisyWorkflow < ApplicationMailer
   def request_fact_check(action, recipient_email)
     @edition = action.edition
     fact_check_prefix = Publisher::Application.fact_check_config.subject_prefix
+    reply_to_id = Publisher::Application.fact_check_config.reply_to_id
     @customised_message = action.customised_message
     view_mail(
       template_id,
       to: recipient_email,
       subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{fact_check_prefix}#{@edition.id}]",
+      reply_to_id: reply_to_id,
     )
   end
 
