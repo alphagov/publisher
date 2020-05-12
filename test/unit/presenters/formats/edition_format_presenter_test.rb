@@ -164,7 +164,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
       should "not exist if no auth_bypass_id is present" do
         edition.expects(:auth_bypass_id).returns(nil)
-        assert_not result.has_key?(:access_limited)
+        assert_not result.key?(:access_limited)
       end
     end
   end

@@ -87,9 +87,8 @@ class EditionsController < InheritedResources::Base
     # TODO: We should refactor this block as it dates back to 2011 and it grew
     # quite a bit since then.
     # For the moment, I'll just disable the Metrics/BlockLength check ¯\_(ツ)_/¯
-    # rubocop:disable Metrics/BlockLength
     update! do |success, failure|
-      success.html {
+      success.html do
         if attempted_activity
           if progress_edition(resource, activity_params)
             flash[:success] = @command.status_message
@@ -104,16 +103,16 @@ class EditionsController < InheritedResources::Base
 
         return_to = params[:return_to] || edition_path(resource)
         redirect_to return_to
-      }
-      failure.html {
+      end
+      failure.html do
         @resource = resource
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
         flash.now[:danger] = format_failure_message(resource)
         render action: "show"
-      }
-      success.json {
+      end
+      success.json do
         progress_edition(resource, activity_params) if attempted_activity
 
         update_assignment resource, assign_to
@@ -121,10 +120,9 @@ class EditionsController < InheritedResources::Base
         UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
         render json: resource
-      }
+      end
       failure.json { render json: resource.errors, status: :not_acceptable }
     end
-    # rubocop:enable Metrics/BlockLength
   end
 
   def linking
@@ -152,7 +150,7 @@ class EditionsController < InheritedResources::Base
 
   def update_related_external_links
     artefact = resource.artefact
-    if params.has_key?("artefact")
+    if params.key?("artefact")
       external_links = params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
       artefact.external_links_attributes = external_links[:external_links_attributes].to_h
 

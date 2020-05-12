@@ -29,7 +29,7 @@ class User
   index({ uid: 1 }, unique: true)
   index disabled: 1
 
-  scope :alphabetized, lambda { order_by(name: :asc) }
+  scope :alphabetized, -> { order_by(name: :asc) }
   scope :enabled, lambda {
     any_of({ :disabled.exists => false },
            { :disabled.in => [false, nil] })

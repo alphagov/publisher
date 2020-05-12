@@ -41,7 +41,7 @@ class Artefact
         _type: 1,
         _id: 1
 
-  scope :not_archived, lambda { where(:state.nin => %w[archived]) }
+  scope :not_archived, -> { where(:state.nin => %w[archived]) }
 
   FORMATS_BY_DEFAULT_OWNING_APP = {
     "publisher" => %w[answer
@@ -95,7 +95,7 @@ class Artefact
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true, slug: true
-  validates :kind, inclusion: { in: lambda { |_x| FORMATS } }
+  validates :kind, inclusion: { in: ->(_x) { FORMATS } }
   validates :state, inclusion: { in: %w[draft live archived] }
   validates :owning_app, presence: true
   validates :language, inclusion: { in: %w[en cy] }
@@ -121,9 +121,9 @@ class Artefact
   end
 
   def as_json(options = {})
-    super.tap { |hash|
+    super.tap do |hash|
       hash["id"] = hash.delete("_id")
-    }
+    end
   end
 
   def any_editions_published?

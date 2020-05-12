@@ -32,11 +32,11 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   def draft_second_edition_from(published_edition)
-    published_edition.build_clone(AnswerEdition).tap { |edition|
+    published_edition.build_clone(AnswerEdition).tap do |edition|
       edition.body = "Test Body 2"
       edition.save
       edition.reload
-    }
+    end
   end
 
   test "it must have a title" do
@@ -124,7 +124,7 @@ class EditionTest < ActiveSupport::TestCase
     should "not be valid for major changes with a blank change note" do
       edition = AnswerEdition.new(major_change: true, change_note: "")
       assert_not edition.valid?
-      assert edition.errors.has_key?(:change_note)
+      assert edition.errors.key?(:change_note)
     end
     should "be valid for major changes with a change note" do
       edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123, major_change: true, change_note: "Changed")
@@ -146,7 +146,7 @@ class EditionTest < ActiveSupport::TestCase
                                 state: "in_review", review_requested_at: Time.zone.now, assigned_to: user)
     edition.reviewer = user.name
     assert_not edition.valid?
-    assert edition.errors.has_key?(:reviewer)
+    assert edition.errors.key?(:reviewer)
   end
 
   test "it should build a clone" do
@@ -441,9 +441,9 @@ class EditionTest < ActiveSupport::TestCase
 
     a, b = 2.times.map { FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
-    alice, bob, charlie = %w[alice bob charlie].map { |s|
+    alice, bob, charlie = %w[alice bob charlie].map do |s|
       FactoryBot.create(:user, name: s)
-    }
+    end
     alice.assign(a, bob)
     alice.assign(a, charlie)
     alice.assign(b, bob)
@@ -539,9 +539,9 @@ class EditionTest < ActiveSupport::TestCase
 
     a, b = 2.times.map { |_i| FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
-    alice, bob, charlie = %w[alice bob charlie].map { |s|
+    alice, bob, charlie = %w[alice bob charlie].map do |s|
       FactoryBot.create(:user, name: s)
-    }
+    end
 
     alice.assign(a, bob)
     a.reload

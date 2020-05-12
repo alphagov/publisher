@@ -1,7 +1,7 @@
 module AreasHelper
   def edition_areas_select_options(edition)
     options_for_select(
-      Area.all.map { |area|
+      Area.all.map do |area|
         [
           area.name,
           area.codes["gss"],
@@ -10,10 +10,10 @@ module AreasHelper
             "data-type" => area.type,
           },
         ]
-      },
-      Area.areas_for_edition(edition).map { |area|
+      end,
+      Area.areas_for_edition(edition).map do |area|
         area.codes["gss"]
-      },
+      end,
     )
   end
 

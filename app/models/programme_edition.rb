@@ -18,9 +18,9 @@ class ProgrammeEdition < Edition
 
   def setup_default_parts
     if parts.empty?
-      DEFAULT_PARTS.each { |part|
+      DEFAULT_PARTS.each do |part|
         parts.build(title: part[:title], slug: part[:slug], body: "")
-      }
+      end
     end
   end
 end

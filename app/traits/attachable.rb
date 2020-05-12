@@ -22,7 +22,6 @@ module Attachable
   private
 
     def attaches_with_options(fields, options = {})
-      # rubocop:disable Metrics/BlockLength
       fields.map(&:to_s).each do |field|
         before_save "upload_#{field}".to_sym, if: "#{field}_has_changed?".to_sym
         self.field "#{field}_id".to_sym, type: String
@@ -73,7 +72,6 @@ module Attachable
           end
         end
       end
-      # rubocop:enable Metrics/BlockLength
     end
   end
 

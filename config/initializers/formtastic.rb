@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # --------------------------------------------------------------------------------------------------
 # Please note: If you're subclassing Formtastic::SemanticFormBuilder in a Rails 3 project,
 # Formtastic uses class_attribute for these configuration attributes instead of the deprecated

@@ -7,13 +7,13 @@ class DatesReportPresenter < CSVPresenter
       .where(:updated_at.gte => start_date)
       .where(:created_at.lte => end_date)
       .order_by(created_at: "asc")
-      .select { |item|
+      .select do |item|
         item.actions.select { |a|
           a.request_type == "publish" &&
             a.created_at >= start_date &&
             a.created_at <= end_date
         }.any?
-      }
+      end
     super(scope)
 
     self.column_headings = %i[

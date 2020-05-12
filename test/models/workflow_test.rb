@@ -128,7 +128,7 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_not guide.in_review?
     guide.reviewer = "Bob"
     assert_not guide.valid?
-    assert guide.errors.has_key?(:reviewer)
+    assert guide.errors.key?(:reviewer)
   end
 
   test "guide workflow" do

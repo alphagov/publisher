@@ -1,5 +1,4 @@
 # Having a long routes file is not a style violation
-# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   get "/healthcheck", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::SidekiqRedis,
@@ -64,4 +63,3 @@ Rails.application.routes.draw do
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
 end
-# rubocop:enable Metrics/BlockLength

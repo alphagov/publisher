@@ -34,9 +34,9 @@ FactoryBot.define do
     content_id      { SecureRandom.uuid }
 
     trait :with_published_edition do
-      after(:create) { |object|
+      after(:create) do |object|
         create("#{object.kind}_edition".to_sym, panopticon_id: object.id, slug: object.slug, state: "published")
-      }
+      end
     end
 
     trait :non_publisher do
@@ -66,10 +66,10 @@ FactoryBot.define do
   end
 
   factory :edition, class: AnswerEdition do
-    panopticon_id {
+    panopticon_id do
       a = create(:artefact, kind: kind_for_artefact)
       a.id
-    }
+    end
     transient do
       version_number { nil }
     end
@@ -128,10 +128,10 @@ FactoryBot.define do
 
   factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: "CompletedTransactionEdition" do
     sequence(:slug) { |n| "done/slug-#{n}" }
-    panopticon_id {
+    panopticon_id do
       a = create(:artefact, kind: kind_for_artefact, slug: slug)
       a.id
-    }
+    end
   end
 
   factory :video_edition, traits: [:with_body], parent: :edition, class: "VideoEdition" do

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class NoisyWorkflow < ApplicationMailer
   include PathsHelper
   default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
@@ -48,7 +46,9 @@ class NoisyWorkflow < ApplicationMailer
 
     def message; end
 
-    def processed?; true; end
+    def processed?
+      true
+    end
   end
 
   def report_errors(error_list)

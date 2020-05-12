@@ -156,7 +156,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
 
         should "not be present in the payload when it is not present in the YAML file" do
           @content[:choose_sign_in].delete(:description)
-          assert_not result[:details][:choose_sign_in].has_key?(:description)
+          assert_not result[:details][:choose_sign_in].key?(:description)
         end
       end
 
@@ -171,9 +171,9 @@ class ServiceSignInTest < ActiveSupport::TestCase
           @content[:choose_sign_in].delete(:tracking_code)
           @content[:choose_sign_in].delete(:tracking_domain)
           @content[:choose_sign_in].delete(:tracking_name)
-          assert_not result[:details][:choose_sign_in].has_key?(:tracking_code)
-          assert_not result[:details][:choose_sign_in].has_key?(:tracking_domain)
-          assert_not result[:details][:choose_sign_in].has_key?(:tracking_name)
+          assert_not result[:details][:choose_sign_in].key?(:tracking_code)
+          assert_not result[:details][:choose_sign_in].key?(:tracking_domain)
+          assert_not result[:details][:choose_sign_in].key?(:tracking_name)
         end
       end
 
@@ -215,7 +215,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
       context "when create_new_account is not present in the file" do
         should "not be present in the payload" do
           @content.delete(:create_new_account)
-          assert_not result.has_key?(:create_new_account)
+          assert_not result.key?(:create_new_account)
         end
       end
 
