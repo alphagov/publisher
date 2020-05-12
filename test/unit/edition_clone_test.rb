@@ -6,6 +6,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     @other_user = User.create uid: "321", name: "Furious Five"
 
     @artefact = FactoryBot.create(:artefact, name: "Childcare", slug: "childcare")
+    stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
   end
 
   def fact_check_and_publish(edition = nil)

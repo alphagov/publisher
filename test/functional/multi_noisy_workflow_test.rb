@@ -28,6 +28,8 @@ class MultiNoisyWorkflowTest < ActionMailer::TestCase
     end
 
     should "resend the fact check email for an edition in fact check state" do
+      stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
+
       send_fact_check(@user, @edition)
       stubbed_fact_check_mail = stub("mailer", deliver_now: true)
       MultiNoisyWorkflow.expects(:request_fact_check).returns(stubbed_fact_check_mail)
