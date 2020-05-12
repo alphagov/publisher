@@ -215,7 +215,7 @@ FactoryBot.define do
 
   factory :local_authority do
     name { "Some Council" }
-    sequence(:snac) { |n| "%02dAA" % n }
+    sequence(:snac) { |n| format "%02dAA", n }
     sequence(:local_directgov_id)
     tier { "county" }
   end

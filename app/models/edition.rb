@@ -450,7 +450,7 @@ class Edition
       ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
-      "%08x-%04x-%04x-%04x-%04x%08x" % ary
+      format "%08x-%04x-%04x-%04x-%04x%08x", *ary
     end
   end
 

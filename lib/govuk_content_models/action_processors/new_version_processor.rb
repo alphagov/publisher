@@ -17,7 +17,7 @@ module GovukContentModels
       end
 
       def record_action?
-        !!edition
+        edition.present?
       end
     end
   end
