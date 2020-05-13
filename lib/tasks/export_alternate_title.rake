@@ -3,14 +3,14 @@ desc "Export all Editions that have an alternate title as a CSV"
 task export_alternate_title: :environment do
   require "csv"
 
-  editions_with_alternative_titles = Edition.where(:alternative_title.nin => ["", nil]).map { |e|
+  editions_with_alternative_titles = Edition.where(:alternative_title.nin => ["", nil]).map do |e|
     {
       bson_id: e.id.to_s,
       title: e.title,
       alternative_title: e.alternative_title,
       slug: e.slug,
     }
-  }
+  end
 
   csv_string = CSV.generate do |csv|
     csv << %w[bson_id title alternative_title slug]

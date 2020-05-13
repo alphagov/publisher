@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class NotesController < InheritedResources::Base
   belongs_to :edition
 

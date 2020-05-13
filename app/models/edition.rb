@@ -18,7 +18,7 @@ class Edition
 
   field :title,                type: String
   field :in_beta,              type: Boolean,  default: false
-  field :created_at,           type: DateTime, default: lambda { Time.zone.now }
+  field :created_at,           type: DateTime, default: -> { Time.zone.now }
   field :publish_at,           type: DateTime
   field :overview,             type: String
   field :slug,                 type: String
@@ -39,10 +39,10 @@ class Edition
 
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
-    scope state, lambda { where(state: state) }
+    scope state, -> { where(state: state) }
   end
-  scope :archived_or_published, lambda { where(:state.in => %w[archived published]) }
-  scope :in_progress, lambda { where(:state.nin => %w[archived published]) }
+  scope :archived_or_published, -> { where(:state.in => %w[archived published]) }
+  scope :in_progress, -> { where(:state.nin => %w[archived published]) }
   scope :assigned_to, lambda { |user|
     if user
       where(assigned_to_id: user.id)
@@ -50,7 +50,7 @@ class Edition
       where(:assigned_to_id.exists => false)
     end
   }
-  scope :major_updates, lambda { where(major_change: true) }
+  scope :major_updates, -> { where(major_change: true) }
 
   scope :internal_search, lambda { |term|
     regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
@@ -450,7 +450,7 @@ class Edition
       ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
-      "%08x-%04x-%04x-%04x-%04x%08x" % ary
+      sprintf "%08x-%04x-%04x-%04x-%04x%08x", *ary # rubocop:disable Style/FormatString
     end
   end
 

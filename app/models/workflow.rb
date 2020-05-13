@@ -3,8 +3,6 @@ require "state_machines-mongoid"
 module Workflow
   class CannotDeletePublishedPublication < RuntimeError; end
   extend ActiveSupport::Concern
-
-  # rubocop:disable Metrics/BlockLength
   included do
     validate :not_editing_published_item
     before_destroy :check_can_delete_and_notify
@@ -105,7 +103,6 @@ module Workflow
       end
     end
   end
-  # rubocop:enable Metrics/BlockLength
 
   def can_resend_fact_check?
     fact_check? && latest_status_action&.is_fact_check_request?

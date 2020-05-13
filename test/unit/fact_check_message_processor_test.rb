@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require "test_helper"
 require "fact_check_message_processor"
 

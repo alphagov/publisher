@@ -22,7 +22,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
       @artefact.expects(:update_as).returns(false)
 
       result = UnpublishService.call(@artefact, @user)
-      assert result == nil
+      assert result.nil?
     end
   end
 

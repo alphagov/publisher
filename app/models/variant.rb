@@ -7,7 +7,7 @@ class Variant
 
   embedded_in :transaction_edition
 
-  scope :in_order, lambda { order_by(order: :asc) }
+  scope :in_order, -> { order_by(order: :asc) }
 
   field :order,             type: Integer
   field :title,             type: String
@@ -16,7 +16,7 @@ class Variant
   field :link,              type: String
   field :more_information,  type: String
   field :alternate_methods, type: String
-  field :created_at,        type: DateTime, default: lambda { Time.zone.now }
+  field :created_at,        type: DateTime, default: -> { Time.zone.now }
 
   GOVSPEAK_FIELDS = %i[introduction more_information alternate_methods].freeze
 

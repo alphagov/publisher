@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 class LinkValidator < ActiveModel::Validator
   def validate(record)
     record.class::GOVSPEAK_FIELDS.each do |govspeak_field_name|

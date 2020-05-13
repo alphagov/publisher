@@ -39,7 +39,7 @@ private
 
   def check_for_top_level_required_fields
     REQUIRED_TOP_LEVEL_FIELDS.each do |field|
-      @errors << "Missing field: #{field}" unless @yaml_file.has_key?(field)
+      @errors << "Missing field: #{field}" unless @yaml_file.key?(field)
     end
   end
 
@@ -66,7 +66,7 @@ private
 
   def check_choose_sign_in_top_level_fields(error_message)
     REQUIRED_CHOOSE_SIGN_IN_FIELDS.each do |field|
-      unless choose_sign_in.has_key?(field)
+      unless choose_sign_in.key?(field)
         @errors << error_message + field
       end
     end
@@ -80,8 +80,8 @@ private
     end
 
     choose_sign_in["options"].each do |option|
-      @errors << error_message + "text" unless option.has_key?("text")
-      unless option.has_key?("slug") || option.has_key?("url")
+      @errors << error_message + "text" unless option.key?("text")
+      unless option.key?("slug") || option.key?("url")
         @errors << error_message + "slug or url"
       end
     end
@@ -89,7 +89,7 @@ private
 
   def check_for_create_new_account_required_fields
     REQUIRED_CREATE_NEW_ACCOUNT_FIELDS.each do |field|
-      unless create_new_account.has_key?(field)
+      unless create_new_account.key?(field)
         @errors << "Missing create_new_account field: #{field}"
       end
     end

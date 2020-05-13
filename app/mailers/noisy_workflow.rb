@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class NoisyWorkflow < ApplicationMailer
   include PathsHelper
 
@@ -53,7 +51,9 @@ class NoisyWorkflow < ApplicationMailer
 
     def message; end
 
-    def processed?; true; end
+    def processed?
+      true
+    end
   end
 
   def report_errors(error_list)

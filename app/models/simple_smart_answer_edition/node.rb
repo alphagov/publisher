@@ -14,7 +14,7 @@ class SimpleSmartAnswerEdition < Edition
     field :order, type: Integer
     field :kind, type: String
 
-    default_scope lambda { order_by(order: :asc) }
+    default_scope -> { order_by(order: :asc) }
 
     GOVSPEAK_FIELDS = [:body].freeze
 

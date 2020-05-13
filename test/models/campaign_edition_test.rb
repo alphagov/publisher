@@ -46,7 +46,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign.organisation_brand_colour = "something-else"
 
     assert_not campaign.valid?
-    assert campaign.errors.has_key?(:organisation_brand_colour)
+    assert campaign.errors.key?(:organisation_brand_colour)
   end
 
   should "be not valid with an organisation crest from outside the list" do
@@ -54,7 +54,7 @@ class CampaignEditionTest < ActiveSupport::TestCase
     campaign.organisation_crest = "something-else"
 
     assert_not campaign.valid?
-    assert campaign.errors.has_key?(:organisation_crest)
+    assert campaign.errors.key?(:organisation_crest)
   end
 
   should "be valid with a blank organisation crest and brand colour" do

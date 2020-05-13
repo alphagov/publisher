@@ -85,7 +85,7 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
   end
 
   def there_is_job_enqueued_to_run_immediately(jobs)
-    jobs.one? { |job| !job.has_key? "at" }
+    jobs.one? { |job| !job.key? "at" }
   end
 
   def there_is_job_enqueued_to_run_at_time(jobs, time)
