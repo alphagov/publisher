@@ -9,7 +9,7 @@ class FactCheckConfig
     @reply_to_id = reply_to_id
 
     @subject_prefix = subject_prefix.present? ? subject_prefix + "-" : ""
-    subject_format = "\\[#{@subject_prefix}(?<id>[0-9a-f]+)\\]"
+    @subject_pattern = /\[#{@subject_prefix}(?<id>[0-9a-f]+)\]/
 
     @address_prefix, @address_suffix = address_format.split("{id}")
     @address_pattern = Regexp.new(
@@ -18,10 +18,6 @@ class FactCheckConfig
       "(.+?)" +
       Regexp.escape(@address_suffix) +
       '\Z',
-    )
-
-    @subject_pattern = Regexp.new(
-      subject_format,
     )
   end
 
