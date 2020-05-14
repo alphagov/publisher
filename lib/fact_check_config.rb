@@ -9,7 +9,7 @@ class FactCheckConfig
     @reply_to_id = reply_to_id
 
     @subject_prefix = subject_prefix.present? ? subject_prefix + "-" : ""
-    subject_format = "‘\\[.+?\\]’ GOV.UK preview of new edition \\[#{@subject_prefix}(?<id>.+?)\\]"
+    @subject_pattern = /\[#{@subject_prefix}(?<id>[0-9a-f]+)\]/
 
     @address_prefix, @address_suffix = address_format.split("{id}")
     @address_pattern = Regexp.new(
@@ -17,12 +17,6 @@ class FactCheckConfig
       Regexp.escape(@address_prefix) +
       "(.+?)" +
       Regexp.escape(@address_suffix) +
-      '\Z',
-    )
-
-    @subject_pattern = Regexp.new(
-      '\A.*' +
-      subject_format +
       '\Z',
     )
   end
@@ -44,14 +38,17 @@ class FactCheckConfig
   end
 
   def valid_subject?(subject)
-    @subject_pattern.match(subject).present?
+    subject.scan(@subject_pattern).length == 1
   end
 
   def item_id_from_subject(subject)
-    if (match = @subject_pattern.match(subject))
-      match[:id]
+    match = subject.scan(@subject_pattern)
+    if match.length == 1
+      match[0][0]
+    elsif match.length > 1
+      raise ArgumentError, "'#{subject}' has too many matches"
     else
-      raise ArgumentError, "'#{subject}' is not a valid fact check address"
+      raise ArgumentError, "'#{subject}' is not a valid fact check subject"
     end
   end
 end
