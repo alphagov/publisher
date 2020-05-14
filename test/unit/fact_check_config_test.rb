@@ -131,6 +131,8 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "raise an exception if there are multiple matches" do
     config = FactCheckConfig.new(valid_address_pattern)
     valid_subjects.each do |valid_subject|
+      assert_equal false, config.valid_subject?(valid_subject + " [5678]")
+
       assert_raises ArgumentError do
         config.item_id_from_subject(valid_subject + " [5678]")
       end

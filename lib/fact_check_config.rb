@@ -38,7 +38,7 @@ class FactCheckConfig
   end
 
   def valid_subject?(subject)
-    @subject_pattern.match(subject).present?
+    subject.scan(@subject_pattern).length == 1
   end
 
   def item_id_from_subject(subject)
