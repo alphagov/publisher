@@ -9,11 +9,13 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#create" do
     setup do
-      @artefact = FactoryBot.create(:artefact,
-                                    slug: "test",
-                                    kind: "answer",
-                                    name: "test",
-                                    owning_app: "publisher")
+      @artefact = FactoryBot.create(
+        :artefact,
+        slug: "test",
+        kind: "answer",
+        name: "test",
+        owning_app: "publisher",
+      )
     end
 
     should "report publication counts on creation" do
@@ -285,16 +287,22 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#destroy" do
     setup do
-      artefact1 = FactoryBot.create(:artefact, slug: "test",
-                                               kind: "transaction",
-                                               name: "test",
-                                               owning_app: "publisher")
+      artefact1 = FactoryBot.create(
+        :artefact,
+        slug: "test",
+        kind: "transaction",
+        name: "test",
+        owning_app: "publisher",
+      )
       @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
 
-      artefact2 = FactoryBot.create(:artefact, slug: "test2",
-                                               kind: "guide",
-                                               name: "test",
-                                               owning_app: "publisher")
+      artefact2 = FactoryBot.create(
+        :artefact,
+        slug: "test2",
+        kind: "guide",
+        name: "test",
+        owning_app: "publisher",
+      )
       @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
       stub_request(:delete, "#{Plek.current.find('arbiter')}/slugs/test").to_return(status: 200)
@@ -352,10 +360,13 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     setup do
-      artefact2 = FactoryBot.create(:artefact, slug: "test2",
-                                               kind: "guide",
-                                               name: "test",
-                                               owning_app: "publisher")
+      artefact2 = FactoryBot.create(
+        :artefact,
+        slug: "test2",
+        kind: "guide",
+        name: "test",
+        owning_app: "publisher",
+      )
       @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 
@@ -387,10 +398,15 @@ class EditionsControllerTest < ActionController::TestCase
     setup do
       @artefact = FactoryBot.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
       @edition = FactoryBot.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
-      @edition.nodes.build(kind: "question", slug: "question-1", title: "Question One", options_attributes: [
-        { label: "Option One", next_node: "outcome-1" },
-        { label: "Option Two", next_node: "outcome-2" },
-      ])
+      @edition.nodes.build(
+        kind: "question",
+        slug: "question-1",
+        title: "Question One",
+        options_attributes: [
+          { label: "Option One", next_node: "outcome-1" },
+          { label: "Option Two", next_node: "outcome-2" },
+        ],
+      )
       @edition.nodes.build(kind: "outcome", slug: "outcome-1", title: "Outcome One")
       @edition.nodes.build(kind: "outcome", slug: "outcome-2", title: "Outcome Two")
       @edition.save!

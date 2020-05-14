@@ -29,7 +29,7 @@ class LinkCheckReportCreator
 
     report
   rescue Mongoid::Errors::Validations => e
-    raise InvalidReport.new(e)
+    raise InvalidReport, e
   end
 
 private

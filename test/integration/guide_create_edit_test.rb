@@ -26,10 +26,12 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "editing a GuideEdition, and hiding chapter navigation" do
-    guide = FactoryBot.create(:guide_edition,
-                              panopticon_id: @artefact.id,
-                              state: "draft",
-                              title: "Foo bar #0")
+    guide = FactoryBot.create(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      state: "draft",
+      title: "Foo bar #0",
+    )
 
     visit_edition guide
     assert_not find("#edition_hide_chapter_navigation").checked?
@@ -45,10 +47,12 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "show hide_chapter_navigation as selected" do
-    guide = FactoryBot.build(:guide_edition,
-                             panopticon_id: @artefact.id,
-                             state: "draft",
-                             title: "Foo bar #0")
+    guide = FactoryBot.build(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      state: "draft",
+      title: "Foo bar #0",
+    )
     guide.hide_chapter_navigation = true
     guide.save!
 
@@ -57,9 +61,11 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "editing a GuideEdition, and adding some parts" do
-    guide = FactoryBot.build(:guide_edition,
-                             panopticon_id: @artefact.id,
-                             title: "Foo bar")
+    guide = FactoryBot.build(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      title: "Foo bar",
+    )
     guide.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
     guide.save!
 
@@ -89,10 +95,12 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a GuideEdition" do
-    guide = FactoryBot.create(:guide_edition_with_two_parts,
-                              panopticon_id: @artefact.id,
-                              state: "published",
-                              title: "Foo bar")
+    guide = FactoryBot.create(
+      :guide_edition_with_two_parts,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "Foo bar",
+    )
     guide.save!
 
     visit_edition guide
@@ -106,10 +114,12 @@ class GuideCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryBot.create(:guide_edition_with_two_parts,
-                                panopticon_id: @artefact.id,
-                                state: "published",
-                                title: "Foo bar")
+    edition = FactoryBot.create(
+      :guide_edition_with_two_parts,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "Foo bar",
+    )
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

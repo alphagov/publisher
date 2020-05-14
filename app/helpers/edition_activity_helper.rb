@@ -11,8 +11,11 @@ module EditionActivityHelper
 
   def edition_activities_forms(edition, activities)
     activities_forms = activities.map do |activity, title|
-      semantic_form_for(:edition, url: progress_edition_path(edition),
-                                  html: modal_attributes.merge(id: "#{activity}_form")) do |f|
+      semantic_form_for(
+        :edition,
+        url: progress_edition_path(edition),
+        html: modal_attributes.merge(id: "#{activity}_form"),
+      ) do |f|
         edition_activity_fields(edition, title, activity, f, inline: false)
       end
     end
@@ -24,8 +27,11 @@ module EditionActivityHelper
     render(
       partial: "shared/edition_activity_fields",
       locals: {
-        form_builder: form_builder, title: title, activity: activity,
-        inline: options[:inline], disabled: !edition.send("can_#{activity}?".to_sym)
+        form_builder: form_builder,
+        title: title,
+        activity: activity,
+        inline: options[:inline],
+        disabled: !edition.send("can_#{activity}?".to_sym),
       },
     )
   end

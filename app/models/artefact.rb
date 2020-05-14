@@ -85,8 +85,9 @@ class Artefact
   embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
 
   embeds_many :external_links, class_name: "ArtefactExternalLink"
-  accepts_nested_attributes_for :external_links, allow_destroy: true,
-                                                 reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
+  accepts_nested_attributes_for :external_links,
+                                allow_destroy: true,
+                                reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
 
   before_validation :normalise, on: :create
   before_create :record_create_action
@@ -131,8 +132,10 @@ class Artefact
   end
 
   def any_editions_ever_published?
-    Edition.where(panopticon_id: id,
-                  :state.in => %w[published archived]).any?
+    Edition.where(
+      panopticon_id: id,
+      :state.in => %w[published archived],
+    ).any?
   end
 
   def update_editions

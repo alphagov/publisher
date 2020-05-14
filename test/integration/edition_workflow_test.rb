@@ -407,7 +407,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_link?(
       "Edit existing newer edition",
       href: edition_path(new_edition),
-    ), "Page should have edit link"
+    ),
+           "Page should have edit link"
   end
 
   test "should show an alert if another person has created a newer edition" do

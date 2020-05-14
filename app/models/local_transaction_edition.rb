@@ -15,7 +15,7 @@ class LocalTransactionEdition < Edition
   validates :lgil_code, numericality: { only_integer: true, message: "can only be whole number between 0 and 999." }
 
   def valid_lgsl_code
-    if !service
+    unless service
       errors.add(:lgsl_code, "#{lgsl_code} not recognised")
     end
   end

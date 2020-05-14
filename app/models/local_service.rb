@@ -10,9 +10,10 @@ class LocalService
 
   validates :lgsl_code, :providing_tier, presence: true
   validates :lgsl_code, uniqueness: true
-  validates :providing_tier, inclusion: {
-    in: [%w[county unitary], %w[district unitary], %w[district unitary county]],
-  }
+  validates :providing_tier,
+            inclusion: {
+              in: [%w[county unitary], %w[district unitary], %w[district unitary county]],
+            }
 
   def self.find_by_lgsl_code(lgsl_code)
     LocalService.where(lgsl_code: lgsl_code).first

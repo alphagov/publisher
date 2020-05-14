@@ -35,8 +35,10 @@ class ActionDispatch::IntegrationTest
 
   def assert_field_contains(expected, field)
     found_field = find_field(field)
-    assert(found_field.value.include?(expected),
-           "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}")
+    assert(
+      found_field.value.include?(expected),
+      "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}",
+    )
   end
 
   def filter_by_user(option, from: "Assignee")

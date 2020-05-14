@@ -56,13 +56,17 @@ module ActionHelper
     formatted_email_parts = [format_and_auto_link_plain_text(email_parts.shift)]
 
     # if a reply was found
-    if !email_parts.empty?
-      formatted_email_parts << link_to("Toggle earlier messages",
-                                       "#show-original",
-                                       class: "original-message-toggle if-no-js-hide js-toggle")
-      formatted_email_parts << content_tag(:div,
-                                           format_and_auto_link_plain_text(email_parts.join("")),
-                                           class: "original-message if-js-hide js-toggle-target")
+    unless email_parts.empty?
+      formatted_email_parts << link_to(
+        "Toggle earlier messages",
+        "#show-original",
+        class: "original-message-toggle if-no-js-hide js-toggle",
+      )
+      formatted_email_parts << content_tag(
+        :div,
+        format_and_auto_link_plain_text(email_parts.join("")),
+        class: "original-message if-js-hide js-toggle-target",
+      )
     end
 
     formatted_email_parts

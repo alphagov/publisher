@@ -105,9 +105,12 @@ FactoryBot.define do
       end
 
       link_check_reports do
-        [FactoryBot.build(:link_check_report, :with_links,
-                          batch_id: batch_id,
-                          link_uris: link_uris)]
+        [FactoryBot.build(
+          :link_check_report,
+          :with_links,
+          batch_id: batch_id,
+          link_uris: link_uris,
+        )]
       end
     end
   end
@@ -147,31 +150,46 @@ FactoryBot.define do
 
   factory :programme_edition_with_multiple_parts, parent: :programme_edition do
     after :create do |getp|
-      getp.parts.build(title: "PART !", body: "This is some programme version text.",
-                       slug: "part-one")
-      getp.parts.build(title: "PART !!",
-                       body: "This is some more programme version text.",
-                       slug: "part-two")
+      getp.parts.build(
+        title: "PART !",
+        body: "This is some programme version text.",
+        slug: "part-one",
+      )
+      getp.parts.build(
+        title: "PART !!",
+        body: "This is some more programme version text.",
+        slug: "part-two",
+      )
     end
   end
 
   factory :guide_edition_with_two_parts, parent: :guide_edition do
     after :create do |getp|
-      getp.parts.build(title: "PART !", body: "This is some version text.",
-                       slug: "part-one")
-      getp.parts.build(title: "PART !!",
-                       body: "This is some more version text.",
-                       slug: "part-two")
+      getp.parts.build(
+        title: "PART !",
+        body: "This is some version text.",
+        slug: "part-one",
+      )
+      getp.parts.build(
+        title: "PART !!",
+        body: "This is some more version text.",
+        slug: "part-two",
+      )
     end
   end
 
   factory :guide_edition_with_two_govspeak_parts, parent: :guide_edition do
     after :create do |getp|
-      getp.parts.build(title: "Some Part Title!",
-                       body: "This is some **version** text.", slug: "part-one")
-      getp.parts.build(title: "Another Part Title",
-                       body: "This is [link](http://example.net/) text.",
-                       slug: "part-two")
+      getp.parts.build(
+        title: "Some Part Title!",
+        body: "This is some **version** text.",
+        slug: "part-one",
+      )
+      getp.parts.build(
+        title: "Another Part Title",
+        body: "This is [link](http://example.net/) text.",
+        slug: "part-two",
+      )
     end
   end
 
@@ -193,12 +211,16 @@ FactoryBot.define do
 
   factory :transaction_edition_with_two_variants, parent: :transaction_edition do
     after :create do |getp|
-      getp.variants.build(title: "VARIANT !",
-                          introduction: "This is some version text.",
-                          slug: "variant-one")
-      getp.variants.build(title: "VARIANT !!",
-                          introduction: "This is some more version text.",
-                          slug: "variant-two")
+      getp.variants.build(
+        title: "VARIANT !",
+        introduction: "This is some version text.",
+        slug: "variant-one",
+      )
+      getp.variants.build(
+        title: "VARIANT !!",
+        introduction: "This is some more version text.",
+        slug: "variant-two",
+      )
     end
   end
 
@@ -215,7 +237,7 @@ FactoryBot.define do
 
   factory :local_authority do
     name { "Some Council" }
-    sequence(:snac) { |n| format "%02dAA", n }
+    sequence(:snac) { |n| sprintf "%02dAA", n }
     sequence(:local_directgov_id)
     tier { "county" }
   end

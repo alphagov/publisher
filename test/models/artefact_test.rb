@@ -190,11 +190,13 @@ class ArtefactTest < ActiveSupport::TestCase
   # should continue to work in the way it has been:
   # i.e. you can edit everything but the name/title for published content in panop
   test "on save title should not be applied to already published content" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "foo-bar",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
 
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
@@ -211,12 +213,14 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should not change the slug of published editions when the artefact slug is changed" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "too-late-to-edit",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher",
-                                 state: "live")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "too-late-to-edit",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+      state: "live",
+    )
 
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
@@ -230,12 +234,14 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should change the slug of draft editions when the artefact slug is changed" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "too-late-to-edit",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher",
-                                 state: "live")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "too-late-to-edit",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+      state: "live",
+    )
 
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
@@ -249,11 +255,13 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should indicate when any editions have been published for this artefact" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "foo-bar",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
 

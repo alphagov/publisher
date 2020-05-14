@@ -6,7 +6,7 @@ class UserSearchController < ApplicationController
   def index
     @user_filter = params[:user_filter] || current_user.uid
     @user = params[:user_filter] ? User.where(uid: @user_filter).first : current_user
-    raise ActionController::RoutingError.new("Not Found") unless @user
+    raise ActionController::RoutingError, "Not Found" unless @user
 
     # Warning: this works for all our current users, but is likely to break in
     # future. We should update our user model to have the concept of a forename

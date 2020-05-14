@@ -1,9 +1,10 @@
 # Having a long routes file is not a style violation
 Rails.application.routes.draw do
-  get "/healthcheck", to: GovukHealthcheck.rack_response(
-    GovukHealthcheck::SidekiqRedis,
-    Healthcheck::ScheduledPublishing,
-  )
+  get "/healthcheck",
+      to: GovukHealthcheck.rack_response(
+        GovukHealthcheck::SidekiqRedis,
+        Healthcheck::ScheduledPublishing,
+      )
 
   resources :notes do
     put "resolve", on: :member
@@ -28,13 +29,14 @@ Rails.application.routes.draw do
       patch "update_related_external_links"
       post "progress"
       put "review"
-      post "skip_fact_check", to: "editions#progress",
-                              edition: {
-                                activity: {
-                                  request_type: "skip_fact_check",
-                                  comment: "Fact check skipped by request.",
-                                },
-                              }
+      post "skip_fact_check",
+           to: "editions#progress",
+           edition: {
+             activity: {
+               request_type: "skip_fact_check",
+               comment: "Fact check skipped by request.",
+             },
+           }
     end
 
     resource :downtime, only: %i[new create edit update destroy]

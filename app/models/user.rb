@@ -30,10 +30,13 @@ class User
   index disabled: 1
 
   scope :alphabetized, -> { order_by(name: :asc) }
-  scope :enabled, lambda {
-    any_of({ :disabled.exists => false },
-           { :disabled.in => [false, nil] })
-  }
+  scope :enabled,
+        lambda {
+          any_of(
+            { :disabled.exists => false },
+            { :disabled.in => [false, nil] },
+          )
+        }
 
   def to_s
     name || email || ""

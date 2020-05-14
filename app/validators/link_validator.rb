@@ -22,7 +22,7 @@ class LinkValidator < ActiveModel::Validator
     errors = Set.new
 
     string.gsub(/(“|”)+/, '"').scan(link_regex) do |match|
-      if !%r{^(?:https?://|mailto:|/)}.match?(match[0])
+      unless %r{^(?:https?://|mailto:|/)}.match?(match[0])
         errors << "Internal links must start with a forward slash eg [link text](/link-destination). External links must start with http://, https://, or mailto: eg [external link text](https://www.google.co.uk)."
       end
       if match[1]

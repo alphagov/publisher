@@ -33,14 +33,16 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow editing LicenceEdition" do
-      licence = FactoryBot.create(:licence_edition,
-                                  panopticon_id: @artefact.id,
-                                  title: "Foo bar",
-                                  licence_identifier: "ab2345",
-                                  licence_short_description: "Short description content",
-                                  licence_overview: "Licence overview content",
-                                  will_continue_on: "The HMRC website",
-                                  continuation_link: "http://www.hmrc.gov.uk")
+      licence = FactoryBot.create(
+        :licence_edition,
+        panopticon_id: @artefact.id,
+        title: "Foo bar",
+        licence_identifier: "ab2345",
+        licence_short_description: "Short description content",
+        licence_overview: "Licence overview content",
+        will_continue_on: "The HMRC website",
+        continuation_link: "http://www.hmrc.gov.uk",
+      )
 
       visit_edition licence
 
@@ -68,15 +70,17 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a LicenceEdition" do
-    licence = FactoryBot.create(:licence_edition,
-                                panopticon_id: @artefact.id,
-                                state: "published",
-                                title: "Foo bar",
-                                licence_identifier: "ab2345",
-                                licence_short_description: "Short description content",
-                                licence_overview: "Licence overview content",
-                                will_continue_on: "The HMRC website",
-                                continuation_link: "http://www.hmrc.gov.uk")
+    licence = FactoryBot.create(
+      :licence_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "Foo bar",
+      licence_identifier: "ab2345",
+      licence_short_description: "Short description content",
+      licence_overview: "Licence overview content",
+      will_continue_on: "The HMRC website",
+      continuation_link: "http://www.hmrc.gov.uk",
+    )
 
     visit_edition licence
     click_on "Create new edition"
@@ -91,15 +95,17 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryBot.create(:licence_edition,
-                                panopticon_id: @artefact.id,
-                                state: "published",
-                                title: "Foo bar",
-                                licence_identifier: "ab2345",
-                                licence_short_description: "Short description content",
-                                licence_overview: "Licence overview content",
-                                will_continue_on: "The HMRC website",
-                                continuation_link: "http://www.hmrc.gov.uk")
+    edition = FactoryBot.create(
+      :licence_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "Foo bar",
+      licence_identifier: "ab2345",
+      licence_short_description: "Short description content",
+      licence_overview: "Licence overview content",
+      will_continue_on: "The HMRC website",
+      continuation_link: "http://www.hmrc.gov.uk",
+    )
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

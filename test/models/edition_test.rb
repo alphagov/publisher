@@ -6,13 +6,21 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   def template_answer(version_number = 1)
-    artefact = FactoryBot.create(:artefact,
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
 
-    AnswerEdition.create(state: "ready", slug: "childcare", panopticon_id: artefact.id,
-                         title: "Child care stuff", body: "Lots of info", version_number: version_number)
+    AnswerEdition.create(
+      state: "ready",
+      slug: "childcare",
+      panopticon_id: artefact.id,
+      title: "Child care stuff",
+      body: "Lots of info",
+      version_number: version_number,
+    )
   end
 
   def template_published_answer(version_number = 1)
@@ -23,8 +31,13 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   def template_transaction
-    TransactionEdition.create(title: "One", introduction: "introduction",
-                              more_information: "more info", panopticon_id: @artefact.id, slug: "childcare")
+    TransactionEdition.create(
+      title: "One",
+      introduction: "introduction",
+      more_information: "more info",
+      panopticon_id: @artefact.id,
+      slug: "childcare",
+    )
   end
 
   def template_unpublished_answer(version_number = 1)
@@ -142,20 +155,28 @@ class EditionTest < ActiveSupport::TestCase
 
   test "reviewer cannot be the assignee" do
     user = FactoryBot.create(:user)
-    edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123,
-                                state: "in_review", review_requested_at: Time.zone.now, assigned_to: user)
+    edition = AnswerEdition.new(
+      title: "Edition",
+      version_number: 1,
+      panopticon_id: 123,
+      state: "in_review",
+      review_requested_at: Time.zone.now,
+      assigned_to: user,
+    )
     edition.reviewer = user.name
     assert_not edition.valid?
     assert edition.errors.key?(:reviewer)
   end
 
   test "it should build a clone" do
-    edition = FactoryBot.create(:guide_edition,
-                                state: "published",
-                                panopticon_id: @artefact.id,
-                                version_number: 1,
-                                overview: "I am a test overview",
-                                in_beta: true)
+    edition = FactoryBot.create(
+      :guide_edition,
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      overview: "I am a test overview",
+      in_beta: true,
+    )
     clone_edition = edition.build_clone
     assert_equal "I am a test overview", clone_edition.overview
     assert_equal true, clone_edition.in_beta
@@ -163,24 +184,30 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "cloning can only occur from a published edition" do
-    edition = FactoryBot.create(:guide_edition,
-                                panopticon_id: @artefact.id,
-                                version_number: 1)
+    edition = FactoryBot.create(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      version_number: 1,
+    )
     assert_raise(RuntimeError) do
       edition.build_clone
     end
   end
 
   test "cloning can only occur from a published edition with no subsequent in progress siblings" do
-    edition = FactoryBot.create(:guide_edition,
-                                panopticon_id: @artefact.id,
-                                state: "published",
-                                version_number: 1)
+    edition = FactoryBot.create(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      version_number: 1,
+    )
 
-    FactoryBot.create(:guide_edition,
-                      panopticon_id: @artefact.id,
-                      state: "draft",
-                      version_number: 2)
+    FactoryBot.create(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      state: "draft",
+      version_number: 2,
+    )
 
     assert_raise(RuntimeError) do
       edition.build_clone
@@ -188,14 +215,18 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "cloning from an earlier edition should give you a safe version number" do
-    edition = FactoryBot.create(:guide_edition,
-                                state: "published",
-                                panopticon_id: @artefact.id,
-                                version_number: 1)
-    FactoryBot.create(:guide_edition,
-                      state: "published",
-                      panopticon_id: @artefact.id,
-                      version_number: 2)
+    edition = FactoryBot.create(
+      :guide_edition,
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+    )
+    FactoryBot.create(
+      :guide_edition,
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 2,
+    )
 
     clone1 = edition.build_clone
     assert_equal 3, clone1.version_number
@@ -400,11 +431,13 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should create a publication based on data imported from panopticon" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "foo-bar",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
     artefact.save!
 
     Artefact.find(artefact.id)
@@ -418,17 +451,21 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should not change edition metadata if archived" do
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "foo-bar",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
 
-    guide = FactoryBot.create(:guide_edition,
-                              panopticon_id: artefact.id,
-                              title: "Original title",
-                              slug: "original-title",
-                              state: "archived")
+    guide = FactoryBot.create(
+      :guide_edition,
+      panopticon_id: artefact.id,
+      title: "Original title",
+      slug: "original-title",
+      state: "archived",
+    )
     artefact.slug = "new-slug"
     artefact.save
 
@@ -841,11 +878,13 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should denormalise a creator's name when an edition is created" do
     user = FactoryBot.create(:user)
-    artefact = FactoryBot.create(:artefact,
-                                 slug: "foo-bar",
-                                 kind: "answer",
-                                 name: "Foo bar",
-                                 owning_app: "publisher")
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
 
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user)
 
@@ -1008,10 +1047,13 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#latest_major_update" do
     should "return the most recent published edition with a major change" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                    change_note: "published",
-                                                    state: "published",
-                                                    version_number: 1)
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: true,
+        change_note: "published",
+        state: "published",
+        version_number: 1,
+      )
       edition2 = edition1.build_clone
 
       edition2.update!(major_change: true, change_note: "changed", state: "published")
@@ -1025,36 +1067,48 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#latest_change_note" do
     should "return the change note of the latest major update" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                    change_note: "a change note",
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: true,
+        change_note: "a change note",
+        state: "published",
+      )
       edition2 = edition1.build_clone
 
       assert_equal "a change note", edition2.latest_change_note
     end
 
     should "return nil if there is no major update in the edition series" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        state: "published",
+      )
       assert_nil edition1.latest_change_note
     end
   end
 
   context "#public_updated_at" do
     should "return the updated_at timestamp of the latest major update" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: true,
-                                                    change_note: "a change note",
-                                                    updated_at: 1.minute.ago,
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: true,
+        change_note: "a change note",
+        updated_at: 1.minute.ago,
+        state: "published",
+      )
       edition2 = edition1.build_clone
 
       assert_in_delta edition1.updated_at, edition2.public_updated_at, 1.second
     end
 
     should "return the timestamp of the first published edition when there are no major updates" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    updated_at: 2.minutes.ago,
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        updated_at: 2.minutes.ago,
+        state: "published",
+      )
       edition2 = edition1.build_clone
       Timecop.freeze(1.minute.ago) do
         # added to allow significant amount of time between edition updated_at values
@@ -1067,9 +1121,12 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "return nil if there are no major updates and no published editions" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    updated_at: 1.minute.ago,
-                                                    state: "draft")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        updated_at: 1.minute.ago,
+        state: "draft",
+      )
 
       assert_nil edition1.public_updated_at
     end
@@ -1077,14 +1134,20 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#has_ever_been_published?" do
     should "return true if any edition has a published state" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    updated_at: 2.minutes.ago,
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        updated_at: 2.minutes.ago,
+        state: "published",
+      )
       edition2 = edition1.build_clone
       edition2.update!(state: "archived", major_change: false)
-      edition4 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    updated_at: 2.minutes.ago,
-                                                    state: "draft")
+      edition4 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        updated_at: 2.minutes.ago,
+        state: "draft",
+      )
 
       assert_equal true, edition1.has_ever_been_published?
       assert_equal true, edition2.has_ever_been_published?
@@ -1094,9 +1157,12 @@ class EditionTest < ActiveSupport::TestCase
 
   context "#first_edition_of_published" do
     should "return the first edition of a series that has at least one edition state published" do
-      edition1 = FactoryBot.create(:answer_edition, major_change: false,
-                                                    updated_at: 2.minutes.ago,
-                                                    state: "published")
+      edition1 = FactoryBot.create(
+        :answer_edition,
+        major_change: false,
+        updated_at: 2.minutes.ago,
+        state: "published",
+      )
       edition2 = edition1.build_clone
       edition1.update!(state: "archived", major_change: false)
       edition2.update!(state: "published", major_change: false)
