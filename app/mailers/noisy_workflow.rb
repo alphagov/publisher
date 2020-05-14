@@ -26,13 +26,12 @@ class NoisyWorkflow < ApplicationMailer
     @edition = action.edition
     fact_check_prefix = Publisher::Application.fact_check_config.subject_prefix
     reply_to_id = Publisher::Application.fact_check_config.reply_to_id
-    @customised_message = action.customised_message
 
-    @prefixed_edition_id = fact_check_prefix + @edition.id
+    @customised_message = action.customised_message
 
     params = {
       to: recipient_email,
-      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{@prefixed_edition_id}]",
+      subject: "‘[#{@edition.title}]’ GOV.UK preview of new edition [#{fact_check_prefix}#{@edition.id}]",
     }
     params[:reply_to_id] = reply_to_id if reply_to_id.present?
 
