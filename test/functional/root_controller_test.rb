@@ -24,32 +24,41 @@ class RootControllerTest < ActionController::TestCase
 
   test "should strip leading/trailing whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff")
-    get(:index, params: {
-      list: "drafts",
-      user_filter: "all",
-      string_filter: " stuff",
-    })
+    get(
+      :index,
+      params: {
+        list: "drafts",
+        user_filter: "all",
+        string_filter: " stuff",
+      },
+    )
     assert_select "td.title", /Stuff/i
   end
 
   test "should strip excess interstitial whitespace from string_filter" do
     @guide.update_attribute(:title, "Stuff and things")
-    get(:index, params: {
-      list: "drafts",
-      user_filter: "all",
-      string_filter: "stuff   and things",
-    })
+    get(
+      :index,
+      params: {
+        list: "drafts",
+        user_filter: "all",
+        string_filter: "stuff   and things",
+      },
+    )
     assert_select "td.title", /Stuff and things/i
   end
 
   test "should search in slug with string_filter" do
     @guide.update_attribute(:title, "Stuff")
     @guide.update_attribute(:slug, "electric-banana")
-    get(:index, params: {
-      list: "drafts",
-      user_filter: "all",
-      string_filter: "electric-banana",
-    })
+    get(
+      :index,
+      params: {
+        list: "drafts",
+        user_filter: "all",
+        string_filter: "electric-banana",
+      },
+    )
     assert_select "td.title", /Stuff/i
   end
 end

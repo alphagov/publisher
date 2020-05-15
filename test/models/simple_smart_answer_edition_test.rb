@@ -22,10 +22,12 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "copy the body and nodes when cloning an edition" do
-    edition = FactoryBot.create(:simple_smart_answer_edition,
-                                panopticon_id: @artefact.id,
-                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-                                state: "published")
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.nodes.build(slug: "left", title: "As you wander through the door, it slams shut behind you, as a lion starts pacing towards you...", order: 2, kind: "outcome")
     edition.nodes.build(slug: "right", title: "As you wander through the door, it slams shut behind you, as a tiger starts pacing towards you...", order: 3, kind: "outcome")
@@ -45,10 +47,12 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "not copy nodes when new edition is not a smart answer" do
-    edition = FactoryBot.create(:simple_smart_answer_edition,
-                                panopticon_id: @artefact.id,
-                                body: "This smart answer is somewhat unique and calls for a different kind of introduction",
-                                state: "published")
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
     edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.save!
 
@@ -71,10 +75,13 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "create nodes with nested attributes" do
-    edition = FactoryBot.create(:simple_smart_answer_edition, nodes_attributes: [
-      { slug: "question1", title: "Question 1", kind: "question", order: 1 },
-      { slug: "foo", title: "Outcome 1", kind: "outcome", order: 2 },
-    ])
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      nodes_attributes: [
+        { slug: "question1", title: "Question 1", kind: "question", order: 1 },
+        { slug: "foo", title: "Outcome 1", kind: "outcome", order: 2 },
+      ],
+    )
 
     assert_equal 2, edition.nodes.size
     assert_equal %w[question1 foo], edition.nodes.all.map(&:slug)
@@ -150,13 +157,17 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "update edition and nested node and option attributes" do
-      @edition.update(title: "Smarter than the average answer",
-                      body: "No developers were involved in the changing of this copy",
-                      nodes_attributes: {
-                        "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first", "options_attributes" => {
-                          "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
-                        } },
-                      })
+      @edition.update(
+        title: "Smarter than the average answer",
+        body: "No developers were involved in the changing of this copy",
+        nodes_attributes: {
+          "0" => { "id" => @edition.nodes.first.id,
+                   "title" => "Question the first",
+                   "options_attributes" => {
+                     "0" => { "id" => @edition.nodes.first.options.first.id, "label" => "Option the first" },
+                   } },
+        },
+      )
 
       @edition.reload
 
@@ -168,13 +179,17 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     should "create and destroy nodes and options using nested attributes" do
       @edition.update(nodes_attributes: {
-        "0" => { "id" => @edition.nodes.first.id, "options_attributes" => {
-          "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
-        } },
+        "0" => { "id" => @edition.nodes.first.id,
+                 "options_attributes" => {
+                   "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
+                 } },
         "1" => { "id" => @edition.nodes.second.id, "_destroy" => "1" },
-        "2" => { "kind" => "question", "title" => "Question 3", "slug" => "question3", "options_attributes" => {
-          "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" },
-        } },
+        "2" => { "kind" => "question",
+                 "title" => "Question 3",
+                 "slug" => "question3",
+                 "options_attributes" => {
+                   "0" => { "label" => "Goes to outcome 1", "next_node" => "outcome1" },
+                 } },
         "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" },
       })
 

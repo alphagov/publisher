@@ -2,25 +2,31 @@ require "integration_test_helper"
 
 class SkipReviewTest < JavascriptIntegrationTest
   setup do
-    @permitted_user = FactoryBot.create(:user,
-                                        name: "Vincent Panache",
-                                        email: "test@example.com",
-                                        permissions: %w[skip_review])
+    @permitted_user = FactoryBot.create(
+      :user,
+      name: "Vincent Panache",
+      email: "test@example.com",
+      permissions: %w[skip_review],
+    )
 
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @artefact = FactoryBot.create(:artefact,
-                                  slug: "hedgehog-topiary",
-                                  kind: "guide",
-                                  name: "Foo bar",
-                                  owning_app: "publisher")
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "hedgehog-topiary",
+      kind: "guide",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
 
-    @guide = FactoryBot.build(:guide_edition,
-                              panopticon_id: @artefact.id,
-                              title: "Foo bar",
-                              state: "in_review",
-                              review_requested_at: 1.hour.ago)
+    @guide = FactoryBot.build(
+      :guide_edition,
+      panopticon_id: @artefact.id,
+      title: "Foo bar",
+      state: "in_review",
+      review_requested_at: 1.hour.ago,
+    )
     @guide.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
     @guide.save!
 
@@ -55,10 +61,12 @@ class SkipReviewTest < JavascriptIntegrationTest
   end
 
   should "not allow a user without permissions to force publish" do
-    editor = FactoryBot.create(:user,
-                               name: "Editor",
-                               email: "thingy@example.com",
-                               permissions: %w[editor])
+    editor = FactoryBot.create(
+      :user,
+      name: "Editor",
+      email: "thingy@example.com",
+      permissions: %w[editor],
+    )
 
     login_as editor
 

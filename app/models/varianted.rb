@@ -3,8 +3,9 @@ require_dependency "variant"
 module Varianted
   def self.included(klass)
     klass.embeds_many :variants
-    klass.accepts_nested_attributes_for :variants, allow_destroy: true,
-                                                   reject_if: proc { |attrs| attrs["title"].blank? && attrs["slug"].blank? }
+    klass.accepts_nested_attributes_for :variants,
+                                        allow_destroy: true,
+                                        reject_if: proc { |attrs| attrs["title"].blank? && attrs["slug"].blank? }
     klass.after_validation :merge_embedded_variants_errors
   end
 
@@ -21,7 +22,7 @@ module Varianted
   end
 
   def order_variants
-    ordered_variants = variants.sort_by { |p| p.order || 99999 }
+    ordered_variants = variants.sort_by { |p| p.order || 99_999 }
     ordered_variants.each_with_index do |obj, i|
       obj.order = i + 1
     end

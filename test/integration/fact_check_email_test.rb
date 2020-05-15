@@ -79,8 +79,11 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
   test "should pick up multiple emails and update the relevant publications" do
     answer1 = FactoryBot.create(:answer_edition, state: "fact_check")
-    answer2 = FactoryBot.create(:answer_edition, state: "in_review",
-                                                 review_requested_at: Time.zone.now)
+    answer2 = FactoryBot.create(
+      :answer_edition,
+      state: "in_review",
+      review_requested_at: Time.zone.now,
+    )
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),
@@ -152,8 +155,11 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
   test "should invoke the supplied block after each message" do
     answer1 = FactoryBot.create(:answer_edition, state: "fact_check")
-    answer2 = FactoryBot.create(:answer_edition, state: "in_review",
-                                                 review_requested_at: Time.zone.now)
+    answer2 = FactoryBot.create(
+      :answer_edition,
+      state: "in_review",
+      review_requested_at: Time.zone.now,
+    )
 
     Mail.stubs(:all).multiple_yields(
       fact_check_mail_for(answer1, body: "First Message"),

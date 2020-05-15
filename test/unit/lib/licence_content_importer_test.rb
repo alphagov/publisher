@@ -3,12 +3,19 @@ require "test_helper"
 class LicenceContentImporterTest < ActiveSupport::TestCase
   def setup
     @user = FactoryBot.create(:user, name: "Test user")
-    @artefact = FactoryBot.create(:artefact, slug: "licence-to-test",
-                                             kind: "licence", name: "test", owning_app: "publisher")
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "licence-to-test",
+      kind: "licence",
+      name: "test",
+      owning_app: "publisher",
+    )
 
     @importer = LicenceContentImporter.new("data/foo", @user.name)
-    @row = CSV::Row.new(%w[OID NAME LONGDESC],
-                        [12345, "Licence to test", "<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>"])
+    @row = CSV::Row.new(
+      %w[OID NAME LONGDESC],
+      [12_345, "Licence to test", "<p><strong>Software testing</strong> can be stated as the process of <em>validating</em> and verifying a product.</p>"],
+    )
   end
 
   def test_report
@@ -24,7 +31,7 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
 
   def test_import
     @importer.import(@row)
-    assert 12345, @importer.imported.first.licence_identifier
+    assert 12_345, @importer.imported.first.licence_identifier
     assert_equal "licence-to-test", @importer.imported.first.slug
     assert_equal @artefact.id.to_s, @importer.imported.first.panopticon_id
   end

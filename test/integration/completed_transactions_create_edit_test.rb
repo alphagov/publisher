@@ -2,11 +2,13 @@ require "integration_test_helper"
 
 class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
-                                  slug: "done/stick-a-fork-in-me-im",
-                                  kind: "completed_transaction",
-                                  name: "All bar done",
-                                  owning_app: "publisher")
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "done/stick-a-fork-in-me-im",
+      kind: "completed_transaction",
+      name: "All bar done",
+      owning_app: "publisher",
+    )
 
     setup_users
     stub_linkables
@@ -24,9 +26,11 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
   with_and_without_javascript do
     should "allow editing CompletedTransactionEdition" do
-      completed_transaction = FactoryBot.create(:completed_transaction_edition,
-                                                panopticon_id: @artefact.id,
-                                                title: "All bar done")
+      completed_transaction = FactoryBot.create(
+        :completed_transaction_edition,
+        panopticon_id: @artefact.id,
+        title: "All bar done",
+      )
 
       visit_edition completed_transaction
 
@@ -42,10 +46,12 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "allow creating a new version of a CompletedTransactionEdition" do
-    completed_transaction = FactoryBot.create(:completed_transaction_edition,
-                                              panopticon_id: @artefact.id,
-                                              state: "published",
-                                              title: "All bar done")
+    completed_transaction = FactoryBot.create(
+      :completed_transaction_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "All bar done",
+    )
 
     visit_edition completed_transaction
 
@@ -55,10 +61,12 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
   end
 
   should "disable fields for a published edition" do
-    edition = FactoryBot.create(:completed_transaction_edition,
-                                panopticon_id: @artefact.id,
-                                state: "published",
-                                title: "All bar done")
+    edition = FactoryBot.create(
+      :completed_transaction_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      title: "All bar done",
+    )
 
     visit_edition edition
     assert_all_edition_fields_disabled(page)

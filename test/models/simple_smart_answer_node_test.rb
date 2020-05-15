@@ -96,10 +96,13 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     end
 
     should "not be valid if an outcome has options" do
-      @node = @edition.nodes.build(@atts.merge(kind: "outcome", options_attributes: [
-        { label: "Yes", next_node: "yes" },
-        { label: "No", next_node: "no" },
-      ]))
+      @node = @edition.nodes.build(@atts.merge(
+                                     kind: "outcome",
+                                     options_attributes: [
+                                       { label: "Yes", next_node: "yes" },
+                                       { label: "No", next_node: "no" },
+                                     ],
+                                   ))
       assert_not @node.valid?
 
       assert_equal [:options], @node.errors.keys

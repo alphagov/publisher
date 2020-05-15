@@ -30,7 +30,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def url_after_first_slash_is_valid_slug!
-      if !valid_slug?(url_after_first_slash)
+      unless valid_slug?(url_after_first_slash)
         record.errors[attribute] << "must be usable in a url"
       end
     end

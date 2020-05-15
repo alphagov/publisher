@@ -26,7 +26,7 @@ class LicenceContentImporter
     puts importer.formatted_result(method == :import)
   end
 
-  def report row
+  def report(row)
     identifier = row["OID"].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
@@ -44,7 +44,7 @@ class LicenceContentImporter
     end
   end
 
-  def import row
+  def import(row)
     identifier = row["OID"].to_s.strip
     existing_editions = LicenceEdition.where(licence_identifier: identifier)
 
@@ -57,16 +57,23 @@ class LicenceContentImporter
 
       artefact = Artefact.find_by(slug: slug) ||
         Artefact.create(
-          slug: slug, kind: "licence", state: "draft", owning_app: "publisher",
-          name: title, rendering_app: "frontend"
+          slug: slug,
+          kind: "licence",
+          state: "draft",
+          owning_app: "publisher",
+          name: title,
+          rendering_app: "frontend",
         )
 
       artefact_id = artefact["id"]
 
       puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
-      edition = LicenceEdition.create title: title, panopticon_id: artefact_id, slug: slug,
-                                      licence_identifier: identifier, licence_overview: marked_down(row["LONGDESC"])
+      edition = LicenceEdition.create title: title,
+                                      panopticon_id: artefact_id,
+                                      slug: slug,
+                                      licence_identifier: identifier,
+                                      licence_overview: marked_down(row["LONGDESC"])
 
       if edition
         add_workflow(@user, edition)

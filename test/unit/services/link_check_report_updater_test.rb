@@ -20,19 +20,23 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
       checked: completed_at.try(:iso8601),
       problem_summary: nil,
       suggested_fix: nil,
-    }, {
-      uri: "http://www.gov.com",
-      status: "broken",
-      checked: completed_at.try(:iso8601),
-      problem_summary: "Page Not Found",
-      suggested_fix: "Contact site administrator",
-    }]
+    },
+     {
+       uri: "http://www.gov.com",
+       status: "broken",
+       checked: completed_at.try(:iso8601),
+       problem_summary: "Page Not Found",
+       suggested_fix: "Contact site administrator",
+     }]
   end
 
   def create_edition_with_link_check_report
-    FactoryBot.create(:edition, :with_link_check_report,
-                      batch_id: 1,
-                      link_uris: ["http://www.example.com", "http://www.gov.com"])
+    FactoryBot.create(
+      :edition,
+      :with_link_check_report,
+      batch_id: 1,
+      link_uris: ["http://www.example.com", "http://www.gov.com"],
+    )
   end
 
   def link_check_report

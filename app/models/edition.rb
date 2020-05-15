@@ -43,34 +43,38 @@ class Edition
   end
   scope :archived_or_published, -> { where(:state.in => %w[archived published]) }
   scope :in_progress, -> { where(:state.nin => %w[archived published]) }
-  scope :assigned_to, lambda { |user|
-    if user
-      where(assigned_to_id: user.id)
-    else
-      where(:assigned_to_id.exists => false)
-    end
-  }
+  scope :assigned_to,
+        lambda { |user|
+          if user
+            where(assigned_to_id: user.id)
+          else
+            where(:assigned_to_id.exists => false)
+          end
+        }
   scope :major_updates, -> { where(major_change: true) }
 
-  scope :internal_search, lambda { |term|
-    regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
-    any_of({ title: regex }, { slug: regex }, { overview: regex }, licence_identifier: regex)
-  }
+  scope :internal_search,
+        lambda { |term|
+          regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
+          any_of({ title: regex }, { slug: regex }, { overview: regex }, licence_identifier: regex)
+        }
 
   # Including recipient_id on actions will include anything that has been
   # assigned to the user we're looking at, but include the check anyway to
   # account for manual assignments
-  scope :for_user, lambda { |user|
-    any_of(
-      { assigned_to_id: user.id },
-      { "actions.requester_id" => user.id },
-      "actions.recipient_id" => user.id,
-    )
-  }
+  scope :for_user,
+        lambda { |user|
+          any_of(
+            { assigned_to_id: user.id },
+            { "actions.requester_id" => user.id },
+            "actions.recipient_id" => user.id,
+          )
+        }
 
-  scope :user_search, lambda { |user, term|
-    all_of(for_user(user).selector, internal_search(term).selector)
-  }
+  scope :user_search,
+        lambda { |user, term|
+          all_of(for_user(user).selector, internal_search(term).selector)
+        }
 
   scope :published, -> { where(state: "published") }
   scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
@@ -311,10 +315,12 @@ class Edition
     metadata = Artefact.find(panopticon_id)
     raise "Artefact not found" unless metadata
 
-    importing_user.create_edition(metadata.kind.to_sym,
-                                  panopticon_id: metadata.id,
-                                  slug: metadata.slug,
-                                  title: metadata.name)
+    importing_user.create_edition(
+      metadata.kind.to_sym,
+      panopticon_id: metadata.id,
+      slug: metadata.slug,
+      title: metadata.name,
+    )
   end
 
   def self.find_and_identify(slug, edition)
@@ -450,7 +456,7 @@ class Edition
       ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
-      sprintf "%08x-%04x-%04x-%04x-%04x%08x", *ary # rubocop:disable Style/FormatString
+      sprintf "%08x-%04x-%04x-%04x-%04x%08x", *ary
     end
   end
 

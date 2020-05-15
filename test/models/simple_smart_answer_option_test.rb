@@ -4,10 +4,13 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
   context "given a smart answer exists with a node" do
     setup do
       @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question")
-      @edition = FactoryBot.create(:simple_smart_answer_edition, nodes: [
-        @node,
-        SimpleSmartAnswerEdition::Node.new(slug: "outcome1", title: "Outcome One", kind: "outcome"),
-      ])
+      @edition = FactoryBot.create(
+        :simple_smart_answer_edition,
+        nodes: [
+          @node,
+          SimpleSmartAnswerEdition::Node.new(slug: "outcome1", title: "Outcome One", kind: "outcome"),
+        ],
+      )
 
       @atts = {
         label: "Yes",

@@ -2,15 +2,19 @@ require "integration_test_helper"
 
 class UnpublishTest < ActionDispatch::IntegrationTest
   setup do
-    @artefact = FactoryBot.create(:artefact,
-                                  slug: "bertie-botts-every-flavour-beans",
-                                  kind: "answer",
-                                  name: "Bertie Bott's Every Flavour Beans",
-                                  owning_app: "publisher")
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "bertie-botts-every-flavour-beans",
+      kind: "answer",
+      name: "Bertie Bott's Every Flavour Beans",
+      owning_app: "publisher",
+    )
 
-    @edition = FactoryBot.create(:answer_edition,
-                                 panopticon_id: @artefact.id,
-                                 body: "They're quite gross.")
+    @edition = FactoryBot.create(
+      :answer_edition,
+      panopticon_id: @artefact.id,
+      body: "They're quite gross.",
+    )
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check

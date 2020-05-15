@@ -3,8 +3,10 @@ module EditionActivityButtonsHelper
     check_method = "can_#{activity}?".to_sym
     enabled = edition.send(check_method)
 
-    link_to title, "##{activity}_form", data: { toggle: "modal" },
-                                        class: "btn btn-info #{'disabled' if !enabled} add-top-margin"
+    link_to title,
+            "##{activity}_form",
+            data: { toggle: "modal" },
+            class: "btn btn-info #{'disabled' unless enabled} add-top-margin"
   end
 
   def review_buttons(edition)
@@ -37,8 +39,10 @@ module EditionActivityButtonsHelper
       disabled = !edition.send("can_#{activity}?")
       next if disabled && options.fetch(:skip_disabled_buttons, false)
 
-      link_to title, "##{activity}_form", data: { toggle: "modal" },
-                                          class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
+      link_to title,
+              "##{activity}_form",
+              data: { toggle: "modal" },
+              class: "btn btn-large btn-#{button_color} #{'disabled' if disabled}"
     }.join("\n").html_safe
   end
 

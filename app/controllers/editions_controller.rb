@@ -272,8 +272,14 @@ protected
         :body,
         :start_button_text,
         nodes_attributes: [
-          :slug, :title, :body, :order, :kind, :id, :_destroy,
-          options_attributes: %i[label next_node id _destroy]
+          :slug,
+          :title,
+          :body,
+          :order,
+          :kind,
+          :id,
+          :_destroy,
+          options_attributes: %i[label next_node id _destroy],
         ],
       ]
     when :transaction_edition

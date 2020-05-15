@@ -378,10 +378,16 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
         panopticon_id: @artefact.id,
         slug: "can-i-get-a-driving-licence",
       )
-      @edition.nodes.build(slug: "question-1", order: 1, title: "To be or not to be?", kind: "question", options_attributes: [
-        { label: "That is the question", next_node: "outcome-1" },
-        { label: "That is not the question", next_node: "outcome-2" },
-      ])
+      @edition.nodes.build(
+        slug: "question-1",
+        order: 1,
+        title: "To be or not to be?",
+        kind: "question",
+        options_attributes: [
+          { label: "That is the question", next_node: "outcome-1" },
+          { label: "That is not the question", next_node: "outcome-2" },
+        ],
+      )
       @edition.nodes.build(slug: "outcome-1", order: 2, title: "Outcome One", kind: "outcome")
       @edition.nodes.build(slug: "outcome-2", order: 3, title: "Outcome Two", kind: "outcome")
       @edition.save!
@@ -431,9 +437,11 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
           within ".options > div:nth-of-type(2)" do
             assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", with: "That is not the question")
-            assert page.has_select?("next-node-list",
-                                    options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
-                                    selected: "Outcome 2 (Outcome Two)")
+            assert page.has_select?(
+              "next-node-list",
+              options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
+              selected: "Outcome 2 (Outcome Two)",
+            )
           end
         end
 

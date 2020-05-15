@@ -1,5 +1,5 @@
-require 'simplecov-rcov'
+require "simplecov-rcov"
 
-SimpleCov.start 'rails' do
+SimpleCov.start "rails" do
 end
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
