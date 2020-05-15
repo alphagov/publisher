@@ -73,7 +73,7 @@
     <% else %>
       This edition can’t be previewed.<br />
     <% end %>
-    Send fact check responses to <%= mail_to resource.fact_check_email_address %>
+    Send fact check responses to <%= mail_to resource.fact_check_email_address %> and include [<%= resource.id %>] in the subject line.
   </p>
 
   <div class="panel-group">
