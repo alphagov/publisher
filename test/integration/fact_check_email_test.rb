@@ -16,7 +16,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
       to      attrs.fetch(:to,      edition && edition.fact_check_email_address)
       cc      attrs.fetch(:cc,      nil)
       bcc     attrs.fetch(:bcc,     nil)
-      subject attrs.fetch(:subject, "This is a fact check response")
+      subject attrs.fetch(:subject, "This is a fact check response [#{edition.present? ? edition.id : ''}]")
       body    attrs.fetch(:body,    "I like it. Good work!")
     end
 
@@ -143,8 +143,7 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
 
   test "should look for fact-check subject field" do
     edition = FactoryBot.create(:answer_edition, state: "fact_check")
-    message = fact_check_mail_for(edition, subject: "Fact Checked [dev-#{edition.id}]")
-    pp message
+    message = fact_check_mail_for(edition, subject: "Fact Checked [#{edition.id}]")
 
     Mail.stubs(:all).yields(message)
 

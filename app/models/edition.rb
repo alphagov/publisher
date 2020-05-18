@@ -442,7 +442,7 @@ class Edition
   end
 
   def fact_check_email_address
-    Publisher::Application.fact_check_config.address(id)
+    Publisher::Application.fact_check_config.address
   end
 
   def check_if_archived

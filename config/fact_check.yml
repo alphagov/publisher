@@ -5,6 +5,7 @@
 # legacy formats, so we still pick up emails to old addresses
 address_format: <%=ENV.fetch("FACT_CHECK_ADDRESS_FORMAT", "factcheck+dev-{id}@alphagov.co.uk") %>
 subject_prefix: <%=ENV.fetch("FACT_CHECK_SUBJECT_PREFIX", "") %>
+reply_to_address: <%=ENV.fetch("FACT_CHECK_REPLY_TO_ADDRESS", "factcheck+dev@alphagov.co.uk") %>
 reply_to_id: <%=ENV.fetch("FACT_CHECK_REPLY_TO_ID", nil) %>
 
 fetcher:
