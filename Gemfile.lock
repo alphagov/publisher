@@ -154,7 +154,7 @@ GEM
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
       rails (>= 3.2.0)
-    govuk_app_config (2.1.2)
+    govuk_app_config (2.2.0)
       logstasher (>= 1.2.2, < 1.4.0)
       sentry-raven (>= 2.7.1, < 3.1.0)
       statsd-ruby (~> 1.4.0)
@@ -254,7 +254,7 @@ GEM
     mimemagic (0.3.4)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.14.0)
+    minitest (5.14.1)
     minitest-reporters (1.4.2)
       ansi
       builder
@@ -487,7 +487,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
-    unicorn (5.5.4)
+    unicorn (5.5.5)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     warden (1.2.8)
@@ -527,7 +527,7 @@ DEPENDENCIES
   govspeak (~> 6.5.3)
   govuk-content-schema-test-helpers (~> 1.6)
   govuk_admin_template (~> 6.7)
-  govuk_app_config (~> 2.1.2)
+  govuk_app_config (~> 2.2.0)
   govuk_sidekiq (~> 3.0.5)
   govuk_test
   has_scope
