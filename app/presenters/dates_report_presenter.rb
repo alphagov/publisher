@@ -29,13 +29,13 @@ private
     csv << %w[created_at title url]
     scope.each do |item|
       item.actions.each do |action|
-        if action.request_type == "publish"
-          csv << [
-            action.created_at.to_s(:db),
-            item.title,
-            "#{Plek.current.website_root}/#{item.slug}",
-          ]
-        end
+        next unless action.request_type == "publish"
+
+        csv << [
+          action.created_at.to_s(:db),
+          item.title,
+          "#{Plek.current.website_root}/#{item.slug}",
+        ]
       end
     end
   end
