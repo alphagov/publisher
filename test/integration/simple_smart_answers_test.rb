@@ -503,7 +503,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
     end
 
     should "correctly number new nodes" do
-      @edition.nodes.where(slug: "outcome-2").first.update_attribute(:slug, "outcome-3")
+      @edition.nodes.where(slug: "outcome-2").first.update(slug: "outcome-3")
 
       visit_edition @edition
 

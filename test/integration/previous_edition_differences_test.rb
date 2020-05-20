@@ -58,8 +58,9 @@ class PreviousEditionDifferencesTest < JavascriptIntegrationTest
   context "Editions scheduled for publishing" do
     setup do
       @second_edition = @first_edition.build_clone(AnswerEdition)
-      @second_edition.update(body: "Test Body 2")
-      @second_edition.update_attribute(:state, :scheduled_for_publishing)
+      @second_edition.body = "Test Body 2"
+      @second_edition.state = :scheduled_for_publishing
+      @second_edition.save(validate: false)
     end
 
     should "show differences after publishing" do

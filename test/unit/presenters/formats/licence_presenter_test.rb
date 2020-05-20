@@ -103,7 +103,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
 
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.update_attribute(:external_links, [link])
+      artefact.external_links = [link]
+      artefact.save(validate: false)
       expected = [
         {
           url: link["url"],
@@ -115,7 +116,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update_attribute(:slug, "foo")
+      edition.update(slug: "foo")
       expected = [
         { path: "/foo", type: "prefix" },
       ]

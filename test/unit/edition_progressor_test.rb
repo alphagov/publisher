@@ -9,7 +9,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should be able to progress an item" do
-    @guide.update_attribute(:state, :ready)
+    @guide.update(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -26,7 +26,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if the email addresses were blank" do
-    @guide.update_attribute(:state, :ready)
+    @guide.update(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -40,7 +40,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if the email addresses were invalid" do
-    @guide.update_attribute(:state, :ready)
+    @guide.update(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -54,7 +54,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if any of the email addresses were invalid" do
-    @guide.update_attribute(:state, :ready)
+    @guide.update(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -108,7 +108,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
 
     should "enqueue a job for sidekiq to perform later" do
       Sidekiq::Testing.fake! do
-        @guide.update_attribute(:state, :ready)
+        @guide.update(state: :ready)
         publish_at = 1.day.from_now
         activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: publish_at }
 

@@ -37,7 +37,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "not show the view link for archived editions" do
-      @answer.update_attribute(:state, "archived")
+      @answer.update(state: "archived")
 
       visit_edition @answer
       click_on "History and notes"

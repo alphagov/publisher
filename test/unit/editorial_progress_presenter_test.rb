@@ -21,7 +21,7 @@ class EditoriaProgressPresenterTest < ActiveSupport::TestCase
   end
 
   test "lists out each separate edition of an item" do
-    @guide.update_attribute :state, "published"
+    @guide.update state: "published"
     second_guide = @guide.build_clone
     second_guide.save
 

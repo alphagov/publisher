@@ -13,7 +13,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
       guide = FactoryBot.create(:guide_edition, title: @random_name, slug: "test-guide")
       guide.save!
-      guide.update_attribute(:state, "draft")
+      guide.update(state: "draft")
 
       visit_edition guide
 
@@ -157,7 +157,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
     guide = FactoryBot.create(:guide_edition, title: random_name, slug: "test-guide")
     guide.save!
-    guide.update_attribute(:state, "draft")
+    guide.update(state: "draft")
 
     visit_edition guide
 
