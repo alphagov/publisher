@@ -13,6 +13,7 @@ class NoisyWorkflow < ApplicationMailer
   end
 
   def skip_review(action, recipient_email)
+    @action = action
     @edition = action.edition
     @edition_url = edition_url(@edition.id, host: Plek.find("publisher"), external: true)
     view_mail(
