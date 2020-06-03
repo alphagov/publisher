@@ -72,7 +72,25 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
-    assert_match(/do not remove \[.+?\] from the subject line/, fact_check_email.body.to_s)
+    assert_match(/Do not remove \[.+?\] from the subject line/, fact_check_email.body.to_s)
+  end
+
+  test "fact-check email has reply-to address in it" do
+    guide.update_attribute(:state, "ready")
+    visit_edition guide
+
+    click_link("Fact check")
+
+    ActionMailer::Base.deliveries.clear
+
+    within "#send_fact_check_form" do
+      fill_in "Email address", with: "user@example.com"
+      click_on "Send"
+    end
+
+    fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
+    assert fact_check_email
+    assert_match(/reply is being sent to <#{Regexp.escape guide.fact_check_email_address}>\./, fact_check_email.body.to_s)
   end
 
   test "can send guide to fact-check when in ready state" do
