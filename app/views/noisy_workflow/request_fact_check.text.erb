@@ -23,6 +23,8 @@ Or, if you spot something that's not correct, reply to this email and tell us:
 - which paragraph or section isn’t right - for example chapter 2, under heading ‘How much it costs’
 - what’s wrong and why - for example the text implies a legal obligation, when there isn't one
 
+Check your reply is being sent to <<%= @edition.fact_check_email_address %>>. Do not remove [<%= @edition.id %>] from the subject line - GDS will not get your fact check response if this is removed.
+
 ---------------------------------------------------
 
 # How to do it
@@ -31,7 +33,6 @@ When fact checking, please:
 
 - only point out factual errors - don’t suggest wording (GDS is responsible for the style)
 - use plain text - GDS systems don’t display text formatting, colours or attachments
-- do not remove [<%= @edition.id %>] from the subject line - GDS will not get your fact check response if this is removed
 
 To get the content published more quickly:
 
