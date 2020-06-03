@@ -90,7 +90,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
-    assert_match(/reply is being sent to <#{Regexp.escape guide.fact_check_email_address}>\./, fact_check_email.body.to_s)
+    assert_match(/reply is being sent to #{Regexp.escape guide.fact_check_email_address}\./, fact_check_email.body.to_s)
   end
 
   test "can send guide to fact-check when in ready state" do
