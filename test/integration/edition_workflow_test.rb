@@ -76,7 +76,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "fact-check email has reply-to address in it" do
-    guide.update_attribute(:state, "ready")
+    guide.update(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
