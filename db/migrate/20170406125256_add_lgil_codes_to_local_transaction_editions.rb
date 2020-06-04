@@ -8,7 +8,7 @@ class AddLgilCodesToLocalTransactionEditions < Mongoid::Migration
         .where(state: { '$in': %w(draft published) })
         .last
       p "no edition found for #{slug}" if edition == nil
-      p n if edition.update_attribute("lgil_code", lgil_code_value)
+      p n if edition.update(lgil_code: lgil_code_value)
     end
   end
 

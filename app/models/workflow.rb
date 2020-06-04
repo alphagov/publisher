@@ -184,7 +184,7 @@ private
   end
 
   def update_sibling_in_progress(version_number_or_nil)
-    update_attribute(:sibling_in_progress, version_number_or_nil)
+    update(sibling_in_progress: version_number_or_nil)
   end
 
   def update_user_action(property, statuses)

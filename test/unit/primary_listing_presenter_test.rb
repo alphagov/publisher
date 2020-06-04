@@ -11,11 +11,11 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
     a = FactoryBot.create(:guide_edition)
-    a.update_attribute(:state, "draft")
+    a.update(state: "draft")
     assert a.draft?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, "published")
+    b.update(state: "published")
     b.save
     b.reload
     assert_not b.draft?
@@ -30,7 +30,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.published?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, "published")
+    b.update(state: "published")
     b.reload
     assert b.published?
 
@@ -44,7 +44,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.archived?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, "published")
+    b.update(state: "published")
     b.archive
     b.save
 
@@ -61,7 +61,8 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.in_review?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, "in_review")
+    b.state = "in_review"
+    b.save(validate: false)
     b.reload
     assert b.in_review?
 
@@ -76,7 +77,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.fact_check?
 
     b = FactoryBot.create(:guide_edition)
-    b.update_attribute(:state, "fact_check")
+    b.update(state: "fact_check")
     b.reload
     assert b.fact_check?
 

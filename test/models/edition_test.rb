@@ -522,7 +522,7 @@ class EditionTest < ActiveSupport::TestCase
   test "deleting a newer draft of a published edition removes sibling information" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update_attribute(:state, "published")
+    edition.update(state: "published")
     second_edition = edition.build_clone
     second_edition.save!
     edition.reload
@@ -538,7 +538,7 @@ class EditionTest < ActiveSupport::TestCase
   test "the latest edition should remove sibling_in_progress details if it is present" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update_attribute(:state, "published")
+    edition.update(state: "published")
 
     # simulate a document having a newer edition destroyed (previous behaviour).
     edition.sibling_in_progress = 2
@@ -559,7 +559,7 @@ class EditionTest < ActiveSupport::TestCase
   test "should not delete associated artefact if there are other editions of this publication" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update_attribute(:state, "published")
+    edition.update(state: "published")
 
     edition.reload
     second_edition = edition.build_clone
@@ -598,11 +598,11 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, slug: "hedgehog-topiary", state: "published")
 
     second_edition = edition.build_clone
-    edition.update_attribute(:state, "archived")
-    second_edition.update_attribute(:state, "published")
+    edition.update(state: "archived")
+    second_edition.update(state: "published")
 
     third_edition = second_edition.build_clone
-    third_edition.update_attribute(:state, "draft")
+    third_edition.update(state: "draft")
 
     assert_equal edition.published_edition, second_edition
   end
@@ -693,7 +693,7 @@ class EditionTest < ActiveSupport::TestCase
     publish(user, second_edition, "Second publication")
 
     # simulate link validation errors in published edition
-    second_edition.parts.first.update_attribute(:body, "[register your vehicle](registering-an-imported-vehicle)")
+    second_edition.parts.first.update(body: "[register your vehicle](registering-an-imported-vehicle)")
 
     third_edition = second_edition.build_clone
     # fix link validation error in cloned edition by appending a '/' to the relative url
@@ -745,12 +745,12 @@ class EditionTest < ActiveSupport::TestCase
     publish(user, edition, "First publication")
 
     second_edition = edition.build_clone
-    second_edition.update_attribute(:state, "ready")
+    second_edition.update(state: "ready")
     second_edition.save!
     publish(user, second_edition, "Second publication")
 
     third_edition = second_edition.build_clone
-    third_edition.update_attribute(:state, "ready")
+    third_edition.update(state: "ready")
     third_edition.save!
     publish(user, third_edition, "Third publication")
 
@@ -927,7 +927,7 @@ class EditionTest < ActiveSupport::TestCase
 
     new_edition = published_edition.build_clone
     new_edition.save!
-    new_edition.update_attribute(:state, "ready")
+    new_edition.update(state: "ready")
     publish(user, new_edition, "First publication")
 
     assert_equal 3, new_edition.version_number

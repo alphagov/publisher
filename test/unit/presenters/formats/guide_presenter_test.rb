@@ -85,7 +85,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
 
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.update_attribute(:external_links, [link])
+      artefact.external_links = [link]
+      artefact.save(validate: false)
       expected = [
         {
           url: link["url"],
@@ -97,14 +98,15 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "[:hide_chapter_navigation]" do
-      edition.update_attribute(:hide_chapter_navigation, true)
+      edition.hide_chapter_navigation = true
+      edition.save(validate: false)
 
       assert_equal true, result[:details][:hide_chapter_navigation]
     end
   end
 
   should "[:routes]" do
-    edition.update_attribute(:slug, "foo")
+    edition.update(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]

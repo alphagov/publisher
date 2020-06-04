@@ -315,7 +315,8 @@ class ArtefactTest < ActiveSupport::TestCase
     user1 = FactoryBot.create(:user)
 
     # Make the edition invalid, check that it persisted the invalid state
-    edition.update_attribute(:title, nil)
+    edition.title = nil
+    edition.save(validate: false)
     assert_nil edition.reload.title
 
     artefact.update_as(user1, state: "archived")

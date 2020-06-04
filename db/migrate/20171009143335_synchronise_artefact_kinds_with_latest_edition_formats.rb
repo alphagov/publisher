@@ -9,7 +9,7 @@ class SynchroniseArtefactKindsWithLatestEditionFormats < Mongoid::Migration
       next if latest_edition.kind_for_artefact == artefact.kind
 
       puts "Changing #{artefact.slug} (#{artefact.content_id}) from #{artefact.kind} to #{latest_edition.kind_for_artefact}"
-      artefact.update_attribute(:kind, latest_edition.kind_for_artefact)
+      artefact.update(kind: latest_edition.kind_for_artefact)
     end
 
     # restore the update callback for future migrations
