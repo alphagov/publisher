@@ -15,11 +15,11 @@ module BaseHelper
       li_classes = ["status-option", scope]
       li_classes << "active" if scope == options[:current]
 
-      content_tag(:li, class: li_classes.join(" ")) do
+      tag.li(class: li_classes.join(" ")) do
         url = root_path(scope_path_options(scope))
 
-        content_tag(:a, href: url) do
-          h(status_label + " ") + content_tag(:span, @presenter.send(scope).length, class: "badge pull-right")
+        tag.a(href: url) do
+          h(status_label + " ") + tag.span(@presenter.send(scope).length, class: "badge pull-right")
         end
       end
     end

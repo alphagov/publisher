@@ -26,9 +26,9 @@ private
   def report_last_updated(report)
     mtime = mtime_for(report)
     if mtime
-      content_tag :span, "Generated #{mtime.to_s(:govuk_date)}", class: "text-muted"
+      tag.span "Generated #{mtime.to_s(:govuk_date)}", class: "text-muted"
     else
-      content_tag :span, "Report currently unavailable", class: "text-muted"
+      tag.span "Report currently unavailable", class: "text-muted"
     end
   end
   helper_method :report_last_updated

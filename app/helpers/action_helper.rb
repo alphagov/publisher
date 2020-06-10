@@ -22,11 +22,11 @@ module ActionHelper
     end
 
     if action.is_fact_check_request? && action.email_addresses.present?
-      notes << content_tag(:p, "Request sent to #{mail_to action.email_addresses.gsub(/\s/, ''), action.email_addresses}".html_safe)
+      notes << tag.p("Request sent to #{mail_to action.email_addresses.gsub(/\s/, ''), action.email_addresses}".html_safe)
     end
 
     if action.recipient_id.present?
-      notes << content_tag(:p, "Assigned to #{mail_to action.recipient.email, action.recipient.name}".html_safe)
+      notes << tag.p("Assigned to #{mail_to action.recipient.email, action.recipient.name}".html_safe)
     end
 
     notes.join.html_safe
@@ -62,8 +62,7 @@ module ActionHelper
         "#show-original",
         class: "original-message-toggle if-no-js-hide js-toggle",
       )
-      formatted_email_parts << content_tag(
-        :div,
+      formatted_email_parts << tag.div(
         format_and_auto_link_plain_text(email_parts.join("")),
         class: "original-message if-js-hide js-toggle-target",
       )

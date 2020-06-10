@@ -1,7 +1,7 @@
 module EditionActivityHelper
   def edition_activities_fields(form, edition)
     activities_fields = Edition::ACTIONS.map do |activity, title|
-      content_tag(:div, modal_attributes.merge(id: "#{activity}_form")) do
+      tag.div(modal_attributes.merge(id: "#{activity}_form")) do
         edition_activity_fields(edition, title, activity, form, inline: true)
       end
     end
