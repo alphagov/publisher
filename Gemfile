@@ -50,7 +50,7 @@ group :test do
   gem "minitest-reporters"
   gem "mocha", "1.9.0"
   gem "rails-controller-testing"
-  gem "shoulda", "3.6.0"
+  gem "shoulda", "4.0.0"
   gem "simplecov", "~> 0.18.5", require: false
   gem "simplecov-rcov", "~> 0.2.3", require: false
   gem "timecop", "0.9.1"
