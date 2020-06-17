@@ -26,7 +26,7 @@ class FactCheckMail
 private
 
   def subject_is_out_of_office?
-    @message["Subject"].to_s.downcase.start_with?("out of office")
+    @message["Subject"].to_s.downcase.include?("out of office")
   end
 
   def out_of_office_header_set?
