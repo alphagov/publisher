@@ -7,19 +7,10 @@ inherit_mode:
   merge:
     - Exclude
 
-AllCops:
-  Exclude:
-    - db/migrate/201*.rb
-
+# This is not supported for Mongoid
 Rails/FindEach:
   Enabled: false
-Rails/OutputSafety:
-  Enabled: false
-Rails/HelperInstanceVariable:
-  Enabled: false
+
+# This is not supported for Mongoid
 Rails/FindBy:
   Enabled: false
-
-Rails/DynamicFindBy:
-  Whitelist:
-    - find_by_lgsl_code
