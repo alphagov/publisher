@@ -20,7 +20,7 @@
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
             <li class="nav-header">Filter by Status</li>
-            <%= publication_tab_list :current => @list %>
+            <%= publication_tab_list(@presenter, current: @list) %>
           </ul>
         </div>
 

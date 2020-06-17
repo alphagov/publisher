@@ -6,18 +6,18 @@ module EditionsHelper
     params[:action] == "diff"
   end
 
-  def resource_form(&form_definition)
+  def resource_form(resource, &form_definition)
     html_options = { id: "edition-form" }
-    unless @resource.locked_for_edits? || @resource.archived?
-      if @resource.is_a?(Parted) || @resource.is_a?(Varianted)
+    unless resource.locked_for_edits? || resource.archived?
+      if resource.is_a?(Parted) || resource.is_a?(Varianted)
         html_options["data-module"] = "ajax-save-with-parts"
-      elsif @resource.format != "SimpleSmartAnswer"
+      elsif resource.format != "SimpleSmartAnswer"
         html_options["data-module"] = "ajax-save"
       end
     end
 
-    semantic_bootstrap_nested_form_for @resource,
-                                       as: :edition, url: edition_path(@resource),
+    semantic_bootstrap_nested_form_for resource,
+                                       as: :edition, url: edition_path(resource),
                                        html: html_options,
                                        &form_definition
   end
