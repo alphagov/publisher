@@ -17,7 +17,7 @@ class FactCheckEmailHandler
   def process_message(message)
     message = FactCheckMail.new(message)
 
-    return false if message.out_of_office?
+    return true if message.out_of_office?
 
     if @fact_check_config.valid_subject?(message.subject)
       edition_id = @fact_check_config.item_id_from_subject(message.subject)
