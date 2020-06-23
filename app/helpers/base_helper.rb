@@ -1,5 +1,5 @@
 module BaseHelper
-  def publication_tab_list(options)
+  def publication_tab_list(presenter, options)
     state_names = {
       drafts: "Drafts",
       in_review: "In review",
@@ -19,15 +19,15 @@ module BaseHelper
         url = root_path(scope_path_options(scope))
 
         tag.a(href: url) do
-          h(status_label + " ") + tag.span(@presenter.send(scope).length, class: "badge pull-right")
+          h(status_label + " ") + tag.span(presenter.send(scope).length, class: "badge pull-right")
         end
       end
     end
     safe_join(output)
   end
 
-  def resource_fields
-    "/#{@resource.format.underscore.downcase.pluralize}/fields"
+  def resource_fields(resource)
+    "/#{resource.format.underscore.downcase.pluralize}/fields"
   end
 
   def skip_fact_check_for_edition(edition)
