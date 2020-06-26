@@ -39,13 +39,16 @@ class FactCheckEmailHandler
 
   # takes an optional block to call after processing each message
   def process
+    unprocessed_emails_count = 0
     Mail.all(read_only: false, delete_after_find: true) do |message|
-      message.skip_deletion unless process_message(message)
+      message.mark_for_delete = process_message(message)
+      unprocessed_emails_count += 1 unless message.is_marked_for_delete?
       begin
         yield(message) if block_given?
       rescue StandardError => e
         GovukError.notify(e)
       end
     end
+    GovukStatsd.gauge("unprocessed_emails.count", unprocessed_emails_count)
   end
 end
