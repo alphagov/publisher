@@ -17,37 +17,33 @@ choose_sign_in:
       slug: create-account
       hint_text: If you do not already have one of these accounts, we'll help you choose whether to use Government Gateway or GOV.UK Verify.
 create_new_account:
-  title: Create an account
+  title: Choose a way to prove your identity
   slug: create-account
   body: |
-    To use this service, you need to create either a Government Gateway or GOV.UK Verify account. These are used to help fight identity theft.
+    You need to confirm who you are before you can access your personal tax account.
 
-    Once you have an account, you can use it to access other government services online.
+    To do this, you can create either a Government Gateway user ID or a GOV.UK Verify identity account.
 
-    ## Choose a way to prove your identity
+    ## Government Gateway
 
-    ### Government Gateway
+   You'll need:
 
-    Registering with Government Gateway usually takes about 10 minutes. It works best if you have:
-
-    - your National Insurance number
+    - your National Insurance number or UK address
     - a recent payslip or P60 or a valid UK passport
+    
+    You can use your user ID for things like your personal or business tax account, Self Assessment, Corporation Tax, PAYE for employers and VAT.
 
-    {button}[Create a Government Gateway account](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
+    {button}[Choose Government Gateway](https://www.tax.service.gov.uk/gg/sign-in?continue=/personal-account&accountType=individual&origin=PTA-frontend){/button}
 
-    ### GOV.UK Verify
+    ## GOV.UK Verify
 
-    Registering with GOV.UK Verify usually takes about 15 minutes. It works best if you have:
+    GOV.UK Verify works best if you're over 20 years old. You'll need:
 
     - a UK address
-    - a valid passport or photocard driving licence
+    - a mobile phone
+    - at least one valid photo ID from any country
 
-    {button}[Create a GOV.UK Verify account](https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=registration){/button}
+    {button}[Choose GOV.UK Verify](https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=registration){/button}
 
-    A certified company will double check your identity when you register with GOV.UK Verify. They’ve all met security standards set by government.
-
-    ## Personal tax account
-
-    Signing in for the first time will activate your personal tax account. You can use this to check your HMRC records and manage your other details.
 update_type: minor
-change_note: Updated eIDAS content because more than two countries are connected now.
+change_note: Updated create account page content to be more accurate and help people choose.
