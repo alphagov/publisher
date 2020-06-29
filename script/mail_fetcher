@@ -20,7 +20,7 @@ def redis
   Redis.new(RedisConfig::REDIS_CONFIG)
 end
 
-Rails.logger.info "Running MailFetcher in #{Rails.env} mode"
+Rails.logger.info "Running MailFetcher in #{Rails.env} mode - #{Time.now.utc}"
 
 handler = FactCheckEmailHandler.new(Publisher::Application.fact_check_config)
 
@@ -56,4 +56,4 @@ if handler.errors.any?
   NoisyWorkflow.report_errors(handler.errors).deliver
 end
 
-Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode"
+Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode - #{Time.now.utc}"

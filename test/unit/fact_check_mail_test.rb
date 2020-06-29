@@ -23,7 +23,7 @@ class FactCheckMailTest < ActiveSupport::TestCase
     %w[Precedence auto_reply],
     %w[Precedence junk],
     ["Return-Path", nil],
-    ["Subject", "Out of Office"],
+    ["Subject", "Automatic reply: Out of Office"],
     %w[X-Precedence bulk],
     %w[X-Precedence auto_reply],
     %w[X-Precedence junk],
