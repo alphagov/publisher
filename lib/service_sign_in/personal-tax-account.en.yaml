@@ -42,6 +42,8 @@ create_new_account:
     - a UK address
     - a mobile phone
     - at least one valid photo ID from any country
+    
+    You can use your identity account for things like Universal Credit, requesting a basic DBS check and Self Assessment. 
 
     {button}[Choose GOV.UK Verify](https://www.signin.service.gov.uk/initiate-journey/hmrc-personal-tax-account?journey_hint=registration){/button}
 
