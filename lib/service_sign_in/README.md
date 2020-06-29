@@ -15,7 +15,7 @@ Once the change is merged, you can release these in two steps.
 
 ### Running the Rake task
 
-Go to the [Jenkins Rake task job (Staging)](https://deploy.staging.publishing.service.gov.uk/job/run-rake-task/parambuild/?TARGET_APPLICATION=publisher&MACHINE_CLASS=backend&RAKE_TASK=service_sign_in:publish[check-update-company-car-tax.en.yaml]) ([Production](https://deploy.publishing.service.gov.uk/job/run-rake-task/parambuild/?TARGET_APPLICATION=publisher&MACHINE_CLASS=backend&RAKE_TASK=service_sign_in:publish[check-update-company-car-tax.en.yaml]))
+Go to the [Jenkins Rake task job (Staging)](https://deploy.blue.staging.govuk.digital/job/run-rake-task/parambuild/?TARGET_APPLICATION=publisher&MACHINE_CLASS=backend&RAKE_TASK=service_sign_in:publish[check-update-company-car-tax.en.yaml]) ([Production](https://deploy.blue.production.govuk.digital/job/run-rake-task/parambuild/?TARGET_APPLICATION=publisher&MACHINE_CLASS=backend&RAKE_TASK=service_sign_in:publish[check-update-company-car-tax.en.yaml]))
 
 
 Run the task with the following parameters
@@ -40,7 +40,7 @@ item, resulting in a 500 error.
 
 1. Find the `content_id` and `locale` of the page you would like to unpublish.
 
-2. Go to the Jenkins Rake task job on  [Staging](https://deploy.staging.publishing.service.gov.uk/job/run-rake-task/build?delay=0sec) or [Production](https://deploy.publishing.service.gov.uk/job/run-rake-task/build?delay=0sec)
+2. Go to the Jenkins Rake task job on  [Staging](https://deploy.blue.staging.govuk.digital/job/run-rake-task/build?delay=0sec) or [Production](https://deploy.blue.production.govuk.digital/job/run-rake-task/build?delay=0sec)
 
 There are two ways to unpublish a Service Sign In Page; with a redirect, and without a redirect (410 gone).
 
