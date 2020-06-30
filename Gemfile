@@ -19,7 +19,7 @@ gem "kaminari-mongoid", "1.0.1"
 gem "mail-notify"
 gem "mlanett-redis-lock", "0.2.7" # Only used in some importers
 gem "momentjs-rails", "2.20.1"
-gem "mongo", "~> 2.5.0"
+gem "mongo", "~> 2.12.1"
 gem "mongoid", "~> 6.3"
 gem "mongoid-sadstory"
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
