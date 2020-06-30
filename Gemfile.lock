@@ -75,7 +75,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
     brakeman (4.7.1)
-    bson (4.3.0)
+    bson (4.9.4)
     builder (3.2.4)
     byebug (11.1.1)
     capybara (3.32.2)
@@ -266,8 +266,8 @@ GEM
       metaclass (~> 0.0.1)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
-    mongo (2.5.0)
-      bson (>= 4.3.0, < 5.0.0)
+    mongo (2.12.1)
+      bson (>= 4.8.2, < 5.0.0)
     mongoid (6.3.0)
       activemodel (~> 5.1)
       mongo (>= 2.5.0, < 3.0.0)
@@ -546,7 +546,7 @@ DEPENDENCIES
   mlanett-redis-lock (= 0.2.7)
   mocha (= 1.9.0)
   momentjs-rails (= 2.20.1)
-  mongo (~> 2.5.0)
+  mongo (~> 2.12.1)
   mongoid (~> 6.3)
   mongoid-sadstory
   mongoid_rails_migrations!
