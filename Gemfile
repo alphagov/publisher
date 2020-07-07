@@ -20,7 +20,7 @@ gem "mail-notify"
 gem "mlanett-redis-lock", "0.2.7" # Only used in some importers
 gem "momentjs-rails", "2.20.1"
 gem "mongo", "~> 2.12.1"
-gem "mongoid", "~> 6.3"
+gem "mongoid", "~> 7.1"
 gem "mongoid-sadstory"
 gem "mousetrap-rails", "1.4.6"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"

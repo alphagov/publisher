@@ -255,9 +255,9 @@ GEM
       railties (>= 3.1)
     mongo (2.12.1)
       bson (>= 4.8.2, < 5.0.0)
-    mongoid (6.3.0)
-      activemodel (~> 5.1)
-      mongo (>= 2.5.0, < 3.0.0)
+    mongoid (7.1.2)
+      activemodel (>= 5.1, < 6.1)
+      mongo (>= 2.7.0, < 3.0.0)
     mongoid-sadstory (0.0.2)
       mongoid
     mousetrap-rails (1.4.6)
@@ -528,7 +528,7 @@ DEPENDENCIES
   mocha (= 1.9.0)
   momentjs-rails (= 2.20.1)
   mongo (~> 2.12.1)
-  mongoid (~> 6.3)
+  mongoid (~> 7.1)
   mongoid-sadstory
   mousetrap-rails (= 1.4.6)
   nested_form!
