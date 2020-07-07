@@ -1,16 +1,4 @@
 GIT
-  remote: https://github.com/alphagov/mongoid_rails_migrations
-  revision: 7dc2c19549698f5666d2a91e89a9845480e852c4
-  branch: avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix
-  specs:
-    mongoid_rails_migrations (1.1.0)
-      activesupport (>= 4.2.0)
-      bundler (>= 1.0.0)
-      mongoid (>= 4.0.0)
-      rails (>= 4.2.0)
-      railties (>= 4.2.0)
-
-GIT
   remote: https://github.com/alphagov/nested_form.git
   revision: ac43d8fe0cd3805b7309169ca8fbdd6a1527d9b5
   branch: add-wrapper-class
@@ -542,7 +530,6 @@ DEPENDENCIES
   mongo (~> 2.12.1)
   mongoid (~> 6.3)
   mongoid-sadstory
-  mongoid_rails_migrations!
   mousetrap-rails (= 1.4.6)
   nested_form!
   null_logger
