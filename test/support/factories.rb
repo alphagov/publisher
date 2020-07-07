@@ -66,6 +66,8 @@ FactoryBot.define do
   end
 
   factory :edition, class: AnswerEdition do
+    id              { SecureRandom.hex(12) }
+
     panopticon_id do
       a = create(:artefact, kind: kind_for_artefact)
       a.id
