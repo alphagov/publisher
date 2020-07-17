@@ -33,6 +33,8 @@ class Edition
   field :change_note,          type: String
   field :review_requested_at,  type: DateTime
 
+  field :auth_bypass_id,       type: String
+
   belongs_to :assigned_to, class_name: "User", optional: true
 
   embeds_many :link_check_reports
