@@ -1,13 +1,13 @@
 require "test_helper"
 
 class PathsHelperTest < ActionView::TestCase
+  JWT_AUTH_SECRET = "111".freeze
+
   context "#preview_edition_path" do
     setup do
       Rails.stubs(:application).returns(
         stub(
-          config: stub(
-            jwt_auth_secret: "111",
-          ),
+          config: stub(jwt_auth_secret: JWT_AUTH_SECRET),
         ),
       )
     end
@@ -21,8 +21,9 @@ class PathsHelperTest < ActionView::TestCase
         assert_equal "#{draft_origin}/foo", path
 
         token = result.gsub(/.*token=(.*)$/, '\1')
-        jwt = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.ZulDHod_QzOlKE-D-B2KuZVAHhx91yvKF23G2Fhfmro"
-        assert_equal jwt, token
+        payload = decoded_token_payload(token)
+
+        assert_equal payload["sub"], "123"
       end
     end
 
@@ -37,5 +38,16 @@ class PathsHelperTest < ActionView::TestCase
 
   def draft_origin
     Plek.current.find("draft-origin")
+  end
+
+  def decoded_token_payload(token)
+    payload, _header = JWT.decode(
+      token,
+      JWT_AUTH_SECRET,
+      true,
+      { algorithm: "HS256" },
+    )
+
+    payload
   end
 end
