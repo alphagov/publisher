@@ -14,7 +14,7 @@ class PathsHelperTest < ActionView::TestCase
 
     context "when the edition returns an auth_bypass_id" do
       should "append a valid JWT token to the preview path" do
-        edition = stub(auth_bypass_id: "123", state: "draft", slug: "foo")
+        edition = stub(auth_bypass_id: "123", state: "draft", slug: "foo", content_id: "68134a9a-6146-4925-8472-4e3dd42c055a")
         result = preview_edition_path(edition)
 
         path = result.gsub(/^(.*)\?.*$/, '\1')
@@ -24,6 +24,7 @@ class PathsHelperTest < ActionView::TestCase
         payload = decoded_token_payload(token)
 
         assert_equal payload["sub"], "123"
+        assert_equal payload["content_id"], "68134a9a-6146-4925-8472-4e3dd42c055a"
         assert_equal payload["iat"], Time.zone.now.to_i
         assert_equal payload["exp"], 1.month.from_now.to_i
       end

@@ -7,9 +7,9 @@ module PathsHelper
     path = edition_front_end_path(edition)
 
     if should_have_auth_bypass_id?(edition)
-      token = jwt_token(sub: edition.auth_bypass_id)
-      path << "?token=#{token}"
+      path << "?token=#{jwt_token(edition)}"
     end
+
     path
   end
 
@@ -27,9 +27,10 @@ module PathsHelper
 
 protected
 
-  def jwt_token(sub:)
+  def jwt_token(edition)
     payload = {
-      "sub" => sub,
+      "sub" => edition.auth_bypass_id,
+      "content_id" => edition.content_id,
       "iat" => Time.zone.now.to_i,
       "exp" => 1.month.from_now.to_i,
     }
