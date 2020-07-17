@@ -120,6 +120,10 @@ class Edition
     destroy_artefact
   end
 
+  after_create do
+    update(auth_bypass_id: temp_auth_bypass_id)
+  end
+
   index assigned_to_id: 1
   index({ panopticon_id: 1, version_number: 1 }, unique: true)
   index state: 1
