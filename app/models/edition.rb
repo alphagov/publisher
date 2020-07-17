@@ -451,8 +451,8 @@ class Edition
     end
   end
 
-  def auth_bypass_id
-    @auth_bypass_id ||= begin
+  def temp_auth_bypass_id
+    @temp_auth_bypass_id ||= begin
       ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000

@@ -7,7 +7,7 @@ module PathsHelper
     path = edition_front_end_path(edition)
 
     if should_have_auth_bypass_id?(edition)
-      token = jwt_token(sub: edition.auth_bypass_id)
+      token = jwt_token(sub: edition.temp_auth_bypass_id)
       path << "?token=#{token}"
     end
     path
@@ -46,6 +46,6 @@ protected
 private
 
   def should_have_auth_bypass_id?(edition)
-    %w[published archived].exclude?(edition.state) && edition.auth_bypass_id
+    %w[published archived].exclude?(edition.state) && edition.temp_auth_bypass_id
   end
 end
