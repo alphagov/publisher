@@ -24,6 +24,8 @@ class PathsHelperTest < ActionView::TestCase
         payload = decoded_token_payload(token)
 
         assert_equal payload["sub"], "123"
+        assert_equal payload["iat"], Time.zone.now.to_i
+        assert_equal payload["exp"], 1.month.from_now.to_i
       end
     end
 

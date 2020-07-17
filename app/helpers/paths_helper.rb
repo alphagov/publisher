@@ -28,7 +28,12 @@ module PathsHelper
 protected
 
   def jwt_token(sub:)
-    JWT.encode({ "sub" => sub }, jwt_auth_secret, "HS256")
+    payload = {
+      "sub" => sub,
+      "iat" => Time.zone.now.to_i,
+      "exp" => 1.month.from_now.to_i,
+    }
+    JWT.encode(payload, jwt_auth_secret, "HS256")
   end
 
   def jwt_auth_secret
