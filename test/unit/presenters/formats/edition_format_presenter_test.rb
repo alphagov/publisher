@@ -155,17 +155,10 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       assert_equal "foo", result[:locale]
     end
 
-    context "[:access_limited]" do
-      should "return auth_bypass_ids if present" do
-        edition.expects(:auth_bypass_id).twice.returns("foo")
-        expected = { auth_bypass_ids: %w[foo] }
-        assert_equal expected, result[:access_limited]
-      end
-
-      should "not exist if no auth_bypass_id is present" do
-        edition.expects(:auth_bypass_id).returns(nil)
-        assert_not result.key?(:access_limited)
-      end
+    should "[:access_limited]" do
+      edition.expects(:auth_bypass_id).returns("foo")
+      expected = { auth_bypass_ids: %w[foo] }
+      assert_equal expected, result[:access_limited]
     end
   end
 end
