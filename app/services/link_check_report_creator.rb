@@ -45,7 +45,7 @@ private
   end
 
   def call_link_checker_api
-    Services.link_checker_api.create_batch(
+    GdsApi.link_checker_api.create_batch(
       uris,
       webhook_uri: callback_url,
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
