@@ -1,6 +1,5 @@
 require "gds_api/publishing_api"
 require "gds_api/link_checker_api"
-require "gds_api/imminence"
 
 module Services
   def self.publishing_api
@@ -14,12 +13,6 @@ module Services
     @link_checker_api ||= GdsApi::LinkCheckerApi.new(
       Plek.new.find("link-checker-api"),
       bearer_token: ENV["LINK_CHECKER_API_BEARER_TOKEN"],
-    )
-  end
-
-  def self.imminence
-    @imminence ||= GdsApi::Imminence.new(
-      Plek.new.find("imminence"),
     )
   end
 end
