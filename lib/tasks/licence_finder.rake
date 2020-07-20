@@ -1,5 +1,3 @@
-require "gds_api/publishing_api_v2"
-
 def create_artefact!
   artefact = Artefact.new(
     content_id: "69af22e0-da49-4810-9ee4-22b4666ac627",

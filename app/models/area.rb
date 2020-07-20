@@ -28,7 +28,7 @@ class Area < OpenStruct
   def self.all_areas
     areas = []
     AREA_TYPES.each do |type|
-      areas << Services.imminence.areas_for_type(type)["results"].map do |area_hash|
+      areas << GdsApi.imminence.areas_for_type(type)["results"].map do |area_hash|
         new(area_hash)
       end
     end
