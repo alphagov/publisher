@@ -23,23 +23,12 @@ class EditionTest < ActiveSupport::TestCase
     assert_match "Internal links must start with a forward slash", exception.message
   end
 
-  context "#auth_bypass_id" do
-    should "return a deterministic hex id if edition is in fact-check state" do
-      edition = FactoryBot.create(:edition, state: "fact_check", id: 123)
-      edition.artefact.update(kind: "help_page")
-      assert_equal edition.temp_auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-    end
+  should "generate a unique random auth_bypass_id" do
+    edition = FactoryBot.create(:edition)
+    assert edition.auth_bypass_id.is_a?(String)
+    assert_not edition.auth_bypass_id.empty?
 
-    should "return a deterministic hex id if edition is in fact-check-received state" do
-      edition = FactoryBot.create(:edition, state: "fact_check_received", id: 123)
-      edition.artefact.update(kind: "help_page")
-      assert_equal edition.temp_auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-    end
-
-    should "return a deterministic hex id if edition is in ready state" do
-      edition = FactoryBot.create(:edition, state: "ready", id: 123)
-      edition.artefact.update(kind: "help_page")
-      assert_equal edition.temp_auth_bypass_id, "a665a459-2042-4f9d-817e-4867efdc4fb8"
-    end
+    second_edition = FactoryBot.create(:edition)
+    assert_not_equal edition.auth_bypass_id, second_edition.auth_bypass_id
   end
 end
