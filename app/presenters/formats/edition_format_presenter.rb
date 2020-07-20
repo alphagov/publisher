@@ -14,17 +14,10 @@ module Formats
     attr_reader :edition, :artefact
 
     def optional_fields
-      fields = {}
+      access_limited = { auth_bypass_ids: [edition.auth_bypass_id] }
+      phase = edition.in_beta ? "beta" : nil
 
-      if edition.temp_auth_bypass_id
-        fields[:access_limited] = { auth_bypass_ids: [edition.temp_auth_bypass_id] }
-      end
-
-      if edition.in_beta
-        fields[:phase] = "beta"
-      end
-
-      fields
+      { access_limited: access_limited, phase: phase }.compact
     end
 
     def required_fields(republish)

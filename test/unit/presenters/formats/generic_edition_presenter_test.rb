@@ -45,7 +45,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         },
         locale: "en",
         access_limited: {
-          auth_bypass_ids: [@edition.temp_auth_bypass_id],
+          auth_bypass_ids: [@edition.auth_bypass_id],
         },
       }
     end

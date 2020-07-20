@@ -7,9 +7,9 @@ module PathsHelper
     path = edition_front_end_path(edition)
 
     if should_have_auth_bypass_id?(edition)
-      token = jwt_token(sub: edition.temp_auth_bypass_id)
-      path << "?token=#{token}"
+      path << "?token=#{jwt_token(edition)}"
     end
+
     path
   end
 
@@ -27,8 +27,14 @@ module PathsHelper
 
 protected
 
-  def jwt_token(sub:)
-    JWT.encode({ "sub" => sub }, jwt_auth_secret, "HS256")
+  def jwt_token(edition)
+    payload = {
+      "sub" => edition.auth_bypass_id,
+      "content_id" => edition.content_id,
+      "iat" => Time.zone.now.to_i,
+      "exp" => 1.month.from_now.to_i,
+    }
+    JWT.encode(payload, jwt_auth_secret, "HS256")
   end
 
   def jwt_auth_secret
@@ -46,6 +52,6 @@ protected
 private
 
   def should_have_auth_bypass_id?(edition)
-    %w[published archived].exclude?(edition.state) && edition.temp_auth_bypass_id
+    %w[published archived].exclude?(edition.state)
   end
 end
