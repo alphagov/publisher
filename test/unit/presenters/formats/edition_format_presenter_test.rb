@@ -27,7 +27,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :major_change
       edition.stubs :version_number
       edition.stubs :latest_change_note
-      edition.stubs :auth_bypass_id
+      edition.stubs :temp_auth_bypass_id
       edition.stubs :exact_route?
 
       artefact.stubs :language
@@ -157,13 +157,13 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
     context "[:access_limited]" do
       should "return auth_bypass_ids if present" do
-        edition.expects(:auth_bypass_id).twice.returns("foo")
+        edition.expects(:temp_auth_bypass_id).twice.returns("foo")
         expected = { auth_bypass_ids: %w[foo] }
         assert_equal expected, result[:access_limited]
       end
 
       should "not exist if no auth_bypass_id is present" do
-        edition.expects(:auth_bypass_id).returns(nil)
+        edition.expects(:temp_auth_bypass_id).returns(nil)
         assert_not result.key?(:access_limited)
       end
     end

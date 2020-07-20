@@ -33,6 +33,8 @@ class Edition
   field :change_note,          type: String
   field :review_requested_at,  type: DateTime
 
+  field :auth_bypass_id,       type: String
+
   belongs_to :assigned_to, class_name: "User", optional: true
 
   embeds_many :link_check_reports
@@ -116,6 +118,10 @@ class Edition
   before_destroy do
     destroy_publishing_api_draft
     destroy_artefact
+  end
+
+  after_create do
+    update(auth_bypass_id: temp_auth_bypass_id)
   end
 
   index assigned_to_id: 1
@@ -451,8 +457,8 @@ class Edition
     end
   end
 
-  def auth_bypass_id
-    @auth_bypass_id ||= begin
+  def temp_auth_bypass_id
+    @temp_auth_bypass_id ||= begin
       ary = Digest::SHA256.digest(id.to_s).unpack("NnnnnN")
       ary[2] = (ary[2] & 0x0fff) | 0x4000
       ary[3] = (ary[3] & 0x3fff) | 0x8000
