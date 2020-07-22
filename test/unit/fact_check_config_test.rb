@@ -5,11 +5,13 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   valid_address = "factcheck+1234@example.com"
   valid_address_pattern = "factcheck+{id}@example.com"
   reply_to_address = valid_address
-  valid_subjects = ["‘[Some title]’ GOV.UK preview of new edition [1234]",
-                    "‘[Some title]’ GOV.UK preview of new edition [1234] - ticket #5678",
-                    "I've edited the subject but left the ID at the end [1234]",
-                    "I've edited the subject and appended something [1234] - ticket #2468"]
-  valid_prefixed_subjects = valid_subjects.map { |subject| subject.gsub(/\[1234\]/, "[test-1234]") }
+  valid_subjects = ["‘[Some title]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184]",
+                    "‘[Some title]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184] - ticket #5678",
+                    "‘[123456]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184]",
+                    "‘[123456]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184] - ticket #5678",
+                    "I've edited the subject but left the ID at the end [5e6bb57b40f0b62656e3e184]",
+                    "I've edited the subject and appended something [5e6bb57b40f0b62656e3e184] - ticket #2468"]
+  valid_prefixed_subjects = valid_subjects.map { |subject| subject.gsub(/\[5e6bb57b40f0b62656e3e184\]/, "[test-5e6bb57b40f0b62656e3e184]") }
 
   should "fail on a nil address format" do
     assert_raises ArgumentError do
@@ -120,7 +122,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "extract an item ID from a valid subject" do
     config = FactCheckConfig.new(valid_address_pattern, reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal "1234", config.item_id_from_subject(valid_subject)
+      assert_equal "5e6bb57b40f0b62656e3e184", config.item_id_from_subject(valid_subject)
     end
   end
 
@@ -138,10 +140,10 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "raise an exception if there are multiple matches" do
     config = FactCheckConfig.new(valid_address_pattern, reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal false, config.valid_subject?(valid_subject + " [5678]")
+      assert_equal false, config.valid_subject?(valid_subject + " [d682605bec3cf9b8906cf2bc]")
 
       assert_raises ArgumentError do
-        config.item_id_from_subject(valid_subject + " [5678]")
+        config.item_id_from_subject(valid_subject + " [d682605bec3cf9b8906cf2bc]")
       end
     end
   end
