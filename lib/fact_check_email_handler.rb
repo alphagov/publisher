@@ -34,7 +34,7 @@ class FactCheckEmailHandler
 
     raise "Unable to locate fact check ID from address or subject"
   rescue StandardError => e
-    message = "Failed to process message #{message.subject}: #{e.message}"
+    message = "Failed to process message '#{message.subject}': #{e.message}"
     GovukError.notify(UnableToProcessError.new(message))
     false
   end
