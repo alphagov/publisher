@@ -7,11 +7,12 @@ require_relative "fact_check_mail"
 # It presumes that the mail class has already been configured in an
 # initializer and is typically called from the mail_fetcher script
 class FactCheckEmailHandler
-  attr_accessor :errors, :fact_check_config
+  attr_accessor :fact_check_config
+
+  class UnableToProcessError < StandardError; end
 
   def initialize(fact_check_config)
     @fact_check_config = fact_check_config
-    self.errors = []
   end
 
   def process_message(message)
@@ -30,10 +31,11 @@ class FactCheckEmailHandler
         return FactCheckMessageProcessor.process(message, edition_id)
       end
     end
-    false
+
+    raise "Unable to locate fact check ID from address or subject"
   rescue StandardError => e
-    errors << "Failed to process message #{message.subject}: #{e.message}"
-    GovukError.notify(e)
+    message = "Failed to process message #{message.subject}: #{e.message}"
+    GovukError.notify(UnableToProcessError.new(message))
     false
   end
 
