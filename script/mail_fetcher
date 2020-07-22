@@ -51,9 +51,4 @@ rescue StandardError => e
   raise
 end
 
-if handler.errors.any?
-  Rails.logger.error(handler.errors.join("\n"))
-  NoisyWorkflow.report_errors(handler.errors).deliver
-end
-
 Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode - #{Time.now.utc}"
