@@ -1,4 +1,4 @@
-class MultiNoisyWorkflow < ApplicationMailer
+class EventNotifierService
   def self.any_action(action, mailer: EventMailer)
     recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 
