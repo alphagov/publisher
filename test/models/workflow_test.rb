@@ -3,7 +3,7 @@ require "test_helper"
 class WorkflowTest < ActiveSupport::TestCase
   def setup
     @artefact = FactoryBot.create(:artefact)
-    GovukContentModels::ActionProcessors::BaseProcessor.any_instance.stubs(:make_record_action_noises)
+    GovukContentModels::ActionProcessors::BaseProcessor.any_instance.stubs(:notify_about_event)
   end
 
   def template_users

@@ -3,7 +3,7 @@ require "test_helper"
 class UserTest < ActiveSupport::TestCase
   test "it doesn't try to send a fact check email if no addresses were given" do
     user = User.create(name: "bob")
-    NoisyWorkflow.expects(:request_fact_check).never
+    EventMailer.expects(:request_fact_check).never
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: FactoryBot.create(:artefact).id)
     assert_not send_fact_check(user, trans)
   end

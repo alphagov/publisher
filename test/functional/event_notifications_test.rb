@@ -1,12 +1,10 @@
 require "test_helper"
 
-class MultiNoisyWorkflowTest < ActionMailer::TestCase
-  tests MultiNoisyWorkflow
-
+class EventNotificationsTest < ActiveSupport::TestCase
   def fact_check_email
     guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: "jys@ketlai.co.uk", customised_message: "Blah")
-    email = MultiNoisyWorkflow.request_fact_check(action)
+    email = EventNotifierService.request_fact_check(action)
     [guide, email]
   end
 
@@ -14,7 +12,7 @@ class MultiNoisyWorkflowTest < ActionMailer::TestCase
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
     action = guide.actions.create(request_type: action, requester: requester)
-    MultiNoisyWorkflow.make_noise(action)
+    EventNotifierService.any_action(action)
   end
 
   context ".resend_fact_check" do
@@ -32,30 +30,30 @@ class MultiNoisyWorkflowTest < ActionMailer::TestCase
 
       send_fact_check(@user, @edition)
       stubbed_fact_check_mail = stub("mailer", deliver_now: true)
-      MultiNoisyWorkflow.expects(:request_fact_check).returns(stubbed_fact_check_mail)
+      EventNotifierService.expects(:request_fact_check).returns(stubbed_fact_check_mail)
       resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
 
-      mail = MultiNoisyWorkflow.resend_fact_check(resend_fact_check_action)
+      mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
       assert_equal stubbed_fact_check_mail, mail
     end
 
     should "return a NoMail instance if the edition is not in fact check state" do
-      MultiNoisyWorkflow.expects(:request_fact_check).never
+      EventNotifierService.expects(:request_fact_check).never
       resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
 
-      mail = MultiNoisyWorkflow.resend_fact_check(resend_fact_check_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
+      mail = EventNotifierService.resend_fact_check(resend_fact_check_action)
+      assert mail.is_a? EventMailer::NoMail
     end
 
     should "return a NoMail instance if the supplied action is not a resend fact check one" do
-      MultiNoisyWorkflow.expects(:request_fact_check).never
+      EventNotifierService.expects(:request_fact_check).never
 
-      mail = MultiNoisyWorkflow.resend_fact_check(@edition.latest_status_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
+      mail = EventNotifierService.resend_fact_check(@edition.latest_status_action)
+      assert mail.is_a? EventMailer::NoMail
     end
   end
 
-  context "make_noise" do
+  context "any_action" do
     context "Setting the recipients" do
       should "send to 'publisher-alerts-citizen'" do
         email = action_email(Action::PUBLISH)

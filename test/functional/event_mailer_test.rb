@@ -1,7 +1,7 @@
 require "test_helper"
 
-class NoisyWorkflowTest < ActionMailer::TestCase
-  tests NoisyWorkflow
+class EventMailerTest < ActionMailer::TestCase
+  tests EventMailer
 
   setup do
     stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
@@ -10,7 +10,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   def fact_check_email
     guide = FactoryBot.create(:guide_edition)
     action = guide.actions.create!(email_addresses: "jys@ketlai.co.uk", customised_message: "Blah")
-    email = NoisyWorkflow.request_fact_check(action, action.email_addresses)
+    email = EventMailer.request_fact_check(action, action.email_addresses)
     [guide, email]
   end
 
@@ -18,7 +18,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
     action = guide.actions.create(request_type: action, requester: requester)
-    NoisyWorkflow.make_noise(action, action.email_addresses)
+    EventMailer.any_action(action, action.email_addresses)
   end
 
   def publisher_and_guide
@@ -39,7 +39,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
 
   test "user should be able to have an email sent for fact checking" do
     stub_mailer = stub("mailer", deliver_now: true)
-    NoisyWorkflow.expects(:request_fact_check).returns(stub_mailer)
+    EventMailer.expects(:request_fact_check).returns(stub_mailer)
     user = User.create(name: "Ben")
     artefact = FactoryBot.create(:artefact)
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: artefact.id)
@@ -52,7 +52,7 @@ class NoisyWorkflowTest < ActionMailer::TestCase
   test "a guide should not send an email if creating a new edition fails" do
     user, guide = publisher_and_guide
     edition = guide.published_edition
-    NoisyWorkflow.expects(:make_noise).never
+    EventMailer.expects(:any_action).never
     edition.expects(:build_clone).returns(false)
     assert_not user.new_version(edition)
   end
@@ -67,8 +67,8 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       slug: "my-title-b",
     )
 
-    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
-    NoisyWorkflow.expects(:make_noise).returns(mock("noise maker", deliver_now: nil))
+    EventMailer.expects(:any_action).returns(mock("event email", deliver_now: nil))
+    EventMailer.expects(:any_action).returns(mock("event email", deliver_now: nil))
     receive_fact_check(user, guide)
   end
 
@@ -77,12 +77,12 @@ class NoisyWorkflowTest < ActionMailer::TestCase
       user = FactoryBot.create(:user, name: "Ben", permissions: %w[skip_review])
       guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
       request_review(user, guide)
-      NoisyWorkflow.expects(:skip_review).returns(mock("noise maker", deliver_now: nil))
+      EventMailer.expects(:skip_review).returns(mock("event email", deliver_now: nil))
       skip_review(user, guide)
     end
   end
 
-  context "make_noise" do
+  context "any_action" do
     context "Setting the subject" do
       should "set a subject containing the description" do
         email = action_email(Action::APPROVE_REVIEW)
