@@ -1,13 +1,13 @@
 class MultiNoisyWorkflow < ApplicationMailer
-  def self.make_noise(action, mailer: NoisyWorkflow)
+  def self.any_action(action, mailer: EventMailer)
     recipient_emails = (EMAIL_GROUPS[:citizen] + EMAIL_GROUPS[:business]).uniq
 
     recipient_emails.map do |recipient_email|
-      mailer.make_noise(action, recipient_email)
+      mailer.any_action(action, recipient_email)
     end
   end
 
-  def self.skip_review(action, mailer: NoisyWorkflow)
+  def self.skip_review(action, mailer: EventMailer)
     recipient_emails = EMAIL_GROUPS[:force_publish_alerts]
 
     recipient_emails.map do |recipient_email|
@@ -15,7 +15,7 @@ class MultiNoisyWorkflow < ApplicationMailer
     end
   end
 
-  def self.request_fact_check(action, mailer: NoisyWorkflow)
+  def self.request_fact_check(action, mailer: EventMailer)
     action.email_addresses.split(/,\s*/).map do |recipient_email|
       mailer.request_fact_check(action, recipient_email)
     end
@@ -28,7 +28,7 @@ class MultiNoisyWorkflow < ApplicationMailer
       request_fact_check(latest_status_action)
     else
       Rails.logger.info("Asked to resend fact check for #{edition.content_id}, but its most recent status action is not a fact check, it's a #{latest_status_action.request_type}")
-      NoisyWorkflow::NoMail.new
+      EventMailer::NoMail.new
     end
   end
 end

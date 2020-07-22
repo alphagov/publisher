@@ -14,7 +14,7 @@ class MultiNoisyWorkflowTest < ActionMailer::TestCase
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
     action = guide.actions.create(request_type: action, requester: requester)
-    MultiNoisyWorkflow.make_noise(action)
+    MultiNoisyWorkflow.any_action(action)
   end
 
   context ".resend_fact_check" do
@@ -44,18 +44,18 @@ class MultiNoisyWorkflowTest < ActionMailer::TestCase
       resend_fact_check_action = @edition.new_action(@user, "resend_fact_check")
 
       mail = MultiNoisyWorkflow.resend_fact_check(resend_fact_check_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
+      assert mail.is_a? EventMailer::NoMail
     end
 
     should "return a NoMail instance if the supplied action is not a resend fact check one" do
       MultiNoisyWorkflow.expects(:request_fact_check).never
 
       mail = MultiNoisyWorkflow.resend_fact_check(@edition.latest_status_action)
-      assert mail.is_a? NoisyWorkflow::NoMail
+      assert mail.is_a? EventMailer::NoMail
     end
   end
 
-  context "make_noise" do
+  context "any_action" do
     context "Setting the recipients" do
       should "send to 'publisher-alerts-citizen'" do
         email = action_email(Action::PUBLISH)

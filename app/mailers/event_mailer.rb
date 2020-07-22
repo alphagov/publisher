@@ -1,11 +1,11 @@
-class NoisyWorkflow < ApplicationMailer
+class EventMailer < ApplicationMailer
   include PathsHelper
 
   add_template_helper(PathsHelper)
   add_template_helper(WorkingDaysHelper)
   default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
-  def make_noise(action, recipient_email)
+  def any_action(action, recipient_email)
     @action = action
     @preview_url = preview_edition_path(@action.edition)
     subject = "[PUBLISHER] #{describe_action(@action)}"
