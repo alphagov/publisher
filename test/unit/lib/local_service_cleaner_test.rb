@@ -11,7 +11,7 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
 
     context "when lgsl of service present in input" do
       setup do
-        @service = LocalService.create(lgsl_code: 1234, description: "Escaping Joy", providing_tier: %w[district unitary county])
+        @service = LocalService.create!(lgsl_code: 1234, description: "Escaping Joy", providing_tier: %w[district unitary county])
       end
 
       should "not destroy service" do
@@ -22,7 +22,7 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
 
     context "when lgsl of service not present in input" do
       setup do
-        @service = LocalService.create(lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+        @service = LocalService.create!(lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
       end
 
       context "and lgsl not used by local transaction edition" do

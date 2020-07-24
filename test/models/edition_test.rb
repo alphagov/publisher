@@ -13,7 +13,7 @@ class EditionTest < ActiveSupport::TestCase
       owning_app: "publisher",
     )
 
-    AnswerEdition.create(
+    AnswerEdition.create!(
       state: "ready",
       slug: "childcare",
       panopticon_id: artefact.id,
@@ -47,7 +47,7 @@ class EditionTest < ActiveSupport::TestCase
   def draft_second_edition_from(published_edition)
     published_edition.build_clone(AnswerEdition).tap do |edition|
       edition.body = "Test Body 2"
-      edition.save
+      edition.save!
       edition.reload
     end
   end
@@ -441,7 +441,7 @@ class EditionTest < ActiveSupport::TestCase
     artefact.save!
 
     Artefact.find(artefact.id)
-    user = User.create
+    user = User.create!
 
     publication = Edition.find_or_create_from_panopticon_data(artefact.id, user)
 
@@ -467,7 +467,7 @@ class EditionTest < ActiveSupport::TestCase
       state: "archived",
     )
     artefact.slug = "new-slug"
-    artefact.save
+    artefact.save!
 
     assert_not_equal "new-slug", guide.reload.slug
   end
@@ -504,7 +504,7 @@ class EditionTest < ActiveSupport::TestCase
 
     new_edition = dummy_answer.build_clone
     new_edition.body = "Two"
-    dummy_answer.save
+    dummy_answer.save!
 
     assert_raise Edition::CannotDeletePublishedPublication do
       dummy_answer.destroy
@@ -513,7 +513,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "can delete a publication that has not been published" do
     dummy_answer = template_unpublished_answer
-    dummy_answer.destroy
+    dummy_answer.destroy!
 
     loaded_answer = AnswerEdition.where(slug: dummy_answer.slug).first
     assert_nil loaded_answer
@@ -522,14 +522,14 @@ class EditionTest < ActiveSupport::TestCase
   test "deleting a newer draft of a published edition removes sibling information" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update(state: "published")
+    edition.update!(state: "published")
     second_edition = edition.build_clone
     second_edition.save!
     edition.reload
 
     assert edition.sibling_in_progress
 
-    second_edition.destroy
+    second_edition.destroy!
     edition.reload
 
     assert_nil edition.sibling_in_progress
@@ -538,11 +538,11 @@ class EditionTest < ActiveSupport::TestCase
   test "the latest edition should remove sibling_in_progress details if it is present" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update(state: "published")
+    edition.update!(state: "published")
 
     # simulate a document having a newer edition destroyed (previous behaviour).
     edition.sibling_in_progress = 2
-    edition.save(validate: false)
+    edition.save!(validate: false)
 
     assert edition.can_create_new_edition?
   end
@@ -559,7 +559,7 @@ class EditionTest < ActiveSupport::TestCase
   test "should not delete associated artefact if there are other editions of this publication" do
     user1 = FactoryBot.create(:user)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
-    edition.update(state: "published")
+    edition.update!(state: "published")
 
     edition.reload
     second_edition = edition.build_clone
@@ -598,11 +598,11 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, slug: "hedgehog-topiary", state: "published")
 
     second_edition = edition.build_clone
-    edition.update(state: "archived")
-    second_edition.update(state: "published")
+    edition.update!(state: "archived")
+    second_edition.update!(state: "published")
 
     third_edition = second_edition.build_clone
-    third_edition.update(state: "draft")
+    third_edition.update!(state: "draft")
 
     assert_equal edition.published_edition, second_edition
   end
@@ -619,7 +619,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "status should not be affected by notes" do
-    user = User.create(name: "bob")
+    user = User.create!(name: "bob")
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.new_action(user, Action::APPROVE_REVIEW)
     edition.new_action(user, Action::NOTE, comment: "Something important")
@@ -683,7 +683,7 @@ class EditionTest < ActiveSupport::TestCase
   test "should archive older editions, even if there are validation errors, when a new edition is published" do
     edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create name: "bob"
+    user = User.create! name: "bob"
     publish(user, edition, "First publication")
 
     second_edition = edition.build_clone
@@ -693,7 +693,7 @@ class EditionTest < ActiveSupport::TestCase
     publish(user, second_edition, "Second publication")
 
     # simulate link validation errors in published edition
-    second_edition.parts.first.update(body: "[register your vehicle](registering-an-imported-vehicle)")
+    second_edition.parts.first.update!(body: "[register your vehicle](registering-an-imported-vehicle)")
 
     third_edition = second_edition.build_clone
     # fix link validation error in cloned edition by appending a '/' to the relative url
@@ -723,7 +723,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "edition can return latest status action of a specified request type" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
-    user = User.create(name: "George")
+    user = User.create!(name: "George")
     request_review(user, edition)
 
     assert_equal edition.actions.size, 1
@@ -741,16 +741,16 @@ class EditionTest < ActiveSupport::TestCase
   test "edition's publish history is recorded" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create name: "bob"
+    user = User.create! name: "bob"
     publish(user, edition, "First publication")
 
     second_edition = edition.build_clone
-    second_edition.update(state: "ready")
+    second_edition.update!(state: "ready")
     second_edition.save!
     publish(user, second_edition, "Second publication")
 
     third_edition = second_edition.build_clone
-    third_edition.update(state: "ready")
+    third_edition.update!(state: "ready")
     third_edition.save!
     publish(user, third_edition, "Third publication")
 
@@ -768,7 +768,7 @@ class EditionTest < ActiveSupport::TestCase
   test "a series with all editions published should not have siblings in progress" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create name: "bob"
+    user = User.create! name: "bob"
     publish(user, edition, "First publication")
 
     new_edition = edition.build_clone
@@ -785,7 +785,7 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.save!
 
-    user = User.create name: "bob"
+    user = User.create! name: "bob"
     publish(user, edition, "First publication")
 
     new_edition = edition.build_clone
@@ -820,9 +820,9 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "user should not be able to review an edition they requested review for" do
-    user = User.create(name: "Mary")
+    user = User.create!(name: "Mary")
 
-    edition = ProgrammeEdition.create(title: "Childcare", slug: "childcare", panopticon_id: @artefact.id)
+    edition = ProgrammeEdition.create!(title: "Childcare", slug: "childcare", panopticon_id: @artefact.id)
     assert edition.can_request_review?
     request_review(user, edition)
     assert_not request_amendments(user, edition)
@@ -833,7 +833,7 @@ class EditionTest < ActiveSupport::TestCase
     assert_not dummy_answer.has_sibling_in_progress?
 
     edition = dummy_answer.build_clone
-    edition.save
+    edition.save!
 
     dummy_answer.reload
     assert dummy_answer.has_sibling_in_progress?
@@ -854,9 +854,9 @@ class EditionTest < ActiveSupport::TestCase
     FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
 
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived", assigned_to_id: user1.id)
-    edition.actions.create request_type: Action::CREATE, requester: user2
-    edition.actions.create request_type: Action::PUBLISH, requester: user3
-    edition.actions.create request_type: Action::ARCHIVE, requester: user1
+    edition.actions.create! request_type: Action::CREATE, requester: user2
+    edition.actions.create! request_type: Action::PUBLISH, requester: user3
+    edition.actions.create! request_type: Action::ARCHIVE, requester: user1
     edition.save! && edition.reload
 
     assert_equal user1.name, edition.assignee
@@ -927,7 +927,7 @@ class EditionTest < ActiveSupport::TestCase
 
     new_edition = published_edition.build_clone
     new_edition.save!
-    new_edition.update(state: "ready")
+    new_edition.update!(state: "ready")
     publish(user, new_edition, "First publication")
 
     assert_equal 3, new_edition.version_number
@@ -964,7 +964,7 @@ class EditionTest < ActiveSupport::TestCase
     artefact = FactoryBot.create(:artefact)
     guide_edition = FactoryBot.create(:guide_edition, state: "draft", panopticon_id: artefact.id)
     artefact.state = "archived"
-    artefact.save
+    artefact.save!
 
     assert_raise(RuntimeError) do
       guide_edition.title = "Error this"
@@ -1196,8 +1196,8 @@ class EditionTest < ActiveSupport::TestCase
 
     should "return the last report created" do
       edition = FactoryBot.create(:edition, :published)
-      edition.link_check_reports.create(FactoryBot.attributes_for(:link_check_report))
-      latest_report = edition.link_check_reports.create(FactoryBot.attributes_for(:link_check_report, batch_id: 2))
+      edition.link_check_reports.create!(FactoryBot.attributes_for(:link_check_report))
+      latest_report = edition.link_check_reports.create!(FactoryBot.attributes_for(:link_check_report, batch_id: 2))
 
       assert latest_report, edition.latest_link_check_report
     end

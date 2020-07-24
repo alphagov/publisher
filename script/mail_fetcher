@@ -20,7 +20,7 @@ def redis
   Redis.new(RedisConfig::REDIS_CONFIG)
 end
 
-Rails.logger.info "Running MailFetcher in #{Rails.env} mode - #{Time.now.utc}"
+Rails.logger.info "Running MailFetcher in #{Rails.env} mode - #{Time.zone.now.utc}"
 
 handler = FactCheckEmailHandler.new(Publisher::Application.fact_check_config)
 
@@ -51,4 +51,4 @@ rescue StandardError => e
   raise
 end
 
-Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode - #{Time.now.utc}"
+Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode - #{Time.zone.now.utc}"

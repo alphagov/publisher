@@ -32,7 +32,7 @@ class EditionLinkCheckTest < JavascriptIntegrationTest
 
       @place.reload
 
-      @place.latest_link_check_report.update(status: "completed")
+      @place.latest_link_check_report.update!(status: "completed")
 
       within(".broken-links-report") do
         click_on "Refresh"

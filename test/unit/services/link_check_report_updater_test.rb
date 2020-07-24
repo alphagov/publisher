@@ -2,7 +2,7 @@ require "test_helper"
 
 class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
   def completed_at
-    @completed_at ||= Time.now.utc
+    @completed_at ||= Time.zone.now.utc
   end
 
   def payload

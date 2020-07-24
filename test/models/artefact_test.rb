@@ -117,7 +117,7 @@ class ArtefactTest < ActiveSupport::TestCase
       # This validation can be expensive, so skip it where unnecessary.
       @a.paths = %w[foo]
       @a.prefixes = %w[bar]
-      @a.save validate: false
+      @a.save! validate: false
 
       assert @a.valid?
     end
@@ -206,7 +206,7 @@ class ArtefactTest < ActiveSupport::TestCase
     assert_equal artefact.name, edition.title
 
     artefact.name = "Babar"
-    artefact.save
+    artefact.save!
 
     edition.reload
     assert_not_equal artefact.name, edition.title
@@ -316,7 +316,7 @@ class ArtefactTest < ActiveSupport::TestCase
 
     # Make the edition invalid, check that it persisted the invalid state
     edition.title = nil
-    edition.save(validate: false)
+    edition.save!(validate: false)
     assert_nil edition.reload.title
 
     artefact.update_as(user1, state: "archived")
@@ -329,7 +329,7 @@ class ArtefactTest < ActiveSupport::TestCase
     artefact = FactoryBot.create(:artefact, state: "live")
     edition = FactoryBot.create(:programme_edition, panopticon_id: artefact.id, state: "published")
     artefact.state = "archived"
-    artefact.save
+    artefact.save!
     assert_raise RuntimeError do
       edition.update(state: "archived", title: "Shabba", slug: "do-not-allow")
     end
@@ -345,7 +345,7 @@ class ArtefactTest < ActiveSupport::TestCase
     should "accept welsh language" do
       a = FactoryBot.build(:artefact)
       a.language = "cy"
-      a.save
+      a.save!
 
       a = Artefact.first
       assert_equal "cy", a.language

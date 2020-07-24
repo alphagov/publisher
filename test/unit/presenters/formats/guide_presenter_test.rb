@@ -69,7 +69,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of parts" do
-      Part.create(guide_edition: edition)
+      Part.create!(guide_edition: edition)
 
       expected = [{
         title: "",
@@ -86,7 +86,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -99,14 +99,14 @@ class GuidePresenterTest < ActiveSupport::TestCase
 
     should "[:hide_chapter_navigation]" do
       edition.hide_chapter_navigation = true
-      edition.save(validate: false)
+      edition.save!(validate: false)
 
       assert_equal true, result[:details][:hide_chapter_navigation]
     end
   end
 
   should "[:routes]" do
-    edition.update(slug: "foo")
+    edition.update!(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]

@@ -43,7 +43,7 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
     end
 
     should "expose the node" do
-      @option = @node.options.create(@atts)
+      @option = @node.options.create!(@atts)
       @option.reload
 
       assert_equal @node, @option.node
@@ -51,9 +51,9 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
 
     should "return in order" do
       @options = [
-        @node.options.create(@atts.merge(label: "Third", next_node: "baz", order: 3)),
-        @node.options.create(@atts.merge(label: "First", next_node: "foo", order: 1)),
-        @node.options.create(@atts.merge(label: "Second", next_node: "bar", order: 2)),
+        @node.options.create!(@atts.merge(label: "Third", next_node: "baz", order: 3)),
+        @node.options.create!(@atts.merge(label: "First", next_node: "foo", order: 1)),
+        @node.options.create!(@atts.merge(label: "Second", next_node: "bar", order: 2)),
       ]
 
       assert_equal %w[First Second Third], @node.options.all.map(&:label)
@@ -69,7 +69,7 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
       end
 
       should "keep the slug up to date if the label changes" do
-        @option = @node.options.create(@atts.merge(slug: "most-likely"))
+        @option = @node.options.create!(@atts.merge(slug: "most-likely"))
         @option.label = "Most of the times"
         assert @option.valid?
         assert_equal "most-of-the-times", @option.slug

@@ -303,7 +303,7 @@ class EditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
       stub_request(:delete, "#{Plek.current.find('arbiter')}/slugs/test").to_return(status: 200)
     end
@@ -367,7 +367,7 @@ class EditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
@@ -386,7 +386,7 @@ class EditionsControllerTest < ActionController::TestCase
     should "we can diff the last edition" do
       first_edition = FactoryBot.create(:guide_edition, state: "published")
       second_edition = first_edition.build_clone(GuideEdition)
-      second_edition.save
+      second_edition.save!
       second_edition.reload
 
       get :diff, params: { id: second_edition.id }

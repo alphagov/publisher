@@ -13,7 +13,7 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
 
       transaction = FactoryBot.create(:transaction_edition, title: @random_name, slug: "test-transaction")
       transaction.save!
-      transaction.update(state: "draft")
+      transaction.update!(state: "draft")
 
       visit_edition transaction
 
@@ -160,7 +160,7 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
 
     transaction = FactoryBot.create(:transaction_edition, title: random_name, slug: "test-transaction")
     transaction.save!
-    transaction.update(state: "draft")
+    transaction.update!(state: "draft")
 
     visit_edition transaction
 

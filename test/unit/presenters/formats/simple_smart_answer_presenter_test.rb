@@ -91,7 +91,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(body: nil)
+          edition.update!(body: nil)
           assert_not_includes result[:details].keys, :body
         end
       end
@@ -155,7 +155,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -167,7 +167,7 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update(slug: "foo")
+      edition.update!(slug: "foo")
       expected = [
         { path: "/foo", type: "prefix" },
       ]

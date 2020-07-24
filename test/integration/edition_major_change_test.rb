@@ -33,7 +33,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
       context "for an edition in a published series" do
         setup do
           @second_edition = @edition.build_clone
-          @second_edition.update(body: "Some different body text", state: "draft")
+          @second_edition.update!(body: "Some different body text", state: "draft")
         end
 
         should "be visible" do

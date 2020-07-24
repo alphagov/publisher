@@ -89,13 +89,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "creating a transaction with the initial details creates a valid transaction" do
-    user = User.create(name: "bob")
+    user = User.create!(name: "bob")
     trans = user.create_edition(:transaction, title: "test", slug: "test", panopticon_id: @artefact.id)
     assert trans.valid?
   end
 
   test "user can't okay a publication they've sent for review" do
-    user = User.create(name: "bob")
+    user = User.create!(name: "bob")
 
     trans = user.create_edition(:transaction, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     request_review(user, trans)
@@ -108,7 +108,7 @@ class UserTest < ActiveSupport::TestCase
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)
-    publication.save
+    publication.save!
     publication.reload
 
     assert_equal(worker_user, publication.assigned_to)
@@ -120,13 +120,13 @@ class UserTest < ActiveSupport::TestCase
 
     publication = boss_user.create_edition(:answer, title: "test answer", slug: "test", panopticon_id: @artefact.id)
     boss_user.assign(publication, worker_user)
-    publication.save
+    publication.save!
     publication.reload
 
     assert_equal(worker_user, publication.assigned_to)
 
     boss_user.unassign(publication)
-    publication.save
+    publication.save!
     publication.reload
 
     assert_nil publication.assigned_to

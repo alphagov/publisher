@@ -50,9 +50,9 @@ class SimpleSmartAnswerEdition < Edition
         if node_id
           node = nodes.find(node_id)
           if destroy_in_attrs?(node_attrs)
-            node.destroy
+            node.destroy!
           else
-            node.update(node_attrs)
+            node.update!(node_attrs)
           end
         else
           nodes << Node.new(node_attrs) unless destroy_in_attrs?(node_attrs)

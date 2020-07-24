@@ -47,7 +47,7 @@ class User
 
     processor = GovukContentModels::ActionProcessors::REQUEST_TYPE_TO_PROCESSOR[request_type.to_sym]
     edition = GovukContentModels::ActionProcessors.const_get(processor).new(self, edition, action_attributes, {}).processed_edition
-    edition.save if edition
+    edition.save! if edition
   end
 
   def record_note(edition, comment, type = Action::NOTE)

@@ -24,11 +24,11 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     service = LocalService.create!(lgsl_code: BINS, providing_tier: %w[county unitary])
 
     local_transaction = LocalTransactionEdition.new(lgsl_code: NONEXISTENT, lgil_code: 1, title: "Foo", slug: "foo", panopticon_id: @artefact.id)
-    local_transaction.save
+    local_transaction.save!
     assert_not local_transaction.valid?
 
     local_transaction = LocalTransactionEdition.new(lgsl_code: service.lgsl_code, lgil_code: 1, title: "Bar", slug: "bar", panopticon_id: @artefact.id)
-    local_transaction.save
+    local_transaction.save!
     assert local_transaction.valid?
     assert local_transaction.persisted?
   end

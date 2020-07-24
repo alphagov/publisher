@@ -17,13 +17,13 @@ class EventMailerTest < ActionMailer::TestCase
   def action_email(action)
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
-    action = guide.actions.create(request_type: action, requester: requester)
+    action = guide.actions.create!(request_type: action, requester: requester)
     EventMailer.any_action(action, action.email_addresses)
   end
 
   def publisher_and_guide
-    user = User.create(uid: "123", name: "Ben")
-    other_user = User.create(uid: "321", name: "James")
+    user = User.create!(uid: "123", name: "Ben")
+    other_user = User.create!(uid: "321", name: "James")
 
     guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
@@ -40,7 +40,7 @@ class EventMailerTest < ActionMailer::TestCase
   test "user should be able to have an email sent for fact checking" do
     stub_mailer = stub("mailer", deliver_now: true)
     EventMailer.expects(:request_fact_check).returns(stub_mailer)
-    user = User.create(name: "Ben")
+    user = User.create!(name: "Ben")
     artefact = FactoryBot.create(:artefact)
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: artefact.id)
     edition = guide
@@ -58,7 +58,7 @@ class EventMailerTest < ActionMailer::TestCase
   end
 
   test "should send an email on fact check received" do
-    user = User.create(name: "Ben")
+    user = User.create!(name: "Ben")
     guide = user.create_edition(
       :guide,
       panopticon_id: FactoryBot.create(:artefact).id,

@@ -54,7 +54,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(will_continue_on: nil)
+          edition.update!(will_continue_on: nil)
           assert_not_includes result[:details].keys, :will_continue_on
         end
       end
@@ -66,7 +66,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(continuation_link: nil)
+          edition.update!(continuation_link: nil)
           assert_not_includes result[:details].keys, :continuation_link
         end
       end
@@ -78,7 +78,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(licence_short_description: nil)
+          edition.update!(licence_short_description: nil)
           assert_not_includes result[:details].keys, :licence_short_description
         end
       end
@@ -95,7 +95,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(licence_overview: nil)
+          edition.update!(licence_overview: nil)
           assert_not_includes result[:details].keys, :licence_overview
         end
       end
@@ -104,7 +104,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -116,7 +116,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update(slug: "foo")
+      edition.update!(slug: "foo")
       expected = [
         { path: "/foo", type: "prefix" },
       ]

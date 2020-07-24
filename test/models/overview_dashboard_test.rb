@@ -12,13 +12,13 @@ class OverviewDashboardTest < ActiveSupport::TestCase
 private
 
   def create_test_overview
-    overview = OverviewDashboard.create dashboard_type: "Format", result_group: "Guide"
+    overview = OverviewDashboard.create! dashboard_type: "Format", result_group: "Guide"
 
     row_status.each do |k, v|
       overview[k] = v
     end
 
-    overview.save
+    overview.save!
 
     found_overviews = OverviewDashboard.where(dashboard_type: "Format")
     assert_equal found_overviews.size, 1

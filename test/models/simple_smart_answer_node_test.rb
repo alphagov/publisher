@@ -117,9 +117,9 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
 
     should "be returned in order" do
       @nodes = [
-        @edition.nodes.create(@atts.merge(title: "Third", order: 3)),
-        @edition.nodes.create(@atts.merge(title: "First", order: 1)),
-        @edition.nodes.create(@atts.merge(title: "Second", order: 2)),
+        @edition.nodes.create!(@atts.merge(title: "Third", order: 3)),
+        @edition.nodes.create!(@atts.merge(title: "First", order: 1)),
+        @edition.nodes.create!(@atts.merge(title: "Second", order: 2)),
       ]
 
       assert_equal %w[First Second Third], @edition.nodes.all.map(&:title)

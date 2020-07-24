@@ -15,21 +15,21 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
       stub_fh = stub(:close)
       File.expects(:open).with("data/local_services.csv", "r:Windows-1252:UTF-8").returns(stub_fh)
       LocalServiceImporter.expects(:new).with(stub_fh).returns(stub(:run))
-      LocalServiceImporter.update
+      LocalServiceImporter.update!
     end
 
     should "run it" do
       instance = stub
       instance.expects(:run)
       LocalServiceImporter.stubs(:new).returns(instance)
-      LocalServiceImporter.update
+      LocalServiceImporter.update!
     end
 
     should "close the filehandle when done" do
       stub_fh = stub
       File.stubs(:open).with("data/local_services.csv", anything).returns(stub_fh)
       stub_fh.expects(:close)
-      LocalServiceImporter.update
+      LocalServiceImporter.update!
     end
   end
 

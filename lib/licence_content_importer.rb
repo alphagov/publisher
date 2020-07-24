@@ -56,7 +56,7 @@ class LicenceContentImporter
       slug = slug_for(title)
 
       artefact = Artefact.find_by(slug: slug) ||
-        Artefact.create(
+        Artefact.create!(
           slug: slug,
           kind: "licence",
           state: "draft",
@@ -69,11 +69,11 @@ class LicenceContentImporter
 
       puts "Artefact id: #{artefact_id}, slug: #{slug}."
 
-      edition = LicenceEdition.create title: title,
-                                      panopticon_id: artefact_id,
-                                      slug: slug,
-                                      licence_identifier: identifier,
-                                      licence_overview: marked_down(row["LONGDESC"])
+      edition = LicenceEdition.create! title: title,
+                                       panopticon_id: artefact_id,
+                                       slug: slug,
+                                       licence_identifier: identifier,
+                                       licence_overview: marked_down(row["LONGDESC"])
 
       if edition
         add_workflow(@user, edition)

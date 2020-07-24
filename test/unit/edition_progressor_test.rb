@@ -9,7 +9,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should be able to progress an item" do
-    @guide.update(state: :ready)
+    @guide.update!(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -26,7 +26,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if the email addresses were blank" do
-    @guide.update(state: :ready)
+    @guide.update!(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -40,7 +40,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if the email addresses were invalid" do
-    @guide.update(state: :ready)
+    @guide.update!(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -54,7 +54,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
   end
 
   test "should not progress to fact check if any of the email addresses were invalid" do
-    @guide.update(state: :ready)
+    @guide.update!(state: :ready)
 
     activity = {
       request_type: "send_fact_check",
@@ -77,7 +77,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       stub_register_published_content
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update!(state: :scheduled_for_publishing, publish_at: publish_at)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "publish", comment: "go live now!" }
@@ -90,7 +90,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     end
 
     should "not fail if there is no scheduled job for the edition being published" do
-      @guide.update(state: :ready)
+      @guide.update!(state: :ready)
 
       activity = { request_type: "publish", comment: "go live!" }
       command = EditionProgressor.new(@guide, @laura)
@@ -108,7 +108,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
 
     should "enqueue a job for sidekiq to perform later" do
       Sidekiq::Testing.fake! do
-        @guide.update(state: :ready)
+        @guide.update!(state: :ready)
         publish_at = 1.day.from_now
         activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: publish_at }
 
@@ -122,7 +122,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     should "dequeue a scheduled job" do
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update!(state: :scheduled_for_publishing, publish_at: publish_at)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }

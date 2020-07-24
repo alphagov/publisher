@@ -170,7 +170,7 @@ class Artefact
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
     record_action(action_type, user: user)
-    save(options)
+    save!(options)
   end
 
   # We should use this method when performing save actions from rake tasks,

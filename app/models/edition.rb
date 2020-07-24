@@ -412,7 +412,7 @@ class Edition
   # system.
   def destroy_artefact
     if can_destroy? && siblings.empty?
-      Artefact.find(panopticon_id).destroy
+      Artefact.find(panopticon_id).destroy!
     end
   end
 

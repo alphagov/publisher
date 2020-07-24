@@ -73,7 +73,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(introduction: nil)
+          edition.update!(introduction: nil)
           assert_not_includes result[:details].keys, :introduction
         end
       end
@@ -90,7 +90,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(more_information: nil)
+          edition.update!(more_information: nil)
           assert_not_includes result[:details].keys, :more_information
         end
       end
@@ -107,7 +107,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update(need_to_know: nil)
+          edition.update!(need_to_know: nil)
           assert_not_includes result[:details].keys, :need_to_know
         end
       end
@@ -116,7 +116,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -128,7 +128,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update(slug: "foo")
+      edition.update!(slug: "foo")
       expected = [
         { path: "/foo", type: "prefix" },
       ]

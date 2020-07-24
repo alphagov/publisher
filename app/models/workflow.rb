@@ -169,7 +169,7 @@ module Workflow
     # http://rubydoc.info/github/pluginaweek/state_machine/StateMachine/Machine:event
     # pass false to transition state without performing state machine actions
     public_send(event, false)
-    save(validate: false)
+    save!(validate: false)
   end
 
   def important_note

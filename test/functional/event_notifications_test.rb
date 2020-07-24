@@ -11,14 +11,14 @@ class EventNotificationsTest < ActiveSupport::TestCase
   def action_email(action)
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
-    action = guide.actions.create(request_type: action, requester: requester)
+    action = guide.actions.create!(request_type: action, requester: requester)
     EventNotifierService.any_action(action)
   end
 
   context ".resend_fact_check" do
     setup do
-      @user = User.create(uid: "123", name: "Ben")
-      @other_user = User.create(uid: "321", name: "James")
+      @user = User.create!(uid: "123", name: "Ben")
+      @other_user = User.create!(uid: "321", name: "James")
 
       @edition = @user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
       request_review(@user, @edition)

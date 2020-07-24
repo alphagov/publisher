@@ -14,13 +14,13 @@ class WorkflowTest < ActiveSupport::TestCase
 
   def template_programme
     p = ProgrammeEdition.new(slug: "childcare", title: "Children", panopticon_id: @artefact.id)
-    p.save
+    p.save!
     p
   end
 
   def template_guide
     edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    edition.save
+    edition.save!
     edition
   end
 
@@ -45,14 +45,14 @@ class WorkflowTest < ActiveSupport::TestCase
     other_user = FactoryBot.create(:user, name: "James")
 
     transaction = user.create_edition(:transaction, title: "My title", slug: "my-title", panopticon_id: @artefact.id, need_to_know: "Credit card required")
-    transaction.save
+    transaction.save!
 
     request_review(user, transaction)
-    transaction.save
+    transaction.save!
     approve_review(other_user, transaction)
-    transaction.save
+    transaction.save!
     user.progress(transaction, request_type: :publish, comment: "Let's go")
-    transaction.save
+    transaction.save!
     [user, transaction]
   end
 
@@ -413,7 +413,7 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "return false if the edition is not published" do
-      @edition.update(state: :in_review)
+      @edition.update!(state: :in_review)
       assert_nil @user.new_version(@edition)
     end
 
@@ -459,7 +459,7 @@ class WorkflowTest < ActiveSupport::TestCase
     setup do
       @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
-      @edition.parts.first.update(
+      @edition.parts.first.update!(
         body: "[register and tax your vehicle](registering-an-imported-vehicle)",
       )
     end
