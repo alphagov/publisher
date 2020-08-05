@@ -84,15 +84,15 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
   end
 
   def first_of_july_next_year_at_midday_bst
-    Time.zone.local(next_year, 7, 1, 11, 0)
+    Time.zone.local(next_year, 7, 1, 12, 0)
   end
 
   def first_of_july_next_year_at_six_pm_bst
-    Time.zone.local(next_year, 7, 1, 17, 0)
+    Time.zone.local(next_year, 7, 1, 18, 0)
   end
 
   def first_of_july_next_year_at_nine_thirty_pm_bst
-    Time.zone.local(next_year, 7, 1, 20, 30)
+    Time.zone.local(next_year, 7, 1, 21, 30)
   end
 
   def day

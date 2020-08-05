@@ -23,7 +23,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :slug
       edition.stubs :overview
       edition.stubs :public_updated_at
-      edition.stubs updated_at: DateTime.now.in_time_zone
+      edition.stubs updated_at: Time.zone.now
       edition.stubs :major_change
       edition.stubs :version_number
       edition.stubs :latest_change_note
@@ -78,16 +78,16 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
 
     context "[:public_updated_at]" do
       should "return edition.public_updated_at if not nil" do
-        expected = DateTime.now.in_time_zone.to_datetime.rfc3339(3)
-        edition.expects(:public_updated_at).returns(expected)
-        assert_equal expected, result[:public_updated_at]
+        now = Time.zone.now
+        edition.expects(:public_updated_at).returns(now)
+        assert_equal now.rfc3339(3), result[:public_updated_at]
       end
 
       should "return edition.updated_at otherwise" do
         edition.stubs(:public_updated_at).returns(nil)
-        expected = DateTime.now.in_time_zone.to_datetime.rfc3339(3)
-        edition.expects(:updated_at).returns(expected)
-        assert_equal expected, result[:public_updated_at]
+        now = Time.zone.now
+        edition.expects(:updated_at).returns(now)
+        assert_equal now.rfc3339(3), result[:public_updated_at]
       end
     end
 
