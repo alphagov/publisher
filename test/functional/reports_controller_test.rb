@@ -20,7 +20,7 @@ class ReportsControllerTest < ActionController::TestCase
     get :progress
 
     assert_equal "foo,bar", response.body
-    assert_equal 'attachment; filename="editorial_progress-20150601010000.csv"',
+    assert_equal 'attachment; filename="editorial_progress-20150601010000.csv"; filename*=UTF-8\'\'editorial_progress-20150601010000.csv',
                  response.header["Content-Disposition"]
     assert_equal "text/csv", response.header["Content-Type"]
   end

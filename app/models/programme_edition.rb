@@ -4,7 +4,7 @@ require "parted"
 class ProgrammeEdition < Edition
   include Parted
 
-  before_save :setup_default_parts, on: :create
+  before_save :setup_default_parts, if: :new_record?
 
   GOVSPEAK_FIELDS = [].freeze
 
