@@ -484,61 +484,63 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootstrap-kaminari-views (= 0.0.5)
-  database_cleaner (= 1.8.5)
-  diffy (= 3.3.0)
+  bootstrap-kaminari-views
+  ci_reporter_minitest
+  database_cleaner
+  diffy
   erubis
   factory_bot_rails
-  formtastic (= 3.1.5)
-  formtastic-bootstrap (= 3.1.1)
-  gds-api-adapters (~> 67.0)
-  gds-sso (~> 15.0)
-  govspeak (~> 6.5.5)
-  govuk-content-schema-test-helpers (~> 1.6)
-  govuk_admin_template (~> 6.7)
-  govuk_app_config (~> 2.2.1)
-  govuk_sidekiq (~> 4.0.0)
+  formtastic
+  formtastic-bootstrap
+  gds-api-adapters
+  gds-sso
+  govspeak
+  govuk-content-schema-test-helpers
+  govuk_admin_template
+  govuk_app_config
+  govuk_sidekiq
   govuk_test
   has_scope
   inherited_resources
-  jasmine (~> 3.5.1)
-  jasmine-core (~> 3.5.0)
-  jquery-ui-rails (~> 6.0)
-  kaminari (~> 1.2)
-  kaminari-mongoid (= 1.0.1)
+  jasmine
+  jasmine-core
+  jquery-ui-rails
+  kaminari
+  kaminari-mongoid
   mail-notify
-  mlanett-redis-lock (= 0.2.7)
-  mocha (= 1.9.0)
-  momentjs-rails (= 2.20.1)
-  mongo (~> 2.12.1)
-  mongoid (~> 6.3)
+  minitest-reporters
+  mlanett-redis-lock
+  mocha
+  momentjs-rails
+  mongo
+  mongoid
   mongoid-sadstory
-  mousetrap-rails (= 1.4.6)
+  mousetrap-rails
   nested_form!
   null_logger
-  plek (= 4.0.0)
+  plek
   pry-byebug
-  rack (= 2.2.3)
+  rack
   rails (~> 5.2)
   rails-controller-testing
-  rails_autolink (= 1.1.6)
+  rails_autolink
   rest-client
   retriable
-  reverse_markdown (= 2.0.0)
+  reverse_markdown
   rubocop-govuk
-  sass-rails (~> 5.0)
+  sass-rails
   select2-rails (= 3.5.9.1)
-  selectize-rails (= 0.12.6)
-  shoulda (= 4.0.0)
-  simplecov (~> 0.18.5)
-  simplecov-rcov (~> 0.2.3)
-  state_machines (~> 0.4)
+  selectize-rails
+  shoulda
+  simplecov
+  simplecov-rcov
+  state_machines
   state_machines-graphviz
-  state_machines-mongoid (~> 0.1)
-  strip_attributes (~> 1.11)
-  timecop (= 0.9.1)
-  uglifier (= 4.2.0)
-  webmock (~> 3.8.3)
+  state_machines-mongoid
+  strip_attributes
+  timecop
+  uglifier
+  webmock
   whenever
 
 BUNDLED WITH

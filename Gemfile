@@ -1,57 +1,60 @@
 source "https://rubygems.org"
 
-gem "bootstrap-kaminari-views", "0.0.5"
-gem "diffy", "3.3.0"
+gem "rails", "~> 5.2"
+
+gem "bootstrap-kaminari-views"
+gem "diffy"
 gem "erubis"
-gem "formtastic", "3.1.5"
-gem "formtastic-bootstrap", "3.1.1"
-gem "gds-api-adapters", "~> 67.0"
-gem "gds-sso", "~> 15.0"
-gem "govspeak", "~> 6.5.5"
-gem "govuk_admin_template", "~> 6.7"
-gem "govuk_app_config", "~> 2.2.1"
-gem "govuk_sidekiq", "~> 4.0.0"
+gem "formtastic"
+gem "formtastic-bootstrap"
+gem "gds-api-adapters"
+gem "gds-sso"
+gem "govspeak"
+gem "govuk_admin_template"
+gem "govuk_app_config"
+gem "govuk_sidekiq"
 gem "has_scope"
 gem "inherited_resources"
-gem "jquery-ui-rails", "~> 6.0"
-gem "kaminari", "~> 1.2"
-gem "kaminari-mongoid", "1.0.1"
+gem "jquery-ui-rails"
+gem "kaminari"
+gem "kaminari-mongoid"
 gem "mail-notify"
-gem "mlanett-redis-lock", "0.2.7" # Only used in some importers
-gem "momentjs-rails", "2.20.1"
-gem "mongo", "~> 2.12.1"
-gem "mongoid", "~> 6.3"
+gem "mlanett-redis-lock" # Only used in some importers
+gem "momentjs-rails"
+gem "mongo"
+gem "mongoid"
 gem "mongoid-sadstory"
-gem "mousetrap-rails", "1.4.6"
+gem "mousetrap-rails"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"
 gem "null_logger"
-gem "plek", "4.0.0"
-gem "rails", "~> 5.2"
-gem "rails_autolink", "1.1.6"
+gem "plek"
+gem "rails_autolink"
 gem "rest-client", require: false # Only used in some importers
 gem "retriable", require: false # Only used in some importers
-gem "reverse_markdown", "2.0.0", require: false # Only used in some importers
-gem "sass-rails", "~> 5.0"
+gem "reverse_markdown", require: false # Only used in some importers
+gem "sass-rails"
 gem "select2-rails", "3.5.9.1" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
-gem "selectize-rails", "0.12.6"
-gem "state_machines", "~> 0.4"
-gem "state_machines-mongoid", "~> 0.1"
-gem "strip_attributes", "~> 1.11"
-gem "uglifier", "4.2.0"
+gem "selectize-rails"
+gem "state_machines"
+gem "state_machines-mongoid"
+gem "strip_attributes"
+gem "uglifier"
 gem "whenever", require: false
 
 group :test do
-  gem "database_cleaner", "1.8.5"
+  gem "ci_reporter_minitest"
+  gem "database_cleaner"
   gem "factory_bot_rails"
-  gem "govuk-content-schema-test-helpers", "~> 1.6"
+  gem "govuk-content-schema-test-helpers"
   gem "govuk_test"
-  gem "mocha", "1.9.0"
+  gem "minitest-reporters"
+  gem "mocha"
   gem "rails-controller-testing"
-  gem "shoulda", "4.0.0"
-  gem "simplecov", "~> 0.18.5", require: false
-  gem "simplecov-rcov", "~> 0.2.3", require: false
-  gem "timecop", "0.9.1"
-  gem "webmock", "~> 3.8.3"
+  gem "shoulda"
+  gem "simplecov", require: false
+  gem "simplecov-rcov", require: false
+  gem "timecop"
+  gem "webmock"
 end
 
 group :development do
@@ -59,9 +62,9 @@ group :development do
 end
 
 group :development, :test do
-  gem "jasmine", "~> 3.5.1"
-  gem "jasmine-core", "~> 3.5.0"
+  gem "jasmine"
+  gem "jasmine-core"
   gem "pry-byebug"
-  gem "rack", "2.2.3"
+  gem "rack"
   gem "rubocop-govuk"
 end
