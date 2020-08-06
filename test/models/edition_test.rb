@@ -693,7 +693,8 @@ class EditionTest < ActiveSupport::TestCase
     publish(user, second_edition, "Second publication")
 
     # simulate link validation errors in published edition
-    second_edition.parts.first.update!(body: "[register your vehicle](registering-an-imported-vehicle)")
+    second_edition.parts.first.body = "[register your vehicle](registering-an-imported-vehicle)"
+    second_edition.parts.first.save!(validate: false)
 
     third_edition = second_edition.build_clone
     # fix link validation error in cloned edition by appending a '/' to the relative url

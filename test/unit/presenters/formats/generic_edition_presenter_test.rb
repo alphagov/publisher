@@ -62,7 +62,8 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "create an attributes hash for a minor change" do
-      @edition.update!(major_change: false)
+      @edition.major_change = false
+      @edition.save!(validate: false)
 
       output = @presenter.render_for_publishing_api(republish: false)
       assert_equal "minor", output[:update_type]

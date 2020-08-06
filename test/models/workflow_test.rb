@@ -413,7 +413,8 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "return false if the edition is not published" do
-      @edition.update!(state: :in_review)
+      @edition.state = :in_review
+      @edition.save!(validate: false)
       assert_nil @user.new_version(@edition)
     end
 
@@ -459,9 +460,8 @@ class WorkflowTest < ActiveSupport::TestCase
     setup do
       @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
-      @edition.parts.first.update!(
-        body: "[register and tax your vehicle](registering-an-imported-vehicle)",
-      )
+      @edition.parts.first.body = "[register and tax your vehicle](registering-an-imported-vehicle)"
+      @edition.parts.first.save!(validate: false)
     end
 
     should "transition an edition with link validation errors to fact_check_received state" do

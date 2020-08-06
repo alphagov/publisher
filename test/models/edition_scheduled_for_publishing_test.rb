@@ -81,7 +81,8 @@ class EditionScheduledForPublishingTest < ActiveSupport::TestCase
 
     should "work with editions that have passed publish_at time" do
       edition = FactoryBot.create(:edition, :scheduled_for_publishing)
-      edition.update! publish_at: 2.days.ago
+      edition.publish_at = 2.days.ago
+      edition.save!(validate: false)
 
       edition.cancel_scheduled_publishing
 

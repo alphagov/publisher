@@ -69,7 +69,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of parts" do
-      Part.create!(guide_edition: edition)
+      Part.new(guide_edition: edition).save!(validate: false)
 
       expected = [{
         title: "",
@@ -106,7 +106,8 @@ class GuidePresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update!(slug: "foo")
+    edition.slug = "foo"
+    edition.save!(validate: false)
     expected = [
       { path: "/foo", type: "prefix" },
     ]

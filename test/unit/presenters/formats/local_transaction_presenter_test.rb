@@ -73,7 +73,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(introduction: nil)
+          edition.introduction = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :introduction
         end
       end
@@ -90,7 +91,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(more_information: nil)
+          edition.more_information = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :more_information
         end
       end
@@ -107,7 +109,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(need_to_know: nil)
+          edition.need_to_know = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :need_to_know
         end
       end
@@ -128,7 +131,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update!(slug: "foo")
+      edition.slug = "foo"
+      edition.save!(validate: false)
       expected = [
         { path: "/foo", type: "prefix" },
       ]

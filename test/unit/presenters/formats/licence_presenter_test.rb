@@ -54,7 +54,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(will_continue_on: nil)
+          edition.will_continue_on = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :will_continue_on
         end
       end
@@ -66,7 +67,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(continuation_link: nil)
+          edition.continuation_link = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :continuation_link
         end
       end
@@ -78,7 +80,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(licence_short_description: nil)
+          edition.licence_short_description = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :licence_short_description
         end
       end
@@ -95,7 +98,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
         end
 
         should "not present the data if nil" do
-          edition.update!(licence_overview: nil)
+          edition.licence_overview = nil
+          edition.save!(validate: false)
           assert_not_includes result[:details].keys, :licence_overview
         end
       end
@@ -116,7 +120,8 @@ class LicencePresenterTest < ActiveSupport::TestCase
     end
 
     should "[:routes]" do
-      edition.update!(slug: "foo")
+      edition.slug = "foo"
+      edition.save!(validate: false)
       expected = [
         { path: "/foo", type: "prefix" },
       ]

@@ -81,7 +81,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of variants" do
-      Variant.create!(transaction_edition: edition)
+      Variant.new(transaction_edition: edition).save!(validate: false)
 
       expected = [{
         title: "",
