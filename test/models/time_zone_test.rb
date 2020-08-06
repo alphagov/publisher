@@ -17,7 +17,7 @@ class TimeZoneTest < ActiveSupport::TestCase
     should "still store the date in UTC" do
       Timecop.freeze(wintertime) do
         FactoryBot.create(:artefact)
-        assert_equal "UTC", Artefact.last[:created_at].zone
+        assert_equal "UTC", Artefact.last.attributes["created_at"].zone
         assert_equal "GMT", Artefact.last.created_at.zone
       end
     end
@@ -33,7 +33,7 @@ class TimeZoneTest < ActiveSupport::TestCase
       should "still store the date in UTC" do
         Timecop.freeze(first_day_of_summer_time) do
           FactoryBot.create(:artefact)
-          assert_equal "UTC", Artefact.last[:created_at].zone
+          assert_equal "UTC", Artefact.last.attributes["created_at"].zone
         end
       end
 
