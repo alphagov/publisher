@@ -7,13 +7,13 @@ class LocalServiceCleaner
 
   def run
     LocalService.all.each do |local_service|
-      print "Looking at #{local_service.lgsl_code} -"
+      Rails.logger.debug "Looking at #{local_service.lgsl_code} -"
       if in_csv? local_service
-        puts " in csv"
+        Rails.logger.debug " in csv"
       elsif in_local_transaction? local_service
-        puts " in local transaction"
+        Rails.logger.debug " in local transaction"
       else
-        puts " removed"
+        Rails.logger.debug " removed"
         local_service.destroy!
       end
     end

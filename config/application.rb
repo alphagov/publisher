@@ -33,9 +33,6 @@ module Publisher
     config.assets.version = "1.0"
     config.assets.prefix = "/assets"
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    config.eager_load_paths += %W[#{config.root}/lib #{config.root}/app/presenters #{config.root}/app/decorators]
-
     config.action_mailer.notify_settings = {
       api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
     }

@@ -13,7 +13,7 @@ class CsvReportGenerator
   def run!
     redis.lock("publisher:#{Rails.env}:report_generation_lock", life: 15.minutes) do
       reports.each do |report|
-        puts "Generating #{path}/#{report.report_name}.csv"
+        Rails.logger.debug "Generating #{path}/#{report.report_name}.csv"
         report.write_csv(path)
       end
 
