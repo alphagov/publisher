@@ -66,6 +66,12 @@ module Publisher
     config.filter_parameters += [:password]
 
     config.jwt_auth_secret = ENV["JWT_AUTH_SECRET"]
+
+    # Using a sass css compressor causes a scss file to be processed twice
+    # (once to build, once to compress) which breaks the usage of "unquote"
+    # to use CSS that has same function names as SCSS such as max.
+    # https://github.com/alphagov/govuk-frontend/issues/1350
+    config.assets.css_compressor = nil
   end
 end
 
