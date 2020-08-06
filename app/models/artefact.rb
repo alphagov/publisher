@@ -166,12 +166,15 @@ class Artefact
     save_as user
   end
 
+  # Return value is used in caller chain to show errors
+  # rubocop:disable Rails/SaveBang
   def save_as(user, options = {})
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
     record_action(action_type, user: user)
-    save!(options)
+    save(options)
   end
+  # rubocop:enable Rails/SaveBang
 
   # We should use this method when performing save actions from rake tasks,
   # message queue consumer or any other performed tasks that have no user associated

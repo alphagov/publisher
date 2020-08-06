@@ -41,6 +41,8 @@ class SimpleSmartAnswerEdition < Edition
   # to the same document.
   alias_method :original_update, :update
 
+  # Any validation errors are eventually checked by the caller
+  # rubocop:disable Rails/SaveBang
   def update(attributes)
     nodes_attrs = attributes.delete(:nodes_attributes)
     if nodes_attrs
@@ -50,9 +52,9 @@ class SimpleSmartAnswerEdition < Edition
         if node_id
           node = nodes.find(node_id)
           if destroy_in_attrs?(node_attrs)
-            node.destroy!
+            node.destroy
           else
-            node.update!(node_attrs)
+            node.update(node_attrs)
           end
         else
           nodes << Node.new(node_attrs) unless destroy_in_attrs?(node_attrs)
@@ -62,6 +64,7 @@ class SimpleSmartAnswerEdition < Edition
 
     original_update(attributes)
   end
+  # rubocop:enable Rails/SaveBang
 
   def initial_node
     nodes.first

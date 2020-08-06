@@ -145,6 +145,8 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
   end
 
+  # This explicitly tests the custom update override
+  # rubocop:disable Rails/SaveBang
   context "update method" do
     setup do
       @edition = FactoryBot.create(:simple_smart_answer_edition)
@@ -157,7 +159,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "update edition and nested node and option attributes" do
-      @edition.update!(
+      @edition.update(
         title: "Smarter than the average answer",
         body: "No developers were involved in the changing of this copy",
         nodes_attributes: {
@@ -178,7 +180,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "create and destroy nodes and options using nested attributes" do
-      @edition.update!(nodes_attributes: {
+      @edition.update(nodes_attributes: {
         "0" => { "id" => @edition.nodes.first.id,
                  "options_attributes" => {
                    "0" => { "id" => @edition.nodes.first.options.first.id, "_destroy" => "1" },
@@ -204,7 +206,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
 
     should "ignore new nodes if they are to be destroyed" do
-      @edition.update!(nodes_attributes: {
+      @edition.update(nodes_attributes: {
         "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
         "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" },
       })
@@ -214,4 +216,5 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       assert_equal 2, @edition.nodes.size
     end
   end
+  # rubocop:enable Rails/SaveBang
 end
