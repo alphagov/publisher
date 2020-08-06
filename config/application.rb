@@ -1,5 +1,6 @@
 require_relative "boot"
 
+require "rails"
 # Pick the frameworks you want:
 # require "active_record/railtie"
 require "action_controller/railtie"
@@ -13,6 +14,9 @@ Bundler.require(*Rails.groups)
 
 module Publisher
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 6.0
+
     # Configuration object for the fact check email fetch script
     # See `script/mail_fetcher`
     attr_accessor :mail_fetcher_config
@@ -72,6 +76,16 @@ module Publisher
     # to use CSS that has same function names as SCSS such as max.
     # https://github.com/alphagov/govuk-frontend/issues/1350
     config.assets.css_compressor = nil
+
+    # Enable per-form CSRF tokens. Previous versions had false.
+    Rails.application.config.action_controller.per_form_csrf_tokens = true
+
+    # Enable origin-checking CSRF mitigation. Previous versions had false.
+    Rails.application.config.action_controller.forgery_protection_origin_check = false
+
+    # Make Ruby 2.4 preserve the timezone of the receiver when calling `to_time`.
+    # Previous versions had false.
+    ActiveSupport.to_time_preserves_timezone = false
   end
 end
 
