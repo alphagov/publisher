@@ -54,6 +54,7 @@ group :test do
   gem "simplecov", require: false
   gem "simplecov-rcov", require: false
   gem "timecop"
+  gem "webdrivers"
   gem "webmock"
 end
 
@@ -64,6 +65,7 @@ end
 group :development, :test do
   gem "jasmine"
   gem "jasmine-core"
+  gem "jasmine_selenium_runner", require: false
   gem "pry-byebug"
   gem "rack"
   gem "rubocop-govuk"
