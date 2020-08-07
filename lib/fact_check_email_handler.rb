@@ -25,14 +25,7 @@ class FactCheckEmailHandler
       return FactCheckMessageProcessor.process(message, edition_id)
     end
 
-    message.recipients.each do |recipient|
-      if @fact_check_config.valid_address?(recipient.to_s)
-        edition_id = @fact_check_config.item_id_from_address(recipient.to_s)
-        return FactCheckMessageProcessor.process(message, edition_id)
-      end
-    end
-
-    raise "Unable to locate fact check ID from address or subject"
+    raise "Unable to locate fact check ID from subject"
   rescue StandardError => e
     message = "Failed to process message '#{message.subject}': #{e.message}"
     GovukError.notify(UnableToProcessError.new(message))
