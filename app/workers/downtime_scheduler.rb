@@ -21,7 +21,7 @@ class DowntimeScheduler
     artefact = downtime.artefact
 
     if Time.zone.parse(downtime.end_time.to_s) <= Time.zone.now
-      downtime.destroy
+      downtime.destroy!
     end
 
     PublishingApiWorkflowBypassPublisher.call(artefact)

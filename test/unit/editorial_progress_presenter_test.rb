@@ -21,9 +21,9 @@ class EditoriaProgressPresenterTest < ActiveSupport::TestCase
   end
 
   test "lists out each separate edition of an item" do
-    @guide.update state: "published"
+    @guide.update! state: "published"
     second_guide = @guide.build_clone
-    second_guide.save
+    second_guide.save!
 
     presenter = EditorialProgressPresenter.new(Edition.all)
     result = presenter.to_csv

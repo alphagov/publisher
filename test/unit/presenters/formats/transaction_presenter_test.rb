@@ -81,7 +81,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of variants" do
-      Variant.create(transaction_edition: edition)
+      Variant.new(transaction_edition: edition).save!(validate: false)
 
       expected = [{
         title: "",
@@ -93,7 +93,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:introductory_paragraph]" do
-      edition.update(introduction: "foo")
+      edition.update!(introduction: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -104,7 +104,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:more_information]" do
-      edition.update(more_information: "foo")
+      edition.update!(more_information: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -115,7 +115,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:other_ways_to_apply]" do
-      edition.update(alternate_methods: "foo")
+      edition.update!(alternate_methods: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -126,7 +126,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:what_you_need_to_know]" do
-      edition.update(need_to_know: "foo")
+      edition.update!(need_to_know: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -139,7 +139,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -151,22 +151,22 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:will_continue_on]" do
-      edition.update(will_continue_on: "foo")
+      edition.update!(will_continue_on: "foo")
       assert_equal "foo", result[:details][:will_continue_on]
     end
 
     should "[:transaction_start_link]" do
-      edition.update(link: "foo")
+      edition.update!(link: "foo")
       assert_equal "foo", result[:details][:transaction_start_link]
     end
 
     should "[:department_analytics_profile]" do
-      edition.update(department_analytics_profile: "UA-000000-2")
+      edition.update!(department_analytics_profile: "UA-000000-2")
       assert_equal "UA-000000-2", result[:details][:department_analytics_profile]
     end
 
     should "[:start_button_text]" do
-      edition.update(start_button_text: "Sign in")
+      edition.update!(start_button_text: "Sign in")
       assert_equal "Sign in", result[:details][:start_button_text]
     end
 
@@ -193,7 +193,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update(slug: "foo")
+    edition.update!(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]

@@ -95,7 +95,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     assert_equal 2, edition.nodes.size
 
-    edition.update(nodes_attributes: {
+    edition.update!(nodes_attributes: {
       "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" },
     })
     edition.reload
@@ -145,6 +145,8 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
   end
 
+  # This explicitly tests the custom update override
+  # rubocop:disable Rails/SaveBang
   context "update method" do
     setup do
       @edition = FactoryBot.create(:simple_smart_answer_edition)
@@ -214,4 +216,5 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       assert_equal 2, @edition.nodes.size
     end
   end
+  # rubocop:enable Rails/SaveBang
 end

@@ -68,7 +68,7 @@ module Formats
     end
 
     def public_updated_at
-      DateTime.now.rfc3339 if update_type == "major"
+      Time.zone.now.rfc3339 if update_type == "major"
     end
 
     def details

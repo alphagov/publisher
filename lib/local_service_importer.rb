@@ -1,7 +1,7 @@
 require "csv"
 
 class LocalServiceImporter
-  def self.update
+  def self.run
     fh = fetch_data
     begin
       new(fh).run

@@ -10,8 +10,8 @@ class LicenceIdentifierMigratorTest < ActiveSupport::TestCase
         1_084_062_157 => "898-1-1",
         1_075_329_002 => "999-4-1",
       )
-      @le1 = LicenceEdition.create(licence_identifier: "1083741799", title: "Licence One", panopticon_id: FactoryBot.create(:artefact).id)
-      @le2 = LicenceEdition.create(licence_identifier: "9999999999", title: "Licence Two", panopticon_id: FactoryBot.create(:artefact).id)
+      @le1 = LicenceEdition.create!(licence_identifier: "1083741799", title: "Licence One", panopticon_id: FactoryBot.create(:artefact).id)
+      @le2 = LicenceEdition.create!(licence_identifier: "9999999999", title: "Licence Two", panopticon_id: FactoryBot.create(:artefact).id)
     end
 
     should "update licence editions with a matching licence identifier" do

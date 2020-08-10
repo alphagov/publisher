@@ -2,8 +2,8 @@ require "test_helper"
 
 class PrimaryListingPresenterTest < ActiveSupport::TestCase
   def setup_users
-    alice = User.create(uid: "123")
-    bob = User.create(uid: "321")
+    alice = User.create!(uid: "123")
+    bob = User.create!(uid: "321")
     [alice, bob]
   end
 
@@ -11,12 +11,12 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     presenter = PrimaryListingPresenter.new(Edition, :all)
 
     a = FactoryBot.create(:guide_edition)
-    a.update(state: "draft")
+    a.update!(state: "draft")
     assert a.draft?
 
     b = FactoryBot.create(:guide_edition)
-    b.update(state: "published")
-    b.save
+    b.update!(state: "published")
+    b.save!
     b.reload
     assert_not b.draft?
 
@@ -30,7 +30,7 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.published?
 
     b = FactoryBot.create(:guide_edition)
-    b.update(state: "published")
+    b.update!(state: "published")
     b.reload
     assert b.published?
 
@@ -44,9 +44,9 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert_not a.archived?
 
     b = FactoryBot.create(:guide_edition)
-    b.update(state: "published")
+    b.update!(state: "published")
     b.archive
-    b.save
+    b.save!
 
     assert b.archived?
 
@@ -55,14 +55,14 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
   test "should filter by in_review state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    User.create
+    User.create!
 
     a = FactoryBot.create(:guide_edition)
     assert_not a.in_review?
 
     b = FactoryBot.create(:guide_edition)
     b.state = "in_review"
-    b.save(validate: false)
+    b.save!(validate: false)
     b.reload
     assert b.in_review?
 
@@ -71,13 +71,13 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
 
   test "should filter by fact checking state" do
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    User.create
+    User.create!
 
     a = FactoryBot.create(:guide_edition)
     assert_not a.fact_check?
 
     b = FactoryBot.create(:guide_edition)
-    b.update(state: "fact_check")
+    b.update!(state: "fact_check")
     b.reload
     assert b.fact_check?
 

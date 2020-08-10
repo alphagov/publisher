@@ -18,7 +18,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       assert_equal %w[first second third], @answer.actions.map(&:comment)
 
       @guide = @answer.build_clone(GuideEdition)
-      @guide.save
+      @guide.save!
 
       @guide.new_action(@author, Action::SEND_FACT_CHECK, comment: "fourth")
       @guide.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "fifth")
@@ -37,7 +37,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
     end
 
     should "not show the view link for archived editions" do
-      @answer.update(state: "archived")
+      @answer.update!(state: "archived")
 
       visit_edition @answer
       click_on "History and notes"
@@ -134,7 +134,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
           :answer_edition,
           state: "published",
         )
-        @edition.actions.create(
+        @edition.actions.create!(
           request_type: Action::IMPORTANT_NOTE,
           comment: "This is an important note. Take note.",
         )

@@ -8,13 +8,13 @@ class GuideEditionTest < ActiveSupport::TestCase
 
   def template_guide
     edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    edition.save
+    edition.save!
     edition
   end
 
   def publisher_and_guide
-    user = User.create(uid: "123", name: "Ben")
-    other_user = User.create(uid: "321", name: "James")
+    user = User.create!(uid: "123", name: "Ben")
+    other_user = User.create!(uid: "321", name: "James")
 
     guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide

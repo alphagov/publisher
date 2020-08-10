@@ -10,7 +10,7 @@ class DowntimeRemoverTest < ActiveSupport::TestCase
   end
 
   def downtime
-    @downtime ||= stub(artefact: artefact, destroy: nil)
+    @downtime ||= stub(artefact: artefact, destroy!: nil)
   end
 
   def artefact
@@ -19,7 +19,7 @@ class DowntimeRemoverTest < ActiveSupport::TestCase
 
   context ".destroy_immediately" do
     should "destroy the Downtime" do
-      downtime.expects(:destroy)
+      downtime.expects(:destroy!)
       DowntimeRemover.destroy_immediately(downtime)
     end
 

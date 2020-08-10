@@ -270,7 +270,7 @@ FactoryBot.define do
   factory :link do
     uri { "https://www.gov.uk" }
     status { "ok" }
-    checked_at { Time.parse("2017-12-01").iso8601 }
+    checked_at { Time.zone.parse("2017-12-01").iso8601 }
     check_warnings { ["example check warnings"] }
     check_errors { ["example check errors"] }
     problem_summary { "example problem" }
@@ -284,7 +284,7 @@ FactoryBot.define do
 
     trait :completed do
       status { "completed" }
-      completed_at { Time.now.iso8601 }
+      completed_at { Time.zone.now.iso8601 }
     end
 
     trait :with_links do

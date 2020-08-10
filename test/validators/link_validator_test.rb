@@ -73,7 +73,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
     should "be validated when any attribute of the document changes" do
       # already published document having link validation errors
       doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
-      doc.save(validate: false)
+      doc.save!(validate: false)
 
       doc.assignee = "4fdef0000000000000000001"
       assert doc.invalid?

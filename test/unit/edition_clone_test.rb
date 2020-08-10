@@ -2,8 +2,8 @@ require "test_helper"
 
 class EditionCloneTest < ActiveSupport::TestCase
   def setup
-    @user = User.create uid: "123", name: "Grandmaster Flash"
-    @other_user = User.create uid: "321", name: "Furious Five"
+    @user = User.create! uid: "123", name: "Grandmaster Flash"
+    @other_user = User.create! uid: "321", name: "Furious Five"
 
     @artefact = FactoryBot.create(:artefact, name: "Childcare", slug: "childcare")
     stub_calendars_has_no_bank_holidays(in_division: "england-and-wales")
@@ -22,7 +22,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     stub_register_published_content
 
     guide_edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    guide_edition.save
+    guide_edition.save!
 
     fact_check_and_publish(guide_edition)
 
@@ -38,7 +38,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     stub_register_published_content
 
     answer_edition = FactoryBot.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    answer_edition.save
+    answer_edition.save!
 
     fact_check_and_publish(answer_edition)
 
@@ -56,7 +56,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     guide_edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     guide_edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
     guide_edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
-    guide_edition.save
+    guide_edition.save!
 
     fact_check_and_publish(guide_edition)
 
@@ -75,7 +75,7 @@ class EditionCloneTest < ActiveSupport::TestCase
 
     answer_edition = FactoryBot.create(:answer_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     answer_edition.body = "Bleep, bloop, blop"
-    answer_edition.save
+    answer_edition.save!
 
     fact_check_and_publish(answer_edition)
 

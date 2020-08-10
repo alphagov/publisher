@@ -29,7 +29,7 @@ class AnswerPresenterTest < ActiveSupport::TestCase
 
   context "[:details]" do
     should "[:body]" do
-      edition.update(body: "foo")
+      edition.update!(body: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -42,7 +42,7 @@ class AnswerPresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -55,7 +55,7 @@ class AnswerPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update(slug: "foo")
+    edition.update!(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]

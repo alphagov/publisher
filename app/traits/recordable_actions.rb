@@ -24,7 +24,7 @@ module RecordableActions
 
     def new_action_without_validation(user, type, options = {})
       action = actions.build(options.merge(requester_id: user.id, request_type: type))
-      save(validate: false)
+      save!(validate: false)
       action
     end
 

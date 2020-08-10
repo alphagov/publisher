@@ -17,7 +17,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         :video_edition,
         :published,
         major_change: true,
-        updated_at: DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone,
+        updated_at: Time.zone.local(2017, 2, 6, 17, 36, 58),
         change_note: "Test",
         version_number: 2,
         panopticon_id: artefact.id,
@@ -62,7 +62,8 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "create an attributes hash for a minor change" do
-      @edition.update(major_change: false)
+      @edition.major_change = false
+      @edition.save!(validate: false)
 
       output = @presenter.render_for_publishing_api(republish: false)
       assert_equal "minor", output[:update_type]
@@ -84,7 +85,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         content_id: SecureRandom.uuid,
         language: "cy",
       )
-      updated_at = DateTime.new(2017, 2, 6, 17, 36, 58).in_time_zone
+      updated_at = Time.zone.local(2017, 2, 6, 17, 36, 58)
       @edition = FactoryBot.create(
         :transaction_edition,
         state: "draft",

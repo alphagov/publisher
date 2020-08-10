@@ -5,7 +5,7 @@ class DowntimeRemover
     return if downtime.nil?
 
     artefact_id = downtime.artefact.id.to_s
-    downtime.destroy
+    downtime.destroy!
     perform_async(artefact_id)
   end
 

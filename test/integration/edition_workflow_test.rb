@@ -44,7 +44,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     stub_calendars_has_a_bank_holiday_on(Date.parse("2017-05-01"), in_division: "england-and-wales")
 
     Timecop.freeze(today) do
-      guide.update(state: "ready")
+      guide.update!(state: "ready")
       visit_edition guide
 
       click_link("Fact check")
@@ -58,7 +58,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "fact-check email has ID in it" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -76,7 +76,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "fact-check email has reply-to address in it" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -94,7 +94,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can send guide to fact-check when in ready state" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -123,7 +123,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can send guide to several fact-check recipients with comma separated emails" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -151,7 +151,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "the fact-check form validates emails and won't send if they are mangled" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -192,7 +192,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "a guide in the ready state can be requested to make more amendments" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
@@ -203,7 +203,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "a guide in the fact-check state can be requested to make more amendments" do
-    guide.update(state: "fact_check")
+    guide.update!(state: "fact_check")
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
@@ -214,7 +214,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "a guide in the fact-check state can resend the email" do
-    guide.update(state: "ready")
+    guide.update!(state: "ready")
     visit_edition guide
 
     click_link("Fact check")
@@ -268,7 +268,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   test "cannot be the guide reviewer and assignee" do
     guide.assigned_to = bob
     guide.state = "in_review"
-    guide.save(validate: false)
+    guide.save!(validate: false)
 
     visit_edition guide
     select("Bob", from: "Reviewer")
@@ -312,7 +312,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "can review another's guide" do
     guide.state = "in_review"
-    guide.save(validate: false)
+    guide.save!(validate: false)
     guide.assigned_to = bob
 
     visit_edition guide
@@ -323,7 +323,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "review failed" do
     guide.state = "in_review"
-    guide.save(validate: false)
+    guide.save!(validate: false)
     guide.assigned_to = bob
 
     visit_edition guide
@@ -336,7 +336,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "review passed" do
     guide.state = "in_review"
-    guide.save(validate: false)
+    guide.save!(validate: false)
 
     visit_edition guide
     send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
@@ -346,7 +346,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can skip fact-check" do
-    guide.update(state: "fact_check")
+    guide.update!(state: "fact_check")
 
     visit_edition guide
 
@@ -366,7 +366,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can progress from fact-check" do
-    guide.update(state: "fact_check_received")
+    guide.update!(state: "fact_check_received")
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
@@ -377,7 +377,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can go back to fact-check from fact-check received" do
-    guide.update(state: "fact_check_received")
+    guide.update!(state: "fact_check_received")
 
     visit_edition guide
     send_for_fact_check guide
@@ -387,7 +387,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can create a new edition from the listings screens" do
-    guide.update(state: "published")
+    guide.update!(state: "published")
 
     visit "/"
     filter_for_all_users
@@ -398,14 +398,14 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "can preview a draft article on draft-origin" do
-    guide.update(state: "draft")
+    guide.update!(state: "draft")
 
     visit_edition guide
     assert page.has_text?("Preview")
   end
 
   test "can view a published article on the live site" do
-    guide.update(state: "published")
+    guide.update!(state: "published")
 
     visit_edition guide
     assert page.has_text?("View this on the GOV.UK website")
@@ -423,7 +423,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "cannot preview an archived article" do
-    guide.update(state: "archived")
+    guide.update!(state: "archived")
 
     visit_edition guide
     assert page.has_css?("#edit div div.navbar.navbar-inverse.navbar-fixed-bottom.text-center div div div a:nth-child(2)", text: "Preview")
@@ -452,7 +452,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   end
 
   test "should show an alert if another person has created a newer edition" do
-    guide.update(state: "published")
+    guide.update!(state: "published")
 
     filter_for_all_users
     view_filtered_list "Published"
@@ -460,7 +460,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     # Simulate that someone has clicked on 'Create new edition'
     # while current user has been viewing the list of published editions
     new_edition = guide.build_clone(GuideEdition)
-    new_edition.save
+    new_edition.save!
 
     # Current user now decides to click the button
     click_on "Create new edition"
@@ -477,7 +477,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       state: "archived",
       version_number: 1,
     )
-    artefact.update(state: "archived")
+    artefact.update!(state: "archived")
 
     visit "/"
     select "Video (Retired)", from: "Format"

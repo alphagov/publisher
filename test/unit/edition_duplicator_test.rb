@@ -31,7 +31,8 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     publish_item(guide, @laura)
 
     # invalid link in body having a {:rel="external"}
-    guide.parts.first.update(body: '[Home page](http://example.com "Home"){:rel="external"}')
+    guide.parts.first.body = '[Home page](http://example.com "Home"){:rel="external"}'
+    guide.parts.first.save!(validate: false)
     guide.reload
 
     command = EditionDuplicator.new(guide, @laura)

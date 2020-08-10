@@ -35,7 +35,7 @@ class UnpublishTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Content unpublished")
     end
 
-    @artefact.update(state: "archived")
+    @artefact.update!(state: "archived")
 
     visit_edition @edition
 

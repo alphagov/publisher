@@ -26,11 +26,6 @@ require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
-require "minitest/reporters"
-Minitest::Reporters.use!(
-  Minitest::Reporters::SpecReporter.new(color: true),
-)
-
 DatabaseCleaner.strategy = :truncation
 # initial clean
 DatabaseCleaner.clean

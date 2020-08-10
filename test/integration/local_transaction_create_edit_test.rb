@@ -2,7 +2,7 @@ require "integration_test_helper"
 
 class LocalTransactionCreateEditTest < JavascriptIntegrationTest
   setup do
-    LocalService.create(lgsl_code: 1, providing_tier: %w[county unitary])
+    LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
 
     @artefact = FactoryBot.create(
       :artefact,

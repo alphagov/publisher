@@ -8,15 +8,18 @@ class EditionDuplicator
     self.actor            = actor
   end
 
-  # new_format : The format of the new edition (eg. 'answer')
-  # assign_to  : The User who the new item should be assigned to for further
-  #              work.
+  # This method intentionally skips validations
   def duplicate(new_format = nil, assign_to = nil)
     self.new_edition = actor.new_version(existing_edition, new_format)
 
     if new_edition && new_edition.save(validate: false)
       update_assignment(assign_to)
-      new_edition.artefact.update(kind: new_edition.kind_for_artefact) if new_format.present?
+
+      if new_format.present?
+        new_edition.artefact.kind = new_edition.kind_for_artefact
+        new_edition.artefact.save!(validate: false)
+      end
+
       true
     else
       false

@@ -41,12 +41,10 @@ gem "uglifier", "4.2.0"
 gem "whenever", require: false
 
 group :test do
-  gem "ci_reporter_minitest", "1.0.0"
   gem "database_cleaner", "1.8.5"
   gem "factory_bot_rails"
   gem "govuk-content-schema-test-helpers", "~> 1.6"
   gem "govuk_test"
-  gem "minitest-reporters"
   gem "mocha", "1.9.0"
   gem "rails-controller-testing"
   gem "shoulda", "4.0.0"

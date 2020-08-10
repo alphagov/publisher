@@ -36,7 +36,7 @@ namespace :orphaned_editions do
     if orphans.any?
       orphans.each do |o|
         puts "Destroying orphan - Id: #{o.id} Type: #{o._type} o: #{edition.title}"
-        o.destroy
+        o.destroy!
       end
     else
       puts "No orphaned editions found"

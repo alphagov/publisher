@@ -29,7 +29,7 @@ class PlacePresenterTest < ActiveSupport::TestCase
 
   context "[:details]" do
     should "[:introduction]" do
-      edition.update(introduction: "foo")
+      edition.update!(introduction: "foo")
       expected = [
         {
           content_type: "text/govspeak",
@@ -42,7 +42,7 @@ class PlacePresenterTest < ActiveSupport::TestCase
     should "[:external_related_links]" do
       link = { "url" => "www.foo.com", "title" => "foo" }
       artefact.external_links = [link]
-      artefact.save(validate: false)
+      artefact.save!(validate: false)
       expected = [
         {
           url: link["url"],
@@ -54,14 +54,14 @@ class PlacePresenterTest < ActiveSupport::TestCase
     end
 
     should "not send through nil fields" do
-      edition.update(need_to_know: nil)
+      edition.update!(need_to_know: nil)
 
       assert_not_includes result[:details].keys, :need_to_know
     end
   end
 
   should "[:routes]" do
-    edition.update(slug: "foo")
+    edition.update!(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]
