@@ -14,8 +14,8 @@ class StateCountReporterTest < ActiveSupport::TestCase
   end
 
   should "report a count for each state" do
-    statsd_mock = mock("statsd") do
-      stubs(:batch).yields(self)
+    statsd_mock = mock("statsd")
+    statsd_mock.stubs(:batch).yields(self).tap do
       expects(:gauge).with("state.draft", 12)
       expects(:gauge).with("state.published", 15)
     end
@@ -31,9 +31,8 @@ class StateCountReporterTest < ActiveSupport::TestCase
   should "batch the metrics together" do
     # The actual calls to the batch object get tested above
     batch_stub = stub("statsd batch", gauge: nil)
-    statsd_mock = mock("statsd") do
-      expects(:batch).yields(batch_stub)
-    end
+    statsd_mock = mock("statsd")
+    statsd_mock.expects(:batch).yields(batch_stub)
 
     StateCountReporter.new(@model_class, @states, statsd_mock).report
   end

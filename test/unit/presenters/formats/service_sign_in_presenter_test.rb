@@ -105,7 +105,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
   end
 
   should "[:description]" do
-    assert_equal @parent.overview, result[:description]
+    assert_nil @parent.overview, result[:description]
   end
 
   context "[:public_updated_at]" do

@@ -8,13 +8,13 @@ class LocalServiceImporterTest < ActiveSupport::TestCase
 
   context "update" do
     setup do
-      LocalServiceImporter.stubs(:new).returns(stub(:run))
+      LocalServiceImporter.stubs(:new).returns(stub(run: nil))
     end
 
     should "create a new instance with a filehandle on the services csv, and run it" do
-      stub_fh = stub(:close)
+      stub_fh = stub(close: nil)
       File.expects(:open).with("data/local_services.csv", "r:Windows-1252:UTF-8").returns(stub_fh)
-      LocalServiceImporter.expects(:new).with(stub_fh).returns(stub(:run))
+      LocalServiceImporter.expects(:new).with(stub_fh).returns(stub(run: nil))
       LocalServiceImporter.run
     end
 

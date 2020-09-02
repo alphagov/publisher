@@ -36,7 +36,7 @@ access that data for display. It is sometimes referred to as "mainstream publish
 ## Working with Service Sign In pages
 These pages do not have an admin interface and are instead managed through rake tasks.
 
-See the [README](lib/service_sign_in/README.md) for more details.
+See the [README](app/lib/service_sign_in/README.md) for more details.
 
 ## Nomenclature
 

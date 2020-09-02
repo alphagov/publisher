@@ -23,7 +23,7 @@ class LicenceContentImporter
       end
     end
 
-    puts importer.formatted_result(method == :import)
+    Rails.logger.debug importer.formatted_result(method == :import)
   end
 
   def report(row)
@@ -34,11 +34,11 @@ class LicenceContentImporter
       @existing << existing_editions
       @existing.flatten!
     else
-      puts slug_for(row["NAME"])
+      Rails.logger.debug slug_for(row["NAME"])
       if row["LONGDESC"]
-        puts "---------------------------- marked down ---------------------------------"
-        puts marked_down(row["LONGDESC"])
-        puts "------------------------------- end --------------------------------------\n\n"
+        Rails.logger.debug "---------------------------- marked down ---------------------------------"
+        Rails.logger.debug marked_down(row["LONGDESC"])
+        Rails.logger.debug "------------------------------- end --------------------------------------\n\n"
       end
       @imported << { identifier: identifier, slug: slug_for(row["NAME"]), description: marked_down(row["LONGDESC"]) }
     end
@@ -67,7 +67,7 @@ class LicenceContentImporter
 
       artefact_id = artefact["id"]
 
-      puts "Artefact id: #{artefact_id}, slug: #{slug}."
+      Rails.logger.debug "Artefact id: #{artefact_id}, slug: #{slug}."
 
       edition = LicenceEdition.create! title: title,
                                        panopticon_id: artefact_id,
@@ -77,11 +77,11 @@ class LicenceContentImporter
 
       if edition
         add_workflow(@user, edition)
-        puts "Created LicenceEdition in publisher with panopticon_id: #{artefact_id}, licence_identifier: #{identifier}"
+        Rails.logger.debug "Created LicenceEdition in publisher with panopticon_id: #{artefact_id}, licence_identifier: #{identifier}"
         @imported << edition
       else
         @failed[identifier] = slug
-        puts "Failed to import LicenceEdition into publisher. Identifier: #{identifier}, slug: #{slug}."
+        Rails.logger.debug "Failed to import LicenceEdition into publisher. Identifier: #{identifier}, slug: #{slug}."
       end
     end
   end
@@ -94,21 +94,21 @@ class LicenceContentImporter
   end
 
   def formatted_result(import = true)
-    puts "--------------------------------------------------------------------------"
-    puts "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
+    Rails.logger.debug "--------------------------------------------------------------------------"
+    Rails.logger.debug "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
     unless existing.empty?
       existing.map! { |e| "#{e.slug} (#{e.licence_identifier})" }
       existing.uniq!
-      puts "#{existing.size} existing LicenceEditions:"
-      puts existing
+      Rails.logger.debug "#{existing.size} existing LicenceEditions:"
+      Rails.logger.debug existing
     end
     unless failed.empty?
-      puts "#{failed.keys.size} failed imports:"
+      Rails.logger.debug "#{failed.keys.size} failed imports:"
       failed.each_key do |k|
-        puts "#{k} : #{failed[k]}"
+        Rails.logger.debug "#{k} : #{failed[k]}"
       end
     end
-    puts "--------------------------------------------------------------------------"
+    Rails.logger.debug "--------------------------------------------------------------------------"
   end
 
   def slug_for(title)

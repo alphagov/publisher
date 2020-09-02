@@ -32,6 +32,6 @@ class LicenceIdentifierMigrator
   end
 
   def self.done(counter, line_ending)
-    print "Migrated #{counter} LicenceEditions.#{line_ending}"
+    Rails.logger.debug "Migrated #{counter} LicenceEditions.#{line_ending}"
   end
 end

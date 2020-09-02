@@ -1,5 +1,5 @@
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/environment.rb.
+  # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -22,7 +22,7 @@ Rails.application.configure do
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=172800",
+      "Cache-Control" => "public, max-age=#{2.days.to_i}",
     }
   else
     config.cache_store = :null_store
@@ -38,9 +38,6 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: "www.dev.gov.uk" }
 
-  # Raise an error on page load if there are pending migrations.
-  # config.active_record.migration_error = :page_load
-
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
@@ -50,6 +47,7 @@ Rails.application.configure do
   # yet still be able to expire them through the digest params.
   config.assets.digest = true
 
+  # Suppress logger output for asset requests.
   config.assets.quiet = true
 
   # Adds additional error checking when serving assets at runtime.
@@ -57,7 +55,7 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  # Raises error for missing translations
+  # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
   # Use an evented file watcher to asynchronously detect changes in source code,
