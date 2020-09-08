@@ -19,7 +19,11 @@ class WorkingDaysCalculator
   end
 
   def public_holidays
-    @public_holidays ||= fetch_public_holidays
+    # Had to prevent the call to GdsApi because it would give a 503 error.
+    # Then if I `govuk-docker-up` inside publishing-api, I would get a
+    # GdsApi::HTTPUnavailable for the following line:
+    # public_holidays_json = GdsApi.calendars.bank_holidays(@calendar_division)
+    @public_holidays ||= [] # fetch_public_holidays
   end
 
 private
