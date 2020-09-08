@@ -15,6 +15,9 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Allow requests for all domains e.g. <app>.dev.gov.uk
+  config.hosts.clear
+
   config.jwt_auth_secret = "123"
 
   # Enable/disable caching. By default caching is disabled.
