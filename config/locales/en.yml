@@ -27,3 +27,4 @@ en:
         slug: "for example, title-of-part (no spaces, apostrophes or acronyms)"
       part:
         slug: "for example, title-of-part (no spaces, apostrophes or acronyms)"
+        variant: "e.g. 'Deal' or 'No Deal' (at publish time, you'll choose which should be used)"
