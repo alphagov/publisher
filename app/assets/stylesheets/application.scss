@@ -44,3 +44,13 @@
 .selectize-control.multi .selectize-input > div.active {
   display: inline-block;
 }
+
+
+@import 'govuk_publishing_components/govuk_frontend_support';
+@import 'govuk_publishing_components/component_support';
+@import 'govuk_publishing_components/components/_button';
+@import 'govuk_publishing_components/components/_select';
+
+.govuk-select {
+  box-sizing: content-box;
+}

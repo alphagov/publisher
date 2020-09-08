@@ -1,3 +1,30 @@
+<%= render "govuk_publishing_components/components/select", {
+  id: "dropdown1",
+  label: "Switch to edition",
+  options: [
+    {
+      text: "Deal (draft)",
+      value: "option1"
+    },
+    {
+      text: "No Deal (draft)",
+      value: "option2"
+    },
+    {
+      text: "Pending (published)",
+      value: "option3"
+    },
+    {
+      text: "Pendinnng (superseded)",
+      value: "option4"
+    }
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/button", {
+  text: "View edition"
+} %>
+
 <div class="page-title">
   <h1>
     <%= @resource.title %>
