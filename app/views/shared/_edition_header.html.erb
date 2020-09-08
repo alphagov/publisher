@@ -1,29 +1,31 @@
+<% if @resource.series.pluck(:state).filter { |state| state == "draft" }.count > 1 %>
+<p>Multiple draft editions exist for this content</p>
+
 <%= render "govuk_publishing_components/components/select", {
   id: "dropdown1",
   label: "Switch to edition",
-  options: [
+  options: @resource.history.map do |edition|
     {
-      text: "Deal (draft)",
-      value: "option1"
-    },
-    {
-      text: "No Deal (draft)",
-      value: "option2"
-    },
-    {
-      text: "Pending (published)",
-      value: "option3"
-    },
-    {
-      text: "Pendinnng (superseded)",
-      value: "option4"
+      text: "Edition #{edition.version_number} (#{edition.state})",
+      value: edition.id
     }
-  ]
+  end
 } %>
 
 <%= render "govuk_publishing_components/components/button", {
   text: "View edition"
 } %>
+
+<%= render "govuk_publishing_components/components/button", {
+  text: "Publish this edition",
+  secondary: true
+} %>
+
+<%= render "govuk_publishing_components/components/button", {
+  text: "Delete this edition",
+  destructive: true
+} %>
+<% end %>
 
 <div class="page-title">
   <h1>
