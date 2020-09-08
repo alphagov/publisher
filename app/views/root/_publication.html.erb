@@ -64,7 +64,7 @@
       <%= publication.publisher %>
     </td>
   <% end %>
-  <% if tab && (tab == :archived || tab == :published) %>
+  <% # if tab && (tab == :archived || tab == :published) %>
     <td>
       <% if publication.can_create_new_edition? %>
         <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
@@ -72,5 +72,5 @@
         <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
       <% end %>
     </td>
-  <% end %>
+  <% # end %>
 </tr>

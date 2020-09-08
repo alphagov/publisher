@@ -2,7 +2,7 @@ module GovukContentModels
   module ActionProcessors
     class NewVersionProcessor < BaseProcessor
       def process?
-        edition.published?
+        true # edition.published?
       end
 
       def process

@@ -259,9 +259,9 @@ class Edition
   end
 
   def build_clone(target_class = nil)
-    unless state == "published"
-      raise "Cloning of non published edition not allowed"
-    end
+    # unless state == "published"
+    #   raise "Cloning of non published edition not allowed"
+    # end
 
     unless can_create_new_edition?
       raise "Cloning of a published edition when an in-progress edition exists
