@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
+  rescue_from Notifications::Client::BadRequestError, with: :notify_bad_request
 
   def template_folder_for(publication)
     tmpl_folder = publication.class.to_s.underscore.pluralize.downcase.gsub("_edition", "")
@@ -28,5 +29,9 @@ class ApplicationController < ActionController::Base
       params[attribute_name] = Time.zone.local(*datetime_params) if datetime_params.present?
     end
     params
+  end
+
+  def notify_bad_request(_exception)
+    render plain: "Error: One or more recipients not in GOV.UK Notify team (code: 400)", status: :bad_request
   end
 end
