@@ -4,6 +4,7 @@
       <div class="col-md-12">
         <%= f.input :id, as: :hidden, input_html: { value: @artefact.id } %>
         <%= f.input :slug, :input_html => { :class => "input-md-6" } %>
+        <%= f.input :language, :input_html => { :class => "input-md-6" } %>
       </div>
     </div>
     <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>
