@@ -41,6 +41,6 @@ private
   end
 
   def updatable_params
-    params.require(:artefact).permit(:id, :slug)
+    params.require(:artefact).permit(:id, :slug, :language)
   end
 end
