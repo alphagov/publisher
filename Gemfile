@@ -52,7 +52,6 @@ group :test do
   gem "rails-controller-testing"
   gem "shoulda"
   gem "simplecov", require: false
-  gem "simplecov-rcov", require: false
   gem "timecop"
   gem "webdrivers"
   gem "webmock"

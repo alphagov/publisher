@@ -1,9 +1,8 @@
-# TODO: Enable simplecov again, once the encoding issue is fixed
-# https://github.com/fguillen/simplecov-rcov/issues/20
-#
-# require 'simplecov'
-
 ENV["RAILS_ENV"] = "test"
+
+# Must go at top of file
+require "simplecov"
+SimpleCov.start
 
 require File.expand_path("../config/environment", __dir__)
 
