@@ -244,6 +244,30 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert_equal "Blah blah fact check message", resent_fact_check_email.body.to_s
   end
 
+  test "sending a fact check email to a non-permitted address will return an error" do
+    raises_exception = lambda { |_request, _params|
+      response = MiniTest::Mock.new
+      response.expect :code, 400
+      response.expect :body, "Can't send to this recipient using a team-only API key"
+      raise Notifications::Client::BadRequestError, response
+    }
+
+    EventMailer.stub(:request_fact_check, raises_exception) do
+      guide.update!(state: "ready")
+      visit_edition guide
+
+      click_link("Fact check")
+
+      within "#send_fact_check_form" do
+        fill_in "Customised message", with: "Blah blah fact check message"
+        fill_in "Email address", with: "user-to-ask-for-fact-check@example.com"
+        click_on "Send"
+      end
+
+      assert page.has_content? "Error: One or more recipients not in GOV.UK Notify team (code: 400)"
+    end
+  end
+
   test "can flag guide for review" do
     guide.assigned_to = bob
 
