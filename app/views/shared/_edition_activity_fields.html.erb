@@ -14,7 +14,15 @@
       <% end %>
 
       <% if activity == :send_fact_check %>
-        <%= activity_fields.input :email_addresses, hint: 'You can enter multiple email addresses if you comma separate them as follows: <code>fact-checker-one@example.com, fact-checker-two@example.com</code>.'.html_safe %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= activity_fields.label :email_addresses %>
+          </span>
+          <span class="form-wrapper">
+            <%= activity_fields.text_field :email_addresses, class: "form-control" %>
+            <span class="help-block">You can enter multiple email addresses if you comma separate them as follows: <code>fact-checker-one@example.com, fact-checker-two@example.com</code>.</span>
+          </span>
+        </div>
 
         <%= activity_fields.label :customised_message do %>
           Customised message<abbr title="required">*</abbr>
@@ -32,7 +40,14 @@
           <div class="form-control-static"><%= format_and_auto_link_plain_text(latest_status_action.customised_message) %></div>
         <% end %>
       <% else %>
-        <%= activity_fields.input :comment, :as => :text, :input_html => { :cols => 60, :rows => 6 } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= activity_fields.label :comment %>
+          </span>
+          <span class="form-wrapper">
+            <%= activity_fields.text_area :comment, cols: 60, rows: 6, class: "form-control" %>
+          </span>
+        </div>
       <% end %>
 
       <% if activity == :schedule_for_publishing %>

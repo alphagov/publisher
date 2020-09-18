@@ -1,12 +1,18 @@
 <div class="row">
   <div class="col-md-8">
-    <%= f.inputs do %>
+    <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-      <%= f.input :body,
-                  :as => :text,
-                  :hint => 'The body text is overwritten by the service feedback survey',
-                  :input_html => { :disabled => 'disabled', class: 'input-md-10' } %>
-    <% end %>
+
+      <div class="form-group">
+        <span class="form-label">
+          <%= f.label :body %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_area :body, disabled: "disabled", class: "input-md-10 form-control" %>
+          <span class="help-block">The body text is overwritten by the service feedback survey</span>
+        </span>
+      </div>
+    </fieldset>
   </div>
 </div>
 
@@ -39,20 +45,32 @@
         { checked: (f.object.promotion_choice == "electric_vehicle"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-electric-vehicle' } %>
       <%= f.label :promotion_choice, "Promote electric vehicles", value: 'electric_vehicle' %>
 
-      <%= f.input :promotion_choice_url,
-          required: false,
-          input_html: { disabled: @resource.locked_for_edits? },
-          wrapper_html: { class: "form-group input-md-8 promotion-choice-url", id: 'promotion-choice-url' } %>
+      <div class="form-group promotion-choice-url" id="promotion-choice-url">
+        <span class="form-label">
+          <%= f.label :promotion_choice_url %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :promotion_choice_url, disabled: @resource.locked_for_edits?, class: "input-md-8 form-control" %>
+        </span>
+      </div>
 
-      <%= f.input :promotion_choice_opt_in_url,
-          required: false,
-          input_html: { disabled: @resource.locked_for_edits? },
-          wrapper_html: { class: "form-group input-md-8 promotion-choice-url promotion-choice-opt-in-out-url", id: 'promotion-choice-opt-in-url' } %>
+      <div class="form-group promotion-choice-url promotion-choice-opt-in-out-url" id="promotion-choice-opt-in-url">
+        <span class="form-label">
+          <%= f.label :promotion_choice_opt_in_url %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :promotion_choice_opt_in_url, disabled: @resource.locked_for_edits?, class: "input-md-8 form-control" %>
+        </span>
+      </div>
 
-      <%= f.input :promotion_choice_opt_out_url,
-          required: false,
-          input_html: { disabled: @resource.locked_for_edits? },
-          wrapper_html: { class: "form-group input-md-8 promotion-choice-url promotion-choice-opt-in-out-url", id: 'promotion-choice-opt-out-url' } %>
+      <div class="form-group promotion-choice-url promotion-choice-opt-in-out-url" id="promotion-choice-opt-out-url">
+        <span class="form-label">
+          <%= f.label :promotion_choice_opt_out_url %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_field :promotion_choice_opt_out_url, disabled: @resource.locked_for_edits?, class: "input-md-8 form-control" %>
+        </span>
+      </div>
     </div>
 
   </div>

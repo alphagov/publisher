@@ -1,13 +1,20 @@
 <div class="row">
   <div class="col-md-8">
-    <%= f.inputs do %>
+    <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
       <div class="row">
         <div class="col-md-10">
-          <%= f.input :body, :as => :text, :input_html => { :rows => 5, :disabled => @resource.locked_for_edits? } %>
+          <div class="form-group">
+            <span class="form-label">
+              <%= f.label :body %>
+            </span>
+            <span class="form-wrapper">
+              <%= f.text_area :body, rows: 5, disabled: @resource.locked_for_edits?, class: "form-control" %>
+            </span>
+          </div>
         </div>
       </div>
-    <% end %>
+    </fieldset>
   </div>
 </div>
 
@@ -24,7 +31,7 @@
   </div>
   <div class="nodes" id="nodes">
     <%# We need to output questions followed by outcomes but the potential for unsaved (invalid) nodes rules out the user of database ordering. So we must instead sort the collection by node order ascending (a.order <=> b.order) within node kind descending (b.kind <=> a.kind). %>
-    <%= f.semantic_fields_for :nodes, @resource.nodes.sort {|a,b| [b.kind, a.order] <=> [a.kind, b.order] }, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
+    <%= f.fields_for :nodes, @resource.nodes.sort {|a,b| [b.kind, a.order] <=> [a.kind, b.order] }, :wrapper_class => lambda {|n| return "row node #{n.kind}" } do |node| %>
       <%= render :partial => "simple_smart_answers/node", :locals => { :f => node } %>
     <% end %>
   </div>

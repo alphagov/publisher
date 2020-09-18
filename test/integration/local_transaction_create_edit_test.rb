@@ -21,9 +21,9 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     email_count_before_start = ActionMailer::Base.deliveries.count
 
     visit "/publications/#{@artefact.id}"
+    fill_in "LGSL code", with: "1"
+    fill_in "LGIL code", with: "2"
 
-    fill_in "Lgsl code", with: "1"
-    fill_in "Lgil code", with: "2"
     click_button "Create Local transaction"
     assert page.has_content?(/Foo bar\W#1/)
 
@@ -38,7 +38,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
-    fill_in "Lgsl code", with: "2"
+    fill_in "LGSL code", with: "2"
     click_on "Create Local transaction edition"
 
     assert page.has_content? "Lgsl code 2 not recognised"
@@ -48,8 +48,8 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
-    fill_in "Lgsl code", with: "1"
-    fill_in "Lgil code", with: "2"
+    fill_in "LGSL code", with: "1"
+    fill_in "LGIL code", with: "2"
 
     click_button "Create Local transaction"
     assert page.has_content?(/Foo bar\W#1/)

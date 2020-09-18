@@ -9,53 +9,82 @@
   </div>
   <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse collapse in" aria-expanded="true">
     <div class="panel-body">
-        <%= f.inputs do %>
-          <%= f.input :title,
-                      :input_html => { :class => 'title', :disabled => @resource.locked_for_edits? },
-                      :hint => false,
-                      :required => true %>
+      <fieldset class="inputs">
+        <div class="form-group" id="edition_parts_title_input">
+          <span class="form-label">
+            <%= f.label :title %><abbr title="required">*</abbr>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "title form-control" %>
+          </span>
+        </div>
 
-          <%
-            slug_input_html = { :class => 'slug', :disabled => ! editable }
-            if @resource.version_number == 1
-              slug_input_html['data-accepts-generated-value'] = true
-            end
-          %>
+        <%
+          slug_input_html = { :class => 'slug form-control', :disabled => ! editable }
+          if @resource.version_number == 1
+            slug_input_html['data-accepts-generated-value'] = true
+          end
+        %>
 
-          <%= f.input :slug,
-                      :input_html => slug_input_html,
-                      :hint => true,
-                      :required => true %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :slug %><abbr title="required">*</abbr>
+          </span>
+          <span class="form-wrapper" id="edition_parts_slug_input">
+            <%= f.text_field :slug, slug_input_html %>
+            <span class="help-block">
+              for example, title-of-part (no spaces, apostrophes or acronyms)
+            </span>
+          </span>
+        </div>
 
-          <%= f.input :introduction,
-                      :as => :text,
-                      :label => 'Introductory paragraph',
-                      :hint => 'Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")',
-                      :input_html => { :rows => 8, :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :introduction, "Introductory paragraph" %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_area :introduction, rows: 8, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+            <span class="help-block">Set the scene for the user. What is about to happen? (eg. "you will need to fill in a form, print it out and take it to the post office")</span>
+          </span>
+        </div>
 
-          <%= f.input :link,
-                      :label => 'Link to start of transaction',
-                      :hint => 'Link as deep as possible.',
-                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-7' } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :link, "Link to start of transaction" %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :link, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+            <span class="help-block">Link as deep as possible.</span>
+          </span>
+        </div>
 
-          <%= f.input :more_information,
-                      :as => :text,
-                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-10' } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :more_information %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_area :more_information, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+          </span>
+        </div>
 
-          <%= f.input :alternate_methods,
-                      :as => :text,
-                      :label => "Other ways to apply",
-                      :hint => "Alternative ways of completing this transaction. Not displayed on front end if left blank.",
-                      :input_html => { :disabled => @resource.locked_for_edits?, :class => 'input-md-10' } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :alternate_methods, "Other ways to apply" %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_area :alternate_methods, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+            <span class="help-block">Alternative ways of completing this transaction. Not displayed on front end if left blank.</span>
+          </span>
+        </div>
 
-          <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
+        <%= f.hidden_field :order, class: 'order', disabled: !editable %>
 
-          <% unless @resource.locked_for_edits? %>
-            <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
-              <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this variant
-            <% end %>
+        <% unless @resource.locked_for_edits? %>
+          <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
+            <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this variant
           <% end %>
         <% end %>
+      </fieldset>
     </div>
   </div>
 </div>

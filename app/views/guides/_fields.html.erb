@@ -1,18 +1,21 @@
 
 <div class="row">
   <div class="col-md-8">
-    <%= f.inputs do %>
+    <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-    <% end %>
+    </fieldset>
   </div>
 </div>
 
-<%= f.input :hide_chapter_navigation,
-            as: :boolean,
-            label: 'Hide chapter navigation and arrows',
-            input_html: { disabled: @resource.locked_for_edits? },
-            :hint => 'Only do this when every chapter is included in a step by step navigation.',
-            wrapper_html: { class: "emphasised-field form-group" } %>
+<div class="form-group checkbox">
+  <div class="form-wrapper emphasised-field form-group">
+    <%= f.label :hide_chapter_navigation, class: "control-label" do %>
+      <%= f.check_box :hide_chapter_navigation, disabled: @resource.locked_for_edits? %>
+      Hide chapter navigation and arrows
+    <% end %>
+    <span class="help-block">Only do this when every chapter is included in a step by step navigation.</span>
+  </div>
+</div>
 
 <hr>
 
@@ -29,8 +32,8 @@
     </p>
 
     <section class="panel-group" id="parts" data-module="parts">
-      <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
-        <%= render :partial => '/shared/part', :locals => {:f => part, :editable => ! @resource.locked_for_edits? } %>
+      <%= f.fields_for :parts, @ordered_parts do |part| %>
+        <%= render partial: '/shared/part', locals: { f: part, editable: !@resource.locked_for_edits? } %>
       <% end %>
     </section>
 

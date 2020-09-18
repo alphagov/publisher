@@ -1,10 +1,26 @@
 <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
-  <%= semantic_bootstrap_nested_form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
+  <%= form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
     <div class="row">
       <div class="col-md-12">
-        <%= f.input :id, as: :hidden, input_html: { value: @artefact.id } %>
-        <%= f.input :slug, :input_html => { :class => "input-md-6" } %>
-        <%= f.input :language, :input_html => { :class => "input-md-6" } %>
+        <%= f.hidden_field :id, value: @artefact.id %>
+
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :slug %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :slug, class: "form-control input-md-6" %>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :language %>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :language, class: "form-control input-md-6" %>
+          </span>
+        </div>
       </div>
     </div>
     <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>

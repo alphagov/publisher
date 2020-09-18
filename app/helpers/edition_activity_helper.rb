@@ -11,7 +11,7 @@ module EditionActivityHelper
 
   def edition_activities_forms(edition, activities)
     activities_forms = activities.map do |activity, title|
-      semantic_form_for(
+      form_for(
         :edition,
         url: progress_edition_path(edition),
         html: modal_attributes.merge(id: "#{activity}_form"),
