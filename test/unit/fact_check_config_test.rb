@@ -31,63 +31,85 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "recognise a valid fact check subject" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert config.valid_subject?(valid_subject)
+      assert config.contains_id?(valid_subject)
     end
   end
 
   should "recognise a valid fact check subject with a prefix" do
     config = FactCheckConfig.new(reply_to_address, subject_prefix)
     valid_prefixed_subjects.each do |valid_prefixed_subject|
-      assert config.valid_subject?(valid_prefixed_subject)
+      assert config.contains_id?(valid_prefixed_subject)
     end
     valid_subjects.each do |valid_subject|
-      assert_not config.valid_subject?(valid_subject)
+      assert_not config.contains_id?(valid_subject)
     end
   end
 
   should "not recognise an invalid fact check subject" do
     config = FactCheckConfig.new(reply_to_address)
-    assert_not config.valid_subject?("Not a valid subject")
+    assert_not config.contains_id?("Not a valid subject")
   end
 
   should "treat a subject prefixed with Re: as valid" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert config.valid_subject?("Re: " + valid_subject)
+      assert config.contains_id?("Re: " + valid_subject)
     end
   end
 
   should "not recognise a fact check subject with an empty ID" do
     config = FactCheckConfig.new(reply_to_address)
-    assert_not config.valid_subject?("Not a valid subject []")
+    assert_not config.contains_id?("Not a valid subject []")
   end
 
   should "extract an item ID from a valid subject" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal "5e6bb57b40f0b62656e3e184", config.item_id_from_subject(valid_subject)
+      assert_equal "5e6bb57b40f0b62656e3e184", config.item_id_from_string(valid_subject)
     end
   end
 
   should "raise an exception trying to extract an ID from an invalid subject" do
     config = FactCheckConfig.new(reply_to_address)
     assert_raises ArgumentError do
-      config.item_id_from_subject("Not a valid subject (1234)")
+      config.item_id_from_string("Not a valid subject (1234)")
     end
 
     assert_raises ArgumentError do
-      config.item_id_from_subject("Not a valid subject [notHexadecimal]")
+      config.item_id_from_string("Not a valid subject [notHexadecimal]")
     end
   end
 
   should "raise an exception if there are multiple matches" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal false, config.valid_subject?(valid_subject + " [d682605bec3cf9b8906cf2bc]")
+      assert_equal false, config.contains_id?(valid_subject + " [d682605bec3cf9b8906cf2bc]")
 
       assert_raises ArgumentError do
-        config.item_id_from_subject(valid_subject + " [d682605bec3cf9b8906cf2bc]")
+        config.item_id_from_string(valid_subject + " [d682605bec3cf9b8906cf2bc]")
       end
+    end
+  end
+
+  should "fall back to reading ID from body if none in subject" do
+    config = FactCheckConfig.new(reply_to_address)
+    assert_equal config.item_id_from_subject_or_body("subject without id",
+                                                     "random text random text\n\nrandom text [5e6bb57b40f0b62656e3e184] more words\n\nwords words words words"),
+                 "5e6bb57b40f0b62656e3e184"
+  end
+
+  should "ignore ID in body if subject has one" do
+    config = FactCheckConfig.new(reply_to_address)
+    assert_equal config.item_id_from_subject_or_body(valid_subjects.first,
+                                                     "random text random text\n\nrandom text [d682605bec3cf9b8906cf2bc] more words\n\nwords words words words"),
+                 "5e6bb57b40f0b62656e3e184"
+  end
+
+  should "fail if body has multiple IDs" do
+    config = FactCheckConfig.new(reply_to_address)
+    assert_raises ArgumentError do
+      config.item_id_from_subject_or_body("subject without id",
+                                          "random text random text\n\nrandom text [d682605bec3cf9b8906cf2bc] more words\n\nwords words [5e6bb57b40f0b62656e3e184] words words")
     end
   end
 end
