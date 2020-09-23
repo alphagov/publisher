@@ -17,10 +17,6 @@ class FactCheckConfig
     @reply_to_address
   end
 
-  def contains_id?(string)
-    string.scan(@subject_pattern).length == 1
-  end
-
   def item_id_from_string(string)
     match = string.scan(@subject_pattern)
     if match.length == 1

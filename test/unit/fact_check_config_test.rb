@@ -31,35 +31,35 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "recognise a valid fact check subject" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert config.contains_id?(valid_subject)
+      assert config.item_id_from_string(valid_subject).present?
     end
   end
 
   should "recognise a valid fact check subject with a prefix" do
     config = FactCheckConfig.new(reply_to_address, subject_prefix)
     valid_prefixed_subjects.each do |valid_prefixed_subject|
-      assert config.contains_id?(valid_prefixed_subject)
+      assert config.item_id_from_string(valid_prefixed_subject).present?
     end
     valid_subjects.each do |valid_subject|
-      assert_not config.contains_id?(valid_subject)
+      assert_nil config.item_id_from_string(valid_subject)
     end
   end
 
   should "not recognise an invalid fact check subject" do
     config = FactCheckConfig.new(reply_to_address)
-    assert_not config.contains_id?("Not a valid subject")
+    assert_nil config.item_id_from_string("Not a valid subject")
   end
 
   should "treat a subject prefixed with Re: as valid" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert config.contains_id?("Re: " + valid_subject)
+      assert config.item_id_from_string("Re: " + valid_subject).present?
     end
   end
 
   should "not recognise a fact check subject with an empty ID" do
     config = FactCheckConfig.new(reply_to_address)
-    assert_not config.contains_id?("Not a valid subject []")
+    assert_nil config.item_id_from_string("Not a valid subject []")
   end
 
   should "extract an item ID from a valid subject" do
@@ -79,8 +79,6 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "raise an exception if there are multiple matches" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal false, config.contains_id?(valid_subject + " [d682605bec3cf9b8906cf2bc]")
-
       assert_raises ArgumentError do
         config.item_id_from_string(valid_subject + " [d682605bec3cf9b8906cf2bc]")
       end
