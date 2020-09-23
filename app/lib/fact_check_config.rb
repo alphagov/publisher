@@ -27,20 +27,14 @@ class FactCheckConfig
       match[0][0]
     elsif match.length > 1
       raise ArgumentError, "'#{string}' has too many matches"
-    else
-      raise ArgumentError, "'#{string}' does not contain any fact check ID"
     end
   end
 
   def item_id_from_subject_or_body(subject, body = "")
-    if contains_id?(subject)
-      id = item_id_from_string(subject)
-    elsif contains_id?(body)
-      id = item_id_from_string(body)
-    else
-      raise ArgumentError, "Message does not contain any fact check ID"
-    end
+    id = (item_id_from_string(subject) || item_id_from_string(body))
 
-    id
+    return id if id
+
+    raise ArgumentError, "Message does not contain any fact check ID"
   end
 end

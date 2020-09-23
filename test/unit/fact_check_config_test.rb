@@ -69,15 +69,11 @@ class FactCheckConfigTest < ActiveSupport::TestCase
     end
   end
 
-  should "raise an exception trying to extract an ID from an invalid subject" do
+  should "return nil if the input contains no valid ID" do
     config = FactCheckConfig.new(reply_to_address)
-    assert_raises ArgumentError do
-      config.item_id_from_string("Not a valid subject (1234)")
-    end
 
-    assert_raises ArgumentError do
-      config.item_id_from_string("Not a valid subject [notHexadecimal]")
-    end
+    assert_nil config.item_id_from_string("Not a valid subject (1234)")
+    assert_nil config.item_id_from_string("Not a valid subject [notHexadecimal]")
   end
 
   should "raise an exception if there are multiple matches" do
