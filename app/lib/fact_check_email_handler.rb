@@ -20,12 +20,8 @@ class FactCheckEmailHandler
 
     return true if message.out_of_office?
 
-    if @fact_check_config.valid_subject?(message.subject)
-      edition_id = @fact_check_config.item_id_from_subject(message.subject)
-      return FactCheckMessageProcessor.process(message, edition_id)
-    end
-
-    raise "Unable to locate fact check ID from subject"
+    edition_id = @fact_check_config.item_id_from_subject_or_body(message.subject, message.body)
+    FactCheckMessageProcessor.process(message, edition_id)
   rescue StandardError => e
     message = "Failed to process message '#{message.subject}': #{e.message}"
     GovukError.notify(UnableToProcessError.new(message))
