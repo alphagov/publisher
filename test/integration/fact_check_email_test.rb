@@ -157,6 +157,17 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     assert message.is_marked_for_delete?
   end
 
+  test "should look for fact-check body field" do
+    edition = FactoryBot.create(:answer_edition, state: "fact_check")
+    message = fact_check_mail_for(edition, subject: "Fact Checked", body: "[#{edition.id}]")
+
+    Mail.stubs(:all).yields(message)
+
+    handler = FactCheckEmailHandler.new(fact_check_config)
+
+    assert handler.process_message(message)
+  end
+
   test "should invoke the supplied block after each message" do
     answer1 = FactoryBot.create(:answer_edition, state: "fact_check")
     answer2 = FactoryBot.create(
