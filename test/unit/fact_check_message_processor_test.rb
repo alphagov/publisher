@@ -61,13 +61,13 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it handles windows-1252 email wrongly declared as iso-8859-1" do
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/pound_symbol.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    assert f.process_for_publication(sample_publication.id)
+    f.process_for_publication(sample_publication.id)
   end
 
   test "it handles an email with wrongly declared character set after base 64 encoding" do
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/base64.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    assert f.process_for_publication(sample_publication.id)
+    f.process_for_publication(sample_publication.id)
   end
 
   test "it should turn each paragraph to UTF-8, even if they have different encodings" do
@@ -95,7 +95,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     edition = sample_publication
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/hidden_nasty.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    assert f.process_for_publication(edition.id)
+    f.process_for_publication(edition.id)
 
     edition.reload
     assert_includes(edition.actions.last.comment, "This is some text")
