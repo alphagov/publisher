@@ -5,12 +5,11 @@ class FactCheckEmailHandlerTest < ActiveSupport::TestCase
     FactCheckEmailHandler.new(Publisher::Application.fact_check_config)
   end
 
-  test "#process_message returns true when email subject includes 'out of office'" do
+  test "#process ignores 'out of office' emails" do
     out_of_office_message = Mail.new { subject("Automatic reply: out of office") }
-    other_message = Mail.new { subject("Any other subject") }
-
-    assert handler.process_message(out_of_office_message)
-    assert_not handler.process_message(other_message)
+    Mail.stubs(:all).yields(out_of_office_message)
+    handler.process
+    assert out_of_office_message.is_marked_for_delete?
   end
 
   test "#process sends count of unprocessed emails to Graphite" do

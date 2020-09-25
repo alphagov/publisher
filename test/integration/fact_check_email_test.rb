@@ -153,8 +153,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     Mail.stubs(:all).yields(message)
 
     handler = FactCheckEmailHandler.new(fact_check_config)
-
-    assert handler.process_message(message)
+    handler.process_message(message)
+    assert message.is_marked_for_delete?
   end
 
   test "should invoke the supplied block after each message" do
