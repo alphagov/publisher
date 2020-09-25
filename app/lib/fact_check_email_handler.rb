@@ -19,7 +19,7 @@ class FactCheckEmailHandler
     message = FactCheckMail.new(message)
     return if message.out_of_office?
 
-    edition_id = @fact_check_config.item_id_from_subject_or_body(message.subject, message.body)
+    edition_id = @fact_check_config.item_id_from_subject_or_body(message.subject, message.body.to_s)
     FactCheckMessageProcessor.process(message, edition_id)
   rescue StandardError => e
     raise UnableToProcessError, "Failed to process message '#{message.subject}': #{e.message}"
