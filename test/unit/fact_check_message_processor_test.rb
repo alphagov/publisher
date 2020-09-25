@@ -28,9 +28,9 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     FactoryBot.create(:guide_edition, title: "Hello", slug: "hello-#{Time.zone.now.to_i}")
   end
 
-  test "processing returns true if the publication isn't found" do
+  test "it ignores publications that do not exist (no error)" do
     f = sample_processor
-    assert f.process_for_publication("4e1dac78e2ba80076000000ea")
+    f.process_for_publication("4e1dac78e2ba80076000000ea")
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
