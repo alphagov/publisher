@@ -30,7 +30,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
 
   test "it ignores publications that do not exist (no error)" do
     f = sample_processor
-    f.process_for_publication("4e1dac78e2ba80076000000ea")
+    assert_nothing_raised { f.process_for_publication("4e1dac78e2ba80076000000ea") }
   end
 
   test "it extracts the body as utf8 acceptable to mongo" do
@@ -61,13 +61,13 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it handles windows-1252 email wrongly declared as iso-8859-1" do
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/pound_symbol.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    f.process_for_publication(sample_publication.id)
+    assert_nothing_raised { f.process_for_publication(sample_publication.id) }
   end
 
   test "it handles an email with wrongly declared character set after base 64 encoding" do
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/base64.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    f.process_for_publication(sample_publication.id)
+    assert_nothing_raised { f.process_for_publication(sample_publication.id) }
   end
 
   test "it should turn each paragraph to UTF-8, even if they have different encodings" do
