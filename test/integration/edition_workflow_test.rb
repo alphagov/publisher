@@ -416,6 +416,16 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
+  test "can't progress from fact-check if not govuk_editor" do
+    guide.update!(state: "fact_check_received")
+
+    login_as FactoryBot.create(:user)
+
+    visit_edition guide
+    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
+    assert page.has_content? "Couldn't approve fact check"
+  end
+
   test "can go back to fact-check from fact-check received" do
     guide.update!(state: "fact_check_received")
 
