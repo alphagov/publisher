@@ -33,6 +33,20 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     assert answer.public_send("#{state}?")
   end
 
+  test "should ignore emails about editions that do not exist e.g. if they have been deleted'" do
+    answer = FactoryBot.create(:answer_edition, state: "fact_check")
+
+    message = fact_check_mail_for(answer)
+    Mail.stubs(:all).yields(message)
+
+    answer.destroy!
+
+    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler.process
+
+    assert message.is_marked_for_delete?
+  end
+
   test "should pick up an email and add an action to the edition, and advance the state to 'fact_check_received'" do
     answer = FactoryBot.create(:answer_edition, state: "fact_check")
 
@@ -139,8 +153,8 @@ class FactCheckEmailTest < ActionDispatch::IntegrationTest
     Mail.stubs(:all).yields(message)
 
     handler = FactCheckEmailHandler.new(fact_check_config)
-
-    assert handler.process_message(message)
+    handler.process_message(message)
+    assert message.is_marked_for_delete?
   end
 
   test "should invoke the supplied block after each message" do

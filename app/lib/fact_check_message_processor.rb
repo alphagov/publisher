@@ -28,10 +28,8 @@ class FactCheckMessageProcessor
   def process_for_publication(publication_id)
     edition = Edition.find(publication_id)
     progress_publication_edition(edition)
-    true
   rescue Mongoid::Errors::DocumentNotFound
-    Rails.logger.info "#{publication_id} is not a valid mongo id"
-    false
+    Rails.logger.warn "Ignoring message for non-existant edition: '#{publication_id}'"
   end
 
   def self.process(message, publication_id)

@@ -17,29 +17,28 @@ class FactCheckEmailHandler
 
   def process_message(message)
     message = FactCheckMail.new(message)
-
-    return true if message.out_of_office?
+    return if message.out_of_office?
 
     edition_id = @fact_check_config.item_id_from_subject_or_body(message.subject, message.body)
     FactCheckMessageProcessor.process(message, edition_id)
   rescue StandardError => e
-    message = "Failed to process message '#{message.subject}': #{e.message}"
-    GovukError.notify(UnableToProcessError.new(message))
-    false
+    raise UnableToProcessError, "Failed to process message '#{message.subject}': #{e.message}"
   end
 
   # takes an optional block to call after processing each message
   def process
     unprocessed_emails_count = 0
+
     Mail.all(read_only: false, delete_after_find: true) do |message|
-      message.mark_for_delete = process_message(message)
-      unprocessed_emails_count += 1 unless message.is_marked_for_delete?
-      begin
-        yield(message) if block_given?
-      rescue StandardError => e
-        GovukError.notify(e)
-      end
+      process_message(message)
+      message.mark_for_delete = true
+      yield(message) if block_given?
+    rescue StandardError => e
+      message.mark_for_delete = false
+      unprocessed_emails_count += 1
+      GovukError.notify(e)
     end
+
     GovukStatsd.gauge("unprocessed_emails.count", unprocessed_emails_count)
   end
 end
