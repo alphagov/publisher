@@ -73,4 +73,8 @@ class User
   def unassign(edition)
     GovukContentModels::ActionProcessors::AssignProcessor.new(self, edition).processed_edition
   end
+
+  def govuk_editor?
+    permissions.include?("govuk_editor")
+  end
 end
