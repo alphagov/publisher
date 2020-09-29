@@ -6,17 +6,30 @@
 <%= render partial: 'reviewer_field', locals: { f: f } if @resource.in_review? %>
 <%= render partial: 'major_change_fields', locals: { f: f } if @resource.published_edition %>
 
-<%= f.input :title,
-      :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+<div class="form-group">
+  <span class="form-label">
+    <%= f.label :title %>
+  </span>
+  <span class="form-wrapper">
+    <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+  </span>
+</div>
 
-<%= f.input :in_beta,
-      as: :boolean,
-      label: 'Content is in beta',
-      input_html: { disabled: @resource.locked_for_edits? },
-      wrapper_html: { class: "emphasised-field form-group add-bottom-margin input-md-7" } %>
+<div class="form-group checkbox">
+  <div class="form-wrapper emphasised-field add-bottom-margin input-md-7">
+    <%= f.label :in_beta, class: "control-label" do %>
+      <%= f.check_box :in_beta, disabled: @resource.locked_for_edits? %>
+      Content is in beta
+    <% end %>
+  </div>
+</div>
 
-<%= f.input :overview,
-      :as => :text,
-      :label => 'Meta tag description',
-      :hint => 'Some search engines will display this if they cannot find what they need in the main text',
-      :input_html => { :rows => 4, :disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+<div class="form-group">
+  <span class="form-label">
+    <%= f.label :overview, "Meta tag description" %>
+  </span>
+  <span class="form-wrapper">
+    <%= f.text_area :overview, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+    <span class="help-block">Some search engines will display this if they cannot find what they need in the main text</span>
+  </span>
+</div>

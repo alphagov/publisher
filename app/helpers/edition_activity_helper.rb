@@ -1,7 +1,7 @@
 module EditionActivityHelper
   def edition_activities_fields(form, edition)
     activities_fields = Edition::ACTIONS.map do |activity, title|
-      tag.div(modal_attributes.merge(id: "#{activity}_form")) do
+      tag.div(**modal_attributes.merge(id: "#{activity}_form")) do
         edition_activity_fields(edition, title, activity, form, inline: true)
       end
     end
@@ -11,7 +11,7 @@ module EditionActivityHelper
 
   def edition_activities_forms(edition, activities)
     activities_forms = activities.map do |activity, title|
-      semantic_form_for(
+      form_for(
         :edition,
         url: progress_edition_path(edition),
         html: modal_attributes.merge(id: "#{activity}_form"),
@@ -45,6 +45,6 @@ module EditionActivityHelper
   end
 
   def modal_attributes
-    { :role => "dialog", :class => "modal", :tabindex => -1, "aria-hidden" => true }
+    { role: "dialog", class: "modal", tabindex: -1, "aria-hidden": true }
   end
 end

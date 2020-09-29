@@ -1,9 +1,24 @@
-<%= f.input :change_note,
-      as: :text,
-      label: 'Summary of changes to this edition',
-      input_html: { rows: 3, class: 'input-md-7', disabled: @resource.locked_for_edits? } %>
-<%= f.input :major_change,
-      as: :boolean,
-      input_html: {disabled: @resource.locked_for_edits?},
-      wrapper_html: {class: 'emphasised-field add-bottom-margin input-md-7'},
-      label: "Alert the public to this change" %>
+<div class="form-group" id="edition_change_note_input">
+  <span class="form-label">
+    <%= f.label :change_note, "Summary of changes to this edition" %>
+  </span>
+  <span class="form-wrapper">
+    <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+  </span>
+  <% if f.object.errors[:change_note].any? %>
+    <ul class="help-block has-error">
+      <% f.object.errors[:change_note].each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<div class="form-group emphasised-field add-bottom-margin checkbox">
+  <span class="form-wrapper">
+    <%= f.label :major_change, class: "control-label" do %>
+      <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
+      Alert the public to this change
+    <% end %>
+  </span>
+</div>

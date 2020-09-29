@@ -18,7 +18,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
     assert page.has_no_field?("edition_major_change")
   end
 
-  with_and_without_javascript do
+  without_javascript do
     context "change note fields" do
       setup do
         @edition = FactoryBot.create(:answer_edition, state: "published")

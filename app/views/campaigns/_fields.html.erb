@@ -1,11 +1,11 @@
-<%= f.inputs do %>
+<fieldset class="inputs">
   <div class="row">
     <div class="col-md-8">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
     </div>
   </div>
 
-  <%= f.inputs "Campaign images" do %>
+  <%= f.fields_for "Campaign images" do %>
     <table class="table table-bordered image-upload remove-bottom-margin">
       <thead>
         <tr class="table-header">
@@ -23,28 +23,50 @@
   <% end %>
   <hr />
 
-  <%= f.input :organisation_formatted_name,
-              :as => :text,
-              :label => "Organisation formatted name",
-              :input_html => { :rows => "4", :disabled => @resource.locked_for_edits?, class: 'input-md-3' } %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :organisation_formatted_name, "Organisation formatted name" %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.text_area :organisation_formatted_name, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-3 form-control" %>
+    </span>
+  </div>
 
-  <%= f.input :organisation_url,
-              :label => "Organisation URL",
-              :input_html => {:disabled => @resource.locked_for_edits?, class: 'input-md-7' } %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :organisation_url, "Organisation URL" %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.text_field :organisation_url, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+    </span>
+  </div>
 
-  <%= f.input :organisation_crest,
-              :as => :select,
-              :collection => CampaignEdition::CRESTS,
-              :input_html => {:disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :organisation_crest %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.select :organisation_crest, CampaignEdition::CRESTS, {}, { disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" } %>
+    </span>
+  </div>
 
-  <%= f.input :organisation_brand_colour,
-              :as => :select,
-              :collection => CampaignEdition::BRAND_COLOURS,
-              :input_html => {:disabled => @resource.locked_for_edits?, class: 'input-md-7'  } %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :organisation_brand_colour %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.select :organisation_brand_colour, CampaignEdition::BRAND_COLOURS, {}, { disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" } %>
+    </span>
+  </div>
 
-  <%= f.input :body,
-              :as => :text,
-              :input_html => {:disabled => @resource.locked_for_edits?, class: 'input-md-10'  } %>
-<% end %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :body %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.text_area :body, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+    </span>
+  </div>
+</fieldset>
 
 <%= render partial: 'shared/workflow_buttons', locals: { f: f } %>

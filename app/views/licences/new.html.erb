@@ -12,15 +12,21 @@
    </p>
 <% end %>
 
-<%= semantic_form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
-  <%= f.inputs :licence_identifier %>
-  <%= f.inputs do %>
+<%= form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
+  <div class="form-group">
+    <span class="form-label">
+      <%= f.label :licence_identifier %>
+    </span>
+    <span class="form-wrapper">
+      <%= f.text_field :licence_identifier, class: "form-control" %>
+    </span>
+  </div>
+
+  <fieldset class="inputs">
     <input type="hidden" name="edition[kind]" value="licence">
-    <%= f.input :panopticon_id, :as => :hidden %>
-    <%= f.input :title, :as => :hidden %>
-    <%= f.input :slug, :as => :hidden %>
-  <% end %>
-  <%= f.actions do %>
-    <%= f.submit "Create Licence edition", class: 'btn btn-success' %>
-  <% end %>
+    <%= f.hidden_field :panopticon_id %>
+    <%= f.hidden_field :title %>
+    <%= f.hidden_field :slug %>
+  </fieldset>
+  <%= f.submit "Create Licence edition", class: 'btn btn-success' %>
 <% end %>

@@ -9,37 +9,52 @@
   </div>
   <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse collapse in" aria-expanded="true">
     <div class="panel-body">
-        <%= f.inputs do %>
-          <%= f.input :title,
-                      :input_html => { :class => 'title', :disabled => @resource.locked_for_edits? },
-                      :hint => false,
-                      :required => true %>
+      <fieldset class="inputs">
+        <div class="form-group" id="edition_parts_title_input">
+          <span class="form-label">
+            <%= f.label :title %><abbr title="required">*</abbr>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "title form-control" %>
+          </span>
+        </div>
 
-          <%
-            slug_input_html = { :class => 'slug', :disabled => ! editable }
-            if @resource.version_number == 1
-              slug_input_html['data-accepts-generated-value'] = true
-            end
-          %>
+        <%
+          slug_input_html = { class: 'slug form-control', disabled: !editable }
+          if @resource.version_number == 1
+            slug_input_html['data-accepts-generated-value'] = true
+          end
+        %>
 
-          <%= f.input :slug,
-                      :input_html => slug_input_html,
-                      :hint => true,
-                      :required => true %>
+        <div class="form-group" id="edition_parts_slug_input">
+          <span class="form-label">
+            <%= f.label :slug %><abbr title="required">*</abbr>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_field :slug, slug_input_html %>
+            <span class="help-block">
+              for example, title-of-part (no spaces, apostrophes or acronyms)
+            </span>
+          </span>
+        </div>
 
-          <%= f.input :body,
-                      :as => :text,
-                      :required => true,
-                      :input_html => {:rows => '25', :disabled => @resource.locked_for_edits? } %>
+        <div class="form-group">
+          <span class="form-label">
+            <%= f.label :body %><abbr title="required">*</abbr>
+          </span>
+          <span class="form-wrapper">
+            <%= f.text_area :body, rows: 25, disabled: @resource.locked_for_edits?, class: "title form-control" %>
+          </span>
+        </div>
 
-          <%= f.input :order, :as => :hidden, :input_html => { :class => 'order', :disabled => !editable } %>
+        <%= f.hidden_field :order, class: 'order', disabled: !editable %>
 
-          <% unless @resource.locked_for_edits? %>
-            <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
-              <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this part
-            <% end %>
+        <% unless @resource.locked_for_edits? %>
+          <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
+            <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this part
           <% end %>
         <% end %>
+      </fieldset>
     </div>
   </div>
 </div>

@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-md-8">
-    <%= f.inputs do %>
+    <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-    <% end %>
+    </fieldset>
   </div>
 </div>
 
@@ -21,7 +21,7 @@
     </p>
 
     <section class="panel-group" id="parts" data-module="parts">
-      <%= f.semantic_fields_for :parts, @ordered_parts do |part| %>
+      <%= f.fields_for :parts, @ordered_parts do |part| %>
         <%= render :partial => '/shared/part', :locals => { :f => part, :editable => false } %>
       <% end %>
     </section>

@@ -1,9 +1,17 @@
 <div class="row">
   <div class="col-md-8">
-    <%= f.inputs do %>
+    <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
-      <%= f.input :body, :as => :text, :input_html => { :disabled => @resource.locked_for_edits?, class: 'input-md-10' } %>
-    <% end %>
+
+      <div class="form-group">
+        <span class="form-label">
+          <%= f.label :body %>
+        </span>
+        <span class="form-wrapper">
+          <%= f.text_area :body, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+        </span>
+      </div>
+    </fieldset>
   </div>
 </div>
 

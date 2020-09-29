@@ -16,10 +16,7 @@ module EditionsHelper
       end
     end
 
-    semantic_bootstrap_nested_form_for resource,
-                                       as: :edition, url: edition_path(resource),
-                                       html: html_options,
-                                       &form_definition
+    nested_form_for resource, as: :edition, url: edition_path(resource), html: html_options, &form_definition
   end
 
   def format_conversion_select_options(edition)
