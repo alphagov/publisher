@@ -730,6 +730,13 @@ class EditionTest < ActiveSupport::TestCase
     assert_nil edition.reload.publish_at
   end
 
+  test "cannot request review if not govuk_editor" do
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
+    user = User.create!(name: "George")
+    request_review(user, edition)
+    assert_equal edition.actions.size, 0
+  end
+
   test "edition can return latest status action of a specified request type" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
     user = FactoryBot.create(:user, :govuk_editor, name: "George")
