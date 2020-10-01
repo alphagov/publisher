@@ -510,6 +510,12 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "schedule an edition for publishing if it is ready" do
       edition = FactoryBot.create(:edition, state: "ready")
+      schedule_for_publishing(FactoryBot.create(:user), edition, @activity_details)
+      assert_not edition.reload.scheduled_for_publishing?
+    end
+
+    should "not schedule an edition for publishing if user is not govuk_editor" do
+      edition = FactoryBot.create(:edition, state: "ready")
 
       schedule_for_publishing(@user, edition, @activity_details)
 
