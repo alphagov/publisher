@@ -132,5 +132,17 @@ class EditionProgressorTest < ActiveSupport::TestCase
         assert_equal 0, Sidekiq::ScheduledSet.new.size
       end
     end
+
+    should "not dequeue a scheduled job if not govuk_editor" do
+      Sidekiq::Testing.disable! do
+        publish_at = 1.day.from_now
+        @guide.update!(state: :scheduled_for_publishing, publish_at: publish_at)
+        ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
+
+        activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }
+        command = EditionProgressor.new(@guide, FactoryBot.create(:user))
+        assert_not command.progress(activity)
+      end
+    end
   end
 end
