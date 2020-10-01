@@ -640,6 +640,14 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal bob, edition.assigned_to
   end
 
+  test "cannot assign if user is not govuk_editor" do
+    alice = FactoryBot.create(:user, name: "alice")
+    bob = FactoryBot.create(:user, :govuk_editor, name: "bob")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    alice.assign(edition, bob)
+    assert_nil edition.assigned_to
+  end
+
   test "new edition should have an incremented version number" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     new_edition = edition.build_clone
