@@ -9,10 +9,10 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     # This isn't right, really need a way to run actions when
     # logged in as particular users without having Signonotron running.
     #
-    alice = FactoryBot.create(:user, name: "Alice", uid: "alice")
+    alice = FactoryBot.create(:user, :govuk_editor, name: "Alice", uid: "alice")
 
-    bob     = FactoryBot.create(:user, name: "Bob", uid: "bob")
-    charlie = FactoryBot.create(:user, name: "Charlie", uid: "charlie")
+    bob     = FactoryBot.create(:user, :govuk_editor, name: "Bob", uid: "bob")
+    charlie = FactoryBot.create(:user, :govuk_editor, name: "Charlie", uid: "charlie")
 
     x = FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
     y = FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy")
@@ -53,7 +53,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "XXX")
     FactoryBot.create(:guide_edition, title: "YYY")
 
@@ -67,7 +67,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by title content should not lose the active section" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
 
     visit "/"
     click_on "Amends needed"
@@ -78,7 +78,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by format" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "Draft guide")
     FactoryBot.create(:transaction_edition, title: "Draft transaction")
     FactoryBot.create(:guide_edition, title: "Amends needed guide", state: "amends_needed")
@@ -105,7 +105,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "invalid sibling_in_progress should not break archived view" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "XXX", state: "archived", sibling_in_progress: 2)
 
     visit "/"
@@ -124,7 +124,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "Publications in review are ordered correctly" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(
       :guide_edition,
       title: "XXX",
@@ -163,7 +163,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "Shows link to Collections Publisher when reviewing in review documents" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
 
     visit "/"
     filter_by_user("All")
@@ -175,8 +175,8 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "allows a user to claim 2i" do
     stub_linkables
 
-    user = FactoryBot.create(:user)
-    assignee = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
+    assignee = FactoryBot.create(:user, :govuk_editor)
     edition = FactoryBot.create(
       :guide_edition,
       title: "XXX",
@@ -203,10 +203,10 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   test "prevents claiming 2i when someone else has" do
     stub_linkables
 
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
 
-    assignee = FactoryBot.create(:user)
-    another_user = FactoryBot.create(:user, name: "Another McPerson")
+    assignee = FactoryBot.create(:user, :govuk_editor)
+    another_user = FactoryBot.create(:user, :govuk_editor, name: "Another McPerson")
     edition = FactoryBot.create(
       :guide_edition,
       title: "XXX",
@@ -246,7 +246,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "prevents the assignee claiming 2i" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(
       :guide_edition,
       title: "XXX",
@@ -264,7 +264,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
   end
 
   test "filtering by published should show a table with an edition with a slug as a link" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")
 
     visit "/"

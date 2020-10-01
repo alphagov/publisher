@@ -13,8 +13,8 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
 
   def publisher_and_guide
-    user = User.create!(uid: "123", name: "Ben")
-    other_user = User.create!(uid: "321", name: "James")
+    user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
+    other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
 
     guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide

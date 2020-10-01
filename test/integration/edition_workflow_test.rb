@@ -9,8 +9,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @alice = FactoryBot.create(:user, name: "Alice")
-    @bob = FactoryBot.create(:user, name: "Bob")
+    @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
+    @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"

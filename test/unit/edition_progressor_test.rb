@@ -3,7 +3,7 @@ require "edition_progressor"
 
 class EditionProgressorTest < ActiveSupport::TestCase
   setup do
-    @laura = FactoryBot.create(:user)
+    @laura = FactoryBot.create(:user, :govuk_editor)
     @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
     stub_register_published_content
   end

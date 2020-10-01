@@ -198,7 +198,7 @@ class ArtefactTest < ActiveSupport::TestCase
       owning_app: "publisher",
     )
 
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
@@ -222,7 +222,7 @@ class ArtefactTest < ActiveSupport::TestCase
       state: "live",
     )
 
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
@@ -243,7 +243,7 @@ class ArtefactTest < ActiveSupport::TestCase
       state: "live",
     )
 
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "draft"
     edition.save!
@@ -262,7 +262,7 @@ class ArtefactTest < ActiveSupport::TestCase
       name: "Foo bar",
       owning_app: "publisher",
     )
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
 
     assert_not artefact.any_editions_published?

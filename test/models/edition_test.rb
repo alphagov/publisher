@@ -441,7 +441,7 @@ class EditionTest < ActiveSupport::TestCase
     artefact.save!
 
     Artefact.find(artefact.id)
-    user = User.create!
+    user = FactoryBot.create(:user, :govuk_editor)
 
     publication = Edition.find_or_create_from_panopticon_data(artefact.id, user)
 
@@ -479,7 +479,7 @@ class EditionTest < ActiveSupport::TestCase
     a, b = 2.times.map { FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map do |s|
-      FactoryBot.create(:user, name: s)
+      FactoryBot.create(:user, :govuk_editor, name: s)
     end
     alice.assign(a, bob)
     alice.assign(a, charlie)
@@ -520,7 +520,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "deleting a newer draft of a published edition removes sibling information" do
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update!(state: "published")
     second_edition = edition.build_clone
@@ -536,7 +536,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "the latest edition should remove sibling_in_progress details if it is present" do
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update!(state: "published")
 
@@ -548,7 +548,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should also delete associated artefact" do
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
 
     assert_difference "Artefact.count", -1 do
@@ -557,7 +557,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should not delete associated artefact if there are other editions of this publication" do
-    user1 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
     edition = AnswerEdition.find_or_create_from_panopticon_data(@artefact.id, user1)
     edition.update!(state: "published")
 
@@ -577,7 +577,7 @@ class EditionTest < ActiveSupport::TestCase
     a, b = 2.times.map { |_i| FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map do |s|
-      FactoryBot.create(:user, name: s)
+      FactoryBot.create(:user, :govuk_editor, name: s)
     end
 
     alice.assign(a, bob)
@@ -633,8 +633,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should be assigned to the last assigned recipient" do
-    alice = FactoryBot.create(:user, name: "alice")
-    bob = FactoryBot.create(:user, name: "bob")
+    alice = FactoryBot.create(:user, :govuk_editor, name: "alice")
+    bob = FactoryBot.create(:user, :govuk_editor, name: "bob")
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     alice.assign(edition, bob)
     assert_equal bob, edition.assigned_to
@@ -683,7 +683,7 @@ class EditionTest < ActiveSupport::TestCase
   test "should archive older editions, even if there are validation errors, when a new edition is published" do
     edition = FactoryBot.create(:guide_edition_with_two_parts, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create! name: "bob"
+    user = FactoryBot.create(:user, :govuk_editor, name: "bob")
     publish(user, edition, "First publication")
 
     second_edition = edition.build_clone
@@ -714,7 +714,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "when an edition is published, publish_at is cleared" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
     edition = FactoryBot.create(:edition, :scheduled_for_publishing)
 
     publish(user, edition, "First publication")
@@ -724,7 +724,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "edition can return latest status action of a specified request type" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
-    user = User.create!(name: "George")
+    user = FactoryBot.create(:user, :govuk_editor, name: "George")
     request_review(user, edition)
 
     assert_equal edition.actions.size, 1
@@ -742,7 +742,7 @@ class EditionTest < ActiveSupport::TestCase
   test "edition's publish history is recorded" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create! name: "bob"
+    user = FactoryBot.create(:user, :govuk_editor, name: "bob")
     publish(user, edition, "First publication")
 
     second_edition = edition.build_clone
@@ -769,7 +769,7 @@ class EditionTest < ActiveSupport::TestCase
   test "a series with all editions published should not have siblings in progress" do
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
 
-    user = User.create! name: "bob"
+    user = FactoryBot.create(:user, :govuk_editor, name: "bob")
     publish(user, edition, "First publication")
 
     new_edition = edition.build_clone
@@ -786,7 +786,7 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     edition.save!
 
-    user = User.create! name: "bob"
+    user = FactoryBot.create(:user, :govuk_editor, name: "bob")
     publish(user, edition, "First publication")
 
     new_edition = edition.build_clone
@@ -867,8 +867,8 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise an assignee's name when an edition is assigned" do
-    user1 = FactoryBot.create(:user)
-    user2 = FactoryBot.create(:user)
+    user1 = FactoryBot.create(:user, :govuk_editor)
+    user2 = FactoryBot.create(:user, :govuk_editor)
 
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "draft")
     user1.assign edition, user2
@@ -878,7 +878,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise a creator's name when an edition is created" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
     artefact = FactoryBot.create(
       :artefact,
       slug: "foo-bar",
@@ -893,7 +893,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should denormalise a publishing user's name when an edition is published" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
 
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     publish(user, edition, "First publication")
@@ -902,7 +902,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should set siblings in progress to nil for new editions" do
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
     assert_equal 1, edition.version_number
@@ -922,7 +922,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should update previous editions when new edition is published" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "archived")
     published_edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "published")
 
