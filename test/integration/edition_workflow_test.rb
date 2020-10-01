@@ -196,6 +196,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -207,6 +209,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -233,6 +237,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       assert page.has_content? "user-to-ask-for-fact-check@example.com"
       click_on "Resend"
     end
+    assert page.has_content?("updated")
 
     visit_edition guide
     click_on "History and notes"
@@ -273,6 +278,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "In review"
 
@@ -284,6 +291,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     assert page.has_selector?(".alert-info")
     assert has_no_link? "OK for publication"
@@ -306,6 +314,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     select("", from: "Reviewer")
     save_edition_and_assert_success
@@ -327,6 +336,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.assigned_to = bob
 
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     visit_edition guide
 
@@ -352,6 +362,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -364,6 +376,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Ready"
     assert page.has_content? guide.title
@@ -394,6 +408,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Ready"
 
@@ -522,7 +538,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     within :css, action_element_id, &block
 
-    assert page.has_content?("updated"), "new page doesn't show 'updated' message"
     guide.reload
   end
 
@@ -536,6 +551,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       fill_in "Customised message", with: message
       click_on "Send"
     end
+    assert page.has_content?("updated")
   end
 
   def send_action(guide, button_text, modal_button_text, message)
