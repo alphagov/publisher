@@ -2,7 +2,7 @@ module GovukContentModels
   module ActionProcessors
     class ApproveReviewProcessor < BaseProcessor
       def process?
-        requester_different?
+        actor.govuk_editor? && requester_different?
       end
     end
   end

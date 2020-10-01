@@ -383,6 +383,17 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
+  test "can't approve review if not govuk_editor" do
+    guide.state = "in_review"
+    guide.save!(validate: false)
+
+    login_as FactoryBot.create(:user)
+
+    visit_edition guide
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
+    assert page.has_content? "Couldn't approve review"
+  end
+
   test "can skip fact-check" do
     guide.update!(state: "fact_check")
 
