@@ -379,6 +379,13 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_equal "archived", edition.state
   end
 
+  test "an edition cannot be moved into archive state if not govuk_editor" do
+    user = FactoryBot.create(:user)
+    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    user.progress(edition, request_type: :archive)
+    assert_equal "draft", edition.state
+  end
+
   test "User can request amendments for an edition they just approved" do
     user1, user2 = template_users
     edition = user1.create_edition(:answer, panopticon_id: @artefact.id, title: "Answer foo", slug: "answer-foo")
