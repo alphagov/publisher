@@ -1,6 +1,10 @@
 module GovukContentModels
   module ActionProcessors
     class ResendFactCheckProcessor < BaseProcessor
+      def process?
+        actor.govuk_editor?
+      end
+
       def process
         return false unless edition.latest_status_action.is_fact_check_request?
 
