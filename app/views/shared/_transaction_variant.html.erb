@@ -63,7 +63,7 @@
             <%= f.label :more_information %>
           </span>
           <span class="form-wrapper">
-            <%= f.text_area :more_information, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+            <%= f.text_area :more_information, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
           </span>
         </div>
 
@@ -72,7 +72,7 @@
             <%= f.label :alternate_methods, "Other ways to apply" %>
           </span>
           <span class="form-wrapper">
-            <%= f.text_area :alternate_methods, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+            <%= f.text_area :alternate_methods, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
             <span class="help-block">Alternative ways of completing this transaction. Not displayed on front end if left blank.</span>
           </span>
         </div>

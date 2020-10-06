@@ -51,7 +51,7 @@
               <%= f.label :body %>
             </span>
             <span class="form-wrapper">
-              <%= f.text_area :body, disabled: @resource.locked_for_edits?, class: "form-control" %>
+              <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "form-control" %>
             </span>
           </div>
         </div>
