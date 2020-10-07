@@ -17,8 +17,8 @@ class EventNotificationsTest < ActiveSupport::TestCase
 
   context ".resend_fact_check" do
     setup do
-      @user = User.create!(uid: "123", name: "Ben")
-      @other_user = User.create!(uid: "321", name: "James")
+      @user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
+      @other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
 
       @edition = @user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
       request_review(@user, @edition)

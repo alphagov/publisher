@@ -37,7 +37,7 @@ class SkipReviewTest < JavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  should "allow a user with the correct permissions to force publish" do
+  should "allow a user with the correct permissions to skip review" do
     login_as @permitted_user
 
     visit "/publications/#{@artefact.id}"
@@ -60,7 +60,7 @@ class SkipReviewTest < JavascriptIntegrationTest
     end
   end
 
-  should "not allow a user without permissions to force publish" do
+  should "not allow a user without permissions to skip review" do
     editor = FactoryBot.create(
       :user,
       name: "Editor",

@@ -78,7 +78,7 @@ class ActiveSupport::TestCase
   end
 
   def login_as_stub_user
-    @user = FactoryBot.create(:user, name: "Stub User")
+    @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: @user)
   end
 

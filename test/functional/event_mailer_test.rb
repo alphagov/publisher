@@ -22,8 +22,8 @@ class EventMailerTest < ActionMailer::TestCase
   end
 
   def publisher_and_guide
-    user = User.create!(uid: "123", name: "Ben")
-    other_user = User.create!(uid: "321", name: "James")
+    user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
+    other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
 
     guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
@@ -40,7 +40,7 @@ class EventMailerTest < ActionMailer::TestCase
   test "user should be able to have an email sent for fact checking" do
     stub_mailer = stub("mailer", deliver_now: true)
     EventMailer.expects(:request_fact_check).returns(stub_mailer)
-    user = User.create!(name: "Ben")
+    user = FactoryBot.create(:user, :govuk_editor, name: "Ben")
     artefact = FactoryBot.create(:artefact)
     guide = user.create_edition(:guide, title: "My Title", slug: "my-title", panopticon_id: artefact.id)
     edition = guide
@@ -58,7 +58,7 @@ class EventMailerTest < ActionMailer::TestCase
   end
 
   test "should send an email on fact check received" do
-    user = User.create!(name: "Ben")
+    user = FactoryBot.create(:user, :govuk_editor, name: "Ben")
     guide = user.create_edition(
       :guide,
       panopticon_id: FactoryBot.create(:artefact).id,
@@ -74,7 +74,7 @@ class EventMailerTest < ActionMailer::TestCase
 
   context ".skip_review" do
     should "should send an email on skipping review" do
-      user = FactoryBot.create(:user, name: "Ben", permissions: %w[skip_review])
+      user = FactoryBot.create(:user, name: "Ben", permissions: %w[govuk_editor skip_review])
       guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
       request_review(user, guide)
       EventMailer.expects(:skip_review).returns(mock("event email", deliver_now: nil))

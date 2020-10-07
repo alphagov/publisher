@@ -5,6 +5,10 @@ module GovukContentModels
         Action::CREATE
       end
 
+      def process?
+        actor.govuk_editor?
+      end
+
       # Return value is used in caller chain to show errors
       # rubocop:disable Rails/SaveBang
       def process

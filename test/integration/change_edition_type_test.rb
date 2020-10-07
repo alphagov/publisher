@@ -6,7 +6,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
   setup do
     stub_linkables
-    FactoryBot.create(:user)
+    FactoryBot.create(:user, :govuk_editor)
     stub_mapit_areas_requests(Plek.current.find("imminence"))
     stub_holidays_used_by_fact_check
   end

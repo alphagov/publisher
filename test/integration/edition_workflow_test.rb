@@ -9,8 +9,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
 
-    @alice = FactoryBot.create(:user, name: "Alice")
-    @bob = FactoryBot.create(:user, name: "Bob")
+    @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
+    @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
@@ -196,6 +196,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -207,6 +209,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -233,6 +237,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       assert page.has_content? "user-to-ask-for-fact-check@example.com"
       click_on "Resend"
     end
+    assert page.has_content?("updated")
 
     visit_edition guide
     click_on "History and notes"
@@ -273,6 +278,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "In review"
 
@@ -284,6 +291,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     assert page.has_selector?(".alert-info")
     assert has_no_link? "OK for publication"
@@ -306,6 +314,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     select("", from: "Reviewer")
     save_edition_and_assert_success
@@ -327,6 +336,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.assigned_to = bob
 
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
+    assert page.has_content?("updated")
 
     visit_edition guide
 
@@ -352,6 +362,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Needs more work", "Request amendments", "You need to fix some stuff"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Amends needed"
 
@@ -364,9 +376,22 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Ready"
     assert page.has_content? guide.title
+  end
+
+  test "can't approve review if not govuk_editor" do
+    guide.state = "in_review"
+    guide.save!(validate: false)
+
+    login_as FactoryBot.create(:user)
+
+    visit_edition guide
+    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
+    assert page.has_content? "Couldn't approve review"
   end
 
   test "can skip fact-check" do
@@ -394,10 +419,22 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
+    assert page.has_content?("updated")
+
     filter_for_all_users
     view_filtered_list "Ready"
 
     assert page.has_content? guide.title
+  end
+
+  test "can't progress from fact-check if not govuk_editor" do
+    guide.update!(state: "fact_check_received")
+
+    login_as FactoryBot.create(:user)
+
+    visit_edition guide
+    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
+    assert page.has_content? "Couldn't approve fact check"
   end
 
   test "can go back to fact-check from fact-check received" do
@@ -522,7 +559,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     within :css, action_element_id, &block
 
-    assert page.has_content?("updated"), "new page doesn't show 'updated' message"
     guide.reload
   end
 
@@ -536,6 +572,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
       fill_in "Customised message", with: message
       click_on "Send"
     end
+    assert page.has_content?("updated")
   end
 
   def send_action(guide, button_text, modal_button_text, message)

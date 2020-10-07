@@ -6,8 +6,8 @@ require "edition_duplicator"
 # are the clear, minimal dependencies.
 class EditionDuplicatorTest < ActiveSupport::TestCase
   setup do
-    @laura = FactoryBot.create(:user)
-    @fred  = FactoryBot.create(:user)
+    @laura = FactoryBot.create(:user, :govuk_editor)
+    @fred  = FactoryBot.create(:user, :govuk_editor)
     @guide = FactoryBot.create(:guide_edition)
     stub_register_published_content
   end

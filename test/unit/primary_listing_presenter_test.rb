@@ -2,8 +2,8 @@ require "test_helper"
 
 class PrimaryListingPresenterTest < ActiveSupport::TestCase
   def setup_users
-    alice = User.create!(uid: "123")
-    bob = User.create!(uid: "321")
+    alice = FactoryBot.create(:user, :govuk_editor)
+    bob = FactoryBot.create(:user, :govuk_editor)
     [alice, bob]
   end
 

@@ -20,7 +20,7 @@ class User
   field "uid",                     type: String
   field "version",                 type: Integer
   field "email",                   type: String
-  field "permissions",             type: Array
+  field "permissions",             type: Array, default: []
   field "remotely_signed_out",     type: Boolean, default: false
   field "organisation_slug",       type: String
   field "disabled",                type: Boolean, default: false
@@ -72,5 +72,9 @@ class User
 
   def unassign(edition)
     GovukContentModels::ActionProcessors::AssignProcessor.new(self, edition).processed_edition
+  end
+
+  def govuk_editor?
+    permissions.include?("govuk_editor")
   end
 end
