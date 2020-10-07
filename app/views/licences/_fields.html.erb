@@ -47,7 +47,7 @@
           <%= f.label :licence_overview %>
         </span>
         <span class="form-wrapper">
-          <%= f.text_area :licence_overview, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+          <%= f.text_area :licence_overview, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
         </span>
       </div>
     </fieldset>

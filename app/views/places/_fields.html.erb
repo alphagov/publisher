@@ -27,7 +27,7 @@
           <%= f.label :more_information %>
         </span>
         <span class="form-wrapper">
-          <%= f.text_area :more_information, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+          <%= f.text_area :more_information, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
         </span>
       </div>
 
