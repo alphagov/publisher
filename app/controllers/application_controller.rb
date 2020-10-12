@@ -34,4 +34,11 @@ class ApplicationController < ActionController::Base
   def notify_bad_request(_exception)
     render plain: "Error: One or more recipients not in GOV.UK Notify team (code: 400)", status: :bad_request
   end
+
+  def require_govuk_editor(redirect_path: root_path)
+    return if current_user.govuk_editor?
+
+    flash[:danger] = "You do not have permission to see this page."
+    redirect_to redirect_path
+  end
 end
