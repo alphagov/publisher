@@ -115,6 +115,10 @@ class Artefact
     attributes["language"] || "en"
   end
 
+  def welsh?
+    language == "cy"
+  end
+
   def normalise
     return if kind.blank?
 

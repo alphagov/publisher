@@ -12,6 +12,11 @@ class UserTest < ActiveSupport::TestCase
     @artefact = FactoryBot.create(:artefact)
   end
 
+  test "is welsh_editor? if permissions include welsh_editor" do
+    user = FactoryBot.create(:user, :welsh_editor)
+    assert user.welsh_editor?
+  end
+
   test "should convert to string using name by preference" do
     user = User.new(name: "Bob", email: "user@example.com")
     assert_equal "Bob", user.to_s
