@@ -17,6 +17,10 @@ FactoryBot.define do
     trait :govuk_editor do
       permissions { %w[govuk_editor signin] }
     end
+
+    trait :welsh_editor do
+      permissions { %w[welsh_editor signin] }
+    end
   end
 
   factory :disabled_user, parent: :user do
