@@ -53,7 +53,7 @@ module Attachable
           end
         end
 
-      private
+        private
 
         define_method("upload_#{field}") do
           raise ApiClientNotPresent unless Attachable.asset_api_client
