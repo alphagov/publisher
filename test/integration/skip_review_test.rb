@@ -6,7 +6,7 @@ class SkipReviewTest < JavascriptIntegrationTest
       :user,
       name: "Vincent Panache",
       email: "test@example.com",
-      permissions: %w[skip_review],
+      permissions: %w[skip_review govuk_editor],
     )
 
     stub_linkables
@@ -65,7 +65,7 @@ class SkipReviewTest < JavascriptIntegrationTest
       :user,
       name: "Editor",
       email: "thingy@example.com",
-      permissions: %w[editor],
+      permissions: %w[govuk_editor],
     )
 
     login_as editor
