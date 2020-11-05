@@ -5,6 +5,7 @@ class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
+  before_action :require_editor_permissions, only: %i[duplicate]
   after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
   def index
@@ -55,7 +56,7 @@ class EditionsController < InheritedResources::Base
 
   def duplicate
     command = EditionDuplicator.new(resource, current_user)
-    target_edition_class_name = (params[:to] + "_edition").classify if params[:to]
+    target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
 
     if !resource.can_create_new_edition?
       flash[:warning] = "Another person has created a newer edition"

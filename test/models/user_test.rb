@@ -12,6 +12,34 @@ class UserTest < ActiveSupport::TestCase
     @artefact = FactoryBot.create(:artefact)
   end
 
+  test "#has_editor_permissions? is true with govuk_editor and non-Welsh editions" do
+    govuk_editor = FactoryBot.create(:user, :govuk_editor)
+    edition = FactoryBot.create(:edition)
+
+    assert govuk_editor.has_editor_permissions?(edition)
+  end
+
+  test "#has_editor_permissions? is true with govuk_editor and Welsh editions" do
+    govuk_editor = FactoryBot.create(:user, :govuk_editor)
+    welsh_edition = FactoryBot.create(:edition, :welsh)
+
+    assert govuk_editor.has_editor_permissions?(welsh_edition)
+  end
+
+  test "#has_editor_permissions? is false with welsh_editor and non-Welsh editions" do
+    welsh_editor = FactoryBot.create(:user, :welsh_editor)
+    edition = FactoryBot.create(:edition)
+
+    assert_not welsh_editor.has_editor_permissions?(edition)
+  end
+
+  test "#has_editor_permissions? is true with welsh_editor and Welsh editions" do
+    welsh_editor = FactoryBot.create(:user, :welsh_editor)
+    welsh_edition = FactoryBot.create(:edition, :welsh)
+
+    assert welsh_editor.has_editor_permissions?(welsh_edition)
+  end
+
   test "is welsh_editor? if permissions include welsh_editor" do
     user = FactoryBot.create(:user, :welsh_editor)
     assert user.welsh_editor?

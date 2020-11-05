@@ -2,7 +2,7 @@ module GovukContentModels
   module ActionProcessors
     class NewVersionProcessor < BaseProcessor
       def process?
-        actor.govuk_editor? && edition.published?
+        edition.published?
       end
 
       def process

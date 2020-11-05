@@ -96,6 +96,10 @@ FactoryBot.define do
       end
     end
 
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
     trait :scheduled_for_publishing do
       state { "scheduled_for_publishing" }
       publish_at { 1.day.from_now }

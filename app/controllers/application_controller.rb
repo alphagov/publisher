@@ -41,4 +41,11 @@ class ApplicationController < ActionController::Base
     flash[:danger] = "You do not have permission to see this page."
     redirect_to redirect_path
   end
+
+  def require_editor_permissions
+    return if current_user.has_editor_permissions?(resource)
+
+    flash[:danger] = "You do not have correct editor permissions for this action."
+    redirect_to edition_path(resource)
+  end
 end

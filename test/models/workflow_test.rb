@@ -431,11 +431,6 @@ class WorkflowTest < ActiveSupport::TestCase
       assert_nil @user.new_version(@edition)
     end
 
-    should "return nil if user is not govuk_editor" do
-      other_user = FactoryBot.create(:user)
-      assert_nil other_user.new_version(@edition)
-    end
-
     should "record the action" do
       new_version = @user.new_version(@edition)
       assert_equal "new_version", new_version.actions.last.request_type

@@ -87,21 +87,51 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#duplicate" do
-    setup do
-      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
-      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
-      EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+    context "Standard behaviour" do
+      setup do
+        @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+        EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+        EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+      end
+
+      should "delegate complexity of duplication to appropriate collaborator" do
+        post :duplicate, params: { id: @guide.id }
+        assert_response 302
+        assert_equal "New edition created", flash[:success]
+      end
+
+      should "update the publishing API upon duplication of an edition" do
+        UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
+        post :duplicate, params: { id: @guide.id }
+      end
     end
 
-    should "delegate complexity of duplication to appropriate collaborator" do
-      post :duplicate, params: { id: @guide.id }
-      assert_response 302
-      assert_equal "New edition created", flash[:success]
-    end
+    context "Welsh editors" do
+      setup { login_as_welsh_editor }
 
-    should "update the publishing API upon duplication of an edition" do
-      UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
-      post :duplicate, params: { id: @guide.id }
+      should "be able to duplicate Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :published, :welsh)
+        artefact = edition.artefact
+
+        post :duplicate, params: { id: edition.id }
+
+        assert_response 302
+        assert_redirected_to edition_path(artefact.latest_edition)
+        assert_not_equal edition, artefact.latest_edition
+        assert_equal "New edition created", flash[:success]
+      end
+
+      should "not be able to duplicate non-Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :published)
+        artefact = edition.artefact
+
+        post :duplicate, params: { id: edition.id }
+
+        assert_response 302
+        assert_redirected_to edition_path(edition)
+        assert_equal edition, artefact.latest_edition
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
     end
   end
 
