@@ -434,7 +434,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
-    assert page.has_content? "Couldn't approve fact check"
+    assert page.has_content? "You do not have correct editor permissions for this action."
   end
 
   test "can go back to fact-check from fact-check received" do

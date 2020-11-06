@@ -109,6 +109,10 @@ FactoryBot.define do
       state { "published" }
     end
 
+    trait :ready do
+      state { "ready" }
+    end
+
     trait :with_body do
       body { "Some body text" }
     end

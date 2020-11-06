@@ -287,6 +287,45 @@ class EditionsControllerTest < ActionController::TestCase
              },
            }
     end
+
+    context "Welsh editors" do
+      setup { login_as_welsh_editor }
+
+      should "be able to update Welsh editions" do
+        artefact = FactoryBot.create(:artefact, :welsh)
+        edition = FactoryBot.create(:guide_edition, :ready, panopticon_id: artefact.id)
+
+        post :update,
+             params: {
+               id: edition.id,
+               edition: {
+                 title: "Updated title",
+               },
+             }
+
+        assert_redirected_to edition_path(edition)
+        edition.reload
+        assert_equal edition.title, "Updated title"
+      end
+
+      should "not be able to update non-Welsh editions" do
+        artefact = FactoryBot.create(:artefact)
+        edition = FactoryBot.create(:guide_edition, :ready, panopticon_id: artefact.id)
+
+        post :update,
+             params: {
+               id: edition.id,
+               edition: {
+                 title: "Updated title",
+               },
+             }
+
+        assert_redirected_to edition_path(edition)
+        edition.reload
+        assert_not_equal edition.title, "Updated title"
+        assert_equal "You do not have permission to create a new edition.", flash[:danger]
+      end
+    end
   end
 
   context "#review" do

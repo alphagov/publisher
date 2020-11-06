@@ -5,7 +5,7 @@ class EditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
-  before_action :require_editor_permissions, only: %i[duplicate]
+  before_action :require_editor_permissions, only: %i[update duplicate]
   after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
   def index
