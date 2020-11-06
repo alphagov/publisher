@@ -7,7 +7,7 @@ namespace :local_transactions do
 
   desc "Import services from the service list CSV"
   task update_services: :environment do
-    LocalServiceImporter.update
+    LocalServiceImporter.run
   end
 
   desc "Removes services that do not appear in the service list CSV"

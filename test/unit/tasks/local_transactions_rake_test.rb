@@ -3,8 +3,8 @@ require "rake"
 
 class LocalTransactionsRakeTest < ActiveSupport::TestCase
   context "local_transactions:update_services" do
-    should "call LocalServiceImporter.update" do
-      LocalServiceImporter.expects(:update)
+    should "call LocalServiceImporter.run" do
+      LocalServiceImporter.expects(:run)
       Rake::Task["local_transactions:update_services"].invoke
     end
   end
