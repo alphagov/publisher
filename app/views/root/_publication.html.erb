@@ -66,10 +66,12 @@
   <% end %>
   <% if tab && (tab == :archived || tab == :published) %>
     <td>
-      <% if publication.can_create_new_edition? %>
-        <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
-      <% elsif publication.in_progress_sibling %>
-        <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
+      <% if current_user.has_editor_permissions?(publication) %>
+        <% if publication.can_create_new_edition? %>
+          <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
+        <% elsif publication.in_progress_sibling %>
+          <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
+        <% end %>
       <% end %>
     </td>
   <% end %>

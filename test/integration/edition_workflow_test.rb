@@ -11,6 +11,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
+    @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
@@ -456,6 +457,128 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on "Create new edition"
 
     assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot create a new edition from the listings screen" do
+    guide.update!(state: "published")
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    assert page.has_no_content? "Create new edition"
+  end
+
+  test "Welsh editors can create a new Welsh edition from the listings screen" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot edit a newer edition from the listings screen" do
+    guide.update!(state: "published")
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+
+    assert page.has_no_content? "Edit newer edition"
+  end
+
+  test "Welsh editors can edit a newer Welsh edition from the listings screen" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+
+    click_on "Edit newer edition"
+
+    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
+  end
+
+  test "Welsh editors cannot create new editions from the edition page" do
+    guide.update!(state: "published")
+    login_as("WelshEditor")
+
+    visit edition_path(guide)
+    assert page.has_no_content? "Create new edition"
+  end
+
+  test "Welsh editors can create new Welsh editions from the edition page" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+    login_as("WelshEditor")
+
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot edit existing newer editions from the edition page" do
+    guide.update!(state: "published")
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Edit existing newer edition"
+  end
+
+  test "Welsh editors can edit existing newer Welsh editions from the edition page" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    click_on "Edit existing newer edition"
+
+    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
+  end
+
+  test "Welsh editors cannot update editions" do
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Save"
+  end
+
+  test "Welsh editors can update Welsh editions" do
+    guide.artefact.update!(language: "cy")
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    fill_in "Title", with: "Updated Welsh Title"
+
+    save_edition_and_assert_success
   end
 
   test "can preview a draft article on draft-origin" do
