@@ -9,8 +9,6 @@ require_relative "fact_check_mail"
 class FactCheckEmailHandler
   attr_accessor :fact_check_config
 
-  class UnableToProcessError < StandardError; end
-
   def initialize(fact_check_config)
     @fact_check_config = fact_check_config
   end
@@ -21,8 +19,6 @@ class FactCheckEmailHandler
 
     edition_id = @fact_check_config.item_id_from_subject_or_body(message.subject, message.body.to_s)
     FactCheckMessageProcessor.process(message, edition_id)
-  rescue StandardError => e
-    raise UnableToProcessError, "Failed to process message '#{message.subject}': #{e.message}"
   end
 
   # takes an optional block to call after processing each message
@@ -34,9 +30,9 @@ class FactCheckEmailHandler
       message.mark_for_delete = true
       yield(message) if block_given?
     rescue StandardError => e
+      Rails.logger.debug "UnableToProcessError: Failed to process message '#{message.subject}': #{e.message}"
       message.mark_for_delete = false
       unprocessed_emails_count += 1
-      GovukError.notify(e)
     end
 
     GovukStatsd.gauge("unprocessed_emails.count", unprocessed_emails_count)
