@@ -289,41 +289,93 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "Welsh editors" do
-      setup { login_as_welsh_editor }
+      setup do
+        login_as_welsh_editor
+        @edition = FactoryBot.create(:guide_edition, :ready)
+        @welsh_edition = FactoryBot.create(:guide_edition, :ready, :welsh)
+      end
 
       should "be able to update Welsh editions" do
-        artefact = FactoryBot.create(:artefact, :welsh)
-        edition = FactoryBot.create(:guide_edition, :ready, panopticon_id: artefact.id)
-
         post :update,
              params: {
-               id: edition.id,
+               id: @welsh_edition.id,
                edition: {
                  title: "Updated title",
                },
              }
 
-        assert_redirected_to edition_path(edition)
-        edition.reload
-        assert_equal edition.title, "Updated title"
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.title, "Updated title"
       end
 
       should "not be able to update non-Welsh editions" do
-        artefact = FactoryBot.create(:artefact)
-        edition = FactoryBot.create(:guide_edition, :ready, panopticon_id: artefact.id)
-
         post :update,
              params: {
-               id: edition.id,
+               id: @edition.id,
                edition: {
                  title: "Updated title",
                },
              }
 
-        assert_redirected_to edition_path(edition)
-        edition.reload
-        assert_not_equal edition.title, "Updated title"
-        assert_equal "You do not have permission to create a new edition.", flash[:danger]
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_not_equal @edition.title, "Updated title"
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to schedule publishing for Welsh editions" do
+        ScheduledPublisher.expects(:enqueue).with(@welsh_edition)
+
+        post(
+          :update,
+          params: {
+            id: @welsh_edition.id,
+            edition: {
+              activity_schedule_for_publishing_attributes: {
+                request_type: "schedule_for_publishing",
+                "publish_at(1i)" => "2020",
+                "publish_at(2i)" => "12",
+                "publish_at(3i)" => "21",
+                "publish_at(4i)" => "10",
+                "publish_at(5i)" => "35",
+              },
+            },
+            commit: "Schedule for publishing",
+          },
+        )
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "scheduled_for_publishing"
+        assert_equal flash[:notice], "Guide edition was successfully updated."
+      end
+
+      should "not be able to schedule publishing for non-Welsh editions" do
+        ScheduledPublisher.expects(:enqueue).with(@edition).never
+
+        post(
+          :update,
+          params: {
+            id: @edition.id,
+            edition: {
+              activity_schedule_for_publishing_attributes: {
+                request_type: "schedule_for_publishing",
+                "publish_at(1i)" => "2020",
+                "publish_at(2i)" => "12",
+                "publish_at(3i)" => "21",
+                "publish_at(4i)" => "10",
+                "publish_at(5i)" => "35",
+              },
+            },
+            commit: "Schedule for publishing",
+          },
+        )
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
     end
   end
