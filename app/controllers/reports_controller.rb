@@ -1,3 +1,5 @@
+require "csv_report_generator"
+
 class ReportsController < ApplicationController
   include ActionView::Helpers::TagHelper
 
