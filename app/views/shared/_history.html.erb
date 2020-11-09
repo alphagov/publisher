@@ -68,16 +68,18 @@
     <a href="#" class="js-toggle-all">Expand all notes</a>
   </p>
 
-  <div class="add-bottom-margin">
-    <a href="#save-edition-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-comment add-right-margin"></i>Add edition note</a>
-    <a href="#update-important-note" class="btn btn-default" data-toggle="modal"><i class="glyphicon glyphicon-exclamation-sign add-right-margin"></i>Update important note</a>
-    <% if @resource.important_note %>
-      <%= form_for(@resource.important_note, :url=> resolve_note_path, :html => { :class => "add-left-margin inline" }, :method => "put") do |f| %>
-        <%= hidden_field_tag :edition_id, resource.id %>
-        <%= f.submit :class=>"btn btn-default", :value => 'Delete important note' %>
+  <% if current_user.has_editor_permissions?(@resource) %>
+    <div class="add-bottom-margin">
+      <a href="#save-edition-note" class="btn btn-primary" data-toggle="modal"><i class="glyphicon glyphicon-comment add-right-margin"></i>Add edition note</a>
+      <a href="#update-important-note" class="btn btn-default" data-toggle="modal"><i class="glyphicon glyphicon-exclamation-sign add-right-margin"></i>Update important note</a>
+      <% if @resource.important_note %>
+        <%= form_for(@resource.important_note, :url=> resolve_note_path, :html => { :class => "add-left-margin inline" }, :method => "put") do |f| %>
+          <%= hidden_field_tag :edition_id, resource.id %>
+          <%= f.submit :class=>"btn btn-default", :value => 'Delete important note' %>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
   <p class="add-bottom-margin">
     <% if resource.published? %>

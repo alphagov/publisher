@@ -175,6 +175,52 @@ class EditionHistoryTest < JavascriptIntegrationTest
         assert page.has_css?(".callout-important-note tr:first-child td", text: "An updated note")
       end
     end
+
+    context "Welsh editors" do
+      setup do
+        user = FactoryBot.create(:user, :welsh_editor, name: "Author", email: "test@example.com")
+        @welsh_edition = FactoryBot.create(:guide_edition, :welsh, state: "ready")
+        login_as(user)
+      end
+
+      should "not see options to add notes to non-Welsh editions" do
+        visit_edition @answer
+        click_on "History and notes"
+        assert page.has_no_css?("#edition-history .btn.btn-primary", text: "Add edition note")
+        assert page.has_no_css?("#edition-history .btn.btn-default", text: "Update important note")
+      end
+
+      should "be able to add notes to Welsh editions" do
+        visit_edition @welsh_edition
+        click_on "History and notes"
+
+        click_on "Add edition note"
+
+        within "#save-edition-note" do
+          fill_in "Note", with: "A simple Welsh note"
+          click_on "Save edition note"
+        end
+
+        assert page.has_content?("Note recorded")
+        assert page.has_css?(".action-note", text: "A simple Welsh note")
+      end
+
+      should "be able to add important notes to Welsh editions" do
+        visit_edition @welsh_edition
+        click_on "History and notes"
+
+        click_on "Update important note"
+
+        within "#update-important-note" do
+          fill_in "Important note", with: "An important Welsh note"
+          click_on "Save important note"
+        end
+
+        assert page.has_content?("Note recorded")
+
+        assert page.has_css?(".callout-important-note ", text: "An important Welsh note")
+      end
+    end
   end
 
   def add_important_note(note)
