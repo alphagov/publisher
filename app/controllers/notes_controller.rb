@@ -1,5 +1,6 @@
 class NotesController < InheritedResources::Base
   belongs_to :edition
+  before_action :require_editor_permissions
 
   include PathsHelper
 
