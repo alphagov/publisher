@@ -581,6 +581,46 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     save_edition_and_assert_success
   end
 
+  test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
+    edition = FactoryBot.create(:edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
+    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
+  end
+
+  test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
+    edition = FactoryBot.create(:edition, :ready, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
+    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
+  end
+
+  test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Cancel scheduled publishing")
+    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
+  end
+
+  test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_css?(".btn.btn-large.btn-danger", text: "Cancel scheduled publishing")
+    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
+  end
+
   test "can preview a draft article on draft-origin" do
     guide.update!(state: "draft")
 
