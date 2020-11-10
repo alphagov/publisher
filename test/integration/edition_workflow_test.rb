@@ -392,7 +392,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
-    assert page.has_content? "Couldn't approve review"
+    assert page.has_content? "You do not have correct editor permissions for this action."
   end
 
   test "can skip fact-check" do

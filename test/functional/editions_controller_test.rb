@@ -199,6 +199,61 @@ class EditionsControllerTest < ActionController::TestCase
              },
            }
     end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @artefact = FactoryBot.create(:artefact)
+        @edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, panopticon_id: @artefact.id)
+        @welsh_edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, :welsh)
+      end
+
+      should "be able to cancel scheduled publishing for Welsh editions" do
+        ScheduledPublisher.expects(:cancel_scheduled_publishing).with(@welsh_edition.id.to_s).once
+
+        post(
+          :progress,
+          params: {
+            id: @welsh_edition.id,
+            commit: "Cancel scheduled publishing",
+            edition: {
+              activity: {
+                request_type: "cancel_scheduled_publishing",
+                comment: "cancel this!",
+              },
+            },
+          },
+        )
+
+        assert_redirected_to edition_path(@welsh_edition)
+        assert_equal flash[:success], "Guide updated"
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to cancel scheduled publishing for non-Welsh editions" do
+        ScheduledPublisher.expects(:cancel_scheduled_publishing).with(@edition.id.to_s).never
+
+        post(
+          :progress,
+          params: {
+            id: @edition.id,
+            commit: "Cancel scheduled publishing",
+            edition: {
+              activity: {
+                request_type: "cancel_scheduled_publishing",
+                comment: "cancel this!",
+              },
+            },
+          },
+        )
+
+        assert_redirected_to edition_path(@edition)
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+        @edition.reload
+        assert_equal @edition.state, "scheduled_for_publishing"
+      end
+    end
   end
 
   context "#update" do
