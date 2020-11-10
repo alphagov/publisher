@@ -39,4 +39,16 @@ class TabsHelperTest < ActionView::TestCase
       assert_match "Edit", link
     end
   end
+
+  context "#tabs_for(user)" do
+    should "return all tabs if user is govuk_editor" do
+      user = FactoryBot.create(:user, :govuk_editor)
+      assert_equal tabs_for(user), tabs
+    end
+
+    should "return all tabs except `unpublish` if user is not govuk_editor" do
+      user = FactoryBot.create(:user)
+      assert_equal %w[unpublish], (tabs - tabs_for(user)).map(&:name)
+    end
+  end
 end

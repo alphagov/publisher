@@ -612,6 +612,77 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#unpublish" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition, :published, panopticon_id: FactoryBot.create(:artefact).id)
+      @redirect_url = "https://www.example.com/somewhere_else"
+    end
+
+    should "update publishing API upon unpublishing an edition" do
+      UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).returns(true)
+
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: @redirect_url,
+           }
+
+      assert_redirected_to root_path
+      assert_equal "Content unpublished and redirected", flash[:notice]
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :published, :welsh)
+      end
+
+      should "not be able to access the unpublish page of non-Welsh editions" do
+        get :unpublish, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be able to access the unpublish page of Welsh editions" do
+        get :unpublish, params: { id: @welsh_guide.id }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be allowed to unpublish a Welsh edition" do
+        UnpublishService.expects(:call).with(@welsh_guide.artefact, @user, @redirect_url).never
+
+        post :process_unpublish,
+             params: {
+               id: @welsh_guide.id,
+               redirect_url: @redirect_url,
+             }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        @welsh_guide.reload
+        assert_equal @welsh_guide.state, "published"
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be allowed to unpublish a non-Welsh edition" do
+        UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).never
+
+        post :process_unpublish,
+             params: {
+               id: @guide.id,
+               redirect_url: @redirect_url,
+             }
+
+        assert_redirected_to edition_path(@guide)
+        @guide.reload
+        assert_equal @guide.state, "published"
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+    end
+  end
+
   context "given a simple smart answer" do
     setup do
       @artefact = FactoryBot.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")

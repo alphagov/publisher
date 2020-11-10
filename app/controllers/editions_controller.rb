@@ -6,6 +6,9 @@ class EditionsController < InheritedResources::Base
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
   before_action :require_editor_permissions, only: %i[update duplicate progress]
+  before_action only: %i[unpublish process_unpublish] do
+    require_govuk_editor(redirect_path: edition_path(resource))
+  end
   after_action :report_state_counts, only: %i[create duplicate progress destroy]
 
   def index

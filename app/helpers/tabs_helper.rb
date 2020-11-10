@@ -21,4 +21,8 @@ module TabsHelper
   def tabs
     Edition::Tab.all
   end
+
+  def tabs_for(user)
+    tabs.reject { |tab| tab.name == "unpublish" unless user.govuk_editor? }
+  end
 end
