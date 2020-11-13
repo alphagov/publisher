@@ -501,6 +501,40 @@ class EditionsControllerTest < ActionController::TestCase
       @guide.reload
       assert_equal bob.name, @guide.reviewer
     end
+
+    context "Welsh editors" do
+      setup do
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)
+        login_as_welsh_editor
+        @welsh_user = @user
+      end
+
+      should "be able to claim a review for Welsh editions" do
+        put :review,
+            params: {
+              id: @welsh_guide.id,
+              edition: { reviewer: @welsh_user.name },
+            }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        assert_equal "You are the reviewer of this guide.", flash[:success]
+        @welsh_guide.reload
+        assert_equal @welsh_user.name, @welsh_guide.reviewer
+      end
+
+      should "not be able to claim a review for non-Welsh editions" do
+        put :review,
+            params: {
+              id: @guide.id,
+              edition: { reviewer: @welsh_user.name },
+            }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        @guide.reload
+        assert_nil @guide.reviewer
+      end
+    end
   end
 
   context "#destroy" do

@@ -113,6 +113,11 @@ FactoryBot.define do
       state { "ready" }
     end
 
+    trait :in_review do
+      state { "in_review" }
+      review_requested_at { Time.zone.now }
+    end
+
     trait :with_body do
       body { "Some body text" }
     end
