@@ -610,6 +610,25 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
   end
 
+  test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
+    edition = FactoryBot.create(:edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_link?("2nd pair of eyes", href: "#request_review_form")
+  end
+
+  test "Welsh editors can see buttons to request a review for Welsh editions" do
+    edition = FactoryBot.create(:edition, :draft, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+    find_link("2nd pair of eyes", href: "#request_review_form").click
+
+    assert page.has_button?("Send to 2nd pair of eyes", type: "submit")
+  end
+
   test "can preview a draft article on draft-origin" do
     guide.update!(state: "draft")
 

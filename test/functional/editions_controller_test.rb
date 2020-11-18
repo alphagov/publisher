@@ -258,7 +258,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#update" do
     setup do
-      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition)
     end
 
     should "update assignment" do
@@ -518,6 +518,52 @@ class EditionsControllerTest < ActionController::TestCase
         assert_redirected_to edition_path(edition)
         edition.reload
         assert_equal edition.state, "in_review"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to request a review for Welsh editions" do
+        welsh_edition = FactoryBot.create(:guide_edition, :draft, :welsh)
+
+        UpdateWorker.expects(:perform_async).with(welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: welsh_edition.id,
+               commit: "Send to 2nd pair of eyes",
+               edition: {
+                 activity_request_review_attributes: {
+                   request_type: :request_review,
+                   comment: "Please review",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(welsh_edition)
+        welsh_edition.reload
+        assert_equal welsh_edition.state, "in_review"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to request a review for non-Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :draft)
+
+        UpdateWorker.expects(:perform_async).with(edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: edition.id,
+               commit: "Send to 2nd pair of eyes",
+               edition: {
+                 activity_request_review_attributes: {
+                   request_type: :request_review,
+                   comment: "Please review",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(edition)
+        edition.reload
+        assert_equal edition.state, "draft"
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
     end
