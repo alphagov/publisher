@@ -566,6 +566,48 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal edition.state, "draft"
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
+
+      should "be able to request amendments to a review for Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Request amendments",
+               edition: {
+                 activity_request_amendments_attributes: {
+                   request_type: :request_amendments,
+                   comment: "Suggestion here",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "amends_needed"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to request amendments to a review for non-Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Request amendments",
+               edition: {
+                 activity_request_amendments_attributes: {
+                   request_type: :request_amendments,
+                   comment: "Suggestion here",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
