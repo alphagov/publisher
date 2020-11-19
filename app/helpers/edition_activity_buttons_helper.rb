@@ -11,8 +11,10 @@ module EditionActivityButtonsHelper
 
   def review_buttons(edition)
     buttons = []
-    buttons << build_review_button(edition, "request_amendments", "Needs more work")
-    buttons << build_review_button(edition, "approve_review", "OK for publication")
+    if current_user.has_editor_permissions?(edition)
+      buttons << build_review_button(edition, "request_amendments", "Needs more work")
+      buttons << build_review_button(edition, "approve_review", "OK for publication")
+    end
     buttons.join("\n").html_safe
   end
 

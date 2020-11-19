@@ -610,6 +610,26 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
   end
 
+  test "Welsh editors cannot see review buttons for non-Welsh editions" do
+    edition = FactoryBot.create(:edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_link?("Needs more work", href: "#request_amendments_form")
+    assert_not page.has_link?("OK for publication", href: "#approve_review_form")
+  end
+
+  test "Welsh editors can see review buttons for Welsh editions" do
+    edition = FactoryBot.create(:edition, :in_review, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_link?("Needs more work", href: "#request_amendments_form")
+    assert page.has_link?("OK for publication", href: "#approve_review_form")
+  end
+
   test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
     edition = FactoryBot.create(:edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
