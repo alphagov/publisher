@@ -432,6 +432,48 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal @edition.state, "ready"
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
+
+      should "be able to publish a Welsh edition" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, true)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Send to publish",
+               edition: {
+                 activity_publish_attributes: {
+                   request_type: "publish",
+                   comment: "Publish this!",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "published"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to publish a non-Welsh edition" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, true).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Send to publish",
+               edition: {
+                 activity_publish_attributes: {
+                   request_type: "publish",
+                   comment: "Publish this!",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
