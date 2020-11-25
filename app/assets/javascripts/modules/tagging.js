@@ -13,8 +13,8 @@
         var mainstreams = $mainstreams.val() || []
         var primaryMainstream = $primaryMainstream.val() || []
 
-        if (primaryMainstream.length != 0) {
-          if (mainstreams.length == 0 || (mainstreams.indexOf(primaryMainstream) == -1)) {
+        if (primaryMainstream.length !== 0) {
+          if (mainstreams.length === 0 || (mainstreams.indexOf(primaryMainstream) === -1)) {
             $mainstreamAlertWarning.removeClass('hidden')
           } else {
             $mainstreamAlertWarning.addClass('hidden')

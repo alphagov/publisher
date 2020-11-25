@@ -18,69 +18,69 @@ describe('An ajax save with parts module', function () {
   })
 
   beforeEach(function () {
-    element = $('<form action="some/url">\
-      <div class="js-status-message"></div>\
-      <div class="fields">\
-        <a href="#" class="js-part-toggle">\
-          <span class="js-part-title">Title</span>\
-        </a>\
-        <div class="js-part-toggle-target" id="slug">\
-          <div id="edition_parts_attributes_100_title_input">\
-            <input class="title" type="text" id="edition_part_100_title" name="edition[part][100][title]" value="Title">\
-          </div>\
-          <input class="order" type="hidden" id="edition_part_100_order" name="edition[part][100][order]" value="1">\
-          <div id="edition_parts_attributes_100_slug_input">\
-            <input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">\
-          </div>\
-          <input type="hidden" id="edition_part_100_id" name="edition[part][100][id]" value="5f00000001">\
-        </div>\
-      </div>\
-      <div class="fields">\
-        <a href="#" class="js-part-toggle">\
-          <span class="js-part-title">Title 2</span>\
-        </a>\
-        <div class="js-part-toggle-target" id="slug-2">\
-          <div id="edition_parts_attributes_101_title_input">\
-            <input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">\
-          </div>\
-          <input class="order" type="hidden" id="edition_part_101_order" name="edition[part][101][order]" value="2">\
-          <div id="edition_parts_attributes_101_slug_input">\
-            <input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">\
-          </div>\
-          <input type="hidden" id="edition_part_101_id" name="edition[part][101][id]" value="5f00000002">\
-          <input id="edition_parts_attributes_101__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="false">\
-        </div>\
-      </div>\
-      <div class="fields">\
-        <a href="#" class="js-part-toggle">\
-          <span class="js-part-title">Untitled part</span>\
-        </a>\
-        <div class="js-part-toggle-target" id="untitled-part">\
-          <div id="edition_parts_attributes_4535667_title_input">\
-            <input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">\
-          </div>\
-          <input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">\
-          <div id="edition_parts_attributes_4535667_slug_input">\
-            <input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">\
-          </div>\
-        </div>\
-      </div>\
-      <div class="fields">\
-        <a href="#" class="js-part-toggle">\
-          <span class="js-part-title">Deleted part</span>\
-        </a>\
-        <div class="js-part-toggle-target" id="deleted-part">\
-          <div id="edition_parts_attributes_deleted_title_input">\
-            <input class="title" type="text" id="edition_part_deleted_title" name="edition[part][deleted][title]" value="Deleted Part">\
-          </div>\
-          <input class="order" type="hidden" id="edition_part_deleted_order" name="edition[part][deleted][order]" value="4">\
-          <div id="edition_parts_attributes_deleted_slug_input">\
-            <input id="edition_parts_attributes_deleted__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="1">\
-          </div>\
-        </div>\
-      </div>\
-      <input type="submit" class="js-save" value="Save">\
-    </form>')
+    element = $('<form action="some/url">' +
+      '<div class="js-status-message"></div>' +
+      '<div class="fields">' +
+        '<a href="#" class="js-part-toggle">' +
+          '<span class="js-part-title">Title</span>' +
+        '</a>' +
+        '<div class="js-part-toggle-target" id="slug">' +
+          '<div id="edition_parts_attributes_100_title_input">' +
+            '<input class="title" type="text" id="edition_part_100_title" name="edition[part][100][title]" value="Title">' +
+          '</div>' +
+          '<input class="order" type="hidden" id="edition_part_100_order" name="edition[part][100][order]" value="1">' +
+          '<div id="edition_parts_attributes_100_slug_input">' +
+            '<input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">' +
+          '</div>' +
+          '<input type="hidden" id="edition_part_100_id" name="edition[part][100][id]" value="5f00000001">' +
+        '</div>' +
+      '</div>' +
+      '<div class="fields">' +
+        '<a href="#" class="js-part-toggle">' +
+          '<span class="js-part-title">Title 2</span>' +
+        '</a>' +
+        '<div class="js-part-toggle-target" id="slug-2">' +
+          '<div id="edition_parts_attributes_101_title_input">' +
+            '<input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">' +
+          '</div>' +
+          '<input class="order" type="hidden" id="edition_part_101_order" name="edition[part][101][order]" value="2">' +
+          '<div id="edition_parts_attributes_101_slug_input">' +
+            '<input class="slug" type="text" id="edition_part_101_slug" name="edition[part][101][slug]" value="slug-2">' +
+          '</div>' +
+          '<input type="hidden" id="edition_part_101_id" name="edition[part][101][id]" value="5f00000002">' +
+          '<input id="edition_parts_attributes_101__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="false">' +
+        '</div>' +
+      '</div>' +
+      '<div class="fields">' +
+        '<a href="#" class="js-part-toggle">' +
+          '<span class="js-part-title">Untitled part</span>' +
+        '</a>' +
+        '<div class="js-part-toggle-target" id="untitled-part">' +
+          '<div id="edition_parts_attributes_4535667_title_input">' +
+            '<input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">' +
+          '</div>' +
+          '<input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">' +
+          '<div id="edition_parts_attributes_4535667_slug_input">' +
+            '<input class="slug" type="text" id="edition_part_4535667_slug" name="edition[part][4535667][slug]" value="">' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fields">' +
+        '<a href="#" class="js-part-toggle">' +
+          '<span class="js-part-title">Deleted part</span>' +
+        '</a>' +
+        '<div class="js-part-toggle-target" id="deleted-part">' +
+          '<div id="edition_parts_attributes_deleted_title_input">' +
+            '<input class="title" type="text" id="edition_part_deleted_title" name="edition[part][deleted][title]" value="Deleted Part">' +
+          '</div>' +
+          '<input class="order" type="hidden" id="edition_part_deleted_order" name="edition[part][deleted][order]" value="4">' +
+          '<div id="edition_parts_attributes_deleted_slug_input">' +
+            '<input id="edition_parts_attributes_deleted__destroy" type="hidden" name="edition[parts_attributes][deleted][__destroy]" value="1">' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<input type="submit" class="js-save" value="Save">' +
+    '</form>')
 
     $('body').append(element)
     ajaxSaveWithParts = new GOVUKAdmin.Modules.AjaxSaveWithParts()

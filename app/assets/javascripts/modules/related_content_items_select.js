@@ -34,16 +34,16 @@
       var $buttonEl = $('<button class="btn btn-default" type="button">Add related item</button>')
 
       $inputEl.on('keypress', function (e) {
-        if (e.keyCode == 13) { // Enter key
+        if (e.keyCode === 13) { // Enter key
           e.preventDefault()
-          if (this.value.length == 0) return
+          if (this.value.length === 0) return
           lookupBasePath(this.value)
         }
       })
 
       $buttonEl.on('click', function (e) {
         var inputValue = $('input.js-path-field').val()
-        if (inputValue.length == 0) return
+        if (inputValue.length === 0) return
         lookupBasePath(inputValue)
       })
 
@@ -81,7 +81,7 @@
           $('.js-add-path-error').addClass('hide')
           $('ul.js-base-path-list').append(buildInputGroupEl(path))
           $('input.js-path-field').val('')
-        }).fail(function (error) {
+        }).fail(function (error) { // eslint-disable-line node/handle-callback-err
           $('.js-add-path-error').removeClass('hide')
           $('.js-path-field').addClass('field-with-error')
         })

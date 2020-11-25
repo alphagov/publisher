@@ -1,3 +1,5 @@
+/* globals Mousetrap */
+
 describe('An ajax save module', function () {
   'use strict'
 
@@ -5,18 +7,18 @@ describe('An ajax save module', function () {
     element
 
   beforeEach(function () {
-    element = $('<form action="some/url">\
-      <div class="js-status-message"></div>\
-      <div id="edition_test_input">\
-        <input type="text" name="test" value="prefilled value">\
-      </div>\
-      <div id="edition_another_input">\
-        <input type="text" name="another" value="another value">\
-      </div>\
-      <input class="js-no-ajax" type="text" name="fake-file-input">\
-      <input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">\
-      <input type="submit" class="js-save" value="Save">\
-    </form>')
+    element = $('<form action="some/url">' +
+      '<div class="js-status-message"></div>' +
+      '<div id="edition_test_input">' +
+        '<input type="text" name="test" value="prefilled value">' +
+      '</div>' +
+      '<div id="edition_another_input">' +
+        '<input type="text" name="another" value="another value">' +
+      '</div>' +
+      '<input class="js-no-ajax" type="text" name="fake-file-input">' +
+      '<input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">' +
+      '<input type="submit" class="js-save" value="Save">' +
+    '</form>')
 
     $('body').append(element)
     ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
@@ -157,7 +159,7 @@ describe('An ajax save module', function () {
   })
 
   describe('when an ajax save errors with validation messages', function () {
-    var timeoutTime, ajaxError, ajaxSuccess
+    var timeoutTime, ajaxError
 
     beforeEach(function () {
       spyOn($, 'ajax').and.callFake(function (options) {
@@ -166,8 +168,6 @@ describe('An ajax save module', function () {
           options.error({ responseJSON: errors })
           options.complete()
         }
-
-        ajaxSuccess = options.success
       })
       spyOn(window, 'setTimeout').and.callFake(function (fn, time) {
         timeoutTime = time
@@ -276,7 +276,6 @@ describe('An ajax save module', function () {
     })
 
     it('avoids ajax if a non-ajax text input has a value', function () {
-      var ajaxOptions
       spyOn($, 'ajax')
       element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected')
       element.find('.js-save').trigger('click')
@@ -290,7 +289,6 @@ describe('An ajax save module', function () {
     })
 
     it('avoids ajax if a non-ajax checkbox is checked', function () {
-      var ajaxOptions
       spyOn($, 'ajax')
       element.find('.js-no-ajax[name="remove-file-checkbox"]').attr('checked', true)
       element.find('.js-save').trigger('click')

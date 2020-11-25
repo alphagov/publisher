@@ -1,3 +1,5 @@
+/* globals Mousetrap */
+
 (function (Modules) {
   'use strict'
   Modules.AjaxSave = function () {

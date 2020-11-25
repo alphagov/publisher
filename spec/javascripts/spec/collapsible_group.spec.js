@@ -16,12 +16,12 @@ describe('A collapsible group module', function () {
       }
     }
 
-    element = $('<div data-expand-text="Expand" data-collapse-text="Collapse">\
-      <a href="#" class="js-toggle-all">Starting text</a>\
-      <div class="collapse"></div>\
-      <div class="collapse"></div>\
-      <div class="collapse"></div>\
-    </div>')
+    element = $('<div data-expand-text="Expand" data-collapse-text="Collapse">' +
+      '<a href="#" class="js-toggle-all">Starting text</a>' +
+      '<div class="collapse"></div>' +
+      '<div class="collapse"></div>' +
+      '<div class="collapse"></div>' +
+    '</div>')
 
     $('body').append(element)
 

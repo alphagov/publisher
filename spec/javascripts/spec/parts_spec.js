@@ -5,26 +5,26 @@ describe('A parts module', function () {
     element
 
   beforeEach(function () {
-    element = $('<div>\
-      <div id="part_1" class="part">\
-        <div class="js-sort-handle">Part title 1</div>\
-        <input class="title" name="part_1_title" type="text" value="Part title 1">\
-        <input class="slug" name="part_1_slug" type="text" value="part-title-1">\
-        <input class="order" name="part_1_order" type="hidden" value="1">\
-      </div>\
-      <div id="part_2" class="part">\
-        <div class="js-sort-handle">Part title 2</div>\
-        <input class="title" name="part_2_title" type="text" value="Part title 2">\
-        <input class="slug" name="part_2_slug" type="text" value="part-title-2">\
-        <input class="order" name="part_2_order" type="hidden" value="2">\
-      </div>\
-      <div id="part_3" class="part">\
-        <div class="js-sort-handle">Part title 3</div>\
-        <input class="title" name="part_3_title" type="text" value="Part title 3">\
-        <input class="slug" name="part_3_slug" type="text" value="part-title-3">\
-        <input class="order" name="part_3_order" type="hidden" value="3">\
-      </div>\
-    </div>')
+    element = $('<div>' +
+      '<div id="part_1" class="part">' +
+        '<div class="js-sort-handle">Part title 1</div>' +
+        '<input class="title" name="part_1_title" type="text" value="Part title 1">' +
+        '<input class="slug" name="part_1_slug" type="text" value="part-title-1">' +
+        '<input class="order" name="part_1_order" type="hidden" value="1">' +
+      '</div>' +
+      '<div id="part_2" class="part">' +
+        '<div class="js-sort-handle">Part title 2</div>' +
+        '<input class="title" name="part_2_title" type="text" value="Part title 2">' +
+        '<input class="slug" name="part_2_slug" type="text" value="part-title-2">' +
+        '<input class="order" name="part_2_order" type="hidden" value="2">' +
+      '</div>' +
+      '<div id="part_3" class="part">' +
+        '<div class="js-sort-handle">Part title 3</div>' +
+        '<input class="title" name="part_3_title" type="text" value="Part title 3">' +
+        '<input class="slug" name="part_3_slug" type="text" value="part-title-3">' +
+        '<input class="order" name="part_3_order" type="hidden" value="3">' +
+      '</div>' +
+    '</div>')
 
     $('body').append(element)
     parts = new GOVUKAdmin.Modules.Parts()
@@ -59,13 +59,13 @@ describe('A parts module', function () {
 
   describe('when adding a part', function () {
     beforeEach(function () {
-      element.append('<div id="part_4" class="part">\
-        <div class="js-sort-handle"></div>\
-        <input class="error has-error title" name="part_4_title" type="text" value="">\
-        <input class="slug" name="part_4_slug" type="text" value="">\
-        <input class="order" name="part_4_order" type="hidden" value="">\
-        <div class="js-error some-error">Error</div>\
-      </div>')
+      element.append('<div id="part_4" class="part">' +
+        '<div class="js-sort-handle"></div>' +
+        '<input class="error has-error title" name="part_4_title" type="text" value="">' +
+        '<input class="slug" name="part_4_slug" type="text" value="">' +
+        '<input class="order" name="part_4_order" type="hidden" value="">' +
+        '<div class="js-error some-error">Error</div>' +
+      '</div>')
       element.trigger('nested:fieldAdded:parts')
     })
 

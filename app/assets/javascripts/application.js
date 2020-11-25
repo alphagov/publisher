@@ -18,7 +18,7 @@ $(function () {
 })
 
 // System wide library functions
-var GovUKGuideUtils = {
+var GovUKGuideUtils = { // eslint-disable-line no-unused-vars
   convertToSlug: function (title) {
     return title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-')
   }

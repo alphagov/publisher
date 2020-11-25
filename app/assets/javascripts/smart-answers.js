@@ -58,7 +58,7 @@
       var questions = $('.nodes .question:visible')
       var outcomes = $('.nodes .outcome:visible')
 
-      if (kind == 'outcome') {
+      if (kind === 'outcome') {
         node.find('.options').remove()
 
         var i = 0
@@ -131,7 +131,7 @@
 
       $.each(validNextNodes, function (i, x) {
         var optionLabel = x.name
-        if (x.label != '') {
+        if (x.label !== '') {
           optionLabel = optionLabel + ' (' + x.label + ')'
         }
         $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(nextNodeField.find('optgroup[class="' + x.kind + '-list"]'))
@@ -143,7 +143,7 @@
 
         var nextNodeId = valueField.val()
 
-        if (validNextIds.indexOf(nextNodeId) != -1) {
+        if (validNextIds.indexOf(nextNodeId) !== -1) {
           selectList.val(nextNodeId)
         } else {
           valueField.val('')

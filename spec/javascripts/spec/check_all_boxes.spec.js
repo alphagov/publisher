@@ -5,13 +5,13 @@ describe('A check all module', function () {
     form
 
   beforeEach(function () {
-    form = $('<form>\
-      <input type="checkbox" class="js-check-all">\
-      <input type="checkbox">\
-      <input type="checkbox" checked>\
-      <input type="checkbox" checked="checked">\
-      <input type="checkbox" disabled="disabled">\
-    </form>')
+    form = $('<form>' +
+      '<input type="checkbox" class="js-check-all">' +
+      '<input type="checkbox">' +
+      '<input type="checkbox" checked>' +
+      '<input type="checkbox" checked="checked">' +
+      '<input type="checkbox" disabled="disabled">' +
+    '</form>')
 
     $('body').append(form)
 

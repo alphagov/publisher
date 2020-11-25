@@ -1,3 +1,5 @@
+/* globals moment */
+
 (function (Modules) {
   'use strict'
   Modules.DowntimeMessage = function () {

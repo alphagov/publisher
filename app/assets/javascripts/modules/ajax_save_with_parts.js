@@ -60,7 +60,7 @@
         $partContainer.find('.js-part-toggle-target').attr('id', part.slug)
         $partContainer.find('.js-part-toggle').attr('href', '#' + part.slug)
 
-        if ($hiddenInputId.length == 0) {
+        if ($hiddenInputId.length === 0) {
           generateHiddenIdInput($partContainer, partId)
         }
       }
@@ -73,7 +73,7 @@
           return $hiddenIdInput.parents('.fields')
         } else {
           $order = element.find('input.order').filter(function () {
-            return this.value == order
+            return this.value == order // eslint-disable-line eqeqeq
           })
 
           return $order.parents('.fields')

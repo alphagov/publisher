@@ -5,98 +5,98 @@ describe('A downtime message module', function () {
     form
 
   beforeEach(function () {
-    var formHTML = '<select>\
-      <option value="00">00</option>\
-      <option value="01">01</option>\
-      <option value="02">02</option>\
-      <option value="03">03</option>\
-      <option value="04">04</option>\
-      <option value="05">05</option>\
-      <option value="06">06</option>\
-      <option value="07">07</option>\
-      <option value="08">08</option>\
-      <option value="09">09</option>\
-      <option value="10">10</option>\
-      <option value="11">11</option>\
-      <option value="12">12</option>\
-      <option value="13">13</option>\
-      <option value="14">14</option>\
-      <option value="15">15</option>\
-      <option value="16">16</option>\
-      <option value="17">17</option>\
-      <option value="18">18</option>\
-      <option value="19">19</option>\
-      <option value="20">20</option>\
-      <option value="21">21</option>\
-      <option value="22">22</option>\
-      <option value="23">23</option>\
-    </select>\
-    <select>\
-      <option value="00">00</option>\
-      <option value="15">15</option>\
-      <option value="30">30</option>\
-      <option value="45">45</option>\
-    </select>\
-    <select>\
-      <option value="1">1</option>\
-      <option value="2">2</option>\
-      <option value="3">3</option>\
-      <option value="4">4</option>\
-      <option value="5">5</option>\
-      <option value="6">6</option>\
-      <option value="7">7</option>\
-      <option value="8">8</option>\
-      <option value="9">9</option>\
-      <option value="10">10</option>\
-      <option value="11">11</option>\
-      <option value="12">12</option>\
-      <option value="13">13</option>\
-      <option value="14">14</option>\
-      <option value="15">15</option>\
-      <option value="16">16</option>\
-      <option value="17">17</option>\
-      <option value="18">18</option>\
-      <option value="19">19</option>\
-      <option value="20">20</option>\
-      <option value="21">21</option>\
-      <option value="22">22</option>\
-      <option value="23">23</option>\
-      <option value="24">24</option>\
-      <option value="25">25</option>\
-      <option value="26">26</option>\
-      <option value="27">27</option>\
-      <option value="28">28</option>\
-      <option value="29">29</option>\
-      <option value="30">30</option>\
-      <option value="31">31</option>\
-    </select>\
-    <select>\
-      <option value="1">January</option>\
-      <option value="2">February</option>\
-      <option value="3">March</option>\
-      <option value="4">April</option>\
-      <option value="5">May</option>\
-      <option value="6">June</option>\
-      <option value="7">July</option>\
-      <option value="8">August</option>\
-      <option value="9">September</option>\
-      <option value="10">October</option>\
-      <option value="11">November</option>\
-      <option value="12">December</option>\
-    </select>\
-    <select>\
-      <option value="2015"></option>\
-      <option value="2016"></option>\
-    </select>'
+    var formHTML = '<select>' +
+      '<option value="00">00</option>' +
+      '<option value="01">01</option>' +
+      '<option value="02">02</option>' +
+      '<option value="03">03</option>' +
+      '<option value="04">04</option>' +
+      '<option value="05">05</option>' +
+      '<option value="06">06</option>' +
+      '<option value="07">07</option>' +
+      '<option value="08">08</option>' +
+      '<option value="09">09</option>' +
+      '<option value="10">10</option>' +
+      '<option value="11">11</option>' +
+      '<option value="12">12</option>' +
+      '<option value="13">13</option>' +
+      '<option value="14">14</option>' +
+      '<option value="15">15</option>' +
+      '<option value="16">16</option>' +
+      '<option value="17">17</option>' +
+      '<option value="18">18</option>' +
+      '<option value="19">19</option>' +
+      '<option value="20">20</option>' +
+      '<option value="21">21</option>' +
+      '<option value="22">22</option>' +
+      '<option value="23">23</option>' +
+    '</select>' +
+    '<select>' +
+      '<option value="00">00</option>' +
+      '<option value="15">15</option>' +
+      '<option value="30">30</option>' +
+      '<option value="45">45</option>' +
+    '</select>' +
+    '<select>' +
+      '<option value="1">1</option>' +
+      '<option value="2">2</option>' +
+      '<option value="3">3</option>' +
+      '<option value="4">4</option>' +
+      '<option value="5">5</option>' +
+      '<option value="6">6</option>' +
+      '<option value="7">7</option>' +
+      '<option value="8">8</option>' +
+      '<option value="9">9</option>' +
+      '<option value="10">10</option>' +
+      '<option value="11">11</option>' +
+      '<option value="12">12</option>' +
+      '<option value="13">13</option>' +
+      '<option value="14">14</option>' +
+      '<option value="15">15</option>' +
+      '<option value="16">16</option>' +
+      '<option value="17">17</option>' +
+      '<option value="18">18</option>' +
+      '<option value="19">19</option>' +
+      '<option value="20">20</option>' +
+      '<option value="21">21</option>' +
+      '<option value="22">22</option>' +
+      '<option value="23">23</option>' +
+      '<option value="24">24</option>' +
+      '<option value="25">25</option>' +
+      '<option value="26">26</option>' +
+      '<option value="27">27</option>' +
+      '<option value="28">28</option>' +
+      '<option value="29">29</option>' +
+      '<option value="30">30</option>' +
+      '<option value="31">31</option>' +
+    '</select>' +
+    '<select>' +
+      '<option value="1">January</option>' +
+      '<option value="2">February</option>' +
+      '<option value="3">March</option>' +
+      '<option value="4">April</option>' +
+      '<option value="5">May</option>' +
+      '<option value="6">June</option>' +
+      '<option value="7">July</option>' +
+      '<option value="8">August</option>' +
+      '<option value="9">September</option>' +
+      '<option value="10">October</option>' +
+      '<option value="11">November</option>' +
+      '<option value="12">December</option>' +
+    '</select>' +
+    '<select>' +
+      '<option value="2015"></option>' +
+      '<option value="2016"></option>' +
+    '</select>'
 
-    form = $('\
-      <form>\
-        <div class="js-start-time">' + formHTML + '</div>\
-        <div class="js-stop-time">' + formHTML + '</div>\
-        <textarea class="js-downtime-message">starting message</textarea>\
-        <div class="js-schedule-message">starting message</div>\
-        <input type="submit" class="js-submit">\
-      </form>'
+    form = $(
+      '<form>' +
+        '<div class="js-start-time">' + formHTML + '</div>' +
+        '<div class="js-stop-time">' + formHTML + '</div>' +
+        '<textarea class="js-downtime-message">starting message</textarea>' +
+        '<div class="js-schedule-message">starting message</div>' +
+        '<input type="submit" class="js-submit">' +
+      '</form>'
     )
 
     $('body').append(form)

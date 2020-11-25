@@ -1,3 +1,5 @@
+/* globals GovUKGuideUtils */
+
 (function (Modules) {
   'use strict'
   Modules.Parts = function () {
