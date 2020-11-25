@@ -9,4 +9,4 @@ Rake.application.options.trace = true
 
 Rails.application.load_tasks
 
-task default: ["db:mongoid:create_indexes", :test, "jasmine:ci", :lint]
+task default: [:lint, "db:mongoid:create_indexes", :test, "jasmine:ci"]
