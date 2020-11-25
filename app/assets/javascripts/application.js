@@ -11,15 +11,15 @@
 
 // System wide behaviours
 $(function () {
-  $('a.preview').attr("target","_blank");
-  $('form.preview').attr("target","_blank");
-  $(".select2").select2({ allowClear: true });
-  $(".selectize").selectize({ plugins: ['drag_drop','remove_button'], closeAfterSelect: true, highlight: false });
+  $('a.preview').attr('target', '_blank')
+  $('form.preview').attr('target', '_blank')
+  $('.select2').select2({ allowClear: true })
+  $('.selectize').selectize({ plugins: ['drag_drop', 'remove_button'], closeAfterSelect: true, highlight: false })
 })
 
 // System wide library functions
 var GovUKGuideUtils = {
-  convertToSlug: function(title) {
-    return title.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-');
+  convertToSlug: function (title) {
+    return title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-')
   }
 }

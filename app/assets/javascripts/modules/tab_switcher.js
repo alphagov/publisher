@@ -1,15 +1,15 @@
-(function(Modules) {
-  "use strict";
-  Modules.TabSwitcher = function() {
-    this.start = function(element) {
-      element.on('show.bs.tab', function(e) {
-        var tabHref = $(e.target).attr('href');
+(function (Modules) {
+  'use strict'
+  Modules.TabSwitcher = function () {
+    this.start = function (element) {
+      element.on('show.bs.tab', function (e) {
+        var tabHref = $(e.target).attr('href')
 
         if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, null, tabHref);
+          window.history.replaceState(null, null, tabHref)
 
           // Track tab switch as pageview
-          window.GOVUKAdmin.trackPageview(tabHref);
+          window.GOVUKAdmin.trackPageview(tabHref)
         }
 
         // Shim Boostrap tabs, which are only capabable of removing
@@ -19,15 +19,14 @@
         //
         // Works in conjunction with:
         // https://github.com/alphagov/publisher/blob/master/app/assets/stylesheets/bootstrap_and_overrides.css.scss#L98-L110
-        resetAllTabs();
-      });
+        resetAllTabs()
+      })
 
-      function resetAllTabs() {
-        element.find('.tab-pane').each(function() {
-          $(this).removeClass('active');
-        });
+      function resetAllTabs () {
+        element.find('.tab-pane').each(function () {
+          $(this).removeClass('active')
+        })
       }
-
     }
-  };
-})(window.GOVUKAdmin.Modules);
+  }
+})(window.GOVUKAdmin.Modules)

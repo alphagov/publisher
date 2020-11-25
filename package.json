@@ -14,7 +14,11 @@
       "browser": true,
       "jquery": true,
       "jasmine": true
-    }
+    },
+    "ignore": [
+      "app/assets/javascripts/vendor",
+      "spec/javascripts/helpers/jquery.simulate.drag-sortable.js"
+    ]
   },
   "eslintConfig": {
     "rules": {
