@@ -77,4 +77,12 @@ class User
   def govuk_editor?
     permissions.include?("govuk_editor")
   end
+
+  def welsh_editor?
+    permissions.include?("welsh_editor")
+  end
+
+  def has_editor_permissions?(resource)
+    govuk_editor? || (welsh_editor? && resource.artefact.welsh?)
+  end
 end

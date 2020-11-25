@@ -431,11 +431,6 @@ class WorkflowTest < ActiveSupport::TestCase
       assert_nil @user.new_version(@edition)
     end
 
-    should "return nil if user is not govuk_editor" do
-      other_user = FactoryBot.create(:user)
-      assert_nil other_user.new_version(@edition)
-    end
-
     should "record the action" do
       new_version = @user.new_version(@edition)
       assert_equal "new_version", new_version.actions.last.request_type
@@ -509,12 +504,6 @@ class WorkflowTest < ActiveSupport::TestCase
     end
 
     should "schedule an edition for publishing if it is ready" do
-      edition = FactoryBot.create(:edition, state: "ready")
-      schedule_for_publishing(FactoryBot.create(:user), edition, @activity_details)
-      assert_not edition.reload.scheduled_for_publishing?
-    end
-
-    should "not schedule an edition for publishing if user is not govuk_editor" do
       edition = FactoryBot.create(:edition, state: "ready")
 
       schedule_for_publishing(@user, edition, @activity_details)

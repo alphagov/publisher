@@ -87,21 +87,51 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#duplicate" do
-    setup do
-      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
-      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
-      EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+    context "Standard behaviour" do
+      setup do
+        @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+        EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+        EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
+      end
+
+      should "delegate complexity of duplication to appropriate collaborator" do
+        post :duplicate, params: { id: @guide.id }
+        assert_response 302
+        assert_equal "New edition created", flash[:success]
+      end
+
+      should "update the publishing API upon duplication of an edition" do
+        UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
+        post :duplicate, params: { id: @guide.id }
+      end
     end
 
-    should "delegate complexity of duplication to appropriate collaborator" do
-      post :duplicate, params: { id: @guide.id }
-      assert_response 302
-      assert_equal "New edition created", flash[:success]
-    end
+    context "Welsh editors" do
+      setup { login_as_welsh_editor }
 
-    should "update the publishing API upon duplication of an edition" do
-      UpdateWorker.expects(:perform_async).with(@guide.id.to_s)
-      post :duplicate, params: { id: @guide.id }
+      should "be able to duplicate Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :published, :welsh)
+        artefact = edition.artefact
+
+        post :duplicate, params: { id: edition.id }
+
+        assert_response 302
+        assert_redirected_to edition_path(artefact.latest_edition)
+        assert_not_equal edition, artefact.latest_edition
+        assert_equal "New edition created", flash[:success]
+      end
+
+      should "not be able to duplicate non-Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :published)
+        artefact = edition.artefact
+
+        post :duplicate, params: { id: edition.id }
+
+        assert_response 302
+        assert_redirected_to edition_path(edition)
+        assert_equal edition, artefact.latest_edition
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
     end
   end
 
@@ -169,11 +199,66 @@ class EditionsControllerTest < ActionController::TestCase
              },
            }
     end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @artefact = FactoryBot.create(:artefact)
+        @edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, panopticon_id: @artefact.id)
+        @welsh_edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, :welsh)
+      end
+
+      should "be able to cancel scheduled publishing for Welsh editions" do
+        ScheduledPublisher.expects(:cancel_scheduled_publishing).with(@welsh_edition.id.to_s).once
+
+        post(
+          :progress,
+          params: {
+            id: @welsh_edition.id,
+            commit: "Cancel scheduled publishing",
+            edition: {
+              activity: {
+                request_type: "cancel_scheduled_publishing",
+                comment: "cancel this!",
+              },
+            },
+          },
+        )
+
+        assert_redirected_to edition_path(@welsh_edition)
+        assert_equal flash[:success], "Guide updated"
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to cancel scheduled publishing for non-Welsh editions" do
+        ScheduledPublisher.expects(:cancel_scheduled_publishing).with(@edition.id.to_s).never
+
+        post(
+          :progress,
+          params: {
+            id: @edition.id,
+            commit: "Cancel scheduled publishing",
+            edition: {
+              activity: {
+                request_type: "cancel_scheduled_publishing",
+                comment: "cancel this!",
+              },
+            },
+          },
+        )
+
+        assert_redirected_to edition_path(@edition)
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+        @edition.reload
+        assert_equal @edition.state, "scheduled_for_publishing"
+      end
+    end
   end
 
   context "#update" do
     setup do
-      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition)
     end
 
     should "update assignment" do
@@ -257,6 +342,273 @@ class EditionsControllerTest < ActionController::TestCase
              },
            }
     end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @edition = FactoryBot.create(:guide_edition, :ready)
+        @welsh_edition = FactoryBot.create(:guide_edition, :ready, :welsh)
+      end
+
+      should "be able to update Welsh editions" do
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               edition: {
+                 title: "Updated title",
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.title, "Updated title"
+      end
+
+      should "not be able to update non-Welsh editions" do
+        post :update,
+             params: {
+               id: @edition.id,
+               edition: {
+                 title: "Updated title",
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_not_equal @edition.title, "Updated title"
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to schedule publishing for Welsh editions" do
+        ScheduledPublisher.expects(:enqueue).with(@welsh_edition)
+
+        post(
+          :update,
+          params: {
+            id: @welsh_edition.id,
+            edition: {
+              activity_schedule_for_publishing_attributes: {
+                request_type: "schedule_for_publishing",
+                "publish_at(1i)" => "2020",
+                "publish_at(2i)" => "12",
+                "publish_at(3i)" => "21",
+                "publish_at(4i)" => "10",
+                "publish_at(5i)" => "35",
+              },
+            },
+            commit: "Schedule for publishing",
+          },
+        )
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "scheduled_for_publishing"
+        assert_equal flash[:notice], "Guide edition was successfully updated."
+      end
+
+      should "not be able to schedule publishing for non-Welsh editions" do
+        ScheduledPublisher.expects(:enqueue).with(@edition).never
+
+        post(
+          :update,
+          params: {
+            id: @edition.id,
+            edition: {
+              activity_schedule_for_publishing_attributes: {
+                request_type: "schedule_for_publishing",
+                "publish_at(1i)" => "2020",
+                "publish_at(2i)" => "12",
+                "publish_at(3i)" => "21",
+                "publish_at(4i)" => "10",
+                "publish_at(5i)" => "35",
+              },
+            },
+            commit: "Schedule for publishing",
+          },
+        )
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to publish a Welsh edition" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, true)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Send to publish",
+               edition: {
+                 activity_publish_attributes: {
+                   request_type: "publish",
+                   comment: "Publish this!",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "published"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to publish a non-Welsh edition" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, true).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Send to publish",
+               edition: {
+                 activity_publish_attributes: {
+                   request_type: "publish",
+                   comment: "Publish this!",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to approve a review for Welsh editions" do
+        welsh_edition = FactoryBot.create(:guide_edition, :in_review, :welsh)
+
+        UpdateWorker.expects(:perform_async).with(welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: welsh_edition.id,
+               commit: "OK for publication",
+               edition: {
+                 activity_approve_review_attributes: {
+                   request_type: :approve_review,
+                   comment: "LGTM",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(welsh_edition)
+        welsh_edition.reload
+        assert_equal welsh_edition.state, "ready"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to approve a review for non-Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :in_review)
+
+        UpdateWorker.expects(:perform_async).with(edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: edition.id,
+               commit: "OK for publication",
+               edition: {
+                 activity_approve_review_attributes: {
+                   request_type: :approve_review,
+                   comment: "LGTM",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(edition)
+        edition.reload
+        assert_equal edition.state, "in_review"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to request a review for Welsh editions" do
+        welsh_edition = FactoryBot.create(:guide_edition, :draft, :welsh)
+
+        UpdateWorker.expects(:perform_async).with(welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: welsh_edition.id,
+               commit: "Send to 2nd pair of eyes",
+               edition: {
+                 activity_request_review_attributes: {
+                   request_type: :request_review,
+                   comment: "Please review",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(welsh_edition)
+        welsh_edition.reload
+        assert_equal welsh_edition.state, "in_review"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to request a review for non-Welsh editions" do
+        edition = FactoryBot.create(:guide_edition, :draft)
+
+        UpdateWorker.expects(:perform_async).with(edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: edition.id,
+               commit: "Send to 2nd pair of eyes",
+               edition: {
+                 activity_request_review_attributes: {
+                   request_type: :request_review,
+                   comment: "Please review",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(edition)
+        edition.reload
+        assert_equal edition.state, "draft"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to request amendments to a review for Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Request amendments",
+               edition: {
+                 activity_request_amendments_attributes: {
+                   request_type: :request_amendments,
+                   comment: "Suggestion here",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal @welsh_edition.state, "amends_needed"
+        assert_equal flash[:success], "Guide updated"
+      end
+
+      should "not be able to request amendments to a review for non-Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Request amendments",
+               edition: {
+                 activity_request_amendments_attributes: {
+                   request_type: :request_amendments,
+                   comment: "Suggestion here",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+    end
   end
 
   context "#review" do
@@ -282,6 +634,40 @@ class EditionsControllerTest < ActionController::TestCase
 
       @guide.reload
       assert_equal bob.name, @guide.reviewer
+    end
+
+    context "Welsh editors" do
+      setup do
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)
+        login_as_welsh_editor
+        @welsh_user = @user
+      end
+
+      should "be able to claim a review for Welsh editions" do
+        put :review,
+            params: {
+              id: @welsh_guide.id,
+              edition: { reviewer: @welsh_user.name },
+            }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        assert_equal "You are the reviewer of this guide.", flash[:success]
+        @welsh_guide.reload
+        assert_equal @welsh_user.name, @welsh_guide.reviewer
+      end
+
+      should "not be able to claim a review for non-Welsh editions" do
+        put :review,
+            params: {
+              id: @guide.id,
+              edition: { reviewer: @welsh_user.name },
+            }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        @guide.reload
+        assert_nil @guide.reviewer
+      end
     end
   end
 
@@ -391,6 +777,77 @@ class EditionsControllerTest < ActionController::TestCase
 
       get :diff, params: { id: second_edition.id }
       assert_response :success
+    end
+  end
+
+  context "#unpublish" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition, :published, panopticon_id: FactoryBot.create(:artefact).id)
+      @redirect_url = "https://www.example.com/somewhere_else"
+    end
+
+    should "update publishing API upon unpublishing an edition" do
+      UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).returns(true)
+
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: @redirect_url,
+           }
+
+      assert_redirected_to root_path
+      assert_equal "Content unpublished and redirected", flash[:notice]
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :published, :welsh)
+      end
+
+      should "not be able to access the unpublish page of non-Welsh editions" do
+        get :unpublish, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be able to access the unpublish page of Welsh editions" do
+        get :unpublish, params: { id: @welsh_guide.id }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be allowed to unpublish a Welsh edition" do
+        UnpublishService.expects(:call).with(@welsh_guide.artefact, @user, @redirect_url).never
+
+        post :process_unpublish,
+             params: {
+               id: @welsh_guide.id,
+               redirect_url: @redirect_url,
+             }
+
+        assert_redirected_to edition_path(@welsh_guide)
+        @welsh_guide.reload
+        assert_equal @welsh_guide.state, "published"
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
+
+      should "not be allowed to unpublish a non-Welsh edition" do
+        UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).never
+
+        post :process_unpublish,
+             params: {
+               id: @guide.id,
+               redirect_url: @redirect_url,
+             }
+
+        assert_redirected_to edition_path(@guide)
+        @guide.reload
+        assert_equal @guide.state, "published"
+        assert_equal "You do not have permission to see this page.", flash[:danger]
+      end
     end
   end
 

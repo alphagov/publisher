@@ -263,6 +263,32 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     assert page.has_css?("#publication-list-container tbody tr:first-child td:nth-child(6)", text: "")
   end
 
+  test "Welsh editors can see claim 2i button in Welsh editions" do
+    stub_linkables
+    FactoryBot.create(:guide_edition, :in_review, :welsh)
+    welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+    login_as(welsh_editor)
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    assert page.has_button?("Claim 2i")
+  end
+
+  test "Welsh editors cannot see claim 2i button in non-Welsh editions" do
+    stub_linkables
+    FactoryBot.create(:guide_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+    welsh_editor = FactoryBot.create(:user, :welsh_editor)
+
+    login_as(welsh_editor)
+    visit "/"
+    filter_by_user("All")
+    click_on "In review"
+
+    assert_not page.has_button?("Claim 2i")
+  end
+
   test "filtering by published should show a table with an edition with a slug as a link" do
     FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, state: "published", title: "Test", slug: "test-slug")

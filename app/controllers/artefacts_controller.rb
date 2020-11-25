@@ -1,4 +1,6 @@
 class ArtefactsController < ApplicationController
+  before_action :require_govuk_editor
+
   def new
     @artefact = Artefact.new(content_id: SecureRandom.uuid)
   end

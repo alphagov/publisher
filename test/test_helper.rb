@@ -77,10 +77,21 @@ class ActiveSupport::TestCase
     Sidekiq::Worker.clear_all
   end
 
-  def login_as_stub_user
-    @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
-    request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: @user)
+  def login_as(user)
+    request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: user)
   end
+
+  def login_as_govuk_editor
+    @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+    login_as(@user)
+  end
+
+  def login_as_welsh_editor
+    @user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+    login_as(@user)
+  end
+
+  alias_method :login_as_stub_user, :login_as_govuk_editor
 
   include GdsApi::TestHelpers::PublishingApi
   include TagTestHelpers

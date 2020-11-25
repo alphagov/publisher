@@ -351,6 +351,11 @@ class ArtefactTest < ActiveSupport::TestCase
       assert_equal "cy", a.language
     end
 
+    should "be welsh? if language is cy" do
+      artefact = FactoryBot.build(:artefact, language: "cy")
+      assert artefact.welsh?
+    end
+
     should "reject a language which is not english or welsh" do
       a = FactoryBot.build(:artefact)
       a.language = "pirate"

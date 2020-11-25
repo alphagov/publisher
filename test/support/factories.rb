@@ -17,6 +17,10 @@ FactoryBot.define do
     trait :govuk_editor do
       permissions { %w[govuk_editor signin] }
     end
+
+    trait :welsh_editor do
+      permissions { %w[welsh_editor signin] }
+    end
   end
 
   factory :disabled_user, parent: :user do
@@ -92,6 +96,10 @@ FactoryBot.define do
       end
     end
 
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
     trait :scheduled_for_publishing do
       state { "scheduled_for_publishing" }
       publish_at { 1.day.from_now }
@@ -99,6 +107,19 @@ FactoryBot.define do
 
     trait :published do
       state { "published" }
+    end
+
+    trait :ready do
+      state { "ready" }
+    end
+
+    trait :in_review do
+      state { "in_review" }
+      review_requested_at { Time.zone.now }
+    end
+
+    trait :draft do
+      state { "draft" }
     end
 
     trait :with_body do

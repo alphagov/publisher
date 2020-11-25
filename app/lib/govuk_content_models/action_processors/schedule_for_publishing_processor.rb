@@ -1,10 +1,6 @@
 module GovukContentModels
   module ActionProcessors
     class ScheduleForPublishingProcessor < BaseProcessor
-      def process?
-        actor.govuk_editor?
-      end
-
       def process
         publish_at = action_attributes.delete(:publish_at).to_time.utc
         action_attributes[:request_details] = { scheduled_time: publish_at }

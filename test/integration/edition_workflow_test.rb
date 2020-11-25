@@ -11,6 +11,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
+    @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
@@ -383,17 +384,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
-  test "can't approve review if not govuk_editor" do
-    guide.state = "in_review"
-    guide.save!(validate: false)
-
-    login_as FactoryBot.create(:user)
-
-    visit_edition guide
-    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
-    assert page.has_content? "Couldn't approve review"
-  end
-
   test "can skip fact-check" do
     guide.update!(state: "fact_check")
 
@@ -434,7 +424,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
-    assert page.has_content? "Couldn't approve fact check"
+    assert page.has_content? "You do not have correct editor permissions for this action."
   end
 
   test "can go back to fact-check from fact-check received" do
@@ -456,6 +446,207 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     click_on "Create new edition"
 
     assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot create a new edition from the listings screen" do
+    guide.update!(state: "published")
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    assert page.has_no_content? "Create new edition"
+  end
+
+  test "Welsh editors can create a new Welsh edition from the listings screen" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot edit a newer edition from the listings screen" do
+    guide.update!(state: "published")
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+
+    assert page.has_no_content? "Edit newer edition"
+  end
+
+  test "Welsh editors can edit a newer Welsh edition from the listings screen" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+
+    visit "/"
+    filter_for_all_users
+    view_filtered_list "Published"
+
+    click_on "Edit newer edition"
+
+    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
+  end
+
+  test "Welsh editors cannot create new editions from the edition page" do
+    guide.update!(state: "published")
+    login_as("WelshEditor")
+
+    visit edition_path(guide)
+    assert page.has_no_content? "Create new edition"
+  end
+
+  test "Welsh editors can create new Welsh editions from the edition page" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+    login_as("WelshEditor")
+
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    assert page.has_content? "New edition created"
+  end
+
+  test "Welsh editors cannot edit existing newer editions from the edition page" do
+    guide.update!(state: "published")
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Edit existing newer edition"
+  end
+
+  test "Welsh editors can edit existing newer Welsh editions from the edition page" do
+    guide.update!(state: "published")
+    guide.artefact.update!(language: "cy")
+
+    visit edition_path(guide)
+    click_on "Create new edition"
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    click_on "Edit existing newer edition"
+
+    assert_equal page.current_path, edition_path(guide.artefact.latest_edition)
+  end
+
+  test "Welsh editors cannot update editions" do
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Save"
+  end
+
+  test "Welsh editors can update Welsh editions" do
+    guide.artefact.update!(language: "cy")
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    fill_in "Title", with: "Updated Welsh Title"
+
+    save_edition_and_assert_success
+  end
+
+  test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
+    edition = FactoryBot.create(:edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
+    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
+  end
+
+  test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
+    edition = FactoryBot.create(:edition, :ready, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_css?(".btn.btn-large.btn-warning", text: "Schedule")
+    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish")
+  end
+
+  test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_css?(".btn.btn-large.btn-warning", text: "Cancel scheduled publishing")
+    assert_not page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
+  end
+
+  test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
+    edition = FactoryBot.create(:edition, :scheduled_for_publishing, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_css?(".btn.btn-large.btn-danger", text: "Cancel scheduled publishing")
+    assert page.has_css?(".btn.btn-large.btn-primary", text: "Publish now")
+  end
+
+  test "Welsh editors cannot see review buttons for non-Welsh editions" do
+    edition = FactoryBot.create(:edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_link?("Needs more work", href: "#request_amendments_form")
+    assert_not page.has_link?("OK for publication", href: "#approve_review_form")
+  end
+
+  test "Welsh editors can see review buttons for Welsh editions" do
+    edition = FactoryBot.create(:edition, :in_review, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_link?("Needs more work", href: "#request_amendments_form")
+    assert page.has_link?("OK for publication", href: "#approve_review_form")
+  end
+
+  test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
+    edition = FactoryBot.create(:edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_link?("2nd pair of eyes", href: "#request_review_form")
+  end
+
+  test "Welsh editors can see buttons to request a review for Welsh editions" do
+    edition = FactoryBot.create(:edition, :draft, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+    find_link("2nd pair of eyes", href: "#request_review_form").click
+
+    assert page.has_button?("Send to 2nd pair of eyes", type: "submit")
   end
 
   test "can preview a draft article on draft-origin" do

@@ -18,6 +18,16 @@ class DowntimesControllerTest < ActionController::TestCase
         assert_select "h4.publication-table-title", text: edition.title
       end
     end
+
+    should "redirect to root page if welsh_editor" do
+      login_as_welsh_editor
+
+      get :index
+
+      assert_response :redirect
+      assert_redirected_to controller: "root", action: "index"
+      assert_includes flash[:danger], "do not have permission"
+    end
   end
 
   context "#new" do
