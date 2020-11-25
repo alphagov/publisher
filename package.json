@@ -29,7 +29,10 @@
     }
   },
   "stylelint": {
-    "extends": "stylelint-config-gds/scss"
+    "extends": "stylelint-config-gds/scss",
+    "ignoreFiles": [
+      "app/assets/stylesheets/vendor/**/*"
+    ]
   },
   "devDependencies": {
     "standardx": "^7.0.0",

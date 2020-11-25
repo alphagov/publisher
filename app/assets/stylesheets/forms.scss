@@ -5,13 +5,14 @@
 }
 
 .edition-tags {
-  .select2, .selectize {
+  .select2,
+  .selectize {
     display: block;
   }
 }
 
 .emphasised-field {
-  background: #ddd;
+  background: #dddddd;
   padding: $default-vertical-margin/2;
   border-radius: $border-radius-base;
 }
@@ -30,7 +31,7 @@
 
 .related-external-links {
   input[type=text] {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   .fields:last-of-type {
@@ -39,7 +40,7 @@
 }
 
 .nested-item {
-  background: #fff;
+  background: #ffffff;
   padding: 8px;
   margin-bottom: 3px;
 
@@ -55,7 +56,7 @@
   .remove-row-related {
     top: auto;
     bottom: 0;
-    right: 15px
+    right: 15px;
   }
 }
 

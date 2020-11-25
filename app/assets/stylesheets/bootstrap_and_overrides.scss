@@ -4,7 +4,7 @@
 
 /* Placeholder text to explain a blank value */
 .placeholder {
-  color: #ccc;
+  color: #cccccc;
 }
 
 /* override the font-size for main textareas */
@@ -20,7 +20,7 @@ form.formtastic .form-group textarea {
 }
 
 .autosave-msg {
-  float:right;
+  float: right;
 }
 
 // Give contrast against grey well. Also put images against
@@ -36,6 +36,7 @@ form.formtastic .form-group textarea {
 table.image-upload label {
   display: inline-block;
 }
+
 table.image-upload div.controls {
   display: inline-block;
   margin-left: 5px;
@@ -43,8 +44,8 @@ table.image-upload div.controls {
 
 label {
   font-weight: bold;
-  font-size:16px;
-  margin-bottom:10px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 label.nav-header {
@@ -52,8 +53,8 @@ label.nav-header {
 }
 
 .help-inline {
-  padding-left:0;
-  color:#888;
+  padding-left: 0;
+  color: #888888;
   max-width: 400px;
 }
 
@@ -77,16 +78,19 @@ select.date {
   overflow: hidden;
   position: absolute;
   visibility: hidden;
-  width: 0px;
+  width: 0;
 }
+
 .tab-content .active {
   visibility: visible;
   position: relative;
   width: 100%;
 }
-.tab-content>.tab-pane {
+
+.tab-content > .tab-pane {
   display: inline-block;
 }
+
 .modal.in {
   visibility: visible;
 }
