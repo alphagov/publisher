@@ -15,24 +15,7 @@ choose_sign_in:
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=eidas_sign_in
       hint_text: If you’re part of an ID scheme in a participating country, you may be able to use it here.
     - text: Register for Self Assessment
-      slug: register-self-assessment
+      url: https://www.gov.uk/register-for-self-assessment
       hint_text: You must register before you can file your first tax return.
-create_new_account:
-  title: Register for Self Assessment
-  slug: register-self-assessment
-  body: |
-    There are different ways to register if you’re:
-
-    - [self-employed or a sole trader](/log-in-file-self-assessment-tax-return/register-if-youre-self-employed)
-    - [not self-employed](/log-in-file-self-assessment-tax-return/register-if-youre-not-self-employed)
-    - [registering a partner or partnership](/log-in-file-self-assessment-tax-return/register-if-youre-a-partner-or-partnership)
-
-    Allow enough time to complete the registration process so you can send your return by the [deadline](/self-assessment-tax-returns/deadlines).
-
-    ##If you've already registered
-
-    Once you've registered, you'll get a letter that tells you what to do next. It will include your Unique Taxpayer Reference (UTR).
-
-    *[UTR]: Unique Taxpayer Reference
 update_type: minor
-change_note: Updated eIDAS content because more than two countries are connected now.
+change_note: Redirect Register for Self Assessment page to /register-for-self-assessment.
