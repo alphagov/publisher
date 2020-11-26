@@ -2,18 +2,18 @@
   color: $text-color;
 }
 
-/* Placeholder text to explain a blank value */
+// Placeholder text to explain a blank value
 .placeholder {
   color: #cccccc;
 }
 
-/* override the font-size for main textareas */
+// override the font-size for main textareas
 form.formtastic .form-group textarea {
   font-size: 17px;
   line-height: 21px;
 }
 
-/* Govspeak helper in Guides */
+// Govspeak helper in Guides
 .govspeak_help {
   height: 650px;
   overflow-y: scroll;
@@ -58,22 +58,20 @@ label.nav-header {
   max-width: 400px;
 }
 
-/* datetime selectors */
+// datetime selectors
 
 select.date {
   width: auto;
 }
 
-/*
- * Bootstrap tab styles apply display attributes only to .tab-pane
- * elements that are direct children of .tab-content. This fix is
- * required to apply correct display attributes to .tab-pane
- * elements wrapped inside the edition form in .tab-content.
- * See: edition/show.html.erb
- *
- * Uses visibility: rather than display: modifiers so that modal forms
- * embedded in hidden tabs can be displayed.
- */
+// Bootstrap tab styles apply display attributes only to .tab-pane
+// elements that are direct children of .tab-content. This fix is
+// required to apply correct display attributes to .tab-pane
+// elements wrapped inside the edition form in .tab-content.
+// See: edition/show.html.erb
+//
+//Uses visibility: rather than display: modifiers so that modal forms
+// embedded in hidden tabs can be displayed.
 .tab-content .tab-pane {
   overflow: hidden;
   position: absolute;
