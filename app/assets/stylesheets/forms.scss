@@ -38,8 +38,8 @@
   margin-bottom: 3px;
 
   .remove-row {
-    @extend .btn;
-    @extend .btn-danger;
+    @extend .btn; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+    @extend .btn-danger; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 
     position: absolute;
     right: 8px;
