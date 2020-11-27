@@ -262,7 +262,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update assignment" do
-      bob = FactoryBot.create(:user)
+      bob = FactoryBot.create(:user, :govuk_editor)
 
       post :update,
            params: {
@@ -275,7 +275,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "not create a new action if the assignment is unchanged" do
-      bob = FactoryBot.create(:user)
+      bob = FactoryBot.create(:user, :govuk_editor)
       @user.assign(@guide, bob)
 
       post :update,
@@ -377,6 +377,59 @@ class EditionsControllerTest < ActionController::TestCase
         @edition.reload
         assert_not_equal @edition.title, "Updated title"
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to assign users to Welsh editions" do
+        assignees = [FactoryBot.create(:user, :welsh_editor), FactoryBot.create(:user, :govuk_editor)]
+        assignees.each do |assignee|
+          post :update,
+               params: {
+                 id: @welsh_edition.id,
+                 edition: {
+                   assigned_to_id: assignee.id,
+                 },
+               }
+
+          assert_redirected_to edition_path(@welsh_edition)
+          @welsh_edition.reload
+          assert_equal @welsh_edition.assigned_to, assignee
+        end
+      end
+
+      should "not be able to assign users to non-Welsh editions" do
+        assignees = [FactoryBot.create(:user, :welsh_editor), FactoryBot.create(:user, :govuk_editor)]
+        assignees.each do |assignee|
+          post :update,
+               params: {
+                 id: @edition.id,
+                 edition: {
+                   assigned_to_id: assignee.id,
+                 },
+               }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+          @edition.reload
+          assert_nil @edition.assigned_to
+        end
+      end
+
+      should "not be able to be assigned to non-Welsh editions" do
+        login_as_govuk_editor
+        assignee = FactoryBot.create(:user, :welsh_editor)
+
+        post :update,
+             params: {
+               id: @edition.id,
+               edition: {
+                 assigned_to_id: assignee.id,
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        assert_equal flash[:danger], "Chosen assignee does not have correct editor permissions."
+        @edition.reload
+        assert_nil @edition.assigned_to
       end
 
       should "be able to schedule publishing for Welsh editions" do

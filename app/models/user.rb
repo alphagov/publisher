@@ -67,6 +67,8 @@ class User
   end
 
   def assign(edition, recipient)
+    return unless has_editor_permissions?(edition) && recipient.has_editor_permissions?(edition)
+
     GovukContentModels::ActionProcessors::AssignProcessor.new(self, edition, recipient_id: recipient.id).processed_edition
   end
 
