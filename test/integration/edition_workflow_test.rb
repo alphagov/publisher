@@ -570,6 +570,28 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     save_edition_and_assert_success
   end
 
+  test "Welsh editors can assign users to Welsh editions" do
+    guide.artefact.update!(language: "cy")
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    select "Bob", from: "Assigned to"
+    save_edition_and_assert_success
+    guide.reload
+
+    assert_equal guide.assigned_to, bob
+
+    save_edition_and_assert_success
+  end
+
+  test "Welsh editors cannot assign users to non-Welsh editions" do
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Assigned to"
+  end
+
   test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
     edition = FactoryBot.create(:edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
