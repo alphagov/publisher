@@ -40,15 +40,23 @@ class TabsHelperTest < ActionView::TestCase
     end
   end
 
-  context "#tabs_for(user)" do
+  context "#tabs_for" do
     should "return all tabs if user is govuk_editor" do
+      guide = FactoryBot.create(:guide_edition)
       user = FactoryBot.create(:user, :govuk_editor)
-      assert_equal tabs_for(user), tabs
+      assert_equal tabs_for(user, guide), tabs
     end
 
     should "return all tabs except `unpublish` if user is not govuk_editor" do
-      user = FactoryBot.create(:user)
-      assert_equal %w[unpublish], (tabs - tabs_for(user)).map(&:name)
+      guide = FactoryBot.create(:guide_edition, :welsh)
+      user = FactoryBot.create(:user, :welsh_editor)
+      assert_equal %w[unpublish], (tabs - tabs_for(user, guide)).map(&:name)
+    end
+
+    should "exclude `admin` tab if a user has insufficient editor permissions" do
+      guide = FactoryBot.create(:guide_edition)
+      user = FactoryBot.create(:user, :welsh_editor)
+      assert_equal %w[admin unpublish], (tabs - tabs_for(user, guide)).map(&:name)
     end
   end
 end

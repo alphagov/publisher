@@ -2,7 +2,7 @@
   <%= render 'shared/edition_header' %>
   <div class="tabbable" data-module="tab-switcher" role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-      <% tabs_for(current_user).each do |tab| %>
+      <% tabs_for(current_user, @edition).each do |tab| %>
         <li <% if tab == active_tab %>class="active"<% end %>>
           <%= tab_link(tab, edition_path(@edition)) %>
         </li>
