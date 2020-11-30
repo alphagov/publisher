@@ -1,9 +1,13 @@
 <div class="alert alert-info">
   <% if @resource.latest_status_action %>
     <p><%= @resource.latest_status_action.requester.name %> requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
-    <%= resend_fact_check_buttons(@resource) %>
+    <% if current_user.has_editor_permissions?(@resource) %>
+      <%= resend_fact_check_buttons(@resource) %>
+    <% end %>
   <% else %>
     <p>Someone requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
   <% end %>
-  <%= render 'shared/request_amendments' %>
+  <% if current_user.has_editor_permissions?(@resource) %>
+    <%= render 'shared/request_amendments' %>
+  <% end %>
 </div>
