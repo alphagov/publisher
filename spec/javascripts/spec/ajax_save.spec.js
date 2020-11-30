@@ -1,305 +1,299 @@
-describe('An ajax save module', function() {
-  "use strict";
+/* globals Mousetrap */
+
+describe('An ajax save module', function () {
+  'use strict'
 
   var ajaxSave,
-      element;
+    element
 
-  beforeEach(function() {
+  beforeEach(function () {
+    element = $('<form action="some/url">' +
+      '<div class="js-status-message"></div>' +
+      '<div id="edition_test_input">' +
+        '<input type="text" name="test" value="prefilled value">' +
+      '</div>' +
+      '<div id="edition_another_input">' +
+        '<input type="text" name="another" value="another value">' +
+      '</div>' +
+      '<input class="js-no-ajax" type="text" name="fake-file-input">' +
+      '<input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">' +
+      '<input type="submit" class="js-save" value="Save">' +
+    '</form>')
 
-    element = $('<form action="some/url">\
-      <div class="js-status-message"></div>\
-      <div id="edition_test_input">\
-        <input type="text" name="test" value="prefilled value">\
-      </div>\
-      <div id="edition_another_input">\
-        <input type="text" name="another" value="another value">\
-      </div>\
-      <input class="js-no-ajax" type="text" name="fake-file-input">\
-      <input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">\
-      <input type="submit" class="js-save" value="Save">\
-    </form>');
+    $('body').append(element)
+    ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
+    ajaxSave.start(element)
 
-    $('body').append(element);
-    ajaxSave = new GOVUKAdmin.Modules.AjaxSave();
-    ajaxSave.start(element);
+    var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false)
+    element.submit(submitCallbackSpy)
+  })
 
-    var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false);
-    element.submit(submitCallbackSpy);
+  afterEach(function () {
+    element.remove()
+  })
 
-  });
+  describe('when keying command+s', function () {
+    beforeEach(function () {
+      spyOn($, 'ajax')
+    })
 
-  afterEach(function() {
-    element.remove();
-  });
+    it('attempts to save', function () {
+      Mousetrap.trigger('command+s')
+      expect($.ajax).toHaveBeenCalled()
+    })
 
-  describe('when keying command+s', function() {
-    beforeEach(function() {
-      spyOn($, 'ajax');
-    });
+    describe('and save button is not visible', function () {
+      it('does not save', function () {
+        element.find('.js-save').hide()
+        Mousetrap.trigger('command+s')
+        expect($.ajax).not.toHaveBeenCalled()
+      })
+    })
 
-    it('attempts to save', function() {
-      Mousetrap.trigger('command+s');
-      expect($.ajax).toHaveBeenCalled();
-    });
+    describe('and save button is disabled', function () {
+      it('does not save', function () {
+        element.find('.js-save').prop('disabled', true)
+        Mousetrap.trigger('command+s')
+        expect($.ajax).not.toHaveBeenCalled()
+      })
+    })
+  })
 
-    describe('and save button is not visible', function() {
-      it('does not save', function() {
-        element.find('.js-save').hide();
-        Mousetrap.trigger('command+s');
-        expect($.ajax).not.toHaveBeenCalled();
-      });
-    });
+  describe('when attempting to save multiple times before a request finishes', function () {
+    it('saves only once', function () {
+      spyOn($, 'ajax')
+      element.find('.js-save').trigger('click')
+      Mousetrap.trigger('command+s')
+      Mousetrap.trigger('command+s')
+      expect($.ajax.calls.count()).toEqual(1)
+    })
 
-    describe('and save button is disabled', function() {
-      it('does not save', function() {
-        element.find('.js-save').prop('disabled', true);
-        Mousetrap.trigger('command+s');
-        expect($.ajax).not.toHaveBeenCalled();
-      });
-    });
-  });
+    it('saves again afterwards', function () {
+      var complete
+      spyOn($, 'ajax').and.callFake(function (options) {
+        complete = options.complete
+      })
+      Mousetrap.trigger('command+s')
+      Mousetrap.trigger('command+s')
+      expect($.ajax.calls.count()).toEqual(1)
+      complete()
+      Mousetrap.trigger('command+s')
+      expect($.ajax.calls.count()).toEqual(2)
+    })
+  })
 
-  describe('when attempting to save multiple times before a request finishes', function() {
-    it('saves only once', function() {
-      spyOn($, 'ajax');
-      element.find('.js-save').trigger('click');
-      Mousetrap.trigger('command+s');
-      Mousetrap.trigger('command+s');
-      expect($.ajax.calls.count()).toEqual(1);
-    });
+  describe('when clicking a save link', function () {
+    it('indicates the form is saving', function () {
+      element.find('.js-save').trigger('click')
 
-    it('saves again afterwards', function() {
-      var complete;
-      spyOn($, 'ajax').and.callFake(function(options) {
-        complete = options.complete;
-      });
-      Mousetrap.trigger('command+s');
-      Mousetrap.trigger('command+s');
-      expect($.ajax.calls.count()).toEqual(1);
-      complete();
-      Mousetrap.trigger('command+s');
-      expect($.ajax.calls.count()).toEqual(2);
-    });
-  });
+      var statusMessage = element.find('.js-status-message')
+      expect(statusMessage.text()).toBe('Saving…')
+      expect(statusMessage.is('.workflow-message-saving')).toBe(true)
+    })
 
-  describe('when clicking a save link', function() {
-    it('indicates the form is saving', function() {
-      element.find('.js-save').trigger('click');
+    it('posts the form using ajax', function () {
+      var ajaxOptions
+      spyOn($, 'ajax').and.callFake(function (options) {
+        ajaxOptions = options
+      })
+      element.find('.js-save').trigger('click')
 
-      var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('Saving…');
-      expect(statusMessage.is('.workflow-message-saving')).toBe(true);
-    });
+      expect($.ajax).toHaveBeenCalled()
+      expect(ajaxOptions.type).toBe('POST')
+      expect(ajaxOptions.url).toBe('some/url.json')
+      expect(ajaxOptions.data).toBe('test=prefilled+value&another=another+value&fake-file-input=')
+    })
+  })
 
-    it('posts the form using ajax', function() {
-      var ajaxOptions;
-      spyOn($, 'ajax').and.callFake(function(options) {
-        ajaxOptions = options;
-      });
-      element.find('.js-save').trigger('click');
+  describe('when an ajax save is successful', function () {
+    var timeoutTime
 
-      expect($.ajax).toHaveBeenCalled();
-      expect(ajaxOptions.type).toBe('POST');
-      expect(ajaxOptions.url).toBe('some/url.json');
-      expect(ajaxOptions.data).toBe('test=prefilled+value&another=another+value&fake-file-input=');
-    });
-  });
+    beforeEach(function () {
+      GOVUKAdmin.Data.editionFormDirty = true
+      spyOn($, 'ajax').and.callFake(function (options) {
+        options.success({ title: 'Title' })
+        options.complete()
+      })
+      spyOn(window, 'setTimeout').and.callFake(function (fn, time) {
+        timeoutTime = time
+        fn()
+      })
+      element.find('.js-save').trigger('click')
+    })
 
-  describe('when an ajax save is successful', function() {
-    var timeoutTime;
+    it('says that it has saved', function () {
+      var statusMessage = element.find('.js-status-message')
+      expect(statusMessage.text()).toBe('Saved')
+      expect(statusMessage.is('.workflow-message-saved')).toBe(true)
+    })
 
-    beforeEach(function() {
-      GOVUKAdmin.Data.editionFormDirty = true;
-      spyOn($, 'ajax').and.callFake(function(options) {
-        options.success({title: 'Title'});
-        options.complete();
-      });
-      spyOn(window, 'setTimeout').and.callFake(function(fn, time) {
-        timeoutTime = time;
-        fn();
-      });
-      element.find('.js-save').trigger('click');
-    });
+    it('marks the form as clean', function () {
+      expect(GOVUKAdmin.Data.editionFormDirty).toBe(false)
+    })
 
-    it('says that it has saved', function() {
-      var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('Saved');
-      expect(statusMessage.is('.workflow-message-saved')).toBe(true);
-    });
+    it('the save message disappears after a short while', function () {
+      expect(timeoutTime).toBe(2000)
+      expect(element.find('.js-status-message').is('.workflow-message-hide'))
+    })
 
-    it('marks the form as clean', function() {
-      expect(GOVUKAdmin.Data.editionFormDirty).toBe(false);
-    });
+    it('triggers a success.ajaxsave.admin dom event', function () {
+      var successResponse = false
+      element.on('success.ajaxsave.admin', function (evt, response) {
+        successResponse = response
+      })
+      element.find('.js-save').trigger('click')
+      expect(successResponse).toEqual({ title: 'Title' })
+    })
+  })
 
-    it('the save message disappears after a short while', function() {
-      expect(timeoutTime).toBe(2000);
-      expect(element.find('.js-status-message').is('.workflow-message-hide'));
-    });
+  describe('when an ajax save errors without validation messages', function () {
+    it('tracks the error status and HTTP text', function () {
+      spyOn($, 'ajax').and.callFake(function (options) {
+        options.error({}, 'abort', 'Not Found')
+      })
+      spyOn(window.GOVUKAdmin, 'trackEvent')
+      element.find('.js-save').trigger('click')
 
-    it('triggers a success.ajaxsave.admin dom event', function() {
-      var successResponse = false;
-      element.on('success.ajaxsave.admin', function(evt, response) {
-        successResponse = response;
-      });
-      element.find('.js-save').trigger('click');
-      expect(successResponse).toEqual({title: 'Title'});
-    });
-  });
+      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save', 'error', { value: 'abort: Not Found' })
+    })
+  })
 
-  describe('when an ajax save errors without validation messages', function() {
-    it('tracks the error status and HTTP text', function() {
-      spyOn($, 'ajax').and.callFake(function(options) {
-        options.error({}, 'abort', 'Not Found');
-      });
-      spyOn(window.GOVUKAdmin, 'trackEvent');
-      element.find('.js-save').trigger('click');
+  describe('when an ajax save errors with validation messages', function () {
+    var timeoutTime, ajaxError
 
-      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save', 'error', { value: 'abort: Not Found' });
-    });
-  });
+    beforeEach(function () {
+      spyOn($, 'ajax').and.callFake(function (options) {
+        ajaxError = function (errors) {
+          errors = errors || {}
+          options.error({ responseJSON: errors })
+          options.complete()
+        }
+      })
+      spyOn(window, 'setTimeout').and.callFake(function (fn, time) {
+        timeoutTime = time
+        fn()
+      })
+      element.find('.js-save').trigger('click')
+    })
 
-  describe('when an ajax save errors with validation messages', function() {
-    var timeoutTime, ajaxError, ajaxSuccess;
+    it('marks the form as dirty', function () {
+      GOVUKAdmin.Data.editionFormDirty = false
+      ajaxError()
+      expect(GOVUKAdmin.Data.editionFormDirty).toBe(true)
+    })
 
-    beforeEach(function() {
-      spyOn($, 'ajax').and.callFake(function(options) {
-        ajaxError = function(errors) {
-          errors = errors || {};
-          options.error({responseJSON: errors});
-          options.complete();
-        };
+    it('says that it couldn’t save', function () {
+      ajaxError()
+      var statusMessage = element.find('.js-status-message')
+      expect(statusMessage.text()).toBe('We had some problems saving. Please check the form above.')
+      expect(statusMessage.is('.workflow-message-error')).toBe(true)
+    })
 
-        ajaxSuccess = options.success;
-      });
-      spyOn(window, 'setTimeout').and.callFake(function(fn, time) {
-        timeoutTime = time;
-        fn();
-      });
-      element.find('.js-save').trigger('click');
-    });
+    it('the error message disappears after a short while', function () {
+      ajaxError()
+      expect(timeoutTime).toBe(4000)
+      expect(element.find('.js-status-message').is('.workflow-message-hide'))
+    })
 
-    it('marks the form as dirty', function() {
-      GOVUKAdmin.Data.editionFormDirty = false;
-      ajaxError();
-      expect(GOVUKAdmin.Data.editionFormDirty).toBe(true);
-    });
+    it('shows the error alongside the erroring field', function () {
+      ajaxError({ test: ['must be changed'] })
+      expect(element.find('#edition_test_input').is('.has-error')).toBe(true)
+      expect(element.find('#edition_test_input ul li').length).toBe(1)
+      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed')
+    })
 
-    it('says that it couldn’t save', function() {
-      ajaxError();
-      var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('We had some problems saving. Please check the form above.');
-      expect(statusMessage.is('.workflow-message-error')).toBe(true);
-    });
+    it('includes the base error in the save dialogue', function () {
+      ajaxError({ base: ['Form is wholly wrong'] })
+      var statusMessage = element.find('.js-status-message')
+      expect(statusMessage.text()).toBe('We had some problems saving. Form is wholly wrong.')
+    })
 
-    it('the error message disappears after a short while', function() {
-      ajaxError();
-      expect(timeoutTime).toBe(4000);
-      expect(element.find('.js-status-message').is('.workflow-message-hide'));
-    });
+    it('ignores validation messages for fields it does not recognise', function () {
+      ajaxError({ not_a_field: ['nonsense'] })
+      expect(element.find('.has-error').length).toBe(0)
+      expect(element.find('.js-error').length).toBe(0)
+    })
 
-    it('shows the error alongside the erroring field', function() {
-      ajaxError({test: ['must be changed']});
-      expect(element.find('#edition_test_input').is('.has-error')).toBe(true);
-      expect(element.find('#edition_test_input ul li').length).toBe(1);
-      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed');
-    });
+    it('can show multiple errors', function () {
+      ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
 
-    it('includes the base error in the save dialogue', function() {
-      ajaxError({base: ['Form is wholly wrong']});
-      var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('We had some problems saving. Form is wholly wrong.');
-    });
+      expect(element.find('#edition_test_input').is('.has-error')).toBe(true)
+      expect(element.find('#edition_test_input ul li').length).toBe(2)
+      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed')
+      expect(element.find('#edition_test_input ul li:last').text()).toBe('must be blue')
 
-    it('ignores validation messages for fields it does not recognise', function() {
-      ajaxError({not_a_field: ['nonsense']});
-      expect(element.find('.has-error').length).toBe(0);
-      expect(element.find('.js-error').length).toBe(0);
-    });
+      expect(element.find('#edition_another_input').is('.has-error')).toBe(true)
+      expect(element.find('#edition_another_input ul li').length).toBe(1)
+      expect(element.find('#edition_another_input ul li:first').text()).toBe('must rhyme')
+    })
 
-    it('can show multiple errors', function() {
-      ajaxError({test: ['must be changed', 'must be blue'], another: ['must rhyme']});
+    it('triggers an error.ajaxsave.admin dom event', function () {
+      var errorResponse = false
+      element.on('errors.ajaxsave.admin', function (evt, response) {
+        errorResponse = response
+      })
+      ajaxError({ not_a_field: ['nonsense'] })
+      expect(errorResponse).toEqual({ responseJSON: { not_a_field: ['nonsense'] } })
+    })
 
-      expect(element.find('#edition_test_input').is('.has-error')).toBe(true);
-      expect(element.find('#edition_test_input ul li').length).toBe(2);
-      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed');
-      expect(element.find('#edition_test_input ul li:last').text()).toBe('must be blue');
-
-      expect(element.find('#edition_another_input').is('.has-error')).toBe(true);
-      expect(element.find('#edition_another_input ul li').length).toBe(1);
-      expect(element.find('#edition_another_input ul li:first').text()).toBe('must rhyme');
-    });
-
-    it('triggers an error.ajaxsave.admin dom event', function() {
-      var errorResponse = false;
-      element.on('errors.ajaxsave.admin', function(evt, response) {
-        errorResponse = response;
-      });
-      ajaxError({not_a_field: ['nonsense']});
-      expect(errorResponse).toEqual({responseJSON: {not_a_field: ['nonsense']}});
-    });
-
-    it('tracks the error (and normalises part IDs)', function() {
-      spyOn(window.GOVUKAdmin, 'trackEvent');
-      ajaxError({"parts":
+    it('tracks the error (and normalises part IDs)', function () {
+      spyOn(window.GOVUKAdmin, 'trackEvent')
+      ajaxError({
+        parts:
         [
           {
-            "5f00000001:1":{"slug":["can't be blank","is invalid"]},
-            "5f00000002:2":{"title":["can't be blank"]},
-            "101:3" :{"title":["must not walk on the grass"]}
+            '5f00000001:1': { slug: ["can't be blank", 'is invalid'] },
+            '5f00000002:2': { title: ["can't be blank"] },
+            '101:3': { title: ['must not walk on the grass'] }
           }
         ]
-      });
+      })
 
-      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save-error', '{"parts":[{"part":{"slug":["can\'t be blank","is invalid"]},"part":{"title":["can\'t be blank"]},"part":{"title":["must not walk on the grass"]}}]}');
-    });
+      expect(window.GOVUKAdmin.trackEvent).toHaveBeenCalledWith('ajax-save-error', '{"parts":[{"part":{"slug":["can\'t be blank","is invalid"]},"part":{"title":["can\'t be blank"]},"part":{"title":["must not walk on the grass"]}}]}')
+    })
 
-    describe('when the form is saved again', function() {
-      it('removes all errors', function() {
-        ajaxError({test: ['must be changed', 'must be blue'], another: ['must rhyme']});
-        element.find('.js-save').trigger('click');
+    describe('when the form is saved again', function () {
+      it('removes all errors', function () {
+        ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
+        element.find('.js-save').trigger('click')
 
-        expect(element.find('.has-error').length).toBe(0);
-        expect(element.find('.js-error').length).toBe(0);
-      });
-    });
-
-  });
+        expect(element.find('.has-error').length).toBe(0)
+        expect(element.find('.js-error').length).toBe(0)
+      })
+    })
+  })
 
   /* Cannot simulate a file input with a value, instead test this feature by proxy
      using an input which has the class 'js-no-ajax' and setting a value on it */
-  describe('when submitting a form with fields that need a full page reload', function() {
+  describe('when submitting a form with fields that need a full page reload', function () {
+    it('still indicates the form is saving', function () {
+      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected')
+      element.find('.js-save').trigger('click')
 
-    it('still indicates the form is saving', function() {
-      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected');
-      element.find('.js-save').trigger('click');
+      var statusMessage = element.find('.js-status-message')
+      expect(statusMessage.text()).toBe('Saving…')
+      expect(statusMessage.is('.workflow-message-saving')).toBe(true)
+    })
 
-      var statusMessage = element.find('.js-status-message');
-      expect(statusMessage.text()).toBe('Saving…');
-      expect(statusMessage.is('.workflow-message-saving')).toBe(true);
-    });
+    it('avoids ajax if a non-ajax text input has a value', function () {
+      spyOn($, 'ajax')
+      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected')
+      element.find('.js-save').trigger('click')
 
-    it('avoids ajax if a non-ajax text input has a value', function() {
-      var ajaxOptions;
-      spyOn($, 'ajax');
-      element.find('.js-no-ajax[name="fake-file-input"]').val('has value as if file was selected');
-      element.find('.js-save').trigger('click');
+      expect($.ajax).not.toHaveBeenCalled()
 
-      expect($.ajax).not.toHaveBeenCalled();
+      element.find('.js-no-ajax[name="fake-file-input"]').val('')
+      element.find('.js-save').trigger('click')
 
-      element.find('.js-no-ajax[name="fake-file-input"]').val('');
-      element.find('.js-save').trigger('click');
+      expect($.ajax).toHaveBeenCalled()
+    })
 
-      expect($.ajax).toHaveBeenCalled();
-    });
+    it('avoids ajax if a non-ajax checkbox is checked', function () {
+      spyOn($, 'ajax')
+      element.find('.js-no-ajax[name="remove-file-checkbox"]').attr('checked', true)
+      element.find('.js-save').trigger('click')
 
-    it('avoids ajax if a non-ajax checkbox is checked', function() {
-      var ajaxOptions;
-      spyOn($, 'ajax');
-      element.find('.js-no-ajax[name="remove-file-checkbox"]').attr('checked', true);
-      element.find('.js-save').trigger('click');
-
-      expect($.ajax).not.toHaveBeenCalled();
-    });
-  });
-
-});
+      expect($.ajax).not.toHaveBeenCalled()
+    })
+  })
+})

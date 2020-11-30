@@ -1,18 +1,12 @@
-#edition_in_beta_input {
-  .help-block {
-    margin-top: 0;
-  }
-}
-
 .edition-tags {
-  .select2, .selectize {
+  .select2 {
     display: block;
   }
 }
 
 .emphasised-field {
-  background: #ddd;
-  padding: $default-vertical-margin/2;
+  background: #dddddd;
+  padding: $default-vertical-margin / 2;
   border-radius: $border-radius-base;
 }
 
@@ -30,7 +24,7 @@
 
 .related-external-links {
   input[type=text] {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
   .fields:last-of-type {
@@ -39,13 +33,13 @@
 }
 
 .nested-item {
-  background: #fff;
+  background: #ffffff;
   padding: 8px;
   margin-bottom: 3px;
 
   .remove-row {
-    @extend .btn;
-    @extend .btn-danger;
+    @extend .btn; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+    @extend .btn-danger; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 
     position: absolute;
     right: 8px;
@@ -55,7 +49,7 @@
   .remove-row-related {
     top: auto;
     bottom: 0;
-    right: 15px
+    right: 15px;
   }
 }
 

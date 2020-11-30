@@ -21,3 +21,6 @@ reports/*
 # Local transactions import reports
 removed_ghosts*.csv
 ghosts*.csv
+
+node_modules
+yarn-error.log

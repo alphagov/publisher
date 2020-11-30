@@ -177,24 +177,6 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     find(:xpath, "//body").find(".select2-results li", text: value).click
   end
 
-  def selectize(with, scope)
-    # clear any existing selections
-    page.execute_script("$('.selectize-input a.remove').click()")
-
-    # find_field works by finding the label by text/id and then the input field associated
-    # with the label by its 'for' attribute. In our case this input will be invisible until interacted with.
-    select_field = page.find_field(scope, visible: false)
-    selectize_control = "select##{select_field[:id]} + .selectize-control"
-
-    Array(with).each do |value|
-      # Fill in the value into the input field
-      page.execute_script("$('#{selectize_control} .selectize-input input').val('#{value}');")
-      # Simulate selecting the first option
-      page.execute_script("$('#{selectize_control} .selectize-input input').keyup();")
-      page.execute_script("$('#{selectize_control} div.option').first().mousedown();")
-    end
-  end
-
   def switch_tab(tab)
     page.click_on(tab)
   end

@@ -1,169 +1,168 @@
-(function() {
-  "use strict";
+(function () {
+  'use strict'
 
-  var root = this,
-      $ = root.jQuery;
-  if(typeof root.Publisher === 'undefined') { root.Publisher = {}; }
+  var root = this
+  var $ = root.jQuery
+  if (typeof root.Publisher === 'undefined') { root.Publisher = {} }
 
   var smartAnswerBuilder = {
-    init: function() {
-      smartAnswerBuilder.setEventHandlers();
-      smartAnswerBuilder.reloadAllNextNodeLists();
-      smartAnswerBuilder.setupInitialQuestion();
+    init: function () {
+      smartAnswerBuilder.setEventHandlers()
+      smartAnswerBuilder.reloadAllNextNodeLists()
+      smartAnswerBuilder.setupInitialQuestion()
     },
     lastNodeKind: null,
-    setEventHandlers: function() {
-      smartAnswerBuilder.addQuestionButton().click(smartAnswerBuilder.addQuestion);
-      smartAnswerBuilder.addOutcomeButton().click(smartAnswerBuilder.addOutcome);
+    setEventHandlers: function () {
+      smartAnswerBuilder.addQuestionButton().click(smartAnswerBuilder.addQuestion)
+      smartAnswerBuilder.addOutcomeButton().click(smartAnswerBuilder.addOutcome)
 
-      $('.nodes').on("change", ".node input.node-title", smartAnswerBuilder.reloadAllNextNodeLists);
-      $('.nodes').on("change", ".node select.next-node-list", smartAnswerBuilder.updateNextNode);
+      $('.nodes').on('change', '.node input.node-title', smartAnswerBuilder.reloadAllNextNodeLists)
+      $('.nodes').on('change', '.node select.next-node-list', smartAnswerBuilder.updateNextNode)
 
-      $(document).on('nested:fieldAdded:nodes', smartAnswerBuilder.initNode);
-      $(document).on('nested:fieldRemoved:nodes', smartAnswerBuilder.reloadAllNextNodeLists);
+      $(document).on('nested:fieldAdded:nodes', smartAnswerBuilder.initNode)
+      $(document).on('nested:fieldRemoved:nodes', smartAnswerBuilder.reloadAllNextNodeLists)
 
-      $(document).on('nested:fieldAdded:options', smartAnswerBuilder.initOption);
+      $(document).on('nested:fieldAdded:options', smartAnswerBuilder.initOption)
     },
     container: $('.builder-container'),
-    addQuestion: function() {
-      smartAnswerBuilder.lastNodeKind = "question";
+    addQuestion: function () {
+      smartAnswerBuilder.lastNodeKind = 'question'
     },
-    addOutcome: function() {
-      smartAnswerBuilder.lastNodeKind = "outcome";
+    addOutcome: function () {
+      smartAnswerBuilder.lastNodeKind = 'outcome'
     },
-    addQuestionButton: function() {
-      return smartAnswerBuilder.container.find('a.add-question');
+    addQuestionButton: function () {
+      return smartAnswerBuilder.container.find('a.add-question')
     },
-    addOutcomeButton: function() {
-      return smartAnswerBuilder.container.find('a.add-outcome');
+    addOutcomeButton: function () {
+      return smartAnswerBuilder.container.find('a.add-outcome')
     },
-    setupInitialQuestion: function() {
+    setupInitialQuestion: function () {
       if (smartAnswerBuilder.container.find('.node').length < 1) {
-        smartAnswerBuilder.addQuestionButton().click();
+        smartAnswerBuilder.addQuestionButton().click()
       }
     },
-    initNode: function(e) {
-      var kind = smartAnswerBuilder.lastNodeKind;
-      var index = smartAnswerBuilder.indexOfKind(kind);
+    initNode: function (e) {
+      var kind = smartAnswerBuilder.lastNodeKind
+      var index = smartAnswerBuilder.indexOfKind(kind)
 
-      var node = e.field;
-      smartAnswerBuilder.lastNodeKind = null;
+      var node = e.field
+      smartAnswerBuilder.lastNodeKind = null
 
-      node.find('input.node-kind').val(kind);
-      node.find('input.node-slug').val(nodeId(kind, index));
+      node.find('input.node-kind').val(kind)
+      node.find('input.node-slug').val(nodeId(kind, index))
 
-      node.find('.node-label').text(nodeLabel(kind, index));
-      node.addClass(kind).attr('id', nodeId(kind, index));
+      node.find('.node-label').text(nodeLabel(kind, index))
+      node.addClass(kind).attr('id', nodeId(kind, index))
 
-      var questions = $('.nodes .question:visible');
-      var outcomes = $('.nodes .outcome:visible');
+      var questions = $('.nodes .question:visible')
+      var outcomes = $('.nodes .outcome:visible')
 
-      if (kind == "outcome") {
-        node.find('.options').remove();
+      if (kind === 'outcome') {
+        node.find('.options').remove()
 
-        var i = 0;
+        var i = 0
         if (outcomes.length > 1) {
-          i = outcomes.eq(-2).find('input.node-order').val();
+          i = outcomes.eq(-2).find('input.node-order').val()
         } else {
           if (questions.length > 0) {
-            i = questions.last().find('input.node-order').val();
+            i = questions.last().find('input.node-order').val()
           }
         };
-        node.find('input.node-order').val(parseInt(i) + 1);
-
+        node.find('input.node-order').val(parseInt(i) + 1)
       } else {
-        node.find('.options .add_nested_fields').click();
-        node.find('input.node-title').attr('placeholder', 'The title of the question');
+        node.find('.options .add_nested_fields').click()
+        node.find('input.node-title').attr('placeholder', 'The title of the question')
 
-        questions.each(function(i) {
-          $(this).find('input.node-order').val(i + 1);
-        });
+        questions.each(function (i) {
+          $(this).find('input.node-order').val(i + 1)
+        })
 
         if (questions.length > 1) {
-          node.insertAfter(questions[questions.length - 2]);
+          node.insertAfter(questions[questions.length - 2])
         } else {
-          $('.nodes').prepend(node);
+          $('.nodes').prepend(node)
         };
 
-        outcomes.each(function(i) {
-          $(this).find('input.node-order').val(questions.length + i + 1);
-        });
+        outcomes.each(function (i) {
+          $(this).find('input.node-order').val(questions.length + i + 1)
+        })
       }
 
-      smartAnswerBuilder.reloadAllNextNodeLists();
+      smartAnswerBuilder.reloadAllNextNodeLists()
 
-      function nodeId(kind, index) {
-        return kind + "-" + index;
+      function nodeId (kind, index) {
+        return kind + '-' + index
       }
 
-      function nodeLabel(kind, index) {
-        var capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1);
-        return capitalizedKind + " " + index;
+      function nodeLabel (kind, index) {
+        var capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1)
+        return capitalizedKind + ' ' + index
       }
     },
-    indexOfKind: function(kind) {
-      var kindMatch = new RegExp(kind + "-");
-      var indexes = smartAnswerBuilder.container.find(".node."+ kind +" .node-slug").map( function(){
-        var index = $(this).val().replace(kindMatch, "");
-        return parseInt(index);
-      }).get();
+    indexOfKind: function (kind) {
+      var kindMatch = new RegExp(kind + '-')
+      var indexes = smartAnswerBuilder.container.find('.node.' + kind + ' .node-slug').map(function () {
+        var index = $(this).val().replace(kindMatch, '')
+        return parseInt(index)
+      }).get()
       if (indexes.length < 1) {
-        return 1;
+        return 1
       } else {
-        var max = Math.max.apply(null, indexes);
-        return max + 1;
+        var max = Math.max.apply(null, indexes)
+        return max + 1
       }
     },
-    initOption: function(e) {
-      var node = $(e.field).parents(".node").first();
-      smartAnswerBuilder.reloadNextNodeList(node);
+    initOption: function (e) {
+      var node = $(e.field).parents('.node').first()
+      smartAnswerBuilder.reloadNextNodeList(node)
     },
-    reloadAllNextNodeLists: function() {
-      $.each( smartAnswerBuilder.container.find('.node'), function(i,node) {
-        smartAnswerBuilder.reloadNextNodeList( $(node) );
-      });
+    reloadAllNextNodeLists: function () {
+      $.each(smartAnswerBuilder.container.find('.node'), function (i, node) {
+        smartAnswerBuilder.reloadNextNodeList($(node))
+      })
     },
-    reloadNextNodeList: function(node) {
-      var nextNodeField = node.find('.next-node-list');
-      nextNodeField.find('option:not(.default)').remove();
+    reloadNextNodeList: function (node) {
+      var nextNodeField = node.find('.next-node-list')
+      nextNodeField.find('option:not(.default)').remove()
 
-      var validNextNodes = smartAnswerBuilder.optionsForNode(node);
-      var validNextIds = $.map(validNextNodes, function(n){ return n.id; });
+      var validNextNodes = smartAnswerBuilder.optionsForNode(node)
+      var validNextIds = $.map(validNextNodes, function (n) { return n.id })
 
-      $.each( validNextNodes, function(i, x) {
-        var optionLabel = x.name;
-        if (x.label != '') {
-          optionLabel = optionLabel + " (" + x.label + ")";
+      $.each(validNextNodes, function (i, x) {
+        var optionLabel = x.name
+        if (x.label !== '') {
+          optionLabel = optionLabel + ' (' + x.label + ')'
         }
-        $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(nextNodeField.find('optgroup[class="'+ x.kind +'-list"]'));
-      });
+        $('<option></option>').text(optionLabel).attr('value', x.id).appendTo(nextNodeField.find('optgroup[class="' + x.kind + '-list"]'))
+      })
 
-      node.find('.option').each( function(i, option){
-        var valueField = $(option).find('.next-node-id').first();
-        var selectList = $(option).find('.next-node-list');
+      node.find('.option').each(function (i, option) {
+        var valueField = $(option).find('.next-node-id').first()
+        var selectList = $(option).find('.next-node-list')
 
-        var nextNodeId = valueField.val();
+        var nextNodeId = valueField.val()
 
-        if (validNextIds.indexOf(nextNodeId) != -1) {
-          selectList.val(nextNodeId);
+        if (validNextIds.indexOf(nextNodeId) !== -1) {
+          selectList.val(nextNodeId)
         } else {
-          valueField.val("");
-          selectList.val("");
+          valueField.val('')
+          selectList.val('')
         }
-      });
+      })
     },
-    optionsForNode: function(node) {
-      var nextNodes = node.nextAll(':visible');
+    optionsForNode: function (node) {
+      var nextNodes = node.nextAll(':visible')
 
-      return $.map( nextNodes, function(nodeContainer, i) {
-        node = $(nodeContainer);
-        return { id: node.find('.node-slug').val(), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() };
-      });
+      return $.map(nextNodes, function (nodeContainer, i) {
+        node = $(nodeContainer)
+        return { id: node.find('.node-slug').val(), label: node.find('.node-title').val(), kind: node.find('.node-kind').val(), name: node.find('.node-label').text() }
+      })
     },
-    updateNextNode: function() {
-      var nextNode = $(this).val();
-      $(this).closest('.option').find('.next-node-id').val(nextNode);
+    updateNextNode: function () {
+      var nextNode = $(this).val()
+      $(this).closest('.option').find('.next-node-id').val(nextNode)
     }
   }
-  root.Publisher.smartAnswerBuilder = smartAnswerBuilder;
-}).call(this);
+  root.Publisher.smartAnswerBuilder = smartAnswerBuilder
+}).call(this)

@@ -1,26 +1,27 @@
+// stylelint-disable selector-no-qualifying-type
 .alert .modal {
   color: $text-color;
 }
 
-/* Placeholder text to explain a blank value */
+// Placeholder text to explain a blank value
 .placeholder {
-  color: #ccc;
+  color: #cccccc;
 }
 
-/* override the font-size for main textareas */
+// override the font-size for main textareas
 form.formtastic .form-group textarea {
   font-size: 17px;
   line-height: 21px;
 }
 
-/* Govspeak helper in Guides */
+// Govspeak helper in Guides
 .govspeak_help {
   height: 650px;
   overflow-y: scroll;
 }
 
 .autosave-msg {
-  float:right;
+  float: right;
 }
 
 // Give contrast against grey well. Also put images against
@@ -36,6 +37,7 @@ form.formtastic .form-group textarea {
 table.image-upload label {
   display: inline-block;
 }
+
 table.image-upload div.controls {
   display: inline-block;
   margin-left: 5px;
@@ -43,8 +45,8 @@ table.image-upload div.controls {
 
 label {
   font-weight: bold;
-  font-size:16px;
-  margin-bottom:10px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 label.nav-header {
@@ -52,41 +54,42 @@ label.nav-header {
 }
 
 .help-inline {
-  padding-left:0;
-  color:#888;
+  padding-left: 0;
+  color: #888888;
   max-width: 400px;
 }
 
-/* datetime selectors */
+// datetime selectors
 
 select.date {
   width: auto;
 }
 
-/*
- * Bootstrap tab styles apply display attributes only to .tab-pane
- * elements that are direct children of .tab-content. This fix is
- * required to apply correct display attributes to .tab-pane
- * elements wrapped inside the edition form in .tab-content.
- * See: edition/show.html.erb
- *
- * Uses visibility: rather than display: modifiers so that modal forms
- * embedded in hidden tabs can be displayed.
- */
+// Bootstrap tab styles apply display attributes only to .tab-pane
+// elements that are direct children of .tab-content. This fix is
+// required to apply correct display attributes to .tab-pane
+// elements wrapped inside the edition form in .tab-content.
+// See: edition/show.html.erb
+//
+//Uses visibility: rather than display: modifiers so that modal forms
+// embedded in hidden tabs can be displayed.
 .tab-content .tab-pane {
   overflow: hidden;
   position: absolute;
   visibility: hidden;
-  width: 0px;
+  width: 0;
 }
+
 .tab-content .active {
   visibility: visible;
   position: relative;
   width: 100%;
 }
-.tab-content>.tab-pane {
+
+.tab-content > .tab-pane {
   display: inline-block;
 }
+
 .modal.in {
   visibility: visible;
 }

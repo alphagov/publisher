@@ -1,11 +1,11 @@
-/* ==========================================================================
-   Diff of two editions
-   ========================================================================== */
+// stylelint-disable selector-no-qualifying-type, max-nesting-depth
 
-$added-color: #dfd;
+// Diff of two editions
+
+$added-color: #ddffdd;
 $strong-added-color: #77f177;
-$removed-color: #fdd;
-$strong-removed-color: #faa;
+$removed-color: #ffdddd;
+$strong-removed-color: #ffaaaa;
 
 .diff {
   border: 1px solid $gray-lighter;
