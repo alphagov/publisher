@@ -846,6 +846,38 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#admin" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition)
+    end
+
+    should "show the admin page for the edition" do
+      get :admin, params: { id: @guide.id }
+
+      assert_response :success
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+      end
+
+      should "be able to see the admin page for Welsh editions" do
+        get :admin, params: { id: @welsh_guide.id }
+
+        assert_response :success
+      end
+
+      should "not be able to see the admin page for non-Welsh editions" do
+        get :admin, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#diff" do
     should "we can diff the last edition" do
       first_edition = FactoryBot.create(:guide_edition, state: "published")
