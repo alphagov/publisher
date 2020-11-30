@@ -787,6 +787,31 @@ class EditionsControllerTest < ActionController::TestCase
         delete :destroy, params: { id: @guide.id }
       end
     end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+      end
+
+      should "not be able to destroy non-Welsh editions" do
+        assert_difference("GuideEdition.count", 0) do
+          delete :destroy, params: { id: @guide.id }
+        end
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to destroy Welsh editions" do
+        assert_difference("GuideEdition.count", -1) do
+          delete :destroy, params: { id: @welsh_guide.id }
+        end
+
+        assert_redirected_to(:controller => "root", "action" => "index")
+        assert_equal "Guide destroyed", flash[:success]
+      end
+    end
   end
 
   context "#index" do
