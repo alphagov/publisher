@@ -253,6 +253,46 @@ class EditionsControllerTest < ActionController::TestCase
         @edition.reload
         assert_equal @edition.state, "scheduled_for_publishing"
       end
+
+      should "be able to skip fact checks for Welsh editions" do
+        @welsh_edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @welsh_edition.id,
+               edition: {
+                 activity: {
+                   "request_type" => "skip_fact_check",
+                   "comment" => "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "The fact check has been skipped for this publication."
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to skip fact checks for non-Welsh editions" do
+        @edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @edition.id,
+               edition: {
+                 activity: {
+                   request_type: "skip_fact_check",
+                   comment: "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
