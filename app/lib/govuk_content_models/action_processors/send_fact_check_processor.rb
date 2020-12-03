@@ -1,10 +1,6 @@
 module GovukContentModels
   module ActionProcessors
     class SendFactCheckProcessor < BaseProcessor
-      def process?
-        actor.govuk_editor?
-      end
-
       def process
         return false if action_attributes[:email_addresses].blank?
 
