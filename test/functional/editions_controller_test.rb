@@ -707,6 +707,49 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal @edition.state, "ready"
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
+
+      should "be able to approve a fact check for Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Approve Fact check",
+               edition: {
+                 activity_approve_fact_check_attributes: {
+                   request_type: "approve_fact_check",
+                   comment: "lgtm",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to approve a fact check for non-Welsh editions" do
+        @edition.update!(state: "fact_check_received")
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Approve Fact check",
+               edition: {
+                 activity_approve_fact_check_attributes: {
+                   request_type: "approve_fact_check",
+                   comment: "lgtm",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check_received"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
