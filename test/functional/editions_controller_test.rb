@@ -748,6 +748,64 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
 
+      should "be able to resend fact check emails for Welsh editions" do
+        @welsh_edition.update!(state: "fact_check")
+
+        previous_action = Action.new(
+          request_type: "send_fact_check",
+          email_addresses: "user@example.com",
+          comment: "Blah",
+          customised_message: "Hello",
+          edition: @welsh_edition,
+        )
+        Edition.any_instance.stubs(:latest_status_action).returns(previous_action)
+
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Resend fact check email",
+               edition: {
+                 activity_resend_fact_check_attributes: {
+                   request_type: "resend_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "Guide updated"
+        assert_equal @welsh_edition.state, "fact_check"
+      end
+
+      should "not be able to resend fact check emails for non-Welsh editions" do
+        @edition.update!(state: "fact_check")
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Resend fact check email",
+               edition: {
+                 activity_resend_fact_check_attributes: {
+                   request_type: "resend_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
       should "be able to approve a fact check for Welsh editions" do
         UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
 
