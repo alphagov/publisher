@@ -1,10 +1,6 @@
 module GovukContentModels
   module ActionProcessors
     class AssignProcessor < BaseProcessor
-      def process?
-        actor.govuk_editor?
-      end
-
       def process
         edition.set(assigned_to_id: action_attributes[:recipient_id])
         edition.reload

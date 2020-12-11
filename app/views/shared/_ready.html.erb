@@ -1,4 +1,6 @@
-<div class="alert alert-info">
-  <p>Request this edition to be amended further.</p>
-  <%= render 'shared/request_amendments' %>
-</div>
+ <% if current_user.has_editor_permissions?(@resource)%>
+  <div class="alert alert-info">
+    <p>Request this edition to be amended further.</p>
+    <%= render 'shared/request_amendments' %>
+  </div>
+<% end %>

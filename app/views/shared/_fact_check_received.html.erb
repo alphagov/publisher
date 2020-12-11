@@ -1,10 +1,14 @@
 <div class="alert alert-info">
-  <p>We have received a fact check response for this edition. Please check the response in History &amp; Notes, and select an action below.</p>
+  <p>We have received a fact check response for this edition.</p>
 
-  <div class="workflow-buttons">
-    <%= fact_check_buttons(@resource)%>
-  </div>
-  <% if activity_forms_required? %>
-    <%= fact_check_forms(@resource)%>
-  <% end %>
+   <% if current_user.has_editor_permissions?(@resource)%>
+    <p>Please check the response in History &amp; Notes, and select an action below.</p>
+
+    <div class="workflow-buttons">
+      <%= fact_check_buttons(@resource)%>
+    </div>
+    <% if activity_forms_required? %>
+      <%= fact_check_forms(@resource)%>
+    <% end %>
+  <% end%>
 </div>

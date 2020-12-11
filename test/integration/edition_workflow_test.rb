@@ -417,16 +417,6 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content? guide.title
   end
 
-  test "can't progress from fact-check if not govuk_editor" do
-    guide.update!(state: "fact_check_received")
-
-    login_as FactoryBot.create(:user)
-
-    visit_edition guide
-    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
-    assert page.has_content? "You do not have correct editor permissions for this action."
-  end
-
   test "can go back to fact-check from fact-check received" do
     guide.update!(state: "fact_check_received")
 
@@ -568,6 +558,90 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     fill_in "Title", with: "Updated Welsh Title"
 
     save_edition_and_assert_success
+  end
+
+  test "Welsh editors can assign users to Welsh editions" do
+    guide.artefact.update!(language: "cy")
+
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    select "Bob", from: "Assigned to"
+    save_edition_and_assert_success
+    guide.reload
+
+    assert_equal guide.assigned_to, bob
+
+    save_edition_and_assert_success
+  end
+
+  test "Welsh editors cannot assign users to non-Welsh editions" do
+    login_as("WelshEditor")
+    visit edition_path(guide)
+
+    assert page.has_no_content? "Assigned to"
+  end
+
+  test "Welsh editors may not see buttons to respond to fact checks" do
+    edition = FactoryBot.create(:edition, :fact_check_received)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_content?("We have received a fact check response for this edition")
+    assert_not page.has_css?(".btn.btn-info", text: "Needs major changes")
+    assert_not page.has_css?(".btn.btn-info", text: "Minor or no changes required")
+  end
+
+  test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
+    edition = FactoryBot.create(:edition, :fact_check_received, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_content?("We have received a fact check response for this edition")
+    assert page.has_css?(".btn.btn-info", text: "Needs major changes")
+    assert page.has_css?(".btn.btn-info", text: "Minor or no changes required")
+  end
+
+  test "Welsh editors may not request more work for fact checked edition" do
+    edition = FactoryBot.create(:edition, :fact_check)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_content?("We’re awaiting a response")
+    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
+  end
+
+  test "Welsh editors may request more work for fact checked Welsh edition" do
+    edition = FactoryBot.create(:edition, :fact_check, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_content?("We’re awaiting a response")
+    assert page.has_css?(".btn.btn-info", text: "Needs more work")
+  end
+
+  test "Welsh editors may not request more work for 'ready' non-Welsh editions" do
+    edition = FactoryBot.create(:edition, :ready)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert_not page.has_content?("Request this edition to be amended further.")
+    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
+  end
+
+  test "Welsh editors may request more work for 'ready' Welsh editions" do
+    edition = FactoryBot.create(:edition, :ready, :welsh)
+    login_as("WelshEditor")
+
+    visit_edition edition
+
+    assert page.has_content?("Request this edition to be amended further.")
+    assert page.has_css?(".btn.btn-info", text: "Needs more work")
   end
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do

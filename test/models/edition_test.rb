@@ -640,9 +640,17 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal bob, edition.assigned_to
   end
 
-  test "cannot assign if user is not govuk_editor" do
+  test "cannot assign if user does not have correct editor permissions" do
     alice = FactoryBot.create(:user, name: "alice")
     bob = FactoryBot.create(:user, :govuk_editor, name: "bob")
+    edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
+    alice.assign(edition, bob)
+    assert_nil edition.assigned_to
+  end
+
+  test "cannot assign if recipient does not have correct editor permissions" do
+    alice = FactoryBot.create(:user, :govuk_editor, name: "alice")
+    bob = FactoryBot.create(:user, name: "bob")
     edition = FactoryBot.create(:guide_edition, panopticon_id: @artefact.id, state: "ready")
     alice.assign(edition, bob)
     assert_nil edition.assigned_to

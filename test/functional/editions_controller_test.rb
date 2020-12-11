@@ -253,6 +253,46 @@ class EditionsControllerTest < ActionController::TestCase
         @edition.reload
         assert_equal @edition.state, "scheduled_for_publishing"
       end
+
+      should "be able to skip fact checks for Welsh editions" do
+        @welsh_edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @welsh_edition.id,
+               edition: {
+                 activity: {
+                   "request_type" => "skip_fact_check",
+                   "comment" => "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "The fact check has been skipped for this publication."
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to skip fact checks for non-Welsh editions" do
+        @edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @edition.id,
+               edition: {
+                 activity: {
+                   request_type: "skip_fact_check",
+                   comment: "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
@@ -262,7 +302,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "update assignment" do
-      bob = FactoryBot.create(:user)
+      bob = FactoryBot.create(:user, :govuk_editor)
 
       post :update,
            params: {
@@ -275,7 +315,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "not create a new action if the assignment is unchanged" do
-      bob = FactoryBot.create(:user)
+      bob = FactoryBot.create(:user, :govuk_editor)
       @user.assign(@guide, bob)
 
       post :update,
@@ -377,6 +417,59 @@ class EditionsControllerTest < ActionController::TestCase
         @edition.reload
         assert_not_equal @edition.title, "Updated title"
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to assign users to Welsh editions" do
+        assignees = [FactoryBot.create(:user, :welsh_editor), FactoryBot.create(:user, :govuk_editor)]
+        assignees.each do |assignee|
+          post :update,
+               params: {
+                 id: @welsh_edition.id,
+                 edition: {
+                   assigned_to_id: assignee.id,
+                 },
+               }
+
+          assert_redirected_to edition_path(@welsh_edition)
+          @welsh_edition.reload
+          assert_equal @welsh_edition.assigned_to, assignee
+        end
+      end
+
+      should "not be able to assign users to non-Welsh editions" do
+        assignees = [FactoryBot.create(:user, :welsh_editor), FactoryBot.create(:user, :govuk_editor)]
+        assignees.each do |assignee|
+          post :update,
+               params: {
+                 id: @edition.id,
+                 edition: {
+                   assigned_to_id: assignee.id,
+                 },
+               }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+          @edition.reload
+          assert_nil @edition.assigned_to
+        end
+      end
+
+      should "not be able to be assigned to non-Welsh editions" do
+        login_as_govuk_editor
+        assignee = FactoryBot.create(:user, :welsh_editor)
+
+        post :update,
+             params: {
+               id: @edition.id,
+               edition: {
+                 assigned_to_id: assignee.id,
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        assert_equal flash[:danger], "Chosen assignee does not have correct editor permissions."
+        @edition.reload
+        assert_nil @edition.assigned_to
       end
 
       should "be able to schedule publishing for Welsh editions" do
@@ -608,6 +701,153 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal @edition.state, "ready"
         assert_equal flash[:danger], "You do not have correct editor permissions for this action."
       end
+
+      should "be able to request a fact check for Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Send to Fact check",
+               edition: {
+                 activity_send_fact_check_attributes: {
+                   request_type: "send_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "Guide updated"
+        assert_equal @welsh_edition.state, "fact_check"
+      end
+
+      should "not be able to request a fact check for non-Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Send to Fact check",
+               edition: {
+                 activity_send_fact_check_attributes: {
+                   request_type: "send_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "ready"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to resend fact check emails for Welsh editions" do
+        @welsh_edition.update!(state: "fact_check")
+
+        previous_action = Action.new(
+          request_type: "send_fact_check",
+          email_addresses: "user@example.com",
+          comment: "Blah",
+          customised_message: "Hello",
+          edition: @welsh_edition,
+        )
+        Edition.any_instance.stubs(:latest_status_action).returns(previous_action)
+
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Resend fact check email",
+               edition: {
+                 activity_resend_fact_check_attributes: {
+                   request_type: "resend_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "Guide updated"
+        assert_equal @welsh_edition.state, "fact_check"
+      end
+
+      should "not be able to resend fact check emails for non-Welsh editions" do
+        @edition.update!(state: "fact_check")
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Resend fact check email",
+               edition: {
+                 activity_resend_fact_check_attributes: {
+                   request_type: "resend_fact_check",
+                   comment: "Blah",
+                   email_addresses: "user@example.com",
+                   customised_message: "Hello",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+
+      should "be able to approve a fact check for Welsh editions" do
+        UpdateWorker.expects(:perform_async).with(@welsh_edition.id.to_s, false)
+
+        post :update,
+             params: {
+               id: @welsh_edition.id,
+               commit: "Approve Fact check",
+               edition: {
+                 activity_approve_fact_check_attributes: {
+                   request_type: "approve_fact_check",
+                   comment: "lgtm",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to approve a fact check for non-Welsh editions" do
+        @edition.update!(state: "fact_check_received")
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s, false).never
+
+        post :update,
+             params: {
+               id: @edition.id,
+               commit: "Approve Fact check",
+               edition: {
+                 activity_approve_fact_check_attributes: {
+                   request_type: "approve_fact_check",
+                   comment: "lgtm",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check_received"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
     end
   end
 
@@ -734,6 +974,31 @@ class EditionsControllerTest < ActionController::TestCase
         delete :destroy, params: { id: @guide.id }
       end
     end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+      end
+
+      should "not be able to destroy non-Welsh editions" do
+        assert_difference("GuideEdition.count", 0) do
+          delete :destroy, params: { id: @guide.id }
+        end
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to destroy Welsh editions" do
+        assert_difference("GuideEdition.count", -1) do
+          delete :destroy, params: { id: @welsh_guide.id }
+        end
+
+        assert_redirected_to(:controller => "root", "action" => "index")
+        assert_equal "Guide destroyed", flash[:success]
+      end
+    end
   end
 
   context "#index" do
@@ -765,6 +1030,38 @@ class EditionsControllerTest < ActionController::TestCase
       get :show, params: { id: @guide.id }
       assert_response :success
       assert_not_nil assigns(:resource)
+    end
+  end
+
+  context "#admin" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition)
+    end
+
+    should "show the admin page for the edition" do
+      get :admin, params: { id: @guide.id }
+
+      assert_response :success
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+      end
+
+      should "be able to see the admin page for Welsh editions" do
+        get :admin, params: { id: @welsh_guide.id }
+
+        assert_response :success
+      end
+
+      should "not be able to see the admin page for non-Welsh editions" do
+        get :admin, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
     end
   end
 

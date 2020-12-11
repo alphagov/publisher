@@ -113,6 +113,14 @@ FactoryBot.define do
       state { "ready" }
     end
 
+    trait :fact_check do
+      state { "fact_check" }
+    end
+
+    trait :fact_check_received do
+      state { "fact_check_received" }
+    end
+
     trait :in_review do
       state { "in_review" }
       review_requested_at { Time.zone.now }
