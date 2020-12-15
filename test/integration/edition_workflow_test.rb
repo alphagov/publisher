@@ -270,7 +270,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
         click_on "Send"
       end
 
-      assert page.has_content? "Error: One or more recipients not in GOV.UK Notify team (code: 400)"
+      assert page.has_content? "Error: One or more recipients not in GOV.UK Notify team (code: 400).\nThis error will not occur in Production."
     end
   end
 

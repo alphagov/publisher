@@ -32,7 +32,12 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_bad_request(_exception)
-    render plain: "Error: One or more recipients not in GOV.UK Notify team (code: 400)", status: :bad_request
+    error = <<~ERROR
+      Error: One or more recipients not in GOV.UK Notify team (code: 400).
+      This error will not occur in Production.
+    ERROR
+
+    render plain: error, status: :bad_request
   end
 
   def require_govuk_editor(redirect_path: root_path)
