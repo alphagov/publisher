@@ -482,7 +482,7 @@ class EditionsControllerTest < ActionController::TestCase
             edition: {
               activity_schedule_for_publishing_attributes: {
                 request_type: "schedule_for_publishing",
-                "publish_at(1i)" => "2020",
+                "publish_at(1i)" => "2100",
                 "publish_at(2i)" => "12",
                 "publish_at(3i)" => "21",
                 "publish_at(4i)" => "10",
