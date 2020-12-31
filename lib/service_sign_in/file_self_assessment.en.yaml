@@ -11,9 +11,6 @@ choose_sign_in:
     - text: Sign in with GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=uk_idp_sign_in
       hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
-    - text: Sign in with a digital identity from another European country
-      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=eidas_sign_in
-      hint_text: If you’re part of an ID scheme in a participating country, you may be able to use it here.
     - text: Register for Self Assessment
       url: https://www.gov.uk/register-for-self-assessment
       hint_text: You must register before you can file your first tax return.

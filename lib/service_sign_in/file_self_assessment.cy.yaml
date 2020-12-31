@@ -10,9 +10,6 @@ choose_sign_in:
     - text: Mewngofnodi gan ddefnyddio GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=uk_idp_sign_in
       hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, Digidentity, Experian, Swyddfa'r Post neu SecureIdentity.
-    - text: Defnyddiwch hunaniaeth digidol o wlad Ewropeaidd arall
-      url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=eidas_sign_in
-      hint_text: Os ydych yn rhan o gynllun ID mewn gwlad sy'n cymryd rhan, efallai y gallwch ei ddefnyddio yma.
     - text: Cofrestru ar gyfer Hunanasesiad
       slug: cofrestru-hunan-asesiad
       hint_text: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
