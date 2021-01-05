@@ -52,6 +52,7 @@ class UnpublishService
             path: "/#{artefact.slug}",
             type: "prefix",
             destination: redirect_url,
+            segments_mode: "ignore",
           },
         ],
         discard_drafts: true,

@@ -67,6 +67,7 @@ class UnpublishServiceTest < ActiveSupport::TestCase
                     path: "/foo",
                     type: "prefix",
                     destination: "/bar",
+                    segments_mode: "ignore",
                   },
                 ],
                 discard_drafts: true)
