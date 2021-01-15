@@ -1,57 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "1dd7580ea4eb3c303e870dad82dc5223592fd36c4b44bec6ab6ea0a0c1affbc0",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "lib/csv_report_generator.rb",
-      "line": 14,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "redis.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CsvReportGenerator",
-        "method": "run!"
-      },
-      "user_input": "Rails.env",
-      "confidence": "Weak",
-      "note": "We don't pass any user data to this string."
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "3f2c31f15778e6b65e944692da7e7a60ce09767a71010060f5237c62d5e0ae41",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/views/root/index.html.erb",
-      "line": 53,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "@presenter.send((\"drafts\" or params[:list]))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "RootController",
-          "method": "index",
-          "line": 20,
-          "file": "app/controllers/root_controller.rb",
-          "rendered": {
-            "name": "root/index",
-            "file": "app/views/root/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "root/index"
-      },
-      "user_input": "params[:list]",
-      "confidence": "High",
-      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "73de97a88f3e6fef8a35ced89420323264c5014cde36875b2795a1ac9cf85015",
@@ -128,8 +77,28 @@
       "user_input": "params[:list].presence",
       "confidence": "High",
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "d3d42c84d0b0acf57ccb1c9d1133ca43389fd725d0471016013e52bf59269b83",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/csv_report_generator.rb",
+      "line": 11,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Redis.current.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CsvReportGenerator",
+        "method": "run!"
+      },
+      "user_input": "Rails.env",
+      "confidence": "Weak",
+      "note": "We don't pass any user data to this string."
     }
   ],
-  "updated": "2019-12-06 15:44:17 +0000",
-  "brakeman_version": "4.7.2"
+  "updated": "2021-01-15 21:34:56 +0000",
+  "brakeman_version": "4.10.1"
 }
