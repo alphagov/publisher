@@ -14,7 +14,6 @@ require "fact_check_email_handler"
 
 require "redis"
 require "redis-lock"
-require_relative "../lib/redis_config"
 
 def redis
   Redis.new(RedisConfig::REDIS_CONFIG)
@@ -39,7 +38,7 @@ handler = FactCheckEmailHandler.new(Publisher::Application.fact_check_config)
 # that long.
 AUTOMATIC_LOCK_EXPIRY = (5 * 60) # seconds
 begin
-  redis.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |lock|
+  Redis.current.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |lock|
     handler.process do
       lock.extend_life(AUTOMATIC_LOCK_EXPIRY)
     end
