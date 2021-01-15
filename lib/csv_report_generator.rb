@@ -2,8 +2,6 @@ require "redis"
 require "redis-lock"
 
 class CsvReportGenerator
-  include RedisConfig
-
   def self.csv_path
     ENV["GOVUK_APP_ROOT"] ||= Rails.root
     File.join(ENV["GOVUK_APP_ROOT"], "reports")
