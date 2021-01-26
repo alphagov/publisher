@@ -31,13 +31,20 @@ class ApplicationController < ActionController::Base
     params
   end
 
-  def notify_bad_request(_exception)
-    error = <<~ERROR
-      Error: One or more recipients not in GOV.UK Notify team (code: 400).
-      This error will not occur in Production.
-    ERROR
+  def notify_bad_request(exception)
+    if %w[integration staging].include?(ENV["SENTRY_CURRENT_ENV"]) && exception.message =~ /team-only API key/
+      # in production we care about all errors
+      # in staging and integration the team-only error may be encountered by
+      # end-users who should see a more helpful error message
+      raise
+    else
+      error = <<~ERROR
+        Error: One or more recipients not in GOV.UK Notify team (code: 400).
+        This error will not occur in Production.
+      ERROR
 
-    render plain: error, status: :bad_request
+      render plain: error, status: :bad_request
+    end
   end
 
   def require_govuk_editor(redirect_path: root_path)
