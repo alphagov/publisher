@@ -10,9 +10,9 @@ choose_sign_in:
       hint_text: You’ll have a user ID if you’ve registered for Self Assessment or filed a tax return online before.
     - text: Sign in with GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=uk_idp_sign_in
-      hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
+      hint_text: You’ll have an account if you’ve already proved your identity with either Digidentity or Post Office.
     - text: Register for Self Assessment
       url: https://www.gov.uk/register-for-self-assessment
       hint_text: You must register before you can file your first tax return.
 update_type: minor
-change_note: Redirect Register for Self Assessment page to /register-for-self-assessment.
+change_note: Updated choose sign in page to remove disconnecting identity providers.

@@ -9,7 +9,7 @@ choose_sign_in:
       hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
     - text: Sign in with GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-tax-estimate?journey_hint=uk_idp_sign_in
-      hint_text: You’ll have an account if you’ve already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
+      hint_text: You’ll have an account if you’ve already proved your identity with either Digidentity or Post Office.
     - text: Create an account
       slug: create-account
       hint_text: If you do not already have one of these accounts, we'll help you choose whether to use Government Gateway or GOV.UK Verify.
@@ -45,4 +45,4 @@ create_new_account:
     {button}[Choose GOV.UK Verify](https://www.signin.service.gov.uk/initiate-journey/hmrc-tax-estimate?journey_hint=registration){/button}
 
 update_type: minor
-change_note: Updated create account page content to be more accurate and help people choose.
+change_note: Updated choose sign in page to remove disconnecting identity providers.

@@ -10,9 +10,9 @@ choose_sign_in:
       hint_text: You'll have a CRN and password if you've already registered for the Rural Payments service.
     - text: Sign in with GOV.UK Verify
       url: https://www.ruralpayments.service.gov.uk/auth/ida/request
-      hint_text: You'll have an account if you've already proved your identity with either Barclays, Digidentity, Experian, Post Office or SecureIdentity.
+      hint_text: You'll have an account if you've already proved your identity with either Digidentity or Post Office.
     - text: Register for the Rural Payments service
       url: https://www.gov.uk/guidance/register-for-rural-payments
       hint_text: You must register before you can make a rural payment claim.
-update_type: major
-change_note: A new page for Rural Payments (no welsh, no create account)
+update_type: minor
+change_note: Updated choose sign in page to remove disconnecting identity providers.

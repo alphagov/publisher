@@ -9,7 +9,7 @@ choose_sign_in:
       hint_text: Bydd gennych chi ID defnyddiwr os ydych chi wedi cofrestru ar gyfer Hunanasesiad neu wedi ffeilio ffurflen dreth ar-lein yn y gorffennol.
     - text: Mewngofnodi gan ddefnyddio GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-isa?journey_hint=uk_idp_sign_in
-      hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Barclays, Digidentity, Experian, Swyddfa'r Post neu SecureIdentity.
+      hint_text: Bydd gennych chi gyfrif os ydych chi wedi profi'n barod pwy ydych chi naill ai gyda Digidentity neu Swyddfa'r Post.
     - text: Cofrestru ar gyfer Hunanasesiad
       slug: cofrestru-hunan-asesiad
       hint_text: Os ydych chi’n ffeilio ar-lein am y tro cyntaf, bydd angen i chi gofrestru ar gyfer Hunanasesiad yn gyntaf.
@@ -31,4 +31,4 @@ create_new_account:
 
     *[UTR]: Cyfeirnod Trethdalwr Unigryw
 update_type: minor
-change_note: Updated Verify links to use correct hints and redirects
+change_note: Updated choose sign in page to remove disconnecting identity providers.
