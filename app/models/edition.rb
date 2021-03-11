@@ -113,7 +113,10 @@ class Edition
   validates_with ReviewerValidator
   validates :change_note, presence: { if: :major_change }
 
-  before_save :check_for_archived_artefact
+  before_save do
+    check_for_archived_artefact
+    remove_line_separator_character
+  end
 
   before_destroy do
     destroy_publishing_api_draft
@@ -457,6 +460,15 @@ class Edition
 
   def latest_link_check_report
     link_check_reports.last
+  end
+
+  def remove_line_separator_character
+    return unless respond_to?(:parts)
+
+    character = "\u2028"
+    parts.each do |part|
+      part.body = part.body.to_s.gsub(character, "")
+    end
   end
 
 private

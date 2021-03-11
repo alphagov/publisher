@@ -1219,4 +1219,14 @@ class EditionTest < ActiveSupport::TestCase
       assert latest_report, edition.latest_link_check_report
     end
   end
+
+  context "where the body contains a line separator character" do
+    should "remove character on save" do
+      edition = FactoryBot.create(:guide_edition_with_two_parts)
+      edition.parts.first.body = "Some text \u2028with a line separator character"
+      edition.save!
+
+      assert_no_match(/\u2028/, edition.parts.first.body)
+    end
+  end
 end
