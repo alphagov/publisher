@@ -9,7 +9,7 @@ choose_sign_in:
       hint_text: Bydd gennych Ddynodydd Defnyddiwr (ID) os ydych wedi cofrestru i wneud pethau fel cyflwyno'ch Ffurflen Dreth Hunanasesiad ar-lein.
     - text: Defnyddio GOV.UK Verify
       url: https://www.signin.service.gov.uk/initiate-journey/hmrc-company-car-tax?journey_hint=uk_idp_sign_in
-      hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Barclays, Digidentity, Experian, Swyddfa'r Post neu SecureIdentity.
+      hint_text: Bydd gennych gyfrif os ydych eisoes wedi profi pwy ydych gyda naill ai Digidentity neu Swyddfa'r Posty.
     - text: Creu cyfrif
       slug: creu-cyfrif
       hint_text: Os nad oes gennych un o'r cyfrifon hyn eisoes, gallwn eich helpu i ddewis p'un ai i ddefnyddio Porth y Llywodraeth neu GOV.UK Verify
@@ -49,4 +49,4 @@ create_new_account:
 
 
 update_type: minor
-change_note: Updated Verify links to use correct hints and redirects
+change_note: Updated choose sign in page to remove disconnecting identity providers.
