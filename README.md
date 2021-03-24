@@ -51,16 +51,18 @@ bundle exec rake
 ### State machine
 
 Maps out the transitions between states for the `Edition` class. These transitions are defined in the [workflow](app/models/workflow.rb) module.
-A diagram of the current state machine can be seen here: [state machine diagram](doc/state_machines/state_machine_diagram_for_edition.png).
+A diagram of the current state machine can be seen here: [state machine diagram](docs/state_machines/state_machine_diagram_for_edition.png).
 The diagram can be (re)generated using the [state_machines-graphviz gem](https://github.com/state-machines/state_machines-graphviz), by doing:
 
-`bundle exec rake state_machines:draw CLASS=Edition`
+```sh
+bundle exec rake state_machines:draw CLASS=Edition TARGET=docs
+```
 
-This will generate a diagram in the `doc/state_machines` folder.
+This will generate a diagram in the `docs/state_machines` folder.
 
 ## Further documentation
 
-- [Fact Checking](doc/fact-checking.md)
+- [Fact Checking](docs/fact-checking.md)
 
 ### Working with Service Sign In pages
 
