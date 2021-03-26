@@ -463,11 +463,13 @@ class Edition
   end
 
   def remove_line_separator_character
-    return unless respond_to?(:parts)
-
     character = "\u2028"
-    parts.each do |part|
-      part.body = part.body.to_s.gsub(character, "")
+    if respond_to?(:parts)
+      parts.each do |part|
+        part.body = part.body.to_s.gsub(character, "")
+      end
+    elsif respond_to?(:body)
+      self.body = body.to_s.gsub(character, "") unless body.nil?
     end
   end
 

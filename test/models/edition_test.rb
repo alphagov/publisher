@@ -1221,7 +1221,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   context "where the body contains a line separator character" do
-    should "remove character on save" do
+    should "remove character on save with 2 part edition" do
       edition = FactoryBot.create(:guide_edition_with_two_parts)
       edition.parts.first.body = "Some text \u2028with a line separator character"
       edition.save!
