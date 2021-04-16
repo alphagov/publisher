@@ -31,7 +31,11 @@ module Publisher
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.version = "1.0"
-    config.assets.prefix = "/assets"
+    config.assets.prefix = ENV.fetch("ASSETS_PREFIX", "/assets")
+
+    # allow overriding the asset host with an environment variable, useful for
+    # when router is proxying to this app but asset proxying isn't set up.
+    config.asset_host = ENV.fetch("ASSET_HOST", nil)
 
     config.action_mailer.notify_settings = {
       api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
