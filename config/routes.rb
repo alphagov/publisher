@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     GovukHealthcheck::SidekiqRedis,
   )
 
+  get "/healthcheck/scheduled-publishing", to: "healthcheck#scheduled_publishing"
+
   resources :notes do
     put "resolve", on: :member
   end

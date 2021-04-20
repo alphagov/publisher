@@ -19,6 +19,13 @@ module Healthcheck
       "#{edition_count} scheduled edition(s); #{queue_size} item(s) queued"
     end
 
+    def to_hash
+      {
+        status: status,
+        message: message,
+      }
+    end
+
   private
 
     def queue_size_matches_edition_count?
