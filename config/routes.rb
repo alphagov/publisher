@@ -7,6 +7,14 @@ Rails.application.routes.draw do
         Healthcheck::ScheduledPublishing,
       )
 
+  get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
+  get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
+    GovukHealthcheck::Mongoid,
+    GovukHealthcheck::SidekiqRedis,
+  )
+
+  get "/healthcheck/scheduled-publishing", to: "healthcheck#scheduled_publishing"
+
   resources :notes do
     put "resolve", on: :member
   end
