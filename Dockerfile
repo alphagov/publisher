@@ -11,6 +11,7 @@ ENV RAILS_ENV production
 ENV GOVUK_APP_NAME publisher
 ENV MONGODB_URI mongodb://mongo/govuk_content_development
 ENV PORT 3000
+ENV ASSETS_PREFIX /assets/publisher
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
