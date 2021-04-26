@@ -1,12 +1,5 @@
 # Having a long routes file is not a style violation
 Rails.application.routes.draw do
-  get "/healthcheck",
-      to: GovukHealthcheck.rack_response(
-        GovukHealthcheck::Mongoid,
-        GovukHealthcheck::SidekiqRedis,
-        Healthcheck::ScheduledPublishing,
-      )
-
   get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
   get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::Mongoid,
