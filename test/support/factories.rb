@@ -2,6 +2,7 @@ require "factory_bot"
 require "answer_edition"
 require "artefact"
 require "user"
+require "devolved_administration_availability"
 
 FactoryBot.define do
   factory :user do
@@ -229,14 +230,34 @@ FactoryBot.define do
     end
   end
 
+  factory :devolved_administration_availability, class: "DevolvedAdministrationAvailability" do
+    type { "local_authority_service" }
+    alternative_url { "" }
+  end
+
   factory :local_transaction_edition, parent: :edition, class: "LocalTransactionEdition" do
     sequence(:lgsl_code) { |nlgsl| nlgsl }
     introduction { "Test introduction" }
     more_information { "This is more information" }
     need_to_know { "This service is only available in England and Wales" }
-    scotland_availability { { type: 'local_authority', alternative_url: "" } }
-    wales_availability { { type: 'local_authority', alternative_url: ""} }
-    northern_ireland_availability { {type: 'local_authority', alternative_url: "" } }
+
+    scotland_availability do
+      FactoryBot.build(
+        :devolved_administration_availability,
+      )
+    end
+
+    wales_availability do
+      FactoryBot.build(
+        :devolved_administration_availability,
+      )
+    end
+
+    northern_ireland_availability do
+      FactoryBot.build(
+        :devolved_administration_availability,
+      )
+    end
   end
 
   factory :transaction_edition, parent: :edition, class: "TransactionEdition" do
