@@ -234,6 +234,9 @@ FactoryBot.define do
     introduction { "Test introduction" }
     more_information { "This is more information" }
     need_to_know { "This service is only available in England and Wales" }
+    scotland_availability { { type: 'local_authority', alternative_url: "" } }
+    wales_availability { { type: 'local_authority', alternative_url: ""} }
+    northern_ireland_availability { {type: 'local_authority', alternative_url: "" } }
   end
 
   factory :transaction_edition, parent: :edition, class: "TransactionEdition" do

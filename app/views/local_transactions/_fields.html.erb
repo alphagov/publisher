@@ -48,6 +48,45 @@
           <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
         </span>
       </div>
+
+      <% administrations = {
+        "Scotland" => :scotland_availability,
+        "Wales" => :wales_availability,
+        "Northern Ireland" => :northern_ireland_availability
+      } %>
+
+      <% administrations.each do |title, field_name| %>
+        <%= f.fields_for field_name do |f| %>
+          <div class="form-group">
+            <span class="form-label">
+              <%= f.label :type, "Devolved Administrations - #{title}" %>
+            </span>
+            </br>
+            <span class="form-wrapper">
+              <%= f.radio_button :type, 'local_authority_service', disabled: @resource.locked_for_edits? %>
+              <%= f.label :type, "Service is handled by local authority", value: 'local_authority_service' %>
+            </span>
+            </br>
+            <span class="form-wrapper">
+              <%= f.radio_button :type, 'devolved_administration_service', disabled: @resource.locked_for_edits? %>
+              <%= f.label :type, "Service is handled by devolved administration", value: 'devolved_administration_service' %>
+            </span>
+            </br>
+            <span class="form-wrapper">
+              <%= f.radio_button :type, 'unavailable', disabled: @resource.locked_for_edits? %>
+              <%= f.label :type, "Service not available", value: 'unavailable' %>
+            </span>
+            </br>
+            <span class="form-label">
+              <%= f.label :alternative_url, "Enter devolved administration's website URL" %>
+            </span>
+            </br>
+            <span class="form-wrapper">
+              <%= f.text_field :alternative_url, class: "input-md-8 form-control", disabled: @resource.locked_for_edits? %>
+            </span>
+          </div>
+        <% end %>
+      <% end %>
     </fieldset>
   </div>
 </div>
