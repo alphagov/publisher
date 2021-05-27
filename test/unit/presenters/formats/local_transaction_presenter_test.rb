@@ -138,5 +138,39 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       ]
       assert_equal expected, result[:routes]
     end
+
+    context "devolved administration availability" do
+      should "not present any devolved administration availability values by default" do
+        edition.save!(validate: false)
+        assert_not result[:details].key?(:wales_availability)
+        assert_not result[:details].key?(:scotland_availability)
+        assert_not result[:details].key?(:northern_ireland_availability)
+      end
+
+      should "not present the data if local_authority_service was selected" do
+        edition.scotland_availability = { type: "local_authority_service", alternative_url: "" }
+        edition.save!(validate: false)
+
+        assert_not result[:details].key?(:scotland_availability)
+      end
+
+      should "present the type data if unavailable was selected" do
+        edition.wales_availability.type = "unavailable"
+
+        edition.save!(validate: false)
+
+        expected = { type: "unavailable" }
+        assert_equal expected, result[:details][:wales_availability]
+      end
+
+      should "present the type and url data if devolved_administration_service was selected" do
+        edition.northern_ireland_availability = { type: "devolved_administration_service", alternative_url: "https://www.ni.gov/service" }
+
+        edition.save!(validate: false)
+
+        expected = { type: "devolved_administration_service", alternative_url: "https://www.ni.gov/service" }
+        assert_equal expected, result[:details][:northern_ireland_availability]
+      end
+    end
   end
 end
