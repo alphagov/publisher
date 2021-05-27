@@ -9,6 +9,10 @@ class LocalTransactionEdition < Edition
   field :more_information, type: String
   field :need_to_know, type: String
 
+  embeds_one :scotland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
+  embeds_one :wales_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
+  embeds_one :northern_ireland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
+
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   validate :valid_lgsl_code

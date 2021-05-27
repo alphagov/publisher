@@ -23,6 +23,15 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       introduction: "hello",
       more_information: "more info",
       need_to_know: "for your eyes only",
+      scotland_availability: FactoryBot.build(
+        :devolved_administration_availability,
+      ),
+      wales_availability: FactoryBot.build(
+        :devolved_administration_availability,
+      ),
+      northern_ireland_availability: FactoryBot.build(
+        :devolved_administration_availability,
+      ),
     )
   end
 
@@ -137,6 +146,39 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
         { path: "/foo", type: "prefix" },
       ]
       assert_equal expected, result[:routes]
+    end
+
+    context "[:scotland_availability]" do
+      should "not present the data if local_authority_service was selected" do
+        edition.scotland_availability = { type: "local_authority_service", alternative_url: "" }
+        edition.save!(validate: false)
+
+        expected = nil
+        assert_equal expected, result[:details][:scotland_availability]
+      end
+
+      should "present the type data if unavailable was selected" do
+        edition.scotland_availability = FactoryBot.build(
+          :devolved_administration_availability,
+          type: "unavailable",
+        )
+        edition.save!(validate: false)
+
+        expected = { type: "unavailable" }
+        assert_equal expected, result[:details][:scotland_availability]
+      end
+
+      should "present the type and url data if devolved_administration_service was selected" do
+        edition.scotland_availability = FactoryBot.build(
+          :devolved_administration_availability,
+          type: "devolved_administration_service",
+          alternative_url: "https://www.scot.gov/service",
+        )
+        edition.save!(validate: false)
+
+        expected = { type: "devolved_administration_service", alternative_url: "https://www.scot.gov/service" }
+        assert_equal expected, result[:details][:scotland_availability]
+      end
     end
   end
 end
