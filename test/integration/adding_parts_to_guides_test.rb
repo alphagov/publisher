@@ -9,7 +9,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
 
   context "creating a guide with parts" do
     setup do
-      @random_name = (0...8).map { rand(65..89).chr }.join + " GUIDE"
+      @random_name = "#{SecureRandom.alphanumeric(8)} GUIDE"
 
       guide = FactoryBot.create(:guide_edition, title: @random_name, slug: "test-guide")
       guide.save!
@@ -153,7 +153,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
   end
 
   test "slug for new parts should be automatically generated" do
-    random_name = (0...8).map { rand(65..89).chr }.join + " GUIDE"
+    random_name = "#{SecureRandom.alphanumeric(8)} GUIDE"
 
     guide = FactoryBot.create(:guide_edition, title: random_name, slug: "test-guide")
     guide.save!
