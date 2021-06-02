@@ -5,7 +5,7 @@ class LinkCheckReportCreator
 
   class InvalidReport < RuntimeError
     def initialize(original_error)
-      @message = original_error.message
+      super original_error.message
     end
   end
 
