@@ -3,7 +3,7 @@ require "local_service_importer"
 
 class LocalServiceImporterTest < ActiveSupport::TestCase
   def fixture_file(file)
-    File.expand_path("fixtures/" + file, File.dirname(__FILE__))
+    File.expand_path("fixtures/#{file}", File.dirname(__FILE__))
   end
 
   context "update" do

@@ -75,14 +75,14 @@ private
   def check_choose_sign_in_options_fields(error_message)
     error_message += "option > "
     unless choose_sign_in["options"].is_a?(Array)
-      @errors << error_message + "text, slug or url"
+      @errors << "#{error_message}text, slug or url"
       return
     end
 
     choose_sign_in["options"].each do |option|
-      @errors << error_message + "text" unless option.key?("text")
+      @errors << "#{error_message}text" unless option.key?("text")
       unless option.key?("slug") || option.key?("url")
-        @errors << error_message + "slug or url"
+        @errors << "#{error_message}slug or url"
       end
     end
   end

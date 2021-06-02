@@ -53,7 +53,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "treat a subject prefixed with Re: as valid" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert config.item_id_from_string("Re: " + valid_subject).present?
+      assert config.item_id_from_string("Re: #{valid_subject}").present?
     end
   end
 
@@ -80,7 +80,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
       assert_raises ArgumentError do
-        config.item_id_from_string(valid_subject + " [d682605bec3cf9b8906cf2bc]")
+        config.item_id_from_string("#{valid_subject} [d682605bec3cf9b8906cf2bc]")
       end
     end
   end

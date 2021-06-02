@@ -12,7 +12,7 @@ class ScheduledPublisher
     perform_at(edition.publish_at, edition.id.to_s)
   end
 
-  # NOTE on ids: edition and actor id are enqueued
+  # NOTE: on ids: edition and actor id are enqueued
   # as String or else marshalling converts it to a hash
   def self.cancel_scheduled_publishing(cancel_edition_id)
     queued_jobs.select { |scheduled_job|

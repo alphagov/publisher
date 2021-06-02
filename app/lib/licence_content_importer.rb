@@ -95,7 +95,7 @@ class LicenceContentImporter
 
   def formatted_result(import = true)
     Rails.logger.debug "--------------------------------------------------------------------------"
-    Rails.logger.debug "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
+    Rails.logger.debug "#{imported.size} LicenceEditions#{import ? '' : ' can be'} imported."
     unless existing.empty?
       existing.map! { |e| "#{e.slug} (#{e.licence_identifier})" }
       existing.uniq!

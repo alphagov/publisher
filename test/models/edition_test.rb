@@ -972,7 +972,7 @@ class EditionTest < ActiveSupport::TestCase
     answer_edition = template_published_answer
     guide_edition = answer_edition.build_clone(GuideEdition)
 
-    expected = "# Part One\n\n" + answer_edition.whole_body
+    expected = "# Part One\n\n#{answer_edition.whole_body}"
 
     assert_equal expected, guide_edition.whole_body
   end

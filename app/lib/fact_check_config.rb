@@ -9,7 +9,7 @@ class FactCheckConfig
     @reply_to_address = reply_to_address
     @reply_to_id = reply_to_id
 
-    @subject_prefix = subject_prefix.present? ? subject_prefix + "-" : ""
+    @subject_prefix = subject_prefix.present? ? "#{subject_prefix}-" : ""
     @subject_pattern = /\[#{@subject_prefix}(?<id>[0-9a-f]{24})\]/
   end
 
