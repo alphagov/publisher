@@ -38,7 +38,6 @@ class LicenceContentImporterTest < ActiveSupport::TestCase
 
   def test_marked_down
     assert_equal "**strong**", @importer.marked_down("<strong>strong</strong>")
-    assert_equal "**strong**", @importer.marked_down("&lt;strong&gt;strong&lt;/strong&gt;", true)
   end
 
   def test_valid_markdown_for_lists
