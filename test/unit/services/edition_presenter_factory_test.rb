@@ -1,10 +1,11 @@
 require "test_helper"
 
 class EditionPresenterFactoryTest < ActiveSupport::TestCase
+  Klass = Class.new
+
   context ".get_presenter" do
     should "return an object" do
       edition = stub(class: "foo")
-      Klass = Class.new
       Klass.expects(:new).with(edition).returns("bar")
 
       EditionPresenterFactory.expects(:presenter_class).with("foo").returns("EditionPresenterFactoryTest::Klass")
