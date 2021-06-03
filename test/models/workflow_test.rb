@@ -63,7 +63,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "also return scheduled publishing time when the state is scheduled for publishing" do
       edition = FactoryBot.build(:edition, :scheduled_for_publishing)
-      expected_status_text = "Scheduled for publishing on " + edition.publish_at.strftime("%d/%m/%Y %H:%M")
+      expected_status_text = "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}"
 
       assert_equal expected_status_text, edition.status_text
     end

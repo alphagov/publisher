@@ -43,7 +43,7 @@ module ActionHelper
   end
 
   def auto_link_zendesk_tickets(text)
-    text = text.gsub(/(?:zen|zendesk|zendesk ticket)(?:\s)?(?:#|\:)?(?:\s)?(\d{4,})/i) do |match|
+    text = text.gsub(/(?:zen|zendesk|zendesk ticket)(?:\s)?(?:#|:)?(?:\s)?(\d{4,})/i) do |match|
       ticket = Regexp.last_match(1)
       link_to match, "https://govuk.zendesk.com/tickets/#{ticket}"
     end

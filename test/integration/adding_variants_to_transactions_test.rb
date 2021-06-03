@@ -9,7 +9,7 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
 
   context "creating a transaction with variants" do
     setup do
-      @random_name = (0...8).map { rand(65..89).chr }.join + " TRANSACTION"
+      @random_name = "#{SecureRandom.alphanumeric(8)} TRANSACTION"
 
       transaction = FactoryBot.create(:transaction_edition, title: @random_name, slug: "test-transaction")
       transaction.save!
@@ -156,7 +156,7 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
   end
 
   test "slug for new variants should be automatically generated" do
-    random_name = (0...8).map { rand(65..89).chr }.join + " TRANSACTION"
+    random_name = "#{SecureRandom.alphanumeric(8)} TRANSACTION"
 
     transaction = FactoryBot.create(:transaction_edition, title: random_name, slug: "test-transaction")
     transaction.save!

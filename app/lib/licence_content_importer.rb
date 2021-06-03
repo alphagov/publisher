@@ -23,7 +23,7 @@ class LicenceContentImporter
       end
     end
 
-    Rails.logger.debug importer.formatted_result(method == :import)
+    Rails.logger.debug importer.formatted_result(import: method == :import)
   end
 
   def report(row)
@@ -93,9 +93,9 @@ class LicenceContentImporter
     user.record_note(edition, "Imported via LicenceContentImporter: #{Time.zone.today.to_s(:db)}")
   end
 
-  def formatted_result(import = true)
+  def formatted_result(import: true)
     Rails.logger.debug "--------------------------------------------------------------------------"
-    Rails.logger.debug "#{imported.size} LicenceEditions#{(import ? '' : ' can be')} imported."
+    Rails.logger.debug "#{imported.size} LicenceEditions#{import ? '' : ' can be'} imported."
     unless existing.empty?
       existing.map! { |e| "#{e.slug} (#{e.licence_identifier})" }
       existing.uniq!
@@ -115,11 +115,10 @@ class LicenceContentImporter
     title.parameterize.gsub("-amp-", "-and-")
   end
 
-  def marked_down(str, unescape_html = false)
+  def marked_down(str)
     return str if str.nil?
 
     str = to_utf8(str)
-    str = CGI.unescapeHTML(str) if unescape_html
     ReverseMarkdown.convert(str).strip
   end
 

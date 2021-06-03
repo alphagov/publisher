@@ -13,7 +13,6 @@ class FactCheckMail
     subject_is_out_of_office? || out_of_office_header_set?
   end
 
-  # rubocop:disable Style/MethodMissingSuper
   def method_missing(method_name, *args, &block)
     @message.public_send(method_name, *args, &block)
   end
@@ -21,7 +20,6 @@ class FactCheckMail
   def respond_to_missing?(method_name, *)
     @message.respond_to?(method_name)
   end
-# rubocop:enable Style/MethodMissingSuper
 
 private
 
@@ -45,7 +43,7 @@ private
       %w[X-Precedence junk],
       %w[X-Autoreply yes],
     ].any? do |key, value|
-      @message[key].class == Mail::Field &&
+      @message[key].instance_of?(Mail::Field) &&
         @message[key].to_s == value
     end
   end

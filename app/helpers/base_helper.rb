@@ -19,7 +19,7 @@ module BaseHelper
         url = root_path(scope_path_options(scope))
 
         tag.a(href: url) do
-          h(status_label + " ") + tag.span(presenter.send(scope).length, class: "badge pull-right")
+          h("#{status_label} ") + tag.span(presenter.send(scope).length, class: "badge pull-right")
         end
       end
     end
@@ -40,7 +40,7 @@ module BaseHelper
 
   def friendly_date(date)
     if Time.zone.now - date < 2.days
-      time_ago_in_words(date) + " ago."
+      "#{time_ago_in_words(date)} ago."
     else
       date.strftime("%d/%m/%Y %R")
     end

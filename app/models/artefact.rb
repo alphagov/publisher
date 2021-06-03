@@ -276,15 +276,11 @@ private
   end
 
   def validate_prefixes_and_paths
-    if !prefixes.nil? && prefixes_changed?
-      if prefixes.any? { |p| !valid_url_path?(p) }
-        errors.add(:prefixes, "are not all valid absolute URL paths")
-      end
+    if !prefixes.nil? && prefixes_changed? && prefixes.any? { |p| !valid_url_path?(p) }
+      errors.add(:prefixes, "are not all valid absolute URL paths")
     end
-    if !paths.nil? && paths_changed?
-      if paths.any? { |p| !valid_url_path?(p) }
-        errors.add(:paths, "are not all valid absolute URL paths")
-      end
+    if !paths.nil? && paths_changed? && paths.any? { |p| !valid_url_path?(p) }
+      errors.add(:paths, "are not all valid absolute URL paths")
     end
   end
 

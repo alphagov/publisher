@@ -1,5 +1,5 @@
 namespace :orphaned_editions do
-  QUALIFYING_EDITION_STATES = %w[
+  qualifying_edition_states = %w[
     ready
     amends_needed
     fact_check_received
@@ -12,7 +12,7 @@ namespace :orphaned_editions do
   task report: :environment do
     puts "Searching for orphaned editions..."
 
-    orphans = QUALIFYING_EDITION_STATES.flat_map do |state|
+    orphans = qualifying_edition_states.flat_map do |state|
       Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
 
@@ -29,7 +29,7 @@ namespace :orphaned_editions do
   task destroy: :environment do
     puts "Searching for orphaned editions..."
 
-    orphans = QUALIFYING_EDITION_STATES.flat_map do |state|
+    orphans = qualifying_edition_states.flat_map do |state|
       Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
 

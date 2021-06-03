@@ -248,7 +248,7 @@ protected
     when :guide_edition
       [
         :hide_chapter_navigation,
-        parts_attributes: %i[title body slug order id _destroy],
+        { parts_attributes: %i[title body slug order id _destroy] },
       ]
     when :licence_edition
       %i[
@@ -277,7 +277,7 @@ protected
       [
         :body,
         :start_button_text,
-        nodes_attributes: [
+        { nodes_attributes: [
           :slug,
           :title,
           :body,
@@ -285,8 +285,8 @@ protected
           :kind,
           :id,
           :_destroy,
-          options_attributes: %i[label next_node id _destroy],
-        ],
+          { options_attributes: %i[label next_node id _destroy] },
+        ] },
       ]
     when :transaction_edition
       [
@@ -298,7 +298,7 @@ protected
         :alternate_methods,
         :need_to_know,
         :department_analytics_profile,
-        variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy],
+        { variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy] },
       ]
     when :completed_transaction_edition
       %i[

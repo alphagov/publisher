@@ -24,9 +24,10 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   end
 
   def create_artefact_of_kind(kind)
-    if kind == "help_page"
+    case kind
+    when "help_page"
       FactoryBot.create(:artefact, slug: "help/foo", kind: kind)
-    elsif kind == "completed_transaction"
+    when "completed_transaction"
       FactoryBot.create(:artefact, slug: "done/foo", kind: kind)
     else
       FactoryBot.create(:artefact, kind: kind)
@@ -52,7 +53,7 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
 
     conversions.each do |to, from|
       should "be able to convert #{from} into #{to}" do
-        factory_name = (from + "_edition").to_sym
+        factory_name = "#{from}_edition".to_sym
         artefact = create_artefact_of_kind(from)
         edition = FactoryBot.create(factory_name, state: "published", panopticon_id: artefact.id)
         sample_parts.each { |part| edition.parts.create(part) } if edition.respond_to?(:parts)

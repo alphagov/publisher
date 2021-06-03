@@ -14,9 +14,8 @@ module PublicationsHelper
     Plek.new.external_url_for("content-tagger") + "/content/#{content_id}"
   end
 
-  def enabled_users_select_options(empty_value = true)
+  def enabled_users_select_options
     options = User.enabled.order_by([%i[name asc]]).collect { |u| [u.name, u.id] }
-    options.unshift(["", ""]) if empty_value
-    options
+    options.unshift(["", ""])
   end
 end

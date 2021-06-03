@@ -30,9 +30,7 @@ class ActionHelperTest < ActionView::TestCase
       assert_equal unformatted_email.length, 3
       assert_match(/reply/, unformatted_email.first)
       assert_match(/original/, unformatted_email.last)
-    end
 
-    emails.each do |text|
       formatted_email = format_email_text(text)
       assert_equal formatted_email.length, 3
       assert_match(/reply/, formatted_email.first)

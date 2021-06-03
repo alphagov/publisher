@@ -1,8 +1,7 @@
 module Tagging
   class TaggingUpdateForm
     include ActiveModel::Model
-    attr_accessor :content_id, :previous_version
-    attr_accessor :topics, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent
+    attr_accessor :content_id, :previous_version, :topics, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent
 
     validate :ordered_related_items_paths_exist
 
@@ -55,9 +54,7 @@ module Tagging
     end
 
     def ordered_related_items_path_by_ids
-      @ordered_related_items_path_by_ids ||= begin
-        Services.publishing_api.lookup_content_ids(base_paths: ordered_related_items)
-      end
+      @ordered_related_items_path_by_ids ||= Services.publishing_api.lookup_content_ids(base_paths: ordered_related_items)
     end
 
     def transform_base_paths_to_content_ids(base_paths)

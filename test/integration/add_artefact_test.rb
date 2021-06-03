@@ -23,7 +23,7 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
 
     click_button "Save and go to item"
 
-    assert %r{^\/editions\/[a-f0-9]*$} =~ page.current_path
+    assert %r{^/editions/[a-f0-9]*$} =~ page.current_path
 
     edition = HelpPageEdition.last
     assert edition.artefact.name == "Thingy McThingface"
