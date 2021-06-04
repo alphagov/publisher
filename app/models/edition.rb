@@ -473,6 +473,16 @@ class Edition
     end
   end
 
+  def paths
+    paths = ["/#{slug}"]  # base path
+
+    if respond_to?(:parts)
+      paths += parts.map { |part| "/#{slug}/#{part.slug}" }
+    end
+
+    paths
+  end
+
 private
 
   def base_field_keys
