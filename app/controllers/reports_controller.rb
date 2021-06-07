@@ -23,6 +23,10 @@ class ReportsController < ApplicationController
     send_report "content_workflow"
   end
 
+  def all_urls
+    send_report "all_urls"
+  end
+
 private
 
   def report_last_updated(report)
