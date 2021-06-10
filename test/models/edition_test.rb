@@ -1229,4 +1229,17 @@ class EditionTest < ActiveSupport::TestCase
       assert_no_match(/\u2028/, edition.parts.first.body)
     end
   end
+
+  context "#paths" do
+    should "include the base path" do
+      edition = FactoryBot.create(:guide_edition, slug: "test-path")
+      assert_equal edition.paths, ["/test-path"]
+    end
+
+    should "include any parts" do
+      edition = FactoryBot.create(:guide_edition, slug: "test-path")
+      edition.parts.create!(title: "Test title", body: "Test body", slug: "test-part")
+      assert_equal edition.paths, ["/test-path", "/test-path/test-part"]
+    end
+  end
 end
