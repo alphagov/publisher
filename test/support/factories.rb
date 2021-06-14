@@ -229,6 +229,8 @@ FactoryBot.define do
     end
   end
 
+  factory :devolved_administration_availability
+
   factory :local_transaction_edition, parent: :edition, class: "LocalTransactionEdition" do
     sequence(:lgsl_code) { |nlgsl| nlgsl }
     introduction { "Test introduction" }
