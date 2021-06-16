@@ -29,4 +29,51 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     local_transaction = LocalTransactionEdition.new(lgsl_code: service.lgsl_code, lgil_code: 1, title: "Bar", slug: "bar", panopticon_id: @artefact.id)
     assert local_transaction.valid?
   end
+
+  should "copy the devolved administration availability fields when cloning an edition" do
+    edition = FactoryBot.build(
+      :local_transaction_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      scotland_availability: {
+        type: "devolved_administration_service",
+        alternative_url: "https://test.com",
+      },
+      wales_availability: {
+        type: "unavailable",
+        alternative_url: nil,
+      },
+    )
+
+    edition.save!(validate: false)
+
+    cloned_edition = edition.build_clone
+    cloned_edition.save!(validate: false)
+
+    assert_equal edition.scotland_availability.type, cloned_edition.scotland_availability.type
+    assert_equal edition.scotland_availability.alternative_url, cloned_edition.scotland_availability.alternative_url
+    assert_equal edition.wales_availability.type, cloned_edition.wales_availability.type
+    assert_equal edition.northern_ireland_availability.type, cloned_edition.northern_ireland_availability.type
+  end
+
+  should "not copy the devolved administration availability fields when new edition is not a LocalTransactionEdition" do
+    edition = FactoryBot.build(
+      :local_transaction_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      scotland_availability: {
+        type: "devolved_administration_service",
+        alternative_url: "https://test.com",
+      },
+    )
+
+    edition.save!(validate: false)
+
+    cloned_edition = edition.build_clone(TransactionEdition)
+    cloned_edition.save!(validate: false)
+
+    assert cloned_edition.is_a?(TransactionEdition)
+    assert_equal edition.scotland_availability.type, "devolved_administration_service"
+    assert_not cloned_edition.respond_to?(:scotland_availability)
+  end
 end
