@@ -39,4 +39,14 @@ class LocalTransactionEdition < Edition
   def whole_body
     introduction
   end
+
+  def build_clone(target_class = nil)
+    new_edition = super
+    if new_edition.is_a?(LocalTransactionEdition)
+      new_edition.scotland_availability = scotland_availability.clone
+      new_edition.wales_availability = wales_availability.clone
+      new_edition.northern_ireland_availability = northern_ireland_availability.clone
+    end
+    new_edition
+  end
 end
