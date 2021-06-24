@@ -19,5 +19,9 @@
   <strong><%= link_to 'Content summary and workflow history', content_workflow_report_path(format: :csv) %></strong><br />
   <%= report_last_updated("content_workflow")%>
 </p>
+<p>
+  <strong><%= link_to 'All URLs', all_urls_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("all_urls")%>
+</p>
 
 <% content_for :page_title, "Reports" %>
