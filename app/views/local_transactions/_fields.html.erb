@@ -48,6 +48,49 @@
           <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
         </span>
       </div>
+
+      <% administrations = {
+        "Scotland" => :scotland_availability,
+        "Wales" => :wales_availability,
+        "Northern Ireland" => :northern_ireland_availability
+      } %>
+      <% administrations.each do |title, field_name| %>
+        <%= f.fields_for field_name do |f| %>
+          <p class="h4"><%= title %></p>
+          <div class="form-group">
+            <div class="radio">
+              <%= f.label :type_local_authority_service, class: "control-label" do %>
+                <%= f.radio_button :type, 'local_authority_service', disabled: @resource.locked_for_edits? %>
+                Service available from local council
+              <% end %>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="radio">
+              <%= f.label :type_devolved_administration_service, class: "control-label" do %>
+                <%= f.radio_button :type, 'devolved_administration_service', disabled: @resource.locked_for_edits? %>
+                Service available from devolved administration (or a similar service is available)
+              <% end %>
+            </div>
+          </div>
+          <div class="form-group inset-text-field">
+            <div class="form-label">
+              <%= f.label :alternative_url, "Enter the URL of the devolved administration website page", class: "inset-text-field-label" %>
+            </div>
+            <div class="form-wrapper">
+              <%= f.text_field :alternative_url, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="radio">
+              <%= f.label :type_unavailable, class: "control-label" do %>
+                <%= f.radio_button :type, 'unavailable', disabled: @resource.locked_for_edits? %>
+                Service not available
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </fieldset>
   </div>
 </div>
