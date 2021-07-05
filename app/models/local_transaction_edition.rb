@@ -13,6 +13,10 @@ class LocalTransactionEdition < Edition
   embeds_one :wales_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
   embeds_one :northern_ireland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
 
+  accepts_nested_attributes_for :scotland_availability
+  accepts_nested_attributes_for :wales_availability
+  accepts_nested_attributes_for :northern_ireland_availability
+
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   validate :valid_lgsl_code

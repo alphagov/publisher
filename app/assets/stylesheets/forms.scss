@@ -67,3 +67,13 @@
 .vertical-drag {
   cursor: ns-resize;
 }
+
+.inset-text-field {
+  border-left: 5px solid #bcbcbc;
+  padding: 6px 0 6px 10px;
+  margin-left: 25px;
+
+  .inset-text-field-label {
+    font-weight: normal;
+  }
+}

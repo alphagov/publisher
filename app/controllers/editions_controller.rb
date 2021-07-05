@@ -259,12 +259,15 @@ protected
         licence_overview
       ]
     when :local_transaction_edition
-      %i[
-        lgsl_code
-        lgil_code
-        introduction
-        more_information
-        need_to_know
+      [
+        :lgsl_code,
+        :lgil_code,
+        :introduction,
+        :more_information,
+        :need_to_know,
+        { scotland_availability_attributes: %i[type alternative_url] },
+        { wales_availability_attributes: %i[type alternative_url] },
+        { northern_ireland_availability_attributes: %i[type alternative_url] },
       ]
     when :place_edition
       %i[
