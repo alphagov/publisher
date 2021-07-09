@@ -117,15 +117,20 @@
 
       function showErrors (errors) {
         $.each(errors, function (errorKey, errorMessages) {
-          var errorElement = element.find('#edition_' + errorKey + '_input')
-          var $list = $('<ul class="help-block js-error"></ul>')
+          var errorElement = null
 
-          errorElement.addClass('has-error')
-          for (var j = 0, m = errorMessages.length; j < m; j++) {
-            $list.append('<li>' + errorMessages[j] + '</li>')
+          if (errorKey.endsWith('_availability')) {
+            errorElement = element.find('#edition_' + errorKey + '_attributes_alternative_url')
+          } else {
+            errorElement = element.find('#edition_' + errorKey)
           }
+          var parents = errorElement.parents('.form-group')
+          parents.addClass('has-error')
 
-          errorElement.append($list)
+          var list = parents.find('.error-block')
+          for (var j = 0, m = errorMessages.length; j < m; j++) {
+            list.append('<li>' + humanize(errorKey) + ' ' + errorMessages[j] + '</li>')
+          }
         })
       }
 
@@ -136,6 +141,7 @@
       }
 
       function hideErrors () {
+        element.find('.error-block').empty()
         element.find('.js-error').remove()
         element.find('.has-error').removeClass('has-error')
       }
@@ -156,6 +162,14 @@
         message.removeClass(function (index, css) {
           return (css.match(/(^|\s)workflow-message-\S+/g) || []).join(' ')
         })
+      }
+
+      function humanize (string) {
+        var humanizedString = string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
+        humanizedString = humanizedString.replaceAll('_', ' ')
+        humanizedString = humanizedString.replaceAll('ireland', 'Ireland')
+        humanizedString = humanizedString.replaceAll('url', 'URL')
+        return humanizedString
       }
     }
   }
