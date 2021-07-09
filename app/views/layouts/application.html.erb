@@ -37,8 +37,15 @@
     <div class="alert alert-<%= alert_class %>"
       data-module="auto-track-event"
       data-track-action="alert-<%= alert_class %>"
-      data-track-label="<%= strip_tags(flash[k]) %>">
-        <%= flash[k] %>
+        <% if flash[k].is_a?(String) %>
+          data-track-label="<%= flash[k] %>">
+          <%= flash[k] %>
+        <% else %>
+          data-track-label="<%= flash[k].sort.join(' ') %>">
+          <% flash[k].compact.each do |message| %>
+            <%= message %><br>
+          <% end %>
+        <% end %>
     </div>
   <% end %>
   <%= yield %>
