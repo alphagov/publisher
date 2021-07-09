@@ -117,15 +117,14 @@
 
       function showErrors (errors) {
         $.each(errors, function (errorKey, errorMessages) {
-          var errorElement = element.find('#edition_' + errorKey + '_input')
-          var $list = $('<ul class="help-block js-error"></ul>')
+          var errorElement = element.find('#edition_' + errorKey)
+          var parents = errorElement.parents('.form-group')
+          parents.addClass('has-error')
 
-          errorElement.addClass('has-error')
+          var list = parents.find('.error-block')
           for (var j = 0, m = errorMessages.length; j < m; j++) {
-            $list.append('<li>' + errorMessages[j] + '</li>')
+            list.append('<li>' + errorMessages[j] + '</li>')
           }
-
-          errorElement.append($list)
         })
       }
 
@@ -136,6 +135,7 @@
       }
 
       function hideErrors () {
+        element.find('.error-block').empty()
         element.find('.js-error').remove()
         element.find('.has-error').removeClass('has-error')
       }
