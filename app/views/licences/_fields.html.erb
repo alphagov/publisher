@@ -3,14 +3,13 @@
     <fieldset class="inputs">
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
-      <div class="form-group">
-        <span class="form-label">
-          <%= f.label :licence_identifier %>
-        </span>
-        <span class="form-wrapper">
-          <%= f.text_field :licence_identifier, disabled: @resource.locked_for_edits?, class: "input-md-3 form-control" %>
-        </span>
-      </div>
+      <%= render partial: 'shared/validated_text_field', locals: {
+        f: f,
+        resource: resource,
+        id: "licence_identifier",
+        label: "Licence identifier",
+        input_classes: "input-md-3",
+      } %>
 
       <div class="form-group">
         <span class="form-label">
@@ -22,15 +21,14 @@
         </span>
       </div>
 
-      <div class="form-group">
-        <span class="form-label">
-          <%= f.label :continuation_link, "Link to competent authority" %>
-        </span>
-        <span class="form-wrapper">
-          <%= f.text_field :continuation_link, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-          <span class="help-block">Link as deep as possible.</span>
-        </span>
-      </div>
+      <%= render partial: 'shared/validated_text_field', locals: {
+        f: f,
+        resource: resource,
+        id: "continuation_link",
+        label: "Link to competent authority",
+        input_classes: "input-md-7",
+        help_block_text: "Link as deep as possible.",
+      } %>
 
       <div class="form-group">
         <span class="form-label">
