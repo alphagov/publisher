@@ -4,11 +4,15 @@
     <%= f.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i> Remove node".html_safe, :class => "btn btn-default pull-right remove-node" %>
   </legend>
   <%= f.hidden_field :order, class: 'node-order' %>
-  <div class="form-group">
-    <span class="form-wrapper">
-      <%= f.text_field :title, placeholder: "The title of the outcome", class: "node-title form-control" %>
-    </span>
-  </div>
+
+  <%= render partial: 'shared/validated_text_field', locals: {
+    f: f,
+    resource: resource,
+    id: "title",
+    input_classes: "node-title",
+    field_name: f.object.slug,
+    placeholder: "The title of the outcome",
+  } %>
 
   <div class="form-group">
     <span class="form-wrapper">
@@ -22,7 +26,14 @@
     <div class="options">
       <%= f.fields_for :options, :wrapper_class => "outcome-wrap option" do |o| %>
         <div class="form-inline form-group<%= o.object.errors.empty? ? '' : ' error' %>">
-          <%= o.text_field :label, placeholder: "Label", class: "option-label form-control" %>
+          <%= render partial: 'shared/validated_text_field', locals: {
+            f: o,
+            resource: resource,
+            id: "label",
+            input_classes: "option-label",
+            placeholder: "Label",
+          } %>
+
           <i class="glyphicon glyphicon-arrow-right add-left-margin add-right-margin"></i>
           <%= o.hidden_field :next_node, class: "next-node-id" %>
           <select class="form-control required next-node-list" name="next-node-list">
