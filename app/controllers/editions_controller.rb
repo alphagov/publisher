@@ -408,10 +408,7 @@ private
   end
 
   def format_failure_message(resource)
-    resource_base_errors = resource.errors[:base]
-    return resource.errors[:base].join("<br />") if resource_base_errors.present?
-
-    "We had some problems saving. Please check the form below."
+    resource.errors.any? ? resource.errors.full_messages : ["We had some problems saving. Please check the form below."]
   end
 
   def progress_edition(resource, activity_params)

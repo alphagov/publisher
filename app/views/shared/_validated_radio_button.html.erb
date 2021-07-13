@@ -1,0 +1,9 @@
+<div class="form-group">
+  <div class="form-wrapper radio">
+    <%= f.label id + "_" + value, class: "control-label" do %>
+      <%= f.radio_button id, value, disabled: resource.locked_for_edits? %>
+      <%= label %>
+    <% end %>
+  </div>
+  <ul class="help-block error-block"></ul>
+</div>

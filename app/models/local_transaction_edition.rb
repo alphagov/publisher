@@ -17,6 +17,8 @@ class LocalTransactionEdition < Edition
   accepts_nested_attributes_for :wales_availability
   accepts_nested_attributes_for :northern_ireland_availability
 
+  after_validation :merge_embedded_errors
+
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
   validate :valid_lgsl_code
@@ -52,5 +54,19 @@ class LocalTransactionEdition < Edition
       new_edition.northern_ireland_availability = northern_ireland_availability.clone
     end
     new_edition
+  end
+
+private
+
+  def merge_embedded_errors
+    [scotland_availability, wales_availability, northern_ireland_availability].each do |administration|
+      instance_name = administration.instance_values["_association"].name
+      next unless errors.delete(instance_name) == ["is invalid"]
+
+      da_errors = administration.errors.map do |key, value|
+        "#{key} #{value}".humanize
+      end
+      errors.add(instance_name, da_errors)
+    end
   end
 end

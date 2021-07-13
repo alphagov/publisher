@@ -1,0 +1,48 @@
+<% administrations = {
+  "Scotland" => :scotland_availability,
+  "Wales" => :wales_availability,
+  "Northern Ireland" => :northern_ireland_availability
+} %>
+<% administrations.each do |title, field_name| %>
+  <%= f.fields_for field_name do |f| %>
+    <p class="h4"><%= title %></p>
+
+    <%= render partial: 'shared/validated_radio_button', locals: {
+      f: f,
+      resource: @resource,
+      id: "type",
+      value: "local_authority_service",
+      label: "Service available from local council",
+      field_name: field_name,
+    } %>
+
+    <%= render partial: 'shared/validated_radio_button', locals: {
+      f: f,
+      resource: @resource,
+      id: "type",
+      value: "devolved_administration_service",
+      label: "Service available from devolved administration (or a similar service is available)",
+      field_name: field_name,
+    } %>
+
+    <%= render partial: 'shared/validated_text_field', locals: {
+      f: f,
+      resource: resource,
+      id: "alternative_url",
+      label: "Enter the URL of the devolved administration website page",
+      input_classes: "input-md-7",
+      form_group_classes: "inset-text-field",
+      label_classes: "inset-text-field-label",
+      field_name: field_name,
+    } %>
+
+    <%= render partial: 'shared/validated_radio_button', locals: {
+      f: f,
+      resource: @resource,
+      id: "type",
+      value: "unavailable",
+      label: "Service not available",
+      field_name: field_name,
+    } %>
+  <% end %>
+<% end %>

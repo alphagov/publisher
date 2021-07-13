@@ -14,6 +14,8 @@ class SimpleSmartAnswerEdition < Edition
 
   accepts_nested_attributes_for :nodes, allow_destroy: true
 
+  after_validation :merge_embedded_errors
+
   GOVSPEAK_FIELDS = [:body].freeze
 
   def whole_body
@@ -72,5 +74,27 @@ class SimpleSmartAnswerEdition < Edition
 
   def destroy_in_attrs?(attrs)
     attrs.delete("_destroy") == "1"
+  end
+
+private
+
+  def merge_embedded_errors
+    errors.delete(:nodes) if errors.include?(:nodes) && errors[:nodes] == ["is invalid"]
+    nodes.each do |node|
+      instance_name = node.slug
+
+      node.errors.delete(:options) if node.errors.include?(:options) && node.errors[:options] == ["is invalid"]
+      node_errors = node.errors.map do |key, value|
+        "#{key} #{value}".humanize
+      end
+
+      option_errors = node.options.map do |options|
+        options.errors.map do |key, value|
+          "#{key} #{value}".humanize
+        end
+      end
+
+      errors.add(instance_name, (node_errors + option_errors).flatten)
+    end
   end
 end

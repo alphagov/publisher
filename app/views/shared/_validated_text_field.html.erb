@@ -1,0 +1,25 @@
+<div class="form-group <%= form_group_classes ||= '' %>">
+  <% unless local_assigns[:label].nil? %>
+    <div class="form-label">
+      <%= f.label id, label, class: label_classes ||= '' %>
+    </div>
+  <% end %>
+
+  <div class="form-wrapper">
+    <%= f.text_field id,
+        placeholder: placeholder ||= '',
+        disabled: disabled ||= resource.locked_for_edits?,
+        class: "#{input_classes} form-control" %>
+  </div>
+
+  <% unless local_assigns[:help_block_text].nil? %>
+    <div class="help-block"><%= help_block_text %></div>
+  <% end %>
+
+  <ul class="help-block error-block">
+    <% field_name = field_name ||= id %>
+    <% resource.errors.messages[field_name.to_sym].flatten.each do |error| %>
+      <li><%= error.humanize %></li>
+    <% end %>
+  </ul>
+</div>
