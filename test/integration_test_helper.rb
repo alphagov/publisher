@@ -203,9 +203,10 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def save_edition_and_assert_error
+  def save_edition_and_assert_error(error = nil)
     save_edition
     assert page.has_content? "We had some problems saving"
+    assert page.has_content? error if error.present?
   end
 
   def save_tags_and_assert_success
