@@ -36,6 +36,13 @@
               for example, title-of-part (no spaces, apostrophes or acronyms)
             </span>
           </span>
+          <% if f.object.errors.any? %>
+            <ul class="help-block error-block">
+              <% f.object.errors.each do |key, error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          <% end %>
         </div>
 
         <div class="form-group">

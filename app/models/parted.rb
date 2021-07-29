@@ -39,6 +39,7 @@ private
 
     if errors.delete(:parts) == ["is invalid"]
       parts_errors = parts.each_with_object({}) do |part, result|
+        part.errors.messages.each { |_k, v| v.delete("is invalid") }
         result["#{part._id}:#{part.order}"] = part.errors.messages if part.errors.present?
       end
       errors.add(:parts, parts_errors)

@@ -35,6 +35,7 @@ private
 
     if errors.delete(:variants) == ["is invalid"]
       variants_errors = variants.each_with_object({}) do |variant, result|
+        variant.errors.messages.each { |_k, v| v.delete("is invalid") }
         result["#{variant._id}:#{variant.order}"] = variant.errors.messages if variant.errors.present?
       end
       errors.add(:variants, variants_errors)

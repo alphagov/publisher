@@ -140,14 +140,13 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
         assert page.has_css?("#parts .has-error", count: 2)
 
         within :css, "#parts div.fields:nth-of-type(2)" do
-          assert page.has_css?('.has-error[id*="slug"]')
-          assert page.has_css?(".js-error li", count: 2)
+          assert page.has_css?('span.form-wrapper.has-error[id*="slug"]')
+          assert page.has_css?(".js-error li", count: 1)
           assert page.has_css?(".js-error li", text: "can't be blank")
-          assert page.has_css?(".js-error li", text: "is invalid")
         end
 
         within :css, "#parts div.fields:nth-of-type(3)" do
-          assert page.has_css?('.has-error[id*="title"]')
+          assert page.has_css?('div.form-group.has-error[id*="title"]')
           assert page.has_css?(".js-error li", count: 1)
           assert page.has_css?(".js-error li", text: "can't be blank")
         end
