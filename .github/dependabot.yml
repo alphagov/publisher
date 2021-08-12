@@ -27,6 +27,11 @@ updates:
         dependency-type: direct
       - dependency-name: sassc-rails
         dependency-type: direct
+      # Gems with framework dependencies
+      - dependency-name: inherited_resources
+        dependency-type: direct
+      - dependency-name: mongoid
+        dependency-type: direct
 
   - package-ecosystem: npm
     directory: /
