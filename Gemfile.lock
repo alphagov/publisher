@@ -279,9 +279,10 @@ GEM
       railties (>= 3.1)
     mongo (2.15.0)
       bson (>= 4.8.2, < 5.0.0)
-    mongoid (7.3.1)
+    mongoid (7.3.2)
       activemodel (>= 5.1, < 6.2)
       mongo (>= 2.10.5, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     mongoid-sadstory (0.0.2)
       mongoid
     mousetrap-rails (1.4.6)
