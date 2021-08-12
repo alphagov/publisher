@@ -39,6 +39,7 @@ gem "uglifier"
 gem "whenever", require: false
 
 group :test do
+  gem "capybara-select-2"
   gem "ci_reporter_minitest"
   gem "database_cleaner"
   gem "factory_bot_rails"
