@@ -8,14 +8,9 @@
 <%= render partial: 'reviewer_field', locals: { f: f } if @resource.in_review? %>
 <%= render partial: 'major_change_fields', locals: { f: f } if @resource.published_edition %>
 
-<div class="form-group">
-  <span class="form-label">
-    <%= f.label :title %>
-  </span>
-  <span class="form-wrapper">
-    <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-  </span>
-</div>
+<%= form_group(f, :title, label: "Title") do %>
+  <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+<% end %>
 
 <div class="form-group checkbox">
   <div class="form-wrapper emphasised-field add-bottom-margin input-md-7">

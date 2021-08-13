@@ -9,11 +9,23 @@ describe('An ajax save module', function () {
   beforeEach(function () {
     element = $('<form action="some/url">' +
       '<div class="js-status-message"></div>' +
-      '<div id="edition_test_input">' +
-        '<input type="text" name="test" value="prefilled value">' +
+      '<div class="form-group">' +
+      '  <div class="form-label">' +
+      '    <label for="edition_test">Test</label>' +
+      '  </div>' +
+      '  <div class="form-wrapper">' +
+      '    <input class="" type="text" value="prefilled value" name="edition_test" id="edition_test">' +
+      '  </div>' +
+      '  <ul class="help-block error-block"></ul>' +
       '</div>' +
-      '<div id="edition_another_input">' +
-        '<input type="text" name="another" value="another value">' +
+      '<div class="form-group">' +
+      '  <div class="form-wrapper">' +
+      '    <label for="edition_another">' +
+      '      <input type="checkbox" value="1" name="edition_another" id="edition_another">' +
+      '      Another' +
+      '    </label>' +
+      '  </div>' +
+      '  <ul class="help-block error-block"></ul>' +
       '</div>' +
       '<input class="js-no-ajax" type="text" name="fake-file-input">' +
       '<input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">' +
@@ -101,7 +113,7 @@ describe('An ajax save module', function () {
       expect($.ajax).toHaveBeenCalled()
       expect(ajaxOptions.type).toBe('POST')
       expect(ajaxOptions.url).toBe('some/url.json')
-      expect(ajaxOptions.data).toBe('test=prefilled+value&another=another+value&fake-file-input=')
+      expect(ajaxOptions.data).toBe('edition_test=prefilled+value&fake-file-input=')
     })
   })
 
@@ -197,9 +209,12 @@ describe('An ajax save module', function () {
 
     it('shows the error alongside the erroring field', function () {
       ajaxError({ test: ['must be changed'] })
-      expect(element.find('#edition_test_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_test_input ul li').length).toBe(1)
-      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed')
+
+      var parents = element.find('#edition_test').parents('.form-group')
+
+      expect(parents.is('.has-error')).toBe(true)
+      expect(parents.find('.error-block li').length).toBe(1)
+      expect(parents.find('.error-block li:first').text()).toBe('must be changed')
     })
 
     it('includes the base error in the save dialogue', function () {
@@ -217,14 +232,18 @@ describe('An ajax save module', function () {
     it('can show multiple errors', function () {
       ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
 
-      expect(element.find('#edition_test_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_test_input ul li').length).toBe(2)
-      expect(element.find('#edition_test_input ul li:first').text()).toBe('must be changed')
-      expect(element.find('#edition_test_input ul li:last').text()).toBe('must be blue')
+      var el = element.find('#edition_test')
+      var parents = el.parents('.form-group')
+      expect(parents.is('.has-error')).toBe(true)
+      expect(parents.find('.error-block li').length).toBe(2)
+      expect(parents.find('.error-block li:first').text()).toBe('must be changed')
+      expect(parents.find('.error-block li:last').text()).toBe('must be blue')
 
-      expect(element.find('#edition_another_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_another_input ul li').length).toBe(1)
-      expect(element.find('#edition_another_input ul li:first').text()).toBe('must rhyme')
+      el = element.find('#edition_another')
+      parents = el.parents('.form-group')
+      expect(parents.is('.has-error')).toBe(true)
+      expect(parents.find('.error-block li').length).toBe(1)
+      expect(parents.find('.error-block li:first').text()).toBe('must rhyme')
     })
 
     it('triggers an error.ajaxsave.admin dom event', function () {
