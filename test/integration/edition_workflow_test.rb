@@ -304,7 +304,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.save!(validate: false)
 
     visit_edition guide
-    select2 "Bob", from: "Reviewer"
+    select2 "Bob", css: "#s2id_edition_reviewer"
     save_edition_and_assert_error("can't be the assignee")
   end
 
@@ -315,7 +315,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
     assert page.has_content?("updated")
 
-    select2_clear from: "Reviewer"
+    select2_clear css: "#s2id_edition_reviewer"
     save_edition_and_assert_success
   end
 
@@ -339,7 +339,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
 
-    select2 "Alice", from: "Reviewer"
+    select2 "Alice", css: "#s2id_edition_reviewer"
     save_edition_and_assert_success
   end
 
