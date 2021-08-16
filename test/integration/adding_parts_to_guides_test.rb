@@ -140,7 +140,7 @@ class AddingPartsToGuidesTest < JavascriptIntegrationTest
           assert page.has_css?('.has-error[id*="slug"]')
           assert page.has_css?(".js-error li", count: 2)
           assert page.has_css?(".js-error li", text: "can't be blank")
-          assert page.has_css?(".js-error li", text: "is invalid")
+          assert page.has_css?(".js-error li", text: "can only consist of lower case characters, numbers and hyphens")
         end
 
         within :css, "#parts div.fields:nth-of-type(3)" do

@@ -12,7 +12,7 @@ class VariantedTest < ActiveSupport::TestCase
     assert_not edition.valid?
 
     assert_equal({ title: ["can't be blank"] }, edition.errors[:variants][0]["54c10d4d759b743528000010:1"])
-    assert_equal({ slug: ["can't be blank", "is invalid"] }, edition.errors[:variants][0]["54c10d4d759b743528000011:2"])
+    assert_equal({ slug: ["can't be blank", "can only consist of lower case characters, numbers and hyphens"] }, edition.errors[:variants][0]["54c10d4d759b743528000011:2"])
     assert_equal 2, edition.errors[:variants][0].length
   end
 end
