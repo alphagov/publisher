@@ -76,7 +76,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
     brakeman (5.0.4)
-    bson (4.10.0)
+    bson (4.12.1)
     builder (3.2.4)
     byebug (11.1.3)
     capybara (3.35.3)
@@ -87,6 +87,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    capybara-select-2 (0.5.1)
     childprocess (3.0.0)
     chronic (0.10.2)
     ci_reporter (2.0.0)
@@ -191,9 +192,9 @@ GEM
       puma
       selenium-webdriver (>= 3.142)
       webdrivers (>= 4)
-    has_scope (0.7.2)
-      actionpack (>= 4.1)
-      activesupport (>= 4.1)
+    has_scope (0.8.0)
+      actionpack (>= 5.2)
+      activesupport (>= 5.2)
     hashdiff (1.0.1)
     hashie (4.1.0)
     htmlentities (4.3.4)
@@ -202,10 +203,10 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    inherited_resources (1.11.0)
-      actionpack (>= 5.0, < 6.1)
+    inherited_resources (1.13.0)
+      actionpack (>= 5.2, < 6.2)
       has_scope (~> 0.6)
-      railties (>= 5.0, < 6.1)
+      railties (>= 5.2, < 6.2)
       responders (>= 2, < 4)
     jasmine (3.6.0)
       jasmine-core (~> 3.6.0)
@@ -247,7 +248,7 @@ GEM
     logstasher (2.1.5)
       activesupport (>= 5.2)
       request_store
-    loofah (2.10.0)
+    loofah (2.12.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -265,7 +266,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0704)
     mini_mime (1.1.0)
-    mini_portile2 (2.5.3)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     minitest-reporters (1.4.2)
       ansi
@@ -277,11 +278,12 @@ GEM
     mocha (1.11.2)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
-    mongo (2.13.0)
+    mongo (2.15.0)
       bson (>= 4.8.2, < 5.0.0)
-    mongoid (7.1.2)
-      activemodel (>= 5.1, < 6.1)
-      mongo (>= 2.7.0, < 3.0.0)
+    mongoid (7.3.2)
+      activemodel (>= 5.1, < 6.2)
+      mongo (>= 2.10.5, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     mongoid-sadstory (0.0.2)
       mongoid
     mousetrap-rails (1.4.6)
@@ -290,8 +292,8 @@ GEM
     multipart-post (2.1.1)
     netrc (0.11.0)
     nio4r (2.5.7)
-    nokogiri (1.11.7)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.3)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -368,7 +370,7 @@ GEM
       thor (>= 0.20.3, < 2.0)
     rainbow (3.0.0)
     raindrops (0.19.2)
-    rake (13.0.4)
+    rake (13.0.6)
     redis (4.1.4)
     redis-namespace (1.8.0)
       redis (>= 3.0.4)
@@ -418,7 +420,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.11.0)
-    ruby2_keywords (0.0.4)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.0)
     safe_yaml (1.0.5)
     sanitize (5.2.3)
@@ -433,8 +435,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    select2-rails (3.5.9.1)
-      thor (~> 0.14)
+    select2-rails (3.5.11)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
@@ -480,7 +481,7 @@ GEM
     statsd-ruby (1.5.0)
     strip_attributes (1.11.0)
       activemodel (>= 3.0, < 7.0)
-    thor (0.20.3)
+    thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.1)
@@ -521,6 +522,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-kaminari-views
+  capybara-select-2
   ci_reporter_minitest
   database_cleaner
   diffy
@@ -564,7 +566,7 @@ DEPENDENCIES
   reverse_markdown
   rubocop-govuk
   sassc-rails
-  select2-rails (= 3.5.9.1)
+  select2-rails (~> 3.5.9)
   shoulda
   simplecov
   state_machines

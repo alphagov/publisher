@@ -1,9 +1,12 @@
 require "test_helper"
 require "capybara/rails"
+require "capybara-select-2"
 require "support/govuk_test"
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include CapybaraSelect2
+  include CapybaraSelect2::Helpers
   include Warden::Test::Helpers
 
   teardown do
@@ -162,15 +165,6 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     save_edition_and_assert_success
 
     transaction.reload
-  end
-
-  def select2(value, scope)
-    select2_container = first("#{scope} .select2-container")
-    select2_container.first(".select2-search-choice").click
-
-    select2_container.first("input.select2-input").set(value)
-    page.execute_script(%|$("#{scope} input.select2-input:visible").keyup();|)
-    find(:xpath, "//body").find(".select2-results li", text: value).click
   end
 
   def switch_tab(tab)

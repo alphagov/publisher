@@ -25,7 +25,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert_nil guide.assigned_to
 
     visit_edition guide
-    select "Bob", from: "Assigned to"
+    select2 "Bob", from: "Assigned to"
     save_edition_and_assert_success
     guide.reload
 
@@ -304,7 +304,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.save!(validate: false)
 
     visit_edition guide
-    select("Bob", from: "Reviewer")
+    select2 "Bob", css: "#s2id_edition_reviewer"
     save_edition_and_assert_error("can't be the assignee")
   end
 
@@ -315,7 +315,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     send_action guide, "2nd pair of eyes", "Send to 2nd pair of eyes", "I think this is done"
     assert page.has_content?("updated")
 
-    select("", from: "Reviewer")
+    select2_clear css: "#s2id_edition_reviewer"
     save_edition_and_assert_success
   end
 
@@ -323,12 +323,12 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.assigned_to = bob
 
     visit_edition guide
-    select "", from: "Assigned to"
+    select2_clear css: "#s2id_edition_assigned_to_id"
     save_edition_and_assert_success
     guide.reload
 
     assert_nil guide.assignee
-    assert page.has_select?("Assigned to", selected: "")
+    page.assert_selector("select#edition_assigned_to_id", text: "", visible: false)
   end
 
   test "can become the guide reviewer" do
@@ -339,7 +339,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
 
-    select("Alice", from: "Reviewer")
+    select2 "Alice", css: "#s2id_edition_reviewer"
     save_edition_and_assert_success
   end
 
@@ -564,7 +564,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     login_as("WelshEditor")
     visit edition_path(guide)
 
-    select "Bob", from: "Assigned to"
+    select2 "Bob", from: "Assigned to"
     save_edition_and_assert_success
     guide.reload
 
@@ -854,7 +854,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
   def filter_for_all_users
     visit "/"
     within :css, ".user-filter-form" do
-      select "All", from: "user_filter"
+      select2 "All", from: "ASSIGNEE"
       click_on "Filter publications"
     end
     assert page.has_content?("Publications")
