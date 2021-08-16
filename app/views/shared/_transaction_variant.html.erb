@@ -17,6 +17,7 @@
           <span class="form-wrapper">
             <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "title form-control" %>
           </span>
+          <%= form_errors(f.object.errors[:title]) %>
         </div>
 
         <%
@@ -36,6 +37,7 @@
               for example, title-of-part (no spaces, apostrophes or acronyms)
             </span>
           </span>
+          <%= form_errors(f.object.errors[:slug]) %>
         </div>
 
         <div class="form-group">
