@@ -15,7 +15,7 @@ class SimpleSmartAnswerEdition < Edition
       default_scope -> { order_by(order: :asc) }
 
       validates :label, :next_node, presence: true
-      validates :slug, format: { with: /\A[a-z0-9-]+\z/ }
+      validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "can only consist of lower case characters, numbers and hyphens" }
 
       before_validation :populate_slug
 
