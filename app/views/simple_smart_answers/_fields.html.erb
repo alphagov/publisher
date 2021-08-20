@@ -4,14 +4,9 @@
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
       <div class="row">
         <div class="col-md-10">
-          <div class="form-group">
-            <span class="form-label">
-              <%= f.label :body %>
-            </span>
-            <span class="form-wrapper">
-              <%= f.text_area :body, rows: 5, disabled: @resource.locked_for_edits?, class: "form-control" %>
-            </span>
-          </div>
+          <%= form_group(f, :body) do %>
+            <%= f.text_area :body, rows: 5, disabled: @resource.locked_for_edits?, class: "form-control" %>
+          <% end %>
         </div>
       </div>
     </fieldset>
