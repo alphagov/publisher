@@ -7,38 +7,21 @@
         <%= f.text_field :licence_identifier, disabled: @resource.locked_for_edits?, class: "input-md-3 form-control" %>
       <% end %>
 
-      <div class="form-group">
-        <span class="form-label">
-          <%= f.label :will_continue_on %>
-        </span>
-        <span class="form-wrapper">
-          <%= f.text_field :will_continue_on, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-          <span class="help-block">Text to follow the statement 'This will continue on. eg. "the HMRC website"'</span>
-        </span>
-      </div>
+      <%= form_group(f, :will_continue_on, help: "Text to follow the statement 'This will continue on. eg. \"the HMRC website\"'") do %>
+        <%= f.text_field :will_continue_on, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+      <% end %>
 
       <%= form_group(f, :continuation_link, label: "Link to competent authority", help: "Link as deep as possible.") do %>
         <%= f.text_field :continuation_link, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
       <% end %>
 
-      <div class="form-group">
-        <span class="form-label">
-          <%= f.label :licence_short_description %>
-        </span>
-        <span class="form-wrapper">
-          <%= f.text_area :licence_short_description, rows: 2, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-          <span class="help-block">One line curated description, will appear in Licence Finder results</span>
-        </span>
-      </div>
+      <%= form_group(f, :licence_short_description, help: "One line curated description, will appear in Licence Finder results") do %>
+        <%= f.text_area :licence_short_description, rows: 2, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+      <% end %>
 
-      <div class="form-group">
-        <span class="form-label">
-          <%= f.label :licence_overview %>
-        </span>
-        <span class="form-wrapper">
-          <%= f.text_area :licence_overview, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
-        </span>
-      </div>
+      <%= form_group(f, :licence_overview) do %>
+        <%= f.text_area :licence_overview, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+      <% end %>
     </fieldset>
   </div>
 </div>
