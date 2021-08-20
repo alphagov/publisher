@@ -13,28 +13,18 @@
 
 <%= form_for(@publication, as: :edition, url: editions_path, html: { id: 'edition-form', novalidate: 'novalidate' } ) do |f| %>
   <fieldset class="inputs">
-    <div class="form-group">
-      <span class="form-label">
-        <%= f.label :lgsl_code, "LGSL code" %>
-      </span>
-      <span class="form-wrapper">
-        <%= f.text_field :lgsl_code, class: "form-control" %>
-      </span>
-    </div>
+    <%= form_group(f, :lgsl_code, label: "LGSL code") do %>
+      <%= f.text_field :lgsl_code, class: "form-control" %>
+    <% end %>
 
     <input type="hidden" name="edition[kind]" value="local_transaction">
     <%= f.hidden_field :panopticon_id %>
     <%= f.hidden_field :title %>
     <%= f.hidden_field :slug %>
 
-    <div class="form-group">
-      <span class="form-label">
-        <%= f.label :lgil_code, "LGIL code" %>
-      </span>
-      <span class="form-wrapper">
-        <%= f.text_field :lgil_code, class: "form-control" %>
-      </span>
-    </div>
+    <%= form_group(f, :lgil_code, label: "LGIL code") do %>
+      <%= f.text_field :lgil_code, class: "form-control" %>
+    <% end %>
   </fieldset>
   <%= f.submit "Create Local transaction edition", class: 'btn btn-success' %>
 <% end %>
