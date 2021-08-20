@@ -28,10 +28,9 @@
 
 <hr />
 
-<div class="form-group">
-  <%= f.label :message %>
+<%= form_group(f, :message) do %>
   <%= f.text_area :message, class: 'form-control input-md-6 js-downtime-message', rows: 5 %>
-</div>
+<% end %>
 
 <p class="add-bottom-margin help-note">
   <span class="glyphicon glyphicon-exclamation-sign"></span>
