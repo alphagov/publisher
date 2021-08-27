@@ -178,9 +178,6 @@ describe('An ajax save with parts module', function () {
     })
 
     it('shows the error messages', function () {
-      expect(element.find('.has-error').length).toBe(3)
-      expect(element.find('ul.js-error').length).toBe(3)
-
       expect(element.find('#edition_parts_attributes_100_slug_input').is('.has-error')).toBe(true)
       expect(element.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(2)
       expect(element.find('#edition_parts_attributes_100_slug_input ul li:first').text()).toBe('can\'t be blank')

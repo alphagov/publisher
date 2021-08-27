@@ -64,7 +64,7 @@ describe('A parts module', function () {
         '<input class="error has-error title" name="part_4_title" type="text" value="">' +
         '<input class="slug" name="part_4_slug" type="text" value="">' +
         '<input class="order" name="part_4_order" type="hidden" value="">' +
-        '<div class="js-error some-error">Error</div>' +
+        '<div class="error has-error" id="error-block">Error</div>' +
       '</div>')
       element.trigger('nested:fieldAdded:parts')
     })
@@ -87,7 +87,7 @@ describe('A parts module', function () {
     })
 
     it('removes validation errors on the newly added part', function () {
-      expect(element.find('.error, .has-error, .js-error, .some-error').length).toBe(0)
+      expect($('#part_4').find('.error, .has-error').length).toBe(0)
     })
   })
 

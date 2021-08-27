@@ -136,7 +136,6 @@
 
       function hideErrors () {
         element.find('.error-block').empty()
-        element.find('.js-error').remove()
         element.find('.has-error').removeClass('has-error')
       }
 
