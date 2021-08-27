@@ -31,6 +31,7 @@ describe('An ajax save with parts module', function () {
           '<input class="order" type="hidden" id="edition_part_100_order" name="edition[part][100][order]" value="1">' +
           '<div id="edition_parts_attributes_100_slug_input">' +
             '<input class="slug" type="text" id="edition_part_100_slug" name="edition[part][100][slug]" value="slug">' +
+            '<ul class="error-block"></ul>' +
           '</div>' +
           '<input type="hidden" id="edition_part_100_id" name="edition[part][100][id]" value="5f00000001">' +
         '</div>' +
@@ -42,6 +43,7 @@ describe('An ajax save with parts module', function () {
         '<div class="js-part-toggle-target" id="slug-2">' +
           '<div id="edition_parts_attributes_101_title_input">' +
             '<input class="title" type="text" id="edition_part_101_title" name="edition[part][101][title]" value="Title 2">' +
+            '<ul class="error-block"></ul>' +
           '</div>' +
           '<input class="order" type="hidden" id="edition_part_101_order" name="edition[part][101][order]" value="2">' +
           '<div id="edition_parts_attributes_101_slug_input">' +
@@ -58,6 +60,7 @@ describe('An ajax save with parts module', function () {
         '<div class="js-part-toggle-target" id="untitled-part">' +
           '<div id="edition_parts_attributes_4535667_title_input">' +
             '<input class="title" type="text" id="edition_part_4535667_title" name="edition[part][4535667][title]" value="Updated title 3">' +
+            '<ul class="error-block"></ul>' +
           '</div>' +
           '<input class="order" type="hidden" id="edition_part_4535667_order" name="edition[part][4535667][order]" value="3">' +
           '<div id="edition_parts_attributes_4535667_slug_input">' +

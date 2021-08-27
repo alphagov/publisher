@@ -74,7 +74,7 @@ describe('A parts module', function () {
     })
 
     it('allows the part to be sortable', function (done) {
-      $('#part_4').simulateDragSortable({ move: -2, handle: '.js-sort-handle' })
+      $('#part_4').simulateDragSortable({ move: -2, handle: '.js-sort-handle', tolerance: 0 })
 
       // Wait briefly until jquery ui has done its thing
       setTimeout(function () {
