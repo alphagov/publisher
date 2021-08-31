@@ -4,23 +4,13 @@
       <div class="col-md-12">
         <%= f.hidden_field :id, value: @artefact.id %>
 
-        <div class="form-group">
-          <span class="form-label">
-            <%= f.label :slug %>
-          </span>
-          <span class="form-wrapper">
-            <%= f.text_field :slug, class: "form-control input-md-6" %>
-          </span>
-        </div>
+        <%= form_group(f, :slug) do %>
+          <%= f.text_field :slug, class: "form-control input-md-6" %>
+        <% end %>
 
-        <div class="form-group">
-          <span class="form-label">
-            <%= f.label :language %>
-          </span>
-          <span class="form-wrapper">
-            <%= f.text_field :language, class: "form-control input-md-6" %>
-          </span>
-        </div>
+        <%= form_group(f, :language) do %>
+          <%= f.text_field :language, class: "form-control input-md-6" %>
+        <% end %>
       </div>
     </div>
     <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>

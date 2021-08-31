@@ -20,44 +20,23 @@
         <div class="well">
           <%= f.hidden_field :content_id, value: @artefact.content_id %>
 
-          <div class="form-group">
-            <span class="form-label">
-              <%= f.label :name, "Title" %>
-            </span>
-            <span class="form-wrapper">
-              <%= f.text_field :name, class: "input-md-6 form-control" %>
-            </span>
-          </div>
+          <%= form_group(f, :name, label: "Title") do %>
+            <%= f.text_field :name, class: "input-md-6 form-control" %>
+          <% end %>
 
-          <div class="form-group">
-            <span class="form-label">
-              <%= f.label :slug %>
-            </span>
-            <span class="form-wrapper">
-              <%= f.text_field :slug, class: "input-md-6 form-control" %>
-              <span class="help-block">For example: lower-case-hyphen-separated</span>
-            </span>
-          </div>
+          <%= form_group(f, :slug, help: "For example: lower-case-hyphen-separated") do %>
+            <%= f.text_field :slug, class: "input-md-6 form-control" %>
+          <% end %>
 
-          <div class="form-group">
-            <span class="form-label">
-              <%= f.label :kind, "Format" %>
-            </span>
-            <span class="form-wrapper">
-              <%= f.select :kind, formats.map { |s| [s.humanize, s]}, { include_blank: "Select a format" }, { class: "input-md-4 form-control" } %>
-            </span>
-          </div>
+          <%= form_group(f, :kind, label: "Format") do %>
+            <%= f.select :kind, formats.map { |s| [s.humanize, s]}, { include_blank: "Select a format" }, { class: "input-md-4 form-control" } %>
+          <% end %>
 
           <%= f.hidden_field :owning_app, value: 'publisher' %>
 
-          <div class="form-group">
-            <span class="form-label">
-              <%= f.label :language %>
-            </span>
-            <span class="form-wrapper">
-              <%= f.select :language, { "English" => "en", "Welsh" => "cy" }, {}, { class: "input-md-4 form-control" } %>
-            </span>
-          </div>
+          <%= form_group(f, :language) do %>
+            <%= f.select :language, { "English" => "en", "Welsh" => "cy" }, {}, { class: "input-md-4 form-control" } %>
+          <% end %>
         </div>
 
         <div class="form-actions">

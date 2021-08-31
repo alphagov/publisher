@@ -13,14 +13,9 @@
 <% end %>
 
 <%= form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
-  <div class="form-group">
-    <span class="form-label">
-      <%= f.label :licence_identifier %>
-    </span>
-    <span class="form-wrapper">
-      <%= f.text_field :licence_identifier, class: "form-control" %>
-    </span>
-  </div>
+  <%= form_group(f, :licence_identifier) do %>
+    <%= f.text_field :licence_identifier, class: "form-control" %>
+  <% end %>
 
   <fieldset class="inputs">
     <input type="hidden" name="edition[kind]" value="licence">
