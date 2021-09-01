@@ -226,7 +226,6 @@ describe('An ajax save module', function () {
     it('ignores validation messages for fields it does not recognise', function () {
       ajaxError({ not_a_field: ['nonsense'] })
       expect(element.find('.has-error').length).toBe(0)
-      expect(element.find('.js-error').length).toBe(0)
     })
 
     it('can show multiple errors', function () {
@@ -277,7 +276,6 @@ describe('An ajax save module', function () {
         element.find('.js-save').trigger('click')
 
         expect(element.find('.has-error').length).toBe(0)
-        expect(element.find('.js-error').length).toBe(0)
       })
     })
   })

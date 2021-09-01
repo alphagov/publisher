@@ -49,8 +49,8 @@
       function removeValidationMessages (evt) {
         var $part = $(evt.target)
 
-        $part.find('.error, .has-error').removeClass('error has-error')
-        $part.find('.js-error').remove()
+        $part.find('.error, .has-error').removeClass('error').removeClass('has-error')
+        $part.find('.error-block').empty()
       }
     }
   }

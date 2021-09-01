@@ -16,8 +16,8 @@
           </span>
           <span class="form-wrapper">
             <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "title form-control" %>
+            <%= form_errors(f.object.errors[:title]) %>
           </span>
-          <%= form_errors(f.object.errors[:title]) %>
         </div>
 
         <%
@@ -36,8 +36,8 @@
             <span class="help-block">
               for example, title-of-part (no spaces, apostrophes or acronyms)
             </span>
+            <%= form_errors(f.object.errors[:slug]) %>
           </span>
-          <%= form_errors(f.object.errors[:slug]) %>
         </div>
 
         <%= form_group(f, :introduction, label: "Introductory paragraph", help: "Set the scene for the user. What is about to happen? (eg. \"you will need to fill in a form, print it out and take it to the post office\")") do %>

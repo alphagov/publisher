@@ -41,13 +41,12 @@
         $partContainer.find('.collapse').collapse('show')
         $.each(partErrors, function (fieldKey, messages) {
           var $errorElement = $partContainer.find('[id*=' + fieldKey + '_input]')
-          var $list = $('<ul class="help-block js-error"></ul>')
 
           $errorElement.addClass('has-error')
+          var list = $errorElement.find('.error-block')
           for (var j = 0, m = messages.length; j < m; j++) {
-            $list.append('<li>' + messages[j] + '</li>')
+            list.append('<li>' + messages[j] + '</li>')
           }
-          $errorElement.append($list)
         })
       }
 
