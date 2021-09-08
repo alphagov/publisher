@@ -1,4 +1,5 @@
-FROM ruby:2.7.2
+ARG base_image=ruby:2.7.2
+FROM ${base_image}
 RUN apt-get update -qq && apt-get upgrade -y
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get update && apt-get install -y nodejs && apt-get install npm -y
