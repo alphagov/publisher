@@ -22,7 +22,7 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :parts, @ordered_parts do |part| %>
-        <%= render :partial => '/shared/part', :locals => { :f => part, :editable => false } %>
+        <%= render partial: '/shared/common_part_attributes', locals: { f: part, editable: false, child_record_type: 'part' } %>
       <% end %>
     </section>
 
