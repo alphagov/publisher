@@ -1,0 +1,40 @@
+<div class="panel panel-part part">
+  <div class="panel-heading js-sort-handle">
+    <h4 class="panel-title">
+      <a class="js-part-toggle" data-toggle="collapse" data-parent="#parts" href="#<%= f.object.slug || 'untitled-part' %>">
+        <i class="glyphicon glyphicon-chevron-down pull-left add-right-margin"></i>
+        <span class="js-part-title"><%= f.object.title.present? ? f.object.title : "Untitled #{child_record_type}" %></span>
+      </a>
+    </h4>
+  </div>
+  <div id="<%= f.object.slug || 'untitled-part' %>" class="js-part-toggle-target panel-collapse collapse in" aria-expanded="true">
+    <div class="panel-body">
+      <fieldset class="inputs">
+        <%
+          slug_input_html = { class: 'slug form-control', disabled: !editable }
+          if @resource.version_number == 1
+            slug_input_html['data-accepts-generated-value'] = true
+          end
+        %>
+
+        <%= form_group(f, :title, attributes: { id: "edition_parts_title_input" }) do %>
+          <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "title form-control" %>
+        <% end %>
+
+        <%= form_group(f, :slug, help: "for example, title-of-#{child_record_type} (no spaces, apostrophes or acronyms)", attributes: { id: "edition_parts_slug_input" }) do %>
+          <%= f.text_field :slug, slug_input_html %>
+        <% end %>
+
+        <%= render partial: "/shared/#{child_record_type}", locals: {f: f, editable: ! @resource.locked_for_edits? } %>
+
+        <%= f.hidden_field :order, class: 'order', disabled: !editable %>
+
+        <% unless @resource.locked_for_edits? %>
+          <%= f.link_to_remove class: 'btn btn-default btn-sm' do %>
+            <i class="glyphicon glyphicon-remove glyphicon-smaller-than-text"></i> Remove this <%= child_record_type %>
+          <% end %>
+        <% end %>
+      </fieldset>
+    </div>
+  </div>
+</div>

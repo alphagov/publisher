@@ -33,7 +33,7 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :parts, @ordered_parts do |part| %>
-        <%= render partial: '/shared/part', locals: { f: part, editable: !@resource.locked_for_edits? } %>
+        <%= render partial: '/shared/common_part_attributes', locals: { f: part, editable: !@resource.locked_for_edits?, child_record_type: 'part' } %>
       <% end %>
     </section>
 

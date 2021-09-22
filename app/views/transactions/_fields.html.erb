@@ -57,7 +57,7 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :variants, @ordered_variants do |variant| %>
-        <%= render :partial => '/shared/transaction_variant', :locals => {:f => variant, :editable => ! @resource.locked_for_edits? } %>
+        <%= render partial: '/shared/common_part_attributes', locals: {f: variant, editable: ! @resource.locked_for_edits?, child_record_type: 'variant' } %>
       <% end %>
     </section>
 
