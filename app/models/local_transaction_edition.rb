@@ -61,8 +61,8 @@ private
   def merge_embedded_errors
     %i[scotland_availability wales_availability northern_ireland_availability].each do |availability|
       nested_errors = public_send(availability).errors
-      nested_errors.each do |key, value|
-        errors.add("#{availability}_attributes_#{key}", value)
+      nested_errors.each do |error|
+        errors.add("#{availability}_attributes_#{error.attribute}", error.message)
       end
     end
   end
