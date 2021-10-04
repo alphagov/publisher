@@ -30,7 +30,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
       dummy = Dummy.new(i_am_embedded_govspeak: embedded)
       # Can't invoke embedded.valid? because that would run the validations
       assert dummy.invalid?
-      assert_includes dummy.errors.keys, :i_am_embedded_govspeak
+      assert_includes dummy.errors.attribute_names, :i_am_embedded_govspeak
     end
   end
 
@@ -43,7 +43,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
     should "disallow images not hosted by us" do
       dummy = Dummy.new(i_am_govspeak: '<img src="http://evil.com/trollface"/>')
       assert dummy.invalid?
-      assert_includes dummy.errors.keys, :i_am_govspeak
+      assert_includes dummy.errors.attribute_names, :i_am_govspeak
     end
 
     should "allow images hosted by us" do

@@ -29,7 +29,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
       @node = @edition.nodes.build(@atts.merge(slug: ""))
 
       assert_not @node.valid?
-      assert_equal [:slug], @node.errors.keys
+      assert_equal [:slug], @node.errors.attribute_names
     end
 
     should "not be valid with an invalid slug" do
@@ -49,21 +49,21 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
       @node = @edition.nodes.build(@atts.merge(title: ""))
 
       assert_not @node.valid?
-      assert_equal [:title], @node.errors.keys
+      assert_equal [:title], @node.errors.attribute_names
     end
 
     should "not be valid without a kind" do
       @node = @edition.nodes.build(@atts.merge(kind: nil))
       assert_not @node.valid?
 
-      assert_equal [:kind], @node.errors.keys
+      assert_equal [:kind], @node.errors.attribute_names
     end
 
     should "not be valid with a kind other than 'question' or 'outcome'" do
       @node = @edition.nodes.build(@atts.merge(kind: "blah"))
       assert_not @node.valid?
 
-      assert_equal [:kind], @node.errors.keys
+      assert_equal [:kind], @node.errors.attribute_names
     end
 
     should "create options using nested attributes" do
@@ -105,7 +105,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
                                    ))
       assert_not @node.valid?
 
-      assert_equal [:options], @node.errors.keys
+      assert_equal [:options], @node.errors.attribute_names
     end
 
     should "be able to create an outcome without options" do
