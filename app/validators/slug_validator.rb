@@ -31,7 +31,7 @@ class SlugValidator < ActiveModel::EachValidator
 
     def url_after_first_slash_is_valid_slug!
       unless valid_slug?(url_after_first_slash)
-        record.errors[attribute] << "must be usable in a url"
+        record.errors.add(attribute, "must be usable in a url")
       end
     end
 
@@ -53,7 +53,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
-      record.errors[attribute] << "Done page slugs must have a done/ prefix" unless starts_with?("done/")
+      record.errors.add(attribute, "Done page slugs must have a done/ prefix") unless starts_with?("done/")
       url_after_first_slash_is_valid_slug!
     end
   end
@@ -74,7 +74,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
-      record.errors[attribute] << "Help page slugs must have a help/ prefix" unless starts_with?("help/")
+      record.errors.add(attribute, "Help page slugs must have a help/ prefix") unless starts_with?("help/")
       url_after_first_slash_is_valid_slug!
     end
   end
@@ -94,19 +94,19 @@ class SlugValidator < ActiveModel::EachValidator
 
     def validate_number_of_parts!
       unless [2, 3].include?(url_parts.size)
-        record.errors[attribute] << "must contains two or three path parts"
+        record.errors.add(attribute, "must contains two or three path parts")
       end
     end
 
     def validate_guidance_prefix!
       unless starts_with?("guidance/")
-        record.errors[attribute] << "must have a guidance/ prefix"
+        record.errors.add(attribute, "must have a guidance/ prefix")
       end
     end
 
     def validate_parts_as_slugs!
       unless url_parts.all? { |url_part| valid_slug?(url_part) }
-        record.errors[attribute] << "must be usable in a URL"
+        record.errors.add(attribute, "must be usable in a URL")
       end
     end
   end
@@ -117,7 +117,7 @@ class SlugValidator < ActiveModel::EachValidator
     end
 
     def validate!
-      record.errors[attribute] << "must be usable in a url" unless valid_slug?(value)
+      record.errors.add(attribute, "must be usable in a url") unless valid_slug?(value)
     end
   end
 end

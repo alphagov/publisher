@@ -5,7 +5,9 @@ class LinkValidator < ActiveModel::Validator
       next if govspeak_field_value.blank?
 
       messages = errors(govspeak_field_value)
-      record.errors[govspeak_field_name] << messages if messages.present?
+      messages.each do |message|
+        record.errors.add(govspeak_field_name, message: message)
+      end
     end
   end
 

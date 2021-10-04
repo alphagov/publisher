@@ -61,13 +61,13 @@ class LinkValidatorTest < ActiveSupport::TestCase
     should "show multiple errors" do
       doc = Dummy.new(body: 'abc [foobar](foobar.com "bar"){:rel="external"}')
       assert doc.invalid?
-      assert_equal 3, doc.errors[:body].first.length
+      assert_equal 3, doc.errors.count
     end
 
     should "only show each error once" do
       doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
       assert doc.invalid?
-      assert_equal 1, doc.errors[:body].first.length
+      assert_equal 1, doc.errors.count
     end
 
     should "be validated when any attribute of the document changes" do
@@ -78,7 +78,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
       doc.assignee = "4fdef0000000000000000001"
       assert doc.invalid?
 
-      assert_equal 1, doc.errors[:body].first.length
+      assert_equal 1, doc.errors.count
     end
   end
 end
