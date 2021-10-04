@@ -2,11 +2,13 @@ require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
-# require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "rails/test_unit/railtie"
 require "sprockets/railtie"
+
+require "open-uri"
+require "builder"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -53,16 +55,9 @@ module Publisher
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = "London"
 
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
-
     # Enforce locale restriction to silence deprecation warnings; this will be
     # the default in future Rails versions.
     config.i18n.enforce_available_locales = true
-
-    # JavaScript files you want as :defaults (application.js is always included).
-    # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -89,6 +84,3 @@ module Publisher
     ActiveSupport.to_time_preserves_timezone = false
   end
 end
-
-require "open-uri"
-require "builder"
