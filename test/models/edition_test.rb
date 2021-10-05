@@ -118,7 +118,7 @@ class EditionTest < ActiveSupport::TestCase
       edition.body += "some update"
 
       assert_not edition.valid?
-      assert_includes edition.errors.full_messages, %q(Body ["Don't include hover text in links. Delete the text in quotation marks eg \\"This appears when you hover over the link.\\""])
+      assert_equal edition.errors.full_messages, ["Body Don't include hover text in links. Delete the text in quotation marks eg \"This appears when you hover over the link.\""]
     end
 
     should "allow archiving an edition with invalid links" do

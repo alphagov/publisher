@@ -1,8 +1,8 @@
 class EventMailer < ApplicationMailer
   include PathsHelper
 
-  add_template_helper(PathsHelper)
-  add_template_helper(WorkingDaysHelper)
+  helper(PathsHelper)
+  helper(WorkingDaysHelper)
   default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   def any_action(action, recipient_email)

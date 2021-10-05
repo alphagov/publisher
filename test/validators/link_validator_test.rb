@@ -31,7 +31,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
     should "start with http[s]://, mailto: or /" do
       doc = Dummy.new(body: "abc [external](external.com)")
       assert doc.invalid?
-      assert_includes doc.errors.keys, :body
+      assert_includes doc.errors.attribute_names, :body
 
       doc = Dummy.new(body: "abc [external](http://external.com)")
       assert doc.valid?
@@ -43,31 +43,31 @@ class LinkValidatorTest < ActiveSupport::TestCase
     should "not contain hover text" do
       doc = Dummy.new(body: 'abc [foobar](http://foobar.com "hover")')
       assert doc.invalid?
-      assert_includes doc.errors.keys, :body
+      assert_includes doc.errors.attribute_names, :body
     end
 
     should "validate smart quotes as normal quotes" do
       doc = Dummy.new(body: "abc [foobar](http://foobar.com “hover”)")
       assert doc.invalid?
-      assert_includes doc.errors.keys, :body
+      assert_includes doc.errors.attribute_names, :body
     end
 
     should "not set rel=external" do
       doc = Dummy.new(body: 'abc [foobar](http://foobar.com){:rel="external"}')
       assert doc.invalid?
-      assert_includes doc.errors.keys, :body
+      assert_includes doc.errors.attribute_names, :body
     end
 
     should "show multiple errors" do
       doc = Dummy.new(body: 'abc [foobar](foobar.com "bar"){:rel="external"}')
       assert doc.invalid?
-      assert_equal 3, doc.errors[:body].first.length
+      assert_equal 3, doc.errors.count
     end
 
     should "only show each error once" do
       doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
       assert doc.invalid?
-      assert_equal 1, doc.errors[:body].first.length
+      assert_equal 1, doc.errors.count
     end
 
     should "be validated when any attribute of the document changes" do
@@ -78,7 +78,7 @@ class LinkValidatorTest < ActiveSupport::TestCase
       doc.assignee = "4fdef0000000000000000001"
       assert doc.invalid?
 
-      assert_equal 1, doc.errors[:body].first.length
+      assert_equal 1, doc.errors.count
     end
   end
 end
