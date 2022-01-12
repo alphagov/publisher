@@ -51,6 +51,9 @@ Rails.application.routes.draw do
   get "reports/content_workflow" => "reports#content_workflow", as: "content_workflow_report"
   get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
 
+  get "service-sign-in" => "service_sign_in#index"
+  get "service-sign-in/(*slug)" => "service_sign_in#show", as: "service_sign_in_show"
+
   get "user_search" => "user_search#index"
 
   resources :link_check_reports, only: %i[create show]

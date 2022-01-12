@@ -1,0 +1,3 @@
+<% @resources.each do |resource| %>
+  <%= link_to(resource.slug, service_sign_in_show_path(resource.slug)) %>
+<% end %>
