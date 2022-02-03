@@ -1,0 +1,50 @@
+start_page_slug: help-friends-family-tax
+locale: en
+choose_sign_in:
+  title: Prove your identity to continue
+  slug: prove-identity
+  options:
+    - text: Sign in with Government Gateway
+      url: https://www.tax.service.gov.uk/gg/sign-in?continue=/trusted-helpers&accountType=individual&origin=FANDF
+      hint_text: You’ll have a user ID if you’ve signed up to do things like file your Self Assessment tax return online.
+    - text: Sign in with GOV.UK Verify
+      url: https://tax.service.gov.uk/trusted-helpers/start-verify
+      hint_text: You’ll have an account if you’ve already proved your identity with either Digidentity or Post Office.
+    - text: Create an account
+      slug: create-account
+      hint_text: If you do not already have one of these accounts, we’ll help you choose whether to use Government Gateway or GOV.UK Verify.
+create_new_account:
+  title: Choose a way to prove your identity
+  slug: create-account
+  body: |
+    You need to confirm who you are before you can help friends or family with their tax.
+
+    To do this, you can create either a Government Gateway user ID or a GOV.UK Verify identity account.
+
+    ^From 1 April you will not be able to use a Verify account to access HMRC digital services. Instead you’ll need to use Government Gateway.^
+
+    ## Government Gateway
+
+    You’ll need:
+
+    - your National Insurance number or UK address
+    - a recent payslip or P60 or a valid UK passport
+
+    You can use your user ID for things like your personal or business tax account, Self Assessment, Corporation Tax, PAYE for employers and VAT.
+
+    {button}[Choose Government Gateway](https://www.tax.service.gov.uk/gg/sign-in?continue=/trusted-helpers&accountType=individual&origin=FANDF){/button}
+
+    ## GOV.UK Verify
+
+    GOV.UK Verify works best if you’re over 20 years old. You’ll need:
+
+    - a UK address
+    - a mobile phone
+    - at least one valid photo ID from any country
+
+    You can use your identity account for things like Universal Credit, requesting a basic DBS check and Self Assessment.
+
+    {button}[Choose GOV.UK Verify](https://tax.service.gov.uk/trusted-helpers/start-verify){/button}
+
+update_type: major
+change_note: First published.
