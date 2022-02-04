@@ -12,7 +12,7 @@ module FormHelper
     attributes[:class] = Array(attributes[:class]) << "form-group"
     attributes[:class] << "has-error" if errors.any?
 
-    tag.div(attributes) do
+    tag.div(**attributes) do
       wrapped_label = tag.div(class: "form-label") { form_label_element(form, field_name, label) }
       wrapped_field = tag.div(class: "form-wrapper", &block)
       errors = form_errors(errors)
