@@ -71,8 +71,8 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
     ast (2.4.2)
-    autoprefixer-rails (9.8.6.1)
-      execjs
+    autoprefixer-rails (10.4.2.0)
+      execjs (~> 2)
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
       rails (>= 3.1)
@@ -112,7 +112,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.10.0)
     erubis (2.7.0)
-    execjs (2.7.0)
+    execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -141,7 +141,7 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
-    ffi (1.13.1)
+    ffi (1.15.5)
     gds-api-adapters (79.0.0)
       addressable
       link_header
@@ -171,7 +171,7 @@ GEM
       sanitize (~> 6)
     govuk-content-schema-test-helpers (1.6.1)
       json-schema (~> 2.8.0)
-    govuk_admin_template (6.7.0)
+    govuk_admin_template (6.8.1)
       bootstrap-sass (= 3.4.1)
       jquery-rails (~> 4.3.1)
       plek (>= 2.1.0)
