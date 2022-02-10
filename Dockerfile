@@ -1,6 +1,5 @@
-# TODO: make this default to govuk-ruby once it's being pushed somewhere public
 # (unless we decide to use Bitnami instead)
-ARG base_image=ruby:2.7.2-slim-buster
+ARG base_image=ruby:2.7.5-slim-buster
 
 FROM $base_image AS builder
 # TODO: have a separate build image which already contains the build-only deps.
