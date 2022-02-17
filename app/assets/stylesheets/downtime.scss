@@ -7,3 +7,18 @@
     margin-right: $default-horizontal-margin;
   }
 }
+
+p {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.date {
+  width: auto;
+}
+
+.joining-on {
+  @media screen and (min-width: 600px) {
+    margin-top: 40px;
+  }
+}

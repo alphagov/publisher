@@ -6,27 +6,77 @@
    </p>
 <% end %>
 
-<div class="form-group form-inline js-start-time">
-  <%= f.label :start_time, 'This service will be unavailable from' %><br />
-  <span>
-  <%= f.time_select :start_time, { default: 1.hour.from_now.beginning_of_hour, ignore_date: true }, { class: 'date form-control' } %>
-</span>
-  <b class="add-left-margin add-right-margin">on</b>
-  <%= f.date_select :start_time, { order: [:day, :month, :year], default: Date.tomorrow,
-    start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+<div class="form-group">
+  <p>This service will be unavailable from</p>
 </div>
 
-<div class="form-group form-inline js-stop-time">
-  <%= f.label :end_time, 'to' %><br />
-  <span>
-  <%= f.time_select :end_time, { default: 1.hour.from_now.beginning_of_hour, ignore_date: true }, { class: 'date form-control' } %>
-  </span>
-  <b class="add-left-margin add-right-margin">on</b>
-  <%= f.date_select :end_time, { order: [:day, :month, :year], default: Date.tomorrow,
-    start_year: Date.today.year, end_year: Date.today.year.next }, { class: 'date form-control' } %>
+<div class="row js-start-time">
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Hour", for: "date_start_time_4i" %>
+    <%= select_hour @downtime.start_time&.hour || 1.hour.from_now.beginning_of_hour, { field_name: "start_time(4i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Minute", for: "date_start_time_5i" %>
+    <%= select_minute @downtime.start_time&.minute, { field_name: "start_time(5i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <p class="joining-on">on</p>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Day", for: "date_start_time_3i" %>
+    <%= select_day @downtime.start_time&.day || Date.tomorrow.day, { field_name: "start_time(3i)" }, { class: "form-control date" } %>
+  </div>
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Month", for: "date_start_time_2i" %>
+    <%= select_month@downtime.start_time&.month || Date.tomorrow.month, { field_name: "start_time(2i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Year", for: "date_start_time_1i" %>
+    <%= select_year @downtime.start_time&.year || Date.tomorrow.year, { field_name: "start_time(1i)" }, { class: "form-control date" } %>
+  </div>
 </div>
 
-<hr />
+<div class="form-group">
+  <p>to</p>
+</div>
+
+<div class="row js-stop-time">
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :end_time, "Hour", for: "date_end_time_4i" %>
+    <%= select_hour @downtime.end_time&.hour || 1.hour.from_now.beginning_of_hour, { field_name: "end_time(4i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :end_time, "Minute", for: "date_end_time_5i" %>
+    <%= select_minute @downtime.end_time&.minute, { field_name: "end_time(5i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <p class="joining-on">on</p>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :start_time, "Day", for: "date_end_time_3i" %>
+    <%= select_day @downtime.end_time&.day || Date.tomorrow.day, { field_name: "end_time(3i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :end_time, "Month", for: "date_end_time_2i" %>
+    <%= select_month @downtime.end_time&.month || Date.tomorrow.month, { field_name: "end_time(2i)" }, { class: "form-control date" } %>
+  </div>
+
+  <div class="form-group date col-sm-1">
+    <%= f.label :end_time, "Year", for: "date_end_time_1i" %>
+    <%= select_year @downtime.end_time&.year || Date.tomorrow.year, { field_name: "end_time(1i)" }, { class: "form-control date" } %>
+  </div>
+</div>
+
+<hr>
 
 <%= form_group(f, :message) do %>
   <%= f.text_area :message, class: 'form-control input-md-6 js-downtime-message', rows: 5 %>
@@ -37,4 +87,4 @@
   <span class="js-schedule-message">Messages appear on the start page one day before the downtime is due.</span>
 </p>
 
-<hr />
+<hr>
