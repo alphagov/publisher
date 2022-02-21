@@ -3,12 +3,12 @@
     <%= publication.format.underscore.humanize %>
   </td>
   <td class="title">
-    <h4 class="publication-table-title">
+    <h2 class="publication-table-title h4">
       <%= link_to publication.admin_list_title, edition_path(publication) %>
       <% if publication.in_beta? %>
         <span class="badge badge-beta">beta</span>
       <% end %>
-    </h4>
+    </h2>
 
     <% if publication.published? %>
       <%= link_to "/#{publication.slug}", "#{Plek.new.website_root}/#{publication.slug}", class: 'link-muted' %>
