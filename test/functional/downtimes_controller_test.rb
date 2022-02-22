@@ -41,35 +41,35 @@ class DowntimesControllerTest < ActionController::TestCase
     context "with valid params" do
       should "create a new downtime" do
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: date_params }
         assert_a_downtime_is_created
       end
 
       should "schedule the publication and expiration of the downtime" do
         DowntimeScheduler.expects(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: date_params }
       end
 
       should "redirect to the downtime index page" do
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: date_params }
         assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
     context "with invalid params" do
       should "not create a downtime" do
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: invalid_params }
         assert_that_no_downtime_exists
       end
 
       should "not schedule publishing and expiration" do
         DowntimeScheduler.expects(:schedule_publish_and_expiry).never
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: invalid_params }
       end
 
       should "rerender the page" do
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
+        post :create, params: { edition_id: edition.id, downtime: downtime_params, date: invalid_params }
         assert_template :new
       end
     end
@@ -87,12 +87,12 @@ class DowntimesControllerTest < ActionController::TestCase
     context "cancelling scheduled downtime" do
       should "invoke the DowntimeRemover" do
         DowntimeRemover.expects(:destroy_immediately).with(downtime)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, date: date_params, commit: "Cancel downtime" }
       end
 
       should "redirect to the downtime index" do
         DowntimeRemover.stubs(:destroy_immediately)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, date: date_params, commit: "Cancel downtime" }
         assert_redirected_to controller: "downtimes", action: "index"
       end
     end
@@ -100,13 +100,13 @@ class DowntimesControllerTest < ActionController::TestCase
     context "rescheduling planned downtime" do
       should "schedule the changes for publication and expiration" do
         DowntimeScheduler.expects(:schedule_publish_and_expiry).with(downtime)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, date: date_params, commit: "Re-schedule downtime message" }
       end
 
       should "redirect to the downtime index" do
         create_downtime
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, date: date_params, commit: "Re-schedule downtime message" }
         assert_redirected_to controller: "downtimes", action: "index"
       end
     end
@@ -114,7 +114,7 @@ class DowntimesControllerTest < ActionController::TestCase
     context "with invalid form data" do
       should "rerender the page" do
         create_downtime
-        put :update, params: { edition_id: edition.id, downtime: invalid_params, commit: "Re-schedule downtime message" }
+        put :update, params: { edition_id: edition.id, downtime: downtime_params, date: invalid_params, commit: "Re-schedule downtime message" }
         assert_template :edit
       end
     end
@@ -143,6 +143,12 @@ class DowntimesControllerTest < ActionController::TestCase
   def downtime_params
     {
       'artefact_id': edition.artefact.id,
+      'message': "foo",
+    }
+  end
+
+  def date_params
+    {
       'start_time(4i)': 11,
       'start_time(5i)': 0,
       'start_time(3i)': 14,
@@ -153,12 +159,11 @@ class DowntimesControllerTest < ActionController::TestCase
       'end_time(3i)': 14,
       'end_time(2i)': 3,
       'end_time(1i)': next_year,
-      'message': "foo",
     }
   end
 
   def invalid_params
-    downtime_params.merge('end_time(1i)': last_year)
+    date_params.merge!('end_time(1i)': last_year)
   end
 
   def assert_a_downtime_is_created

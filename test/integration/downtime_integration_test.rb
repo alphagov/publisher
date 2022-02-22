@@ -64,11 +64,11 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
   end
 
   def enter_start_time(start_time)
-    complete_date_inputs("downtime_start_time", start_time)
+    complete_date_inputs("date_start_time", start_time)
   end
 
   def enter_end_time(end_time)
-    complete_date_inputs("downtime_end_time", end_time)
+    complete_date_inputs("date_end_time", end_time)
   end
 
   def complete_date_inputs(input_id, time)
