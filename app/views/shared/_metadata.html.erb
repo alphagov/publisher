@@ -1,3 +1,5 @@
+<h2 class="remove-top-margin add-bottom-margin h3">Metadata</h2>
+
 <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
   <%= form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
     <div class="row">

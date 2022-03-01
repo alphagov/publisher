@@ -1,17 +1,19 @@
+<h2 class="remove-top-margin add-bottom-margin h3">Admin</h2>
+
 <% if @resource.can_destroy? %>
-  <h3 class="remove-top-margin add-bottom-margin">Delete edition</h3>
+  <h3 class="remove-top-margin add-bottom-margin h4">Delete edition</h3>
   <%= button_to "Delete this edition – ##{@resource.version_number}", path_for_edition(@resource), :method => :delete, :class => "btn btn-danger" %>
 <% end %>
 
 <% if @resource.can_destroy? && @resource.fact_check? %><hr/><% end %>
 
 <% if @resource.fact_check? %>
-  <h3 class="add-bottom-margin">Skip fact check</h3>
+  <h3 class="add-bottom-margin h4">Skip fact check</h3>
   <%= button_to "Skip fact check", skip_fact_check_for_edition(@resource), :method => :post, :class => "btn btn-default" %>
 <% end %>
 
 <% if @edition.published? && @edition.can_create_new_edition? %>
-  <h3 class="remove-top-margin">Change format of edition</h3>
+  <h3 class="remove-top-margin h4">Change format of edition</h3>
 
 <%= render partial: "shared/clone_buttons",
     locals: {

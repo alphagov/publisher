@@ -2,9 +2,10 @@
     <%= f.hidden_field :content_id %>
     <%= f.hidden_field :previous_version %>
 
+    <h2 class="remove-top-margin add-bottom-margin h3">Tagging</h2>
+
     <div class="row">
       <div class="col-md-7 edition-tags">
-
         <div class="form-group" id="edition_browse_pages_input">
           <%= f.label :mainstream_browse_pages, "Mainstream browse pages", class: 'control-label' %>
           <%= f.select :mainstream_browse_pages,

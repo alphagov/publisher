@@ -1,11 +1,12 @@
 <%= nested_form_for @artefact, url: update_related_external_links_edition_path(@resource) do |f| %>
+  <h2 class="remove-top-margin add-bottom-margin h3">Related external links</h2>
+
   <div class='alert alert-info'>
     Once saved, related external links will be visible on the site the next time
     this publication is published.
   </div>
 
   <div class="related-external-links fieldset-section">
-    <label class="section-label">Related external links</label><br />
     <%= f.fields_for :external_links do |link| %>
       <div class="nested-item">
         <div class="row relative">
