@@ -25,7 +25,16 @@ class WorkingDaysCalculator
 private
 
   def fetch_public_holidays
-    public_holidays_json = GdsApi.calendars.bank_holidays(@calendar_division)
+    public_holidays_json = calendars_api.bank_holidays(@calendar_division)
     public_holidays_json["events"].map { |event| Date.parse(event["date"]) }
+  end
+
+  def calendars_api
+    endpoint = if !Rails.env.production? || ENV["HEROKU_APP_NAME"].present?
+                 Plek.new.website_root
+               else
+                 Plek.find("frontend")
+               end
+    GdsApi::Calendars.new(endpoint)
   end
 end
