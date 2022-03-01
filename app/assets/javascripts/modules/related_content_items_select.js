@@ -29,7 +29,7 @@
 
     var buildAddRelatedItemEl = function () {
       var $inputGroupEl = $('<div class="input-group">')
-      var $inputEl = $('<input type="text" class="form-control js-path-field" placeholder="URL or path">')
+      var $inputEl = $('<input id="add-related-item" type="text" class="form-control js-path-field" placeholder="URL or path">')
       var $buttonGroupEl = $('<span class="input-group-btn"></span>')
       var $buttonEl = $('<button class="btn btn-default" type="button">Add related item</button>')
 
