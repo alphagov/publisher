@@ -5,8 +5,10 @@
   <p class="lead">Show a message on a published transaction start page for a specific time.</p>
 </div>
 
-<h2 class="add-bottom-margin">Services</h2>
 <table class="table table-bordered table-striped" data-module="filterable-table">
+  <caption class="h2 remove-top-margin">
+    <h2 class="remove-top-margin remove-bottom-margin">Services</h2>
+  </caption>
   <thead>
     <tr class="table-header">
       <th>Service start page</th>
@@ -16,8 +18,9 @@
     <tr class="if-no-js-hide table-header-secondary">
       <td colspan="3">
         <form>
-          <label for="table-filter" class="rm">Filter services</label>
-          <input id="table-filter" type="text" class="form-control normal js-filter-table-input" placeholder="Filter services (eg ‘driving’ or ‘scheduled downtime’)">
+          <label class="remove-bottom-margin" for="table-filter">Filter services</label>
+          <p class="help-inline">For example ‘driving’ or ‘scheduled downtime’</p>
+          <input id="table-filter" type="text" class="form-control normal js-filter-table-input">
         </form>
       </td>
     </tr>
@@ -26,11 +29,11 @@
     <% @transactions.each do |transaction| %>
     <tr>
       <td>
-        <h4 class="publication-table-title">
+        <h3 class="publication-table-title">
           <%= link_to transaction.title, Downtime.for(transaction.artefact).present? ?
                                           edit_edition_downtime_path(transaction) :
                                           new_edition_downtime_path(transaction) %>
-        </h4>
+        </h3>
         <%= link_to "/#{transaction.slug}", "#{Plek.new.website_root}/#{transaction.slug}", class: 'link-muted' %>
       </td>
         <% if downtime = Downtime.for(transaction.artefact) %>

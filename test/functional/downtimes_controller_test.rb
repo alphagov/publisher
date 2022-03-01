@@ -13,9 +13,9 @@ class DowntimesControllerTest < ActionController::TestCase
       get :index
 
       assert_response :ok
-      assert_select "h4.publication-table-title", count: 0, text: unpublished_transaction_edition.title
+      assert_select "h3.publication-table-title", count: 0, text: unpublished_transaction_edition.title
       transaction_editions.each do |edition|
-        assert_select "h4.publication-table-title", text: edition.title
+        assert_select "h3.publication-table-title", text: edition.title
       end
     end
 
