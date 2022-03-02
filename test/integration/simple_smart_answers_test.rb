@@ -70,7 +70,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
       within ".nodes .outcome" do
         assert page.has_content?("Outcome 1")
-        assert page.has_selector?("input.node-title[placeholder='The title of the outcome']")
+        assert page.has_content?("Title")
         assert page.has_selector?("textarea.node-body")
       end
     end
