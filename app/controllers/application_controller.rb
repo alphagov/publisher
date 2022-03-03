@@ -32,7 +32,8 @@ class ApplicationController < ActionController::Base
   end
 
   def notify_bad_request(exception)
-    if %w[integration staging].include?(ENV["SENTRY_CURRENT_ENV"]) && exception.message =~ /team-only API key/
+    # TODO: control this via the log level rather than an environment variable
+    if %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT_NAME"]) && exception.message =~ /team-only API key/
       # in production we care about all errors
       # in staging and integration the team-only error may be encountered by
       # end-users who should see a more helpful error message
