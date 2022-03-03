@@ -10,6 +10,8 @@
   <%= yield :extra_headers %>
 <% end %>
 
+<%= render "govuk_publishing_components/components/skip_link" %>
+
 <% content_for :navbar_items do %>
   <%= nav_link 'Publications', root_path %>
 
@@ -23,25 +25,27 @@
 <% end %>
 
 <% content_for :content do %>
-  <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
-    <%
-      case k
-      when :notice
-        alert_class = "success"
-      when :alert
-        alert_class = "danger"
-      else
-        alert_class = k
-      end
-    %>
-    <div class="alert alert-<%= alert_class %>"
-      data-module="auto-track-event"
-      data-track-action="alert-<%= alert_class %>"
-      data-track-label="<%= strip_tags(flash[k]) %>">
-        <%= flash[k] %>
-    </div>
-  <% end %>
-  <%= yield %>
+  <div id="main-content">
+    <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
+      <%
+        case k
+        when :notice
+          alert_class = "success"
+        when :alert
+          alert_class = "danger"
+        else
+          alert_class = k
+        end
+      %>
+      <div class="alert alert-<%= alert_class %>"
+        data-module="auto-track-event"
+        data-track-action="alert-<%= alert_class %>"
+        data-track-label="<%= strip_tags(flash[k]) %>">
+          <%= flash[k] %>
+      </div>
+    <% end %>
+    <%= yield %>
+  </div>
 <% end %>
 
 <% content_for :footer_version, CURRENT_RELEASE_SHA %>
