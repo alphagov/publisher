@@ -27,7 +27,7 @@ class FormHelperTest < ActionView::TestCase
       wrapped_field = '<div class="form-wrapper"><input type="text" value="" name="edition[field_name]" id="edition_field_name" /></div>'
       error_block = '<ul class="help-block error-block"></ul>'
 
-      assert_equal %(<div class="form-group">#{label}#{wrapped_field}#{error_block}</div>), output
+      assert_equal %(<div class="form-group">#{label}#{error_block}#{wrapped_field}</div>), output
     end
 
     should "include help text if that is provided" do
