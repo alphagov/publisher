@@ -18,7 +18,7 @@ module FormHelper
       errors = form_errors(errors)
       help = tag.div(class: "help-block") { help } if help
 
-      safe_join([wrapped_label, wrapped_field, errors, help])
+      safe_join([wrapped_label, help, errors, wrapped_field])
     end
   end
 
