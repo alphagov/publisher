@@ -5,15 +5,18 @@
       <h1><%= yield :page_title %></h1>
     </legend>
 
-    <% if @artefact.errors.count > 0 %>
-      <div class="alert alert-danger">
-        <ul>
-          <% @artefact.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+<% if @artefact.errors.count > 0 %>
+  <div class="alert alert-danger">
+    <h2 class="add-bottom-margin">There is a problem</h2>
+    <ul>
+      <% @artefact.errors.each do |error| %>
+      <li>
+        <a href="#<%= @artefact.class.to_s.underscore + "_" + error.attribute.to_s %>"><%=error.message %></a>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
     <div class="row">
       <div class="col-md-12">
