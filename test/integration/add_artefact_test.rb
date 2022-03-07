@@ -22,7 +22,7 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Help page slugs must have a help/ prefix", href: "#artefact_slug")
     end
 
-    within ".help-block" do
+    within "#error-slug" do
       assert page.has_content?("Help page slugs must have a help/ prefix")
     end
 

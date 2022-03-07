@@ -55,7 +55,7 @@ class EditionsController < InheritedResources::Base
       redirect_to edition_path(@publication)
     else
       setup_view_paths_for(@publication)
-      render action: "new"
+      render template: "new"
     end
   end
 

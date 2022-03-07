@@ -5,11 +5,7 @@
   We need a bit more information to create your local transaction.
 </p>
 
-<% if @publication.errors.any? %>
-  <p class="alert alert-danger">
-    Errors: <%= @publication.errors.full_messages.uniq.to_sentence %>
-  </p>
-<% end %>
+<%= render :partial => 'shared/error_summary', locals: { object: @publication} %>
 
 <%= form_for(@publication, as: :edition, url: editions_path, html: { id: 'edition-form', novalidate: 'novalidate' } ) do |f| %>
   <fieldset class="inputs">
