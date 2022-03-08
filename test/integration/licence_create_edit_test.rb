@@ -19,7 +19,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
 
     assert page.has_content? "We need a bit more information to create your licence."
-    assert page.has_content? "Licence identifier can't be blank"
+    assert page.has_link? "Enter a licence identifier", href: "#edition_licence_identifier"
 
     fill_in "Licence identifier", with: "AB1234"
     click_button "Create Licence"

@@ -9,7 +9,7 @@ class LicenceEdition < Edition
 
   GOVSPEAK_FIELDS = [:licence_overview].freeze
 
-  validates :licence_identifier, presence: true
+  validates :licence_identifier, presence: { message: "Enter a licence identifier" }
   validate :licence_identifier_unique
   validates :continuation_link, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true }
 
