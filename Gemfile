@@ -60,9 +60,6 @@ end
 
 group :development, :test do
   gem "govuk_test"
-  gem "jasmine"
-  gem "jasmine-core"
-  gem "jasmine_selenium_runner"
   gem "pry-byebug"
   gem "rack"
   gem "rubocop-govuk"

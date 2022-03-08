@@ -22,5 +22,10 @@ reports/*
 removed_ghosts*.csv
 ghosts*.csv
 
-node_modules
 yarn-error.log
+
+# Ignore JavaScript dependencies
+/node_modules
+
+# Ignore compiled assets
+/public/assets
