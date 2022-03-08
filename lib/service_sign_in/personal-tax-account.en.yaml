@@ -21,6 +21,8 @@ create_new_account:
 
     To do this, you can create either a Government Gateway user ID or a GOV.UK Verify identity account.
 
+    ^From 1 April you will not be able to use a Verify account to access HMRC digital services. Instead you’ll need to use Government Gateway.^
+
     ## Government Gateway
 
     You'll need:
