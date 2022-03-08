@@ -50,7 +50,6 @@ group :test do
   gem "shoulda"
   gem "simplecov", require: false
   gem "timecop"
-  gem "webdrivers"
   gem "webmock"
 end
 
