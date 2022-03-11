@@ -38,7 +38,7 @@ class EditionTabTest < JavascriptIntegrationTest
       assert_tab_active("edit", "Edit")
 
       fill_in "Title", with: ""
-      save_edition_and_assert_error
+      save_edition_and_assert_error("Enter a title", "#edition_title")
       assert_tab_active("edit", "Edit")
     end
 

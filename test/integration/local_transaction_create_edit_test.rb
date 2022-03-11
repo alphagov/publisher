@@ -108,7 +108,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       visit_edition edition
       fill_in "Title", with: ""
 
-      save_edition_and_assert_error
+      save_edition_and_assert_error("Enter a title", "#edition_title")
     end
   end
 
