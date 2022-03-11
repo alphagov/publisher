@@ -483,6 +483,10 @@ class Edition
     paths
   end
 
+  def html_ref_for_error(attribute)
+    "#edition_#{attribute}"
+  end
+
 private
 
   def base_field_keys

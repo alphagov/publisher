@@ -73,4 +73,8 @@ class SimpleSmartAnswerEdition < Edition
   def destroy_in_attrs?(attrs)
     attrs.delete("_destroy") == "1"
   end
+
+  def html_ref_for_error(attribute)
+    "#edition_#{attribute}"
+  end
 end

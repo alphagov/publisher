@@ -130,5 +130,19 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
 
       assert_equal @node.edition, @edition
     end
+
+    describe ".html_ref_for_error" do
+      should "pass back the correct id to link an error to an input" do
+        @node = @edition.nodes.build(@atts)
+        @node.order = 1
+        @node2 = @edition.nodes.build(@atts)
+        @node2.order = 2
+
+        attribute = :title
+
+        assert_equal @node.html_ref_for_error(attribute), "#edition_nodes_attributes_0_title"
+        assert_equal @node2.html_ref_for_error(attribute), "#edition_nodes_attributes_1_title"
+      end
+    end
   end
 end

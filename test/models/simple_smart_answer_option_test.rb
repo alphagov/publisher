@@ -3,7 +3,7 @@ require "test_helper"
 class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
   context "given a smart answer exists with a node" do
     setup do
-      @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question")
+      @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question", order: 1)
       @edition = FactoryBot.create(
         :simple_smart_answer_edition,
         nodes: [
@@ -33,6 +33,28 @@ class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
 
       assert_not @option.valid?
       assert @option.errors.key?(:label)
+    end
+
+    describe ".html_ref_for_error" do
+      should "pass back the correct id to link an error to an input" do
+        @node2 = @edition.nodes.create!(slug: "question2", title: "Question Two?", kind: "question", order: 2)
+        @option = @node.options.build(@atts)
+        @option2 = @node.options.build(@atts)
+        @option3 = @node2.options.build(@atts)
+        @option4 = @node2.options.build(@atts)
+
+        label = :label
+        node = :next_node
+
+        assert_equal @option.html_ref_for_error(label), "#edition_nodes_attributes_0_options_attributes_0_label"
+        assert_equal @option.html_ref_for_error(node), "#edition_nodes_attributes_0_options_attributes_0_node"
+        assert_equal @option2.html_ref_for_error(label), "#edition_nodes_attributes_0_options_attributes_1_label"
+        assert_equal @option2.html_ref_for_error(node), "#edition_nodes_attributes_0_options_attributes_1_node"
+        assert_equal @option3.html_ref_for_error(label), "#edition_nodes_attributes_1_options_attributes_0_label"
+        assert_equal @option3.html_ref_for_error(node), "#edition_nodes_attributes_1_options_attributes_0_node"
+        assert_equal @option4.html_ref_for_error(label), "#edition_nodes_attributes_1_options_attributes_1_label"
+        assert_equal @option4.html_ref_for_error(node), "#edition_nodes_attributes_1_options_attributes_1_node"
+      end
     end
 
     should "not be valid without the next node" do
