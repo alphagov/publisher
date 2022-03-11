@@ -44,6 +44,7 @@ group :test do
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "govuk-content-schema-test-helpers"
+  gem "launchy"
   gem "minitest-reporters"
   gem "mocha"
   gem "rails-controller-testing"
