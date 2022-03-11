@@ -31,6 +31,7 @@ class EditionsController < InheritedResources::Base
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
 
+    construct_objects_with_errors
     render action: "show"
   end
   alias_method :metadata, :show
@@ -112,7 +113,7 @@ class EditionsController < InheritedResources::Base
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
-        flash.now[:danger] = format_failure_message(resource)
+        construct_objects_with_errors
         render action: "show"
       end
       success.json do
@@ -132,6 +133,7 @@ class EditionsController < InheritedResources::Base
     @linkables = Tagging::Linkables.new
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
+    construct_objects_with_errors
     render action: "show"
   end
 
@@ -439,5 +441,30 @@ private
 
   def attempted_activity
     Edition::ACTIONS.invert[params[:commit]]
+  end
+
+  def construct_objects_with_errors
+    @objects_with_errors = []
+
+    @objects_with_errors << @resource if @resource.errors.present?
+
+    return unless @resource.instance_of?(SimpleSmartAnswerEdition)
+
+    if @resource.nodes.present?
+      @resource.nodes.each do |node|
+        @objects_with_errors << node if node.errors.present?
+        next if node.options.blank?
+
+        node.options.each do |option|
+          @objects_with_errors << option if option.errors.present?
+        end
+      end
+    end
+
+    @objects_with_errors.each do |object|
+      object.errors.errors.reject! do |error|
+        error.type == :invalid
+      end
+    end
   end
 end
