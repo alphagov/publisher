@@ -1,7 +1,7 @@
 module FormHelper
   def form_errors(errors, field_name)
     tag.div(id: "error-#{field_name.to_s.dasherize}") do
-      tag.ul(class: %w[help-block error-block]) do
+      tag.ul(class: %w[help-block error-block no-bullets]) do
         safe_join(errors.map { |e| tag.li(e) })
       end
     end

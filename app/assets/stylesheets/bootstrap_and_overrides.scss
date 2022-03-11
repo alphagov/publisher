@@ -101,3 +101,13 @@ legend p {
   font-size: 16px;
   font-weight: bold;
 }
+
+li a {
+  text-decoration: underline;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
