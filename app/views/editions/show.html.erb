@@ -1,5 +1,21 @@
 <% @edition = @resource %>
   <%= render 'shared/edition_header' %>
+
+  <% if @objects_with_errors.any? %>
+    <div id="error-summary" class="alert alert-danger">
+      <h2 class="add-bottom-margin">There is a problem</h2>
+      <ul class="no-bullets">
+        <% @objects_with_errors.each do |object| %>
+          <% object.errors.each do |error| %>
+          <li>
+            <a href="<%= object.html_ref_for_error(error.attribute) %>"><%= error.message %></a>
+          </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="tabbable" data-module="tab-switcher" role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
       <% tabs_for(current_user, @edition).each do |tab| %>
