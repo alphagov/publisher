@@ -28,13 +28,13 @@
         <div class="form-inline form-group<%= o.object.errors.empty? ? '' : ' error' %>">
           <div class="row">
             <div class="form-group col-md-3">
-              <%= f.label :label, for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_label" %>
+              <%= f.label :label, "Answer #{o.index.to_i + 1}",for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_label" %>
               <%= o.text_field :label, class: "option-label form-control" %>
               <%= form_errors(o.object.errors[:label]) %>
             </div>
 
             <div class="form-group col-md-6">
-              <%= f.label :next_node, "Node", for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_node" %>
+              <%= f.label :next_node, "Next question for user", for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_node" %>
               <%= o.hidden_field :next_node, class: "next-node-id" %>
               <select id="edition_nodes_attributes_<%= o.options[:parent_builder].index %>_options_attributes_<%= o.index %>_node" class="form-control required next-node-list" name="next-node-list">
                 <option value="" class="default">Select a node..</option>
