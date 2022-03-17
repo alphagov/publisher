@@ -45,14 +45,9 @@ class DowntimesController < ApplicationController
 private
 
   def downtime_params
-    params[:downtime].permit(%w[
-      artefact_id
-      message
-    ]).merge!(date_params)
-  end
-
-  def date_params
-    params[:date].permit([
+    params[:downtime].permit([
+      "artefact_id",
+      "message",
       "end_time(1i)",
       "end_time(2i)",
       "end_time(3i)",
