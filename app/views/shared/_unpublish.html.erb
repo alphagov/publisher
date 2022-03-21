@@ -3,15 +3,15 @@
     Warning
   </div>
   <div class="callout-body">
-    Unpublish a page from GOV.UK. This can’t be undone.
+    If you unpublish a page from GOV.UK it cannot be undone.
   </div>
 </div>
 
 <div class="well">
   <%= form_tag("/editions/#{@resource.id}/process_unpublish", method: "post") do %>
-    <h3 class="remove-top-margin add-bottom-margin">Unpublish</h3>
+    <h2 class="remove-top-margin add-bottom-margin">Unpublish</h2>
     <div class="form-group">
-      <label>Redirect to</label>
+      <label for="redirect_url">Redirect to</label>
       <span class="normal">
         For example: <code>https://www.gov.uk/redirect-to-replacement-page</code>
       </span>

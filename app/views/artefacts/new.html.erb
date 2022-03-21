@@ -1,20 +1,20 @@
 <%= content_for :page_title, "New artefact" %>
-<div class="page-header">
-  <h1><%= yield :page_title %></h1>
-</div>
-
-<% if @artefact.errors.count > 0 %>
-  <div class="alert alert-danger">
-    <ul>
-      <% @artefact.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
 <%= form_for(@artefact, html: { class: 'artefact', id: 'edit_artefact' }) do |f| %>
   <fieldset class="inputs">
+    <legend class="page-header">
+      <h1><%= yield :page_title %></h1>
+    </legend>
+
+    <% if @artefact.errors.count > 0 %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @artefact.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
     <div class="row">
       <div class="col-md-12">
         <div class="well">

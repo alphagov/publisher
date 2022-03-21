@@ -14,7 +14,7 @@
       <ul class="panel-body list-unstyled remove-bottom-margin">
         <% edition_actions(edition).each do |action| %>
           <li class="action-<%= action_class(action) %> add-bottom-margin add-left-margin">
-            <h4>
+            <h3 class="h4">
               <div class="add-label-margin normal">
                 <time datetime="<%= action.created_at %>" class="text-muted add-label-margin">
                   <%= action.created_at.to_s(:govuk_date) %>
@@ -26,7 +26,7 @@
               <% else %>
                 GOV.UK Bot
               <% end %>
-            </h4>
+            </h3>
             <% if action_note?(action) %>
               <% if action.comment_sanitized %>
                 <div class="alert alert-error alert-block">

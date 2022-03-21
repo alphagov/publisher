@@ -7,14 +7,16 @@
 
   <div class="form-group">
     <div class="form-wrapper">
-      <%= f.text_field :title, placeholder: "The title of the outcome", class: "node-title form-control" %>
+      <%= f.label :title, "Title" %>
+      <%= f.text_field :title, class: "node-title form-control" %>
     </div>
     <%= form_errors(f.object.errors[:title]) %>
   </div>
 
   <div class="form-group">
     <span class="form-wrapper">
-      <%= f.text_area :body, rows: 10, placeholder: "Optional extra information", class: "node-body form-control" %>
+      <%= f.label :body, "Optional extra information" %>
+      <%= f.text_area :body, rows: 10, class: "node-body form-control" %>
     </span>
   </div>
 
@@ -26,13 +28,15 @@
         <div class="form-inline form-group<%= o.object.errors.empty? ? '' : ' error' %>">
           <div class="row">
             <div class="form-group col-md-3">
-              <%= o.text_field :label, placeholder: "Label", class: "option-label form-control" %>
+              <%= f.label :label, "Answer #{o.index.to_i + 1}",for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_label" %>
+              <%= o.text_field :label, class: "option-label form-control" %>
               <%= form_errors(o.object.errors[:label]) %>
             </div>
 
             <div class="form-group col-md-6">
+              <%= f.label :next_node, "Next question for user", for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_node" %>
               <%= o.hidden_field :next_node, class: "next-node-id" %>
-              <select class="form-control required next-node-list" name="next-node-list">
+              <select id="edition_nodes_attributes_<%= o.options[:parent_builder].index %>_options_attributes_<%= o.index %>_node" class="form-control required next-node-list" name="next-node-list">
                 <option value="" class="default">Select a node..</option>
                 <optgroup label="Questions" class="question-list"></optgroup>
                 <optgroup label="Outcomes" class="outcome-list"></optgroup>

@@ -1,20 +1,25 @@
 <div class="row">
   <div class="col-md-8">
     <fieldset class="inputs">
+      <legend class="remove-bottom-margin">
+        <h2 class="remove-top-margin add-bottom-margin h3">Edit Transaction</h2>
+      </legend>
+
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
       <%= form_group(f, :introduction, label: "Introductory paragraph", help: "Set the scene for the user. What is about to happen? (eg. \"you will need to fill in a form, print it out and take it to the post office\")") do %>
         <%= f.text_area :introduction, rows: 8, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
       <% end %>
 
-      <div class="form-group">
-        <label for="edition_start_button_text">Start button text:</label><br/>
+      <fieldset>
+        <legend>
+          <p class="start-button-text remove-bottom-margin">Start button text:</p>
+        </legend>
         <% ["Start now", "Sign in"].each do |option| %>
-        <%# radio_button(object_name, method, tag_value, options = {}) %>
           <%= f.radio_button :start_button_text, option, {class: "input-md-7", disabled: @resource.locked_for_edits?} %>
           <%= f.label "start_button_text_#{option.gsub(" ","_").underscore}", option %><br>
         <% end %>
-      </div>
+      </fieldset>
 
       <%= form_group(f, :will_continue_on, help: "Text to follow the statement 'This will continue on. eg. \"the HMRC website\"'") do %>
         <%= f.text_field :will_continue_on, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>

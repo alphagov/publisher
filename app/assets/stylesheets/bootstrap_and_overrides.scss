@@ -54,9 +54,7 @@ label.nav-header {
 }
 
 .help-inline {
-  padding-left: 0;
-  color: #888888;
-  max-width: 400px;
+  color: #666666;
 }
 
 // datetime selectors
@@ -92,4 +90,14 @@ select.date {
 
 .modal.in {
   visibility: visible;
+}
+
+legend {
+  color: #000000;
+  border: 0;
+}
+
+legend p {
+  font-size: 16px;
+  font-weight: bold;
 }
