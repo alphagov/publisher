@@ -31,9 +31,10 @@ class EditionsController < InheritedResources::Base
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
 
-    construct_objects_with_errors
+    @objects_with_errors = construct_objects_with_errors
     render action: "show"
   end
+
   alias_method :metadata, :show
   alias_method :history, :show
   alias_method :admin, :show
@@ -113,7 +114,7 @@ class EditionsController < InheritedResources::Base
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
-        construct_objects_with_errors
+        @objects_with_errors = construct_objects_with_errors
         render action: "show"
       end
       success.json do
@@ -133,7 +134,7 @@ class EditionsController < InheritedResources::Base
     @linkables = Tagging::Linkables.new
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
-    construct_objects_with_errors
+    @objects_with_errors = construct_objects_with_errors
     render action: "show"
   end
 
@@ -313,7 +314,8 @@ protected
         promotion_choice_opt_in_url
         promotion_choice_opt_out_url
       ]
-    else # answer_edition, help_page_edition
+    else
+      # answer_edition, help_page_edition
       [
         :body,
       ]
@@ -444,27 +446,10 @@ private
   end
 
   def construct_objects_with_errors
-    @objects_with_errors = []
-
-    @objects_with_errors << @resource if @resource.errors.present?
-
-    return unless @resource.instance_of?(SimpleSmartAnswerEdition)
-
-    if @resource.nodes.present?
-      @resource.nodes.each do |node|
-        @objects_with_errors << node if node.errors.present?
-        next if node.options.blank?
-
-        node.options.each do |option|
-          @objects_with_errors << option if option.errors.present?
-        end
-      end
-    end
-
-    @objects_with_errors.each do |object|
-      object.errors.errors.reject! do |error|
-        error.type == :invalid
-      end
+    if @resource.instance_of?(SimpleSmartAnswerEdition) || @resource.instance_of?(GuideEdition)
+      @resource.return_self_and_nested_objects_with_errors
+    else
+      @resource.errors.present? ? [@resource] : []
     end
   end
 end

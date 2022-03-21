@@ -222,5 +222,36 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       end
     end
   end
+
+  describe ".return_self_and_nested_objects_with_errors returns" do
+    def invalid_errors(smart_answer)
+      smart_answer.errors.errors.select { |error| error.type == :invalid }
+    end
+
+    should "return self and nested objects with errors" do
+      smart_answer = SimpleSmartAnswerEdition.new
+      node = smart_answer.nodes.new(slug: "question_1")
+      option = node.options.new
+
+      smart_answer.save
+      node.save
+      option.save
+
+      assert_equal smart_answer.return_self_and_nested_objects_with_errors, [smart_answer, node, option]
+    end
+
+    should "remove errors where the type is 'invalid'" do
+      smart_answer = FactoryBot.create(:simple_smart_answer_edition)
+      node = smart_answer.nodes.new(slug: "question_1")
+      option = node.options.new
+
+      smart_answer.save
+      node.save
+      option.save
+
+      assert invalid_errors(smart_answer).present?
+      assert invalid_errors(smart_answer.return_self_and_nested_objects_with_errors.first).blank?
+    end
+  end
   # rubocop:enable Rails/SaveBang
 end

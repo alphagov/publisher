@@ -16,10 +16,23 @@ class Part
 
   GOVSPEAK_FIELDS = [:body].freeze
 
-  validates :title, presence: true
-  validates :slug, presence: true
+  validate :validate_title_is_present, :validate_slug_is_present
   validates :slug, exclusion: { in: %w[video], message: "Can not be video" }
   validates :slug, format: { with: /\A[a-z0-9\-]+\Z/i, message: "can only consist of lower case characters, numbers and hyphens" }
   validates_with SafeHtml
   validates_with LinkValidator
+
+  def html_ref_for_error(attribute)
+    "#edition_parts_attributes_#{guide_edition.parts.find_index(self)}_#{attribute}"
+  end
+
+private
+
+  def validate_title_is_present
+    errors.add(:title, "Enter a title for Part #{guide_edition.parts.find_index(self) + 1}") if title.blank?
+  end
+
+  def validate_slug_is_present
+    errors.add(:slug, "Enter a slug for Part #{guide_edition.parts.find_index(self) + 1}") if slug.blank?
+  end
 end
