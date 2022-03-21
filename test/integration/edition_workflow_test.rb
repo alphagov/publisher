@@ -305,7 +305,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
     visit_edition guide
     select2 "Bob", css: "#s2id_edition_reviewer"
-    save_edition_and_assert_error("can't be the assignee")
+    save_edition_and_assert_error("can't be the assignee", "#edition_reviewer")
   end
 
   test "can deselect the guide reviewer" do

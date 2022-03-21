@@ -197,17 +197,19 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def save_edition_and_assert_error(error_message = nil, link_href_if_javascript_disabled = nil)
+  def save_edition_and_assert_error(error_message = nil, link_href = nil)
     save_edition
+
     if using_javascript?
       assert page.has_content? "We had some problems saving"
-    else
-      # once we use add in a error summary component this line should be tested with
-      # and without js
-      assert page.has_content? "There is a problem"
-      assert page.has_link? error_message, href: link_href_if_javascript_disabled
     end
-    assert page.has_content? error_message if error_message.present?
+
+    if error_message.present?
+      assert page.has_content? "There is a problem"
+      assert page.has_content? error_message
+    end
+
+    assert page.has_link? error_message, href: link_href if link_href.present?
   end
 
   def save_tags_and_assert_success
