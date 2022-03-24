@@ -1,16 +1,15 @@
 <% @edition = @resource %>
   <%= render 'shared/edition_header' %>
 
-  <% if @objects_with_errors.any? %>
+  <% errors_hash = errors_to_display_hash(@edition) %>
+  <% if !errors_hash.empty? %>
     <div id="error-summary" class="alert alert-danger">
       <h2 class="add-bottom-margin">There is a problem</h2>
       <ul class="no-bullets">
-        <% @objects_with_errors.each do |object| %>
-          <% object.errors.each do |error| %>
+        <% errors_hash.each do |error_message, html_ref| %>
           <li>
-            <a href="<%= object.html_ref_for_error(error.attribute) %>"><%= error.message %></a>
+            <a href="<%= html_ref %>"><%= error_message %></a>
           </li>
-          <% end %>
         <% end %>
       </ul>
     </div>

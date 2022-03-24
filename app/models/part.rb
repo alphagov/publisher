@@ -22,10 +22,6 @@ class Part
   validates_with SafeHtml
   validates_with LinkValidator
 
-  def html_ref_for_error(attribute)
-    "#edition_parts_attributes_#{guide_edition.parts.find_index(self)}_#{attribute}"
-  end
-
 private
 
   def validate_title_is_present

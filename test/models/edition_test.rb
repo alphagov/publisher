@@ -1243,10 +1243,11 @@ class EditionTest < ActiveSupport::TestCase
     end
   end
 
-  describe ".html_ref_for_error" do
-    should "pass back the correct id to link an error to an input" do
-      edition = FactoryBot.create(:guide_edition)
-      assert_equal edition.html_ref_for_error("title"), "#edition_title"
-    end
-  end
+  # Move to helper tests
+  # describe ".html_ref_for_error" do
+  #   should "pass back the correct id to link an error to an input" do
+  #     edition = FactoryBot.create(:guide_edition)
+  #     assert_equal edition.html_ref_for_error("title"), "#edition_title"
+  #   end
+  # end
 end

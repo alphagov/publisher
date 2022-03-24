@@ -20,11 +20,6 @@ class SimpleSmartAnswerEdition < Edition
 
       before_validation :populate_slug
 
-      def html_ref_for_error(attribute)
-        attr = attribute == :next_node ? :node : attribute
-        "#edition_nodes_attributes_#{node.order - 1}_options_attributes_#{node.options.find_index(self)}_#{attr}"
-      end
-
     private
 
       def populate_slug

@@ -30,8 +30,6 @@ class EditionsController < InheritedResources::Base
 
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
-
-    @objects_with_errors = construct_objects_with_errors
     render action: "show"
   end
 
@@ -114,7 +112,6 @@ class EditionsController < InheritedResources::Base
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
-        @objects_with_errors = construct_objects_with_errors
         render action: "show"
       end
       success.json do
@@ -134,7 +131,6 @@ class EditionsController < InheritedResources::Base
     @linkables = Tagging::Linkables.new
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
-    @objects_with_errors = construct_objects_with_errors
     render action: "show"
   end
 
@@ -443,13 +439,5 @@ private
 
   def attempted_activity
     Edition::ACTIONS.invert[params[:commit]]
-  end
-
-  def construct_objects_with_errors
-    if @resource.instance_of?(SimpleSmartAnswerEdition) || @resource.instance_of?(GuideEdition)
-      @resource.return_self_and_nested_objects_with_errors
-    else
-      @resource.errors.present? ? [@resource] : []
-    end
   end
 end

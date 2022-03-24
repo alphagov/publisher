@@ -31,10 +31,6 @@ class SimpleSmartAnswerEdition < Edition
     validate :outcomes_have_no_options
     validates_with SafeHtml
 
-    def html_ref_for_error(attribute)
-      "#edition_nodes_attributes_#{order - 1}_#{attribute}"
-    end
-
   private
 
     def outcomes_have_no_options

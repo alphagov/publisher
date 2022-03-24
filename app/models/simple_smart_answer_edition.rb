@@ -73,23 +73,4 @@ class SimpleSmartAnswerEdition < Edition
   def destroy_in_attrs?(attrs)
     attrs.delete("_destroy") == "1"
   end
-
-  def html_ref_for_error(attribute)
-    "#edition_#{attribute}"
-  end
-
-  def return_self_and_nested_objects_with_errors
-    top_level_errors = errors.present? ? [self] : []
-
-    nodes_with_errors = nodes.select { |node| node.errors.present? }
-    options_with_errors = nodes.flat_map { |node| node.options.select { |option| option.errors.present? } }
-
-    objects_with_errors = top_level_errors + nodes_with_errors + options_with_errors
-
-    objects_with_errors.each do |object|
-      object.errors.errors.reject! do |error|
-        error.type == :invalid
-      end
-    end
-  end
 end

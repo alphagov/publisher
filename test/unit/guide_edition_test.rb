@@ -61,42 +61,4 @@ class GuideEditionTest < ActiveSupport::TestCase
     assert guide.valid?
     assert guide.video_url == "https://youtube.com"
   end
-
-  # rubocop:disable Rails/SaveBang
-  describe ".return_self_and_nested_objects_with_errors returns" do
-    def parts_error(guide)
-      guide.errors.errors.select { |error| error.attribute == :parts }
-    end
-
-    should "return self and nested objects with errors" do
-      guide = GuideEdition.new
-      part = guide.parts.new
-
-      guide.save
-      part.save
-
-      assert_equal guide.return_self_and_nested_objects_with_errors, [guide, part]
-    end
-
-    should "not return valid objects" do
-      guide = FactoryBot.create(:guide_edition)
-      part = guide.parts.new
-
-      part.save
-
-      assert_equal guide.return_self_and_nested_objects_with_errors, [part]
-    end
-
-    should "remove errors where the attribute is 'parts'" do
-      guide = GuideEdition.new
-      part = guide.parts.new
-
-      guide.save
-      part.save
-
-      assert parts_error(guide).present?
-      assert parts_error(guide.return_self_and_nested_objects_with_errors.first).blank?
-    end
-  end
-  # rubocop:enable Rails/SaveBang
 end
