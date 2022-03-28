@@ -9,14 +9,20 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
   # rubocop:disable Rails/SaveBang
   test "errors_to_display_hash returns useful error messages and correct hrefs for invalid fields for a guide" do
-    part_with_missing_title = Part.new(title: "", slug: "some-slug")
     valid_part = Part.new(title: "some part", slug: "another-slug")
+    invalid_part_1 = Part.new(title: "", slug: "invalid slug with spaces")
+    invalid_part_2 = Part.new(title: "valid title", slug: "another invalid slug")
 
-    guide_with_invalid_data = guide_with_title_and_parts("", [valid_part, part_with_missing_title])
+    guide_with_invalid_data = guide_with_title_and_parts("", [valid_part, invalid_part_1, invalid_part_2])
 
     guide_with_invalid_data.save
 
-    assert_equal errors_to_display_hash(guide_with_invalid_data), { "Enter a title" => "#edition_title", "Enter a title for Part 2" => "#edition_parts_attributes_1_title" }
+    assert_equal errors_to_display(guide_with_invalid_data), [
+      ["Enter a title", "#edition_title"],
+      ["Enter a title for Part 2", "#edition_parts_attributes_1_title"],
+      ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_1_slug"],
+      ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_2_slug"],
+    ]
   end
 
   test "errors_to_display_hash returns useful error messages and correct hrefs for invalid fields for a SimpleSmartAnswer" do
@@ -32,14 +38,14 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
     simple_smart_answer.save
 
-    expected_errors = {
-      "Enter a title" => "#edition_title",
-      "Enter a title for Node 2" => "#edition_nodes_attributes_1_title",
-      "Enter a label for Node 3, Option 2" => "#edition_nodes_attributes_2_options_attributes_1_label",
-      "Select a node for Node 3, Option 3" => "#edition_nodes_attributes_2_options_attributes_2_node",
-    }
+    expected_errors = [
+      ["Enter a title", "#edition_title"],
+      ["Enter a title for Node 2", "#edition_nodes_attributes_1_title"],
+      ["Enter a label for Node 3, Option 2", "#edition_nodes_attributes_2_options_attributes_1_label"],
+      ["Select a node for Node 3, Option 3", "#edition_nodes_attributes_2_options_attributes_2_node"],
+    ]
 
-    assert_equal errors_to_display_hash(simple_smart_answer), expected_errors
+    assert_equal errors_to_display(simple_smart_answer), expected_errors
   end
 
   test "errors_to_display_hash returns useful error messages and correct hrefs for invalid fields for an edition type without nested fields" do
@@ -47,13 +53,13 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
     invalid_edition.save
 
-    expected_errors = {
-      "Enter a title" => "#edition_title",
-      "Enter a LGSL code" => "#edition_lgsl_code",
-      "LGIL code can only be a whole number between 0 and 999" => "#edition_lgil_code",
-    }
+    expected_errors = [
+      ["Enter a title", "#edition_title"],
+      ["Enter a LGSL code", "#edition_lgsl_code"],
+      ["LGIL code can only be a whole number between 0 and 999", "#edition_lgil_code"],
+    ]
 
-    assert_equal errors_to_display_hash(invalid_edition), expected_errors
+    assert_equal errors_to_display(invalid_edition), expected_errors
   end
   # rubocop:enable Rails/SaveBang
 end

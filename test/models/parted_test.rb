@@ -12,7 +12,7 @@ class PartedTest < ActiveSupport::TestCase
     assert_not edition.valid?
 
     assert_equal({ title: ["Enter a title for Part 1"] }, edition.errors[:parts][0]["54c10d4d759b743528000010:1"])
-    assert_equal({ slug: ["Enter a slug for Part 2", "can only consist of lower case characters, numbers and hyphens"] }, edition.errors[:parts][0]["54c10d4d759b743528000011:2"])
+    assert_equal({ slug: ["Enter a slug for Part 2", "Slug can only consist of lower case characters, numbers and hyphens"] }, edition.errors[:parts][0]["54c10d4d759b743528000011:2"])
     assert_equal 2, edition.errors[:parts][0].length
   end
 

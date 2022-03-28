@@ -16,7 +16,7 @@ class SimpleSmartAnswerEdition < Edition
 
       validate :validate_label_is_present
       validate :validate_node_is_selected
-      validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "can only consist of lower case characters, numbers and hyphens" }
+      validates :slug, format: { with: /\A[a-z0-9-]+\z/, message: "Slug can only consist of lower case characters, numbers and hyphens" }
 
       before_validation :populate_slug
 
