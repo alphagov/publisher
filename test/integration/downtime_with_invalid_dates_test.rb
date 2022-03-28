@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DowntimeWIthInvalidDates < ActionDispatch::IntegrationTest
+class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
   setup do
     setup_users
 
@@ -44,7 +44,11 @@ class DowntimeWIthInvalidDates < ActionDispatch::IntegrationTest
     select time.year.to_s, from: "#{input_id}_1i"
     select time.strftime("%B"), from: "#{input_id}_2i"
     select time.day.to_s, from: "#{input_id}_3i"
-    select time.hour.to_s, from: "#{input_id}_4i"
+    select pad_digit_to_two_digits(time.hour.to_s), from: "#{input_id}_4i"
     select time.strftime("%M"), from: "#{input_id}_5i"
+  end
+
+  def pad_digit_to_two_digits(hour_string)
+    hour_string.length == 1 ? "0#{hour_string}" : hour_string
   end
 end
