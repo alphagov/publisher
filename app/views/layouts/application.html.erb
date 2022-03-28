@@ -10,7 +10,9 @@
   <%= yield :extra_headers %>
 <% end %>
 
-<%= render "govuk_publishing_components/components/skip_link" %>
+<% content_for :body_start do %>
+  <%= render "govuk_publishing_components/components/skip_link" %>
+<% end %>
 
 <% content_for :navbar_items do %>
   <%= nav_link 'Publications', root_path %>
