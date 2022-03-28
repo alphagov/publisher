@@ -3,13 +3,13 @@ require "test_helper"
 class FormHelperTest < ActionView::TestCase
   context "form_errors" do
     should "return an unordered list with errors when there are errors present" do
-      expected = '<div id="error-field-name"><ul class="help-block error-block no-bullets"><li>One</li><li>Two</li><li>Three</li></ul></div>'
+      expected = '<div id="error-field-name"><ul class="help-block error-block"><li>One</li><li>Two</li><li>Three</li></ul></div>'
 
       assert_equal expected, form_errors(%w[One Two Three], "field_name")
     end
 
     should "return an empty unordered list when there are no errors present" do
-      expected = '<div id="error-field-name"><ul class="help-block error-block no-bullets"></ul></div>'
+      expected = '<div id="error-field-name"><ul class="help-block error-block"></ul></div>'
 
       assert_equal expected, form_errors([], "field_name")
     end
@@ -25,7 +25,7 @@ class FormHelperTest < ActionView::TestCase
       output = form_group(@form, :field_name) { @form.text_field(:field_name) }
       label = '<div class="form-label"><label for="edition_field_name">Field name</label></div>'
       wrapped_field = '<div class="form-wrapper"><input type="text" value="" name="edition[field_name]" id="edition_field_name" /></div>'
-      error_block = '<div id="error-field-name"><ul class="help-block error-block no-bullets"></ul></div>'
+      error_block = '<div id="error-field-name"><ul class="help-block error-block"></ul></div>'
 
       assert_equal %(<div class="form-group">#{label}#{error_block}#{wrapped_field}</div>), output
     end

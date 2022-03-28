@@ -3,9 +3,9 @@
 
   <% errors_hash = errors_to_display_hash(@edition) %>
   <% if !errors_hash.empty? %>
-    <div id="error-summary" class="alert alert-danger">
+    <div id="error-summary" class="alert alert-danger error-summary">
       <h2 class="add-bottom-margin">There is a problem</h2>
-      <ul class="no-bullets">
+      <ul>
         <% errors_hash.each do |error_message, html_ref| %>
           <li>
             <a href="<%= html_ref %>"><%= error_message %></a>

@@ -1,7 +1,7 @@
 <% if object.errors.any? %>
-  <div id="error-summary" class="alert alert-danger">
+  <div id="error-summary" class="alert alert-danger error-summary">
     <h2 class="add-bottom-margin">There is a problem</h2>
-    <ul class="no-bullets">
+    <ul>
       <% object.errors.each do |error| %>
       <li>
         <% model = object.class.superclass.to_s == "Object" ? object.class : object.class.superclass %>

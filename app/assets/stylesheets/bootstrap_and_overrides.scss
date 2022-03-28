@@ -102,12 +102,14 @@ legend p {
   font-weight: bold;
 }
 
-li a {
-  text-decoration: underline;
-}
+.error-summary {
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
 
-ul.no-bullets {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+  li a {
+    text-decoration: underline;
+  }
 }
