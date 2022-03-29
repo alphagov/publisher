@@ -407,13 +407,6 @@ private
     ).to_h
   end
 
-  def format_failure_message(resource)
-    resource_base_errors = resource.errors[:base]
-    return resource.errors[:base].join("<br />") if resource_base_errors.present?
-
-    "We had some problems saving. Please check the form below."
-  end
-
   def progress_edition(resource, activity_params)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
