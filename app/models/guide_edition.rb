@@ -6,7 +6,7 @@ class GuideEdition < Edition
 
   strip_attributes only: :video_url
 
-  field :video_url,     type: String
+  field :video_url, type: String
   field :video_summary, type: String
   field :hide_chapter_navigation, type: Boolean
 

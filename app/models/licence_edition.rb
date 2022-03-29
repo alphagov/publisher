@@ -9,9 +9,9 @@ class LicenceEdition < Edition
 
   GOVSPEAK_FIELDS = [:licence_overview].freeze
 
-  validates :licence_identifier, presence: true
+  validates :licence_identifier, presence: { message: "Enter a licence identifier" }
   validate :licence_identifier_unique
-  validates :continuation_link, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true }
+  validates :continuation_link, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true, message: "Continuation link is invalid" }
 
   def whole_body
     [licence_short_description, licence_overview].join("\n\n")
@@ -29,7 +29,7 @@ private
       :licence_identifier => licence_identifier,
       :panopticon_id.ne => panopticon_id,
     ).any?
-      errors.add(:licence_identifier, :taken)
+      errors.add(:licence_identifier, "Licence identifier is already taken")
     end
   end
 end

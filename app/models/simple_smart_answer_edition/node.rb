@@ -23,7 +23,8 @@ class SimpleSmartAnswerEdition < Edition
       outcome
     ].freeze
 
-    validates :title, :kind, presence: true
+    validate :title_is_present
+    validates :kind, presence: true
     validates :kind, inclusion: { in: KINDS }
     validates :slug, presence: true, format: { with: /\A[a-z0-9-]+\z/ }
 
@@ -34,6 +35,10 @@ class SimpleSmartAnswerEdition < Edition
 
     def outcomes_have_no_options
       errors.add(:options, "cannot be added for an outcome") if options.present? && options.any? && kind == "outcome"
+    end
+
+    def title_is_present
+      errors.add(:title, "Enter a title for #{slug.humanize.gsub('-', ' ')}") if title.blank?
     end
   end
 end

@@ -8,9 +8,9 @@ class Downtime
 
   belongs_to :artefact, optional: true
 
-  validates :message, :start_time, :end_time, :artefact, presence: true
-  validate :end_time_is_in_future, on: :create
   validate :start_time_precedes_end_time
+  validate :end_time_is_in_future, on: :create
+  validates :message, :start_time, :end_time, :artefact, presence: true
 
   def self.for(artefact)
     where(artefact_id: artefact.id).first
@@ -27,10 +27,10 @@ class Downtime
 private
 
   def end_time_is_in_future
-    errors.add(:end_time, "must be in the future") if end_time && !end_time.future?
+    errors.add(:end_time, "End time must be in the future") if end_time && !end_time.future?
   end
 
   def start_time_precedes_end_time
-    errors.add(:start_time, "must be earlier than end time") if start_time && end_time && start_time >= end_time
+    errors.add(:start_time, "Start time must be earlier than end time") if start_time && end_time && start_time >= end_time
   end
 end

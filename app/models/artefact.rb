@@ -94,9 +94,9 @@ class Artefact
   before_update :record_update_action
   after_update :update_editions
 
-  validates :name, presence: true
-  validates :slug, presence: true, uniqueness: true, slug: true
-  validates :kind, inclusion: { in: ->(_x) { FORMATS } }
+  validates :name, presence: { message: "Enter a title" }
+  validates :slug, presence: { message: "Enter a slug" }, uniqueness: true, slug: true
+  validates :kind, inclusion: { in: ->(_x) { FORMATS }, message: "Select a format" }
   validates :state, inclusion: { in: %w[draft live archived] }
   validates :owning_app, presence: true
   validates :language, inclusion: { in: %w[en cy] }

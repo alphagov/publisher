@@ -105,7 +105,7 @@ class Edition
     HelpPageEdition
   ].freeze
 
-  validates :title, presence: true
+  validates :title, presence: { message: "Enter a title" }
   validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }
   validates :panopticon_id, presence: true
   validates_with SafeHtml
