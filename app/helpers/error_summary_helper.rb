@@ -6,18 +6,22 @@ module ErrorSummaryHelper
     when GuideEdition
       guide_errors(edition)
     else
-      edition_errors(edition).map { |error, href| [error.message, href] }
+      edition_errors(edition)
     end
   end
 
 private
 
   def edition_errors(edition)
+    top_level_errors(edition).map { |error, href| [error.message, href] }
+  end
+
+  def top_level_errors(edition)
     edition.errors.map { |error| [error, "#edition_#{error.attribute}"] }
   end
 
   def smart_answer_errors(smart_answer)
-    edition_errors = edition_errors(smart_answer)
+    edition_errors = top_level_errors(smart_answer)
 
     nested_errors = []
 
@@ -41,7 +45,7 @@ private
   end
 
   def guide_errors(guide)
-    edition_errors = edition_errors(guide)
+    edition_errors = top_level_errors(guide)
 
     parts_errors = []
 
