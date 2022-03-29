@@ -17,7 +17,14 @@ class AddArtefactTest < ActionDispatch::IntegrationTest
 
     click_button "Save and go to item"
 
-    assert page.has_content?("Help page slugs must have a help/ prefix")
+    within "#error-summary" do
+      assert page.has_content?("There is a problem")
+      assert page.has_link?("Help page slugs must have a help/ prefix", href: "#artefact_slug")
+    end
+
+    within "#error-slug" do
+      assert page.has_content?("Help page slugs must have a help/ prefix")
+    end
 
     fill_in "Slug", with: "help/thingy"
 

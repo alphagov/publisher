@@ -1,5 +1,20 @@
 <% @edition = @resource %>
   <%= render 'shared/edition_header' %>
+
+  <% errors_hash = errors_to_display(@edition) %>
+  <% if !errors_hash.empty? %>
+    <div id="error-summary" class="alert alert-danger error-summary">
+      <h2 class="add-bottom-margin">There is a problem</h2>
+      <ul>
+        <% errors_hash.each do |error_message, html_ref| %>
+          <li>
+            <a href="<%= html_ref %>"><%= error_message %></a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="tabbable" data-module="tab-switcher" role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
       <% tabs_for(current_user, @edition).each do |tab| %>

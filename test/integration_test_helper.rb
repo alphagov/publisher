@@ -10,7 +10,7 @@ class ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
   teardown do
-    Capybara.reset_sessions!    # Forget the (simulated) browser state
+    Capybara.reset_sessions! # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
     GDS::SSO.test_user = nil
   end
@@ -19,7 +19,7 @@ class ActionDispatch::IntegrationTest
     # This may not be the right way to do things. We rely on the gds-sso
     # having a strategy that uses the first user. We probably want some
     # tests that cover the oauth interaction properly
-    @author   = FactoryBot.create(:user, :govuk_editor, name: "Author",   email: "test@example.com")
+    @author = FactoryBot.create(:user, :govuk_editor, name: "Author", email: "test@example.com")
     @reviewer = FactoryBot.create(:user, :govuk_editor, name: "Reviewer", email: "test@example.com")
   end
 
@@ -197,10 +197,17 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def save_edition_and_assert_error(error = nil)
+  def save_edition_and_assert_error(error_message = nil, link_href_if_javascript_disabled = nil)
     save_edition
-    assert page.has_content? "We had some problems saving"
-    assert page.has_content? error if error.present?
+    if using_javascript?
+      assert page.has_content? "We had some problems saving"
+    else
+      # once we use add in a error summary component this line should be tested with
+      # and without js
+      assert page.has_content? "There is a problem"
+      assert page.has_link? error_message, href: link_href_if_javascript_disabled
+    end
+    assert page.has_content? error_message if error_message.present?
   end
 
   def save_tags_and_assert_success

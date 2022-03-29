@@ -1,10 +1,6 @@
 <%= f.hidden_field :artefact_id %>
 
-<% if @downtime.errors.any? %>
-   <p class="alert alert-danger">
-     Errors: <%= @downtime.errors.full_messages.to_sentence %>
-   </p>
-<% end %>
+<%= render :partial => 'shared/error_summary', locals: { object: @downtime} %>
 
 <div class="downtime-dates">
   <div class="form-group">

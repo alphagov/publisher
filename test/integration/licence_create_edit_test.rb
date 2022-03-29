@@ -19,7 +19,7 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     visit "/publications/#{@artefact.id}"
 
     assert page.has_content? "We need a bit more information to create your licence."
-    assert page.has_content? "Licence identifier can't be blank"
+    assert page.has_link? "Enter a licence identifier", href: "#edition_licence_identifier"
 
     fill_in "Licence identifier", with: "AB1234"
     click_button "Create Licence"
@@ -29,6 +29,49 @@ class LicenceCreateEditTest < JavascriptIntegrationTest
     l = LicenceEdition.first
     assert_equal @artefact.id.to_s, l.panopticon_id
     assert_equal "AB1234", l.licence_identifier
+  end
+
+  should "raise an error if the licence identifier has already been assigned to another licence" do
+    existing_license_identifier = "abc123"
+
+    other_artefact = FactoryBot.create(
+      :artefact,
+      slug: "something-else",
+      kind: "licence",
+      name: "some other page",
+      owning_app: "publisher",
+    )
+
+    FactoryBot.create(
+      :licence_edition,
+      panopticon_id: other_artefact.id,
+      title: "some other page",
+      licence_identifier: existing_license_identifier,
+      licence_short_description: "Short description content",
+      licence_overview: "Licence overview content",
+      will_continue_on: "The HMRC website",
+      continuation_link: "http://www.hmrc.gov.uk",
+    )
+
+    visit "/publications/#{@artefact.id}"
+
+    fill_in "Licence identifier", with: existing_license_identifier
+    click_button "Create Licence"
+
+    assert page.has_content? "There is a problem"
+    assert page.has_link? "Licence identifier is already taken", href: "#edition_licence_identifier"
+  end
+
+  with_and_without_javascript do
+    should "raise an error if the continuation link is invalid" do
+      visit "/publications/#{@artefact.id}"
+      fill_in "Licence identifier", with: "AB1234"
+      click_button "Create Licence"
+
+      fill_in "Link to competent authority", with: "not a url"
+
+      save_edition_and_assert_error("Continuation link is invalid", "#edition_continuation_link")
+    end
   end
 
   with_and_without_javascript do
