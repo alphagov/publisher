@@ -37,10 +37,10 @@ private
       end
     end
 
-    # Reject errors with an attribute of 'nodes' or 'options' as these are because of the nested structure of guides and will be duplicated so not helpful
+    # Errors with attributes of options or nodes will be an error for a option / node as a whole (rather than the individual field) and not helpful
     # Errors with an attribute of 'slug' will be slugs which are derived, rather than being input explicitly, so are not useful error messages
     (edition_errors + nested_errors)
-      .reject { |error, _| %i[nodes options slug].include?(error.attribute) } # Errors with attributes of options or nodes will be an error for a option / node as a whole (rather than the individual field) and not helpful
+      .reject { |error, _| %i[nodes options slug].include?(error.attribute) }
       .map { |error, href| [error.message, href] }
   end
 
