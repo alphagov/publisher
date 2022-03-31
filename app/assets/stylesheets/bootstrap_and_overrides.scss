@@ -69,7 +69,7 @@ select.date {
 // elements wrapped inside the edition form in .tab-content.
 // See: edition/show.html.erb
 //
-//Uses visibility: rather than display: modifiers so that modal forms
+// Uses visibility: rather than display: modifiers so that modal forms
 // embedded in hidden tabs can be displayed.
 .tab-content .tab-pane {
   overflow: hidden;
