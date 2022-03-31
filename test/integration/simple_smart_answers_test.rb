@@ -250,6 +250,34 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
 
+    should "raise appropriate validation errors" do
+      find("#edition_title").set("")
+
+      click_link("Add outcome")
+
+      save_edition
+
+      within "#error-summary" do
+        assert page.has_content?("Enter a title")
+        assert page.has_content?("Enter a label for Question 1, Option 1")
+        assert page.has_content?("Enter a title for Outcome 1")
+        assert page.has_content?("Enter a title for Question 1")
+        assert page.has_content?("Select a node for Question 1, Option 1")
+        assert_not page.has_content?("is invalid")
+        assert_not page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+      end
+
+      within ".nodes .question:first-child" do
+        assert page.has_content?("Enter a title for Question 1")
+        assert page.has_content?("Enter a label for Question 1, Option 1")
+        assert page.has_content?("Select a node for Question 1, Option 1")
+      end
+
+      within ".nodes .outcome:nth-child(2)" do
+        assert page.has_content?("Enter a title for Outcome 1")
+      end
+    end
+
     should "persist a valid smart answer" do
       within ".nodes .question:first-child" do
         find(:css, "input.node-title").set("Which driving licence do you hold?")

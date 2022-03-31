@@ -1,7 +1,9 @@
 module FormHelper
-  def form_errors(errors)
-    tag.ul(class: %w[help-block error-block]) do
-      safe_join(errors.map { |e| tag.li(e) })
+  def form_errors(errors, field_name)
+    tag.div(id: "error-#{field_name.to_s.dasherize}") do
+      tag.ul(class: %w[help-block error-block]) do
+        safe_join(errors.map { |e| tag.li(e) })
+      end
     end
   end
 
@@ -15,10 +17,10 @@ module FormHelper
     tag.div(**attributes) do
       wrapped_label = tag.div(class: "form-label") { form_label_element(form, field_name, label) }
       wrapped_field = tag.div(class: "form-wrapper", &block)
-      errors = form_errors(errors)
+      errors = form_errors(errors, field_name)
       help = tag.div(class: "help-block") { help } if help
 
-      safe_join([wrapped_label, wrapped_field, errors, help])
+      safe_join([wrapped_label, help, errors, wrapped_field])
     end
   end
 

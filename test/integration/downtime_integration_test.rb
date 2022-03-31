@@ -83,6 +83,10 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     Time.zone.now.next_year.year
   end
 
+  def date_in_the_past
+    Time.zone.local(Time.zone.now.last_year.year, 1, 1, 12, 0)
+  end
+
   def first_of_july_next_year_at_midday_bst
     Time.zone.local(next_year, 7, 1, 12, 0)
   end

@@ -75,7 +75,10 @@ class TransactionCreateEditTest < JavascriptIntegrationTest
       visit_edition transaction
 
       fill_in "Service analytics profile", with: "UA-INVALID-SPACE-FLIGHT"
-      save_edition_and_assert_error
+      save_edition_and_assert_error(
+        "Invalid format for service analytics profile: must be in format UA-xxxxx-x where xs are digits",
+        "#edition_department_analytics_profile",
+      )
 
       fill_in "Service analytics profile", with: "UA-00100000-1"
       save_edition_and_assert_success

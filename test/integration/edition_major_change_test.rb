@@ -45,7 +45,7 @@ class EditionMajorChangeTest < JavascriptIntegrationTest
         should "validate that the change note is present for a major change" do
           visit_edition @second_edition
           check("edition_major_change")
-          save_edition_and_assert_error("can't be blank")
+          save_edition_and_assert_error("can't be blank", "#edition_change_note")
 
           fill_in "edition_change_note", with: "Something changed"
           save_edition_and_assert_success

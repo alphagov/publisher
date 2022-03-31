@@ -41,7 +41,17 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     fill_in "LGSL code", with: "2"
     click_on "Create Local transaction edition"
 
-    assert page.has_content? "Lgsl code 2 not recognised"
+    assert page.has_link?("LGSL code is not recognised", href: "#edition_lgsl_code")
+  end
+
+  test "creating a local transaction with a bad LGIL code displays an appropriate error" do
+    visit "/publications/#{@artefact.id}"
+    assert page.has_content? "We need a bit more information to create your local transaction."
+
+    fill_in "LGIL code", with: "word"
+    click_on "Create Local transaction edition"
+
+    assert page.has_link?("LGIL code can only be a whole number between 0 and 999", href: "#edition_lgil_code")
   end
 
   test "creating a local transaction requests an LGSL and a LGIL code" do
@@ -98,7 +108,7 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
       visit_edition edition
       fill_in "Title", with: ""
 
-      save_edition_and_assert_error
+      save_edition_and_assert_error("Enter a title", "#edition_title")
     end
   end
 

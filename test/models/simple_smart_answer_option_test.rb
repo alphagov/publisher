@@ -3,7 +3,7 @@ require "test_helper"
 class SimpleSmartAnswerOptionTest < ActiveSupport::TestCase
   context "given a smart answer exists with a node" do
     setup do
-      @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question")
+      @node = SimpleSmartAnswerEdition::Node.new(slug: "question1", title: "Question One?", kind: "question", order: 1)
       @edition = FactoryBot.create(
         :simple_smart_answer_edition,
         nodes: [

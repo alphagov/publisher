@@ -14,7 +14,7 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
     fill_in "Slug", with: ""
     click_button "Update metadata"
 
-    assert page.has_content?("Slug can't be blank")
+    assert page.has_content?("Enter a slug")
 
     fill_in "Slug", with: "thingy-mc-thingface"
 

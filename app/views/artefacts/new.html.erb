@@ -5,15 +5,7 @@
       <h1><%= yield :page_title %></h1>
     </legend>
 
-    <% if @artefact.errors.count > 0 %>
-      <div class="alert alert-danger">
-        <ul>
-          <% @artefact.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+<%= render :partial => 'shared/error_summary', locals: { object: @artefact} %>
 
     <div class="row">
       <div class="col-md-12">

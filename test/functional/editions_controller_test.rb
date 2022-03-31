@@ -341,16 +341,6 @@ class EditionsControllerTest < ActionController::TestCase
       assert_response 200
     end
 
-    should "show the resource base errors if present" do
-      Edition.expects(:find).returns(@guide)
-      @guide.stubs(:update).returns(false)
-      @guide.errors.add(:base, "Editions scheduled for publishing can't be edited")
-
-      post :update, params: { id: @guide.id, edition: {} }
-
-      assert_equal "Editions scheduled for publishing can't be edited", flash[:danger]
-    end
-
     should "save the edition changes while performing an activity" do
       post :update,
            params: {

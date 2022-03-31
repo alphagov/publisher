@@ -23,7 +23,7 @@ class Variant
   validates :title, presence: true
   validates :slug, presence: true
   validates :slug, exclusion: { in: %w[video], message: "Can not be video" }
-  validates :slug, format: { with: /\A[a-z0-9\-]+\Z/i, message: "can only consist of lower case characters, numbers and hyphens" }
+  validates :slug, format: { with: /\A[a-z0-9\-]+\Z/i, message: "Slug can only consist of lower case characters, numbers and hyphens" }
   validates_with SafeHtml
   validates_with LinkValidator
 end

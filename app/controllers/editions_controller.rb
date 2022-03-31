@@ -30,9 +30,9 @@ class EditionsController < InheritedResources::Base
 
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
-
     render action: "show"
   end
+
   alias_method :metadata, :show
   alias_method :history, :show
   alias_method :admin, :show
@@ -55,7 +55,7 @@ class EditionsController < InheritedResources::Base
       redirect_to edition_path(@publication)
     else
       setup_view_paths_for(@publication)
-      render action: "new"
+      render template: "new"
     end
   end
 
@@ -112,7 +112,6 @@ class EditionsController < InheritedResources::Base
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
-        flash.now[:danger] = format_failure_message(resource)
         render action: "show"
       end
       success.json do
@@ -311,7 +310,8 @@ protected
         promotion_choice_opt_in_url
         promotion_choice_opt_out_url
       ]
-    else # answer_edition, help_page_edition
+    else
+      # answer_edition, help_page_edition
       [
         :body,
       ]
@@ -405,13 +405,6 @@ private
       meets_user_needs: [],
       ordered_related_items: [],
     ).to_h
-  end
-
-  def format_failure_message(resource)
-    resource_base_errors = resource.errors[:base]
-    return resource.errors[:base].join("<br />") if resource_base_errors.present?
-
-    "We had some problems saving. Please check the form below."
   end
 
   def progress_edition(resource, activity_params)
