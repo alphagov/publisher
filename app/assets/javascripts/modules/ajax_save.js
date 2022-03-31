@@ -96,6 +96,8 @@
 
         if (typeof responseJSON === 'object') {
           showErrors(responseJSON)
+          destroyErrorSummaryComponent()
+          displayErrorSummaryComponent(responseJSON)
           trackErrors(JSON.stringify(responseJSON))
 
           if (typeof responseJSON.base === 'object') {
@@ -107,6 +109,7 @@
 
         message.addClass('workflow-message-error').removeClass('workflow-message-saving')
         message.html('We had some problems saving. ' + messageAddendum)
+
         hideTimeout = setTimeout(hide, 4000)
 
         // Save errored, form still has unsaved changes
@@ -126,6 +129,54 @@
             list.append('<li>' + errorMessages[j] + '</li>')
           }
         })
+      }
+
+      function displayErrorSummaryComponent (errors) {
+        createErrorSummaryComponent()
+
+        $.each(errors, function (errorKey, errorMessages) {
+          for (var i = 0, m = errorMessages.length; i < m; i++) {
+            if (errorKey !== 'parts' && errorMessages[i] !== 'is invalid') {
+              createAndAppendLinkToErrorSummaryComponent(errorKey, errorMessages[i])
+            }
+          }
+        })
+      }
+
+      function createErrorSummaryComponent () {
+        var heading = document.getElementsByClassName('page-title')[0]
+
+        var div = document.createElement('div')
+        div.id = 'error-summary'
+        div.classList.add('alert', 'alert-danger')
+        heading.after(div)
+
+        var h3 = document.createElement('h3')
+        h3.id = 'error-heading'
+        h3.innerText = 'There is a problem'
+        div.append(h3)
+
+        var ul = document.createElement('ul')
+        ul.classList.add('no-bullets')
+        div.append(ul)
+      }
+
+      function createAndAppendLinkToErrorSummaryComponent (errorKey, errorMessage) {
+        var ul = document.getElementsByClassName('no-bullets')[0]
+        var list = document.createElement('li')
+        var errorLink = document.createElement('a')
+        errorLink.href = '#edition_' + errorKey
+        errorLink.innerText = errorMessage
+        ul.append(list)
+        list.append(errorLink)
+      }
+
+      function destroyErrorSummaryComponent () {
+        var errorSummaryComponent = document.getElementById('error-summary')
+
+        if (errorSummaryComponent != null) {
+          errorSummaryComponent.remove()
+        }
       }
 
       function trackErrors (label) {
@@ -151,6 +202,7 @@
 
       function reset () {
         hideErrors()
+        destroyErrorSummaryComponent()
         clearTimeout(hideTimeout)
         message.removeClass(function (index, css) {
           return (css.match(/(^|\s)workflow-message-\S+/g) || []).join(' ')

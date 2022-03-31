@@ -21,7 +21,6 @@
       function error (evt, response) {
         var responseJSON = response.responseJSON
         var partErrors = typeof responseJSON === 'object' && (responseJSON.parts || responseJSON.variants)
-
         if (partErrors) {
           $.each(partErrors[0], showPartErrors)
         }
@@ -46,8 +45,20 @@
           var list = $errorElement.find('.error-block')
           for (var j = 0, m = messages.length; j < m; j++) {
             list.append('<li>' + messages[j] + '</li>')
+            var elementId = '#' + $errorElement.find('input')[0].id
+            appendPartErrorsToErrorSummaryComponent(elementId, messages[j])
           }
         })
+      }
+
+      function appendPartErrorsToErrorSummaryComponent (elementId, message) {
+        var ul = document.getElementById('error-summary').childNodes[1]
+        var list = document.createElement('li')
+        var errorLink = document.createElement('a')
+        errorLink.href = elementId
+        errorLink.innerText = message
+        ul.append(list)
+        list.append(errorLink)
       }
 
       function updatePart (part) {

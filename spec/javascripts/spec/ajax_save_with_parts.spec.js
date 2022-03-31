@@ -2,7 +2,8 @@ describe('An ajax save with parts module', function () {
   'use strict'
 
   var ajaxSaveWithParts,
-    element
+    element,
+    form
 
   beforeAll(function () {
     // Stub a bootstrap collapse method on jQuery
@@ -18,7 +19,13 @@ describe('An ajax save with parts module', function () {
   })
 
   beforeEach(function () {
-    element = $('<form action="some/url">' +
+    element = $('<div>' +
+      '<div class="page-title"></div>' +
+      '<div id="error-summary">' +
+      '<h3>There is a problem</h3>' +
+      '<ul></ul>' +
+      '</div>' +
+      '<form action="some/url">' +
       '<div class="js-status-message"></div>' +
       '<div class="fields">' +
         '<a href="#" class="js-part-toggle">' +
@@ -83,11 +90,14 @@ describe('An ajax save with parts module', function () {
         '</div>' +
       '</div>' +
       '<input type="submit" class="js-save" value="Save">' +
-    '</form>')
+    '</form>' +
+    '</div>'
+    )
 
     $('body').append(element)
+    form = element.find('form')
     ajaxSaveWithParts = new GOVUKAdmin.Modules.AjaxSaveWithParts()
-    ajaxSaveWithParts.start(element)
+    ajaxSaveWithParts.start(form)
   })
 
   afterEach(function () {
@@ -111,7 +121,7 @@ describe('An ajax save with parts module', function () {
 
   describe('when the form is saved successfully', function () {
     beforeEach(function () {
-      element.trigger('success.ajaxsave.admin', {
+      form.trigger('success.ajaxsave.admin', {
         parts:
         [{ _id: { $oid: '5f00000001' }, order: 1, slug: 'updated-title-1', title: 'Updated title 1' },
           { _id: { $oid: '5f00000002' }, order: 2, slug: 'updated-title-2', title: 'Updated title 2' }]
@@ -119,26 +129,26 @@ describe('An ajax save with parts module', function () {
     })
 
     it('updates the part titles based on their IDs', function () {
-      expect(element.find('.js-part-title').eq(0).text()).toBe('Updated title 1')
-      expect(element.find('.js-part-title').eq(1).text()).toBe('Updated title 2')
+      expect(form.find('.js-part-title').eq(0).text()).toBe('Updated title 1')
+      expect(form.find('.js-part-title').eq(1).text()).toBe('Updated title 2')
     })
 
     it('updates the toggle href and target based on its slug', function () {
-      expect(element.find('.js-part-toggle-target').eq(0).attr('id')).toBe('updated-title-1')
-      expect(element.find('.js-part-toggle-target').eq(1).attr('id')).toBe('updated-title-2')
-      expect(element.find('.js-part-toggle').eq(0).attr('href')).toBe('#updated-title-1')
-      expect(element.find('.js-part-toggle').eq(1).attr('href')).toBe('#updated-title-2')
+      expect(form.find('.js-part-toggle-target').eq(0).attr('id')).toBe('updated-title-1')
+      expect(form.find('.js-part-toggle-target').eq(1).attr('id')).toBe('updated-title-2')
+      expect(form.find('.js-part-toggle').eq(0).attr('href')).toBe('#updated-title-1')
+      expect(form.find('.js-part-toggle').eq(1).attr('href')).toBe('#updated-title-2')
     })
 
     it('removes deleted parts from the DOM to prevent inclusion in subsequent posts', function () {
-      expect(element.find('#edition_parts_attributes_101_title_input').length).toBe(1)
-      expect(element.find('#edition_parts_attributes_deleted_title_input').length).toBe(0)
+      expect(form.find('#edition_parts_attributes_101_title_input').length).toBe(1)
+      expect(form.find('#edition_parts_attributes_deleted_title_input').length).toBe(0)
     })
   })
 
   describe('when a new part is added and the form is saved', function () {
     beforeEach(function () {
-      element.trigger('success.ajaxsave.admin', {
+      form.trigger('success.ajaxsave.admin', {
         parts:
         [{ _id: { $oid: '5f00000001' }, order: 1, slug: 'updated-title-1', title: 'Updated title 1' },
           { _id: { $oid: '5f00000002' }, order: 2, slug: 'updated-title-2', title: 'Updated title 2' },
@@ -147,7 +157,7 @@ describe('An ajax save with parts module', function () {
     })
 
     it('adds a hidden input containing the part’s new ID', function () {
-      var $input = element.find('input[value="5f00000003"]')
+      var $input = form.find('input[value="5f00000003"]')
 
       expect($input.length).toBe(1)
       expect($input.attr('id')).toBe('edition_part_4535667_id')
@@ -155,18 +165,18 @@ describe('An ajax save with parts module', function () {
     })
 
     it('updates the part’s title', function () {
-      expect(element.find('.js-part-title').eq(2).text()).toBe('Updated title 3')
+      expect(form.find('.js-part-title').eq(2).text()).toBe('Updated title 3')
     })
 
     it('updates the toggle href and target based on its slug', function () {
-      expect(element.find('.js-part-toggle-target').eq(2).attr('id')).toBe('updated-title-3')
-      expect(element.find('.js-part-toggle').eq(2).attr('href')).toBe('#updated-title-3')
+      expect(form.find('.js-part-toggle-target').eq(2).attr('id')).toBe('updated-title-3')
+      expect(form.find('.js-part-toggle').eq(2).attr('href')).toBe('#updated-title-3')
     })
   })
 
   describe('when the form save errors', function () {
     beforeEach(function () {
-      element.trigger('errors.ajaxsave.admin', {
+      form.trigger('errors.ajaxsave.admin', {
         responseJSON: {
           parts:
         [
@@ -181,18 +191,35 @@ describe('An ajax save with parts module', function () {
     })
 
     it('shows the error messages', function () {
-      expect(element.find('#edition_parts_attributes_100_slug_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(2)
-      expect(element.find('#edition_parts_attributes_100_slug_input ul li:first').text()).toBe('can\'t be blank')
-      expect(element.find('#edition_parts_attributes_100_slug_input ul li:last').text()).toBe('is invalid')
+      expect(form.find('#edition_parts_attributes_100_slug_input').is('.has-error')).toBe(true)
+      expect(form.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(2)
+      expect(form.find('#edition_parts_attributes_100_slug_input ul li:first').text()).toBe('can\'t be blank')
+      expect(form.find('#edition_parts_attributes_100_slug_input ul li:last').text()).toBe('is invalid')
 
-      expect(element.find('#edition_parts_attributes_101_title_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_parts_attributes_101_title_input ul li').length).toBe(1)
-      expect(element.find('#edition_parts_attributes_101_title_input ul li:first').text()).toBe('can\'t be blank')
+      expect(form.find('#edition_parts_attributes_101_title_input').is('.has-error')).toBe(true)
+      expect(form.find('#edition_parts_attributes_101_title_input ul li').length).toBe(1)
+      expect(form.find('#edition_parts_attributes_101_title_input ul li:first').text()).toBe('can\'t be blank')
 
-      expect(element.find('#edition_parts_attributes_4535667_title_input').is('.has-error')).toBe(true)
-      expect(element.find('#edition_parts_attributes_4535667_title_input ul li').length).toBe(1)
-      expect(element.find('#edition_parts_attributes_4535667_title_input ul li:first').text()).toBe('must not walk on the grass')
+      expect(form.find('#edition_parts_attributes_4535667_title_input').is('.has-error')).toBe(true)
+      expect(form.find('#edition_parts_attributes_4535667_title_input ul li').length).toBe(1)
+      expect(form.find('#edition_parts_attributes_4535667_title_input ul li:first').text()).toBe('must not walk on the grass')
+    })
+
+    it('renders an error summary banner with the correct links to errors', function () {
+      var links = element.find('#error-summary').find('a')
+      var error1 = links[0]
+      var error2 = links[1]
+      var error3 = links[2]
+      var error4 = links[3]
+
+      expect(error1.hash).toBe('#edition_part_100_slug')
+      expect(error1.text).toBe("can't be blank")
+      expect(error2.hash).toBe('#edition_part_100_slug')
+      expect(error2.text).toBe('is invalid')
+      expect(error3.hash).toBe('#edition_part_101_title')
+      expect(error3.text).toBe("can't be blank")
+      expect(error4.hash).toBe('#edition_part_4535667_title')
+      expect(error4.text).toBe('must not walk on the grass')
     })
   })
 })

@@ -4,10 +4,13 @@ describe('An ajax save module', function () {
   'use strict'
 
   var ajaxSave,
-    element
+    element,
+    form
 
   beforeEach(function () {
-    element = $('<form action="some/url">' +
+    element = $('<div>' +
+      '<div class="page-title"></div>' +
+      '<form action="some/url">' +
       '<div class="js-status-message"></div>' +
       '<div class="form-group">' +
       '  <div class="form-label">' +
@@ -30,11 +33,14 @@ describe('An ajax save module', function () {
       '<input class="js-no-ajax" type="text" name="fake-file-input">' +
       '<input class="js-no-ajax" type="checkbox" name="remove-file-checkbox" value="1">' +
       '<input type="submit" class="js-save" value="Save">' +
-    '</form>')
+      '</form>' +
+      '</div>'
+    )
 
     $('body').append(element)
+    form = element.find('form')
     ajaxSave = new GOVUKAdmin.Modules.AjaxSave()
-    ajaxSave.start(element)
+    ajaxSave.start(form)
 
     var submitCallbackSpy = jasmine.createSpy('some/url').and.returnValue(false)
     element.submit(submitCallbackSpy)
@@ -171,7 +177,7 @@ describe('An ajax save module', function () {
   })
 
   describe('when an ajax save errors with validation messages', function () {
-    var timeoutTime, ajaxError
+    var timeoutTime, ajaxError, ajaxSuccess
 
     beforeEach(function () {
       spyOn($, 'ajax').and.callFake(function (options) {
@@ -180,7 +186,13 @@ describe('An ajax save module', function () {
           options.error({ responseJSON: errors })
           options.complete()
         }
+
+        ajaxSuccess = function () {
+          options.success({ title: 'Title' })
+          options.complete()
+        }
       })
+
       spyOn(window, 'setTimeout').and.callFake(function (fn, time) {
         timeoutTime = time
         fn()
@@ -245,6 +257,33 @@ describe('An ajax save module', function () {
       expect(parents.find('.error-block li:first').text()).toBe('must rhyme')
     })
 
+    it('renders an error summary component which link to the correct inputs', function () {
+      ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
+
+      var errorSummary = element.find('#error-summary')
+      var heading = errorSummary.find('h3')[0]
+      var links = errorSummary.find('a')
+      var error1 = links[0]
+      var error2 = links[1]
+      var error3 = links[2]
+
+      expect(heading.textContent).toBe('There is a problem')
+      expect(error1.hash).toBe('#edition_test')
+      expect(error1.text).toBe('must be changed')
+      expect(error2.hash).toBe('#edition_test')
+      expect(error2.text).toBe('must be blue')
+      expect(error3.hash).toBe('#edition_another')
+      expect(error3.text).toBe('must rhyme')
+    })
+
+    it('does not render errors with the message "is invalid" or where the errorKey is "parts"', function () {
+      ajaxError({ test: ['must be changed', 'is invalid'], parts: ['must rhyme'] })
+
+      var links = element.find('#error-summary').find('a')
+
+      expect(links.length).toBe(1)
+    })
+
     it('triggers an error.ajaxsave.admin dom event', function () {
       var errorResponse = false
       element.on('errors.ajaxsave.admin', function (evt, response) {
@@ -276,6 +315,22 @@ describe('An ajax save module', function () {
         element.find('.js-save').trigger('click')
 
         expect(element.find('.has-error').length).toBe(0)
+      })
+
+      it('removes the error summary component if successful', function () {
+        ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
+        element.find('.js-save').trigger('click')
+        ajaxSuccess()
+
+        expect(element.find('#error-summary').length).toBe(0)
+      })
+
+      it('removes validation errors that have been completed if unsuccessful', function () {
+        ajaxError({ test: ['must be changed', 'must be blue'], another: ['must rhyme'] })
+        element.find('.js-save').trigger('click')
+        ajaxError({ test: ['must be changed'], another: ['must rhyme'] })
+
+        expect(element.find('#error-summary').find('a').length).toBe(2)
       })
     })
   })
