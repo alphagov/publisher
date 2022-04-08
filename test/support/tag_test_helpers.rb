@@ -20,8 +20,23 @@ module TagTestHelpers
         { base_path: "/topic/oil-and-gas/wells", internal_name: "Oil and Gas / Wells", publication_state: "published", content_id: "CONTENT-ID-WELLS" },
         { base_path: "/topic/oil-and-gas/fields", internal_name: "Oil and Gas / Fields", publication_state: "published", content_id: "CONTENT-ID-FIELDS" },
         { base_path: "/topic/oil-and-gas/distillation", internal_name: "Oil and Gas / Distillation", publication_state: "draft", content_id: "CONTENT-ID-DISTILL" },
+        { base_path: "/topic/employing-people-mainstream-copy/contracts-mainstream-copy", internal_name: "Employing People / Contracts", publication_state: "published", content_id: "CONTENT-ID-EMPLOYING-COPY" },
+        { base_path: "/topic/disabilities-mainstream-copy/benefits-mainstream-copy", internal_name: "Disabilities / Benefits", publication_state: "draft", content_id: "CONTENT-ID-BENEFIT-COPY" },
       ],
       document_type: "topic",
+    )
+
+    stub_publishing_api_has_content(
+      [
+        { base_path: "/topic/oil-and-gas/wells", internal_name: "Oil and Gas / Wells", publication_state: "published", content_id: "CONTENT-ID-WELLS" },
+        { base_path: "/topic/oil-and-gas/fields", internal_name: "Oil and Gas / Fields", publication_state: "published", content_id: "CONTENT-ID-FIELDS" },
+        { base_path: "/topic/oil-and-gas/distillation", internal_name: "Oil and Gas / Distillation", publication_state: "draft", content_id: "CONTENT-ID-DISTILL" },
+        { base_path: "/topic/employing-people-mainstream-copy/contracts-mainstream-copy", internal_name: "Employing People / Contracts", publication_state: "published", content_id: "CONTENT-ID-EMPLOYING-COPY", details: { mainstream_browse_origin: "notnil" } },
+        { base_path: "/topic/disabilities-mainstream-copy/benefits-mainstream-copy", internal_name: "Disabilities / Benefits", publication_state: "draft", content_id: "CONTENT-ID-BENEFIT-COPY", details: { mainstream_browse_origin: "" } },
+      ],
+      document_type: "topic",
+      per_page: 10_000,
+      fields: %w[content_id details],
     )
 
     stub_publishing_api_has_linkables(
