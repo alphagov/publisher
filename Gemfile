@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "6.1.5.1"
+gem "rails", "7.0.2.4"
 
 gem "bootstrap-kaminari-views"
 gem "diffy"
