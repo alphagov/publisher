@@ -32,6 +32,7 @@ gem "retriable", require: false
 gem "reverse_markdown", require: false
 gem "sassc-rails"
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
+gem "sprockets-rails"
 gem "state_machines"
 gem "state_machines-mongoid"
 gem "strip_attributes"

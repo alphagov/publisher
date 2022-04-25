@@ -580,6 +580,7 @@ DEPENDENCIES
   select2-rails (~> 3.5.9)
   shoulda
   simplecov
+  sprockets-rails
   state_machines
   state_machines-graphviz
   state_machines-mongoid
