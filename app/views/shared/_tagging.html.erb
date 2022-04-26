@@ -19,8 +19,6 @@
             Mainstream browse pages live under <a href="https://www.gov.uk/browse">/browse</a>.
             Examples: <a href="https://www.gov.uk/browse/working">Working</a> or
             <a href="https://www.gov.uk/browse/business">Business</a>.
-            They are used to organise mainstream content. Formerly called
-            <i>sections and subsections</i>.
           </p>
         </div>
 
@@ -46,7 +44,7 @@
         </div>
 
         <div class="form-group" id="edition_topics_input">
-          <%= f.label :topics, "Topics", class: 'control-label' %>
+          <%= f.label :topics, "Specialist topic pages", class: 'control-label' %>
           <%= f.select :topics, @linkables.topics,
                        {},
                        { multiple: true,
@@ -54,13 +52,12 @@
                          data: { placeholder: 'Choose Topics…' } } %>
 
           <p class='help-block'>
-            Topic pages live under <a href="https://www.gov.uk/topic">/topic</a>.
+            Specialist topic pages live under <a href="https://www.gov.uk/topic">/topic</a>.
             They contain collections of pages on GOV.UK. Example:
             <a href="https://www.gov.uk/topic/business-tax">Business Tax</a> or
             <a href="https://www.gov.uk/topic/animal-welfare/pets">Animal Welfare / Pets</a>.
-            Tagging a page with a topic will send out an
+            Tagging a page to a specialist topic will send out an
             <a href="https://www.gov.uk/topic/business-tax/vat/email-signup">email alert to subscribers</a>.
-            Formerly called <i>specialist sectors</i>.
           </p>
         </div>
 
@@ -73,7 +70,7 @@
                          data: { placeholder: 'Choose Organisations…' } } %>
 
            <p class="help-block">
-           Tagging a page to an organisation will make it show up in search.
+           Tagging a page to an organisation will make it show up in search when filtered to the organisation(s).
            Example: <a href="https://www.gov.uk/search?q=taxes&amp;filter_organisations%5B%5D=hm-revenue-customs">search for documents published by HMRC</a>.
            </p>
         </div>

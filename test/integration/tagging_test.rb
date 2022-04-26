@@ -39,7 +39,7 @@ class TaggingTest < JavascriptIntegrationTest
       visit_edition @edition
       switch_tab "Tagging"
 
-      select2 "Oil and Gas / Fields", "Oil and Gas / Distillation (draft)", from: "Topics"
+      select2 "Oil and Gas / Fields", "Oil and Gas / Distillation (draft)", from: "Specialist topic pages"
 
       save_tags_and_assert_success
       assert_publishing_api_patch_links(
@@ -226,7 +226,7 @@ class TaggingTest < JavascriptIntegrationTest
       select2 "Tax / RTI (draft)", "Tax / VAT", from: "Mainstream browse pages"
 
       select2 "Tax / Capital Gains Tax", from: "Breadcrumb"
-      select2 "Oil and Gas / Fields", from: "Topics"
+      select2 "Oil and Gas / Fields", from: "Specialist topic pages"
 
       save_tags_and_assert_success
 
@@ -258,7 +258,7 @@ class TaggingTest < JavascriptIntegrationTest
 
       switch_tab "Tagging"
 
-      select2 "Oil and Gas / Fields", from: "Topics"
+      select2 "Oil and Gas / Fields", from: "Specialist topic pages"
 
       stub_request(:patch, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
         .to_return(status: 409)
