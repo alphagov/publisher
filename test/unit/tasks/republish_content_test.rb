@@ -12,6 +12,8 @@ class RepublishContentTest < ActiveSupport::TestCase
 
   context "#publishing_api:republish_content" do
     should "republish both draft and published editions" do
+      Rake::Task["publishing_api:republish_content"].reenable
+
       RepublishWorker.expects(:perform_async).with(@published_edition.id.to_s)
       UpdateWorker.expects(:perform_async).with(@draft_edition.id.to_s)
 
@@ -21,6 +23,8 @@ class RepublishContentTest < ActiveSupport::TestCase
 
   context "#publishing_api:republish_by_format" do
     should "only republish items of that format" do
+      Rake::Task["publishing_api:republish_by_format"].reenable
+
       UpdateWorker.expects(:perform_async).with(@draft_edition.id.to_s)
 
       Rake::Task["publishing_api:republish_by_format"].invoke("help_page")
