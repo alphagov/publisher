@@ -17,7 +17,7 @@
             <h3 class="h4">
               <div class="add-label-margin normal">
                 <time datetime="<%= action.created_at %>" class="text-muted add-label-margin">
-                  <%= action.created_at.to_s(:govuk_date) %>
+                  <%= action.created_at.to_fs(:govuk_date) %>
                 </time>
               </div>
               <%= action.to_s %> by

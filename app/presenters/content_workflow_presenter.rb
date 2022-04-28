@@ -27,7 +27,7 @@ private
           action.request_type,
           item.format,
           item.assignee,
-          action.created_at.to_s(:db),
+          action.created_at.to_fs(:db),
         ]
       end
     end
