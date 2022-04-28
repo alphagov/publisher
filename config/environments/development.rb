@@ -19,6 +19,9 @@ Rails.application.configure do
 
   config.jwt_auth_secret = "123"
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?

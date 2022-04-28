@@ -2,10 +2,12 @@ require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
+require "active_model/railtie"
+require "active_job/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
+require "action_view/railtie"
 require "rails/test_unit/railtie"
-require "sprockets/railtie"
 
 require "open-uri"
 require "builder"
@@ -82,5 +84,12 @@ module Publisher
     # Make Ruby 2.4 preserve the timezone of the receiver when calling `to_time`.
     # Previous versions had false.
     ActiveSupport.to_time_preserves_timezone = false
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
+    # config.time_zone = "Central Time (US & Canada)"
+    # config.eager_load_paths << Rails.root.join("extras")
   end
 end
