@@ -112,12 +112,10 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    database_cleaner (1.99.0)
-      database_cleaner-active_record (~> 2.0.0)
-    database_cleaner-active_record (2.0.1)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
+    database_cleaner-mongoid (2.0.1)
+      database_cleaner-core (~> 2.0.0)
+      mongoid
     diffy (3.4.0)
     digest (3.1.0)
     docile (1.4.0)
@@ -543,7 +541,7 @@ DEPENDENCIES
   bootstrap-kaminari-views
   capybara-select-2
   ci_reporter_minitest
-  database_cleaner
+  database_cleaner-mongoid
   diffy
   erubis
   factory_bot_rails
