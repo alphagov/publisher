@@ -30,21 +30,21 @@
     <% end %>
   </td>
   <td>
-    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_s(:govuk_date) %>">
-      <%= publication.updated_at.to_date.to_s(:govuk_date_short) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.updated_at %>" title="<%= publication.updated_at.to_fs(:govuk_date) %>">
+      <%= publication.updated_at.to_date.to_fs(:govuk_date_short) %>
     </time>
   </td>
   <% if tab && tab == :fact_check %>
   <td>
-    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.last_fact_checked_at %>" title="<%= publication.last_fact_checked_at.to_s(:govuk_date) %>">
-      <%= publication.last_fact_checked_at.to_date.to_s(:govuk_date_short) %>
+    <time class="publication-table-date" data-toggle="tooltip" datetime="<%= publication.last_fact_checked_at %>" title="<%= publication.last_fact_checked_at.to_fs(:govuk_date) %>">
+      <%= publication.last_fact_checked_at.to_date.to_fs(:govuk_date_short) %>
     </time>
   </td>
   <% end %>
   <% if tab && tab == :scheduled_for_publishing %>
   <td>
     <time class="publication-table-date" datetime="<%= publication.publish_at %>">
-      <%= publication.publish_at.to_s(:govuk_date_short) %>
+      <%= publication.publish_at.to_fs(:govuk_date_short) %>
     </time>
   </td>
   <% end %>

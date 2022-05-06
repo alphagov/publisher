@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "6.1.5.1"
+gem "rails", "7.0.2.4"
 
 gem "bootstrap-kaminari-views"
 gem "diffy"
@@ -32,6 +32,7 @@ gem "retriable", require: false
 gem "reverse_markdown", require: false
 gem "sassc-rails"
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
+gem "sprockets-rails"
 gem "state_machines"
 gem "state_machines-mongoid"
 gem "strip_attributes"
@@ -41,7 +42,7 @@ gem "whenever", require: false
 group :test do
   gem "capybara-select-2"
   gem "ci_reporter_minitest"
-  gem "database_cleaner"
+  gem "database_cleaner-mongoid"
   gem "factory_bot_rails"
   gem "govuk-content-schema-test-helpers"
   gem "launchy"

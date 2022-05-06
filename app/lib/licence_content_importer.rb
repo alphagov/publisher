@@ -90,7 +90,7 @@ class LicenceContentImporter
     type = Action::CREATE
     edition.new_action(user, type, {})
     edition.save!
-    user.record_note(edition, "Imported via LicenceContentImporter: #{Time.zone.today.to_s(:db)}")
+    user.record_note(edition, "Imported via LicenceContentImporter: #{Time.zone.today.to_fs(:db)}")
   end
 
   def formatted_result(import: true)

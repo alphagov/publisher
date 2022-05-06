@@ -32,7 +32,7 @@ private
         next unless action.request_type == "publish"
 
         csv << [
-          action.created_at.to_s(:db),
+          action.created_at.to_fs(:db),
           item.title,
           "#{Plek.current.website_root}/#{item.slug}",
         ]

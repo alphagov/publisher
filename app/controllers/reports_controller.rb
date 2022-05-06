@@ -32,7 +32,7 @@ private
   def report_last_updated(report)
     mtime = mtime_for(report)
     if mtime
-      tag.span "Generated #{mtime.to_s(:govuk_date)}", class: "text-muted"
+      tag.span "Generated #{mtime.to_fs(:govuk_date)}", class: "text-muted"
     else
       tag.span "Report currently unavailable", class: "text-muted"
     end

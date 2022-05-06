@@ -7,7 +7,7 @@ We need you to check the factual accuracy of changes made to ‘<%= @edition.tit
 
 The GOV.UK Content Team made the changes because
 
-# Deadline: <%= working_days_after(Date.current, how_many: 5).to_s(:govuk_date) %> (5 working days from today - <%= Date.current.to_s(:govuk_date) %>)
+# Deadline: <%= working_days_after(Date.current, how_many: 5).to_fs(:govuk_date) %> (5 working days from today - <%= Date.current.to_fs(:govuk_date) %>)
 
 Preview the changes:
 <%= preview_edition_path(@edition) %>

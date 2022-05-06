@@ -9,7 +9,7 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "minitest/autorun"
 require "mocha/minitest"
-require "database_cleaner"
+require "database_cleaner/mongoid"
 require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
 require "support/tag_test_helpers"
@@ -25,9 +25,11 @@ require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
-DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.strategy = :deletion
 # initial clean
 DatabaseCleaner.clean
+
+Rails.application.load_tasks if Rake::Task.tasks.empty?
 
 GovukContentSchemaTestHelpers.configure do |config|
   config.schema_type = "publisher_v2"
