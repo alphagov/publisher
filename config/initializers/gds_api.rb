@@ -1,8 +1,5 @@
-require "gds_api/base"
 require "gds_api/asset_manager"
 require "plek"
-
-GdsApi::Base.logger = Logger.new(Rails.root.join("log/#{Rails.env}.api_client.log"))
 
 # Need to provide a bearer token to authenticate to the asset manager.
 # This can be loaded from an environment variable, or this file can
