@@ -168,12 +168,12 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (4.5.0)
+    govuk_app_config (4.6.0)
       logstasher (~> 2.1)
       prometheus_exporter (~> 2.0)
       puma (~> 5.6)
-      sentry-rails (~> 5.2)
-      sentry-ruby (~> 5.2)
+      sentry-rails (~> 5.3)
+      sentry-ruby (~> 5.3)
       statsd-ruby (~> 1.5)
       unicorn (~> 6.1)
     govuk_personalisation (0.11.2)
@@ -248,7 +248,7 @@ GEM
     logstasher (2.1.5)
       activesupport (>= 5.2)
       request_store
-    loofah (2.17.0)
+    loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -458,6 +458,9 @@ GEM
       sentry-ruby-core (= 5.3.0)
     sentry-ruby-core (5.3.0)
       concurrent-ruby
+    sentry-sidekiq (5.3.0)
+      sentry-ruby-core (~> 5.3.0)
+      sidekiq (>= 3.0)
     shoulda (4.0.0)
       shoulda-context (~> 2.0)
       shoulda-matchers (~> 4.0)
@@ -582,6 +585,7 @@ DEPENDENCIES
   rubocop-govuk
   sassc-rails
   select2-rails (~> 3.5.9)
+  sentry-sidekiq
   shoulda
   simplecov
   sprockets-rails
