@@ -25,7 +25,7 @@ RUN apt-get update -qy && apt-get upgrade -y && \
     apt-get install -y nodejs
 # TODO: MONGODB_URI shouldn't be set here but seems to be required by E2E tests, figure out why.
 # TODO: Can ASSETS_PREFIX default to `/assets/publisher` within Publisher?
-ENV RAILS_ENV=production GOVUK_APP_NAME=publisher ASSETS_PREFIX=/assets/publisher MONGODB_URI=mongodb://mongo/govuk_content_development
+ENV GOVUK_PROMETHEUS_EXPORTER=true RAILS_ENV=production GOVUK_APP_NAME=publisher ASSETS_PREFIX=/assets/publisher MONGODB_URI=mongodb://mongo/govuk_content_development
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 COPY --from=builder /app /app/
 WORKDIR /app
