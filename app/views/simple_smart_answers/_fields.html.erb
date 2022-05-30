@@ -9,7 +9,9 @@
       <div class="row">
         <div class="col-md-10">
           <%= form_group(f, :body) do %>
-            <%= f.text_area :body, rows: 5, disabled: @resource.locked_for_edits?, class: "form-control" %>
+            <%= f.text_area :body, rows: 5, disabled: @resource.locked_for_edits?, class: "form-control", data: {
+              module: "paste-html-to-govspeak"
+            } %>
           <% end %>
         </div>
       </div>

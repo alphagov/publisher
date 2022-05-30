@@ -16,7 +16,9 @@
   <div class="form-group">
     <span class="form-wrapper">
       <%= f.label :body, "Optional extra information" %>
-      <%= f.text_area :body, rows: 10, class: "node-body form-control" %>
+      <%= f.text_area :body, rows: 10, class: "node-body form-control", data: {
+        module: "paste-html-to-govspeak"
+      } %>
     </span>
   </div>
 

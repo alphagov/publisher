@@ -12,15 +12,21 @@
       <% end %>
 
       <%= form_group(f, :introduction) do %>
-        <%= f.text_area :introduction, rows: 5, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+        <%= f.text_area :introduction, rows: 5, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
+          module: "paste-html-to-govspeak"
+        } %>
       <% end %>
 
       <%= form_group(f, :more_information) do %>
-        <%= f.text_area :more_information, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+        <%= f.text_area :more_information, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
+          module: "paste-html-to-govspeak"
+        } %>
       <% end %>
 
       <%= form_group(f, :need_to_know, label: "What you need to know", attributes: { class: %w[add-top-margin] }) do %>
-        <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+        <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
+          module: "paste-html-to-govspeak"
+        } %>
       <% end %>
     </fieldset>
   </div>

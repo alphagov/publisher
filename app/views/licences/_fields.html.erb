@@ -24,7 +24,9 @@
       <% end %>
 
       <%= form_group(f, :licence_overview) do %>
-        <%= f.text_area :licence_overview, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+        <%= f.text_area :licence_overview, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
+          module: "paste-html-to-govspeak"
+        } %>
       <% end %>
     </fieldset>
   </div>
