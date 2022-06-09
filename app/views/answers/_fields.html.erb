@@ -8,7 +8,9 @@
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
       <%= form_group(f, :body) do %>
-        <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control" %>
+        <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
+          module: "paste-html-to-govspeak"
+        } %>
       <% end %>
     </fieldset>
   </div>

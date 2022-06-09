@@ -1,3 +1,5 @@
 <%= form_group(f, :body) do %>
-  <%= f.text_area :body, rows: 25, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+  <%= f.text_area :body, rows: 25, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
+    module: "paste-html-to-govspeak"
+  } %>
 <% end %>
