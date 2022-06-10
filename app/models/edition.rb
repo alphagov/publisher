@@ -105,6 +105,18 @@ class Edition
     HelpPageEdition
   ].freeze
 
+  HAS_GOVSPEAK_FIELDS = %w[
+    AnswerEdition
+    GuideEdition
+    HelpPageEdition
+    LicenceEdition
+    LocalTransactionEdition
+    PlaceEdition
+    ProgrammeEdition
+    SimpleSmartAnswerEdition
+    TransactionEdition
+  ].freeze
+
   validates :title, presence: { message: "Enter a title" }
   validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }
   validates :panopticon_id, presence: true

@@ -55,6 +55,9 @@
       node.find('.node-label').text(nodeLabel(kind, index))
       node.addClass(kind).attr('id', nodeId(kind, index))
 
+      var body = node.find('.node-body')
+      addPasteHtmlToGovspeak(body)
+
       var questions = $('.nodes .question:visible')
       var outcomes = $('.nodes .outcome:visible')
 
@@ -98,6 +101,11 @@
       function nodeLabel (kind, index) {
         var capitalizedKind = kind.charAt(0).toUpperCase() + kind.slice(1)
         return capitalizedKind + ' ' + index
+      }
+
+      function addPasteHtmlToGovspeak (field) {
+        var pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
+        pasteHtmlToGovspeak.start(field)
       }
     },
     indexOfKind: function (kind) {
