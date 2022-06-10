@@ -4,24 +4,40 @@ describe('A parts module', function () {
   var parts,
     element
 
+  function createHtmlPasteEvent (html = null) {
+    var event = new window.Event('paste')
+    event.clipboardData = {
+      getData: (type) => {
+        if (type === 'text/html') {
+          return html
+        }
+      }
+    }
+
+    return event
+  }
+
   beforeEach(function () {
     element = $('<div>' +
       '<div id="part_1" class="part">' +
         '<div class="js-sort-handle">Part title 1</div>' +
         '<input class="title" name="part_1_title" type="text" value="Part title 1">' +
         '<input class="slug" name="part_1_slug" type="text" value="part-title-1">' +
+        '<textarea class="body" name="part_1_body">part-body-1</textarea>' +
         '<input class="order" name="part_1_order" type="hidden" value="1">' +
       '</div>' +
       '<div id="part_2" class="part">' +
         '<div class="js-sort-handle">Part title 2</div>' +
         '<input class="title" name="part_2_title" type="text" value="Part title 2">' +
         '<input class="slug" name="part_2_slug" type="text" value="part-title-2">' +
+        '<textarea class="body" name="part_2_body">part-body-2</textarea>' +
         '<input class="order" name="part_2_order" type="hidden" value="2">' +
       '</div>' +
       '<div id="part_3" class="part">' +
         '<div class="js-sort-handle">Part title 3</div>' +
         '<input class="title" name="part_3_title" type="text" value="Part title 3">' +
         '<input class="slug" name="part_3_slug" type="text" value="part-title-3">' +
+        '<textarea class="body" name="part_3_body">part-body-3</textarea>' +
         '<input class="order" name="part_3_order" type="hidden" value="3">' +
       '</div>' +
     '</div>')
@@ -63,6 +79,7 @@ describe('A parts module', function () {
         '<div class="js-sort-handle"></div>' +
         '<input class="error has-error title" name="part_4_title" type="text" value="">' +
         '<input class="slug" name="part_4_slug" type="text" value="">' +
+        '<textarea class="body" name="part_4_body"></textarea>' +
         '<input class="order" name="part_4_order" type="hidden" value="">' +
         '<div class="error has-error" id="error-block">Error</div>' +
       '</div>')
@@ -88,6 +105,13 @@ describe('A parts module', function () {
 
     it('removes validation errors on the newly added part', function () {
       expect($('#part_4').find('.error, .has-error').length).toBe(0)
+    })
+
+    it('applies the paste html to govspeak data module to the new parts body field', function () {
+      var $textarea = $('#part_4').find('.body')[0]
+      $textarea.dispatchEvent(createHtmlPasteEvent('<h2>This is a h2</h2>'))
+
+      expect($textarea.value).toEqual('## This is a h2')
     })
   })
 

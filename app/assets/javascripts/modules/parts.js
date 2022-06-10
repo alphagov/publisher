@@ -5,6 +5,7 @@
   Modules.Parts = function () {
     this.start = function (element) {
       element.on('change', 'input.title', generateSlug)
+      element.on('nested:fieldAdded:parts', addPasteHtmlToGovspeak)
       element.on('nested:fieldAdded:parts', updatePartOrders)
       element.on('nested:fieldAdded:parts', removeValidationMessages)
 
@@ -24,6 +25,12 @@
             $slugInput.removeClass('yellow-fade')
           }, 2000)
         }
+      }
+
+      function addPasteHtmlToGovspeak () {
+        var input = element.find('.body').slice(-1)
+        var pasteHtmlToGovspeak = new GOVUKAdmin.Modules.PasteHtmlToGovspeak()
+        pasteHtmlToGovspeak.start(input)
       }
 
       function makePartsSortable () {
