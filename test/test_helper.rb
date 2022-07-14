@@ -18,9 +18,7 @@ require "support/holidays_test_helpers"
 require "support/action_processor_helpers"
 require "support/factories"
 require "support/local_services"
-require "govuk-content-schema-test-helpers"
-require "govuk-content-schema-test-helpers/test_unit"
-
+require "govuk_schemas/assert_matchers"
 require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
@@ -30,11 +28,6 @@ DatabaseCleaner.strategy = :deletion
 DatabaseCleaner.clean
 
 Rails.application.load_tasks if Rake::Task.tasks.empty?
-
-GovukContentSchemaTestHelpers.configure do |config|
-  config.schema_type = "publisher_v2"
-  config.project_root = Rails.root
-end
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -47,6 +40,7 @@ class ActiveSupport::TestCase
 
   include MiniTest::Assertions
   include WebMock::API
+  include GovukSchemas::AssertMatchers
 
   def clean_db
     DatabaseCleaner.clean

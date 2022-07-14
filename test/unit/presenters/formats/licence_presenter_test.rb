@@ -1,8 +1,6 @@
 require "test_helper"
 
 class LicencePresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::LicencePresenter.new(edition)
   end
@@ -31,7 +29,7 @@ class LicencePresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "licence")
+    assert_valid_against_publisher_schema(result, "licence")
   end
 
   should "[:schema_name]" do

@@ -1,8 +1,6 @@
 require "test_helper"
 
 class GenericEditionPresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   context ".render_for_publishing_api with a published document" do
     setup do
       artefact = FactoryBot.create(:artefact)
@@ -58,7 +56,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       attributes_for_republish = @expected_attributes_for_publishing_api_hash.merge(update_type: "republish")
       presented_hash = @presenter.render_for_publishing_api(republish: true)
       assert_equal attributes_for_republish, presented_hash
-      assert_valid_against_schema(presented_hash, "generic_with_external_related_links")
+      assert_valid_against_publisher_schema(presented_hash, "generic_with_external_related_links")
     end
 
     should "create an attributes hash for a minor change" do
@@ -96,7 +94,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
     end
 
     should "be valid against schema" do
-      assert_valid_against_schema(@output, "generic_with_external_related_links")
+      assert_valid_against_publisher_schema(@output, "generic_with_external_related_links")
     end
 
     should "use updated_at value if public_updated_at is nil" do

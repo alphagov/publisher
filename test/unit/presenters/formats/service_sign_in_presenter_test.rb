@@ -1,8 +1,6 @@
 require "test_helper"
 
 class ServiceSignInTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::ServiceSignInPresenter.new(@content)
   end
@@ -58,7 +56,7 @@ class ServiceSignInTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "service_sign_in")
+    assert_valid_against_publisher_schema(result, "service_sign_in")
   end
 
   should "[:schema_name]" do
