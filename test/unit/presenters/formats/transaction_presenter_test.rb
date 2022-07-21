@@ -1,8 +1,6 @@
 require "test_helper"
 
 class TransactionPresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::TransactionPresenter.new(edition)
   end
@@ -40,7 +38,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "transaction")
+    assert_valid_against_publisher_schema(result, "transaction")
   end
 
   should "[:schema_name]" do

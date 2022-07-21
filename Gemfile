@@ -45,7 +45,7 @@ group :test do
   gem "ci_reporter_minitest"
   gem "database_cleaner-mongoid"
   gem "factory_bot_rails"
-  gem "govuk-content-schema-test-helpers"
+  gem "govuk_schemas"
   gem "launchy"
   gem "minitest-reporters"
   gem "mocha"

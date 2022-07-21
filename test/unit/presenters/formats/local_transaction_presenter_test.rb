@@ -1,8 +1,6 @@
 require "test_helper"
 
 class LocalTransactionPresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   setup do
     LocalService.create(lgsl_code: 431, providing_tier: %w[county unitary])
   end
@@ -35,7 +33,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "local_transaction")
+    assert_valid_against_publisher_schema(result, "local_transaction")
   end
 
   should "[:schema_name]" do

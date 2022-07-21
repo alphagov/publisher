@@ -1,8 +1,6 @@
 require "test_helper"
 
 class HelpPagePresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::HelpPagePresenter.new(edition)
   end
@@ -20,7 +18,7 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "help_page")
+    assert_valid_against_publisher_schema(result, "help_page")
   end
 
   should "[:schema_name]" do

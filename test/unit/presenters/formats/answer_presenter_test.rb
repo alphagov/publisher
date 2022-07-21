@@ -1,8 +1,6 @@
 require "test_helper"
 
 class AnswerPresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::AnswerPresenter.new(edition)
   end
@@ -20,7 +18,7 @@ class AnswerPresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "answer")
+    assert_valid_against_publisher_schema(result, "answer")
   end
 
   should "[:schema_name]" do

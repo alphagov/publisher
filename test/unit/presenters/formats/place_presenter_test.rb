@@ -1,8 +1,6 @@
 require "test_helper"
 
 class PlacePresenterTest < ActiveSupport::TestCase
-  include GovukContentSchemaTestHelpers::TestUnit
-
   def subject
     Formats::PlacePresenter.new(edition)
   end
@@ -20,7 +18,7 @@ class PlacePresenterTest < ActiveSupport::TestCase
   end
 
   should "be valid against schema" do
-    assert_valid_against_schema(result, "place")
+    assert_valid_against_publisher_schema(result, "place")
   end
 
   should "[:schema_name]" do
