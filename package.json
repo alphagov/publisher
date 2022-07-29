@@ -46,6 +46,6 @@
     "stylelint-config-gds": "^0.2.0"
   },
   "dependencies": {
-    "paste-html-to-govspeak": "^0.2.6"
+    "paste-html-to-govspeak": "^0.3.0"
   }
 }
