@@ -1,4 +1,5 @@
 require "govspeak/html_sanitizer"
+require "html2text"
 
 class FactCheckMessageProcessor
   attr_accessor :message
@@ -14,6 +15,10 @@ class FactCheckMessageProcessor
     else
       character_set = @message.body.charset
       messy_notes = @message.body.to_s
+
+      if @message["Content-Type"].to_s.starts_with? "text/html"
+        messy_notes = decode_html(messy_notes)
+      end
     end
 
     normalize_line_endings(messy_notes).scan(/\n+|[^\n]+/).map { |part|
@@ -61,5 +66,9 @@ private
     end
 
     string.encode(Encoding::US_ASCII, invalid: :replace)
+  end
+
+  def decode_html(string)
+    Html2Text.convert string
   end
 end

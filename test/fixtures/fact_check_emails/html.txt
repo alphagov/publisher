@@ -1,0 +1,47 @@
+
+Delivered-To: factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk
+Received: by 10.220.195.137 with SMTP id ec9cs93359vcb;
+        Wed, 14 Dec 2011 01:33:02 -0800 (PST)
+Received: by 10.180.4.42 with SMTP id h10mr3090107wih.22.1323855178442;
+        Wed, 14 Dec 2011 01:32:58 -0800 (PST)
+Return-Path: <Mark.Stanley@justice.gsi.gov.uk>
+Received: from mail89.messagelabs.com (mail89.messagelabs.com. [194.106.220.3])
+        by mx.google.com with SMTP id fi21si883827wbb.86.2011.12.14.01.32.58;
+        Wed, 14 Dec 2011 01:32:58 -0800 (PST)
+Received-SPF: neutral (google.com: 194.106.220.3 is neither permitted nor denied by best guess record for domain of Mark.Stanley@justice.gsi.gov.uk) client-ip=194.106.220.3;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 194.106.220.3 is neither permitted nor denied by best guess record for domain of Mark.Stanley@justice.gsi.gov.uk) smtp.mail=Mark.Stanley@justice.gsi.gov.uk
+X-Env-Sender: Mark.Stanley@justice.gsi.gov.uk
+X-Msg-Ref: server-3.tower-89.messagelabs.com!1323855177!46457961!1
+X-Originating-IP: [195.92.40.48]
+X-StarScan-Version: 6.4.3; banners=justice.gsi.gov.uk,-,-
+X-VirusChecked: Checked
+Received: (qmail 31172 invoked from network); 14 Dec 2011 09:32:57 -0000
+Received: from gateway-201.energis.gsi.gov.uk (HELO mx.hosting-e.gsi.gov.uk) (195.92.40.48)
+  by server-3.tower-89.messagelabs.com with SMTP; 14 Dec 2011 09:32:57 -0000
+X-IronPort-AV: E=Sophos;i="4.71,351,1320624000";
+   d="scan'208";a="47736601"
+From: "Stanley, Mark" <Mark.Stanley@justice.gsi.gov.uk>
+To: "factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk"
+	<factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk>
+Date: Wed, 14 Dec 2011 09:32:55 +0000
+Subject: RE: [FACT CHECK REQUESTED] Courts - the different types
+Thread-Topic: [FACT CHECK REQUESTED] Courts - the different types
+Thread-Index: Acyva5y+9wXC/B9qT4av47mTVMRqFQK16q2A
+Message-ID: <ED35BCA4B8742E49943C61F87DC459B22BCE853FF5@EXM0002.dom1.infra.int>
+References: <4ed63c5610a61_23a755f17c8149e@ip-10-59-151-229.mail>
+In-Reply-To: <4ed63c5610a61_23a755f17c8149e@ip-10-59-151-229.mail>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+acceptlanguage: en-US, en-GB
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head></head>
+<body>
+<p>Hello world</p>
+</body>
+</html>
