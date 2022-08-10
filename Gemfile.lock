@@ -204,6 +204,8 @@ GEM
       activesupport (>= 5.2)
     hashdiff (1.0.1)
     hashie (5.0.0)
+    html2text (0.2.1)
+      nokogiri (~> 1.6)
     htmlentities (4.3.4)
     http-accept (1.7.0)
     http-cookie (1.0.5)
@@ -563,6 +565,7 @@ DEPENDENCIES
   govuk_sidekiq
   govuk_test
   has_scope
+  html2text
   inherited_resources
   jquery-ui-rails
   kaminari
