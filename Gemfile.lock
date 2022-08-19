@@ -151,7 +151,7 @@ GEM
       warden-oauth2 (~> 0.0.1)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    govspeak (6.8.4)
+    govspeak (7.0.0)
       actionview (>= 6)
       addressable (>= 2.3.8, < 3)
       govuk_publishing_components (>= 23)
@@ -177,7 +177,7 @@ GEM
     govuk_personalisation (0.12.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (30.1.0)
+    govuk_publishing_components (30.2.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
