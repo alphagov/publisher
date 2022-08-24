@@ -17,7 +17,7 @@ class FactCheckMessageProcessor
       messy_notes = @message.body.to_s
 
       if @message["Content-Type"].to_s.starts_with? "text/html"
-        messy_notes = decode_html(messy_notes)
+        messy_notes = decode_html(try_decode(messy_notes, character_set))
       end
     end
 

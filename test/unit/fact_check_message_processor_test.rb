@@ -105,6 +105,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it should convert html-only emails to plaintext" do
     message = Mail.read(File.expand_path("../fixtures/fact_check_emails/html.txt", __dir__))
     f = FactCheckMessageProcessor.new(message)
-    assert_equal f.body_as_utf8, "Hello world"
+    assert_match(/The SMEs have provided the following feedback/, f.body_as_utf8)
+    assert_no_match(/<td>/, f.body_as_utf8)
   end
 end
