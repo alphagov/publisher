@@ -108,4 +108,11 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_match(/The SMEs have provided the following feedback/, f.body_as_utf8)
     assert_no_match(/<td>/, f.body_as_utf8)
   end
+
+  test "it should convert html-only emails containing Unicode to plaintext" do
+    message = Mail.read(File.expand_path("../fixtures/fact_check_emails/html-unicode.txt", __dir__))
+    f = FactCheckMessageProcessor.new(message)
+    assert_match(/Please change hyperlink for ‘ffeil credyd’ to lead to the following page/, f.body_as_utf8)
+    assert_no_match(/\?\?\?/, f.body_as_utf8)
+  end
 end

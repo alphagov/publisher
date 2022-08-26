@@ -13,10 +13,10 @@ class FactCheckMessageProcessor
       character_set = @message.text_part.content_type_parameters["charset"]
       messy_notes = @message.text_part.body.to_s
     else
-      character_set = @message.body.charset
+      character_set = @message.charset
       messy_notes = @message.body.to_s
 
-      if @message["Content-Type"].to_s.starts_with? "text/html"
+      if @message["Content-Type"].to_s.start_with? "text/html"
         messy_notes = decode_html(try_decode(messy_notes, character_set))
       end
     end

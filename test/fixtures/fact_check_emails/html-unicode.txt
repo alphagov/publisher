@@ -1,0 +1,835 @@
+Delivered-To: govuk-fact-check@digital.cabinet-office.gov.uk
+Received: by 2002:a8a:8c:0:0:0:0:0 with SMTP id s12csp2496820ocq;
+        Wed, 24 Aug 2022 01:12:59 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5kKVuXPM8EJFdYI3Mp4momhWVCoBbWwsI8fghDbArgDErOaiEcvWUewA/hXYU5w/b1pQii
+X-Received: by 2002:a25:e542:0:b0:671:7f71:6895 with SMTP id c63-20020a25e542000000b006717f716895mr27822224ybh.7.1661328779131;
+        Wed, 24 Aug 2022 01:12:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1661328779; cv=none;
+        d=google.com; s=arc-20160816;
+        b=o0U9dH0baeDhFtxuaDEmWDam2lDYtZvczWFqy3KAUlThqKJojWBzhz/w/3DUfMDxwG
+         ApzrptlfB6zygOrI/PzOFki5uhiqSHN4OuuHLHYIG7R0TD+fk5XmmkYyCKiQpWp6eVcQ
+         IfP8BMl12hIHYVXksQvecv3goJho3XTQgT6OxrsbW+aWkUZe7jIK/dPb/qNxy56kROEE
+         xnAgVjSC2SVd5y+sgsapHrwVLR/NgAyZ8s92ekQ9CbkdmTbThDTzCepyricOefliQGSA
+         lcoxwlbbBSdvbMfaiBZpEImnQO5wv9VfV+CjKTcoPg1zkcTgSJhfo2THzZIwv282aAll
+         88JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=to:reply-to:in-reply-to:references:content-transfer-encoding
+         :mime-version:from:subject:date:message-id:dkim-signature;
+        bh=8KW7Cdi33Z85s94npnoUc7ackuZekx6jk1w1xMcm94k=;
+        b=F4lsK99Lq1/WTaQkdLaSjMcjMcaHUR6io2CG6bR+hhDcmty7JOD/gcxQi2sZ7Rt+AA
+         p5Z1N/goA0n1QgSCWRSaWYsGY1OJBoFz+QKJrLHfVH1H2OuO3pNmTtKDxhAzcuiEPD91
+         E6pYtRWmEprOHG7ff625JGLtUVctZ1Muq8DCgmCQ3T/c4OZKvpvBKTjfUSq7kCBnolQZ
+         O90j+ITD0csFATLP/uLaf42eTXZ1ndFirI0ZxfSz115tO3HzcrklcnC1bAiovlXYb76d
+         CYhFFwm/0OMVcmEMtmcfCv8/4E7oyyBMBki00SQk0eiLVHtaW9+nHVX52BUxO0+HfFjV
+         gjxw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@sendgrid.net header.s=smtpapi header.b=XHW4haQn;
+       spf=pass (google.com: domain of bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net designates 149.72.170.13 as permitted sender) smtp.mailfrom="bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net"
+Return-Path: <bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net>
+Received: from o4.ptr118.deskpro.com (o4.ptr118.deskpro.com. [149.72.170.13])
+        by mx.google.com with ESMTPS id i73-20020a253b4c000000b00695a7cd98b7si8825755yba.206.2022.08.24.01.12.58
+        for <govuk-fact-check@digital.cabinet-office.gov.uk>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Aug 2022 01:12:59 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net designates 149.72.170.13 as permitted sender) client-ip=149.72.170.13;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@sendgrid.net header.s=smtpapi header.b=XHW4haQn;
+       spf=pass (google.com: domain of bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net designates 149.72.170.13 as permitted sender) smtp.mailfrom="bounces+408478-bcaa-govuk-fact-check=digital.cabinet-office.gov.uk@sendgrid.net"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.net;
+	h=subject:from:mime-version:content-type:content-transfer-encoding:
+	references:in-reply-to:reply-to:to:cc;
+	s=smtpapi; bh=8KW7Cdi33Z85s94npnoUc7ackuZekx6jk1w1xMcm94k=;
+	b=XHW4haQnmjrExYHkeYMArnoSXfHHh721n89q7CD54+dMtKFPRa3Cjbu8GO9A44EnfxC3
+	whMKwqF9ll/2CigBkcKKkj32Yi/8CyQ3chzc2MT+y8r4n1mm9jRom6QHmPd0g8ueS61i6i
+	FHM3kob69Yc6djMRPZ3OQAs8OU6REXwGg=
+Received: by filterdrecv-699f9bf5bf-dmr5b with SMTP id filterdrecv-699f9bf5bf-dmr5b-1-6305DD8A-F
+        2022-08-24 08:12:58.64860895 +0000 UTC m=+126648.116947880
+Received: from ukc-hmrc-content.deskpro.com (unknown)
+	by geopod-ismtpd-5-1 (SG) with ESMTP id Z5tUY3vDSSSMQ6uidQGE_g
+	for <govuk-fact-check@digital.cabinet-office.gov.uk>;
+	Wed, 24 Aug 2022 08:12:58.284 +0000 (UTC)
+Return-Path: <contact@hmrc-content.deskpro.com>
+Message-ID: <PTAC-BTRT7G224WQ2A6XZQ43.6305dd88eaf880.56179112-1@064e9e7837f4281c2dac4f1adace5756>
+Date: Wed, 24 Aug 2022 08:12:58 +0000 (UTC)
+Subject: RE: =?UTF-8?B?4oCYW1JoZW9saeKAmWNoIGNyZWR5ZGF1IHRyZXRoXeKAmQ==?=
+ GOV.UK preview of new edition [62f23750e90e0708d889c216] - ticket #30881
+From: "HMRC Gov.uk Team" <contact@hmrc-content.deskpro.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-DP-LREF: 580e8ab3cdcb3cfd9bdde4e53a21b57a
+X-DeskPRO-MessageRef: 1661328775-WXU9P8XNJ160K7AG3RTT7LIV60FOZ7FVGKIRI8GZ
+X-DeskPRO-Build: 1646753563
+References: <TICKET-BTRT7G224WQ2A6XZQ43.1@064e9e7837f4281c2dac4f1adace5756>
+In-Reply-To: <TICKET-BTRT7G224WQ2A6XZQ43.1@064e9e7837f4281c2dac4f1adace5756>
+Reply-To: "HMRC Gov.uk Team" <contact@hmrc-content.deskpro.com>
+X-SG-EID: 
+ =?us-ascii?Q?EDz+pPcCEObzY0erxmJdKKQGpdvMup88HgLuRDHyA93PjbWCktxUaC8TC8ZAoM?=
+ =?us-ascii?Q?n1e5XH3ziUuQn3KWUnBUYNwzuGFtNLcDbF3yvjS?=
+ =?us-ascii?Q?E=2FShttlZ27NyNlCqaqxz=2F0m8YS2o=2Fb3Jdln+QXy?=
+ =?us-ascii?Q?LDHJzVVlFq3YBV4e+bhr9FrlAjG3IVU9+M4S00d?=
+ =?us-ascii?Q?UfSQLkdcv8UeqG57EANUeZBC2gYsL8zpZqbOGRj?=
+ =?us-ascii?Q?Q3n38O2kpuJzGkD+xAce17tY8FQgOTM8jkjoYwy?=
+ =?us-ascii?Q?9pSXlqT8La=2FUpicGNUeDtuElHfRj4ZhUbFSrxqR?=
+ =?us-ascii?Q?k0qYKgcbbSC9t4UaRenalxSk?=
+To: Govuk-fact-check <govuk-fact-check@digital.cabinet-office.gov.uk>
+X-Entity-ID: oanZ3dHBzO2PlfwDMI33zg==
+
+<!DOCTYPE html>
+<html style=3D"background-color: #FEFEFE;">
+<head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8"></head>
+<body style=3D"min-width: 100%; -webkit-text-size-adjust: 100%; -ms-text-si=
+ze-adjust: 100%; margin: 0; padding: 0 20px; -moz-box-sizing: border-box; -=
+webkit-box-sizing: border-box; box-sizing: border-box; color: #242424; font=
+-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; text-a=
+lign: left; line-height: 125%; font-size: 14px; background-color: #FEFEFE; =
+width: 100%;">
+<!-- Please avoid to edit this template as it may break some functionalitie=
+s --><div class=3D"dp-wrap" style=3D"font-family: Calibri, Helvetica, Arial=
+, sans-serif; line-height: 125%; color: #242424; font-size: 14px;">
+    <a class=3D"DP_TOP_MARK DP_USER_EMAIL dp_marker_link" id=3D"DP_TOP_MARK=
+ DP_USER_EMAIL" name=3D"DP_TOP_MARK DP_USER_EMAIL" style=3D"color: #000; fo=
+nt-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; m=
+argin: 0; text-align: left; line-height: 1px; text-decoration: none; height=
+: 1px; overflow: hidden; cursor: default; display: inline;">=E2=80=8B</a>
+    <br>
+
+			<!-- DP_MESSAGE_BEGIN --><div dir=3D"ltr" lang=3D"en" name=3D"dp_message=
+_166342_begin" class=3D"dp_message_166342_begin"><div>Hello</div><div><br><=
+/div><div>Factcheck comments:</div><div></div><table class=3D"dp_message_ta=
+ble"><tbody><tr><td>
+  <div>Subheading =E2=80=98Before you
+  start=E2=80=99, 5<sup>th</sup> bullet point</div>
+  </td>
+  <td>
+  <div>Please change
+  hyperlink for =E2=80=98ffeil credyd=E2=80=99 to lead to the following pag=
+e: <a href=3D"https://www.citizensadvice.org.uk/cymraeg/Dyled-ac-arian/borr=
+owing-money/how-lenders-decide-whether-to-give-you-credit/">https://www.cit=
+izensadvice.org.uk/cymraeg/Dyled-ac-arian/borrowing-money/how-lenders-decid=
+e-whether-to-give-you-credit/</a><br><br>
+  Currently, leads to =E2=80=98England=E2=80=99 journey.</div>
+  </td>
+ </tr><tr><td>
+  <div>Subheading =E2=80=98Before you
+  start=E2=80=99, 5<sup>th</sup> bullet point</div>
+  </td>
+  <td>
+  <div>Please change: morgeisi<br><br>
+  To: forgeisi</div>
+  </td>
+ </tr><tr><td>
+  <div>Subheading =E2=80=98Before you
+  start=E2=80=99, 6<sup>th</sup> bullet point</div>
+  </td>
+  <td>
+  <div>Please change: mlynedd<br><br>
+  To: blynedd</div>
+  </td>
+ </tr></tbody></table><div><br></div>
+
+<div>Regards</div>
+
+<div><br></div>
+
+<div>Wendy</div>
+
+<div><b>Please only reply to this mailbox and not my personal email address=
+.</b></div>
+
+<div><br></div>
+
+<div>Wendy Smith<b> I</b> HMRC GOV.UK Design Team - Content Designer <b>I</=
+b> 03000 539935 <b>I</b> 07799 341672 <b>I </b><a href=3D"mailto:wendy.a.sm=
+ith@hmrc.gsi.gov.uk">wendy.a.smith@hmrc.gov.uk</a> </div>
+
+<div>Search for <a href=3D"https://intranet.prod.dop.corp.hmrc.gov.uk/secti=
+on/how-do-i/get-help-it-phones-and-data/govuk-get-content-added-or-changed#=
+518494-0-list-pane." style=3D"font-size:13px;">GOV.UK</a><span style=3D"fon=
+t-size:13px;"> on our Intranet.</span></div></div><!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_166342_end" class=3D"dp_message_166342_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+=09
+					<div class=3D"rate-link" style=3D"font-family: Calibri, Helvetica, Ari=
+al, sans-serif; line-height: 125%; color: #ABABAB; font-size: 11px; margin-=
+top: 10px; font-style: italic;">
+	Was this message helpful?
+	<a href=3D"https://hmrc-content.deskpro.com/ticket-rate/QPCU-5105-CHRA/7G2=
+24WQ2A6XZQ43/166342?setrating=3D1" style=3D"color: #ABABAB; font-family: He=
+lvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; tex=
+t-align: left; line-height: 1.3; text-decoration: none; border: 1px solid #=
+DADADA; margin-right: 3px; border-radius: 3px; -moz-border-radius: 3px; -we=
+bkit-border-radius: 3px;">&nbsp;&nbsp;Yes&nbsp;&nbsp;</a>
+	<a href=3D"https://hmrc-content.deskpro.com/ticket-rate/QPCU-5105-CHRA/7G2=
+24WQ2A6XZQ43/166342?setrating=3D0" style=3D"color: #ABABAB; font-family: He=
+lvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; tex=
+t-align: left; line-height: 1.3; text-decoration: none; border: 1px solid #=
+DADADA; margin-right: 3px; border-radius: 3px; -moz-border-radius: 3px; -we=
+bkit-border-radius: 3px;">&nbsp;&nbsp;It was OK&nbsp;&nbsp;</a>
+	<a href=3D"https://hmrc-content.deskpro.com/ticket-rate/QPCU-5105-CHRA/7G2=
+24WQ2A6XZQ43/166342?setrating=3D-1" style=3D"color: #ABABAB; font-family: H=
+elvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; te=
+xt-align: left; line-height: 1.3; text-decoration: none; border: 1px solid =
+#DADADA; margin-right: 3px; border-radius: 3px; -moz-border-radius: 3px; -w=
+ebkit-border-radius: 3px;">&nbsp;&nbsp;No&nbsp;&nbsp;</a>
+</div>
+=09
+	<br><br><!-- DP_BLOCKQUOTE_BEGIN --><table border=3D"0" cellspacing=3D"0" =
+cellpadding=3D"3" style=3D"border-spacing: 0; border-collapse: collapse; pa=
+dding: 0; vertical-align: top; text-align: left;">
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<div class=3D"dp-author-row" style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif; line-height: 125%; color: #ABABAB; font-size: 14px; paddin=
+g-bottom: 2px;">
+							On Aug 23, 2022 at 11:49 AM, Thomas Gunning wrote:
+					</div>
+	</td></tr>
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-a=
+lign: top; text-align: left;"><tr style=3D"padding: 0; vertical-align: top;=
+ text-align: left;"><td style=3D"word-wrap: break-word; -webkit-hyphens: au=
+to; -moz-hyphens: auto; hyphens: auto; padding: 0; vertical-align: top; tex=
+t-align: left; color: #242424; font-family: Calibri, Helvetica, Arial, sans=
+-serif; font-weight: normal; margin: 0; line-height: 125%; font-size: 14px;=
+ border-collapse: collapse;">
+							<div data-dp-type=3D"blockquote" class=3D"dp-quoted-message" style=
+=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-height: 125%; =
+color: #00174B; font-size: 14px; border-left: 1px solid #00174B; padding-le=
+ft: 8px; margin-left: 2px;">
+                    <!-- DP_MESSAGE_BEGIN -->
+<div dir=3D"ltr" lang=3D"en" name=3D"dp_message_166265_begin"
+																class=3D"dp_message_166265_begin">
+	<div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>Bore da Wendy,</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>Please find your second QA under the reference =E2=80=93 CYF-8-22-0037.<br=
+ />
+Please see the attached factcheck document with any changes required.</span=
+></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>Please send further formatted Welsh and English final drafts for QA to</sp=
+an>
+<a href=3D"mailto:welshlanguagetranslations@hmrc.gov.uk"><span style=3D"col=
+or:#0563C1;">welshlanguagetranslations@hmrc.gov.uk</span></a><u></u></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>Are you happy with the service received and do you have any suggestions fo=
+r improvement?</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#1F497D;"=
+>Cofion </span><span style=3D"color:#4472C4;">|</span><span style=3D"color:=
+#1F497D;">
+</span><span style=3D"color:#538135;">Regards</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><b><span style=3D"color:#4472C=
+4;">Thomas Ryan Gunning</span></b><b><span style=3D"color:#4472C4;"><a href=
+=3D"https://hmrc-content.deskpro.com/file.php/925477KZWDZXWJCQSTKHK0/image0=
+01.jpg?sc=3D0-obrgdkdoqf-a17773bc4fe4a715389f426c5dce0054cb5ed098" target=
+=3D"_blank" class=3D"dp-is-image dragout dp-embed-blob-a-925477KZWDZXWJCQST=
+KHK0" data-downloadurl=3D"https://hmrc-content.deskpro.com/file.php/925477K=
+ZWDZXWJCQSTKHK0/image001.jpg" data-blob-authid=3D"925477KZWDZXWJCQSTKHK0"><=
+img src=3D"https://hmrc-content.deskpro.com/file.php/925477KZWDZXWJCQSTKHK0=
+/image001.jpg?sc=3D0-obrgdkdoqf-a17773bc4fe4a715389f426c5dce0054cb5ed098&s=
+=3D350" title=3D"image001.jpg" class=3D"dp-embed-blob-img-925477KZWDZXWJCQS=
+TKHK0"  width=3D"22" height=3D"28" /></a></span></b><b></b></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#4472C4;"=
+>Uwch-gyfieithydd | Canolfan Iaith Gymraeg CThEM |Ystafell B1.22 | 6&nbsp; =
+Sgw=C3=A2r Canolog |T=C5=B7 William Morgan | Caerdydd | CF10 1EP | 03000 59=
+2150</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#538135;"=
+>Senior Translator | HMRC Welsh Language Centre |Room B1.22 | 6&nbsp;Centra=
+l Square | T=C5=B7 William Morgan | Cardiff | CF10 1EP | 03000 592150<b></b=
+></span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#4472C4;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#4472C4;"=
+>E-bostiwch geisiadau cyfieithu, boed yn eitemau newydd neu=E2=80=99n eitem=
+au i=E2=80=99w diwygio, yn syth at
+</span><span><a href=3D"mailto:welshlanguagetranslations@hmrc.gov.uk"><span=
+ style=3D"color:#0563C1;">welshlanguagetranslations@hmrc.gov.uk</span></a><=
+span style=3D"color:#4472C4;"> i osgoi oedi</span><span style=3D"color:#445=
+46A;">
+</span></span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#538135;"=
+>To avoid delays, please e-mail any new or amended items for translation di=
+rectly to
+<a href=3D"mailto:welshlanguagetranslations@hmrc.gov.uk"><span style=3D"col=
+or:#538135;">welshlanguagetranslations@hmrc.gov.uk</span></a><u>
+</u></span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"color:#339966;"=
+>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span><a href=3D"http://intern=
+al.active.hmrci/section/business-area/communications/comms-resources/welsh-=
+language-service"><span style=3D"color:#4472C4;">Gwasanaeth Iaith Gymraeg C=
+ThEM</span></a><span style=3D"color:#4472C4;"> |</span><span style=3D"color=
+:#44546A;">
+</span><span style=3D"color:#538135;"><a href=3D"http://ircc.inrev.gov.uk/u=
+nits/wls/index.htm"><span style=3D"color:#538135;">HMRC Welsh Language Serv=
+ice</span></a></span></span></div>
+</div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;">&nbsp;</div>
+<div align=3D"center">
+<span style=3D"font-size:10pt;color:#000000;">OFFICIAL</span></div>
+<div>
+<div style=3D"border:none;padding:3pt 0cm 0cm 0cm;">
+<br /></div></div>
+</div>
+<!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_166265_end" class=3D"dp_message_166265_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+	<div style=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-hei=
+ght: 125%; color: #242424; font-size: 11px;">
+		<br><strong>Attachments</strong>
+														<br>
+				=E2=80=A2
+				<a href=3D"https://hmrc-content.deskpro.com/file.php/925478PCYBPBSJQPGG=
+GDK0T/FACTCHECK-Rheolich-credydau-treth.docx" style=3D"color: #0065A3; font=
+-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; mar=
+gin: 0; text-align: left; line-height: 1.3; text-decoration: underline;">
+					FACTCHECK-Rheolich-credydau-treth.docx
+				</a>
+				(44.32 KB)
+				</attachment>
+</div>
+                    <!-- DP_MESSAGE_END -->
+                </div>
+					</td></tr></table>
+</td></tr>
+</table>
+<div class=3D"dp-spacer" style=3D"font-family: Calibri, Helvetica, Arial, s=
+ans-serif; line-height: 125%; color: #242424; font-size: 1px; padding: 6px;=
+ height: 6px; overflow: hidden;">&nbsp;</div>
+<!-- DP_BLOCKQUOTE_END -->
+								<!-- DP_BLOCKQUOTE_BEGIN -->
+<table border=3D"0" cellspacing=3D"0" cellpadding=3D"3" style=3D"border-spa=
+cing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-a=
+lign: left;">
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<div class=3D"dp-author-row" style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif; line-height: 125%; color: #ABABAB; font-size: 14px; paddin=
+g-bottom: 2px;">
+							On Aug 22, 2022 at 12:23 PM, Welsh Language Unit wrote:
+					</div>
+	</td></tr>
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-a=
+lign: top; text-align: left;"><tr style=3D"padding: 0; vertical-align: top;=
+ text-align: left;"><td style=3D"word-wrap: break-word; -webkit-hyphens: au=
+to; -moz-hyphens: auto; hyphens: auto; padding: 0; vertical-align: top; tex=
+t-align: left; color: #242424; font-family: Calibri, Helvetica, Arial, sans=
+-serif; font-weight: normal; margin: 0; line-height: 125%; font-size: 14px;=
+ border-collapse: collapse;">
+							<div data-dp-type=3D"blockquote" class=3D"dp-quoted-message" style=
+=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-height: 125%; =
+color: #00174B; font-size: 14px; border-left: 1px solid #00174B; padding-le=
+ft: 8px; margin-left: 2px;">
+                    <!-- DP_MESSAGE_BEGIN -->
+<div dir=3D"ltr" lang=3D"en" name=3D"dp_message_166112_begin"
+																class=3D"dp_message_166112_begin">
+	<div class=3D"MsoNormal" style=3D"margin:0;">Prynhawn da,</div>
+<div class=3D"MsoNormal" style=3D"margin:0;">&nbsp;</div>
+<div class=3D"MsoNormal" style=3D"margin:0;">I have sent this to the transl=
+ator who did the work and asked them to do this fact check ASAP!</div>
+<div class=3D"MsoNormal" style=3D"margin:0;">&nbsp;</div>
+<div class=3D"MsoNormal" style=3D"margin:0;">&nbsp;</div>
+<div class=3D"MsoNormal" style=3D"margin:0;">Diolch,</div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><b><span style=3D"font-family:=
+'Myriad Pro Light';">Ifan Price</span></b></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><b><span style=3D"font-family:=
+'Myriad Pro Light';">(Fo/Ef : He/Him)</span></b></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><b><i><u><span style=3D"font-s=
+ize:10.5pt;font-family:'Segoe UI', sans-serif;color:#242424;background:#FFF=
+FFF;">Please only respond to the inbox and not my personal email.</span></u=
+></i></b><b></b></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"font-family:'My=
+riad Pro Light';">Cydlynydd Busnes Iaith Gymraeg
+</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"font-family:'My=
+riad Pro Light';">Welsh Language Business Co-ordinator</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"font-family:'My=
+riad Pro Light';">Canolfan Iaith Gymraeg CThEM | Yst B1.22 | 6&nbsp; Sgw=C3=
+=A2r Canolog | T=C5=B7 William Morgan | Caerdydd | CF10 1EP | 03000 567806
+<br />
+HMRC Welsh Language Centre | Room B1.22 | 6&nbsp;Central Square | T=C5=B7 W=
+illiam Morgan | Cardiff | CF10 1EP | 03000 567806</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"font-family:'My=
+riad Pro Light';">&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span style=3D"font-family:'My=
+riad Pro Light';color:#70AD47;">Mae croeso i chi ysgrifennu ataf yn Gymraeg=
+ neu Saesneg</span><span style=3D"font-family:'Myriad Pro Light';color:#1F4=
+97D;"><br /></span><span style=3D"font-family:'Myriad Pro Light';color:#FF0=
+000;">You're welcome to write to me in English and Welsh</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;"><span>&nbsp;</span></div>
+<div class=3D"MsoNormal" style=3D"margin:0;">&nbsp;</div>
+<div align=3D"center">
+<span style=3D"font-size:10pt;color:#000000;">OFFICIAL</span></div>
+<div>
+<div style=3D"border:none;padding:3pt 0cm 0cm 0cm;">
+<div class=3D"MsoNormal" style=3D"margin:0;">
+</div>
+</div>
+</div>
+<br />
+The information in this e-mail and any attachments is confidential and may =
+be subject to legal professional privilege. Unless you are the intended rec=
+ipient or his/her representative you are not authorised to, and must not, r=
+ead, copy, distribute, use or retain
+ this message or any part of it. If you are not the intended recipient, ple=
+ase notify the sender immediately.<br /><br />
+HM Revenue &amp; Customs computer systems will be monitored and communicati=
+ons carried on them recorded, to secure the effective operation of the syst=
+em and for lawful purposes.<br /><br />
+The Commissioners for HM Revenue and Customs are not liable for any persona=
+l views of the sender.<br /><br />
+This e-mail may have been intercepted and its information altered.
+</div>
+<!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_166112_end" class=3D"dp_message_166112_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+                    <!-- DP_MESSAGE_END -->
+                </div>
+					</td></tr></table>
+</td></tr>
+</table>
+<div class=3D"dp-spacer" style=3D"font-family: Calibri, Helvetica, Arial, s=
+ans-serif; line-height: 125%; color: #242424; font-size: 1px; padding: 6px;=
+ height: 6px; overflow: hidden;">&nbsp;</div>
+<!-- DP_BLOCKQUOTE_END -->
+								<!-- DP_BLOCKQUOTE_BEGIN -->
+<table border=3D"0" cellspacing=3D"0" cellpadding=3D"3" style=3D"border-spa=
+cing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-a=
+lign: left;">
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<div class=3D"dp-author-row" style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif; line-height: 125%; color: #ABABAB; font-size: 14px; paddin=
+g-bottom: 2px;">
+							On Aug 22, 2022 at 11:55 AM, Wendy A Smith wrote:
+					</div>
+	</td></tr>
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-a=
+lign: top; text-align: left;"><tr style=3D"padding: 0; vertical-align: top;=
+ text-align: left;"><td style=3D"word-wrap: break-word; -webkit-hyphens: au=
+to; -moz-hyphens: auto; hyphens: auto; padding: 0; vertical-align: top; tex=
+t-align: left; color: #242424; font-family: Calibri, Helvetica, Arial, sans=
+-serif; font-weight: normal; margin: 0; line-height: 125%; font-size: 14px;=
+ border-collapse: collapse;">
+							<div data-dp-type=3D"blockquote" class=3D"dp-quoted-message" style=
+=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-height: 125%; =
+color: #00174B; font-size: 14px; border-left: 1px solid #00174B; padding-le=
+ft: 8px; margin-left: 2px;">
+					                    <!-- DP_MESSAGE_BEGIN --><div dir=3D"ltr" lang=3D"=
+en" name=3D"dp_message_166098_begin" class=3D"dp_message_166098_begin"><div=
+>Hello</div><div><br></div><div>I'm really sorry, but it doesn't look as th=
+ough this fact check was sent on to you. the deadline was 16 August, which =
+is our error, so would you return for me asap please?</div><div><br></div><=
+div>All the info is in the email of 9 August.</div><div><br></div>
+
+<div class=3D"dp-signature-start">Regards</div>
+
+<div class=3D"dp-signature-start"><br></div>
+
+<div class=3D"dp-signature-start">Wendy</div>
+
+<div class=3D"dp-signature-start"><b>Please only reply to this mailbox and =
+not my personal email address.</b></div>
+
+<div class=3D"dp-signature-start"><br></div>
+
+<div>Wendy Smith<b> I</b> HMRC GOV.UK Design Team - Content Designer <b>I</=
+b> 03000 539935 <b>I</b> 07799 341672 <b>I </b><a href=3D"mailto:wendy.a.sm=
+ith@hmrc.gsi.gov.uk">wendy.a.smith@hmrc.gov.uk</a> </div>
+
+<div>Search for <a href=3D"https://intranet.prod.dop.corp.hmrc.gov.uk/secti=
+on/how-do-i/get-help-it-phones-and-data/govuk-get-content-added-or-changed#=
+518494-0-list-pane." style=3D"font-size:13px;">GOV.UK</a><span style=3D"fon=
+t-size:13px;"> on our Intranet.</span></div></div><!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_166098_end" class=3D"dp_message_166098_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+                    <!-- DP_MESSAGE_END -->
+                </div>
+					</td></tr></table>
+</td></tr>
+</table>
+<div class=3D"dp-spacer" style=3D"font-family: Calibri, Helvetica, Arial, s=
+ans-serif; line-height: 125%; color: #242424; font-size: 1px; padding: 6px;=
+ height: 6px; overflow: hidden;">&nbsp;</div>
+<!-- DP_BLOCKQUOTE_END -->
+								<!-- DP_BLOCKQUOTE_BEGIN -->
+<table border=3D"0" cellspacing=3D"0" cellpadding=3D"3" style=3D"border-spa=
+cing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-a=
+lign: left;">
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<div class=3D"dp-author-row" style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif; line-height: 125%; color: #ABABAB; font-size: 14px; paddin=
+g-bottom: 2px;">
+							On Aug 9, 2022 at 1:06 PM, Dan Marley wrote:
+					</div>
+	</td></tr>
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-a=
+lign: top; text-align: left;"><tr style=3D"padding: 0; vertical-align: top;=
+ text-align: left;"><td style=3D"word-wrap: break-word; -webkit-hyphens: au=
+to; -moz-hyphens: auto; hyphens: auto; padding: 0; vertical-align: top; tex=
+t-align: left; color: #242424; font-family: Calibri, Helvetica, Arial, sans=
+-serif; font-weight: normal; margin: 0; line-height: 125%; font-size: 14px;=
+ border-collapse: collapse;">
+							<div data-dp-type=3D"blockquote" class=3D"dp-quoted-message" style=
+=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-height: 125%; =
+color: #00174B; font-size: 14px; border-left: 1px solid #00174B; padding-le=
+ft: 8px; margin-left: 2px;">
+					                    <!-- DP_MESSAGE_BEGIN --><div dir=3D"ltr" lang=3D"=
+en" name=3D"dp_message_164936_begin" class=3D"dp_message_164936_begin"><div=
+></div><div></div><div><b>Reply by: 1pm, 16 August, please.</b></div><div><=
+b><br></b></div>
+
+<div>The
+following piece of GOV.UK content needs to be fact checked because of chang=
+es made to match the English version=C2=A0<a href=3D"https://www.gov.uk/man=
+age-your-tax-credits">Manage your tax credits - GOV.UK (www.gov.uk)</a>=C2=
+=A0under=C2=A0<b>CYF-8-22-0037</b></div><div><br></div>
+
+<div>Title:=C2=A0Rheoli'ch credydau treth</div><div><br>
+URL:=C2=A0<a href=3D"https://draft-origin.publishing.service.gov.uk/rheoli-=
+eich-credydau-treth?token=3DeyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhOGI0YTBmMy0xNj=
+lhLTRmNDItYTVhNy1hMmQ2Y2YwNWUzYTkiLCJjb250ZW50X2lkIjoiZmUyMWQwOTktZTQ2ZS00N=
+jI5LWI4YjgtN2YzYzk1OTVjZjgxIiwiaWF0IjoxNjYwMDQ2MTAxLCJleHAiOjE2NjI3MjQ1MDF9=
+.WK6BhccQcbfSBI6ij2o7AiLS72fH_F5a5yXpFQCSYZo">https://draft-origin.publishi=
+ng.service.gov.uk/rheoli-eich-credydau-treth?token=3DeyJhbGciOiJIUzI1NiJ9.e=
+yJzdWIiOiJhOGI0YTBmMy0xNjlhLTRmNDItYTVhNy1hMmQ2Y2YwNWUzYTkiLCJjb250ZW50X2lk=
+IjoiZmUyMWQwOTktZTQ2ZS00NjI5LWI4YjgtN2YzYzk1OTVjZjgxIiwiaWF0IjoxNjYwMDQ2MTA=
+xLCJleHAiOjE2NjI3MjQ1MDF9.WK6BhccQcbfSBI6ij2o7AiLS72fH_F5a5yXpFQCSYZo</a></=
+div><div><br><b>What to do</b></div><div><b><br></b>
+Review the content, then either:</div><div><br></div>
+
+<div></div><ul><li>confirm that the content is correct<br></li><li>use the =
+attached comments sheet to give clear and
+specific details of what's wrong, why and what changes should be made - if =
+you
+spot any differences for devolved administrations please include them in yo=
+ur
+comments<br></li></ul><div>Where more than one person is checking this cont=
+ent, please provide a single combined response.</div><div><br></div><div>On=
+ly include factual errors - GOV.UK will rewrite any content.</div><div><br>=
+</div>
+
+<div>You should:</div><div><br></div>
+
+<div></div><ul><li>only give details on the comments sheet (don't
+use strikethrough, coloured, italics or highlighted text) or include screen=
+shots<br></li><li>not send any other attachments<br></li></ul><div><b>The f=
+act check cannot be accepted in any other format.</b></div><div><br></div><=
+div><span style=3D"font-size:13px;">If you=E2=80=99ll not be able to meet t=
+he deadline to carry out the
+fact check please let us know as soon as possible.</span><br></div><div><br=
+></div>
+
+<div>Please email all replies by the due date to: <a href=3D"mailto:contact=
+@HMRC-content.deskpro.com">contact@HMRC-content.deskpro.com</a>.=C2=A0</div=
+><br><div><br></div>
+
+<div class=3D"dp-signature-start">Kind regards,</div>
+
+<div class=3D"dp-signature-start"><b><br></b></div>
+
+<div class=3D"dp-signature-start"><b>Dan Marley</b> | HMRC
+GOV.UK Team - Triage | CDIO Customer Engagement and IT Business Services | =
+HM Revenue and Customs | Benton
+Park View | Prudhoe House | BP 9102 | Newcastle upon Tyne | NE98 1ZZ |
+0300 055 2504 | contact@hmrc-content.deskpro.com | Search for=C2=A0<a href=
+=3D"http://internal.active.hmrci/section/business-area/chief-digital-inform=
+ation-officer/cdio-digital-services/govuk-get-content-added-or-changed">GOV=
+.UK</a> on our intranet | <b>Please do not forward requests to my personal =
+email or by any other means outside of our inbox, I will not action them</b=
+></div></div><!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_164936_end" class=3D"dp_message_164936_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+	<div style=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-hei=
+ght: 125%; color: #242424; font-size: 11px;">
+		<br><strong>Attachments</strong>
+									<br>
+				=E2=80=A2 <a href=3D"https://hmrc-content.deskpro.com/file.php/918855CD=
+YSMZCWMRYCYRM0T/FACTCHECK-Rheolich-credydau-treth.docx" style=3D"color: #00=
+65A3; font-family: Helvetica, Arial, sans-serif; font-weight: normal; paddi=
+ng: 0; margin: 0; text-align: left; line-height: 1.3; text-decoration: unde=
+rline;">FACTCHECK-Rheolich-credydau-treth.docx</a> (42.79 KB)
+				</attachment>
+</div>
+                    <!-- DP_MESSAGE_END -->
+                </div>
+					</td></tr></table>
+</td></tr>
+</table>
+<div class=3D"dp-spacer" style=3D"font-family: Calibri, Helvetica, Arial, s=
+ans-serif; line-height: 125%; color: #242424; font-size: 1px; padding: 6px;=
+ height: 6px; overflow: hidden;">&nbsp;</div>
+<!-- DP_BLOCKQUOTE_END -->
+								<!-- DP_BLOCKQUOTE_BEGIN -->
+<table border=3D"0" cellspacing=3D"0" cellpadding=3D"3" style=3D"border-spa=
+cing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-a=
+lign: left;">
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<div class=3D"dp-author-row" style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif; line-height: 125%; color: #ABABAB; font-size: 14px; paddin=
+g-bottom: 2px;">
+							On Aug 9, 2022 at 12:55 PM, Govuk-fact-check wrote:
+					</div>
+	</td></tr>
+<tr style=3D"padding: 0; vertical-align: top; text-align: left;"><td style=
+=3D"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphe=
+ns: auto; padding: 0; vertical-align: top; text-align: left; color: #242424=
+; font-family: Calibri, Helvetica, Arial, sans-serif; font-weight: normal; =
+margin: 0; line-height: 125%; font-size: 14px; border-collapse: collapse;">
+		<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" st=
+yle=3D"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-a=
+lign: top; text-align: left;"><tr style=3D"padding: 0; vertical-align: top;=
+ text-align: left;"><td style=3D"word-wrap: break-word; -webkit-hyphens: au=
+to; -moz-hyphens: auto; hyphens: auto; padding: 0; vertical-align: top; tex=
+t-align: left; color: #242424; font-family: Calibri, Helvetica, Arial, sans=
+-serif; font-weight: normal; margin: 0; line-height: 125%; font-size: 14px;=
+ border-collapse: collapse;">
+							<div data-dp-type=3D"blockquote" class=3D"dp-quoted-message" style=
+=3D"font-family: Calibri, Helvetica, Arial, sans-serif; line-height: 125%; =
+color: #00174B; font-size: 14px; border-left: 1px solid #00174B; padding-le=
+ft: 8px; margin-left: 2px;">
+                    <!-- DP_MESSAGE_BEGIN -->
+<div dir=3D"ltr" lang=3D"en" name=3D"dp_message_164933_begin"
+																class=3D"dp_message_164933_begin">
+	<span style=3D"display:none;font-size:1px;color:#fff;">Hi, We need you to =
+check the factual accuracy of changes made to =E2=80=98Rheoli=E2=80=99ch cr=
+edydau treth=E2=80=99 before it=E2=80=99s published on GOV.=E2=80=8BUK. The=
+ GOV.=E2=80=8BUK Content Team made the changes because of the changes in ti=
+cket number 5013113. Deadline: 16 August 2022 (5 working day=E2=80=A6</span=
+>
+
+
+
+  <table align=3D"center" cellpadding=3D"0" cellspacing=3D"0" border=3D"0" =
+style=3D"max-width:580px;width:100%;" width=3D"100%"><tr><td width=3D"10" h=
+eight=3D"10" valign=3D"middle"></td>
+      <td>
+       =20
+                <table width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" b=
+order=3D"0"><tr><td height=3D"24" width=3D"100%" colspan=3D"2"><br /></td>
+                  </tr><tr><td>
+                      <table cellpadding=3D"0" cellspacing=3D"0" border=3D"=
+0"><tr><td style=3D"padding:0 5px 0 0;">
+                            </td>
+                          <td width=3D"100%" style=3D"font-family:Helvetica=
+, Arial, sans-serif;font-size:18px;line-height:23px;">
+                           =20
+                          </td>
+                        </tr></table></td>
+                  </tr></table></td>
+      <td width=3D"10" valign=3D"middle" height=3D"10"></td>
+    </tr></table><table align=3D"center" cellpadding=3D"0" cellspacing=3D"0=
+" border=3D"0" style=3D"max-width:580px;width:100%;" width=3D"100%"><tr><td=
+ height=3D"30"><br /></td>
+    </tr><tr><td width=3D"10" valign=3D"middle"><br /></td>
+      <td style=3D"font-family:Helvetica, Arial, sans-serif;font-size:19px;=
+line-height:1.315789474;max-width:560px;">
+       =20
+            <div style=3D"font-size:19px;line-height:25px;color:#0B0C0C;">H=
+i,</div><div style=3D"font-size:19px;line-height:25px;color:#0B0C0C;">We ne=
+ed you to check the factual accuracy of changes made to =E2=80=98Rheoli=E2=
+=80=99ch credydau treth=E2=80=99 before it=E2=80=99s published on GOV.=E2=
+=80=8BUK.</div><div style=3D"font-size:19px;line-height:25px;color:#0B0C0C;=
+">The GOV.=E2=80=8BUK Content Team made the changes because of the changes =
+in ticket number 5013113.</div><h2 style=3D"padding:0;font-size:27px;line-h=
+eight:35px;font-weight:bold;color:#0B0C0C;">Deadline: 16 August 2022 (5 wor=
+king days from today =E2=80=93 9 August 2022)</h2><div style=3D"font-size:1=
+9px;line-height:25px;color:#0B0C0C;">Preview the changes:<br /><a style=3D"=
+color:#1D70B8;" href=3D"https://draft-origin.publishing.service.gov.uk/rheo=
+li-eich-credydau-treth?token=3DeyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhOGI0YTBmMy0=
+xNjlhLTRmNDItYTVhNy1hMmQ2Y2YwNWUzYTkiLCJjb250ZW50X2lkIjoiZmUyMWQwOTktZTQ2ZS=
+00NjI5LWI4YjgtN2YzYzk1OTVjZjgxIiwiaWF0IjoxNjYwMDQ2MTAxLCJleHAiOjE2NjI3MjQ1M=
+DF9.WK6BhccQcbfSBI6ij2o7AiLS72fH_F5a5yXpFQCSYZo">https://draft-origin.publi=
+shing.service.gov.uk/rheoli-eich-credydau-treth?token=3DeyJhbGciOiJIUzI1NiJ=
+9.eyJzdWIiOiJhOGI0YTBmMy0xNjlhLTRmNDItYTVhNy1hMmQ2Y2YwNWUzYTkiLCJjb250ZW50X=
+2lkIjoiZmUyMWQwOTktZTQ2ZS00NjI5LWI4YjgtN2YzYzk1OTVjZjgxIiwiaWF0IjoxNjYwMDQ2=
+MTAxLCJleHAiOjE2NjI3MjQ1MDF9.WK6BhccQcbfSBI6ij2o7AiLS72fH_F5a5yXpFQCSYZo</a=
+></div><hr style=3D"border:0;height:1px;background:#B1B4B6;"></hr><h2 style=
+=3D"padding:0;font-size:27px;line-height:35px;font-weight:bold;color:#0B0C0=
+C;">What to do</h2><div style=3D"font-size:19px;line-height:25px;color:#0B0=
+C0C;">Reply and confirm the content is correct.</div><div style=3D"font-siz=
+e:19px;line-height:25px;color:#0B0C0C;">Or, if you spot something that=E2=
+=80=99s not correct, reply to this email and tell us:</div><table style=3D"=
+padding:0 0 20px 0;"><tr><td style=3D"font-family:Helvetica, Arial, sans-se=
+rif;"><ul style=3D"padding:0;"><li style=3D"padding:0 0 0 5px;font-size:19p=
+x;line-height:25px;color:#0B0C0C;">which paragraph or section isn=E2=80=99t=
+ right =E2=80=93 for example chapter 2, under heading =E2=80=98How much it =
+costs=E2=80=99</li><li style=3D"padding:0 0 0 5px;font-size:19px;line-heigh=
+t:25px;color:#0B0C0C;">what=E2=80=99s wrong and why =E2=80=93 for example t=
+he text implies a legal obligation, when there isn=E2=80=99t one</li></ul><=
+/td></tr></table><div style=3D"font-size:19px;line-height:25px;color:#0B0C0=
+C;">Check your reply is being sent to govuk-fact-check@digital.cabinet-offi=
+ce.gov.uk. Do not remove [62f23750e90e0708d889c216] from the subject line =
+=E2=80=93 GDS will not get your fact check response if this is removed.</di=
+v><hr style=3D"border:0;height:1px;background:#B1B4B6;"></hr><h2 style=3D"p=
+adding:0;font-size:27px;line-height:35px;font-weight:bold;color:#0B0C0C;">H=
+ow to do it</h2><div style=3D"font-size:19px;line-height:25px;color:#0B0C0C=
+;">When fact checking, please:</div><table style=3D"padding:0 0 20px 0;"><t=
+r><td style=3D"font-family:Helvetica, Arial, sans-serif;"><ul style=3D"padd=
+ing:0;"><li style=3D"padding:0 0 0 5px;font-size:19px;line-height:25px;colo=
+r:#0B0C0C;">only point out factual errors =E2=80=93 don=E2=80=99t suggest w=
+ording (GDS is responsible for the style)</li><li style=3D"padding:0 0 0 5p=
+x;font-size:19px;line-height:25px;color:#0B0C0C;">use plain text =E2=80=93 =
+GDS systems don=E2=80=99t display text formatting, colours or attachments</=
+li></ul></td></tr></table><div style=3D"font-size:19px;line-height:25px;col=
+or:#0B0C0C;">To get the content published more quickly:</div><table style=
+=3D"padding:0 0 20px 0;"><tr><td style=3D"font-family:Helvetica, Arial, san=
+s-serif;"><ul style=3D"padding:0;"><li style=3D"padding:0 0 0 5px;font-size=
+:19px;line-height:25px;color:#0B0C0C;">only include comments about sections=
+ that GDS has changed</li><li style=3D"padding:0 0 0 5px;font-size:19px;lin=
+e-height:25px;color:#0B0C0C;">only reply once =E2=80=93 it=E2=80=99ll help =
+if you co-ordinate your response before replying</li></ul></td></tr></table=
+><hr style=3D"border:0;height:1px;background:#B1B4B6;"></hr><h2 style=3D"pa=
+dding:0;font-size:27px;line-height:35px;font-weight:bold;color:#0B0C0C;">Wh=
+en to contact your GOV.=E2=80=8BUK lead</h2><div style=3D"font-size:19px;li=
+ne-height:25px;color:#0B0C0C;">Ask your GOV.=E2=80=8BUK lead if:</div><tabl=
+e style=3D"padding:0 0 20px 0;"><tr><td style=3D"font-family:Helvetica, Ari=
+al, sans-serif;"><ul style=3D"padding:0;"><li style=3D"padding:0 0 0 5px;fo=
+nt-size:19px;line-height:25px;color:#0B0C0C;">you=E2=80=99ve spotted a new =
+issue =E2=80=93 they=E2=80=99ll raise a new request with GDS</li><li style=
+=3D"padding:0 0 0 5px;font-size:19px;line-height:25px;color:#0B0C0C;">you=
+=E2=80=99ve got any questions =E2=80=93 they can ask GDS any queries via th=
+e Zendesk system</li><li style=3D"padding:0 0 0 5px;font-size:19px;line-hei=
+ght:25px;color:#0B0C0C;">you need an extension to the deadline</li></ul></t=
+d></tr></table><div style=3D"font-size:19px;line-height:25px;color:#0B0C0C;=
+">Thank you.</div>
+       =20
+      </td>
+      <td width=3D"10" valign=3D"middle"><br /></td>
+    </tr><tr><td height=3D"30"><br /></td>
+    </tr></table>
+</div>
+<!-- DP_MESSAGE_END -->
+<a name=3D"dp_message_164933_end" class=3D"dp_message_164933_end dp_marker_=
+link" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font=
+-weight: normal; padding: 0; margin: 0; text-align: left; line-height: 1px;=
+ text-decoration: none; height: 1px; overflow: hidden; cursor: default; dis=
+play: inline;"></a>
+                    <!-- DP_MESSAGE_END -->
+                </div>
+					</td></tr></table>
+</td></tr>
+</table>
+<div class=3D"dp-spacer" style=3D"font-family: Calibri, Helvetica, Arial, s=
+ans-serif; line-height: 125%; color: #242424; font-size: 1px; padding: 6px;=
+ height: 6px; overflow: hidden;">&nbsp;</div>
+<!-- DP_BLOCKQUOTE_END -->
+		=09
+			<br><br>
+
+		View and manage this ticket online:
+		<a href=3D"https://hmrc-content.deskpro.com/tickets/30881" style=3D"color=
+: #0065A3; font-family: Helvetica, Arial, sans-serif; font-weight: normal; =
+padding: 0; margin: 0; text-align: left; line-height: 1.3; text-decoration:=
+ underline;">https://hmrc-content.deskpro.com/tickets/30881</a>
+=09
+
+<!-- Please avoid to edit this template as it may break some functionalitie=
+s -->
+<div class=3D"dp-hr" style=3D"font-family: Calibri, Helvetica, Arial, sans-=
+serif; line-height: 100%; color: #242424; font-size: 12px; padding: 0; marg=
+in-top: 15px; border-top: 2px solid #C5C5C5;">&nbsp;</div>
+<a href=3D"http://www.gov.uk/hmrc" style=3D"color: #0065A3; font-family: He=
+lvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; tex=
+t-align: left; line-height: 1.3; text-decoration: underline;">HM Revenue &a=
+mp; Customs</a> =C2=B7 <a href=3D"https://hmrc-content.deskpro.com/" style=
+=3D"color: #0065A3; font-family: Helvetica, Arial, sans-serif; font-weight:=
+ normal; padding: 0; margin: 0; text-align: left; line-height: 1.3; text-de=
+coration: underline;">https://hmrc-content.deskpro.com/</a>
+    <span class=3D"dp-replycode" style=3D"font-family: Calibri, Helvetica, =
+Arial, sans-serif; line-height: 125%; color: #E8E8E8; font-size: 1px;">BTRT=
+7G224WQ2A6XZQ43</span>
+
+
+
+    <!--DP_TOP_MARK DP_USER_EMAIL--><a class=3D"DP_TOP_MARK DP_USER_EMAIL d=
+p_marker_link DP_NEWMSG_AS_REPLY" id=3D"DP_TOP_MARK DP_USER_EMAIL DP_NEWMSG=
+_AS_REPLY" name=3D"DP_TOP_MARK DP_USER_EMAIL%20DP_NEWMSG_AS_REPLY" style=3D=
+"color: #000; font-family: Helvetica, Arial, sans-serif; font-weight: norma=
+l; padding: 0; margin: 0; text-align: left; line-height: 1px; text-decorati=
+on: none; height: 1px; overflow: hidden; cursor: default; display: inline;"=
+>=E2=80=8B</a>
+<!--DP_BOTTOM_MARK-->
+    <a class=3D"DP_BOTTOM_MARK dp_marker_link DP_NEWMSG_AS_REPLY" id=3D"DP_=
+BOTTOM_MARK DP_NEWMSG_AS_REPLY" name=3D"DP_BOTTOM_MARK%20DP_NEWMSG_AS_REPLY=
+" style=3D"color: #000; font-family: Helvetica, Arial, sans-serif; font-wei=
+ght: normal; padding: 0; margin: 0; text-align: left; line-height: 1px; tex=
+t-decoration: none; height: 1px; overflow: hidden; cursor: default; display=
+: inline;">&nbsp;</a>
+</div>
+<style type=3D"text/css">@media only screen {
+  html {
+    min-height: 100%;
+    background: #f3f3f3;
+  }
+}</style>
+</body>
+</html>
