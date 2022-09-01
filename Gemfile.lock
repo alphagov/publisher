@@ -462,10 +462,8 @@ GEM
       sentry-ruby (~> 5.4.2)
     sentry-ruby (5.4.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-ruby-core (5.3.1)
-      concurrent-ruby
-    sentry-sidekiq (5.3.0)
-      sentry-ruby-core (~> 5.3.0)
+    sentry-sidekiq (5.4.2)
+      sentry-ruby (~> 5.4.2)
       sidekiq (>= 3.0)
     shoulda (4.0.0)
       shoulda-context (~> 2.0)
