@@ -27,6 +27,5 @@ COPY --from=builder /app /app/
 
 USER app
 
-HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
 
 CMD bundle exec puma
