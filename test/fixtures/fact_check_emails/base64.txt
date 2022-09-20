@@ -1,5 +1,5 @@
-                                                                                                                                                                                                                                                               
-Delivered-To: factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk
+
+Delivered-To: factcheck@dev.gov.uk
 Received: by 10.220.195.137 with SMTP id ec9cs93359vcb;
         Wed, 14 Dec 2011 01:33:02 -0800 (PST)
 Received: by 10.180.4.42 with SMTP id h10mr3090107wih.22.1323855178442;
@@ -21,8 +21,8 @@ Received: from gateway-201.energis.gsi.gov.uk (HELO mx.hosting-e.gsi.gov.uk) (19
 X-IronPort-AV: E=Sophos;i="4.71,351,1320624000"; 
    d="scan'208";a="47736601"
 From: "Stanley, Mark" <Mark.Stanley@justice.gsi.gov.uk>
-To: "factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk"
-	<factcheck+production-4ecbb1d3e76e624707000033@alphagov.co.uk>
+To: "factcheck@dev.gov.uk"
+	<factcheck@dev.gov.uk>
 Date: Wed, 14 Dec 2011 09:32:55 +0000
 Subject: RE: [FACT CHECK REQUESTED] Courts - the different types
 Thread-Topic: [FACT CHECK REQUESTED] Courts - the different types
