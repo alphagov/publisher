@@ -20,7 +20,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   end
 
   def sample_processor(_body_text = "I approve")
-    basic_message = Mail.new(to: "factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk", subject: "Fact Checked", body: "I approve")
+    basic_message = Mail.new(to: "factcheck@dev.gov.uk", subject: "Fact Checked", body: "I approve")
     FactCheckMessageProcessor.new(basic_message)
   end
 
@@ -36,7 +36,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
   test "it extracts the body as utf8 acceptable to mongo" do
     windows_string = "Hallo Umläute".encode("Windows-1252")
     message = Mail.new(
-      to: "factcheck+test-4e1dac78e2ba80076000000e@alphagov.co.uk",
+      to: "factchecke@dev.gov.uk",
       subject: "Fact Checked",
       body: windows_string,
       content_type: "text/plain; charset=Windows-1252",

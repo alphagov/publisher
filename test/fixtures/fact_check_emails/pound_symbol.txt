@@ -1,4 +1,4 @@
-Delivered-To: factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk
+Delivered-To: factcheck@dev.gov.uk
 Received: by 10.220.193.201 with SMTP id dv9cs282215vcb;
         Mon, 28 Nov 2011 03:37:02 -0800 (PST)
 Received: by 10.205.135.6 with SMTP id ie6mr17070013bkc.69.1322480220653;
@@ -20,8 +20,8 @@ Received: from gateway-201.energis.gsi.gov.uk (HELO mx.hosting-e.gsi.gov.uk) (19
 X-IronPort-AV: E=Sophos;i="4.69,583,1315177200"; 
    d="scan'208";a="46381388"
 From: "Stanley, Mark" <Mark.Stanley@justice.gsi.gov.uk>
-To: "factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk"
-	<factcheck+production-4e6e1b2fe2ba8022d100000a@alphagov.co.uk>
+To: "factcheck@dev.gov.uk"
+	<factcheck@dev.gov.uk>
 Date: Mon, 28 Nov 2011 11:36:57 +0000
 Subject: RE: [FACT CHECK REQUESTED] Find out if someone has an attorney or
  deputy acting for them
@@ -56,7 +56,7 @@ stice=20
 Ministry of Justice | Creating a safe, just and democratic society
 
 -----Original Message-----
-From: Beta Editorial Team [mailto:winston@alphagov.co.uk]=20
+From: Beta Editorial Team [mailto:winston@dev.gov.uk]=20
 Sent: 31 October 2011 16:50
 To: Stanley, Mark
 Subject: [FACT CHECK REQUESTED] Find out if someone has an attorney or dep=
@@ -66,8 +66,7 @@ Hello - thank you for fact-checking the beta version of www.gov.uk
 
 Please read this content and check it's factually correct.
 
-PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: factcheck+production-4e6e1b2fe=
-2ba8022d100000a@alphagov.co.uk
+PLEASE SEND COMMENTS TO THIS EMAIL ADDRESS: factcheck@dev.gov.uk
 
 If you spot something that's incorrect, please let us know by:
 
@@ -81,8 +80,8 @@ Please don't rewrite the text - just point out any factual errors. We will=
 
 Title: Find out if someone has an attorney or deputy acting for them
 
-http://www.production.alphagov.co.uk/find-someones-attorney-or-deputy?edit=
-ion=3D1
+http://publisher.publishing.service.gov.uk/find-someones-attorney-or-deput=
+y?edition=3D1
 
 Thanks,
 Beta editorial team

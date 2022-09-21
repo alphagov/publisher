@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-# Check all emails in the gmail inbox. Find any sent to an address matching the pattern
-# factcheck+{rails_environment}-#{publication_id}@alphagov.co.uk
+# Check all emails in the gmail inbox.
 #
 # Any messages successfully processed will be moved out of the inbox. Others are left
 # there, so we can review that messages are getting processed properly by going into the

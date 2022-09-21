@@ -3,7 +3,6 @@ class EventMailer < ApplicationMailer
 
   helper(PathsHelper)
   helper(WorkingDaysHelper)
-  default from: "Winston (GOV.UK Publisher) <winston@alphagov.co.uk>"
 
   def any_action(action, recipient_email)
     @action = action
