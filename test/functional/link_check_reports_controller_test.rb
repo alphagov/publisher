@@ -14,7 +14,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
     setup do
       @stubbed_api_request = stub_link_checker_api_create_batch(
         uris: ["https://www.gov.uk"],
-        id: "a-batch-id",
+        id: 1234,
         webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
         webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
       )
@@ -27,7 +27,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
 
       assert_redirected_to(controller: "editions", action: "show", id: @edition.id)
       assert @edition.link_check_reports.any?
-      assert "a-batch-id", @edition.link_check_reports.last.batch_id
+      assert 1234, @edition.link_check_reports.last.batch_id
     end
 
     should "create and render the create template on AJAX" do
@@ -39,7 +39,7 @@ class LinkCheckReportsControllerTest < ActionController::TestCase
       @edition.reload
 
       assert @edition.link_check_reports.any?
-      assert "a-batch-id", @edition.link_check_reports.last.batch_id
+      assert 1234, @edition.link_check_reports.last.batch_id
     end
   end
 

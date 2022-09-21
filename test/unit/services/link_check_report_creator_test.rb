@@ -12,7 +12,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
   setup do
     @stubbed_api_request = stub_link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],
-      id: "a-batch-id",
+      id: 1234,
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
     )
@@ -30,7 +30,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
 
       assert_requested(@stubbed_api_request)
       assert edition.link_check_reports
-      assert "a-batch-id", edition.link_check_reports.first.batch_id
+      assert 1234, edition.link_check_reports.first.batch_id
     end
 
     should "not make a request the link checker api when the edition has no links" do
