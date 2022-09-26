@@ -1,4 +1,4 @@
-name: Set automatic_deploys_enabled (optionally image_tag too)
+name: Set automatic deploys
 
 on:
   workflow_dispatch:
