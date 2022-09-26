@@ -2,37 +2,12 @@ require "test_helper"
 
 class ContentWorkflowPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
-    action1 = Action.new(
-      request_type: "create",
-      created_at: "2016-01-07 17:41:57",
-    )
-
-    action2 = Action.new(
-      request_type: "request_review",
-      created_at: "2016-01-11 10:21:00",
-    )
-
-    action3 = Action.new(
-      request_type: "send_fact_check",
-      created_at: "2016-01-17 12:11:33",
-    )
-
-    action4 = Action.new(
-      request_type: "request_amendments",
-      created_at: "2016-01-20 17:41:28",
-    )
-
-    action5 = Action.new(
-      request_type: "send_fact_check",
-      created_at: "2016-03-07 17:31:44",
-    )
-
     transaction_edition = TransactionEdition.new(
       title: "Register to vote (armed forces)",
       slug: "register-to-vote-armed-forces",
       state: "published",
       assignee: "Ray Khan",
-      actions: [action1, action2, action3, action4, action5],
+      actions: actions,
     )
 
     guide_edition = GuideEdition.new(
@@ -40,7 +15,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       slug: "queens-awards-for-enterprise",
       state: "published",
       assignee: "Constance Cerf",
-      actions: [action1, action2, action3, action4, action5],
+      actions: actions,
     )
 
     Edition.stubs(:published).returns([transaction_edition, guide_edition])
@@ -66,5 +41,34 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
     assert_equal "Guide", data[7]["Format"]
     assert_equal "Constance Cerf", data[7]["Current assignee"]
     assert_equal "2016-01-17 12:11:33", data[7]["Created at"]
+  end
+
+  def actions
+    action1 = Action.new(
+      request_type: "create",
+      created_at: "2016-01-07 17:41:57",
+    )
+
+    action2 = Action.new(
+      request_type: "request_review",
+      created_at: "2016-01-11 10:21:00",
+    )
+
+    action3 = Action.new(
+      request_type: "send_fact_check",
+      created_at: "2016-01-17 12:11:33",
+    )
+
+    action4 = Action.new(
+      request_type: "request_amendments",
+      created_at: "2016-01-20 17:41:28",
+    )
+
+    action5 = Action.new(
+      request_type: "send_fact_check",
+      created_at: "2016-03-07 17:31:44",
+    )
+
+    [action1, action2, action3, action4, action5]
   end
 end

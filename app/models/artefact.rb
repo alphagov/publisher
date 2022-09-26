@@ -92,6 +92,7 @@ class Artefact
   before_validation :normalise, on: :create
   before_create :record_create_action
   before_update :record_update_action
+  before_update :remember_if_slug_has_changed
   after_update :update_editions
 
   validates :name, presence: { message: "Enter a title" }
@@ -145,7 +146,7 @@ class Artefact
   def update_editions
     return archive_editions if state == "archived"
 
-    if slug_changed?
+    if @slug_was_changed
       Edition.draft_in_publishing_api.where(panopticon_id: id).each do |edition|
         edition.update_slug_from_artefact(self)
       end
@@ -270,6 +271,12 @@ class Artefact
   end
 
 private
+
+  # We need to do this because Mongoid doesn't implement 'saved_change_to_attribute?' methods like ActiveRecord does
+  # https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Dirty.html#method-i-saved_change_to_attribute-3F
+  def remember_if_slug_has_changed
+    @slug_was_changed = slug_changed?
+  end
 
   def edition_class_name
     "#{kind.camelcase}Edition"

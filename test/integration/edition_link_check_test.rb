@@ -11,7 +11,7 @@ class EditionLinkCheckTest < JavascriptIntegrationTest
 
     @stubbed_api_request = stub_link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],
-      id: "a-batch-id",
+      id: 1234,
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
     )

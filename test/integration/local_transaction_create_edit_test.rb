@@ -44,11 +44,19 @@ class LocalTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_link?("LGSL code is not recognised", href: "#edition_lgsl_code")
   end
 
+  test "creating a local transaction with an empty LGIL code displays an appropriate error" do
+    visit "/publications/#{@artefact.id}"
+    assert page.has_content? "We need a bit more information to create your local transaction."
+    click_on "Create Local transaction edition"
+
+    assert page.has_link?("Enter a LGIL code", href: "#edition_lgil_code")
+  end
+
   test "creating a local transaction with a bad LGIL code displays an appropriate error" do
     visit "/publications/#{@artefact.id}"
     assert page.has_content? "We need a bit more information to create your local transaction."
 
-    fill_in "LGIL code", with: "word"
+    fill_in "LGIL code", with: 10.5
     click_on "Create Local transaction edition"
 
     assert page.has_link?("LGIL code can only be a whole number between 0 and 999", href: "#edition_lgil_code")
