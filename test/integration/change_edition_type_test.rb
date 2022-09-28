@@ -1,13 +1,9 @@
 require "integration_test_helper"
-require "imminence_areas_test_helper"
 
 class ChangeEditionTypeTest < JavascriptIntegrationTest
-  include ImminenceAreasTestHelper
-
   setup do
     stub_linkables
     FactoryBot.create(:user, :govuk_editor)
-    stub_mapit_areas_requests(Plek.current.find("imminence"))
     stub_holidays_used_by_fact_check
   end
 

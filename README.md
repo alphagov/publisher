@@ -2,9 +2,6 @@
 
 Publisher is sometimes referred to as "mainstream publisher".
 
-This application depends on [imminence](https://www.github.com/alphagov/imminence) to
-provide geographical search tools.
-
 ## Live examples
 - [Answer](https://www.gov.uk/smart-meters)
 - [Completed transaction](https://www.gov.uk/done/make-lpa)
