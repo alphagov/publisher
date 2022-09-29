@@ -102,7 +102,7 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
 
   # Get a single user by their name. If the user doesn't exist, return nil.
   def get_user(name)
-    User.where(name: name).first
+    User.where(name:).first
   end
 
   # Set the given user to be the current user

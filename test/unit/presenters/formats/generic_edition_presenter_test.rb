@@ -87,7 +87,7 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       @edition = FactoryBot.create(
         :transaction_edition,
         state: "draft",
-        updated_at: updated_at,
+        updated_at:,
         panopticon_id: artefact.id,
       )
       @output = Formats::GenericEditionPresenter.new(@edition).render_for_publishing_api

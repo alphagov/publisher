@@ -16,8 +16,8 @@ module Formats
 
     def details
       {
-        parts: parts,
-        external_related_links: external_related_links,
+        parts:,
+        external_related_links:,
         hide_chapter_navigation: edition.hide_chapter_navigation.present?,
       }
     end

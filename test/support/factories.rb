@@ -144,8 +144,8 @@ FactoryBot.define do
         [FactoryBot.build(
           :link_check_report,
           :with_links,
-          batch_id: batch_id,
-          link_uris: link_uris,
+          batch_id:,
+          link_uris:,
         )]
       end
     end
@@ -168,7 +168,7 @@ FactoryBot.define do
   factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: "CompletedTransactionEdition" do
     sequence(:slug) { |n| "done/slug-#{n}" }
     panopticon_id do
-      a = create(:artefact, kind: kind_for_artefact, slug: slug)
+      a = create(:artefact, kind: kind_for_artefact, slug:)
       a.id
     end
   end
@@ -330,7 +330,7 @@ FactoryBot.define do
       end
 
       links do
-        link_uris.map { |uri| FactoryBot.build(:link, uri: uri, status: link_status) }
+        link_uris.map { |uri| FactoryBot.build(:link, uri:, status: link_status) }
       end
     end
   end

@@ -11,7 +11,7 @@ module Formats
     def details
       required_details
         .merge(optional_details)
-        .merge(external_related_links: external_related_links)
+        .merge(external_related_links:)
     end
 
   private

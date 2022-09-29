@@ -26,7 +26,7 @@ class UpdateServiceTest < ActiveSupport::TestCase
   end
 
   def edition
-    @edition ||= stub(content_id: content_id)
+    @edition ||= stub(content_id:)
   end
 
   def content_id

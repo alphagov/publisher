@@ -6,7 +6,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
   end
 
   def edition
-    @edition ||= stub(artefact: artefact, in_beta: false)
+    @edition ||= stub(artefact:, in_beta: false)
   end
 
   def artefact

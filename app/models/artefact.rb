@@ -108,7 +108,7 @@ class Artefact
   end
 
   def self.find_by_slug(slug)
-    where(slug: slug).first
+    where(slug:).first
   end
 
   # Fallback to english if no language is present
@@ -176,7 +176,7 @@ class Artefact
   def save_as(user, options = {})
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
-    record_action(action_type, user: user)
+    record_action(action_type, user:)
     save(options)
   end
   # rubocop:enable Rails/SaveBang
@@ -188,7 +188,7 @@ class Artefact
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
 
-    record_action(action_type, task_name: task_name)
+    record_action(action_type, task_name:)
     save!(options)
   end
 
@@ -209,7 +209,7 @@ class Artefact
     unless current_snapshot == last_snapshot
 
       attributes = {
-        action_type: action_type,
+        action_type:,
         snapshot: current_snapshot,
       }
 

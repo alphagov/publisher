@@ -46,7 +46,7 @@ private
   end
 
   def extract_links_from_document(body)
-    govspeak_document(body).extracted_links(website_root: website_root)
+    govspeak_document(body).extracted_links(website_root:)
   end
 
   def govspeak_document(string)
