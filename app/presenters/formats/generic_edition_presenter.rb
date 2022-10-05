@@ -21,7 +21,7 @@ module Formats
 
     def details
       {
-        external_related_links: external_related_links,
+        external_related_links:,
       }
     end
   end

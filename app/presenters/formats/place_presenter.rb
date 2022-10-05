@@ -11,7 +11,7 @@ module Formats
     end
 
     def details
-      details = { external_related_links: external_related_links }
+      details = { external_related_links: }
 
       details[:place_type] = edition.place_type if edition.place_type
 

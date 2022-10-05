@@ -5,7 +5,7 @@ module Tagging
     def self.find(content_id, locale)
       link_set = Services.publishing_api.get_expanded_links(
         content_id,
-        locale: locale,
+        locale:,
         generate: true,
       )
       new(link_set.to_h)

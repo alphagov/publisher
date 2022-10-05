@@ -74,7 +74,7 @@ class ActiveSupport::TestCase
   end
 
   def login_as(user)
-    request.env["warden"] = stub(authenticate!: true, authenticated?: true, user: user)
+    request.env["warden"] = stub(authenticate!: true, authenticated?: true, user:)
   end
 
   def login_as_govuk_editor

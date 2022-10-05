@@ -191,9 +191,9 @@ class AddingVariantsToTransactionsTest < JavascriptIntegrationTest
   end
 
   def assert_correct_variants(count = 3)
-    assert page.has_css?("#parts .panel-part", count: count)
-    assert page.has_css?("#parts .panel-title", count: count)
-    assert page.has_css?("#parts .panel-body", count: count)
+    assert page.has_css?("#parts .panel-part", count:)
+    assert page.has_css?("#parts .panel-title", count:)
+    assert page.has_css?("#parts .panel-body", count:)
 
     if count > 0 # rubocop:disable Style/NumericPredicate
       assert page.has_css?("#variant-one", count: 1)
