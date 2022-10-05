@@ -34,7 +34,7 @@ private
         csv << [
           action.created_at.to_fs(:db),
           item.title,
-          "#{Plek.current.website_root}/#{item.slug}",
+          "#{Plek.new.website_root}/#{item.slug}",
         ]
       end
     end

@@ -53,7 +53,7 @@ class PrimaryListingPresenter
   end
 
   def step_by_step_review_url
-    "#{Plek.current.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at"
+    "#{Plek.new.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at"
   end
 
   alias_method :drafts, :draft

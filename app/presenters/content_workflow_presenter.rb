@@ -22,7 +22,7 @@ private
         csv << [
           item.title,
           item.slug,
-          "#{Plek.current.website_root}/#{item.slug}",
+          "#{Plek.new.website_root}/#{item.slug}",
           item.state,
           action.request_type,
           item.format,

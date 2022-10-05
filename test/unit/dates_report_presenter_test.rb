@@ -77,15 +77,15 @@ class DatesReportPresenterTest < ActiveSupport::TestCase
 
     assert_equal 3, data.length
     assert_equal "Cancel your visa, immigration or citizenship application", data[0]["title"]
-    assert_equal "#{Plek.current.website_root}/cancel-visa", data[0]["url"]
+    assert_equal "#{Plek.new.website_root}/cancel-visa", data[0]["url"]
     assert_equal "2015-04-30 09:16:03", data[0]["created_at"]
 
     assert_equal "The national curriculum", data[1]["title"]
-    assert_equal "#{Plek.current.website_root}/national-curriculum", data[1]["url"]
+    assert_equal "#{Plek.new.website_root}/national-curriculum", data[1]["url"]
     assert_equal "2015-04-30 09:16:03", data[1]["created_at"]
 
     assert_equal "Family Visitor visa", data[2]["title"]
-    assert_equal "#{Plek.current.website_root}/family-visit-visa", data[2]["url"]
+    assert_equal "#{Plek.new.website_root}/family-visit-visa", data[2]["url"]
     assert_equal "2015-04-30 09:16:03", data[2]["created_at"]
   end
 end
