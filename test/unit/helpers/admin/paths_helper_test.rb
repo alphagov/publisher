@@ -40,7 +40,7 @@ class PathsHelperTest < ActionView::TestCase
   end
 
   def draft_origin
-    Plek.current.find("draft-origin")
+    Plek.new.find("draft-origin")
   end
 
   def decoded_token_payload(token)
