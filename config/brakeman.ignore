@@ -29,6 +29,9 @@
       },
       "user_input": "params[:list].presence",
       "confidence": "High",
+      "cwe_id": [
+        22
+      ],
       "note": ""
     },
     {
@@ -45,6 +48,10 @@
       "location": null,
       "user_input": null,
       "confidence": "Medium",
+      "cwe_id": [
+        565,
+        502
+      ],
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
     },
     {
@@ -76,18 +83,21 @@
       },
       "user_input": "params[:list].presence",
       "confidence": "High",
+      "cwe_id": [
+        77
+      ],
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
     },
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "d3d42c84d0b0acf57ccb1c9d1133ca43389fd725d0471016013e52bf59269b83",
+      "fingerprint": "814bc0a997725602aa2913dd902c8d77c28de9044d4562f60a898ad250d04b5a",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "lib/csv_report_generator.rb",
       "line": 11,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Redis.current.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
+      "code": "Redis.new.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
       "render_path": null,
       "location": {
         "type": "method",
@@ -99,6 +109,6 @@
       "note": "We don't pass any user data to this string."
     }
   ],
-  "updated": "2021-01-15 21:34:56 +0000",
-  "brakeman_version": "4.10.1"
+  "updated": "2022-10-06 12:04:32 +0100",
+  "brakeman_version": "5.3.1"
 }
