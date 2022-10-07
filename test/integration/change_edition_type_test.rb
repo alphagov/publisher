@@ -22,11 +22,11 @@ class ChangeEditionTypeTest < JavascriptIntegrationTest
   def create_artefact_of_kind(kind)
     case kind
     when "help_page"
-      FactoryBot.create(:artefact, slug: "help/foo", kind:)
+      FactoryBot.create(:artefact, slug: "help/foo", kind: kind)
     when "completed_transaction"
-      FactoryBot.create(:artefact, slug: "done/foo", kind:)
+      FactoryBot.create(:artefact, slug: "done/foo", kind: kind)
     else
-      FactoryBot.create(:artefact, kind:)
+      FactoryBot.create(:artefact, kind: kind)
     end
   end
 

@@ -23,7 +23,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       edition = create_edition("This is [link](https://www.gov.uk) text.")
 
       LinkCheckReportCreator.new(
-        edition:,
+        edition: edition,
       ).call
 
       edition.reload
@@ -37,7 +37,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       edition = create_edition("This is had no links.")
 
       LinkCheckReportCreator.new(
-        edition:,
+        edition: edition,
       ).call
 
       edition.reload

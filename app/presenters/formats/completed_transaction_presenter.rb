@@ -17,7 +17,7 @@ module Formats
     end
 
     def required_details
-      { external_related_links: }
+      { external_related_links: external_related_links }
     end
 
     def optional_details

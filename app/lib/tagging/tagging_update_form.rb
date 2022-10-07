@@ -9,7 +9,7 @@ module Tagging
       link_set = LinkSet.find(content_id, locale)
 
       new(
-        content_id:,
+        content_id: content_id,
         previous_version: link_set.version,
         topics: link_set.links["topics"],
         organisations: link_set.links["organisations"],

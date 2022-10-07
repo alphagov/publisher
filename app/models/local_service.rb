@@ -13,7 +13,7 @@ class LocalService
   validate :eligible_providing_tier
 
   def self.find_by_lgsl_code(lgsl_code)
-    LocalService.where(lgsl_code:).first
+    LocalService.where(lgsl_code: lgsl_code).first
   end
 
   def eligible_providing_tier

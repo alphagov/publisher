@@ -41,7 +41,7 @@ class Edition
 
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
-    scope state, -> { where(state:) }
+    scope state, -> { where(state: state) }
   end
   scope :archived_or_published, -> { where(:state.in => %w[archived published]) }
   scope :in_progress, -> { where(:state.nin => %w[archived published]) }
@@ -157,7 +157,7 @@ class Edition
   end
 
   def series
-    Edition.where(panopticon_id:)
+    Edition.where(panopticon_id: panopticon_id)
   end
 
   def history
@@ -165,7 +165,7 @@ class Edition
   end
 
   def siblings
-    series.excludes(id:)
+    series.excludes(id: id)
   end
 
   def previous_siblings
@@ -325,7 +325,7 @@ class Edition
   end
 
   def self.find_or_create_from_panopticon_data(panopticon_id, importing_user)
-    existing_publication = Edition.where(panopticon_id:)
+    existing_publication = Edition.where(panopticon_id: panopticon_id)
       .order_by(version_number: :desc).first
     return existing_publication if existing_publication
 
@@ -341,7 +341,7 @@ class Edition
   end
 
   def self.find_and_identify(slug, edition)
-    scope = where(slug:)
+    scope = where(slug: slug)
 
     if edition.present? && (edition == "latest")
       scope.order_by(version_number: :asc).last

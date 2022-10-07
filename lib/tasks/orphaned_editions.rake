@@ -13,7 +13,7 @@ namespace :orphaned_editions do
     puts "Searching for orphaned editions..."
 
     orphans = qualifying_edition_states.flat_map do |state|
-      Edition.where(state:).select { |e| e.artefact.state == "archived" }
+      Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
 
     if orphans.any?
@@ -30,7 +30,7 @@ namespace :orphaned_editions do
     puts "Searching for orphaned editions..."
 
     orphans = qualifying_edition_states.flat_map do |state|
-      Edition.where(state:).select { |e| e.artefact.state == "archived" }
+      Edition.where(state: state).select { |e| e.artefact.state == "archived" }
     end
 
     if orphans.any?

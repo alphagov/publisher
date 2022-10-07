@@ -27,9 +27,9 @@ module EditionActivityHelper
     render(
       partial: "shared/edition_activity_fields",
       locals: {
-        form_builder:,
-        title:,
-        activity:,
+        form_builder: form_builder,
+        title: title,
+        activity: activity,
         inline: options[:inline],
         disabled: !edition.send("can_#{activity}?".to_sym),
       },

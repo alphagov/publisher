@@ -23,7 +23,7 @@ class LocalServiceImporter
       process_row(row)
     rescue StandardError => e
       Rails.logger.error "Error #{e.class} processing row in #{self.class}\n#{e.backtrace.join("\n")}"
-      GovukError.notify(e, extra: { row: })
+      GovukError.notify(e, extra: { row: row })
     end
   end
 

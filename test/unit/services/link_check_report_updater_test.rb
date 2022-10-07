@@ -8,7 +8,7 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
   def payload
     {
       status: "complete",
-      completed_at:,
+      completed_at: completed_at,
       links: links_payload,
     }.with_indifferent_access
   end
@@ -44,7 +44,7 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
   end
 
   should "update the link check report" do
-    LinkCheckReportUpdater.new(report: link_check_report, payload:).call
+    LinkCheckReportUpdater.new(report: link_check_report, payload: payload).call
 
     link_check_report.reload
 
@@ -53,7 +53,7 @@ class LinkCheckReportUpdaterTest < ActiveSupport::TestCase
   end
 
   should "update the links status" do
-    LinkCheckReportUpdater.new(report: link_check_report, payload:).call
+    LinkCheckReportUpdater.new(report: link_check_report, payload: payload).call
 
     link_check_report.reload
 

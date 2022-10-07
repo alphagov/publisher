@@ -19,7 +19,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: artefact.id,
       title: "Child care stuff",
       body: "Lots of info",
-      version_number:,
+      version_number: version_number,
     )
   end
 
