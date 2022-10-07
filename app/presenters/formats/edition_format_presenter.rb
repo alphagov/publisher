@@ -17,24 +17,24 @@ module Formats
       access_limited = { auth_bypass_ids: [edition.auth_bypass_id] }
       phase = edition.in_beta ? "beta" : nil
 
-      { access_limited:, phase: }.compact
+      { access_limited: access_limited, phase: phase }.compact
     end
 
     def required_fields(republish)
       {
         title: edition.title,
-        base_path:,
+        base_path: base_path,
         description: edition.overview || "",
-        schema_name:,
-        document_type:,
+        schema_name: schema_name,
+        document_type: document_type,
         public_updated_at: public_updated_at.rfc3339(3),
         publishing_app: "publisher",
-        rendering_app:,
-        routes:,
+        rendering_app: rendering_app,
+        routes: routes,
         redirects: [],
         update_type: update_type(republish),
         change_note: edition.latest_change_note,
-        details:,
+        details: details,
         locale: artefact.language,
       }
     end

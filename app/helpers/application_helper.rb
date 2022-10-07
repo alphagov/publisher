@@ -17,7 +17,7 @@ module ApplicationHelper
     title ||= column.titleize
     css_class = column == sort_column ? "current #{sort_direction}" : "sortable"
     direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
-    link_to title, permitted_params.merge(sort: column, direction:), class: css_class
+    link_to title, permitted_params.merge(sort: column, direction: direction), class: css_class
   end
 
   def diff_html(version1, version2)

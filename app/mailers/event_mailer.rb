@@ -8,7 +8,7 @@ class EventMailer < ApplicationMailer
     @action = action
     @preview_url = preview_edition_path(@action.edition)
     subject = "[PUBLISHER] #{describe_action(@action)}"
-    view_mail(template_id, to: recipient_email, subject:)
+    view_mail(template_id, to: recipient_email, subject: subject)
   end
 
   def skip_review(action, recipient_email)

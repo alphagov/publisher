@@ -102,7 +102,7 @@ class DowntimeSchedulerTest < ActiveSupport::TestCase
     stub(
       id: 123,
       display_start_time: start_time,
-      end_time:,
+      end_time: end_time,
     )
   end
 

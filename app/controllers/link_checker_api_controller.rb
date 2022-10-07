@@ -31,7 +31,7 @@ private
   end
 
   def link_check_report
-    @link_check_report ||= edition.link_check_reports.find_by(batch_id:)
+    @link_check_report ||= edition.link_check_reports.find_by(batch_id: batch_id)
   end
 
   def verify_signature

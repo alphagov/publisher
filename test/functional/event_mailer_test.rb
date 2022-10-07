@@ -17,7 +17,7 @@ class EventMailerTest < ActionMailer::TestCase
   def action_email(action)
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
-    action = guide.actions.create!(request_type: action, requester:)
+    action = guide.actions.create!(request_type: action, requester: requester)
     EventMailer.any_action(action, action.email_addresses)
   end
 

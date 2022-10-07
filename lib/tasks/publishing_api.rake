@@ -38,6 +38,11 @@ namespace :publishing_api do
     end
   end
 
+  desc "Publish the experimental knowledge API"
+  task publish_knowledge: [:environment] do
+    KnowledgeApi.new.publish
+  end
+
   desc "Republish an edition"
   task :republish_edition, %w[slug] => :environment do |_, args|
     editions = Edition.published.where(slug: args[:slug])

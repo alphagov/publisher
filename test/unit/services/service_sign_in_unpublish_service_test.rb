@@ -10,7 +10,7 @@ class ServiceSignInUnpublishServiceTest < ActiveSupport::TestCase
     Services.publishing_api.expects(:unpublish).with(
       content_id,
       type: "gone",
-      locale:,
+      locale: locale,
       discard_drafts: true,
     )
 
@@ -20,7 +20,7 @@ class ServiceSignInUnpublishServiceTest < ActiveSupport::TestCase
   should "unpublish a content item with type 'redirect'" do
     Services.publishing_api.expects(:unpublish).with(
       content_id,
-      locale:,
+      locale: locale,
       type: "redirect",
       discard_drafts: true,
       redirects: [
@@ -35,7 +35,7 @@ class ServiceSignInUnpublishServiceTest < ActiveSupport::TestCase
     ServiceSignInUnpublishService.call(
       content_id,
       locale,
-      redirect_path:,
+      redirect_path: redirect_path,
     )
   end
 

@@ -10,8 +10,8 @@ module Healthcheck
 
     def details
       {
-        queue_size:,
-        edition_count:,
+        queue_size: queue_size,
+        edition_count: edition_count,
       }
     end
 
@@ -21,8 +21,8 @@ module Healthcheck
 
     def to_hash
       {
-        status:,
-        message:,
+        status: status,
+        message: message,
       }
     end
 

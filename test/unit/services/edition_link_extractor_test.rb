@@ -29,7 +29,7 @@ class EditionLinkExtractorTest < ActiveSupport::TestCase
   end
 
   def call_edition_link_extractor(edition)
-    EditionLinkExtractor.new(edition:).call
+    EditionLinkExtractor.new(edition: edition).call
   end
 
   def edition_with_no_links
