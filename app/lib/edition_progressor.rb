@@ -1,5 +1,5 @@
 class EditionProgressor
-  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/.freeze
+  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
 
   attr_accessor :edition, :actor, :activity, :status_message
 

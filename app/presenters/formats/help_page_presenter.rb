@@ -22,7 +22,7 @@ module Formats
             content: @edition.body.to_s,
           },
         ],
-        external_related_links: external_related_links,
+        external_related_links:,
       }
     end
   end

@@ -6,7 +6,7 @@ class LinkValidator < ActiveModel::Validator
 
       messages = errors(govspeak_field_value)
       messages.each do |message|
-        record.errors.add(govspeak_field_name, message: message)
+        record.errors.add(govspeak_field_name, message:)
       end
     end
   end

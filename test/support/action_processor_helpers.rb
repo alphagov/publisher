@@ -8,7 +8,7 @@ module ActionProcessorHelpers
   end
 
   def send_fact_check(user, edition, comment = "Fact check this guide please.")
-    user.progress(edition, request_type: :send_fact_check, comment: comment, email_addresses: "test@test.com")
+    user.progress(edition, request_type: :send_fact_check, comment:, email_addresses: "test@test.com")
   end
 
   def resend_fact_check(user, edition)
@@ -16,11 +16,11 @@ module ActionProcessorHelpers
   end
 
   def receive_fact_check(user, edition, comment = "Please verify these facts.")
-    user.progress(edition, request_type: :receive_fact_check, comment: comment)
+    user.progress(edition, request_type: :receive_fact_check, comment:)
   end
 
   def approve_fact_check(user, edition, comment = "No changes needed, this is all correct")
-    user.progress(edition, request_type: :approve_fact_check, comment: comment)
+    user.progress(edition, request_type: :approve_fact_check, comment:)
   end
 
   def request_amendments(user, edition)
@@ -28,7 +28,7 @@ module ActionProcessorHelpers
   end
 
   def publish(user, edition, comment = "Yo!")
-    user.progress(edition, request_type: :publish, comment: comment)
+    user.progress(edition, request_type: :publish, comment:)
   end
 
   def schedule_for_publishing(user, edition, action_attributes)

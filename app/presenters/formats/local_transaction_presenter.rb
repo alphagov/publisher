@@ -13,14 +13,14 @@ module Formats
     def details
       required_details
         .merge(optional_details)
-        .merge(external_related_links: external_related_links)
+        .merge(external_related_links:)
     end
 
     def required_details
       {
         lgsl_code: edition.lgsl_code,
         lgil_code: edition.lgil_code,
-        service_tiers: service_tiers,
+        service_tiers:,
       }
     end
 

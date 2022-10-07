@@ -51,7 +51,7 @@ class User
   end
 
   def record_note(edition, comment, type = Action::NOTE)
-    edition.new_action(self, type, comment: comment)
+    edition.new_action(self, type, comment:)
   end
 
   def resolve_important_note(edition)
@@ -59,11 +59,11 @@ class User
   end
 
   def create_edition(format, attributes = {})
-    GovukContentModels::ActionProcessors::CreateEditionProcessor.new(self, nil, {}, format: format, edition_attributes: attributes).processed_edition
+    GovukContentModels::ActionProcessors::CreateEditionProcessor.new(self, nil, {}, format:, edition_attributes: attributes).processed_edition
   end
 
   def new_version(edition, convert_to = nil)
-    GovukContentModels::ActionProcessors::NewVersionProcessor.new(self, edition, {}, convert_to: convert_to).processed_edition
+    GovukContentModels::ActionProcessors::NewVersionProcessor.new(self, edition, {}, convert_to:).processed_edition
   end
 
   def assign(edition, recipient)

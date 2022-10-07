@@ -4,7 +4,7 @@ class ErrorSummaryHelperTest < ActionView::TestCase
   include ErrorSummaryHelper
 
   def guide_with_title_and_parts(title, parts)
-    GuideEdition.new(title: title, parts: parts, panopticon_id: "Some_id")
+    GuideEdition.new(title:, parts:, panopticon_id: "Some_id")
   end
 
   context "A Guide Edition" do

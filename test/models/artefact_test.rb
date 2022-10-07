@@ -291,7 +291,7 @@ class ArtefactTest < ActiveSupport::TestCase
   test "should archive all editions when archived" do
     artefact = FactoryBot.create(:artefact, state: "live")
     editions = %w[draft ready published archived].map do |state|
-      FactoryBot.create(:programme_edition, panopticon_id: artefact.id, state: state)
+      FactoryBot.create(:programme_edition, panopticon_id: artefact.id, state:)
     end
     user1 = FactoryBot.create(:user)
 

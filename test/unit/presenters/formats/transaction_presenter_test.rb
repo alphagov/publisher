@@ -15,10 +15,10 @@ class TransactionPresenterTest < ActiveSupport::TestCase
 
   def create_downtime(message, start_time: Time.zone.yesterday.at_midnight)
     Downtime.create(
-      artefact: artefact,
-      start_time: start_time,
+      artefact:,
+      start_time:,
       end_time: Time.zone.tomorrow.at_midnight,
-      message: message,
+      message:,
     )
   end
 
