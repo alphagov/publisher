@@ -24,8 +24,8 @@ class PublishServiceTest < ActiveSupport::TestCase
     @edition ||= stub(
       id: 123,
       artefact: stub(
-        content_id: content_id,
-        language: language,
+        content_id:,
+        language:,
       ),
     )
   end

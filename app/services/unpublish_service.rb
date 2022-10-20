@@ -12,7 +12,7 @@ class UnpublishService
       artefact.update_as(
         user,
         state: "archived",
-        redirect_url: redirect_url,
+        redirect_url:,
       )
     end
 

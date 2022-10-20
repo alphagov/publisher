@@ -78,14 +78,14 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
       utf8.force_encoding(Encoding::ASCII_8BIT),
       iso.force_encoding(Encoding::ASCII_8BIT),
     ].join("\n\n")
-    message = Mail.new(body: body)
+    message = Mail.new(body:)
     f = FactCheckMessageProcessor.new(message)
     assert_equal expected, f.body_as_utf8
   end
 
   test "it should extract ASCII when a paragraph is totally borked" do
     body = [0x48, 0x65, 0x6c, 0x6c, 0x6f, 0xe2, 0x86, 0x90, 0xa3, 0x0a].pack("C*")
-    message = Mail.new(body: body)
+    message = Mail.new(body:)
     f = FactCheckMessageProcessor.new(message)
     assert_match(/Hello/, f.body_as_utf8)
   end

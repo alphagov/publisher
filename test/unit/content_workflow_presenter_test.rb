@@ -7,7 +7,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       slug: "register-to-vote-armed-forces",
       state: "published",
       assignee: "Ray Khan",
-      actions: actions,
+      actions:,
     )
 
     guide_edition = GuideEdition.new(
@@ -15,7 +15,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       slug: "queens-awards-for-enterprise",
       state: "published",
       assignee: "Constance Cerf",
-      actions: actions,
+      actions:,
     )
 
     Edition.stubs(:published).returns([transaction_edition, guide_edition])

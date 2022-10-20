@@ -47,7 +47,7 @@ class EditionsControllerTest < ActionController::TestCase
       lgsl_code = 800
       FactoryBot.create(
         :local_service,
-        lgsl_code: lgsl_code,
+        lgsl_code:,
       )
       artefact = FactoryBot.create(:artefact)
 

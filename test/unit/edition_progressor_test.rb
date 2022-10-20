@@ -77,7 +77,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       stub_register_published_content
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update!(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update!(state: :scheduled_for_publishing, publish_at:)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "publish", comment: "go live now!" }
@@ -110,7 +110,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
       Sidekiq::Testing.fake! do
         @guide.update!(state: :ready)
         publish_at = 1.day.from_now
-        activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: publish_at }
+        activity = { request_type: "schedule_for_publishing", comment: "schedule!", publish_at: }
 
         command = EditionProgressor.new(@guide, @laura)
         assert command.progress(activity)
@@ -122,7 +122,7 @@ class EditionProgressorTest < ActiveSupport::TestCase
     should "dequeue a scheduled job" do
       Sidekiq::Testing.disable! do
         publish_at = 1.day.from_now
-        @guide.update!(state: :scheduled_for_publishing, publish_at: publish_at)
+        @guide.update!(state: :scheduled_for_publishing, publish_at:)
         ScheduledPublisher.perform_at(publish_at, @guide.id.to_s)
 
         activity = { request_type: "cancel_scheduled_publishing", comment: "stop!" }

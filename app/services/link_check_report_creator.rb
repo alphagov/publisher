@@ -37,7 +37,7 @@ private
   attr_reader :edition
 
   def uris
-    @uris ||= EditionLinkExtractor.new(edition: edition).call
+    @uris ||= EditionLinkExtractor.new(edition:).call
   end
 
   def callback_url
