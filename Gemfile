@@ -29,8 +29,6 @@ gem "null_logger"
 gem "plek"
 gem "rails_autolink"
 gem "rest-client", require: false
-gem "retriable", require: false
-gem "reverse_markdown", require: false
 gem "sassc-rails"
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem "sentry-sidekiq"
