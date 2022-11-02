@@ -279,7 +279,7 @@ GEM
       ruby-progressbar
     mlanett-redis-lock (0.2.7)
       redis
-    mocha (1.16.0)
+    mocha (2.0.0)
     momentjs-rails (2.29.4.1)
       railties (>= 3.1)
     mongo (2.18.1)
