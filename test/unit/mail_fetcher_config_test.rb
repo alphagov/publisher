@@ -20,7 +20,7 @@ class MailFetcherConfigTest < ActiveSupport::TestCase
 
   should "configure email settings when activated" do
     mail = StubMail.new
-    mail.expects(:retriever_method).with(:imap, user_name: "bob@example.com")
+    mail.expects(:retriever_method).with(:imap, { user_name: "bob@example.com" })
     MailFetcherConfig.new(user_name: "bob@example.com").configure(mail)
   end
 
