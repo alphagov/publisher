@@ -375,7 +375,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
-    rails_autolink (1.1.6)
+    rails_autolink (1.1.7)
       rails (> 3.1)
     railties (7.0.4)
       actionpack (= 7.0.4)
@@ -536,7 +536,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.3)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   aarch64-linux
