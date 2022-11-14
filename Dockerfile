@@ -28,4 +28,4 @@ COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 COPY --from=builder /app /app/
 
 WORKDIR /app
-CMD bundle exec puma
+CMD ["bundle", "exec", "puma"]
