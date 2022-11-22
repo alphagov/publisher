@@ -26,7 +26,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
     assert_equal 10, data.length
     assert_equal "Register to vote (armed forces)", data.first["Content title"]
     assert_equal "register-to-vote-armed-forces", data.first["Content slug"]
-    assert_equal "#{Plek.new.website_root}/register-to-vote-armed-forces", data.first["Content URL"]
+    assert_equal "#{Plek.website_root}/register-to-vote-armed-forces", data.first["Content URL"]
     assert_equal "published", data.first["Current status"]
     assert_equal "create", data.first["Stage"]
     assert_equal "Transaction", data.first["Format"]
@@ -35,7 +35,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
 
     assert_equal "The Queen's Awards for Enterprise", data[7]["Content title"]
     assert_equal "queens-awards-for-enterprise", data[7]["Content slug"]
-    assert_equal "#{Plek.new.website_root}/queens-awards-for-enterprise", data[7]["Content URL"]
+    assert_equal "#{Plek.website_root}/queens-awards-for-enterprise", data[7]["Content URL"]
     assert_equal "published", data[7]["Current status"]
     assert_equal "send_fact_check", data[7]["Stage"]
     assert_equal "Guide", data[7]["Format"]

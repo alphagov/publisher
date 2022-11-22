@@ -71,7 +71,7 @@ module EditionActivityButtonsHelper
 
   def preview_button(edition)
     if edition.published?
-      link_to("View this on the GOV.UK website", "#{Plek.new.website_root}/#{edition.slug}", class: "btn btn-primary btn-large")
+      link_to("View this on the GOV.UK website", "#{Plek.website_root}/#{edition.slug}", class: "btn btn-primary btn-large")
     elsif edition.archived?
       link_to("Preview", "#", class: "btn btn-primary btn-large disabled")
     else

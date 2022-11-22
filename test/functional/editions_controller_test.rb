@@ -921,7 +921,7 @@ class EditionsControllerTest < ActionController::TestCase
       )
       @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
 
-      stub_request(:delete, "#{Plek.new.find('arbiter')}/slugs/test").to_return(status: 200)
+      stub_request(:delete, "#{Plek.find('arbiter')}/slugs/test").to_return(status: 200)
     end
 
     should "destroy transaction" do

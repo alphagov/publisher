@@ -4,8 +4,8 @@ require "plek"
 class SafeHtml < ActiveModel::Validator
   ALLOWED_IMAGE_HOSTS = [
     # URLs for the local environment
-    URI.parse(Plek.new.website_root).host, # eg www.gov.uk
-    URI.parse(Plek.new.asset_root).host,   # eg assets.publishing.service.gov.uk
+    URI.parse(Plek.website_root).host, # eg www.gov.uk
+    URI.parse(Plek.asset_root).host,   # eg assets.publishing.service.gov.uk
 
     # Hardcode production URLs so that content copied from production is valid
     "www.gov.uk",
