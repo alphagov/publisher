@@ -46,7 +46,7 @@ protected
   end
 
   def preview_url(_edition)
-    Plek.new.external_url_for("draft-origin")
+    Plek.external_url_for("draft-origin")
   end
 
 private

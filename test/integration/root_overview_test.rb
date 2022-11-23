@@ -169,7 +169,7 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
     filter_by_user("All")
     click_on "In review"
 
-    assert page.has_link?("Check Collections publisher", href: "#{Plek.new.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
+    assert page.has_link?("Check Collections publisher", href: "#{Plek.find('collections-publisher', external: true)}/step-by-step-pages?status=submitted_for_2i&order_by=updated_at")
   end
 
   test "allows a user to claim 2i" do
@@ -298,6 +298,6 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     click_on "Published"
 
-    assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/test-slug")
+    assert page.has_link?("/test-slug", href: "#{Plek.website_root}/test-slug")
   end
 end

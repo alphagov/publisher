@@ -24,7 +24,7 @@ class EditionLinkExtractorTest < ActiveSupport::TestCase
     should "convert absolute paths to full urls" do
       result = call_edition_link_extractor(edition_with_absolute_paths_in_govspeak_fields)
 
-      assert_same_elements ["https://www.example.co.uk", "#{Plek.new.website_root}/id-for-driving-licence"], result
+      assert_same_elements ["https://www.example.co.uk", "#{Plek.website_root}/id-for-driving-licence"], result
     end
   end
 

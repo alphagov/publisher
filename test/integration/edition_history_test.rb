@@ -33,7 +33,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
       click_on "History and notes"
 
       assert page.has_css?("#edition-history p.add-bottom-margin", text: "View this on the GOV.UK website")
-      assert page.has_link?("/test-slug", href: "#{Plek.new.website_root}/#{@answer.slug}")
+      assert page.has_link?("/test-slug", href: "#{Plek.website_root}/#{@answer.slug}")
     end
 
     should "not show the view link for archived editions" do

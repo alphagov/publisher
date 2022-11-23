@@ -8,7 +8,7 @@ require "plek"
 
 Rails.application.config.to_prepare do
   Attachable.asset_api_client = GdsApi::AssetManager.new(
-    Plek.new.find("asset-manager"),
+    Plek.find("asset-manager"),
     bearer_token: ENV["ASSET_MANAGER_BEARER_TOKEN"] || "example",
   )
 end

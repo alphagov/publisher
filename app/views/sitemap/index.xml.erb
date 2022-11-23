@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <% @paths.each do |path| -%>
     <url>
-      <loc><%= Plek.new.website_root %><%= path %></loc>
+      <loc><%= Plek.website_root %><%= path %></loc>
     </url>
   <% end -%>
 </urlset>
