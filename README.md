@@ -69,4 +69,4 @@ See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Licence
 
-[MIT License](LICENSE)
+[MIT License](LICENCE)
