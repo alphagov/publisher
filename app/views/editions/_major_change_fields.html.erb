@@ -1,11 +1,11 @@
-<%= form_group(f, :change_note, label: "Summary of changes to this edition", attributes: { id: "edition_change_note_input" }) do %>
+<%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
   <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
 <% end %>
 
 <div class="form-group emphasised-field add-bottom-margin checkbox">
   <span class="form-wrapper">
     <%= f.label :major_change, class: "control-label" do %>
-      <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
+      <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7", help: "The change note will be emailed to users subscribed to email alerts and the ‘last updated’ date will change." %>
       Alert the public to this change
     <% end %>
   </span>
