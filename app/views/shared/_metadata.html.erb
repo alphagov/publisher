@@ -7,7 +7,7 @@
         <%= f.hidden_field :id, value: @artefact.id %>
 
         <%= form_group(f, :slug) do %>
-          <%= f.text_field :slug, class: "form-control input-md-6" %>
+          <%= f.text_field :slug, class: "form-control input-md-6", help: "If you change the slug of a published page, the old slug will automatically redirect to the new one." %>
         <% end %>
 
         <%= form_group(f, :language) do %>
