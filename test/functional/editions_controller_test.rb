@@ -986,7 +986,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         assert_redirected_to(:controller => "root", "action" => "index")
-        assert_equal "Guide destroyed", flash[:success]
+        assert_equal "Edition deleted", flash[:success]
       end
     end
   end
