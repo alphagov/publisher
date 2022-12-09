@@ -566,7 +566,7 @@ class EditionsControllerTest < ActionController::TestCase
         post :update,
              params: {
                id: welsh_edition.id,
-               commit: "OK for publication",
+               commit: "No changes needed",
                edition: {
                  activity_approve_review_attributes: {
                    request_type: :approve_review,
@@ -589,7 +589,7 @@ class EditionsControllerTest < ActionController::TestCase
         post :update,
              params: {
                id: edition.id,
-               commit: "OK for publication",
+               commit: "No changes needed",
                edition: {
                  activity_approve_review_attributes: {
                    request_type: :approve_review,
