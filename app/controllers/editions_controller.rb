@@ -187,7 +187,7 @@ class EditionsController < InheritedResources::Base
   def destroy
     if resource.can_destroy?
       destroy! do
-        flash[:success] = "#{description(resource)} destroyed"
+        flash[:success] = "Edition deleted"
         redirect_to root_url
         return
       end
