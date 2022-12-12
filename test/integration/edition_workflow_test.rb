@@ -374,7 +374,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.save!(validate: false)
 
     visit_edition guide
-    send_action guide, "No changes needed", "OK for publication", "Yup, looks good"
+    send_action guide, "No changes needed", "No changes needed", "Yup, looks good"
     assert page.has_content?("updated")
 
     filter_for_all_users
