@@ -87,7 +87,7 @@ class Edition
     request_review: "Send to 2nd pair of eyes",
     schedule_for_publishing: "Schedule for publishing",
     publish: "Send to publish",
-    approve_review: "OK for publication",
+    approve_review: "No changes needed",
     request_amendments: "Request amendments",
     approve_fact_check: "Approve fact check",
     skip_review: "Skip review",

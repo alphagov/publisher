@@ -6,7 +6,7 @@
       <div class="col-md-12">
         <%= f.hidden_field :id, value: @artefact.id %>
 
-        <%= form_group(f, :slug) do %>
+        <%= form_group(f, :slug, help: "If you change the slug of a published page, the old slug will automatically redirect to the new one.") do %>
           <%= f.text_field :slug, class: "form-control input-md-6" %>
         <% end %>
 

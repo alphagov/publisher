@@ -197,7 +197,7 @@ class EditionHistoryTest < JavascriptIntegrationTest
         click_on "Add edition note"
 
         within "#save-edition-note" do
-          fill_in "Note", with: "A simple Welsh note"
+          fill_in "Edition note", with: "A simple Welsh note"
           click_on "Save edition note"
         end
 

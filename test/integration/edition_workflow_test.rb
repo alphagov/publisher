@@ -295,7 +295,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     assert page.has_content?("updated")
 
     assert page.has_selector?(".alert-info")
-    assert has_no_link? "OK for publication"
+    assert has_no_link? "No changes needed"
   end
 
   test "cannot be the guide reviewer and assignee" do
@@ -351,7 +351,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition guide
     assert page.has_selector?(".alert-info")
     assert has_link? "Needs more work"
-    assert has_link? "OK for publication"
+    assert has_link? "No changes needed"
   end
 
   test "review failed" do
@@ -374,7 +374,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.save!(validate: false)
 
     visit_edition guide
-    send_action guide, "OK for publication", "OK for publication", "Yup, looks good"
+    send_action guide, "No changes needed", "No changes needed", "Yup, looks good"
     assert page.has_content?("updated")
 
     filter_for_all_users
@@ -406,7 +406,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     guide.update!(state: "fact_check_received")
 
     visit_edition guide
-    send_action guide, "Minor or no changes required", "Approve fact check", "Hurrah!"
+    send_action guide, "No more work needed", "Approve fact check", "Hurrah!"
     assert page.has_content?("updated")
 
     filter_for_all_users
@@ -587,8 +587,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition edition
 
     assert page.has_content?("We have received a fact check response for this edition")
-    assert_not page.has_css?(".btn.btn-info", text: "Needs major changes")
-    assert_not page.has_css?(".btn.btn-info", text: "Minor or no changes required")
+    assert_not page.has_css?(".btn.btn-info", text: "Needs more work")
+    assert_not page.has_css?(".btn.btn-info", text: "No more work needed")
   end
 
   test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
@@ -598,8 +598,8 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition edition
 
     assert page.has_content?("We have received a fact check response for this edition")
-    assert page.has_css?(".btn.btn-info", text: "Needs major changes")
-    assert page.has_css?(".btn.btn-info", text: "Minor or no changes required")
+    assert page.has_css?(".btn.btn-info", text: "Needs more work")
+    assert page.has_css?(".btn.btn-info", text: "No more work needed")
   end
 
   test "Welsh editors may not request more work for fact checked edition" do
@@ -689,7 +689,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition edition
 
     assert_not page.has_link?("Needs more work", href: "#request_amendments_form")
-    assert_not page.has_link?("OK for publication", href: "#approve_review_form")
+    assert_not page.has_link?("No changes needed", href: "#approve_review_form")
   end
 
   test "Welsh editors can see review buttons for Welsh editions" do
@@ -699,7 +699,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
     visit_edition edition
 
     assert page.has_link?("Needs more work", href: "#request_amendments_form")
-    assert page.has_link?("OK for publication", href: "#approve_review_form")
+    assert page.has_link?("No changes needed", href: "#approve_review_form")
   end
 
   test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do

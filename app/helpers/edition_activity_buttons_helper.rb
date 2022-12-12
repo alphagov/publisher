@@ -13,15 +13,15 @@ module EditionActivityButtonsHelper
     buttons = []
     if current_user.has_editor_permissions?(edition)
       buttons << build_review_button(edition, "request_amendments", "Needs more work")
-      buttons << build_review_button(edition, "approve_review", "OK for publication")
+      buttons << build_review_button(edition, "approve_review", "No changes needed")
     end
     buttons.join("\n").html_safe
   end
 
   def fact_check_buttons(edition)
     [
-      ["Needs major changes", "request_amendments"],
-      ["Minor or no changes required", "approve_fact_check"],
+      ["Needs more work", "request_amendments"],
+      ["No more work needed", "approve_fact_check"],
     ].map { |title, activity|
       build_review_button(edition, activity, title)
     }.join("\n").html_safe

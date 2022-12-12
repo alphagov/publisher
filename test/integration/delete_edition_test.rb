@@ -25,7 +25,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
       click_button "Delete this edition – #1"
 
       within(".alert-success") do
-        assert page.has_content?("Guide destroyed")
+        assert page.has_content?("Edition deleted")
       end
     end
   end
@@ -44,7 +44,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
       click_button "Delete this edition – #2"
 
       within(".alert-success") do
-        assert page.has_content?("Guide destroyed")
+        assert page.has_content?("Edition deleted")
       end
     end
   end

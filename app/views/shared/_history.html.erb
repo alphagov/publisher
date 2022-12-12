@@ -9,14 +9,17 @@
         <fieldset class="inputs">
           <%= hidden_field_tag :edition_id, resource.id %>
           <div class="modal-body">
+            <p class="help-block">Explain what changes you did or did not make and why. <% if current_user.govuk_editor? %>Include a link to the relevant Zendesk ticket and Trello card.<% end %> You can also add an edition note when you send the edition for review (2nd pair of eyes).</p>
+            <% if current_user.govuk_editor? %>
+              <p class="help-block">Read the <a href="https://gov-uk.atlassian.net/l/cp/dwn06raQ" rel="noreferrer noopener" target="_blank">guidance on writing good change notes on the GOV.UK wiki (opens in a new tab)</a>.</p>
+            <% end %>
             <div class="form-group">
               <span class="form-label">
-                <%= f.label :comment, "Note" %>
+                <%= f.label :comment, "Edition note" %>
               </span>
               <span class="form-wrapper">
                 <%= f.text_area :comment, rows: 6, cols: 120, class: "form-control" %>
               </span>
-              <p class="help-block">Summarise your changes, and briefly explain why if you didn't make any requested changes.</p>
             </div>
           </div>
           <footer class="modal-footer remove-top-margin">
