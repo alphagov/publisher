@@ -17,6 +17,7 @@ gem "inherited_resources"
 gem "jquery-ui-rails"
 gem "kaminari"
 gem "kaminari-mongoid"
+gem "mail", "~> 2.7.1"  # TODO: remove once https://github.com/mikel/mail/issues/1489 is fixed.
 gem "mail-notify"
 gem "mlanett-redis-lock"
 gem "momentjs-rails"
