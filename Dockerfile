@@ -11,6 +11,7 @@ RUN bundle install
 COPY package.json yarn.lock ./
 RUN yarn install --production --frozen-lockfile --non-interactive --link-duplicates
 COPY . .
+RUN bootsnap precompile --gemfile .
 RUN rails assets:precompile && rm -fr log
 
 
@@ -22,6 +23,7 @@ WORKDIR $APP_HOME
 COPY --from=builder /usr/bin/node* /usr/bin/
 COPY --from=builder /usr/lib/node_modules/ /usr/lib/node_modules/
 COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
+COPY --from=builder $BOOTSNAP_CACHE_DIR $BOOTSNAP_CACHE_DIR
 COPY --from=builder $APP_HOME .
 
 USER app
