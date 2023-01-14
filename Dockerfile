@@ -1,31 +1,28 @@
-ARG base_image=ghcr.io/alphagov/govuk-ruby-base:3.1.2
-ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:3.1.2
+ARG ruby_version=3.1.2
+ARG base_image=ghcr.io/alphagov/govuk-ruby-base:$ruby_version
+ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
+
 
 FROM $builder_image AS builder
 
-# TODO: Can ASSETS_PREFIX default to `/assets/publisher` within Publisher?
-ENV GOVUK_APP_NAME=publisher ASSETS_PREFIX=/assets/publisher
-
-WORKDIR /app
-COPY Gemfile Gemfile.lock .ruby-version package.json yarn.lock /app/
-
+WORKDIR $APP_HOME
+COPY Gemfile* .ruby-version ./
 RUN bundle install
-RUN yarn install --production --frozen-lockfile
-COPY . /app
-
-RUN GOVUK_APP_DOMAIN=www.gov.uk GOVUK_WEBSITE_ROOT=www.gov.uk bundle exec rails assets:precompile
+COPY package.json yarn.lock ./
+RUN yarn install --production --frozen-lockfile --non-interactive --link-duplicates
+COPY . .
+RUN rails assets:precompile && rm -fr log
 
 
 FROM $base_image
 
-# TODO: don't set MONGODB_URI here. Move it to publishing-e2e-tests.
-ENV MONGODB_URI=mongodb://mongo/govuk_content_development
-# TODO: can ASSETS_PREFIX default to `/assets/publisher` within Publisher?
-ENV GOVUK_APP_NAME=publisher ASSETS_PREFIX=/assets/publisher
+ENV GOVUK_APP_NAME=publisher
 
+WORKDIR $APP_HOME
 COPY --from=builder /usr/bin/node* /usr/bin/
-COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
-COPY --from=builder /app /app/
+COPY --from=builder /usr/lib/node_modules/ /usr/lib/node_modules/
+COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
+COPY --from=builder $APP_HOME .
 
-WORKDIR /app
-CMD ["bundle", "exec", "puma"]
+USER app
+CMD ["puma"]
