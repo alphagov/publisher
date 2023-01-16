@@ -79,6 +79,8 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
+    bootsnap (1.15.0)
+      msgpack (~> 1.2)
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
       rails (>= 3.1)
@@ -293,6 +295,7 @@ GEM
     mongoid-sadstory (0.0.2)
       mongoid
     mousetrap-rails (1.4.6)
+    msgpack (1.6.0)
     multi_xml (0.6.0)
     net-imap (0.3.4)
       date
@@ -547,6 +550,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bootsnap
   bootstrap-kaminari-views
   capybara-select-2
   ci_reporter_minitest

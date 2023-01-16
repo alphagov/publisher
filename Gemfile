@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "7.0.4"
 
+gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
 gem "diffy"
 gem "erubis"
