@@ -569,7 +569,6 @@ DEPENDENCIES
   kaminari
   kaminari-mongoid
   launchy
-  mail (~> 2.7.1)
   mail-notify
   minitest-reporters
   mlanett-redis-lock
