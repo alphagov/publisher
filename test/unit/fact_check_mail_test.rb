@@ -22,14 +22,14 @@ class FactCheckMailTest < ActiveSupport::TestCase
     %w[Precedence bulk],
     %w[Precedence auto_reply],
     %w[Precedence junk],
-    ["Return-Path", nil],
+    ["Return-Path", ""],
     ["Subject", "Automatic reply: Out of Office"],
     %w[X-Precedence bulk],
     %w[X-Precedence auto_reply],
     %w[X-Precedence junk],
     %w[X-Autoreply yes],
-    ["X-Autorespond", nil],
-    ["X-Auto-Response-Suppress", nil],
+    ["X-Autorespond", ""],
+    ["X-Auto-Response-Suppress", ""],
   ].each do |key, value|
     should "return true when email is out of office with #{key} header set to #{value}" do
       assert email_with_header(key, value).out_of_office?
