@@ -46,7 +46,7 @@ class ActionDispatch::IntegrationTest
 
   def filter_by_user(option, from: "Assignee")
     within ".user-filter-form" do
-      select option, from: from
+      select(option, from:)
       click_on "Filter publications"
     end
   end
