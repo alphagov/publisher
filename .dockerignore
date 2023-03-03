@@ -12,7 +12,7 @@ docs
 features
 log
 node_modules
-script
+script/cucumber
 spec
 test
 tmp
