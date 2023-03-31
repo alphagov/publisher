@@ -434,7 +434,7 @@ class Edition
   def destroy_publishing_api_draft
     return unless can_destroy?
 
-    Services.publishing_api.discard_draft(content_id)
+    Services.publishing_api.discard_draft(content_id, locale: artefact.language)
   rescue GdsApi::HTTPNotFound
     nil
   rescue GdsApi::HTTPUnprocessableEntity
