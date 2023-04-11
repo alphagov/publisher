@@ -41,6 +41,7 @@ FactoryBot.define do
     kind            { Artefact::FORMATS.first }
     owning_app      { "publisher" }
     content_id      { SecureRandom.uuid }
+    language        { "en" }
 
     trait :with_published_edition do
       after(:create) do |object|

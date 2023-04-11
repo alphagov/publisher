@@ -20,7 +20,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
 
       click_on "Admin"
 
-      Services.publishing_api.expects(:discard_draft).with(artefact.content_id)
+      Services.publishing_api.expects(:discard_draft).with(artefact.content_id, locale: artefact.language)
 
       click_button "Delete this edition – #1"
 
@@ -39,7 +39,7 @@ class DeleteEditionTest < ActionDispatch::IntegrationTest
 
       click_on "Admin"
 
-      Services.publishing_api.expects(:discard_draft).with(artefact.content_id)
+      Services.publishing_api.expects(:discard_draft).with(artefact.content_id, locale: artefact.language)
 
       click_button "Delete this edition – #2"
 
