@@ -2,52 +2,25 @@ require "test_helper"
 
 class CsvReportGeneratorTest < ActiveSupport::TestCase
   setup do
-    @report_dir = File.join(Dir.tmpdir, "publisher-test-reports")
-    CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
+    @stubbed_s3_client = Aws::S3::Client.new(stub_responses: true)
+    Aws::S3::Client.stubs(:new).returns(@stubbed_s3_client)
+
     @generator = CsvReportGenerator.new
   end
 
-  teardown do
-    FileUtils.rm_rf(@report_dir)
-  end
-
-  test "#path makes a temp directory and returns the path" do
-    Timecop.freeze(Time.mktime(2015, 1)) do
-      Process.stubs(:pid).returns 1234
-      expected = File.join(Dir.tmpdir, "publisher_reports-20150101000000-1234")
-      assert_equal expected, @generator.path
-
-      # Check the call is memoized
-      FileUtils.expects(:mkdir_p).never
-      assert_equal expected, @generator.path
-
-      assert Dir.exist?(@generator.path)
-    end
-  end
-
-  test "all reports are able to create CSVs" do
-    @generator.reports.each do |report|
-      assert_respond_to(report, :write_csv)
-    end
-  end
-
-  test "#move_temporary_reports_into_place does what it says" do
-    FileUtils.mkdir_p(CsvReportGenerator.csv_path)
-
-    dest = File.join(CsvReportGenerator.csv_path, "example.csv")
-    File.open(dest, "w") do |f|
-      f.write("foo")
+  test "run! creates and uploads reports" do
+    ClimateControl.modify REPORTS_S3_BUCKET_NAME: "example" do
+      @generator.run!
     end
 
-    File.open(File.join(@generator.path, "example.csv"), "w") do |f|
-      f.write("bar")
-    end
+    assert_equal 5, @stubbed_s3_client.api_requests.size
+    assert(@stubbed_s3_client.api_requests.all? { |r| r[:operation_name] == :put_object })
+    assert(@stubbed_s3_client.api_requests.all? { |r| r[:params][:bucket] == "example" })
 
-    @generator.move_temporary_reports_into_place
-
-    assert_equal "bar",
-                 File.read(
-                   File.join(CsvReportGenerator.csv_path, "example.csv"),
-                 )
+    assert_equal "editorial_progress.csv", @stubbed_s3_client.api_requests[0][:params][:key]
+    assert_equal "edition_churn.csv", @stubbed_s3_client.api_requests[1][:params][:key]
+    assert_equal "organisation_content.csv", @stubbed_s3_client.api_requests[2][:params][:key]
+    assert_equal "content_workflow.csv", @stubbed_s3_client.api_requests[3][:params][:key]
+    assert_equal "all_urls.csv", @stubbed_s3_client.api_requests[4][:params][:key]
   end
 end
