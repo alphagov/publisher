@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "4de24c49b5d87e19ef510a17b4952468eaac4f2bfdcf3d5a67507cf694c25c93",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"all_urls\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsController",
+        "method": "all_urls"
+      },
+      "user_input": "Report.new(\"all_urls\").url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "73de97a88f3e6fef8a35ced89420323264c5014cde36875b2795a1ac9cf85015",
@@ -35,6 +58,52 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "814bc0a997725602aa2913dd902c8d77c28de9044d4562f60a898ad250d04b5a",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/csv_report_generator.rb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Redis.new.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CsvReportGenerator",
+        "method": "run!"
+      },
+      "user_input": "Rails.env",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "We don't pass any user data to this string."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8a68da1b1484168c425d8ececc95a8768e24993e9eff56e549f233f877ed5628",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"edition_churn\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsController",
+        "method": "edition_churn"
+      },
+      "user_input": "Report.new(\"edition_churn\").url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
+    },
+    {
       "warning_type": "Remote Code Execution",
       "warning_code": 110,
       "fingerprint": "9ae68e59cfee3e5256c0540dadfeb74e6b72c91997fdb60411063a6e8518144a",
@@ -53,6 +122,29 @@
         502
       ],
       "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "a4a63bc63305104b5cd40a8d6bd5dd10386b184d04e93294d63f4795f30a7bee",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"content_workflow\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsController",
+        "method": "content_workflow"
+      },
+      "user_input": "Report.new(\"content_workflow\").url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
     },
     {
       "warning_type": "Dangerous Send",
@@ -86,29 +178,55 @@
       "cwe_id": [
         77
       ],
-      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+      "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "814bc0a997725602aa2913dd902c8d77c28de9044d4562f60a898ad250d04b5a",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "lib/csv_report_generator.rb",
-      "line": 11,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Redis.new.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "ae27d181beea686b653e71c89ed40293d9b4c7a8866de6894d3f3555d6a12760",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"organisation_content\").url, :allow_other_host => true)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "CsvReportGenerator",
-        "method": "run!"
+        "class": "ReportsController",
+        "method": "organisation_content"
       },
-      "user_input": "Rails.env",
-      "confidence": "Weak",
-      "note": "We don't pass any user data to this string."
+      "user_input": "Report.new(\"organisation_content\").url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "b5e56ced685a7fcccc47f90ea76587a75d2ad12f9330058d2ff52d18d7d3d6b6",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"editorial_progress\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsController",
+        "method": "progress"
+      },
+      "user_input": "Report.new(\"editorial_progress\").url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
     }
   ],
-  "updated": "2022-10-06 12:04:32 +0100",
+  "updated": "2023-04-18 09:48:30 +0100",
   "brakeman_version": "5.3.1"
 }
