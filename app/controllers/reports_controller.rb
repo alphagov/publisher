@@ -1,5 +1,3 @@
-require "csv_report_generator"
-
 class ReportsController < ApplicationController
   include ActionView::Helpers::TagHelper
 
@@ -8,55 +6,34 @@ class ReportsController < ApplicationController
   def index; end
 
   def progress
-    send_report "editorial_progress"
+    redirect_to Report.new("editorial_progress").url, allow_other_host: true
   end
 
   def organisation_content
-    send_report "organisation_content"
+    redirect_to Report.new("organisation_content").url, allow_other_host: true
   end
 
   def edition_churn
-    send_report "edition_churn"
+    redirect_to Report.new("edition_churn").url, allow_other_host: true
   end
 
   def content_workflow
-    send_report "content_workflow"
+    redirect_to Report.new("content_workflow").url, allow_other_host: true
   end
 
   def all_urls
-    send_report "all_urls"
+    redirect_to Report.new("all_urls").url, allow_other_host: true
   end
 
 private
 
-  def report_last_updated(report)
-    mtime = mtime_for(report)
-    if mtime
-      tag.span "Generated #{mtime.to_fs(:govuk_date)}", class: "text-muted"
+  def report_last_updated(report_name)
+    last_updated = ::Report.new(report_name).last_updated
+    if last_updated
+      tag.span "Generated #{last_updated.to_fs(:govuk_date)}", class: "text-muted"
     else
       tag.span "Report currently unavailable", class: "text-muted"
     end
   end
   helper_method :report_last_updated
-
-  def mtime_for(report)
-    File.stat(report_location(report)).mtime.in_time_zone(Time.zone)
-  rescue Errno::ENOENT
-    nil
-  end
-
-  def report_location(report)
-    File.join(CsvReportGenerator.csv_path, "#{report}.csv")
-  end
-
-  def send_report(report)
-    if File.exist?(report_location(report))
-      send_file report_location(report),
-                filename: "#{report}-#{mtime_for(report).strftime('%Y%m%d%H%M%S')}.csv",
-                type: "text/csv",
-                disposition: "attachment"
-    else
-      head(:not_found)
-    end
-  end
 end

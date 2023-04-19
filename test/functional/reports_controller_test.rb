@@ -3,37 +3,31 @@ require "test_helper"
 class ReportsControllerTest < ActionController::TestCase
   setup do
     login_as_stub_user
-    @report_dir = File.join(Dir.tmpdir, "publisher-test-reports")
-    CsvReportGenerator.stubs(:csv_path).returns(@report_dir)
-    path = File.join(@report_dir, "editorial_progress.csv")
 
-    FileUtils.mkdir_p(@report_dir)
-    File.open(path, "w") { |f| f.write("foo,bar") }
-    FileUtils.touch(path, mtime: Time.mktime(2015, 6, 1))
+    last_modified = Time.zone.local(2023, 12, 12, 1, 1, 1)
+
+    Aws.config[:s3] = {
+      stub_responses: {
+        head_object: { last_modified: },
+      },
+    }
+
+    ENV["REPORTS_S3_BUCKET_NAME"] = "example"
   end
 
   teardown do
-    FileUtils.rm_rf(@report_dir)
+    ENV["REPORTS_S3_BUCKET_NAME"] = nil
   end
 
-  test "it sends the file with the correct name" do
+  test "it redirects the user to S3" do
     get :progress
 
-    assert_equal "foo,bar", response.body
-    assert_equal 'attachment; filename="editorial_progress-20150601010000.csv"; filename*=UTF-8\'\'editorial_progress-20150601010000.csv',
-                 response.header["Content-Disposition"]
-    assert_equal "text/csv", response.header["Content-Type"]
+    assert_equal 302, response.status
   end
 
-  test "returns 404 if the report is not available" do
-    get :organisation_content
-
-    assert_equal 404, response.status
-  end
-
-  test "shows the mtime on the index page" do
+  test "shows the last updated time on the index page" do
     get :index
 
-    assert_match(/Generated 1:00am, 1 June 2015/, response.body)
+    assert_match(/Generated 1:01am, 12 December 2023/, response.body)
   end
 end

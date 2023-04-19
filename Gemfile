@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "rails", "7.0.4.3"
 
+gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
 gem "diffy"
@@ -43,6 +44,7 @@ gem "whenever", require: false
 group :test do
   gem "capybara-select-2"
   gem "ci_reporter_minitest"
+  gem "climate_control"
   gem "database_cleaner-mongoid"
   gem "factory_bot_rails"
   gem "govuk_schemas"
