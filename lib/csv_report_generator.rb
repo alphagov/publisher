@@ -3,7 +3,7 @@ require "redis-lock"
 
 class CsvReportGenerator
   def run!
-    Redis.new.lock("publisher:#{Rails.env}:report_generation_lock", life: 15.minutes) do
+    Redis.new.lock("publisher:#{Rails.env}:report_generation_lock", life: 900) do
       presenters.each do |presenter|
         report = Report.new(presenter.report_name)
 
