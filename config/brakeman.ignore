@@ -24,6 +24,29 @@
       "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "56a132f8b3538ac32e889d8c251c856723b1a5ef7ca6fa0dcc3c684a6ae317a4",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/csv_report_generator.rb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Redis.new.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 900)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CsvReportGenerator",
+        "method": "run!"
+      },
+      "user_input": "Rails.env",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "73de97a88f3e6fef8a35ced89420323264c5014cde36875b2795a1ac9cf85015",
@@ -56,29 +79,6 @@
         22
       ],
       "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "814bc0a997725602aa2913dd902c8d77c28de9044d4562f60a898ad250d04b5a",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "lib/csv_report_generator.rb",
-      "line": 6,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Redis.new.lock(\"publisher:#{Rails.env}:report_generation_lock\", :life => 15.minutes)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CsvReportGenerator",
-        "method": "run!"
-      },
-      "user_input": "Rails.env",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "We don't pass any user data to this string."
     },
     {
       "warning_type": "Redirect",
@@ -227,6 +227,6 @@
       "note": "This is a redirect to AWS S3 for file download, unlikely to be dangerous."
     }
   ],
-  "updated": "2023-04-18 09:48:30 +0100",
-  "brakeman_version": "5.3.1"
+  "updated": "2023-04-20 10:50:54 +0100",
+  "brakeman_version": "5.4.0"
 }
