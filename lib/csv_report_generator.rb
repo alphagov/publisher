@@ -3,14 +3,12 @@ require "redis-lock"
 
 class CsvReportGenerator
   def run!
-    Redis.new.lock("publisher:#{Rails.env}:report_generation_lock", life: 900) do
-      Redis.new.lock("publisher:report_generation_lock", life: 900) do
-        presenters.each do |presenter|
-          report = Report.new(presenter.report_name)
+    Redis.new.lock("publisher:report_generation_lock", life: 900) do
+      presenters.each do |presenter|
+        report = Report.new(presenter.report_name)
 
-          Rails.logger.debug "Uploading #{report.filename} to S3"
-          report.upload_to_s3(presenter.to_csv)
-        end
+        Rails.logger.debug "Uploading #{report.filename} to S3"
+        report.upload_to_s3(presenter.to_csv)
       end
     end
   rescue Redis::Lock::LockNotAcquired => e
