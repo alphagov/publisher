@@ -40,7 +40,7 @@ begin
   Redis.new.lock("publisher:#{Rails.env}:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |lock|
     Redis.new.lock("publisher:fact_check_processing_lock", life: AUTOMATIC_LOCK_EXPIRY) do |inner_lock|
       handler.process do
-        inner_lock.exception(AUTOMATIC_LOCK_EXPIRY)
+        inner_lock.extend_life(AUTOMATIC_LOCK_EXPIRY)
         lock.extend_life(AUTOMATIC_LOCK_EXPIRY)
       end
     end
