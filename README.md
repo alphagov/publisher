@@ -7,7 +7,6 @@ Publisher is sometimes referred to as "mainstream publisher".
 - [Completed transaction](https://www.gov.uk/done/make-lpa)
 - [Guide](https://www.gov.uk/council-tax-appeals)
 - [Help page](https://www.gov.uk/help/accessibility)
-- [Licence](https://www.gov.uk/day-nurseries-wales)
 - [Local transactions](https://www.gov.uk/complain-about-your-council)
 - [Place](https://www.gov.uk/ukonline-centre-internet-access-computer-training)
 - [Service sign in](https://www.gov.uk/log-in-file-self-assessment-tax-return/sign-in)
@@ -18,6 +17,7 @@ Publisher is sometimes referred to as "mainstream publisher".
 - Campaign
 - Programme
 - Video
+- Licence (Migrated to Specialist Licence Finder)
 
 ## Removed formats
 - Business Support - used to be retired, and the documents remained visible, now
