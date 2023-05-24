@@ -1,5 +1,6 @@
 require "test_helper"
 require "edition_progressor"
+require "sidekiq/api"
 
 class EditionProgressorTest < ActiveSupport::TestCase
   setup do

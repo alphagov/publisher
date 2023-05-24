@@ -1,3 +1,5 @@
+require "sidekiq/api"
+
 class ScheduledPublisher
   include Sidekiq::Worker
 
