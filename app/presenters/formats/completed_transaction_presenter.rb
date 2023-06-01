@@ -16,6 +16,10 @@ module Formats
       optional_details.merge(required_details)
     end
 
+    def rendering_app
+      "feedback"
+    end
+
     def required_details
       { external_related_links: }
     end

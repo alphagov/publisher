@@ -86,6 +86,10 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
 
       assert_equal expected, result[:details][:external_related_links]
     end
+
+    should "[:rendering_app]" do
+      assert_equal "feedback", result[:rendering_app]
+    end
   end
 
   should "[:routes]" do
