@@ -18,15 +18,22 @@
             <%= link.label :url, "URL" %>
             <%= link.text_field :url, class: 'form-control' %>
           </div>
-          <%= link.link_to_remove "Remove this URL", class: "remove-row remove-row-related" %>
+          <% unless @resource.retired_format? %>
+            <%= link.link_to_remove "Remove this URL", class: "remove-row remove-row-related" %>
+          <% end %>
         </div>
       </div>
     <% end %>
 
-    <%= f.link_to_add "Add related external link", :external_links, :class => "btn btn-primary" %>
+
+    <% unless @resource.retired_format? %>
+      <%= f.link_to_add "Add related external link", :external_links, :class => "btn btn-primary" %>
+    <% end %>
   </div>
 
-  <br/>
+    <% unless @resource.retired_format? %>
+      <br/>
 
-  <%= f.submit 'Save links', class: "btn btn-success btn-large" %>
+      <%= f.submit 'Save links', class: "btn btn-success btn-large" %>
+    <% end %>
 <% end %>

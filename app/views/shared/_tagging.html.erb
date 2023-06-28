@@ -127,6 +127,9 @@
       </div>
     </div>
 
-    <hr/>
-    <%= f.submit 'Update tags', class: "btn btn-success btn-large" %>
+    <% unless @resource.retired_format? %>
+      <hr/>
+
+      <%= f.submit 'Update tags', class: "btn btn-success btn-large" %>
+    <% end %>
 <% end %>
