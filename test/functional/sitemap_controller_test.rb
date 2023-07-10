@@ -21,7 +21,7 @@ class SitemapControllerTest < ActionController::TestCase
 
       assert_response :success
 
-      assert_select "url > loc", "http://www.dev.gov.uk/test-path", count: 1
+      assert_select "url > loc", { text: "http://www.dev.gov.uk/test-path", count: 1 }
     end
   end
 
