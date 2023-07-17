@@ -49,16 +49,6 @@ class LicenceEditionTest < ActiveSupport::TestCase
       end
     end
 
-    should "not require a unique licence identifier for different versions of the same licence edition" do
-      @l.state = "published"
-      @l.licence_identifier = "wibble"
-      @l.save!
-
-      new_version = @l.build_clone
-      assert_equal "wibble", new_version.licence_identifier
-      assert new_version.valid?, "Expected clone to be valid"
-    end
-
     should "not validate the continuation link when blank" do
       @l.continuation_link = ""
       assert @l.valid?, "continuation link validation should not be triggered when the field is blank"
@@ -71,26 +61,6 @@ class LicenceEditionTest < ActiveSupport::TestCase
       @l.continuation_link = "http://www.hmrc.gov.uk"
       assert @l.valid?, "continuation_link validation should pass with a valid url"
     end
-  end
-
-  should "clone extra fields when cloning edition" do
-    licence = FactoryBot.create(
-      :licence_edition,
-      panopticon_id: @artefact.id,
-      state: "published",
-      licence_identifier: "1234",
-      licence_short_description: "Short description of licence",
-      licence_overview: "Overview to be cloned",
-      will_continue_on: "Continuation text to be cloned",
-      continuation_link: "http://www.gov.uk",
-    )
-    new_licence = licence.build_clone
-
-    assert_equal licence.licence_identifier, new_licence.licence_identifier
-    assert_equal licence.licence_short_description, new_licence.licence_short_description
-    assert_equal licence.licence_overview, new_licence.licence_overview
-    assert_equal licence.will_continue_on, new_licence.will_continue_on
-    assert_equal licence.continuation_link, new_licence.continuation_link
   end
 
   context "indexable_content" do

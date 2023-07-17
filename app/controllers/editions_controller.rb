@@ -249,14 +249,6 @@ protected
         :hide_chapter_navigation,
         { parts_attributes: %i[title body slug order id _destroy] },
       ]
-    when :licence_edition
-      %i[
-        licence_identifier
-        will_continue_on
-        continuation_link
-        licence_short_description
-        licence_overview
-      ]
     when :local_transaction_edition
       [
         :lgsl_code,

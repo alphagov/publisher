@@ -66,7 +66,7 @@ class Artefact
     "replaced" => %w[business_support],
   }.freeze
 
-  RETIRED_FORMATS = %w[campaign programme video].freeze
+  RETIRED_FORMATS = %w[campaign programme video licence].freeze
 
   FORMATS = FORMATS_BY_DEFAULT_OWNING_APP.values.flatten
 
