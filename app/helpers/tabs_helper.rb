@@ -25,9 +25,8 @@ module TabsHelper
   def tabs_for(user, resource)
     tabs_to_remove = []
     tabs_to_remove << "admin" unless user.has_editor_permissions?(resource)
-    tabs_to_remove << "admin" if resource.retired_format?
     tabs_to_remove << "unpublish" unless user.govuk_editor?
 
-    tabs.reject { |tab| tabs_to_remove.uniq.include?(tab.name) }
+    tabs.reject { |tab| tabs_to_remove.include?(tab.name) }
   end
 end

@@ -58,11 +58,5 @@ class TabsHelperTest < ActionView::TestCase
       user = FactoryBot.create(:user, :welsh_editor)
       assert_equal %w[admin unpublish], (tabs - tabs_for(user, guide)).map(&:name)
     end
-
-    should "exclude `admin` tab if document retired" do
-      retired_document = FactoryBot.create(:campaign_edition)
-      user = FactoryBot.create(:user, :govuk_editor)
-      assert_equal %w[admin], (tabs - tabs_for(user, retired_document)).map(&:name)
-    end
   end
 end
