@@ -17,10 +17,14 @@ PATHS_NOT_TO_MIGRATE = [
   "pet-shop-licence-wales-scotland",
 ].freeze
 
+PATH_NOT_TO_UNPUBLISH = "busking-licence".freeze
+
 namespace :once_off do
   desc "Archives and unpublishes licences after they've been migrated to Specialist Publisher"
   task unpublish_licences: :environment do
     LicenceEdition.where(state: "published").each do |licence_edition|
+      next if licence_edition.slug == PATH_NOT_TO_UNPUBLISH
+
       if licence_edition.exact_route?
         puts("WARNING: #{licence_edition.slug} skipped as it unexpectedly has an exact route")
         next
