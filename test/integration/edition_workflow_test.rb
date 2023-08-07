@@ -252,7 +252,7 @@ class EditionWorkflowTest < JavascriptIntegrationTest
 
   test "sending a fact check email to a non-permitted address will return an error" do
     raises_exception = lambda { |_request, _params|
-      response = MiniTest::Mock.new
+      response = Minitest::Mock.new
       response.expect :code, 400
       response.expect :body, "Can't send to this recipient using a team-only API key"
       raise Notifications::Client::BadRequestError, response
