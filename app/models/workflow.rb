@@ -31,7 +31,7 @@ module Workflow
         edition.reviewer = nil
       end
 
-      after_transition on: :publish do |edition, _transition|
+      before_transition on: :publish do |edition, _transition|
         edition.was_published
       end
 
