@@ -18,7 +18,7 @@
 }
 
 .joining-on {
-  @media screen and (min-width: 600px) {
+  @media screen and (min-width: 600px) { // stylelint-disable-line max-nesting-depth, media-feature-range-notation
     margin-top: 40px;
   }
 }

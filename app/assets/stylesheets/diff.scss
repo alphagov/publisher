@@ -53,8 +53,8 @@ $strong-removed-color: #ffaaaa;
       }
     }
 
-    li.del:before,
-    li.ins:before {
+    li.del::before,
+    li.ins::before {
       position: absolute;
       font-weight: bold;
       margin-left: -55px;
@@ -65,13 +65,13 @@ $strong-removed-color: #ffaaaa;
       bottom: 0;
     }
 
-    li.del:before {
+    li.del::before {
       color: $state-danger-text;
       background-color: $removed-color;
       content: "-";
     }
 
-    li.ins:before {
+    li.ins::before {
       color: $state-success-text;
       background-color: $added-color;
       content: "+";
