@@ -530,7 +530,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     should "not be in published state if the transition fails" do
       edition = FactoryBot.create(:edition, state: "ready")
-      raise_exception = -> { raise ArgumentError.new }
+      raise_exception = -> { raise "something went wrong with the publish transition" }
       edition.stub :was_published, raise_exception do
         assert_raises(ArgumentError) { publish(@user, edition, "this should fail") }
       end
