@@ -332,15 +332,12 @@ protected
   def update_assignment(edition, assignee)
     return if edition.assigned_to == assignee
 
-    unless assignee.has_editor_permissions?(resource)
-      flash[:danger] = "Chosen assignee does not have correct editor permissions."
-      return
-    end
-
-    if assignee
+    if !assignee
+      current_user.unassign(edition)
+    elsif assignee.has_editor_permissions?(resource)
       current_user.assign(edition, assignee)
     else
-      current_user.unassign(edition)
+      flash[:danger] = "Chosen assignee does not have correct editor permissions."
     end
   end
 

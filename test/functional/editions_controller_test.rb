@@ -314,6 +314,17 @@ class EditionsControllerTest < ActionController::TestCase
       assert_equal bob, @guide.assigned_to
     end
 
+    should "clear assignment if no assignment is passed" do
+      post :update,
+           params: {
+             id: @guide.id,
+             edition: {},
+           }
+
+      @guide.reload
+      assert_nil @guide.assigned_to
+    end
+
     should "not create a new action if the assignment is unchanged" do
       bob = FactoryBot.create(:user, :govuk_editor)
       @user.assign(@guide, bob)
