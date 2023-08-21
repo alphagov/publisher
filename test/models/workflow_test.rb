@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/autorun"
 
 class WorkflowTest < ActiveSupport::TestCase
   def setup
@@ -519,6 +520,21 @@ class WorkflowTest < ActiveSupport::TestCase
         schedule_for_publishing(@user, edition, @activity_details)
       end
       assert_equal "schedule_for_publishing", edition.actions.last.request_type
+    end
+  end
+
+  context "#publish" do
+    setup do
+      @user = FactoryBot.create(:user, :govuk_editor)
+    end
+
+    should "not be in published state if the transition fails" do
+      edition = FactoryBot.create(:edition, state: "ready")
+      raise_exception = -> { raise ArgumentError.new }
+      edition.stub :was_published, raise_exception do
+        assert_raises(ArgumentError) { publish(@user, edition, "this should fail") }
+      end
+      assert_equal "ready", edition.state
     end
   end
 end
