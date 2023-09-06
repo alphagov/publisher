@@ -12,12 +12,20 @@
   <%= report_last_updated("edition_churn")%>
 </p>
 <p>
+  <strong><%= link_to 'Churn in all editions', edition_churn_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("all_edition_churn")%>
+</p>
+<p>
   <strong><%= link_to 'Progress on all non-archived editions', progress_report_path(format: :csv) %></strong><br />
   <%= report_last_updated("editorial_progress")%>
 </p>
 <p>
-  <strong><%= link_to 'Content summary and workflow history', content_workflow_report_path(format: :csv) %></strong><br />
+  <strong><%= link_to 'Content summary and workflow history for all published editions', content_workflow_report_path(format: :csv) %></strong><br />
   <%= report_last_updated("content_workflow")%>
+</p>
+<p>
+  <strong><%= link_to 'Content summary and workflow history for all editions', content_workflow_report_path(format: :csv) %></strong><br />
+  <%= report_last_updated("all_content_workflow")%>
 </p>
 <p>
   <strong><%= link_to 'All URLs', all_urls_report_path(format: :csv) %></strong><br />

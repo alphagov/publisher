@@ -48,7 +48,9 @@ Rails.application.routes.draw do
   get "reports/progress" => "reports#progress", as: :progress_report
   get "reports/organisation-content" => "reports#organisation_content", :as => :organisation_content_report
   get "reports/edition-churn" => "reports#edition_churn", as: "edition_churn_report"
+  get "reports/all-edition-churn" => "reports#all_edition_churn", as: "all_edition_churn_report"
   get "reports/content_workflow" => "reports#content_workflow", as: "content_workflow_report"
+  get "reports/all-content_workflow" => "reports#all_content_workflow", as: "all_content_workflow_report"
   get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
 
   get "user_search" => "user_search#index"
