@@ -27,7 +27,7 @@ class CsvReportGenerator
 
       AllEditionChurnPresenter.new(
         Edition.all.order(created_at: 1),
-        ),
+      ),
 
       OrganisationContentPresenter.new(
         Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
