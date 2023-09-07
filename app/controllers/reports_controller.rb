@@ -20,7 +20,7 @@ class ReportsController < ApplicationController
   def all_edition_churn
     redirect_to Report.new("all_edition_churn").url, allow_other_host: true
   end
-  
+
   def content_workflow
     redirect_to Report.new("content_workflow").url, allow_other_host: true
   end
