@@ -153,7 +153,7 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
-    gds-api-adapters (90.0.0)
+    gds-api-adapters (91.0.0)
       addressable
       link_header
       null_logger
@@ -296,7 +296,7 @@ GEM
     marcel (1.0.2)
     matrix (0.4.2)
     method_source (1.0.0)
-    mime-types (3.5.0)
+    mime-types (3.5.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2023.0808)
     mini_mime (1.1.5)
