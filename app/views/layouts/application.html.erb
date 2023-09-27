@@ -50,7 +50,7 @@
   </div>
 <% end %>
 
-<% content_for :footer_version, CURRENT_RELEASE_SHA %>
+<% content_for :footer_version, ENV.fetch("SENTRY_RELEASE", "null")[0..18] %>
 
 <% content_for :body_end do %>
   <%= javascript_include_tag "application" %>
