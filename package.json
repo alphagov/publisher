@@ -46,7 +46,7 @@
     "stylelint-config-gds": "^1.0.0"
   },
   "dependencies": {
-    "paste-html-to-govspeak": "^0.3.0"
+    "paste-html-to-govspeak": "^0.4.0"
   },
   "resolutions": {
     "stylelint/strip-ansi": "6.0.1",
