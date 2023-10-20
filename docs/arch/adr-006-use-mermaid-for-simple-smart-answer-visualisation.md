@@ -4,9 +4,19 @@
 Proposed
 
 ## Context
-Following user research it was identified that Content Designers (CDs) were struggling to understand the flow of a smart answer, communicate this with colleagues and confidently edit it. 
+Following user research it was identified that Content Designers (CDs) were struggling to understand the flow of a smart answer, communicate this with colleagues and confidently edit it. They typically use third party tools to visualise smart answers that have complex flows. According to the user research, CDs would prefer to do this within Mainstream Publisher. 
 
-To arrive at our proposed solution, we evaluated the following options:
+A list of potential features were derived from the user research:
+
+* Diagram that shows the full flow of questions, answers and outcomes.
+* Illustrate the path from each answer to the next node (question/outcome)
+* Flow lines and node boxes are in a sensible order to not create additional cognitive load
+* Questions, answers and outcome boxes look different e.g. different shape/colours
+* Interactive e.g. user can select a question/outcome and the flow to/from it, is highlighted
+
+We carried out a spike to identify viable diagramming tools that meet the above requirements. The potential need for the diagram to be interactive limited our scope to Javascript based diagramming tools, which will allow us to modify the diagrams dynamically.
+
+We evaluated the following options:
 
 | Option                                     | Decision |                                                  Reason                                                   |
 |:-------------------------------------------|:--------:|:---------------------------------------------------------------------------------------------------------:|
@@ -24,11 +34,11 @@ Having performed a high level review of a variety of visualisation libraries, we
 
 It has the right balance of simplicity and functionality that we require. It is also possible to customise the presentation of the visualisations.
 
-We tested implementation of mermaid.js in a standalone project using the api, and were able to render the diagram within an html page. We also ran the webpack demo which demonstrates the use of mermaid.js as a dependency.
+We tested implementation of mermaid.js in a standalone project using the api, and were able to render the diagram within a html page. We also ran the webpack demo which demonstrates the use of mermaid.js as a dependency.
 
 We foresee a few limitations;
-* the auto-positioning of the nodes is something we do not have control of.
-* we do not have the ability to control the shape of connecting lines.
+* The auto-positioning of the nodes (question/outcome boxes) is something we do not have control of i.e Mermaid rearranges their position depending on how the flowchart evolves
+* Connecting lines do not always render in a visually appropriate way i.e sometimes they sit behind boxes or can overlap with other lines.
 
 ## Consequences
 To be able to integrate mermaid.js into Publisher, we will need to build a data translation service, that takes the flow as described in the data model, and converts this into the mermaid.js syntax.
