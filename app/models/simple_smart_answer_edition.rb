@@ -19,7 +19,7 @@ class SimpleSmartAnswerEdition < Edition
   def whole_body
     parts = [body]
     unless nodes.nil?
-      parts += nodes.map { |node| "#{node.kind}: #{node.title} \n\n #{node.body}" }
+      parts += nodes.map { |node| "#{node.kind.capitalize} #{node.slug.split('-')[1]}\n#{node.title} \n\n #{node.body}" }
     end
     parts.join("\n\n\n")
   end

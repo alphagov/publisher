@@ -53,12 +53,12 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
     )
-    edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
+    edition.nodes.build(slug: "question-1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
     edition.save!
 
     new_edition = edition.build_clone(AnswerEdition)
 
-    assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nquestion: You approach two open doors. Which do you choose? \n\n ", new_edition.body
+    assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nQuestion 1\nYou approach two open doors. Which do you choose? \n\n ", new_edition.body
 
     assert new_edition.is_a?(AnswerEdition)
     assert_not new_edition.respond_to?(:nodes)
