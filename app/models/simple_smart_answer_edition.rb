@@ -17,9 +17,15 @@ class SimpleSmartAnswerEdition < Edition
   GOVSPEAK_FIELDS = [:body].freeze
 
   def whole_body
-    parts = [body]
+    parts = body == "" ? [] : [body]
     unless nodes.nil?
-      parts += nodes.map { |node| "#{node.kind.capitalize} #{node.slug.split('-')[1]}\n#{node.title} \n\n #{node.body}" }
+      nodes.each do |node|
+        parts << if node.kind == "question"
+                   question(node)
+                 elsif node.kind == "outcome"
+                   outcome(node)
+                 end
+      end
     end
     parts.join("\n\n\n")
   end
@@ -72,5 +78,25 @@ class SimpleSmartAnswerEdition < Edition
 
   def destroy_in_attrs?(attrs)
     attrs.delete("_destroy") == "1"
+  end
+
+private
+
+  def question(node)
+    part = ["#{node.slug.titleize}\n#{node.title}\n"]
+    part << node.body.to_s unless node.body == ""
+    part << ""
+    node.options.each.with_index(1) do |option, index|
+      part << "Answer #{index}\n#{option.label}"
+      title = (nodes.select { |single_node| single_node["slug"] == option.next_node })[0].title.to_s
+      next_node_title, next_node_number = option.next_node.split("-")
+      part << "Next question for user: #{next_node_title.capitalize} #{next_node_number} (#{title})\n"
+    end
+    part.join("\n")
+  end
+
+  def outcome(node)
+    body = node.body == "" ? "" : "\n#{node.body}"
+    "#{node.slug.titleize}\n#{node.title}#{body}"
   end
 end
