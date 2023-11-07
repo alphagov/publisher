@@ -87,7 +87,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
     should "add a question before outcomes when no other questions" do
       within ".nodes .question:nth-child(1)" do
-        click_link "Remove node"
+        find('.remove-node-label').click
       end
 
       click_link("Add outcome")
@@ -107,7 +107,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
 
       within ".nodes .question:nth-child(1)" do
-        click_link "Remove node"
+        find('.remove-node-label').click
       end
 
       click_link("Add question")
@@ -132,7 +132,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
     should "set the order for an outcome" do
       within ".nodes .question:nth-child(1)" do
-        click_link "Remove node"
+        find('.remove-node-label').click
       end
 
       click_link("Add outcome")
@@ -201,7 +201,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       click_link("Add question")
 
       within ".nodes .question:nth-child(2)" do
-        click_link("Add an option")
+        click_link("Add answer")
 
         assert page.has_selector?(".options")
         assert page.has_css?(".options .option", count: 2)
@@ -312,7 +312,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Question 2 (When did you get your licence?)", from: "next-node-list"
         end
 
-        click_link("Add an option")
+        click_link("Add answer")
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("Provisional licence")
@@ -327,7 +327,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Outcome 2 (You can drive all the things.)", from: "next-node-list"
         end
 
-        click_link("Add an option")
+        click_link("Add answer")
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("A long time ago")
@@ -374,7 +374,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
           select "Select a node..", from: "next-node-list"
         end
 
-        click_link("Add an option")
+        click_link("Add answer")
 
         within ".option:nth-child(2)" do
           find(:css, "input.option-label").set("No")
@@ -493,12 +493,12 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       visit_edition @edition
 
       within ".nodes .node:first-child .option:nth-child(2)" do
-        click_link "Remove option"
+        click_link "Remove answer"
         assert_equal "1", page.find(:css, "#edition_nodes_attributes_0_options_attributes_1__destroy", visible: false).value
       end
 
       within ".nodes .outcome:nth-child(3)" do
-        click_link("Remove node")
+        click_link("Remove outcome")
         assert_equal "1", page.find(:css, "#edition_nodes_attributes_2__destroy", visible: false).value
       end
       assert page.has_no_content?("Outcome 2")
@@ -517,7 +517,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       visit_edition @edition
 
       within ".nodes .outcome:nth-child(3)" do
-        click_link "Remove node"
+        click_link "Remove outcome"
       end
 
       within ".nodes .node:first-child .option:nth-child(2)" do
