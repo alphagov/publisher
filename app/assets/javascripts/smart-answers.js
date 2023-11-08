@@ -54,8 +54,7 @@
 
       node.find('.node-label').text(nodeLabel(kind, index))
       node.addClass(kind).attr('id', nodeId(kind, index))
-
-      node.find('.remove-node-label').text('Remove ' + kind)
+      node.find('.remove-node-button').text('Remove ' + kind)
 
       var body = node.find('.node-body')
       addPasteHtmlToGovspeak(body)
