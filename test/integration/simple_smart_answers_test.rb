@@ -87,7 +87,7 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
 
     should "add a question before outcomes when no other questions" do
       within ".nodes .question:nth-child(1)" do
-        find(".remove-node-label").click
+        click_link(class: "remove-node")
       end
 
       click_link("Add outcome")
