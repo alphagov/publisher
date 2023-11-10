@@ -53,12 +53,12 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
       body: "This smart answer is somewhat unique and calls for a different kind of introduction",
       state: "published",
     )
-    edition.nodes.build(slug: "question-1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
+    edition.nodes.build(slug: "question-1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1, body: "")
     edition.save!
 
     new_edition = edition.build_clone(AnswerEdition)
 
-    assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nQuestion 1\nYou approach two open doors. Which do you choose? \n\n ", new_edition.body
+    assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nQuestion 1\nYou approach two open doors. Which do you choose?\n\n", new_edition.body
 
     assert new_edition.is_a?(AnswerEdition)
     assert_not new_edition.respond_to?(:nodes)
@@ -72,6 +72,27 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     edition.nodes.build(slug: "bar", title: "Outcome 2", order: 4, kind: "outcome")
 
     assert_equal "question1", edition.initial_node.slug
+  end
+
+  should "format the questions and outcomes correctly for the history" do
+    edition = FactoryBot.create(:simple_smart_answer_edition)
+    edition.nodes.build(slug: "question-1",
+                        title: "The first question",
+                        kind: "question",
+                        body: "Body",
+                        order: 1,
+                        options: [
+                          {
+                            label: "option one",
+                            next_node: "outcome-1",
+                          },
+                          { label: "option two",
+                            next_node: "outcome-2" },
+                        ])
+    edition.nodes.build(slug: "outcome-1", title: "The first outcome", order: 3, kind: "outcome", body: "Outcome body")
+    edition.nodes.build(slug: "outcome-2", title: "The second outcome", order: 4, kind: "outcome")
+
+    assert_equal "Introduction to the smart answer\n\n\nQuestion 1\nThe first question\n\nBody\n\nAnswer 1\noption one\nNext question for user: Outcome 1 (The first outcome)\n\nAnswer 2\noption two\nNext question for user: Outcome 2 (The second outcome)\n\n\n\nOutcome 1\nThe first outcome\nOutcome body\n\n\nOutcome 2\nThe second outcome\n", edition.whole_body
   end
 
   should "create nodes with nested attributes" do
