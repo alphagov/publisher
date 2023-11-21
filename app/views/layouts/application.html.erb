@@ -9,6 +9,7 @@
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
 <% end %>
+<% render "layouts/google_tag_manager" %>
 
 <% content_for :body_start do %>
   <%= render "govuk_publishing_components/components/skip_link" %>
