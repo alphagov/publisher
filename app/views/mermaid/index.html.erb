@@ -1,0 +1,114 @@
+<h1> Driving in Great Britain on a non-GB licence</h1>
+<pre class="mermaid">
+            flowchart TD
+            accTitle: Flowchart for Driving in Great Britain on a non-GB licence
+            AA["`Start`"]:::start
+            A["`Q1 Are you:`"]:::question
+            B["`Q2 What kind of driving licence do you have?`"]:::question
+            C["`Q3 Where did you pass your test?`"]:::question
+            D["`Q4 Where did you pass your test?`"]:::question
+            E["`Q5 Where did you pass your test?`"]:::question
+            F["`Q6 Where are you from?`"]:::question
+            G{{"`O1: You can drive in Great Britain on your full, valid driving licence until it expires`"}}:::outcome
+            H{{"`O2: You can drive in Great Britain on your full, valid driving licence`"}}:::outcome
+            I{{"`O3: You can drive in Great Britain on your full, valid driving licence for 12 months from when you became resident`"}}:::outcome
+            J{{"`O4: You can drive in Great Britain on your full, valid driving licence for 12 months from when you became resident`"}}:::outcome
+            K{{"`O5: You can drive in Great Britain on your full, valid licence until you’re 45, or for 5 years after you become resident in Great Britain, whichever is longer`"}}:::outcome
+            L{{"`O6: You cannot drive a lorry, minibus or bus in Great Britain (GB) on your driving licence`"}}:::outcome
+            M{{"`O7: You cannot drive a lorry, minibus or bus in Great Britain (GB) on your driving licence`"}}:::outcome
+            N{{"`O8: You cannot drive a lorry, minibus or bus in Great Britain (GB) on your driving licence`"}}:::outcome
+            O{{"`O9: You can drive any type of vehicle listed on your full and valid licence`"}}:::outcome
+            P{{"`O10: You can drive any type of small vehicle (for example cars or motorcycles) listed on your full and valid licence for 12 months from when you last entered Great Britain (GB)`"}}:::outcome
+            Q{{"`O11: You can drive any type of small vehicle (for example cars or motorcycles) listed on your full and valid licence for 12 months from when you last entered Great Britain (GB)`"}}:::outcome
+            R{{"`O12: You can drive in Great Britain for as long as your licence is valid, or until you're 70, if you've got a driving licence from a European Union (EU) country`"}}:::outcome
+            S{{"`O13: You can drive in Great Britain for 12 months if you’ve got a non-European Union (EU) driving licence or international driving permit`"}}:::outcome
+            T{{"`O14: You can drive any type of small vehicle (for example cars or motorcycles) listed on your full and valid licence for 12 months after becoming resident in Great Britain`"}}:::outcome
+            U{{"`O15: You can drive in Great Britain (GB) on your full, valid driving licence for 12 months from when you became a resident`"}}:::outcome
+
+            NA(["`a resident of Great Britain?`"]):::answer
+            NB(["`a visitor of Great Britain?`"]):::answer
+            NC(["`a foreign student studying in Great Britain?`"]):::answer
+
+            ND(["`Full car and motorcycle`"]):::answer
+            NE(["`Full lorry, minibus and bus`"]):::answer
+
+            NF(["`Great Britain and Northern Ireland`"]):::answer
+            NG(["`European Union or European Economic Area`"]):::answer
+            NH(["`Gibraltar, Jersey, Guernsey, Isle of Man or a 'designated country or territory'*`"]):::answer
+            NI(["`Any other country`"]):::answer
+
+            NJ(["`Great Britain and Northern Ireland`"]):::answer
+            NK(["`European Union or European Economic Area`"]):::answer
+            NL(["`Switzerland`"]):::answer
+            NM(["`Gibraltar, Jersey, Guernsey or the Isle of Man`"]):::answer
+            NN(["`A 'designated country or territory'*`"]):::answer
+            NO(["`Any other country`"]):::answer
+
+            NP(["`Great Britain and Northern Ireland`"]):::answer
+            NQ(["`European Union or European Economic Area`"]):::answer
+            NR(["`Jersey, Guernsey or the Isle of Man`"]):::answer
+            NS(["`Any other country`"]):::answer
+
+            NT(["`European Union or European Economic Area`"]):::answer
+            NU(["`Non-European Union`"]):::answer
+
+            AA-->A
+            A---NA
+            NA-->B
+            A---NB
+            NB-->E
+            A---NC
+            NC-->F
+
+            B---ND
+            ND-->C
+            B---NE
+            NE-->D
+
+            C---NF
+            NF-->U
+            C---NG
+            NG-->H
+            C---NH
+            NH-->I
+            C---NI
+            NI-->J
+
+            D---NJ
+            NJ-->N
+            D---NK
+            NK-->K
+            D---NL
+            NL-->T
+            D---NM
+            NM-->I
+            D---NN
+            NN-->L
+            D---NO
+            NO-->M
+
+            E---NP
+            NP-->G
+            E---NQ
+            NQ-->O
+            E---NR
+            NR-->P
+            E---NS
+            NS-->Q
+
+            F---NT
+            NT-->R
+            F---NU
+            NU-->S
+
+
+      classDef answer fill: #f3f2f1
+      classDef outcome fill:#003078,color:#ffffff;
+      classDef question fill: #ffffff
+      classDef start fill:#00703c
+    </pre>
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true});
+</script>
+

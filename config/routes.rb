@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   get "/admin(/*path)", to: redirect { |params, _req| "/#{params[:path]}" }
 
   get "/govuk-sitemap.xml" => "sitemap#index"
+  resources :mermaid
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
 end
