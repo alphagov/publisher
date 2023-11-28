@@ -10,7 +10,7 @@
       'lineColor': '#0b0c0c',
       'secondaryColor': '#006100',
       'tertiaryColor': '#fff',
-      'fontSize': '19px'
+      'fontSize': '23.75px'
     }
   }
 }%%
@@ -18,7 +18,7 @@
             flowchart TD
             accTitle: Flowchart for Driving in Great Britain on a non-GB licence
             accDescr: A flowchart for the Driving in Great Britain on a non-GB licence smart answer
-            AA["`Start`"]:::start
+            AA[Start]:::start
             A["`Q1 Are you:`"]:::question
             B["`Q2 What kind of driving licence do you have?`"]:::question
             C["`Q3 Where did you pass your test?`"]:::question
@@ -120,14 +120,17 @@
       classDef answer fill: #F3F2F1, stroke:#505A5F;
       classDef outcome fill: #6FA4D2
       classDef question fill: #B1B4B6, stroke:#505A5F;
-      classDef start fill:#44ADA5
+      classDef start fill:#00703c,color: #ffffff
     </pre>
 <style>
   .container{
       width: 100% !important;
   }
   .mermaid {
-      background-color: white;
+      background-color: #ffffff;
+  }
+  pre {
+      word-break: normal;
   }
 </style>
 <script type="module">
