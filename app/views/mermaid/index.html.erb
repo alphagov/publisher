@@ -1,5 +1,5 @@
 <h1> Driving in Great Britain on a non-GB licence</h1>
-<pre class="mermaid">
+<pre class="mermaid flowchart">
   %%{
   init: {
     'theme': 'base',
@@ -126,8 +126,11 @@
   .container{
       width: 100% !important;
   }
+  .mermaid {
+      background-color: white;
+  }
 </style>
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true});
+    mermaid.initialize({ startOnLoad: true, flowchart: { useMaxWidth: false }});
 </script>
