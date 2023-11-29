@@ -80,6 +80,36 @@ class SimpleSmartAnswerEdition < Edition
     attrs.delete("_destroy") == "1"
   end
 
+  def generate_mermaid()
+    parts = ["%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'background': '#FFFFFF',
+      'primaryTextColor': '#0B0C0C',
+      'lineColor': '#0b0c0c',
+      'fontSize': '23.75px'
+    }
+  }
+}%%\nflowchart TD"]
+    parts<<"accTitle: #{title}"
+    parts<<"accDescr: A flowchart for the #{title} smart answer"
+    parts<<"AA[Start]:::start"
+    unless nodes.nil?
+      parts<<"AA---Q#{nodes.first.slug.split('-')[1]}"
+      nodes.each do |node|
+        parts << if node.kind == "question"
+                   mermaid_question(node)
+                 elsif node.kind == "outcome"
+                   mermaid_outcome(node)
+                 end
+      end
+    end
+    parts<<"classDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef outcome fill: #6FA4D2" +
+      "\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: #ffffff"
+    parts.join("\n")
+  end
+
 private
 
   def question(node)
@@ -93,6 +123,23 @@ private
       part << "Next question for user: #{next_node_title.capitalize} #{next_node_number} (#{title})\n"
     end
     part.join("\n")
+  end
+
+  def mermaid_question(node)
+    question_id=node.slug.split('-')[1]
+    part = ["Q#{question_id}[\"`#{node.slug.titleize} #{node.title}`\"]:::question"]
+    node.options.each.with_index(1) do |option, index|
+      part<< "Q#{question_id}---Q#{question_id}A#{index}"
+      part << "Q#{question_id}A#{index}([\"`Answer #{index} #{option.label}`\"]):::answer"
+      next_node_title, next_node_number = option.next_node.split("-")
+      part << "Q#{question_id}A#{index}-->#{next_node_title[0].upcase}#{next_node_number}\n"
+    end
+    part.join("\n")
+  end
+
+  def mermaid_outcome(node)
+    node_id = node.slug.split("-")[1]
+    "O#{node_id}{{\"`O#{node_id} #{node.title}`\"}}:::outcome"
   end
 
   def outcome(node)
