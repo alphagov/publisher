@@ -80,23 +80,13 @@ class SimpleSmartAnswerEdition < Edition
     attrs.delete("_destroy") == "1"
   end
 
-  def generate_mermaid()
-    parts = ["%%{
-  init: {
-    'theme': 'base',
-    'themeVariables': {
-      'background': '#FFFFFF',
-      'primaryTextColor': '#0B0C0C',
-      'lineColor': '#0b0c0c',
-      'fontSize': '23.75px'
-    }
-  }
-}%%\nflowchart TD"]
-    parts<<"accTitle: #{title}"
-    parts<<"accDescr: A flowchart for the #{title} smart answer"
-    parts<<"AA[Start]:::start"
+  def generate_mermaid
+    parts = ["%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    " \
+      "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
+      "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
+    parts << "accTitle: #{title}\naccDescr: A flowchart for the #{title} smart answer\nAA[Start]:::start"
     unless nodes.nil?
-      parts<<"AA---Q#{nodes.first.slug.split('-')[1]}"
+      parts << "AA---Q#{nodes.first.slug.split('-')[1]}"
       nodes.each do |node|
         parts << if node.kind == "question"
                    mermaid_question(node)
@@ -105,7 +95,7 @@ class SimpleSmartAnswerEdition < Edition
                  end
       end
     end
-    parts<<"classDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef outcome fill: #6FA4D2" +
+    parts << "classDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef outcome fill: #6FA4D2" \
       "\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: #ffffff"
     parts.join("\n")
   end
@@ -125,25 +115,26 @@ private
     part.join("\n")
   end
 
+  def outcome(node)
+    body = node.body == "" ? "" : "\n#{node.body}"
+    "#{node.slug.titleize}\n#{node.title}#{body}"
+  end
+
   def mermaid_question(node)
-    question_id=node.slug.split('-')[1]
-    part = ["Q#{question_id}[\"`#{node.slug.titleize} #{node.title}`\"]:::question"]
+    question_node_id = node.slug.split("-")[1]
+    part = ["Q#{question_node_id}[\"`Q#{question_node_id}. #{node.title}`\"]:::question"]
     node.options.each.with_index(1) do |option, index|
-      part<< "Q#{question_id}---Q#{question_id}A#{index}"
-      part << "Q#{question_id}A#{index}([\"`Answer #{index} #{option.label}`\"]):::answer"
+      answer_node_id = "Q#{question_node_id}A#{index}"
       next_node_title, next_node_number = option.next_node.split("-")
-      part << "Q#{question_id}A#{index}-->#{next_node_title[0].upcase}#{next_node_number}\n"
+      part << "Q#{question_node_id}---#{answer_node_id}\n" \
+        "#{answer_node_id}([\"`A#{index}. #{option.label}`\"]):::answer\n" \
+        "#{answer_node_id}-->#{next_node_title[0].upcase}#{next_node_number}\n"
     end
     part.join("\n")
   end
 
   def mermaid_outcome(node)
-    node_id = node.slug.split("-")[1]
-    "O#{node_id}{{\"`O#{node_id} #{node.title}`\"}}:::outcome"
-  end
-
-  def outcome(node)
-    body = node.body == "" ? "" : "\n#{node.body}"
-    "#{node.slug.titleize}\n#{node.title}#{body}"
+    outcome_node_id = node.slug.split("-")[1]
+    "O#{outcome_node_id}{{\"`O#{outcome_node_id}. #{node.title}`\"}}:::outcome"
   end
 end

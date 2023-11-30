@@ -92,7 +92,10 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     edition.nodes.build(slug: "outcome-1", title: "The first outcome", order: 3, kind: "outcome", body: "Outcome body")
     edition.nodes.build(slug: "outcome-2", title: "The second outcome", order: 4, kind: "outcome")
 
-    assert_equal "Introduction to the smart answer\n\n\nQuestion 1\nThe first question\n\nBody\n\nAnswer 1\noption one\nNext question for user: Outcome 1 (The first outcome)\n\nAnswer 2\noption two\nNext question for user: Outcome 2 (The second outcome)\n\n\n\nOutcome 1\nThe first outcome\nOutcome body\n\n\nOutcome 2\nThe second outcome\n", edition.whole_body
+    assert_equal "Introduction to the smart answer\n\n\nQuestion 1\nThe first question\n\nBody\n\nAnswer 1\noption one" \
+      "\nNext question for user: Outcome 1 (The first outcome)\n\nAnswer 2\noption two\nNext question for" \
+      " user: Outcome 2 (The second outcome)\n\n\n\nOutcome 1\nThe first outcome\nOutcome body\n\n\nOutcome" \
+      " 2\nThe second outcome\n", edition.whole_body
   end
 
   should "create nodes with nested attributes" do
@@ -242,19 +245,18 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
     edition.body = "This is a simple smart answer."
 
-    edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [{label: "A tiger fights you", next_node: "outcome-1" }])
+    edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [{ label: "A tiger fights you", next_node: "outcome-1" }])
     edition.nodes.build(slug: "outcome-1", title: "Tiger wins", kind: "outcome")
     edition.save!
 
-    assert_equal "%%{\n  init: {\n    'theme': 'base',\n    'themeVariables': {\n      'background': '#FFFFFF',\n" +
-                   "      'primaryTextColor': '#0B0C0C',\n      'lineColor': '#0b0c0c',\n      'fontSize': '23.75px'\n" +
-                   "    }\n  }\n}%%\nflowchart TD\naccTitle: Simple smart answer\naccDescr: A flowchart for the Simple " +
-                   "smart answer smart answer\nAA[Start]:::start\nAA---Q1\nQ1[\"`Question 1 You approach two locked doors. " +
-                   "Which do you choose?`\"]:::question\nQ1---Q1A1\nQ1A1([\"`Answer 1 A tiger fights you`\"]):::answer\n" +
-                   "Q1A1-->O1\n\nO1{{\"`O1 Tiger wins`\"}}:::outcome\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " +
-                   "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " +
-                   "#ffffff", edition.generate_mermaid
-
+    assert_equal "%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    'background': '#FFFFFF',\n" \
+      "    'primaryTextColor': '#0B0C0C',\n    'lineColor': '#0b0c0c',\n    'fontSize': '23.75px'" \
+      " } } }%%\nflowchart TD\naccTitle: Simple smart answer\naccDescr: A flowchart for the Simple " \
+      "smart answer smart answer\nAA[Start]:::start\nAA---Q1\nQ1[\"`Q1. You approach two locked doors. " \
+      "Which do you choose?`\"]:::question\nQ1---Q1A1\nQ1A1([\"`A1. A tiger fights you`\"]):::answer\n" \
+      "Q1A1-->O1\n\nO1{{\"`O1. Tiger wins`\"}}:::outcome\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " \
+      "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " \
+      "#ffffff", edition.generate_mermaid
   end
   # rubocop:enable Rails/SaveBang
 end
