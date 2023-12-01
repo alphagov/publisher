@@ -241,22 +241,52 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     end
   end
 
-  should "generating mermaid.js syntax from a simple smart answer" do
-    edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
-    edition.body = "This is a simple smart answer."
+  context "generating mermaid.js syntax" do
+    should "generate correct syntax from a simple smart answer with no nodes" do
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+      edition.update(title: "Smarter than the average answer")
+      edition.save!
 
-    edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [{ label: "A tiger fights you", next_node: "outcome-1" }])
-    edition.nodes.build(slug: "outcome-1", title: "Tiger wins", kind: "outcome")
-    edition.save!
+      assert_equal "%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    'background': '#FFFFFF',\n" \
+        "    'primaryTextColor': '#0B0C0C',\n    'lineColor': '#0b0c0c',\n    'fontSize': '23.75px'" \
+        " } } }%%\nflowchart TD\naccTitle: Smarter than the average answer\naccDescr: A flowchart for the Smarter " \
+        "than the average answer smart answer\nAA[Start]:::start\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " \
+        "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " \
+        "#ffffff", edition.generate_mermaid
+    end
 
-    assert_equal "%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    'background': '#FFFFFF',\n" \
-      "    'primaryTextColor': '#0B0C0C',\n    'lineColor': '#0b0c0c',\n    'fontSize': '23.75px'" \
-      " } } }%%\nflowchart TD\naccTitle: Simple smart answer\naccDescr: A flowchart for the Simple " \
-      "smart answer smart answer\nAA[Start]:::start\nAA---Q1\nQ1[\"`Q1. You approach two locked doors. " \
-      "Which do you choose?`\"]:::question\nQ1---Q1A1\nQ1A1([\"`A1. A tiger fights you`\"]):::answer\n" \
-      "Q1A1-->O1\n\nO1{{\"`O1. Tiger wins`\"}}:::outcome\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " \
-      "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " \
-      "#ffffff", edition.generate_mermaid
+    should "generate correct syntax from a simple smart answer with one node" do
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+      edition.update(title: "Smarter than the average answer")
+      edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question")
+
+      edition.save!
+
+      assert_equal "%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    'background': '#FFFFFF',\n" \
+        "    'primaryTextColor': '#0B0C0C',\n    'lineColor': '#0b0c0c',\n    'fontSize': '23.75px'" \
+        " } } }%%\nflowchart TD\naccTitle: Smarter than the average answer\naccDescr: A flowchart for the Smarter " \
+        "than the average answer smart answer\nAA[Start]:::start\nAA---Q1\nQ1[\"`Q1. You approach two locked doors. " \
+    "Which do you choose?`\"]:::question\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " \
+        "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " \
+        "#ffffff", edition.generate_mermaid
+    end
+
+    should "generate mermaid.js syntax from a simple smart answer with multiple nodes" do
+      edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
+
+      edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [{ label: "A tiger fights you", next_node: "outcome-1" }])
+      edition.nodes.build(slug: "outcome-1", title: "Tiger wins", kind: "outcome")
+      edition.save!
+
+      assert_equal "%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    'background': '#FFFFFF',\n" \
+        "    'primaryTextColor': '#0B0C0C',\n    'lineColor': '#0b0c0c',\n    'fontSize': '23.75px'" \
+        " } } }%%\nflowchart TD\naccTitle: Simple smart answer\naccDescr: A flowchart for the Simple " \
+        "smart answer smart answer\nAA[Start]:::start\nAA---Q1\nQ1[\"`Q1. You approach two locked doors. " \
+        "Which do you choose?`\"]:::question\nQ1---Q1A1\nQ1A1([\"`A1. A tiger fights you`\"]):::answer\n" \
+        "Q1A1-->O1\n\nO1{{\"`O1. Tiger wins`\"}}:::outcome\nclassDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef " \
+        "outcome fill: #6FA4D2\nclassDef question fill: #B1B4B6, stroke:#505A5F;\nclassDef start fill:#00703c,color: " \
+        "#ffffff", edition.generate_mermaid
+    end
   end
   # rubocop:enable Rails/SaveBang
 end

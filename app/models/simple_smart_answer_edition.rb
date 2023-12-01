@@ -85,7 +85,7 @@ class SimpleSmartAnswerEdition < Edition
       "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
       "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
     parts << "accTitle: #{title}\naccDescr: A flowchart for the #{title} smart answer\nAA[Start]:::start"
-    unless nodes.nil?
+    if nodes.present?
       parts << "AA---Q#{nodes.first.slug.split('-')[1]}"
       nodes.each do |node|
         parts << if node.kind == "question"
