@@ -20,4 +20,11 @@ class FactCheckEmailHandlerTest < ActiveSupport::TestCase
 
     handler.process
   end
+
+  test "#process does not send count of unprocessed emails to Graphite when emails cannot be retrieved" do
+    Mail.stubs(:all).raises(StandardError)
+    GovukStatsd.expects(:gauge).never
+
+    handler.process
+  end
 end

@@ -36,5 +36,10 @@ class FactCheckEmailHandler
     end
 
     GovukStatsd.gauge("unprocessed_emails.count", unprocessed_emails_count)
+  rescue StandardError => e
+    # Occasionally, there is an error when connecting to the mailbox in production.
+    # It seems a very transient error, and since the job is run every few minutes isn't really a problem, but if the
+    # exception is left unhandled a Sentry alert is raised. Log the error and move on.
+    Rails.logger.warn "UnableToProcessError: Failed to connect to mailbox: #{e.message}"
   end
 end
