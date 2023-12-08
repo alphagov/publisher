@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get "tagging", to: "editions#linking"
       get "related_external_links", to: "editions#linking"
       get "unpublish"
+      get "diagram"
       post "duplicate"
       post "update_tagging"
       post "process_unpublish"

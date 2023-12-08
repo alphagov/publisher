@@ -235,6 +235,13 @@ class EditionsController < InheritedResources::Base
     end
   end
 
+  def diagram
+    # [MT] TODO: What's the best way to handle requests for a diagram for a non-simple smart answer?
+    if @resource.format != "SimpleSmartAnswer"
+      render plain: "404 Not Found", status: :not_found
+    end
+  end
+
 protected
 
   def permitted_params(subtype: nil)
