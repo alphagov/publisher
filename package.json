@@ -46,6 +46,7 @@
     "stylelint-config-gds": "^1.1.0"
   },
   "dependencies": {
+    "mermaid": "10.5.1",
     "paste-html-to-govspeak": "^0.4.0"
   },
   "resolutions": {
