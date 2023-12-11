@@ -1,5 +1,3 @@
-require "set"
-
 class LocalServiceCleaner
   def initialize(input_data = LocalServiceImporter.fetch_data)
     @input_data = input_data
