@@ -39,7 +39,7 @@ gem "sprockets-rails"
 gem "state_machines"
 gem "state_machines-mongoid"
 gem "strip_attributes"
-gem "uglifier"
+gem "terser"
 gem "whenever", require: false
 
 group :test do

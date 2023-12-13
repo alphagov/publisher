@@ -739,14 +739,14 @@ GEM
     statsd-ruby (1.5.0)
     strip_attributes (1.13.0)
       activemodel (>= 3.0, < 8.0)
+    terser (1.1.20)
+      execjs (>= 0.3.0, < 3)
     thor (1.3.0)
     tilt (2.0.10)
     timecop (0.9.8)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
@@ -832,8 +832,8 @@ DEPENDENCIES
   state_machines-graphviz
   state_machines-mongoid
   strip_attributes
+  terser
   timecop
-  uglifier
   webmock
   whenever
 
