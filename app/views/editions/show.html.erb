@@ -29,7 +29,7 @@
           <div class="link-check-report col-md-4">
             <% if @edition.class.to_s == "SimpleSmartAnswerEdition" %>
               <p>
-                View the <%= link_to "flow diagram", diagram_edition_path(@edition) %>
+                View the <%= link_to "flow diagram (opens in a new tab)", diagram_edition_path(@edition), target: '_blank' %>
               </p>
             <% end %>
 

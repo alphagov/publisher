@@ -1048,15 +1048,15 @@ class EditionsControllerTest < ActionController::TestCase
 
       get :show, params: { id: simple_smart_answer.id }
 
-      assert_select ".link-check-report p", { text: "View the flow diagram" } do
+      assert_select ".link-check-report p", { text: "View the flow diagram (opens in a new tab)" } do
         assert_select "a[href=?]", diagram_edition_path(simple_smart_answer).to_s,
-                      { count: 1, text: "flow diagram" }
+                      { count: 1, text: "flow diagram (opens in a new tab)" }
       end
     end
 
     should "not render a link to the diagram when edition is not a simple smart answer" do
       get :show, params: { id: @guide.id }
-      assert_select "p", { count: 0, text: "View the flow diagram" }
+      assert_select "p", { count: 0, text: "View the flow diagram (opens in a new tab)" }
     end
   end
 
