@@ -1,0 +1,14 @@
+.smart-answer-flowchart {
+  .mermaid {
+    background-color: #ffffff;
+  }
+
+  .flowchart--hidden,
+  .flowchart__loading--hidden {
+    display: none;
+  }
+
+  pre {
+    word-break: normal;
+  }
+}
