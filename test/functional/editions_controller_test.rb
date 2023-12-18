@@ -1032,32 +1032,6 @@ class EditionsControllerTest < ActionController::TestCase
       assert_response :success
       assert_not_nil assigns(:resource)
     end
-
-    should "render a link to the diagram when edition is a simple smart answer" do
-      simple_smart_answer_artefact = FactoryBot.create(
-        :artefact,
-        slug: "my-simple-smart-answer",
-        kind: "guide",
-        name: "test",
-        owning_app: "publisher",
-      )
-      simple_smart_answer = SimpleSmartAnswerEdition.create!(
-        title: "test ssa",
-        panopticon_id: simple_smart_answer_artefact.id,
-      )
-
-      get :show, params: { id: simple_smart_answer.id }
-
-      assert_select ".link-check-report p", { text: "View the flow diagram" } do
-        assert_select "a[href=?]", diagram_edition_path(simple_smart_answer).to_s,
-                      { count: 1, text: "flow diagram" }
-      end
-    end
-
-    should "not render a link to the diagram when edition is not a simple smart answer" do
-      get :show, params: { id: @guide.id }
-      assert_select "p", { count: 0, text: "View the flow diagram" }
-    end
   end
 
   context "#admin" do
@@ -1228,34 +1202,6 @@ class EditionsControllerTest < ActionController::TestCase
       question = @edition.nodes.where(kind: "question").first
       assert_equal 1, question.options.count
       assert_equal "Option One", question.options.first.label
-    end
-  end
-
-  context "#diagram" do
-    context "given a simple smart answer exists" do
-      setup do
-        @artefact = FactoryBot.create(:artefact, slug: "foo", name: "Foo", kind: "simple_smart_answer", owning_app: "publisher")
-        @edition = FactoryBot.create(:simple_smart_answer_edition, body: "blah", state: "draft", slug: "foo", panopticon_id: @artefact.id)
-        @edition.save!
-      end
-
-      should "render a diagram page for it" do
-        get :diagram, params: { id: @edition.id }
-
-        assert_response :success
-        assert_select "title", "Diagram for #{@edition.title} | GOV.UK Publisher"
-      end
-    end
-
-    context "given a non-simple smart answer exists" do
-      setup do
-        @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)
-      end
-
-      should "return a 404" do
-        get :diagram, params: { id: @welsh_guide.id }
-        assert_response :not_found
-      end
     end
   end
 end
