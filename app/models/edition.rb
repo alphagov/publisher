@@ -337,6 +337,7 @@ class Edition
       panopticon_id: metadata.id,
       slug: metadata.slug,
       title: metadata.name,
+      assigned_to_id: importing_user.id,
     )
   end
 
