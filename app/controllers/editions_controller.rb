@@ -66,7 +66,7 @@ class EditionsController < InheritedResources::Base
     if !resource.can_create_new_edition?
       flash[:warning] = "Another person has created a newer edition"
       redirect_to edition_path(resource)
-    elsif command.duplicate(target_edition_class_name, new_assignee)
+    elsif command.duplicate(target_edition_class_name, current_user)
       new_edition = command.new_edition
       UpdateWorker.perform_async(new_edition.id.to_s)
 

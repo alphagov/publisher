@@ -427,6 +427,24 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal artefact.id.to_s, publication.panopticon_id.to_s
   end
 
+  test "should create a publication with the current user as the assignee" do
+    artefact = FactoryBot.create(
+      :artefact,
+      slug: "foo-bar",
+      kind: "answer",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
+    artefact.save!
+
+    Artefact.find(artefact.id)
+    user = FactoryBot.create(:user, :govuk_editor)
+
+    publication = Edition.find_or_create_from_panopticon_data(artefact.id, user)
+
+    assert_equal user.id.to_s, publication.assigned_to_id.to_s
+  end
+
   test "should not change edition metadata if archived" do
     artefact = FactoryBot.create(
       :artefact,
