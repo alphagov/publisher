@@ -1,7 +1,7 @@
-class ReportsController < ApplicationController
+class LegacyReportsController < ApplicationController
   include ActionView::Helpers::TagHelper
 
-  before_action :authenticate_user!, :require_design_system_enabled
+  before_action :authenticate_user!
 
   def index; end
 
@@ -44,10 +44,4 @@ private
     end
   end
   helper_method :report_last_updated
-
-  def require_design_system_enabled
-    unless Flipflop.design_system_reports_page?
-      redirect_to legacy_reports_path
-    end
-  end
 end

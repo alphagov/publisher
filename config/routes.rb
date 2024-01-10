@@ -1,5 +1,6 @@
 # Having a long routes file is not a style violation
 Rails.application.routes.draw do
+  mount Flipflop::Engine => "/flipflop"
   get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
   get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::Mongoid,
@@ -53,6 +54,14 @@ Rails.application.routes.draw do
   get "reports/content-workflow" => "reports#content_workflow", as: "content_workflow_report"
   get "reports/all-content-workflow" => "reports#all_content_workflow", as: "all_content_workflow_report"
   get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
+  get "legacy_reports" => "legacy_reports#index", as: :legacy_reports
+  get "legacy_reports/progress" => "legacy_reports#progress", as: :legacy_progress_report
+  get "legacy_reports/organisation-content" => "legacy_reports#organisation_content", :as => :legacy_organisation_content_report
+  get "legacy_reports/edition-churn" => "legacy_reports#edition_churn", as: "legacy_edition_churn_report"
+  get "legacy_reports/all-edition-churn" => "legacy_reports#all_edition_churn", as: "legacy_all_edition_churn_report"
+  get "legacy_reports/content-workflow" => "legacy_reports#content_workflow", as: "legacy_content_workflow_report"
+  get "legacy_reports/all-content-workflow" => "legacy_reports#all_content_workflow", as: "legacy_all_content_workflow_report"
+  get "legacy_reports/all-urls" => "legacy_reports#all_urls", as: "legacy_all_urls_report"
 
   get "user_search" => "user_search#index"
 
