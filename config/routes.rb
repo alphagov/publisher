@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     resource :downtime, only: %i[new create edit update destroy]
   end
 
-  constraints FeatureConstraint.new do
+  constraints FeatureConstraint.new("design_system_reports_page") do
     get "reports" => "reports#index", as: :reports
     get "reports/progress" => "reports#progress", as: :progress_report
     get "reports/organisation-content" => "reports#organisation_content", :as => :organisation_content_report
