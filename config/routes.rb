@@ -1,5 +1,6 @@
 # Having a long routes file is not a style violation
 Rails.application.routes.draw do
+  mount Flipflop::Engine => "/flipflop"
   get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
   get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::Mongoid,
@@ -45,14 +46,24 @@ Rails.application.routes.draw do
     resource :downtime, only: %i[new create edit update destroy]
   end
 
-  get "reports" => "reports#index", as: :reports
-  get "reports/progress" => "reports#progress", as: :progress_report
-  get "reports/organisation-content" => "reports#organisation_content", :as => :organisation_content_report
-  get "reports/edition-churn" => "reports#edition_churn", as: "edition_churn_report"
-  get "reports/all-edition-churn" => "reports#all_edition_churn", as: "all_edition_churn_report"
-  get "reports/content-workflow" => "reports#content_workflow", as: "content_workflow_report"
-  get "reports/all-content-workflow" => "reports#all_content_workflow", as: "all_content_workflow_report"
-  get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
+  constraints FeatureConstraint.new do
+    get "reports" => "reports#index", as: :reports
+    get "reports/progress" => "reports#progress", as: :progress_report
+    get "reports/organisation-content" => "reports#organisation_content", :as => :organisation_content_report
+    get "reports/edition-churn" => "reports#edition_churn", as: "edition_churn_report"
+    get "reports/all-edition-churn" => "reports#all_edition_churn", as: "all_edition_churn_report"
+    get "reports/content-workflow" => "reports#content_workflow", as: "content_workflow_report"
+    get "reports/all-content-workflow" => "reports#all_content_workflow", as: "all_content_workflow_report"
+    get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
+  end
+  get "reports" => "legacy_reports#index"
+  get "reports/progress" => "legacy_reports#progress"
+  get "reports/organisation-content" => "legacy_reports#organisation_content"
+  get "reports/edition-churn" => "legacy_reports#edition_churn"
+  get "reports/all-edition-churn" => "legacy_reports#all_edition_churn"
+  get "reports/content-workflow" => "legacy_reports#content_workflow"
+  get "reports/all-content-workflow" => "legacy_reports#all_content_workflow"
+  get "reports/all-urls" => "legacy_reports#all_urls"
 
   get "user_search" => "user_search#index"
 
