@@ -3,9 +3,10 @@
 Date 2024-01-12
 
 ## Status
+Accepted
 
 ## Context
-As part of the migration of Mainstream Publisher away from Bootstrap and towards the GOV.UK Design System, we wish to be able to have work-in-progress changes viewable in deployed environments (integration/staging/production) without impacting the majority of users. To do this we investigated the use of [Flipflop](https://github.com/voormedia/flipflop), a gem for feature toggles in Rails applications, and which was [recently introduced into Whitehall](https://github.com/alphagov/whitehall/pull/8446).
+As part of the migration of Mainstream Publisher away from Bootstrap and towards the GOV.UK Design System, we wish to be able to have work-in-progress changes viewable in deployed environments (integration/staging/production) without impacting the majority of users. As part of [this spike](https://trello.com/c/uNr9SzAE/599-spike-learn-about-the-flipflop-library) we investigated the use of [Flipflop](https://github.com/voormedia/flipflop), a gem for feature toggles in Rails applications, and which was [recently introduced into Whitehall](https://github.com/alphagov/whitehall/pull/8446).
 
 Flipflop provides a dashboard for viewing the status of toggles at the path `/flipflop`. By default this page is disabled in "production" (which for us would mean all deployed environments), but since we are not planning on putting anything sensitive behind the toggles we have chosen to remove that restriction and make the dashboard always available.
 
