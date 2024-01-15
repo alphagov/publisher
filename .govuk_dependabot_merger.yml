@@ -1,0 +1,41 @@
+api_version: 1
+auto_merge:
+  - dependency: gds-api-adapters
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: gds-sso
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govspeak
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govuk_admin_template
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govuk_app_config
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govuk_publishing_components
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: nested_form
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govuk_sidekiq
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: govuk_test
+    allowed_semver_bumps:
+      - patch
+      - minor
+  - dependency: rubocop-govuk
+    allowed_semver_bumps:
+      - patch
