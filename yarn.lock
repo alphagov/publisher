@@ -998,10 +998,10 @@ ejs@^3.1.6:
   dependencies:
     jake "^10.8.5"
 
-elkjs@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.npmjs.org/elkjs/-/elkjs-0.8.2.tgz"
-  integrity sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==
+elkjs@^0.9.0:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/elkjs/-/elkjs-0.9.1.tgz#fd1524b3f0bed72dc65ba107ae91bcf04b5582bd"
+  integrity sha512-JWKDyqAdltuUcyxaECtYG6H4sqysXSLeoXuGUBfRNESMTkj+w+qdb0jya8Z/WI0jVd03WQtCGhS6FOFtlhD5FQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -2296,10 +2296,10 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.npmjs.org/merge2/-/merge2-1.4.1.tgz"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-mermaid@10.5.1:
-  version "10.5.1"
-  resolved "https://registry.yarnpkg.com/mermaid/-/mermaid-10.5.1.tgz#b6ee7356e3b79515bc87406763e258ca49b5cca9"
-  integrity sha512-+4mkGW5PptHDSae4YZ/Jw1pEOf0irrB/aCL6BwZcJPhr5+84UJBrQnHTvyPqCUz67tXkrDvSzWv4B+J2hLO78g==
+mermaid@10.7.0:
+  version "10.7.0"
+  resolved "https://registry.yarnpkg.com/mermaid/-/mermaid-10.7.0.tgz#4fd5bfd60c0c5e5c42016a82905f06c4684ec53b"
+  integrity sha512-PsvGupPCkN1vemAAjScyw4pw34p4/0dZkSrqvAB26hUvJulOWGIwt35FZWmT9wPIi4r0QLa5X0PB4YLIGn0/YQ==
   dependencies:
     "@braintree/sanitize-url" "^6.0.1"
     "@types/d3-scale" "^4.0.3"
@@ -2312,7 +2312,7 @@ mermaid@10.5.1:
     dagre-d3-es "7.0.10"
     dayjs "^1.11.7"
     dompurify "^3.0.5"
-    elkjs "^0.8.2"
+    elkjs "^0.9.0"
     khroma "^2.0.0"
     lodash-es "^4.17.21"
     mdast-util-from-markdown "^1.3.0"
