@@ -877,6 +877,20 @@ class EditionsControllerTest < ActionController::TestCase
       assert_equal bob.name, @guide.reviewer
     end
 
+    should "not be able to update the reviewer when edition is scheduled for publishing" do
+      bob = FactoryBot.create(:user, name: "bob")
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+
+      put :review,
+          params: {
+            id: edition.id,
+            edition: { reviewer: bob.name },
+          }
+
+      assert_response(302)
+      assert_equal "Something went wrong when attempting to claim 2i.", flash[:danger]
+    end
+
     context "Welsh editors" do
       setup do
         @welsh_guide = FactoryBot.create(:guide_edition, :welsh, :in_review)

@@ -176,7 +176,7 @@ class EditionsController < InheritedResources::Base
     end
 
     resource.reviewer = params[:edition][:reviewer]
-    if resource.save!
+    if resource.save
       flash[:success] = "You are the reviewer of this #{description(resource).downcase}."
     else
       flash[:danger] = "Something went wrong when attempting to claim 2i."
