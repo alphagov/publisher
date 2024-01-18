@@ -57,6 +57,10 @@ bundle exec rake state_machines:draw CLASS=Edition TARGET=docs
 
 This will generate a diagram in the `docs/state_machines` folder.
 
+### Querying the database of a deployed publisher app
+
+Publisher stores its data in DocumentDB, which can't be queried using the instructions detailed in the GOV.UK developer docs. Instead, follow [these instructions for querying the database](docs/database-querying.md). 
+
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
