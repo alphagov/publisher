@@ -153,6 +153,17 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
+    flipper (1.2.2)
+      concurrent-ruby (< 2)
+    flipper-mongo (1.2.2)
+      flipper (~> 1.2.2)
+      mongo (~> 2.0)
+    flipper-ui (1.2.2)
+      erubi (>= 1.0.0, < 2.0.0)
+      flipper (~> 1.2.2)
+      rack (>= 1.4, < 4)
+      rack-protection (>= 1.5.3, <= 4.0.0)
+      sanitize (< 7)
     gds-api-adapters (91.1.0)
       addressable
       link_header
@@ -789,6 +800,8 @@ DEPENDENCIES
   diffy
   erubis
   factory_bot_rails
+  flipper-mongo (~> 1.2)
+  flipper-ui (~> 1.2)
   gds-api-adapters
   gds-sso
   govspeak

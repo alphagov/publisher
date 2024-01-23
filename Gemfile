@@ -69,3 +69,7 @@ group :development, :test do
   gem "rack"
   gem "rubocop-govuk"
 end
+
+gem "flipper-mongo", "~> 1.2"
+
+gem "flipper-ui", "~> 1.2"
