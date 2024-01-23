@@ -82,5 +82,8 @@ Rails.application.routes.draw do
   get "/govuk-sitemap.xml" => "sitemap#index"
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
-  mount Flipper::UI.app(Flipper) => '/flipper'
+
+  constraints CanAccessFlipperUI do
+    mount Flipper::UI.app(Flipper) => '/flipper'
+  end
 end

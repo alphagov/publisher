@@ -3,7 +3,7 @@ require "aws-sdk-s3"
 class Report
   def initialize(report_name)
     @bucket_name = ENV["REPORTS_S3_BUCKET_NAME"]
-    @s3 = Aws::S3::Client.new
+    # @s3 = Aws::S3::Client.new
 
     @report_name = report_name
   end
@@ -21,6 +21,7 @@ class Report
   end
 
   def last_updated
+    return nil
     response = @s3.head_object(bucket: @bucket_name, key: filename)
     response.last_modified
   rescue Aws::S3::Errors::NotFound
