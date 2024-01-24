@@ -3,6 +3,52 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "17210c84682f1087da739d7c48998ec063833a0ead94cab74161f376a02902c8",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"content_workflow\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "content_workflow"
+      },
+      "user_input": "Report.new(\"content_workflow\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "21d15a1dedb4e98b76dd4206d5d9755c0c2fbb5ac22a3845342390fb14f32405",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"editorial_progress\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "progress"
+      },
+      "user_input": "Report.new(\"editorial_progress\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "3ce172087408945a462430f52e5bd728ae414d568f019a3a40528121eb9ebb98",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -17,6 +63,86 @@
         "method": "all_edition_churn"
       },
       "user_input": "Report.new(\"all_edition_churn\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "547dd1ed93af0f3b1b537207879e41d3acc5d30344b527cfe61a7fa99e8bcfe2",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"all_urls\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "all_urls"
+      },
+      "user_input": "Report.new(\"all_urls\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "5da50023d480fee0db69426e97c68a6172b789a65999b5707297aafe8f52fd4a",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/views/root/index.html.erb",
+      "line": 61,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@presenter.send((params[:list] or \"drafts\"))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "RootController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/root_controller.rb",
+          "rendered": {
+            "name": "root/index",
+            "file": "app/views/root/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "root/index"
+      },
+      "user_input": "params[:list]",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8b9b1897c23071c0620b3b89373e4b67c9c018f55d2bf9c9b10139194112876e",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"all_content_workflow\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "all_content_workflow"
+      },
+      "user_input": "Report.new(\"all_content_workflow\").url",
       "confidence": "Weak",
       "cwe_id": [
         601
@@ -49,17 +175,17 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "b52a4a72f485842b28181b0e846a46fc44f92bb4b998e7143bee1d56ab2cb592",
+      "fingerprint": "907123917bfc82d11454ff52d42cccf5a906b3340f2bd0e67e48b4a02e326254",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
-      "file": "app/controllers/reports_controller.rb",
+      "file": "app/controllers/legacy_reports_controller.rb",
       "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"organisation_content\").url, :allow_other_host => true)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "ReportsController",
+        "class": "LegacyReportsController",
         "method": "organisation_content"
       },
       "user_input": "Report.new(\"organisation_content\").url",
@@ -170,36 +296,25 @@
       "note": ""
     },
     {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "5da50023d480fee0db69426e97c68a6172b789a65999b5707297aafe8f52fd4a",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/views/root/index.html.erb",
-      "line": 61,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "@presenter.send((params[:list] or \"drafts\"))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "RootController",
-          "method": "index",
-          "line": 20,
-          "file": "app/controllers/root_controller.rb",
-          "rendered": {
-            "name": "root/index",
-            "file": "app/views/root/index.html.erb"
-          }
-        }
-      ],
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "a9dfe519dba7fb86018e3cf55f2aa7184127d83afa1c6db8b15b788aab813ad0",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"all_edition_churn\").url, :allow_other_host => true)",
+      "render_path": null,
       "location": {
-        "type": "template",
-        "template": "root/index"
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "all_edition_churn"
       },
-      "user_input": "params[:list]",
-      "confidence": "High",
+      "user_input": "Report.new(\"all_edition_churn\").url",
+      "confidence": "Weak",
       "cwe_id": [
-        77
+        601
       ],
       "note": ""
     },
@@ -248,8 +363,54 @@
         601
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "b52a4a72f485842b28181b0e846a46fc44f92bb4b998e7143bee1d56ab2cb592",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/reports_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"organisation_content\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ReportsController",
+        "method": "organisation_content"
+      },
+      "user_input": "Report.new(\"organisation_content\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "df4a142e2b4cccb80d2434a4195dd33a2873dfd4f1f7cac0f021c14fab463e3f",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/legacy_reports_controller.rb",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Report.new(\"edition_churn\").url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LegacyReportsController",
+        "method": "edition_churn"
+      },
+      "user_input": "Report.new(\"edition_churn\").url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
     }
   ],
-  "updated": "2024-01-16 16:43:33 +0000",
+  "updated": "2024-01-24 11:41:24 +0000",
   "brakeman_version": "6.1.1"
 }
