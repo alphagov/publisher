@@ -1,4 +1,6 @@
 class ReportsController < ApplicationController
+  layout "design_system"
+
   include ActionView::Helpers::TagHelper
 
   before_action :authenticate_user!
