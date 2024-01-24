@@ -5,7 +5,7 @@
   <%= favicon_link_tag "govuk_admin_template/#{favicon}" %>
 <% end %>
 <% content_for :head do %>
-  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "legacy-application", :media => "all" %>
   <%= csrf_meta_tag %>
   <%= yield :extra_headers %>
 <% end %>
@@ -54,7 +54,7 @@
 <% content_for :footer_version, ENV.fetch("SENTRY_RELEASE", "null")[0..18] %>
 
 <% content_for :body_end do %>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "legacy-application" %>
   <%= yield :extra_javascript %>
 <% end %>
 
