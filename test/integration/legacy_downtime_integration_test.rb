@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DowntimeIntegrationTest < JavascriptIntegrationTest
+class LegacyDowntimeIntegrationTest < JavascriptIntegrationTest
   setup do
     setup_users
 
@@ -14,9 +14,6 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     WebMock.reset!
     stub_any_publishing_api_put_content
     stub_any_publishing_api_publish
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_index_page, true)
   end
 
   test "Scheduling new downtime" do

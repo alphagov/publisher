@@ -95,6 +95,31 @@ class DowntimesControllerTest < ActionController::TestCase
     end
   end
 
+  context "#index" do
+    should "list all published transaction editions" do
+      unpublished_transaction_edition = FactoryBot.create(:transaction_edition)
+      transaction_editions = FactoryBot.create_list(:transaction_edition, 2, :published)
+
+      get :index
+
+      assert_response :ok
+      assert_select "h3.publication-table-title", count: 0, text: unpublished_transaction_edition.title
+      transaction_editions.each do |edition|
+        assert_select "h3.publication-table-title", text: edition.title
+      end
+    end
+
+    should "redirect to root page if welsh_editor" do
+      login_as_welsh_editor
+
+      get :index
+
+      assert_response :redirect
+      assert_redirected_to controller: "root", action: "index"
+      assert_includes flash[:danger], "do not have permission"
+    end
+  end
+
   def edition
     @edition ||= FactoryBot.create(:transaction_edition)
   end
