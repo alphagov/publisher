@@ -589,4 +589,36 @@ class SimpleSmartAnswersTest < JavascriptIntegrationTest
       end
     end
   end
+
+  context "mermaid:" do
+    setup do
+      @edition = FactoryBot.build(
+        :simple_smart_answer_edition,
+        title: "Can I get a driving licence?",
+        panopticon_id: @artefact.id,
+        slug: "can-i-get-a-driving-licence",
+        )
+      @edition.nodes.build(
+        slug: "question-1",
+        order: 1,
+        title: "To be or not to be?",
+        kind: "question",
+        options_attributes: [
+          { label: "That is the question", next_node: "outcome-1" },
+          { label: "That is not the question", next_node: "outcome-2" },
+        ],
+        )
+      @edition.nodes.build(slug: "outcome-1", order: 2, title: "Outcome One", kind: "outcome")
+      @edition.nodes.build(slug: "outcome-2", order: 3, title: "Outcome Two", kind: "outcome")
+      @edition.save!
+    end
+
+    should "render small smart-answer flowchart successfully" do
+      visit "/editions/#{@edition.to_param}/diagram"
+
+      within ".nodes" do
+        assert page.has_content? "Q1. To be or not to be?"
+      end
+    end
+  end
 end
