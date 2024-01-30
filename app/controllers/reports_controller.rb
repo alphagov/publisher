@@ -38,12 +38,17 @@ class ReportsController < ApplicationController
 private
 
   def report_last_updated(report_name)
-    last_updated = ::Report.new(report_name).last_updated
-    if last_updated
-      tag.span "Generated #{last_updated.to_fs(:govuk_date)}", class: "text-muted"
-    else
-      tag.span "Report currently unavailable", class: "text-muted"
-    end
+    ::Report.new(report_name).last_updated
   end
   helper_method :report_last_updated
+
+  def report_generated_time_message(report_name)
+    last_updated = report_last_updated(report_name)
+    if last_updated
+      "Generated #{last_updated.strftime('%-l:%M%#p')}"
+    else
+      "Report currently unavailable"
+    end
+  end
+  helper_method :report_generated_time_message
 end
