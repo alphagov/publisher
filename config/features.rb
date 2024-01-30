@@ -12,4 +12,8 @@ Flipflop.configure do
   feature :design_system_reports_page,
           default: false,
           description: "A transition of the reports page to use the GOV.UK Design System"
+
+  feature :design_system_downtime_new,
+          default: false,
+          description: "A transition of the add downtime page to use the GOV.UK Design System"
 end
