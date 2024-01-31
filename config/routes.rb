@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     put "resolve", on: :member
   end
 
-  get "downtimes" => "downtimes#index"
+  get "downtimes" => "legacy_downtimes#index"
 
   resources :artefacts, only: %i[new create update]
 
@@ -42,7 +42,10 @@ Rails.application.routes.draw do
            }
     end
 
-    resource :downtime, only: %i[new create edit update destroy]
+    constraints FeatureConstraint.new("design_system_downtime_new") do
+      resource :downtime, only: %i[new create]
+    end
+    resource :downtime, only: %i[new create edit update destroy], controller: "legacy_downtimes"
   end
 
   constraints FeatureConstraint.new("design_system_reports_page") do
