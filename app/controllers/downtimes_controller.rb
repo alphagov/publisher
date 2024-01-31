@@ -3,6 +3,8 @@ class DowntimesController < ApplicationController
   before_action :load_edition
   before_action :process_params, only: %i[create update]
 
+  layout "design_system"
+
   def new
     @downtime = Downtime.new(artefact: @edition.artefact)
   end
