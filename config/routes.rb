@@ -45,6 +45,9 @@ Rails.application.routes.draw do
     constraints FeatureConstraint.new("design_system_downtime_new") do
       resource :downtime, only: %i[new create]
     end
+    constraints FeatureConstraint.new("design_system_downtime_edit") do
+      resource :downtime, only: %i[edit update]
+    end
     resource :downtime, only: %i[new create edit update destroy], controller: "legacy_downtimes"
   end
 
