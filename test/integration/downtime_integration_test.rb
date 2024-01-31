@@ -24,7 +24,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
 
     visit root_path
     click_link "Downtime"
-    click_link "Apply to become a driving instructor"
+    click_link "Add downtime"
 
     enter_start_time first_of_july_next_year_at_midday_bst
     enter_end_time first_of_july_next_year_at_six_pm_bst

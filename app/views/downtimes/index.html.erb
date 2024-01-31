@@ -1,56 +1,30 @@
 <% content_for :page_title, 'Downtime messages' %>
+<% content_for :title, "Downtime messages" %>
 
-<div class="page-title">
-  <h1>Downtime messages</h1>
-  <p class="lead">Show a message on a published transaction start page for a specific time.</p>
+<div class="govuk-grid-column-full">
+
+  <%= render "govuk_publishing_components/components/lead_paragraph", {
+    text: "Show a message on a published transaction start page for a specific time.",
+    margin_bottom: 6
+  } %>  
+
+  <%= render "govuk_publishing_components/components/table", {
+    filterable: true,
+    label: "Filter by service or service status",
+    head: [
+      {
+        text: "Service Start page"
+      },
+      {
+        text: "Service Status",
+      },
+      {
+        text: tag.span("Action", class: "govuk-visually-hidden")
+      },
+      {
+        text: tag.span("Link to view live on GOV.UK", class: "govuk-visually-hidden")
+      }
+    ],
+    rows: transactions_table_entries(@transactions.to_a)
+  } %>
 </div>
-
-<table class="table table-bordered table-striped" data-module="filterable-table">
-  <caption class="h2 remove-top-margin">
-    <h2 class="remove-top-margin remove-bottom-margin">Services</h2>
-  </caption>
-  <thead>
-    <tr class="table-header">
-      <th>Service start page</th>
-      <th>Service status</th>
-      <th>Action</th>
-    </tr>
-    <tr class="if-no-js-hide table-header-secondary">
-      <td colspan="3">
-        <form>
-          <label class="remove-bottom-margin" for="table-filter">Filter services</label>
-          <p class="help-inline">For example ‘driving’ or ‘scheduled downtime’</p>
-          <input id="table-filter" type="text" class="form-control normal js-filter-table-input">
-        </form>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <% @transactions.each do |transaction| %>
-    <tr>
-      <td>
-        <h3 class="publication-table-title">
-          <%= link_to transaction.title, Downtime.for(transaction.artefact).present? ?
-                                          edit_edition_downtime_path(transaction) :
-                                          new_edition_downtime_path(transaction) %>
-        </h3>
-        <%= link_to "/#{transaction.slug}", "#{Plek.website_root}/#{transaction.slug}", class: 'link-muted' %>
-      </td>
-        <% if downtime = Downtime.for(transaction.artefact) %>
-          <td>
-            Scheduled downtime<br />
-            <span class="text-muted"><%= downtime_datetime(downtime) %></span>
-          </td>
-          <td>
-            <%= link_to 'Edit downtime', edit_edition_downtime_path(transaction), class: 'btn btn-info' %>
-          </td>
-        <% else %>
-          <td>Live</td>
-          <td>
-            <%= link_to 'Add downtime', new_edition_downtime_path(transaction), class: 'btn btn-default' %>
-          </td>
-        <% end %>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
