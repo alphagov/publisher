@@ -17,26 +17,10 @@
   } %>
 
   <div class="govuk-width-container">
-
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-      <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
-        <%
-          case k
-          when :notice
-            alert_class = "success"
-          when :alert
-            alert_class = "danger"
-          else
-            alert_class = k
-          end
-        %>
-        <div class="alert alert-<%= alert_class %>"
-          data-module="auto-track-event"
-          data-track-action="alert-<%= alert_class %>"
-          data-track-label="<%= strip_tags(flash[k]) %>">
-            <%= flash[k] %>
-        </div>
-      <% end %>      
+
+      <%= render "shared/flash", flash: flash %>
+
       <% if yield(:title).present? %>
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">

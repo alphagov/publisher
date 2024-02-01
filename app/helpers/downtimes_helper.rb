@@ -14,4 +14,27 @@ module DowntimesHelper
 
     strings.join(" ").gsub(":00", "").gsub("12pm", "midday").gsub("12am", "midnight")
   end
+
+  def transactions_table_entries(transactions)
+    transactions.map do |transaction|
+      downtime = Downtime.for(transaction.artefact)
+
+      [
+        { text: transaction.title },
+        {
+          text: downtime ? "Scheduled downtime #{downtime_datetime(downtime)}" : "Live",
+        },
+        { text: action_link_for_transaction(transaction) },
+        { text: link_to("View on website", "#{Plek.website_root}/#{transaction.slug}", class: "govuk-link") },
+      ]
+    end
+  end
+
+  def action_link_for_transaction(transaction)
+    if transaction.artefact.downtime
+      link_to "Edit downtime", edit_edition_downtime_path(transaction), class: "govuk-link"
+    else
+      link_to "Add downtime", new_edition_downtime_path(transaction), class: "govuk-link"
+    end
+  end
 end
