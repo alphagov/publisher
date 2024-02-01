@@ -37,4 +37,18 @@ class RoutesTest < ActionDispatch::IntegrationTest
 
     assert_routing("/editions/1/downtime/new", controller: "legacy_downtimes", action: "new", edition_id: "1")
   end
+
+  should "route to new downtimes controller index action when 'design_system_downtime_index_page' toggle is enabled" do
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_downtime_index_page, true)
+
+    assert_routing("/downtimes", controller: "downtimes", action: "index")
+  end
+
+  should "route to legacy downtimes controller index action when 'design_system_downtime_index_page' toggle is disabled" do
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_downtime_index_page, false)
+
+    assert_routing("/downtimes", controller: "legacy_downtimes", action: "index")
+  end
 end

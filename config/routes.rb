@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     put "resolve", on: :member
   end
 
+  constraints FeatureConstraint.new("design_system_downtime_index_page") do
+    get "downtimes" => "downtimes#index"
+  end
   get "downtimes" => "legacy_downtimes#index"
 
   resources :artefacts, only: %i[new create update]
