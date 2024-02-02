@@ -12,6 +12,7 @@
         } do %>
           <%= render "govuk_publishing_components/components/date_input", {
             hint: "For example, 01 08 2022",
+            name: "from-date"
           } %>
         <% end %>
       </div>
@@ -21,7 +22,8 @@
           heading_size: "l"
         } do %>
           <%= render "time_input", {
-            hint: "For example, 9:30 or 19:30"
+            hint: "For example, 9:30 or 19:30",
+            name: "from-time"
           } %>
         <% end %>
       </div>
@@ -39,6 +41,7 @@
         } do %>
           <%= render "govuk_publishing_components/components/date_input", {
             hint: "For example, 01 08 2022",
+            name: "to-date"
           } %>
         <% end %>
       </div>
@@ -48,7 +51,8 @@
           heading_size: "l"
         } do %>
           <%= render "time_input", {
-            hint: "For example, 9:30 or 19:30"
+            hint: "For example, 9:30 or 19:30",
+            name: "to-time"
           } %>
         <% end %>
       </div>
