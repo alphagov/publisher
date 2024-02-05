@@ -487,7 +487,7 @@ class Edition
   end
 
   def paths
-    paths = ["/#{slug}"]  # base path
+    paths = ["/#{slug}"] # base path
 
     if respond_to?(:parts)
       paths += parts.map { |part| "/#{slug}/#{part.slug}" }
