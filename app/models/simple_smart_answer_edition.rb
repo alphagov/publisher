@@ -52,7 +52,7 @@ class SimpleSmartAnswerEdition < Edition
   def update(attributes)
     nodes_attrs = attributes.delete(:nodes_attributes)
     if nodes_attrs
-      nodes_attrs.each do |_index, node_attrs|
+      nodes_attrs.each_value do |node_attrs|
         # as this isn't a Hash
         node_id = node_attrs["id"]
         if node_id

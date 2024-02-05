@@ -27,7 +27,7 @@ class FactCheckConfig
   end
 
   def item_id_from_subject_or_body(subject, body = "")
-    id = (item_id_from_string(subject) || item_id_from_string(body))
+    id = item_id_from_string(subject) || item_id_from_string(body)
 
     return id if id
 
