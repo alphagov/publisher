@@ -34,16 +34,16 @@ class DowntimesHelperTest < ActionView::TestCase
     entries = transactions_table_entries([@edition_live, @edition_downtime])
     assert_equal entries, [
       [
-        { text: @edition_live.title },
-        { text: "Live" },
-        { text: "<a class=\"govuk-link\" href=\"/editions/#{@edition_live.id}/downtime/new\">Add downtime</a>" },
-        { text: "<a class=\"govuk-link\" href=\"#{Plek.website_root}/#{@edition_live.slug}\">View on website</a>" },
+        { text: "<span class=\"downtimes__table-title-column\">#{@edition_live.title}</span>" },
+        { text: "<span class=\"downtimes__table-state-column\">Live</span>" },
+        { text: "<a class=\"govuk-link downtimes__table-link\" href=\"/editions/#{@edition_live.id}/downtime/new\">Add downtime</a>" },
+        { text: "<a class=\"govuk-link downtimes__table-link\" href=\"#{Plek.website_root}/#{@edition_live.slug}\">View on website</a>" },
       ],
       [
-        { text: @edition_downtime.title },
-        { text: "Scheduled downtime 3pm on 10 October to 6pm on 11 October" },
-        { text: "<a class=\"govuk-link\" href=\"/editions/#{@edition_downtime.id}/downtime/edit\">Edit downtime</a>" },
-        { text: "<a class=\"govuk-link\" href=\"#{Plek.website_root}/#{@edition_downtime.slug}\">View on website</a>" },
+        { text: "<span class=\"downtimes__table-title-column\">#{@edition_downtime.title}</span>" },
+        { text: "<span class=\"downtimes__table-state-column\">Scheduled downtime 3pm on 10 October to 6pm on 11 October</span>" },
+        { text: "<a class=\"govuk-link downtimes__table-link\" href=\"/editions/#{@edition_downtime.id}/downtime/edit\">Edit downtime</a>" },
+        { text: "<a class=\"govuk-link downtimes__table-link\" href=\"#{Plek.website_root}/#{@edition_downtime.slug}\">View on website</a>" },
       ],
     ]
   end

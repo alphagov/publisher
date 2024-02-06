@@ -20,21 +20,21 @@ module DowntimesHelper
       downtime = Downtime.for(transaction.artefact)
 
       [
-        { text: transaction.title },
+        { text: tag.span(transaction.title, class: "downtimes__table-title-column") },
         {
-          text: downtime ? "Scheduled downtime #{downtime_datetime(downtime)}" : "Live",
+          text: tag.span(downtime ? "Scheduled downtime #{downtime_datetime(downtime)}" : "Live", class: "downtimes__table-state-column"),
         },
         { text: action_link_for_transaction(transaction) },
-        { text: link_to("View on website", "#{Plek.website_root}/#{transaction.slug}", class: "govuk-link") },
+        { text: link_to("View on website", "#{Plek.website_root}/#{transaction.slug}", class: "govuk-link downtimes__table-link") },
       ]
     end
   end
 
   def action_link_for_transaction(transaction)
     if transaction.artefact.downtime
-      link_to "Edit downtime", edit_edition_downtime_path(transaction), class: "govuk-link"
+      link_to "Edit downtime", edit_edition_downtime_path(transaction), class: "govuk-link downtimes__table-link"
     else
-      link_to "Add downtime", new_edition_downtime_path(transaction), class: "govuk-link"
+      link_to "Add downtime", new_edition_downtime_path(transaction), class: "govuk-link downtimes__table-link"
     end
   end
 end
