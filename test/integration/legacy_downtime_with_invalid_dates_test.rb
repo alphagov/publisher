@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
+class LegacyDowntimeWithInvalidDates < ActionDispatch::IntegrationTest
   setup do
     setup_users
 
@@ -16,7 +16,7 @@ class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_index_page, true)
+    test_strategy.switch!(:design_system_downtime_index_page, false)
   end
 
   test "Scheduling new downtime with invalid dates" do
@@ -24,7 +24,7 @@ class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
 
     visit root_path
     click_link "Downtime"
-    click_link "Add downtime"
+    click_link "Apply to become a driving instructor"
 
     enter_start_time 1.day.ago
     enter_end_time 1.day.ago - 1.day
