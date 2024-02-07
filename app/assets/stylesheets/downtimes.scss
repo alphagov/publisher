@@ -1,0 +1,15 @@
+.downtimes__table-title-column {
+  display: block;
+  max-width: 600px;
+}
+
+.downtimes__table-state-column {
+  display: block;
+  max-width: 350px;
+}
+
+.downtimes__table-link {
+  @include govuk-media-query($from: "tablet") {
+    white-space: nowrap;  
+  }
+}
