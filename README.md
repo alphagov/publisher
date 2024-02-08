@@ -61,6 +61,10 @@ This will generate a diagram in the `docs/state_machines` folder.
 
 Publisher stores its data in DocumentDB, which can't be queried using the instructions detailed in the GOV.UK developer docs. Instead, follow [these instructions for querying the database](docs/database-querying.md). 
 
+### Feature flags
+
+For details on how feature flags are managed in Publisher, see the [feature flags documentation](docs/feature-flags.md).
+
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
