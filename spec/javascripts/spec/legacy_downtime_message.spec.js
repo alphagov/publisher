@@ -101,7 +101,7 @@ describe('A downtime message module', function () {
 
     $('body').append(form)
 
-    downtimeMessage = new GOVUKAdmin.Modules.DowntimeMessage()
+    downtimeMessage = new GOVUKAdmin.Modules.LegacyDowntimeMessage()
     downtimeMessage.start(form)
   })
 
