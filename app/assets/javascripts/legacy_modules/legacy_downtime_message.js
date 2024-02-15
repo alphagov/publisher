@@ -2,7 +2,7 @@
 
 (function (Modules) {
   'use strict'
-  Modules.DowntimeMessage = function () {
+  Modules.LegacyDowntimeMessage = function () {
     this.start = function (element) {
       var $startTimeFields = element.find('.js-start-time select')
       var $stopTimeFields = element.find('.js-stop-time select')
