@@ -1,0 +1,48 @@
+<%
+  date_legend_text ||= nil
+  time_legend_text ||= nil
+
+  year ||= nil
+  month ||= nil
+  day ||= nil
+  date_input_items = []
+  date_input_items << day if day
+  date_input_items << month if month
+  date_input_items << year if year
+  date_input_items = nil unless date_input_items.any?
+
+  hour ||= nil
+  minute ||= nil
+  time_input_items = []
+  time_input_items << hour if hour
+  time_input_items << minute if minute
+  time_input_items = nil unless time_input_items.any?
+%>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%= render "govuk_publishing_components/components/fieldset", {
+          legend_text: date_legend_text,
+          heading_size: "m"
+        } do %>
+          <%= render "govuk_publishing_components/components/date_input", {
+            hint: "For example, 01 08 2022",
+            items: date_input_items,
+          } %>
+        <% end %>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <%= render "govuk_publishing_components/components/fieldset", {
+          legend_text: time_legend_text,
+          heading_size: "m"
+        } do %>
+          <%= render "time_input", {
+            hint: "For example, 9:30 or 19:30",
+            items: time_input_items,
+          } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

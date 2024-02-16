@@ -7,7 +7,7 @@
   We need a bit more information to create your local transaction.
 </p>
 
-<%= render :partial => 'shared/error_summary', locals: { object: @publication} %>
+<%= render :partial => 'shared/legacy_error_summary', locals: { object: @publication} %>
 
 <%= form_for(@publication, as: :edition, url: editions_path, html: { id: 'edition-form', novalidate: 'novalidate' } ) do |f| %>
   <fieldset class="inputs">

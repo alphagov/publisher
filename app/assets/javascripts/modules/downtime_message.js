@@ -14,8 +14,8 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     form.addEventListener('change', updateMessage)
 
     function updateMessage () {
-      const fromDate = getDate('from')
-      const toDate = getDate('to')
+      const fromDate = getDate('start')
+      const toDate = getDate('end')
 
       let message = ''
       if (isValidSchedule(fromDate, toDate)) {
@@ -25,11 +25,11 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     }
 
     function getDate (selector) {
-      const day = form.elements[`${selector}-date[day]`].value
-      const month = form.elements[`${selector}-date[month]`].value
-      const year = form.elements[`${selector}-date[year]`].value
-      const hours = form.elements[`${selector}-time[hour]`].value
-      const minutes = form.elements[`${selector}-time[minute]`].value
+      const day = form.elements[`downtime[${selector}_time(3i)]`].value
+      const month = form.elements[`downtime[${selector}_time(2i)]`].value
+      const year = form.elements[`downtime[${selector}_time(1i)]`].value
+      const hours = form.elements[`downtime[${selector}_time(4i)]`].value
+      const minutes = form.elements[`downtime[${selector}_time(5i)]`].value
 
       // The Date class treats 1 as February, but in the UI we expect 1 to be January
       const zeroIndexedMonth = parseInt(month) - 1

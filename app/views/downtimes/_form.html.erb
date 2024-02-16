@@ -1,64 +1,66 @@
 <%= f.hidden_field :artefact_id %>
 
-<%= render :partial => 'shared/error_summary', locals: { object: @downtime} %>
+<%= render :partial => 'shared/legacy_error_summary', locals: { object: @downtime} %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <%= render "govuk_publishing_components/components/fieldset", {
-          legend_text: "From date",
-          heading_size: "m"
-        } do %>
-          <%= render "govuk_publishing_components/components/date_input", {
-            hint: "For example, 01 08 2022",
-            name: "from-date"
-          } %>
-        <% end %>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <%= render "govuk_publishing_components/components/fieldset", {
-          legend_text: "From time",
-          heading_size: "m"
-        } do %>
-          <%= render "time_input", {
-            hint: "For example, 9:30 or 19:30",
-            name: "from-time"
-          } %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render partial: "downtimes/datetime_fields", locals: {
+  date_legend_text: "From date",
+  time_legend_text: "From time",
+  year: {
+    name: "downtime[start_time(1i)]",
+    label: "Year",
+    width: 4,
+  },
+  month: {
+    name: "downtime[start_time(2i)]",
+    label: "Month",
+    width: 2,
+  },
+  day: {
+    name: "downtime[start_time(3i)]",
+    label: "Day",
+    width: 2,
+  },
+  hour: {
+    name: "downtime[start_time(4i)]",
+    label: "Hour",
+    width: 2,
+  },
+  minute: {
+    name: "downtime[start_time(5i)]",
+    label: "Minute",
+    width: 2,
+  },
+} %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <%= render "govuk_publishing_components/components/fieldset", {
-          legend_text: "To date",
-          heading_size: "m"
-        } do %>
-          <%= render "govuk_publishing_components/components/date_input", {
-            hint: "For example, 01 08 2022",
-            name: "to-date"
-          } %>
-        <% end %>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <%= render "govuk_publishing_components/components/fieldset", {
-          legend_text: "To time",
-          heading_size: "m"
-        } do %>
-          <%= render "time_input", {
-            hint: "For example, 9:30 or 19:30",
-            name: "to-time"
-          } %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render partial: "downtimes/datetime_fields", locals: {
+  date_legend_text: "To date",
+  time_legend_text: "To time",
+  year: {
+    name: "downtime[end_time(1i)]",
+    label: "Year",
+    width: 4,
+  },
+  month: {
+    name: "downtime[end_time(2i)]",
+    label: "Month",
+    width: 2,
+  },
+  day: {
+    name: "downtime[end_time(3i)]",
+    label: "Day",
+    width: 2,
+  },
+  hour: {
+    name: "downtime[end_time(4i)]",
+    label: "Hour",
+    width: 2,
+  },
+  minute: {
+    name: "downtime[end_time(5i)]",
+    label: "Minute",
+    width: 2,
+  },
+} %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
