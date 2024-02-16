@@ -9,10 +9,6 @@ Flipflop.configure do
             description: "A feature only used by tests; not to be used for any actual features."
   end
 
-  feature :design_system_reports_page,
-          default: true,
-          description: "A transition of the reports page to use the GOV.UK Design System"
-
   feature :design_system_downtime_new,
           default: false,
           description: "A transition of the add downtime page to use the GOV.UK Design System"
