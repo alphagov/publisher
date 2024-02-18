@@ -18,11 +18,6 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
             "title" => "HMRC",
           },
         ],
-        "topics" => [
-          {
-            "base_path" => "/topic/business-tax/vat",
-          },
-        ],
       },
     }
   end
@@ -50,7 +45,6 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     assert_equal "Important document", data[0]["Name"]
     assert_equal "answer", data[0]["Format"]
     assert_equal "HMRC", data[0]["Organisations"]
-    assert_equal "business-tax/vat", data[0]["Topics"]
     assert_equal "business/support,tax/vat", data[0]["Browse pages"]
   end
 

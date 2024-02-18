@@ -24,31 +24,9 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: [],
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
-          ordered_related_items: [],
-          parent: [],
-        },
-        previous_version: 0,
-      )
-    end
-
-    should "tag to topics" do
-      visit_edition @edition
-      switch_tab "Tagging"
-
-      select2 "Oil and Gas / Fields", "Oil and Gas / Distillation (draft)", from: "Specialist topic pages"
-
-      save_tags_and_assert_success
-      assert_publishing_api_patch_links(
-        @content_id,
-        links: {
-          topics: %w[CONTENT-ID-DISTILL CONTENT-ID-FIELDS],
-          organisations: [],
-          meets_user_needs: [],
-          mainstream_browse_pages: [],
           ordered_related_items: [],
           parent: [],
         },
@@ -66,7 +44,6 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: [],
           organisations: %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
           meets_user_needs: [],
           mainstream_browse_pages: [],
@@ -87,7 +64,6 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @edition.artefact.content_id,
         links: {
-          topics: [],
           organisations: [],
           meets_user_needs: %w[CONTENT-ID-USER-NEED],
           mainstream_browse_pages: [],
@@ -147,7 +123,6 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: [],
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: [],
@@ -178,7 +153,6 @@ class TaggingTest < JavascriptIntegrationTest
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: [],
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: [],
@@ -196,13 +170,6 @@ class TaggingTest < JavascriptIntegrationTest
                    body: {
                      "content_id" => @content_id,
                      "expanded_links" => {
-                       "topics" => [
-                         {
-                           "content_id" => "CONTENT-ID-WELLS",
-                           "base_path" => "/topic/oil-and-gas/wells",
-                           "internal_name" => "Oil and Gas / Wells",
-                         },
-                       ],
                        "mainstream_browse_pages" => [
                          {
                            "content_id" => "CONTENT-ID-RTI",
@@ -226,14 +193,12 @@ class TaggingTest < JavascriptIntegrationTest
       select2 "Tax / RTI (draft)", "Tax / VAT", from: "Mainstream browse pages"
 
       select2 "Tax / Capital Gains Tax", from: "Breadcrumb"
-      select2 "Oil and Gas / Fields", from: "Specialist topic pages"
 
       save_tags_and_assert_success
 
       assert_publishing_api_patch_links(
         @content_id,
         links: {
-          topics: %w[CONTENT-ID-FIELDS CONTENT-ID-WELLS],
           organisations: [],
           meets_user_needs: [],
           mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
@@ -248,7 +213,6 @@ class TaggingTest < JavascriptIntegrationTest
       stub_publishing_api_has_links(
         "content_id" => @content_id,
         "links" => {
-          topics: %w[CONTENT-ID-WELLS],
           mainstream_browse_pages: %w[CONTENT-ID-RTI],
           parent: %w[CONTENT-ID-RTI],
         },
@@ -258,7 +222,7 @@ class TaggingTest < JavascriptIntegrationTest
 
       switch_tab "Tagging"
 
-      select2 "Oil and Gas / Fields", from: "Specialist topic pages"
+      select2 "Tax / RTI", from: "Mainstream browse pages"
 
       stub_request(:patch, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
         .to_return(status: 409)

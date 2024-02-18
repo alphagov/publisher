@@ -5,19 +5,6 @@ class LinkablesTest < ActiveSupport::TestCase
     stub_linkables
   end
 
-  test "returns sorted topics" do
-    assert_equal(
-      {
-        "Oil and Gas" => [
-          ["Oil and Gas / Distillation (draft)", "CONTENT-ID-DISTILL"],
-          ["Oil and Gas / Fields", "CONTENT-ID-FIELDS"],
-          ["Oil and Gas / Wells", "CONTENT-ID-WELLS"],
-        ],
-      },
-      Tagging::Linkables.new.topics,
-    )
-  end
-
   test "returns sorted browse pages" do
     assert_equal(
       {
