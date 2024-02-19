@@ -82,5 +82,25 @@ class EditArtefactTest < ActionDispatch::IntegrationTest
       assert page.has_no_select?("Reviewer", selected: assignee.name)
       assert page.has_no_css?("input", class: "claim-2i")
     end
+
+    should "not show 'Claim 2i' button on the Edit page if Reviewer is already assigned" do
+      user = FactoryBot.create(:user, :govuk_editor)
+      assignee = FactoryBot.create(:user, :govuk_editor)
+      edition = FactoryBot.create(
+        :guide_edition,
+        title: "XXX",
+        state: "in_review",
+        review_requested_at: Time.zone.now,
+        assigned_to: assignee,
+        reviewer: user,
+      )
+
+      visit edition_path(edition)
+
+      assert edition_url(edition), current_url
+      assert page.has_select?("Assigned to", selected: assignee.name)
+      assert page.has_select?("Reviewer", selected: user.name)
+      assert page.has_no_css?("input", class: "claim-2i")
+    end
   end
 end
