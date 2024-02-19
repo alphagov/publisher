@@ -1,10 +1,13 @@
 <%= form_group(f, :reviewer, label: "Reviewer") do %>
   <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => 'assignee-select'} %>
-
-  <% if current_user.id != edition.assigned_to_id %>
-    <%= form_for :edition, url: review_edition_path(edition.id), method: :put do |f| %>
-      <%= f.hidden_field :reviewer, value: current_user.name %>
-      <%= f.submit "Claim 2i", class: "btn btn-primary claim-2i" %>
-    <% end -%>
-  <% end -%>
 <% end %>
+
+<% if current_user.id != edition.assigned_to_id %>
+  <%= form_for :edition, url: review_edition_path(edition.id), method: :put do |f| %>
+    <%= f.hidden_field :reviewer, value: current_user.name %>
+    <%= f.submit "Claim 2i", class: "btn btn-primary claim-2i" %>
+  <% end -%>
+<% end -%>
+
+<br />
+<br />
