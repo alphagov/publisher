@@ -1,7 +1,5 @@
 <%= f.hidden_field :artefact_id %>
 
-<%= render :partial => 'shared/legacy_error_summary', locals: { object: @downtime} %>
-
 <%= render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "From date",
   time_legend_text: "From time",
@@ -16,6 +14,7 @@
     width: 2,
   },
   day: {
+    id: "downtime_start_time",
     name: "downtime[start_time(3i)]",
     label: "Day",
     width: 2,
@@ -46,6 +45,7 @@
     width: 2,
   },
   day: {
+    id: "downtime_end_time",
     name: "downtime[end_time(3i)]",
     label: "Day",
     width: 2,
@@ -70,6 +70,7 @@
         text: "Message"
       },
       hint: "Message is auto-generated once a schedule has been made.",
+      id: "downtime_message",
       name: "downtime[message]"
     } %>
   </div>
