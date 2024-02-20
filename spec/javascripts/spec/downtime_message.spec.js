@@ -168,7 +168,7 @@ describe('A downtime message module', function () {
                 <div id="hint-2d54afbc" class="gem-c-hint govuk-hint">
                     Message is auto-generated once a schedule has been made.
                 </div>
-                <textarea name="message" class="govuk-textarea" id="textarea-30759358" rows="5" spellcheck="true"
+                <textarea name="downtime[message]" class="govuk-textarea" id="textarea-30759358" rows="5" spellcheck="true"
                           aria-describedby="hint-2d54afbc">starting message</textarea>
             </div>
         </div>
@@ -276,11 +276,11 @@ describe('A downtime message module', function () {
   })
 
   function expectDowntimeMessageToMatch (text) {
-    expect(form.elements.message.value).toMatch(text)
+    expect(form.elements['downtime[message]'].value).toMatch(text)
   }
 
   function expectDowntimeMessageToBe (text) {
-    expect(form.elements.message.value).toBe(text)
+    expect(form.elements['downtime[message]'].value).toBe(text)
   }
 
   function enterFromDate (dateObj) {
