@@ -21,7 +21,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
       if (isValidSchedule(fromDate, toDate)) {
         message = downtimeMessage(fromDate, toDate)
       }
-      form.elements.message.value = message
+      form.elements['downtime[message]'].value = message
     }
 
     function getDate (selector) {

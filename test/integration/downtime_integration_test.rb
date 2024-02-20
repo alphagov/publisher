@@ -17,6 +17,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_downtime_index_page, true)
+    test_strategy.switch!(:design_system_downtime_new, true)
   end
 
   test "Scheduling new downtime" do
@@ -26,15 +27,14 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     click_link "Downtime"
     click_link "Add downtime"
 
-    enter_start_time first_of_july_next_year_at_midday_bst
-    enter_end_time first_of_july_next_year_at_six_pm_bst
+    enter_from_date_and_time first_of_july_next_year_at_midday_bst
+    enter_to_date_and_time first_of_july_next_year_at_six_pm_bst
 
     assert_match("midday to 6pm on #{day} 1 July", page.find_field("Message").value)
-    click_button "Schedule downtime message"
+    click_button "Save"
 
-    assert page.has_content?("downtime message scheduled")
-    assert page.has_content?("Scheduled downtime")
-    assert page.has_content?("midday to 6pm on 1 July")
+    assert_text "downtime message scheduled"
+    assert_text "Scheduled downtime midday to 6pm on 1 July"
   end
 
   test "Rescheduling downtime" do
@@ -44,7 +44,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     visit root_path
     click_link "Downtime"
     click_link "Edit downtime"
-    enter_end_time first_of_july_next_year_at_nine_thirty_pm_bst
+    legacy_enter_end_time first_of_july_next_year_at_nine_thirty_pm_bst
 
     assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field("Message").value)
     click_on "Re-schedule downtime message"
@@ -66,11 +66,27 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     assert_no_downtime_scheduled
   end
 
-  def enter_start_time(start_time)
+  def enter_from_date_and_time(start_time)
+    enter_date_and_time("start", start_time)
+  end
+
+  def enter_to_date_and_time(end_time)
+    enter_date_and_time("end", end_time)
+  end
+
+  def enter_date_and_time(prefix, time)
+    fill_in "downtime[#{prefix}_time(3i)]", with: time.day.to_s
+    fill_in "downtime[#{prefix}_time(2i)]", with: time.month.to_s
+    fill_in "downtime[#{prefix}_time(1i)]", with: time.year.to_s
+    fill_in "downtime[#{prefix}_time(4i)]", with: time.hour.to_s
+    fill_in "downtime[#{prefix}_time(5i)]", with: time.min.to_s
+  end
+
+  def legacy_enter_start_time(start_time)
     complete_date_inputs("downtime_start_time", start_time)
   end
 
-  def enter_end_time(end_time)
+  def legacy_enter_end_time(end_time)
     complete_date_inputs("downtime_end_time", end_time)
   end
 
