@@ -27,13 +27,25 @@ class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     click_link "Downtime"
     click_link "Add downtime"
 
-    enter_from_date_and_time 1.day.ago
-    enter_to_date_and_time 1.day.ago - 1.day
+    start_time = 1.day.ago
+    end_time = start_time - 1.day
+    enter_from_date_and_time start_time
+    enter_to_date_and_time end_time
 
     click_button "Save"
 
     assert page.has_link?("End time must be in the future", href: "#downtime_end_time")
     assert page.has_link?("Start time must be earlier than end time", href: "#downtime_start_time")
+    assert page.has_field?("downtime[start_time(1i)]", with: start_time.year.to_s)
+    assert page.has_field?("downtime[start_time(2i)]", with: start_time.month.to_s)
+    assert page.has_field?("downtime[start_time(3i)]", with: start_time.day.to_s)
+    assert page.has_field?("downtime[start_time(4i)]", with: start_time.hour.to_s)
+    assert page.has_field?("downtime[start_time(5i)]", with: start_time.min.to_s)
+    assert page.has_field?("downtime[end_time(1i)]", with: end_time.year.to_s)
+    assert page.has_field?("downtime[end_time(2i)]", with: end_time.month.to_s)
+    assert page.has_field?("downtime[end_time(3i)]", with: end_time.day.to_s)
+    assert page.has_field?("downtime[end_time(4i)]", with: end_time.hour.to_s)
+    assert page.has_field?("downtime[end_time(5i)]", with: end_time.min.to_s)
   end
 
   def enter_from_date_and_time(start_time)
