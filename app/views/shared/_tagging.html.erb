@@ -43,24 +43,6 @@
           </p>
         </div>
 
-        <div class="form-group" id="edition_topics_input">
-          <%= f.label :topics, "Specialist topic pages", class: 'control-label' %>
-          <%= f.select :topics, @linkables.topics,
-                       {},
-                       { multiple: true,
-                         class: 'select2',
-                         data: { placeholder: 'Choose Topics…' } } %>
-
-          <p class='help-block'>
-            Specialist topic pages live under <a href="https://www.gov.uk/topic">/topic</a>.
-            They contain collections of pages on GOV.UK. Example:
-            <a href="https://www.gov.uk/topic/business-tax">Business Tax</a> or
-            <a href="https://www.gov.uk/topic/animal-welfare/pets">Animal Welfare / Pets</a>.
-            Tagging a page to a specialist topic will send out an
-            <a href="https://www.gov.uk/topic/business-tax/vat/email-signup">email alert to subscribers</a>.
-          </p>
-        </div>
-
         <div class="form-group" id="edition_organisations_input">
           <%= f.label :organisations, "Organisations", class: 'control-label' %>
           <%= f.select :organisations, @linkables.organisations,

@@ -8,10 +8,6 @@
 # to use `content_id`, we may move this functionality into a gem.
 module Tagging
   class Linkables
-    def topics
-      @topics ||= for_nested_document_type("topic")
-    end
-
     def taxons
       @taxons ||= for_document_type("taxon")
     end

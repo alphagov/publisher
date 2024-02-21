@@ -8,7 +8,6 @@ class OrganisationContentPresenter < CSVPresenter
       slug
       state
       browse_pages
-      topics
       organisations
     ]
   end
@@ -27,8 +26,6 @@ private
     case header
     when :browse_pages
       expanded_links(content_id, %w[mainstream_browse_pages base_path], /\/browse\//)
-    when :topics
-      expanded_links(content_id, %w[topics base_path], /\/topic\//)
     when :organisations
       expanded_links(content_id, %w[organisations title])
     when :format

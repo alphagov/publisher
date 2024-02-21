@@ -1,7 +1,7 @@
 module Tagging
   class TaggingUpdateForm
     include ActiveModel::Model
-    attr_accessor :content_id, :previous_version, :topics, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent
+    attr_accessor :content_id, :previous_version, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent
 
     validate :ordered_related_items_paths_exist
 
@@ -11,7 +11,6 @@ module Tagging
       new(
         content_id:,
         previous_version: link_set.version,
-        topics: link_set.links["topics"],
         organisations: link_set.links["organisations"],
         meets_user_needs: link_set.links["meets_user_needs"],
         mainstream_browse_pages: link_set.links["mainstream_browse_pages"],
@@ -30,7 +29,6 @@ module Tagging
 
     def links_payload
       {
-        topics: clean_content_ids(topics),
         organisations: clean_content_ids(organisations),
         meets_user_needs: clean_content_ids(meets_user_needs),
         mainstream_browse_pages: clean_content_ids(mainstream_browse_pages),

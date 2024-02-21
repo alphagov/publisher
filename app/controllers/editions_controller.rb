@@ -396,7 +396,6 @@ private
       :previous_version,
       :parent,
       mainstream_browse_pages: [],
-      topics: [],
       organisations: [],
       meets_user_needs: [],
       ordered_related_items: [],
