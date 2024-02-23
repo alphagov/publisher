@@ -4,7 +4,7 @@
     items: object.errors.map do |error|
       model = object.class.superclass.to_s == "Object" ? object.class : object.class.superclass
       {
-        text: error.message,
+        text: error.full_message,
         href: "##{model.to_s.underscore + "_" + error.attribute.to_s}",
       }
     end
