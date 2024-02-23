@@ -3,6 +3,7 @@
 <%= render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "From date",
   time_legend_text: "From time",
+  error_items: errors_for(f.object.errors, :start_time),
   year: {
     name: "downtime[start_time(1i)]",
     label: "Year",
@@ -39,6 +40,7 @@
 <%= render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "To date",
   time_legend_text: "To time",
+  error_items: errors_for(f.object.errors, :end_time),
   year: {
     name: "downtime[end_time(1i)]",
     label: "Year",
