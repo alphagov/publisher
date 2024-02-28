@@ -47,19 +47,11 @@ class DowntimesController < ApplicationController
 private
 
   def downtime_params
-    params[:downtime].permit([
-      "artefact_id",
-      "message",
-      "end_time(1i)",
-      "end_time(2i)",
-      "end_time(3i)",
-      "end_time(4i)",
-      "end_time(5i)",
-      "start_time(1i)",
-      "start_time(2i)",
-      "start_time(3i)",
-      "start_time(4i)",
-      "start_time(5i)",
+    params[:downtime].permit(%w[
+      artefact_id
+      message
+      end_time
+      start_time
     ])
   end
 
