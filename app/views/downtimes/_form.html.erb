@@ -85,6 +85,7 @@
       id: "downtime_message",
       name: "downtime[message]",
       value: params.dig("downtime", "message"),
+      error_items: errors_for(f.object.errors, :message),
     } %>
   </div>
 </div>
