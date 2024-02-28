@@ -1,7 +1,7 @@
 class DowntimesController < ApplicationController
   before_action :require_govuk_editor
   before_action :load_edition, except: [:index]
-  before_action :process_params, only: %i[create update]
+  before_action :process_params, only: %i[update]
 
   layout "design_system"
 
