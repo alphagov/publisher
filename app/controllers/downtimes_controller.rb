@@ -15,11 +15,19 @@ class DowntimesController < ApplicationController
 
   def create
     @downtime = Downtime.new(downtime_params)
-    if @downtime.save
+    datetime_validation_errors = datetime_validation_errors(downtime_params, %w[start_time end_time])
+
+    if datetime_validation_errors.empty? && @downtime.save
       DowntimeScheduler.schedule_publish_and_expiry(@downtime)
       flash[:success] = "#{edition_link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
+      @downtime.valid? # Make sure the model validations have run
+      datetime_validation_errors.each do |name, message|
+        # Remove any default messages for this field added by the model validation
+        @downtime.errors.delete(name)
+        @downtime.errors.add(name, message)
+      end
       render :new
     end
   end
@@ -65,5 +73,23 @@ private
 
   def edition_link
     view_context.link_to(@edition.title, edit_edition_downtime_path(@edition), class: "link-inherit bold")
+  end
+
+  def datetime_validation_errors(params, attribute_names = [])
+    errors = {}
+    attribute_names.each do |name|
+      year, month, day, hour, minute = params.select { |k, _| k.include? name }.to_h.sort.map { |_, v| v }
+      unless year.match?(/^\d{4}$/) && month.match?(/^\d{1,2}$/) && day.match?(/^\d{1,2}$/) \
+        && hour.match?(/^\d{1,2}$/) && minute.match?(/^\d{1,2}$/)
+
+        errors[name] = "format is invalid"
+      end
+      begin
+        Time.zone.local(year.to_i, month.to_i, day.to_i, hour.to_i, minute.to_i)
+      rescue ArgumentError
+        errors[name] = "format is invalid"
+      end
+    end
+    errors
   end
 end
