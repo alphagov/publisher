@@ -1,6 +1,9 @@
 require "test_helper"
+require "support/downtimes_controller_parameterised_tests"
 
 class DowntimesControllerTest < ActionController::TestCase
+  extend DowntimesControllerParameterisedTests
+
   setup do
     login_as_stub_user
   end
@@ -33,8 +36,16 @@ class DowntimesControllerTest < ActionController::TestCase
     end
 
     context "with invalid params" do
-      should "not create a downtime" do
+      should "not create a downtime when model validation fails" do
         post :create, params: { edition_id: edition.id, downtime: invalid_params }
+        assert_that_no_downtime_exists
+      end
+
+      should "not create a downtime when extra date/time validation fails" do
+        params_with_invalid_start_time = downtime_params.merge('start_time(1i)': "aaa")
+
+        post :create, params: { edition_id: edition.id, downtime: params_with_invalid_start_time }
+
         assert_that_no_downtime_exists
       end
 
@@ -46,6 +57,40 @@ class DowntimesControllerTest < ActionController::TestCase
       should "rerender the page" do
         post :create, params: { edition_id: edition.id, downtime: invalid_params }
         assert_template :new
+      end
+
+      test_create_with_invalid_datetime_values
+
+      should "display a validation error when the start date is invalid" do
+        params_with_invalid_start_time = downtime_params.merge('start_time(1i)': "4", 'start_time(2i)': "31")
+
+        post :create, params: { edition_id: edition.id, downtime: params_with_invalid_start_time }
+
+        assert_select "div.govuk-error-summary" do
+          assert_select "a", "Start time format is invalid"
+        end
+      end
+
+      should "not display other datetime validation errors when there are 'format is invalid' errors" do
+        params_with_invalid_start_time = downtime_params.merge('end_time(1i)': "a")
+
+        post :create, params: { edition_id: edition.id, downtime: params_with_invalid_start_time }
+
+        assert_select "div.govuk-error-summary" do
+          assert_select "a", "End time format is invalid"
+          assert_select "a", { text: "End time must be in the future", count: 0 }
+        end
+      end
+
+      should "run model validations when there are datetime validation errors" do
+        params_with_invalid_start_time = downtime_params.merge('end_time(1i)': "a", message: "")
+
+        post :create, params: { edition_id: edition.id, downtime: params_with_invalid_start_time }
+
+        assert_select "div.govuk-error-summary" do
+          assert_select "a", "End time format is invalid"
+          assert_select "a", "Message can't be blank"
+        end
       end
     end
   end

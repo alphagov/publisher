@@ -2,6 +2,8 @@
   date_legend_text ||= nil
   time_legend_text ||= nil
 
+  error_items ||= nil
+
   year ||= nil
   month ||= nil
   day ||= nil
@@ -29,6 +31,7 @@
           <%= render "govuk_publishing_components/components/date_input", {
             hint: "For example, 01 08 2022",
             items: date_input_items,
+            error_items: error_items,
           } %>
         <% end %>
       </div>
@@ -40,6 +43,7 @@
           <%= render "time_input", {
             hint: "For example, 9:30 or 19:30",
             items: time_input_items,
+            error_items: error_items,
           } %>
         <% end %>
       </div>

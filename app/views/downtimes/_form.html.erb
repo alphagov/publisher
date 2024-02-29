@@ -3,30 +3,36 @@
 <%= render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "From date",
   time_legend_text: "From time",
+  error_items: errors_for(f.object.errors, :start_time),
   year: {
     name: "downtime[start_time(1i)]",
     label: "Year",
+    value: params.dig("downtime", "start_time(1i)"),
     width: 4,
   },
   month: {
     name: "downtime[start_time(2i)]",
     label: "Month",
+    value: params.dig("downtime", "start_time(2i)"),
     width: 2,
   },
   day: {
     id: "downtime_start_time",
     name: "downtime[start_time(3i)]",
     label: "Day",
+    value: params.dig("downtime", "start_time(3i)"),
     width: 2,
   },
   hour: {
     name: "downtime[start_time(4i)]",
     label: "Hour",
+    value: params.dig("downtime", "start_time(4i)"),
     width: 2,
   },
   minute: {
     name: "downtime[start_time(5i)]",
     label: "Minute",
+    value: params.dig("downtime", "start_time(5i)"),
     width: 2,
   },
 } %>
@@ -34,30 +40,36 @@
 <%= render partial: "downtimes/datetime_fields", locals: {
   date_legend_text: "To date",
   time_legend_text: "To time",
+  error_items: errors_for(f.object.errors, :end_time),
   year: {
     name: "downtime[end_time(1i)]",
     label: "Year",
+    value: params.dig("downtime", "end_time(1i)"),
     width: 4,
   },
   month: {
     name: "downtime[end_time(2i)]",
     label: "Month",
+    value: params.dig("downtime", "end_time(2i)"),
     width: 2,
   },
   day: {
     id: "downtime_end_time",
     name: "downtime[end_time(3i)]",
     label: "Day",
+    value: params.dig("downtime", "end_time(3i)"),
     width: 2,
   },
   hour: {
     name: "downtime[end_time(4i)]",
     label: "Hour",
+    value: params.dig("downtime", "end_time(4i)"),
     width: 2,
   },
   minute: {
     name: "downtime[end_time(5i)]",
     label: "Minute",
+    value: params.dig("downtime", "end_time(5i)"),
     width: 2,
   },
 } %>
@@ -71,7 +83,9 @@
       },
       hint: "Message is auto-generated once a schedule has been made.",
       id: "downtime_message",
-      name: "downtime[message]"
+      name: "downtime[message]",
+      value: params.dig("downtime", "message"),
+      error_items: errors_for(f.object.errors, :message),
     } %>
   </div>
 </div>
