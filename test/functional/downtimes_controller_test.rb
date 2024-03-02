@@ -31,7 +31,7 @@ class DowntimesControllerTest < ActionController::TestCase
       should "redirect to the downtime index page" do
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
         post :create, params: { edition_id: edition.id, downtime: downtime_params }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
@@ -107,13 +107,13 @@ class DowntimesControllerTest < ActionController::TestCase
     context "cancelling scheduled downtime" do
       should "invoke the DowntimeRemover" do
         DowntimeRemover.expects(:destroy_immediately).with(downtime)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
+        put :update, params: { edition_id: edition.id, commit: "Cancel downtime" }
       end
 
       should "redirect to the downtime index" do
         DowntimeRemover.stubs(:destroy_immediately)
-        put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        put :update, params: { edition_id: edition.id, commit: "Cancel downtime" }
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
@@ -127,7 +127,7 @@ class DowntimesControllerTest < ActionController::TestCase
         create_downtime
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
         put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
@@ -162,6 +162,14 @@ class DowntimesControllerTest < ActionController::TestCase
       assert_response :redirect
       assert_redirected_to controller: "root", action: "index"
       assert_includes flash[:danger], "do not have permission"
+    end
+  end
+
+  context "#destroy" do
+    should "render the page ok" do
+      create_downtime
+      get :destroy, params: { edition_id: edition.id }
+      assert_response :ok
     end
   end
 

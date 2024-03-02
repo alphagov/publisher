@@ -7,32 +7,32 @@
   year: {
     name: "downtime[start_time(1i)]",
     label: "Year",
-    value: params.dig("downtime", "start_time(1i)"),
+    value: @downtime.start_time&.year || params.dig("downtime", "start_time(1i)"),
     width: 4,
   },
   month: {
     name: "downtime[start_time(2i)]",
     label: "Month",
-    value: params.dig("downtime", "start_time(2i)"),
+    value: @downtime.start_time&.month || params.dig("downtime", "start_time(2i)"),
     width: 2,
   },
   day: {
     id: "downtime_start_time",
     name: "downtime[start_time(3i)]",
     label: "Day",
-    value: params.dig("downtime", "start_time(3i)"),
+    value: @downtime.start_time&.day || params.dig("downtime", "start_time(3i)"),
     width: 2,
   },
   hour: {
     name: "downtime[start_time(4i)]",
     label: "Hour",
-    value: params.dig("downtime", "start_time(4i)"),
+    value: @downtime.start_time&.hour || params.dig("downtime", "start_time(4i)"),
     width: 2,
   },
   minute: {
     name: "downtime[start_time(5i)]",
     label: "Minute",
-    value: params.dig("downtime", "start_time(5i)"),
+    value: @downtime.start_time&.minute || params.dig("downtime", "start_time(5i)"),
     width: 2,
   },
 } %>
@@ -44,32 +44,32 @@
   year: {
     name: "downtime[end_time(1i)]",
     label: "Year",
-    value: params.dig("downtime", "end_time(1i)"),
+    value: @downtime.end_time&.year || params.dig("downtime", "end_time(1i)"),
     width: 4,
   },
   month: {
     name: "downtime[end_time(2i)]",
     label: "Month",
-    value: params.dig("downtime", "end_time(2i)"),
+    value: @downtime.end_time&.month || params.dig("downtime", "end_time(2i)"),
     width: 2,
   },
   day: {
     id: "downtime_end_time",
     name: "downtime[end_time(3i)]",
     label: "Day",
-    value: params.dig("downtime", "end_time(3i)"),
+    value: @downtime.end_time&.day || params.dig("downtime", "end_time(3i)"),
     width: 2,
   },
   hour: {
     name: "downtime[end_time(4i)]",
     label: "Hour",
-    value: params.dig("downtime", "end_time(4i)"),
+    value: @downtime.end_time&.hour || params.dig("downtime", "end_time(4i)"),
     width: 2,
   },
   minute: {
     name: "downtime[end_time(5i)]",
     label: "Minute",
-    value: params.dig("downtime", "end_time(5i)"),
+    value: @downtime.end_time&.minute || params.dig("downtime", "end_time(5i)"),
     width: 2,
   },
 } %>
@@ -85,7 +85,7 @@
       hint: "Message is auto-generated once a schedule has been made.",
       id: "downtime_message",
       name: "downtime[message]",
-      value: params.dig("downtime", "message"),
+      value: @downtime.message || params.dig("downtime", "message"),
       error_items: errors_for(f.object.errors, :message),
     } %>
   </div>

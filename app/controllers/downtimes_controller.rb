@@ -39,7 +39,7 @@ class DowntimesController < ApplicationController
   def update
     @downtime = Downtime.for(@edition.artefact)
 
-    if params["commit"] == "Cancel downtime"
+    if !params[:downtime]
       DowntimeRemover.destroy_immediately(@downtime)
       flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
@@ -50,6 +50,11 @@ class DowntimesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @downtime = Downtime.for(@edition.artefact)
+    render :delete
   end
 
 private
@@ -68,7 +73,9 @@ private
   end
 
   def process_params
-    squash_multiparameter_datetime_attributes(downtime_params, %w[start_time end_time])
+    if params[:downtime]
+      squash_multiparameter_datetime_attributes(downtime_params, %w[start_time end_time])
+    end
   end
 
   def edition_link

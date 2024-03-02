@@ -10,6 +10,10 @@
 
 .downtimes__table-link {
   @include govuk-media-query($from: "tablet") {
-    white-space: nowrap;  
+    white-space: nowrap;
   }
+}
+
+.remove-link, .remove-link:visited{
+  color: govuk-colour("red");
 }
