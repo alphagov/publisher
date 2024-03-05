@@ -140,6 +140,7 @@ class Edition
   index state: 1
   index created_at: 1
   index updated_at: 1
+  index({title: 'text', slug: 'text', overview: 'text', licence_identifier: "text" })
 
   alias_method :admin_list_title, :title
 
