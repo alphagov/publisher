@@ -90,18 +90,18 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
   should "only allow one promotion to be displayed at once" do
     edition = FactoryBot.create(:completed_transaction_edition, panopticon_id: @artefact.id)
-    register_to_vote_promotion_url = "https://gov.uk/register-to-vote"
+    mot_promotion_url = "https://www.gov.uk/mot-reminder"
 
     visit_edition edition
 
-    assert page.has_unchecked_field? "Promote register to vote"
+    assert page.has_unchecked_field? "Promote MOT reminders"
 
-    choose "Promote register to vote"
-    fill_in "Promotion choice URL", with: register_to_vote_promotion_url
+    choose "Promote MOT reminders"
+    fill_in "Promotion choice URL", with: mot_promotion_url
     save_edition_and_assert_success
 
-    assert page.has_checked_field? "Promote register to vote"
-    assert page.has_field? "Promotion choice URL", with: register_to_vote_promotion_url
+    assert page.has_checked_field? "Promote MOT reminders"
+    assert page.has_field? "Promotion choice URL", with: mot_promotion_url
     assert page.has_unchecked_field? "Promote organ donation"
   end
 
@@ -112,7 +112,6 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
 
     assert page.has_content? "Don't promote anything on this page"
     assert page.has_content? "Promote organ donation"
-    assert page.has_content? "Promote register to vote"
     assert page.has_content? "Promote MOT reminders"
   end
 end
