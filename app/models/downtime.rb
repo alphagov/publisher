@@ -9,7 +9,7 @@ class Downtime
   belongs_to :artefact, optional: true
 
   validate :start_time_precedes_end_time
-  validate :end_time_is_in_future, on: :create
+  validate :end_time_is_in_future
   validates :message, :start_time, :end_time, :artefact, presence: true
 
   def self.for(artefact)
