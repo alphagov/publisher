@@ -18,6 +18,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_downtime_index_page, true)
     test_strategy.switch!(:design_system_downtime_new, true)
+    test_strategy.switch!(:design_system_downtime_edit, true)
   end
 
   test "Scheduling new downtime" do
@@ -44,10 +45,12 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     visit root_path
     click_link "Downtime"
     click_link "Edit downtime"
-    legacy_enter_end_time first_of_july_next_year_at_nine_thirty_pm_bst
+    enter_to_date_and_time first_of_july_next_year_at_nine_thirty_pm_bst
+
+    find("textarea#downtime_message").click
 
     assert_match("This service will be unavailable from midday to 9:30pm on #{day} 1 July.", page.find_field("Message").value)
-    click_on "Re-schedule downtime message"
+    click_on "Save"
 
     assert page.has_content?("downtime message re-scheduled")
     assert page.has_content?("midday to 9:30pm on 1 July")
@@ -60,7 +63,8 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     visit root_path
     click_link "Downtime"
     click_link "Edit downtime"
-    click_on "Cancel downtime"
+    click_link "Remove"
+    click_on "Remove"
 
     assert page.has_content?("downtime message cancelled")
     assert_no_downtime_scheduled

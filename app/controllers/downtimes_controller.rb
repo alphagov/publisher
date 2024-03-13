@@ -1,7 +1,6 @@
 class DowntimesController < ApplicationController
   before_action :require_govuk_editor
   before_action :load_edition, except: [:index]
-  before_action :process_params, only: %i[update]
 
   layout "design_system"
 
@@ -39,17 +38,31 @@ class DowntimesController < ApplicationController
   def update
     @downtime = Downtime.for(@edition.artefact)
 
-    if params["commit"] == "Cancel downtime"
+    if params[:downtime]
+      datetime_validation_errors = datetime_validation_errors(downtime_params, %w[start_time end_time])
+      if datetime_validation_errors.empty? && @downtime.update(downtime_params)
+        DowntimeScheduler.schedule_publish_and_expiry(@downtime)
+        flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+        redirect_to downtimes_path
+      else
+        @downtime.valid? # Make sure the model validations have run
+        datetime_validation_errors.each do |name, message|
+          # Remove any default messages for this field added by the model validation
+          @downtime.errors.delete(name)
+          @downtime.errors.add(name, message)
+        end
+        render :edit
+      end
+    else
       DowntimeRemover.destroy_immediately(@downtime)
       flash[:success] = "#{edition_link} downtime message cancelled".html_safe
       redirect_to downtimes_path
-    elsif @downtime.update(downtime_params)
-      DowntimeScheduler.schedule_publish_and_expiry(@downtime)
-      flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
-      redirect_to downtimes_path
-    else
-      render :edit
     end
+  end
+
+  def destroy
+    @downtime = Downtime.for(@edition.artefact)
+    render :delete
   end
 
 private
@@ -65,10 +78,6 @@ private
 
   def load_edition
     @edition = Edition.find(params[:edition_id])
-  end
-
-  def process_params
-    squash_multiparameter_datetime_attributes(downtime_params, %w[start_time end_time])
   end
 
   def edition_link
