@@ -7,32 +7,32 @@
   year: {
     name: "downtime[start_time(1i)]",
     label: "Year",
-    value: @downtime.start_time&.year || params.dig("downtime", "start_time(1i)"),
+    value: params.dig("downtime", "start_time(1i)") || @downtime.start_time&.year,
     width: 4,
   },
   month: {
     name: "downtime[start_time(2i)]",
     label: "Month",
-    value: @downtime.start_time&.month || params.dig("downtime", "start_time(2i)"),
+    value: params.dig("downtime", "start_time(2i)") || @downtime.start_time&.month,
     width: 2,
   },
   day: {
     id: "downtime_start_time",
     name: "downtime[start_time(3i)]",
     label: "Day",
-    value: @downtime.start_time&.day || params.dig("downtime", "start_time(3i)"),
+    value: params.dig("downtime", "start_time(3i)") || @downtime.start_time&.day,
     width: 2,
   },
   hour: {
     name: "downtime[start_time(4i)]",
     label: "Hour",
-    value: @downtime.start_time&.hour || params.dig("downtime", "start_time(4i)"),
+    value: params.dig("downtime", "start_time(4i)") || @downtime.start_time&.hour,
     width: 2,
   },
   minute: {
     name: "downtime[start_time(5i)]",
     label: "Minute",
-    value: @downtime.start_time&.minute || params.dig("downtime", "start_time(5i)"),
+    value: params.dig("downtime", "start_time(5i)") || @downtime.start_time&.minute,
     width: 2,
   },
 } %>
@@ -44,32 +44,32 @@
   year: {
     name: "downtime[end_time(1i)]",
     label: "Year",
-    value: @downtime.end_time&.year || params.dig("downtime", "end_time(1i)"),
+    value: params.dig("downtime", "end_time(1i)") || @downtime.end_time&.year,
     width: 4,
   },
   month: {
     name: "downtime[end_time(2i)]",
     label: "Month",
-    value: @downtime.end_time&.month || params.dig("downtime", "end_time(2i)"),
+    value: params.dig("downtime", "end_time(2i)") || @downtime.end_time&.month,
     width: 2,
   },
   day: {
     id: "downtime_end_time",
     name: "downtime[end_time(3i)]",
     label: "Day",
-    value: @downtime.end_time&.day || params.dig("downtime", "end_time(3i)"),
+    value: params.dig("downtime", "end_time(3i)") || @downtime.end_time&.day,
     width: 2,
   },
   hour: {
     name: "downtime[end_time(4i)]",
     label: "Hour",
-    value: @downtime.end_time&.hour || params.dig("downtime", "end_time(4i)"),
+    value: params.dig("downtime", "end_time(4i)") || @downtime.end_time&.hour,
     width: 2,
   },
   minute: {
     name: "downtime[end_time(5i)]",
     label: "Minute",
-    value: @downtime.end_time&.minute || params.dig("downtime", "end_time(5i)"),
+    value: params.dig("downtime", "end_time(5i)") || @downtime.end_time&.minute,
     width: 2,
   },
 } %>
@@ -85,7 +85,7 @@
       hint: "Message is auto-generated once a schedule has been made.",
       id: "downtime_message",
       name: "downtime[message]",
-      value: @downtime.message || params.dig("downtime", "message"),
+      value: params.dig("downtime", "message") || @downtime.message,
       error_items: errors_for(f.object.errors, :message),
     } %>
   </div>
