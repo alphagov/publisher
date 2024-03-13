@@ -18,7 +18,7 @@ class DowntimesController < ApplicationController
 
     if datetime_validation_errors.empty? && @downtime.save
       DowntimeScheduler.schedule_publish_and_expiry(@downtime)
-      flash[:success] = "#{edition_link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+      flash[:success] = "#{@edition.title} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
       redirect_to downtimes_path
     else
       @downtime.valid? # Make sure the model validations have run
