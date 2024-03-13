@@ -42,7 +42,7 @@ class DowntimesController < ApplicationController
       datetime_validation_errors = datetime_validation_errors(downtime_params, %w[start_time end_time])
       if datetime_validation_errors.empty? && @downtime.update(downtime_params)
         DowntimeScheduler.schedule_publish_and_expiry(@downtime)
-        flash[:success] = "#{edition_link} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+        flash[:success] = "#{@edition.title} downtime message re-scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
         redirect_to downtimes_path
       else
         @downtime.valid? # Make sure the model validations have run
@@ -55,7 +55,7 @@ class DowntimesController < ApplicationController
       end
     else
       DowntimeRemover.destroy_immediately(@downtime)
-      flash[:success] = "#{edition_link} downtime message cancelled".html_safe
+      flash[:success] = "#{@edition.title} downtime message cancelled".html_safe
       redirect_to downtimes_path
     end
   end
