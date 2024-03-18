@@ -17,6 +17,8 @@ class LegacyDowntimeWithInvalidDates < ActionDispatch::IntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_downtime_index_page, false)
+    test_strategy.switch!(:design_system_downtime_new, false)
+    test_strategy.switch!(:design_system_downtime_edit, false)
   end
 
   test "Scheduling new downtime with invalid dates" do
