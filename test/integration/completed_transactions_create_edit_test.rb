@@ -113,6 +113,5 @@ class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
     assert page.has_content? "Don't promote anything on this page"
     assert page.has_content? "Promote organ donation"
     assert page.has_content? "Promote MOT reminders"
-    assert page.has_content? "Promote bring photo ID to vote"
   end
 end

@@ -2,7 +2,7 @@ module Formats
   class CompletedTransactionPresenter < EditionFormatPresenter
   private
 
-    PROMOTIONS = %w[organ_donor bring_id_to_vote mot_reminder electric_vehicle].freeze
+    PROMOTIONS = %w[organ_donor mot_reminder electric_vehicle].freeze
 
     def schema_name
       "completed_transaction"

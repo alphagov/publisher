@@ -35,10 +35,6 @@
           { checked: (f.object.promotion_choice == "organ_donor"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-organ-donor' } %>
         <%= f.label :promotion_choice, "Promote organ donation", value: 'organ_donor' %>
         <br />
-        <%= f.radio_button :promotion_choice, 'bring_id_to_vote',
-          { checked: (f.object.promotion_choice == "bring_id_to_vote"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-bring-id-to-vote' } %>
-        <%= f.label :promotion_choice, "Promote bring photo ID to vote", value: 'bring_id_to_vote' %>
-        <br />
         <%= f.radio_button :promotion_choice, 'mot_reminder',
           { checked: (f.object.promotion_choice == "mot_reminder"), disabled: @resource.locked_for_edits?, class: 'promotion-choice-mot-reminder' } %>
         <%= f.label :promotion_choice, "Promote MOT reminders", value: 'mot_reminder' %>
