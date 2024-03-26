@@ -53,6 +53,13 @@ class CompletedTransactionEditionTest < ActiveSupport::TestCase
     assert_equal "https://www.organdonation.nhs.uk/registration/in/", completed_transaction_edition.promotion_choice_opt_in_url
     assert_equal "https://www.organdonation.nhs.uk/registration/out/", completed_transaction_edition.promotion_choice_opt_out_url
 
+    completed_transaction_edition.promotion_choice = "bring_id_to_vote"
+    completed_transaction_edition.promotion_choice_url = "https://www.gov.uk/how-to-vote/photo-id-youll-need"
+    completed_transaction_edition.save!
+
+    assert_equal "bring_id_to_vote", completed_transaction_edition.reload.promotion_choice
+    assert_equal "https://www.gov.uk/how-to-vote/photo-id-youll-need", completed_transaction_edition.promotion_choice_url
+
     completed_transaction_edition.promotion_choice = "mot_reminder"
     completed_transaction_edition.promotion_choice_url = "https://www.gov.uk/mot-reminder"
     completed_transaction_edition.save!
