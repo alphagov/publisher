@@ -65,6 +65,10 @@ Publisher stores its data in DocumentDB, which can't be queried using the instru
 
 For details on how feature flags are managed in Publisher, see the [feature flags documentation](docs/feature-flags.md).
 
+### Adding promotions to Completed Transactions
+
+For instructions on how to add a new type of promotion to Completed Transactions, see the ["adding a promotion" documentation](docs/adding-a-promotion-to-a-completed-transaction.md).
+
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
