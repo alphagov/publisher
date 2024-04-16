@@ -16,7 +16,6 @@ class LegacyDowntimeIntegrationTest < JavascriptIntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_index_page, false)
     test_strategy.switch!(:design_system_downtime_new, false)
     test_strategy.switch!(:design_system_downtime_edit, false)
   end
@@ -26,7 +25,7 @@ class LegacyDowntimeIntegrationTest < JavascriptIntegrationTest
 
     visit root_path
     click_link "Downtime"
-    click_link "Apply to become a driving instructor"
+    click_link "Add downtime"
 
     enter_start_time first_of_july_next_year_at_midday_bst
     enter_end_time first_of_july_next_year_at_six_pm_bst

@@ -5,31 +5,6 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
     login_as_stub_user
   end
 
-  context "#index" do
-    should "list all published transaction editions" do
-      unpublished_transaction_edition = FactoryBot.create(:transaction_edition)
-      transaction_editions = FactoryBot.create_list(:transaction_edition, 2, :published)
-
-      get :index
-
-      assert_response :ok
-      assert_select "h3.publication-table-title", count: 0, text: unpublished_transaction_edition.title
-      transaction_editions.each do |edition|
-        assert_select "h3.publication-table-title", text: edition.title
-      end
-    end
-
-    should "redirect to root page if welsh_editor" do
-      login_as_welsh_editor
-
-      get :index
-
-      assert_response :redirect
-      assert_redirected_to controller: "root", action: "index"
-      assert_includes flash[:danger], "do not have permission"
-    end
-  end
-
   context "#new" do
     should "render the page ok" do
       get :new, params: { edition_id: edition.id }
@@ -53,7 +28,7 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
       should "redirect to the downtime index page" do
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
         post :create, params: { edition_id: edition.id, downtime: downtime_params }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
@@ -93,7 +68,7 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
       should "redirect to the downtime index" do
         DowntimeRemover.stubs(:destroy_immediately)
         put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Cancel downtime" }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 
@@ -107,7 +82,7 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
         create_downtime
         DowntimeScheduler.stubs(:schedule_publish_and_expiry)
         put :update, params: { edition_id: edition.id, downtime: downtime_params, commit: "Re-schedule downtime message" }
-        assert_redirected_to controller: "legacy_downtimes", action: "index"
+        assert_redirected_to controller: "downtimes", action: "index"
       end
     end
 

@@ -16,8 +16,4 @@ Flipflop.configure do
   feature :design_system_downtime_edit,
           default: true,
           description: "A transition of the edit downtime page to the GOV.UK Design System"
-
-  feature :design_system_downtime_index_page,
-          default: true,
-          description: "A transition of the downtime index page to use the GOV.UK Design System"
 end
