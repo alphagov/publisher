@@ -16,7 +16,6 @@ class LegacyDowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_index_page, false)
     test_strategy.switch!(:design_system_downtime_new, false)
     test_strategy.switch!(:design_system_downtime_edit, false)
   end
@@ -26,7 +25,7 @@ class LegacyDowntimeWithInvalidDates < ActionDispatch::IntegrationTest
 
     visit root_path
     click_link "Downtime"
-    click_link "Apply to become a driving instructor"
+    click_link "Add downtime"
 
     enter_start_time 1.day.ago
     enter_end_time 1.day.ago - 1.day

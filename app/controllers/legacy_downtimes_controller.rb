@@ -1,11 +1,7 @@
 class LegacyDowntimesController < ApplicationController
   before_action :require_govuk_editor
-  before_action :load_edition, except: [:index]
+  before_action :load_edition
   before_action :process_params, only: %i[create update]
-
-  def index
-    @transactions = TransactionEdition.published.order_by(%i[title asc])
-  end
 
   def new
     @downtime = Downtime.new(artefact: @edition.artefact)
