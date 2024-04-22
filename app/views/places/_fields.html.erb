@@ -7,7 +7,7 @@
 
       <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
 
-      <%= form_group(f, :place_type, label: "This is the 'slug' assigned in the imminence app") do %>
+      <%= form_group(f, :place_type, label: "This is the 'slug' assigned in the places manager app") do %>
         <%= f.text_field :place_type, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
       <% end %>
 
