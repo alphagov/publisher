@@ -1137,6 +1137,16 @@ class EditionsControllerTest < ActionController::TestCase
       assert_equal "Content unpublished and redirected", flash[:notice]
     end
 
+    should "not be able to unpublish with invalid redirect url" do
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: "invalid redirect url",
+           }
+
+      assert_equal "Redirect path is invalid. Guide has not been unpublished.", flash[:danger]
+    end
+
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
