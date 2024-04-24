@@ -230,7 +230,7 @@ class EditionsController < InheritedResources::Base
       flash[:notice] = notice
       redirect_to root_path
     else
-      flash[:alert] = artefact.errors.full_messages.join("\n")
+      flash[:alert] = "Due to a service problem, the edition couldn't be unpublished"
       redirect_to unpublish_edition_path(edition)
     end
   end
