@@ -1,9 +1,11 @@
 class UnpublishService
   class << self
     def call(artefact, user, redirect_url = "")
-      if update_artefact_in_shared_db(artefact, user, redirect_url)
-        unpublish_in_publishing_api artefact, redirect_url
-      end
+      unpublish_in_publishing_api(artefact, redirect_url)
+      update_artefact_in_shared_db artefact, user, redirect_url
+    rescue StandardError => e
+      Rails.logger.error "Encountered error #{e.message} while trying to unpublish #{artefact.slug}"
+      nil
     end
 
   private
