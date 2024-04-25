@@ -1124,8 +1124,18 @@ class EditionsControllerTest < ActionController::TestCase
       @redirect_url = "https://www.example.com/somewhere_else"
     end
 
-    should "update publishing API upon unpublishing an edition" do
-      UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url).returns(true)
+    should "update publishing API upon unpublishing" do
+      UnpublishService.expects(:call).with(@guide.artefact, @user, @redirect_url)
+
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: @redirect_url,
+           }
+    end
+
+    should "redirect and display success message after successful unpublish" do
+      UnpublishService.stubs(:call).with(@guide.artefact, @user, @redirect_url).returns(true)
 
       post :process_unpublish,
            params: {
@@ -1135,6 +1145,28 @@ class EditionsControllerTest < ActionController::TestCase
 
       assert_redirected_to root_path
       assert_equal "Content unpublished and redirected", flash[:notice]
+    end
+
+    should "not be able to unpublish with invalid redirect url" do
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: "invalid redirect url",
+           }
+
+      assert_equal "Redirect path is invalid. Guide has not been unpublished.", flash[:danger]
+    end
+
+    should "alert if unable to unpublish" do
+      UnpublishService.stubs(:call).with(@guide.artefact, @user, @redirect_url).returns(nil)
+
+      post :process_unpublish,
+           params: {
+             id: @guide.id,
+             redirect_url: @redirect_url,
+           }
+
+      assert_equal "Due to a service problem, the edition couldn't be unpublished", flash[:alert]
     end
 
     context "Welsh editors" do
