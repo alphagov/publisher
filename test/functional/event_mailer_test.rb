@@ -14,11 +14,11 @@ class EventMailerTest < ActionMailer::TestCase
     [guide, email]
   end
 
-  def action_email(action)
+  def action_email(action_name)
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
-    action = guide.actions.create!(request_type: action, requester:)
-    EventMailer.any_action(action, action.email_addresses)
+    action = guide.actions.create!(request_type: action_name, requester:)
+    EventMailer.any_action(action, ["fake@not-a-real-email-address"])
   end
 
   def publisher_and_guide
