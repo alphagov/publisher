@@ -58,7 +58,7 @@ module Publisher
     config.asset_host = ENV.fetch("ASSET_HOST", nil)
 
     config.action_mailer.notify_settings = {
-      api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
+      api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
     }
 
     config.generators do |g|
