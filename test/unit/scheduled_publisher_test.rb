@@ -32,8 +32,12 @@ class ScheduledPublisherTest < ActiveSupport::TestCase
       assert @edition.reload.published?
     end
 
-    should "call downstream publish service" do
-      PublishService.expects(:call).with(@edition)
+    should "update publishing api with latest edition payload before publishing" do
+      sequence = sequence(:task_order)
+
+      UpdateService.expects(:call).with(@edition).in_sequence(sequence)
+      PublishService.expects(:call).with(@edition).in_sequence(sequence)
+
       ScheduledPublisher.new.perform(@edition.id.to_s)
     end
 
