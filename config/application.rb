@@ -27,7 +27,12 @@ module Publisher
     config.flipflop.raise_strategy_errors = nil
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w(assets tasks))
 
     # Configuration object for the fact check email fetch script
     # See `script/mail_fetcher`
@@ -53,7 +58,7 @@ module Publisher
     config.asset_host = ENV.fetch("ASSET_HOST", nil)
 
     config.action_mailer.notify_settings = {
-      api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
+      api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
     }
 
     config.generators do |g|
