@@ -35,6 +35,7 @@ class ScheduledPublisher
     edition = Edition.find(edition_id)
     edition.publish_anonymously!
 
+    UpdateService.call(edition)
     PublishService.call(edition)
 
     report_state_counts
