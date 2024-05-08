@@ -1,0 +1,29 @@
+name: Table
+description: A new updated table component to render the landing page of Publisher.
+accessibility_criteria: |
+  Accessible tables need HTML markup that indicates header cells and data cells and defines their relationship. Assistive technologies use this information to provide context to users.
+  Header cells must be marked up with `<th>`, and data cells with `<td>` to make tables accessible.
+  For more complex tables, explicit associations is needed using scope attributes.
+shared_accessibility_criteria:
+  - link
+type: helper
+examples:
+  default:
+    data:
+      rows:
+      -
+        title: Get a faster decision on your visa or settlement application
+        updated: "2024-04-18"
+        assigned: David Trussler
+        status: Draft
+        edition: 37
+        format: Transaction
+        note: Fact check needed
+      -
+        title: Apply online for a UK passport
+        updated: "2024-04-30"
+        assigned: Polly Green
+        status: Draft
+        edition: 47
+        format: Guide
+        note: No fact check needed
