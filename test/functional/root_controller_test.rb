@@ -20,7 +20,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { states_filter: %w[draft] }
 
       assert_response :ok
-      assert_select "h2", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document(s)"
     end
 
     should "filter publications by assignee" do
@@ -30,7 +30,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { assignee_filter: [anna.id] }
 
       assert_response :ok
-      assert_select "h2", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document(s)"
     end
 
     should "filter publications by format" do
@@ -40,7 +40,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { format_filter: "guide" }
 
       assert_response :ok
-      assert_select "h2", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document(s)"
     end
 
     should "filter publications by title text" do
@@ -50,7 +50,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { title_filter: "zombie" }
 
       assert_response :ok
-      assert_select "h2", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document(s)"
     end
 
     should "ignore unrecognised filter states" do
