@@ -74,4 +74,5 @@ Rails.application.routes.draw do
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
+  mount GovukPublishingComponents::Engine, at: "/component-guide" unless Rails.env.production?
 end

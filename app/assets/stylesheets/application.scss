@@ -2,4 +2,7 @@ $govuk-page-width: 1140px;
 
 // GOVUK Design System
 @import "govuk_publishing_components/all_components";
+@import "govuk/components/tag/tag";
+
 @import "downtimes";
+@import "components/table";
