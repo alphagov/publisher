@@ -4,7 +4,7 @@ module TableHelper
   def self.helper(context, caption = nil, opt = {})
     builder = TableBuilder.new(context.tag)
 
-    classes = %w[gem-c-table govuk-table]
+    classes = %w[gem-c-table govuk-table mainstream-table]
     classes << "govuk-table--sortable" if opt[:sortable]
 
     caption_classes = %w[govuk-table__caption]
