@@ -19,7 +19,7 @@
     <%= t.header "Title" %>
     <%= t.header "Assigned to" %>
     <%= t.header "Status" %>
-    <%= t.header "" %>
+    <%= t.header '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'.html_safe %>
   <% end %>
 
   <% rows.each_with_index do |row, rowindex| %>
