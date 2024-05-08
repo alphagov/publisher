@@ -251,7 +251,7 @@ class Artefact
   end
 
   def update_from_edition(edition)
-    update(
+    update!(
       state: state_from_edition(edition),
       description: edition.overview,
       public_timestamp: edition.public_updated_at,
