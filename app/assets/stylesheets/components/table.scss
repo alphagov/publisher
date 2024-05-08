@@ -1,3 +1,15 @@
-.govuk-accordion__controls {
-  display: none;
+.mainstream-table {
+  .govuk-table__body {
+    position: relative;
+  }
+
+  .govuk-accordion__controls {
+    display: none;
+  }
+
+  .govuk-accordion__section-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
