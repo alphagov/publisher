@@ -2,7 +2,3 @@ api_version: 2
 defaults:
   auto_merge: true
   update_external_dependencies: false # TODO: enable after verifying that this repo meets the conditions
-overrides:
-  - dependency: rubocop-govuk
-    allowed_semver_bumps:
-      - patch
