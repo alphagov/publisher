@@ -57,7 +57,7 @@
 
     <%= t.body do %>
       <%= t.row do %>
-        <%= t.cell sanitize("<div><p>#{row[:title]}</p><span>Last updated: #{row[:updated]}</span></div>") %>
+        <%= t.cell sanitize("<div><p><a href='#{row[:href]}'>#{row[:title]}</a></p><span>Last updated: #{row[:updated]}</span></div>") %>
         <%= t.cell row[:assigned] %>
         <%= t.cell row[:status] %>
         <%= t.cell sanitize('<span class="accordion-hack__button-space"></span>') %>

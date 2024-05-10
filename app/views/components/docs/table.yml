@@ -12,7 +12,8 @@ examples:
     data:
       rows:
       -
-        title: Get a faster decision on your visa or settlement application
+        title: The National Minimum Wage and Living Wage
+        href: https://publisher.integration.publishing.service.gov.uk/editions/663ba7b8ad73b90011b3ecbf
         updated: "2024-04-18"
         assigned: David Trussler
         status: Draft
@@ -20,7 +21,8 @@ examples:
         format: Transaction
         note: Fact check needed
       -
-        title: Apply online for a UK passport
+        title: Employing someone to work in your home
+        href: https://publisher.integration.publishing.service.gov.uk/editions/663cdbe219ced10011c76ae1
         updated: "2024-04-30"
         assigned: Polly Green
         status: Draft
