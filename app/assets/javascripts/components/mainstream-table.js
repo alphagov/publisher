@@ -22,18 +22,18 @@
 
   // Adds event listeners to set state of the "Show/Hide all" button when section buttons are clicked
   MainstreamTable.prototype.setUpSections = function () {
-    this.sections.forEach(function(section) {
-      section.querySelector('.govuk-accordion__section-heading').addEventListener('click', function() {
-        if(section.classList.contains('govuk-accordion__section--expanded')) {
+    this.sections.forEach(function (section) {
+      section.querySelector('.govuk-accordion__section-heading').addEventListener('click', function () {
+        if (section.classList.contains('govuk-accordion__section--expanded')) {
           this.openSections--
 
-          if (this.openSections == this.numSections - 1) {
+          if (this.openSections === this.numSections - 1) {
             this.toggleShowAllControls()
           }
         } else {
           this.openSections++
 
-          if (this.openSections == this.numSections) {
+          if (this.openSections === this.numSections) {
             this.toggleShowAllControls()
           }
         }
@@ -43,7 +43,7 @@
 
   // Toggles the "Show/Hide all" button
   MainstreamTable.prototype.toggleShowAllControls = function () {
-    if (this.showAllControls.getAttribute('aria-expanded') == 'true') {
+    if (this.showAllControls.getAttribute('aria-expanded') === 'true') {
       this.showAllControls.querySelector('.govuk-accordion__show-all-text').textContent = 'Show all'
       this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--up')
       this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--down')
@@ -61,13 +61,13 @@
     var sections = this.$module.querySelectorAll('.' + this.sectionClass)
 
     // Open and close all sections
-    sections.forEach(function(section) {
+    sections.forEach(function (section) {
       var button = section.querySelector('button')
 
       if (section.classList.contains(this.sectionExpandedClass)) {
-        if (controlAllState == 'true') {
+        if (controlAllState === 'true') {
           section.classList.remove(this.sectionExpandedClass)
-          section.querySelector('.' + this.sectionInnerContentClass).hidden = "until-found"
+          section.querySelector('.' + this.sectionInnerContentClass).hidden = 'until-found'
           button.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--down')
           button.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--up')
           button.querySelector('.govuk-accordion__section-toggle-text').textContent = 'Show'
@@ -75,9 +75,9 @@
           this.openSections = 0
         }
       } else {
-        if (controlAllState == 'false') {
+        if (controlAllState === 'false') {
           section.classList.add(this.sectionExpandedClass)
-          section.querySelector('.' + this.sectionInnerContentClass).hidden = ""
+          section.querySelector('.' + this.sectionInnerContentClass).hidden = ''
           button.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--down')
           button.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--up')
           button.querySelector('.govuk-accordion__section-toggle-text').textContent = 'Hide'
