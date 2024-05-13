@@ -10,7 +10,7 @@ module TableHelper
     caption_classes = %w[govuk-table__caption]
     caption_classes << opt[:caption_classes] if opt[:caption_classes]
 
-    context.tag.table class: classes, id: opt[:table_id], data: {module: 'mainstream-table'} do
+    context.tag.table class: classes, id: opt[:table_id], data: { module: "mainstream-table" } do
       context.concat context.tag.caption caption, class: caption_classes
       yield(builder)
     end
