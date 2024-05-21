@@ -96,7 +96,7 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "delegate complexity of duplication to appropriate collaborator" do
         post :duplicate, params: { id: @guide.id }
-        assert_response 302
+        assert_response :found
         assert_equal "New edition created", flash[:success]
       end
 
@@ -115,7 +115,7 @@ class EditionsControllerTest < ActionController::TestCase
 
         post :duplicate, params: { id: edition.id }
 
-        assert_response 302
+        assert_response :found
         assert_redirected_to edition_path(artefact.latest_edition)
         assert_not_equal edition, artefact.latest_edition
         assert_equal "New edition created", flash[:success]
@@ -127,7 +127,7 @@ class EditionsControllerTest < ActionController::TestCase
 
         post :duplicate, params: { id: edition.id }
 
-        assert_response 302
+        assert_response :found
         assert_redirected_to edition_path(edition)
         assert_equal edition, artefact.latest_edition
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
@@ -349,7 +349,7 @@ class EditionsControllerTest < ActionController::TestCase
              id: @guide.id,
              edition: { assigned_to_id: "" },
            }
-      assert_response 200
+      assert_response :ok
     end
 
     should "save the edition changes while performing an activity" do
@@ -887,7 +887,7 @@ class EditionsControllerTest < ActionController::TestCase
             edition: { reviewer: bob.name },
           }
 
-      assert_response(302)
+      assert_response(:found)
       assert_equal "Something went wrong when attempting to claim 2i.", flash[:danger]
     end
 
@@ -1038,7 +1038,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "requesting a publication that doesn't exist returns a 404" do
       get :show, params: { id: "4e663834e2ba80480a0000e6" }
-      assert_response 404
+      assert_response :not_found
     end
 
     should "we can view a guide" do
