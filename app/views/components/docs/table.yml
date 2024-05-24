@@ -14,18 +14,90 @@ examples:
       -
         title: The National Minimum Wage and Living Wage
         href: https://publisher.integration.publishing.service.gov.uk/editions/663ba7b8ad73b90011b3ecbf
-        updated: "2024-04-18"
+        updated: 18 April 2024
         assigned: David Trussler
         status: Draft
         edition: 37
         format: Transaction
         note: Fact check needed
       -
-        title: Employing someone to work in your home
-        href: https://publisher.integration.publishing.service.gov.uk/editions/663cdbe219ced10011c76ae1
-        updated: "2024-04-30"
-        assigned: Polly Green
-        status: Draft
-        edition: 47
+        title: Find software for filing company changes and registrations
+        href: https://draft-origin.integration.publishing.service.gov.uk/software-company-changes
+        updated: 21 May 2024
+        assigned: Jane Regan
+        status: In review
+        edition: 1
+        format: Answer
+        note: Please leave for Hannah M, Gav and Sarah. Once 2i’d, send for FC to bdavies@companieshouse.gov.uk, jmoyle@companieshouse.gov.uk, asoullier@companieshouse.gov.uk
+        awaiting_review: 3 days
+        reviewer: Sarah Nicholson
+      -
+        title: Appeal an Illegal Migration Act decision
+        href: https://draft-origin.integration.publishing.service.gov.uk/appeal-migration-act
+        updated: 22 May 2024
+        assigned: Peter Wilkinson
+        status: Amends needed
+        edition: 3
         format: Guide
-        note: No fact check needed
+        note: Peter is on leave until 28 May. Justin can answer questions in the meantime. Please send for fact check to hmctsweb@justice.gov.uk, aundrae.jordine@justice.gov.uk, Thomas.Thirkill-Kirk@justice.gov.uk. Leave in Ready until we've had an off rota 2i with 'Make a claim under the Illegal Migration Act'
+      -
+        title: Stamp Duty Land Tax
+        href: https://draft-origin.integration.publishing.service.gov.uk/stamp-duty-land-tax
+        updated: 23 May 2024
+        assigned: Antoni Devlin
+        status: Out for fact check
+        sent: 23 May 2024
+        edition: 34
+        format: Guide
+      -
+        title: Business rates
+        href: https://draft-origin.integration.publishing.service.gov.uk/introduction-to-business-rates
+        updated: 23 May 2024
+        assigned: Rebecca Milton
+        status: Fact check received
+        edition: 53
+        format: Guide
+        note: Send for f/c to benjamin.young@voa.gov.uk
+      -
+        title: Capital allowances when you sell an asset
+        href: https://draft-origin.integration.publishing.service.gov.uk/capital-allowances-sell-asset
+        updated: 19 Apr 2024
+        assigned: Grant Chappell
+        status: Ready
+        edition: 4
+        format: Answer
+      -
+        title: Get your dog or cat microchipped
+        href: https://draft-origin.integration.publishing.service.gov.uk/get-your-dog-cat-microchipped
+        updated: 16 May 2024
+        assigned: Linda Steele
+        status: Scheduled for publishing
+        scheduled: 12:01am, 10 Jun 2024
+        edition: 21
+        format: Answer
+        note: No factcheck needed. Please schedule to go live on 10 June 2024 at 00:01h
+      -
+        title: Credyd Cynhwysol
+        href: https://www.integration.publishing.service.gov.uk/credyd-cynhwysol
+        updated: 23 May 2024
+        assigned: Megan Husband
+        status: Published
+        edition: 105
+        format: Guide
+        published: Manon Williams
+      -
+        title: Apply for a proxy vote
+        href: https://publisher.integration.publishing.service.gov.uk/editions/664f5263e3937900111877ad
+        updated: 23 May 2024
+        assigned: Nicola Frost
+        status: Archived
+        edition: |
+          #6 – #7 in published
+        format: Transaction
+        note: |
+          No fact check needed. Schedule for 00:01 on 3 May 2024. 2i with:
+          https://publisher.publishing.service.gov.uk/editions/662a2bd05762be000c015a7b
+          https://publisher.publishing.service.gov.uk/editions/662a2e445762be0013015a71
+          https://publisher.publishing.service.gov.uk/editions/662a2e955762be000c015a82
+          https://publisher.publishing.service.gov.uk/editions/662a2f061d8db9000c6f754b
+          https://publisher.publishing.service.gov.uk/editions/662a2f731d8db900136f7547
