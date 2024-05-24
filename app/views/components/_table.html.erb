@@ -26,18 +26,14 @@
     <%
       summary = render "govuk_publishing_components/components/summary_list", {
         items: [
-          {
-            field: "Edition",
-            value: row[:edition]
-          },
-          {
-            field: "Format",
-            value: row[:format]
-          },
-          {
-            field: "Important Note",
-            value: row[:note]
-          }
+          {field: "Edition", value: row[:edition]},
+          {field: "Format", value: row[:format]},
+          *([{field: "Important Note", value: row[:note]}] if row[:note].present?),
+          *([{field: "Awaiting review", value: row[:awaiting_review]}] if row[:awaiting_review].present?),
+          *([{field: "Reviewer", value: row[:reviewer]}] if row[:reviewer].present?),
+          *([{field: "Sent Out", value: row[:sent]}] if row[:sent].present?),
+          *([{field: "Scheduled", value: row[:scheduled]}] if row[:scheduled].present?),
+          *([{field: "Published by", value: row[:published]}] if row[:published].present?)
         ],
         borderless: true
       }
