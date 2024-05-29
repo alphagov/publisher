@@ -1,22 +1,7 @@
 class LegacyDowntimesController < ApplicationController
   before_action :require_govuk_editor
   before_action :load_edition
-  before_action :process_params, only: %i[create update]
-
-  def new
-    @downtime = Downtime.new(artefact: @edition.artefact)
-  end
-
-  def create
-    @downtime = Downtime.new(downtime_params)
-    if @downtime.save
-      DowntimeScheduler.schedule_publish_and_expiry(@downtime)
-      flash[:success] = "#{edition_link} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
-      redirect_to downtimes_path
-    else
-      render :new
-    end
-  end
+  before_action :process_params, only: %i[update]
 
   def edit
     @downtime = Downtime.for(@edition.artefact)

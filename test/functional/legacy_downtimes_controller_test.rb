@@ -5,51 +5,6 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
     login_as_stub_user
   end
 
-  context "#new" do
-    should "render the page ok" do
-      get :new, params: { edition_id: edition.id }
-      assert_response :ok
-    end
-  end
-
-  context "#create" do
-    context "with valid params" do
-      should "create a new downtime" do
-        DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
-        assert_a_downtime_is_created
-      end
-
-      should "schedule the publication and expiration of the downtime" do
-        DowntimeScheduler.expects(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
-      end
-
-      should "redirect to the downtime index page" do
-        DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-        post :create, params: { edition_id: edition.id, downtime: downtime_params }
-        assert_redirected_to controller: "downtimes", action: "index"
-      end
-    end
-
-    context "with invalid params" do
-      should "not create a downtime" do
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
-        assert_that_no_downtime_exists
-      end
-
-      should "not schedule publishing and expiration" do
-        DowntimeScheduler.expects(:schedule_publish_and_expiry).never
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
-      end
-
-      should "rerender the page" do
-        post :create, params: { edition_id: edition.id, downtime: invalid_params }
-        assert_template :new
-      end
-    end
-  end
-
   context "#edit" do
     should "render the page ok" do
       create_downtime
@@ -134,13 +89,5 @@ class LegacyDowntimesControllerTest < ActionController::TestCase
 
   def invalid_params
     downtime_params.merge('end_time(1i)': last_year)
-  end
-
-  def assert_a_downtime_is_created
-    assert_equal 1, Downtime.count
-  end
-
-  def assert_that_no_downtime_exists
-    assert_equal 0, Downtime.count
   end
 end
