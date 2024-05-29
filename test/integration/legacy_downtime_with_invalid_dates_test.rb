@@ -16,24 +16,7 @@ class LegacyDowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_new, false)
     test_strategy.switch!(:design_system_downtime_edit, false)
-  end
-
-  test "Scheduling new downtime with invalid dates" do
-    DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-
-    visit root_path
-    click_link "Downtime"
-    click_link "Add downtime"
-
-    enter_start_time 1.day.ago
-    enter_end_time 1.day.ago - 1.day
-
-    click_button "Schedule downtime message"
-
-    assert page.has_link?("End time must be in the future", href: "#downtime_end_time")
-    assert page.has_link?("Start time must be earlier than end time", href: "#downtime_start_time")
   end
 
   def enter_start_time(start_time)

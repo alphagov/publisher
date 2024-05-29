@@ -16,7 +16,6 @@ class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_new, true)
     test_strategy.switch!(:design_system_downtime_edit, true)
   end
 

@@ -16,26 +16,7 @@ class LegacyDowntimeIntegrationTest < JavascriptIntegrationTest
     stub_any_publishing_api_publish
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_new, false)
     test_strategy.switch!(:design_system_downtime_edit, false)
-  end
-
-  test "Scheduling new downtime" do
-    DowntimeScheduler.stubs(:schedule_publish_and_expiry)
-
-    visit root_path
-    click_link "Downtime"
-    click_link "Add downtime"
-
-    enter_start_time first_of_july_next_year_at_midday_bst
-    enter_end_time first_of_july_next_year_at_six_pm_bst
-
-    assert_match("midday to 6pm on #{day} 1 July", page.find_field("Message").value)
-    click_button "Schedule downtime message"
-
-    assert page.has_content?("downtime message scheduled")
-    assert page.has_content?("Scheduled downtime")
-    assert page.has_content?("midday to 6pm on 1 July")
   end
 
   test "Rescheduling downtime" do
