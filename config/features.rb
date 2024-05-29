@@ -8,8 +8,4 @@ Flipflop.configure do
             default: true,
             description: "A feature only used by tests; not to be used for any actual features."
   end
-
-  feature :design_system_downtime_edit,
-          default: true,
-          description: "A transition of the edit downtime page to the GOV.UK Design System"
 end

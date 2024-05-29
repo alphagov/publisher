@@ -14,9 +14,6 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     WebMock.reset!
     stub_any_publishing_api_put_content
     stub_any_publishing_api_publish
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_edit, true)
   end
 
   test "Scheduling new downtime" do
@@ -82,14 +79,6 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     fill_in "downtime[#{prefix}_time(1i)]", with: time.year.to_s
     fill_in "downtime[#{prefix}_time(4i)]", with: time.hour.to_s
     fill_in "downtime[#{prefix}_time(5i)]", with: time.min.to_s
-  end
-
-  def legacy_enter_start_time(start_time)
-    complete_date_inputs("downtime_start_time", start_time)
-  end
-
-  def legacy_enter_end_time(end_time)
-    complete_date_inputs("downtime_end_time", end_time)
   end
 
   def complete_date_inputs(input_id, time)
