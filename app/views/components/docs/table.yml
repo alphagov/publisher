@@ -25,7 +25,18 @@ examples:
         href: https://draft-origin.integration.publishing.service.gov.uk/software-company-changes
         updated: 21 May 2024
         assigned: Jane Regan
-        status: In review
+        status: Awaiting 2i
+        edition: 1
+        format: Answer
+        note: Please leave for Hannah M, Gav and Sarah. Once 2i’d, send for FC to bdavies@companieshouse.gov.uk, jmoyle@companieshouse.gov.uk, asoullier@companieshouse.gov.uk
+        awaiting_review: 3 days
+        reviewer: No reviewer assigned
+      -
+        title: Find software for filing company changes and registrations
+        href: https://draft-origin.integration.publishing.service.gov.uk/software-company-changes
+        updated: 21 May 2024
+        assigned: Jane Regan
+        status: In 2i
         edition: 1
         format: Answer
         note: Please leave for Hannah M, Gav and Sarah. Once 2i’d, send for FC to bdavies@companieshouse.gov.uk, jmoyle@companieshouse.gov.uk, asoullier@companieshouse.gov.uk

@@ -55,7 +55,7 @@
       <%= t.row do %>
         <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") %>
         <%= t.cell row[:assigned] %>
-        <%= t.cell row[:status] %>
+        <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
         <%= t.cell "" %>
       <% end %>
       <%= t.row do %>
