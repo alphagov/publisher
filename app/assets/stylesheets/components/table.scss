@@ -16,9 +16,11 @@
       border-bottom: 0;
     }
 
-    button {
-      border: none;
-      padding: 0;
+    .govuk-accordion__section-heading {
+      button {
+        border: none;
+        padding: 0;
+      }
     }
   }
 
@@ -98,6 +100,17 @@
 
       .govuk-table__cell {
         border-bottom: 0;
+        padding: 0 govuk-spacing(2);
+
+        .govuk-accordion__section-content {
+          position: relative;
+
+          & > button {
+            position: absolute;
+            top: govuk-spacing(2);
+            right: 0;
+          }
+        }
       }
 
       .govuk-accordion {
@@ -111,10 +124,6 @@
       .govuk-summary-list,
       .gem-c-summary__block {
         margin-bottom: 0;
-      }
-
-      .govuk-table__cell {
-        padding: 0 govuk-spacing(2);
       }
     }
   }
