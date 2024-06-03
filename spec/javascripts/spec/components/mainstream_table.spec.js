@@ -1,25 +1,38 @@
-/* global GOVUK */
-
 describe('Table component', function () {
   'use strict'
 
   var table, mainstreamTable
 
   beforeEach(function () {
-    table = $('<table data-module="mainstream-table"></table>')
+    var tableHtml =
+      `<thead>
+        <tr>
+          <th>Title</th>
+          <th>Assigned to</th>
+          <th>Status</th>
+          <th class="govuk-table__header--controls"></th>
+        </tr>
+      </thead>`
 
-    $('body').append(table)
+    table = document.createElement('table')
+    table.innerHTML = tableHtml
+    document.body.appendChild(table)
 
-    mainstreamTable = new GOVUK.Modules.MainstreamTable()
+    mainstreamTable = new GOVUK.Modules.MainstreamTable(table)
+    mainstreamTable.init()
   })
 
   afterEach(function () {
-    table.remove()
+    document.body.removeChild(table)
   })
 
-  describe('when first initialized', function () {
-    it('should do nothing', function() {
-        expect(1).toBe(1)
+  describe('When initialised', function () {
+    it('should have a "Show/Hide All" button', function () {
+      var headerControls = table.querySelector('th.govuk-table__header--controls')
+
+      expect(headerControls.querySelector('button')).not.toBeNull()
+      expect(headerControls.querySelector('button').classList).toContain('govuk-accordion__show-all')
+      expect(headerControls.querySelector('button').textContent).toBe('Show all')
     })
   })
 })
