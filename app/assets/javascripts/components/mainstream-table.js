@@ -5,16 +5,17 @@
     this.sectionExpandedClass = 'govuk-accordion__section--expanded'
     this.sectionInnerContentClass = 'govuk-accordion__section-content'
     this.sectionButton = '.govuk-accordion__section-button'
-
-    this.showAllControls = this.$module.querySelector('.govuk-accordion__show-all')
     this.sections = this.$module.querySelectorAll('.govuk-accordion__section')
     this.openSections = 0
     this.numSections = this.sections.length
   }
 
   MainstreamTable.prototype.init = function () {
+    // Add Show/Hide All button to DOM
+    this.$module.querySelector('.govuk-table__header--controls').innerHTML = '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'
+
     // Add Event listener for Show All button
-    this.showAllControls.addEventListener('click', this.toggleAllSections.bind(this))
+    this.$module.querySelector('.govuk-accordion__show-all').addEventListener('click', this.toggleAllSections.bind(this))
 
     // Add Event listeners for sections buttons
     this.setUpSections()
@@ -43,21 +44,23 @@
 
   // Toggles the "Show/Hide all" button
   MainstreamTable.prototype.toggleShowAllControls = function () {
-    if (this.showAllControls.getAttribute('aria-expanded') === 'true') {
-      this.showAllControls.querySelector('.govuk-accordion__show-all-text').textContent = 'Show all'
-      this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--up')
-      this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--down')
-      this.showAllControls.setAttribute('aria-expanded', 'false')
+    var showAllControls = this.$module.querySelector('.govuk-accordion__show-all')
+
+    if (showAllControls.getAttribute('aria-expanded') === 'true') {
+      showAllControls.querySelector('.govuk-accordion__show-all-text').textContent = 'Show all'
+      showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--up')
+      showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--down')
+      showAllControls.setAttribute('aria-expanded', 'false')
     } else {
-      this.showAllControls.querySelector('.govuk-accordion__show-all-text').textContent = 'Hide all'
-      this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--down')
-      this.showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--up')
-      this.showAllControls.setAttribute('aria-expanded', 'true')
+      showAllControls.querySelector('.govuk-accordion__show-all-text').textContent = 'Hide all'
+      showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.remove('govuk-accordion-nav__chevron--down')
+      showAllControls.querySelector('.govuk-accordion-nav__chevron').classList.add('govuk-accordion-nav__chevron--up')
+      showAllControls.setAttribute('aria-expanded', 'true')
     }
   }
 
   MainstreamTable.prototype.toggleAllSections = function () {
-    var controlAllState = this.showAllControls.getAttribute('aria-expanded')
+    var controlAllState = this.$module.querySelector('.govuk-accordion__show-all').getAttribute('aria-expanded')
     var sections = this.$module.querySelectorAll('.' + this.sectionClass)
 
     // Open and close all sections
