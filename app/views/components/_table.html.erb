@@ -1,0 +1,94 @@
+<%
+  add_gem_component_stylesheet("table")
+  caption ||= nil
+  rows ||= []
+  first_cell_is_header ||= false
+  caption_classes ||= nil
+  sortable ||= false
+  label ||= t("components.table.filter_label")
+  table_id = "table-id-#{SecureRandom.hex(4)}"
+%>
+
+<%= TableHelper.helper(self, caption, {
+    sortable: sortable,
+    caption_classes: caption_classes,
+    table_id: table_id
+  }) do |t| %>
+
+  <%= t.head do %>
+    <%= t.header "Title" %>
+    <%= t.header "Assigned to" %>
+    <%= t.header "Status" %>
+    <%= t.header "", {
+      format: "controls"
+    } %>
+  <% end %>
+
+  <% rows.each_with_index do |row, rowindex| %>
+    <%
+      if row[:status] === "Awaiting 2i"
+        button = render "govuk_publishing_components/components/button", {
+          text: "Claim 2i"
+        }
+      else
+        button = nil
+      end
+
+      if button
+        summary = button + (render "govuk_publishing_components/components/summary_list", {
+          items: [
+            {field: "Edition", value: row[:edition]},
+            {field: "Format", value: row[:format]},
+            *([{field: "Important Note", value: row[:note]}] if row[:note].present?),
+            *([{field: "Awaiting review", value: row[:awaiting_review]}] if row[:awaiting_review].present?),
+            *([{field: "2i reviewer", value: row[:reviewer]}] if row[:reviewer].present?),
+            *([{field: "Sent Out", value: row[:sent]}] if row[:sent].present?),
+            *([{field: "Scheduled", value: row[:scheduled]}] if row[:scheduled].present?),
+            *([{field: "Published by", value: row[:published]}] if row[:published].present?)
+          ],
+          borderless: true
+        })
+      else
+        summary = render "govuk_publishing_components/components/summary_list", {
+          items: [
+            {field: "Edition", value: row[:edition]},
+            {field: "Format", value: row[:format]},
+            *([{field: "Important Note", value: row[:note]}] if row[:note].present?),
+            *([{field: "Awaiting review", value: row[:awaiting_review]}] if row[:awaiting_review].present?),
+            *([{field: "2i reviewer", value: row[:reviewer]}] if row[:reviewer].present?),
+            *([{field: "Sent Out", value: row[:sent]}] if row[:sent].present?),
+            *([{field: "Scheduled", value: row[:scheduled]}] if row[:scheduled].present?),
+            *([{field: "Published by", value: row[:published]}] if row[:published].present?)
+          ],
+          borderless: true
+        }
+      end
+
+      accordion = render "govuk_publishing_components/components/accordion", {
+        disable_ga4: true,
+        items: [
+          {
+            heading: {},
+            content: {
+              html: summary
+            }
+          }
+        ]
+      }
+    %>
+
+    <%= t.body do %>
+      <%= t.row do %>
+        <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") %>
+        <%= t.cell row[:assigned] %>
+        <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
+        <%= t.cell "" %>
+      <% end %>
+      <%= t.row do %>
+        <%= t.cell accordion, {
+          colspan: 4
+        } %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
