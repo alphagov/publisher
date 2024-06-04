@@ -14,9 +14,6 @@ class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
     WebMock.reset!
     stub_any_publishing_api_put_content
     stub_any_publishing_api_publish
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_downtime_edit, true)
   end
 
   test "Scheduling new downtime with invalid dates" do
