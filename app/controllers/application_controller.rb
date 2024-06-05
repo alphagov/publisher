@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
 
   def notify_bad_request(exception)
     # TODO: control this via the log level rather than an environment variable
-    if %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT_NAME"]) && exception.message =~ /team-only API key/
+    if %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT"]) && exception.message =~ /team-only API key/
       # in production we care about all errors
       # in staging and integration the team-only error may be encountered by
       # end-users who should see a more helpful error message
