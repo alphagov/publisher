@@ -70,12 +70,12 @@
 
     <%= t.body do %>
       <%= t.row do %>
-        <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") %>
+        <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") + details %>
         <%= t.cell row[:assigned] %>
         <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
       <% end %>
       <%= t.row do %>
-        <%= t.cell details, {
+        <%= t.cell "", {
           colspan: 3
         } %>
       <% end %>
