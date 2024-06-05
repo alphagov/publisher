@@ -61,17 +61,11 @@
         }
       end
 
-      accordion = render "govuk_publishing_components/components/accordion", {
-        disable_ga4: true,
-        items: [
-          {
-            heading: {},
-            content: {
-              html: summary
-            }
-          }
-        ]
-      }
+      details = render "govuk_publishing_components/components/details", {
+        title: "Show"
+      } do
+        summary
+      end
     %>
 
     <%= t.body do %>
@@ -81,7 +75,7 @@
         <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
       <% end %>
       <%= t.row do %>
-        <%= t.cell accordion, {
+        <%= t.cell details, {
           colspan: 3
         } %>
       <% end %>
