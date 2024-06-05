@@ -19,9 +19,6 @@
     <%= t.header "Title" %>
     <%= t.header "Assigned to" %>
     <%= t.header "Status" %>
-    <%= t.header "", {
-      format: "controls"
-    } %>
   <% end %>
 
   <% rows.each_with_index do |row, rowindex| %>
@@ -82,11 +79,10 @@
         <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") %>
         <%= t.cell row[:assigned] %>
         <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
-        <%= t.cell "" %>
       <% end %>
       <%= t.row do %>
         <%= t.cell accordion, {
-          colspan: 4
+          colspan: 3
         } %>
       <% end %>
     <% end %>
