@@ -1,4 +1,13 @@
 .mainstream-table {
+  .govuk-details {
+    margin-top: govuk-spacing(2);
+    margin-bottom: 0 !important;
+
+    .govuk-summary-list {
+      width: auto;
+    }
+  }
+
   .govuk-accordion__show-all {
     display: none;
 
