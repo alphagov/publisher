@@ -9,8 +9,10 @@
     color: rgb(11, 12, 12) !important;
   }
 
-  td.span.updated {
-    white-space: nowrap;
+  td {
+    &.govuk-table__cell--updated {
+      white-space: nowrap;
+    }
   }
 
   .govuk-details {
