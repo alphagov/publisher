@@ -9,6 +9,12 @@
     color: rgb(11, 12, 12) !important;
   }
 
+  th {
+    &.govuk-table__header--expand {
+      white-space: nowrap;
+    }
+  }
+
   td {
     &.govuk-table__cell--updated {
       white-space: nowrap;
