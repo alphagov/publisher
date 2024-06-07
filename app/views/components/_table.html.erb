@@ -17,8 +17,10 @@
 
   <%= t.head do %>
     <%= t.header "Title" %>
+    <%= t.header "Updated" %>
     <%= t.header "Assigned to" %>
     <%= t.header "Status" %>
+    <%= t.header sanitize('<a href="#" class="govuk-link">Expand&nbsp;all</a>') %>
   <% end %>
 
   <% rows.each_with_index do |row, rowindex| %>
@@ -62,7 +64,7 @@
       end
 
       details = render "govuk_publishing_components/components/details", {
-        title: "Show"
+        title: "More details"
       } do
         summary
       end
@@ -70,9 +72,11 @@
 
     <%= t.body do %>
       <%= t.row do %>
-        <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-!-font-weight-bold'>#{row[:title]}</a><span class='updated govuk-!-font-size-16'>Last updated: #{row[:updated]}</span></p>") + details %>
+        <%= t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-link govuk-!-font-weight-bold'>#{row[:title]}</a></p>") + details %>
+        <%= t.cell sanitize("<span class='updated'>#{row[:updated]}</span>") %>
         <%= t.cell row[:assigned] %>
         <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
+        <%= t.cell "" %>
       <% end %>
     <% end %>
   <% end %>
