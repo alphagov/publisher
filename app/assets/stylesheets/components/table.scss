@@ -25,6 +25,19 @@
     &.govuk-table__cell--updated {
       white-space: nowrap;
     }
+
+    // Custom styles for tags that may not be necessary when rendered on page
+    // Think the uppercase, size and weight come from the Component Guide header
+    & > .govuk-tag {
+      text-transform: inherit;
+      font-size: inherit;
+      font-weight: 400;
+
+      &.govuk-tag--light-blue {
+        color: #0c2d4a;
+        background-color: #e8f1f8;
+      }
+    }
   }
 
   .govuk-details {
@@ -85,53 +98,6 @@
   }
 
   .govuk-table__row {
-    .govuk-table__cell {
-      .status {
-        display: inline-block;
-        padding: govuk-spacing(1) govuk-spacing(2);
-
-        &--amends-needed {
-          background-color: govuk-tint(govuk-colour("red"), 75%);
-        }
-
-        &--archived {
-          background-color: govuk-tint(govuk-colour("dark-grey"), 85%);
-        }
-
-        &--draft {
-          background-color: govuk-tint(govuk-colour("yellow"), 75%);
-        }
-
-        &--out-for-fact-check {
-          background-color: govuk-tint(govuk-colour("bright-purple"), 85%);
-        }
-
-        &--fact-check-received {
-          background-color: govuk-tint(govuk-colour("red"), 75%);
-        }
-
-        &--ready {
-          background-color: govuk-tint(govuk-colour("blue"), 60%);
-        }
-
-        &--scheduled-for-publishing {
-          background-color: govuk-tint(govuk-colour("turquoise"), 80%);
-        }
-
-        &--published {
-          background-color: govuk-tint(govuk-colour("green"), 80%);
-        }
-
-        &--awaiting-2i {
-          background-color: govuk-tint(govuk-colour("blue"), 70%);
-        }
-
-        &--in-2i {
-          background-color: govuk-tint(govuk-colour("dark-grey"), 85%);
-        }
-      }
-    }
-
     &:nth-of-type(2) {
       background: govuk-colour("light-grey");
 

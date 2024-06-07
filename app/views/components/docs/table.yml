@@ -17,6 +17,7 @@ examples:
         updated: 18 April 2024
         assigned: David Trussler
         status: Draft
+        status_colour: yellow
         edition: 37
         format: Transaction
         note: Fact check needed
@@ -26,6 +27,7 @@ examples:
         updated: 21 May 2024
         assigned: Jane Regan
         status: Awaiting 2i
+        status_colour: light-blue
         edition: 1
         format: Answer
         note: Please leave for Hannah M, Gav and Sarah. Once 2i’d, send for FC to bdavies@companieshouse.gov.uk, jmoyle@companieshouse.gov.uk, asoullier@companieshouse.gov.uk
@@ -37,6 +39,7 @@ examples:
         updated: 21 May 2024
         assigned: Jane Regan
         status: In 2i
+        status_colour: grey
         edition: 1
         format: Answer
         note: Please leave for Hannah M, Gav and Sarah. Once 2i’d, send for FC to bdavies@companieshouse.gov.uk, jmoyle@companieshouse.gov.uk, asoullier@companieshouse.gov.uk
@@ -48,6 +51,7 @@ examples:
         updated: 22 May 2024
         assigned: Peter Wilkinson
         status: Amends needed
+        status_colour: red
         edition: 3
         format: Guide
         note: Peter is on leave until 28 May. Justin can answer questions in the meantime. Please send for fact check to hmctsweb@justice.gov.uk, aundrae.jordine@justice.gov.uk, Thomas.Thirkill-Kirk@justice.gov.uk. Leave in Ready until we've had an off rota 2i with 'Make a claim under the Illegal Migration Act'
@@ -57,6 +61,7 @@ examples:
         updated: 23 May 2024
         assigned: Antoni Devlin
         status: Out for fact check
+        status_colour: purple
         sent: 23 May 2024
         edition: 34
         format: Guide
@@ -66,6 +71,7 @@ examples:
         updated: 23 May 2024
         assigned: Rebecca Milton
         status: Fact check received
+        status_colour: pink
         edition: 53
         format: Guide
         note: Send for f/c to benjamin.young@voa.gov.uk
@@ -75,6 +81,7 @@ examples:
         updated: 19 Apr 2024
         assigned: Grant Chappell
         status: Ready
+        status_colour: green
         edition: 4
         format: Answer
       -
@@ -83,6 +90,7 @@ examples:
         updated: 16 May 2024
         assigned: Linda Steele
         status: Scheduled for publishing
+        status_colour: turquoise
         scheduled: 12:01am, 10 Jun 2024
         edition: 21
         format: Answer
@@ -93,6 +101,7 @@ examples:
         updated: 23 May 2024
         assigned: Megan Husband
         status: Published
+        status_colour: orange
         edition: 105
         format: Guide
         published: Manon Williams
@@ -102,6 +111,7 @@ examples:
         updated: 23 May 2024
         assigned: Nicola Frost
         status: Archived
+        status_colour: blue
         edition: |
           #6 – #7 in published
         format: Transaction

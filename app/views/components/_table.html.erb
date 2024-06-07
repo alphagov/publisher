@@ -79,7 +79,7 @@
           format: 'updated'
         } %>
         <%= t.cell row[:assigned] %>
-        <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
+        <%= t.cell sanitize("<span class='govuk-tag govuk-tag--#{row[:status_colour]}'>#{row[:status]}</span>") %>
         <%= t.cell "" %>
       <% end %>
     <% end %>
