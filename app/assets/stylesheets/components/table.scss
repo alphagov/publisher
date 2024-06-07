@@ -5,6 +5,12 @@
     }
   }
 
+  .govuk-details__text {
+    dd {
+      word-break: break-word;
+    }
+  }
+
   .govuk-details__summary-text {
     color: rgb(11, 12, 12) !important;
   }
