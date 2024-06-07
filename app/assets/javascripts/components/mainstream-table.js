@@ -61,7 +61,7 @@
       })
 
       this.openDetails = this.numDetails
-      e.target.textContent = 'Contract all'
+      e.target.textContent = 'Collapse all'
     } else if (this.openDetails == this.numDetails) {
       this.details.forEach(function(section) {
         section.removeAttribute('open')
