@@ -74,11 +74,6 @@
         <%= t.cell row[:assigned] %>
         <%= t.cell sanitize("<span class='status status--#{row[:status].downcase.parameterize(separator: '-')}'>#{row[:status]}</span>") %>
       <% end %>
-      <%= t.row do %>
-        <%= t.cell "", {
-          colspan: 3
-        } %>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>
