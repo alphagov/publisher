@@ -5,20 +5,71 @@
     this.sectionExpandedClass = 'govuk-accordion__section--expanded'
     this.sectionInnerContentClass = 'govuk-accordion__section-content'
     this.sectionButton = '.govuk-accordion__section-button'
-    this.sections = this.$module.querySelectorAll('.govuk-accordion__section')
-    this.openSections = 0
-    this.numSections = this.sections.length
+    // this.sections = this.$module.querySelectorAll('.govuk-accordion__section')
+    // this.openSections = 0
+    // this.numSections = this.sections.length
+    this.details = this.$module.querySelectorAll('.govuk-details')
+    this.openDetails = 0
+    this.numDetails = this.details.length
   }
 
   MainstreamTable.prototype.init = function () {
     // Add Show/Hide All button to DOM
-    this.$module.querySelector('.govuk-table__header--controls').innerHTML = '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'
+    // this.$module.querySelector('.govuk-table__header--controls').innerHTML = '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'
 
     // Add Event listener for Show All button
-    this.$module.querySelector('.govuk-accordion__show-all').addEventListener('click', this.toggleAllSections.bind(this))
+    // this.$module.querySelector('.govuk-accordion__show-all').addEventListener('click', this.toggleAllSections.bind(this))
+
+    // Add Event listener for Expand All button
+    this.$module.querySelector('.govuk-table__header--expand').querySelector('a').addEventListener('click', this.toggleDetails.bind(this))
+
+    // Add Event listener for Details sections
+    this.$module.addEventListener('click', function(e) {
+      if (e.target.classList.contains('govuk-details__summary')) {
+        this.detailsStatus(e.target.parentNode)
+      } else if (e.target.parentNode.classList.contains('govuk-details__summary')) {
+        this.detailsStatus(e.target.parentNode.parentNode)
+      }
+    }.bind(this))
 
     // Add Event listeners for sections buttons
-    this.setUpSections()
+    // this.setUpSections()
+  }
+
+  // Records status of Details sections
+  MainstreamTable.prototype.detailsStatus = function (section) {
+    var expandLink = this.$module.querySelector('.govuk-table__header--expand').querySelector('a')
+
+    if (section.open == true) {
+      this.openDetails--
+    } else {
+      this.openDetails++
+    }
+
+    if(this.openDetails == this.numDetails) {
+      expandLink.textContent = 'Collapse all'
+    } else {
+      expandLink.textContent = 'Expand all'
+    }
+  }
+
+  // Toggles the "More details" sections
+  MainstreamTable.prototype.toggleDetails = function (e) {
+    if (this.openDetails < this.numDetails) {
+      this.details.forEach(function(section) {
+        section.setAttribute('open', true)
+      })
+
+      this.openDetails = this.numDetails
+      e.target.textContent = 'Contract all'
+    } else if (this.openDetails == this.numDetails) {
+      this.details.forEach(function(section) {
+        section.removeAttribute('open')
+      })
+
+      this.openDetails = 0
+      e.target.textContent = 'Expand all'
+    }
   }
 
   // Adds event listeners to set state of the "Show/Hide all" button when section buttons are clicked
