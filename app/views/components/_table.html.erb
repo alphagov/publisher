@@ -16,13 +16,12 @@
   }) do |t| %>
 
   <%= t.head do %>
-    <%= t.header "Title" %>
+    <%= t.header sanitize('<span>Title</span><a href="#" class="govuk-link">Expand all</a>'), {
+      format: "expand"
+    } %>
     <%= t.header "Updated" %>
     <%= t.header "Assigned to" %>
     <%= t.header "Status" %>
-    <%= t.header sanitize('<a href="#" class="govuk-link">Expand all</a>'), {
-      format: "expand"
-    } %>
   <% end %>
 
   <% rows.each_with_index do |row, rowindex| %>

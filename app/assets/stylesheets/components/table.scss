@@ -1,4 +1,16 @@
 .mainstream-table {
+  position: relative; 
+
+  // Positions the expander link outside of the table. 
+  // When the table is wrapped in containing element this can be added as a separate element
+  .govuk-table__header--expand {
+    a {
+      position: absolute;
+      right: 0;
+      top: calc(-1.1875rem * 1.3157894737); 
+    }
+  }
+
   .govuk-details__summary {
     &:before {
       color: rgb(11, 12, 12);
