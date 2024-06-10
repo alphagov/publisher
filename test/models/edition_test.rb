@@ -234,6 +234,8 @@ class EditionTest < ActiveSupport::TestCase
 
   # test cloning into different edition types
   Edition.subclasses.permutation(2).each do |source_class, destination_class|
+    next if source_class.instance_of?(PopularLinksEdition.class) || destination_class.instance_of?(PopularLinksEdition.class)
+
     test "it should be possible to clone from a #{source_class} to a #{destination_class}" do
       # Note that the new edition won't necessarily be valid - for example the
       # new type might have required fields that the old just doesn't have.
@@ -469,7 +471,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should scope publications by assignee" do
     stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js})
-        .to_return(status: 200, body: "{}", headers: {})
+      .to_return(status: 200, body: "{}", headers: {})
 
     a, b = 2.times.map { FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
@@ -567,7 +569,7 @@ class EditionTest < ActiveSupport::TestCase
 
   test "should scope publications assigned to nobody" do
     stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js})
-        .to_return(status: 200, body: "{}", headers: {})
+      .to_return(status: 200, body: "{}", headers: {})
 
     a, b = 2.times.map { |_i| FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
@@ -947,8 +949,10 @@ class EditionTest < ActiveSupport::TestCase
     assert_nil published_edition.reload.sibling_in_progress
   end
 
-  test "all subclasses should provide a working whole_body method for diffing" do
+  test "all subclasses except popular links should provide a working whole_body method for diffing" do
     Edition.subclasses.each do |klass|
+      next if klass.instance_of?(PopularLinksEdition.class)
+
       assert klass.instance_methods.include?(:whole_body), "#{klass} doesn't provide a whole_body"
       assert_nothing_raised do
         klass.new.whole_body

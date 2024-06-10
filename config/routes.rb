@@ -72,6 +72,8 @@ Rails.application.routes.draw do
 
   get "/govuk-sitemap.xml" => "sitemap#index"
 
+  get "/homepage/popular-links" => "homepage#show"
+
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
 end
