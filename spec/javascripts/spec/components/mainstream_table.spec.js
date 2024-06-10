@@ -7,10 +7,10 @@ describe('Table component', function () {
     var tableHtml =
       `<thead>
         <tr>
-          <th>Title</th>
+          <th class="govuk-table__header--expand">Title</th>
+          <th>Updated</th>
           <th>Assigned to</th>
           <th>Status</th>
-          <th class="govuk-table__header--controls"></th>
         </tr>
       </thead>`
 
@@ -27,12 +27,11 @@ describe('Table component', function () {
   })
 
   describe('When initialised', function () {
-    it('should have a "Show/Hide All" button', function () {
-      var headerControls = table.querySelector('th.govuk-table__header--controls')
+    it('should have a "Expand/Contract All" link', function () {
+      var expander = table.querySelector('th.govuk-table__header--expand')
 
-      expect(headerControls.querySelector('button')).not.toBeNull()
-      expect(headerControls.querySelector('button').classList).toContain('govuk-accordion__show-all')
-      expect(headerControls.querySelector('button').textContent).toBe('Show all')
+      expect(expander.querySelector('a')).not.toBeNull()
+      expect(expander.querySelector('a').textContent).toBe('Expand all')
     })
   })
 })

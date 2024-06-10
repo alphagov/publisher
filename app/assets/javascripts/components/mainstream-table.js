@@ -17,6 +17,14 @@
     // Add Show/Hide All button to DOM
     // this.$module.querySelector('.govuk-table__header--controls').innerHTML = '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'
 
+    // Add Expand/Contract link to DOM
+    var expandLink = document.createElement('a')
+
+    expandLink.classList.add('govuk-link')
+    expandLink.textContent = 'Expand all'
+
+    this.$module.querySelector('.govuk-table__header--expand').append(expandLink)
+
     // Add Event listener for Show All button
     // this.$module.querySelector('.govuk-accordion__show-all').addEventListener('click', this.toggleAllSections.bind(this))
 
