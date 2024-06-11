@@ -1,37 +1,40 @@
 describe('Table component', function () {
   'use strict'
 
-  var table, mainstreamTable
+  var module, mainstreamTable
 
   beforeEach(function () {
-    var tableHtml =
-      `<thead>
-        <tr>
-          <th class="govuk-table__header--expand">Title</th>
-          <th>Updated</th>
-          <th>Assigned to</th>
-          <th>Status</th>
-        </tr>
-      </thead>`
+    var moduleHtml =
+      `<p class="mainstream-table__heading">50 documents</p>
+      <table>
+        <thead>
+          <tr>
+            <th class="govuk-table__header--expand">Title</th>
+            <th>Updated</th>
+            <th>Assigned to</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+      </table>`
 
-    table = document.createElement('table')
-    table.innerHTML = tableHtml
-    document.body.appendChild(table)
+    module = document.createElement('div')
+    module.innerHTML = moduleHtml
+    document.body.appendChild(module)
 
-    mainstreamTable = new GOVUK.Modules.MainstreamTable(table)
+    mainstreamTable = new GOVUK.Modules.MainstreamTable(module)
     mainstreamTable.init()
   })
 
   afterEach(function () {
-    document.body.removeChild(table)
+    document.body.removeChild(module)
   })
 
   describe('When initialised', function () {
     it('should have a "Expand/Contract All" link', function () {
-      var expander = table.querySelector('th.govuk-table__header--expand')
+      var heading = module.querySelector('.mainstream-table__heading')
 
-      expect(expander.querySelector('a')).not.toBeNull()
-      expect(expander.querySelector('a').textContent).toBe('Expand all')
+      expect(heading.querySelector('a')).not.toBeNull()
+      expect(heading.querySelector('a').textContent).toBe('Expand all')
     })
   })
 })
