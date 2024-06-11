@@ -1,14 +1,15 @@
 .mainstream-table {
-  position: relative; 
+  position: relative;
+
+  table {
+    border-top: 2px solid #0b0c0c;
+  }
 
   // Positions the expander link outside of the table. 
   // When the table is wrapped in containing element this can be added as a separate element
-  .govuk-table__header--expand {
-    a {
-      position: absolute;
-      right: 0;
-      top: calc(-1.1875rem * 1.3157894737); 
-    }
+  &--expand-link {
+    float: right;
+    font-size: 1.1875rem;
   }
 
   .govuk-details__summary {

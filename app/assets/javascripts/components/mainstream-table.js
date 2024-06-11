@@ -1,10 +1,10 @@
 (function (Modules) {
   function MainstreamTable ($module) {
     this.$module = $module
-    this.sectionClass = 'govuk-accordion__section'
-    this.sectionExpandedClass = 'govuk-accordion__section--expanded'
-    this.sectionInnerContentClass = 'govuk-accordion__section-content'
-    this.sectionButton = '.govuk-accordion__section-button'
+    // this.sectionClass = 'govuk-accordion__section'
+    // this.sectionExpandedClass = 'govuk-accordion__section--expanded'
+    // this.sectionInnerContentClass = 'govuk-accordion__section-content'
+    // this.sectionButton = '.govuk-accordion__section-button'
     // this.sections = this.$module.querySelectorAll('.govuk-accordion__section')
     // this.openSections = 0
     // this.numSections = this.sections.length
@@ -14,22 +14,25 @@
   }
 
   MainstreamTable.prototype.init = function () {
+    console.log('init!')
+
     // Add Show/Hide All button to DOM
     // this.$module.querySelector('.govuk-table__header--controls').innerHTML = '<button type="button" class="govuk-accordion__show-all gem-c-accordion__show-all" aria-expanded="false"><span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span><span class="govuk-accordion__show-all-text">Show all</span></button>'
 
     // Add Expand/Contract link to DOM
-    var expandLink = document.createElement('a')
+    var  expandLink = document.createElement('a')
 
-    expandLink.classList.add('govuk-link')
+    expandLink.classList.add('govuk-link', 'mainstream-table--expand-link')
+    // expandLink.classList.add('govuk-link, mainstream-table--expand-link')
     expandLink.textContent = 'Expand all'
 
-    this.$module.querySelector('.govuk-table__header--expand').append(expandLink)
+    this.$module.querySelector('.mainstream-table__heading').append(expandLink)
 
     // Add Event listener for Show All button
     // this.$module.querySelector('.govuk-accordion__show-all').addEventListener('click', this.toggleAllSections.bind(this))
 
     // Add Event listener for Expand All button
-    this.$module.querySelector('.govuk-table__header--expand').querySelector('a').addEventListener('click', this.toggleDetails.bind(this))
+    // this.$module.querySelector('.govuk-table__header--expand').querySelector('a').addEventListener('click', this.toggleDetails.bind(this))
 
     // Add Event listener for Details sections
     this.$module.addEventListener('click', function(e) {
