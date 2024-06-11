@@ -47,8 +47,11 @@ private
 
   def build_presenter(user_filter, current_page = nil)
     user_filter, user = process_user_filter(user_filter)
+
     editions = filtered_editions.order_by([sort_column, sort_direction])
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
+    editions = editions.where.not(_type: "PopularLinksEdition")
+
     [PrimaryListingPresenter.new(editions, user), user_filter]
   end
 
