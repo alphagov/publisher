@@ -195,7 +195,7 @@ GEM
       nokogiri (~> 1.12)
       rinku (~> 2.0)
       sanitize (~> 6)
-    govuk_admin_template (6.11.0)
+    govuk_admin_template (7.0.0)
       bootstrap-sass (~> 3.4)
       jquery-rails (~> 4.3)
       plek (>= 2.1)
