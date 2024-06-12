@@ -108,7 +108,7 @@ GEM
     brakeman (6.1.2)
       racc
     bson (4.15.0)
-    builder (3.2.4)
+    builder (3.3.0)
     byebug (11.1.3)
     capybara (3.40.0)
       addressable
@@ -129,7 +129,7 @@ GEM
       minitest (~> 5.0)
     climate_control (1.2.0)
     coderay (1.1.3)
-    concurrent-ruby (1.3.1)
+    concurrent-ruby (1.3.3)
     connection_pool (2.4.1)
     crack (1.0.0)
       bigdecimal
@@ -751,9 +751,9 @@ GEM
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
-    sprockets-rails (3.4.2)
-      actionpack (>= 5.2)
-      activesupport (>= 5.2)
+    sprockets-rails (3.5.1)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
       sprockets (>= 3.0.0)
     state_machines (0.6.0)
     state_machines-activemodel (0.8.0)
