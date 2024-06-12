@@ -41,16 +41,16 @@
 
     // Custom styles for tags that may not be necessary when rendered on page
     // Think the uppercase, size and weight come from the Component Guide header
-    & > .govuk-tag {
-      text-transform: inherit;
-      font-size: inherit;
-      font-weight: 400;
+    // & > .govuk-tag {
+    //   text-transform: inherit;
+    //   font-size: inherit;
+    //   font-weight: 400;
 
-      &.govuk-tag--light-blue {
-        color: #0c2d4a;
-        background-color: #e8f1f8;
-      }
-    }
+    //   &.govuk-tag--light-blue {
+    //     color: #0c2d4a;
+    //     background-color: #e8f1f8;
+    //   }
+    // }
   }
 
   .govuk-details {
