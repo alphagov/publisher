@@ -1,64 +1,39 @@
-<%# @presenter.draft[0].to_json %><br /><br />
-
-<% @presenter.draft.each_with_index do |row, index| %>
-  <%= 'Title: ' + row.title %><br />
-  <%= 'Updated: ' + row.updated_at.to_s %><br />
-  <%= 'Assigned to: ' + row.assignee.to_s %><br />
-  <%= 'Status: ' + 'Draft' %><br />
-  <br />
-<% end %>
+<%# @presenter.draft[0].to_json %>
 
 <div class="mainstream-table" data-module="mainstream-table">
   <p class="govuk-heading-m govuk-!-margin-bottom-3 mainstream-table__heading">50 documents</p>
 
   <%= render "govuk_publishing_components/components/table", {
     head: [
-      {text: "Title"},
-      {text: "Updated"},
-      {text: "Assigned to"},
-      {text: "Status"}
+      {
+        text: "Title"
+      },
+      {
+        text: "Updated"
+      },
+      {
+        text: "Assigned to"
+      },
+      {
+        text: "Status"
+      }
     ],
-    rows: [
+    rows: @presenter.draft.map do |row|
       [
         {
-          text: "January"
+          text: row.title
         },
         {
-          text: "£85",
-          format: "numeric"
+          text: row.updated_at.to_s
         },
         {
-          text: "£95",
-          format: "numeric"
-        }
-      ],
-      [
-        {
-          text: "February"
+          text: row.assignee.to_s
         },
         {
-          text: "£75",
-          format: "numeric"
-        },
-        {
-          text: "£55",
-          format: "numeric"
-        }
-      ],
-      [
-        {
-          text: "March"
-        },
-        {
-          text: "£165",
-          format: "numeric"
-        },
-        {
-          text: "£125",
-          format: "numeric"
+          text: 'Draft'
         }
       ]
-    ]
+    end
   } %>
 </div>
 
