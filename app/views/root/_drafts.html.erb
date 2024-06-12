@@ -1,3 +1,67 @@
+<%# @presenter.draft[0].to_json %><br /><br />
+
+<% @presenter.draft.each_with_index do |row, index| %>
+  <%= 'Title: ' + row.title %><br />
+  <%= 'Updated: ' + row.updated_at.to_s %><br />
+  <%= 'Assigned to: ' + row.assignee.to_s %><br />
+  <%= 'Status: ' + 'Draft' %><br />
+  <br />
+<% end %>
+
+<div class="mainstream-table" data-module="mainstream-table">
+  <p class="govuk-heading-m govuk-!-margin-bottom-3 mainstream-table__heading">50 documents</p>
+
+  <%= render "govuk_publishing_components/components/table", {
+    head: [
+      {text: "Title"},
+      {text: "Updated"},
+      {text: "Assigned to"},
+      {text: "Status"}
+    ],
+    rows: [
+      [
+        {
+          text: "January"
+        },
+        {
+          text: "£85",
+          format: "numeric"
+        },
+        {
+          text: "£95",
+          format: "numeric"
+        }
+      ],
+      [
+        {
+          text: "February"
+        },
+        {
+          text: "£75",
+          format: "numeric"
+        },
+        {
+          text: "£55",
+          format: "numeric"
+        }
+      ],
+      [
+        {
+          text: "March"
+        },
+        {
+          text: "£165",
+          format: "numeric"
+        },
+        {
+          text: "£125",
+          format: "numeric"
+        }
+      ]
+    ]
+  } %>
+</div>
+
 <table class="table table-striped table-bordered table-condensed" summary="List of &ldquo;Draft&rdquo; content">
   <thead>
     <tr class="table-header">
