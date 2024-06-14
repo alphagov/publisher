@@ -118,10 +118,10 @@ class Edition
   ].freeze
 
   validates :title, presence: { message: "Enter a title" }
-  validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }
-  validates :panopticon_id, presence: true
-  validates_with SafeHtml
-  validates_with LinkValidator, on: :update, unless: :archived?
+  validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }, unless: :popular_links_edition?
+  validates :panopticon_id, presence: true, unless: :popular_links_edition?
+  validates_with SafeHtml, unless: :popular_links_edition?
+  validates_with LinkValidator, on: :update, unless: :archived? || :popular_links_edition?
   validates_with ReviewerValidator
   validates :change_note, presence: { if: :major_change }
 
@@ -514,5 +514,9 @@ private
 
   def common_type_specific_field_keys(target_class)
     ((fields.keys & target_class.fields.keys) - Edition.fields.keys).map(&:to_sym)
+  end
+
+  def popular_links_edition?
+    instance_of?(::PopularLinksEdition)
   end
 end

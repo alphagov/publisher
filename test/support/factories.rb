@@ -181,6 +181,11 @@ FactoryBot.define do
     sequence(:title) { |n| "Test guide #{n}" }
   end
 
+  factory :popular_links, class: "PopularLinksEdition" do
+    title { "Homepage Popular Links" }
+    link_items { [{ url: "url1", title: "title1" }, { url: "url2", title: "title2" }, { url: "url3", title: "title3" }, { url: "url4", title: "title4" }, { url: "url5", title: "title5" }, { url: "url6", title: "title6" }] }
+  end
+
   factory :programme_edition, parent: :edition, class: "ProgrammeEdition" do
     sequence(:title) { |n| "Test programme #{n}" }
   end

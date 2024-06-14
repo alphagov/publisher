@@ -1,0 +1,9 @@
+<% content_for :page_title, 'Popular on GOV.UK' %>
+<% content_for :title, 'Popular on GOV.UK' %>
+<% content_for :title_context, 'Homepage' %>
+<div class="govuk-grid-column-two-thirds">
+  <%= render "homepage/popular_links/version_and_status", version: @latest_popular_links.version_number, status: @latest_popular_links.state %>
+  <% @latest_popular_links.link_items.each_with_index do |item, index| %>
+    <%= render "homepage/popular_links/link", item:, index: %>
+  <% end %>
+</div>

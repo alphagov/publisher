@@ -300,4 +300,20 @@ class RootOverviewTest < ActionDispatch::IntegrationTest
 
     assert page.has_link?("/test-slug", href: "#{Plek.website_root}/test-slug")
   end
+
+  test "should not render popular links edition" do
+    FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create(:guide_edition, title: "Draft guide")
+    FactoryBot.create(:transaction_edition, title: "Draft transaction")
+    FactoryBot.create(:popular_links, title: "Popular links edition")
+
+    visit "/"
+
+    filter_by_user("All")
+
+    assert page.has_content?("Draft guide")
+    assert page.has_content?("Draft transaction")
+    assert page.has_content?("Draft guide")
+    assert page.has_no_content?("Popular links edition")
+  end
 end

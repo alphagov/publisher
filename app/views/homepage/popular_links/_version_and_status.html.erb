@@ -1,0 +1,15 @@
+<% status_tags = { :published=> "govuk-tag--green", :draft => "govuk-tag--yellow" } %>
+<% status_tag = tag.strong status.capitalize, class: ["govuk-tag",status_tags[status.to_sym]] %>
+
+<%= render "govuk_publishing_components/components/summary_list", {
+  items: [
+    {
+      field: "Edition",
+      value: version
+    },
+    {
+      field: "Status",
+      value: status_tag
+    }
+  ]
+} %>
