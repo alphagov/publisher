@@ -5,4 +5,14 @@ module PopularLinksHelper
     rows << { key: "URL", value: item[:url] }
     rows.compact
   end
+
+  def button_for(model, url, method, text, secondary_solid: false)
+    form_for model, url:, method: do
+      render "govuk_publishing_components/components/button", {
+        text:,
+        margin_bottom: 3,
+        secondary_solid:,
+      }
+    end
+  end
 end

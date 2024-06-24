@@ -1,0 +1,8 @@
+<div class="sidebar-components">
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Options",
+    font_size: "s",
+    padding: true
+  } %>
+  <%= button_for(@latest_popular_links, create_popular_links_path, :post, "Create new edition") %>
+</div>

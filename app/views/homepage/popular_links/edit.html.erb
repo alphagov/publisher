@@ -1,0 +1,18 @@
+<% content_for :page_title, 'Edit popular links' %>
+<% content_for :title, 'Edit popular links' %>
+<% content_for :title_context, 'Popular on GOV.UK' %>
+<% unless @latest_popular_links.errors.empty? %>
+  <% content_for :error_summary, render("shared/error_summary", { object: @latest_popular_links })  %>
+<% end %>
+
+<div class="govuk-grid-column-two-thirds">
+  <%= form_for @latest_popular_links, url: update_popular_links_path(@latest_popular_links), method: "patch" do |form| %>
+    <% @latest_popular_links.link_items.each_with_index do |item, index| %>
+      <%= render "homepage/popular_links/form", item:, index:, form: %>
+    <% end %>
+    <%= render("govuk_publishing_components/components/button", {
+      text: "Save",
+      type: "submit",
+    }) %>
+  <% end %>
+</div>
