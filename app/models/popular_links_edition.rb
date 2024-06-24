@@ -9,9 +9,9 @@ class PopularLinksEdition < Edition
 
   def all_valid_urls_and_titles_are_present
     link_items.each_with_index do |item, index|
-      errors.add(:Url, "is required for Link #{index + 1}") unless url_present?(item)
-      errors.add(:Title, "is required for Link #{index + 1}") unless title_present?(item)
-      errors.add(:Url, "is invalid for Link #{index + 1}") if url_present?(item) && url_has_spaces_or_has_no_dot?(item[:url])
+      errors.add("url#{index + 1}", "URL is required for Link #{index + 1}") unless url_present?(item)
+      errors.add("title#{index + 1}", "Title is required for Link #{index + 1}") unless title_present?(item)
+      errors.add("url#{index + 1}", "URL is invalid for Link #{index + 1}, all URLs should have at least one '.' and no spaces.") if url_present?(item) && url_has_spaces_or_has_no_dot?(item[:url])
     end
   end
 

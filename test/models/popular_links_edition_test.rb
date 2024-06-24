@@ -24,8 +24,8 @@ class PopularLinksEditionTest < ActiveSupport::TestCase
     popular_links = FactoryBot.build(:popular_links, link_items:)
 
     assert_not popular_links.valid?
-    assert popular_links.errors.full_messages.include?("Title is required for Link 1")
-    assert popular_links.errors.full_messages.include?("URL is required for Link 2")
+    assert popular_links.errors.messages[:title1].include?("Title is required for Link 1")
+    assert popular_links.errors.messages[:url2].include?("URL is required for Link 2")
   end
 
   should "validate all urls are valid" do
@@ -36,9 +36,10 @@ class PopularLinksEditionTest < ActiveSupport::TestCase
                   { url: "www.efg.co.uk", title: "title5" },
                   { url: "www.ijk.com", title: "title6" }]
     popular_links = FactoryBot.build(:popular_links, link_items:)
+
     assert_not popular_links.valid?
-    assert popular_links.errors.full_messages.include?("URL is invalid for Link 2")
-    assert popular_links.errors.full_messages.include?("URL is required for Link 1")
+    assert popular_links.errors.messages[:url2].include?("URL is invalid for Link 2, all URLs should have at least one '.' and no spaces.")
+    assert popular_links.errors.messages[:url1].include?("URL is required for Link 1")
   end
 
   should "create new record from last 'published' record with status as 'draft' and increased 'version_number'" do

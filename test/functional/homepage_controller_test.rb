@@ -40,4 +40,62 @@ class HomepageControllerTest < ActionController::TestCase
       assert_equal "draft", PopularLinksEdition.last.state
     end
   end
+
+  context "#edit" do
+    should "render edit template" do
+      popular_links = FactoryBot.create(:popular_links, state: "published")
+
+      post :edit, params: { id: popular_links.id }
+
+      assert_response :ok
+      assert_template "homepage/popular_links/edit"
+    end
+  end
+
+  context "#update" do
+    setup do
+      @popular_links = FactoryBot.create(:popular_links, state: "draft")
+    end
+
+    should "update latest PopularLinksEdition with changed title and url" do
+      assert_equal "title1", @popular_links.link_items[0][:title]
+      assert_equal "https://www.url1.com", @popular_links.link_items[0][:url]
+
+      new_title = "title has changed"
+      new_url = "https://www.changedurl.com"
+      patch :update, params: { id: @popular_links.id,
+                               "popular_links" =>
+                                 { "1" => { "title" => new_title, "url" => new_url },
+                                   "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                   "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                   "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                   "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                   "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+      assert_equal new_title, PopularLinksEdition.last.link_items[0][:title]
+      assert_equal new_url, PopularLinksEdition.last.link_items[0][:url]
+    end
+
+    should "redirect to show path on success" do
+      new_title = "title has changed"
+      patch :update, params: { id: @popular_links.id,
+                               "popular_links" =>
+                                 { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
+                                   "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                   "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                   "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                   "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                   "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+      assert_redirected_to show_popular_links_path
+    end
+
+    should "render edit template on errors" do
+      patch :update, params: { id: @popular_links.id,
+                               "popular_links" =>
+                                 { "1" => { "title" => "title has changed", "url" => "https://www.url1.com" } } }
+
+      assert_template "homepage/popular_links/edit"
+    end
+  end
 end

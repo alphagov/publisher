@@ -4,5 +4,9 @@
     font_size: "s",
     padding: true
   } %>
-  <%= button_for(@latest_popular_links, create_popular_links_path, :post, "Create new edition") %>
+  <% if @latest_popular_links.state == "published" %>
+    <%= primary_button_for(@latest_popular_links, create_popular_links_path, "Create new edition") %>
+  <% else %>
+    <%= primary_link_button_for(edit_popular_links_path(@latest_popular_links), "Edit popular links") %>
+  <% end %>
 </div>
