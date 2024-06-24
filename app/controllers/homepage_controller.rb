@@ -23,6 +23,11 @@ class HomepageController < ApplicationController
     render "homepage/popular_links/edit"
   end
 
+  def publish
+    publish_latest_popular_links
+    render "homepage/popular_links/show"
+  end
+
 private
 
   def fetch_latest_popular_link
@@ -41,5 +46,9 @@ private
       link_items << link
     end
     link_items
+  end
+
+  def publish_latest_popular_links
+    @latest_popular_links.publish_popular_links
   end
 end

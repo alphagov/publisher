@@ -17,6 +17,7 @@ class Action
     PUBLISH                     = "publish".freeze,
     ARCHIVE                     = "archive".freeze,
     NEW_VERSION                 = "new_version".freeze,
+    PUBLISH_POPULAR_LINKS       = "publish_popular_links".freeze,
   ].freeze
 
   NON_STATUS_ACTIONS = [

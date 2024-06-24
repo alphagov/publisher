@@ -93,6 +93,10 @@ module Workflow
         transition all => :archived, :unless => :archived?
       end
 
+      event :publish_popular_links do
+        transition %i[draft] => :published
+      end
+
       state :in_review do
         validates :review_requested_at, presence: true
       end

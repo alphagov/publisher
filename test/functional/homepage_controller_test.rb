@@ -98,4 +98,20 @@ class HomepageControllerTest < ActionController::TestCase
       assert_template "homepage/popular_links/edit"
     end
   end
+
+  context "#publish" do
+    setup do
+      @popular_links = FactoryBot.create(:popular_links, state: "draft")
+    end
+
+    should "publish latest draft popular links and render show template" do
+      assert_equal "draft", PopularLinksEdition.last.state
+
+      post :publish, params: { id: @popular_links.id }
+
+      assert_response :ok
+      assert_template "homepage/popular_links/show"
+      assert_equal "published", PopularLinksEdition.last.state
+    end
+  end
 end
