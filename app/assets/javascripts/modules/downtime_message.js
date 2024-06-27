@@ -1,4 +1,4 @@
-//= require govuk_publishing_components/vendor/polyfills/closest
+//= require govuk_publishing_components/vendor/polyfills-govuk-frontend-v4/Element/prototype/closest
 
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.Modules = window.GOVUK.Modules || {};
