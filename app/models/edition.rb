@@ -121,7 +121,7 @@ class Edition
   validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }, unless: :popular_links_edition?
   validates :panopticon_id, presence: true, unless: :popular_links_edition?
   validates_with SafeHtml, unless: :popular_links_edition?
-  validates_with LinkValidator, on: :update, unless: :archived? || :popular_links_edition?
+  validates_with LinkValidator, on: :update, unless: :archived_or_popular_links?
   validates_with ReviewerValidator
   validates :change_note, presence: { if: :major_change }
 
@@ -518,5 +518,9 @@ private
 
   def popular_links_edition?
     instance_of?(::PopularLinksEdition)
+  end
+
+  def archived_or_popular_links?
+    archived? || popular_links_edition?
   end
 end

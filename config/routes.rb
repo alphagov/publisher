@@ -72,7 +72,11 @@ Rails.application.routes.draw do
 
   get "/govuk-sitemap.xml" => "sitemap#index"
 
-  get "/homepage/popular-links" => "homepage#show"
+  get "/homepage/popular-links" => "homepage#show", as: "show_popular_links"
+  post "/homepage/popular-links/create" => "homepage#create", as: "create_popular_links"
+  get "/homepage/popular-links/:id" => "homepage#edit", as: "edit_popular_links"
+  patch "/homepage/popular-links/:id" => "homepage#update", as: "update_popular_links"
+  post "/homepage/popular-links/:id/publish" => "homepage#publish", as: "publish_popular_links"
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"

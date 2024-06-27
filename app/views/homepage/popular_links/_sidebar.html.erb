@@ -1,0 +1,13 @@
+<div class="sidebar-components">
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Options",
+    font_size: "s",
+    padding: true
+  } %>
+  <% if @latest_popular_links.state == "published" %>
+    <%= primary_button_for(@latest_popular_links, create_popular_links_path, "Create new edition") %>
+  <% else %>
+    <%= primary_link_button_for(edit_popular_links_path(@latest_popular_links), "Edit popular links") %>
+    <%= secondary_button_for(@latest_popular_links, publish_popular_links_path(@latest_popular_links), "Publish") %>
+  <% end %>
+</div>

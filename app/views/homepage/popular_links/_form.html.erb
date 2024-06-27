@@ -1,0 +1,25 @@
+<%= render "govuk_publishing_components/components/fieldset", {
+  legend_text: "Link #{index+1}",
+  heading_level: 2,
+  heading_size: "m",
+} do %>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Title",
+    },
+    name: "popular_links[#{index + 1}][title]",
+    id: "title#{index + 1}",
+    value: item[:title],
+    error_items: errors_for(form.object.errors, "title#{index + 1}".to_sym, use_full_message: false),
+  } %>
+
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "URL",
+    },
+    name: "popular_links[#{index + 1}][url]",
+    id: "url#{index + 1}",
+    value: item[:url],
+    error_items: errors_for(form.object.errors, "url#{index + 1}".to_sym, use_full_message: false),
+  } %>
+<% end %>
