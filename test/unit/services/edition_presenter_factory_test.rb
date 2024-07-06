@@ -51,6 +51,11 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase
       assert result == "Formats::TransactionPresenter"
     end
 
+    should "return a presenter for PopularLinks" do
+      result = EditionPresenterFactory.presenter_class("PopularLinksEdition")
+      assert result == "Formats::PopularLinksPresenter"
+    end
+
     should "return default presenter for other pages" do
       result = EditionPresenterFactory.presenter_class("any_other_format")
       assert result == "Formats::GenericEditionPresenter"

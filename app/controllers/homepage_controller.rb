@@ -17,6 +17,8 @@ class HomepageController < ApplicationController
 
   def update
     update_link_items
+    UpdateWorker.perform_async(@latest_popular_links.id.to_s, update_action_is_publish?)
+
     flash[:success] = "Popular links draft saved.".html_safe
     redirect_to show_popular_links_path
   rescue StandardError
@@ -50,5 +52,13 @@ private
 
   def publish_latest_popular_links
     @latest_popular_links.publish_popular_links
+  end
+
+  def update_action_is_publish?
+    attempted_activity == :publish
+  end
+
+  def attempted_activity
+    Edition::ACTIONS.invert[params[:commit]]
   end
 end

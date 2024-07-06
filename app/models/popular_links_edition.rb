@@ -33,4 +33,8 @@ class PopularLinksEdition < Edition
     popular_links.save!
     popular_links
   end
+
+  def content_id
+    "ad7968d0-0339-40b2-80bc-3ea1db8ef1b7".freeze
+  end
 end

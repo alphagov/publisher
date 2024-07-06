@@ -58,6 +58,8 @@ class HomepageControllerTest < ActionController::TestCase
     end
 
     should "update latest PopularLinksEdition with changed title and url" do
+      UpdateWorker.stubs(:perform_async)
+
       assert_equal "title1", @popular_links.link_items[0][:title]
       assert_equal "https://www.url1.com", @popular_links.link_items[0][:url]
 
@@ -76,8 +78,25 @@ class HomepageControllerTest < ActionController::TestCase
       assert_equal new_url, PopularLinksEdition.last.link_items[0][:url]
     end
 
+    should "update publishing API" do
+      Sidekiq::Testing.inline! do
+        Services.publishing_api.expects(:put_content)
+
+        patch :update, params: { id: @popular_links.id,
+                                 "popular_links" =>
+                                   { "1" => { "title" => "title", "url" => "url.com" },
+                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+      end
+    end
+
     should "redirect to show path on success" do
+      UpdateWorker.stubs(:perform_async)
       new_title = "title has changed"
+
       patch :update, params: { id: @popular_links.id,
                                "popular_links" =>
                                  { "1" => { "title" => new_title, "url" => "https://www.url1.com" },

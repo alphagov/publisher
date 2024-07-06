@@ -24,6 +24,8 @@ class EditionPresenterFactory
         "Formats::SimpleSmartAnswerPresenter"
       when "TransactionEdition"
         "Formats::TransactionPresenter"
+      when "PopularLinksEdition"
+        "Formats::PopularLinksPresenter"
       else
         "Formats::GenericEditionPresenter"
       end
