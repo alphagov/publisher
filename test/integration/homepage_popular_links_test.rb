@@ -135,6 +135,19 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
   end
 
+  context "#publish" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "publish latest edition when 'Publish' is clicked" do
+      click_button("Publish")
+
+      assert page.has_text?("PUBLISHED")
+      assert page.has_text?("Popular links successfully published.")
+    end
+  end
+
   def visit_popular_links
     visit "/homepage/popular-links"
   end

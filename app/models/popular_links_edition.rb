@@ -34,7 +34,28 @@ class PopularLinksEdition < Edition
     popular_links
   end
 
+  def publish
+    Services.publishing_api.publish(content_id, update_type, locale:)
+    # This publish_popular_links is a new workflow that was introduced for popular links.
+    publish_popular_links
+  end
+
+  def save_draft
+    UpdateService.call(self)
+    save!
+  end
+
   def content_id
     "ad7968d0-0339-40b2-80bc-3ea1db8ef1b7".freeze
+  end
+
+  # PopularLinks updates are going to be a major update
+  # as there is no real reason for having a minor update
+  def update_type
+    "major".freeze
+  end
+
+  def locale
+    "en".freeze
   end
 end
