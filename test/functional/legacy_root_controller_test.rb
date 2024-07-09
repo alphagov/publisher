@@ -1,6 +1,6 @@
 require "test_helper"
 
-class RootControllerTest < ActionController::TestCase
+class LegacyRootControllerTest < ActionController::TestCase
   setup do
     @users = FactoryBot.create_list(:user, 3)
     login_as_stub_user

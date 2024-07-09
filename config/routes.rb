@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   get "api/lookup-by-base-path", to: "publishing_api_proxy#lookup_by_base_path"
 
   resources :publications
-  root to: "root#index"
+  root to: "legacy_root#index"
 
   # We used to nest all URLs under /admin so we now redirect that
   # in case people had bookmarks set up. Using a proc as otherwise the
