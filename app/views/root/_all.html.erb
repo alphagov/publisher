@@ -1,5 +1,8 @@
 <div class="govuk-grid-row">
-  <h1>Table goes here</h1>
+  <%= render(partial: "table", locals: {
+    edition: "edition",
+  }) %>
+
   <!-- <div class="govuk-grid-column-two-thirds accordion-hack" data-module="govuk-accordion gem-accordion" id="accordion-default"> -->
     <%# render "components/table", {
       head: [
