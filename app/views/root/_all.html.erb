@@ -1,0 +1,55 @@
+<div class="govuk-grid-row">
+  <h1>Table goes here</h1>
+  <!-- <div class="govuk-grid-column-two-thirds accordion-hack" data-module="govuk-accordion gem-accordion" id="accordion-default"> -->
+    <%# render "components/table", {
+      head: [
+        {
+          text: "Title",
+          format: "text",
+        },
+        {
+          text: "Assigned to",
+          format: "text",
+        },
+        {
+          text: "Status",
+          format: "text",
+        },
+        {
+          text: "",
+          colspan: 3
+        }
+      ],
+      rows: @presenter.all.reduce([]) do | acc, document |
+        row = document.as_json.with_indifferent_access
+
+        acc.push(
+          [
+            [
+              {
+                text: sanitize("<div><p>#{row[:title]}</p><span>Last updated: #{ Date.strptime(row[:updated_at], '%Y-%m-%d')}</div>")
+              },
+              {
+                text: row[:assignee]
+              },
+              {
+                text: row[:state]
+              },
+              {
+                text: sanitize("<span class='accordion-hack__button-space'></span>", attributes: %w(class))
+              }
+            ],
+            [
+              {
+                colspan: 5,
+                text: render(partial: "shared/table_table", locals: {
+                  edition: "edition",
+                })
+              }
+            ]
+          ]
+        )
+      end
+    } %>
+  <!-- </div> -->
+</div>

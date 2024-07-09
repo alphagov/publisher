@@ -39,6 +39,12 @@ class Edition
 
   embeds_many :link_check_reports
 
+  # state will never be all
+  # this is just a hack to return
+  # all the editions in the editions
+  # filter view...
+  scope :all, -> { where(state: "all") }
+
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
     scope state, -> { where(state:) }
