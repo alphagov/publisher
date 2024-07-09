@@ -1,133 +1,109 @@
-<%#
-  add_gem_component_stylesheet("table")
-  caption ||= nil
-  rows ||= []
-  first_cell_is_header ||= false
-  caption_classes ||= nil
-  sortable ||= false
-  label ||= t("components.table.filter_label")
-  table_id = "table-id-#{SecureRandom.hex(4)}"
-%>
+<%# @presenter.all.each do |publication| %>
+  <%# publication.assigned_to %>
+  <%# current_user.has_editor_permissions?(publication) %>
+  <%# publication.subsequent_siblings.last %><br /><br />
+  <%# publication.publisher %><br /><br />
+  <%# publication._id %><br /><br />
+  <%# publication._id.$oid.to_json %><br /><br />
+  <%# publication[:_id][:$oid].to_json %><br /><br />
+  <%# publication[:review_requested_at].to_json %><br /><br />
+  <%# time_ago_in_words(publication[:review_requested_at]) %><br /><br />
+  <%# row.actions.each do |action| %>
+    <%# action.to_json %><br /><br />
+  <%# end %>
+<%# end %>
 
 <div class="publisher-table" data-module="publisher-table">
-  <p class="govuk-heading-m govuk-!-margin-bottom-3 publisher-table__heading">50 documents</p>
+  <p class="govuk-heading-m govuk-!-margin-bottom-3 publisher-table__heading"><%= @presenter.all.length %> documents</p>
 
   <%= render "govuk_publishing_components/components/table", {
-    rows: [
-      [
-        {
-          text: "January"
-        },
-        {
-          text: "£85",
-          format: "numeric"
-        },
-        {
-          text: "£95",
-          format: "numeric"
+    head: [
+      {
+        text: "Title"
+      },
+      {
+        text: "Updated"
+      },
+      {
+        text: "Assigned to"
+      },
+      {
+        text: "Status"
+      }
+    ],
+    rows: @presenter.all.map do | publication |
+      if publication.state == "in_review"
+        if publication.reviewer and publication.reviewer.present?
+          reviewer = publication.reviewer
+        elsif current_user != publication.assigned_to && current_user.has_editor_permissions?(publication)
+          reviewer = form_for :edition, url: review_edition_path(publication._id), method: :put do |f|
+            # TODO: ensure this field is rendered
+            f.hidden_field :reviewer, value: current_user.name
+
+            render "govuk_publishing_components/components/button", {
+              text: "Claim 2i"
+            }
+          end
+        end
+      end
+
+      if (publication.state == "published" || publication.state == "archived") && publication.subsequent_siblings.first.present?
+        edition_number = sanitize(publication.version_number.to_s + " - " + link_to("##{publication.subsequent_siblings.first.version_number} in #{publication.subsequent_siblings.first.state.humanize.downcase}", edition_path(publication.subsequent_siblings.first), class: 'link-inherit'))
+      else
+        edition_number = publication.version_number.to_s
+      end
+
+      details = render "govuk_publishing_components/components/details", {
+        title: "More details"
+      } do
+        render "govuk_publishing_components/components/summary_list", {
+          items: [
+            {field: "Edition", value: edition_number},
+            {field: "Format", value: publication.format.underscore.humanize},
+            *([{field: "Important Note", value: publication.important_note.comment}] if publication.important_note.present?),
+            *([{field: "Awaiting review", value: time_ago_in_words(publication.review_requested_at)}] if publication.state == 'in_review'),
+            *([{field: "2i reviewer", value: reviewer}] if publication.state == "in_review"),
+            *([{field: "Sent Out", value: publication.last_fact_checked_at.to_date.to_fs(:govuk_date_short)}] if publication.state == 'fact_check'),
+            *([{field: "Scheduled", value: publication.publish_at.to_fs(:govuk_date_short)}] if publication.publish_at.present?),
+            *([{field: "Published by", value: publication.publisher}] if publication.publisher.present?)
+          ],
+          borderless: true
         }
-      ],
+      end
+
       [
         {
-          text: "February"
+          text:
+            sanitize("<p class='title govuk-body'><a href='editions/#{publication._id}' class='govuk-link govuk-!-font-weight-bold'>#{publication.title}</a></p>") +
+            (render "govuk_publishing_components/components/details", {
+              title: "More details"
+            } do
+              render "govuk_publishing_components/components/summary_list", {
+                items: [
+                  {field: "Edition", value: edition_number(publication)},
+                  {field: "Format", value: format(publication)},
+                  *([{field: "Important Note", value: important_note(publication)}] if important_note(publication)),
+                  *([{field: "Awaiting review", value: awaiting_review(publication)}] if awaiting_review(publication)),
+                  *([{field: "2i reviewer", value: reviewer(publication, current_user)}] if reviewer(publication, current_user)),
+                  *([{field: "Sent Out", value: sent_out(publication)}] if sent_out(publication)),
+                  *([{field: "Scheduled", value: scheduled(publication)}] if scheduled(publication)),
+                  *([{field: "Published by", value: published_by(publication)}] if published_by(publication))
+                ],
+                borderless: true
+              }
+            end
+          )
         },
         {
-          text: "£75",
-          format: "numeric"
+          text: publication.updated_at.to_date.to_fs(:govuk_date_short)
         },
         {
-          text: "£55",
-          format: "numeric"
-        }
-      ],
-      [
-        {
-          text: "March"
+          text: publication.assignee
         },
         {
-          text: "£165",
-          format: "numeric"
-        },
-        {
-          text: "£125",
-          format: "numeric"
+          text: publication.state.humanize
         }
       ]
-    ]
+    end
   } %>
-
-  <%# TableHelper.helper(self, caption, {
-      sortable: sortable,
-      caption_classes: caption_classes,
-      table_id: table_id
-    }) do |t| %>
-
-    <%# t.head do %>
-      <%# t.header "Title", {
-        format: "expand"
-      } %>
-      <%# t.header "Updated" %>
-      <%# t.header "Assigned to" %>
-      <%# t.header "Status" %>
-    <%# end %>
-
-    <%# rows.each_with_index do |row, rowindex| %>
-      <%#
-        if row[:status] === "Awaiting 2i"
-          button = render "govuk_publishing_components/components/button", {
-            text: "Claim 2i"
-          }
-        else
-          button = nil
-        end
-
-        if button
-          summary = button + (render "govuk_publishing_components/components/summary_list", {
-            items: [
-              {field: "Edition", value: row[:edition]},
-              {field: "Format", value: row[:format]},
-              *([{field: "Important Note", value: row[:note]}] if row[:note].present?),
-              *([{field: "Awaiting review", value: row[:awaiting_review]}] if row[:awaiting_review].present?),
-              *([{field: "2i reviewer", value: row[:reviewer]}] if row[:reviewer].present?),
-              *([{field: "Sent Out", value: row[:sent]}] if row[:sent].present?),
-              *([{field: "Scheduled", value: row[:scheduled]}] if row[:scheduled].present?),
-              *([{field: "Published by", value: row[:published]}] if row[:published].present?)
-            ],
-            borderless: true
-          })
-        else
-          summary = render "govuk_publishing_components/components/summary_list", {
-            items: [
-              {field: "Edition", value: row[:edition]},
-              {field: "Format", value: row[:format]},
-              *([{field: "Important Note", value: row[:note]}] if row[:note].present?),
-              *([{field: "Awaiting review", value: row[:awaiting_review]}] if row[:awaiting_review].present?),
-              *([{field: "2i reviewer", value: row[:reviewer]}] if row[:reviewer].present?),
-              *([{field: "Sent Out", value: row[:sent]}] if row[:sent].present?),
-              *([{field: "Scheduled", value: row[:scheduled]}] if row[:scheduled].present?),
-              *([{field: "Published by", value: row[:published]}] if row[:published].present?)
-            ],
-            borderless: true
-          }
-        end
-
-        details = render "govuk_publishing_components/components/details", {
-          title: "More details"
-        } do
-          summary
-        end
-      %>
-
-      <%# t.body do %>
-        <%# t.row do %>
-          <%# t.cell sanitize("<p class='title govuk-body'><a href='#{row[:href]}' class='govuk-link govuk-!-font-weight-bold'>#{row[:title]}</a></p>") + details %>
-          <%# t.cell row[:updated], {
-            format: 'updated'
-          } %>
-          <%# t.cell row[:assigned] %>
-          <%# t.cell sanitize("<span class='govuk-tag govuk-tag--#{row[:status_colour]}'>#{row[:status]}</span>") %>
-        <%# end %>
-      <%# end %>
-    <%# end %>
-  <%# end %>
 </div>
