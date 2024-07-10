@@ -45,6 +45,13 @@ class HomepageController < ApplicationController
     redirect_to show_popular_links_path
   end
 
+  def destroy
+    # TODO: Must only delete if unpublished and this route must not be accessible from the URL
+    flash[:success] = "Popular links draft deleted.".html_safe
+    # @latest_popular_links.delete
+    redirect_to "homepage/popular_links/show"
+  end
+
 private
 
   def rescue_already_published_error(error)
