@@ -1,19 +1,19 @@
 (function (Modules) {
-  function MainstreamTable ($module) {
+  function PublisherTable ($module) {
     this.$module = $module
     this.details = this.$module.querySelectorAll('.govuk-details')
     this.openDetails = 0
     this.numDetails = this.details.length
   }
 
-  MainstreamTable.prototype.init = function () {
+  PublisherTable.prototype.init = function () {
     console.log('init!')
 
     // Add Expand/Contract link to DOM
     this.addExpandlink()
 
     // Add Event listener for Expand All button
-    this.$module.querySelector('.mainstream-table__heading a').addEventListener('click', this.toggleDetails.bind(this))
+    this.$module.querySelector('.publisher-table__heading a').addEventListener('click', this.toggleDetails.bind(this))
 
     // Add Event listener for Details sections
     // this.$module.addEventListener('click', function(e) {
@@ -29,15 +29,15 @@
   }
 
   // Add Expand/Contract link to DOM
-  MainstreamTable.prototype.addExpandlink = function () {
+  PublisherTable.prototype.addExpandlink = function () {
     var  expandLink = document.createElement('a')
-    expandLink.classList.add('govuk-link', 'mainstream-table--expand-link')
+    expandLink.classList.add('govuk-link', 'publisher-table--expand-link')
     expandLink.textContent = 'Expand all'
-    this.$module.querySelector('.mainstream-table__heading').append(expandLink)
+    this.$module.querySelector('.publisher-table__heading').append(expandLink)
   }
 
   // Toggles the "More details" sections
-  MainstreamTable.prototype.toggleDetails = function (e) {
+  PublisherTable.prototype.toggleDetails = function (e) {
     console.log('toggleDetails!')
 
     if (this.openDetails < this.numDetails) {
@@ -58,7 +58,7 @@
   }
 
   // Records status of Details sections
-  // MainstreamTable.prototype.detailsStatus = function (section) {
+  // PublisherTable.prototype.detailsStatus = function (section) {
   //   var expandLink = this.$module.querySelector('.govuk-table__header--expand').querySelector('a')
 
   //   if (section.open == true) {
@@ -75,7 +75,7 @@
   // }
 
   // Adds event listeners to set state of the "Show/Hide all" button when section buttons are clicked
-  // MainstreamTable.prototype.setUpSections = function () {
+  // PublisherTable.prototype.setUpSections = function () {
   //   this.sections.forEach(function (section) {
   //     section.querySelector('.govuk-accordion__section-heading').addEventListener('click', function () {
   //       if (section.classList.contains('govuk-accordion__section--expanded')) {
@@ -96,7 +96,7 @@
   // }
 
   // Toggles the "Show/Hide all" button
-  // MainstreamTable.prototype.toggleShowAllControls = function () {
+  // PublisherTable.prototype.toggleShowAllControls = function () {
   //   var showAllControls = this.$module.querySelector('.govuk-accordion__show-all')
 
   //   if (showAllControls.getAttribute('aria-expanded') === 'true') {
@@ -112,7 +112,7 @@
   //   }
   // }
 
-  // MainstreamTable.prototype.toggleAllSections = function () {
+  // PublisherTable.prototype.toggleAllSections = function () {
   //   var controlAllState = this.$module.querySelector('.govuk-accordion__show-all').getAttribute('aria-expanded')
   //   var sections = this.$module.querySelectorAll('.' + this.sectionClass)
 
@@ -146,5 +146,5 @@
   //   this.toggleShowAllControls()
   // }
 
-  Modules.MainstreamTable = MainstreamTable
+  Modules.PublisherTable = PublisherTable
 })(window.GOVUK.Modules)

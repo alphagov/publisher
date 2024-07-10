@@ -1,7 +1,7 @@
 describe('Table component', function () {
   'use strict'
 
-  var table, mainstreamTable
+  var table, publisherTable
 
   beforeEach(function () {
     var tableHtml =
@@ -18,8 +18,8 @@ describe('Table component', function () {
     table.innerHTML = tableHtml
     document.body.appendChild(table)
 
-    mainstreamTable = new GOVUK.Modules.MainstreamTable(table)
-    mainstreamTable.init()
+    publisherTable = new GOVUK.Modules.PublisherTable(table)
+    publisherTable.init()
   })
 
   afterEach(function () {
