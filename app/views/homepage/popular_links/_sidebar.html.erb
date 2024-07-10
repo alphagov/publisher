@@ -16,8 +16,9 @@
       items: [
         primary_link_button_for(edit_popular_links_path(@latest_popular_links), "Edit popular links") ,
         secondary_button_for(@latest_popular_links, publish_popular_links_path(@latest_popular_links), "Publish"),
+        link_to('Delete', delete_popular_links_path(@latest_popular_links), method: :delete, class: "govuk-link gem-link--destructive",),
         link_to("Preview (opens in new tab)", preview_homepage_path(@latest_popular_links), rel:"noreferrer noopener", target:"_blank", class: "govuk-link")
-      ]
+        ]
     } %>
   <% end %>
 </div>

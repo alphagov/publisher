@@ -5,6 +5,24 @@ class HomepageControllerTest < ActionController::TestCase
     login_as_stub_user
   end
 
+  context "#confirm_destroy" do
+    should "render confirm destroy page for draft edition" do
+      popular_links = FactoryBot.create(:popular_links, state: "draft")
+
+      get :confirm_destroy, params: { id: popular_links.id }
+
+      assert_template "homepage/popular_links/confirm_destroy"
+    end
+
+    should "not render confirm destroy page if edition is published" do
+      popular_links = FactoryBot.create(:popular_links, state: "published")
+
+      get :confirm_destroy, params: { id: popular_links.id }
+
+      assert_template "homepage/popular_links/confirm_destroy"
+    end
+  end
+
   context "#show" do
     setup do
       @popular_links = FactoryBot.create(:popular_links)
