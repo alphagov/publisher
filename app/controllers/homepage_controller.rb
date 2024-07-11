@@ -16,7 +16,9 @@ class HomepageController < ApplicationController
   end
 
   def update
-    update_link_items
+    @latest_popular_links.link_items = remove_leading_and_trailing_url_spaces(params[:popular_links].values)
+    @latest_popular_links.save_draft
+
     flash[:success] = "Popular links draft saved.".html_safe
     redirect_to show_popular_links_path
   rescue StandardError
@@ -24,7 +26,8 @@ class HomepageController < ApplicationController
   end
 
   def publish
-    publish_latest_popular_links
+    @latest_popular_links.publish
+    flash[:success] = "Popular links successfully published.".html_safe
     render "homepage/popular_links/show"
   end
 
@@ -34,11 +37,6 @@ private
     @latest_popular_links = PopularLinksEdition.last
   end
 
-  def update_link_items
-    @latest_popular_links.link_items = remove_leading_and_trailing_url_spaces(params[:popular_links].values)
-    @latest_popular_links.save!
-  end
-
   def remove_leading_and_trailing_url_spaces(links)
     link_items = []
     links.each do |link|
@@ -46,9 +44,5 @@ private
       link_items << link
     end
     link_items
-  end
-
-  def publish_latest_popular_links
-    @latest_popular_links.publish_popular_links
   end
 end
