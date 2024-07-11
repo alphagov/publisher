@@ -20,7 +20,9 @@ Therefore, we need an interim solution that restricts access within Mainstream P
 
 In the immediate term, the requirement is to limit access, for non-GDS content designers, to that content which is managed by their own department. Signon does provide the organisation that a user belongs to, which Mainstream Publisher will use in order to make authorisation decisions when attempting to view and edit content. There are some cases where a content item would need to be managed by content designers from multiple organisations. 
 
-For now the access rules can be binary, with users either given full access to a piece of content (view/edit/publish), or no access.
+For now the access rules for existing publications can be binary, with users either given full access to a piece of content (view/edit/publish), or no access.
+
+There is a separate discussion to be had (outside the scope of this ADR) as to whether the ability to create new publications should be restricted. Currently, creating new publications ("artefacts") requires the "Editor" permission, but we might want to change this to enable non-GDS content designers to be able to create new publications without needing to have this permission (for example, by introducing a new permission for creating publications). 
 
 This ADS focuses on the technical solution to restrict access, using the data supplied by Signon about the user (i.e. the organisation to which they belong).
 
@@ -48,8 +50,8 @@ A new field could be introduced to content items within Mainstream Publisher to 
 
 #### Disadvantages
 
-- This field will potentially be duplicating the Primary Publishing Organisation association (if there were to become a desire to have that field also reflect this change in which organisation is managing the content item), or tagging information.
-- This solution introduces a new field/concept that is not common to other publishing applications (though Manuals Publisher does to something similar to filter the data that is showed to users).
+- This field will potentially be duplicating the Primary Publishing Organisation association (if there were to become a desire to have that field also reflect this change in which organisation is managing the content item), or tagging information. The Primary Publishing Organisation is not currently exposed to Mainstream Publisher users so this "duplication" won't be apparent to them. See also [this Slack thread](https://gds.slack.com/archives/C051S690LGL/p1720451970243779).
+- This solution introduces a new field/concept that is not common to other publishing applications (though Manuals Publisher does to something similar to filter the data that is shown to users).
 
 #### Advantages
 
@@ -81,4 +83,4 @@ GDS content designers (i.e. those with the "Editor" permission in Signon) will c
 
 ## Consequences
 
-The data for this new field will need to be populated somehow. This will likely be done by creating a rake task to populate the field. The actual data to be used will need to be sourced, for example, by using the existing tagging association to organisations. 
+The data for this new field will need to be populated somehow. For existing publications, this will likely be done by creating a rake task to populate the field. The actual data to be used will need to be sourced, for example, by using the existing tagging association to organisations. For newly-created publications, it could either be left unset, or could be set based on the user's organisation. That decision is left outside the scope of this ADR. 
