@@ -1,13 +1,47 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "2cee65ee3ed052192ee50380a02fcd7c1a9d9f81e3a8f0dee8f656fb473e75ff",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/legacy_root/index.html.erb",
+      "line": 60,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => (params[:list] or \"drafts\"), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "LegacyRootController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/legacy_root_controller.rb",
+          "rendered": {
+            "name": "legacy_root/index",
+            "file": "app/views/legacy_root/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "legacy_root/index"
+      },
+      "user_input": "params[:list]",
+      "confidence": "High",
+      "cwe_id": [
+        22
+      ],
+      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "3ce172087408945a462430f52e5bd728ae414d568f019a3a40528121eb9ebb98",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 21,
+      "line": 23,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"all_edition_churn\").url, :allow_other_host => true)",
       "render_path": null,
@@ -38,7 +72,7 @@
           "type": "controller",
           "class": "RootController",
           "method": "index",
-          "line": 20,
+          "line": 22,
           "file": "app/controllers/root_controller.rb",
           "rendered": {
             "name": "root/index",
@@ -64,7 +98,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 33,
+      "line": 35,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"all_urls\").url, :allow_other_host => true)",
       "render_path": null,
@@ -95,7 +129,7 @@
           "type": "controller",
           "class": "RootController",
           "method": "index",
-          "line": 20,
+          "line": 22,
           "file": "app/controllers/root_controller.rb",
           "rendered": {
             "name": "root/index",
@@ -121,7 +155,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 29,
+      "line": 31,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"all_content_workflow\").url, :allow_other_host => true)",
       "render_path": null,
@@ -164,7 +198,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 17,
+      "line": 19,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"edition_churn\").url, :allow_other_host => true)",
       "render_path": null,
@@ -187,7 +221,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 25,
+      "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"content_workflow\").url, :allow_other_host => true)",
       "render_path": null,
@@ -210,7 +244,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 9,
+      "line": 11,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"editorial_progress\").url, :allow_other_host => true)",
       "render_path": null,
@@ -233,7 +267,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/reports_controller.rb",
-      "line": 13,
+      "line": 15,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Report.new(\"organisation_content\").url, :allow_other_host => true)",
       "render_path": null,
@@ -248,8 +282,42 @@
         601
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "d114390670b08cfb4120b6e65b5b2374a0f266a3ae14b5d5630cefd811e2e110",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/views/legacy_root/index.html.erb",
+      "line": 61,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@presenter.send((params[:list] or \"drafts\"))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "LegacyRootController",
+          "method": "index",
+          "line": 20,
+          "file": "app/controllers/legacy_root_controller.rb",
+          "rendered": {
+            "name": "legacy_root/index",
+            "file": "app/views/legacy_root/index.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "legacy_root/index"
+      },
+      "user_input": "params[:list]",
+      "confidence": "High",
+      "cwe_id": [
+        77
+      ],
+      "note": "The params[:list] argument is already checked before the template gets rendered by @presenter.acceptable_list?(@list)."
     }
   ],
-  "updated": "2024-01-24 11:41:24 +0000",
-  "brakeman_version": "6.1.1"
+  "updated": "2024-07-11 13:48:45 +0000",
+  "brakeman_version": "6.1.2"
 }
