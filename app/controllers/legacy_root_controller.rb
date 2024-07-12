@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class RootController < ApplicationController
+class LegacyRootController < ApplicationController
   respond_to :html, :json
 
   include ColumnSortable

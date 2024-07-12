@@ -954,7 +954,7 @@ class EditionsControllerTest < ActionController::TestCase
       assert_difference("TransactionEdition.count", -1) do
         delete :destroy, params: { id: @transaction.id }
       end
-      assert_redirected_to(:controller => "root", "action" => "index")
+      assert_redirected_to root_path
     end
 
     should "can't destroy published transaction" do
@@ -973,7 +973,7 @@ class EditionsControllerTest < ActionController::TestCase
       assert_difference("GuideEdition.count", -1) do
         delete :destroy, params: { id: @guide.id }
       end
-      assert_redirected_to(:controller => "root", "action" => "index")
+      assert_redirected_to root_path
     end
 
     should "can't destroy published guide" do
@@ -1010,7 +1010,7 @@ class EditionsControllerTest < ActionController::TestCase
           delete :destroy, params: { id: @welsh_guide.id }
         end
 
-        assert_redirected_to(:controller => "root", "action" => "index")
+        assert_redirected_to root_path
         assert_equal "Edition deleted", flash[:success]
       end
     end
@@ -1020,7 +1020,7 @@ class EditionsControllerTest < ActionController::TestCase
     should "editions index redirects to root" do
       get :index
       assert_response :redirect
-      assert_redirected_to(:controller => "root", "action" => "index")
+      assert_redirected_to root_path
     end
   end
 

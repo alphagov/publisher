@@ -1,0 +1,14 @@
+<table class="table table-striped table-bordered table-condensed" summary="List of &ldquo;Archived&rdquo; content">
+  <thead>
+    <tr class="table-header">
+      <th scope="col"><%= sortable "_type", "Format" %></th>
+      <th scope="col"><%= sortable "title" %></th>
+      <th scope="col"><%= sortable "updated_at", "Updated" %></th>
+      <th scope="col"><%= sortable "assignee", "Assigned to" %></th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render :collection => @presenter.archived, :partial => 'publication', :locals => {:tab => :archived}  %>
+  </tbody>
+</table>

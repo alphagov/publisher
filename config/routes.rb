@@ -63,7 +63,11 @@ Rails.application.routes.draw do
   get "api/lookup-by-base-path", to: "publishing_api_proxy#lookup_by_base_path"
 
   resources :publications
-  root to: "root#index"
+  constraints FeatureConstraint.new("design_system_publications_filter") do
+    root to: "root#index"
+  end
+  # The below "as: nil" is required to avoid a name clash with the constrained route, above, which causes an error
+  root to: "legacy_root#index", as: nil
 
   # We used to nest all URLs under /admin so we now redirect that
   # in case people had bookmarks set up. Using a proc as otherwise the
