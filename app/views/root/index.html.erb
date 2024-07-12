@@ -1,66 +1,9 @@
-
-    <div class="page-title">
-      <h1>
-        <% if !params[:string_filter].blank? %>
-          Searching for “<%= params[:string_filter] -%>” in “<%= @list.humanize %>”
-        <% else %>
-          <%= @list.humanize %>
-        <% end %>
-      </h1>
-    </div>
-
-    <% if flash[:notice] %>
-      <%= flash[:notice] %>
-    <% end %>
-
-    <div class="row">
-
-      <div class="col-md-2">
-
-        <div class="well sidebar-nav">
-          <ul class="nav nav-list">
-            <li class="nav-header">Filter by Status</li>
-            <%= publication_tab_list(@presenter, current: @list) %>
-          </ul>
-        </div>
-
-        <div class="well sidebar-nav">
-          <form method="GET" action="/" class="user-filter-form nav nav-list">
-            <%= hidden_field_tag :list, params[:list] %>
-            <%= hidden_field_tag :string_filter, params[:string_filter] %>
-            <label for="user_filter" class="nav-header">Assignee</label>
-            <%=
-              select_tag("user_filter", options_for_select(
-                [["All", "all"], ["Nobody", "nobody"]] +
-                User.enabled.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-              ), class: 'form-control js-user-filter', "data-module" => 'assignee-select')
-            %>
-            <label for="string_filter" class="add-top-margin nav-header">Keyword</label>
-            <%= text_field_tag "string_filter", params[:string_filter], class: 'form-control', type: "search" %>
-
-            <label for="format_filter" class="add-top-margin nav-header">Format</label>
-            <%= select_tag("format_filter", options_for_select(
-              format_filter_selection_options,
-              params[:format_filter]
-            ), class: 'form-control') %>
-            <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
-          </form>
-        </div>
-      </div>
-
-      <% if params[:list] == "in_review" %>
-        <div class="col-md-10">
-          <p>
-            <%= link_to "Check Collections publisher", @presenter.step_by_step_review_url %> for step by steps that are waiting for review
-          </p>
-        </div>
-      <% end %>
-
-      <div id="publication-list-container" class="col-md-10">
-        <%= render @list %>
-        <%= paginate @presenter.send(@list), theme: 'twitter-bootstrap-3' %>
-      </div>
-
-    </div><!--./row -->
-
 <% content_for :page_title, "Publications" %>
+<% content_for :title, "Publications" %>
+
+<div class="govuk-grid-column-one-third">
+  <p>[replace with filter controls]</p>
+</div>
+<div class="govuk-grid-column-two-thirds">
+  <p>[replace with publications table]</p>
+</div>
