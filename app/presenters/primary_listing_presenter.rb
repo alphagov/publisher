@@ -1,6 +1,5 @@
 class PrimaryListingPresenter
   AVAILABLE_LISTS = %i[
-    all
     draft
     amends_needed
     in_review

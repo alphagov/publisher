@@ -1,20 +1,5 @@
-<%# @presenter.all.each do |publication| %>
-  <%# publication.assigned_to %>
-  <%# current_user.has_editor_permissions?(publication) %>
-  <%# publication.subsequent_siblings.last %><br /><br />
-  <%# publication.publisher %><br /><br />
-  <%# publication._id %><br /><br />
-  <%# publication._id.$oid.to_json %><br /><br />
-  <%# publication[:_id][:$oid].to_json %><br /><br />
-  <%# publication[:review_requested_at].to_json %><br /><br />
-  <%# time_ago_in_words(publication[:review_requested_at]) %><br /><br />
-  <%# row.actions.each do |action| %>
-    <%# action.to_json %><br /><br />
-  <%# end %>
-<%# end %>
-
 <div class="publisher-table" data-module="publisher-table">
-  <p class="govuk-heading-m govuk-!-margin-bottom-3 publisher-table__heading"><%= @presenter.all.length %> documents</p>
+  <p class="govuk-heading-m govuk-!-margin-bottom-3 publisher-table__heading"><%= @presenter.editions.length %> documents</p>
 
   <%= render "govuk_publishing_components/components/table", {
     head: [
@@ -31,7 +16,7 @@
         text: "Status"
       }
     ],
-    rows: @presenter.all.map do | publication |
+    rows: @presenter.editions.map do | publication |
       if publication.state == "in_review"
         if publication.reviewer and publication.reviewer.present?
           reviewer = publication.reviewer
