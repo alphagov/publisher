@@ -2,7 +2,7 @@ require "test_helper"
 
 class HomepageControllerTest < ActionController::TestCase
   setup do
-    login_as_stub_user
+    login_as_homepage_editor
   end
 
   context "#show" do
