@@ -1,10 +1,10 @@
 # ADR011 - Restricting access to content by organisation
 
-Date 2024-XX-XX
+Date 2024-07-16
 
 ## Status
 
-Draft
+Accepted
 
 ## Context
 
