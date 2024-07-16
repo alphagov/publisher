@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class RoutesTest < PublisherIntegrationTest
+class RoutesTest < LegacyPublisherIntegrationTest
   should "route to downtimes controller for edit downtime" do
     edition = FactoryBot.create(:edition)
     edition_id = edition.id.to_s

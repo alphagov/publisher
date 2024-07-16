@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class FactCheckEmailTest < PublisherIntegrationTest
+class FactCheckEmailTest < LegacyPublisherIntegrationTest
   def fact_check_mail_for(edition, attrs = {})
     message = Mail.new do
       from    attrs.fetch(:from,    "foo@example.com")

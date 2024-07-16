@@ -1,6 +1,6 @@
-require_relative "../integration_test_helper"
+require_relative "../legacy_integration_test_helper"
 
-class RootOverviewTest < PublisherIntegrationTest
+class RootOverviewTest < LegacyPublisherIntegrationTest
   setup do
     stub_holidays_used_by_fact_check
   end

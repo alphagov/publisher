@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class HomepagePopularLinksTest < JavascriptIntegrationTest
+class HomepagePopularLinksTest < LegacyJavascriptIntegrationTest
   setup do
     setup_users
     @popular_links = FactoryBot.create(:popular_links, state: "published")

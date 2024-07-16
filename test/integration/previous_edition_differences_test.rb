@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class PreviousEditionDifferencesTest < JavascriptIntegrationTest
+class PreviousEditionDifferencesTest < LegacyJavascriptIntegrationTest
   setup do
     stub_register_published_content
     setup_users

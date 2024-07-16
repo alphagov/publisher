@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class EditionScheduledPublishingTest < JavascriptIntegrationTest
+class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables

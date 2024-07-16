@@ -1,7 +1,7 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 require "gds_api/test_helpers/link_checker_api"
 
-class EditionLinkCheckTest < JavascriptIntegrationTest
+class EditionLinkCheckTest < LegacyJavascriptIntegrationTest
   include GdsApi::TestHelpers::LinkCheckerApi
 
   setup do

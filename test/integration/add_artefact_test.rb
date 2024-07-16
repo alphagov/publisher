@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class AddArtefactTest < PublisherIntegrationTest
+class AddArtefactTest < LegacyPublisherIntegrationTest
   setup do
     setup_users
     stub_linkables

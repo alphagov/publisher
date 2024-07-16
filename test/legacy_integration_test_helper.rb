@@ -3,7 +3,7 @@ require "capybara/rails"
 require "capybara-select-2"
 require "support/govuk_test"
 
-class PublisherIntegrationTest < ActionDispatch::IntegrationTest
+class LegacyPublisherIntegrationTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include CapybaraSelect2
   include CapybaraSelect2::Helpers
@@ -95,7 +95,7 @@ class PublisherIntegrationTest < ActionDispatch::IntegrationTest
   end
 end
 
-class JavascriptIntegrationTest < PublisherIntegrationTest
+class LegacyJavascriptIntegrationTest < LegacyPublisherIntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
   end

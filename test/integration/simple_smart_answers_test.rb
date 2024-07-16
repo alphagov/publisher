@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class SimpleSmartAnswersTest < JavascriptIntegrationTest
+class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
   setup do
     @artefact = FactoryBot.create(
       :artefact,
