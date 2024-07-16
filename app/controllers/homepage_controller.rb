@@ -1,6 +1,9 @@
 class HomepageController < ApplicationController
   layout "design_system"
   before_action :fetch_latest_popular_link
+  before_action :require_homepage_editor_permissions
+
+  include GDS::SSO::ControllerMethods
 
   def show
     render "homepage/popular_links/show"
@@ -44,5 +47,9 @@ private
       link_items << link
     end
     link_items
+  end
+
+  def require_homepage_editor_permissions
+    authorise_user!("homepage_editor")
   end
 end

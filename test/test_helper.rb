@@ -87,6 +87,11 @@ class ActiveSupport::TestCase
     login_as(@user)
   end
 
+  def login_as_homepage_editor
+    @user = FactoryBot.create(:user, :homepage_editor, name: "Stub User")
+    login_as(@user)
+  end
+
   alias_method :login_as_stub_user, :login_as_govuk_editor
 
   include GdsApi::TestHelpers::PublishingApi
