@@ -1,6 +1,6 @@
 require_relative "../integration_test_helper"
 
-class UserSearchTest < ActionDispatch::IntegrationTest
+class UserSearchTest < PublisherIntegrationTest
   setup do
     alice = FactoryBot.create(:user, name: "Alice", uid: "alice")
     GDS::SSO.test_user = alice

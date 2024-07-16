@@ -1,6 +1,6 @@
 require_relative "../integration_test_helper"
 
-class RootOverviewTest < ActionDispatch::IntegrationTest
+class RootOverviewTest < PublisherIntegrationTest
   setup do
     stub_holidays_used_by_fact_check
   end

@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class UnpublishTest < ActionDispatch::IntegrationTest
+class UnpublishTest < PublisherIntegrationTest
   setup do
     @artefact = FactoryBot.create(
       :artefact,

@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class AddArtefactTest < ActionDispatch::IntegrationTest
+class AddArtefactTest < PublisherIntegrationTest
   setup do
     setup_users
     stub_linkables

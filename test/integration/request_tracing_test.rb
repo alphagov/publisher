@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class RequestTracingTest < ActionDispatch::IntegrationTest
+class RequestTracingTest < PublisherIntegrationTest
   setup do
     setup_users
     stub_register_published_content

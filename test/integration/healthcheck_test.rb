@@ -1,6 +1,6 @@
-require "test_helper"
+require "integration_test_helper"
 
-class HealthcheckTest < ActionDispatch::IntegrationTest
+class HealthcheckTest < PublisherIntegrationTest
   def json
     JSON.parse(response.body)
   end

@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DeleteEditionTest < ActionDispatch::IntegrationTest
+class DeleteEditionTest < PublisherIntegrationTest
   setup do
     setup_users
     stub_linkables

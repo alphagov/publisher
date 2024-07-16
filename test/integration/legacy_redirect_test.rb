@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class LegacyRedirect < ActionDispatch::IntegrationTest
+class LegacyRedirect < PublisherIntegrationTest
   should "redirect requests for the old index to the new one" do
     get "/admin"
     assert_response :redirect

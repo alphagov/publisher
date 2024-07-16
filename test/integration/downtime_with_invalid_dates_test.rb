@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DowntimeWithInvalidDates < ActionDispatch::IntegrationTest
+class DowntimeWithInvalidDates < PublisherIntegrationTest
   setup do
     setup_users
 
