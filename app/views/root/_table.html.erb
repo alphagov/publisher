@@ -80,13 +80,13 @@
           )
         },
         {
-          text: publication.updated_at.to_date.to_fs(:govuk_date_short)
+          text: sanitize("<span class='govuk-table__cell__updated'>#{publication.updated_at.to_date.to_fs(:govuk_date_short)}</span>")
         },
         {
           text: publication.assignee
         },
         {
-          text: publication.state.humanize
+          text: sanitize("<span class='govuk-tag govuk-tag--#{publication.state}'>#{publication.state.humanize}</span>")
         }
       ]
     end

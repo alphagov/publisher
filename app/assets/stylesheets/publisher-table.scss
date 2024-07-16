@@ -1,152 +1,83 @@
 .publisher-table {
-  .govuk-accordion__show-all {
-    display: none;
+  position: relative;
 
-    .js-enabled & {
-      display: block;
-      margin: 0;
-      padding: 0;
-      line-height: 1;
-      float: right;
-    }
+  &--expand-link {
+    float: right;
+    font-size: 1.1875rem;
   }
 
-  .govuk-accordion {
-    .js-enabled & {
-      border-bottom: 0;
+  .govuk-table {
+    border-top: 2px solid $govuk-text-colour;
+
+    .govuk-table__header {
+      white-space: nowrap;
     }
 
-    .govuk-accordion__section-heading {
-      button {
-        border: none;
-        padding: 0;
+    .govuk-table__cell__updated {
+      white-space: nowrap;
+    }
+
+    .govuk-tag {
+      &--amends_needed {
+        @extend .govuk-tag--red;
       }
-    }
-  }
 
-  .govuk-accordion__section-heading-text {
-    display: none;
+      &--archived {
+        @extend .govuk-tag--blue;
+      }
 
-    .js-enabled & {
-      display: none;
-    }
-  }
+      &--draft {
+        @extend .govuk-tag--yellow;
+      }
 
-  .govuk-table__body {
-    position: relative;
+      &--fact_check {
+        @extend .govuk-tag--purple;
+      }
 
-    .title {
-      @include govuk-responsive-margin(0)
-    }
+      &--fact_check_received {
+        @extend .govuk-tag--pink;
+      }
 
-    .updated {
-      @include govuk-responsive-margin(2, "top");
+      &--ready {
+        @extend .govuk-tag--green;
+      }
 
-      display: block;
-      color: $govuk-secondary-text-colour;
-    }
-  }
+      &--scheduled_for_publishing {
+        @extend .govuk-tag--turquoise;
+      }
 
-  .govuk-table__row {
-    .govuk-table__cell {
-      .status {
-        display: inline-block;
-        padding: govuk-spacing(1) govuk-spacing(2);
+      &--published {
+        @extend .govuk-tag--orange;
+      }
 
-        &--amends-needed {
-          background-color: govuk-tint(govuk-colour("red"), 75%);
-        }
-
-        &--archived {
-          background-color: govuk-tint(govuk-colour("dark-grey"), 85%);
-        }
-
-        &--draft {
-          background-color: govuk-tint(govuk-colour("yellow"), 75%);
-        }
-
-        &--out-for-fact-check {
-          background-color: govuk-tint(govuk-colour("bright-purple"), 85%);
-        }
-
-        &--fact-check-received {
-          background-color: govuk-tint(govuk-colour("red"), 75%);
-        }
-
-        &--ready {
-          background-color: govuk-tint(govuk-colour("blue"), 60%);
-        }
-
-        &--scheduled-for-publishing {
-          background-color: govuk-tint(govuk-colour("turquoise"), 80%);
-        }
-
-        &--published {
-          background-color: govuk-tint(govuk-colour("green"), 80%);
-        }
-
-        &--awaiting-2i {
-          background-color: govuk-tint(govuk-colour("blue"), 70%);
-        }
-
-        &--in-2i {
-          background-color: govuk-tint(govuk-colour("dark-grey"), 85%);
-        }
+      &--in_review {
+        @extend .govuk-tag--grey;
       }
     }
 
-    &:nth-of-type(2) {
-      background: govuk-colour("light-grey");
+    .govuk-details {
+      margin-top: govuk-spacing(2);
+      margin-bottom: 0 !important;
+    }
 
-      .govuk-table__cell {
-        border-bottom: 0;
-        padding: 0 govuk-spacing(2);
+    .govuk-summary-list {
+      width: auto;
+    }
 
-        .govuk-accordion__section-content {
-          position: relative;
-
-          & > button {
-            position: absolute;
-            top: govuk-spacing(2);
-            right: 0;
-          }
-        }
-      }
-
-      .govuk-accordion {
-        margin-bottom: 0 !important;
-      }
-
-      .govuk-accordion__section {
-        padding-top: 0;
-      }
-
-      .govuk-summary-list,
-      .gem-c-summary__block {
-        margin-bottom: 0;
+    .govuk-details__summary {
+      &:before {
+        color: $govuk-text-colour;
       }
     }
-  }
 
-  .govuk-accordion__controls {
-    display: none;
-  }
-
-  .govuk-accordion__section {
-    &.govuk-accordion__section--expanded {
-      border-bottom: 1px solid #b1b4b6;
+    .govuk-details__summary-text {
+      color: $govuk-text-colour;
     }
-  }
 
-  .govuk-accordion__section-header {
-    position: absolute;
-    top: govuk-spacing(2);
-    right: 0;
-  }
-
-  .govuk-accordion__section-content {
-    .js-enabled & {
-      padding: 0;
+    .govuk-details__text {
+      dd {
+        word-break: break-word;
+      }
     }
   }
 }
