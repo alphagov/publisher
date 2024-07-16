@@ -104,12 +104,85 @@ class HomepageControllerTest < ActionController::TestCase
       assert_redirected_to show_popular_links_path
     end
 
-    should "render edit template on errors" do
+    should "render edit template on validation error" do
+      links_with_missing_items = { "1" => { "title" => "title has changed", "url" => "https://www.url1.com" } }
+
       patch :update, params: { id: @popular_links.id,
-                               "popular_links" =>
-                                 { "1" => { "title" => "title has changed", "url" => "https://www.url1.com" } } }
+                               "popular_links" => links_with_missing_items }
 
       assert_template "homepage/popular_links/edit"
+    end
+
+    context "database errors" do
+      setup do
+        PopularLinksEdition.any_instance.stubs(:save).raises(Mongoid::Errors::MongoidError.new)
+      end
+
+      should "alert 'application error'" do
+        new_title = "title has changed"
+
+        patch :update, params: { id: @popular_links.id,
+                                 "popular_links" =>
+                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
+                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+        assert_equal "Due to an application error, the edition couldn't be saved.", flash[:danger]
+      end
+
+      should "render edit template" do
+        new_title = "title has changed"
+
+        patch :update, params: { id: @popular_links.id,
+                                 "popular_links" =>
+                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
+                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+        assert_template "homepage/popular_links/edit"
+      end
+    end
+
+    context "publishing api errors" do
+      setup do
+        stub_publishing_api_put_content_error
+      end
+
+      should "render edit template on publishing api error" do
+        new_title = "title has changed"
+
+        patch :update, params: { id: @popular_links.id,
+                                 "popular_links" =>
+                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
+                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+        assert_template "homepage/popular_links/edit"
+      end
+
+      should "alert 'save was unsuccessful due to a service problem'" do
+        new_title = "title has changed"
+
+        patch :update, params: { id: @popular_links.id,
+                                 "popular_links" =>
+                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
+                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
+                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
+                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
+                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
+                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+
+        assert_equal "Popular links save was unsuccessful due to a service problem. Please wait for a few minutes and try again.", flash[:danger]
+      end
     end
   end
 
@@ -123,15 +196,91 @@ class HomepageControllerTest < ActionController::TestCase
 
       post :publish, params: { id: @popular_links.id }
 
-      assert_response :ok
-      assert_template "homepage/popular_links/show"
+      assert_redirected_to show_popular_links_path
       assert_equal "published", PopularLinksEdition.last.state
     end
 
-    should "publish to publishing API" do
-      Services.publishing_api.expects(:publish).with(@popular_links.content_id, "major", locale: "en")
+    context "database errors" do
+      setup do
+        PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(Mongoid::Errors::MongoidError.new)
+      end
 
-      post :publish, params: { id: @popular_links.id }
+      should "redirect to show path" do
+        post :publish, params: { id: @popular_links.id }
+
+        assert_redirected_to show_popular_links_path
+      end
+
+      should "alert 'application error'" do
+        post :publish, params: { id: @popular_links.id }
+
+        assert_equal "Due to an application error, the edition couldn't be published.", flash[:danger]
+      end
     end
+
+    context "publishing api errors" do
+      should "redirect to show path" do
+        stub_publishing_api_publish_already_published_error
+
+        post :publish, params: { id: @popular_links.id }
+
+        assert_redirected_to show_popular_links_path
+      end
+
+      should "alert 'cannot publish an already published content' when already published content error" do
+        stub_publishing_api_publish_already_published_error
+
+        post :publish, params: { id: @popular_links.id }
+
+        assert_equal "Popular links publish was unsuccessful, cannot publish an already published content item.", flash[:danger]
+      end
+
+      should "alert 'unsuccessful due to a service problem'" do
+        stub_publishing_api_publish_downstream_error
+
+        post :publish, params: { id: @popular_links.id }
+
+        assert_equal "Popular links publish was unsuccessful due to a service problem. Please wait for a few minutes and try again.", flash[:danger]
+      end
+    end
+  end
+
+private
+
+  def stub_publishing_api_publish_already_published_error
+    stub_request(
+      :post,
+      "#{Plek.find('publishing-api')}/v2/content/#{@popular_links.content_id}/publish",
+    ).to_return(
+      status: 409,
+      body: {
+        "error" => {
+          "code" => 409, "message" => "Cannot publish an already published content item"
+        },
+      }.to_json,
+    )
+  end
+
+  def stub_publishing_api_publish_downstream_error
+    stub_request(
+      :post,
+      "#{Plek.find('publishing-api')}/v2/content/#{@popular_links.content_id}/publish",
+    ).to_return(
+      status: 500,
+      body: {
+        "error" => {
+          "code" => 500, "message" => "downstream error"
+        },
+      }.to_json,
+    )
+  end
+
+  def stub_publishing_api_put_content_error
+    stub_request(
+      :put,
+      "#{Plek.find('publishing-api')}/v2/content/#{@popular_links.content_id}",
+    ).to_return(
+      status: 409,
+    )
   end
 end

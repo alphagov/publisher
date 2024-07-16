@@ -34,7 +34,7 @@ class PopularLinksEdition < Edition
     popular_links
   end
 
-  def publish
+  def publish_latest
     Services.publishing_api.publish(content_id, update_type, locale:)
     # This publish_popular_links is a new workflow that was introduced for popular links.
     publish_popular_links
