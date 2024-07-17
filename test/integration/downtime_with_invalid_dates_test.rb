@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class DowntimeWithInvalidDates < LegacyPublisherIntegrationTest
+class DowntimeWithInvalidDates < PublisherIntegrationTest
   setup do
     setup_users
 

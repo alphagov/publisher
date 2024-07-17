@@ -1,6 +1,6 @@
-require "legacy_integration_test_helper"
+require "integration_test_helper"
 
-class DowntimeIntegrationTest < LegacyJavascriptIntegrationTest
+class DowntimeIntegrationTest < JavascriptIntegrationTest
   setup do
     setup_users
 
