@@ -143,7 +143,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     should "publish latest edition when 'Publish' is clicked" do
       click_button("Publish")
 
-      assert page.has_text?("PUBLISHED")
+      assert page.has_text?("Published")
       assert page.has_text?("Popular links successfully published.")
     end
   end
