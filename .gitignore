@@ -12,6 +12,7 @@ coverage
 test/reports
 .generators
 .rakeTasks
+/app/assets/builds/*
 
 *.daemonette-dump
 data/local_interactions.csv
