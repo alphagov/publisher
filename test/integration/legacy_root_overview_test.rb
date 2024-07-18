@@ -1,8 +1,11 @@
 require_relative "../legacy_integration_test_helper"
 
-class RootOverviewTest < LegacyPublisherIntegrationTest
+class LegacyRootOverviewTest < LegacyPublisherIntegrationTest
   setup do
     stub_holidays_used_by_fact_check
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   test "filtering by assigned user" do
