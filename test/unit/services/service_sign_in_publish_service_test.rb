@@ -1,12 +1,6 @@
 require "test_helper"
 
 class ServiceSignInPublishServiceTest < ActiveSupport::TestCase
-  setup do
-    Services.publishing_api.stubs(:put_content)
-    Services.publishing_api.stubs(:patch_links)
-    Services.publishing_api.stubs(:publish)
-  end
-
   should "publish edition to PublishingAPI" do
     update_type = nil
     Services.publishing_api.expects(:put_content).with(content_id, payload)
