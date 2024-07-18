@@ -470,9 +470,6 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should scope publications by assignee" do
-    stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js})
-      .to_return(status: 200, body: "{}", headers: {})
-
     a, b = 2.times.map { FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map do |s|
@@ -568,9 +565,6 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "should scope publications assigned to nobody" do
-    stub_request(:get, %r{http://panopticon\.test\.gov\.uk/artefacts/.*\.js})
-      .to_return(status: 200, body: "{}", headers: {})
-
     a, b = 2.times.map { |_i| FactoryBot.create(:guide_edition, panopticon_id: @artefact.id) }
 
     alice, bob, charlie = %w[alice bob charlie].map do |s|
