@@ -1,10 +1,6 @@
 require "test_helper"
 
 class PublishServiceTest < ActiveSupport::TestCase
-  setup do
-    Services.publishing_api.stubs(:publish)
-  end
-
   should "publish edition to PublishingAPI" do
     Services.publishing_api.expects(:publish).with(
       content_id,
@@ -16,7 +12,7 @@ class PublishServiceTest < ActiveSupport::TestCase
   end
 
   should "set links" do
-    Services.publishing_api.expects(:patch_links)
+    Services.publishing_api.expects(:patch_links).with(content_id, links: { "primary_publishing_organisation" => %w[af07d5a5-df63-4ddc-9383-6a666845ebe9] })
     PublishService.call(edition, update_type)
   end
 

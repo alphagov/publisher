@@ -2,7 +2,6 @@ require "test_helper"
 
 class UpdateServiceTest < ActiveSupport::TestCase
   setup do
-    Services.publishing_api.stubs(:put_content)
     EditionPresenterFactory.stubs(:get_presenter).returns(presenter)
   end
 
