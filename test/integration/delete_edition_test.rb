@@ -1,6 +1,6 @@
 require "legacy_integration_test_helper"
 
-class DeleteEditionTest < LegacyPublisherIntegrationTest
+class DeleteEditionTest < LegacyIntegrationTest
   setup do
     setup_users
     stub_linkables

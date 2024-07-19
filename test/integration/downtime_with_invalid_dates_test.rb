@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class DowntimeWithInvalidDates < PublisherIntegrationTest
+class DowntimeWithInvalidDates < IntegrationTest
   setup do
     setup_users
 
