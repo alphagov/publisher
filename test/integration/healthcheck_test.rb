@@ -1,6 +1,6 @@
-require "test_helper"
+require "legacy_integration_test_helper"
 
-class HealthcheckTest < ActionDispatch::IntegrationTest
+class HealthcheckTest < LegacyIntegrationTest
   def json
     JSON.parse(response.body)
   end

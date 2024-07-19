@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class UnpublishTest < ActionDispatch::IntegrationTest
+class UnpublishTest < LegacyIntegrationTest
   setup do
     @artefact = FactoryBot.create(
       :artefact,

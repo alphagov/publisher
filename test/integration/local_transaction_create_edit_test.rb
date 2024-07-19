@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class LocalTransactionCreateEditTest < JavascriptIntegrationTest
+class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
   setup do
     LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
 

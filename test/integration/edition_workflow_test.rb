@@ -1,7 +1,7 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 require "gds_api/test_helpers/calendars"
 
-class EditionWorkflowTest < JavascriptIntegrationTest
+class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   include GdsApi::TestHelpers::Calendars
   attr_reader :alice, :bob, :guide
 

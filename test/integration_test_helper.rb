@@ -3,7 +3,7 @@ require "capybara/rails"
 require "capybara-select-2"
 require "support/govuk_test"
 
-class ActionDispatch::IntegrationTest
+class IntegrationTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include CapybaraSelect2
   include CapybaraSelect2::Helpers
@@ -27,75 +27,9 @@ class ActionDispatch::IntegrationTest
     GDS::SSO.test_user = user
     super(user)
   end
-
-  def visit_edition(edition)
-    visit "/editions/#{edition.to_param}"
-  end
-
-  def visit_editions
-    visit "/editions"
-  end
-
-  def assert_field_contains(expected, field)
-    found_field = find_field(field)
-    assert(
-      found_field.value.include?(expected),
-      "Can't find #{expected} within field #{field}. Field contains: #{found_field.value}",
-    )
-  end
-
-  def filter_by_user(option, from: "Assignee")
-    within ".user-filter-form" do
-      select(option, from:)
-      click_on "Filter publications"
-    end
-  end
-
-  def filter_by_content(substring)
-    within ".user-filter-form" do
-      fill_in "Keyword", with: substring
-      click_on "Filter publications"
-    end
-  end
-
-  def filter_by_format(format)
-    within ".user-filter-form" do
-      select format, from: "Format"
-      click_on "Filter publications"
-    end
-  end
-
-  def using_javascript?
-    Capybara.current_driver == Capybara.javascript_driver
-  end
-
-  def self.with_javascript
-    context "with javascript" do
-      setup do
-        Capybara.current_driver = Capybara.javascript_driver
-      end
-
-      yield
-    end
-  end
-
-  def self.without_javascript
-    context "without javascript" do
-      setup do
-        Capybara.use_default_driver
-      end
-      yield
-    end
-  end
-
-  def self.with_and_without_javascript(&block)
-    without_javascript(&block)
-
-    with_javascript(&block)
-  end
 end
 
-class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
+class JavascriptIntegrationTest < IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver
   end
@@ -115,108 +49,6 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
     GDS::SSO.test_user = user
   end
 
-  # Fill in some sample sections for a guide
-  def fill_in_parts(guide)
-    visit_edition guide
-
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      add_new_part
-    end
-
-    # Toggle the first part to be open, presuming the first part
-    # is called 'Untitled part'
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      scroll_to_bottom
-      click_on "Untitled part"
-    end
-
-    within :css, "#parts div.part:first-of-type" do
-      fill_in "Title", with: "Part One"
-      fill_in "Body", with: "Body text"
-      fill_in "Slug", with: "part-one"
-    end
-
-    save_edition_and_assert_success
-
-    guide.reload
-  end
-
-  # Fill in some sample variants for a transaction
-  def fill_in_variants(transaction)
-    visit_edition transaction
-
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      add_new_variant
-    end
-
-    # Toggle the first variant to be open, presuming the first variant
-    # is called 'Untitled variant'
-    if page.has_no_css?("#parts div.part:first-of-type input")
-      scroll_to_bottom
-      click_on "Untitled variant"
-    end
-
-    within :css, "#parts div.part:first-of-type" do
-      fill_in "Title", with: "Variant One"
-      fill_in "Introductory paragraph", with: "Body text"
-      fill_in "Slug", with: "variant-one"
-    end
-
-    save_edition_and_assert_success
-
-    transaction.reload
-  end
-
-  def switch_tab(tab)
-    page.click_on(tab)
-  end
-
-  def assert_all_edition_fields_disabled(page)
-    selector = '#edit input:not(#link-check-report):not([disabled]):not([type="hidden"]), #edit select:not([disabled]), #edit textarea:not([disabled])'
-    assert page.has_no_selector?(selector)
-  end
-
-  def save_edition
-    # Ensure that there are no workflow messages as they may obscure the
-    # workflow buttons.
-    page.has_no_css?(".workflow-message", visible: true)
-    click_on("Save")
-  end
-
-  def save_tags
-    page.click_on("Update tags", visible: false)
-  end
-
-  def save_edition_and_assert_success
-    save_edition
-
-    if using_javascript?
-      assert page.has_css?(".workflow-message", text: "Saved"), "Edition didn’t successfully save with javascript"
-    else
-      assert page.has_content? "edition was successfully updated."
-    end
-  end
-
-  def save_edition_and_assert_error(error_message = nil, link_href = nil)
-    save_edition
-
-    if using_javascript?
-      assert page.has_content? "We had some problems saving"
-    end
-
-    if error_message.present?
-      assert page.has_content? "There is a problem"
-      assert page.has_content? error_message
-    end
-
-    assert page.has_link? error_message, href: link_href if link_href.present?
-  end
-
-  def save_tags_and_assert_success
-    save_tags
-    assert page.has_content? "Tags have been updated!"
-  end
-
   def clear_cookies
     browser = Capybara.current_session.driver.browser
     if browser.respond_to?(:clear_cookies)
@@ -226,19 +58,5 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
       # Selenium::WebDriver
       browser.manage.delete_all_cookies
     end
-  end
-
-  def add_new_part
-    scroll_to_bottom
-    click_on "Add new part"
-  end
-
-  def add_new_variant
-    scroll_to_bottom
-    click_on "Add new variant"
-  end
-
-  def scroll_to_bottom
-    page.execute_script "window.scrollBy(0,10000)"
   end
 end

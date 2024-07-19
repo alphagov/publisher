@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class SkipReviewTest < JavascriptIntegrationTest
+class SkipReviewTest < LegacyJavascriptIntegrationTest
   setup do
     @permitted_user = FactoryBot.create(
       :user,

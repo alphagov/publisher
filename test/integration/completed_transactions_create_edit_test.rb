@@ -1,6 +1,6 @@
-require "integration_test_helper"
+require "legacy_integration_test_helper"
 
-class CompletedTransactionCreateEditTest < JavascriptIntegrationTest
+class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
   setup do
     @artefact = FactoryBot.create(
       :artefact,
