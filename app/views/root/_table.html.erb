@@ -17,45 +17,6 @@
       }
     ],
     rows: @presenter.editions.map do | publication |
-      if publication.state == "in_review"
-        if publication.reviewer and publication.reviewer.present?
-          reviewer = publication.reviewer
-        elsif current_user != publication.assigned_to && current_user.has_editor_permissions?(publication)
-          reviewer = form_for :edition, url: review_edition_path(publication._id), method: :put do |f|
-            # TODO: ensure this field is rendered
-            f.hidden_field :reviewer, value: current_user.name
-
-            render "govuk_publishing_components/components/button", {
-              text: "Claim 2i"
-            }
-          end
-        end
-      end
-
-      if (publication.state == "published" || publication.state == "archived") && publication.subsequent_siblings.first.present?
-        edition_number = sanitize(publication.version_number.to_s + " - " + link_to("##{publication.subsequent_siblings.first.version_number} in #{publication.subsequent_siblings.first.state.humanize.downcase}", edition_path(publication.subsequent_siblings.first), class: 'link-inherit'))
-      else
-        edition_number = publication.version_number.to_s
-      end
-
-      details = render "govuk_publishing_components/components/details", {
-        title: "More details"
-      } do
-        render "govuk_publishing_components/components/summary_list", {
-          items: [
-            {field: "Edition", value: edition_number},
-            {field: "Format", value: publication.format.underscore.humanize},
-            *([{field: "Important Note", value: publication.important_note.comment}] if publication.important_note.present?),
-            *([{field: "Awaiting review", value: time_ago_in_words(publication.review_requested_at)}] if publication.state == 'in_review'),
-            *([{field: "2i reviewer", value: reviewer}] if publication.state == "in_review"),
-            *([{field: "Sent Out", value: publication.last_fact_checked_at.to_date.to_fs(:govuk_date_short)}] if publication.state == 'fact_check'),
-            *([{field: "Scheduled", value: publication.publish_at.to_fs(:govuk_date_short)}] if publication.publish_at.present?),
-            *([{field: "Published by", value: publication.publisher}] if publication.publisher.present?)
-          ],
-          borderless: true
-        }
-      end
-
       [
         {
           text:
