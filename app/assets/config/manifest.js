@@ -1,6 +1,6 @@
 //= link_tree ../images
-//= link application.js
-//= link application.css
-
-//= link legacy-application.js
+//= link_tree ../builds
 //= link legacy-application.css
+//= link legacy-application.js
+//= link application.js
+
