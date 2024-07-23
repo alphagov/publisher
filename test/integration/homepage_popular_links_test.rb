@@ -26,7 +26,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_text?("Edition")
       assert page.has_text?(@popular_links.version_number)
       assert page.has_text?("Status")
-      assert page.has_text?("PUBLISHED")
+      assert page.has_text?("Published")
       assert page.has_css?(".govuk-tag--green")
     end
 
@@ -42,7 +42,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     should "render new draft popular links with edit option when 'Create new edition' button is clicked" do
       click_button("Create new edition")
       within(:css, ".govuk-tag--yellow") do
-        assert page.has_content?("DRAFT")
+        assert page.has_content?("Draft")
       end
     end
   end
@@ -54,7 +54,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_text?("Edition")
       assert page.has_text?(@popular_links.version_number)
       assert page.has_text?("Status")
-      assert page.has_text?("DRAFT")
+      assert page.has_text?("Draft")
       assert page.has_css?(".govuk-tag--yellow")
       assert page.has_text?("Edit popular links")
     end
@@ -64,7 +64,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert row[0].has_text?("Edition")
       assert row[0].has_text?("1")
       assert row[1].has_text?("Status")
-      assert row[1].has_text?("PUBLISHED")
+      assert row[1].has_text?("Published")
 
       click_button("Create new edition")
 
@@ -72,7 +72,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert row[0].has_text?("Edition")
       assert row[0].has_text?("2")
       assert row[1].has_text?("Status")
-      assert row[1].has_text?("DRAFT")
+      assert row[1].has_text?("Draft")
     end
   end
 
@@ -143,7 +143,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     should "publish latest edition when 'Publish' is clicked" do
       click_button("Publish")
 
-      assert page.has_text?("PUBLISHED")
+      assert page.has_text?("Published")
       assert page.has_text?("Popular links successfully published.")
     end
   end
