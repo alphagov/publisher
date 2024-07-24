@@ -115,4 +115,18 @@ class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
     assert page.has_content? "Promote MOT reminders"
     assert page.has_content? "Promote bring photo ID to vote"
   end
+
+  should "warn user when triggering a broken links check with unsaved changes" do
+    # This test checks that the javascript that triggers the modal has been correctly loaded
+    completed_transaction = FactoryBot.create(:completed_transaction_edition)
+    visit_edition completed_transaction
+
+    fill_in "Title", with: "Changed title"
+
+    within(".broken-links-report") do
+      accept_alert("Please save your changes before running a link check.") do
+        click_on "Check for broken links"
+      end
+    end
+  end
 end
