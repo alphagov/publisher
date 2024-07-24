@@ -1,13 +1,17 @@
 <% environment = GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment %>
 
+<% content_for :head do %>
+  <%= javascript_include_tag "es6-components", type: "module" %>
+<% end %>
+
 <%= render "govuk_publishing_components/components/layout_for_admin", {
   product_title: "Publisher",
   browser_title: yield(:page_title),
-  environment: environment
+  environment: environment,
+  head: yield(:head)
 } do %>
 
   <% render "layouts/google_tag_manager" %>
-  <%= javascript_include_tag "es6-components", type: "module" %>
 
   <%= render "govuk_publishing_components/components/skip_link" %>
 
