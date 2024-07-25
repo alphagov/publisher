@@ -19,7 +19,8 @@ class ApplicationController < ActionController::Base
     prepend_view_path template_folder_for(publication)
   end
 
-  def record_not_found
+  def record_not_found(exception)
+    Rails.logger.warn "Error loading document: #{exception.message}"
     render body: { 'raw': "404 Not Found" }, status: :not_found
   end
 
