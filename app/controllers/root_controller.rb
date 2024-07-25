@@ -18,7 +18,7 @@ class RootController < ApplicationController
   def index
     states_filter_params = filter_params.to_h[:states_filter]
     sanitised_states_filter_params = states_filter_params&.select { |fp| PERMITTED_FILTER_STATES.include?(fp) }
-    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params)
+    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, nil)
   end
 
 private

@@ -24,7 +24,7 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "ignore unrecognised filter states" do
-      FilteredEditionsPresenter.expects(:new).with(%w[draft]).returns(stub(editions: []))
+      FilteredEditionsPresenter.expects(:new).with(%w[draft], anything).returns(stub(editions: []))
 
       get :index, params: { states_filter: %w[draft not_a_real_state] }
     end
