@@ -16,14 +16,16 @@ class RootController < ApplicationController
   ].freeze
 
   def index
-    states_filter_params = filter_params.to_h[:states_filter]
+    filter_params_hash = filter_params.to_h
+    states_filter_params = filter_params_hash[:states_filter]
     sanitised_states_filter_params = states_filter_params&.select { |fp| PERMITTED_FILTER_STATES.include?(fp) }
-    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, nil)
+    assignee_filter = filter_params_hash[:assignee_filter]
+    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, assignee_filter)
   end
 
 private
 
   def filter_params
-    params.permit(states_filter: [])
+    params.permit(:assignee_filter, states_filter: [])
   end
 end

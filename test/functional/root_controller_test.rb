@@ -23,8 +23,19 @@ class RootControllerTest < ActionController::TestCase
       assert_select "h2", "1 document(s)"
     end
 
+    should "filter publications by assignee" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      FactoryBot.create(:guide_edition)
+
+      get :index, params: { assignee_filter: [anna.id] }
+
+      assert_response :ok
+      assert_select "h2", "1 document(s)"
+    end
+
     should "ignore unrecognised filter states" do
-      FilteredEditionsPresenter.expects(:new).with(%w[draft], anything).returns(stub(editions: []))
+      FilteredEditionsPresenter.expects(:new).with(%w[draft], anything)
+                               .returns(stub(editions: [], available_users: []))
 
       get :index, params: { states_filter: %w[draft not_a_real_state] }
     end
