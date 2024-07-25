@@ -3,8 +3,9 @@
 //= require moment
 //= require mousetrap
 //= require jquery-ui.custom.min
+//= require ./publications
+//= require ./smart-answers
 //= require_directory ./vendor
-//= require_directory .
 //= require_directory ./legacy_modules
 //= require jquery_nested_form
 
