@@ -3,6 +3,8 @@
 
 <div class="govuk-grid-column-one-third">
   <%= form_with url: root_path, method: :get do |form| %>
+    <%= form.label :title_filter, "Title" %>
+    <%= text_field_tag :title_filter %>
     <%= form.label :format_filter, "Format" %>
     <%= select_tag :format_filter,
                    options_for_select(format_filter_selection_options) %>
