@@ -3,7 +3,14 @@
 
 <div class="govuk-grid-column-one-third">
   <p>[replace with filter controls]</p>
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= form.label :states_filter_draft, "Draft" %>
+    <%= check_box_tag "states_filter[]", "draft", false, {id: "states_filter_draft"} %>
+    <%= form.label :states_filter_published, "Published" %>
+    <%= check_box_tag "states_filter[]", "published", false, :id => "states_filter_published" %>
+    <%= form.submit %>
+  <% end %>
 </div>
 <div class="govuk-grid-column-two-thirds">
-  <p>[replace with publications table]</p>
+  <h2><%= @presenter.editions.count %> document(s)</h2>
 </div>

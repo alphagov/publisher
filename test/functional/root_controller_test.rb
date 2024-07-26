@@ -13,6 +13,16 @@ class RootControllerTest < ActionController::TestCase
       assert_template "root/index"
     end
 
+    should "filter publications by state" do
+      FactoryBot.create(:guide_edition, state: "draft")
+      FactoryBot.create(:guide_edition, state: "published")
+
+      get :index, params: { states_filter: %w[draft] }
+
+      assert_response :ok
+      assert_select "h2", "1 document(s)"
+    end
+
     should "ignore unrecognised filter states" do
       FilteredEditionsPresenter.expects(:new).with(%w[draft]).returns(stub(editions: []))
 
