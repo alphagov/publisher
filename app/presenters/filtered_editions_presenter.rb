@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class FilteredEditionsPresenter
-  def initialize(states_filter, assigned_to_filter)
+  def initialize(states_filter, assigned_to_filter, format_filter)
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
+    @format_filter = format_filter
   end
 
   def available_users
@@ -11,12 +12,18 @@ class FilteredEditionsPresenter
   end
 
   def editions
-    result = Edition.all
+    result = editions_by_format
     result = apply_states_filter(result)
     apply_assigned_to_filter(result)
   end
 
 private
+
+  def editions_by_format
+    return Edition.all unless format_filter && format_filter != "all"
+
+    Edition.where(_type: "#{format_filter.camelcase}Edition")
+  end
 
   def apply_states_filter(editions)
     return editions if states_filter.empty?
@@ -40,5 +47,5 @@ private
     editions
   end
 
-  attr_reader :states_filter, :assigned_to_filter
+  attr_reader :states_filter, :assigned_to_filter, :format_filter
 end
