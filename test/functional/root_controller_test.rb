@@ -33,6 +33,16 @@ class RootControllerTest < ActionController::TestCase
       assert_select "h2", "1 document(s)"
     end
 
+    should "filter publications by format" do
+      FactoryBot.create(:guide_edition)
+      FactoryBot.create(:completed_transaction_edition)
+
+      get :index, params: { format_filter: "guide" }
+
+      assert_response :ok
+      assert_select "h2", "1 document(s)"
+    end
+
     should "ignore unrecognised filter states" do
       FilteredEditionsPresenter.expects(:new).with(%w[draft], anything, anything)
                                .returns(stub(editions: [], available_users: []))
