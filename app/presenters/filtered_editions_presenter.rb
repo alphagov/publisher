@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class FilteredEditionsPresenter
-  def initialize(states_filter, assigned_to_filter, format_filter)
+  def initialize(states_filter, assigned_to_filter, format_filter, title_filter)
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
     @format_filter = format_filter
+    @title_filter = title_filter
   end
 
   def available_users
@@ -14,7 +15,8 @@ class FilteredEditionsPresenter
   def editions
     result = editions_by_format
     result = apply_states_filter(result)
-    apply_assigned_to_filter(result)
+    result = apply_assigned_to_filter(result)
+    apply_title_filter(result)
   end
 
 private
@@ -47,5 +49,11 @@ private
     editions
   end
 
-  attr_reader :states_filter, :assigned_to_filter, :format_filter
+  def apply_title_filter(editions)
+    return editions if title_filter.blank?
+
+    editions.title_contains(title_filter)
+  end
+
+  attr_reader :states_filter, :assigned_to_filter, :format_filter, :title_filter
 end
