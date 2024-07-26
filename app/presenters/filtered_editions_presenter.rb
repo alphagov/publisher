@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FilteredEditionsPresenter
-  def initialize(states_filter, assigned_to_filter, format_filter, title_filter)
+  def initialize(states_filter: [], assigned_to_filter: nil, format_filter: nil, title_filter: nil)
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
     @format_filter = format_filter

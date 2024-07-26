@@ -22,7 +22,12 @@ class RootController < ApplicationController
     assignee_filter = filter_params_hash[:assignee_filter]
     format_filter = filter_params_hash[:format_filter]
     title_filter = filter_params_hash[:title_filter]
-    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, assignee_filter, format_filter, title_filter)
+    @presenter = FilteredEditionsPresenter.new(
+      states_filter: sanitised_states_filter_params,
+      assigned_to_filter: assignee_filter,
+      format_filter:,
+      title_filter:,
+    )
   end
 
 private
