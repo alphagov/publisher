@@ -81,6 +81,8 @@ class Edition
   scope :published, -> { where(state: "published") }
   scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
 
+  scope :in_states, ->(states) { where(state: { "$in" => states }) }
+
   ACTIONS = {
     send_fact_check: "Send to Fact check",
     resend_fact_check: "Resend fact check email",
