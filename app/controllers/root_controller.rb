@@ -21,7 +21,7 @@ class RootController < ApplicationController
     sanitised_states_filter_params = states_filter_params&.select { |fp| PERMITTED_FILTER_STATES.include?(fp) }
     assignee_filter = filter_params_hash[:assignee_filter]
     format_filter = filter_params_hash[:format_filter]
-    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, assignee_filter, format_filter)
+    @presenter = FilteredEditionsPresenter.new(sanitised_states_filter_params, assignee_filter, format_filter, nil)
   end
 
 private

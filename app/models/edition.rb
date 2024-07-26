@@ -82,6 +82,11 @@ class Edition
   scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
 
   scope :in_states, ->(states) { where(state: { "$in" => states }) }
+  scope :title_contains,
+        lambda { |term|
+          regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
+          where({ title: regex })
+        }
 
   ACTIONS = {
     send_fact_check: "Send to Fact check",
