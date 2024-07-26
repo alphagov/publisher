@@ -39,6 +39,41 @@ class PathsHelperTest < ActionView::TestCase
     end
   end
 
+  context "#homepage popular links paths" do
+    setup do
+      Rails.stubs(:application).returns(
+        stub(
+          config: stub(jwt_auth_secret: JWT_AUTH_SECRET),
+        ),
+      )
+    end
+
+    context "when navigated to preview path" do
+      should "append a valid JWT token" do
+        popular_links = FactoryBot.build(:popular_links, auth_bypass_id: "123")
+        result = preview_homepage_path(popular_links)
+
+        path = result.gsub(/^(.*)\?.*$/, '\1')
+        assert_equal draft_origin.to_s, path
+
+        token = result.gsub(/.*token=(.*)$/, '\1')
+        payload = decoded_token_payload(token)
+
+        assert_equal payload["sub"], "123"
+        assert_equal payload["content_id"], "ad7968d0-0339-40b2-80bc-3ea1db8ef1b7"
+        assert_equal payload["iat"], Time.zone.now.to_i
+        assert_equal payload["exp"], 1.month.from_now.to_i
+      end
+    end
+
+    context "when navigated to homepage path" do
+      should "not append the JWT token" do
+        result = view_homepage_path
+        assert_no_match %r{&token=}, result
+      end
+    end
+  end
+
   def draft_origin
     Plek.find("draft-origin")
   end

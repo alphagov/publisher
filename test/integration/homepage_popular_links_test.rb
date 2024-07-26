@@ -30,6 +30,10 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_css?(".govuk-tag--green")
     end
 
+    should "have link to view 'GOV.UK'" do
+      assert page.has_link?("View on GOV.UK (opens in new tab)", href: Plek.website_root)
+    end
+
     should "have 'Create new edition' button" do
       assert page.has_text?("Create new edition")
     end
@@ -57,6 +61,12 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_text?("Draft")
       assert page.has_css?(".govuk-tag--yellow")
       assert page.has_text?("Edit popular links")
+    end
+
+    should "have link to preview on draft-origin" do
+      click_button("Create new edition")
+
+      assert page.has_link?("Preview (opens in new tab)", href: /#{Plek.external_url_for('draft-origin')}/)
     end
 
     should "create a new record with next version and 'draft' status" do
