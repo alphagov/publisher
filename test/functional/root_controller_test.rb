@@ -43,6 +43,16 @@ class RootControllerTest < ActionController::TestCase
       assert_select "h2", "1 document(s)"
     end
 
+    should "filter publications by title text" do
+      FactoryBot.create(:guide_edition, title: "How to train your dragon")
+      FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse")
+
+      get :index, params: { title_filter: "zombie" }
+
+      assert_response :ok
+      assert_select "h2", "1 document(s)"
+    end
+
     should "ignore unrecognised filter states" do
       FilteredEditionsPresenter.expects(:new).with(%w[draft], anything, anything, anything)
                                .returns(stub(editions: [], available_users: []))
