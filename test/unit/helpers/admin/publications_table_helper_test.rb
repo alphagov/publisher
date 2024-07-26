@@ -30,6 +30,7 @@ class PublicationsTableHelperTest < ActionView::TestCase
       # review_requested_at: nil,
       # auth_bypass_id: "db95b296-a6ff-4d1f-9e67-42c2b536ddc5",
       # _type: "PopularLinksEdition"
+      format: "PopularLinks" # NB: doesn't exist in DB query!?
       # link_items: [{"title"=>"title1", "url"=>"https://bbc.com"}, {"title"=>"title2", "url"=>"https://bbc.com"}, {"title"=>"title3", "url"=>"https://bbc.com"}, {"title"=>"title4", "url"=>"https://bbc.com"}, {"title"=>"title5", "url"=>"https://bbc.com"}, {"title"=>"title6", "url"=>"https://bbc.com"}]
     )
   end
@@ -37,6 +38,12 @@ class PublicationsTableHelperTest < ActionView::TestCase
   context "edition_number" do
     should "return the correct values for supplied publications" do
       assert_equal edition_number(@publication_draft), "1"
+    end
+  end
+
+  context "format" do
+    should "return the correct values for supplied publications" do
+      assert_equal format(@publication_draft), "Popular links"
     end
   end
 end
