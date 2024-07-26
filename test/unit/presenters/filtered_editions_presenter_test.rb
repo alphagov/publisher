@@ -8,7 +8,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       draft_guide = FactoryBot.create(:guide_edition, state: "draft")
       published_guide = FactoryBot.create(:guide_edition, state: "published")
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, nil, nil, nil).editions
+      filtered_editions = FilteredEditionsPresenter.new.editions
 
       assert_equal(2, filtered_editions.count)
       assert_equal(draft_guide, filtered_editions[0])
@@ -19,7 +19,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       draft_guide = FactoryBot.create(:guide_edition, state: "draft")
       FactoryBot.create(:guide_edition, state: "published")
 
-      filtered_editions = FilteredEditionsPresenter.new(%w[draft], nil, nil, nil).editions
+      filtered_editions = FilteredEditionsPresenter.new(states_filter: %w[draft]).editions
 
       assert_equal(1, filtered_editions.count)
       assert_equal(draft_guide, filtered_editions[0])
@@ -30,7 +30,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to: anna.id)
       FactoryBot.create(:guide_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, anna.id, nil, nil).editions.to_a
+      filtered_editions = FilteredEditionsPresenter.new(assigned_to_filter: anna.id).editions.to_a
 
       assert_equal([assigned_to_anna], filtered_editions)
     end
@@ -40,7 +40,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition, assigned_to: anna.id)
       not_assigned = FactoryBot.create(:guide_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, "nobody", nil, nil).editions.to_a
+      filtered_editions = FilteredEditionsPresenter.new(assigned_to_filter: "nobody").editions.to_a
 
       assert_equal([not_assigned], filtered_editions)
     end
@@ -51,7 +51,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition)
 
       filtered_editions =
-        FilteredEditionsPresenter.new(nil, "not a valid user id", nil, nil).editions
+        FilteredEditionsPresenter.new(assigned_to_filter: "not a valid user id").editions
 
       assert_equal(2, filtered_editions.count)
     end
@@ -60,7 +60,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide = FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, nil, "guide", nil).editions
+      filtered_editions = FilteredEditionsPresenter.new(format_filter: "guide").editions
 
       assert_equal([guide], filtered_editions)
     end
@@ -69,7 +69,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, nil, "all", nil).editions
+      filtered_editions = FilteredEditionsPresenter.new(format_filter: "all").editions
 
       assert_equal(2, filtered_editions.count)
     end
@@ -78,7 +78,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide_fawkes = FactoryBot.create(:guide_edition, title: "Guide Fawkes")
       FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide")
 
-      filtered_editions = FilteredEditionsPresenter.new(nil, nil, nil, "Fawkes").editions
+      filtered_editions = FilteredEditionsPresenter.new(title_filter: "Fawkes").editions
 
       assert_equal([guide_fawkes], filtered_editions)
     end
@@ -90,7 +90,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       charlie = FactoryBot.create(:user, name: "Charlie")
       anna = FactoryBot.create(:user, name: "Anna")
 
-      users = FilteredEditionsPresenter.new(nil, nil, nil, nil).available_users.to_a
+      users = FilteredEditionsPresenter.new.available_users.to_a
 
       assert_equal([anna, bob, charlie], users)
     end
@@ -99,7 +99,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       enabled_user = FactoryBot.create(:user, name: "enabled user")
       FactoryBot.create(:user, name: "disabled user", disabled: true)
 
-      users = FilteredEditionsPresenter.new(nil, nil, nil, nil).available_users.to_a
+      users = FilteredEditionsPresenter.new.available_users.to_a
 
       assert_equal(users, [enabled_user])
     end
