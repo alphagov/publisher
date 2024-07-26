@@ -482,6 +482,13 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal [b], Edition.assigned_to(bob).to_a
   end
 
+  test "should scope publications by state" do
+    draft_guide = FactoryBot.create(:guide_edition, state: "draft")
+    FactoryBot.create(:guide_edition, state: "published")
+
+    assert_equal [draft_guide], Edition.in_states(%w[draft]).to_a
+  end
+
   test "cannot delete a publication that has been published" do
     dummy_answer = template_published_answer
     loaded_answer = AnswerEdition.where(slug: "childcare").first

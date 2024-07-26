@@ -12,5 +12,11 @@ class RootControllerTest < ActionController::TestCase
       assert_response :ok
       assert_template "root/index"
     end
+
+    should "ignore unrecognised filter states" do
+      FilteredEditionsPresenter.expects(:new).with(%w[draft]).returns(stub(editions: []))
+
+      get :index, params: { states_filter: %w[draft not_a_real_state] }
+    end
   end
 end
