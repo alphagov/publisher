@@ -1,5 +1,19 @@
 $width: 40;
 
+.publications-filter {
+  background: govuk-colour("light-grey");
+
+  .gem-c-select {
+    label {
+      font-weight: 700;
+    }
+  }
+
+  .govuk-checkboxes__label::before {
+    background: govuk-colour("white");
+  }
+}
+
 .publications-table {
   th:first-child {
     width: calc($width * 1%);

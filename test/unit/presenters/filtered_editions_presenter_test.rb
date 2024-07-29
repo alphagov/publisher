@@ -3,6 +3,59 @@
 require "test_helper"
 
 class FilteredEditionsPresenterTest < ActiveSupport::TestCase
+  context "#content_types" do
+    should "return content types with none selected when no content type filter has been specified" do
+      content_types = FilteredEditionsPresenter.new.content_types
+
+      assert_equal(13, content_types.count)
+      assert_includes(content_types, { text: "All", value: "all" })
+      assert_includes(content_types, { text: "Answer", value: "answer" })
+      assert_includes(content_types, { text: "Campaign (Retired)", value: "campaign" })
+      assert_includes(content_types, { text: "Completed transaction", value: "completed_transaction" })
+      assert_includes(content_types, { text: "Guide", value: "guide" })
+      assert_includes(content_types, { text: "Help page", value: "help_page" })
+      assert_includes(content_types, { text: "Licence (Retired)", value: "licence" })
+      assert_includes(content_types, { text: "Local transaction", value: "local_transaction" })
+      assert_includes(content_types, { text: "Place", value: "place" })
+      assert_includes(content_types, { text: "Programme (Retired)", value: "programme" })
+      assert_includes(content_types, { text: "Simple smart answer", value: "simple_smart_answer" })
+      assert_includes(content_types, { text: "Transaction", value: "transaction" })
+      assert_includes(content_types, { text: "Video (Retired)", value: "video" })
+    end
+
+    should "mark the relevant content type as selected when a content type filter has been specified" do
+      content_types = FilteredEditionsPresenter.new(content_type_filter: "answer").content_types
+
+      assert_includes(content_types, { text: "Answer", value: "answer", selected: "true" })
+      assert_includes(content_types, { text: "Place", value: "place" }) # Not selected
+    end
+  end
+
+  context "#edition_states" do
+    should "return states with none checked when no state filter has been specified" do
+      states = FilteredEditionsPresenter.new.edition_states
+
+      assert_equal(9, states.count)
+      assert_includes(states, { label: "Drafts", value: :draft })
+      assert_includes(states, { label: "In review", value: :in_review })
+      assert_includes(states, { label: "Amends needed", value: :amends_needed })
+      assert_includes(states, { label: "Out for fact check", value: :fact_check })
+      assert_includes(states, { label: "Fact check received", value: :fact_check_received })
+      assert_includes(states, { label: "Ready", value: :ready })
+      assert_includes(states, { label: "Scheduled", value: :scheduled_for_publishing })
+      assert_includes(states, { label: "Published", value: :published })
+      assert_includes(states, { label: "Archived", value: :archived })
+    end
+
+    should "mark the relevant states as checked when a state filter has been specified" do
+      states = FilteredEditionsPresenter.new(states_filter: %w[in_review ready]).edition_states
+
+      assert_includes(states, { label: "In review", value: :in_review, checked: "true" })
+      assert_includes(states, { label: "Ready", value: :ready, checked: "true" })
+      assert_includes(states, { label: "Published", value: :published }) # Not checked
+    end
+  end
+
   context "#editions" do
     should "return all editions when no filters are specified" do
       draft_guide = FactoryBot.create(:guide_edition, state: "draft")
@@ -60,7 +113,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide = FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(format_filter: "guide").editions
+      filtered_editions = FilteredEditionsPresenter.new(content_type_filter: "guide").editions
 
       assert_equal([guide], filtered_editions.to_a)
     end
@@ -69,7 +122,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(format_filter: "all").editions
+      filtered_editions = FilteredEditionsPresenter.new(content_type_filter: "all").editions
 
       assert_equal(2, filtered_editions.count)
     end

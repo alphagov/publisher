@@ -33,11 +33,11 @@ class RootControllerTest < ActionController::TestCase
       assert_select "p.publications-table__heading", "1 document(s)"
     end
 
-    should "filter publications by format" do
+    should "filter publications by content type" do
       FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      get :index, params: { format_filter: "guide" }
+      get :index, params: { content_type_filter: "guide" }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
@@ -57,7 +57,14 @@ class RootControllerTest < ActionController::TestCase
       FilteredEditionsPresenter
         .expects(:new)
         .with(has_entry(:states_filter, %w[draft]))
-        .returns(stub(editions: Kaminari.paginate_array([]).page(1), available_users: []))
+        .returns(stub(
+                   editions: Kaminari.paginate_array([]).page(1),
+                   available_users: [],
+                   title: "",
+                   assignees: [],
+                   content_types: [],
+                   edition_states: [],
+                 ))
 
       get :index, params: { states_filter: %w[draft not_a_real_state] }
     end
