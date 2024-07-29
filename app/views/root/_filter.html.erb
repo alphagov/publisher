@@ -5,7 +5,17 @@
       margin_bottom: 4,
     } %>
 
-    <%= form.label :title_filter, "Title" %>
+    <%# form.label :title_filter, "Title" %>
+    <%= render "govuk_publishing_components/components/input", {
+      label: {
+        text: "Title",
+        bold: true,
+      },
+      name: "title_filter",
+      # id: "title_filter",
+      # value: @filter.options[:title],
+    } %>
+
     <%= text_field_tag :title_filter %>
     <%= form.label :format_filter, "Format" %>
     <%= select_tag :format_filter,
