@@ -13,6 +13,20 @@ module PathsHelper
     path
   end
 
+  def preview_homepage_path(edition)
+    path = "#{preview_url(edition)}" # rubocop:disable Style/RedundantInterpolation
+
+    if should_have_auth_bypass_id?(edition)
+      path << "?token=#{jwt_token(edition)}"
+    end
+
+    path
+  end
+
+  def view_homepage_path
+    gov_uk_root_url
+  end
+
   def start_work_path(edition)
     send("start_work_edition_path", edition)
   end
@@ -47,6 +61,10 @@ protected
 
   def preview_url(_edition)
     Plek.external_url_for("draft-origin")
+  end
+
+  def gov_uk_root_url
+    Plek.website_root
   end
 
 private
