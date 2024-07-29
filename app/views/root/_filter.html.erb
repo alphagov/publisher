@@ -1,16 +1,93 @@
-<%= form_with url: root_path, method: :get do |form| %>
-  <%= form.label :title_filter, "Title" %>
-  <%= text_field_tag :title_filter %>
-  <%= form.label :format_filter, "Format" %>
-  <%= select_tag :format_filter,
-                  options_for_select(format_filter_selection_options) %>
-  <%= form.label :assignee_filter, "Assignee" %>
-  <%= select_tag :assignee_filter,
-                  options_for_select([%w[Nobody nobody]]) <<
-                    options_from_collection_for_select(@presenter.available_users, "id", "name") %>
-  <%= form.label :states_filter_draft, "Draft" %>
-  <%= check_box_tag "states_filter[]", "draft", false, { id: "states_filter_draft" } %>
-  <%= form.label :states_filter_published, "Published" %>
-  <%= check_box_tag "states_filter[]", "published", false, :id => "states_filter_published" %>
-  <%= form.submit %>
-<% end %>
+<%
+  assignees = [{text: "All assignees", value: ""}]
+  content_types = []
+  states = []
+
+  @presenter.available_users.map do | user |
+    assignees << {text: user.name, value: user.id}
+  end
+
+  format_filter_selection_options.map do | format |
+    content_types << {text: format[0], value: format[1]}
+  end
+
+  state_names.collect do |scope, status_label|
+    states << {label: status_label, value: scope}
+  end
+%>
+
+<div class="app-view-filter govuk-!-padding-5">
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Filter by",
+      margin_bottom: 4,
+    } %>
+
+    <%# form.label :title_filter, "Title" %>
+
+    <%= render "govuk_publishing_components/components/input", {
+      label: {
+        text: "Title",
+        bold: true,
+      },
+      name: "title_filter",
+      id: "title_filter",
+      # value: @filter.options[:title],
+    } %>
+
+    <%# form.label :assignee_filter, "Assignee" %>
+    <%# select_tag :assignee_filter,
+                    options_for_select([%w[Nobody nobody]]) <<
+                      options_from_collection_for_select(@presenter.available_users, "id", "name") %>
+
+    <%= render "govuk_publishing_components/components/select", {
+      id: "assignee_filter",
+      full_width: true,
+      label: "Assigned to",
+      options: assignees
+    } %>
+
+    <%# text_field_tag :title_filter %>
+    <%# form.label :format_filter, "Format" %>
+    <%# select_tag :format_filter,
+                    options_for_select(format_filter_selection_options) %>
+
+    <%= render "govuk_publishing_components/components/select", {
+      id: "format_filter",
+      label: "Content type",
+      full_width: true,
+      options: content_types.map do | option |
+        {
+          text: option[:text],
+          value: option[:value]
+        }
+      end
+    } %>
+
+    <%# form.label :states_filter_draft, "Draft" %>
+    <%# check_box_tag "states_filter[]", "draft", false, { id: "states_filter_draft" } %>
+    <%# form.label :states_filter_published, "Published" %>
+    <%# check_box_tag "states_filter[]", "published", false, :id => "states_filter_published" %>
+
+    <%= render "govuk_publishing_components/components/checkboxes", {
+      name: "states_filter[]",
+      heading: "Status",
+      heading_size: "s",
+      items: states
+    } %>
+
+    <%# form.submit %>
+
+    <div class="govuk-button-group">
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Update filter"
+      } %>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Reset all fields",
+        type: "reset",
+        secondary: true
+      } %>
+    </div>
+  <% end %>
+</div>

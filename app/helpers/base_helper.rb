@@ -1,6 +1,6 @@
 module BaseHelper
-  def publication_tab_list(presenter, options)
-    state_names = {
+  def state_names
+    {
       drafts: "Drafts",
       in_review: "In review",
       amends_needed: "Amends needed",
@@ -11,6 +11,9 @@ module BaseHelper
       published: "Published",
       archived: "Archived",
     }
+  end
+
+  def legacy_publication_tab_list(presenter, options)
     output = state_names.collect do |scope, status_label|
       li_classes = ["status-option", scope]
       li_classes << "active" if scope == options[:current]
