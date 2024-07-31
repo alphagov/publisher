@@ -51,6 +51,24 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
   end
 
+  context "#confirm_destroy" do
+    setup do
+      click_button("Create new edition")
+      click_link("Edit popular links")
+      click_link("Delete edition")
+    end
+
+    should "show the 'Delete draft' confirmation page with the option to actually delete" do
+      assert page.has_text?("Delete draft")
+      assert page.has_text?("Are you sure you want to delete this draft?")
+      assert page.has_text?("Cancel")
+    end
+
+    should "" do
+
+    end
+  end
+
   context "#create" do
     should "create and show new edition with draft status and with an option to edit popular links" do
       click_button("Create new edition")
@@ -67,6 +85,12 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       click_button("Create new edition")
 
       assert page.has_link?("Preview (opens in new tab)", href: /#{Plek.external_url_for('draft-origin')}/)
+    end
+
+    should "have 'delete edition' link navigating to 'confirm destroy' page" do
+      click_button("Create new edition")
+
+      assert page.has_link?("Delete edition", href: /confirm-destroy/)
     end
 
     should "create a new record with next version and 'draft' status" do
