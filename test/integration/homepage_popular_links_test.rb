@@ -54,18 +54,21 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
   context "#confirm_destroy" do
     setup do
       click_button("Create new edition")
-      click_link("Edit popular links")
-      click_link("Delete edition")
     end
 
     should "show the 'Delete draft' confirmation page with the option to actually delete" do
+      click_link("Delete edition")
+
       assert page.has_text?("Delete draft")
       assert page.has_text?("Are you sure you want to delete this draft?")
       assert page.has_text?("Cancel")
     end
 
-    should "" do
+    should "revert to show page if delete is cancelled" do
+      click_link("Delete edition")
+      click_link("Cancel")
 
+      assert_title "Popular on GOV.UK"
     end
   end
 
