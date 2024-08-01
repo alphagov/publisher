@@ -47,12 +47,14 @@ class HomepageController < ApplicationController
 
   def destroy
     # TODO: Must only delete if unpublished and this route must not be accessible from the URL
-    if @latest_popular_links.destroy
-      flash[:success] = "Popular links edition deleted.".html_safe
-    else
-      flash[:danger] = "Due to an application error, the edition couldn't be deleted.".html_safe
-    end
-      # redirect_to "homepage/popular_links/show"
+    @latest_popular_links.delete ? flash[:success] = "Popular links deleted.".html_safe :
+    flash[:danger] = "Due to an application error, the edition couldn't be deleted.".html_safe
+
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} #{e.message}"
+      flash[:danger] = "Due to an application error, the edition couldn't be deleted."
+    ensure
+      redirect_to show_popular_links_path
   end
 
   def confirm_destroy
