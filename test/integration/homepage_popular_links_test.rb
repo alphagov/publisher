@@ -72,6 +72,27 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
   end
 
+  context "#destroy" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "show the previously published edition when a draft is deleted" do
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("2")
+      assert row[1].has_text?("Draft")
+
+      click_link("Delete edition")
+      click_button("Delete")
+
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("1")
+      assert row[1].has_text?("Published")
+    end
+  end
+
   context "#create" do
     should "create and show new edition with draft status and with an option to edit popular links" do
       click_button("Create new edition")
