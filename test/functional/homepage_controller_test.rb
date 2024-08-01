@@ -23,6 +23,25 @@ class HomepageControllerTest < ActionController::TestCase
     end
   end
 
+  context "destroy" do
+    setup do
+      @popular_links = FactoryBot.create(:popular_links, state: "draft")
+      get :confirm_destroy, params: { id: @popular_links.id }
+    end
+
+    should "display a success message if successful" do
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal "Popular links deleted.", flash[:success]
+    end
+
+    should "redirect to show path on success" do
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_redirected_to show_popular_links_path
+    end
+  end
+
   context "#show" do
     setup do
       @popular_links = FactoryBot.create(:popular_links)
