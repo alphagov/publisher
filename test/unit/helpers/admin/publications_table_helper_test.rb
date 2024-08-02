@@ -81,6 +81,22 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  context "#awaiting_review" do
+    should "return the correct text for the 'Awaiting review' field for an edition in review" do
+      today = Date.parse("2024-08-02")
+
+      Timecop.freeze(today) do
+        edition = FactoryBot.create(
+          :edition,
+          state: "in_review",
+          review_requested_at: "2024-07-12"
+        )
+
+        assert_equal "21 days", awaiting_review(edition)
+      end
+    end
+  end
+
   # TODO: How to stub value for "format"?
   # context "#format" do
   #   should "return the correct value for the format" do
