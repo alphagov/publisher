@@ -56,6 +56,6 @@ end
 
 Rails.logger.info "Finished running MailFetcher in #{Rails.env} mode - #{Time.zone.now.utc}"
 Prometheus::Client::Push.new(
-  job: "publisher_fact_check_emails",
+  job: "publisher-metrics",
   gateway: ENV.fetch("PROMETHEUS_PUSHGATEWAY_URL"),
 ).add(registry)
