@@ -97,6 +97,23 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  # TODO: How to stub value for "sent_out"?
+  # context "#sent_out" do
+  #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
+  #     today = Date.parse("2024-08-02")
+
+  #     Timecop.freeze(today) do
+  #       edition = FactoryBot.create(
+  #         :edition,
+  #         state: "fact_check",
+  #         last_fact_checked_at: "2024-07-12"
+  #       )
+
+  #       assert_equal "21 days", sent_out(edition)
+  #     end
+  #   end
+  # end
+
   # TODO: How to stub value for "format"?
   # context "#format" do
   #   should "return the correct value for the format" do
@@ -165,8 +182,6 @@ end
 # review_requested_at: nil,
 # auth_bypass_id: "db95b296-a6ff-4d1f-9e67-42c2b536ddc5",
 # _type: "PopularLinksEdition"
-# format: "PopularLinks", # NB: doesn't exist in DB query!?
-# important_note: {comment: "This is an important note"}, # NB: doesn't exist in DB query!?
 # link_items: [{"title"=>"title1", "url"=>"https://bbc.com"}, {"title"=>"title2", "url"=>"https://bbc.com"}, {"title"=>"title3", "url"=>"https://bbc.com"}, {"title"=>"title4", "url"=>"https://bbc.com"}, {"title"=>"title5", "url"=>"https://bbc.com"}, {"title"=>"title6", "url"=>"https://bbc.com"}]
 
 # Draft 3
@@ -229,3 +244,32 @@ end
 # auth_bypass_id: "910e4c37-542a-4825-9333-947b91741ce1",
 # _type: "AnswerEdition",
 # body: "So this one - and this one only - should display the \"claim 2i\" button ">
+
+# Fact Check 1
+# <GuideEdition _id: 668ead53c680ad0024fc1a57,
+# created_at: 2024-07-10 15:48:35.868 UTC,
+# updated_at: 2024-07-10 15:51:50.743 UTC,
+# state: "fact_check",
+# assigned_to_id: BSON::ObjectId('6564758154a0fe0001aac5a2'),
+# panopticon_id: "668ead53c680ad0024fc1a55",
+# version_number: 1,
+# sibling_in_progress: nil,
+# title: "A new artefact",
+# in_beta: false,
+# publish_at: nil,
+# overview: "",
+# slug: "a-new-artefact",
+# rejected_count: 0,
+# assignee: "Test user",
+# reviewer: nil,
+# creator: "Test user",
+# publisher: nil,
+# archiver: nil,
+# major_change: false,
+# change_note: nil,
+# review_requested_at: 2024-07-10 15:50:39.501 UTC,
+# auth_bypass_id: "c3036df2-73bf-4f9d-accf-e1d2e88397a2",
+# _type: "GuideEdition",
+# video_url: nil,
+# video_summary: nil,
+# hide_chapter_navigation: false>
