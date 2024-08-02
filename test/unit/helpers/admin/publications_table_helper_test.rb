@@ -97,6 +97,22 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  context "#scheduled" do
+    should "return the correct text for the 'Scheduled' field for an edition in 'Scheduled for publishing'" do
+      today = Date.parse("2024-08-02")
+
+      Timecop.freeze(today) do
+        edition = FactoryBot.create(
+          :edition,
+          state: "scheduled_for_publishing",
+          publish_at: "2024-08-21 10:04:50.119 UTC",
+        )
+
+        assert_equal "11:04am, 21 Aug 2024", scheduled(edition)
+      end
+    end
+  end
+
   # TODO: How to stub value for "sent_out"?
   # context "#sent_out" do
   #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
@@ -185,7 +201,8 @@ end
 # link_items: [{"title"=>"title1", "url"=>"https://bbc.com"}, {"title"=>"title2", "url"=>"https://bbc.com"}, {"title"=>"title3", "url"=>"https://bbc.com"}, {"title"=>"title4", "url"=>"https://bbc.com"}, {"title"=>"title5", "url"=>"https://bbc.com"}, {"title"=>"title6", "url"=>"https://bbc.com"}]
 
 # Draft 3
-#<TransactionEdition _id: 668fb6165dc0b0001d178d97,
+#<TransactionEdition
+# _id: 668fb6165dc0b0001d178d97,
 # created_at: 2024-07-11 10:38:14.712 UTC,
 # updated_at: 2024-07-11 10:38:18.801 UTC,
 # state: "draft",
@@ -219,7 +236,8 @@ end
 # start_button_text: "Start now">
 
 # In Review 1
-# <AnswerEdition _id: 66911290db73e8001e6fd3a7,
+# <AnswerEdition
+# _id: 66911290db73e8001e6fd3a7,
 # created_at: 2024-07-12 11:25:04.736 UTC,
 # updated_at: 2024-08-01 16:48:01.442 UTC,
 # state: "in_review",
@@ -246,7 +264,8 @@ end
 # body: "So this one - and this one only - should display the \"claim 2i\" button ">
 
 # Fact Check 1
-# <GuideEdition _id: 668ead53c680ad0024fc1a57,
+# <GuideEdition
+# _id: 668ead53c680ad0024fc1a57,
 # created_at: 2024-07-10 15:48:35.868 UTC,
 # updated_at: 2024-07-10 15:51:50.743 UTC,
 # state: "fact_check",
@@ -273,3 +292,38 @@ end
 # video_url: nil,
 # video_summary: nil,
 # hide_chapter_navigation: false>
+
+# Scheduled for publishing 1
+# <TransactionEdition
+# _id: 668fae425dc0b0001d178d90,
+# created_at: 2024-07-11 10:04:50.093 UTC,
+# updated_at: 2024-07-11 10:09:13.214 UTC,
+# state: "scheduled_for_publishing",
+# assigned_to_id: BSON::ObjectId('6564758154a0fe0001aac5a2'),
+# panopticon_id: "668fae415dc0b0001c178d90",
+# version_number: 1,
+# sibling_in_progress: nil,
+# title: "Yet another new artefact",
+# in_beta: false,
+# publish_at: 2024-07-21 10:04:50.119 UTC,
+# overview: "",
+# slug: "yet-another-new-artefact",
+# rejected_count: 0,
+# assignee: "Test user",
+# reviewer: nil,
+# creator: "Test user",
+# publisher: nil,
+# archiver: nil,
+# major_change: false,
+# change_note: nil,
+# review_requested_at: nil,
+# auth_bypass_id: "3d27e6ca-9568-4eaa-929e-96a5cfcc06ca",
+# _type: "TransactionEdition",
+# introduction: "",
+# will_continue_on: "",
+# link: nil,
+# more_information: "",
+# need_to_know: "",
+# department_analytics_profile: "",
+# alternate_methods: "",
+# start_button_text: "Start now">
