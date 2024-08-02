@@ -113,6 +113,18 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  context "#published_by" do
+    should "return the correct text for the 'Published by' field for an edition in 'Published'" do
+      edition = FactoryBot.create(
+        :edition,
+        state: "published",
+        publisher: "Keir Starmer"
+      )
+
+      assert_equal "Keir Starmer", published_by(edition)
+    end
+  end
+
   # TODO: How to stub value for "sent_out"?
   # context "#sent_out" do
   #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
@@ -327,3 +339,33 @@ end
 # department_analytics_profile: "",
 # alternate_methods: "",
 # start_button_text: "Start now">
+
+# Published 1
+# <GuideEdition
+# _id: 668fbda05dc0b0001c178d9d,
+# created_at: 2024-07-11 11:10:24.005 UTC,
+# updated_at: 2024-07-11 11:10:41.73 UTC,
+# state: "published",
+# assigned_to_id: BSON::ObjectId('6564758154a0fe0001aac5a2'),
+# panopticon_id: "668fbd9f5dc0b0001c178d9b",
+# version_number: 1,
+# sibling_in_progress: nil,
+# title: "A published thing that is not archived",
+# in_beta: false,
+# publish_at: nil,
+# overview: "",
+# slug: "a-published-thing-that-is-not-archived",
+# rejected_count: 0,
+# assignee: "Test user",
+# reviewer: nil,
+# creator: "Test user",
+# publisher: "Test user",
+# archiver: nil,
+# major_change: false,
+# change_note: nil,
+# review_requested_at: 2024-07-11 11:10:30.31 UTC,
+# auth_bypass_id: "34a3b3ab-06e8-4952-9345-ca710979b8f9",
+# _type: "GuideEdition",
+# video_url: nil,
+# video_summary: nil,
+# hide_chapter_navigation: false>
