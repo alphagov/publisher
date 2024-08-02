@@ -125,6 +125,47 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  # TODO: Remove some unecessary values from current_user & edition
+  context "#reviewer" do
+    should "return the correct text for the '2i reviewer' field for an edition in 'In review' that is claimed by a 2i reviewer" do
+      current_user = FactoryBot.create(:user, name: "Liz Truss", permissions: ["signin", "govuk_editor", "skip_review"])
+      edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: "2024-07-12",
+        reviewer: "Rishi Sunak"
+      )
+
+      assert_equal "Rishi Sunak", reviewer(edition, current_user)
+    end
+
+    should "return the correct text for the '2i reviewer' field for an edition in 'In review' that is assigned to the current user and not claimed by a 2i reviewer" do
+      current_user = FactoryBot.create(:user, name: "Boris Johnson", permissions: ["signin", "govuk_editor", "skip_review"])
+      edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: "2024-07-12",
+        assigned_to_id: current_user.id,
+        reviewer: nil
+      )
+
+      assert_nil reviewer(edition, current_user)
+    end
+
+    should "return the correct text for the '2i reviewer' field for an edition in 'In review' that is not assigned to the current user and not claimed by a 2i reviewer" do
+      current_user = FactoryBot.create(:user, name: "Theresa May", permissions: ["signin", "govuk_editor", "skip_review"])
+      edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: "2024-07-12",
+        assigned_to_id: "66911dbf2c88ee0001d8af62",
+        reviewer: nil
+      )
+
+      assert_includes reviewer(edition, current_user), '<button class="gem-c-button govuk-button" type="submit">Claim 2i</button>'
+    end
+  end
+
   # TODO: How to stub value for "sent_out"?
   # context "#sent_out" do
   #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
