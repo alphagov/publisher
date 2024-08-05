@@ -19,7 +19,7 @@ class HomepageControllerTest < ActionController::TestCase
 
       get :confirm_destroy, params: { id: popular_links.id }
 
-      assert_template "homepage/popular_links/confirm_destroy"
+      assert_redirected_to show_popular_links_path
     end
   end
 
