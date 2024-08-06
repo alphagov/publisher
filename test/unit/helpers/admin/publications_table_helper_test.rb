@@ -166,6 +166,16 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
+  context "#format" do
+    should "return the correct value for the format" do
+      edition = FactoryBot.create(
+        :transaction_edition
+      )
+
+      assert_equal "Transaction", format(edition)
+    end
+  end
+
   # TODO: How to stub value for "sent_out"?
   # context "#sent_out" do
   #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
@@ -180,18 +190,6 @@ class PublicationsTableHelperTest < ActionView::TestCase
 
   #       assert_equal "21 days", sent_out(edition)
   #     end
-  #   end
-  # end
-
-  # TODO: How to stub value for "format"?
-  # context "#format" do
-  #   should "return the correct value for the format" do
-  #     edition = FactoryBot.create(
-  #       :edition,
-  #       _type: "SimpleSmartAnswerEdition"
-  #     )
-
-  #     assert_equal "Simple smart answer", format(edition)
   #   end
   # end
 end
