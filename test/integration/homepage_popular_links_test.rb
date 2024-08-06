@@ -57,7 +57,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
 
     should "show the 'Delete draft' confirmation page with the option to actually delete" do
-      click_link("Delete edition")
+      click_link("Delete draft")
 
       assert page.has_text?("Delete draft")
       assert page.has_text?("Are you sure you want to delete this draft?")
@@ -65,7 +65,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
 
     should "revert to show page if delete is cancelled" do
-      click_link("Delete edition")
+      click_link("Delete draft")
       click_link("Cancel")
 
       assert_title "Popular on GOV.UK"
@@ -83,7 +83,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert row[0].has_text?("2")
       assert row[1].has_text?("Draft")
 
-      click_link("Delete edition")
+      click_link("Delete draft")
       click_button("Delete")
 
       row = find_all(".govuk-summary-list__row")
@@ -111,10 +111,10 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_link?("Preview (opens in new tab)", href: /#{Plek.external_url_for('draft-origin')}/)
     end
 
-    should "have 'delete edition' link navigating to 'confirm destroy' page" do
+    should "have 'delete draft' link navigating to 'confirm destroy' page" do
       click_button("Create new edition")
 
-      assert page.has_link?("Delete edition", href: /confirm-destroy/)
+      assert page.has_link?("Delete draft", href: /confirm-destroy/)
     end
 
     should "create a new record with next version and 'draft' status" do
