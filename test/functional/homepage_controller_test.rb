@@ -29,6 +29,14 @@ class HomepageControllerTest < ActionController::TestCase
       get :confirm_destroy, params: { id: @popular_links.id }
     end
 
+    should "delete the popular links from the database" do
+      assert_equal 1, PopularLinksEdition.count
+
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal 0, PopularLinksEdition.count
+    end
+
     should "display a success message if successful" do
       delete :destroy, params: { id: @popular_links.id }
 
@@ -38,6 +46,15 @@ class HomepageControllerTest < ActionController::TestCase
     should "redirect to show path on success" do
       delete :destroy, params: { id: @popular_links.id }
 
+      assert_redirected_to show_popular_links_path
+    end
+
+    should "redirect to edit page with error message if delete from database fails" do
+      PopularLinksEdition.any_instance.stubs(:delete).returns(false)
+
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal "Due to an application error, the edition couldn't be deleted.", flash[:danger]
       assert_redirected_to show_popular_links_path
     end
   end
