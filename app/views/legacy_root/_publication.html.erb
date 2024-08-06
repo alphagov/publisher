@@ -11,14 +11,14 @@
     </h2>
 
     <% if publication.published? %>
-      <%= link_to "/#{publication.slug}", "#{Plek.website_root}/#{publication.slug}", class: 'link-muted' %>
+      <%= link_to "/#{publication.slug}", "#{Plek.website_root}/#{publication.slug}", class: "link-muted" %>
     <% elsif publication.safe_to_preview? %>
-      <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: 'link-muted' %>
+      <%= link_to "/#{publication.slug}", preview_edition_path(publication), class: "link-muted" %>
     <% end %>
 
     <span class="text-muted"> &middot; <span title="Edition <%= publication.version_number %>">#<%= publication.version_number %></span></span>
     <% if tab && (tab == :published || tab == :archived) && publication.subsequent_siblings.first.present? %>
-      <span class="text-muted"> – <%= link_to "##{publication.subsequent_siblings.first.version_number} in #{publication.subsequent_siblings.first.state.humanize.downcase}", edition_path(publication.subsequent_siblings.first), class: 'link-inherit' %>
+      <span class="text-muted"> – <%= link_to "##{publication.subsequent_siblings.first.version_number} in #{publication.subsequent_siblings.first.state.humanize.downcase}", edition_path(publication.subsequent_siblings.first), class: "link-inherit" %>
       </span>
     <% end %>
 
@@ -56,7 +56,7 @@
       <%= time_ago_in_words(publication.review_requested_at) %>
     </td>
     <td>
-      <%= render partial: 'reviewer', locals: { publication: publication } %>
+      <%= render partial: "reviewer", locals: { publication: publication } %>
     </td>
   <% end %>
   <% if tab && tab == :published %>
@@ -68,9 +68,9 @@
     <td>
       <% if current_user.has_editor_permissions?(publication) %>
         <% if publication.can_create_new_edition? %>
-          <%= link_to 'Create new edition', duplicate_edition_path(publication), class: 'btn btn-default', method: :post %>
+          <%= link_to "Create new edition", duplicate_edition_path(publication), class: "btn btn-default", method: :post %>
         <% elsif publication.in_progress_sibling %>
-          <%= link_to 'Edit newer edition', edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
+          <%= link_to "Edit newer edition", edition_path(publication.in_progress_sibling), html_options = { "class" => "btn btn-info"} %>
         <% end %>
       <% end %>
     </td>

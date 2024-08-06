@@ -18,8 +18,8 @@
           <label for="format_filter" class="add-top-margin nav-header">Format</label>
           <%= select_tag("format_filter", options_for_select(
             legacy_format_filter_selection_options,
-            params[:format_filter]
-          ), class: 'form-control') %>
+            params[:format_filter],
+          ), class: "form-control") %>
           <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
         </form>
         </div>
@@ -77,7 +77,7 @@
             <% end %>
           </tbody>
         </table>
-        <%= paginate @page_info, theme: 'twitter-bootstrap-3' %>
+        <%= paginate @page_info, theme: "twitter-bootstrap-3" %>
       </div><!--./col-md-10 -->
 
     </div><!--./row -->

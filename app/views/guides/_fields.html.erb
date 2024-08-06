@@ -6,7 +6,7 @@
         <h2 class="remove-top-margin add-bottom-margin h3">Edit Guide</h2>
       </legend>
 
-      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <%= render :partial => "shared/common_edition_attributes", :locals => {:f => f} %>
     </fieldset>
   </div>
 </div>
@@ -37,15 +37,15 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :parts, @ordered_parts do |part| %>
-        <%= render partial: '/shared/common_part_attributes', locals: { f: part, editable: !@resource.locked_for_edits?, child_record_type: 'part' } %>
+        <%= render partial: "/shared/common_part_attributes", locals: { f: part, editable: !@resource.locked_for_edits?, child_record_type: "part" } %>
       <% end %>
     </section>
 
-    <%= f.link_to_add :parts, :data => { :target => "#parts" }, :class => 'btn btn-default' do %>
+    <%= f.link_to_add :parts, :data => { :target => "#parts" }, :class => "btn btn-default" do %>
       <i class="glyphicon glyphicon-plus add-right-margin"></i>Add new part
     <% end %>
 
   </div>
 </div>
 
-<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+<%= render partial: "shared/workflow_buttons", locals: { f: f } %>

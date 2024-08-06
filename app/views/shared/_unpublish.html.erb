@@ -15,10 +15,10 @@
       <span class="normal">
         For example: <code>https://www.gov.uk/redirect-to-replacement-page</code>
       </span>
-      <%= text_field_tag 'redirect_url', '', class: "form-control input-md-12" %>
+      <%= text_field_tag "redirect_url", "", class: "form-control input-md-12" %>
     </div>
-    <%= button_tag 'Unpublish',
-      "data-module" => 'confirm',
+    <%= button_tag "Unpublish",
+      "data-module" => "confirm",
       "data-message" => "This will remove ‘#{@artefact.name}’ from the website.\n\n Are you sure?",
       :class => "btn btn-danger" %>
   <% end %>

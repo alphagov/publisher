@@ -3,7 +3,7 @@
     <span class="node-label bold"><%= f.object.slug.to_s.titleize %></span>
     <%= f.link_to_remove "<i class=\"glyphicon glyphicon-remove glyphicon-smaller-than-text add-right-margin\"></i> <span class=\"remove-node-label\"> Remove #{f.object.kind} </span>".html_safe , :class => "btn btn-default pull-right remove-node" %>
   </legend>
-  <%= f.hidden_field :order, class: 'node-order' %>
+  <%= f.hidden_field :order, class: "node-order" %>
 
   <div class="form-group">
     <div class="form-wrapper">
@@ -17,7 +17,7 @@
     <span class="form-wrapper">
       <%= f.label :body, "Optional extra information" %>
       <%= f.text_area :body, rows: 10, class: "node-body form-control", data: {
-        module: "paste-html-to-govspeak"
+        module: "paste-html-to-govspeak",
       } %>
     </span>
   </div>
@@ -27,7 +27,7 @@
   <% unless f.object.kind == "outcome" %>
     <div class="options">
       <%= f.fields_for :options, :wrapper_class => "outcome-wrap option" do |o| %>
-        <div class="form-inline form-group<%= o.object.errors.empty? ? '' : ' error' %>">
+        <div class="form-inline form-group<%= o.object.errors.empty? ? "" : " error" %>">
           <div class="row">
             <div class="form-group col-md-3">
               <%= f.label :label, "Answer #{o.index.to_i + 1}",for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_label" %>

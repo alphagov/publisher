@@ -1,4 +1,4 @@
-<%= @action.requester.name %> skipped reviewing "<%= @action.edition.title %>" (<%= @action.edition.format %>) at <%=Time.zone.now.strftime("%R on %d/%m/%Y") %>
+<%= @action.requester.name %> skipped reviewing "<%= @action.edition.title %>" (<%= @action.edition.format %>) at <%= Time.zone.now.strftime("%R on %d/%m/%Y") %>
 
 Comment: <%= @action.comment %>
 

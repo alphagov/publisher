@@ -5,8 +5,8 @@
     <%= action_note(@resource.important_note) %>
   </div>
   <div class="callout-important-note-detail">
-    Note <%= with_history ? 'updated' : 'created' %> <time datetime="<%= important_note.created_at %>"><%= important_note.created_at.to_date.to_fs(:govuk_date_short) %></time>
-    <% if important_note.requester.present? %> by <%= mail_to important_note.requester.email, important_note.requester.name, { class: 'link-inherit' }  %><% end %>
+    Note <%= with_history ? "updated" : "created" %> <time datetime="<%= important_note.created_at %>"><%= important_note.created_at.to_date.to_fs(:govuk_date_short) %></time>
+    <% if important_note.requester.present? %> by <%= mail_to important_note.requester.email, important_note.requester.name, { class: "link-inherit" } %><% end %>
     <% if with_history %>
      <span class="if-no-js-hide"> – <a href="#" class="js-toggle link-muted">See history</a></span>
     <% end %>

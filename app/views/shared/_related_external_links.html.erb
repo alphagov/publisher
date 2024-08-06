@@ -12,11 +12,11 @@
         <div class="row relative">
           <div class="col-md-4">
             <%= link.label :title, "Title" %>
-            <%= link.text_field :title, class: 'form-control' %>
+            <%= link.text_field :title, class: "form-control" %>
           </div>
           <div class="col-md-5">
             <%= link.label :url, "URL" %>
-            <%= link.text_field :url, class: 'form-control' %>
+            <%= link.text_field :url, class: "form-control" %>
           </div>
           <% unless @resource.retired_format? %>
             <%= link.link_to_remove "Remove this URL", class: "remove-row remove-row-related" %>
@@ -34,6 +34,6 @@
     <% unless @resource.retired_format? %>
       <br/>
 
-      <%= f.submit 'Save links', class: "btn btn-success btn-large" %>
+      <%= f.submit "Save links", class: "btn btn-success btn-large" %>
     <% end %>
 <% end %>
