@@ -40,7 +40,7 @@
 
             <label for="format_filter" class="add-top-margin nav-header">Format</label>
             <%= select_tag("format_filter", options_for_select(
-              format_filter_selection_options,
+              legacy_format_filter_selection_options,
               params[:format_filter]
             ), class: 'form-control') %>
             <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">

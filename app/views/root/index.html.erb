@@ -2,8 +2,23 @@
 <% content_for :title, "Publications" %>
 
 <div class="govuk-grid-column-one-third">
-  <p>[replace with filter controls]</p>
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= form.label :title_filter, "Title" %>
+    <%= text_field_tag :title_filter %>
+    <%= form.label :format_filter, "Format" %>
+    <%= select_tag :format_filter,
+                   options_for_select(format_filter_selection_options) %>
+    <%= form.label :assignee_filter, "Assignee" %>
+    <%= select_tag :assignee_filter,
+                   options_for_select([%w[Nobody nobody]]) <<
+                     options_from_collection_for_select(@presenter.available_users, "id", "name") %>
+    <%= form.label :states_filter_draft, "Draft" %>
+    <%= check_box_tag "states_filter[]", "draft", false, { id: "states_filter_draft" } %>
+    <%= form.label :states_filter_published, "Published" %>
+    <%= check_box_tag "states_filter[]", "published", false, :id => "states_filter_published" %>
+    <%= form.submit %>
+  <% end %>
 </div>
 <div class="govuk-grid-column-two-thirds">
-  <p>[replace with publications table]</p>
+  <h2><%= @presenter.editions.count %> document(s)</h2>
 </div>
