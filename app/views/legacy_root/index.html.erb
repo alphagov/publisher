@@ -31,18 +31,18 @@
             <label for="user_filter" class="nav-header">Assignee</label>
             <%=
               select_tag("user_filter", options_for_select(
-                [["All", "all"], ["Nobody", "nobody"]] +
+                [%w[All all], %w[Nobody nobody]] +
                 User.enabled.alphabetized.map{ |u| [u.name, u.uid] }, @user_filter
-              ), class: 'form-control js-user-filter', "data-module" => 'assignee-select')
+              ), class: "form-control js-user-filter", "data-module" => "assignee-select")
             %>
             <label for="string_filter" class="add-top-margin nav-header">Keyword</label>
-            <%= text_field_tag "string_filter", params[:string_filter], class: 'form-control', type: "search" %>
+            <%= text_field_tag "string_filter", params[:string_filter], class: "form-control", type: "search" %>
 
             <label for="format_filter" class="add-top-margin nav-header">Format</label>
             <%= select_tag("format_filter", options_for_select(
               legacy_format_filter_selection_options,
-              params[:format_filter]
-            ), class: 'form-control') %>
+              params[:format_filter],
+            ), class: "form-control") %>
             <input class="add-top-margin btn btn-default" type="submit" value="Filter publications">
           </form>
         </div>
@@ -58,7 +58,7 @@
 
       <div id="publication-list-container" class="col-md-10">
         <%= render @list %>
-        <%= paginate @presenter.send(@list), theme: 'twitter-bootstrap-3' %>
+        <%= paginate @presenter.send(@list), theme: "twitter-bootstrap-3" %>
       </div>
 
     </div><!--./row -->

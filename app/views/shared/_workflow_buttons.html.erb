@@ -7,16 +7,16 @@
           <%= preview_button(@resource) %>
            <% if current_user.has_editor_permissions?(@resource) %>
             <% if @resource.can_create_new_edition? %>
-              <%= link_to 'Create new edition', duplicate_edition_path(@resource), class: 'btn btn-primary btn-large', method: :post %>
+              <%= link_to "Create new edition", duplicate_edition_path(@resource), class: "btn btn-primary btn-large", method: :post %>
             <% end %>
             <% if @resource.in_progress_sibling.present? %>
-              <%= link_to 'Edit existing newer edition', edition_path(@resource.in_progress_sibling), html_options: { "class" => "btn btn-primary btn-large"} %>
+              <%= link_to "Edit existing newer edition", edition_path(@resource.in_progress_sibling), html_options: { "class" => "btn btn-primary btn-large"} %>
             <% end %>
           <% end %>
           <%= progress_buttons(@resource, skip_disabled_buttons: true) %>
         <% else %>
           <% if current_user.has_editor_permissions?(@resource) && !@resource.retired_format? %>
-            <%= f.submit 'Save', id: 'save-edition', class: 'btn btn-success btn-large js-save' %>
+            <%= f.submit "Save", id: "save-edition", class: "btn btn-success btn-large js-save" %>
           <% end %>
           <%= preview_button(@resource) %>
           <%= progress_buttons(@resource) %>

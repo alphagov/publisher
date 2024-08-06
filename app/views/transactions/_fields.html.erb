@@ -5,11 +5,11 @@
         <h2 class="remove-top-margin add-bottom-margin h3">Edit Transaction</h2>
       </legend>
 
-      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <%= render :partial => "shared/common_edition_attributes", :locals => {:f => f} %>
 
       <%= form_group(f, :introduction, label: "Introductory paragraph", help: "Set the scene for the user. What is about to happen? (eg. \"you will need to fill in a form, print it out and take it to the post office\")") do %>
         <%= f.text_area :introduction, rows: 8, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
@@ -33,19 +33,19 @@
 
       <%= form_group(f, :more_information) do %>
         <%= f.text_area :more_information, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
       <%= form_group(f, :alternate_methods, label: "Other ways to apply", help: "Alternative ways of completing this transaction. Not displayed on front end if left blank.") do %>
         <%= f.text_area :alternate_methods, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
       <%= form_group(f, :need_to_know, label: "What you need to know", attributes: { class: %w[add-top-margin] } ) do %>
         <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
     </fieldset>
@@ -66,11 +66,11 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :variants, @ordered_variants do |variant| %>
-        <%= render partial: '/shared/common_part_attributes', locals: {f: variant, editable: ! @resource.locked_for_edits?, child_record_type: 'variant' } %>
+        <%= render partial: "/shared/common_part_attributes", locals: {f: variant, editable: ! @resource.locked_for_edits?, child_record_type: "variant" } %>
       <% end %>
     </section>
 
-    <%= f.link_to_add :variants, :data => { :target => "#parts" }, :class => 'btn btn-default' do %>
+    <%= f.link_to_add :variants, :data => { :target => "#parts" }, :class => "btn btn-default" do %>
       <i class="glyphicon glyphicon-plus add-right-margin"></i>Add new variant
     <% end %>
 
@@ -78,4 +78,4 @@
 
 </div>
 
-<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+<%= render partial: "shared/workflow_buttons", locals: { f: f } %>

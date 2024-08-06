@@ -1,24 +1,24 @@
-<% content_for :page_title, 'Schedule downtime' %>
-<% content_for :title, 'Add downtime message' %>
+<% content_for :page_title, "Schedule downtime" %>
+<% content_for :title, "Add downtime message" %>
 <% content_for :title_context, @downtime.artefact.name %>
 <% unless @downtime.errors.empty? %>
-  <% content_for :error_summary, render("shared/error_summary", { object: @downtime })  %>
+  <% content_for :error_summary, render("shared/error_summary", { object: @downtime }) %>
 <% end %>
 
 <div class="govuk-grid-column-two-thirds">
   <%= render "govuk_publishing_components/components/lead_paragraph", {
     text: "Downtime message appear on the service's start page one day before the downtime is due to occur.",
-    margin_bottom: 6
+    margin_bottom: 6,
   } %>
 
-  <%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: 'form well remove-top-margin', 'data-module' => 'downtime-message' } do |f| %>
-    <%= render 'form', f: f %>
+  <%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: "form well remove-top-margin", "data-module" => "downtime-message" } do |f| %>
+    <%= render "form", f: f %>
 
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
         text: "Save",
         value: "save",
-        name: "save"
+        name: "save",
       } %>
 
       <%= link_to "Cancel", downtimes_path, class: "govuk-link govuk-link--no-visited-state" %>

@@ -8,17 +8,17 @@
     <% else %>
       <p><%= @resource.latest_status_action(Action::REQUEST_REVIEW).requester.name %> has sent this edition to be reviewed.</p>
       <div class="workflow-buttons">
-        <%= review_buttons(@resource)%>
+        <%= review_buttons(@resource) %>
       </div>
       <% if activity_forms_required? %>
-        <%= review_forms(@resource)%>
+        <%= review_forms(@resource) %>
       <% end %>
     <% end %>
   <% else %>
     <p>We're having trouble accessing the action data. This edition has been sent to be reviewed.</p>
     <div class="workflow-buttons">
-      <%= review_buttons(@resource)%>
+      <%= review_buttons(@resource) %>
     </div>
-    <%= review_forms(@resource)%>
+    <%= review_forms(@resource) %>
   <% end %>
 </div>
