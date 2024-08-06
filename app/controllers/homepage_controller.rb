@@ -47,7 +47,7 @@ class HomepageController < ApplicationController
 
   def destroy
     if @latest_popular_links.can_delete?
-      @latest_popular_links.delete ? flash[:success] = "Popular links deleted.".html_safe : flash[:danger] = application_error_message
+      @latest_popular_links.delete ? flash[:success] = "Popular links draft deleted.".html_safe : flash[:danger] = application_error_message
     else
       flash[:danger] = delete_published_error_message
     end
@@ -70,11 +70,11 @@ class HomepageController < ApplicationController
 private
 
   def delete_published_error_message
-    "Can't delete published edition.".html_safe
+    "Can't delete an already published edition. Please create a new edition to make changes.".html_safe
   end
 
   def application_error_message
-    "Due to an application error, the edition couldn't be deleted.".html_safe
+    "Due to an application error, the draft couldn't be deleted.".html_safe
   end
 
   def rescue_already_published_error(error)

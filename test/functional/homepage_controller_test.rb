@@ -40,7 +40,7 @@ class HomepageControllerTest < ActionController::TestCase
     should "display a success message if successful" do
       delete :destroy, params: { id: @popular_links.id }
 
-      assert_equal "Popular links deleted.", flash[:success]
+      assert_equal "Popular links draft deleted.", flash[:success]
     end
 
     should "redirect to show path on success" do
@@ -54,7 +54,7 @@ class HomepageControllerTest < ActionController::TestCase
 
       delete :destroy, params: { id: popular_links.id }
 
-      assert_equal "Can't delete published edition.", flash[:danger]
+      assert_equal "Can't delete an already published edition. Please create a new edition to make changes.", flash[:danger]
     end
 
     should "redirect to edit page with error message if delete from database fails" do
@@ -62,7 +62,7 @@ class HomepageControllerTest < ActionController::TestCase
 
       delete :destroy, params: { id: @popular_links.id }
 
-      assert_equal "Due to an application error, the edition couldn't be deleted.", flash[:danger]
+      assert_equal "Due to an application error, the draft couldn't be deleted.", flash[:danger]
       assert_redirected_to show_popular_links_path
     end
   end
