@@ -49,6 +49,14 @@ class HomepageControllerTest < ActionController::TestCase
       assert_redirected_to show_popular_links_path
     end
 
+    should "not allow the deletion of a published edition" do
+      popular_links = FactoryBot.create(:popular_links, state: "published", version_number: 2)
+
+      delete :destroy, params: { id: popular_links.id }
+
+      assert_equal "Can't delete published edition.", flash[:danger]
+    end
+
     should "redirect to edit page with error message if delete from database fails" do
       PopularLinksEdition.any_instance.stubs(:delete).returns(false)
 

@@ -46,26 +46,32 @@ class HomepageController < ApplicationController
   end
 
   def destroy
-    @latest_popular_links.delete ? flash[:success] = "Popular links deleted.".html_safe :
+    if @latest_popular_links.can_delete?
+      @latest_popular_links.delete ? flash[:success] = "Popular links deleted.".html_safe : flash[:danger] = application_error_message
+    else
+      flash[:danger] = delete_published_error_message
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = application_error_message
-
-    rescue StandardError => e
-      Rails.logger.error "Error #{e.class} #{e.message}"
-      flash[:danger] = application_error_message
-    ensure
-      redirect_to show_popular_links_path
+  ensure
+    redirect_to show_popular_links_path
   end
 
   def confirm_destroy
     if @latest_popular_links.can_delete?
       render "homepage/popular_links/confirm_destroy"
     else
-      flash[:danger] = "Can't delete published edition.".html_safe
+      flash[:danger] = delete_published_error_message
       redirect_to show_popular_links_path
     end
   end
 
 private
+
+  def delete_published_error_message
+    "Can't delete published edition.".html_safe
+  end
 
   def application_error_message
     "Due to an application error, the edition couldn't be deleted.".html_safe
