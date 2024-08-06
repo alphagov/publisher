@@ -28,7 +28,7 @@ module PopularLinksHelper
   def delete_link_for(model, url)
     form_for model, url:, method: :delete do
       link_to("Delete", delete_popular_links_path(model), class: "govuk-link")
-      end
+    end
   end
 
   def primary_link_button_for(url, text)
