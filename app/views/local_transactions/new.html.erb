@@ -7,9 +7,9 @@
   We need a bit more information to create your local transaction.
 </p>
 
-<%= render :partial => 'shared/legacy_error_summary', locals: { object: @publication} %>
+<%= render :partial => "shared/legacy_error_summary", locals: { object: @publication} %>
 
-<%= form_for(@publication, as: :edition, url: editions_path, html: { id: 'edition-form', novalidate: 'novalidate' } ) do |f| %>
+<%= form_for(@publication, as: :edition, url: editions_path, html: { id: "edition-form", novalidate: "novalidate" } ) do |f| %>
   <fieldset class="inputs">
     <%= form_group(f, :lgsl_code, label: "LGSL code") do %>
       <%= f.text_field :lgsl_code, class: "form-control" %>
@@ -24,5 +24,5 @@
       <%= f.text_field :lgil_code, class: "form-control" %>
     <% end %>
   </fieldset>
-  <%= f.submit "Create Local transaction edition", class: 'btn btn-success' %>
+  <%= f.submit "Create Local transaction edition", class: "btn btn-success" %>
 <% end %>

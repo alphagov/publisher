@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-8">
     <fieldset class="inputs">
-      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <%= render :partial => "shared/common_edition_attributes", :locals => {:f => f} %>
     </fieldset>
   </div>
 </div>
@@ -22,11 +22,11 @@
 
     <section class="panel-group" id="parts" data-module="parts">
       <%= f.fields_for :parts, @ordered_parts do |part| %>
-        <%= render partial: '/shared/common_part_attributes', locals: { f: part, editable: false, child_record_type: 'part' } %>
+        <%= render partial: "/shared/common_part_attributes", locals: { f: part, editable: false, child_record_type: "part" } %>
       <% end %>
     </section>
 
   </div>
 </div>
 
-<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+<%= render partial: "shared/workflow_buttons", locals: { f: f } %>

@@ -1,11 +1,11 @@
 <%= content_for :page_title, "New artefact" %>
-<%= form_for(@artefact, html: { class: 'artefact', id: 'edit_artefact' }) do |f| %>
+<%= form_for(@artefact, html: { class: "artefact", id: "edit_artefact" }) do |f| %>
   <fieldset class="inputs">
     <legend class="page-header">
       <h1><%= yield :page_title %></h1>
     </legend>
 
-<%= render :partial => 'shared/legacy_error_summary', locals: { object: @artefact} %>
+<%= render :partial => "shared/legacy_error_summary", locals: { object: @artefact} %>
 
     <div class="row">
       <div class="col-md-12">
@@ -24,7 +24,7 @@
             <%= f.select :kind, formats.map { |s| [s.humanize, s]}, { include_blank: "Select a format" }, { class: "input-md-4 form-control" } %>
           <% end %>
 
-          <%= f.hidden_field :owning_app, value: 'publisher' %>
+          <%= f.hidden_field :owning_app, value: "publisher" %>
 
           <%= form_group(f, :language) do %>
             <%= f.select :language, { "English" => "en", "Welsh" => "cy" }, {}, { class: "input-md-4 form-control" } %>
