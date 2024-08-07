@@ -57,7 +57,7 @@ class HomepageControllerTest < ActionController::TestCase
       assert_equal "Can't delete an already published edition. Please create a new edition to make changes.", flash[:danger]
     end
 
-    should "redirect to edit page with error message if delete from database fails" do
+    should "redirect to show page with error message if delete from database fails" do
       PopularLinksEdition.any_instance.stubs(:delete).returns(false)
 
       delete :destroy, params: { id: @popular_links.id }
