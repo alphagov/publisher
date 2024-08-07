@@ -1,7 +1,6 @@
 <% content_for :context, @latest_popular_links.title %>
 <% content_for :page_title, "Delete draft" %>
 <% content_for :title, "Delete draft" %>
-<% content_for :title_margin_bottom, 6 %>
 
 <div class="govuk-grid-column-two-thirds">
   <%= form_tag delete_popular_links_path(@latest_popular_links), method: :delete do %>
