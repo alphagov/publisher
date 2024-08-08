@@ -5,6 +5,7 @@ gem "rails", "7.0.8.3"
 gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
+gem "dartsass-rails"
 gem "diffy"
 gem "erb_lint"
 gem "erubis"
@@ -34,7 +35,6 @@ gem "null_logger"
 gem "plek"
 gem "rails_autolink"
 gem "rest-client", require: false
-gem "sassc-rails"
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem "sentry-sidekiq"
 gem "sprockets-rails"
