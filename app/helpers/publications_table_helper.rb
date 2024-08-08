@@ -19,7 +19,7 @@ module PublicationsTableHelper
     end
   end
 
-  # test in progress
+  # test written
   def format(publication)
     publication.format.underscore.humanize
   end

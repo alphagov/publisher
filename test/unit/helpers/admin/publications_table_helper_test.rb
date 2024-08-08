@@ -73,7 +73,7 @@ class PublicationsTableHelperTest < ActionView::TestCase
 
   context "#important_note" do
     should "return the important note text for an edition" do
-      user = FactoryBot.create(:user, name: "Keir")
+      user = FactoryBot.create(:user, name: "Keir Starmer")
       edition = FactoryBot.create(:edition)
       user.record_note(edition, "This is an important note", Action::IMPORTANT_NOTE)
 
@@ -176,22 +176,31 @@ class PublicationsTableHelperTest < ActionView::TestCase
     end
   end
 
-  # TODO: How to stub value for "sent_out"?
-  # context "#sent_out" do
-  #   should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
-  #     today = Date.parse("2024-08-02")
+  # TODO: How to stub value for "last_fact_checked_at"?
+  context "#sent_out" do
+    should "return the correct text for the 'Sent Out' field for an edition in Fact Check" do
+      today = Date.parse("2024-08-02")
+      user = FactoryBot.create(:user, name: "David Cameron", permissions: ["signin", "govuk_editor", "skip_review"])
+      # edition = FactoryBot.create(:edition, last_fact_check: "2023-12-11 11:42:56.596 UTC")
+      # user.last_fact_check(edition, "2023-12-11 11:42:56.596 UTC")
+      # edition.last_fact_check("2023-12-11 11:42:56.596 UTC")
+      # user.record_note(edition, "2023-12-11 11:42:56.596 UTC", Action::last_fact_check)
+      # user.last_fact_check(edition, "2023-12-11 11:42:56.596 UTC", Action::last_fact_check)
+      # edition.last_fact_check(created_at: "2023-12-11 11:42:56.596 UTC")      
+      # user.last_fact_check(edition, "2023-12-11 11:42:56.596 UTC")
+      # user.last_fact_check(edition, "2023-12-11 11:42:56.596 UTC")
 
-  #     Timecop.freeze(today) do
-  #       edition = FactoryBot.create(
-  #         :edition,
-  #         state: "fact_check",
-  #         last_fact_checked_at: "2024-07-12"
-  #       )
+      Timecop.freeze(today) do
+        edition = FactoryBot.create(
+          :edition,
+          state: "fact_check",
+          # last_fact_checked_at: "2024-07-12"
+        )
 
-  #       assert_equal "21 days", sent_out(edition)
-  #     end
-  #   end
-  # end
+        assert_equal "21 days", sent_out(edition)
+      end
+    end
+  end
 end
 
 # Draft 1
