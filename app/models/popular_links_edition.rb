@@ -59,4 +59,8 @@ class PopularLinksEdition < Edition
   def locale
     "en".freeze
   end
+
+  def can_delete?
+    state == "draft"
+  end
 end

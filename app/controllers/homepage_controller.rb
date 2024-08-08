@@ -45,7 +45,37 @@ class HomepageController < ApplicationController
     redirect_to show_popular_links_path
   end
 
+  def destroy
+    if @latest_popular_links.can_delete?
+      @latest_popular_links.delete ? flash[:success] = "Popular links draft deleted.".html_safe : flash[:danger] = application_error_message
+    else
+      flash[:danger] = cannot_delete_published_error_message
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash[:danger] = application_error_message
+  ensure
+    redirect_to show_popular_links_path
+  end
+
+  def confirm_destroy
+    if @latest_popular_links.can_delete?
+      render "homepage/popular_links/confirm_destroy"
+    else
+      flash[:danger] = cannot_delete_published_error_message
+      redirect_to show_popular_links_path
+    end
+  end
+
 private
+
+  def cannot_delete_published_error_message
+    "Can't delete an already published edition. Please create a new edition to make changes.".html_safe
+  end
+
+  def application_error_message
+    "Due to an application error, the draft couldn't be deleted.".html_safe
+  end
 
   def rescue_already_published_error(error)
     already_published_error?(JSON.parse(error.http_body)) ? "Popular links publish was unsuccessful, cannot publish an already published content item.".html_safe : publishing_api_publish_error_message

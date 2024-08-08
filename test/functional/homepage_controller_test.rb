@@ -5,6 +5,68 @@ class HomepageControllerTest < ActionController::TestCase
     login_as_stub_user
   end
 
+  context "#confirm_destroy" do
+    should "render confirm destroy page for draft edition" do
+      popular_links = FactoryBot.create(:popular_links, state: "draft")
+
+      get :confirm_destroy, params: { id: popular_links.id }
+
+      assert_template "homepage/popular_links/confirm_destroy"
+    end
+
+    should "not render confirm destroy page if edition is published" do
+      popular_links = FactoryBot.create(:popular_links, state: "published")
+
+      get :confirm_destroy, params: { id: popular_links.id }
+
+      assert_redirected_to show_popular_links_path
+    end
+  end
+
+  context "destroy" do
+    setup do
+      @popular_links = FactoryBot.create(:popular_links, state: "draft")
+      get :confirm_destroy, params: { id: @popular_links.id }
+    end
+
+    should "delete the popular links from the database" do
+      assert_equal 1, PopularLinksEdition.count
+
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal 0, PopularLinksEdition.count
+    end
+
+    should "display a success message if successful" do
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal "Popular links draft deleted.", flash[:success]
+    end
+
+    should "redirect to show path on success" do
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_redirected_to show_popular_links_path
+    end
+
+    should "not allow the deletion of a published edition" do
+      popular_links = FactoryBot.create(:popular_links, state: "published", version_number: 2)
+
+      delete :destroy, params: { id: popular_links.id }
+
+      assert_equal "Can't delete an already published edition. Please create a new edition to make changes.", flash[:danger]
+    end
+
+    should "redirect to show page with error message if delete from database fails" do
+      PopularLinksEdition.any_instance.stubs(:delete).returns(false)
+
+      delete :destroy, params: { id: @popular_links.id }
+
+      assert_equal "Due to an application error, the draft couldn't be deleted.", flash[:danger]
+      assert_redirected_to show_popular_links_path
+    end
+  end
+
   context "#show" do
     setup do
       @popular_links = FactoryBot.create(:popular_links)
