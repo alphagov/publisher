@@ -69,7 +69,8 @@ Rails.application.configure do
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
-  config.assets.digest = true
+  # Set to false to see the latest stylesheet changes if running Sass in watch mode
+  config.assets.digest = false
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
