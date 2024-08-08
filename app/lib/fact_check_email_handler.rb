@@ -9,8 +9,9 @@ require_relative "fact_check_mail"
 class FactCheckEmailHandler
   attr_accessor :fact_check_config
 
-  def initialize(fact_check_config)
+  def initialize(fact_check_config, unprocessed_emails_gauge)
     @fact_check_config = fact_check_config
+    @unprocessed_emails_gauge = unprocessed_emails_gauge
   end
 
   def process_message(message)
@@ -35,7 +36,7 @@ class FactCheckEmailHandler
       unprocessed_emails_count += 1
     end
 
-    GovukStatsd.gauge("unprocessed_emails.count", unprocessed_emails_count)
+    @unprocessed_emails_gauge.set(unprocessed_emails_count)
   rescue StandardError => e
     # Occasionally, there is an error when connecting to the mailbox in production.
     # It seems a very transient error, and since the job is run every few minutes isn't really a problem, but if the

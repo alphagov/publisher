@@ -27,7 +27,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
     message[key] = value
 
     Mail.stubs(:all).yields(message)
-    FactCheckEmailHandler.new(fact_check_config).process
+    FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set)).process
 
     answer.reload
     assert answer.public_send("#{state}?")
@@ -41,7 +41,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     answer.destroy!
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     assert message.is_marked_for_delete?
@@ -53,7 +53,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
     message = fact_check_mail_for(answer)
     Mail.stubs(:all).yields(message)
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     answer.reload
@@ -71,7 +71,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     Mail.stubs(:all).yields(fact_check_mail_for(answer))
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     answer.reload
@@ -96,7 +96,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
       fact_check_mail_for(answer1, body: "Third Message"),
     )
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     answer1.reload
@@ -122,7 +122,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     Mail.stubs(:all).yields(message)
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     assert_not message.is_marked_for_delete?
@@ -139,7 +139,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     Mail.stubs(:all).multiple_yields(message_cc, message_bcc)
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process
 
     assert message_cc.is_marked_for_delete?
@@ -152,7 +152,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     Mail.stubs(:all).yields(message)
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
     handler.process_message(message)
     assert message.is_marked_for_delete?
   end
@@ -163,7 +163,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
 
     Mail.stubs(:all).yields(message)
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
 
     handler.process_message(message)
     assert message.is_marked_for_delete?
@@ -182,7 +182,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
       fact_check_mail_for(answer2, body: "Second Message"),
     )
 
-    handler = FactCheckEmailHandler.new(fact_check_config)
+    handler = FactCheckEmailHandler.new(fact_check_config, stub.stubs(:set))
 
     invocations = 0
     handler.process do
