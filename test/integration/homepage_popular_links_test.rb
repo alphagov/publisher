@@ -51,48 +51,6 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
   end
 
-  context "#confirm_destroy" do
-    setup do
-      click_button("Create new edition")
-    end
-
-    should "show the 'Delete draft' confirmation page with the option to actually delete" do
-      click_link("Delete draft")
-
-      assert page.has_text?("Delete draft")
-      assert page.has_text?("Are you sure you want to delete this draft?")
-      assert page.has_text?("Cancel")
-    end
-
-    should "revert to show page if delete is cancelled" do
-      click_link("Delete draft")
-      click_link("Cancel")
-
-      assert_title "Popular on GOV.UK"
-    end
-  end
-
-  context "#destroy" do
-    setup do
-      click_button("Create new edition")
-    end
-
-    should "show the previously published edition when a draft is deleted" do
-      row = find_all(".govuk-summary-list__row")
-      assert row[0].has_text?("Edition")
-      assert row[0].has_text?("2")
-      assert row[1].has_text?("Draft")
-
-      click_link("Delete draft")
-      click_button("Delete")
-
-      row = find_all(".govuk-summary-list__row")
-      assert row[0].has_text?("Edition")
-      assert row[0].has_text?("1")
-      assert row[1].has_text?("Published")
-    end
-  end
-
   context "#create" do
     should "create and show new edition with draft status and with an option to edit popular links" do
       click_button("Create new edition")
@@ -203,6 +161,47 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
 
       assert page.has_text?("Published")
       assert page.has_text?("Popular links successfully published.")
+    end
+  end
+
+  context "#confirm_destroy" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "show the 'Delete draft' confirmation page" do
+      click_link("Delete draft")
+
+      assert page.has_text?("Delete draft")
+      assert page.has_text?("Are you sure you want to delete this draft?")
+    end
+
+    should "navigate to show page when 'Cancel' button is clicked" do
+      click_link("Delete draft")
+      click_link("Cancel")
+
+      assert_title "Popular on GOV.UK"
+    end
+  end
+
+  context "#destroy" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "show the previously published edition when a draft is deleted" do
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("2")
+      assert row[1].has_text?("Draft")
+
+      click_link("Delete draft")
+      click_button("Delete")
+
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("1")
+      assert row[1].has_text?("Published")
     end
   end
 

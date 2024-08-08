@@ -17,7 +17,7 @@
         primary_link_button_for(edit_popular_links_path(@latest_popular_links), "Edit popular links") ,
         secondary_button_for(@latest_popular_links, publish_popular_links_path(@latest_popular_links), "Publish"),
         link_to("Preview (opens in new tab)", preview_homepage_path(@latest_popular_links), rel:"noreferrer noopener", target:"_blank", class: "govuk-link"),
-        link_to("Delete draft", confirm_destroy_popular_links_path( @latest_popular_links), class: "govuk-link gem-link--destructive")
+        link_to("Delete draft", confirm_destroy_popular_links_path(@latest_popular_links), class: "govuk-link gem-link--destructive")
         ]
     } %>
   <% end %>
