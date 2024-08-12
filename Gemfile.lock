@@ -129,7 +129,7 @@ GEM
       minitest (~> 5.0)
     climate_control (1.2.0)
     coderay (1.1.3)
-    concurrent-ruby (1.3.3)
+    concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     crack (1.0.0)
       bigdecimal
@@ -181,16 +181,16 @@ GEM
       warden-oauth2 (~> 0.0.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.27.2)
+    google-protobuf (4.27.3)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.27.2-aarch64-linux)
+    google-protobuf (4.27.3-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.27.2-arm64-darwin)
+    google-protobuf (4.27.3-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.27.2-x86_64-linux)
+    google-protobuf (4.27.3-x86_64-linux)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.15.0)
@@ -225,7 +225,7 @@ GEM
     govuk_personalisation (0.16.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (41.0.0)
+    govuk_publishing_components (41.1.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -416,7 +416,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-active_support (~> 0.1)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-active_job (0.7.3)
+    opentelemetry-instrumentation-active_job (0.7.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-active_model_serializers (0.20.2)
@@ -463,7 +463,7 @@ GEM
       opentelemetry-instrumentation-sidekiq (~> 0.25.0)
       opentelemetry-instrumentation-sinatra (~> 0.24.0)
       opentelemetry-instrumentation-trilogy (~> 0.59.0)
-    opentelemetry-instrumentation-aws_lambda (0.1.0)
+    opentelemetry-instrumentation-aws_lambda (0.1.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-aws_sdk (0.5.4)
@@ -498,7 +498,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       opentelemetry-instrumentation-rack (~> 0.21)
-    opentelemetry-instrumentation-graphql (0.28.3)
+    opentelemetry-instrumentation-graphql (0.28.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-gruf (0.2.1)
@@ -666,7 +666,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.3.3)
+    rexml (3.3.5)
       strscan
     rinku (2.0.6)
     rouge (4.3.0)
