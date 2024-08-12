@@ -7,9 +7,6 @@
 
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, null, tabHref)
-
-          // Track tab switch as pageview
-          window.GOVUKAdmin.trackPageview(tabHref)
         }
 
         // Shim Boostrap tabs, which are only capabable of removing
