@@ -1,5 +1,17 @@
 .publisher-table {
-  position: relative;
+  // position: relative;
+
+  table {
+    table-layout: fixed;
+  }
+
+  td:first-child {
+    width: calc((312 - (20 * 1)) / (750 + (20 * 3)) * 100%);
+
+    details {
+      width: calc((750 + (20 * 3)) / (312 - (20 * 1)) * 100% + (20px * 3));
+    }
+  }
 
   &--expand-link {
     float: right;
