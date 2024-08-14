@@ -91,13 +91,6 @@ module Formats
         choose_sign_in[:description] = govspeak_content(description)
       end
 
-      tracking_code = content[:choose_sign_in][:tracking_code]
-      tracking_domain = content[:choose_sign_in][:tracking_domain]
-      tracking_name = content[:choose_sign_in][:tracking_name]
-      choose_sign_in[:tracking_code] = tracking_code if tracking_code.present?
-      choose_sign_in[:tracking_domain] = tracking_domain if tracking_domain.present?
-      choose_sign_in[:tracking_name] = tracking_name if tracking_name.present?
-
       choose_sign_in
     end
 

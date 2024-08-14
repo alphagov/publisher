@@ -158,23 +158,6 @@ class ServiceSignInTest < ActiveSupport::TestCase
         end
       end
 
-      context "[:tracking_code] [:tracking_domain] and [:tracking_name]" do
-        should "be present in the payload when it is present in the YAML file" do
-          assert_equal "UA-xxxxxx", result[:details][:choose_sign_in][:tracking_code]
-          assert_equal "tax.service.gov.uk", result[:details][:choose_sign_in][:tracking_domain]
-          assert_equal "somethingClicky", result[:details][:choose_sign_in][:tracking_name]
-        end
-
-        should "not be present in the payload when it is not present in the YAML file" do
-          @content[:choose_sign_in].delete(:tracking_code)
-          @content[:choose_sign_in].delete(:tracking_domain)
-          @content[:choose_sign_in].delete(:tracking_name)
-          assert_not result[:details][:choose_sign_in].key?(:tracking_code)
-          assert_not result[:details][:choose_sign_in].key?(:tracking_domain)
-          assert_not result[:details][:choose_sign_in].key?(:tracking_name)
-        end
-      end
-
       context "[:options]" do
         should "include standard options with an external url" do
           option_one = @content[:choose_sign_in][:options][0]
