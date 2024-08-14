@@ -21,7 +21,6 @@ module Formats
         other_ways_to_apply: govspeak(edition.alternate_methods),
         what_you_need_to_know: govspeak(edition.need_to_know),
         external_related_links:,
-        department_analytics_profile: edition.department_analytics_profile,
         downtime_message:,
       }.delete_if { |_, value| value.nil? }
     end

@@ -64,28 +64,6 @@ class TransactionCreateEditTest < LegacyJavascriptIntegrationTest
       assert_equal "Get your licence to fly to Mars", t.introduction
       assert_equal "UK Terrestrial Mars Office", t.will_continue_on
     end
-
-    should "allow only a valid Service analytics profile" do
-      transaction = FactoryBot.create(
-        :transaction_edition,
-        panopticon_id: @artefact.id,
-        title: "Register for space flight",
-      )
-
-      visit_edition transaction
-
-      fill_in "Service analytics profile", with: "UA-INVALID-SPACE-FLIGHT"
-      save_edition_and_assert_error(
-        "Invalid format for service analytics profile: must be in format UA-xxxxx-x where xs are digits",
-        "#edition_department_analytics_profile",
-      )
-
-      fill_in "Service analytics profile", with: "UA-00100000-1"
-      save_edition_and_assert_success
-
-      t = TransactionEdition.find(transaction.id)
-      assert_equal "UA-00100000-1", t.department_analytics_profile
-    end
   end
 
   should "disable fields for a published edition" do

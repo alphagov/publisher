@@ -48,10 +48,6 @@
           module: "paste-html-to-govspeak"
         } %>
       <% end %>
-
-      <%= form_group(f, :department_analytics_profile, label: "Service analytics profile", help: "Let service teams track user journeys between GOV.UK and their service using Google Analytics.", attributes: { class: %w[add-top-margin] }) do %>
-        <%= f.text_area :department_analytics_profile, placeholder: 'UA-XXXXXX-X', rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-2 form-control" %>
-      <% end %>
     </fieldset>
   </div>
 </div>
