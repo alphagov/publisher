@@ -69,6 +69,12 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
       assert page.has_link?("Preview (opens in new tab)", href: /#{Plek.external_url_for('draft-origin')}/)
     end
 
+    should "have 'delete draft' link navigating to 'confirm destroy' page" do
+      click_button("Create new edition")
+
+      assert page.has_link?("Delete draft", href: /confirm-destroy/)
+    end
+
     should "create a new record with next version and 'draft' status" do
       row = find_all(".govuk-summary-list__row")
       assert row[0].has_text?("Edition")
@@ -155,6 +161,47 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
 
       assert page.has_text?("Published")
       assert page.has_text?("Popular links successfully published.")
+    end
+  end
+
+  context "#confirm_destroy" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "show the 'Delete draft' confirmation page" do
+      click_link("Delete draft")
+
+      assert page.has_text?("Delete draft")
+      assert page.has_text?("Are you sure you want to delete this draft?")
+    end
+
+    should "navigate to show page when 'Cancel' button is clicked" do
+      click_link("Delete draft")
+      click_link("Cancel")
+
+      assert_title "Popular on GOV.UK"
+    end
+  end
+
+  context "#destroy" do
+    setup do
+      click_button("Create new edition")
+    end
+
+    should "show the previously published edition when a draft is deleted" do
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("2")
+      assert row[1].has_text?("Draft")
+
+      click_link("Delete draft")
+      click_button("Delete")
+
+      row = find_all(".govuk-summary-list__row")
+      assert row[0].has_text?("Edition")
+      assert row[0].has_text?("1")
+      assert row[1].has_text?("Published")
     end
   end
 

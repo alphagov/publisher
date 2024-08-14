@@ -1,0 +1,16 @@
+<% content_for :context, @latest_popular_links.title %>
+<% content_for :page_title, "Delete draft" %>
+<% content_for :title, "Delete draft" %>
+
+<div class="govuk-grid-column-two-thirds">
+  <%= form_tag delete_popular_links_path(@latest_popular_links), method: :delete do %>
+    <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to delete this draft?</p>
+    <div class="govuk-button-group govuk-!-margin-bottom-6">
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Delete",
+        destructive: true,
+      } %>
+      <%= link_to("Cancel", show_popular_links_path, class: "govuk-link govuk-link--no-visited-state") %>
+    </div>
+  <% end %>
+</div>

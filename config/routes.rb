@@ -82,6 +82,9 @@ Rails.application.routes.draw do
   patch "/homepage/popular-links/:id" => "homepage#update", as: "update_popular_links"
   post "/homepage/popular-links/:id/publish" => "homepage#publish", as: "publish_popular_links"
 
+  delete "/homepage/popular-links/:id" => "homepage#destroy", as: "delete_popular_links"
+  get "homepage/popular-links/:id/confirm-destroy" => "homepage#confirm_destroy", as: "confirm_destroy_popular_links"
+
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
   mount GovukPublishingComponents::Engine, at: "/component-guide"
