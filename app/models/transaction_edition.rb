@@ -11,13 +11,11 @@ class TransactionEdition < Edition
   field :link, type: String
   field :more_information, type: String
   field :need_to_know, type: String
-  field :department_analytics_profile, type: String
   field :alternate_methods, type: String
   field :start_button_text, type: String, default: "Start now"
 
   GOVSPEAK_FIELDS = %i[introduction more_information alternate_methods need_to_know].freeze
 
-  validates :department_analytics_profile, format: { with: /UA-\d+-\d+/i, allow_blank: true, message: "Invalid format for service analytics profile: must be in format UA-xxxxx-x where xs are digits" }
   validates :start_button_text, presence: true
   validates_with SafeHtml
 

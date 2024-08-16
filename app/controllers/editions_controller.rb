@@ -298,7 +298,6 @@ protected
         :more_information,
         :alternate_methods,
         :need_to_know,
-        :department_analytics_profile,
         { variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy] },
       ]
     when :completed_transaction_edition
