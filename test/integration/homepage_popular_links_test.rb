@@ -130,11 +130,11 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
 
     should "trim spaces from start and end of urls" do
-      fill_in "popular_links[1][url]", with: " www.abc.com "
+      fill_in "popular_links[1][url]", with: " /abc "
       click_button("Save")
 
-      assert page.has_text?("www.abc.com")
-      assert_not page.has_text?(" www.abc.com ")
+      assert page.has_text?("/abc")
+      assert_not page.has_text?(" /abc ")
     end
 
     should "render create page when 'Cancel' is clicked" do
@@ -144,10 +144,10 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     end
 
     should "not save any changes when 'Cancel' is clicked" do
-      fill_in "popular_links[1][url]", with: "www.abc.com"
+      fill_in "popular_links[1][url]", with: "/abc"
       click_link("Cancel")
 
-      assert_not page.has_text?("www.abc.com")
+      assert_not page.has_text?("/abc")
     end
   end
 
