@@ -183,7 +183,7 @@ FactoryBot.define do
 
   factory :popular_links, class: "PopularLinksEdition" do
     title { "Homepage Popular Links" }
-    link_items { [{ url: "https://www.url1.com", title: "title1" }, { url: "https://www.url2.com", title: "title2" }, { url: "https://www.url3.com", title: "title3" }, { url: "https://www.url4.com", title: "title4" }, { url: "https://www.url5.com", title: "title5" }, { url: "https://www.url6.com", title: "title6" }] }
+    link_items { [{ url: "/url1", title: "title1" }, { url: "/url2", title: "title2" }, { url: "/url3", title: "title3" }, { url: "/url4", title: "title4" }, { url: "/url5", title: "title5" }, { url: "/url6", title: "title6" }] }
   end
 
   factory :programme_edition, parent: :edition, class: "ProgrammeEdition" do

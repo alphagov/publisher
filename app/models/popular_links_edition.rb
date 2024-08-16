@@ -11,12 +11,12 @@ class PopularLinksEdition < Edition
     link_items.each_with_index do |item, index|
       errors.add("url#{index + 1}", "URL is required for Link #{index + 1}") unless url_present?(item)
       errors.add("title#{index + 1}", "Title is required for Link #{index + 1}") unless title_present?(item)
-      errors.add("url#{index + 1}", "URL is invalid for Link #{index + 1}, all URLs should have at least one '.' and no spaces.") if url_present?(item) && url_has_spaces_or_has_no_dot?(item[:url])
+      errors.add("url#{index + 1}", "URL is invalid for Link #{index + 1}, all URLs should start with '/'") if url_present?(item) && url_is_not_valid_relative_url?(item[:url])
     end
   end
 
-  def url_has_spaces_or_has_no_dot?(url)
-    url.include?(" ") || url.exclude?(".")
+  def url_is_not_valid_relative_url?(url)
+    !url.start_with?("/")
   end
 
   def title_present?(item)
