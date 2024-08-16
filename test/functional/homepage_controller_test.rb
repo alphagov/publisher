@@ -59,18 +59,18 @@ class HomepageControllerTest < ActionController::TestCase
 
     should "update latest PopularLinksEdition with changed title and url" do
       assert_equal "title1", @popular_links.link_items[0][:title]
-      assert_equal "https://www.url1.com", @popular_links.link_items[0][:url]
+      assert_equal "/url1", @popular_links.link_items[0][:url]
 
       new_title = "title has changed"
-      new_url = "https://www.changedurl.com"
+      new_url = "/changedurl"
       patch :update, params: { id: @popular_links.id,
                                "popular_links" =>
                                  { "1" => { "title" => new_title, "url" => new_url },
-                                   "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                   "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                   "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                   "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                   "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                   "2" => { "title" => "title2", "url" => "/url2" },
+                                   "3" => { "title" => "title3", "url" => "/url3" },
+                                   "4" => { "title" => "title4", "url" => "/url4" },
+                                   "5" => { "title" => "title5", "url" => "/url5" },
+                                   "6" => { "title" => "title6", "url" => "/url6" } } }
 
       assert_equal new_title, PopularLinksEdition.last.link_items[0][:title]
       assert_equal new_url, PopularLinksEdition.last.link_items[0][:url]
@@ -81,12 +81,12 @@ class HomepageControllerTest < ActionController::TestCase
 
       patch :update, params: { id: @popular_links.id,
                                "popular_links" =>
-                                 { "1" => { "title" => "title", "url" => "url.com" },
-                                   "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                   "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                   "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                   "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                   "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                 { "1" => { "title" => "title", "url" => "/url" },
+                                   "2" => { "title" => "title2", "url" => "/url2" },
+                                   "3" => { "title" => "title3", "url" => "/url3" },
+                                   "4" => { "title" => "title4", "url" => "/url4" },
+                                   "5" => { "title" => "title5", "url" => "/url5" },
+                                   "6" => { "title" => "title6", "url" => "/url6" } } }
     end
 
     should "redirect to show path on success" do
@@ -94,18 +94,18 @@ class HomepageControllerTest < ActionController::TestCase
 
       patch :update, params: { id: @popular_links.id,
                                "popular_links" =>
-                                 { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
-                                   "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                   "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                   "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                   "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                   "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                 { "1" => { "title" => new_title, "url" => "/url1" },
+                                   "2" => { "title" => "title2", "url" => "/url2" },
+                                   "3" => { "title" => "title3", "url" => "/url3" },
+                                   "4" => { "title" => "title4", "url" => "/url4" },
+                                   "5" => { "title" => "title5", "url" => "/url5" },
+                                   "6" => { "title" => "title6", "url" => "/url6" } } }
 
       assert_redirected_to show_popular_links_path
     end
 
     should "render edit template on validation error" do
-      links_with_missing_items = { "1" => { "title" => "title has changed", "url" => "https://www.url1.com" } }
+      links_with_missing_items = { "1" => { "title" => "title has changed", "url" => "/url1" } }
 
       patch :update, params: { id: @popular_links.id,
                                "popular_links" => links_with_missing_items }
@@ -123,12 +123,12 @@ class HomepageControllerTest < ActionController::TestCase
 
         patch :update, params: { id: @popular_links.id,
                                  "popular_links" =>
-                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
-                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                   { "1" => { "title" => new_title, "url" => "/url1" },
+                                     "2" => { "title" => "title2", "url" => "/url2" },
+                                     "3" => { "title" => "title3", "url" => "/url3" },
+                                     "4" => { "title" => "title4", "url" => "/url4" },
+                                     "5" => { "title" => "title5", "url" => "/url5" },
+                                     "6" => { "title" => "title6", "url" => "/url6" } } }
 
         assert_equal "Due to an application error, the edition couldn't be saved.", flash[:danger]
       end
@@ -138,12 +138,12 @@ class HomepageControllerTest < ActionController::TestCase
 
         patch :update, params: { id: @popular_links.id,
                                  "popular_links" =>
-                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
-                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                   { "1" => { "title" => new_title, "url" => "/url1" },
+                                     "2" => { "title" => "title2", "url" => "/url2" },
+                                     "3" => { "title" => "title3", "url" => "/url3" },
+                                     "4" => { "title" => "title4", "url" => "/url4" },
+                                     "5" => { "title" => "title5", "url" => "/url5" },
+                                     "6" => { "title" => "title6", "url" => "/url6" } } }
 
         assert_template "homepage/popular_links/edit"
       end
@@ -159,12 +159,12 @@ class HomepageControllerTest < ActionController::TestCase
 
         patch :update, params: { id: @popular_links.id,
                                  "popular_links" =>
-                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
-                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                   { "1" => { "title" => new_title, "url" => "/url1" },
+                                     "2" => { "title" => "title2", "url" => "/url2" },
+                                     "3" => { "title" => "title3", "url" => "/url3" },
+                                     "4" => { "title" => "title4", "url" => "/url4" },
+                                     "5" => { "title" => "title5", "url" => "/url5" },
+                                     "6" => { "title" => "title6", "url" => "/url6" } } }
 
         assert_template "homepage/popular_links/edit"
       end
@@ -174,12 +174,12 @@ class HomepageControllerTest < ActionController::TestCase
 
         patch :update, params: { id: @popular_links.id,
                                  "popular_links" =>
-                                   { "1" => { "title" => new_title, "url" => "https://www.url1.com" },
-                                     "2" => { "title" => "title2", "url" => "https://www.url2.com" },
-                                     "3" => { "title" => "title3", "url" => "https://www.url3.com" },
-                                     "4" => { "title" => "title4", "url" => "https://www.url4.com" },
-                                     "5" => { "title" => "title5", "url" => "https://www.url5.com" },
-                                     "6" => { "title" => "title6", "url" => "https://www.url6.com" } } }
+                                   { "1" => { "title" => new_title, "url" => "/url1" },
+                                     "2" => { "title" => "title2", "url" => "/url2" },
+                                     "3" => { "title" => "title3", "url" => "/url3" },
+                                     "4" => { "title" => "title4", "url" => "/url4" },
+                                     "5" => { "title" => "title5", "url" => "/url5" },
+                                     "6" => { "title" => "title6", "url" => "/url6" } } }
 
         assert_equal "Popular links save was unsuccessful due to a service problem. Please wait for a few minutes and try again.", flash[:danger]
       end

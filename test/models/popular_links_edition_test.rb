@@ -15,12 +15,12 @@ class PopularLinksEditionTest < ActiveSupport::TestCase
   end
 
   should "validate all links have url and title" do
-    link_items = [{ url: "https://www.url1.com", title: "" },
+    link_items = [{ url: "/url1", title: "" },
                   { title: "title2" },
-                  { url: "https://www.url3.com", title: "title3" },
-                  { url: "https://www.url4.com", title: "title4" },
-                  { url: "https://www.url5.com", title: "title5" },
-                  { url: "https://www.url6.com", title: "title6" }]
+                  { url: "/url3", title: "title3" },
+                  { url: "/url4", title: "title4" },
+                  { url: "/url5", title: "title5" },
+                  { url: "/url6", title: "title6" }]
     popular_links = FactoryBot.build(:popular_links, link_items:)
 
     assert_not popular_links.valid?
@@ -31,14 +31,14 @@ class PopularLinksEditionTest < ActiveSupport::TestCase
   should "validate all urls are valid" do
     link_items = [{ url: "", title: "" },
                   { url: "invalid", title: "title2" },
-                  { url: "www.abc.co.uk", title: "title3" },
-                  { url: "www.cde.co.uk", title: "title4" },
-                  { url: "www.efg.co.uk", title: "title5" },
-                  { url: "www.ijk.com", title: "title6" }]
+                  { url: "/abc", title: "title3" },
+                  { url: "/cde", title: "title4" },
+                  { url: "/efg", title: "title5" },
+                  { url: "/hij", title: "title6" }]
     popular_links = FactoryBot.build(:popular_links, link_items:)
 
     assert_not popular_links.valid?
-    assert popular_links.errors.messages[:url2].include?("URL is invalid for Link 2, all URLs should have at least one '.' and no spaces.")
+    assert popular_links.errors.messages[:url2].include?("URL is invalid for Link 2, all URLs should start with '/'")
     assert popular_links.errors.messages[:url1].include?("URL is required for Link 1")
   end
 
