@@ -130,7 +130,7 @@ class HomepageControllerTest < ActionController::TestCase
                                      "5" => { "title" => "title5", "url" => "/url5" },
                                      "6" => { "title" => "title6", "url" => "/url6" } } }
 
-        assert_equal "Due to an application error, the edition couldn't be saved.", flash[:danger]
+        assert_equal "Due to an application error, the edition couldn't be saved. Please wait for a few minutes and try again. If the problem persists <a href=\"#{Plek.external_url_for('support')}/technical_fault_report/new\">please raise a support ticket</a>", flash[:danger]
       end
 
       should "render edit template" do
@@ -223,7 +223,7 @@ class HomepageControllerTest < ActionController::TestCase
       should "alert 'application error'" do
         post :publish, params: { id: @popular_links.id }
 
-        assert_equal "Due to an application error, the edition couldn't be published.", flash[:danger]
+        assert_equal "Due to an application error, the edition couldn't be published. Please wait for a few minutes and try again. If the problem persists <a href=\"#{Plek.external_url_for('support')}/technical_fault_report/new\">please raise a support ticket</a>", flash[:danger]
       end
     end
 
@@ -300,7 +300,7 @@ class HomepageControllerTest < ActionController::TestCase
 
         delete :destroy, params: { id: @popular_links.id }
 
-        assert_equal "Due to an application error, the draft couldn't be deleted.", flash[:danger]
+        assert_equal "Due to an application error, the draft couldn't be deleted. Please wait for a few minutes and try again. If the problem persists <a href=\"#{Plek.external_url_for('support')}/technical_fault_report/new\">please raise a support ticket</a>", flash[:danger]
         assert_redirected_to show_popular_links_path
       end
     end
@@ -328,7 +328,7 @@ class HomepageControllerTest < ActionController::TestCase
 
         delete :destroy, params: { id: @popular_links.id }
 
-        assert_equal "Due to an application error, the draft couldn't be deleted.", flash[:danger]
+        assert_equal "Due to an application error, the draft couldn't be deleted. Please wait for a few minutes and try again. If the problem persists <a href=\"#{Plek.external_url_for('support')}/technical_fault_report/new\">please raise a support ticket</a>", flash[:danger]
         assert_redirected_to show_popular_links_path
       end
     end
