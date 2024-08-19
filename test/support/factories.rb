@@ -23,6 +23,10 @@ FactoryBot.define do
     end
   end
 
+  trait :homepage_editor do
+    permissions { %w[homepage_editor signin] }
+  end
+
   factory :disabled_user, parent: :user do
     disabled { true }
   end
