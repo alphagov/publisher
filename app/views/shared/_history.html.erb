@@ -49,14 +49,14 @@
                 <%= f.label :comment, "Important note" %>
               </span>
               <span class="form-wrapper">
-                <%= f.text_area :comment, rows: 6, cols: 120, value: @resource.important_note ? @resource.important_note.comment : '', class: "form-control" %>
+                <%= f.text_area :comment, rows: 6, cols: 120, value: @resource.important_note ? @resource.important_note.comment : "", class: "form-control" %>
               </span>
               <p class="help-block">Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.” Each edition can have only one important note at a time.</p>
             </div>
           </div>
           <footer class="modal-footer remove-top-margin">
             <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-            <%= f.submit :class=>"btn btn-success", :value=>'Save important note' %>
+            <%= f.submit :class=>"btn btn-success", :value=>"Save important note" %>
           </footer>
         </fieldset>
       <% end %>
@@ -78,7 +78,7 @@
       <% if @resource.important_note %>
         <%= form_for(@resource.important_note, :url=> resolve_note_path, :html => { :class => "add-left-margin inline" }, :method => "put") do |f| %>
           <%= hidden_field_tag :edition_id, resource.id %>
-          <%= f.submit :class=>"btn btn-default", :value => 'Delete important note' %>
+          <%= f.submit :class=>"btn btn-default", :value => "Delete important note" %>
         <% end %>
       <% end %>
     </div>
@@ -96,6 +96,6 @@
   </p>
 
   <div class="panel-group">
-    <%= render collection: @resource.history, partial: '/shared/edition_history', as: 'edition' %>
+    <%= render collection: @resource.history, partial: "/shared/edition_history", as: "edition" %>
   </div>
 </div>

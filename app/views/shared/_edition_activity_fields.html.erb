@@ -36,7 +36,7 @@
         <% end %>
         <textarea id="edition_activity_send_fact_check_attributes_customised_message"
                   name="edition[activity_send_fact_check_attributes][customised_message]"
-                  class="form-control" cols="60" rows="14"><%= render :template => 'event_mailer/request_fact_check', formats: [:text] %></textarea>
+                  class="form-control" cols="60" rows="14"><%= render :template => "event_mailer/request_fact_check", formats: [:text] %></textarea>
       <% elsif activity == :resend_fact_check %>
         <% latest_status_action = form_builder.object.latest_status_action %>
         <% if latest_status_action&.is_fact_check_request? %>
@@ -62,11 +62,14 @@
           Publish at <abbr title="required">*</abbr>
         <% end %>
         <div class="form-inline">
-        <%= activity_fields.time_select :publish_at, {}, { class: 'date form-control' } %>
-        &mdash;
-        <%= activity_fields.date_select :publish_at, { order: [:day, :month, :year],
-          default: Date.tomorrow, start_year: Date.today.year, end_year: Date.today.year.next },
-          { class: 'date form-control' } %>
+          <%= activity_fields.time_select :publish_at, {}, { class: "date form-control" } %>
+          &mdash;
+          <%= activity_fields.date_select :publish_at,
+                                          { order: [:day, :month, :year],
+                                            default: Date.tomorrow,
+                                            start_year: Time.zone.today.year,
+                                            end_year: Time.zone.today.year.next },
+                                          { class: "date form-control" } %>
         </div>
       <% end %>
       <p class="help-block add-top-margin remove-bottom-margin">

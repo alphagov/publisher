@@ -8,9 +8,9 @@
   We need a bit more information to create your licence.
 </p>
 
-<%= render :partial => 'shared/legacy_error_summary', locals: { object: @publication } %>
+<%= render :partial => "shared/legacy_error_summary", locals: { object: @publication } %>
 
-<%= form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => 'edition-form' } ) do |f| %>
+<%= form_for(@publication, :url => editions_path, :as => :edition, :html => { :id => "edition-form" } ) do |f| %>
   <%= form_group(f, :licence_identifier) do %>
     <%= f.text_field :licence_identifier, class: "form-control" %>
   <% end %>
@@ -21,5 +21,5 @@
     <%= f.hidden_field :title %>
     <%= f.hidden_field :slug %>
   </fieldset>
-  <%= f.submit "Create Licence edition", class: 'btn btn-success' %>
+  <%= f.submit "Create Licence edition", class: "btn btn-success" %>
 <% end %>

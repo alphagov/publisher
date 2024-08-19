@@ -1,15 +1,15 @@
 <% [:success, :info, :warning, :danger, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
   <% if k == :warning || k == :danger || k == :alert %>
     <%= render "govuk_publishing_components/components/error_alert", {
-      message: sanitize(flash[k])
+      message: sanitize(flash[k]),
     } %>
   <% elsif k == :notice || k == :info %>
     <%= render "govuk_publishing_components/components/notice", {
-      description: sanitize(flash[k])
+      description: sanitize(flash[k]),
     } %>
   <% elsif k == :success %>
     <%= render "govuk_publishing_components/components/success_alert", {
-      message: sanitize(flash[k])
+      message: sanitize(flash[k]),
     } %>
   <% end %>
 <% end %>

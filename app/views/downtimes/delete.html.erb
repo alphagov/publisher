@@ -1,17 +1,17 @@
-<% content_for :page_title, 'Remove downtime message' %>
-<% content_for :title, 'Remove downtime message' %>
+<% content_for :page_title, "Remove downtime message" %>
+<% content_for :title, "Remove downtime message" %>
 
 <div class="govuk-grid-column-two-thirds">
   <%= render "govuk_publishing_components/components/lead_paragraph", {
     text: "Are you sure you want to remove the scheduled downtime message for \"#{@downtime.artefact.name}\"?",
-    margin_bottom: 8
+    margin_bottom: 8,
   } %>
 
-  <%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: 'form well remove-top-margin', 'data-module': 'downtime-message' } do |f| %>
+  <%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: "form well remove-top-margin", 'data-module': "downtime-message" } do |f| %>
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
         text: "Remove",
-        destructive: true
+        destructive: true,
       } %>
       <%= link_to "Cancel", downtimes_path, class: "govuk-link govuk-link--no-visited-state" %>
     </div>

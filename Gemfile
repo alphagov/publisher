@@ -6,6 +6,7 @@ gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
 gem "diffy"
+gem "erb_lint"
 gem "erubis"
 gem "flipflop"
 gem "gds-api-adapters"

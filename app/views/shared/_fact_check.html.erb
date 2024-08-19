@@ -8,6 +8,6 @@
     <p>Someone requested this edition be fact checked. We&rsquo;re awaiting a response.</p>
   <% end %>
   <% if current_user.has_editor_permissions?(@resource) %>
-    <%= render 'shared/request_amendments' %>
+    <%= render "shared/request_amendments" %>
   <% end %>
 </div>

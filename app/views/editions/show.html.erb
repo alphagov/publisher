@@ -1,5 +1,5 @@
 <% @edition = @resource %>
-  <%= render 'shared/edition_header' %>
+  <%= render "shared/edition_header" %>
 
   <% errors_hash = errors_to_display(@edition) %>
   <% if !errors_hash.empty? %>
@@ -25,15 +25,15 @@
     </ul>
 
     <div class="tab-content add-top-margin">
-        <div role="tabpanel" class="tab-pane <% if active_tab.name == 'edit'%>active<% end %>" id="edit">
+        <div role="tabpanel" class="tab-pane <% if active_tab.name == 'edit' %>active<% end %>" id="edit">
           <div class="link-check-report col-md-4">
             <% if @edition.class.to_s == "SimpleSmartAnswerEdition" %>
               <p>
-                View the <%= link_to "flow diagram (opens in a new tab)", diagram_edition_path(@edition), target: '_blank' %>
+                View the <%= link_to "flow diagram (opens in a new tab)", diagram_edition_path(@edition), target: "_blank", rel: "noopener" %>
               </p>
             <% end %>
 
-            <%= render 'link_check_reports/link_check_report', edition: @edition, report: @edition.latest_link_check_report %>
+            <%= render "link_check_reports/link_check_report", edition: @edition, report: @edition.latest_link_check_report %>
 
             <% if @edition.class.to_s.in?(Edition::HAS_GOVSPEAK_FIELDS) %>
               <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
@@ -56,7 +56,7 @@
         # because this action is triggered from a view where editing is not allowed.
         edition_activities_forms(@resource, Edition::CANCEL_SCHEDULED_PUBLISHING_ACTION) %>
 
-      <% tabs.reject {|t| t.name == 'edit'}.each do |tab| %>
+      <% tabs.reject {|t| t.name == "edit"}.each do |tab| %>
         <div role="tabpanel" class="tab-pane <% if tab == active_tab %>active<% end %>" id="<%= tab.name %>">
           <div class="well">
             <%= render :partial => "/shared/#{tab.name}", :locals => {:publication => @resource} %>

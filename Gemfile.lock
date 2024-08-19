@@ -96,6 +96,13 @@ GEM
     aws-sigv4 (1.9.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
+    better_html (2.1.1)
+      actionview (>= 6.0)
+      activesupport (>= 6.0)
+      ast (~> 2.0)
+      erubi (~> 1.4)
+      parser (>= 2.4)
+      smart_properties
     bigdecimal (3.1.8)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
@@ -143,6 +150,13 @@ GEM
     diffy (3.4.2)
     docile (1.4.0)
     domain_name (0.6.20240107)
+    erb_lint (0.6.0)
+      activesupport
+      better_html (>= 2.0.1)
+      parser (>= 2.7.1.4)
+      rainbow
+      rubocop (>= 1)
+      smart_properties
     erubi (1.13.0)
     erubis (2.7.0)
     execjs (2.9.1)
@@ -748,6 +762,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    smart_properties (1.17.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -819,6 +834,7 @@ DEPENDENCIES
   climate_control
   database_cleaner-mongoid
   diffy
+  erb_lint
   erubis
   factory_bot_rails
   flipflop

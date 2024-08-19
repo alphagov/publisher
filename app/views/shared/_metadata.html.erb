@@ -1,7 +1,7 @@
 <h2 class="remove-top-margin add-bottom-margin h3">Metadata</h2>
 
 <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
-  <%= form_for(@artefact, :html => { :class => 'artefact', :id => 'edit_artefact'}) do |f| %>
+  <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact"}) do |f| %>
     <div class="row">
       <div class="col-md-12">
         <%= f.hidden_field :id, value: @artefact.id %>
@@ -15,14 +15,14 @@
         <% end %>
       </div>
     </div>
-    <%= f.submit 'Update metadata', class: "btn btn-success btn-large" %>
+    <%= f.submit "Update metadata", class: "btn btn-success btn-large" %>
   <% end %>
 <% else %>
   <div class="row">
     <div class="col-md-7">
-      <% @artefact.attributes.slice('slug', 'language').each do |key, value| %>
+      <% @artefact.attributes.slice("slug", "language").each do |key, value| %>
         <%= content_tag :label, key.humanize, for: key %>
-        <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: 'disabled' %>
+        <%= text_field_tag key, value, class: "form-control add-bottom-margin", disabled: "disabled" %>
       <% end %>
     </div>
   </div>

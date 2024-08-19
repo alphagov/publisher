@@ -13,29 +13,29 @@
         <%= f.text_field :lgil_code, disabled: @resource.locked_for_edits?, class: "input-md-4 form-control" %>
       <% end %>
 
-      <%= render :partial => 'shared/common_edition_attributes', :locals => {:f => f} %>
+      <%= render :partial => "shared/common_edition_attributes", :locals => {:f => f} %>
 
       <%= form_group(f, :introduction, label: "Introductory paragraph", help: "Set the scene for the user. Explain that it's the responsibility of the local council and that we'll take you there.") do %>
         <%= f.text_area :introduction, rows: 8, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
       <%= form_group(f, :more_information) do %>
         <%= f.text_area :more_information, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
       <%= form_group(f, :need_to_know, label: "What you need to know") do %>
         <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
-          module: "paste-html-to-govspeak"
+          module: "paste-html-to-govspeak",
         } %>
       <% end %>
 
-      <%= render partial: 'local_transactions/devolved_administrations', locals: { f: f, resource: @resource } %>
+      <%= render partial: "local_transactions/devolved_administrations", locals: { f: f, resource: @resource } %>
     </fieldset>
   </div>
 </div>
 
-<%= render partial: 'shared/workflow_buttons', locals: { f: f } %>
+<%= render partial: "shared/workflow_buttons", locals: { f: f } %>

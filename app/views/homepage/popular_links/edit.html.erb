@@ -1,6 +1,6 @@
-<% content_for :page_title, 'Edit popular links' %>
-<% content_for :title, 'Edit popular links' %>
-<% content_for :title_context, 'Popular on GOV.UK' %>
+<% content_for :page_title, "Edit popular links" %>
+<% content_for :title, "Edit popular links" %>
+<% content_for :title_context, "Popular on GOV.UK" %>
 <% unless @latest_popular_links.errors.empty? %>
   <% content_for :error_summary do %>
     <%= render("govuk_publishing_components/components/error_summary", {
@@ -11,7 +11,7 @@
           text: error.message,
           href: "##{error.attribute.to_s}",
         }
-      end
+      end,
     }) %>
   <% end %>
 <% end %>
