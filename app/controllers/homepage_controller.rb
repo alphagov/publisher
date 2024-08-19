@@ -28,7 +28,7 @@ class HomepageController < ApplicationController
     render "homepage/popular_links/edit"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
-    flash[:danger] = "Due to an application error, the edition couldn't be saved."
+    flash[:danger] = "Due to an application error, the edition couldn't be saved. #{try_again_message} #{raise_support_error_message}"
     render "homepage/popular_links/edit"
   end
 
@@ -40,7 +40,7 @@ class HomepageController < ApplicationController
     flash[:danger] = rescue_already_published_error(e)
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
-    flash[:danger] = "Due to an application error, the edition couldn't be published."
+    flash[:danger] = "Due to an application error, the edition couldn't be published. #{try_again_message} #{raise_support_error_message}"
   ensure
     redirect_to show_popular_links_path
   end
@@ -74,7 +74,7 @@ private
   end
 
   def application_error_message
-    "Due to an application error, the draft couldn't be deleted.".html_safe
+    "Due to an application error, the draft couldn't be deleted. #{try_again_message} #{raise_support_error_message}".html_safe
   end
 
   def rescue_already_published_error(error)
@@ -108,5 +108,13 @@ private
       link_items << link
     end
     link_items
+  end
+
+  def raise_support_error_message
+    "If the problem persists #{support_link}"
+  end
+
+  def support_link
+    "<a href=\"#{Plek.external_url_for('support')}/technical_fault_report/new\">please raise a support ticket</a>"
   end
 end
