@@ -81,11 +81,11 @@ private
   end
 
   def rescue_already_published_error(error)
-    already_published_error?(JSON.parse(error.http_body)) ? "Popular links publish was unsuccessful, cannot publish an already published content item.".html_safe : publishing_api_publish_error_message
+    already_published_error?(JSON.parse(error.http_body)) ? "Popular links publish was unsuccessful, cannot publish an already published edition.".html_safe : publishing_api_publish_error_message
   end
 
   def already_published_error?(error_body)
-    error_body["error"] && error_body["error"]["message"] && error_body["error"]["message"].include?("already published content item")
+    error_body["error"] && error_body["error"]["message"] && error_body["error"]["message"].include?("Cannot publish an already published")
   end
 
   def fetch_latest_popular_link

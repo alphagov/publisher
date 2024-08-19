@@ -35,7 +35,7 @@ class PopularLinksEdition < Edition
   end
 
   def publish_latest
-    save_draft
+    save_draft if is_draft?
     Services.publishing_api.publish(content_id, update_type, locale:)
     # This publish_popular_links is a new workflow that was introduced for popular links.
     publish_popular_links
@@ -61,6 +61,12 @@ class PopularLinksEdition < Edition
   end
 
   def can_delete?
+    is_draft?
+  end
+
+private
+
+  def is_draft?
     state == "draft"
   end
 end

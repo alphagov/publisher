@@ -190,6 +190,31 @@ class HomepageControllerTest < ActionController::TestCase
     setup do
       @popular_links = FactoryBot.create(:popular_links, state: "draft")
     end
+    context "#current is state is draft" do
+      should "save to publishing API before publish" do
+        sequence = sequence(:task_order)
+
+        Services.publishing_api.expects(:put_content).with(@popular_links.content_id, has_entry(:title, "Homepage Popular Links")).in_sequence(sequence)
+        Services.publishing_api.expects(:publish).with(@popular_links.content_id, "major", locale: "en").in_sequence(sequence)
+
+        post :publish, params: { id: @popular_links.id }
+      end
+    end
+
+    context "#current is state is published" do
+      setup do
+        @popular_links = FactoryBot.create(:popular_links, state: "published", version_number: 2)
+      end
+
+      should "not save to publishing API before publish" do
+        sequence = sequence(:task_order)
+
+        Services.publishing_api.expects(:put_content).times(0)
+        Services.publishing_api.expects(:publish).with(@popular_links.content_id, "major", locale: "en").in_sequence(sequence)
+
+        post :publish, params: { id: @popular_links.id }
+      end
+    end
 
     should "publish latest draft popular links and render show template" do
       assert_equal "draft", PopularLinksEdition.last.state
@@ -199,16 +224,6 @@ class HomepageControllerTest < ActionController::TestCase
       assert_redirected_to show_popular_links_path
       assert_equal "published", PopularLinksEdition.last.state
     end
-
-    should "save to publishing API before publish" do
-      sequence = sequence(:task_order)
-
-      Services.publishing_api.expects(:put_content).with(@popular_links.content_id, has_entry(:title, "Homepage Popular Links")).in_sequence(sequence)
-      Services.publishing_api.expects(:publish).with(@popular_links.content_id, "major", locale: "en").in_sequence(sequence)
-
-      post :publish, params: { id: @popular_links.id }
-    end
-
     context "database errors" do
       setup do
         PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(Mongoid::Errors::MongoidError.new)
@@ -241,7 +256,7 @@ class HomepageControllerTest < ActionController::TestCase
 
         post :publish, params: { id: @popular_links.id }
 
-        assert_equal "Popular links publish was unsuccessful, cannot publish an already published content item.", flash[:danger]
+        assert_equal "Popular links publish was unsuccessful, cannot publish an already published edition.", flash[:danger]
       end
 
       should "alert 'unsuccessful due to a service problem'" do
@@ -253,7 +268,6 @@ class HomepageControllerTest < ActionController::TestCase
       end
     end
   end
-
   context "#confirm_destroy" do
     should "render confirm destroy page for draft edition" do
       popular_links = FactoryBot.create(:popular_links, state: "draft")
@@ -344,7 +358,7 @@ private
       status: 409,
       body: {
         "error" => {
-          "code" => 409, "message" => "Cannot publish an already published content item"
+          "code" => 409, "message" => "Cannot publish an already published edition"
         },
       }.to_json,
     )
