@@ -39,11 +39,17 @@ class PopularLinksEdition < Edition
     Services.publishing_api.publish(content_id, update_type, locale:)
     # This publish_popular_links is a new workflow that was introduced for popular links.
     publish_popular_links
+
+    # TODO: Remove after manual testing
+    fake_error
   end
 
   def save_draft
     UpdateService.call(self)
     save!
+
+    # TODO: Remove after manual testing
+    fake_error
   end
 
   def content_id
@@ -62,6 +68,11 @@ class PopularLinksEdition < Edition
 
   def can_delete?
     is_draft?
+  end
+
+  # TODO - remove this once manual testing complete
+  def fake_error
+    raise StandardError.new('Fake DB error')
   end
 
 private
