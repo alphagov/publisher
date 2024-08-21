@@ -70,9 +70,9 @@ class PopularLinksEdition < Edition
     is_draft?
   end
 
-  # TODO - remove this once manual testing complete
+  # TODO: - remove this once manual testing complete
   def fake_error
-    raise StandardError.new('Fake DB error')
+    raise StandardError, "Fake DB error"
   end
 
 private
