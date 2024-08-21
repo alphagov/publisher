@@ -114,7 +114,7 @@ GEM
       sassc (>= 2.0.0)
     brakeman (6.1.2)
       racc
-    bson (5.0.1)
+    bson (4.15.0)
     builder (3.3.0)
     byebug (11.1.3)
     capybara (3.40.0)
