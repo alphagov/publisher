@@ -60,7 +60,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide = FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(format_filter: "guide").editions
+      filtered_editions = FilteredEditionsPresenter.new(format_filter: "guide").editions.to_a
 
       assert_equal([guide], filtered_editions)
     end
@@ -78,7 +78,16 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide_fawkes = FactoryBot.create(:guide_edition, title: "Guide Fawkes")
       FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide")
 
-      filtered_editions = FilteredEditionsPresenter.new(title_filter: "Fawkes").editions
+      filtered_editions = FilteredEditionsPresenter.new(title_filter: "Fawkes").editions.to_a
+
+      assert_equal([guide_fawkes], filtered_editions)
+    end
+
+    should "not return popular links" do
+      guide_fawkes = FactoryBot.create(:guide_edition)
+      FactoryBot.create(:popular_links)
+
+      filtered_editions = FilteredEditionsPresenter.new.editions.to_a
 
       assert_equal([guide_fawkes], filtered_editions)
     end

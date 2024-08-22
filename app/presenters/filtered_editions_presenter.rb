@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FilteredEditionsPresenter
+  ITEMS_PER_PAGE = 20
+
   def initialize(states_filter: [], assigned_to_filter: nil, format_filter: nil, title_filter: nil)
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
@@ -16,7 +18,11 @@ class FilteredEditionsPresenter
     result = editions_by_format
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
-    apply_title_filter(result)
+    result = apply_title_filter(result)
+    result = result.where.not(_type: "PopularLinksEdition")
+    # Sets a temporary limit of one page and twenty items
+    # Pagination to follow
+    result.page(1).per(ITEMS_PER_PAGE)
   end
 
 private

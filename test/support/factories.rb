@@ -162,6 +162,11 @@ FactoryBot.define do
   end
 
   factory :help_page_edition, traits: [:with_body], parent: :edition, class: "HelpPageEdition" do
+    sequence(:slug) { |n| "help/slug-#{n}" }
+    panopticon_id do
+      a = create(:artefact, kind: kind_for_artefact, slug:)
+      a.id
+    end
   end
 
   factory :campaign_edition, traits: [:with_body], parent: :edition, class: "CampaignEdition" do
@@ -242,7 +247,12 @@ FactoryBot.define do
   factory :devolved_administration_availability
 
   factory :local_transaction_edition, parent: :edition, class: "LocalTransactionEdition" do
-    sequence(:lgsl_code) { |nlgsl| nlgsl }
+    lgsl_code do
+      local_service = FactoryBot.create(:local_service)
+      local_service.lgsl_code
+    end
+
+    lgil_code { "1" }
     introduction { "Test introduction" }
     more_information { "This is more information" }
     need_to_know { "This service is only available in England and Wales" }
