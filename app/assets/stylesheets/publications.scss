@@ -1,3 +1,9 @@
 .app-view-filter {
   background: govuk-colour("light-grey");
+
+  .gem-c-select {
+    label {
+      font-weight: 700;
+    }
+  }
 }
