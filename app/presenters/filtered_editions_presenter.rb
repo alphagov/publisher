@@ -21,7 +21,7 @@ class FilteredEditionsPresenter
     result = apply_assigned_to_filter(result)
     result = apply_title_filter(result)
     result = result.where.not(_type: "PopularLinksEdition")
-    result.page(@page).per(ITEMS_PER_PAGE)
+    result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
   end
 
 private

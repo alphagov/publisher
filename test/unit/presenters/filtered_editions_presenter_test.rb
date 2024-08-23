@@ -11,8 +11,8 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       filtered_editions = FilteredEditionsPresenter.new.editions
 
       assert_equal(2, filtered_editions.count)
-      assert_equal(draft_guide, filtered_editions[0])
-      assert_equal(published_guide, filtered_editions[1])
+      assert_includes(filtered_editions, draft_guide)
+      assert_includes(filtered_editions, published_guide)
     end
 
     should "filter by state" do
@@ -107,6 +107,19 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       filtered_editions = FilteredEditionsPresenter.new(page: 2).editions
 
       assert_equal(1, filtered_editions.to_a.count)
+    end
+
+    should "order the returned results by 'updated_at' in descending order" do
+      oldest = FactoryBot.create(:guide_edition, updated_at: Time.utc(2022, 1))
+      newest = FactoryBot.create(:guide_edition, updated_at: Time.utc(2024, 1))
+      middle = FactoryBot.create(:guide_edition, updated_at: Time.utc(2023, 1))
+
+      filtered_editions = FilteredEditionsPresenter.new.editions
+
+      assert_equal(3, filtered_editions.count)
+      assert_equal(newest, filtered_editions[0])
+      assert_equal(middle, filtered_editions[1])
+      assert_equal(oldest, filtered_editions[2])
     end
   end
 
