@@ -27,12 +27,13 @@ class RootController < ApplicationController
       assigned_to_filter: assignee_filter,
       format_filter:,
       title_filter:,
+      page: filter_params_hash[:page],
     )
   end
 
 private
 
   def filter_params
-    params.permit(:assignee_filter, :format_filter, :title_filter, states_filter: [])
+    params.permit(:page, :assignee_filter, :format_filter, :title_filter, states_filter: [])
   end
 end
