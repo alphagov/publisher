@@ -35,8 +35,6 @@
       margin_bottom: 4,
     } %>
 
-    <%# form.label :title_filter, "Title" %>
-
     <%= render "govuk_publishing_components/components/input", {
       label: {
         text: "Title",
@@ -47,53 +45,36 @@
       value: @presenter.title,
     } %>
 
-    <%# form.label :assignee_filter, "Assignee" %>
-    <%# select_tag :assignee_filter,
-                    options_for_select([%w[Nobody nobody]]) <<
-                      options_from_collection_for_select(@presenter.available_users, "id", "name") %>
-
     <%= render "govuk_publishing_components/components/select", {
       id: "assignee_filter",
       full_width: true,
       label: "Assigned to",
-      options: assignees
+      options: assignees,
     } %>
-
-    <%# text_field_tag :title_filter %>
-    <%# form.label :format_filter, "Format" %>
-    <%# select_tag :format_filter,
-                    options_for_select(format_filter_selection_options) %>
 
     <%= render "govuk_publishing_components/components/select", {
       id: "format_filter",
       label: "Content type",
       full_width: true,
-      options: content_types
+      options: content_types,
     } %>
-
-    <%# form.label :states_filter_draft, "Draft" %>
-    <%# check_box_tag "states_filter[]", "draft", false, { id: "states_filter_draft" } %>
-    <%# form.label :states_filter_published, "Published" %>
-    <%# check_box_tag "states_filter[]", "published", false, :id => "states_filter_published" %>
 
     <%= render "govuk_publishing_components/components/checkboxes", {
       name: "states_filter[]",
       heading: "Status",
       heading_size: "s",
-      items: states
+      items: states,
     } %>
-
-    <%# form.submit %>
 
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
-        text: "Update filter"
+        text: "Update filter",
       } %>
 
       <%= render "govuk_publishing_components/components/button", {
         text: "Reset all fields",
         type: "reset",
-        secondary: true
+        secondary: true,
       } %>
     </div>
   <% end %>
