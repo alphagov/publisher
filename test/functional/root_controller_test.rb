@@ -57,7 +57,7 @@ class RootControllerTest < ActionController::TestCase
       FilteredEditionsPresenter
         .expects(:new)
         .with(has_entry(:states_filter, %w[draft]))
-        .returns(stub(editions: [], available_users: []))
+        .returns(stub(editions: Kaminari.paginate_array([]).page(1), available_users: []))
 
       get :index, params: { states_filter: %w[draft not_a_real_state] }
     end
