@@ -15,6 +15,10 @@ class FilteredEditionsPresenter
     @title_filter
   end
 
+  def assigned_to
+    @assigned_to_filter
+  end
+
   def available_users
     User.enabled.alphabetized
   end
