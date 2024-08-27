@@ -20,7 +20,11 @@
   end
 
   state_names.collect do |scope, status_label|
-    states << {label: status_label, value: scope}
+    if @presenter.states.include? scope.to_s
+      states << {label: status_label, value: scope, checked: "true"}
+    else
+      states << {label: status_label, value: scope}
+    end
   end
 %>
 

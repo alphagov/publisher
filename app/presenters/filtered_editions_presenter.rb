@@ -23,6 +23,10 @@ class FilteredEditionsPresenter
     @format_filter
   end
 
+  def states
+    @states_filter
+  end
+
   def available_users
     User.enabled.alphabetized
   end
