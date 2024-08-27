@@ -12,7 +12,11 @@
   end
 
   format_filter_selection_options.map do | format |
-    content_types << {text: format[0], value: format[1]}
+    if format[1] == @presenter.content_type
+      content_types << {text: format[0], value: format[1], selected: "true"}
+    else
+      content_types << {text: format[0], value: format[1]}
+    end
   end
 
   state_names.collect do |scope, status_label|
@@ -60,12 +64,7 @@
       id: "format_filter",
       label: "Content type",
       full_width: true,
-      options: content_types.map do | option |
-        {
-          text: option[:text],
-          value: option[:value]
-        }
-      end
+      options: content_types
     } %>
 
     <%# form.label :states_filter_draft, "Draft" %>

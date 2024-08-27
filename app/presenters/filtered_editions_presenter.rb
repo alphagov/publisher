@@ -19,6 +19,10 @@ class FilteredEditionsPresenter
     @assigned_to_filter
   end
 
+  def content_type
+    @format_filter
+  end
+
   def available_users
     User.enabled.alphabetized
   end
