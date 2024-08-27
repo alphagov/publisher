@@ -66,16 +66,13 @@
       items: states,
     } %>
 
-    <div class="govuk-button-group">
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Update filter",
-      } %>
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Update filter",
+      margin_bottom: 4,
+    } %>
 
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Reset all fields",
-        type: "reset",
-        secondary: true,
-      } %>
-    </div>
+    <p class="govuk-body">
+      <%= link_to "Reset all fields", root_path, class: "govuk-link" %>
+    </p>
   <% end %>
 </div>
