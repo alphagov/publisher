@@ -11,6 +11,10 @@ class FilteredEditionsPresenter
     @page = page
   end
 
+  def title
+    @title_filter
+  end
+
   def available_users
     User.enabled.alphabetized
   end
