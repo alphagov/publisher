@@ -6,6 +6,10 @@
       font-weight: 700;
     }
   }
+
+  .govuk-checkboxes__label::before {
+    background: govuk-colour("white");
+  }
 }
 
 .publications-table {
