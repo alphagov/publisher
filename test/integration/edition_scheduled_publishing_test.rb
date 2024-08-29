@@ -7,6 +7,9 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
     stub_holidays_used_by_fact_check
     # queue up the edition, don't perform inline
     Sidekiq::Testing.fake!
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   teardown do

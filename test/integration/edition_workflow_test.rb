@@ -15,6 +15,9 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   teardown do

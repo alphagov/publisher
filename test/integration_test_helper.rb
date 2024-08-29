@@ -1,10 +1,12 @@
 require "test_helper"
+require "capybara/minitest"
 require "capybara/rails"
 require "capybara-select-2"
 require "support/govuk_test"
 
 class IntegrationTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
   include CapybaraSelect2
   include CapybaraSelect2::Helpers
   include Warden::Test::Helpers
