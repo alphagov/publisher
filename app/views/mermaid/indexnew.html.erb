@@ -1,0 +1,30 @@
+<h1> Driving in Great Britain on a non-GB licence</h1>
+<pre class="mermaid">
+  %%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#fff',
+      'primaryTextColor': '#0B0C0C',
+      'primaryBorderColor': '#0B0C0C',
+      'secondaryColor': '#006100',
+      'tertiaryColor': '#fff'
+    }
+  }
+}%%
+        graph TD
+          A[Start] --- B[Q1 Are you:]
+          B --> C[a resident of Great Britain?]
+          B --> D[a visitor of Great Britain?]
+          B --> E[a foreign student studying in Great Britain?]
+          E --> F
+          F[Q2 What kind of driving licence do you have?]
+
+
+        style A fill:#006100,color:#ffffff
+    </pre>
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true});
+</script>
+
