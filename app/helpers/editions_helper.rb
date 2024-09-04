@@ -32,13 +32,4 @@ module EditionsHelper
         [displayed_format_name, format_name]
       end
   end
-
-  def format_filter_selection_options
-    [%w[All all]] +
-      Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
-        displayed_format_name = format_name.humanize
-        displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)
-        [displayed_format_name, format_name]
-      end
-  end
 end

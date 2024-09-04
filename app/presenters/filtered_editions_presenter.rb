@@ -15,8 +15,18 @@ class FilteredEditionsPresenter
     @title_filter
   end
 
-  def content_type
-    @format_filter
+  def content_types
+    types = []
+
+    content_type_filter_selection_options.map do | format |
+      if format[1] == @format_filter
+        types << {text: format[0], value: format[1], selected: "true"}
+      else
+        types << {text: format[0], value: format[1]}
+      end
+    end
+
+    types
   end
 
   def states
@@ -47,6 +57,15 @@ class FilteredEditionsPresenter
   end
 
 private
+
+  def content_type_filter_selection_options
+    [%w[All all]] +
+      Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"].map do |format_name|
+        displayed_format_name = format_name.humanize
+        displayed_format_name += " (Retired)" if Artefact::RETIRED_FORMATS.include?(format_name)
+        [displayed_format_name, format_name]
+      end
+  end
 
   def editions_by_format
     return Edition.all unless format_filter && format_filter != "all"
