@@ -29,8 +29,18 @@ class FilteredEditionsPresenter
     types
   end
 
-  def states
-    @states_filter
+  def edition_states
+    states = []
+
+    state_names.map do |scope, status_label|
+      if @states_filter.include? scope.to_s
+        states << {label: status_label, value: scope, checked: "true"}
+      else
+        states << {label: status_label, value: scope}
+      end
+    end
+
+    states
   end
 
   def assignees
@@ -57,6 +67,20 @@ class FilteredEditionsPresenter
   end
 
 private
+
+  def state_names
+    {
+      drafts: "Drafts",
+      in_review: "In review",
+      amends_needed: "Amends needed",
+      out_for_fact_check: "Out for fact check",
+      fact_check_received: "Fact check received",
+      ready: "Ready",
+      scheduled_for_publishing: "Scheduled",
+      published: "Published",
+      archived: "Archived",
+    }
+  end
 
   def content_type_filter_selection_options
     [%w[All all]] +

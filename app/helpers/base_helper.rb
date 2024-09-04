@@ -1,18 +1,4 @@
 module BaseHelper
-  def state_names
-    {
-      drafts: "Drafts",
-      in_review: "In review",
-      amends_needed: "Amends needed",
-      out_for_fact_check: "Out for fact check",
-      fact_check_received: "Fact check received",
-      ready: "Ready",
-      scheduled_for_publishing: "Scheduled",
-      published: "Published",
-      archived: "Archived",
-    }
-  end
-
   def legacy_publication_tab_list(presenter, options)
     output = state_names.collect do |scope, status_label|
       li_classes = ["status-option", scope]

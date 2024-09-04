@@ -1,15 +1,3 @@
-<%
-  states = []
-
-  state_names.collect do |scope, status_label|
-    if @presenter.states.include? scope.to_s
-      states << {label: status_label, value: scope, checked: "true"}
-    else
-      states << {label: status_label, value: scope}
-    end
-  end
-%>
-
 <div class="publications-filter govuk-!-padding-5">
   <%= form_with url: root_path, method: :get do |form| %>
     <%= render "govuk_publishing_components/components/heading", {
@@ -45,7 +33,7 @@
       name: "states_filter[]",
       heading: "Status",
       heading_size: "s",
-      items: states,
+      items: @presenter.edition_states,
     } %>
 
     <%= render "govuk_publishing_components/components/button", {
