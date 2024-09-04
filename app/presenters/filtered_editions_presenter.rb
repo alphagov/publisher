@@ -15,10 +15,6 @@ class FilteredEditionsPresenter
     @title_filter
   end
 
-  def assigned_to
-    @assigned_to_filter
-  end
-
   def content_type
     @format_filter
   end
@@ -27,8 +23,18 @@ class FilteredEditionsPresenter
     @states_filter
   end
 
-  def available_users
-    User.enabled.alphabetized
+  def assignees
+    users = [{text: "All assignees", value: ""}]
+
+    User.enabled.alphabetized.map do | user |
+      if user.id.to_s == @assigned_to_filter
+        users << {text: user.name, value: user.id, selected: "true"}
+      else
+        users << {text: user.name, value: user.id}
+      end
+    end
+
+    users
   end
 
   def editions

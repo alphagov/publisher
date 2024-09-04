@@ -1,15 +1,6 @@
 <%
-  assignees = [{text: "All assignees", value: ""}]
   content_types = []
   states = []
-
-  @presenter.available_users.map do | user |
-    if user.id.to_s == @presenter.assigned_to
-      assignees << {text: user.name, value: user.id, selected: "true"}
-    else
-      assignees << {text: user.name, value: user.id}
-    end
-  end
 
   format_filter_selection_options.map do | format |
     if format[1] == @presenter.content_type
@@ -49,7 +40,7 @@
       id: "assignee_filter",
       full_width: true,
       label: "Assigned to",
-      options: assignees,
+      options: @presenter.assignees,
     } %>
 
     <%= render "govuk_publishing_components/components/select", {
