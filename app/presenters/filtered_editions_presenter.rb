@@ -43,10 +43,6 @@ class FilteredEditionsPresenter
     states
   end
 
-  def available_users
-    User.enabled.alphabetized
-  end
-
   def assignees
     users = [{ text: "All assignees", value: "" }]
 
@@ -71,6 +67,10 @@ class FilteredEditionsPresenter
   end
 
 private
+
+  def available_users
+    User.enabled.alphabetized
+  end
 
   def state_names
     {
