@@ -14,6 +14,9 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
     GDS::SSO.test_user = @author
     stub_linkables
     stub_holidays_used_by_fact_check
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   # fill_in does not trigger 'change' events until the element loses focus

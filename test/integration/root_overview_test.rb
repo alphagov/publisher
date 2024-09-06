@@ -9,9 +9,9 @@ class RootOverviewTest < IntegrationTest
   end
 
   should "be able to view different pages of results" do
-    FactoryBot.create(:user, :govuk_editor, name: "Alice", uid: "alice")
-    FactoryBot.create(:guide_edition, title: "Guides and Gals")
-    FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE)
+    alice = FactoryBot.create(:user, :govuk_editor, name: "Alice", uid: "alice")
+    FactoryBot.create(:guide_edition, title: "Guides and Gals", assigned_to: alice)
+    FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE, assigned_to: alice)
 
     visit "/"
     assert_content("21 document(s)")

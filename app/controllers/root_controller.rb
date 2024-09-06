@@ -43,6 +43,17 @@ private
     filter_params.to_h[:title_filter]
   end
 
+  def assignee_filter
+    filter_params_hash = filter_params.to_h
+    if filter_params_hash[:assignee_filter]
+      filter_params_hash[:assignee_filter]
+    elsif session[:assignee_filter]
+      session[:assignee_filter]
+    else
+      current_user.id.to_s
+    end
+  end
+
   def filter_params
     params.permit(:page, :assignee_filter, :content_type_filter, :title_filter, states_filter: [])
   end

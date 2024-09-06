@@ -57,10 +57,28 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "filter publications by state" do
-      FactoryBot.create(:guide_edition, state: "draft")
-      FactoryBot.create(:guide_edition, state: "published")
+      FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
+      FactoryBot.create(:guide_edition, state: "published", assigned_to: @user)
 
       get :index, params: { states_filter: %w[draft] }
+
+      assert_response :ok
+      assert_select "p.publications-table__heading", "1 document(s)"
+    end
+
+    should "default the assignee to the current user" do
+      get :index
+
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{@user.id}'][selected]"
+    end
+
+    should "default to filtering to publications assigned to the current user" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      FactoryBot.create(:edition, title: "Assigned to Anna", assigned_to: anna)
+      FactoryBot.create(:edition, title: "Assigned to Stub User", assigned_to: @user)
+
+      get :index
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
@@ -107,8 +125,8 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "filter publications by content type" do
-      FactoryBot.create(:guide_edition)
-      FactoryBot.create(:completed_transaction_edition)
+      FactoryBot.create(:guide_edition, assigned_to: @user)
+      FactoryBot.create(:completed_transaction_edition, assigned_to: @user)
 
       get :index, params: { content_type_filter: "guide" }
 
@@ -117,8 +135,8 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "filter publications by title text" do
-      FactoryBot.create(:guide_edition, title: "How to train your dragon")
-      FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse")
+      FactoryBot.create(:guide_edition, title: "How to train your dragon", assigned_to: @user)
+      FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse", assigned_to: @user)
 
       get :index, params: { title_filter: "zombie" }
 
@@ -143,7 +161,9 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "show the first page of publications when no page is specified" do
-      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+      FactoryBot.create_list(
+        :guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
 
       get :index
 
@@ -153,7 +173,9 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "show the specified page of publications" do
-      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+      FactoryBot.create_list(
+        :guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
 
       get :index, params: { page: 2 }
 
