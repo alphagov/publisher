@@ -66,7 +66,17 @@ class RootControllerTest < ActionController::TestCase
       assert_select "p.publications-table__heading", "1 document(s)"
     end
 
-    should "filter publications by assignee" do
+    should "filter publications by assignee in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      @request.session[:assignee_filter] = anna.id.to_s
+
+      get :index
+
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{anna.id}'][selected]"
+    end
+
+    should "filter publications by assignee parameter" do
       anna = FactoryBot.create(:user, name: "Anna")
       FactoryBot.create(:guide_edition, assigned_to: anna)
       FactoryBot.create(:guide_edition)
@@ -75,6 +85,25 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+    end
+
+    should "store the assignee parameter value in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+
+      get :index, params: { assignee_filter: anna.id }
+
+      assert_equal anna.id.to_s, @request.session[:assignee_filter]
+    end
+
+    should "filter publications by assignee parameter in preference to the one in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      bob = FactoryBot.create(:user, name: "Bob")
+      @request.session[:assignee_filter] = bob.id
+
+      get :index, params: { assignee_filter: anna.id }
+
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{anna.id}'][selected]"
     end
 
     should "filter publications by content type" do

@@ -25,7 +25,7 @@ class RootController < ApplicationController
                                      else
                                        DEFAULT_FILTER_STATES
                                      end
-    assignee_filter = filter_params_hash[:assignee_filter]
+    session[:assignee_filter] = assignee_filter
     content_type_filter = filter_params_hash[:content_type_filter]
     title_filter = filter_params_hash[:title_filter]
     @presenter = FilteredEditionsPresenter.new(
