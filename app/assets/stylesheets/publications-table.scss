@@ -1,5 +1,17 @@
+$width: 40;
+
 .publications-table {
-  position: relative;
+  th:first-child {
+    width: calc($width * 1%);
+  }
+
+  details {
+    width: calc(100 / $width * 100%);
+  }
+
+  table {
+    table-layout: fixed;
+  }
 
   &--expand-link {
     float: right;
@@ -46,14 +58,6 @@
 
   .govuk-table {
     border-top: 2px solid $govuk-text-colour;
-
-    .govuk-table__header {
-      white-space: nowrap;
-    }
-
-    .govuk-table__cell__updated {
-      white-space: nowrap;
-    }
   }
 
   .govuk-details {
