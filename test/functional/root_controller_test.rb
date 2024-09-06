@@ -68,9 +68,10 @@ class RootControllerTest < ActionController::TestCase
 
     should "filter publications by assignee" do
       anna = FactoryBot.create(:user, name: "Anna")
+      FactoryBot.create(:guide_edition, assigned_to: anna)
       FactoryBot.create(:guide_edition)
 
-      get :index, params: { assignee_filter: [anna.id] }
+      get :index, params: { assignee_filter: anna.id }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
