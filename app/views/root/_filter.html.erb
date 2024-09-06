@@ -1,0 +1,48 @@
+<div class="publications-filter govuk-!-padding-5">
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Filter by",
+      margin_bottom: 4,
+    } %>
+
+    <%= render "govuk_publishing_components/components/input", {
+      label: {
+        text: "Title",
+        bold: true,
+      },
+      name: "title_filter",
+      id: "title_filter",
+      value: @presenter.title,
+    } %>
+
+    <%= render "govuk_publishing_components/components/select", {
+      id: "assignee_filter",
+      full_width: true,
+      label: "Assigned to",
+      options: @presenter.assignees,
+    } %>
+
+    <%= render "govuk_publishing_components/components/select", {
+      id: "content_type_filter",
+      label: "Content type",
+      full_width: true,
+      options: @presenter.content_types,
+    } %>
+
+    <%= render "govuk_publishing_components/components/checkboxes", {
+      name: "states_filter[]",
+      heading: "Status",
+      heading_size: "s",
+      items: @presenter.edition_states,
+    } %>
+
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Update filter",
+      margin_bottom: 4,
+    } %>
+
+    <p class="govuk-body">
+      <%= link_to "Reset all fields", root_path, class: "govuk-link" %>
+    </p>
+  <% end %>
+</div>
