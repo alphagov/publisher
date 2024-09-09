@@ -34,16 +34,16 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "default the applied state filters when no filters are specified" do
-      FactoryBot.create(:edition, state: "draft")
-      FactoryBot.create(:edition, state: "amends_needed")
-      FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
-      fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax")
+      FactoryBot.create(:edition, state: "draft", assigned_to: @user)
+      FactoryBot.create(:edition, state: "amends_needed", assigned_to: @user)
+      FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago, assigned_to: @user)
+      fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax", assigned_to: @user)
       fact_check_edition.new_action(FactoryBot.create(:user), "send_fact_check")
-      FactoryBot.create(:edition, state: "fact_check_received")
-      FactoryBot.create(:edition, state: "ready")
+      FactoryBot.create(:edition, state: "fact_check_received", assigned_to: @user)
+      FactoryBot.create(:edition, state: "ready", assigned_to: @user)
       FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
-      FactoryBot.create(:edition, state: "published")
-      FactoryBot.create(:edition, state: "archived")
+      FactoryBot.create(:edition, state: "published", assigned_to: @user)
+      FactoryBot.create(:edition, state: "archived", assigned_to: @user)
 
       get :index
 
