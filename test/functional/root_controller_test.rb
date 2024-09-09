@@ -13,6 +13,49 @@ class RootControllerTest < ActionController::TestCase
       assert_template "root/index"
     end
 
+    should "default the state filter checkboxes when no filters are specified" do
+      get :index
+
+      # These filters should be 'checked'
+      assert_select "input.govuk-checkboxes__input[value='draft'][checked]"
+      assert_select "input.govuk-checkboxes__input[value='amends_needed'][checked]"
+      assert_select "input.govuk-checkboxes__input[value='in_review'][checked]"
+      assert_select "input.govuk-checkboxes__input[value='fact_check'][checked]"
+      assert_select "input.govuk-checkboxes__input[value='fact_check_received'][checked]"
+      assert_select "input.govuk-checkboxes__input[value='ready'][checked]"
+
+      # These filters should NOT be 'checked'
+      assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing']"
+      assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='published']"
+      assert_select "input.govuk-checkboxes__input[value='published'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='archived']"
+      assert_select "input.govuk-checkboxes__input[value='archived'][checked]", false
+    end
+
+    should "default the applied state filters when no filters are specified" do
+      FactoryBot.create(:edition, state: "draft")
+      FactoryBot.create(:edition, state: "amends_needed")
+      FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+      fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax")
+      fact_check_edition.new_action(FactoryBot.create(:user), "send_fact_check")
+      FactoryBot.create(:edition, state: "fact_check_received")
+      FactoryBot.create(:edition, state: "ready")
+      FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+      FactoryBot.create(:edition, state: "published")
+      FactoryBot.create(:edition, state: "archived")
+
+      get :index
+
+      assert_select "p.publications-table__heading", "6 document(s)"
+      assert_select "span.govuk-tag--draft", "Draft"
+      assert_select "span.govuk-tag--amends_needed", "Amends needed"
+      assert_select "span.govuk-tag--in_review", "In review"
+      assert_select "span.govuk-tag--fact_check", "Fact check"
+      assert_select "span.govuk-tag--fact_check_received", "Fact check received"
+      assert_select "span.govuk-tag--ready", "Ready"
+    end
+
     should "filter publications by state" do
       FactoryBot.create(:guide_edition, state: "draft")
       FactoryBot.create(:guide_edition, state: "published")
@@ -66,7 +109,7 @@ class RootControllerTest < ActionController::TestCase
                    edition_states: [],
                  ))
 
-      get :index, params: { states_filter: %w[draft not_a_real_state] }
+      get :index, params: { title_filter: "", states_filter: %w[draft not_a_real_state] }
     end
 
     should "show the first page of publications when no page is specified" do
