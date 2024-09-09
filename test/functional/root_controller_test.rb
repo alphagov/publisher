@@ -64,6 +64,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Draft"
     end
 
     should "default the assignee to the current user" do
@@ -82,6 +83,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Stub User"
     end
 
     should "filter publications by assignee in the session" do
@@ -103,6 +105,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Anna"
     end
 
     should "store the assignee parameter value in the session" do
@@ -132,6 +135,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "dd.govuk-summary-list__value", "Guide"
     end
 
     should "filter publications by title text" do
@@ -142,6 +146,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.title", "What to do in the event of a zombie apocalypse"
     end
 
     should "ignore unrecognised filter states" do
