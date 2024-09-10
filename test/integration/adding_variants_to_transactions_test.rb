@@ -5,6 +5,9 @@ class AddingVariantsToTransactionsTest < LegacyJavascriptIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   context "creating a transaction with variants" do

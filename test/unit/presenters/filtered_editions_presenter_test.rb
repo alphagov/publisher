@@ -176,24 +176,49 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     end
   end
 
-  context "#available_users" do
+  context "#assignees" do
+    should "return an 'all assignees' item" do
+      assignees = FilteredEditionsPresenter.new.assignees
+
+      assert_equal([{ text: "All assignees", value: "" }], assignees)
+    end
+
+    should "return users who are not the assignee as unselected" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      assignees = FilteredEditionsPresenter.new.assignees
+
+      assert_includes(assignees, { text: anna.name, value: anna.id })
+    end
+
+    should "return the assignee as selected" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      assignees = FilteredEditionsPresenter.new(assigned_to_filter: anna.id.to_s).assignees
+
+      assert_includes(assignees, { text: anna.name, value: anna.id, selected: "true" })
+    end
+
     should "return users in alphabetical order" do
       bob = FactoryBot.create(:user, name: "Bob")
       charlie = FactoryBot.create(:user, name: "Charlie")
       anna = FactoryBot.create(:user, name: "Anna")
 
-      users = FilteredEditionsPresenter.new.available_users.to_a
+      assignees = FilteredEditionsPresenter.new.assignees
 
-      assert_equal([anna, bob, charlie], users)
+      assert_equal(anna.name, assignees[1][:text])
+      assert_equal(bob.name, assignees[2][:text])
+      assert_equal(charlie.name, assignees[3][:text])
     end
 
     should "not include disabled users" do
       enabled_user = FactoryBot.create(:user, name: "enabled user")
-      FactoryBot.create(:user, name: "disabled user", disabled: true)
+      disabled_user = FactoryBot.create(:user, name: "disabled user", disabled: true)
 
-      users = FilteredEditionsPresenter.new.available_users.to_a
+      users = FilteredEditionsPresenter.new.assignees
 
-      assert_equal(users, [enabled_user])
+      assert_equal(2, users.count)
+      assert_equal("All assignees", users[0][:text])
+      assert_equal(enabled_user.name, users[1][:text])
+      assert_not_includes users.map { |user| user[:text] }, disabled_user.name
     end
   end
 end

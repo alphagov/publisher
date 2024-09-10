@@ -34,16 +34,16 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "default the applied state filters when no filters are specified" do
-      FactoryBot.create(:edition, state: "draft")
-      FactoryBot.create(:edition, state: "amends_needed")
-      FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
-      fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax")
+      FactoryBot.create(:edition, state: "draft", assigned_to: @user)
+      FactoryBot.create(:edition, state: "amends_needed", assigned_to: @user)
+      FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago, assigned_to: @user)
+      fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax", assigned_to: @user)
       fact_check_edition.new_action(FactoryBot.create(:user), "send_fact_check")
-      FactoryBot.create(:edition, state: "fact_check_received")
-      FactoryBot.create(:edition, state: "ready")
+      FactoryBot.create(:edition, state: "fact_check_received", assigned_to: @user)
+      FactoryBot.create(:edition, state: "ready", assigned_to: @user)
       FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
-      FactoryBot.create(:edition, state: "published")
-      FactoryBot.create(:edition, state: "archived")
+      FactoryBot.create(:edition, state: "published", assigned_to: @user)
+      FactoryBot.create(:edition, state: "archived", assigned_to: @user)
 
       get :index
 
@@ -57,43 +57,96 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "filter publications by state" do
-      FactoryBot.create(:guide_edition, state: "draft")
-      FactoryBot.create(:guide_edition, state: "published")
+      FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
+      FactoryBot.create(:guide_edition, state: "published", assigned_to: @user)
 
       get :index, params: { states_filter: %w[draft] }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Draft"
     end
 
-    should "filter publications by assignee" do
-      anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition)
+    should "default the assignee to the current user" do
+      get :index
 
-      get :index, params: { assignee_filter: [anna.id] }
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{@user.id}'][selected]"
+    end
+
+    should "default to filtering to publications assigned to the current user" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      FactoryBot.create(:edition, title: "Assigned to Anna", assigned_to: anna)
+      FactoryBot.create(:edition, title: "Assigned to Stub User", assigned_to: @user)
+
+      get :index
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Stub User"
+    end
+
+    should "filter publications by assignee in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      @request.session[:assignee_filter] = anna.id.to_s
+
+      get :index
+
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{anna.id}'][selected]"
+    end
+
+    should "filter publications by assignee parameter" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      FactoryBot.create(:guide_edition, assigned_to: anna)
+      FactoryBot.create(:guide_edition)
+
+      get :index, params: { assignee_filter: anna.id }
+
+      assert_response :ok
+      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "td.govuk-table__cell", "Anna"
+    end
+
+    should "store the assignee parameter value in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+
+      get :index, params: { assignee_filter: anna.id }
+
+      assert_equal anna.id.to_s, @request.session[:assignee_filter]
+    end
+
+    should "filter publications by assignee parameter in preference to the one in the session" do
+      anna = FactoryBot.create(:user, name: "Anna")
+      bob = FactoryBot.create(:user, name: "Bob")
+      @request.session[:assignee_filter] = bob.id
+
+      get :index, params: { assignee_filter: anna.id }
+
+      assert_response :ok
+      assert_select "#assignee_filter > option[value='#{anna.id}'][selected]"
     end
 
     should "filter publications by content type" do
-      FactoryBot.create(:guide_edition)
-      FactoryBot.create(:completed_transaction_edition)
+      FactoryBot.create(:guide_edition, assigned_to: @user)
+      FactoryBot.create(:completed_transaction_edition, assigned_to: @user)
 
       get :index, params: { content_type_filter: "guide" }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "dd.govuk-summary-list__value", "Guide"
     end
 
     should "filter publications by title text" do
-      FactoryBot.create(:guide_edition, title: "How to train your dragon")
-      FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse")
+      FactoryBot.create(:guide_edition, title: "How to train your dragon", assigned_to: @user)
+      FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse", assigned_to: @user)
 
       get :index, params: { title_filter: "zombie" }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.title", "What to do in the event of a zombie apocalypse"
     end
 
     should "ignore unrecognised filter states" do
@@ -113,7 +166,9 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "show the first page of publications when no page is specified" do
-      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+      FactoryBot.create_list(
+        :guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
 
       get :index
 
@@ -123,7 +178,9 @@ class RootControllerTest < ActionController::TestCase
     end
 
     should "show the specified page of publications" do
-      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+      FactoryBot.create_list(
+        :guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, assigned_to: @user
+      )
 
       get :index, params: { page: 2 }
 
