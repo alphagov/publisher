@@ -16,10 +16,18 @@ Rails.application.routes.draw do
 
   resources :artefacts, only: %i[new create update]
 
+  get "editions" => "legacy_editions#show"
+
   resources :editions do
     member do
       get "diff"
-      get "metadata"
+
+      constraints FeatureConstraint.new("design_system_edit") do
+        get "metadata" => "editions#show"
+      end
+
+      get "metadata" => "legacy_editions#show"
+
       get "history"
       get "admin"
       get "tagging", to: "editions#linking"
@@ -66,6 +74,7 @@ Rails.application.routes.draw do
   constraints FeatureConstraint.new("design_system_publications_filter") do
     root to: "root#index"
   end
+
   # The below "as: nil" is required to avoid a name clash with the constrained route, above, which causes an error
   root to: "legacy_root#index", as: nil
 
