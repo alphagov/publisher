@@ -1,9 +1,7 @@
 require "edition_duplicator"
 require "edition_progressor"
 
-class EditionsController < InheritedResources::Base
-  layout "design_system"
-
+class LegacyEditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
