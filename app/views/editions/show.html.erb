@@ -3,21 +3,23 @@
 <% content_for :page_title, @resource.title %>
 <% content_for :title, @resource.title %>
 
-<div class="govuk-grid-column-two-thirds">
-  <%= render "govuk_publishing_components/components/summary_list", {
-    items: [
-      {
-        field: "Assigned to",
-        value: @resource.assigned_to,
-      },
-      {
-        field: "Content type",
-        value: @resource.format.underscore.humanize,
-      },
-      {
-        field: "Edition",
-        value: sanitize("#{@resource.version_number} <span class='govuk-tag govuk-tag--#{@resource.state}'>#{@resource.status_text}</span>"),
-      },
-    ],
-  } %>
+<div class="govuk-grid-column-full-width editions__edit">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: [
+        {
+          field: "Assigned to",
+          value: @resource.assigned_to,
+        },
+        {
+          field: "Content type",
+          value: @resource.format.underscore.humanize,
+        },
+        {
+          field: "Edition",
+          value: sanitize("#{@resource.version_number} <span class='govuk-tag govuk-tag--#{@resource.state}'>#{@resource.status_text}</span>"),
+        },
+      ],
+    } %>
+  </div>
 </div>
