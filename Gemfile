@@ -33,6 +33,7 @@ gem "mousetrap-rails"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"
 gem "null_logger"
 gem "plek"
+gem "prometheus-client"
 gem "rails_autolink"
 gem "rest-client", require: false
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.

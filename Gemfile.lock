@@ -611,6 +611,8 @@ GEM
       ast (~> 2.4.1)
       racc
     plek (5.2.0)
+    prometheus-client (4.2.3)
+      base64
     prometheus_exporter (2.1.1)
       webrick
     pry (0.14.1)
@@ -872,6 +874,7 @@ DEPENDENCIES
   nested_form!
   null_logger
   plek
+  prometheus-client
   pry-byebug
   rack
   rails (= 7.0.8.3)
