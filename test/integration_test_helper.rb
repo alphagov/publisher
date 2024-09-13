@@ -29,6 +29,39 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     GDS::SSO.test_user = user
     super(user)
   end
+
+  def filter_by_user(option, from: "Assigned to")
+    within ".publications-filter form" do
+      select(option, from:)
+      click_on "Update filter"
+    end
+  end
+
+  def filter_by_content(substring)
+    within ".publications-filter form" do
+      fill_in "Title", with: substring
+      click_on "Update filter"
+    end
+  end
+
+  def filter_by_status(option)
+    within ".publications-filter form" do
+      all("input[type=checkbox]").each do |checkbox|
+        if checkbox.checked?
+          checkbox.click
+        end
+      end
+      check(option)
+      click_on "Update filter"
+    end
+  end
+
+  def filter_by_content_type(option, from: "Content type")
+    within ".publications-filter form" do
+      select(option, from:)
+      click_on "Update filter"
+    end
+  end
 end
 
 class JavascriptIntegrationTest < IntegrationTest
