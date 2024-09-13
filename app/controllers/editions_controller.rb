@@ -4,16 +4,8 @@ require "edition_progressor"
 class EditionsController < InheritedResources::Base
   layout "design_system"
 
-  actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
-  before_action :setup_view_paths, except: %i[index new create]
-  before_action only: %i[update duplicate progress review destroy admin] do
-    require_editor_permissions
-  end
-  before_action only: %i[unpublish process_unpublish] do
-    require_govuk_editor(redirect_path: edition_path(resource))
-  end
-  after_action :report_state_counts, only: %i[create duplicate progress destroy]
+  before_action :setup_view_paths, except: %i[index new]
 
   def index
     redirect_to root_path
@@ -35,213 +27,9 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
-  alias_method :metadata, :show
-  alias_method :history, :show
-  alias_method :admin, :show
-  alias_method :unpublish, :show
-
   def new
     @publication = build_resource
     setup_view_paths_for(@publication)
-  end
-
-  def create
-    class_identifier = params[:edition].delete(:kind).to_sym
-    create_params = permitted_params(subtype: :"#{class_identifier}_edition")
-    @publication = current_user.create_edition(class_identifier, create_params[:edition])
-
-    if @publication.persisted?
-      UpdateWorker.perform_async(@publication.id.to_s)
-
-      flash[:success] = "#{description(@publication)} successfully created"
-      redirect_to edition_path(@publication)
-    else
-      setup_view_paths_for(@publication)
-      render template: "new"
-    end
-  end
-
-  def duplicate
-    command = EditionDuplicator.new(resource, current_user)
-    target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
-
-    if !resource.can_create_new_edition?
-      flash[:warning] = "Another person has created a newer edition"
-      redirect_to edition_path(resource)
-    elsif command.duplicate(target_edition_class_name, current_user)
-      new_edition = command.new_edition
-      UpdateWorker.perform_async(new_edition.id.to_s)
-
-      return_to = params[:return_to] || edition_path(new_edition)
-      flash[:success] = "New edition created"
-      redirect_to return_to
-    else
-      flash[:danger] = command.error_message
-      redirect_to edition_path(resource)
-    end
-  end
-
-  def update
-    # We have to call this before updating as it removes any assigned_to_id
-    # parameter from the request, preventing us from inadvertently changing
-    # it at the wrong time.
-    assign_to = new_assignee
-
-    activity_params = attempted_activity_params
-    remove_activity_params
-
-    # update! is from the Inherited Resources gem
-    # https://github.com/josevalim/inherited_resources/blob/master/lib/inherited_resources/actions.rb#L42
-    update! do |success, failure|
-      success.html do
-        if attempted_activity
-          if progress_edition(resource, activity_params)
-            flash[:success] = @command.status_message
-          else
-            flash[:danger] = @command.status_message
-          end
-        end
-
-        update_assignment resource, assign_to
-
-        UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
-
-        return_to = params[:return_to] || edition_path(resource)
-        redirect_to return_to
-      end
-      failure.html do
-        @resource = resource
-        @tagging_update = tagging_update_form
-        @linkables = Tagging::Linkables.new
-        @artefact = @resource.artefact
-        render action: "show"
-      end
-      success.json do
-        progress_edition(resource, activity_params) if attempted_activity
-
-        update_assignment resource, assign_to
-
-        UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
-
-        render json: resource
-      end
-      failure.json { render json: resource.errors, status: :not_acceptable }
-    end
-  end
-
-  def linking
-    @linkables = Tagging::Linkables.new
-    @tagging_update = tagging_update_form
-    @artefact = @resource.artefact
-    render action: "show"
-  end
-
-  def update_tagging
-    form = Tagging::TaggingUpdateForm.new(tagging_update_form_params)
-    if form.valid?
-      form.publish!
-      flash[:success] = "Tags have been updated!"
-    else
-      flash[:danger] = form.errors.full_messages.join("\n")
-    end
-    redirect_to tagging_edition_path
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  end
-
-  def update_related_external_links
-    artefact = resource.artefact
-    if params.key?("artefact")
-      external_links = params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
-      artefact.external_links_attributes = external_links[:external_links_attributes].to_h
-
-      if artefact.save
-        flash[:success] = "External links have been saved. They will be visible the next time this publication is published."
-      else
-        flash[:danger] = artefact.errors.full_messages.join("\n")
-      end
-    else
-      flash[:danger] = "There aren't any external related links yet"
-    end
-
-    redirect_back(fallback_location: related_external_links_edition_path(resource.id))
-  end
-
-  def review
-    if resource.reviewer.present?
-      flash[:danger] = "#{resource.reviewer} has already claimed this 2i"
-      redirect_to edition_path(resource)
-      return
-    end
-
-    resource.reviewer = params[:edition][:reviewer]
-    if resource.save
-      flash[:success] = "You are the reviewer of this #{description(resource).downcase}."
-    else
-      flash[:danger] = "Something went wrong when attempting to claim 2i."
-    end
-    redirect_to edition_path(resource)
-  end
-
-  def destroy
-    if resource.can_destroy?
-      destroy! do
-        flash[:success] = "Edition deleted"
-        redirect_to root_url
-        return
-      end
-    else
-      flash[:danger] = "Cannot delete a #{description(resource).downcase} that has ever been published."
-      redirect_to edition_path(resource)
-      nil
-    end
-  end
-
-  def progress
-    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
-      PublishWorker.perform_async(resource.id.to_s) if progress_action_is_publish?
-
-      flash[:success] = @command.status_message
-    else
-      flash[:danger] = @command.status_message
-    end
-    redirect_to edition_path(resource)
-  end
-
-  def diff
-    @resource = resource
-    @comparison = @resource.previous_siblings.last
-  end
-
-  def process_unpublish
-    edition = Edition.find(params[:id])
-    artefact = edition.artefact
-
-    if validate_redirect(redirect_url) || redirect_url.blank?
-      success = UnpublishService.call(artefact, current_user, redirect_url)
-    else
-      flash[:danger] = "Redirect path is invalid. #{description(resource)} has not been unpublished."
-    end
-
-    if success
-      notice = "Content unpublished"
-      notice << " and redirected" if redirect_url.present?
-      flash[:notice] = notice
-      redirect_to root_path
-    else
-      flash[:alert] = "Due to a service problem, the edition couldn't be unpublished"
-      redirect_to unpublish_edition_path(edition)
-    end
-  end
-
-  def diagram
-    # [MT] TODO: What's the best way to handle requests for a diagram for a non-simple smart answer?
-    if @resource.format != "SimpleSmartAnswer"
-      render plain: "404 Not Found", status: :not_found
-    end
   end
 
 protected
@@ -353,42 +141,13 @@ protected
     setup_view_paths_for(resource)
   end
 
-  def description(resource)
-    resource.format.underscore.humanize
-  end
-
 private
-
-  def redirect_url
-    make_govuk_url_relative params["redirect_url"]
-  end
-
-  def make_govuk_url_relative(url = "")
-    url.sub(%r{^(https?://)?(www\.)?gov\.uk/}, "/")
-  end
-
-  def validate_redirect(redirect_url)
-    regex = /(\/([a-z0-9]+-)*[a-z0-9]+)+/
-    redirect_url =~ regex
-  end
 
   def tagging_update_form
     Tagging::TaggingUpdateForm.build_from_publishing_api(
       @resource.artefact.content_id,
       @resource.artefact.language,
     )
-  end
-
-  def attempted_activity_params
-    return unless attempted_activity
-
-    params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-      :request_type, :email_addresses, :customised_message, :comment, :publish_at
-    )
-  end
-
-  def remove_activity_params
-    params.fetch(:edition, {}).delete_if { |attributes, _| attributes =~ /\Aactivity_\w*_attributes\z/ }
   end
 
   def tagging_update_form_params
@@ -403,30 +162,8 @@ private
     ).to_h
   end
 
-  def progress_edition(resource, activity_params)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
-  end
-
-  def report_state_counts
-    Publisher::Application.edition_state_count_reporter.report
-  end
-
-  def update_action_is_publish?
-    attempted_activity == :publish
-  end
-
-  def progress_action_is_publish?
-    progress_action_param == "publish"
-  end
-
-  def progress_action_param
-    params[:edition][:activity][:request_type]
-  rescue StandardError
-    nil
-  end
-
-  def attempted_activity
-    Edition::ACTIONS.invert[params[:commit]]
+  def setup_view_paths_for(publication)
+    prepend_view_path "app/views/editions"
+    prepend_view_path template_folder_for(publication)
   end
 end
