@@ -17,40 +17,12 @@ Rails.application.routes.draw do
   resources :artefacts, only: %i[new create update]
 
   constraints FeatureConstraint.new("design_system_edit") do
-    resources :editions do
-      member do
-        get "diff"
-        get "metadata"
-        get "history"
-        get "admin"
-        get "tagging", to: "editions#linking"
-        get "related_external_links", to: "editions#linking"
-        get "unpublish"
-        get "diagram"
-        post "duplicate"
-        post "update_tagging"
-        post "process_unpublish"
-        patch "update_related_external_links"
-        post "progress"
-        put "review"
-        post "skip_fact_check",
-             to: "editions#progress",
-             edition: {
-               activity: {
-                 request_type: "skip_fact_check",
-                 comment: "Fact check skipped by request.",
-               },
-             }
-      end
-
-      # resource :downtime, only: %i[new create edit update destroy]
-      # get "downtime" => "downtimes#destroy", as: :destroy_downtime
-    end
+    resources :editions, only: %i[show index]
   end
 
   get "editions/:id" => "legacy_editions#show"
 
-  resources :legacy_editions do
+  resources :editions, controller: "legacy_editions" do
     member do
       get "diff"
       get "metadata"
@@ -76,8 +48,8 @@ Rails.application.routes.draw do
            }
     end
 
-    # resource :downtime, only: %i[new create edit update destroy]
-    # get "downtime" => "downtimes#destroy", as: :destroy_downtime
+    resource :downtime, only: %i[new create edit update destroy]
+    get "downtime" => "downtimes#destroy", as: :destroy_downtime
   end
 
   get "reports" => "reports#index", as: :reports
