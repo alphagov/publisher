@@ -11,6 +11,10 @@ Publisher::Application.mail_fetcher_config.configure
 
 require "fact_check_email_handler"
 
+require "prometheus/client"
+require "prometheus/client/push"
+require "prometheus/client/registry"
+
 require "redis"
 require "redis-lock"
 
