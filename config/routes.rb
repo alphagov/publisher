@@ -16,14 +16,20 @@ Rails.application.routes.draw do
 
   resources :artefacts, only: %i[new create update]
 
-  resources :editions do
+  constraints FeatureConstraint.new("design_system_edit") do
+    resources :editions, only: %i[show index]
+  end
+
+  get "editions/:id" => "legacy_editions#show"
+
+  resources :editions, controller: "legacy_editions" do
     member do
       get "diff"
       get "metadata"
       get "history"
       get "admin"
-      get "tagging", to: "editions#linking"
-      get "related_external_links", to: "editions#linking"
+      get "tagging", to: "legacy_editions#linking"
+      get "related_external_links", to: "legacy_editions#linking"
       get "unpublish"
       get "diagram"
       post "duplicate"
@@ -33,7 +39,7 @@ Rails.application.routes.draw do
       post "progress"
       put "review"
       post "skip_fact_check",
-           to: "editions#progress",
+           to: "legacy_editions#progress",
            edition: {
              activity: {
                request_type: "skip_fact_check",
@@ -66,6 +72,7 @@ Rails.application.routes.draw do
   constraints FeatureConstraint.new("design_system_publications_filter") do
     root to: "root#index"
   end
+
   # The below "as: nil" is required to avoid a name clash with the constrained route, above, which causes an error
   root to: "legacy_root#index", as: nil
 

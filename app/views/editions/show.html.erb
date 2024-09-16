@@ -1,69 +1,25 @@
 <% @edition = @resource %>
-  <%= render "shared/edition_header" %>
 
-  <% errors_hash = errors_to_display(@edition) %>
-  <% if !errors_hash.empty? %>
-    <div id="error-summary" class="alert alert-danger error-summary">
-      <h2 class="add-bottom-margin">There is a problem</h2>
-      <ul>
-        <% errors_hash.each do |error_message, html_ref| %>
-          <li>
-            <a href="<%= html_ref %>"><%= error_message %></a>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<% content_for :page_title, @resource.title %>
+<% content_for :title, @resource.title %>
 
-  <div class="tabbable" data-module="tab-switcher" role="tabpanel">
-    <ul class="nav nav-tabs" role="tablist">
-      <% tabs_for(current_user, @edition).each do |tab| %>
-        <li <% if tab == active_tab %>class="active"<% end %>>
-          <%= tab_link(tab, edition_path(@edition)) %>
-        </li>
-      <% end %>
-    </ul>
-
-    <div class="tab-content add-top-margin">
-        <div role="tabpanel" class="tab-pane <% if active_tab.name == 'edit' %>active<% end %>" id="edit">
-          <div class="link-check-report col-md-4">
-            <% if @edition.class.to_s == "SimpleSmartAnswerEdition" %>
-              <p>
-                View the <%= link_to "flow diagram (opens in a new tab)", diagram_edition_path(@edition), target: "_blank", rel: "noopener" %>
-              </p>
-            <% end %>
-
-            <%= render "link_check_reports/link_check_report", edition: @edition, report: @edition.latest_link_check_report %>
-
-            <% if @edition.class.to_s.in?(Edition::HAS_GOVSPEAK_FIELDS) %>
-              <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
-
-              <div class="well">
-                <%= render "shared/govspeak_help" %>
-              </div>
-            <% end %>
-          </div>
-
-          <%= resource_form(@resource) do |f| %>
-            <div class="well">
-              <%= render resource_fields(@resource), f: f %>
-            </div>
-
-            <%= edition_activities_fields(f, @resource) %>
-          <% end %>
-      </div>
-      <%= # cancel scheduled publishing doesn't require the edition to be saved when requesting an activity,
-        # because this action is triggered from a view where editing is not allowed.
-        edition_activities_forms(@resource, Edition::CANCEL_SCHEDULED_PUBLISHING_ACTION) %>
-
-      <% tabs.reject {|t| t.name == "edit"}.each do |tab| %>
-        <div role="tabpanel" class="tab-pane <% if tab == active_tab %>active<% end %>" id="<%= tab.name %>">
-          <div class="well">
-            <%= render :partial => "/shared/#{tab.name}", :locals => {:publication => @resource} %>
-          </div>
-        </div>
-      <% end %>
-    </div><!--/.tab-content -->
-  </div><!--/.tabbable -->
-<% content_for :page_title, "Editing #{@resource.title}" %>
-
+<div class="govuk-grid-column-full-width editions__edit">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: [
+        {
+          field: "Assigned to",
+          value: @resource.assigned_to,
+        },
+        {
+          field: "Content type",
+          value: @resource.format.underscore.humanize,
+        },
+        {
+          field: "Edition",
+          value: sanitize("#{@resource.version_number} <span class='govuk-tag govuk-tag--#{@resource.state}'>#{@resource.status_text}</span>"),
+        },
+      ],
+    } %>
+  </div>
+</div>
