@@ -18,6 +18,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit, false)
   end
 
   teardown do

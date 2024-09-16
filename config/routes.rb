@@ -28,8 +28,8 @@ Rails.application.routes.draw do
       get "metadata"
       get "history"
       get "admin"
-      get "tagging", to: "editions#linking"
-      get "related_external_links", to: "editions#linking"
+      get "tagging", to: "legacy_editions#linking"
+      get "related_external_links", to: "legacy_editions#linking"
       get "unpublish"
       get "diagram"
       post "duplicate"
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
       post "progress"
       put "review"
       post "skip_fact_check",
-           to: "editions#progress",
+           to: "legacy_editions#progress",
            edition: {
              activity: {
                request_type: "skip_fact_check",
