@@ -22,4 +22,17 @@ class EditionEditTest < IntegrationTest
     assert row[2].has_text?("1")
     assert row[2].has_text?("Draft")
   end
+
+  should "show all the tabs for the edit" do
+    edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft")
+    visit edition_path(edition)
+
+    assert page.has_text?("Edit")
+    assert page.has_text?("Tagging")
+    assert page.has_text?("Metadata")
+    assert page.has_text?("History and notes")
+    assert page.has_text?("Admin")
+    assert page.has_text?("Related external links")
+    assert page.has_text?("Unpublish")
+  end
 end

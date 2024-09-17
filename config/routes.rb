@@ -17,7 +17,16 @@ Rails.application.routes.draw do
   resources :artefacts, only: %i[new create update]
 
   constraints FeatureConstraint.new("design_system_edit") do
-    resources :editions, only: %i[show index]
+    resources :editions do
+      member do
+        get "metadata"
+        get "history"
+        get "admin"
+        get "related_external_links", to: "editions#linking"
+        get "tagging", to: "editions#linking"
+        get "unpublish"
+      end
+    end
   end
 
   get "editions/:id" => "legacy_editions#show"
