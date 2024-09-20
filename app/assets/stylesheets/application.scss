@@ -1,6 +1,7 @@
 $govuk-page-width: 1140px;
 
 // GOVUK Design System
+@import "govuk/base";
 @import 'govuk_publishing_components/govuk_frontend_support';
 @import 'govuk_publishing_components/component_support';
 @import 'govuk_publishing_components/components/button';
@@ -23,6 +24,7 @@ $govuk-page-width: 1140px;
 @import 'govuk_publishing_components/components/notice';
 @import 'govuk_publishing_components/components/previous-and-next-navigation';
 @import 'govuk_publishing_components/components/search';
+@import 'govuk_publishing_components/components/secondary-navigation';
 @import 'govuk_publishing_components/components/select';
 @import 'govuk_publishing_components/components/skip-link';
 @import 'govuk_publishing_components/components/success-alert';

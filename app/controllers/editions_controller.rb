@@ -16,6 +16,26 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
+  def metadata
+    render action: "show"
+  end
+
+  def history
+    render action: "show"
+  end
+
+  def admin
+    render action: "show"
+  end
+
+  def linking
+    render action: "show"
+  end
+
+  def unpublish
+    render action: "show"
+  end
+
 protected
 
   def setup_view_paths
