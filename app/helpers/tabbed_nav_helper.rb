@@ -1,9 +1,8 @@
 module TabbedNavHelper
   def edition_nav_items(edition)
     nav_items = []
-    items = %w[edit tagging metadata history admin related_external_links unpublish]
 
-    items.each do |item|
+    all_tab_names.each do |item|
       nav_items << standard_nav_items(item, edition)
     end
 
@@ -28,5 +27,16 @@ module TabbedNavHelper
         current:,
       },
     ]
+  end
+
+  def current_tab_name
+    current_tab = (request.path.split("/") & all_tab_names).first
+    current_tab == "metadata" ? "metadata" : "temp_nav_text"
+  end
+
+private
+
+  def all_tab_names
+    %w[edit tagging metadata history admin related_external_links unpublish]
   end
 end
