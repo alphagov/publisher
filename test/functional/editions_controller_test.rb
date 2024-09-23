@@ -61,7 +61,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     should "alias to show method" do
-      assert EditionsController.new.method(:metadata).super_method.name.eql?(:show)
+      assert_equal EditionsController.new.method(:metadata).super_method.name, :show
     end
   end
 end
