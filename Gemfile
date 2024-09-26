@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "7.0.8.3"
+gem "rails", "7.1.4"
 
 gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
@@ -27,7 +27,7 @@ gem "mail-notify"
 gem "mlanett-redis-lock"
 gem "momentjs-rails"
 gem "mongo"
-gem "mongoid"
+gem "mongoid", "8.1.4"
 gem "mongoid-sadstory"
 gem "mousetrap-rails"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"
@@ -38,6 +38,7 @@ gem "rails_autolink"
 gem "rest-client", require: false
 gem "select2-rails", "~> 3.5.9" # Updating this will mean updating the styling as 4 & > have a new approach to class names.
 gem "sentry-sidekiq"
+gem "sidekiq", "< 7" # Disables Sidekiq 7 beta opt-in.
 gem "sprockets-rails"
 gem "state_machines"
 gem "state_machines-mongoid"
