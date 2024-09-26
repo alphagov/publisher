@@ -19,7 +19,8 @@ class HomepageController < ApplicationController
   end
 
   def update
-    @latest_popular_links.link_items = remove_leading_and_trailing_url_spaces(params[:popular_links].values)
+    create_params = permitted_params
+    @latest_popular_links.link_items = remove_leading_and_trailing_url_spaces(create_params[:popular_links].values)
     @latest_popular_links.save_draft
 
     flash[:success] = "Popular links draft saved.".html_safe
@@ -72,6 +73,10 @@ class HomepageController < ApplicationController
 
 private
 
+  def permitted_params
+    params.permit(popular_links: %i[title url])
+  end
+
   def cannot_delete_published_error_message
     "Can't delete an already published edition. Please create a new edition to make changes.".html_safe
   end
@@ -108,7 +113,7 @@ private
     link_items = []
     links.each do |link|
       link[:url] = link[:url].strip
-      link_items << link
+      link_items << link.to_h
     end
     link_items
   end
