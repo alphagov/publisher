@@ -18,16 +18,25 @@ class ArtefactsController < ApplicationController
     artefact = Artefact.find(updatable_params[:id])
     if artefact.update_as(current_user, updatable_params)
       UpdateWorker.perform_async(artefact.latest_edition_id)
-      flash[:notice] = "Metadata updated"
+      show_success_message
     else
       flash[:danger] = artefact.errors.full_messages.join("\n")
     end
+
     redirect_to metadata_artefact_path(artefact)
   end
 
   helper_method :formats
 
 private
+
+  def show_success_message
+    if Flipflop.enabled?("design_system_edit".to_sym)
+      flash[:success] = "Metadata has successfully updated".html_safe
+    else
+      flash[:notice] = "Metadata updated"
+    end
+  end
 
   def formats
     Artefact::FORMATS_BY_DEFAULT_OWNING_APP["publisher"] - Artefact::RETIRED_FORMATS
