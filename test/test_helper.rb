@@ -78,7 +78,7 @@ class ActiveSupport::TestCase
   end
 
   def login_as_govuk_editor
-    @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+    @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User", organisation_slug: "government-digital-service")
     login_as(@user)
   end
 

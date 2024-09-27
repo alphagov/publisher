@@ -35,9 +35,19 @@ class Edition
 
   field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
 
+  field :owning_org_slugs, type: Array, default: []
+
   belongs_to :assigned_to, class_name: "User", optional: true
 
   embeds_many :link_check_reports
+
+  scope :accessible_to,
+        lambda { |user|
+          return all unless Flipflop.enabled?(:restrict_access_by_org)
+          return all if user.gds_editor?
+
+          where(owning_org_slugs: user.organisation_slug)
+        }
 
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
@@ -501,6 +511,13 @@ class Edition
     end
 
     paths
+  end
+
+  def is_accessible_to?(user)
+    return true unless Flipflop.enabled?(:restrict_access_by_org)
+    return true if user.gds_editor?
+
+    owning_org_slugs.include?(user.organisation_slug)
   end
 
 private

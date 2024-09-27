@@ -87,4 +87,8 @@ class User
   def has_editor_permissions?(resource)
     govuk_editor? || (welsh_editor? && resource.artefact.welsh?)
   end
+
+  def gds_editor?
+    organisation_slug == "government-digital-service"
+  end
 end

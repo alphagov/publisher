@@ -4,6 +4,9 @@ class EditionsController < InheritedResources::Base
 
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index]
+  before_action except: %i[index] do
+    require_user_accessibility_to_edition(@resource)
+  end
 
   helper_method :locale_to_language
 

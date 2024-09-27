@@ -5,6 +5,9 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     login_as_stub_user
     stub_linkables
     stub_holidays_used_by_fact_check
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:restrict_access_by_org, false)
   end
 
   context "#create" do
@@ -1301,6 +1304,52 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       should "return a 404" do
         get :diagram, params: { id: @welsh_guide.id }
         assert_response :not_found
+      end
+    end
+  end
+
+  context "when 'restrict_access_by_org' feature toggle is disabled" do
+    %i[metadata history].each do |action|
+      context "##{action}" do
+        setup do
+          @edition = FactoryBot.create(:edition, owning_org_slugs: %w[org-two])
+        end
+
+        should "return a 200 when requesting an edition owned by a different organisation" do
+          login_as(FactoryBot.create(:user, organisation_slug: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :ok
+        end
+      end
+    end
+  end
+
+  context "when 'restrict_access_by_org' feature toggle is enabled" do
+    setup do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:restrict_access_by_org, true)
+    end
+
+    teardown do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:restrict_access_by_org, false)
+    end
+
+    %i[show metadata history admin unpublish duplicate update linking update_tagging update_related_external_links review destroy progress diff process_unpublish diagram].each do |action|
+      context "##{action}" do
+        setup do
+          @edition = FactoryBot.create(:edition, owning_org_slugs: %w[org-two])
+        end
+
+        should "return a 404 when requesting an edition owned by a different organisation" do
+          login_as(FactoryBot.create(:user, :govuk_editor, organisation_slug: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :not_found
+        end
       end
     end
   end

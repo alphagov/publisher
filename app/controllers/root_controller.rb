@@ -29,6 +29,7 @@ class RootController < ApplicationController
     content_type_filter = filter_params_hash[:content_type_filter]
     title_filter = filter_params_hash[:title_filter]
     @presenter = FilteredEditionsPresenter.new(
+      current_user,
       states_filter: sanitised_states_filter_params,
       assigned_to_filter: assignee_filter,
       content_type_filter:,

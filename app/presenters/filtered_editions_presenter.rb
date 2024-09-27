@@ -3,7 +3,8 @@
 class FilteredEditionsPresenter
   ITEMS_PER_PAGE = 20
 
-  def initialize(states_filter: [], assigned_to_filter: nil, content_type_filter: nil, title_filter: nil, page: nil)
+  def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, title_filter: nil, page: nil)
+    @user = user
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
     @content_type_filter = content_type_filter
@@ -62,6 +63,7 @@ class FilteredEditionsPresenter
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
     result = apply_title_filter(result)
+    result = result.accessible_to(user)
     result = result.where.not(_type: "PopularLinksEdition")
     result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
   end
@@ -129,5 +131,5 @@ private
     editions.title_contains(title_filter)
   end
 
-  attr_reader :states_filter, :assigned_to_filter, :content_type_filter, :title_filter, :page
+  attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :title_filter, :page
 end

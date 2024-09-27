@@ -63,4 +63,8 @@ class ApplicationController < ActionController::Base
     flash[:danger] = "You do not have correct editor permissions for this action."
     redirect_to edition_path(resource)
   end
+
+  def require_user_accessibility_to_edition(edition)
+    render plain: "404 Not Found", status: :not_found unless edition.is_accessible_to?(current_user)
+  end
 end

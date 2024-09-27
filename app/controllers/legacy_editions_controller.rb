@@ -5,6 +5,9 @@ class LegacyEditionsController < InheritedResources::Base
   actions :create, :update, :destroy
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
   before_action :setup_view_paths, except: %i[index new create]
+  before_action except: %i[index create] do
+    require_user_accessibility_to_edition(@resource)
+  end
   before_action only: %i[update duplicate progress review destroy admin] do
     require_editor_permissions
   end
