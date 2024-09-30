@@ -31,7 +31,7 @@ class ArtefactsController < ApplicationController
 private
 
   def show_success_message
-    if Flipflop.enabled?("design_system_edit".to_sym)
+    if FeatureConstraint.new("design_system_edit")
       flash[:success] = "Metadata has successfully updated".html_safe
     else
       flash[:notice] = "Metadata updated"

@@ -15,15 +15,13 @@
       hint: "If you change the slug of a published page, the old slug will automatically redirect to the new one.",
       name: "artefact[slug]",
       value: publication.slug,
-      heading_level: 3,
+      heading_level: 2,
       heading_size: "m",
     } %>
 
     <%= render "govuk_publishing_components/components/radio", {
       heading: "Language",
       name: "artefact[language]",
-      heading_level: 3,
-      heading_size: "m",
       inline: true,
       items: [
         {
@@ -43,15 +41,4 @@
     } %>
   <% end %>
 <% else %>
-  <% @artefact.attributes.slice("slug", "language").each do |key, value| %>
-    <%= render "govuk_publishing_components/components/heading", {
-      text: key.humanize,
-      heading_level: 3,
-      font_size: "m",
-      margin_bottom: 3,
-    } %>
-    <p class="govuk-body">
-      <%= key.eql?("slug") ? value : locale_to_language(value) %>
-    </p>
-  <% end %>
 <% end %>
