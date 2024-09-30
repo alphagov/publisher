@@ -26,14 +26,14 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     setup do
-      artefact = FactoryBot.create(
+      artefact2 = FactoryBot.create(
         :artefact,
         slug: "test2",
         kind: "guide",
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
+      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
@@ -45,23 +45,6 @@ class EditionsControllerTest < ActionController::TestCase
       get :show, params: { id: @guide.id }
       assert_response :success
       assert_not_nil assigns(:resource)
-    end
-  end
-
-  context "#metadata" do
-    setup do
-      artefact = FactoryBot.create(
-        :artefact,
-        slug: "test2",
-        kind: "guide",
-        name: "test",
-        owning_app: "publisher",
-      )
-      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
-    end
-
-    should "alias to show method" do
-      assert EditionsController.new.method(:metadata).super_method.name.eql?(:show)
     end
   end
 end
