@@ -20,7 +20,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#index" do
-    should "editions index redirects to root" do
+    should "redirect to root" do
       get :index
       assert_response :redirect
       assert_redirected_to root_path
@@ -39,12 +39,12 @@ class EditionsControllerTest < ActionController::TestCase
       @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
     end
 
-    should "requesting a publication that doesn't exist returns a 404" do
+    should "return a 404 when requesting a publication that doesn't exist" do
       get :show, params: { id: "4e663834e2ba80480a0000e6" }
       assert_response :not_found
     end
 
-    should "we can view a guide" do
+    should "return a view for the requested guide" do
       get :show, params: { id: @guide.id }
       assert_response :success
       assert_not_nil assigns(:resource)
