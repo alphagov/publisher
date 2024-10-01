@@ -1,5 +1,4 @@
-<% status_tags = { :published=> "govuk-tag--green", :draft => "govuk-tag--yellow" } %>
-<% status_tag = tag.strong status.capitalize, class: ["govuk-tag",status_tags[status.to_sym]] %>
+<% status_tag = tag.strong status.humanize, class: "govuk-tag govuk-tag--#{status}" %>
 
 <%= render "govuk_publishing_components/components/summary_list", {
   items: [
