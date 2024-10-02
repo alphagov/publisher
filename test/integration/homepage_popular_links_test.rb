@@ -40,7 +40,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
         assert page.has_text?(@popular_links.version_number)
         assert page.has_text?("Status")
         assert page.has_text?("Published")
-        assert page.has_css?(".govuk-tag--green")
+        assert page.has_css?(".govuk-tag--published")
       end
 
       should "have link to view 'GOV.UK'" do
@@ -58,7 +58,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
 
       should "render new draft popular links with edit option when 'Create new edition' button is clicked" do
         click_button("Create new edition")
-        within(:css, ".govuk-tag--yellow") do
+        within(:css, ".govuk-tag--draft") do
           assert page.has_content?("Draft")
         end
       end
@@ -72,7 +72,7 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
         assert page.has_text?(@popular_links.version_number)
         assert page.has_text?("Status")
         assert page.has_text?("Draft")
-        assert page.has_css?(".govuk-tag--yellow")
+        assert page.has_css?(".govuk-tag--draft")
         assert page.has_text?("Edit popular links")
       end
 
