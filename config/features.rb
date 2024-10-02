@@ -16,4 +16,8 @@ Flipflop.configure do
   feature :design_system_edit,
           default: false,
           description: "Update the publications edit page to use the GOV.UK Design System"
+
+  feature :restrict_access_by_org,
+          default: false,
+          description: "Restrict access to editions based on the user's org and which org(s) own the edition"
 end
