@@ -1,6 +1,6 @@
 desc "temporary rake task to see what mainstream content isn't tagged to a browse topic"
 task tagging_report: :environment do
-  latest_editions = Edition.published.select { |e| e.latest_edition? && e._type != "PopularLinksEdition" }
+  latest_editions = Edition.published.reject { |e| e._type == "PopularLinksEdition" }
   english_only = latest_editions.reject { |e| e.artefact.welsh? }
 
   puts "#{english_only.count} English latest editions to process"
@@ -25,11 +25,14 @@ task tagging_report: :environment do
 
   not_tagged_to_browse.each do |hash|
     org_names = []
-    if hash[:links]["links"]["organisations"]
+
+    if hash[:links]["links"] && hash[:links]["links"]["organisations"]
       hash[:links]["links"]["organisations"].each do |organisation_id|
         org_name = Services.publishing_api.get_content(organisation_id).to_h["title"].gsub(",", " ")
-        org_names << org_name # Add the organization name to the array
+        org_names << org_name
       end
+    else
+      org_names << "No organisation"
     end
 
     org_names_string = org_names.join(", ")
