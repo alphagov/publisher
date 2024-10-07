@@ -1,0 +1,61 @@
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Edit",
+  heading_level: 2,
+  margin_bottom: 5,
+} %>
+
+<%= resource_form(@resource) do |f| %>
+  <% if @resource.in_review? %>
+    <%= form_group(f, :reviewer, label: "Reviewer") do %>
+      <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => "assignee-select"} %>
+    <% end %>
+  <% end %>
+
+  <% if @resource.published_edition %>
+    <%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
+      <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+    <% end %>
+
+    <div class="form-group emphasised-field add-bottom-margin checkbox">
+      <span class="form-wrapper">
+        <%= f.label :major_change, class: "control-label" do %>
+          <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
+          Alert the public to this change
+        <% end %>
+        <span class='help-block'>The change note will be emailed to users subscribed to email alerts and the ‘last updated’ date will change.</span>
+      </span>
+    </div>
+  <% end %>
+
+  <%= form_group(f, :title, label: "Title") do %>
+    <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+  <% end %>
+
+  <div class="form-group checkbox">
+    <div class="form-wrapper emphasised-field add-bottom-margin input-md-7">
+      <%= f.label :in_beta, class: "control-label" do %>
+        <%= f.check_box :in_beta, disabled: @resource.locked_for_edits? %>
+        Content is in beta
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_group(f, :overview, label: "Meta tag description", help: "Some search engines will display this if they cannot find what they need in the main text") do %>
+    <%= f.text_area :overview, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+  <% end %>
+
+  <%= form_group(f, :body) do %>
+    <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
+      module: "paste-html-to-govspeak",
+    } %>
+  <% end %>
+
+  <% if @resource.locked_for_edits? %>
+    <%= @resource.error_description %> can't be changed.
+  <% else %>
+    <% if current_user.has_editor_permissions?(@resource) && !@resource.retired_format? %>
+      <%= f.submit "Save", id: "save-edition", class: "btn btn-success btn-large js-save" %>
+    <% end %>
+    <%= preview_button(@resource) %>
+  <% end %>
+<% end %>
