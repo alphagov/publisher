@@ -27,7 +27,17 @@ module Publisher
     config.flipflop.raise_strategy_errors = nil
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
+
+    # Due to how we initialize state_count_reporter we need to disable a new
+    # optimisation put in place in Rails 7.1.
+    # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#autoloaded-paths-are-no-longer-in-$load-path
+    config.add_autoload_paths_to_load_path = true
 
     # Configuration object for the fact check email fetch script
     # See `script/mail_fetcher`
