@@ -39,6 +39,8 @@ module TabbedNavHelper
       "metadata"
     when "unpublish"
       "unpublish"
+    when nil
+      "edit"
     else
       "temp_nav_text"
     end
