@@ -44,7 +44,7 @@
             <% end %>
           </div>
 
-          <%= resource_form(@resource) do |f| %>
+          <%= legacy_resource_form(@resource) do |f| %>
             <div class="well">
               <%= render resource_fields(@resource), f: f %>
             </div>

@@ -6,7 +6,7 @@ module EditionsHelper
     params[:action] == "diff"
   end
 
-  def resource_form(resource, &form_definition)
+  def legacy_resource_form(resource, &form_definition)
     html_options = { id: "edition-form" }
     unless resource.locked_for_edits? || resource.archived?
       if resource.is_a?(Parted) || resource.is_a?(Varianted)

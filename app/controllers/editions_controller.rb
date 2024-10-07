@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin] do
+  before_action only: %i[progress admin update] do
     require_editor_permissions
   end
 
@@ -30,6 +30,22 @@ class EditionsController < InheritedResources::Base
   alias_method :metadata, :show
   alias_method :unpublish, :show
   alias_method :admin, :show
+
+  def update
+    @resource.assign_attributes(permitted_params)
+
+    if @resource.save
+      UpdateWorker.perform_async(resource.id.to_s)
+      flash.now[:success] = "Edition updated successfully."
+    else
+      @artefact = @resource.artefact
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
+  ensure
+    render "show"
+  end
 
   def history
     render action: "show"
@@ -132,5 +148,9 @@ private
     params[:edition][:activity][:request_type]
   rescue StandardError
     nil
+  end
+
+  def permitted_params
+    params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
   end
 end

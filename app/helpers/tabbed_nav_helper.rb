@@ -15,6 +15,8 @@ module TabbedNavHelper
     current_tab = (request.path.split("/") & all_tab_names).first
 
     case current_tab
+    when nil
+      "edit"
     when "metadata"
       "metadata"
     when "unpublish"
