@@ -31,7 +31,16 @@ module TabbedNavHelper
 
   def current_tab_name
     current_tab = (request.path.split("/") & all_tab_names).first
-    current_tab == "metadata" ? "metadata" : "temp_nav_text"
+
+    if
+      current_tab == "metadata"
+      "metadata"
+    elsif
+      !current_tab
+      "edit"
+    else
+      "temp_nav_text"
+    end
   end
 
 private
