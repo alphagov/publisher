@@ -72,11 +72,11 @@ class EditionsControllerTest < ActionController::TestCase
     %i[show metadata history admin linking unpublish].each do |action|
       context "##{action}" do
         setup do
-          @edition = FactoryBot.create(:edition, owning_org_slugs: %w[org-two])
+          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
         end
 
         should "return a 200 when requesting an edition owned by a different organisation" do
-          login_as(FactoryBot.create(:user, organisation_slug: "org-one"))
+          login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
 
           get action, params: { id: @edition.id }
 
@@ -100,11 +100,11 @@ class EditionsControllerTest < ActionController::TestCase
     %i[show metadata history admin linking unpublish].each do |action|
       context "##{action}" do
         setup do
-          @edition = FactoryBot.create(:edition, owning_org_slugs: %w[org-two])
+          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
         end
 
         should "return a 404 when requesting an edition owned by a different organisation" do
-          login_as(FactoryBot.create(:user, organisation_slug: "org-one"))
+          login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
 
           get action, params: { id: @edition.id }
 

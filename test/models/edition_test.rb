@@ -1270,8 +1270,17 @@ class EditionTest < ActiveSupport::TestCase
 
     context "accessible_to scope" do
       should "omit editions that are owned by an organisation that is different to the user's" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        query_result = Edition.accessible_to(user)
+
+        assert_empty query_result
+      end
+
+      should "omit editions that are owned by an organisation when the user has no organisation" do
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         query_result = Edition.accessible_to(user)
 
@@ -1279,8 +1288,17 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "omit editions not owned by any organisation" do
-        FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        query_result = Edition.accessible_to(user)
+
+        assert_empty query_result
+      end
+
+      should "omit editions not owned by any organisation when the user has no organisation" do
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         query_result = Edition.accessible_to(user)
 
@@ -1288,8 +1306,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are owned by the user's organisation" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "one")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "one")
 
         query_result = Edition.accessible_to(user)
 
@@ -1297,8 +1315,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are not owned by any organisation, when the user's organisation is GDS" do
-        FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         query_result = Edition.accessible_to(user)
 
@@ -1306,8 +1324,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are owned by an organisation that is different to the user's, when the user's organisation is GDS" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         query_result = Edition.accessible_to(user)
 
@@ -1317,36 +1335,50 @@ class EditionTest < ActiveSupport::TestCase
 
     context "#is_accessible_to?" do
       should "return false for editions that are owned by an organisation that is different to the user's" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        assert_not edition.is_accessible_to?(user)
+      end
+
+      should "return false for editions that are owned by an organisation when the user has no organisation" do
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         assert_not edition.is_accessible_to?(user)
       end
 
       should "return false for editions not owned by any organisation" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        assert_not edition.is_accessible_to?(user)
+      end
+
+      should "return false for editions not owned by any organisation when the user has no organisation" do
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         assert_not edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are owned by the user's organisation" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "one")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "one")
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are not owned by any organisation, when the user's organisation is GDS" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are owned by an organisation that is different to the user's, when the user's organisation is GDS" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         assert edition.is_accessible_to?(user)
       end
@@ -1361,8 +1393,17 @@ class EditionTest < ActiveSupport::TestCase
 
     context "accessible_to scope" do
       should "include editions that are owned by an organisation that is different to the user's" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        query_result = Edition.accessible_to(user)
+
+        assert_equal 1, query_result.count
+      end
+
+      should "include editions that are owned by an organisation when the user has no organisation" do
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         query_result = Edition.accessible_to(user)
 
@@ -1370,8 +1411,17 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions not owned by any organisation" do
-        FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        query_result = Edition.accessible_to(user)
+
+        assert_equal 1, query_result.count
+      end
+
+      should "include editions not owned by any organisation when the user has no organisation" do
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         query_result = Edition.accessible_to(user)
 
@@ -1379,8 +1429,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are owned by the user's organisation" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "one")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "one")
 
         query_result = Edition.accessible_to(user)
 
@@ -1388,8 +1438,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are not owned by any organisation, when the user's organisation is GDS" do
-        FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         query_result = Edition.accessible_to(user)
 
@@ -1397,8 +1447,8 @@ class EditionTest < ActiveSupport::TestCase
       end
 
       should "include editions that are owned by an organisation that is different to the user's, when the user's organisation is GDS" do
-        FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         query_result = Edition.accessible_to(user)
 
@@ -1408,36 +1458,50 @@ class EditionTest < ActiveSupport::TestCase
 
     context "#is_accessible_to?" do
       should "return true for editions that are owned by an organisation that is different to the user's" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        assert edition.is_accessible_to?(user)
+      end
+
+      should "return true for editions that are owned by an organisation when the user has no organisation" do
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions not owned by any organisation" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "two")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: "two")
+
+        assert edition.is_accessible_to?(user)
+      end
+
+      should "return true for editions not owned by any organisation when the user has no organisation" do
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: nil)
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are owned by the user's organisation" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "one")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: "one")
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are not owned by any organisation, when the user's organisation is GDS" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: [])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: [])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         assert edition.is_accessible_to?(user)
       end
 
       should "return true for editions that are owned by an organisation that is different to the user's, when the user's organisation is GDS" do
-        edition = FactoryBot.create(:edition, owning_org_slugs: %w[one])
-        user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+        edition = FactoryBot.create(:edition, owning_org_content_ids: %w[one])
+        user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
         assert edition.is_accessible_to?(user)
       end

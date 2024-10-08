@@ -89,6 +89,6 @@ class User
   end
 
   def gds_editor?
-    organisation_slug == "government-digital-service"
+    organisation_content_id == PublishService::GDS_ORGANISATION_ID
   end
 end

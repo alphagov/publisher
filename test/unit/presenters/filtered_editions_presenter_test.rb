@@ -4,7 +4,7 @@ require "test_helper"
 
 class FilteredEditionsPresenterTest < ActiveSupport::TestCase
   def a_gds_user
-    FactoryBot.create(:user, organisation_slug: "government-digital-service")
+    FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
   end
 
   context "#content_types" do
@@ -152,8 +152,8 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       end
 
       should "filter out editions not accessible to the user" do
-        user = FactoryBot.create(:user, organisation_slug: "an-org")
-        FactoryBot.create(:guide_edition, owning_org_slugs: %w[another-org])
+        user = FactoryBot.create(:user, organisation_content_id: "an-org")
+        FactoryBot.create(:guide_edition, owning_org_content_ids: %w[another-org])
 
         filtered_editions = FilteredEditionsPresenter.new(user).editions
 

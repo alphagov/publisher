@@ -46,7 +46,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "#gds_editor? is true if user's organisation is GDS" do
-    user = FactoryBot.create(:user, organisation_slug: "government-digital-service")
+    user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
 
     assert user.gds_editor?
   end
