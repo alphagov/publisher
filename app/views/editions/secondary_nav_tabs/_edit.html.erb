@@ -12,9 +12,15 @@
     <% end %>
   <% end %>
 
-  <%= form_group(f, :title, label: "Title") do %>
-    <%= f.text_field :title, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-  <% end %>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Title"
+    },
+    name: "edition[title]",
+    value: @resource.title,
+    heading_level: 3,
+    heading_size: "m"
+  } %>
 
   <div class="form-group checkbox">
     <div class="form-wrapper emphasised-field add-bottom-margin input-md-7">
