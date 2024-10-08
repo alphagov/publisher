@@ -5,26 +5,11 @@
 } %>
 
 <%= resource_form(@resource) do |f| %>
+  <%# This field is not included in the design %>
   <% if @resource.in_review? %>
     <%= form_group(f, :reviewer, label: "Reviewer") do %>
       <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => "assignee-select"} %>
     <% end %>
-  <% end %>
-
-  <% if @resource.published_edition %>
-    <%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
-      <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-    <% end %>
-
-    <div class="form-group emphasised-field add-bottom-margin checkbox">
-      <span class="form-wrapper">
-        <%= f.label :major_change, class: "control-label" do %>
-          <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
-          Alert the public to this change
-        <% end %>
-        <span class='help-block'>The change note will be emailed to users subscribed to email alerts and the ‘last updated’ date will change.</span>
-      </span>
-    </div>
   <% end %>
 
   <%= form_group(f, :title, label: "Title") do %>
@@ -48,6 +33,22 @@
     <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
       module: "paste-html-to-govspeak",
     } %>
+  <% end %>
+
+  <% if @resource.published_edition %>
+    <%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
+      <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+    <% end %>
+
+    <div class="form-group emphasised-field add-bottom-margin checkbox">
+      <span class="form-wrapper">
+        <%= f.label :major_change, class: "control-label" do %>
+          <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
+          Alert the public to this change
+        <% end %>
+        <span class='help-block'>The change note will be emailed to users subscribed to email alerts and the ‘last updated’ date will change.</span>
+      </span>
+    </div>
   <% end %>
 
   <% if @resource.locked_for_edits? %>
