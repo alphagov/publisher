@@ -50,11 +50,15 @@
     ]
   } %>
 
-  <%= form_group(f, :body) do %>
-    <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
-      module: "paste-html-to-govspeak",
-    } %>
-  <% end %>
+  <%= render "govuk_publishing_components/components/textarea", {
+    label: {
+      heading_size: "m",
+      text: "Body"
+    },
+    name: "edition[body]",
+    hint: sanitize("Refer to the <a href=\"#\" class=\"govuk-link\">Govspeak guidance (opens in new tab)</a>"),
+    value: @resource.body
+  } %>
 
   <% if @resource.published_edition %>
     <%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
