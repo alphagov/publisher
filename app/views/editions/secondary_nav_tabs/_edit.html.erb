@@ -18,15 +18,23 @@
     },
     name: "edition[title]",
     value: @resource.title,
-    heading_level: 3,
     heading_size: "m"
+  } %>
+
+  <%= render "govuk_publishing_components/components/textarea", {
+    label: {
+      heading_size: "m",
+      text: "Meta tag description"
+    },
+    name: "edition[overview]",
+    hint: "Some search engines will display this if they cannot find what they need in the main text",
+    value: @resource.overview
   } %>
 
   <%= render "govuk_publishing_components/components/radio", {
     heading: "Is this beta content?",
     name: "edition[in_beta]",
     inline: true,
-    heading_level: 3,
     heading_size: "m",
     items: [
       {
@@ -41,10 +49,6 @@
       }
     ]
   } %>
-
-  <%= form_group(f, :overview, label: "Meta tag description", help: "Some search engines will display this if they cannot find what they need in the main text") do %>
-    <%= f.text_area :overview, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
-  <% end %>
 
   <%= form_group(f, :body) do %>
     <%= f.text_area :body, rows: 20, disabled: @resource.locked_for_edits?, class: "input-md-10 form-control", data: {
