@@ -6,13 +6,6 @@
       margin_bottom: 5,
     } %>
 
-    <%# This field is not included in the design: queried but ignore for now %>
-    <% if @resource.in_review? %>
-      <%= form_group(f, :reviewer, label: "Reviewer") do %>
-        <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => "assignee-select"} %>
-      <% end %>
-    <% end %>
-
     <%= render "govuk_publishing_components/components/input", {
       label: {
         text: "Title"
