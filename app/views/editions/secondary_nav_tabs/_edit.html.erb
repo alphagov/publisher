@@ -61,19 +61,37 @@
   } %>
 
   <% if @resource.published_edition %>
-    <%= form_group(f, :change_note, label: "Public change note", help: "Only use this to alert the public that the content has been updated or to change the ‘last updated’ date.", attributes: { id: "edition_change_note_input" }) do %>
-      <%= f.text_area :change_note, rows: 3, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+    <%= render "govuk_publishing_components/components/details", {
+      title: "Add a public change note"
+    } do %>
+      <%= render "govuk_publishing_components/components/radio", {
+        heading: "Add a public change note",
+        heading_level: 3,
+        heading_size: "m",
+        name: "edition[major_change]",
+        id_prefix: "hint",
+        hint: "Telling users when published information has changed is important for transparency.",
+        items: [
+          {
+            value: "government-gateway",
+            text: sanitize("<span class=\"govuk-!-font-weight-bold\">Yes - information has been added, updated or removed.</span><span>A change note will be published on the page and emailed to users subscribed to email alerts. The ‘last updated’ date will change.</span>"),
+            checked: resource.major_change,
+            conditional: render("govuk_publishing_components/components/textarea", {
+              label: {
+                text: sanitize("<span class=\"govuk-!-font-weight-bold\">Describe the change for users</span>")
+              },
+              name: "edition[change_note]",
+              hint: sanitize("Tell users what has changed, where and why. Write in full sentences, leading with the most important words. For example, \"College A has been removed from the registered sponsors list because its licence has been suspended.\" <a href="">Guidance on change notes (opens in a new tab)</a>")
+            })
+          },
+          {
+            value: "govuk-verify",
+            text: "No",
+            checked: !resource.major_change
+          }
+        ]
+      } %>
     <% end %>
-
-    <div class="form-group emphasised-field add-bottom-margin checkbox">
-      <span class="form-wrapper">
-        <%= f.label :major_change, class: "control-label" do %>
-          <%= f.check_box :major_change, disabled: @resource.locked_for_edits?, class: "input-md-7" %>
-          Alert the public to this change
-        <% end %>
-        <span class='help-block'>The change note will be emailed to users subscribed to email alerts and the ‘last updated’ date will change.</span>
-      </span>
-    </div>
   <% end %>
 
   <% if @resource.locked_for_edits? %>
