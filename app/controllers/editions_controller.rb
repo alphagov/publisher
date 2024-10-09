@@ -38,6 +38,10 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
+  def confirm_unpublish
+    render "editions/secondary_nav_tabs/confirm_unpublish"
+  end
+
 protected
 
   def setup_view_paths
