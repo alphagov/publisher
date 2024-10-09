@@ -67,19 +67,20 @@ class EditionEditTest < IntegrationTest
   end
 
   context "when edition is published" do
+    setup do
+      @edition = FactoryBot.create(
+        :completed_transaction_edition,
+        panopticon_id: FactoryBot.create(
+          :artefact,
+          slug: "can-i-get-a-driving-licence",
+        ).id,
+        state: "published",
+        slug: "can-i-get-a-driving-licence",
+      )
+      visit edition_path(@edition)
+    end
     context "metadata tab" do
       setup do
-        edition = FactoryBot.create(
-          :completed_transaction_edition,
-          panopticon_id: FactoryBot.create(
-            :artefact,
-            slug: "can-i-get-a-driving-licence",
-          ).id,
-          state: "published",
-          slug: "can-i-get-a-driving-licence",
-        )
-
-        visit edition_path(edition)
         click_link("Metadata")
       end
 
@@ -91,6 +92,55 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?(/can-i-get-a-driving-licence/)
         assert page.has_text?("Language")
         assert page.has_text?(/English/)
+      end
+    end
+
+    context "unpublish tab" do
+      setup do
+        click_link("Unpublish")
+      end
+
+      should "show 'Unpublish' header and 'Continue' button" do
+        within :css, ".gem-c-heading" do
+          assert page.has_text?("Unpublish")
+        end
+        assert page.has_button?("Continue")
+      end
+
+      should "show 'cannot be undone' banner" do
+        assert page.has_text?("If you unpublish a page from GOV.UK it cannot be undone.")
+      end
+
+      should "show 'Redirect to URL' text, input box and example text" do
+        assert page.has_text?("Redirect to URL")
+        assert page.has_text?("For example: https://www.gov.uk/redirect-to-replacement-page")
+        assert page.has_css?(".govuk-input", count: 1)
+      end
+
+      should "navigate to 'confirm-unpublish' page when clicked on 'Continue' button" do
+        click_button("Continue")
+        assert_equal(page.current_path, "/editions/#{@edition.id}/unpublish/confirm-unpublish")
+      end
+    end
+
+    context "confirm unpublish" do
+      setup do
+        click_link("Unpublish")
+        click_button("Continue")
+      end
+
+      should "show 'Unpublish' header and document title" do
+        assert page.has_text?("Unpublish")
+        assert page.has_text?(@edition.title.to_s)
+      end
+
+      should "show 'cannot be undone' banner" do
+        assert page.has_text?("If you unpublish a page from GOV.UK it cannot be undone.")
+      end
+
+      should "show 'Unpublish document' button and 'Cancel' link" do
+        assert page.has_button?("Unpublish document")
+        assert page.has_link?("Cancel")
       end
     end
   end

@@ -1,0 +1,24 @@
+<%= header_for("Unpublish") %>
+
+<%= render "govuk_publishing_components/components/inset_text", {
+  text: "If you unpublish a page from GOV.UK it cannot be undone."
+} %>
+
+<%= form_for @edition, url: confirm_unpublish_edition_path, method: "get" do |f| %>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Redirect to URL",
+    },
+    name: "unpublish[redirect-url]",
+    hint:"For example: https://www.gov.uk/redirect-to-replacement-page",
+    heading_level: 3,
+    heading_size: "s",
+  } %>
+  <div class="govuk-button-group">
+    <%= render("govuk_publishing_components/components/button", {
+      text: "Continue",
+      type: "submit",
+    }) %>
+  </div>
+<% end %>
+
