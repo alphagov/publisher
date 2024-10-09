@@ -1,105 +1,109 @@
-<%= render "govuk_publishing_components/components/heading", {
-  text: "Edit",
-  heading_level: 2,
-  margin_bottom: 5,
-} %>
-
 <%= resource_form(@resource) do |f| %>
-  <%# This field is not included in the design %>
-  <% if @resource.in_review? %>
-    <%= form_group(f, :reviewer, label: "Reviewer") do %>
-      <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => "assignee-select"} %>
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Edit",
+      heading_level: 2,
+      margin_bottom: 5,
+    } %>
+
+    <%# This field is not included in the design: queried but ignore for now %>
+    <% if @resource.in_review? %>
+      <%= form_group(f, :reviewer, label: "Reviewer") do %>
+        <%= f.select :reviewer, User.enabled.order_by([[:name, :asc]]).collect{ |p| [p.name, p.name] }, { :include_blank => true }, { :class => "form-control input-md-3", :disabled => @resource.locked_for_edits?, "data-module" => "assignee-select"} %>
+      <% end %>
     <% end %>
-  <% end %>
 
-  <%= render "govuk_publishing_components/components/input", {
-    label: {
-      text: "Title"
-    },
-    name: "edition[title]",
-    value: @resource.title,
-    heading_size: "m"
-  } %>
-
-  <%= render "govuk_publishing_components/components/textarea", {
-    label: {
-      heading_size: "m",
-      text: "Meta tag description"
-    },
-    name: "edition[overview]",
-    hint: "Some search engines will display this if they cannot find what they need in the main text",
-    value: @resource.overview
-  } %>
-
-  <%= render "govuk_publishing_components/components/radio", {
-    heading: "Is this beta content?",
-    name: "edition[in_beta]",
-    inline: true,
-    heading_size: "m",
-    items: [
-      {
-        value: 1,
-        text: "Yes",
-        checked: @resource.in_beta
+    <%= render "govuk_publishing_components/components/input", {
+      label: {
+        text: "Title"
       },
-      {
-        value: 0,
-        text: "No",
-        checked: !@resource.in_beta
-      }
-    ]
-  } %>
+      name: "edition[title]",
+      value: @resource.title,
+      heading_size: "m"
+    } %>
 
-  <%= render "govuk_publishing_components/components/textarea", {
-    label: {
-      heading_size: "m",
-      text: "Body"
-    },
-    name: "edition[body]",
-    hint: sanitize("Refer to the <a href=\"#\" class=\"govuk-link\">Govspeak guidance (opens in new tab)</a>"),
-    value: @resource.body
-  } %>
-
-  <% if @resource.published_edition %>
-    <%= render "govuk_publishing_components/components/details", {
-      title: "Add a public change note"
-    } do %>
-      <%= render "govuk_publishing_components/components/radio", {
-        heading: "Add a public change note",
-        heading_level: 3,
+    <%= render "govuk_publishing_components/components/textarea", {
+      label: {
         heading_size: "m",
-        name: "edition[major_change]",
-        id_prefix: "hint",
-        hint: "Telling users when published information has changed is important for transparency.",
-        items: [
-          {
-            value: "government-gateway",
-            text: sanitize("<span class=\"govuk-!-font-weight-bold\">Yes - information has been added, updated or removed.</span><span>A change note will be published on the page and emailed to users subscribed to email alerts. The ‘last updated’ date will change.</span>"),
-            checked: resource.major_change,
-            conditional: render("govuk_publishing_components/components/textarea", {
-              label: {
-                text: sanitize("<span class=\"govuk-!-font-weight-bold\">Describe the change for users</span>")
-              },
-              name: "edition[change_note]",
-              hint: sanitize("Tell users what has changed, where and why. Write in full sentences, leading with the most important words. For example, \"College A has been removed from the registered sponsors list because its licence has been suspended.\" <a href="">Guidance on change notes (opens in a new tab)</a>")
-            })
-          },
-          {
-            value: "govuk-verify",
-            text: "No",
-            checked: !resource.major_change
-          }
-        ]
-      } %>
-    <% end %>
-  <% end %>
+        text: "Meta tag description"
+      },
+      name: "edition[overview]",
+      hint: "Some search engines will display this if they cannot find what they need in the main text",
+      value: @resource.overview
+    } %>
 
-  <% if @resource.locked_for_edits? %>
-    <%= @resource.error_description %> can't be changed.
-  <% else %>
-    <% if current_user.has_editor_permissions?(@resource) && !@resource.retired_format? %>
-      <%= f.submit "Save", id: "save-edition", class: "btn btn-success btn-large js-save" %>
+    <%= render "govuk_publishing_components/components/radio", {
+      heading: "Is this beta content?",
+      name: "edition[in_beta]",
+      inline: true,
+      heading_size: "m",
+      items: [
+        {
+          value: 1,
+          text: "Yes",
+          checked: @resource.in_beta
+        },
+        {
+          value: 0,
+          text: "No",
+          checked: !@resource.in_beta
+        }
+      ]
+    } %>
+
+    <%= render "govuk_publishing_components/components/textarea", {
+      label: {
+        heading_size: "m",
+        text: "Body"
+      },
+      name: "edition[body]",
+      hint: sanitize("Refer to the <a href=\"#\" class=\"govuk-link\">Govspeak guidance (opens in new tab)</a>"),
+      value: @resource.body
+    } %>
+
+    <% if @resource.published_edition %>
+      <%= render "govuk_publishing_components/components/details", {
+        title: "Add a public change note"
+      } do %>
+        <%= render "govuk_publishing_components/components/radio", {
+          heading: "Add a public change note",
+          heading_level: 3,
+          heading_size: "m",
+          name: "edition[major_change]",
+          id_prefix: "hint",
+          hint: "Telling users when published information has changed is important for transparency.",
+          items: [
+            {
+              value: "government-gateway",
+              text: sanitize("<span class=\"govuk-!-font-weight-bold\">Yes - information has been added, updated or removed.</span><span>A change note will be published on the page and emailed to users subscribed to email alerts. The ‘last updated’ date will change.</span>"),
+              checked: resource.major_change,
+              conditional: render("govuk_publishing_components/components/textarea", {
+                label: {
+                  text: sanitize("<span class=\"govuk-!-font-weight-bold\">Describe the change for users</span>")
+                },
+                name: "edition[change_note]",
+                hint: sanitize("Tell users what has changed, where and why. Write in full sentences, leading with the most important words. For example, \"College A has been removed from the registered sponsors list because its licence has been suspended.\" <a href="">Guidance on change notes (opens in a new tab)</a>")
+              })
+            },
+            {
+              value: "govuk-verify",
+              text: "No",
+              checked: !resource.major_change
+            }
+          ]
+        } %>
+      <% end %>
     <% end %>
-    <%= preview_button(@resource) %>
-  <% end %>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <% if @resource.locked_for_edits? %>
+      <%= @resource.error_description %> can't be changed.
+    <% else %>
+      <% if current_user.has_editor_permissions?(@resource) && !@resource.retired_format? %>
+        <%= f.submit "Save", id: "save-edition", class: "btn btn-success btn-large js-save" %>
+      <% end %>
+      <%= preview_button(@resource) %>
+    <% end %>
+  </div>
 <% end %>

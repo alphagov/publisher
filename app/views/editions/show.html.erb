@@ -27,7 +27,5 @@
     <%= render partial: "secondary_navigation" %>
   </div>
 
-  <div class="govuk-grid-column-two-thirds">
-    <%= render partial: "secondary_nav_tabs/#{current_tab_name}", :locals => { :publication => @resource } %>
-  </div>
+  <%= render partial: "secondary_nav_tabs/#{current_tab_name}", :locals => { :publication => @resource } %>
 </div>
