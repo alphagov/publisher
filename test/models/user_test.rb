@@ -45,6 +45,18 @@ class UserTest < ActiveSupport::TestCase
     assert user.welsh_editor?
   end
 
+  test "#gds_editor? is true if user's organisation is GDS" do
+    user = FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
+
+    assert user.gds_editor?
+  end
+
+  test "#gds_editor? is false if user's organisation is not GDS" do
+    user = FactoryBot.create(:user, organisation_slug: "some-other-org")
+
+    assert_not user.gds_editor?
+  end
+
   test "should convert to string using name by preference" do
     user = User.new(name: "Bob", email: "user@example.com")
     assert_equal "Bob", user.to_s

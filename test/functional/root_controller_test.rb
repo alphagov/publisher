@@ -152,7 +152,7 @@ class RootControllerTest < ActionController::TestCase
     should "ignore unrecognised filter states" do
       FilteredEditionsPresenter
         .expects(:new)
-        .with(has_entry(:states_filter, %w[draft]))
+        .with(anything, has_entry(:states_filter, %w[draft]))
         .returns(stub(
                    editions: Kaminari.paginate_array([]).page(1),
                    available_users: [],

@@ -3,9 +3,13 @@
 require "test_helper"
 
 class FilteredEditionsPresenterTest < ActiveSupport::TestCase
+  def a_gds_user
+    FactoryBot.create(:user, organisation_content_id: PublishService::GDS_ORGANISATION_ID)
+  end
+
   context "#content_types" do
     should "return content types with none selected when no content type filter has been specified" do
-      content_types = FilteredEditionsPresenter.new.content_types
+      content_types = FilteredEditionsPresenter.new(a_gds_user).content_types
 
       assert_equal(13, content_types.count)
       assert_includes(content_types, { text: "All", value: "all" })
@@ -24,7 +28,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     end
 
     should "mark the relevant content type as selected when a content type filter has been specified" do
-      content_types = FilteredEditionsPresenter.new(content_type_filter: "answer").content_types
+      content_types = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "answer").content_types
 
       assert_includes(content_types, { text: "Answer", value: "answer", selected: "true" })
       assert_includes(content_types, { text: "Place", value: "place" }) # Not selected
@@ -33,7 +37,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
   context "#edition_states" do
     should "return states with none checked when no state filter has been specified" do
-      states = FilteredEditionsPresenter.new.edition_states
+      states = FilteredEditionsPresenter.new(a_gds_user).edition_states
 
       assert_equal(9, states.count)
       assert_includes(states, { label: "Drafts", value: :draft })
@@ -48,7 +52,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     end
 
     should "mark the relevant states as checked when a state filter has been specified" do
-      states = FilteredEditionsPresenter.new(states_filter: %w[in_review ready]).edition_states
+      states = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[in_review ready]).edition_states
 
       assert_includes(states, { label: "In review", value: :in_review, checked: "true" })
       assert_includes(states, { label: "Ready", value: :ready, checked: "true" })
@@ -61,7 +65,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       draft_guide = FactoryBot.create(:guide_edition, state: "draft")
       published_guide = FactoryBot.create(:guide_edition, state: "published")
 
-      filtered_editions = FilteredEditionsPresenter.new.editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal(2, filtered_editions.count)
       assert_includes(filtered_editions, draft_guide)
@@ -72,7 +76,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       draft_guide = FactoryBot.create(:guide_edition, state: "draft")
       FactoryBot.create(:guide_edition, state: "published")
 
-      filtered_editions = FilteredEditionsPresenter.new(states_filter: %w[draft]).editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, states_filter: %w[draft]).editions
 
       assert_equal(1, filtered_editions.count)
       assert_equal(draft_guide, filtered_editions[0])
@@ -83,7 +87,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to: anna.id)
       FactoryBot.create(:guide_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(assigned_to_filter: anna.id).editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id).editions
 
       assert_equal([assigned_to_anna], filtered_editions.to_a)
     end
@@ -93,7 +97,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition, assigned_to: anna.id)
       not_assigned = FactoryBot.create(:guide_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(assigned_to_filter: "nobody").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: "nobody").editions
 
       assert_equal([not_assigned], filtered_editions.to_a)
     end
@@ -104,7 +108,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition)
 
       filtered_editions =
-        FilteredEditionsPresenter.new(assigned_to_filter: "not a valid user id").editions
+        FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: "not a valid user id").editions
 
       assert_equal(2, filtered_editions.count)
     end
@@ -113,7 +117,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide = FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(content_type_filter: "guide").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "guide").editions
 
       assert_equal([guide], filtered_editions.to_a)
     end
@@ -122,7 +126,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       FactoryBot.create(:guide_edition)
       FactoryBot.create(:completed_transaction_edition)
 
-      filtered_editions = FilteredEditionsPresenter.new(content_type_filter: "all").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, content_type_filter: "all").editions
 
       assert_equal(2, filtered_editions.count)
     end
@@ -131,16 +135,37 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       guide_fawkes = FactoryBot.create(:guide_edition, title: "Guide Fawkes")
       FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide")
 
-      filtered_editions = FilteredEditionsPresenter.new(title_filter: "Fawkes").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, title_filter: "Fawkes").editions
 
       assert_equal([guide_fawkes], filtered_editions.to_a)
+    end
+
+    context "when 'restrict_access_by_org' feature toggle is enabled" do
+      setup do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:restrict_access_by_org, true)
+      end
+
+      teardown do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:restrict_access_by_org, false)
+      end
+
+      should "filter out editions not accessible to the user" do
+        user = FactoryBot.create(:user, organisation_content_id: "an-org")
+        FactoryBot.create(:guide_edition, owning_org_content_ids: %w[another-org])
+
+        filtered_editions = FilteredEditionsPresenter.new(user).editions
+
+        assert_equal(0, filtered_editions.count)
+      end
     end
 
     should "not return popular links" do
       guide_fawkes = FactoryBot.create(:guide_edition)
       FactoryBot.create(:popular_links)
 
-      filtered_editions = FilteredEditionsPresenter.new.editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal([guide_fawkes], filtered_editions.to_a)
     end
@@ -148,7 +173,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     should "return a single 'page' of results when no page number is specified" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
-      filtered_editions = FilteredEditionsPresenter.new.editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.count)
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.to_a.count)
@@ -157,7 +182,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     should "return the specified 'page' of results" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
-      filtered_editions = FilteredEditionsPresenter.new(page: 2).editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, page: 2).editions
 
       assert_equal(1, filtered_editions.to_a.count)
     end
@@ -167,7 +192,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       newest = FactoryBot.create(:guide_edition, updated_at: Time.utc(2024, 1))
       middle = FactoryBot.create(:guide_edition, updated_at: Time.utc(2023, 1))
 
-      filtered_editions = FilteredEditionsPresenter.new.editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal(3, filtered_editions.count)
       assert_equal(newest, filtered_editions[0])
@@ -178,21 +203,21 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
   context "#assignees" do
     should "return an 'all assignees' item" do
-      assignees = FilteredEditionsPresenter.new.assignees
+      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
 
-      assert_equal([{ text: "All assignees", value: "" }], assignees)
+      assert_includes(assignees, { text: "All assignees", value: "" })
     end
 
     should "return users who are not the assignee as unselected" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assignees = FilteredEditionsPresenter.new.assignees
+      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
 
       assert_includes(assignees, { text: anna.name, value: anna.id })
     end
 
     should "return the assignee as selected" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assignees = FilteredEditionsPresenter.new(assigned_to_filter: anna.id.to_s).assignees
+      assignees = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id.to_s).assignees
 
       assert_includes(assignees, { text: anna.name, value: anna.id, selected: "true" })
     end
@@ -202,7 +227,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       charlie = FactoryBot.create(:user, name: "Charlie")
       anna = FactoryBot.create(:user, name: "Anna")
 
-      assignees = FilteredEditionsPresenter.new.assignees
+      assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
 
       assert_equal(anna.name, assignees[1][:text])
       assert_equal(bob.name, assignees[2][:text])
@@ -210,14 +235,14 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     end
 
     should "not include disabled users" do
-      enabled_user = FactoryBot.create(:user, name: "enabled user")
       disabled_user = FactoryBot.create(:user, name: "disabled user", disabled: true)
+      a_user = a_gds_user
 
-      users = FilteredEditionsPresenter.new.assignees
+      users = FilteredEditionsPresenter.new(a_user).assignees
 
       assert_equal(2, users.count)
       assert_equal("All assignees", users[0][:text])
-      assert_equal(enabled_user.name, users[1][:text])
+      assert_equal(a_user.name, users[1][:text])
       assert_not_includes users.map { |user| user[:text] }, disabled_user.name
     end
   end

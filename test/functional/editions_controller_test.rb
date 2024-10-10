@@ -5,6 +5,9 @@ class EditionsControllerTest < ActionController::TestCase
     login_as_stub_user
     stub_linkables
     stub_holidays_used_by_fact_check
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:restrict_access_by_org, false)
   end
 
   context "#template_folder_for" do
@@ -17,7 +20,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#index" do
-    should "editions index redirects to root" do
+    should "redirect to root" do
       get :index
       assert_response :redirect
       assert_redirected_to root_path
@@ -36,12 +39,12 @@ class EditionsControllerTest < ActionController::TestCase
       @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
     end
 
-    should "requesting a publication that doesn't exist returns a 404" do
+    should "return a 404 when requesting a publication that doesn't exist" do
       get :show, params: { id: "4e663834e2ba80480a0000e6" }
       assert_response :not_found
     end
 
-    should "we can view a guide" do
+    should "return a view for the requested guide" do
       get :show, params: { id: @guide.id }
       assert_response :success
       assert_not_nil assigns(:resource)
@@ -62,6 +65,52 @@ class EditionsControllerTest < ActionController::TestCase
 
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
+    end
+  end
+
+  context "when 'restrict_access_by_org' feature toggle is disabled" do
+    %i[show metadata history admin linking unpublish].each do |action|
+      context "##{action}" do
+        setup do
+          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
+        end
+
+        should "return a 200 when requesting an edition owned by a different organisation" do
+          login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :ok
+        end
+      end
+    end
+  end
+
+  context "when 'restrict_access_by_org' feature toggle is enabled" do
+    setup do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:restrict_access_by_org, true)
+    end
+
+    teardown do
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:restrict_access_by_org, false)
+    end
+
+    %i[show metadata history admin linking unpublish].each do |action|
+      context "##{action}" do
+        setup do
+          @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
+        end
+
+        should "return a 404 when requesting an edition owned by a different organisation" do
+          login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :not_found
+        end
+      end
     end
   end
 end
