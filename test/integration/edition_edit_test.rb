@@ -33,7 +33,10 @@ class EditionEditTest < IntegrationTest
       assert page.has_text?("History and notes")
       assert page.has_text?("Admin")
       assert page.has_text?("Related external links")
-      assert page.has_text?("Unpublish")
+    end
+
+    should "not show unpublish tab" do
+      assert page.has_no_text?("Unpublish")
     end
 
     context "metadata tab" do
@@ -79,6 +82,17 @@ class EditionEditTest < IntegrationTest
       )
       visit edition_path(@edition)
     end
+
+    should "show all the tabs for the published edition" do
+      assert page.has_text?("Edit")
+      assert page.has_text?("Tagging")
+      assert page.has_text?("Metadata")
+      assert page.has_text?("History and notes")
+      assert page.has_text?("Admin")
+      assert page.has_text?("Related external links")
+      assert page.has_text?("Unpublish")
+    end
+
     context "metadata tab" do
       setup do
         click_link("Metadata")

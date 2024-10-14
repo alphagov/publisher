@@ -1,13 +1,30 @@
-<% content_for :title_context, @resource.title %>
+<%@edition = @resource %>
+<% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Unpublish" %>
 <% content_for :title, "Unpublish" %>
+
+<% unless @edition.errors.empty? %>
+  <% content_for :error_summary do %>
+    <%= render("govuk_publishing_components/components/error_summary", {
+      id: "error-summary",
+      title: "There is a problem",
+      items: @edition.errors.map do |error|
+        {
+          text: error.message,
+          href: "##{error.attribute.to_s}",
+        }
+      end,
+    }) %>
+  <% end %>
+<% end %>
 
 <%= render "govuk_publishing_components/components/inset_text", {
   text: "If you unpublish a page from GOV.UK it cannot be undone."
 } %>
 
 <div class="govuk-grid-column-two-thirds">
-  <%= form_tag process_unpublish_edition_path(@resource), method: :post do %>
+  <%= form_for @edition, url: process_unpublish_edition_path(@edition),  method: :post do %>
+    <%= hidden_field_tag :redirect_url, params[:redirect_url]%>
     <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to unpublish this document?</p>
     <div class="govuk-button-group govuk-!-margin-bottom-6">
       <%= render "govuk_publishing_components/components/button", {
