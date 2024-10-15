@@ -1,4 +1,4 @@
-<%@edition = @resource %>
+<% @edition = @resource %>
 <% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Unpublish" %>
 <% content_for :title, "Unpublish" %>
@@ -19,12 +19,12 @@
 <% end %>
 
 <%= render "govuk_publishing_components/components/inset_text", {
-  text: "If you unpublish a page from GOV.UK it cannot be undone."
+  text: "If you unpublish a page from GOV.UK it cannot be undone.",
 } %>
 
 <div class="govuk-grid-column-two-thirds">
   <%= form_for @edition, url: process_unpublish_edition_path(@edition),  method: :post do %>
-    <%= hidden_field_tag :redirect_url, params[:redirect_url]%>
+    <%= hidden_field_tag :redirect_url, params[:redirect_url] %>
     <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to unpublish this document?</p>
     <div class="govuk-button-group govuk-!-margin-bottom-6">
       <%= render "govuk_publishing_components/components/button", {

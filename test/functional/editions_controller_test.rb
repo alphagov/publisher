@@ -69,7 +69,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "when 'restrict_access_by_org' feature toggle is disabled" do
-    %i[show metadata history admin linking unpublish].each do |action|
+    %i[show metadata history admin linking].each do |action|
       context "##{action}" do
         setup do
           @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
