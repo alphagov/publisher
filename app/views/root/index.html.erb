@@ -1,11 +1,13 @@
 <% content_for :page_title, "Publications" %>
 <% content_for :title, "Publications" %>
 
-<div class="govuk-grid-column-one-third">
-  <%= render :partial => "filter" %>
-</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <%= render :partial => "filter" %>
+  </div>
 
-<div class="govuk-grid-column-two-thirds">
-  <%= render :partial => "table" %>
-  <%= paginate @presenter.editions %>
+  <div class="govuk-grid-column-two-thirds">
+    <%= render :partial => "table" %>
+    <%= paginate @presenter.editions %>
+  </div>
 </div>

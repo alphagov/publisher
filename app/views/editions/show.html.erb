@@ -3,8 +3,8 @@
 <% content_for :page_title, @resource.title %>
 <% content_for :title, @resource.title %>
 
-<div class="govuk-grid-column-full-width editions__edit">
-  <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds editions__edit__summary">
     <%= render "govuk_publishing_components/components/summary_list", {
       items: [
         {
@@ -22,11 +22,12 @@
       ],
     } %>
   </div>
+</div>
 
+<div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= render partial: "secondary_navigation" %>
   </div>
-
-  <%= render partial: "secondary_nav_tabs/#{current_tab_name}", :locals => { :publication => @resource } %>
-
 </div>
+
+<%= render partial: "secondary_nav_tabs/#{current_tab_name}", :locals => { :publication => @resource } %>
