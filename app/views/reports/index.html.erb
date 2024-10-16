@@ -1,86 +1,87 @@
 <% content_for :page_title, "Reports" %>
 <% content_for :title, "CSV Reports" %>
 
-<div class="govuk-grid-column-two-thirds">
-  <%= render "govuk_publishing_components/components/lead_paragraph", {
-    text: "These reports are updated every hour.",
-    margin_bottom: 6,
-  } %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/lead_paragraph", {
+      text: "These reports are updated every hour.",
+      margin_bottom: 6,
+    } %>
 
-  <%= render "govuk_publishing_components/components/document_list", {
-    margin_bottom: 6,
-    items: [
-      {
-        link: {
-          text: "All documents for departmental distribution",
-          path: organisation_content_report_path(format: :csv),
+    <%= render "govuk_publishing_components/components/document_list", {
+      margin_bottom: 6,
+      items: [
+        {
+          link: {
+            text: "All documents for departmental distribution",
+            path: organisation_content_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("organisation_content"),
+            public_updated_at: report_last_updated("organisation_content"),
+          },
         },
-        metadata: {
-          updated_at_time: report_generated_time_message("organisation_content"),
-          public_updated_at: report_last_updated("organisation_content"),
+        {
+          link: {
+            text: "Churn in non-archived editions",
+            path: edition_churn_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("edition_churn"),
+            public_updated_at: report_last_updated("edition_churn"),
+          },
         },
-      },
-      {
-        link: {
-          text: "Churn in non-archived editions",
-          path: edition_churn_report_path(format: :csv),
+        {
+          link: {
+            text: "Churn in all editions",
+            path: all_edition_churn_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("all_edition_churn"),
+            public_updated_at: report_last_updated("all_edition_churn"),
+          },
         },
-        metadata: {
-          updated_at_time: report_generated_time_message("edition_churn"),
-          public_updated_at: report_last_updated("edition_churn"),
+        {
+          link: {
+            text: "Progress on all non-archived editions",
+            path: progress_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("editorial_progress"),
+            public_updated_at: report_last_updated("editorial_progress"),
+          },
         },
-      },
-      {
-        link: {
-          text: "Churn in all editions",
-          path: all_edition_churn_report_path(format: :csv),
+        {
+          link: {
+            text: "Content summary and workflow history for all published editions",
+            path: content_workflow_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("content_workflow"),
+            public_updated_at: report_last_updated("content_workflow"),
+          },
         },
-        metadata: {
-          updated_at_time: report_generated_time_message("all_edition_churn"),
-          public_updated_at: report_last_updated("all_edition_churn"),
+        {
+          link: {
+            text: "Content summary and workflow history for all editions",
+            path: all_content_workflow_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("all_content_workflow"),
+            public_updated_at: report_last_updated("all_content_workflow"),
+          },
         },
-      },
-      {
-        link: {
-          text: "Progress on all non-archived editions",
-          path: progress_report_path(format: :csv),
+        {
+          link: {
+            text: "All URLs",
+            path: all_urls_report_path(format: :csv),
+          },
+          metadata: {
+            updated_at_time: report_generated_time_message("all_urls"),
+            public_updated_at: report_last_updated("all_urls"),
+          },
         },
-        metadata: {
-          updated_at_time: report_generated_time_message("editorial_progress"),
-          public_updated_at: report_last_updated("editorial_progress"),
-        },
-      },
-      {
-        link: {
-          text: "Content summary and workflow history for all published editions",
-          path: content_workflow_report_path(format: :csv),
-        },
-        metadata: {
-          updated_at_time: report_generated_time_message("content_workflow"),
-          public_updated_at: report_last_updated("content_workflow"),
-        },
-      },
-      {
-        link: {
-          text: "Content summary and workflow history for all editions",
-          path: all_content_workflow_report_path(format: :csv),
-        },
-        metadata: {
-          updated_at_time: report_generated_time_message("all_content_workflow"),
-          public_updated_at: report_last_updated("all_content_workflow"),
-        },
-      },
-      {
-        link: {
-          text: "All URLs",
-          path: all_urls_report_path(format: :csv),
-        },
-        metadata: {
-          updated_at_time: report_generated_time_message("all_urls"),
-          public_updated_at: report_last_updated("all_urls"),
-        },
-      },
-    ],
-  } %>
-
+      ],
+    } %>
+  </div>
 </div>

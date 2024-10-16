@@ -5,23 +5,25 @@
   <% content_for :error_summary, render("shared/error_summary", { object: @downtime }) %>
 <% end %>
 
-<div class="govuk-grid-column-two-thirds">
-  <%= render "govuk_publishing_components/components/lead_paragraph", {
-    text: "Downtime message appear on the service's start page one day before the downtime is due to occur.",
-    margin_bottom: 6,
-  } %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/lead_paragraph", {
+      text: "Downtime message appear on the service's start page one day before the downtime is due to occur.",
+      margin_bottom: 6,
+    } %>
 
-<%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: "form well remove-top-margin", 'data-module': "downtime-message" } do |f| %>
-  <%= render "form", f: f %>
-    <div class="govuk-button-group">
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Save",
-        value: "save",
-        name: "save",
-      } %>
+  <%= form_for @downtime, url: edition_downtime_path(@edition), html: { class: "form well remove-top-margin", 'data-module': "downtime-message" } do |f| %>
+    <%= render "form", f: f %>
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+          value: "save",
+          name: "save",
+        } %>
 
-      <%= link_to "Cancel", downtimes_path, class: "govuk-link govuk-link--no-visited-state" %>
-      <%= link_to "Remove", edition_destroy_downtime_path, class: "govuk-link remove-link" %>
-    </div>
-<% end %>
+        <%= link_to "Cancel", downtimes_path, class: "govuk-link govuk-link--no-visited-state" %>
+        <%= link_to "Remove", edition_destroy_downtime_path, class: "govuk-link remove-link" %>
+      </div>
+    <% end %>
+  </div>
 </div>

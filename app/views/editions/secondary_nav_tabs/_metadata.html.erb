@@ -1,59 +1,61 @@
-<div class="govuk-grid-column-two-thirds">
-  <%= render "govuk_publishing_components/components/heading", {
-    text: "Metadata",
-    heading_level: 2,
-    margin_bottom: 5,
-  } %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Metadata",
+      heading_level: 2,
+      margin_bottom: 5,
+    } %>
 
-  <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
-    <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact" }) do |f| %>
-      <%= f.hidden_field :id, value: @artefact.id %>
+    <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
+      <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact" }) do |f| %>
+        <%= f.hidden_field :id, value: @artefact.id %>
 
-      <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Slug",
-        },
-        hint: "If you change the slug of a published page, the old slug will automatically redirect to the new one.",
-        name: "artefact[slug]",
-        value: publication.slug,
-        heading_level: 3,
-        heading_size: "m",
-      } %>
-
-      <%= render "govuk_publishing_components/components/radio", {
-        heading: "Language",
-        name: "artefact[language]",
-        heading_level: 3,
-        heading_size: "m",
-        inline: true,
-        items: [
-          {
-            value: "en",
-            text: "English",
-            checked: publication.artefact.language == "en" ? true : false,
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            text: "Slug",
           },
-          {
-            value: "cy",
-            text: "Welsh",
-            checked: publication.artefact.language == "cy" ? true : false,
-          },
-        ],
-      } %>
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Update",
-      } %>
+          hint: "If you change the slug of a published page, the old slug will automatically redirect to the new one.",
+          name: "artefact[slug]",
+          value: publication.slug,
+          heading_level: 3,
+          heading_size: "m",
+        } %>
+
+        <%= render "govuk_publishing_components/components/radio", {
+          heading: "Language",
+          name: "artefact[language]",
+          heading_level: 3,
+          heading_size: "m",
+          inline: true,
+          items: [
+            {
+              value: "en",
+              text: "English",
+              checked: publication.artefact.language == "en" ? true : false,
+            },
+            {
+              value: "cy",
+              text: "Welsh",
+              checked: publication.artefact.language == "cy" ? true : false,
+            },
+          ],
+        } %>
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Update",
+        } %>
+      <% end %>
+    <% else %>
+      <% @artefact.attributes.slice("slug", "language").each do |key, value| %>
+        <%= render "govuk_publishing_components/components/heading", {
+          text: key.humanize,
+          heading_level: 3,
+          font_size: "m",
+          margin_bottom: 3,
+        } %>
+        <p class="govuk-body">
+          <%= key.eql?("slug") ? value : locale_to_language(value) %>
+        </p>
+      <% end %>
     <% end %>
-  <% else %>
-    <% @artefact.attributes.slice("slug", "language").each do |key, value| %>
-      <%= render "govuk_publishing_components/components/heading", {
-        text: key.humanize,
-        heading_level: 3,
-        font_size: "m",
-        margin_bottom: 3,
-      } %>
-      <p class="govuk-body">
-        <%= key.eql?("slug") ? value : locale_to_language(value) %>
-      </p>
-    <% end %>
-  <% end %>
+  </div>
 </div>

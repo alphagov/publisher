@@ -1,30 +1,31 @@
 <% content_for :page_title, "Downtime messages" %>
 <% content_for :title, "Downtime messages" %>
 
-<div class="govuk-grid-column-full">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "govuk_publishing_components/components/lead_paragraph", {
+      text: "Show a message on a published transaction start page for a specific time.",
+      margin_bottom: 6,
+    } %>
 
-  <%= render "govuk_publishing_components/components/lead_paragraph", {
-    text: "Show a message on a published transaction start page for a specific time.",
-    margin_bottom: 6,
-  } %>  
-
-  <%= render "govuk_publishing_components/components/table", {
-    filterable: true,
-    label: "Filter by service or service status",
-    head: [
-      {
-        text: "Service",
-      },
-      {
-        text: "Service Status",
-      },
-      {
-        text: tag.span("Action", class: "govuk-visually-hidden"),
-      },
-      {
-        text: tag.span("Link to view live on GOV.UK", class: "govuk-visually-hidden"),
-      },
-    ],
-    rows: transactions_table_entries(@transactions.to_a),
-  } %>
+    <%= render "govuk_publishing_components/components/table", {
+      filterable: true,
+      label: "Filter by service or service status",
+      head: [
+        {
+          text: "Service",
+        },
+        {
+          text: "Service Status",
+        },
+        {
+          text: tag.span("Action", class: "govuk-visually-hidden"),
+        },
+        {
+          text: tag.span("Link to view live on GOV.UK", class: "govuk-visually-hidden"),
+        },
+      ],
+      rows: transactions_table_entries(@transactions.to_a),
+    } %>
+  </div>
 </div>
