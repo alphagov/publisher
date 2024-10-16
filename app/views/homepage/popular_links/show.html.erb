@@ -2,18 +2,20 @@
 <% content_for :title, "Popular on GOV.UK" %>
 <% content_for :title_context, "Homepage" %>
 
-<div class="govuk-grid-column-two-thirds">
-  <section>
-    <%= render "homepage/popular_links/version_and_status", version: @latest_popular_links.version_number, status: @latest_popular_links.state %>
-  </section>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "homepage/popular_links/version_and_status", version: @latest_popular_links.version_number, status: @latest_popular_links.state %>
+    </section>
 
-  <section>
-    <% @latest_popular_links.link_items.each_with_index do |item, index| %>
-      <%= render "homepage/popular_links/link", item:, index: %>
-    <% end %>
-  </section>
-</div>
+    <section>
+      <% @latest_popular_links.link_items.each_with_index do |item, index| %>
+        <%= render "homepage/popular_links/link", item:, index: %>
+      <% end %>
+    </section>
+  </div>
 
-<div class = "govuk-grid-column-one-third popular-links__sidebar" >
-  <%= render "homepage/popular_links/sidebar" %>
+  <div class = "govuk-grid-column-one-third popular-links__sidebar" >
+    <%= render "homepage/popular_links/sidebar" %>
+  </div>
 </div>
