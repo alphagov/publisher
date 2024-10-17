@@ -3,7 +3,7 @@ module TabbedNavHelper
     nav_items = []
 
     all_tab_names.each do |item|
-      next if edition.state == "draft" && item == "unpublish"
+      next if !edition.state.eql?("published") && item == "unpublish"
 
       nav_items << standard_nav_items(item, edition)
     end
