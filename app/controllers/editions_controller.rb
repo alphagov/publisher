@@ -11,6 +11,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
+  before_action only: %i[update] do
+    require_editor_permissions
+  end
 
   helper_method :locale_to_language
 
@@ -26,6 +29,26 @@ class EditionsController < InheritedResources::Base
 
   alias_method :metadata, :show
   alias_method :unpublish, :show
+
+  def update
+    params = permitted_params
+    @resource.assign_attributes(params[:edition])
+    success = @resource.update!
+
+    if success == true
+      UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
+      flash.now[:success] = "Edition updated successfully."
+    else
+      @resource = resource
+      @artefact = @resource.artefact
+    end
+
+    render action: "show"
+
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} #{e.message}"
+      render_show_page_with_error
+  end
 
   def history
     render action: "show"
@@ -71,6 +94,14 @@ protected
     setup_view_paths_for(resource)
   end
 
+  def update_action_is_publish?
+    attempted_activity == :publish
+  end
+
+  def attempted_activity
+    Edition::ACTIONS.invert[params[:commit]]
+  end
+
 private
 
   def unpublish_edition(artefact)
@@ -80,6 +111,11 @@ private
   def render_confirm_page_with_error
     @resource.errors.add(:unpublish, downstream_error_message)
     render "secondary_nav_tabs/confirm_unpublish"
+  end
+
+  def render_show_page_with_error
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
+    render "show"
   end
 
   def downstream_error_message
@@ -117,5 +153,9 @@ private
 
   def description(resource)
     resource.format.underscore.humanize
+  end
+
+  def permitted_params
+    params.permit(edition: %i[title overview in_beta body major_change change_note])
   end
 end
