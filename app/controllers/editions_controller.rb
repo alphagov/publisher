@@ -11,6 +11,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
+  before_action only: %i[update] do
+    require_editor_permissions
+  end
 
   helper_method :locale_to_language
 
@@ -26,6 +29,32 @@ class EditionsController < InheritedResources::Base
 
   alias_method :metadata, :show
   alias_method :unpublish, :show
+
+  def update
+    assign_to = new_assignee
+    params = permitted_params
+    @resource.assign_attributes(params[:edition])
+    success = @resource.update!
+
+    if success == true
+      update_assignment resource, assign_to
+
+      UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
+      flash[:success] = "Edition updated successfully."
+    else
+      @resource = resource
+      @tagging_update = tagging_update_form
+      @linkables = Tagging::Linkables.new
+      @artefact = @resource.artefact
+    end
+
+    render action: "show"
+
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} #{e.message}"
+      render action: "show"
+  end
+
 
   def history
     render action: "show"
@@ -69,6 +98,36 @@ protected
 
   def setup_view_paths
     setup_view_paths_for(resource)
+  end
+
+  def new_assignee
+    assignee_id = (params[:edition] || {}).delete(:assigned_to_id)
+    User.find(assignee_id) if assignee_id.present?
+  end
+
+  def update_assignment(edition, assignee)
+    return if edition.assigned_to == assignee
+
+    if !assignee
+      current_user.unassign(edition)
+    elsif assignee.has_editor_permissions?(resource)
+      current_user.assign(edition, assignee)
+    else
+      flash[:danger] = "Chosen assignee does not have correct editor permissions."
+    end
+  end
+
+  def update_action_is_publish?
+    attempted_activity == :publish
+  end
+
+  def progress_edition(resource, activity_params)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
+  end
+
+  def attempted_activity
+    Edition::ACTIONS.invert[params[:commit]]
   end
 
 private
@@ -117,5 +176,9 @@ private
 
   def description(resource)
     resource.format.underscore.humanize
+  end
+
+  def permitted_params
+    params.permit(edition: %i[title overview in_beta body major_change change_note])
   end
 end
