@@ -59,6 +59,12 @@ class FilteredEditionsPresenter
   end
 
   def editions
+    @editions ||= query_editions
+  end
+
+private
+
+  def query_editions
     result = editions_by_content_type
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
@@ -67,8 +73,6 @@ class FilteredEditionsPresenter
     result = result.where.not(_type: "PopularLinksEdition")
     result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
   end
-
-private
 
   def available_users
     User.enabled.alphabetized

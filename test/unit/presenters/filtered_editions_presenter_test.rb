@@ -199,6 +199,14 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal(middle, filtered_editions[1])
       assert_equal(oldest, filtered_editions[2])
     end
+
+    should "only query the database once, regardless of how many times it is called" do
+      presenter = FilteredEditionsPresenter.new(a_gds_user)
+      presenter.expects(:query_editions).once.returns([])
+
+      presenter.editions
+      presenter.editions
+    end
   end
 
   context "#assignees" do
