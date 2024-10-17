@@ -7,6 +7,9 @@ class EditionsController < InheritedResources::Base
   before_action except: %i[index] do
     require_user_accessibility_to_edition(@resource)
   end
+  before_action only: %i[update] do
+    require_editor_permissions
+  end
 
   helper_method :locale_to_language
 
@@ -18,6 +21,9 @@ class EditionsController < InheritedResources::Base
     @artefact = @resource.artefact
 
     render action: "show"
+  end
+
+  def update
   end
 
   alias_method :metadata, :show
