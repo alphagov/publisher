@@ -3,6 +3,8 @@ module TabbedNavHelper
     nav_items = []
 
     all_tab_names.each do |item|
+      next if !edition.state.eql?("published") && item == "unpublish"
+
       nav_items << standard_nav_items(item, edition)
     end
 
@@ -31,7 +33,15 @@ module TabbedNavHelper
 
   def current_tab_name
     current_tab = (request.path.split("/") & all_tab_names).first
-    current_tab == "metadata" ? "metadata" : "temp_nav_text"
+
+    case current_tab
+    when "metadata"
+      "metadata"
+    when "unpublish"
+      "unpublish"
+    else
+      "temp_nav_text"
+    end
   end
 
 private

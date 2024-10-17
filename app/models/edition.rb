@@ -343,7 +343,7 @@ class Edition
 
   def self.find_or_create_from_panopticon_data(panopticon_id, importing_user)
     existing_publication = Edition.where(panopticon_id:)
-      .order_by(version_number: :desc).first
+                                  .order_by(version_number: :desc).first
     return existing_publication if existing_publication
 
     metadata = Artefact.find(panopticon_id)
@@ -422,8 +422,9 @@ class Edition
       a = Artefact.find(panopticon_id)
       if (a.state == "archived") && changes.any?
         # If we're only changing the state to archived, that's ok
-        # Any other changes are not allowed
-        allowed_keys = %w[state updated_at]
+        # We have to add owning_org_content_ids as Mongo changes the
+        # value from nil to an empty array on save - reads as a change
+        allowed_keys = %w[state updated_at owning_org_content_ids]
         unless (changes.keys - allowed_keys).empty? && (state == "archived")
           raise "Editing of an edition with an Archived artefact is not allowed"
         end

@@ -1,10 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= render "govuk_publishing_components/components/heading", {
-      text: "Metadata",
-      heading_level: 2,
-      margin_bottom: 5,
-    } %>
+    <%= header_for("Metadata") %>
 
     <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
       <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact" }) do |f| %>
