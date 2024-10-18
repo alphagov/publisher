@@ -76,7 +76,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         should "return a 200 when requesting an edition owned by a different organisation" do
-          login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
+          login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
 
           get action, params: { id: @edition.id }
 
@@ -110,6 +110,93 @@ class EditionsControllerTest < ActionController::TestCase
 
           assert_response :not_found
         end
+      end
+    end
+  end
+
+  context "#unpublish" do
+    setup do
+      artefact = FactoryBot.create(
+        :artefact,
+        slug: "test2",
+        kind: "guide",
+        name: "test",
+        owning_app: "publisher",
+      )
+      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
+    end
+
+    should "redirect to edition_path when user does not have govuk-editor permission" do
+      user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+      login_as(user)
+      get :unpublish, params: { id: @guide.id }
+
+      assert_redirected_to edition_path(@guide)
+    end
+
+    context "#confirm_unpublish" do
+      should "redirect to edition_path when user does not have govuk-editor permission" do
+        user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+        login_as(user)
+        get :confirm_unpublish, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+      end
+
+      should "render 'confirm_unpublish' template if redirect url is blank" do
+        get :confirm_unpublish, params: { id: @guide.id, redirect_url: "" }
+
+        assert_template "secondary_nav_tabs/confirm_unpublish"
+      end
+
+      should "render 'confirm_unpublish' template if redirect url is a valid url" do
+        get :confirm_unpublish, params: { id: @guide.id, redirect_url: "https://www.gov.uk/redirect-to-replacement-page" }
+
+        assert_template "secondary_nav_tabs/confirm_unpublish"
+      end
+
+      should "render show template with error message when redirect url is not valid" do
+        get :confirm_unpublish, params: { id: @guide.id, redirect_url: "bob" }
+
+        assert_select ".gem-c-error-summary__list-item", "Redirect path is invalid. Guide can not be unpublished."
+        assert_template "show"
+      end
+    end
+
+    context "#process_unpublish" do
+      should "redirect to edition_path when user does not have govuk-editor permission" do
+        user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+        login_as(user)
+        get :confirm_unpublish, params: { id: @guide.id, redirect_url: nil }
+
+        assert_redirected_to edition_path(@guide)
+      end
+
+      should "show success message and redirect to root path when unpublished successfully with redirect url" do
+        get :process_unpublish, params: { id: @guide.id, redirect_url: "https://www.gov.uk/redirect-to-replacement-page" }
+
+        assert_equal "Content unpublished and redirected", flash[:success]
+      end
+
+      should "show success message and redirect to root path when unpublished successfully without redirect url" do
+        UnpublishService.stubs(:call).returns(true)
+        get :process_unpublish, params: { id: @guide.id, redirect_url: nil }
+
+        assert_equal "Content unpublished", flash[:success]
+      end
+
+      should "show error message when unpublish is unsuccessful" do
+        UnpublishService.stubs(:call).returns(nil)
+        get :process_unpublish, params: { id: @guide.id, redirect_url: nil }
+
+        assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be unpublished"
+      end
+
+      should "show error message when unpublish service returns an error" do
+        UnpublishService.stubs(:call).raises(StandardError)
+        get :process_unpublish, params: { id: @guide.id, redirect_url: nil }
+
+        assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be unpublished"
       end
     end
   end

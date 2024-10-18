@@ -1,0 +1,31 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% @edition = @resource %>
+    <%= header_for("Unpublish") %>
+
+    <%= render "govuk_publishing_components/components/inset_text", {
+      text: "If you unpublish a page from GOV.UK it cannot be undone.",
+    } %>
+
+    <%= form_for @edition, url: confirm_unpublish_edition_path, method: "get" do |f| %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Redirect to URL",
+        },
+        id: "redirect_url",
+        name: "redirect_url",
+        value: params[:redirect_url],
+        hint: "For example: https://www.gov.uk/redirect-to-replacement-page",
+        heading_level: 3,
+        heading_size: "s",
+        error_items: errors_for(f.object.errors, :redirect_url, use_full_message: false),
+      } %>
+      <div class="govuk-button-group">
+        <%= render("govuk_publishing_components/components/button", {
+          text: "Continue",
+          type: "submit",
+        }) %>
+      </div>
+    <% end %>
+  </div>
+</div>
