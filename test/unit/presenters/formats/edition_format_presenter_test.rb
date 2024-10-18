@@ -29,6 +29,7 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.stubs :latest_change_note
       edition.stubs :auth_bypass_id
       edition.stubs :exact_route?
+      edition.stubs created_by: FactoryBot.build(:user)
 
       artefact.stubs :language
     end
@@ -159,6 +160,13 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
       edition.expects(:auth_bypass_id).returns("foo")
       expected = { auth_bypass_ids: %w[foo] }
       assert_equal expected, result[:access_limited]
+    end
+
+    should "[:last_edited_by_editor_id]" do
+      uid = SecureRandom.uuid
+      user = FactoryBot.build(:user, uid:)
+      edition.expects(:created_by).returns(user)
+      assert_equal uid, result[:last_edited_by_editor_id]
     end
   end
 end
