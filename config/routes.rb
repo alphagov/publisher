@@ -103,6 +103,8 @@ Rails.application.routes.draw do
   delete "/homepage/popular-links/:id" => "homepage#destroy", as: "delete_popular_links"
   get "homepage/popular-links/:id/confirm-destroy" => "homepage#confirm_destroy", as: "confirm_destroy_popular_links"
 
+  get "by-content-id/:content_id" => "content_item#by_content_id"
+
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
   mount GovukPublishingComponents::Engine, at: "/component-guide"
