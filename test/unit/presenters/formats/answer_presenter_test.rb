@@ -17,6 +17,8 @@ class AnswerPresenterTest < ActiveSupport::TestCase
     subject.render_for_publishing_api
   end
 
+  it_includes_last_edited_by_editor_id
+
   should "be valid against schema" do
     assert_valid_against_publisher_schema(result, "answer")
   end
