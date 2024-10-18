@@ -52,19 +52,17 @@ class EditionsController < InheritedResources::Base
   def process_unpublish
     artefact = @resource.artefact
 
-    success = params["redirect_url"].strip.empty? ? UnpublishService.call(artefact, current_user) : UnpublishService.call(artefact, current_user, redirect_url)
+    success = unpublish_edition(artefact)
     if success
       notice = "Content unpublished"
       notice << " and redirected" if redirect_url.present?
       flash[:success] = notice
       redirect_to root_path
     else
-      @resource.errors.add(:unpublish, downstream_error_message)
-      render "secondary_nav_tabs/confirm_unpublish"
+      render_confirm_page_with_error
     end
   rescue StandardError
-    @resource.errors.add(:unpublish, downstream_error_message)
-    render "secondary_nav_tabs/confirm_unpublish"
+    render_confirm_page_with_error
   end
 
 protected
@@ -74,6 +72,15 @@ protected
   end
 
 private
+
+  def unpublish_edition(artefact)
+    params["redirect_url"].strip.empty? ? UnpublishService.call(artefact, current_user) : UnpublishService.call(artefact, current_user, redirect_url)
+  end
+
+  def render_confirm_page_with_error
+    @resource.errors.add(:unpublish, downstream_error_message)
+    render "secondary_nav_tabs/confirm_unpublish"
+  end
 
   def downstream_error_message
     "Due to a service problem, the edition couldn't be unpublished"
