@@ -15,9 +15,11 @@
         label: {
           text: "Title"
         },
+        id: "title",
         name: "edition[title]",
         value: @resource.title,
-        heading_size: "m"
+        heading_size: "m",
+        error_items: errors_for(@edition.errors, "title".to_sym, use_full_message: false)
       } %>
 
       <%= render "govuk_publishing_components/components/textarea", {
