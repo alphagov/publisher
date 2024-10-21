@@ -61,6 +61,6 @@ class HelpPagePresenterTest < ActiveSupport::TestCase
   end
 
   should "[:rendering_app]" do
-    assert_equal "government-frontend", result[:rendering_app]
+    assert_equal "frontend", result[:rendering_app]
   end
 end
