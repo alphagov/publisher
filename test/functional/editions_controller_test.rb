@@ -32,11 +32,11 @@ class EditionsControllerTest < ActionController::TestCase
       artefact = FactoryBot.create(
         :artefact,
         slug: "test2",
-        kind: "guide",
+        kind: "answer",
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
+      @answer = AnswerEdition.create!(title: "test", slug: "test2", panopticon_id: artefact.id)
     end
 
     should "return a 404 when requesting a publication that doesn't exist" do
@@ -44,8 +44,8 @@ class EditionsControllerTest < ActionController::TestCase
       assert_response :not_found
     end
 
-    should "return a view for the requested guide" do
-      get :show, params: { id: @guide.id }
+    should "return a view for the requested answer" do
+      get :show, params: { id: @answer.id }
       assert_response :success
       assert_not_nil assigns(:resource)
     end
@@ -197,6 +197,68 @@ class EditionsControllerTest < ActionController::TestCase
         get :process_unpublish, params: { id: @guide.id, redirect_url: nil }
 
         assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be unpublished"
+      end
+    end
+  end
+
+  context "edit" do
+    setup do
+      @answer = FactoryBot.create(:answer_edition)
+    end
+
+    should "render the page ok" do
+      get :show, params: { id: @answer.id }
+      assert_response :ok
+    end
+
+    context "#update" do
+      should "show update and success message and render show template when saved" do
+        get :update, params: {
+          id: @answer.id,
+          edition: {
+            title: "The changed title"
+          }
+        }
+
+        assert_template "show"
+        assert_equal "Edition updated successfully.", flash[:success]
+        assert_equal "The changed title", AnswerEdition.last.title
+      end
+
+      should "show error message and render show template when title field is blank" do
+        get :update, params: {
+          id: @answer.id,
+          edition: {
+            title: ""
+          }
+        }
+
+        assert_template "show"
+        assert_select ".gem-c-error-summary__list-item", "Enter a title"
+      end
+
+      should "show error message and render show template when the edition could not be updated" do
+        Edition.any_instance.stubs(:update!).raises(StandardError)
+        get :update, params: {
+          id: @answer.id,
+          edition: {
+            title: "A title"
+          }
+        }
+
+        assert_template "show"
+        assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be updated"
+      end
+
+      should "call update worker with edition id when saved" do
+        UpdateWorker.expects(:perform_async).with(@answer.id.to_s, false)
+
+        get :update, params: {
+          id: @answer.id,
+          edition: {
+            title: "The changed title"
+          }
+        }
       end
     end
   end
