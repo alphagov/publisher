@@ -10,7 +10,13 @@ class EditionEditTest < IntegrationTest
 
   context "when edition is draft" do
     setup do
-      edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft")
+      edition = FactoryBot.create(:answer_edition,
+        title: "Edit page title",
+        state: "draft",
+        overview: "metatags",
+        in_beta: 1,
+        body: "The body"
+      )
       visit edition_path(edition)
     end
 
@@ -20,7 +26,7 @@ class EditionEditTest < IntegrationTest
       row = find_all(".govuk-summary-list__row")
       assert row[0].has_content?("Assigned to")
       assert row[1].has_text?("Content type")
-      assert row[1].has_text?("Guide")
+      assert row[1].has_text?("Answer")
       assert row[2].has_text?("Edition")
       assert row[2].has_text?("1")
       assert row[2].has_text?("Draft")
@@ -66,6 +72,55 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?("Metadata has successfully updated")
         assert page.has_field?("artefact[slug]", with: "changed-slug")
       end
+    end
+
+    context "edit tab" do
+      setup do
+        click_link("Edit")
+      end
+
+      should "show 'Metadata' header and an update button" do
+        within :css, "h2.gem-c-heading" do
+          assert page.has_text?("Edit")
+        end
+        assert page.has_button?("Save")
+      end
+
+      should "show Title input box prefilled" do
+        assert page.has_text?("Title")
+        # assert page.has_text?("If you change the slug of a published page, the old slug will automatically redirect to the new one.")
+        assert page.has_field?("edition[title]", with: "Edit page title")
+      end
+
+      should "show Meta tag input box prefilled" do
+        assert page.has_text?("Meta tag description")
+        assert page.has_text?("Some search engines will display this if they cannot find what they need in the main text")
+        assert page.has_field?("edition[overview]", with: "metatags")
+      end
+
+      should "show Beta content radios prechecked" do
+        assert page.has_text?("Is this beta content?")
+        # assert page.has_field?("edition[overview]", with: "metatags")
+        assert find(".gem-c-radio input[value='0']")
+        assert find(".gem-c-radio input[value='1']").checked?
+      end
+
+      should "show Body test field prefilled" do
+        assert page.has_text?("Body")
+        assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
+        # assert page.has_field?("edition[overview]", with: "metatags")
+        assert page.has_field?("edition[body]", with: "The body")
+      end
+
+      # should "update and show success message" do
+      #   fill_in "artefact[slug]", with: "changed-slug"
+      #   choose("Welsh")
+      #   click_button("Update")
+
+      #   assert find(".gem-c-radio input[value='cy']").checked?
+      #   assert page.has_text?("Metadata has successfully updated")
+      #   assert page.has_field?("artefact[slug]", with: "changed-slug")
+      # end
     end
   end
 
