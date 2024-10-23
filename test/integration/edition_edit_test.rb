@@ -15,7 +15,8 @@ class EditionEditTest < IntegrationTest
         state: "draft",
         overview: "metatags",
         in_beta: 1,
-        body: "The body"
+        body: "The body",
+        # version_number: 2
       )
       visit edition_path(edition)
     end
@@ -105,11 +106,40 @@ class EditionEditTest < IntegrationTest
         assert find(".gem-c-radio input[value='1']").checked?
       end
 
-      should "show Body test field prefilled" do
+      should "show Body text field prefilled" do
         assert page.has_text?("Body")
         assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
         # assert page.has_field?("edition[overview]", with: "metatags")
         assert page.has_field?("edition[body]", with: "The body")
+      end
+
+      should "show Change Note field only if the edition has a published version" do
+        assert page.has_no_text?("Add a public change note")
+        assert page.has_no_text?("Telling users when published information has changed is important for transparency.")
+        assert page.has_no_field?("edition[change_note]")
+
+        artefact = FactoryBot.create(:artefact)
+        old_edition = FactoryBot.create(
+          :answer_edition,
+          panopticon_id: artefact.id,
+          state: "published",
+          version_number: 1,
+        )
+        new_edition = FactoryBot.create(
+          :answer_edition,
+          panopticon_id: artefact.id,
+          state: "draft",
+          version_number: 2,
+          # major_change: true,
+          change_note: "The change note"
+        )
+        visit edition_path(new_edition)
+        find("details").click
+        find("input[name='edition[major_change]'][value='true']").choose
+
+        assert page.has_text?("Add a public change note")
+        assert page.has_text?("Telling users when published information has changed is important for transparency.")
+        assert page.has_field?("edition[change_note]")
       end
 
       # should "update and show success message" do
