@@ -28,6 +28,7 @@ module Formats
         schema_name:,
         document_type:,
         public_updated_at: public_updated_at.rfc3339(3),
+        last_edited_by_editor_id:,
         publishing_app: "publisher",
         rendering_app:,
         routes:,
@@ -36,7 +37,7 @@ module Formats
         change_note: edition.latest_change_note,
         details:,
         locale: artefact.language,
-      }
+      }.compact
     end
 
     def schema_name
@@ -96,6 +97,13 @@ module Formats
 
     def public_updated_at
       edition.public_updated_at || edition.updated_at
+    end
+
+    # We can't reliably get the exact user who last edited the edition,
+    # so we rely on who created the edition, which is a fair enough
+    # approximation
+    def last_edited_by_editor_id
+      edition.created_by&.uid
     end
   end
 end

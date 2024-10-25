@@ -36,6 +36,8 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
     assert_valid_against_publisher_schema(result, "local_transaction")
   end
 
+  it_includes_last_edited_by_editor_id
+
   should "[:schema_name]" do
     assert_equal "local_transaction", result[:schema_name]
   end
