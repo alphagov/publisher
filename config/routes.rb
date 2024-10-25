@@ -27,6 +27,15 @@ Rails.application.routes.draw do
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"
+        post "progress"
+        post "skip_fact_check",
+             to: "editions#progress",
+             edition: {
+               activity: {
+                 request_type: "skip_fact_check",
+                 comment: "Fact check skipped by request.",
+               },
+             }
       end
     end
   end

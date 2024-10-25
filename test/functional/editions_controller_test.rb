@@ -200,4 +200,91 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "#admin" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition)
+    end
+
+    should "show the admin page for the edition" do
+      get :admin, params: { id: @guide.id }
+
+      assert_response :success
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @welsh_guide = FactoryBot.create(:guide_edition, :welsh)
+      end
+
+      should "be able to see the admin page for Welsh editions" do
+        get :admin, params: { id: @welsh_guide.id }
+
+        assert_response :success
+      end
+
+      should "not be able to see the admin page for non-Welsh editions" do
+        get :admin, params: { id: @guide.id }
+
+        assert_redirected_to edition_path(@guide)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#progress" do
+    setup do
+      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+    end
+
+    context "Welsh editors" do
+      setup do
+        login_as_welsh_editor
+        @artefact = FactoryBot.create(:artefact)
+        @edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, panopticon_id: @artefact.id)
+        @welsh_edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing, :welsh)
+      end
+
+      should "be able to skip fact checks for Welsh editions" do
+        @welsh_edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @welsh_edition.id,
+               edition: {
+                 activity: {
+                   "request_type" => "skip_fact_check",
+                   "comment" => "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@welsh_edition)
+        @welsh_edition.reload
+        assert_equal flash[:success], "The fact check has been skipped for this publication."
+        assert_equal @welsh_edition.state, "ready"
+      end
+
+      should "not be able to skip fact checks for non-Welsh editions" do
+        @edition.update!(state: "fact_check")
+
+        post :progress,
+             params: {
+               id: @edition.id,
+               edition: {
+                 activity: {
+                   "request_type" => "skip_fact_check",
+                   "comment" => "Fact check skipped by request.",
+                 },
+               },
+             }
+
+        assert_redirected_to edition_path(@edition)
+        @edition.reload
+        assert_equal @edition.state, "fact_check"
+        assert_equal flash[:danger], "You do not have correct editor permissions for this action."
+      end
+    end
+  end
 end

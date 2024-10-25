@@ -1,0 +1,14 @@
+<% @edition = @resource %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= header_for("Admin") %>
+
+    <% if @edition.fact_check? %>
+      <%= form_for @edition, url: skip_fact_check_for_edition(@edition), method: "post" do %>
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Skip fact check",
+        } %>
+        <% end %>
+    <% end %>
+  </div>
+</div>

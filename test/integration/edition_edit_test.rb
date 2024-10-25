@@ -67,6 +67,18 @@ class EditionEditTest < IntegrationTest
         assert page.has_field?("artefact[slug]", with: "changed-slug")
       end
     end
+
+    context "admin tab" do
+      setup do
+        click_link("Admin")
+      end
+      should "show 'Admin' header and not show 'Skip fact check' button" do
+        within :css, ".gem-c-heading" do
+          assert page.has_text?("Admin")
+        end
+        assert page.has_no_button?("Skip fact check")
+      end
+    end
   end
 
   context "when edition is published" do
@@ -155,6 +167,54 @@ class EditionEditTest < IntegrationTest
       should "show 'Unpublish document' button and 'Cancel' link" do
         assert page.has_button?("Unpublish document")
         assert page.has_link?("Cancel")
+      end
+    end
+
+    context "admin tab" do
+      setup do
+        click_link("Admin")
+      end
+
+      should "show 'Admin' header and not show 'Skip fact check' button" do
+        within :css, ".gem-c-heading" do
+          assert page.has_text?("Admin")
+        end
+        assert page.has_no_button?("Skip fact check")
+      end
+    end
+  end
+
+  context "when edition state is 'fact_check'" do
+    setup do
+      @edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "fact_check")
+      visit edition_path(@edition)
+      click_link("Admin")
+    end
+
+    context "admin tab" do
+      context "when state is 'fact_check'" do
+        should "show 'Admin' header and an 'Skip fact check' button" do
+          within :css, ".gem-c-heading" do
+            assert page.has_text?("Admin")
+          end
+          assert page.has_button?("Skip fact check")
+        end
+
+        should "show success message when fact check skipped successfully" do
+          click_button("Skip fact check")
+
+          @edition.reload
+          assert_equal "ready", @edition.state
+          assert page.has_text?("The fact check has been skipped for this publication.")
+        end
+
+        should "show error message when skip fact check gives an error" do
+          User.any_instance.stubs(:progress).returns(false)
+
+          click_button("Skip fact check")
+
+          assert page.has_text?("Could not skip fact check for this publication.")
+        end
       end
     end
   end

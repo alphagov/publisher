@@ -11,6 +11,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
+  before_action only: %i[progress admin] do
+    require_editor_permissions
+  end
 
   helper_method :locale_to_language
 
@@ -26,12 +29,9 @@ class EditionsController < InheritedResources::Base
 
   alias_method :metadata, :show
   alias_method :unpublish, :show
+  alias_method :admin, :show
 
   def history
-    render action: "show"
-  end
-
-  def admin
     render action: "show"
   end
 
@@ -65,6 +65,15 @@ class EditionsController < InheritedResources::Base
     render_confirm_page_with_error
   end
 
+  def progress
+    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
+      flash[:success] = @command.status_message
+    else
+      flash[:danger] = @command.status_message
+    end
+    redirect_to edition_path(resource)
+  end
+
 protected
 
   def setup_view_paths
@@ -72,6 +81,11 @@ protected
   end
 
 private
+
+  def progress_edition(resource, activity_params)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
+  end
 
   def unpublish_edition(artefact)
     params["redirect_url"].strip.empty? ? UnpublishService.call(artefact, current_user) : UnpublishService.call(artefact, current_user, redirect_url)
@@ -117,5 +131,11 @@ private
 
   def description(resource)
     resource.format.underscore.humanize
+  end
+
+  def progress_action_param
+    params[:edition][:activity][:request_type]
+  rescue StandardError
+    nil
   end
 end
