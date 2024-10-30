@@ -100,11 +100,6 @@ private
     "Due to a service problem, the edition couldn't be unpublished"
   end
 
-  def setup_view_paths_for(publication)
-    prepend_view_path "app/views/editions"
-    prepend_view_path template_folder_for(publication)
-  end
-
   def locale_to_language(locale)
     case locale
     when "en"
