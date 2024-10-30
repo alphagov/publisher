@@ -2,10 +2,24 @@ require "integration_test_helper"
 
 class EditionEditTest < IntegrationTest
   setup do
-    setup_users
+    login_as(FactoryBot.create(:user, :govuk_editor, name: "Stub User"))
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit, true)
     stub_linkables
+  end
+
+  context "when user does not have required permissions" do
+    setup do
+      user = FactoryBot.create(:user, name: "Stub User", organisation_slug: "government-digital-service")
+      login_as(user)
+      edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft")
+      visit edition_path(edition)
+    end
+
+    should "not show admin and unpublish tab when user does not have editor permission" do
+      assert page.has_no_text?("Admin")
+      assert page.has_no_text?("Unpublish")
+    end
   end
 
   context "when edition is draft" do
