@@ -4,7 +4,7 @@
     <%= header_for("Admin") %>
 
     <% if @edition.fact_check? %>
-      <%= form_for @edition, url: skip_fact_check_for_edition(@edition), method: "post" do %>
+      <%= form_for @edition, url: skip_fact_check_edition_path(@edition), method: "post" do %>
         <%= render "govuk_publishing_components/components/button", {
           text: "Skip fact check",
         } %>

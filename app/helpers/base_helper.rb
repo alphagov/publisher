@@ -30,10 +30,6 @@ module BaseHelper
     "/#{resource.format.underscore.downcase.pluralize}/fields"
   end
 
-  def skip_fact_check_for_edition(edition)
-    send("skip_fact_check_edition_path", edition)
-  end
-
   def edition_can_be_deleted?(edition)
     !edition.published?
   end

@@ -9,7 +9,7 @@
 
 <% if @resource.fact_check? %>
   <h3 class="add-bottom-margin h4">Skip fact check</h3>
-  <%= button_to "Skip fact check", skip_fact_check_for_edition(@resource), :method => :post, :class => "btn btn-default" %>
+  <%= button_to "Skip fact check", skip_fact_check_edition_path(@resource), :method => :post, :class => "btn btn-default" %>
 <% end %>
 
 <% if @edition.published? && @edition.can_create_new_edition? %>
