@@ -160,7 +160,7 @@ GEM
       database_cleaner-core (~> 2.0.0)
       mongoid
     date (3.3.4)
-    diffy (3.4.2)
+    diffy (3.4.3)
     docile (1.4.0)
     domain_name (0.6.20240107)
     drb (2.2.1)
