@@ -37,7 +37,7 @@ class EditionEditTest < IntegrationTest
   end
 
   context "metadata tab" do
-    context "when state is draft" do
+    context "when state is 'draft'" do
       setup do
         visit_edition_in_draft
         click_link("Metadata")
@@ -67,7 +67,7 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    context "when state state is not draft" do
+    context "when state is not 'draft'" do
       setup do
         visit_edition_in_published
         click_link("Metadata")
@@ -103,7 +103,7 @@ class EditionEditTest < IntegrationTest
         visit_edition_in_draft
       end
 
-      context "when state is publish" do
+      context "when state is 'published'" do
         setup do
           visit_edition_in_published
           click_link("Unpublish")
@@ -132,7 +132,7 @@ class EditionEditTest < IntegrationTest
         end
       end
 
-      context "when state is not publish" do
+      context "when state is not 'published'" do
         setup do
           edition = FactoryBot.create(:edition, state: "draft")
           visit edition_path(edition)
