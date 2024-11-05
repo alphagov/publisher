@@ -32,7 +32,7 @@ class EditionsControllerTest < ActionController::TestCase
       assert_response :not_found
     end
 
-    should "return a view for the requested guide" do
+    should "return a view for the requested edition" do
       get :show, params: { id: @edition.id }
       assert_response :success
       assert_not_nil assigns(:resource)
