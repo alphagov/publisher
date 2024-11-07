@@ -13,14 +13,13 @@
           hint: "If you change the slug of a published page, the old slug will automatically redirect to the new one.",
           name: "artefact[slug]",
           value: publication.slug,
-          heading_level: 3,
           heading_size: "m",
         } %>
 
         <%= render "govuk_publishing_components/components/radio", {
           heading: "Language",
           name: "artefact[language]",
-          heading_level: 3,
+          heading_level: 0,
           heading_size: "m",
           inline: true,
           items: [
