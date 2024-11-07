@@ -253,7 +253,7 @@ GEM
     govuk_personalisation (1.0.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (44.11.0)
+    govuk_publishing_components (45.0.0)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -824,7 +824,7 @@ GEM
       mongoid (>= 4.0.0)
       state_machines-activemodel (>= 0.5.0)
     statsd-ruby (1.5.0)
-    stringio (3.1.1)
+    stringio (3.1.2)
     strip_attributes (1.13.0)
       activemodel (>= 3.0, < 8.0)
     terminal-table (3.0.2)
@@ -833,7 +833,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.3.2)
     timecop (0.9.10)
-    timeout (0.4.1)
+    timeout (0.4.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
