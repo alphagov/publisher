@@ -225,10 +225,90 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "edit tab" do
+    context "draft edition of a new publication" do
+      setup do
+        visit_edition_in_draft
+      end
+
+      should "show 'Metadata' header and an update button" do
+        within :css, "h2.gem-c-heading" do
+          assert page.has_text?("Edit")
+        end
+        assert page.has_button?("Save")
+      end
+
+      should "show Title input box prefilled" do
+        assert page.has_text?("Title")
+        assert page.has_field?("edition[title]", with: "Edit page title")
+      end
+
+      should "show Meta tag input box prefilled" do
+        assert page.has_text?("Meta tag description")
+        assert page.has_text?("Some search engines will display this if they cannot find what they need in the main text")
+        assert page.has_field?("edition[overview]", with: "metatags")
+      end
+
+      should "show Beta content radios prechecked" do
+        assert page.has_text?("Is this beta content?")
+        assert find(".gem-c-radio input[value='0']")
+        assert find(".gem-c-radio input[value='1']").checked?
+      end
+
+      should "show Body text field prefilled" do
+        assert page.has_text?("Body")
+        assert page.has_text?("Refer to the Govspeak guidance (opens in new tab)")
+        assert page.has_field?("edition[body]", with: "The body")
+      end
+
+      should "not show Change Note field for an unpublished document" do
+        assert page.has_no_text?("Add a public change note")
+        assert page.has_no_text?("Telling users when published information has changed is important for transparency.")
+        assert page.has_no_field?("edition[change_note]")
+      end
+
+      should "update and show success message" do
+        fill_in "edition[title]", with: "Changed Title"
+        fill_in "edition[overview]", with: "Changed Meta tag description"
+        choose("Yes")
+        fill_in "edition[body]", with: "Changed body"
+        click_button("Save")
+
+        assert page.has_field?("edition[title]", with: "Changed Title")
+        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+        assert find(".gem-c-radio input[value='1']").checked?
+        assert page.has_field?("edition[body]", with: "Changed body")
+        assert page.has_text?("Edition updated successfully.")
+      end
+    end
+
+    context "draft edition of a previously published publication" do
+      setup do
+        visit_new_edition_of_published_edition
+      end
+
+      should "show Change Note field for a new edition of a published document" do
+        find("details").click
+        find("input[name='edition[major_change]'][value='true']").choose
+
+        assert page.has_text?("Add a public change note")
+        assert page.has_text?("Telling users when published information has changed is important for transparency.")
+        assert page.has_field?("edition[change_note]")
+      end
+    end
+  end
+
 private
 
   def visit_edition_in_draft
-    @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft")
+    @draft_edition = FactoryBot.create(
+      :answer_edition,
+      title: "Edit page title",
+      state: "draft",
+      overview: "metatags",
+      in_beta: 1,
+      body: "The body",
+    )
     visit edition_path(@draft_edition)
   end
 
@@ -249,5 +329,25 @@ private
   def visit_edition_in_fact_check
     @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
     visit edition_path(@fact_check_edition)
+  end
+
+  def visit_new_edition_of_published_edition
+    published_edition = FactoryBot.create(
+      :answer_edition,
+      panopticon_id: FactoryBot.create(
+        :artefact,
+        slug: "can-i-get-a-driving-licence",
+      ).id,
+      state: "published",
+      slug: "can-i-get-a-driving-licence",
+    )
+    new_edition = FactoryBot.create(
+      :answer_edition,
+      panopticon_id: published_edition.artefact.id,
+      state: "draft",
+      version_number: 2,
+      change_note: "The change note",
+    )
+    visit edition_path(new_edition)
   end
 end

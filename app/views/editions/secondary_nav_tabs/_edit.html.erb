@@ -1,0 +1,128 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Edit",
+      heading_level: 2,
+      margin_bottom: 5,
+    } %>
+  </div>
+</div>
+
+<%= form_for @resource, as: :edition, url: edition_path(@resource) do |f| %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Title",
+        },
+        id: "title",
+        name: "edition[title]",
+        value: @resource.title,
+        heading_size: "m",
+        error_items: errors_for(@edition.errors, "title".to_sym, use_full_message: false),
+      } %>
+
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Meta tag description",
+        },
+        name: "edition[overview]",
+        hint: "Some search engines will display this if they cannot find what they need in the main text",
+        value: @resource.overview,
+      } %>
+
+      <%= render "govuk_publishing_components/components/radio", {
+        heading: "Is this beta content?",
+        name: "edition[in_beta]",
+        inline: true,
+        heading_size: "m",
+        items: [
+          {
+            value: 1,
+            text: "Yes",
+            checked: @resource.in_beta,
+          },
+          {
+            value: 0,
+            text: "No",
+            checked: !@resource.in_beta,
+          },
+        ],
+      } %>
+
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Body",
+        },
+        name: "edition[body]",
+        value: @resource.body,
+        hint: ("Refer to #{link_to("Refer to the Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
+      } %>
+
+      <% if @resource.published_edition %>
+        <%= render "govuk_publishing_components/components/details", {
+          title: "Add a public change note",
+        } do %>
+          <%= render "govuk_publishing_components/components/radio", {
+            heading: "Add a public change note",
+            heading_level: 3,
+            heading_size: "m",
+            name: "edition[major_change]",
+            hint: "Telling users when published information has changed is important for transparency.",
+            items: [
+              {
+                hint_text: "A change note will be published on the page and emailed to users subscribed to email alerts. The ‘last updated’ date will change.",
+                text: "Yes - information has been added, updated or removed.",
+                checked: @resource.major_change,
+                bold: true,
+                value: true,
+                conditional: render("govuk_publishing_components/components/textarea", {
+                  label: {
+                    text: "Describe the change for users",
+                    bold: true,
+                  },
+                  name: "edition[change_note]",
+                  value: @resource.change_note,
+                  hint: ("<p class=\"govuk-!-margin-0\">Tell users what has changed, where and why. Write in full sentences, leading with the most important words. For example, \"College A has been removed from the registered sponsors list because its licence has been suspended.\"</p><a href=\"https://www.gov.uk/guidance/content-design/writing-for-gov-uk#change-notes\" target=\"_blank\">Guidance on change notes (opens in a new tab)</a>").html_safe,
+                }),
+              },
+              {
+                value: false,
+                text: "No",
+                bold: true,
+                checked: !@resource.major_change,
+              },
+            ],
+          } %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="govuk-grid-column-one-third options-sidebar">
+      <% if @resource.locked_for_edits? %>
+        <p class="govuk-body"><%= @resource.error_description %> can't be changed.</p>
+      <% else %>
+        <div class="sidebar-components">
+          <%= render "govuk_publishing_components/components/heading", {
+            text: "Options",
+            heading_level: 3,
+            font_size: "s",
+            padding: true,
+          } %>
+
+          <%= render "govuk_publishing_components/components/list", {
+            items: [
+              (render "govuk_publishing_components/components/button", {
+                text: "Save",
+                margin_bottom: 3,
+              } if current_user.has_editor_permissions?(@resource) && !@resource.retired_format?),
+            link_to("Preview (opens in new tab)", preview_edition_path(@resource), target: "_blank", rel: "noopener", class: "govuk-link"),
+            ],
+          } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

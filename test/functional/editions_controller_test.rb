@@ -278,4 +278,55 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "#update" do
+    should "show update and success message and render show template when saved" do
+      post :update, params: {
+        id: @edition.id,
+        edition: {
+          title: "The changed title",
+        },
+      }
+
+      assert_template "show"
+      assert_equal "Edition updated successfully.", flash[:success]
+      assert_equal "The changed title", AnswerEdition.last.title
+    end
+
+    should "show error message and render show template when title field is blank" do
+      post :update, params: {
+        id: @edition.id,
+        edition: {
+          title: "",
+        },
+      }
+
+      assert_template "show"
+      assert_select ".gem-c-error-summary__list-item", "Enter a title"
+    end
+
+    should "show error message and render show template when the edition could not be updated" do
+      Edition.any_instance.stubs(:save).raises(StandardError)
+      post :update, params: {
+        id: @edition.id,
+        edition: {
+          title: "A title",
+        },
+      }
+
+      assert_template "show"
+      assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be updated"
+    end
+
+    should "call update worker with edition id when saved" do
+      UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+
+      post :update, params: {
+        id: @edition.id,
+        edition: {
+          title: "The changed title",
+        },
+      }
+    end
+  end
 end
