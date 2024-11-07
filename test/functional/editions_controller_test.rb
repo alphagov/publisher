@@ -290,7 +290,8 @@ class EditionsControllerTest < ActionController::TestCase
 
       assert_template "show"
       assert_equal "Edition updated successfully.", flash[:success]
-      assert_equal "The changed title", AnswerEdition.last.title
+      @edition.reload
+      assert_equal "The changed title", @edition.title
     end
 
     should "show error message and render show template when title field is blank" do
