@@ -8,7 +8,7 @@
 
   <%= form_for @resource, url: duplicate_edition_path(@resource, from: edition_class.to_s), method: "post" do |f| %>
     <%= f.label :to, "Create as new", for: :to %>
-    <%= select_tag :to, options_for_select(format_conversion_select_options(@resource)), class: "form-control input-md-3 add-bottom-margin" %>
+    <%= select_tag :to, options_for_select(legacy_format_conversion_select_options(@resource)), class: "form-control input-md-3 add-bottom-margin" %>
     <%= f.submit "Change format", class: "btn btn-default" %>
   <% end %>
 <% end %>

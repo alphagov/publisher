@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         get "metadata"
         get "history"
         get "admin"
+        post "duplicate"
         get "related_external_links", to: "editions#linking"
         get "tagging", to: "editions#linking"
         get "unpublish"

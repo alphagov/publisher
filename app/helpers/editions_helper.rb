@@ -19,9 +19,30 @@ module EditionsHelper
     nested_form_for resource, as: :edition, url: edition_path(resource), html: html_options, &form_definition
   end
 
-  def format_conversion_select_options(edition)
+  def legacy_format_conversion_select_options(edition)
     possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
     possible_target_formats.map { |format_name| [format_name.humanize, format_name] }
+  end
+
+  def conversion_items(edition)
+    radio_options_hints = {
+      "answer" => "One page guidance",
+      "completed_transaction" => "Done page for end of a service",
+      "guide" => "Multi-page guidance",
+      "help_page" => "Info about GOV.UK website, for example Privacy",
+      "place" => "Postcode look-up for places/services near you",
+      "simple_smart_answer" => "Simple questions and answers that route users to relevant outcomes",
+      "transaction" => "Start page for a service",
+    }
+
+    possible_target_formats = Edition.convertible_formats - [edition.artefact.kind]
+    possible_target_formats.map do |format_name|
+      {
+        text: format_name.humanize,
+        value: format_name,
+        hint_text: radio_options_hints[format_name],
+      }
+    end
   end
 
   def legacy_format_filter_selection_options

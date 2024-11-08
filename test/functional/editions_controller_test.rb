@@ -264,6 +264,50 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#duplicate" do
+    setup do
+      @answer = FactoryBot.create(:answer_edition)
+      @help = FactoryBot.create(:help_page_edition)
+    end
+
+    should "redirect to the edit tab of the newly created edition and show success message when user saves successfully" do
+      EditionDuplicator.any_instance.expects(:duplicate).returns(true)
+      EditionDuplicator.any_instance.expects(:new_edition).returns(@help)
+
+      post :duplicate, params: { id: @edition.id, to: "help_page" }
+
+      assert_redirected_to edition_path(@help)
+      assert_equal "New edition created", flash[:success]
+    end
+
+    should "redirect to the edit tab and show a failure message when saving the new edition fails" do
+      EditionDuplicator.any_instance.expects(:duplicate).returns(false)
+
+      post :duplicate, params: { id: @edition.id, to: "help_page" }
+
+      assert_response :found
+      assert_equal "Failed to create new edition: couldn't initialise", flash[:danger]
+    end
+
+    should "redirect to the edit tab and show a failure message when another user has already created a new edition" do
+      FactoryBot.create(:edition, panopticon_id: @edition.artefact.id)
+
+      post :duplicate, params: { id: @edition.id, to: "help_page" }
+
+      assert_response :found
+      assert_equal "Another person has created a newer edition", flash[:warning]
+    end
+
+    should "render the edit tab and show a failure message when there is a service problem" do
+      EditionDuplicator.any_instance.expects(:duplicate).raises(StandardError)
+
+      post :duplicate, params: { id: @edition.id, to: "help_page" }
+
+      assert_template "show"
+      assert_select ".gem-c-error-summary__list-item", "Due to a service problem, the edition couldn't be duplicated"
+    end
+  end
+
   context "#progress" do
     context "Welsh editor" do
       setup do
