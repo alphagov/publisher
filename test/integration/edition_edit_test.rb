@@ -10,7 +10,7 @@ class EditionEditTest < IntegrationTest
 
   context "all tabs" do
     setup do
-      visit_edition_in_published
+      visit_published_edition
     end
 
     should "show all the tabs when user has required permission and edition is published" do
@@ -39,7 +39,7 @@ class EditionEditTest < IntegrationTest
   context "metadata tab" do
     context "when state is 'draft'" do
       setup do
-        visit_edition_in_draft
+        visit_draft_edition
         click_link("Metadata")
       end
 
@@ -69,7 +69,7 @@ class EditionEditTest < IntegrationTest
 
     context "when state is not 'draft'" do
       setup do
-        visit_edition_in_published
+        visit_published_edition
         click_link("Metadata")
       end
 
@@ -89,7 +89,7 @@ class EditionEditTest < IntegrationTest
     context "do not have required permissions" do
       setup do
         login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit_edition_in_draft
+        visit_draft_edition
       end
 
       should "not show unpublish tab when user is not govuk editor" do
@@ -100,12 +100,12 @@ class EditionEditTest < IntegrationTest
     context "has required permissions" do
       setup do
         login_as(FactoryBot.create(:user, :govuk_editor, name: "Stub User"))
-        visit_edition_in_draft
+        visit_draft_edition
       end
 
       context "when state is 'published'" do
         setup do
-          visit_edition_in_published
+          visit_published_edition
           click_link("Unpublish")
         end
 
@@ -149,7 +149,7 @@ class EditionEditTest < IntegrationTest
     context "do not have required permissions" do
       setup do
         login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit_edition_in_draft
+        visit_draft_edition
       end
 
       should "not show when user is not govuk editor or welsh editor" do
@@ -158,7 +158,7 @@ class EditionEditTest < IntegrationTest
 
       should "not show when user is welsh editor and edition is not welsh" do
         login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-        visit_edition_in_draft
+        visit_draft_edition
 
         assert page.has_no_text?("Admin")
       end
@@ -169,27 +169,53 @@ class EditionEditTest < IntegrationTest
         login_as(FactoryBot.create(:user, :govuk_editor, name: "Stub User"))
       end
 
-      context "when state is not 'fact_check'" do
-        setup do
-          visit_edition_in_draft
-          click_link("Admin")
-        end
-
-        should "show 'Admin' header and not show 'Skip fact check' button" do
-          within :css, ".gem-c-heading" do
-            assert page.has_text?("Admin")
+      %i[published archived scheduled_for_publishing].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            send "visit_#{state}_edition"
+            click_link("Admin")
           end
-          assert page.has_no_button?("Skip fact check")
+
+          should "show 'Admin' header and not show 'Skip fact check' button" do
+            within :css, ".gem-c-heading" do
+              assert page.has_text?("Admin")
+            end
+            assert page.has_no_button?("Skip fact check")
+          end
+
+          should "not show link to delete edition" do
+            assert page.has_no_link?("Delete edition")
+          end
+        end
+      end
+
+      %i[draft amends_needed in_review fact_check_received ready].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            send "visit_#{state}_edition"
+            click_link("Admin")
+          end
+
+          should "show 'Admin' header and not show 'Skip fact check' button" do
+            within :css, ".gem-c-heading" do
+              assert page.has_text?("Admin")
+            end
+            assert page.has_no_button?("Skip fact check")
+          end
+
+          should "show link to delete edition" do
+            assert page.has_link?("Delete edition")
+          end
         end
       end
 
       context "when state is 'fact_check'" do
         setup do
-          visit_edition_in_fact_check
+          visit_fact_check_edition
           click_link("Admin")
         end
 
-        should "show tab when user is welsh editor and edition is welsh edition" do
+        should "show 'Admin' tab when user is welsh editor and edition is welsh edition" do
           login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
           welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
           visit edition_path(welsh_edition)
@@ -202,6 +228,10 @@ class EditionEditTest < IntegrationTest
             assert page.has_text?("Admin")
           end
           assert page.has_button?("Skip fact check")
+        end
+
+        should "show link to delete edition" do
+          assert page.has_link?("Delete edition")
         end
 
         should "show success message when fact check skipped successfully" do
@@ -222,13 +252,49 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Could not skip fact check for this publication.")
         end
       end
+
+      context "confirm delete" do
+        setup do
+          visit_draft_edition
+          click_link("Admin")
+          click_link("Delete edition #{@draft_edition.version_number}")
+        end
+
+        should "show the delete edition confirmation page" do
+          assert page.has_text?(@draft_edition.title)
+          assert page.has_text?("Delete edition")
+          assert page.has_text?("If you delete this edition it cannot be undone.")
+          assert page.has_text?("Are you sure you want to delete this edition?")
+          assert page.has_link?("Cancel")
+          assert page.has_button?("Delete edition")
+        end
+
+        should "navigate to admin tab when 'Cancel' is clicked" do
+          click_link("Cancel")
+
+          assert_current_path admin_edition_path(@draft_edition.id)
+        end
+
+        should "navigate to root path when 'Delete edition' is clicked" do
+          click_button("Delete edition")
+
+          assert_current_path root_path
+        end
+
+        should "show success message when edition is successfully deleted" do
+          click_button("Delete edition")
+
+          assert_equal 0, Edition.where(id: @draft_edition.id).count
+          assert page.has_text?("Edition deleted")
+        end
+      end
     end
   end
 
   context "edit tab" do
     context "draft edition of a new publication" do
       setup do
-        visit_edition_in_draft
+        visit_draft_edition
       end
 
       should "show 'Metadata' header and an update button" do
@@ -300,19 +366,64 @@ class EditionEditTest < IntegrationTest
 
 private
 
-  def visit_edition_in_draft
-    @draft_edition = FactoryBot.create(
-      :answer_edition,
-      title: "Edit page title",
-      state: "draft",
-      overview: "metatags",
-      in_beta: 1,
-      body: "The body",
-    )
+  def visit_draft_edition
+    @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
     visit edition_path(@draft_edition)
   end
 
-  def visit_edition_in_published
+  def visit_published_edition
+    create_published_edition
+    visit edition_path(@published_edition)
+  end
+
+  def visit_fact_check_edition
+    @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+    visit edition_path(@fact_check_edition)
+  end
+
+  def visit_scheduled_for_publishing_edition
+    @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+    visit edition_path(@scheduled_for_publishing_edition)
+  end
+
+  def visit_archived_edition
+    @archived_edition = FactoryBot.create(:edition, title: "Edit page title", state: "archived")
+    visit edition_path(@archived_edition)
+  end
+
+  def visit_in_review_edition
+    @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+    visit edition_path(@in_review_edition)
+  end
+
+  def visit_amends_needed_edition
+    @amends_needed_edition = FactoryBot.create(:edition, title: "Edit page title", state: "amends_needed")
+    visit edition_path(@amends_needed_edition)
+  end
+
+  def visit_fact_check_received_edition
+    @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+    visit edition_path(@fact_check_received_edition)
+  end
+
+  def visit_ready_edition
+    @ready_edition = FactoryBot.create(:edition, title: "Edit page title", state: "ready")
+    visit edition_path(@ready_edition)
+  end
+
+  def visit_new_edition_of_published_edition
+    create_published_edition
+    new_edition = FactoryBot.create(
+      :answer_edition,
+      panopticon_id: @published_edition.artefact.id,
+      state: "draft",
+      version_number: 2,
+      change_note: "The change note",
+    )
+    visit edition_path(new_edition)
+  end
+
+  def create_published_edition
     @published_edition = FactoryBot.create(
       :edition,
       title: "Edit page title",
@@ -323,31 +434,5 @@ private
       state: "published",
       slug: "can-i-get-a-driving-licence",
     )
-    visit edition_path(@published_edition)
-  end
-
-  def visit_edition_in_fact_check
-    @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
-    visit edition_path(@fact_check_edition)
-  end
-
-  def visit_new_edition_of_published_edition
-    published_edition = FactoryBot.create(
-      :answer_edition,
-      panopticon_id: FactoryBot.create(
-        :artefact,
-        slug: "can-i-get-a-driving-licence",
-      ).id,
-      state: "published",
-      slug: "can-i-get-a-driving-licence",
-    )
-    new_edition = FactoryBot.create(
-      :answer_edition,
-      panopticon_id: published_edition.artefact.id,
-      state: "draft",
-      version_number: 2,
-      change_note: "The change note",
-    )
-    visit edition_path(new_edition)
   end
 end

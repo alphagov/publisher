@@ -168,28 +168,98 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#admin" do
-    should "show the admin page for the edition" do
-      get :admin, params: { id: @edition.id }
+    context "do not have required permissions" do
+      context "Welsh editors and non Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
 
-      assert_response :success
-    end
+        %i[admin confirm_destroy].each do |url_path|
+          should "show permission error and redirects to edition path for #{url_path} path" do
+            get url_path, params: { id: @edition.id }
 
-    context "Welsh editors" do
-      setup do
-        login_as_welsh_editor
+            assert_redirected_to edition_path(@edition)
+            assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+          end
+        end
       end
 
-      should "be able to see the admin page for Welsh editions" do
-        get :admin, params: { id: @welsh_edition.id }
+      context "nor Welsh nor Govuk editors" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        %i[admin confirm_destroy].each do |url_path|
+          should "show permission error and redirects to edition path for #{url_path} path" do
+            get url_path, params: { id: @edition.id }
+
+            assert_redirected_to edition_path(@edition)
+            assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+          end
+        end
+      end
+    end
+
+    context "has required permissions" do
+      context "Welsh editors and welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        %i[admin confirm_destroy].each do |url_path|
+          should "be able to navigate successfully to #{url_path} path" do
+            get url_path, params: { id: @welsh_edition.id }
+
+            assert_response :success
+          end
+        end
+      end
+
+      should "be able to navigate to the admin path" do
+        get :admin, params: { id: @edition.id }
 
         assert_response :success
       end
 
-      should "not be able to see the admin page for non-Welsh editions" do
-        get :admin, params: { id: @edition.id }
+      context "#confirm_destroy" do
+        should "be able to navigate to the confirm destroy path" do
+          get :confirm_destroy, params: { id: @edition.id }
 
-        assert_redirected_to edition_path(@edition)
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+          assert_response :success
+        end
+
+        should "delete the edition from the database and display success message with redirection to root" do
+          delete :destroy, params: { id: @edition.id }
+
+          assert_equal 0, Edition.where(id: @edition.id).count
+          assert_equal "Edition deleted", flash[:success]
+          assert_redirected_to root_path
+        end
+
+        %i[published scheduled_for_publishing archived].each do |edition_state|
+          context "edition with state '#{edition_state}' can not be deleted" do
+            setup do
+              @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour)
+            end
+
+            should "redirect to edition path with error message" do
+              delete :destroy, params: { id: @edition.id }
+
+              assert_redirected_to edition_path
+              assert_equal "Cannot delete a #{description(@edition)} that has ever been published.", flash[:danger]
+            end
+          end
+        end
+
+        should "render confirm destroy page with error if deleting from database fails" do
+          Edition.any_instance.stubs(:destroy!).raises(Mongoid::Errors::MongoidError.new)
+
+          delete :destroy, params: { id: @edition.id }
+
+          assert_template "secondary_nav_tabs/confirm_destroy"
+          assert_equal "Due to a service problem, the edition couldn't be deleted", flash[:danger]
+        end
       end
     end
   end
@@ -329,5 +399,11 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
     end
+  end
+
+private
+
+  def description(edition)
+    edition.format.underscore.humanize.downcase
   end
 end

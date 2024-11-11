@@ -1,7 +1,7 @@
 <% @edition = @resource %>
 <% content_for :title_context, @edition.title %>
-<% content_for :page_title, "Unpublish" %>
-<% content_for :title, "Unpublish" %>
+<% content_for :page_title, "Delete edition" %>
+<% content_for :title, "Delete edition" %>
 <div class="govuk-grid-row">
   <% unless @edition.errors.empty? %>
     <% content_for :error_summary do %>
@@ -20,18 +20,17 @@
 
   <div class="govuk-grid-column-two-thirds">
     <%= render "govuk_publishing_components/components/inset_text", {
-      text: "If you unpublish a page from GOV.UK it cannot be undone.",
+      text: "If you delete this edition it cannot be undone.",
     } %>
 
-    <%= form_for @edition, url: process_unpublish_edition_path(@edition), method: :post do %>
-      <%= hidden_field_tag :redirect_url, params[:redirect_url] %>
-      <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to unpublish this document?</p>
+    <%= form_for @edition, url: admin_delete_edition_path(@edition), method: :delete do %>
+      <p class="govuk-body govuk-!-margin-bottom-7">Are you sure you want to delete this edition?</p>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
-          text: "Unpublish document",
+          text: "Delete edition",
           destructive: true,
         } %>
-        <%= link_to("Cancel", unpublish_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+        <%= link_to("Cancel", admin_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
       </div>
     <% end %>
   </div>

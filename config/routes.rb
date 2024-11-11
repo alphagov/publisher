@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"
+        get "admin/confirm-destroy", to: "editions#confirm_destroy", as: "confirm_destroy"
+        delete "admin/delete-edition", to: "editions#destroy", as: "admin_delete"
         post "progress"
         post "skip_fact_check",
              to: "editions#progress",
