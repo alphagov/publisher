@@ -11,4 +11,45 @@ class RoutesTest < LegacyIntegrationTest
   should "route to new downtimes controller new downtime" do
     assert_routing("/editions/1/downtime/new", controller: "downtimes", action: "new", edition_id: "1")
   end
+
+  # rubocop:disable Rails/SaveBang
+  context "new design system" do
+    setup do
+      @test_strategy = Flipflop::FeatureSet.current.test!
+      @test_strategy.switch!(:design_system_edit, true)
+    end
+
+    context "allowed content types" do
+      %i[answer_edition help_page_edition].each do |content_type|
+        context content_type do
+          setup do
+            @edition = FactoryBot.create(content_type)
+          end
+
+          should "route to editions controller" do
+            assert_routing("/editions/#{@edition.id}", controller: "editions", action: "show", id: @edition.id.to_s)
+          end
+        end
+      end
+    end
+
+    context "not allowed content types" do
+      %i[guide_edition local_transaction_edition completed_transaction_edition place_edition simple_smart_answer_edition transaction_edition].each do |content_type|
+        context content_type do
+          setup do
+            @edition = FactoryBot.create(content_type)
+          end
+
+          should "route to legacy editions controller" do
+            assert_routing("/editions/#{@edition.id}", controller: "legacy_editions", action: "show", id: @edition.id.to_s)
+          end
+        end
+      end
+    end
+
+    teardown do
+      @test_strategy.switch!(:design_system_edit, false)
+    end
+  end
+  # rubocop:enable Rails/SaveBang
 end

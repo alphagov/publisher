@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   resources :artefacts, only: %i[new create update]
 
-  constraints FeatureConstraint.new("design_system_edit") do
+  constraints NewDesignSystemConstraint.new do
     resources :editions do
       member do
         get "metadata"
