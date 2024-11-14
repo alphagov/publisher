@@ -3,3 +3,8 @@
     display: inline;
   }
 }
+
+.edit_edition__change_note {
+  @include govuk-responsive-padding(4, "top");
+  border-top: 1px solid $govuk-border-colour;
+}
