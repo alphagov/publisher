@@ -11,8 +11,11 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update] do
+  before_action only: %i[progress admin update confirm_destroy] do
     require_editor_permissions
+  end
+  before_action only: %i[confirm_destroy destroy] do
+    destroyable_edition?
   end
 
   helper_method :locale_to_language
@@ -90,6 +93,19 @@ class EditionsController < InheritedResources::Base
     redirect_to edition_path(resource)
   end
 
+  def confirm_destroy
+    render "secondary_nav_tabs/confirm_destroy"
+  end
+
+  def destroy
+    @resource.destroy!
+    flash[:success] = "Edition deleted"
+    redirect_to root_url
+  rescue StandardError
+    flash[:danger] = downstream_error_message(:deleted)
+    render "secondary_nav_tabs/confirm_destroy"
+  end
+
 protected
 
   def setup_view_paths
@@ -108,12 +124,12 @@ private
   end
 
   def render_confirm_page_with_error
-    @resource.errors.add(:unpublish, downstream_error_message)
+    @resource.errors.add(:unpublish, downstream_error_message(:unpublished))
     render "secondary_nav_tabs/confirm_unpublish"
   end
 
-  def downstream_error_message
-    "Due to a service problem, the edition couldn't be unpublished"
+  def downstream_error_message(action)
+    "Due to a service problem, the edition couldn't be #{action}"
   end
 
   def locale_to_language(locale)
@@ -152,5 +168,12 @@ private
 
   def permitted_params
     params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
+  end
+
+  def destroyable_edition?
+    return if @resource.can_destroy?
+
+    flash[:danger] = "Cannot delete a #{description(@resource).downcase} that has ever been published."
+    redirect_to edition_path(@resource)
   end
 end
