@@ -1,14 +1,14 @@
 namespace :permissions do
   desc "Add an organisation to an document's access permissions list"
   task :add_organisation_access, %i[document_content_id org_content_id] => :environment do |_, args|
-    document = Artefact.where(id: args[document_content_id])
+    document = Artefact.find_by(id: args[:document_content_id])
     if document.nil?
       puts "Document not found, no permissions changed."
-    elsif document.latest_edition.owning_org_content_ids.include? args[org_content_id]
+    elsif document.latest_edition.owning_org_content_ids.include? args[:org_content_id]
       puts "Organisation already has permission to access this document"
     else
       Edition.where(panopticon_id: document.id).each do |edition|
-        edition.owning_org_content_ids << args[org_content_id]
+        edition.owning_org_content_ids << args[:org_content_id]
       end
       document.save_as_task("PermissionsAddition")
       puts "Access permission successfully assigned"
