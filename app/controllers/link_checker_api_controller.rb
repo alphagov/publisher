@@ -46,6 +46,6 @@ private
   end
 
   def webhook_secret_token
-    Rails.application.secrets.link_checker_api_secret_token
+    ENV.fetch("LINK_CHECKER_API_SECRET_TOKEN")
   end
 end
