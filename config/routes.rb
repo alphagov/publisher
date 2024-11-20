@@ -30,6 +30,8 @@ Rails.application.routes.draw do
         get "admin/confirm-destroy", to: "editions#confirm_destroy", as: "confirm_destroy"
         delete "admin/delete-edition", to: "editions#destroy", as: "admin_delete"
         post "progress"
+        get "edit_assignee"
+        patch "update_assignee"
         post "skip_fact_check",
              to: "editions#progress",
              edition: {

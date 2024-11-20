@@ -61,4 +61,16 @@ private
       },
     ]
   end
+
+  def all_users(resource)
+    users = []
+    User.enabled.order_by([%i[name asc]]).each do |user|
+      users << { value: user.id, text: user.name } unless user.name == resource.assignee
+    end
+    users
+  end
+
+  def can_update_assignee(resource)
+    %w[published archived scheduled_for_publishing].exclude?(resource.state)
+  end
 end

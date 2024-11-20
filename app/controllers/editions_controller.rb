@@ -11,11 +11,15 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
     destroyable_edition?
+  end
+
+  before_action only: %i[edit_assignee update_assignee] do
+    require_assignee_editable
   end
 
   helper_method :locale_to_language
@@ -106,6 +110,22 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/confirm_destroy"
   end
 
+  def edit_assignee
+    render "secondary_nav_tabs/_edit_assignee"
+  end
+
+  def update_assignee
+    assign_to = new_assignee
+    if update_assignment(resource, assign_to)
+      redirect_to edition_path
+    else
+      render "secondary_nav_tabs/_edit_assignee"
+    end
+  rescue StandardError
+    flash[:danger] = "Due to a service problem, the assigned person couldn't be saved"
+    render "secondary_nav_tabs/_edit_assignee"
+  end
+
 protected
 
   def setup_view_paths
@@ -175,5 +195,30 @@ private
 
     flash[:danger] = "Cannot delete a #{description(@resource).downcase} that has ever been published."
     redirect_to edition_path(@resource)
+  end
+
+  def require_assignee_editable
+    return if can_update_assignee(@resource)
+
+    flash[:danger] = "Cannot edit assignee that has ever been published."
+    redirect_to edition_path(@resource)
+  end
+
+  def update_assignment(edition, assignee)
+    return if edition.assigned_to == assignee
+
+    if !assignee
+      current_user.unassign(edition)
+    elsif assignee.has_editor_permissions?(resource)
+      current_user.assign(edition, assignee)
+    else
+      flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
+      false
+    end
+  end
+
+  def new_assignee
+    assignee_id = params[:assigned_to_id]
+    User.where(id: assignee_id).first if assignee_id.present?
   end
 end

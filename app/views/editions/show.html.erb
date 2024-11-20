@@ -25,6 +25,14 @@
         {
           field: "Assigned to",
           value: @resource.assigned_to,
+          edit: if current_user.has_editor_permissions?(@resource) && can_update_assignee(@resource)
+            {
+              href: edit_assignee_edition_path,
+              link_text: "Edit",
+            }
+          else
+            {}
+          end,
         },
         {
           field: "Content type",

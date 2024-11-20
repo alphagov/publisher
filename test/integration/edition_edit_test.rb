@@ -362,6 +362,116 @@ class EditionEditTest < IntegrationTest
         assert page.has_field?("edition[change_note]")
       end
     end
+
+    context "edit assignee link" do
+      context "do not have required permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_draft_edition
+        end
+
+        should "not show 'Edit' link when user is not govuk editor or welsh editor" do
+          within :css, ".editions__edit__summary" do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_draft_edition
+
+          within :css, ".editions__edit__summary" do
+            assert page.has_no_link?("Edit")
+          end
+        end
+      end
+
+      context "has required permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, :govuk_editor, name: "Stub User"))
+        end
+
+        %i[published archived scheduled_for_publishing].each do |state|
+          context "when state is '#{state}'" do
+            setup do
+              send "visit_#{state}_edition"
+            end
+
+            should "not show 'Edit' link" do
+              within :css, ".editions__edit__summary" do
+                assert page.has_no_link?("Edit")
+              end
+            end
+          end
+        end
+
+        %i[draft amends_needed in_review fact_check_received fact_check ready].each do |state|
+          context "when state is '#{state}'" do
+            setup do
+              send "visit_#{state}_edition"
+              click_link("Admin")
+            end
+
+            should "show 'Edit' link" do
+              within :css, ".editions__edit__summary" do
+                assert page.has_link?("Edit")
+              end
+            end
+
+            should "navigate to edit assignee page when 'Edit' assignee is clicked" do
+              within :css, ".editions__edit__summary" do
+                click_link("Edit")
+              end
+
+              assert(page.current_path.include?("/edit_assignee"))
+            end
+          end
+        end
+
+        context "edit assignee page" do
+          setup do
+            visit_draft_edition
+            within :css, ".editions__edit__summary" do
+              click_link("Edit")
+            end
+          end
+
+          should "show editions title and page title as 'Assign person'" do
+            FactoryBot.create(:user, name: "Disabled User", disabled: true)
+            all_enabled_users_names = []
+            User.enabled.each { |user| all_enabled_users_names << user.name }
+            all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+
+            assert page.has_title?("Assign person")
+            assert page.has_text?(@draft_edition.title)
+            assert all_user_radio_buttons.exclude?("Disabled User")
+
+            all_enabled_users_names.each do |users|
+              assert all_user_radio_buttons.include?(users)
+            end
+          end
+
+          should "show all active users as radio button option and not show any disabled users" do
+            FactoryBot.create(:user, name: "Disabled User", disabled: true)
+            all_enabled_users_names = []
+            User.enabled.each { |user| all_enabled_users_names << user.name }
+            all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+
+            assert all_user_radio_buttons.exclude?("Disabled User")
+
+            all_enabled_users_names.each do |users|
+              assert all_user_radio_buttons.include?(users)
+            end
+          end
+
+          should "navigate to editions edit page when 'Cancel' link is clicked" do
+            click_link("Cancel")
+
+            assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
+          end
+        end
+      end
+    end
   end
 
 private
