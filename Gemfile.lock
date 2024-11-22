@@ -189,7 +189,7 @@ GEM
     ffi (1.17.0-aarch64-linux-gnu)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
-    flipflop (2.7.1)
+    flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
     gds-api-adapters (97.3.0)
