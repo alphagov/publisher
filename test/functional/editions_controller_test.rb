@@ -168,15 +168,15 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#admin" do
-    context "do not have required permissions" do
-      context "Welsh editors and non Welsh edition" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
         setup do
           login_as_welsh_editor
         end
 
-        %i[admin confirm_destroy].each do |url_path|
-          should "show permission error and redirects to edition path for #{url_path} path" do
-            get url_path, params: { id: @edition.id }
+        %i[admin confirm_destroy].each do |path|
+          should "show permission error and redirect to edition path for #{path} path" do
+            get path, params: { id: @edition.id }
 
             assert_redirected_to edition_path(@edition)
             assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
@@ -184,15 +184,15 @@ class EditionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "nor Welsh nor Govuk editors" do
+      context "non-Welsh, non-govuk editor" do
         setup do
           user = FactoryBot.create(:user, name: "Stub User")
           login_as(user)
         end
 
-        %i[admin confirm_destroy].each do |url_path|
-          should "show permission error and redirects to edition path for #{url_path} path" do
-            get url_path, params: { id: @edition.id }
+        %i[admin confirm_destroy].each do |path|
+          should "show permission error and redirect to edition path for #{path} path" do
+            get path, params: { id: @edition.id }
 
             assert_redirected_to edition_path(@edition)
             assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
@@ -201,15 +201,15 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
 
-    context "has required permissions" do
-      context "Welsh editors and welsh edition" do
+    context "user with required permissions" do
+      context "Welsh editor and Welsh edition" do
         setup do
           login_as_welsh_editor
         end
 
-        %i[admin confirm_destroy].each do |url_path|
-          should "be able to navigate successfully to #{url_path} path" do
-            get url_path, params: { id: @welsh_edition.id }
+        %i[admin confirm_destroy].each do |path|
+          should "be able to navigate successfully to #{path} path" do
+            get path, params: { id: @welsh_edition.id }
 
             assert_response :success
           end
@@ -238,7 +238,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         %i[published scheduled_for_publishing archived].each do |edition_state|
-          context "edition with state '#{edition_state}' can not be deleted" do
+          context "edition in '#{edition_state}' state can not be deleted" do
             setup do
               @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour)
             end
@@ -265,7 +265,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#progress" do
-    context "Welsh editors" do
+    context "Welsh editor" do
       setup do
         login_as_welsh_editor
       end
@@ -307,7 +307,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
 
-    context "govuk editors" do
+    context "govuk editor" do
       setup do
         login_as_govuk_editor
       end
@@ -398,6 +398,186 @@ class EditionsControllerTest < ActionController::TestCase
           title: "The changed title",
         },
       }
+    end
+  end
+
+  context "#edit_assignee" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :edit_assignee, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "non-Welsh, non-govuk editor" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :edit_assignee, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "user with required permissions" do
+      context "Welsh editor and Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "be able to navigate successfully to edit assignee path" do
+          get :edit_assignee, params: { id: @welsh_edition.id }
+
+          assert_response :success
+        end
+      end
+
+      should "be able to navigate to the edit assignee path" do
+        get :edit_assignee, params: { id: @edition.id }
+
+        assert_response :success
+      end
+
+      %i[published scheduled_for_publishing archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour)
+          end
+
+          should "redirect to edition path with error message" do
+            get :edit_assignee, params: { id: @edition.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Cannot edit the assignee of an edition that has been published.", flash[:danger]
+          end
+        end
+      end
+    end
+  end
+
+  context "#update_assignee" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "show permission error and redirect to edition path" do
+          patch :update_assignee, params: { id: @edition.id, assignee_id: @user.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "non-Welsh, non-govuk editor" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        should "show permission error and redirect to edition path" do
+          patch :update_assignee, params: { id: @edition.id, assignee_id: @user.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "user with required permissions" do
+      context "Welsh editor and Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "be able to successfully update assignee" do
+          patch :update_assignee, params: { id: @welsh_edition.id, assignee_id: @user.id }
+
+          assert_redirected_to edition_path(@welsh_edition.id)
+        end
+      end
+
+      should "be able to successfully update assignee" do
+        patch :update_assignee, params: { id: @edition.id, assignee_id: @user.id }
+
+        assert_redirected_to edition_path(@edition.id)
+      end
+
+      should "update the assignee" do
+        new_assignee = FactoryBot.create(:user, :govuk_editor, name: "Updated Assignee")
+        patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
+
+        @edition.reload
+        assert_equal "Updated Assignee", @edition.assignee
+      end
+
+      should "be able to unassign the current assignee" do
+        patch :update_assignee, params: { id: @edition.id, assignee_id: "none" }
+
+        @edition.reload
+        assert_nil @edition.assignee
+        assert_nil @edition.assigned_to_id
+      end
+
+      %i[published scheduled_for_publishing archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour)
+          end
+
+          should "redirect to edition path with error message" do
+            get :edit_assignee, params: { id: @edition.id, assignee_id: @user.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Cannot edit the assignee of an edition that has been published.", flash[:danger]
+          end
+        end
+      end
+
+      should "show error when database save fails" do
+        new_assignee = FactoryBot.create(:user, :govuk_editor, name: "Updated Assignee")
+        User.any_instance.stubs(:assign).raises(StandardError)
+
+        patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
+
+        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
+      end
+
+      should "show error when new assignee does not have editor permission" do
+        new_assignee = FactoryBot.create(:user, name: "Stub User")
+        patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
+
+        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_equal "Chosen assignee does not have correct editor permissions.", flash[:danger]
+      end
+
+      should "show error when no assignee option is selected" do
+        patch :update_assignee, params: { id: @edition.id }
+
+        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_equal "Please select a person to assign, or 'None' to unassign the currently assigned person.", flash[:danger]
+      end
+
+      should "show error when a non-existent assignee ID is provided" do
+        patch :update_assignee, params: { id: @edition.id, assignee_id: "non-existent ID" }
+
+        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
+      end
     end
   end
 
