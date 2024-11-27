@@ -1,0 +1,1 @@
+ENV["RUBYOPT"] = "-W0"
