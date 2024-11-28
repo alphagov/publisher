@@ -73,15 +73,15 @@ private
     ]
   end
 
-  def available_assignee_items(resource)
+  def available_assignee_items(edition)
     items = []
-    unless resource.assignee.nil?
-      items << { value: resource.assigned_to_id, text: resource.assignee, checked: true }
+    unless edition.assignee.nil?
+      items << { value: edition.assigned_to_id, text: edition.assignee, checked: true }
       items << { value: "none", text: "None" }
       items << :or
     end
     User.enabled.order_by([%i[name asc]]).each do |user|
-      items << { value: user.id, text: user.name } unless user.name == resource.assignee
+      items << { value: user.id, text: user.name } unless user.name == edition.assignee
     end
     items
   end
