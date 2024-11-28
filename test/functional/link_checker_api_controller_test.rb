@@ -48,7 +48,7 @@ class LinkCheckerApiControllerTest < ActionController::TestCase
   def set_headers(post_body)
     headers = {
       "Content-Type": "application/json",
-      "X-LinkCheckerApi-Signature": generate_signature(post_body.to_json, Rails.application.secrets.link_checker_api_secret_token),
+      "X-LinkCheckerApi-Signature": generate_signature(post_body.to_json, ENV.fetch("LINK_CHECKER_API_SECRET_TOKEN")),
     }
 
     request.headers.merge! headers

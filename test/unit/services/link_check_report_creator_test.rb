@@ -14,7 +14,7 @@ class LinkCheckReportCreatorTest < ActiveSupport::TestCase
       uris: ["https://www.gov.uk"],
       id: 1234,
       webhook_uri: link_checker_api_callback_url(host: Plek.find("publisher")),
-      webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token,
+      webhook_secret_token: ENV.fetch("LINK_CHECKER_API_SECRET_TOKEN"),
     )
   end
 
