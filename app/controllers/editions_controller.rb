@@ -30,13 +30,34 @@ class EditionsController < InheritedResources::Base
 
   def show
     @artefact = @resource.artefact
-
     render action: "show"
   end
 
   alias_method :metadata, :show
   alias_method :unpublish, :show
   alias_method :admin, :show
+
+  def duplicate
+    command = EditionDuplicator.new(@resource, current_user)
+    target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
+
+    if !@resource.can_create_new_edition?
+      flash[:warning] = "Another person has created a newer edition"
+      redirect_to edition_path(resource)
+    elsif command.duplicate(target_edition_class_name, current_user)
+      new_edition = command.new_edition
+      UpdateWorker.perform_async(new_edition.id.to_s)
+      flash[:success] = "New edition created"
+      redirect_to edition_path(new_edition)
+    else
+      flash[:danger] = command.error_message
+      redirect_to edition_path(resource)
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be duplicated")
+    render "show"
+  end
 
   def update
     @resource.assign_attributes(permitted_update_params)

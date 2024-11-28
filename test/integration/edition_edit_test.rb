@@ -6,6 +6,7 @@ class EditionEditTest < IntegrationTest
     login_as(@govuk_editor)
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit, true)
+    stub_holidays_used_by_fact_check
     stub_linkables
   end
 
@@ -165,6 +166,19 @@ class EditionEditTest < IntegrationTest
     end
 
     context "user has required permissions" do
+      %i[draft amends_needed in_review fact_check_received ready archived scheduled_for_publishing].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            send "visit_#{state}_edition"
+            click_link("Admin")
+          end
+
+          should "not show the 'Update content type' form" do
+            assert page.has_no_text?("Update content type")
+          end
+        end
+      end
+
       %i[published archived scheduled_for_publishing].each do |state|
         context "when state is '#{state}'" do
           setup do
@@ -246,6 +260,56 @@ class EditionEditTest < IntegrationTest
 
           assert_equal "fact_check", @fact_check_edition.state
           assert page.has_text?("Could not skip fact check for this publication.")
+        end
+      end
+
+      context "when state is 'published'" do
+        context "content type is retired" do
+          setup do
+            visit_retired_edition_in_published
+            click_link("Admin")
+          end
+
+          should "not show the 'Update content type' form" do
+            assert page.has_no_text?("Update content type")
+          end
+        end
+
+        context "edition is not the latest version of a publication" do
+          setup do
+            visit_old_edition_of_published_edition
+            click_link("Admin")
+          end
+
+          should "not show the 'Update content type' form" do
+            assert page.has_no_text?("Update content type")
+          end
+        end
+
+        context "content type is not retired, edition is the latest version of a publication" do
+          setup do
+            visit_published_edition
+            click_link("Admin")
+          end
+
+          should "show the 'Update content type' form" do
+            assert page.has_text?("Update content type")
+          end
+
+          should "show radio buttons for all content types excluding current one (answer)" do
+            assert page.has_no_selector?(".gem-c-radio input[value='answer']")
+            assert page.has_selector?(".gem-c-radio input[value='completed_transaction']")
+            assert page.has_selector?(".gem-c-radio input[value='guide']")
+            assert page.has_selector?(".gem-c-radio input[value='help_page']")
+            assert page.has_selector?(".gem-c-radio input[value='place']")
+            assert page.has_selector?(".gem-c-radio input[value='simple_smart_answer']")
+            assert page.has_selector?(".gem-c-radio input[value='transaction']")
+          end
+
+          should "show common explanatory text for all content types and not show explanatory text specific to Guides" do
+            assert page.has_text?("No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new content type it will still be available in the previous edition. Content in multiple fields might be combined into a single field.")
+            assert page.has_no_text?("All parts of Guide Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading.")
+          end
         end
       end
 
@@ -537,5 +601,34 @@ private
       state: "published",
       slug: "can-i-get-a-driving-licence",
     )
+    visit edition_path(@published_edition)
+  end
+
+  def visit_retired_edition_in_published
+    @published_edition = FactoryBot.create(
+      :campaign_edition,
+      state: "published",
+    )
+    visit edition_path(@published_edition)
+  end
+
+  def visit_old_edition_of_published_edition
+    published_edition = FactoryBot.create(
+      :edition,
+      panopticon_id: FactoryBot.create(
+        :artefact,
+        slug: "can-i-get-a-driving-licence",
+      ).id,
+      state: "published",
+      sibling_in_progress: 2,
+    )
+    FactoryBot.create(
+      :edition,
+      panopticon_id: published_edition.artefact.id,
+      state: "draft",
+      version_number: 2,
+      change_note: "The change note",
+    )
+    visit edition_path(published_edition)
   end
 end

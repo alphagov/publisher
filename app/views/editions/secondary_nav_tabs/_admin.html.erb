@@ -1,12 +1,36 @@
 <% @edition = @resource %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds editions__admin__tab">
     <%= header_for("Admin") %>
-    <%= render "govuk_publishing_components/components/list", {
-      items: [
-        ( primary_button_for(@edition, skip_fact_check_edition_path(@edition), "Skip fact check") if @edition.fact_check? ),
-        ( link_to("Delete edition #{@edition.version_number}", confirm_destroy_edition_path(@resource), class: "govuk-link gem-link--destructive") if @edition.can_destroy? ),
-      ],
-    } %>
+
+    <% if @edition.can_create_new_edition? && @edition.published? %>
+      <p class="govuk-body">No content will be lost, but content in some fields might not make it into the new edition. If it can't be copied to a new content type it will still be available in the previous edition. Content in multiple fields might be combined into a single field.</p>
+
+      <% if @edition.respond_to?(:parts) %>
+        <p class="govuk-body">All parts of Guide Editions will be copied across. If the format you are converting to doesn't have parts, the content of all the parts will be copied into the body, with the part title displayed as a top-level sub-heading.</p>
+      <% end %>
+
+      <%= form_for @resource, url: duplicate_edition_path(@resource), method: "post" do %>
+        <%= render "govuk_publishing_components/components/radio", {
+          heading: "Update content type",
+          heading_level: 0,
+          heading_size: "s",
+          name: "to",
+          items: conversion_items(@resource),
+        } %>
+
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Update",
+        } %>
+      <% end %>
+    <% else %>
+      <%= render "govuk_publishing_components/components/list", {
+        items: [
+          ( primary_button_for(@edition, skip_fact_check_edition_path(@edition), "Skip fact check") if @edition.fact_check? ),
+          ( link_to("Delete edition #{@edition.version_number}", confirm_destroy_edition_path(@resource), class: "govuk-link gem-link--destructive") if @edition.can_destroy? ),
+        ],
+      } %>
+    <% end %>
   </div>
 </div>
