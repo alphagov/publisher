@@ -36,6 +36,22 @@ class EditionEditTest < IntegrationTest
       assert row[2].has_text?("1")
       assert row[2].has_text?("Published")
     end
+
+    should "indicate when an edition does not have an assignee" do
+      within all(".govuk-summary-list__row")[0] do
+        assert_selector(".govuk-summary-list__key", text: "Assigned to")
+        assert_selector(".govuk-summary-list__value", text: "None")
+      end
+    end
+
+    should "show the person assigned to an edition" do
+      visit_draft_edition
+
+      within all(".govuk-summary-list__row")[0] do
+        assert_selector(".govuk-summary-list__key", text: "Assigned to")
+        assert_selector(".govuk-summary-list__value", text: @draft_edition.assignee)
+      end
+    end
   end
 
   context "metadata tab" do

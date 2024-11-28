@@ -53,4 +53,22 @@ module EditionsHelper
         [displayed_format_name, format_name]
       end
   end
+
+  def document_summary_items(edition)
+    [
+      {
+        field: "Assigned to",
+        value: edition.assigned_to || "None",
+        edit: assignee_edit_link(edition),
+      },
+      {
+        field: "Content type",
+        value: edition.format.underscore.humanize,
+      },
+      {
+        field: "Edition",
+        value: sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>"),
+      },
+    ]
+  end
 end
