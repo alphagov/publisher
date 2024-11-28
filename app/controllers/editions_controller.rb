@@ -11,11 +11,15 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
     destroyable_edition?
+  end
+
+  before_action only: %i[edit_assignee update_assignee] do
+    require_assignee_editable
   end
 
   helper_method :locale_to_language
@@ -35,7 +39,7 @@ class EditionsController < InheritedResources::Base
   alias_method :admin, :show
 
   def update
-    @resource.assign_attributes(permitted_params)
+    @resource.assign_attributes(permitted_update_params)
 
     if @resource.save
       UpdateWorker.perform_async(resource.id.to_s)
@@ -106,6 +110,28 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/confirm_destroy"
   end
 
+  def edit_assignee
+    render "secondary_nav_tabs/_edit_assignee"
+  end
+
+  def update_assignee
+    assignee_id = params.require(:assignee_id)
+
+    if update_assignment(@resource, assignee_id)
+      flash[:success] = "Assigned person updated."
+      redirect_to edition_path
+    else
+      render "secondary_nav_tabs/_edit_assignee"
+    end
+  rescue ActionController::ParameterMissing
+    flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
+    render "secondary_nav_tabs/_edit_assignee"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = "Due to a service problem, the assigned person couldn't be saved"
+    render "secondary_nav_tabs/_edit_assignee"
+  end
+
 protected
 
   def setup_view_paths
@@ -166,7 +192,7 @@ private
     nil
   end
 
-  def permitted_params
+  def permitted_update_params
     params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
   end
 
@@ -175,5 +201,32 @@ private
 
     flash[:danger] = "Cannot delete a #{description(@resource).downcase} that has ever been published."
     redirect_to edition_path(@resource)
+  end
+
+  def require_assignee_editable
+    return if can_update_assignee?(@resource)
+
+    flash[:danger] = "Cannot edit the assignee of an edition that has been published."
+    redirect_to edition_path(@resource)
+  end
+
+  def update_assignment(edition, assignee_id)
+    return true if assignee_id == edition.assigned_to_id
+
+    if assignee_id == "none"
+      current_user.unassign(edition)
+      return true
+    end
+
+    assignee = User.where(id: assignee_id).first
+    raise StandardError, "An attempt was made to assign non-existent user '#{assignee_id}' to edition '#{edition.id}'." unless assignee
+
+    if assignee.has_editor_permissions?(@resource)
+      current_user.assign(edition, assignee)
+      return true
+    end
+
+    flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
+    false
   end
 end

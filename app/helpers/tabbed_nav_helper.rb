@@ -28,6 +28,17 @@ module TabbedNavHelper
     end
   end
 
+  def assignee_edit_link(edition)
+    if current_user.has_editor_permissions?(edition) && can_update_assignee?(edition)
+      {
+        href: edit_assignee_edition_path,
+        link_text: "Edit",
+      }
+    else
+      {}
+    end
+  end
+
 private
 
   def all_tab_names
@@ -60,5 +71,22 @@ private
         current:,
       },
     ]
+  end
+
+  def available_assignee_items(resource)
+    items = []
+    unless resource.assignee.nil?
+      items << { value: resource.assigned_to_id, text: resource.assignee, checked: true }
+      items << { value: "none", text: "None" }
+      items << :or
+    end
+    User.enabled.order_by([%i[name asc]]).each do |user|
+      items << { value: user.id, text: user.name } unless user.name == resource.assignee
+    end
+    items
+  end
+
+  def can_update_assignee?(resource)
+    %w[published archived scheduled_for_publishing].exclude?(resource.state)
   end
 end
