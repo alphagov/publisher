@@ -529,6 +529,32 @@ class EditionEditTest < IntegrationTest
         end
       end
     end
+
+    context "content block guidance" do
+      context "when show_link_to_content_block_manager? is false" do
+        setup do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:show_link_to_content_block_manager, false)
+          visit_draft_edition
+        end
+
+        should "not show the content block guidance" do
+          assert_not page.has_text?("Content block")
+        end
+      end
+
+      context "when show_link_to_content_block_manager? is true" do
+        setup do
+          test_strategy = Flipflop::FeatureSet.current.test!
+          test_strategy.switch!(:show_link_to_content_block_manager, true)
+          visit_draft_edition
+        end
+
+        should "show the content block guidance" do
+          assert page.has_text?("Content block")
+        end
+      end
+    end
   end
 
 private
