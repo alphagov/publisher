@@ -242,7 +242,7 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.15.2)
+    govuk_app_config (9.15.3)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.30)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.70.0)
@@ -709,7 +709,7 @@ GEM
     redis-client (0.22.2)
       connection_pool
     regexp_parser (2.9.2)
-    reline (0.5.11)
+    reline (0.5.12)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
