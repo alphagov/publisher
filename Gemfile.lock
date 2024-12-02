@@ -196,7 +196,7 @@ GEM
     flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
-    gds-api-adapters (97.3.0)
+    gds-api-adapters (97.4.1)
       addressable
       link_header
       null_logger
