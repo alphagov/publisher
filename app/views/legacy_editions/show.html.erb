@@ -41,6 +41,10 @@
               <div class="well">
                 <%= render "shared/govspeak_help" %>
               </div>
+
+              <% if Flipflop.show_link_to_content_block_manager? %>
+                <%= render "content_block_guidance" %>
+              <% end %>
             <% end %>
           </div>
 
