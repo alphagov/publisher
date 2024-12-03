@@ -81,7 +81,7 @@ private
       items << :or
     end
     User.enabled.order_by([%i[name asc]]).each do |user|
-      items << { value: user.id, text: user.name } unless user.name == edition.assignee
+      items << { value: user.id, text: user.name } unless user.name == edition.assignee || !user.has_editor_permissions?(edition)
     end
     items
   end
