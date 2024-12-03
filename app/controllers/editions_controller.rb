@@ -79,8 +79,26 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
-  def linking
+  def related_external_links
     render action: "show"
+  end
+
+  def update_related_external_links
+    artefact = resource.artefact
+
+    if params.key?("artefact")
+      artefact.assign_attributes(permitted_external_links_params)
+
+      if artefact.save
+        flash[:success] = "Related links updated."
+      else
+        flash[:danger] = artefact.errors.full_messages.join("\n")
+      end
+    else
+      flash[:danger] = "There aren't any external related links yet"
+    end
+
+    redirect_to related_external_links_edition_path(@resource.id)
   end
 
   def confirm_unpublish
@@ -215,6 +233,10 @@ private
 
   def permitted_update_params
     params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
+  end
+
+  def permitted_external_links_params
+    params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
   end
 
   def require_destroyable

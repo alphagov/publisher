@@ -23,6 +23,8 @@ module TabbedNavHelper
       "unpublish"
     when "admin"
       "admin"
+    when "related_external_links"
+      "related_external_links"
     else
       "temp_nav_text"
     end
