@@ -1,0 +1,14 @@
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Title"
+  },
+  name: "artefact[external_links_attributes][#{index}][title]"
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "URL"
+  },
+  name: "artefact[external_links_attributes][#{index}][url]",
+  hint: "Example: https://gov.uk"
+} %>
