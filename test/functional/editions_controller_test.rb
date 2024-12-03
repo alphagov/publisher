@@ -56,7 +56,7 @@ class EditionsControllerTest < ActionController::TestCase
       test_strategy.switch!(:restrict_access_by_org, true)
     end
 
-    %i[show metadata history admin linking unpublish].each do |action|
+    %i[show metadata history admin related_external_links unpublish].each do |action|
       context "##{action}" do
         setup do
           @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
@@ -74,7 +74,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "when 'restrict_access_by_org' feature toggle is enabled" do
-    %i[show metadata history admin linking unpublish].each do |action|
+    %i[show metadata history admin related_external_links unpublish].each do |action|
       context "##{action}" do
         setup do
           @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
@@ -622,6 +622,62 @@ class EditionsControllerTest < ActionController::TestCase
         assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
       end
+    end
+  end
+
+  context "#update_related_external_links" do
+    should "display an error message when the title is blank" do
+      patch :update_related_external_links, params: {
+        id: @edition.id,
+        artefact: {
+          external_links_attributes: [{ title: "", url: "http://foo-bar.com", _destroy: false }],
+        },
+      }
+
+      assert_equal "External links is invalid", flash[:danger]
+    end
+
+    should "display an error message when the url is blank" do
+      patch :update_related_external_links, params: {
+        id: @edition.id,
+        artefact: {
+          external_links_attributes: [{ title: "foo", url: "", _destroy: false }],
+        },
+      }
+
+      assert_equal "External links is invalid", flash[:danger]
+    end
+
+    should "display an error message when the url is invalid" do
+      patch :update_related_external_links, params: {
+        id: @edition.id,
+        artefact: {
+          external_links_attributes: [{ title: "foo", url: "an-invalid-url", _destroy: false }],
+        },
+      }
+
+      assert_equal "External links is invalid", flash[:danger]
+    end
+
+    should "update related external links and display a success message when successfully saved" do
+      patch :update_related_external_links, params: {
+        id: @edition.id,
+        artefact: {
+          external_links_attributes: [{ title: "foo", url: "https://foo-bar.com", _destroy: false }],
+        },
+      }
+
+      assert_equal "Related links updated.", flash[:success]
+      assert_equal "foo", @edition.artefact.external_links[0].title
+      assert_equal "https://foo-bar.com", @edition.artefact.external_links[0].url
+    end
+
+    should "display an error message when there are no external links to save" do
+      patch :update_related_external_links, params: {
+        id: @edition.id,
+      }
+
+      assert_equal "There aren't any external related links yet", flash[:danger]
     end
   end
 
