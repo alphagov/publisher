@@ -10,7 +10,7 @@ class EditionEditTest < IntegrationTest
     stub_linkables
   end
 
-  context "all tabs" do
+  context "edit page" do
     setup do
       visit_published_edition
     end
@@ -35,6 +35,34 @@ class EditionEditTest < IntegrationTest
       assert row[2].has_text?("Edition")
       assert row[2].has_text?("1")
       assert row[2].has_text?("Published")
+    end
+
+    should "indicate when an edition does not have an assignee" do
+      within all(".govuk-summary-list__row")[0] do
+        assert_selector(".govuk-summary-list__key", text: "Assigned to")
+        assert_selector(".govuk-summary-list__value", text: "None")
+      end
+    end
+
+    should "show the person assigned to an edition" do
+      visit_draft_edition
+
+      within all(".govuk-summary-list__row")[0] do
+        assert_selector(".govuk-summary-list__key", text: "Assigned to")
+        assert_selector(".govuk-summary-list__value", text: @draft_edition.assignee)
+      end
+    end
+  end
+
+  context "edit assignee page" do
+    should "only show editors as available for assignment" do
+      edition = FactoryBot.create(:answer_edition, state: "draft")
+      non_editor_user = FactoryBot.create(:user, name: "Non Editor User")
+
+      visit edit_assignee_edition_path(edition)
+
+      assert_selector "label", text: @govuk_editor.name
+      assert_no_selector "label", text: non_editor_user.name
     end
   end
 
