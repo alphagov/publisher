@@ -2,17 +2,21 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Related external links") %>
 
+    <%
+      items = @edition.artefact.external_links.each_with_index.map do |external_link, index|
+        {
+          fields: (render "secondary_nav_tabs/add-another_fieldset", index: index),
+          destroy_checkbox: (render :partial => "secondary_nav_tabs/add-another_checkbox")
+        }
+      end
+    %>
+
     <%= form_for @edition, url: update_related_external_links_edition_path(@resource) do %>
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Link",
         add_button_text: "Add another link",
-        items: [
-          {
-            fields: (render "secondary_nav_tabs/add-another_fieldset", index: 0),
-            destroy_checkbox: (render :partial => "secondary_nav_tabs/add-another_checkbox")
-          }
-        ],
-        empty: (render "secondary_nav_tabs/add-another_fieldset", index: 1)
+        items: items,
+        empty: (render "secondary_nav_tabs/add-another_fieldset", index: 100)
       } %>
 
       <%= render "govuk_publishing_components/components/inset_text", {
