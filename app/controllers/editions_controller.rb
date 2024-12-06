@@ -36,6 +36,7 @@ class EditionsController < InheritedResources::Base
   alias_method :metadata, :show
   alias_method :unpublish, :show
   alias_method :admin, :show
+  # alias_method :related_external_links, :show
 
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
@@ -81,6 +82,32 @@ class EditionsController < InheritedResources::Base
 
   def linking
     render action: "show"
+  end
+
+  def update_related_external_links
+    artefact = @resource.artefact
+
+    # byebug
+
+    if params.key?("artefact")
+      # external_links = params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
+      external_links = permitted_external_links_params
+      artefact.external_links_attributes = external_links[:external_links_attributes].to_h
+
+      # byebug
+
+      if artefact.save
+        flash[:success] = "Related links updated."
+      else
+        flash[:danger] = artefact.errors.full_messages.join("\n")
+      end
+    else
+      flash[:danger] = "There aren't any external related links yet"
+    end
+
+    redirect_to related_external_links_edition_path(@resource.id)
+    # redirect_back(fallback_location: related_external_links_edition_path(resource.id))
+    # render action: "show/6734b85448f7ef0038fa45a2#linking"
   end
 
   def confirm_unpublish
@@ -215,6 +242,11 @@ private
 
   def permitted_update_params
     params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
+  end
+
+  def permitted_external_links_params
+    params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
+    # external_links = params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
   end
 
   def destroyable_edition?
