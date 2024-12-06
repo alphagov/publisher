@@ -2,7 +2,8 @@
   label: {
     text: "Title"
   },
-  name: "artefact[external_links_attributes][#{index}][title]"
+  name: "artefact[external_links_attributes][#{index}][title]",
+  value: (@edition.artefact.external_links[index].title if @edition.artefact.external_links[index].present?)
 } %>
 
 <%= render "govuk_publishing_components/components/input", {
@@ -10,5 +11,6 @@
     text: "URL"
   },
   name: "artefact[external_links_attributes][#{index}][url]",
+  value: (@edition.artefact.external_links[index].url if @edition.artefact.external_links[index].present?),
   hint: "Example: https://gov.uk"
 } %>
