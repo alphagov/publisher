@@ -1,6 +1,5 @@
-<div class="govuk-checkboxes" data-module="govuk-checkboxes" data-govuk-checkboxes-init="">
-  <div class="govuk-checkboxes__item">
-    <input type="checkbox" name="artefact[external_links_attributes][0][title][_destroy]" id="artefact_external_links_attributes_0__destroy" class="govuk-checkboxes__input">
-    <label for="artefact_external_links_attributes_0__destroy" class="govuk-label govuk-checkboxes__label">Delete</label>
-  </div>
-</div>
+<%= render "govuk_publishing_components/components/checkboxes", { 
+  name: "artefact[external_links_attributes][#{index}][_destroy]",
+  id: "artefact_external_links_attributes_#{index}__destroy",
+  items: [{label: "Delete", value: "1" }]
+} %>

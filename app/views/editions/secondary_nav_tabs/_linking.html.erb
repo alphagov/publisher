@@ -5,8 +5,8 @@
     <%
       items = @edition.artefact.external_links.each_with_index.map do |external_link, index|
         {
-          fields: (render "secondary_nav_tabs/add-another_fieldset", index: index),
-          destroy_checkbox: (render :partial => "secondary_nav_tabs/add-another_checkbox")
+          fields: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: index, id: external_link.id}),
+          destroy_checkbox: render(partial: "secondary_nav_tabs/add-another_checkbox", locals: {index: index})
         }
       end
     %>
@@ -16,7 +16,7 @@
         fieldset_legend: "Link",
         add_button_text: "Add another link",
         items: items,
-        empty: (render "secondary_nav_tabs/add-another_fieldset", index: 100)
+        empty: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: @edition.artefact.external_links.count})
       } %>
 
       <%= render "govuk_publishing_components/components/inset_text", {
