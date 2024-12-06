@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         get "admin"
         post "duplicate"
         get "related_external_links", to: "editions#linking"
+        patch "update_related_external_links"
         get "tagging", to: "editions#linking"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
