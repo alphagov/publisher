@@ -5,8 +5,8 @@
     <%
       items = @edition.artefact.external_links.each_with_index.map do |external_link, index|
         {
-          fields: (render "secondary_nav_tabs/add-another_fieldset", index: index),
-          destroy_checkbox: (render :partial => "secondary_nav_tabs/add-another_checkbox")
+          fields: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: index, id: external_link.id}),
+          destroy_checkbox: render(partial: "secondary_nav_tabs/add-another_checkbox", index: index)
         }
       end
     %>
