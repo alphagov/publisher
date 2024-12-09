@@ -163,7 +163,7 @@ GEM
     database_cleaner-mongoid (2.0.1)
       database_cleaner-core (~> 2.0.0)
       mongoid
-    date (3.4.0)
+    date (3.4.1)
     diffy (3.4.3)
     docile (1.4.0)
     domain_name (0.6.20240107)
@@ -257,7 +257,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (45.9.0)
+    govuk_publishing_components (46.2.0)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
