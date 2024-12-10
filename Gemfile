@@ -27,7 +27,7 @@ gem "mail-notify"
 gem "mlanett-redis-lock"
 gem "momentjs-rails"
 gem "mongo"
-gem "mongoid", "8.1.4" # Locked as Mongoid 8.1.5 changes validation behaviour https://github.com/mongodb/mongoid/releases/tag/v8.1.5
+gem "mongoid", "9.0.3" # Locked as Mongoid 8.1.5 changes validation behaviour https://github.com/mongodb/mongoid/releases/tag/v8.1.5
 gem "mongoid-sadstory"
 gem "mousetrap-rails"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"
