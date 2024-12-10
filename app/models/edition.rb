@@ -2,44 +2,46 @@ require_dependency "workflow"
 
 require "digest"
 
-class Edition
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class Edition < ApplicationRecord
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
   include Workflow
   include RecordableActions
   include BaseHelper
 
+  delegated_type :editionable, types: %w[AnswerEdition GuideEdition], dependent: :destroy
+
   class ResurrectionError < RuntimeError
   end
 
-  field :panopticon_id,        type: String
-  field :version_number,       type: Integer,  default: 1
-  field :sibling_in_progress,  type: Integer,  default: nil
-
-  field :title,                type: String
-  field :in_beta,              type: Boolean,  default: false
-  field :created_at,           type: DateTime, default: -> { Time.zone.now }
-  field :publish_at,           type: DateTime
-  field :overview,             type: String
-  field :slug,                 type: String
-  field :rejected_count,       type: Integer, default: 0
-
-  field :assignee,             type: String
-  field :reviewer,             type: String
-  field :creator,              type: String
-  field :publisher,            type: String
-  field :archiver,             type: String
-  field :major_change,         type: Boolean, default: false
-  field :change_note,          type: String
-  field :review_requested_at,  type: DateTime
-
-  field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
-
-  field :owning_org_content_ids, type: Array, default: []
+  # field :panopticon_id,        type: String
+  # field :version_number,       type: Integer,  default: 1
+  # field :sibling_in_progress,  type: Integer,  default: nil
+  #
+  # field :title,                type: String
+  # field :in_beta,              type: Boolean,  default: false
+  # field :created_at,           type: DateTime, default: -> { Time.zone.now }
+  # field :publish_at,           type: DateTime
+  # field :overview,             type: String
+  # field :slug,                 type: String
+  # field :rejected_count,       type: Integer, default: 0
+  #
+  # field :assignee,             type: String
+  # field :reviewer,             type: String
+  # field :creator,              type: String
+  # field :publisher,            type: String
+  # field :archiver,             type: String
+  # field :major_change,         type: Boolean, default: false
+  # field :change_note,          type: String
+  # field :review_requested_at,  type: DateTime
+  #
+  # field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
+  #
+  # field :owning_org_content_ids, type: Array, default: []
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
-  embeds_many :link_check_reports
+  has_many :link_check_reports
 
   scope :accessible_to,
         lambda { |user|
@@ -53,8 +55,8 @@ class Edition
   state_machine.states.map(&:name).each do |state|
     scope state, -> { where(state:) }
   end
-  scope :archived_or_published, -> { where(:state.in => %w[archived published]) }
-  scope :in_progress, -> { where(:state.nin => %w[archived published]) }
+  scope :archived_or_published, -> { where(state: %w[archived published]) }
+  scope :in_progress, -> { where.not(state: %w[archived published]) }
   scope :assigned_to,
         lambda { |user|
           if user
@@ -137,8 +139,8 @@ class Edition
   validates :title, presence: { message: "Enter a title" }
   validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }, unless: :popular_links_edition?
   validates :panopticon_id, presence: true, unless: :popular_links_edition?
-  validates_with SafeHtml, unless: :popular_links_edition?
-  validates_with LinkValidator, on: :update, unless: :archived_or_popular_links?
+  # validates_with SafeHtml
+  # validates_with LinkValidator, on: :update
   validates_with ReviewerValidator
   validates :change_note, presence: { if: :major_change }
 
@@ -152,16 +154,20 @@ class Edition
     destroy_artefact
   end
 
-  index assigned_to_id: 1
-  index({ panopticon_id: 1, version_number: 1 }, unique: true)
-  index state: 1
-  index created_at: 1
-  index updated_at: 1
+  # index assigned_to_id: 1
+  # index({ panopticon_id: 1, version_number: 1 }, unique: true)
+  # index state: 1
+  # index created_at: 1
+  # index updated_at: 1
 
-  alias_method :admin_list_title, :title
+  alias_attribute :admin_list_title, :title
 
   def self.state_names
     state_machine.states.map(&:name)
+  end
+
+  def self.state
+    Artefact.find(panopticon_id:).state
   end
 
   def self.by_format(format)
@@ -178,19 +184,19 @@ class Edition
   end
 
   def history
-    series.order(%i[version_number desc])
+    series.order([version_number: :desc])
   end
 
   def siblings
-    series.excludes(id:)
+    series.where.not(id:)
   end
 
   def previous_siblings
-    siblings.where(:version_number.lt => version_number).order(version_number: "asc")
+    siblings.where("version_number < ?", version_number).order(version_number: :asc)
   end
 
   def subsequent_siblings
-    siblings.where(:version_number.gt => version_number).order(version_number: "asc")
+    siblings.where("version_number > ?", version_number).order(version_number: :asc)
   end
 
   def latest_edition?
@@ -198,15 +204,15 @@ class Edition
   end
 
   def published_edition
-    series.where(state: "published").order(version_number: "desc").first
+    series.where(state: "published").order(version_number: :desc).first
   end
 
   def previous_published_edition
-    series.where(state: "published").order(version_number: "desc").second
+    series.where(state: "published").order(version_number: :desc).second
   end
 
   def in_progress_sibling
-    subsequent_siblings.in_progress.order(version_number: "desc").first
+    subsequent_siblings.in_progress.order(version_number: :desc).first
   end
 
   def can_create_new_edition?
@@ -246,7 +252,7 @@ class Edition
   end
 
   def first_edition_of_published
-    series.archived_or_published.order(version_number: "asc").first
+    series.archived_or_published.order(version_number: :asc).first
   end
 
   def meta_data
@@ -254,7 +260,7 @@ class Edition
   end
 
   def get_next_version_number
-    latest_version = series.order(version_number: "desc").first.version_number
+    latest_version = series.order(version_number: :desc).first.version_number
     latest_version + 1
   end
 
@@ -526,6 +532,8 @@ private
   def base_field_keys
     %i[
       title
+      editionable_type
+      editionable_id
       in_beta
       panopticon_id
       overview
@@ -534,11 +542,11 @@ private
   end
 
   def type_specific_field_keys
-    (fields.keys - Edition.fields.keys).map(&:to_sym)
+    (attribute_names - Edition.attribute_names).map(&:to_sym)
   end
 
   def common_type_specific_field_keys(target_class)
-    ((fields.keys & target_class.fields.keys) - Edition.fields.keys).map(&:to_sym)
+    ((attribute_names & target_class.attribute_names) - Edition.attribute_names).map(&:to_sym)
   end
 
   def popular_links_edition?

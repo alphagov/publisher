@@ -1,8 +1,8 @@
 class Link
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
 
-  embedded_in :link_check_report
+  has_many :link_check_report
 
   field :uri, type: String
   field :status, type: String

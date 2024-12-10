@@ -1,5 +1,5 @@
 require "factory_bot"
-require "answer_edition"
+# require "answer_edition"
 require "artefact"
 require "user"
 
@@ -79,16 +79,16 @@ FactoryBot.define do
     factory :non_publisher_artefact, traits: [:non_publisher]
   end
 
-  factory :edition, class: AnswerEdition do
-    id              { SecureRandom.hex(12) }
+  factory :edition do
+    id { SecureRandom.hex(12) }
 
     panopticon_id do
-      a = create(:artefact, kind: kind_for_artefact)
+      a = create(:artefact)
       a.id
     end
-    transient do
-      version_number { nil }
-    end
+    # transient do
+    #   version_number { nil }
+    # end
 
     sequence(:slug) { |n| "slug-#{n}" }
     sequence(:title) { |n| "A key answer to your question #{n}" }
@@ -155,8 +155,6 @@ FactoryBot.define do
       end
     end
   end
-  factory :answer_edition, traits: [:with_body], parent: :edition do
-  end
 
   factory :answer_edition_with_link_check_report, traits: [:with_link_check_report], parent: :answer_edition do
   end
@@ -186,9 +184,43 @@ FactoryBot.define do
   factory :video_edition, traits: [:with_body], parent: :edition, class: "VideoEdition" do
   end
 
-  factory :guide_edition, parent: :edition, class: "GuideEdition" do
-    sequence(:title) { |n| "Test guide #{n}" }
+  factory :guide_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      video_url {"some video url"}
+    end
+
+    editionable do
+      create(:create_guide, video_url:)
+    end
+
+    panopticon_id do
+      a = create(:artefact)
+      a.id
+    end
   end
+
+  factory :create_guide, class: "GuideEdition" do
+  end
+
+  factory :answer_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      body {"some body"}
+    end
+
+    editionable do
+      create(:create_answer, body:)
+    end
+    panopticon_id do
+      a = create(:artefact)
+      a.id
+    end
+  end
+
+  factory :create_answer, class: "AnswerEdition" do
+  end
+
 
   factory :popular_links, class: "PopularLinksEdition" do
     title { "Homepage Popular Links" }

@@ -1,18 +1,18 @@
 require_dependency "safe_html"
 
-class Part
-  include Mongoid::Document
+class Part < ApplicationRecord
+  # include Mongoid::Document
 
-  embedded_in :guide_edition
-  embedded_in :programme_edition
+  belongs_to :guide_edition
+  has_many :programme_edition
 
-  scope :in_order, -> { order_by(order: :asc) }
+  scope :in_order, -> { sort_by(&:order) }
 
-  field :order,      type: Integer
-  field :title,      type: String
-  field :body,       type: String
-  field :slug,       type: String
-  field :created_at, type: DateTime, default: -> { Time.zone.now }
+  # field :order,      type: Integer
+  # field :title,      type: String
+  # field :body,       type: String
+  # field :slug,       type: String
+  # field :created_at, type: DateTime, default: -> { Time.zone.now }
 
   GOVSPEAK_FIELDS = [:body].freeze
 

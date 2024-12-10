@@ -1,8 +1,8 @@
 class LinkCheckReport
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
 
-  embedded_in :edition
+  has_many :edition
   embeds_many :links
 
   accepts_nested_attributes_for :links

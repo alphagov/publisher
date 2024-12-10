@@ -3,9 +3,9 @@ require "edition"
 class SimpleSmartAnswerEdition < Edition
   class Node
     class Option
-      include Mongoid::Document
+      # include Mongoid::Document
 
-      embedded_in :node, class_name: "SimpleSmartAnswerEdition::Node"
+      has_many :node, class_name: "SimpleSmartAnswerEdition::Node"
 
       field :label, type: String
       field :slug, type: String
