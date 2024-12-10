@@ -2,7 +2,7 @@ require "csv"
 require_dependency "safe_html"
 
 class LocalService
-  include Mongoid::Document
+  # include Mongoid::Document
 
   field :description,    type: String
   field :lgsl_code,      type: Integer

@@ -1,6 +1,6 @@
 class Downtime
-  include Mongoid::Document
-  include Mongoid::Timestamps
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
 
   field :message, type: String
   field :start_time, type: DateTime

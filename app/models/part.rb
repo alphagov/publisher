@@ -1,10 +1,10 @@
 require_dependency "safe_html"
 
 class Part
-  include Mongoid::Document
+  # include Mongoid::Document
 
-  embedded_in :guide_edition
-  embedded_in :programme_edition
+  has_many :guide_edition
+  has_many :programme_edition
 
   scope :in_order, -> { order_by(order: :asc) }
 

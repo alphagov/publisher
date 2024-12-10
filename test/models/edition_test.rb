@@ -113,7 +113,8 @@ class EditionTest < ActiveSupport::TestCase
     end
 
     should "be done when an existing edition is updated" do
-      edition = FactoryBot.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
+      edition = FactoryBot.create(:edition, :draft)
+
 
       edition.body += "some update"
 

@@ -2,44 +2,45 @@ require_dependency "workflow"
 
 require "digest"
 
-class Edition
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class Edition < ApplicationRecord
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
   include Workflow
   include RecordableActions
   include BaseHelper
+  delegated_type :editionable, types: %w[AnswerEdition], dependent: :destroy
 
   class ResurrectionError < RuntimeError
   end
 
-  field :panopticon_id,        type: String
-  field :version_number,       type: Integer,  default: 1
-  field :sibling_in_progress,  type: Integer,  default: nil
-
-  field :title,                type: String
-  field :in_beta,              type: Boolean,  default: false
-  field :created_at,           type: DateTime, default: -> { Time.zone.now }
-  field :publish_at,           type: DateTime
-  field :overview,             type: String
-  field :slug,                 type: String
-  field :rejected_count,       type: Integer, default: 0
-
-  field :assignee,             type: String
-  field :reviewer,             type: String
-  field :creator,              type: String
-  field :publisher,            type: String
-  field :archiver,             type: String
-  field :major_change,         type: Boolean, default: false
-  field :change_note,          type: String
-  field :review_requested_at,  type: DateTime
-
-  field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
-
-  field :owning_org_content_ids, type: Array, default: []
+  # field :panopticon_id,        type: String
+  # field :version_number,       type: Integer,  default: 1
+  # field :sibling_in_progress,  type: Integer,  default: nil
+  #
+  # field :title,                type: String
+  # field :in_beta,              type: Boolean,  default: false
+  # field :created_at,           type: DateTime, default: -> { Time.zone.now }
+  # field :publish_at,           type: DateTime
+  # field :overview,             type: String
+  # field :slug,                 type: String
+  # field :rejected_count,       type: Integer, default: 0
+  #
+  # field :assignee,             type: String
+  # field :reviewer,             type: String
+  # field :creator,              type: String
+  # field :publisher,            type: String
+  # field :archiver,             type: String
+  # field :major_change,         type: Boolean, default: false
+  # field :change_note,          type: String
+  # field :review_requested_at,  type: DateTime
+  #
+  # field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
+  #
+  # field :owning_org_content_ids, type: Array, default: []
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
-  embeds_many :link_check_reports
+  has_many :link_check_reports
 
   scope :accessible_to,
         lambda { |user|
@@ -152,16 +153,20 @@ class Edition
     destroy_artefact
   end
 
-  index assigned_to_id: 1
-  index({ panopticon_id: 1, version_number: 1 }, unique: true)
-  index state: 1
-  index created_at: 1
-  index updated_at: 1
+  # index assigned_to_id: 1
+  # index({ panopticon_id: 1, version_number: 1 }, unique: true)
+  # index state: 1
+  # index created_at: 1
+  # index updated_at: 1
 
-  alias_method :admin_list_title, :title
+  alias_attribute :admin_list_title, :title
 
   def self.state_names
     state_machine.states.map(&:name)
+  end
+
+  def self.state
+    Artefact.find(panopticon_id:).state
   end
 
   def self.by_format(format)

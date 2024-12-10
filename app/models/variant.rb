@@ -1,11 +1,11 @@
 require_dependency "safe_html"
 
 class Variant
-  include Mongoid::Document
+  # include Mongoid::Document
 
   strip_attributes only: :link
 
-  embedded_in :transaction_edition
+  has_many :transaction_edition
 
   scope :in_order, -> { order_by(order: :asc) }
 

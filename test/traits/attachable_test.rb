@@ -2,7 +2,7 @@ require "test_helper"
 
 class ModelWithAttachments
   include Attachable
-  include Mongoid::Document
+  # include Mongoid::Document
 
   field :title, type: String
   attaches :image
@@ -10,7 +10,7 @@ end
 
 class ModelWithAttachmentsAndUrl
   include Attachable
-  include Mongoid::Document
+  # include Mongoid::Document
 
   field :title, type: String
   attaches :image, with_url_field: true
@@ -18,7 +18,7 @@ end
 
 class ModelWithUpdatableAttachments
   include Attachable
-  include Mongoid::Document
+  # include Mongoid::Document
 
   field :title, type: String
   attaches :image, update_existing: true, with_url_field: true

@@ -1,7 +1,7 @@
 require_dependency "safe_html"
 
-class Action
-  include Mongoid::Document
+class Action < ApplicationRecord
+  # include Mongoid::Document
 
   STATUS_ACTIONS = [
     CREATE                      = "create".freeze,
@@ -28,20 +28,20 @@ class Action
     RESEND_FACT_CHECK = "resend_fact_check".freeze,
   ].freeze
 
-  embedded_in :edition
+  has_many :edition
 
   belongs_to :recipient, class_name: "User", optional: true
   belongs_to :requester, class_name: "User", optional: true
 
-  field :approver_id,        type: Integer
-  field :approved,           type: DateTime
-  field :comment,            type: String
-  field :comment_sanitized,  type: Boolean, default: false
-  field :request_type,       type: String
-  field :request_details,    type: Hash, default: {}
-  field :email_addresses,    type: String
-  field :customised_message, type: String
-  field :created_at,         type: DateTime, default: -> { Time.zone.now }
+  # field :approver_id,        type: Integer
+  # field :approved,           type: DateTime
+  # field :comment,            type: String
+  # field :comment_sanitized,  type: Boolean, default: false
+  # field :request_type,       type: String
+  # field :request_details,    type: Hash, default: {}
+  # field :email_addresses,    type: String
+  # field :customised_message, type: String
+  # field :created_at,         type: DateTime, default: -> { Time.zone.now }
 
   def container_class_name(edition)
     edition.container.class.name.underscore.humanize

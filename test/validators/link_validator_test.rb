@@ -2,7 +2,7 @@ require "test_helper"
 
 class LinkValidatorTest < ActiveSupport::TestCase
   class Dummy
-    include Mongoid::Document
+    # include Mongoid::Document
 
     field "body", type: String
     field "assignee", type: String
