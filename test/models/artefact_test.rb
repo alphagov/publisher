@@ -136,7 +136,7 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should raise a not found exception if the slug doesn't match" do
-    assert_raise Mongoid::Errors::DocumentNotFound do
+    assert_raise Errors do
       Artefact.from_param("something-fake")
     end
   end
@@ -157,7 +157,7 @@ class ArtefactTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:answer_edition, panopticon_id: artefact.id)
     two_days_ago = Time.zone.today - 2
     old_updated_at = Time.zone.local(two_days_ago.year, two_days_ago.month, two_days_ago.day).time
-    edition.set(updated_at: old_updated_at)
+    edition.update_column(:updated_at, old_updated_at)
 
     artefact.language = "cy"
     artefact.save!
@@ -199,7 +199,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
 
@@ -223,7 +223,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
 
@@ -244,7 +244,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "draft"
     edition.save!
 
@@ -263,7 +263,7 @@ class ArtefactTest < ActiveSupport::TestCase
       owning_app: "publisher",
     )
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
 
     assert_not artefact.any_editions_published?
 

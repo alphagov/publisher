@@ -1,5 +1,5 @@
 class PopularLinksEdition < Edition
-  field :link_items, type: Array
+  # field :link_items, type: Array
   validate :six_link_items_present
   validate :all_valid_urls_and_titles_are_present
 

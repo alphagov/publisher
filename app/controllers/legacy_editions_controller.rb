@@ -27,9 +27,9 @@ class LegacyEditionsController < InheritedResources::Base
       @ordered_parts = @resource.parts.in_order
     end
 
-    if @resource.is_a?(Varianted)
-      @ordered_variants = @resource.variants.in_order
-    end
+    # if @resource.is_a?(Varianted)
+    #   @ordered_variants = @resource.variants.in_order
+    # end
 
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact

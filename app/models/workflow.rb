@@ -1,4 +1,4 @@
-require "state_machines-mongoid"
+require "state_machines-activerecord"
 
 module Workflow
   class CannotDeletePublishedPublication < RuntimeError; end
@@ -11,10 +11,11 @@ module Workflow
     before_save :denormalise_users!
     after_create :notify_siblings_of_new_edition
 
-    field :state, type: String, default: "draft"
+    # field :state, type: String, default: "draft"
     belongs_to :assigned_to, class_name: "User", optional: true
 
     state_machine initial: :draft do
+      # state :draft, type: String, default: "draft"
       after_transition on: :request_amendments do |edition, _transition|
         edition.mark_as_rejected
       end
@@ -130,7 +131,9 @@ module Workflow
 
   def denormalise_users!
     new_assignee = assigned_to.try(:name)
-    set(assignee: new_assignee) unless new_assignee == assignee
+    if !new_record? && new_assignee != assignee
+    update_column(:assignee, new_assignee)
+    end
     update_user_action("creator",   [Action::CREATE, Action::NEW_VERSION])
     update_user_action("publisher", [Action::PUBLISH])
     update_user_action("archiver",  [Action::ARCHIVE])
@@ -177,7 +180,7 @@ module Workflow
   end
 
   def important_note
-    action = actions.where(:request_type.in => [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
+    action = actions.where(:request_type => [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
     action if action.try(:request_type) == Action::IMPORTANT_NOTE
   end
 
@@ -192,13 +195,14 @@ private
   end
 
   def update_user_action(property, statuses)
-    actions.where(:request_type.in => statuses).limit(1).each do |action|
+    Action.where(request_type: statuses).limit(1).each do |action|
       # This can be invoked by Panopticon when it updates an artefact and associated
       # editions. The problem is that Panopticon and Publisher users live in different
       # collections, but share a model and relationships with eg actions.
       # Therefore, Panopticon might not find a user for an action.
-      if action.requester
-        set(property => action.requester.name)
+      if action.requester && !new_record?
+        # set(property => action.requester.name)
+        update_column(property, action.requester.name)
       end
     end
   end

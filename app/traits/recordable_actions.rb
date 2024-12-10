@@ -3,7 +3,7 @@ require "action"
 module RecordableActions
   extend ActiveSupport::Concern
   included do
-    embeds_many :actions
+    has_many :actions
 
     def latest_status_action(type = nil)
       if type

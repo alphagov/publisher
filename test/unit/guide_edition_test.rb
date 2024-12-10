@@ -15,7 +15,6 @@ class GuideEditionTest < ActiveSupport::TestCase
   def publisher_and_guide
     user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
     other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
-
     guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
     edition = guide
     request_review(user, edition)
@@ -30,9 +29,10 @@ class GuideEditionTest < ActiveSupport::TestCase
 
   test "order parts shouldn't fail if one part's order attribute is nil" do
     edition = template_guide
-    edition.parts.build
-    edition.parts.build(order: 1)
-    assert edition.order_parts
+
+    edition.editionable.parts.build
+    edition.editionable.parts.build(order: 1)
+    assert edition.editionable.order_parts
   end
 
   test "a guide without a video url should not have a video" do
@@ -41,9 +41,8 @@ class GuideEditionTest < ActiveSupport::TestCase
   end
 
   test "a guide with a video url should have a video" do
-    g = FactoryBot.create(:guide_edition)
-    g.video_url = "http://www.youtube.com/watch?v=QH2-TGUlwu4"
-    assert g.has_video?
+    g = FactoryBot.create(:guide_edition, video_url: "http://www.youtube.com/watch?v=QH2-TGUlwu4")
+    assert g.editionable.has_video?
   end
 
   test "duplicating a guide should duplicate overview and alt title" do
@@ -52,13 +51,13 @@ class GuideEditionTest < ActiveSupport::TestCase
 
     assert_not edition.overview.blank?
 
-    new_edition = user.new_version(edition)
+    new_edition = user.new_version(edition, editionable: guide)
     assert_equal edition.overview, new_edition.overview
   end
 
   test "it should trim whitespace from URLs" do
     guide = FactoryBot.create(:guide_edition, video_url: " https://youtube.com ")
     assert guide.valid?
-    assert guide.video_url == "https://youtube.com"
+    assert guide.editionable.video_url == "https://youtube.com"
   end
 end

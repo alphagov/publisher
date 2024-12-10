@@ -67,11 +67,13 @@ private
   def query_editions
     result = editions_by_content_type
     result = apply_states_filter(result)
+    result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
     result = apply_title_filter(result)
     result = result.accessible_to(user)
-    result = result.where.not(_type: "PopularLinksEdition")
-    result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
+    result = result.where.not(editionable: "PopularLinksEdition")
+    result.order("updated_at desc").page(@page).per(ITEMS_PER_PAGE)
+
   end
 
   def available_users
@@ -104,7 +106,7 @@ private
   def editions_by_content_type
     return Edition.all unless content_type_filter && content_type_filter != "all"
 
-    Edition.where(_type: "#{content_type_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{content_type_filter.camelcase}Edition")
   end
 
   def apply_states_filter(editions)

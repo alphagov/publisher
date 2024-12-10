@@ -1,12 +1,12 @@
-class ArtefactAction
-  include Mongoid::Document
-  include Mongoid::Timestamps::Created
+class ArtefactAction < ApplicationRecord
+  # include Mongoid::Document
+  # include Mongoid::Timestamps::Created
 
-  field "action_type", type: String
-  field "snapshot", type: Hash
-  field "task_performed_by", type: String
+  # field "action_type", type: String
+  # field "snapshot", type: Hash
+  # field "task_performed_by", type: String
 
-  embedded_in :artefact
+  belongs_to :artefact
 
   # Ideally we would like to use the UID field here, since that will be the
   # same across all applications, but Mongoid doesn't yet support using a

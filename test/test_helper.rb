@@ -9,7 +9,8 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "minitest/autorun"
 require "mocha/minitest"
-require "database_cleaner/mongoid"
+# require "database_cleaner/mongoid"
+# require 'database_cleaner'
 require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
 require "support/tag_test_helpers"
@@ -26,7 +27,7 @@ WebMock.disable_net_connect!(allow_localhost: true)
 
 DatabaseCleaner.strategy = :deletion
 # initial clean
-DatabaseCleaner.clean
+# DatabaseCleaner.clean
 
 Rails.application.load_tasks if Rake::Task.tasks.empty?
 
@@ -44,8 +45,10 @@ class ActiveSupport::TestCase
   include GovukSchemas::AssertMatchers
 
   def clean_db
+    DatabaseCleaner.allow_remote_database_url = true
     DatabaseCleaner.clean
   end
+
   set_callback :teardown, :after, :clean_db
 
   setup do

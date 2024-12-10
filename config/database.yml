@@ -1,0 +1,40 @@
+# This file is overwritten by one in alphagov-deployment at deploy time
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  pool: 12
+  template: template0
+
+development:
+  <<: *default
+  database: publisher_development
+  username: publisher
+  password: publisher
+  clients:
+    default:
+      uri: <%= "postgresql://postgres@postgres-13/publisher" %>
+  options:
+#    use_activesupport_time_zone: true
+#    belongs_to_required_by_default: false
+
+test:
+  <<: *default
+  clients:
+    default:
+      uri: <%= "postgresql://postgres@postgres-13/publisher" %>
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+  options:
+#    use_activesupport_time_zone: true
+#    belongs_to_required_by_default: false
+
+# set these environment variables on your prod server
+production:
+  clients:
+    default:
+      uri: <%= ENV['MONGODB_URI'] %>
+  options:
+#    use_activesupport_time_zone: true
+#    belongs_to_required_by_default: false

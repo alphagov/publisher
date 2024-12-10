@@ -2,8 +2,8 @@ require "edition"
 
 class SimpleSmartAnswerEdition < Edition
   class Node
-    include Mongoid::Document
-    embedded_in :edition, class_name: "SimpleSmartAnswerEdition"
+    # include Mongoid::Document
+    has_many :edition, class_name: "SimpleSmartAnswerEdition"
     embeds_many :options, class_name: "SimpleSmartAnswerEdition::Node::Option"
 
     accepts_nested_attributes_for :options, allow_destroy: true

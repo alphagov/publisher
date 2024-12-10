@@ -59,11 +59,11 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   test "it is not in beta by default" do
-    assert_not FactoryBot.build(:guide_edition).in_beta?
+    assert_not FactoryBot.build(:edition).in_beta?
   end
 
   test "it can be in beta" do
-    assert FactoryBot.build(:guide_edition, in_beta: true).in_beta?
+    assert FactoryBot.build(:edition, in_beta: true).in_beta?
   end
 
   test "it should give a friendly (legacy supporting) description of its format" do
@@ -115,16 +115,16 @@ class EditionTest < ActiveSupport::TestCase
     should "be done when an existing edition is updated" do
       edition = FactoryBot.create(:answer_edition, body: 'abc [foobar](http://foobar.com "hover")')
 
-      edition.body += "some update"
+      edition.editionable.body += "some update"
 
-      assert_not edition.valid?
-      assert_equal edition.errors.full_messages, ["Body Don't include hover text in links. Delete the text in quotation marks eg \"This appears when you hover over the link.\""]
+      assert_not edition.editionable.valid?
+      assert_equal edition.editionable.errors.full_messages, ["Body Don't include hover text in links. Delete the text in quotation marks eg \"This appears when you hover over the link.\""]
     end
 
     should "allow archiving an edition with invalid links" do
       edition = FactoryBot.create(:answer_edition, state: "published", body: 'abc [foobar](http://foobar.com "hover")')
 
-      assert_difference "AnswerEdition.archived.count", 1 do
+      assert_difference "Edition.archived.count", 1 do
         edition.archive!
       end
     end
@@ -134,19 +134,23 @@ class EditionTest < ActiveSupport::TestCase
     should "be a minor change by default" do
       assert_not AnswerEdition.new.major_change
     end
+
     should "not be valid for major changes with a blank change note" do
       edition = AnswerEdition.new(major_change: true, change_note: "")
       assert_not edition.valid?
       assert edition.errors.key?(:change_note)
     end
+
     should "be valid for major changes with a change note" do
       edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123, major_change: true, change_note: "Changed")
       assert edition.valid?
     end
+
     should "be valid when blank for minor changes" do
       edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123, change_note: "")
       assert edition.valid?
     end
+
     should "be valid when populated for minor changes" do
       edition = AnswerEdition.new(title: "Edition", version_number: 1, panopticon_id: 123, change_note: "Changed")
       assert edition.valid?

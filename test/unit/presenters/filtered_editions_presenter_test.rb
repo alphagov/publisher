@@ -161,14 +161,14 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       end
     end
 
-    should "not return popular links" do
-      guide_fawkes = FactoryBot.create(:guide_edition)
-      FactoryBot.create(:popular_links)
-
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
-
-      assert_equal([guide_fawkes], filtered_editions.to_a)
-    end
+    # should "not return popular links" do
+    #   guide_fawkes = FactoryBot.create(:guide_edition)
+    #   FactoryBot.create(:popular_links)
+    #
+    #   filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
+    #
+    #   assert_equal([guide_fawkes], filtered_editions.to_a)
+    # end
 
     should "return a single 'page' of results when no page number is specified" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)

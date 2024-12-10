@@ -39,8 +39,8 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
   test "a new artefact should have a create action" do
     @artefact.reload
-
     assert_equal 1, @artefact.actions.size
+
     action = @artefact.actions.first
     assert_equal "create", action[:action_type]
     assert_equal merge_attributes(DEFAULTS, base_fields), action.snapshot
