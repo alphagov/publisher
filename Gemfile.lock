@@ -163,7 +163,7 @@ GEM
     database_cleaner-mongoid (2.0.1)
       database_cleaner-core (~> 2.0.0)
       mongoid
-    date (3.4.0)
+    date (3.4.1)
     diffy (3.4.3)
     docile (1.4.0)
     domain_name (0.6.20240107)
@@ -242,7 +242,7 @@ GEM
       jquery-rails (~> 4.3)
       plek (>= 2.1)
       rails (>= 6)
-    govuk_app_config (9.15.3)
+    govuk_app_config (9.15.4)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.30)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.70.0)
