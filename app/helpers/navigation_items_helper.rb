@@ -13,5 +13,7 @@ module NavigationItemsHelper
     list << { text: "Search by user", href: user_search_path, active: path.end_with?(user_search_path) }
     list << { text: user_name, href:  Plek.new.external_url_for("signon") } if user_name.present?
     list << { text: "Sign out", href: "/auth/gds/sign_out" }
+
+    list << { text: "Bank holidays", href: show_bank_holidays_path, active: true }
   end
 end

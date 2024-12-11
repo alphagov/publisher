@@ -123,6 +123,8 @@ Rails.application.routes.draw do
   delete "/homepage/popular-links/:id" => "homepage#destroy", as: "delete_popular_links"
   get "homepage/popular-links/:id/confirm-destroy" => "homepage#confirm_destroy", as: "confirm_destroy_popular_links"
 
+  get "/calendars/bank-holidays" => "bank_holidays#show", as: "show_bank_holidays"
+
   get "by-content-id/:content_id" => "content_item#by_content_id"
 
   mount GovukAdminTemplate::Engine, at: "/style-guide"
