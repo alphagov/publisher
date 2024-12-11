@@ -156,7 +156,7 @@ FactoryBot.define do
     end
   end
   factory :answer_edition, parent: :edition do
-    # body { "body" }
+    edition_specific_content { "body" }
   end
 
 

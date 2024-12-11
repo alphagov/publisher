@@ -3,16 +3,16 @@ require_dependency "safe_html"
 class Part
   # include Mongoid::Document
 
-  has_many :guide_edition
-  has_many :programme_edition
+  # has_many :guide_edition
+  # has_many :programme_edition
 
-  scope :in_order, -> { order_by(order: :asc) }
+  # scope :in_order, -> { order_by(order: :asc) }
 
-  field :order,      type: Integer
-  field :title,      type: String
-  field :body,       type: String
-  field :slug,       type: String
-  field :created_at, type: DateTime, default: -> { Time.zone.now }
+  # field :order,      type: Integer
+  # field :title,      type: String
+  # field :body,       type: String
+  # field :slug,       type: String
+  # field :created_at, type: DateTime, default: -> { Time.zone.now }
 
   GOVSPEAK_FIELDS = [:body].freeze
 

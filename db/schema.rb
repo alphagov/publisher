@@ -10,8 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_09_170854) do
-  create_table "actions", charset: "utf8mb3", force: :cascade do |t|
+ActiveRecord::Schema[7.1].define(version: 2024_12_11_130548) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "actions", force: :cascade do |t|
     t.integer "approver_id"
     t.datetime "approved"
     t.string "comment"
@@ -23,17 +26,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_170854) do
     t.datetime "created_at"
   end
 
-  create_table "answer_editions", charset: "utf8mb3", force: :cascade do |t|
-    t.string "body"
-  end
-
-  create_table "artefact_actions", charset: "utf8mb3", force: :cascade do |t|
+  create_table "artefact_actions", force: :cascade do |t|
     t.string "action_type"
     t.json "snapshot"
     t.string "task_performed_by"
   end
 
-  create_table "artefacts", charset: "utf8mb3", force: :cascade do |t|
+  create_table "artefacts", force: :cascade do |t|
     t.string "name"
     t.string "slug"
     t.string "paths"
@@ -57,11 +56,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_170854) do
     t.index ["state"], name: "index_artefacts_on_state"
   end
 
-  create_table "editions", charset: "utf8mb3", force: :cascade do |t|
+  create_table "editions", force: :cascade do |t|
     t.string "panopticon_id"
     t.integer "version_number"
-    t.string "editionable_type", null: false
-    t.bigint "editionable_id", null: false
     t.integer "sibling_in_progress"
     t.string "title"
     t.boolean "in_beta", default: false
@@ -79,15 +76,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_170854) do
     t.boolean "major_change", default: false
     t.string "change_note"
     t.datetime "review_requested_at"
-    t.string "auth_bypass_id", default: "45b6aeab-987b-416e-9d2f-17c20e5ff6aa"
+    t.string "auth_bypass_id", default: "4a1ddbc5-4383-47fb-a863-dabbc3b0a7d9"
     t.string "owning_org_content_ids"
+    t.jsonb "edition_specific_content", default: "{}", null: false
     t.index ["created_at"], name: "index_editions_on_created_at"
-    t.index ["editionable_type", "editionable_id"], name: "index_editions_on_editionable"
-    t.index ["panopticon_id"], name: "index_editions_on_panopticon_id", unique: true
-    t.index ["version_number"], name: "index_editions_on_version_number", unique: true
   end
 
-  create_table "users", charset: "utf8mb3", force: :cascade do |t|
+  create_table "jsonb_tests", force: :cascade do |t|
+    t.string "name"
+    t.jsonb "payload"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "uid"

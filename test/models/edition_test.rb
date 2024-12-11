@@ -315,7 +315,7 @@ class EditionTest < ActiveSupport::TestCase
       panopticon_id: @artefact.id,
       version_number: 1,
       overview: "I am a test overview",
-      body: "Test body",
+      edition_specific_content: { body: "Test body" },
     )
     new_edition = edition.build_clone TransactionEdition
 

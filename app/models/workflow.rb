@@ -132,9 +132,9 @@ module Workflow
   def denormalise_users!
     new_assignee = assigned_to.try(:name)
     set(assignee: new_assignee) unless new_assignee == assignee
-    update_user_action("creator",   [Action::CREATE, Action::NEW_VERSION])
-    update_user_action("publisher", [Action::PUBLISH])
-    update_user_action("archiver",  [Action::ARCHIVE])
+    # update_user_action("creator",   [Action::CREATE, Action::NEW_VERSION])
+    # update_user_action("publisher", [Action::PUBLISH])
+    # update_user_action("archiver",  [Action::ARCHIVE])
     self
   end
 
@@ -155,7 +155,7 @@ module Workflow
   end
 
   def notify_siblings_of_new_edition
-    siblings.update_all(sibling_in_progress: version_number)
+    # siblings.update_all(sibling_in_progress: version_number)
   end
 
   def in_progress?

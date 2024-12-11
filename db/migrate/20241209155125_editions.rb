@@ -3,7 +3,7 @@ class Editions < ActiveRecord::Migration[7.1]
     create_table :editions do |t|
       t.string :panopticon_id
       t.integer :version_number
-      t.references :editionable, polymorphic: true, null: false
+      # t.references :editionable, polymorphic: true, null: false
       t.integer :sibling_in_progress
 
       t.string :title
@@ -24,9 +24,8 @@ class Editions < ActiveRecord::Migration[7.1]
       t.datetime :review_requested_at
       t.string :auth_bypass_id,  default: SecureRandom.uuid
       t.string "owning_org_content_ids", type: Array
+      t.jsonb :edition_specific_content, null: false, default: '{}'
 
-      t.index :panopticon_id, unique: true
-      t.index :version_number,  unique: true
       t.index :created_at
     end
   end

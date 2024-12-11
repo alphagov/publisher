@@ -1,6 +1,6 @@
 require_dependency "safe_html"
 
-class Variant
+class Variant < ApplicationRecord
   # include Mongoid::Document
 
   strip_attributes only: :link
@@ -9,14 +9,14 @@ class Variant
 
   scope :in_order, -> { order_by(order: :asc) }
 
-  field :order,             type: Integer
-  field :title,             type: String
-  field :slug,              type: String
-  field :introduction,      type: String
-  field :link,              type: String
-  field :more_information,  type: String
-  field :alternate_methods, type: String
-  field :created_at,        type: DateTime, default: -> { Time.zone.now }
+  # field :order,             type: Integer
+  # field :title,             type: String
+  # field :slug,              type: String
+  # field :introduction,      type: String
+  # field :link,              type: String
+  # field :more_information,  type: String
+  # field :alternate_methods, type: String
+  # field :created_at,        type: DateTime, default: -> { Time.zone.now }
 
   GOVSPEAK_FIELDS = %i[introduction more_information alternate_methods].freeze
 
