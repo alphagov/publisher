@@ -12,3 +12,4 @@
 //= require govuk_publishing_components/components/layout-header
 //= require govuk_publishing_components/components/radio
 //= require govuk_publishing_components/components/skip-link
+//= require govuk_publishing_components/components/tabs
