@@ -28,7 +28,7 @@ class Action < ApplicationRecord
     RESEND_FACT_CHECK = "resend_fact_check".freeze,
   ].freeze
 
-  has_many :edition
+  belongs_to :edition
 
   belongs_to :recipient, class_name: "User", optional: true
   belongs_to :requester, class_name: "User", optional: true

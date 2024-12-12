@@ -1,12 +1,21 @@
 require_dependency "part"
+require "serializers/PartsSerializer"
 
 module Parted
   def self.included(klass)
-    klass.embeds_many :parts
-    klass.accepts_nested_attributes_for :parts,
-                                        allow_destroy: true,
-                                        reject_if: proc { |attrs| attrs["title"].blank? && attrs["body"].blank? }
+    # klass.class_eval do
+    #   after_initialize :initialize_parts
+    # end
+    # klass.accepts_nested_attributes_for :parts,
+    #                                     allow_destroy: true,
+    #                                     reject_if: proc { |attrs| attrs["title"].blank? && attrs["body"].blank? }
     klass.after_validation :merge_embedded_parts_errors
+  end
+
+  attr_writer :parts
+
+  def parts
+    @parts ||= []
   end
 
   def build_clone(target_class = nil)

@@ -1,6 +1,6 @@
 require_dependency "safe_html"
 
-class Part
+class Part < ApplicationRecord
   # include Mongoid::Document
 
   # has_many :guide_edition
@@ -14,6 +14,8 @@ class Part
   # field :slug,       type: String
   # field :created_at, type: DateTime, default: -> { Time.zone.now }
 
+  attr_accessor :order, :title, :body, :slug, :created_at
+
   GOVSPEAK_FIELDS = [:body].freeze
 
   validate :validate_title_is_present, :validate_slug_is_present
@@ -21,6 +23,23 @@ class Part
   validates :slug, format: { with: /\A[a-z0-9-]+\Z/i, message: "Slug can only consist of lower case characters, numbers and hyphens" }
   validates_with SafeHtml
   validates_with LinkValidator
+
+  def initialize(order, title, body, slug, created_at)
+    @order = order
+    @title = title
+    @body = body
+    @slug = slug
+    @created_at = created_at
+  end
+
+  def to_json(*_args)
+    { order:, title:, body:, slug:, created_at: }.to_json
+  end
+
+  # def self.from_json(json)
+  #   data = JSON.parse(json)
+  #   new(order: data['order'], title: data['title'], body: data['body'], slug: data['slug'], created_at: data['created_at'])
+  # end
 
 private
 

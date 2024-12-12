@@ -6,9 +6,12 @@ class GuideEdition < Edition
 
   strip_attributes only: :video_url
 
-  field :video_url, type: String
-  field :video_summary, type: String
-  field :hide_chapter_navigation, type: Boolean
+  # field :video_url, type: String
+  # field :video_summary, type: String
+  # field :hide_chapter_navigation, type: Boolean
+
+  # store :edition_specific_content, accessors: [:parts], coder: PartsSerializer
+  store_accessor :edition_specific_content, :video_url
 
   GOVSPEAK_FIELDS = [].freeze
 

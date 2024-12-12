@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_11_130548) do
 
   create_table "editions", force: :cascade do |t|
     t.string "panopticon_id"
-    t.integer "version_number"
+    t.integer "version_number", default: 1
     t.integer "sibling_in_progress"
     t.string "title"
     t.boolean "in_beta", default: false
@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_11_130548) do
     t.boolean "major_change", default: false
     t.string "change_note"
     t.datetime "review_requested_at"
-    t.string "auth_bypass_id", default: "4a1ddbc5-4383-47fb-a863-dabbc3b0a7d9"
+    t.string "auth_bypass_id", default: "7ba5abb9-1d5c-4b7d-ba75-16fd3c140979"
     t.string "owning_org_content_ids"
     t.jsonb "edition_specific_content", default: "{}", null: false
     t.index ["created_at"], name: "index_editions_on_created_at"

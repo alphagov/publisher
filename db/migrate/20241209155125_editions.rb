@@ -2,7 +2,7 @@ class Editions < ActiveRecord::Migration[7.1]
   def change
     create_table :editions do |t|
       t.string :panopticon_id
-      t.integer :version_number
+      t.integer :version_number, default: 1
       # t.references :editionable, polymorphic: true, null: false
       t.integer :sibling_in_progress
 
