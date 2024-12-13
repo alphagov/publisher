@@ -1,8 +1,10 @@
-<%= render "govuk_publishing_components/components/input", {
-  name: "artefact[external_links_attributes][#{index}][id]",
-  value: id,
-  type: "hidden"
-} %>
+<% if id %>
+  <%= render "govuk_publishing_components/components/input", {
+    name: "artefact[external_links_attributes][#{index}][id]",
+    value: id,
+    type: "hidden"
+  } %>
+<% end %>
 
 <%= render "govuk_publishing_components/components/input", {
   label: {
