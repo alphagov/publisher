@@ -2,21 +2,21 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Related external links") %>
 
-    <%
-      items = @edition.artefact.external_links.each_with_index.map do |external_link, index|
-        {
-          fields: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: index, id: external_link.id}),
-          destroy_checkbox: render(partial: "secondary_nav_tabs/add-another_checkbox", locals: {index: index})
-        }
-      end
-    %>
+    <%= form_for @edition.artefact, url: update_related_external_links_edition_path(@resource) do %>
+      <%
+        items = @edition.artefact.external_links.each_with_index.map do | external_link, index |
+          {
+            fields: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: { index:, id: external_link.id }),
+            destroy_checkbox: render(partial: "secondary_nav_tabs/add-another_checkbox", locals: {index: index})
+          }
+        end
+      %>
 
-    <%= form_for @edition, url: update_related_external_links_edition_path(@resource) do %>
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Link",
         add_button_text: "Add another link",
         items: items,
-        empty: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: @edition.artefact.external_links.count})
+        empty: render(partial: "secondary_nav_tabs/add-another_fieldset", locals: {index: @edition.artefact.external_links.count, id: nil})
       } %>
 
       <%= render "govuk_publishing_components/components/inset_text", {

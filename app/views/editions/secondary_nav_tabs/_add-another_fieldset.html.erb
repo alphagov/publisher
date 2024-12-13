@@ -1,8 +1,15 @@
 <%= render "govuk_publishing_components/components/input", {
+  name: "artefact[external_links_attributes][#{index}][id]",
+  value: id,
+  type: "hidden"
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
   label: {
     text: "Title"
   },
   name: "artefact[external_links_attributes][#{index}][title]",
+  id: "artefact_external_links_attributes_#{index}_title",
   value: @edition.artefact.external_links[index].present? ? @edition.artefact.external_links[index].title : ""
 } %>
 
@@ -11,6 +18,7 @@
     text: "URL"
   },
   name: "artefact[external_links_attributes][#{index}][url]",
+  id: "artefact_external_links_attributes_#{index}_url",
   value: @edition.artefact.external_links[index].present? ? @edition.artefact.external_links[index].url : "",
   hint: "Example: https://gov.uk"
 } %>
