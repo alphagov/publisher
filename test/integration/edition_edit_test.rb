@@ -557,6 +557,25 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Related external links tab" do
+    setup do
+      visit_draft_edition
+      click_link "Related external links"
+    end
+
+    should "show 'Related external links' header" do
+      within :css, "h2.gem-c-heading" do
+        assert page.has_text?("Related external links")
+      end
+    end
+
+    context "Document has no external links" do
+      should "show an empty 'Add another' form" do
+        assert page.has_css?("legend", text: "Link 1")
+      end
+    end
+  end
+
 private
 
   def visit_draft_edition
