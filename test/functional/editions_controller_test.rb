@@ -625,6 +625,31 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_related_external_links" do
+    should "update related external links and show success message when saved" do
+      artefact = @edition.artefact
+      # artefact.external_links_attributes = []
+
+      # byebug
+
+      patch :update_related_external_links, params: {
+        id: artefact.id,
+        artefact[:external_links] => [{
+          title: "The changed title",
+          url: "https://another-thing.com",
+          _destroy: false
+        }]
+      }
+
+      # byebug
+
+      # assert_template "show"
+      assert_equal "Edition updated successfully.", flash[:success]
+      # @edition.reload
+      # assert_equal "The changed title", @edition.title
+    end
+  end
+
 private
 
   def description(edition)
