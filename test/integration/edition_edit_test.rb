@@ -569,11 +569,40 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    # TODO: Add JS and no-JS versions for these tests
     context "Document has no external links" do
       should "show an empty 'Add another' form" do
+        # Link 1
         assert page.has_css?("legend", text: "Link 1")
+        # assert_equal false, page.find("input[name='artefact[external_links_attributes][0][_destroy']").checked
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+
+        # Link 2 (empty fields)
+        assert page.has_css?("legend", text: "Link 2")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+
+        assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
+        # assert page.has_css?("button.gem-c-button", text: "Add another link")
+        # assert page.has_no_css?("button.gem-c-button", text: "Delete")
+        assert page.has_css?("button.gem-c-button", text: "Save")
       end
     end
+
+    # context "Document has no external links (with JS)" do
+    #   setup do
+    #     Capybara.current_driver = Capybara.javascript_driver
+    #   end
+
+    #   assert_equal page.find("input[name='artefact[external_links_attributes][1][title]']").value, ""
+    #   assert_equal page.find("input[name='artefact[external_links_attributes][1][url]']").value, ""
+    #   assert page.has_css?("button.gem-c-button", text: "Add another link")
+    # end
   end
 
 private
