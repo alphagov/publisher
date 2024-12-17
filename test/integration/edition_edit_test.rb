@@ -594,15 +594,35 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    # context "Document has no external links (with JS)" do
-    #   setup do
-    #     Capybara.current_driver = Capybara.javascript_driver
-    #   end
+    context "Document already has external links" do
+      setup do
+        visit_draft_edition
+        @draft_edition.artefact.external_links = [{title: "Link One", url: "https://gov.uk"}]
+        click_link "Related external links"
+      end
 
-    #   assert_equal page.find("input[name='artefact[external_links_attributes][1][title]']").value, ""
-    #   assert_equal page.find("input[name='artefact[external_links_attributes][1][url]']").value, ""
-    #   assert page.has_css?("button.gem-c-button", text: "Add another link")
-    # end
+      should "show a pre-populated 'Add another' form" do
+        # Link 1
+        assert page.has_css?("legend", text: "Link 1")
+        # assert_equal page.find("input[name='artefact[external_links_attributes][0][_destroy']").checked, false
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+        assert_equal "Link One", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+        assert_equal "https://gov.uk", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+
+        # Link 2 (empty fields)
+        assert page.has_css?("legend", text: "Link 2")
+        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+
+        assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
+        # assert page.has_css?("button.gem-c-button", text: "Add another link")
+        # assert page.has_no_css?("button.gem-c-button", text: "Delete")
+        assert page.has_css?("button.gem-c-button", text: "Save")
+      end
+    end
   end
 
 private
