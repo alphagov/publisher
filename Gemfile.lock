@@ -257,7 +257,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (46.3.1)
+    govuk_publishing_components (46.4.0)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -392,7 +392,7 @@ GEM
     mutex_m (0.3.0)
     net-http (0.4.1)
       uri
-    net-imap (0.5.1)
+    net-imap (0.5.2)
       date
       net-protocol
     net-pop (0.1.2)
@@ -532,7 +532,7 @@ GEM
     opentelemetry-instrumentation-excon (0.22.5)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-faraday (0.24.7)
+    opentelemetry-instrumentation-faraday (0.24.8)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-grape (0.2.0)
@@ -646,7 +646,7 @@ GEM
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
-    psych (5.2.1)
+    psych (5.2.2)
       date
       stringio
     public_suffix (6.0.1)
@@ -704,14 +704,14 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.2.1)
-    rdoc (6.9.0)
+    rdoc (6.9.1)
       psych (>= 4.0.0)
     redis (5.3.0)
       redis-client (>= 0.22.0)
     redis-client (0.22.2)
       connection_pool
     regexp_parser (2.9.3)
-    reline (0.5.12)
+    reline (0.6.0)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -723,7 +723,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.3.9)
+    rexml (3.4.0)
     rinku (2.0.6)
     rouge (4.5.1)
     rubocop (1.69.1)
@@ -775,7 +775,7 @@ GEM
       google-protobuf (~> 4.26)
     sassc (2.4.0)
       ffi (~> 1.9)
-    securerandom (0.4.0)
+    securerandom (0.4.1)
     select2-rails (3.5.11)
     selenium-webdriver (4.21.1)
       base64 (~> 0.2)
@@ -839,7 +839,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.3.2)
     timecop (0.9.10)
-    timeout (0.4.2)
+    timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
