@@ -176,11 +176,13 @@ class EditionTest < ActiveSupport::TestCase
       version_number: 1,
       overview: "I am a test overview",
       in_beta: true,
+      owning_org_content_ids: %w[org-1],
     )
     clone_edition = edition.build_clone
     assert_equal "I am a test overview", clone_edition.overview
     assert_equal true, clone_edition.in_beta
     assert_equal 2, clone_edition.version_number
+    assert_equal %w[org-1], clone_edition.owning_org_content_ids
   end
 
   test "cloning can only occur from a published edition" do
