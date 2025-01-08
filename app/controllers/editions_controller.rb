@@ -15,7 +15,7 @@ class EditionsController < InheritedResources::Base
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
-    destroyable_edition?
+    require_destroyable
   end
 
   before_action only: %i[edit_assignee update_assignee] do
@@ -217,7 +217,7 @@ private
     params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
   end
 
-  def destroyable_edition?
+  def require_destroyable
     return if @resource.can_destroy?
 
     flash[:danger] = "Cannot delete a #{description(@resource).downcase} that has ever been published."
