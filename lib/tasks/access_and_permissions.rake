@@ -11,8 +11,9 @@ namespace :permissions do
       message = "Organisation with ID: #{args[:org_content_id]} already has permission to access the document with ID: #{document.id}"
     else
       Edition.where(panopticon_id: document.id).each do |edition|
-        edition.owning_org_content_ids << args[:org_content_id]
-        edition.save!(validate: false)
+        owning_org_content_ids = edition.owning_org_content_ids
+        owning_org_content_ids << args[:org_content_id]
+        edition.set(owning_org_content_ids:)
       end
       document.save_as_task!("PermissionsAddition")
       message = "Access permission for organisation ID: #{args[:org_content_id]}, successfully assigned to document with ID: #{document.id}"
