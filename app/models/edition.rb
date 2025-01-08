@@ -530,6 +530,7 @@ private
       panopticon_id
       overview
       slug
+      owning_org_content_ids
     ]
   end
 
