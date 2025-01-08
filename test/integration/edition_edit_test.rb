@@ -386,7 +386,7 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show 'Metadata' header and an update button" do
-        within :css, "h2.gem-c-heading" do
+        within :css, ".gem-c-heading h2" do
           assert page.has_text?("Edit")
         end
         assert page.has_button?("Save")
