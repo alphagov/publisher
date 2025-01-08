@@ -41,6 +41,23 @@ class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
     assert_equal(1, @edition1.owning_org_content_ids.count { |id| id == organisation_id })
   end
 
+  test "add_organisation_access does not update 'updated_at' values" do
+    organisation_id = "test-org-id"
+    # For some reason, the "updated_at" value when reloaded is different from the one in the object returned by the
+    # factory, so we need to do a reload before storing a copy of the original value.
+    @edition1.reload
+    @artefact1.reload
+    original_edition_updated_at = @edition1.updated_at
+    original_artefact_updated_at = @artefact1.updated_at
+
+    @add_organisation_access_task.invoke(@artefact1.id, organisation_id)
+    @edition1.reload
+    @artefact1.reload
+
+    assert_equal(original_edition_updated_at, @edition1.updated_at)
+    assert_equal(original_artefact_updated_at, @artefact1.updated_at)
+  end
+
   test "bulk_process_access_flags processes all rows in CSV" do
     organisation_id = "test-org-id"
 
