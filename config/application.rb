@@ -3,6 +3,7 @@ require_relative "boot"
 require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
+require "active_record/railtie"
 require "active_job/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -67,7 +68,7 @@ module Publisher
     }
 
     config.generators do |g|
-      g.orm :mongoid
+      # g.orm :mongoid
       g.template_engine :erb # this could be :haml or whatever
       g.test_framework :test_unit, fixture: false # this could be :rpsec or whatever
     end
@@ -104,7 +105,7 @@ module Publisher
 
     # Make Ruby 2.4 preserve the timezone of the receiver when calling `to_time`.
     # Previous versions had false.
-    ActiveSupport.to_time_preserves_timezone = false
+    # ActiveSupport.to_time_preserves_timezone = false
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
