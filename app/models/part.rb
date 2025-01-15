@@ -1,7 +1,7 @@
 require_dependency "safe_html"
 
 class Part
-  include Mongoid::Document
+  # include Mongoid::Document
 
   embedded_in :guide_edition
   embedded_in :programme_edition

@@ -2,7 +2,7 @@ require "test_helper"
 
 class SafeHtmlTest < ActiveSupport::TestCase
   class Dummy
-    include Mongoid::Document
+    # include Mongoid::Document
 
     field :i_am_govspeak, type: String
     embeds_one :i_am_embedded_govspeak, class_name: "SafeHtmlTest::DummyEmbeddedSingle"
@@ -13,7 +13,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
   end
 
   class DummyEmbeddedSingle
-    include Mongoid::Document
+    # include Mongoid::Document
 
     embedded_in :dummy, class_name: "SafeHtmlTest::Dummy"
 

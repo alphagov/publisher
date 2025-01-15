@@ -3,7 +3,7 @@ require "edition"
 class SimpleSmartAnswerEdition < Edition
   class Node
     class Option
-      include Mongoid::Document
+      # include Mongoid::Document
 
       embedded_in :node, class_name: "SimpleSmartAnswerEdition::Node"
 

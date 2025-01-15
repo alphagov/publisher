@@ -3,10 +3,10 @@ require_dependency "workflow"
 require "digest"
 
 class Edition
-  include Mongoid::Document
-  include Mongoid::Timestamps
-  include Workflow
-  include RecordableActions
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
+  # include Workflow
+  # include RecordableActions
   include BaseHelper
 
   class ResurrectionError < RuntimeError
@@ -89,7 +89,7 @@ class Edition
         }
 
   scope :published, -> { where(state: "published") }
-  scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
+  scope :draft_in_publishing_api, -> { where(state:  PUBLISHING_API_DRAFT_STATES ) }
 
   scope :in_states, ->(states) { where(state: { "$in" => states }) }
   scope :title_contains,

@@ -1,5 +1,5 @@
 class ArtefactExternalLink
-  include Mongoid::Document
+  # include Mongoid::Document
 
   strip_attributes only: :url
 

@@ -22,6 +22,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
     "paths" => [],
     "prefixes" => [],
     "language" => "en",
+    "description" => nil,
   }.freeze
 
   def base_fields

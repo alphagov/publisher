@@ -3,7 +3,7 @@ require_dependency "simple_smart_answer_edition/node"
 require_dependency "simple_smart_answer_edition/node/option"
 
 class SimpleSmartAnswerEdition < Edition
-  include Mongoid::Document
+  # include Mongoid::Document
 
   field :body,              type: String
   field :start_button_text, type: String, default: "Start now"

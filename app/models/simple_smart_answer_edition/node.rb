@@ -2,7 +2,7 @@ require "edition"
 
 class SimpleSmartAnswerEdition < Edition
   class Node
-    include Mongoid::Document
+    # include Mongoid::Document
     embedded_in :edition, class_name: "SimpleSmartAnswerEdition"
     embeds_many :options, class_name: "SimpleSmartAnswerEdition::Node::Option"
 

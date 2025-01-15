@@ -3,31 +3,31 @@ require "cgi"
 require "gds-sso/user"
 require_dependency "safe_html"
 
-class User
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class User < ApplicationRecord
+  # include Mongoid::Document
+  # include Mongoid::Timestamps
   include GDS::SSO::User
 
   # Let an app configure the symbolized collection name to use,
   # e.g. set a constant in an initializer.
   if defined?(USER_COLLECTION_NAME)
-    store_in collection: USER_COLLECTION_NAME.to_sym
+    store collection: USER_COLLECTION_NAME.to_sym
   else
-    store_in collection: :users
+    store collection: :users
   end
 
-  field "name",                    type: String
-  field "uid",                     type: String
-  field "version",                 type: Integer
-  field "email",                   type: String
-  field "permissions",             type: Array, default: []
-  field "remotely_signed_out",     type: Boolean, default: false
-  field "organisation_slug",       type: String
-  field "disabled",                type: Boolean, default: false
-  field "organisation_content_id", type: String
+  # field "name",                    type: String
+  # field "uid",                     type: String
+  # field "version",                 type: Integer
+  # field "email",                   type: String
+  # field "permissions",             type: Array, default: []
+  # field "remotely_signed_out",     type: Boolean, default: false
+  # field "organisation_slug",       type: String
+  # field "disabled",                type: Boolean, default: false
+  # field "organisation_content_id", type: String
 
-  index({ uid: 1 }, unique: true)
-  index disabled: 1
+  # index({ uid: 1 }, unique: true)
+  # index disabled: 1
 
   scope :alphabetized, -> { order_by(name: :asc) }
   scope :enabled,

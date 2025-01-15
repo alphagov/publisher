@@ -1,7 +1,7 @@
 require_dependency "safe_html"
 
 class OverviewDashboard
-  include Mongoid::Document
+  # include Mongoid::Document
 
   TOTAL_KEY = "**TOTAL**".freeze
   UNASSIGNED_KEY = "**UNASSIGNED**".freeze
