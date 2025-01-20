@@ -83,7 +83,7 @@
         text: "Message",
       },
       hint: "Message is auto-generated once a schedule has been made.",
-      id: "downtime_message",
+      textarea_id: "downtime_message",
       name: "downtime[message]",
       value: params.dig("downtime", "message") || @downtime.message,
       error_items: errors_for(f.object.errors, :message),
