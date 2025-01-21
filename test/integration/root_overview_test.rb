@@ -303,4 +303,14 @@ class RootOverviewTest < IntegrationTest
     assert page.has_content?("Draft guide")
     assert page.has_no_content?("Popular links edition")
   end
+
+  should "show slug for editions on publications table" do
+    alice = FactoryBot.create(:user, :govuk_editor, name: "Alice", uid: "alice")
+    edition = FactoryBot.create(:edition, title: "Guides and Gals", assigned_to: alice)
+
+    visit "/"
+    row = find_all(".govuk-table__row")
+
+    assert row[1].text.include?("/#{edition.slug}")
+  end
 end

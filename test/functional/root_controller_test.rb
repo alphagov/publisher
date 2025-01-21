@@ -146,7 +146,7 @@ class RootControllerTest < ActionController::TestCase
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
-      assert_select "p.title", "What to do in the event of a zombie apocalypse"
+      assert_select "p.title", /What to do in the event of a zombie apocalypse/
     end
 
     should "ignore unrecognised filter states" do
