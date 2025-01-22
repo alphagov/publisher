@@ -44,15 +44,21 @@ class FilteredEditionsPresenter
 
   def assignees
     users = [{ text: "All assignees", value: "" }]
+    users << if @user.id.to_s == @assigned_to_filter
+               { text: "#{@user.name} (You)", value: @user.id, selected: "true" }
+             else
+               { text: "#{@user.name} (You)", value: @user.id }
+             end
 
     available_users.map do |user|
+      next if user == @user
+
       users << if user.id.to_s == @assigned_to_filter
                  { text: user.name, value: user.id, selected: "true" }
                else
                  { text: user.name, value: user.id }
                end
     end
-
     users
   end
 
