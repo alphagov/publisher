@@ -44,15 +44,13 @@ class FilteredEditionsPresenter
 
   def assignees
     users = [{ text: "All assignees", value: "" }]
+    users << create_assignee_list_item(@user)
 
     available_users.map do |user|
-      users << if user.id.to_s == @assigned_to_filter
-                 { text: user.name, value: user.id, selected: "true" }
-               else
-                 { text: user.name, value: user.id }
-               end
-    end
+      next if user == @user
 
+      users << create_assignee_list_item(user)
+    end
     users
   end
 
@@ -61,6 +59,19 @@ class FilteredEditionsPresenter
   end
 
 private
+
+  def create_assignee_list_item(user)
+    user_name = if user == @user
+                  "#{user.name} (You)"
+                else
+                  user.name
+                end
+    if user.id.to_s == @assigned_to_filter
+      { text: user_name, value: user.id, selected: "true" }
+    else
+      { text: user_name, value: user.id }
+    end
+  end
 
   def query_editions
     result = editions_by_content_type
