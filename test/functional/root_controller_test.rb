@@ -142,7 +142,7 @@ class RootControllerTest < ActionController::TestCase
       FactoryBot.create(:guide_edition, title: "How to train your dragon", assigned_to: @user)
       FactoryBot.create(:guide_edition, title: "What to do in the event of a zombie apocalypse", assigned_to: @user)
 
-      get :index, params: { title_filter: "zombie" }
+      get :index, params: { search_text: "zombie" }
 
       assert_response :ok
       assert_select "p.publications-table__heading", "1 document(s)"
@@ -156,13 +156,13 @@ class RootControllerTest < ActionController::TestCase
         .returns(stub(
                    editions: Kaminari.paginate_array([]).page(1),
                    available_users: [],
-                   title: "",
+                   search_text: "",
                    assignees: [],
                    content_types: [],
                    edition_states: [],
                  ))
 
-      get :index, params: { title_filter: "", states_filter: %w[draft not_a_real_state] }
+      get :index, params: { search_text: "", states_filter: %w[draft not_a_real_state] }
     end
 
     should "show the first page of publications when no page is specified" do

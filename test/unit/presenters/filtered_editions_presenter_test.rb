@@ -131,11 +131,20 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal(2, filtered_editions.count)
     end
 
-    should "filter by a partially-matching title" do
+    should "search by a case-insensitively, partially-matching title" do
       guide_fawkes = FactoryBot.create(:guide_edition, title: "Guide Fawkes")
       FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide")
 
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, title_filter: "Fawkes").editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, search_text: "fawkes").editions
+
+      assert_equal([guide_fawkes], filtered_editions.to_a)
+    end
+
+    should "search by a case-insensitively, partially-matching slug" do
+      guide_fawkes = FactoryBot.create(:guide_edition, title: "A non-matching title", slug: "guide-fawkes")
+      FactoryBot.create(:guide_edition, title: "Another non-matching title", slug: "hitchhikers-guide")
+
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, search_text: "fawkes").editions
 
       assert_equal([guide_fawkes], filtered_editions.to_a)
     end
