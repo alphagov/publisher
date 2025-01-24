@@ -27,13 +27,13 @@ class RootController < ApplicationController
                                      end
     session[:assignee_filter] = assignee_filter
     content_type_filter = filter_params_hash[:content_type_filter]
-    title_filter = filter_params_hash[:title_filter]
+    search_text = filter_params_hash[:search_text]
     @presenter = FilteredEditionsPresenter.new(
       current_user,
       states_filter: sanitised_states_filter_params,
       assigned_to_filter: assignee_filter,
       content_type_filter:,
-      title_filter:,
+      search_text:,
       page: filter_params_hash[:page],
     )
   end
@@ -41,7 +41,7 @@ class RootController < ApplicationController
 private
 
   def user_has_submitted_filters?
-    filter_params.to_h[:title_filter]
+    filter_params.to_h[:search_text]
   end
 
   def assignee_filter
@@ -56,6 +56,6 @@ private
   end
 
   def filter_params
-    params.permit(:page, :assignee_filter, :content_type_filter, :title_filter, states_filter: [])
+    params.permit(:page, :assignee_filter, :content_type_filter, :search_text, states_filter: [])
   end
 end

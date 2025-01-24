@@ -53,7 +53,7 @@ class RootOverviewTest < IntegrationTest
     assert page.has_no_content?("ZZZ")
   end
 
-  should "filter by title content" do
+  should "search by title content" do
     FactoryBot.create(:user, :govuk_editor)
     FactoryBot.create(:guide_edition, title: "XXX")
     FactoryBot.create(:guide_edition, title: "YYY")
@@ -61,7 +61,21 @@ class RootOverviewTest < IntegrationTest
     visit "/"
     filter_by_user("All")
 
-    filter_by_content("xXx")
+    search_by_title_or_slug("xXx")
+
+    assert page.has_content?("XXX")
+    assert page.has_no_content?("YYY")
+  end
+
+  should "search by slug" do
+    FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create(:guide_edition, slug: "XXX")
+    FactoryBot.create(:guide_edition, slug: "YYY")
+
+    visit "/"
+    filter_by_user("All")
+
+    search_by_title_or_slug("xXx")
 
     assert page.has_content?("XXX")
     assert page.has_no_content?("YYY")
@@ -72,7 +86,7 @@ class RootOverviewTest < IntegrationTest
 
     visit "/"
     filter_by_status("Amends needed")
-    filter_by_content("xXx")
+    search_by_title_or_slug("xXx")
 
     assert page.has_css?(".publications-filter input[value='amends_needed'][checked]")
   end

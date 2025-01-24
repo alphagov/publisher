@@ -1,18 +1,19 @@
 <div class="publications-filter govuk-!-padding-5">
   <%= form_with url: root_path, method: :get do |form| %>
     <%= render "govuk_publishing_components/components/heading", {
-      text: "Filter by",
+      text: "Filter",
       margin_bottom: 4,
     } %>
 
     <%= render "govuk_publishing_components/components/input", {
       label: {
-        text: "Title",
+        text: "Search",
         bold: true,
       },
-      name: "title_filter",
-      id: "title_filter",
-      value: @presenter.title,
+      hint: "Search by title or slug",
+      name: "search_text",
+      id: "search_text",
+      value: @presenter.search_text,
     } %>
 
     <%= render "govuk_publishing_components/components/select", {
@@ -33,11 +34,12 @@
       name: "states_filter[]",
       heading: "Status",
       heading_size: "s",
+      hint_text: "Select all that apply",
       items: @presenter.edition_states,
     } %>
 
     <%= render "govuk_publishing_components/components/button", {
-      text: "Update filter",
+      text: "Search",
       margin_bottom: 4,
     } %>
 
