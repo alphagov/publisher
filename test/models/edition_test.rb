@@ -495,14 +495,14 @@ class EditionTest < ActiveSupport::TestCase
     guide = FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide to the Galaxy")
     FactoryBot.create(:guide_edition)
 
-    assert_equal [guide], Edition.title_contains("Galaxy").to_a
+    assert_equal [guide], Edition.search_title_and_slug("Galaxy").to_a
   end
 
   test "should scope publications by case-insensitive title match" do
     guide = FactoryBot.create(:guide_edition, title: "Hitchhiker's Guide to the Galaxy")
     FactoryBot.create(:guide_edition)
 
-    assert_equal [guide], Edition.title_contains("Hitchhiker's gUIDE to the Galaxy").to_a
+    assert_equal [guide], Edition.search_title_and_slug("Hitchhiker's gUIDE to the Galaxy").to_a
   end
 
   test "cannot delete a publication that has been published" do

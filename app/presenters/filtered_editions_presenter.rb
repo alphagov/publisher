@@ -3,17 +3,15 @@
 class FilteredEditionsPresenter
   ITEMS_PER_PAGE = 20
 
-  def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, title_filter: nil, page: nil)
+  attr_reader :search_text
+
+  def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, search_text: nil, page: nil)
     @user = user
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
     @content_type_filter = content_type_filter
-    @title_filter = title_filter
+    @search_text = search_text
     @page = page
-  end
-
-  def title
-    @title_filter
   end
 
   def content_types
@@ -68,7 +66,7 @@ private
     result = editions_by_content_type
     result = apply_states_filter(result)
     result = apply_assigned_to_filter(result)
-    result = apply_title_filter(result)
+    result = apply_search_text(result)
     result = result.accessible_to(user)
     result = result.where.not(_type: "PopularLinksEdition")
     result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
@@ -129,11 +127,11 @@ private
     editions
   end
 
-  def apply_title_filter(editions)
-    return editions if title_filter.blank?
+  def apply_search_text(editions)
+    return editions if search_text.blank?
 
-    editions.title_contains(title_filter)
+    editions.search_title_and_slug(search_text)
   end
 
-  attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :title_filter, :page
+  attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :page
 end

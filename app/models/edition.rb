@@ -92,10 +92,10 @@ class Edition
   scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
 
   scope :in_states, ->(states) { where(state: { "$in" => states }) }
-  scope :title_contains,
+  scope :search_title_and_slug,
         lambda { |term|
           regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
-          where({ title: regex })
+          any_of({ title: regex }, { slug: regex })
         }
 
   ACTIONS = {

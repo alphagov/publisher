@@ -33,14 +33,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def filter_by_user(option, from: "Assigned to")
     within ".publications-filter form" do
       select(option, from:)
-      click_on "Update filter"
+      click_on "Search"
     end
   end
 
-  def filter_by_content(substring)
+  def search_by_title_or_slug(substring)
     within ".publications-filter form" do
-      fill_in "Title", with: substring
-      click_on "Update filter"
+      fill_in "Search", with: substring
+      click_on "Search"
     end
   end
 
@@ -52,14 +52,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         end
       end
       check(option)
-      click_on "Update filter"
+      click_on "Search"
     end
   end
 
   def filter_by_content_type(option, from: "Content type")
     within ".publications-filter form" do
       select(option, from:)
-      click_on "Update filter"
+      click_on "Search"
     end
   end
 end
