@@ -1,0 +1,78 @@
+<% content_for :page_title, "Calendars - Bank holidays" %>
+<% content_for :title, "Bank holidays" %>
+<% content_for :title_context, "Calendars" %>
+<div>
+  <div>
+    <%= render "govuk_publishing_components/components/fieldset", {
+      legend_text: "Does this holiday need bunting?"
+    } do %>
+      <!-- Content -->
+      <%= render "govuk_publishing_components/components/radio", {
+        name: "bunting",
+        items: [
+          {
+            value: "bunting-yes",
+            text: "Yes"
+          },
+          {
+            value: "bunting-no",
+            text: "No"
+          }
+        ]
+      } %>
+      <!-- Content -->
+    <% end %>
+    <%= render "govuk_publishing_components/components/select", {
+      id: "dropdown1",
+      label: "Bunting required",
+      options: [
+        {
+          text: "None",
+          value: "none"
+        },
+        {
+          text: "Triangles",
+          value: "triangles"
+        },
+        {
+          text: "Tinsel",
+          value: "tinsel"
+        }
+      ]
+    } %>
+  </div>
+  <%= render "govuk_publishing_components/components/tabs", {
+    tabs: [
+      {
+        id: "tab1",
+        label: "First section",
+        content: sanitize("<p class=\"govuk-body-m\">Fusce at dictum tellus, ac accumsan est. Nulla vitae turpis in nulla gravida tincidunt. Duis lectus felis, tempus id bibendum sit amet, posuere ut elit. Donec enim odio, eleifend in urna a, sagittis egestas est. Proin id ex ultricies, porta eros id, vehicula quam. Morbi non sagittis velit.</p>
+    "),
+        tab_data_attributes: {
+          ga4_event: {
+            event_name: "select_content",
+            type: "tabs",
+            text: "First section",
+            index_section: 1,
+            index_section_count: 2
+          }
+        }
+      },
+      {
+        id: "tab2",
+        label: "Second section",
+        content: sanitize("<p class=\"govuk-body-m\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam congue elementum commodo. Vestibulum elit turpis, efficitur quis posuere vitae, commodo vitae augue. Donec ut pharetra ligula. Phasellus ac mauris eu felis bibendum dapibus rutrum sed quam. Pellentesque posuere ante id consequat pretium.</p>
+    "),
+        tab_data_attributes: {
+          ga4_event: {
+            event_name: "select_content",
+            type: "tabs",
+            text: "Second section",
+            index_section: 2,
+            index_section_count: 2
+          }
+        }
+      }
+    ]
+  } %>
+</div>
