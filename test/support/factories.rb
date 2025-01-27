@@ -334,7 +334,7 @@ FactoryBot.define do
   end
 
   factory :host_content_update_event, class: "HostContentUpdateEvent" do
-    author { HostContentUpdateEvent::Author.new(name: "someone", email: "foo@example.com") }
+    author { build(:host_content_update_event_author) }
     created_at { Time.zone.now }
     content_id { SecureRandom.uuid }
     content_title { "Something" }
@@ -347,6 +347,18 @@ FactoryBot.define do
         content_id:,
         content_title:,
         document_type:,
+      )
+    end
+  end
+
+  factory :host_content_update_event_author, class: "HostContentUpdateEvent::Author" do
+    name { "Someone" }
+    email { "foo@example.com" }
+
+    initialize_with do
+      new(
+        name:,
+        email:,
       )
     end
   end
