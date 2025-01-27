@@ -5,7 +5,7 @@ class HostContentUpdateEvent < Data.define(:author, :created_at, :content_id, :c
       action: "HostContentUpdateJob",
     })
 
-    user_uuids = events.map { |event| event["payload"]["source_block"]["updated_by_user_uid"] }
+    user_uuids = events.map { |event| event["payload"]["source_block"]["updated_by_user_uid"] }.uniq
     users = users_with_uuids(user_uuids)
 
     events.map do |event|
@@ -27,5 +27,15 @@ class HostContentUpdateEvent < Data.define(:author, :created_at, :content_id, :c
 
   def self.humanize_document_type(document_type)
     document_type.delete_prefix("content_block_").humanize
+  end
+
+  def is_for_edition?(edition)
+    if edition.published?
+      created_at.after?(edition.published_at)
+    elsif edition.archived? && edition.superseded_at
+      created_at.between?(edition.published_at, edition.superseded_at)
+    else
+      false
+    end
   end
 end
