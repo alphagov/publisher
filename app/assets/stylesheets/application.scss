@@ -3,12 +3,8 @@ $govuk-page-width: 1140px;
 // GOVUK Design System
 @import 'govuk_publishing_components/govuk_frontend_support';
 @import 'govuk_publishing_components/component_support';
-@import 'govuk_publishing_components/components/button';
-// The import for the "add-another" stylesheet is listed out of (alphabetical) order to prevent its styles being over-written by the "button" component stylesheet
-// An issue has been opened for this here: https://github.com/alphagov/govuk_publishing_components/issues/4548
-// When this is resolved the components can be reordered to the preferred alphabetical lsiting. 
-// There is a card for this work here: https://trello.com/c/doZRh9Gi/587-list-imported-add-another-component-stylesheet-correctly
 @import 'govuk_publishing_components/components/add-another';
+@import 'govuk_publishing_components/components/button';
 @import 'govuk_publishing_components/components/checkboxes';
 @import 'govuk_publishing_components/components/date-input';
 @import 'govuk_publishing_components/components/details';
