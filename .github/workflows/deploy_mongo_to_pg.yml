@@ -26,7 +26,7 @@ jobs:
     uses: alphagov/govuk-infrastructure/.github/workflows/build-and-push-multiarch-image.yml@main
     with:
       gitRef: ${{ inputs.gitRef || github.event.release.tag_name }}
-      ecrRepositoryName: publisher-on-postgres-branch
+      imageName: publisher-on-postgres-branch
     permissions:
       id-token: write
       contents: read
