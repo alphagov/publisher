@@ -16,8 +16,9 @@ module Formats
     def optional_fields
       access_limited = { auth_bypass_ids: [edition.auth_bypass_id] }
       phase = edition.in_beta ? "beta" : nil
+      public_updated_at = edition.public_updated_at ? edition.public_updated_at.rfc3339(3) : nil
 
-      { access_limited:, phase: }.compact
+      { access_limited:, phase:, public_updated_at: }.compact
     end
 
     def required_fields(republish)
@@ -27,7 +28,6 @@ module Formats
         description: edition.overview || "",
         schema_name:,
         document_type:,
-        public_updated_at: public_updated_at.rfc3339(3),
         last_edited_by_editor_id:,
         publishing_app: "publisher",
         rendering_app:,
@@ -93,10 +93,6 @@ module Formats
 
     def major_change?
       edition.major_change || edition.version_number == 1
-    end
-
-    def public_updated_at
-      edition.public_updated_at || edition.updated_at
     end
 
     # We can't reliably get the exact user who last edited the edition,

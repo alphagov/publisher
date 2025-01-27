@@ -80,15 +80,13 @@ class EditionFormatPresenterTest < ActiveSupport::TestCase
     context "[:public_updated_at]" do
       should "return edition.public_updated_at if not nil" do
         now = Time.zone.now
+        edition.stubs(:public_updated_at).returns(now)
         edition.expects(:public_updated_at).returns(now)
         assert_equal now.rfc3339(3), result[:public_updated_at]
       end
 
-      should "return edition.updated_at otherwise" do
-        edition.stubs(:public_updated_at).returns(nil)
-        now = Time.zone.now
-        edition.expects(:updated_at).returns(now)
-        assert_equal now.rfc3339(3), result[:public_updated_at]
+      should "return nil otherwise" do
+        assert_equal nil, result[:public_updated_at]
       end
     end
 
