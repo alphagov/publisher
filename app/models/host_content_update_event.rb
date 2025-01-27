@@ -38,4 +38,8 @@ class HostContentUpdateEvent < Data.define(:author, :created_at, :content_id, :c
       false
     end
   end
+
+  def to_action
+    Action.new(self)
+  end
 end
