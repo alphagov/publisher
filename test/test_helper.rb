@@ -17,8 +17,11 @@ require "support/tab_test_helpers"
 require "support/holidays_test_helpers"
 require "support/action_processor_helpers"
 require "support/factories"
+require "support/host_content_update_test_helpers"
 require "support/local_services"
 require "support/presenter_test_helpers"
+require "support/signon_api_helpers"
+
 require "govuk_schemas/assert_matchers"
 require "govuk_sidekiq/testing"
 
@@ -101,4 +104,6 @@ class ActiveSupport::TestCase
   include HolidaysTestHelpers
   include ActionProcessorHelpers
   extend PresenterTestHelpers
+  include SignonApiHelpers
+  include HostContentUpdateHelpers
 end

@@ -5,6 +5,8 @@ class DeleteEditionTest < LegacyIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
