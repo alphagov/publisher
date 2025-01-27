@@ -8,6 +8,8 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   setup do
     stub_linkables
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")

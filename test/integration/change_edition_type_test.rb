@@ -5,6 +5,8 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
     stub_linkables
     FactoryBot.create(:user, :govuk_editor)
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
   end
 
   teardown do

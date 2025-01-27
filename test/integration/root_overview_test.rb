@@ -4,6 +4,9 @@ require_relative "../integration_test_helper"
 
 class RootOverviewTest < IntegrationTest
   setup do
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
+
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, true)
   end
