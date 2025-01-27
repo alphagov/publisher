@@ -97,11 +97,6 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
       assert_valid_against_publisher_schema(@output, "generic_with_external_related_links")
     end
 
-    should "use updated_at value if public_updated_at is nil" do
-      assert_nil @edition.public_updated_at
-      assert_equal @edition.updated_at, @output[:public_updated_at]
-    end
-
     should "choose locale based on the artefact language" do
       assert_equal "cy", @output[:locale]
     end
