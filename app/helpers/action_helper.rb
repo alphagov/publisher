@@ -1,8 +1,11 @@
 module ActionHelper
-  def edition_actions(edition)
-    edition.actions.reverse.delete_if do |a|
+  def edition_actions(edition, update_events)
+    actions = edition.actions.reject do |a|
       [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED].include?(a.request_type)
     end
+    update_actions = update_events.select { |e| e.is_for_edition?(edition) }.map(&:to_action)
+    actions.append(*update_actions)
+    actions.sort_by(&:created_at).reverse
   end
 
   def action_note?(action)

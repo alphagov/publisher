@@ -96,6 +96,6 @@
   </p>
 
   <div class="panel-group">
-    <%= render collection: @resource.history, partial: "/shared/edition_history", as: "edition" %>
+    <%= render collection: @resource.history, partial: "/shared/edition_history", as: "edition", locals: { update_events: @update_events } %>
   </div>
 </div>
