@@ -333,6 +333,24 @@ FactoryBot.define do
     suggested_fix { "example fix" }
   end
 
+  factory :host_content_update_event, class: "HostContentUpdateEvent" do
+    author { HostContentUpdateEvent::Author.new(name: "someone", email: "foo@example.com") }
+    created_at { Time.zone.now }
+    content_id { SecureRandom.uuid }
+    content_title { "Something" }
+    document_type { "document_type" }
+
+    initialize_with do
+      new(
+        author:,
+        created_at:,
+        content_id:,
+        content_title:,
+        document_type:,
+      )
+    end
+  end
+
   factory :link_check_report do
     batch_id { 1 }
     status { "in_progress" }

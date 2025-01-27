@@ -71,7 +71,7 @@ class HostContentUpdateEventTest < ActiveSupport::TestCase
             },
           },
         ],
-        )
+      )
 
       result = HostContentUpdateEvent.all_for_artefact(artefact)
 
@@ -90,6 +90,61 @@ class HostContentUpdateEventTest < ActiveSupport::TestCase
       assert_equal result.second.content_id, "5c5520ce-6677-4a76-bd6e-4515f46a804e"
       assert_equal result.second.content_title, "Another exciting piece of content"
       assert_equal result.second.document_type, "content_block_something_else"
+    end
+  end
+
+  describe "#is_for_edition?" do
+    let(:edition) { FactoryBot.build(:edition, state:) }
+    let(:published_at) { Time.zone.now - 4.weeks }
+    let(:superseded_at) { Time.zone.now - 4.days }
+
+    before do
+      edition.stubs(:published_at).returns(published_at)
+      edition.stubs(:superseded_at).returns(superseded_at)
+    end
+
+    describe "if the edition is published" do
+      let(:state) { "published" }
+
+      it "returns true if the event occurred after the published_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: published_at + 1.day)
+
+        assert event.is_for_edition?(edition)
+      end
+
+      it "returns false if the event occurred before the published_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: published_at - 3.days)
+
+        assert_not event.is_for_edition?(edition)
+      end
+    end
+
+    describe "if the edition is archived" do
+      let(:state) { "archived" }
+
+      it "returns true if the event occurred after the published_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: published_at + 1.minute)
+
+        assert event.is_for_edition?(edition)
+      end
+
+      it "returns true if the event occurred before the superseded date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at - 1.minute)
+
+        assert event.is_for_edition?(edition)
+      end
+
+      it "returns false if the event occurred before the published_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: published_at - 1.minute)
+
+        assert_not event.is_for_edition?(edition)
+      end
+
+      it "returns false if the event occurred after the superseded date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at + 1.minute)
+
+        assert_not event.is_for_edition?(edition)
+      end
     end
   end
 end
