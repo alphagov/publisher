@@ -40,13 +40,21 @@ module RecordableActions
     end
 
     def published_by
-      publication = actions.where(request_type: Action::PUBLISH).first
-      publication.requester if publication
+      latest_action_of_type(Action::PUBLISH)&.requester
     end
 
-    def archived_by
-      publication = actions.where(request_type: Action::ARCHIVE).first
-      publication.requester if publication
+    def published_at
+      latest_action_of_type(Action::PUBLISH)&.created_at
+    end
+
+    def superseded_at
+      subsequent_siblings.first&.published_at
+    end
+
+  private
+
+    def latest_action_of_type(request_type)
+      actions.where(request_type:).first
     end
   end
 end
