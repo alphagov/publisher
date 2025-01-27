@@ -1,12 +1,13 @@
 class BankHolidaysEdition < Edition
     field :year, type: Array
+    field :event, type: Array
   
-    # def create_draft_popular_links_from_last_record
-    #   last_popular_links = PopularLinksEdition.last
-    #   popular_links = PopularLinksEdition.new(title: last_popular_links.title, link_items: last_popular_links.link_items, version_number: last_popular_links.version_number.next)
-    #   popular_links.save!
-    #   popular_links
-    # end
+    def create_draft_bank_holidays_from_last_record
+      last_bank_holidays = BankHolidaysEdition.last
+      bank_holidays = BankHolidaysEdition.new(year: last_bank_holidays.year, event: last_bank_holidays.event, version_number: last_bank_holidays.version_number.next)
+      bank_holidays.save!
+      bank_holidays
+    end
   
     GOVSPEAK_FIELDS = [:body].freeze
 

@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   get "homepage/popular-links/:id/confirm-destroy" => "homepage#confirm_destroy", as: "confirm_destroy_popular_links"
 
   get "/calendars/bank-holidays" => "bank_holidays#show", as: "show_bank_holidays"
+  # get "/calendars/bank-holidays" => "bank_holidays#:id", as: "show_bank_holidays"
 
   get "by-content-id/:content_id" => "content_item#by_content_id"
 
