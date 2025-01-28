@@ -27,7 +27,7 @@ jobs:
     with:
       gitRef: ${{ inputs.gitRef || github.event.release.tag_name }}
       tagSuffix: -on-pg
-      imageName: publisher
+      imageName: publisher-on-pg
     permissions:
       id-token: write
       contents: read
@@ -37,6 +37,7 @@ jobs:
     needs: build-and-publish-image
     uses: alphagov/govuk-infrastructure/.github/workflows/deploy.yml@main
     with:
+      appName: publisher-on-pg
       imageTag: ${{ needs.build-and-publish-image.outputs.imageTag }}
       environment: ${{ inputs.environment || 'integration' }}
     secrets:
