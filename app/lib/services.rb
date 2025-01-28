@@ -7,4 +7,11 @@ module Services
       bearer_token: ENV["PUBLISHING_API_BEARER_TOKEN"] || "example",
     )
   end
+
+  def self.signon_api
+    @signon_api ||= GdsApi::SignonApi.new(
+      Plek.find("signon", external: true),
+      bearer_token: ENV.fetch("SIGNON_API_BEARER_TOKEN", "example"),
+    )
+  end
 end

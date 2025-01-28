@@ -8,6 +8,8 @@ class EditionLinkCheckTest < LegacyJavascriptIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
 
     @stubbed_api_request = stub_link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],

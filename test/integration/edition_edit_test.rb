@@ -8,6 +8,8 @@ class EditionEditTest < IntegrationTest
     test_strategy.switch!(:design_system_edit, true)
     stub_holidays_used_by_fact_check
     stub_linkables
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
   end
 
   context "edit page" do
