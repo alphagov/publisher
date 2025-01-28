@@ -58,4 +58,15 @@ class ActionHelperTest < ActionView::TestCase
       assert_match(/older/, unformatted_email.last)
     end
   end
+
+  test "#action_note supports host content update events" do
+    host_content_update_event = FactoryBot.build(:host_content_update_event, document_type: "Something")
+    action = host_content_update_event.to_action
+
+    note = action_note(action)
+
+    assert_match(/Something updated/, note)
+    assert_match(/View in Content Block Manager/, note)
+    assert_match(/#{action.block_url}/, note)
+  end
 end
