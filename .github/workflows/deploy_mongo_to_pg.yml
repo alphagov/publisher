@@ -27,7 +27,7 @@ jobs:
     with:
       gitRef: ${{ inputs.gitRef || github.event.release.tag_name }}
       tagSuffix: -on-pg
-      imageName: publisher
+      imageName: publisher-on-pg
     permissions:
       id-token: write
       contents: read
