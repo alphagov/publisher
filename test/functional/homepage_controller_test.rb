@@ -115,7 +115,7 @@ class HomepageControllerTest < ActionController::TestCase
 
     context "database errors" do
       setup do
-        PopularLinksEdition.any_instance.stubs(:save).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:save).raises(Errors.new)
       end
 
       should "alert 'application error'" do
@@ -226,7 +226,7 @@ class HomepageControllerTest < ActionController::TestCase
     end
     context "database errors" do
       setup do
-        PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(Errors.new)
       end
 
       should "redirect to show path" do
@@ -338,7 +338,7 @@ class HomepageControllerTest < ActionController::TestCase
       end
 
       should "redirect to show page and alert 'application error'" do
-        PopularLinksEdition.any_instance.stubs(:delete).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:delete).raises(Errors.new)
 
         delete :destroy, params: { id: @popular_links.id }
 

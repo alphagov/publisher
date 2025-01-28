@@ -1,6 +1,6 @@
 require "edition"
 
-class HelpPageEdition < Edition
+class HelpPageEdition < EditionTemp
   field :body, type: String
 
   GOVSPEAK_FIELDS = [:body].freeze

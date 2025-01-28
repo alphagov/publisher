@@ -19,7 +19,7 @@ namespace :permissions do
       message = "Access permission for organisation ID: #{args[:org_content_id]}, successfully assigned to document with ID: #{document.id}"
     end
     args[:log_file] ? args[:log_file].puts(message) : puts(message)
-  rescue Mongoid::Errors::DocumentNotFound => e
+  rescue Errors => e
     error_message = "An error occurred while processing document ID #{args[:document_content_id]}: #{e.message}"
     args[:log_file] ? args[:log_file].puts(error_message) : puts(error_message)
   end

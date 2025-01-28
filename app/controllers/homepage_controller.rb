@@ -28,8 +28,8 @@ class HomepageController < ApplicationController
   rescue GdsApi::HTTPErrorResponse
     flash[:danger] = publishing_api_save_error_message.html_safe
     render "homepage/popular_links/edit"
-  rescue Mongoid::Errors::Validations
-    render "homepage/popular_links/edit"
+  # rescue Mongoid::Errors::Validations
+  #   render "homepage/popular_links/edit"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = "Due to an application error, the edition couldn't be saved. #{try_again_message} #{raise_support_error_message}"

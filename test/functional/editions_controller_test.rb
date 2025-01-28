@@ -253,7 +253,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         should "render confirm destroy page with error if deleting from database fails" do
-          Edition.any_instance.stubs(:destroy!).raises(Mongoid::Errors::MongoidError.new)
+          Edition.any_instance.stubs(:destroy!).raises(Errors.new)
 
           delete :destroy, params: { id: @edition.id }
 

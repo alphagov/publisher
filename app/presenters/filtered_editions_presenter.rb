@@ -122,7 +122,7 @@ private
       begin
         assigned_user = User.find(assigned_to_filter)
         editions = editions.assigned_to(assigned_user) if assigned_user
-      rescue Mongoid::Errors::DocumentNotFound
+      rescue Errors
         Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{assigned_to_filter}'"
       end
     end

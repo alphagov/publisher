@@ -1,10 +1,10 @@
 require "edition"
 require "varianted"
 
-class TransactionEdition < Edition
+class TransactionEdition < EditionTemp
   include Varianted
 
-  strip_attributes only: :link
+  # strip_attributes only: :link
 
   field :introduction, type: String
   field :will_continue_on, type: String

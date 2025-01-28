@@ -1,4 +1,4 @@
-class PopularLinksEdition < Edition
+class PopularLinksEdition < EditionTemp
   # field :link_items, type: Array
   validate :six_link_items_present
   validate :all_valid_urls_and_titles_are_present

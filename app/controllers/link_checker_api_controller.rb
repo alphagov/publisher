@@ -3,7 +3,7 @@ class LinkCheckerApiController < ApplicationController
   skip_before_action :authenticate_user!
   before_action :verify_signature
 
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :render_no_content
+  # rescue_from Mongoid::Errors::DocumentNotFound, with: :render_no_content
 
   def callback
     if link_check_report

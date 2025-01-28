@@ -1,6 +1,6 @@
 require "edition"
 
-class PlaceEdition < Edition
+class PlaceEdition < EditionTemp
   field :introduction, type: String
   field :more_information, type: String
   field :need_to_know, type: String

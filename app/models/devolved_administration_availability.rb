@@ -1,5 +1,5 @@
 class DevolvedAdministrationAvailability
-  # include Mongoid::Document
+  include Mongoid::Document
 
   has_many :local_transaction_edition
   field :type, type: String, default: "local_authority_service"

@@ -1,6 +1,6 @@
 class LinkCheckReport
-  # include Mongoid::Document
-  # include Mongoid::Timestamps
+  include Mongoid::Document
+  include Mongoid::Timestamps
 
   has_many :edition
   embeds_many :links

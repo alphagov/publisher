@@ -1,8 +1,8 @@
 require "edition"
 
-class SimpleSmartAnswerEdition < Edition
+class SimpleSmartAnswerEdition < EditionTemp
   class Node
-    # include Mongoid::Document
+    include Mongoid::Document
     has_many :edition, class_name: "SimpleSmartAnswerEdition"
     embeds_many :options, class_name: "SimpleSmartAnswerEdition::Node::Option"
 

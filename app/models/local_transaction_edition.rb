@@ -1,7 +1,7 @@
 require "local_service"
 require "edition"
 
-class LocalTransactionEdition < Edition
+class LocalTransactionEdition < EditionTemp
   field :lgsl_code, type: Integer
   field :lgil_override, type: Integer
   field :lgil_code, type: Integer

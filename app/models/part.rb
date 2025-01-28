@@ -1,7 +1,7 @@
 require_dependency "safe_html"
 
 class Part < ApplicationRecord
-  # include Mongoid::Document
+  include Mongoid::Document
 
   belongs_to :guide_edition
   has_many :programme_edition

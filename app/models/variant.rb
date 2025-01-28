@@ -1,7 +1,7 @@
 require_dependency "safe_html"
 
 class Variant
-  # include Mongoid::Document
+  include Mongoid::Document
 
   strip_attributes only: :link
 

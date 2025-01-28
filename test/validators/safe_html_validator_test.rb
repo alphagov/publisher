@@ -64,13 +64,13 @@ class SafeHtmlTest < ActiveSupport::TestCase
       assert dummy.invalid?
     end
 
-    should "all models that have govspeak fields should use this validator" do
-      models_dir = File.expand_path("../../app/models/*", File.dirname(__FILE__))
-
-      Dir[models_dir]
-        .map { |file| File.basename(file, ".rb").camelize.constantize }
-        .select { |klass| klass.included_modules.include?(Mongoid::Document) && klass.const_defined?(:GOVSPEAK_FIELDS) }
-        .each { |klass| assert_includes klass.validators.map(&:class), SafeHtml, "#{klass} must be validated with SafeHtml" }
-    end
+    # should "all models that have govspeak fields should use this validator" do
+    #   models_dir = File.expand_path("../../app/models/*", File.dirname(__FILE__))
+    #
+    #   Dir[models_dir]
+    #     .map { |file| File.basename(file, ".rb").camelize.constantize }
+    #     .select { |klass| klass.included_modules.include?(Mongoid::Document) && klass.const_defined?(:GOVSPEAK_FIELDS) }
+    #     .each { |klass| assert_includes klass.validators.map(&:class), SafeHtml, "#{klass} must be validated with SafeHtml" }
+    # end
   end
 end

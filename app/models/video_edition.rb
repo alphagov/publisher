@@ -1,10 +1,10 @@
 require "edition"
 require "attachable"
 
-class VideoEdition < Edition
+class VideoEdition < EditionTemp
   include Attachable
 
-  strip_attributes only: :video_url
+  # strip_attributes only: :video_url
 
   field :video_url,     type: String
   field :video_summary, type: String

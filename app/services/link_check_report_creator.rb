@@ -28,7 +28,7 @@ class LinkCheckReportCreator
     report.save!
 
     report
-  rescue Mongoid::Errors::Validations => e
+  rescue Errors => e
     raise InvalidReport, e
   end
 

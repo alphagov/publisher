@@ -1,7 +1,7 @@
 require "edition"
 require "parted"
 
-class ProgrammeEdition < Edition
+class ProgrammeEdition < EditionTemp
   include Parted
 
   before_save :setup_default_parts, if: :new_record?

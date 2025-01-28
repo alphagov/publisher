@@ -6,7 +6,7 @@ class Artefact < ApplicationRecord
   # include Mongoid::Document
   # include Mongoid::Timestamps
 
-  strip_attributes only: :redirect_url
+  # strip_attributes only: :redirect_url
 
   # field "name",                 type: String
   # field "slug",                 type: String

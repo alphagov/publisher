@@ -838,7 +838,7 @@ class EditionTest < ActiveSupport::TestCase
     edition_one.save!
 
     edition_one.parts[0].slug = "part one"
-    assert_raise Mongoid::Errors::Validations do
+    assert_raise Errors do
       edition_one.save!
     end
   end

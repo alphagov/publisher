@@ -1,6 +1,7 @@
 require "edition"
 
-class LicenceEdition < Edition
+class LicenceEdition < EditionTemp
+
   field :licence_identifier, type: String
   field :licence_short_description, type: String
   field :licence_overview, type: String

@@ -1,6 +1,6 @@
 require "edition"
 
-class CompletedTransactionEdition < Edition
+class CompletedTransactionEdition < EditionTemp
   include PresentationToggles
 
   field :body, type: String
