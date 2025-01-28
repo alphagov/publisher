@@ -74,7 +74,7 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show 'Metadata' header and an update button" do
-        within :css, ".gem-c-heading" do
+        within :css, ".gem-c-heading h2" do
           assert page.has_text?("Metadata")
         end
         assert page.has_button?("Update")
@@ -139,7 +139,7 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show 'Unpublish' header and 'Continue' button" do
-          within :css, ".gem-c-heading" do
+          within :css, ".gem-c-heading h2" do
             assert page.has_text?("Unpublish")
           end
           assert page.has_button?("Continue")
@@ -215,7 +215,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show 'Admin' header and not show 'Skip fact check' button" do
-            within :css, ".gem-c-heading" do
+            within :css, ".gem-c-heading h2" do
               assert page.has_text?("Admin")
             end
             assert page.has_no_button?("Skip fact check")
@@ -235,7 +235,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show 'Admin' header and not show 'Skip fact check' button" do
-            within :css, ".gem-c-heading" do
+            within :css, ".gem-c-heading h2" do
               assert page.has_text?("Admin")
             end
             assert page.has_no_button?("Skip fact check")
@@ -262,7 +262,7 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show 'Admin' header and an 'Skip fact check' button" do
-          within :css, ".gem-c-heading" do
+          within :css, ".gem-c-heading h2" do
             assert page.has_text?("Admin")
           end
           assert page.has_button?("Skip fact check")
