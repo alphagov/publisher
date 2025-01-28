@@ -161,7 +161,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       end
 
       should "filter out editions not accessible to the user" do
-        user = FactoryBot.create(:user, organisation_content_id: "an-org")
+        user = FactoryBot.create(:user, :departmental_editor, organisation_content_id: "an-org")
         FactoryBot.create(:guide_edition, owning_org_content_ids: %w[another-org])
 
         filtered_editions = FilteredEditionsPresenter.new(user).editions
