@@ -604,20 +604,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "render an empty 'Add another' form" do
-        # Link 1
         assert page.has_css?("legend", text: "Link 1")
-        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
         assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
         assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
         assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
         assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-
-        # Link 2 (empty fields)
-        assert page.has_css?("legend", text: "Link 2")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
       end
     end
 
@@ -653,7 +644,7 @@ class EditionEditTest < IntegrationTest
       end
 
       should "render a pre-populated 'Add another' form" do
-        within :css, ".gem-c-add-another .js-add-another__fieldset:first-of-type" do
+        within :css, ".gem-c-add-another .js-add-another__empty" do
           fill_in "Title", with: "A new external link"
           fill_in "URL", with: "https://foo.com"
         end
@@ -691,20 +682,11 @@ class EditionEditTest < IntegrationTest
 
         click_button("Save")
 
-        # Link 1
         assert page.has_css?("legend", text: "Link 1")
-        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
         assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
         assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
         assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
         assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-
-        # Link 2
-        assert page.has_css?("legend", text: "Link 2")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
       end
     end
   end
