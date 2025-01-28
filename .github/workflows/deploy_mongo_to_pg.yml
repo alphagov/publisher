@@ -37,6 +37,7 @@ jobs:
     needs: build-and-publish-image
     uses: alphagov/govuk-infrastructure/.github/workflows/deploy.yml@main
     with:
+      appName: publisher-on-pg
       imageTag: ${{ needs.build-and-publish-image.outputs.imageTag }}
       environment: ${{ inputs.environment || 'integration' }}
     secrets:
