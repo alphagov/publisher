@@ -56,7 +56,7 @@ module Publisher
 
     # Set asset path to be application specific so that we can put all GOV.UK
     # assets into an S3 bucket and distinguish app by path.
-    config.assets.prefix = "/assets/publisher"
+    config.assets.prefix = "/assets/publisher-on-pg"
 
     # allow overriding the asset host with an environment variable, useful for
     # when router is proxying to this app but asset proxying isn't set up.
