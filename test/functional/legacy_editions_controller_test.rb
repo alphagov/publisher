@@ -1317,7 +1317,15 @@ class LegacyEditionsControllerTest < ActionController::TestCase
           @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
         end
 
-        should "return a 200 when requesting an edition owned by a different organisation" do
+        should "return a 200 when requesting the #{action} tab on an edition owned by a different organisation and user has departmental_editor permission" do
+          login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :ok
+        end
+
+        should "return a 200 when requesting the #{action} tab on an edition owned by a different organisation and user does not have departmental_editor permission" do
           login_as(FactoryBot.create(:user, organisation_content_id: "org-one"))
 
           get action, params: { id: @edition.id }
@@ -1339,18 +1347,26 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       test_strategy.switch!(:restrict_access_by_org, false)
     end
 
-    %i[show metadata history admin unpublish duplicate update linking update_tagging update_related_external_links review destroy progress diff process_unpublish diagram].each do |action|
+    %i[show metadata history admin unpublish].each do |action|
       context "##{action}" do
         setup do
           @edition = FactoryBot.create(:edition, owning_org_content_ids: %w[org-two])
         end
 
-        should "return a 404 when requesting an edition owned by a different organisation" do
-          login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+        should "return a 404 when requesting the #{action} tab on an edition owned by a different organisation and user has departmental_editor permission" do
+          login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
 
           get action, params: { id: @edition.id }
 
           assert_response :not_found
+        end
+
+        should "return a 200 when requesting the #{action} tab on an edition owned by a different organisation and user does not have departmental_editor permission" do
+          login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+
+          get action, params: { id: @edition.id }
+
+          assert_response :ok
         end
       end
     end
