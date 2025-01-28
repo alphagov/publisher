@@ -21,14 +21,14 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
     end
 
     context "Edition does not already have related external links" do
-      should "render an empty 'Add another' form when the page loads" do
-        assert page.has_css?("legend", text: "Link 1")
+      should "render the form containing just the 'Add related external link' button when the page loads" do
+        assert page.has_no_css?("legend", text: "Link 1")
         assert page.has_no_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-        assert page.has_css?("button", text: "Add another link")
+        assert page.has_no_css?("label[for='artefact_external_links_attributes_0_title']")
+        assert page.has_no_css?("label[for='artefact_external_links_attributes_0_url']")
+        assert page.has_no_css?("input[name='artefact[external_links_attributes][0][title]']")
+        assert page.has_no_css?("input[name='artefact[external_links_attributes][0][url]']")
+        assert page.has_css?("button", text: "Add related external link")
       end
     end
 
@@ -46,12 +46,12 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
         assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
         assert_equal "Link one", page.find("input[name='artefact[external_links_attributes][0][title]']").value
         assert_equal "https://one.com", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-        assert page.has_css?("button", text: "Add another link")
+        assert page.has_css?("button", text: "Add related external link")
       end
     end
 
-    should "display 'Delete' buttons and a second set of inputs when 'Add another link' is clicked" do
-      click_button("Add another link")
+    should "display a 'Delete' button and a set of inputs when the Add button is clicked" do
+      click_button("Add related external link")
 
       assert page.has_css?("legend", text: "Link 1")
       assert page.has_no_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
@@ -59,37 +59,25 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
       assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
       assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
       assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-      assert page.has_css?("legend", text: "Link 2")
-      assert page.has_no_css?("input[name='artefact[external_links_attributes][1][_destroy]']")
-      assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-      assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-      assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-      assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
-      assert page.has_css?("button", text: "Add another link")
-      within :css, ".gem-c-add-another .js-add-another__fieldset:nth-of-type(1)" do
-        assert page.has_css?("button", text: "Delete")
-      end
-      within :css, ".gem-c-add-another .js-add-another__fieldset:nth-of-type(2)" do
+      assert page.has_css?("button", text: "Add related external link")
+      within :css, ".gem-c-add-another .js-add-another__fieldset" do
         assert page.has_css?("button", text: "Delete")
       end
     end
 
-    should "delete the first set of fields when the user clicks the first “Delete” button" do
-      click_button("Add another link")
+    should "delete the set of fields when the user clicks the 'Delete' button" do
+      click_button("Add related external link")
 
-      within :css, ".gem-c-add-another .js-add-another__fieldset:nth-of-type(1)" do
+      within :css, ".gem-c-add-another .js-add-another__fieldset" do
         click_button("Delete")
       end
 
-      assert page.has_css?("legend", text: "Link 1")
+      assert page.has_no_css?("legend", text: "Link 1")
       assert page.has_no_css?("label[for='artefact_external_links_attributes_0_title']")
       assert page.has_no_css?("label[for='artefact_external_links_attributes_0_url']")
-      assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-      assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-      assert page.has_css?("button", text: "Add another link")
-      within :css, ".gem-c-add-another .js-add-another__fieldset:nth-of-type(2)" do
-        assert page.has_css?("button", text: "Delete")
-      end
+      assert page.has_no_css?("label[for='artefact_external_links_attributes_1_title']")
+      assert page.has_no_css?("label[for='artefact_external_links_attributes_1_url']")
+      assert page.has_css?("button", text: "Add related external link")
     end
   end
 
