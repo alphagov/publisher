@@ -25,6 +25,8 @@ module TabbedNavHelper
       "admin"
     when "related_external_links"
       "related_external_links"
+    when "history"
+      "history"
     else
       "temp_nav_text"
     end

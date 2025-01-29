@@ -1,0 +1,26 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h3>Work in progress</h3>
+  </div>
+
+  <div class="govuk-grid-column-one-third options-sidebar">
+    <div class="sidebar-components">
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Options",
+        heading_level: 3,
+        font_size: "s",
+        padding: true,
+      } %>
+
+      <%= render "govuk_publishing_components/components/list", {
+        items: [
+          (render "govuk_publishing_components/components/button", {
+            text: "Add edition note",
+            margin_bottom: 3,
+            href: history_add_edition_note_edition_path,
+          }),
+        ],
+      } %>
+    </div>
+  </div>
+</div>
