@@ -5,11 +5,8 @@
     <%= form_for @edition.artefact, url: update_related_external_links_edition_path(@resource) do %>
       <%
         if @edition.artefact.external_links.count == 0
-          items = [{
-            fields: render(partial: "secondary_nav_tabs/related_external_links/add-another_fieldset", locals: { index: 0, id: nil }),
-            destroy_checkbox: render(partial: "secondary_nav_tabs/related_external_links/add-another_checkbox", locals: {index: 0}),
-          }]
-          empty = render(partial: "secondary_nav_tabs/related_external_links/add-another_fieldset", locals: { index: 1, id: nil })
+          items = []
+          empty = render(partial: "secondary_nav_tabs/related_external_links/add-another_fieldset", locals: { index: 0, id: nil })
         else
           items = @edition.artefact.external_links.each_with_index.map do | external_link, index |
             {
@@ -23,7 +20,8 @@
 
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Link",
-        add_button_text: "Add another link",
+        add_button_text: "Add related external link",
+        empty_fields: true,
         items: items,
         empty: empty,
       } %>
