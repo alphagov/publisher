@@ -225,6 +225,24 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_includes(assignees, { text: "All assignees", value: "" })
     end
 
+    should "return the current user after the 'All assignees' item" do
+      current_user = FactoryBot.create(:user, name: "River Tam", id: 123)
+      assignees = FilteredEditionsPresenter.new(current_user).assignees
+
+      assert_equal("#{current_user.name} (You)", assignees[1][:text])
+      assert_equal(current_user.id, assignees[1][:value])
+    end
+
+    should "only return the current user once" do
+      current_user = FactoryBot.create(:user, name: "River Tam", id: 123)
+      bob = FactoryBot.create(:user, name: "Bob")
+      assignees = FilteredEditionsPresenter.new(current_user).assignees
+
+      assert_equal(1, assignees.count { |user| user[:text] == "#{current_user.name} (You)" })
+      assert_equal(bob.name, assignees[2][:text])
+      assert_not_includes assignees.map { |user| user[:text] }, current_user.name
+    end
+
     should "return users who are not the assignee as unselected" do
       anna = FactoryBot.create(:user, name: "Anna")
       assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
@@ -232,7 +250,14 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_includes(assignees, { text: anna.name, value: anna.id })
     end
 
-    should "return the assignee as selected" do
+    should "return the assignee as selected (when the assignee is the current user)" do
+      a_user = a_gds_user
+      assignees = FilteredEditionsPresenter.new(a_user, assigned_to_filter: a_user.id.to_s).assignees
+
+      assert_includes(assignees, { text: "#{a_user.name} (You)", value: a_user.id, selected: "true" })
+    end
+
+    should "return the assignee as selected (when the assignee is not the current user)" do
       anna = FactoryBot.create(:user, name: "Anna")
       assignees = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id.to_s).assignees
 
@@ -246,9 +271,10 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
       assignees = FilteredEditionsPresenter.new(a_gds_user).assignees
 
-      assert_equal(anna.name, assignees[1][:text])
-      assert_equal(bob.name, assignees[2][:text])
-      assert_equal(charlie.name, assignees[3][:text])
+      # First two items are 'All assignees' and the current user
+      assert_equal(anna.name, assignees[2][:text])
+      assert_equal(bob.name, assignees[3][:text])
+      assert_equal(charlie.name, assignees[4][:text])
     end
 
     should "not include disabled users" do
@@ -259,7 +285,6 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
       assert_equal(2, users.count)
       assert_equal("All assignees", users[0][:text])
-      assert_equal(a_user.name, users[1][:text])
       assert_not_includes users.map { |user| user[:text] }, disabled_user.name
     end
   end
