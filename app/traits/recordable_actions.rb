@@ -34,7 +34,7 @@ module RecordableActions
 
     def created_by
       creation = actions.detect do |a|
-        a.request_type == Action::CREATE || a.request_type == Action::NEW_VERSION
+        [Action::CREATE, Action::NEW_VERSION].include?(a.request_type)
       end
       creation.requester if creation
     end
