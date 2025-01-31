@@ -10,7 +10,7 @@ module PublicationsTableHelper
   end
 
   def edition_number(publication)
-    if (publication.state == "published" || publication.state == "archived") && publication.subsequent_siblings.first.present?
+    if %w[published archived].include?(publication.state) && publication.subsequent_siblings.first.present?
       sanitize("#{publication.version_number} - #{link_to("##{publication.subsequent_siblings.first.version_number} in #{publication.subsequent_siblings.first.state.humanize.downcase}", edition_path(publication.subsequent_siblings.first), class: 'link-inherit')}")
     else
       publication.version_number.to_s
