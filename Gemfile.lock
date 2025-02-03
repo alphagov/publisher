@@ -168,7 +168,7 @@ GEM
     docile (1.4.0)
     domain_name (0.6.20240107)
     drb (2.2.1)
-    erb_lint (0.8.0)
+    erb_lint (0.9.0)
       activesupport
       better_html (>= 2.0.1)
       parser (>= 2.7.1.4)
@@ -332,7 +332,7 @@ GEM
       mongoid
     kramdown (2.5.1)
       rexml (>= 3.3.9)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     launchy (3.1.0)
       addressable (~> 2.8)
       childprocess (~> 5.0)
