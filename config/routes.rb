@@ -8,6 +8,10 @@ Rails.application.routes.draw do
 
   get "/healthcheck/scheduled-publishing", to: "healthcheck#scheduled_publishing"
 
+  resources :legacy_notes do
+    put "resolve", on: :member
+  end
+
   resources :notes do
     put "resolve", on: :member
   end
@@ -21,6 +25,7 @@ Rails.application.routes.draw do
       member do
         get "metadata"
         get "history"
+        get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"
         get "admin"
         post "duplicate"
         get "related_external_links"

@@ -115,6 +115,49 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "History and notes tab" do
+    setup do
+      visit_draft_edition
+      click_link("History and notes")
+    end
+
+    should "show an 'Add edition note' button" do
+      assert page.has_link?("Add edition note")
+    end
+
+    should "navigate to the 'Add edition note' page when the button is clicked" do
+      click_link("Add edition note")
+
+      assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
+    end
+  end
+
+  context "Add edition note page" do
+    setup do
+      visit_draft_edition
+      click_link("History and notes")
+      click_link("Add edition note")
+    end
+
+    should "render the 'Add edition note' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Add edition note")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. You can also add an edition note when you send the edition for 2i review.")
+      assert page.has_text?("Read the guidance on writing good change notes on the GOV.UK wiki (opens in a new tab).")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Edition note")
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+  end
+
   context "unpublish tab" do
     context "user does not have required permissions" do
       setup do

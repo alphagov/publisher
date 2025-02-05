@@ -140,6 +140,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/confirm_destroy"
   end
 
+  def add_edition_note
+    render "secondary_nav_tabs/add_edition_note"
+  end
+
   def destroy
     @resource.destroy!
     flash[:success] = "Edition deleted"
