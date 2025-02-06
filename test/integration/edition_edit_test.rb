@@ -56,6 +56,16 @@ class EditionEditTest < IntegrationTest
         assert_selector(".govuk-summary-list__value", text: @draft_edition.assignee)
       end
     end
+
+    should "display the important note if an important note exists" do
+      setup do
+        @note_text = "This is really really urgent!"
+        create_important_note_for_edition(@published_edition, @note_text)
+      end
+
+      assert page.has_text?("Important")
+      assert page.has_text?(@note_text)
+    end
   end
 
   context "edit assignee page" do
@@ -134,6 +144,16 @@ class EditionEditTest < IntegrationTest
 
       assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
     end
+
+    should "show an 'Update important note' button" do
+      assert page.has_link?("Update important note")
+    end
+
+    should "navigate to the 'Update important note' page when the button is clicked" do
+      click_link("Update important note")
+
+      assert_current_path history_update_important_note_edition_path(@draft_edition.id)
+    end
   end
 
   context "Add edition note page" do
@@ -159,6 +179,39 @@ class EditionEditTest < IntegrationTest
 
       assert page.has_button?("Save")
       assert page.has_link?("Cancel")
+    end
+  end
+
+  context "Update important note page" do
+    setup do
+      visit_draft_edition
+      click_link("History and notes")
+      click_link("Update important note")
+    end
+
+    should "render the 'Update important note' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Update important note")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.")
+      assert page.has_text?("Each edition can have only one important note at a time.")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Important note")
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "pre-populate with the existing note" do
+      create_important_note_for_edition(@draft_edition, "An updated note")
+      click_link("Update important note")
+
+      assert page.has_field?("Important note", with: "An updated note")
     end
   end
 
@@ -1077,5 +1130,14 @@ private
       change_note: "The change note",
     )
     visit edition_path(published_edition)
+  end
+
+  def create_important_note_for_edition(edition, note_text)
+    FactoryBot.create(
+      :action,
+      request_type: Action::IMPORTANT_NOTE,
+      edition: edition,
+      comment: note_text,
+    )
   end
 end

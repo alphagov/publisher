@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         get "metadata"
         get "history"
         get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"
+        get "history/update_important_note", to: "editions#update_important_note", as: "history/update_important_note"
         get "admin"
         post "duplicate"
         get "related_external_links"

@@ -1,0 +1,6 @@
+<%= render "govuk_publishing_components/components/notice", {
+  description_govspeak: sanitize("<p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word'>#{h(@edition.important_note&.comment)}</p>") +
+    sanitize("<p class='govuk-body-m'>#{h(User.find_by(id: @edition.important_note&.requester_id)&.name)} added an important note on
+                  #{h(@edition.important_note&.created_at&.strftime("%d %B %Y"))}</p>"),
+  show_banner_title: true
+} %>
