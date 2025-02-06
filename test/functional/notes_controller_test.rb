@@ -49,6 +49,27 @@ class NotesControllerTest < ActionController::TestCase
       end
     end
 
+    context "when an Important note is provided" do
+      should "confirm the note was successfully recorded" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: @note_text,
+               },
+             }
+
+        @edition.reload
+
+        assert_equal(@note_text, @edition.important_note.comment)
+        assert_redirected_to history_edition_path(@edition)
+        assert_includes flash[:success], "Note recorded"
+      end
+    end
+
+    # TODO: Test that a blank note is saved and message is "Note resolved"
+
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
