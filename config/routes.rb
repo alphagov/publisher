@@ -30,7 +30,7 @@ Rails.application.routes.draw do
         post "duplicate"
         get "related_external_links"
         patch "update_related_external_links"
-        get "tagging", to: "editions#linking"
+        get "tagging", to: "editions#tagging"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"

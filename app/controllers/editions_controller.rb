@@ -34,6 +34,7 @@ class EditionsController < InheritedResources::Base
   end
 
   alias_method :metadata, :show
+  alias_method :tagging, :show
   alias_method :unpublish, :show
   alias_method :admin, :show
 
