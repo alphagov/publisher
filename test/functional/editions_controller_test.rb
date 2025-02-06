@@ -39,6 +39,50 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#request_amendments_page" do
+    should "render the 'Request amendments' page" do
+      get :request_amendments_page, params: { id: @edition.id }
+      assert_template "secondary_nav_tabs/request_amendments_page"
+    end
+  end
+
+  context "#request_amendments" do
+    setup do
+      @requester = FactoryBot.create(:user, name: "Stub Requester")
+      @edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: Time.zone.now,
+      )
+    end
+
+    should "update the edition status to 'amends_needed' and save the comment" do
+      post :request_amendments, params: {
+        id: @edition.id,
+        amendment_comment: "This is a comment",
+      }
+
+      assert_equal "2i amendments requested", flash[:success]
+      @edition.reload
+      assert_equal "This is a comment", @edition.latest_status_action.comment
+      assert_equal "amends_needed", @edition.state
+    end
+
+    should "not update the edition state and render 'request_amendments' template with an error when an error occurs" do
+      EditionProgressor.any_instance.expects(:progress).returns(false)
+
+      post :request_amendments, params: {
+        id: @edition.id,
+        amendment_comment: "This is a comment",
+      }
+
+      assert_template "secondary_nav_tabs/request_amendments_page"
+      assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      @edition.reload
+      assert_equal "in_review", @edition.state
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show

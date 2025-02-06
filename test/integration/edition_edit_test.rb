@@ -3,6 +3,7 @@ require "integration_test_helper"
 class EditionEditTest < IntegrationTest
   setup do
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+    @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
     login_as(@govuk_editor)
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit, true)
@@ -496,6 +497,68 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "Request amendments link" do
+      context "edition is not in review" do
+        setup do
+          visit_draft_edition
+        end
+
+        should "not show the 'Request amendments' link" do
+          assert page.has_no_link?("Request amendments")
+        end
+      end
+
+      context "edition is in review" do
+        context "user does not have the required permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+          end
+
+          should "not show the 'Request amendments' link" do
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "not show 'Request amendments' link when user is a welsh editor and the edition is not welsh" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
+
+            assert page.has_no_link?("Request amendments")
+          end
+        end
+
+        context "user has the required permissions" do
+          context "current user is also the requester" do
+            setup do
+              login_as(@govuk_requester)
+              visit_in_review_edition
+            end
+
+            should "not show the 'Request amendments' link" do
+              assert page.has_no_link?("Request amendments")
+            end
+          end
+
+          context "current user is not the requester" do
+            setup do
+              login_as(@govuk_editor)
+              visit_in_review_edition
+            end
+
+            should "show the 'Request amendments' link" do
+              assert page.has_link?("Request amendments")
+            end
+
+            should "navigate to 'Request amendments' page when link is clicked" do
+              click_link("Request amendments")
+
+              assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
+            end
+          end
+        end
+      end
+    end
+
     context "edit assignee link" do
       context "user does not have required permissions" do
         setup do
@@ -765,6 +828,12 @@ private
 
   def visit_in_review_edition
     @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+
+    @in_review_edition.actions.create!(
+      request_type: Action::REQUEST_AMENDMENTS,
+      requester_id: @govuk_requester.id,
+    )
+
     visit edition_path(@in_review_edition)
   end
 
