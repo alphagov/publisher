@@ -33,9 +33,10 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
-  alias_method :metadata, :show
-  alias_method :unpublish, :show
   alias_method :admin, :show
+  alias_method :metadata, :show
+  alias_method :tagging, :show
+  alias_method :unpublish, :show
 
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
