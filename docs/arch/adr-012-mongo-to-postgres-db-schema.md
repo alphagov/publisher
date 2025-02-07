@@ -46,7 +46,7 @@ All models for content types will remain mostly as-is, the edition model will be
 
 ##### Advantages
 1. Relatively few changes to test and factory files (compared to option 1).
-2. Simplifies the database structure by denormalizing it.
+2. Simplifies the database structure by denormalising it.
 
 ##### Disadvantages
 1. Duplication of database columns.
