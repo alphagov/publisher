@@ -10,7 +10,7 @@ Move the Mainstream Publisher app from using MongoDB to PostgreSQL. This ADR is 
 
 ### Problem statement
 - We have captured some drawbacks of using MongoDB for Mainstream Publisher in an ADR [here](https://docs.publishing.service.gov.uk/repos/publisher/arch/adr-009-replace-mongodb-with-postgres.html).
-- Most of our publisher apps are on PostgreSQL or MySQL(in case of whitehall) and recently we moved the content-store app away from MongoDB; please find the RFC [here](https://github.com/alphagov/govuk-rfcs/pull/158/files).
+- Most of our publisher apps are on PostgreSQL or MySQL (in the case of whitehall) and recently we moved the content-store app away from MongoDB; please find [the RFC here](https://github.com/alphagov/govuk-rfcs/pull/158/files).
 
 #### Option 1 : [Delegated Types](https://guides.rubyonrails.org/v7.1/association_basics.html#delegated-types)
 ##### Database schema
