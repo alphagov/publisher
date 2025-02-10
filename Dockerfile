@@ -17,12 +17,13 @@ RUN rails assets:precompile && rm -fr log node_modules
 
 FROM --platform=$TARGETPLATFORM $base_image
 
-ENV GOVUK_APP_NAME=publisher
+ENV GOVUK_APP_NAME=publisher-on-pg
 
 WORKDIR $APP_HOME
 COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
 COPY --from=builder $BOOTSNAP_CACHE_DIR $BOOTSNAP_CACHE_DIR
 COPY --from=builder $APP_HOME .
 
+RUN chown -R app:app app
 USER app
 CMD ["puma"]
