@@ -147,4 +147,14 @@ class HostContentUpdateEventTest < ActiveSupport::TestCase
       end
     end
   end
+
+  describe "#to_action" do
+    it "returns the object as an action" do
+      event = FactoryBot.build(:host_content_update_event)
+      action = mock("HostContentUpdateEvent::Action")
+      HostContentUpdateEvent::Action.expects(:new).with(event).returns(action)
+
+      assert_equal event.to_action, action
+    end
+  end
 end
