@@ -159,6 +159,9 @@ GEM
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
       sass-embedded (~> 1.63)
+    database_cleaner-active_record (2.2.0)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     database_cleaner-mongoid (2.0.1)
       database_cleaner-core (~> 2.0.0)
@@ -642,6 +645,7 @@ GEM
     parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     plek (5.2.0)
     pp (0.6.2)
       prettyprint
@@ -835,6 +839,9 @@ GEM
     state_machines-activemodel (0.9.0)
       activemodel (>= 6.0)
       state_machines (>= 0.6.0)
+    state_machines-activerecord (0.9.0)
+      activerecord (>= 6.0)
+      state_machines-activemodel (>= 0.9.0)
     state_machines-graphviz (0.0.2)
       ruby-graphviz
       state_machines
@@ -891,6 +898,7 @@ DEPENDENCIES
   ci_reporter_minitest
   climate_control
   dartsass-rails
+  database_cleaner-active_record
   database_cleaner-mongoid
   diffy
   erb_lint
@@ -924,6 +932,7 @@ DEPENDENCIES
   mousetrap-rails
   nested_form!
   null_logger
+  pg
   plek
   prometheus-client
   pry-byebug
@@ -940,6 +949,7 @@ DEPENDENCIES
   simplecov
   sprockets-rails
   state_machines
+  state_machines-activerecord
   state_machines-graphviz
   state_machines-mongoid
   strip_attributes
