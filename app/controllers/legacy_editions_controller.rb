@@ -33,6 +33,7 @@ class LegacyEditionsController < InheritedResources::Base
 
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
+    @update_events = HostContentUpdateEvent.all_for_artefact(@artefact)
     render action: "show"
   end
 
@@ -115,6 +116,7 @@ class LegacyEditionsController < InheritedResources::Base
         @tagging_update = tagging_update_form
         @linkables = Tagging::Linkables.new
         @artefact = @resource.artefact
+        @update_events = HostContentUpdateEvent.all_for_artefact(@artefact)
         render action: "show"
       end
       success.json do
@@ -134,6 +136,7 @@ class LegacyEditionsController < InheritedResources::Base
     @linkables = Tagging::Linkables.new
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
+    @update_events = HostContentUpdateEvent.all_for_artefact(@artefact)
     render action: "show"
   end
 

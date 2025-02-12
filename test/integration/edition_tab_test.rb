@@ -5,6 +5,8 @@ class EditionTabTest < LegacyJavascriptIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
 
     @guide = FactoryBot.create(:guide_edition, state: "draft")
   end

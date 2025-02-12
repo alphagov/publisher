@@ -5,6 +5,8 @@ class AddArtefactTest < LegacyIntegrationTest
     setup_users
     stub_linkables
     stub_holidays_used_by_fact_check
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
   end
 
   should "create a new artefact" do

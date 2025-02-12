@@ -6,6 +6,8 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     stub_linkables
     stub_holidays_used_by_fact_check
     stub_publishing_api_has_lookups({})
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
 
     @edition = FactoryBot.create(:guide_edition)
     @artefact = @edition.artefact

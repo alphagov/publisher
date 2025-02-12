@@ -58,4 +58,55 @@ class ActionHelperTest < ActionView::TestCase
       assert_match(/older/, unformatted_email.last)
     end
   end
+
+  test "#action_note supports host content update events" do
+    host_content_update_event = FactoryBot.build(:host_content_update_event, document_type: "Something")
+    action = host_content_update_event.to_action
+
+    note = action_note(action)
+
+    assert_match(/Something updated/, note)
+    assert_match(/View in Content Block Manager/, note)
+    assert_match(/#{action.block_url}/, note)
+  end
+
+  test "#edition_actions includes update_events" do
+    edition = FactoryBot.create(:edition)
+
+    edition_actions = [
+      stub(:create_action, request_type: Action::CREATE, created_at: Time.zone.now - 1.week),
+      stub(:note_action, request_type: Action::NOTE, created_at: Time.zone.now - 2.days),
+      stub(:sent_fact_check_action, request_type: Action::SEND_FACT_CHECK, created_at: Time.zone.now - 3.days),
+      stub(:receive_fact_check_action, request_type: Action::RECEIVE_FACT_CHECK, created_at: Time.zone.now - 1.day),
+      stub(:important_note_action, request_type: Action::IMPORTANT_NOTE, created_at: Time.zone.now - 1.week),
+      stub(:important_note_resolved_action, request_type: Action::IMPORTANT_NOTE_RESOLVED, created_at: Time.zone.now - 1.week),
+      stub(:publish_action, request_type: Action::PUBLISH, created_at: Time.zone.now - 12.hours),
+    ]
+
+    edition.stubs(:actions).returns(edition_actions)
+
+    update_events = [
+      stub("HostContentUpdateEvent", to_action: stub(:host_content_update_event_action, created_at: Time.zone.now - 2.hours)),
+      stub("HostContentUpdateEvent", to_action: stub(:host_content_update_event_action, created_at: Time.zone.now - 3.hours)),
+      stub("HostContentUpdateEvent", to_action: stub(:host_content_update_event_action, created_at: Time.zone.now)),
+    ]
+
+    update_events[0].stubs(:is_for_edition?).with(edition).returns(true)
+    update_events[1].stubs(:is_for_edition?).with(edition).returns(true)
+    update_events[2].stubs(:is_for_edition?).with(edition).returns(false)
+
+    expected_actions = [
+      update_events[0].to_action,
+      update_events[1].to_action,
+      edition_actions[6],
+      edition_actions[3],
+      edition_actions[1],
+      edition_actions[2],
+      edition_actions[0],
+    ]
+
+    result = edition_actions(edition, update_events)
+
+    assert_equal expected_actions, result
+  end
 end

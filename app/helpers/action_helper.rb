@@ -1,8 +1,11 @@
 module ActionHelper
-  def edition_actions(edition)
-    edition.actions.reverse.delete_if do |a|
+  def edition_actions(edition, update_events)
+    actions = edition.actions.reject do |a|
       [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED].include?(a.request_type)
     end
+    update_actions = update_events.select { |e| e.is_for_edition?(edition) }.map(&:to_action)
+    actions.append(*update_actions)
+    actions.sort_by(&:created_at).reverse
   end
 
   def action_note?(action)
@@ -13,9 +16,12 @@ module ActionHelper
     notes = []
 
     if action.comment.present?
-      if action.request_type == Action::RECEIVE_FACT_CHECK
+      case action.request_type
+      when Action::RECEIVE_FACT_CHECK
         formatted_email_parts = format_email_text(action.comment)
         notes.concat(formatted_email_parts)
+      when HostContentUpdateEvent::Action::CONTENT_BLOCK_UPDATE
+        notes << content_block_update_comment(action)
       else
         notes << format_and_auto_link_plain_text(action.comment)
       end
@@ -30,6 +36,10 @@ module ActionHelper
     end
 
     notes.join.html_safe
+  end
+
+  def content_block_update_comment(action)
+    "#{action.comment} (#{link_to 'View in Content Block Manager', action.block_url, target: '_blank', rel: 'noopener'})"
   end
 
   def action_class(action)

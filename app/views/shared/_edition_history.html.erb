@@ -12,7 +12,7 @@
 
     <div class="panel-collapse collapse<% if edition_counter == 0 %> in<% end %>" id="body<%= edition.version_number %>">
       <ul class="panel-body list-unstyled remove-bottom-margin">
-        <% edition_actions(edition).each do |action| %>
+        <% edition_actions(edition, update_events).each do |action| %>
           <li class="action-<%= action_class(action) %> add-bottom-margin add-left-margin">
             <h3 class="h4">
               <div class="add-label-margin normal">
