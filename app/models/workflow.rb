@@ -176,6 +176,16 @@ module Workflow
     save!(validate: false)
   end
 
+  # As above, but does not change updated_at field
+  def perform_event_without_validations_or_timestamp(event)
+    # http://rubydoc.info/github/pluginaweek/state_machine/StateMachine/Machine:event
+    # pass false to transition state without performing state machine actions
+    public_send(event, false)
+    # Set to not update the updated_at field as it causes issues with public_updated_at
+    # See https://github.com/alphagov/publisher/pull/2539
+    save!(validate: false, touch: false)
+  end
+
   def important_note
     action = actions.where(:request_type.in => [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
     action if action.try(:request_type) == Action::IMPORTANT_NOTE
