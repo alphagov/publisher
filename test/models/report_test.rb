@@ -22,6 +22,7 @@ class ReportTest < ActiveSupport::TestCase
         bucket: @bucket_name,
         key: "example.csv",
         body: "body",
+        checksum_algorithm: "CRC32",
       }
 
       ClimateControl.modify REPORTS_S3_BUCKET_NAME: @bucket_name do
