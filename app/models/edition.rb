@@ -402,7 +402,7 @@ class Edition
   end
 
   def was_published
-    previous_siblings.each { |s| s.perform_event_without_validations(:archive) }
+    previous_siblings.each { |s| s.perform_event_without_validations_or_timestamp(:archive) }
     notify_siblings_of_published_edition
     update_artefact
   end
