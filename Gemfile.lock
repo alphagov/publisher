@@ -808,7 +808,8 @@ GEM
     shoulda-context (2.0.0)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
-    sidekiq (7.3.7)
+    sidekiq (7.3.9)
+      base64
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)
