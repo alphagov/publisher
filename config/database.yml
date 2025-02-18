@@ -7,34 +7,23 @@ default: &default
 
 development:
   <<: *default
-  database: publisher_development
+  clients:
+    default:
+      uri: <%= ENV['DATABASE_URL'] || "postgresql://postgres@postgres-16/publisher" %>
+  options:
+
+test: &test
+  <<: *default
+  database: publisher_test
   username: publisher
   password: publisher
-  clients:
-    default:
-      uri: <%= "postgresql://postgres@postgres-13/publisher" %>
-  options:
-#    use_activesupport_time_zone: true
-#    belongs_to_required_by_default: false
-
-test:
-  <<: *default
-  clients:
-    default:
-      uri: <%= "postgresql://postgres@postgres-13/publisher" %>
-      options:
-        read:
-          mode: :primary
-        max_pool_size: 1
-  options:
-#    use_activesupport_time_zone: true
-#    belongs_to_required_by_default: false
+  url: <%= ENV["TEST_DATABASE_URL"] %>
 
 # set these environment variables on your prod server
 production:
   clients:
     default:
-      uri: <%= ENV['MONGODB_URI'] %>
+      uri: <%= ENV['DATABASE_URL'] %>
   options:
 #    use_activesupport_time_zone: true
   #    belongs_to_required_by_default: false
