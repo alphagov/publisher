@@ -129,9 +129,9 @@ private
       editions = editions.assigned_to(nil)
     else
       begin
-        assigned_user = User.find(assigned_to_filter)
+        assigned_user = User.find(assigned_to_filter) if assigned_to_filter.present?
         editions = editions.assigned_to(assigned_user) if assigned_user
-      rescue Mongoid::Errors::DocumentNotFound
+      rescue ActiveRecord::RecordNotFound
         Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{assigned_to_filter}'"
       end
     end

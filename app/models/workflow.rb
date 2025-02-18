@@ -12,7 +12,18 @@ module Workflow
     after_create :notify_siblings_of_new_edition
 
     field :state, type: String, default: "draft"
-    belongs_to :assigned_to, class_name: "User", optional: true
+
+    # Temp-to-be-removed
+    # This will be removed once we move workflow module to support postgres models, this temporarily
+    # allows to support the belongs_to relation between workflow and user
+    field :assigned_to_id, type: BSON::ObjectId
+
+    # Temp-to-be-brought-back
+    # Currently we are using assigned_to_id as a field to store the assigned_to_id
+    # to bypass the issue of having a belongs_to between a postgres table and a mongo table
+    # we will most likely bring back the belongs_to relationship once we move workflow to support postgres.
+
+    # belongs_to :assigned_to, class_name: "User", optional: true
 
     state_machine initial: :draft do
       after_transition on: :request_amendments do |edition, _transition|
@@ -189,6 +200,19 @@ module Workflow
   def important_note
     action = actions.where(:request_type.in => [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
     action if action.try(:request_type) == Action::IMPORTANT_NOTE
+  end
+
+  # Temp-to-be-removed
+  # The method below are getters and setters for assigned_to that allows us to set the assigned_to_id and get assigned_to.
+  # We are unable to use belongs_to :assigned_to, class_name: "User" as the User table is
+  # in postgres and using a combination of setter and getter methods with a assigned_to_id field
+  # to be able to achieve congruent result as  having a belongs to while we are moving other table to postgres
+  def assigned_to_id=(id)
+    self[:assigned_to_id] = id
+  end
+
+  def assigned_to
+    User.find(assigned_to_id) if assigned_to_id
   end
 
 private
