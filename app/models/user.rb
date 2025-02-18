@@ -6,8 +6,6 @@ require_dependency "safe_html"
 class User < ApplicationRecord
   include GDS::SSO::User
 
-  has_many :artefact_actions, class_name: "ArtefactAction"
-
   scope :alphabetized, -> { order(name: :asc) }
   scope :enabled, -> { where("disabled IS NULL OR disabled = ?", false) }
 

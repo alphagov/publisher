@@ -51,8 +51,8 @@ class Action
   # Temp-to-be-removed
   # This will be removed once we move action table to postgres, this temporarily
   # allows to support the belongs to relation between action and user
-  field :recipient_id,       type: Integer
-  field :requester_id,       type: Integer
+  field :recipient_id,       type: BSON::ObjectId
+  field :requester_id,       type: BSON::ObjectId
 
   def container_class_name(edition)
     edition.container.class.name.underscore.humanize
