@@ -1,5 +1,4 @@
 ENV["RAILS_ENV"] = "test"
-
 # Must go at top of file
 require "simplecov"
 SimpleCov.start
@@ -10,6 +9,7 @@ require "rails/test_help"
 require "minitest/autorun"
 require "mocha/minitest"
 require "database_cleaner/mongoid"
+require "database_cleaner/active_record"
 require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
 require "support/tag_test_helpers"
@@ -28,8 +28,11 @@ require "govuk_sidekiq/testing"
 WebMock.disable_net_connect!(allow_localhost: true)
 DatabaseCleaner.allow_remote_database_url = true
 
-DatabaseCleaner.strategy = :deletion
+DatabaseCleaner[:mongoid].strategy = :deletion
 # initial clean
+DatabaseCleaner[:mongoid].clean
+DatabaseCleaner.allow_remote_database_url = true
+DatabaseCleaner.strategy = :deletion
 DatabaseCleaner.clean
 
 Rails.application.load_tasks if Rake::Task.tasks.empty?
@@ -47,14 +50,16 @@ class ActiveSupport::TestCase
   include WebMock::API
   include GovukSchemas::AssertMatchers
 
-  def clean_db
-    DatabaseCleaner.clean
-  end
-  set_callback :teardown, :after, :clean_db
-
   setup do
+    DatabaseCleaner[:mongoid].start
+    DatabaseCleaner.start
     Sidekiq::Testing.inline!
     stub_any_publishing_api_call
+  end
+
+  teardown do
+    DatabaseCleaner[:mongoid].clean
+    DatabaseCleaner.clean
   end
 
   def without_metadata_denormalisation(*klasses, &_block)
