@@ -176,11 +176,12 @@ class PublicationsTableHelperTest < ActionView::TestCase
 
     should "return a form for claiming a review when an edition assigned to another user is in review and has not been claimed and the current user may do so" do
       current_user = FactoryBot.create(:user, name: "David Cameron", permissions: %w[govuk_editor])
+      another_user = FactoryBot.create(:user, name: "Another User", permissions: %w[govuk_editor])
       edition = FactoryBot.create(
         :edition,
         state: "in_review",
         review_requested_at: "2024-07-12",
-        assigned_to_id: "66911dbf2c88ee0001d8af62",
+        assigned_to_id: another_user.id,
       )
 
       assert_includes reviewer(edition, current_user), '<button class="gem-c-button govuk-button" type="submit">Claim 2i</button>'
@@ -188,11 +189,12 @@ class PublicationsTableHelperTest < ActionView::TestCase
 
     should "return nil when an edition assigned to another user is in review and has not been claimed and the current user may not do so" do
       current_user = FactoryBot.create(:user, name: "Gordon Brown")
+      another_user = FactoryBot.create(:user, name: "Another User")
       edition = FactoryBot.create(
         :edition,
         state: "in_review",
         review_requested_at: "2024-07-12",
-        assigned_to_id: "66911dbf2c88ee0001d8af62",
+        assigned_to_id: another_user.id,
       )
 
       assert_nil reviewer(edition, current_user)
