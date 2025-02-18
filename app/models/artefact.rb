@@ -216,12 +216,25 @@ class Artefact
       attributes[:user] = user if user
       attributes[:task_performed_by] = task_name if task_name
 
+      # Temp-to-be-removed
+      # This will be removed once we move artefact table to postgres, currently record_action
+      # when called with options contains the user object attributes that is supported by belongs to
+      # the below code allows to use the user id foreign key instead as we are temporarily not using belongs to
+      # relationship between artefact and user
+      add_user_id_and_delete_user_key(attributes)
       new_action = actions.build(attributes)
       # Mongoid will not fire creation callbacks on embedded documents, so we
       # need to trigger this manually. There is a `cascade_callbacks` option on
       # `embeds_many`, but it doesn't appear to trigger creation events on
       # children when an update event fires on the parent
       new_action.set_created_at
+    end
+  end
+
+  def add_user_id_and_delete_user_key(attributes)
+    if attributes[:user]
+      attributes[:user_id] = attributes[:user].id
+      attributes.delete(:user)
     end
   end
 
