@@ -10,11 +10,15 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
   setup do
+    DatabaseCleaner[:mongoid].start
+    DatabaseCleaner.start
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit, false)
   end
 
   teardown do
+    DatabaseCleaner[:mongoid].clean
+    DatabaseCleaner.clean
     Capybara.reset_sessions! # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
     GDS::SSO.test_user = nil
