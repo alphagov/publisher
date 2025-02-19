@@ -384,4 +384,11 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :action do
+    request_type { Action::IMPORTANT_NOTE }
+    edition
+    requester { FactoryBot.create(:user) }
+    comment { "Default comment" }
+  end
 end

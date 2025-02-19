@@ -5,11 +5,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-body">Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.
-      Each edition can have only one important note at a time.</p>
+    <p class="govuk-body">
+      Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.
+      Each edition can have only one important note at a time.
+    </p>
 
-    <%= form_for(:note, :url=> notes_path) do |f| %>
-      <%= hidden_field_tag :edition_id, resource.id %>
+    <%= form_for(:note, :url=> notes_path) do %>
+      <%= hidden_field_tag :edition_id, @edition.id %>
       <%= hidden_field_tag "note[type]", Action::IMPORTANT_NOTE %>
 
       <%= render "govuk_publishing_components/components/textarea", {
