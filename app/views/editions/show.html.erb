@@ -20,17 +20,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds editions__edit__summary">
-      <%= render "govuk_publishing_components/components/summary_list", {
-        items: document_summary_items(@resource),
-      } %>
-  </div>
-
-  <div>
-    <%= render "govuk_publishing_components/components/notice", {
-      title: @edition.important_note.comment,
-      description_govspeak: sanitize("<p>#{User.find_by(id: @edition.important_note.requester_id).name} added an important note on #{@edition.important_note.created_at.strftime("%d %B %Y")}</p>"),
-      show_banner_title: true
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: document_summary_items(@resource),
     } %>
+    <% if @edition.important_note %>
+      <%= render partial: "important_note" %>
+    <% end %>
   </div>
 
   <% if @edition.in_review? && current_user.has_editor_permissions?(@edition) %>

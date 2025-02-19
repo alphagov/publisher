@@ -1,6 +1,9 @@
+<% note_author_name = User.find_by(id: @edition.important_note&.requester_id).name %>
+<% note_date = @edition.important_note&.created_at&.strftime("%d %B %Y") %>
+<% note_details = @edition.important_note&.comment %>
 <%= render "govuk_publishing_components/components/notice", {
-  description_govspeak: sanitize("<p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word'>#{h(@edition.important_note&.comment)}</p>") +
-    sanitize("<p class='govuk-body-m'>#{h(User.find_by(id: @edition.important_note&.requester_id)&.name)} added an important note on
-                  #{h(@edition.important_note&.created_at&.strftime("%d %B %Y"))}</p>"),
-  show_banner_title: true
+  description_govspeak:
+    sanitize("<p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word'>#{h(note_details)}</p>") +
+      sanitize("<p class='govuk-body-m'>#{h(note_author_name)} added an important note on #{h(note_date)}</p>"),
+  show_banner_title: true,
 } %>
