@@ -38,6 +38,10 @@ class EditionsController < InheritedResources::Base
   alias_method :tagging, :show
   alias_method :unpublish, :show
 
+  def request_amendments_page
+    render "secondary_nav_tabs/request_amendments_page"
+  end
+
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
     target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
@@ -74,6 +78,16 @@ class EditionsController < InheritedResources::Base
     @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
   ensure
     render "show"
+  end
+
+  def request_amendments
+    if request_amendments_for_edition(@resource, params[:amendment_comment])
+      flash.now[:success] = "2i amendments requested"
+      render "show"
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/request_amendments_page"
+    end
   end
 
   def history
@@ -187,6 +201,11 @@ private
   def progress_edition(resource, activity_params)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
+  end
+
+  def request_amendments_for_edition(resource, comment)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "request_amendments", comment: comment })
   end
 
   def unpublish_edition(artefact)

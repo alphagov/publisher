@@ -24,6 +24,16 @@
       items: document_summary_items(@resource),
     } %>
   </div>
+
+  <% if @edition.in_review? && current_user.has_editor_permissions?(@edition) %>
+    <% unless @edition.latest_status_action.requester == current_user %>
+      <div class="govuk-grid-column-two-thirds">
+        <%= render "govuk_publishing_components/components/inset_text", {} do %>
+          <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path) %></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 </div>
 
 <div class="govuk-grid-row">

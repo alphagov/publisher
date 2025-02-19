@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   constraints NewDesignSystemConstraint.new do
     resources :editions do
       member do
+        get "request_amendments_page", to: "editions#request_amendments_page", as: "request_amendments_page"
+        post "request_amendments", to: "editions#request_amendments", as: "request_amendments"
         get "metadata"
         get "history"
         get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"
