@@ -40,9 +40,23 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#request_amendments_page" do
-    should "render the 'Request amendments' page" do
-      get :request_amendments_page, params: { id: @edition.id }
-      assert_template "secondary_nav_tabs/request_amendments_page"
+    context "user has govuk_editor permission" do
+      should "render the 'Request amendments' page" do
+        get :request_amendments_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/request_amendments_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :request_amendments_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
     end
   end
 
@@ -56,30 +70,48 @@ class EditionsControllerTest < ActionController::TestCase
       )
     end
 
-    should "update the edition status to 'amends_needed' and save the comment" do
-      post :request_amendments, params: {
-        id: @edition.id,
-        amendment_comment: "This is a comment",
-      }
+    context "user has govuk_editor permission" do
+      should "update the edition status to 'amends_needed' and save the comment" do
+        post :request_amendments, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
 
-      assert_equal "2i amendments requested", flash[:success]
-      @edition.reload
-      assert_equal "This is a comment", @edition.latest_status_action.comment
-      assert_equal "amends_needed", @edition.state
+        assert_equal "2i amendments requested", flash[:success]
+        @edition.reload
+        assert_equal "This is a comment", @edition.latest_status_action.comment
+        assert_equal "amends_needed", @edition.state
+      end
+
+      should "not update the edition state and render 'request_amendments' template with an error when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        post :request_amendments, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
+
+        assert_template "secondary_nav_tabs/request_amendments_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        @edition.reload
+        assert_equal "in_review", @edition.state
+      end
     end
 
-    should "not update the edition state and render 'request_amendments' template with an error when an error occurs" do
-      EditionProgressor.any_instance.expects(:progress).returns(false)
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
 
-      post :request_amendments, params: {
-        id: @edition.id,
-        amendment_comment: "This is a comment",
-      }
+      should "render an error message" do
+        post :request_amendments, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
 
-      assert_template "secondary_nav_tabs/request_amendments_page"
-      assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-      @edition.reload
-      assert_equal "in_review", @edition.state
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
     end
   end
 
