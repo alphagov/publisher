@@ -3,6 +3,10 @@
     <%= render "govuk_publishing_components/components/inset_text", {
       text: sanitize("Send fact check responses to #{mail_to resource.fact_check_email_address} and include [#{resource.id}] in the subject line.")
     } %>
+
+    <div class="accordion">
+      <%= render partial: "secondary_nav_tabs/history/history_sections", collection: @resource.history %>
+    </div>
   </div>
 
   <div class="govuk-grid-column-one-third options-sidebar">
