@@ -8,6 +8,8 @@ class EditionsControllerTest < ActionController::TestCase
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
     UpdateWorker.stubs(:perform_async)
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
   end
 
   context "#template_folder_for" do
@@ -119,6 +121,13 @@ class EditionsControllerTest < ActionController::TestCase
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
+    end
+  end
+
+  context "#history" do
+    should "render the 'History and notes' tab of the edit page" do
+      get :history, params: { id: @edition.id }
+      assert_template "show"
     end
   end
 

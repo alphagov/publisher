@@ -7,6 +7,7 @@
 // should be included in a `type="module"` script tag
 // which will ensure they are never loaded.
 
+//= require govuk_publishing_components/components/accordion
 //= require govuk_publishing_components/components/button
 //= require govuk_publishing_components/components/error-summary
 //= require govuk_publishing_components/components/layout-header
