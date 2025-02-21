@@ -25,6 +25,10 @@
           font_size: "s",
           padding: true,
         } %>
+
+        <% if @resource.can_create_new_edition? %>
+          <%= primary_button_for(@resource, duplicate_edition_path(@resource), "Create new edition") %>
+        <% end %>
       </div>
     </div>
   <% else %>

@@ -552,6 +552,21 @@ class EditionEditTest < IntegrationTest
 
         assert page.has_text?(published_edition.change_note)
       end
+
+      should "show a 'create new edition' button when there isn't an existing draft edition" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_button?("Create new edition")
+
+        FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
+        visit edition_path(published_edition)
+
+        assert page.has_no_button?("Create new edition")
+      end
     end
 
     context "Request amendments link" do
