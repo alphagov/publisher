@@ -1,1 +1,34 @@
-<h3>A section</h3>
+<div class="accordion__section">
+  <div class="accordion__section__header">
+    <h3>Edition <%= edition.version_number %></h3>
+  </div>
+
+  <div class="accordion__section__content">
+    <ul class="actions">
+      <% edition_actions(edition, update_events).each do |action| %>
+        <li class="action">
+          <div class="heading">
+            <time datetime="<%= action.created_at %>"><%= action.created_at.to_fs(:govuk_date) %></time>
+            <p><%= action.to_s %> by
+              <% if action.requester %>
+                <%= action.requester.name %></p>
+              <% else %>
+                GOV.UK Bot
+              <% end %>
+            </p>
+          </div>
+
+          <% if action_note?(action) %>
+            <div class="content">
+              <% if action.comment_sanitized %>
+                <p>We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.</p>
+              <% end %>
+
+              <%= action_note(action) %>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
