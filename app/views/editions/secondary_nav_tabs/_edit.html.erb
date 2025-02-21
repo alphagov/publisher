@@ -11,45 +11,7 @@
 <%= form_for @resource, as: :edition, url: edition_path(@resource) do |f| %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Title",
-        },
-        id: "title",
-        name: "edition[title]",
-        value: @resource.title,
-        heading_size: "m",
-        error_items: errors_for(@edition.errors, "title".to_sym, use_full_message: false),
-      } %>
-
-      <%= render "govuk_publishing_components/components/textarea", {
-        label: {
-          heading_size: "m",
-          text: "Meta tag description",
-        },
-        name: "edition[overview]",
-        hint: "Some search engines will display this if they cannot find what they need in the main text",
-        value: @resource.overview,
-      } %>
-
-      <%= render "govuk_publishing_components/components/radio", {
-        heading: "Is this beta content?",
-        name: "edition[in_beta]",
-        inline: true,
-        heading_size: "m",
-        items: [
-          {
-            value: 1,
-            text: "Yes",
-            checked: @resource.in_beta,
-          },
-          {
-            value: 0,
-            text: "No",
-            checked: !@resource.in_beta,
-          },
-        ],
-      } %>
+      <%= render partial: "editions/secondary_nav_tabs/edit/draft/common_fields", locals: { edition: @resource } %>
 
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
