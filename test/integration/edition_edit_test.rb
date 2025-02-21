@@ -536,6 +536,28 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?("div", text: published_edition.body)
         end
       end
+
+      should "show public change field" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+          in_beta: true,
+          major_change: false,
+        )
+        visit edition_path(published_edition)
+
+        within "form" do
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_text?("None added")
+
+          published_edition.major_change = true
+          published_edition.change_note = "Change note for test"
+          published_edition.save!(validate: false)
+          visit edition_path(published_edition)
+
+          assert page.has_text?(published_edition.change_note)
+        end
+      end
     end
 
     context "Request amendments link" do

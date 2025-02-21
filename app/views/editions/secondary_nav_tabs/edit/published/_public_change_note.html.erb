@@ -1,0 +1,12 @@
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Public change note",
+  heading_level: 3,
+  font_size: "m",
+} %>
+<p class="govuk-body">
+  <% if edition.major_change %>
+    <%= edition.change_note %>
+  <% else %>
+    None added
+  <% end %>
+</p>
