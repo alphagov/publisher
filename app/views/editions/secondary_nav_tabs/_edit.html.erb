@@ -28,6 +28,12 @@
 
         <% if @resource.can_create_new_edition? %>
           <%= primary_button_for(@resource, duplicate_edition_path(@resource), "Create new edition") %>
+        <% else %>
+          <%= render "govuk_publishing_components/components/list", {
+            items: [
+              link_to("Edit latest edition", edition_path(@resource.in_progress_sibling), class: "govuk-link")
+            ],
+          } %>
         <% end %>
       </div>
     </div>

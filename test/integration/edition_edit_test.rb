@@ -561,11 +561,19 @@ class EditionEditTest < IntegrationTest
         visit edition_path(published_edition)
 
         assert page.has_button?("Create new edition")
+        assert page.has_no_link?("Edit latest edition")
+      end
 
+      should "show a 'edit latest edition' link when there is an existing draft edition" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+        )
         FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
         visit edition_path(published_edition)
 
         assert page.has_no_button?("Create new edition")
+        assert page.has_link?("Edit latest edition")
       end
     end
 
