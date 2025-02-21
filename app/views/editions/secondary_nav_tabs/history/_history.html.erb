@@ -4,8 +4,12 @@
       text: sanitize("Send fact check responses to #{mail_to resource.fact_check_email_address} and include [#{resource.id}] in the subject line.")
     } %>
 
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "History and notes"
+    } %>
+
     <div class="accordion">
-      <%= render partial: "secondary_nav_tabs/history/history_sections", collection: @resource.history %>
+      <%= render partial: "secondary_nav_tabs/history/history_sections", collection: @resource.history, as: "edition", locals: { update_events: @update_events } %>
     </div>
   </div>
 
