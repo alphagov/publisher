@@ -575,6 +575,16 @@ class EditionEditTest < IntegrationTest
         assert page.has_no_button?("Create new edition")
         assert page.has_link?("Edit latest edition")
       end
+
+      should "show a 'view on GOV.UK' link" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
     end
 
     context "Request amendments link" do
