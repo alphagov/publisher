@@ -497,6 +497,33 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "published edition" do
+      should "show common content-type fields" do
+        published_edition = FactoryBot.create(
+          :edition,
+          state: "published",
+          title: "Some test title",
+          overview: "Some overview text",
+          in_beta: true,
+        )
+        visit edition_path(published_edition)
+
+        within "form" do
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p.govuk-body", text: published_edition.title)
+          assert page.has_css?("h3", text: "Meta tag description")
+          assert page.has_css?("p.govuk-body", text: published_edition.overview)
+          assert page.has_css?("h3", text: "Is this beta content?")
+          assert page.has_css?("p.govuk-body", text: "Yes")
+
+          published_edition.in_beta = false
+          published_edition.save!(validate: false)
+          visit edition_path(published_edition)
+          assert page.has_css?("p.govuk-body", text: "No")
+        end
+      end
+    end
+
     context "Request amendments link" do
       context "edition is not in review" do
         setup do
