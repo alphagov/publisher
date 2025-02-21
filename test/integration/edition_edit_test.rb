@@ -522,6 +522,20 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?("p.govuk-body", text: "No")
         end
       end
+
+      should "show body field" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+          body: "## Some body text",
+        )
+        visit edition_path(published_edition)
+
+        within "form" do
+          assert page.has_css?("h3", text: "Body")
+          assert page.has_css?("div", text: published_edition.body)
+        end
+      end
     end
 
     context "Request amendments link" do

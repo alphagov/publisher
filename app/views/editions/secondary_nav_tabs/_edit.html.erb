@@ -13,20 +13,13 @@
     <div class="govuk-grid-column-two-thirds">
       <% if @resource.published? %>
         <%= render partial: "editions/secondary_nav_tabs/edit/published/common_fields", locals: { edition: @resource } %>
+
+        <%= render partial: "editions/secondary_nav_tabs/edit/published/body", locals: { edition: @resource } %>
       <% else %>
         <%= render partial: "editions/secondary_nav_tabs/edit/draft/common_fields", locals: { edition: @resource } %>
-      <% end %>
 
-      <%= render "govuk_publishing_components/components/textarea", {
-        label: {
-          heading_size: "m",
-          text: "Body",
-        },
-        name: "edition[body]",
-        value: @resource.body,
-        rows: 14,
-        hint: ("Refer to #{link_to("Refer to the Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
-      } %>
+        <%= render partial: "editions/secondary_nav_tabs/edit/draft/body", locals: { edition: @resource } %>
+      <% end %>
 
       <% if @resource.published_edition %>
         <div class="edit_edition__change_note">
