@@ -124,6 +124,10 @@ class EditionEditTest < IntegrationTest
       click_link("History and notes")
     end
 
+    should "show a heading" do
+      assert page.has_css?("h2", text: "History and notes")
+    end
+
     should "show an 'Add edition note' button" do
       assert page.has_link?("Add edition note")
     end
