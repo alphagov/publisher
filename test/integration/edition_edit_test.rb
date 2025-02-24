@@ -128,6 +128,12 @@ class EditionEditTest < IntegrationTest
       assert page.has_css?("h2", text: "History and notes")
     end
 
+    should "show inset text" do
+      within :css, ".gem-c-inset-text" do
+        assert page.has_text?("Send fact check responses to #{@draft_edition.fact_check_email_address} and include [#{@draft_edition.id}] in the subject line.")
+      end
+    end
+
     should "show an 'Add edition note' button" do
       assert page.has_link?("Add edition note")
     end
