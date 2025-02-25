@@ -153,13 +153,14 @@ class EditionEditTest < IntegrationTest
         user_5 = FactoryBot.create(:user, name: "Brian Kilcline")
         user_6 = FactoryBot.create(:user, name: "Trevor Peake")
         user_7 = FactoryBot.create(:user, name: "Dave Bennett")
-        @draft_edition.actions.create! request_type: Action::ASSIGN, requester_id: user_1.id, created_at: "2024-02-24 15:41:00"
-        @draft_edition.actions.create! request_type: Action::NOTE, requester_id: user_2.id, created_at: "2024-03-01 10:30:00"
-        @draft_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: user_3.id, created_at: "2024-04-02 17:23:00"
-        @draft_edition.actions.create! request_type: Action::SEND_FACT_CHECK, requester_id: user_4.id, created_at: "2024-05-16 18:12:00"
+        @draft_edition.actions.create! request_type: Action::ASSIGN, requester_id: user_1.id, created_at: "2024-02-24 15:41:00", comment: "Assigned to me"
+        @draft_edition.actions.create! request_type: Action::NOTE, requester_id: user_2.id, created_at: "2024-03-01 10:30:00", comment: "This is a note"
+        @draft_edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: user_3.id, created_at: "2024-04-02 17:23:00", comment: "Requesting review"
+        @draft_edition.actions.create! request_type: Action::SEND_FACT_CHECK, requester_id: user_4.id, created_at: "2024-05-16 18:12:00", comment: "Fact check requested"
         @draft_edition.actions.create! request_type: Action::RECEIVE_FACT_CHECK, created_at: "2024-06-06 8:32:00", comment: "We’re happy for you to publish. -----Original Message----- Reply and confirm the content is correct.", comment_sanitized: true
-        @draft_edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user_5.id, created_at: "2024-06-27 10:56:00"
-        @draft_edition.actions.create! request_type: Action::APPROVE_REVIEW, requester_id: user_6.id, created_at: "2024-07-05 19:31:00"
+        @draft_edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user_5.id, created_at: "2024-06-27 10:56:00", comment: "Requesting amendments"
+        @draft_edition.actions.create! request_type: Action::APPROVE_REVIEW, requester_id: user_6.id, created_at: "2024-07-05 19:31:00", comment: "Review approved"
+        # TODO: This isn't working as it should - I guess it needs to be stubbed
         @draft_edition.actions.create! request_type: HostContentUpdateEvent::Action::CONTENT_BLOCK_UPDATE, requester_id: user_7.id, created_at: "2024-08-22 15:07:00"
 
         visit edition_path(@draft_edition)
@@ -169,21 +170,25 @@ class EditionEditTest < IntegrationTest
       should "display 'Assign' action" do
         assert page.has_css?("time", text: "3:41pm, 24 February 2024")
         assert page.has_text?("Assign by Steve Ogrizovic")
+        assert page.has_text?("Assigned to me")
       end
 
       should "display 'Note' action" do
         assert page.has_css?("time", text: "10:30am, 1 March 2024")
         assert page.has_text?("Note by David Phillips")
+        assert page.has_text?("This is a note")
       end
 
       should "display 'Request review' action" do
         assert page.has_css?("time", text: "5:23pm, 2 April 2024")
         assert page.has_text?("Request review by Greg Downs")
+        assert page.has_text?("Requesting review")
       end
 
       should "display 'Send fact check' action" do
         assert page.has_css?("time", text: "6:12pm, 16 May 2024")
         assert page.has_text?("Send fact check by Lloyd McGrath")
+        assert page.has_text?("Fact check requested")
       end
 
       should "display 'Receive fact check' action" do
@@ -197,16 +202,20 @@ class EditionEditTest < IntegrationTest
       should "display 'Request amendments' action" do
         assert page.has_css?("time", text: "10:56am, 27 June 2024")
         assert page.has_text?("Request amendments by Brian Kilcline")
+        assert page.has_text?("Requesting amendments")
       end
 
       should "display 'Approve review' action" do
         assert page.has_css?("time", text: "7:31pm, 5 July 2024")
         assert page.has_text?("Approve review by Trevor Peake")
+        assert page.has_text?("Review approved")
       end
 
       should "display 'Content block update' action" do
         assert page.has_css?("time", text: "3:07pm, 22 August 2024")
         assert page.has_text?("Content block update by Dave Bennett")
+        # TODO: This isn't working as it should - I guess it needs to be stubbed in the setup
+        # assert page.has_link?("View in Content Block Manager")
       end
     end
   end
