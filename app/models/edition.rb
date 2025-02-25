@@ -45,6 +45,7 @@ class Edition
         lambda { |user|
           return all unless Flipflop.enabled?(:restrict_access_by_org)
           return all if user.gds_editor?
+          return all unless user.departmental_editor?
 
           where(owning_org_content_ids: user.organisation_content_id)
         }
@@ -517,6 +518,7 @@ class Edition
   def is_accessible_to?(user)
     return true unless Flipflop.enabled?(:restrict_access_by_org)
     return true if user.gds_editor?
+    return true unless user.departmental_editor?
 
     owning_org_content_ids.include?(user.organisation_content_id)
   end
