@@ -508,19 +508,17 @@ class EditionEditTest < IntegrationTest
         )
         visit edition_path(published_edition)
 
-        within "form" do
-          assert page.has_css?("h3", text: "Title")
-          assert page.has_css?("p.govuk-body", text: published_edition.title)
-          assert page.has_css?("h3", text: "Meta tag description")
-          assert page.has_css?("p.govuk-body", text: published_edition.overview)
-          assert page.has_css?("h3", text: "Is this beta content?")
-          assert page.has_css?("p.govuk-body", text: "Yes")
+        assert page.has_css?("h3", text: "Title")
+        assert page.has_css?("p.govuk-body", text: published_edition.title)
+        assert page.has_css?("h3", text: "Meta tag description")
+        assert page.has_css?("p.govuk-body", text: published_edition.overview)
+        assert page.has_css?("h3", text: "Is this beta content?")
+        assert page.has_css?("p.govuk-body", text: "Yes")
 
-          published_edition.in_beta = false
-          published_edition.save!(validate: false)
-          visit edition_path(published_edition)
-          assert page.has_css?("p.govuk-body", text: "No")
-        end
+        published_edition.in_beta = false
+        published_edition.save!(validate: false)
+        visit edition_path(published_edition)
+        assert page.has_css?("p.govuk-body", text: "No")
       end
 
       should "show body field" do
@@ -531,10 +529,8 @@ class EditionEditTest < IntegrationTest
         )
         visit edition_path(published_edition)
 
-        within "form" do
-          assert page.has_css?("h3", text: "Body")
-          assert page.has_css?("div", text: published_edition.body)
-        end
+        assert page.has_css?("h3", text: "Body")
+        assert page.has_css?("div", text: published_edition.body)
       end
 
       should "show public change field" do
@@ -546,17 +542,15 @@ class EditionEditTest < IntegrationTest
         )
         visit edition_path(published_edition)
 
-        within "form" do
-          assert page.has_css?("h3", text: "Public change note")
-          assert page.has_text?("None added")
+        assert page.has_css?("h3", text: "Public change note")
+        assert page.has_css?("p.govuk-body", text: "None added")
 
-          published_edition.major_change = true
-          published_edition.change_note = "Change note for test"
-          published_edition.save!(validate: false)
-          visit edition_path(published_edition)
+        published_edition.major_change = true
+        published_edition.change_note = "Change note for test"
+        published_edition.save!(validate: false)
+        visit edition_path(published_edition)
 
-          assert page.has_text?(published_edition.change_note)
-        end
+        assert page.has_text?(published_edition.change_note)
       end
     end
 
