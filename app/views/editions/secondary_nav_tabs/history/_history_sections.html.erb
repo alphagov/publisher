@@ -1,34 +1,44 @@
+<%
+  # TODO: Put this stuff into the actions helper
+  items = edition_actions(edition, update_events).map do |action|
+    requester = if action.requester
+      "#{action.requester.name}"
+    else
+      "GOV.UK Bot"
+    end
+
+    item = [
+      sanitize("<div class='heading'>
+        <time datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
+        <p>#{action.to_s} by #{requester}</p>
+      </div>")
+    ]
+
+    if action_note?(action)
+      warning = if action.comment_sanitized
+        "We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well."
+      else
+        ""
+      end
+
+      item << tag.div(
+        sanitize("<p>#{warning}</p>") + 
+        sanitize("<div class='comment'>#{action_note(action)}</div>"), class: "content"
+      )
+    end
+
+    item.join.html_safe
+  end
+%>
+
 <div class="accordion__section">
   <div class="accordion__section__header">
     <h3>Edition <%= edition.version_number %></h3>
   </div>
 
   <div class="accordion__section__content">
-    <ul class="actions">
-      <% edition_actions(edition, update_events).each do |action| %>
-        <li class="action">
-          <div class="heading">
-            <time datetime="<%= action.created_at %>"><%= action.created_at.to_fs(:govuk_date) %></time>
-            <p><%= action.to_s %> by
-              <% if action.requester %>
-                <%= action.requester.name %></p>
-              <% else %>
-                GOV.UK Bot
-              <% end %>
-            </p>
-          </div>
-
-          <% if action_note?(action) %>
-            <div class="content">
-              <% if action.comment_sanitized %>
-                <p>We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.</p>
-              <% end %>
-
-              <%= action_note(action) %>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+    <%= render "govuk_publishing_components/components/list", {
+      items: items
+    } %>
   </div>
 </div>
