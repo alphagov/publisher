@@ -10,4 +10,15 @@ module EditionsSidebarButtonsHelper
                end
     buttons << link_to("View on GOV.UK (opens in new tab)", view_homepage_path, rel: "noreferrer noopener", target: "_blank", class: "govuk-link")
   end
+
+  def non_published_sidebar_buttons(edition)
+    buttons = []
+    if current_user.has_editor_permissions?(edition) && !edition.retired_format?
+      buttons << (render "govuk_publishing_components/components/button", {
+        text: "Save",
+        margin_bottom: 3,
+      })
+    end
+    buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
+  end
 end

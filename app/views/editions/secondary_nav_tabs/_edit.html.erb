@@ -54,13 +54,7 @@
           } %>
 
           <%= render "govuk_publishing_components/components/list", {
-            items: [
-              (render "govuk_publishing_components/components/button", {
-                text: "Save",
-                margin_bottom: 3,
-              } if current_user.has_editor_permissions?(@resource) && !@resource.retired_format?),
-              link_to("Preview (opens in new tab)", preview_edition_path(@resource), target: "_blank", rel: "noopener", class: "govuk-link"),
-            ],
+            items: non_published_sidebar_buttons(@resource),
           } %>
         </div>
       </div>
