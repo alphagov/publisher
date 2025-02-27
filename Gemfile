@@ -32,6 +32,7 @@ gem "mongoid-sadstory"
 gem "mousetrap-rails"
 gem "nested_form", git: "https://github.com/alphagov/nested_form.git", branch: "add-wrapper-class"
 gem "null_logger"
+gem "pg"
 gem "plek"
 gem "prometheus-client"
 gem "rails_autolink"
@@ -41,20 +42,17 @@ gem "sentry-sidekiq"
 gem "sidekiq", "< 8" # Disables Sidekiq 7 beta opt-in.
 gem "sprockets-rails"
 gem "state_machines"
+gem "state_machines-activerecord"
 gem "state_machines-mongoid"
 gem "strip_attributes"
 gem "terser"
 gem "whenever", require: false
 
-# postgres dependencies
-gem "pg"
-gem "state_machines-activerecord"
-gem "database_cleaner-active_record"
-
 group :test do
   gem "capybara-select-2"
   gem "ci_reporter_minitest"
   gem "climate_control"
+  gem "database_cleaner-active_record"
   gem "database_cleaner-mongoid"
   gem "factory_bot_rails"
   gem "govuk_schemas"

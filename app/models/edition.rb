@@ -33,11 +33,21 @@ class Edition
   field :change_note,          type: String
   field :review_requested_at,  type: DateTime
 
+  # Temp-to-be-removed
+  # This will be removed once we move edition table to postgres, this temporarily
+  # allows to support the belongs_to relation between edition and user
+  field :assigned_to_id,       type: BSON::ObjectId
+
   field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
 
   field :owning_org_content_ids, type: Array, default: []
 
-  belongs_to :assigned_to, class_name: "User", optional: true
+  # Temp-to-be-brought-back
+  # Currently we are using assigned_to_id as a field to store the assigned_to_id
+  # to bypass the issue of having a belongs_to between a postgres table and a mongo table
+  # we will most likely bring back the belongs_to relationship once we move edition table to postgres.
+
+  # belongs_to :assigned_to, class_name: "User", optional: true
 
   embeds_many :link_check_reports
 
@@ -519,6 +529,24 @@ class Edition
     return true if user.gds_editor?
 
     owning_org_content_ids.include?(user.organisation_content_id)
+  end
+
+  # Temp-to-be-removed
+  # The method below are getters and setters for assigned_to that allows us to set the assigned_to_id and get assigned_to.
+  # We are unable to use belongs_to :assigned_to, class_name: "User" as the User table is
+  # in postgres and using a combination of setter and getter methods with a assigned_to_id field
+  # to be able to achieve congruent result as  having a belongs to while we are moving other table to postgres
+
+  def assigned_to_id=(id)
+    self[:assigned_to_id] = id
+  end
+
+  def assigned_to=(user)
+    self[:assigned_to_id] = user.id
+  end
+
+  def assigned_to
+    User.find(assigned_to_id) if assigned_to_id
   end
 
 private

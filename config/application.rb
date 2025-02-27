@@ -3,6 +3,7 @@ require_relative "boot"
 require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
+require "active_record/railtie"
 require "active_job/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -67,7 +68,7 @@ module Publisher
     }
 
     config.generators do |g|
-      g.orm :mongoid
+      g.orm :active_record
       g.template_engine :erb # this could be :haml or whatever
       g.test_framework :test_unit, fixture: false # this could be :rpsec or whatever
     end
