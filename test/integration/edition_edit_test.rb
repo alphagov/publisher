@@ -553,27 +553,109 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?(published_edition.change_note)
       end
 
-      should "show a 'create new edition' button when there isn't an existing draft edition" do
-        published_edition = FactoryBot.create(
-          :answer_edition,
-          state: "published",
-        )
-        visit edition_path(published_edition)
+      context "user is a govuk_editor" do
+        should "show a 'create new edition' button when there isn't an existing draft edition" do
+          published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+          visit edition_path(published_edition)
 
-        assert page.has_button?("Create new edition")
-        assert page.has_no_link?("Edit latest edition")
+          assert page.has_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
+
+        should "show an 'edit latest edition' link when there is an existing draft edition" do
+          published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+          FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
+          visit edition_path(published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_link?("Edit latest edition")
+        end
       end
 
-      should "show a 'edit latest edition' link when there is an existing draft edition" do
-        published_edition = FactoryBot.create(
-          :answer_edition,
-          state: "published",
-        )
-        FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
-        visit edition_path(published_edition)
+      context "user is a welsh_editor" do
+        setup do
+          login_as_welsh_editor
+        end
 
-        assert page.has_no_button?("Create new edition")
-        assert page.has_link?("Edit latest edition")
+        context "viewing a Welsh edition" do
+          setup do
+            @welsh_published_edition = FactoryBot.create(
+              :answer_edition,
+              :welsh,
+              state: "published",
+            )
+          end
+
+          should "show a 'create new edition' button when there isn't an existing draft edition" do
+            visit edition_path(@welsh_published_edition)
+
+            assert page.has_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+
+          should "show an 'edit latest edition' link when there is an existing draft edition" do
+            FactoryBot.create(:answer_edition, panopticon_id: @welsh_published_edition.artefact.id, state: "draft")
+            visit edition_path(@welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_link?("Edit latest edition")
+          end
+        end
+
+        context "viewing a non-Welsh edition" do
+          setup do
+            @non_welsh_published_edition = FactoryBot.create(
+              :answer_edition,
+              state: "published",
+            )
+          end
+
+          should "not show a 'create new edition' button when there isn't an existing draft edition" do
+            visit edition_path(@non_welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+
+          should "not show an 'edit latest edition' link when there is an existing draft edition" do
+            FactoryBot.create(:answer_edition, panopticon_id: @non_welsh_published_edition.artefact.id, state: "draft")
+            visit edition_path(@non_welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+        end
+      end
+
+      context "user does not have editor permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Non Editor"))
+          @published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+        end
+
+        should "not show a 'create new edition' button when there isn't an existing draft edition" do
+          visit edition_path(@published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
+
+        should "not show an 'edit latest edition' link when there is an existing draft edition" do
+          FactoryBot.create(:answer_edition, panopticon_id: @published_edition.artefact.id, state: "draft")
+          visit edition_path(@published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
       end
 
       should "show a 'view on GOV.UK' link" do
