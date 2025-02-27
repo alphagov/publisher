@@ -2,44 +2,8 @@ require "plek"
 require "artefact_action" # Require this when running outside Rails
 require_dependency "safe_html"
 
-class Artefact
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class Artefact < ApplicationRecord
   strip_attributes only: :redirect_url
-
-  field "name",                 type: String
-  field "slug",                 type: String
-  field "paths",                type: Array, default: []
-  field "prefixes",             type: Array, default: []
-  field "kind",                 type: String
-  field "owning_app",           type: String
-  field "rendering_app",        type: String
-  field "active",               type: Boolean, default: false
-
-  field "publication_id",       type: String
-  field "description",          type: String
-  field "state",                type: String,  default: "draft"
-  field "language",             type: String,  default: "en"
-  field "latest_change_note",   type: String
-  field "public_timestamp",     type: DateTime
-  field "redirect_url",         type: String
-
-  # content_id should be unique but we have existing artefacts without it.
-  # We should therefore enforce the uniqueness as soon as:
-  #  - every current artefact will have a content id assigned
-  #  - every future artefact will be created with a content id
-  field "content_id",           type: String
-
-  index({ slug: 1 }, unique: true)
-
-  # This index allows the `relatable_artefacts` method to use an index-covered
-  # query, so it doesn't have to load each of the artefacts.
-  index name: 1,
-        state: 1,
-        kind: 1,
-        _type: 1,
-        _id: 1
 
   scope :not_archived, -> { where(:state.nin => %w[archived]) }
 
@@ -82,9 +46,10 @@ class Artefact
     "find my nearest" => "place",
   }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
-  embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
+  # has_many :actions, class_name: "ArtefactAction"
+  has_many :artefact_actions, -> { order(:created_at => :asc) }, class_name: "ArtefactAction"
 
-  embeds_many :external_links, class_name: "ArtefactExternalLink"
+  has_many :external_links, class_name: "ArtefactExternalLink"
   accepts_nested_attributes_for :external_links,
                                 allow_destroy: true,
                                 reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
@@ -174,10 +139,13 @@ class Artefact
   # Return value is used in caller chain to show errors
   # rubocop:disable Rails/SaveBang
   def save_as(user, options = {})
+    byebug
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
     record_action(action_type, user:)
-    save(options)
+
+    # save(options)
+    save
   end
   # rubocop:enable Rails/SaveBang
 
@@ -189,7 +157,8 @@ class Artefact
     action_type = options.delete(:action_type) || default_action
 
     record_action(action_type, task_name:)
-    save!(options)
+    # save!(options)
+    save!
   end
 
   def record_create_action
@@ -201,10 +170,11 @@ class Artefact
   end
 
   def record_action(action_type, options = {})
+    byebug
     user = options[:user]
     task_name = options[:task_name]
     current_snapshot = snapshot
-    last_snapshot = actions.last.snapshot if actions.last
+    last_snapshot = artefact_actions.last.snapshot if artefact_actions.last
 
     unless current_snapshot == last_snapshot
 
@@ -221,13 +191,17 @@ class Artefact
       # when called with options contains the user object attributes that is supported by belongs to
       # the below code allows to use the user id foreign key instead as we are temporarily not using belongs to
       # relationship between artefact and user
-      add_user_id_and_delete_user_key(attributes)
-      new_action = actions.build(attributes)
+
+      # add_user_id_and_delete_user_key(attributes)
+
+
+      artefact_actions.build(attributes)
+      byebug
       # Mongoid will not fire creation callbacks on embedded documents, so we
       # need to trigger this manually. There is a `cascade_callbacks` option on
       # `embeds_many`, but it doesn't appear to trigger creation events on
       # children when an update event fires on the parent
-      new_action.set_created_at
+      # new_action.set_created_at
     end
   end
 
@@ -248,7 +222,7 @@ class Artefact
 
   def snapshot
     attributes
-      .except("_id", "created_at", "updated_at", "actions")
+      .except("_id", "created_at", "updated_at", "artefact_actions")
   end
 
   def latest_edition
