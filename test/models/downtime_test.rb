@@ -24,7 +24,7 @@ class DowntimeTest < ActiveSupport::TestCase
     end
 
     should "validate presence of artefact" do
-      downtime = FactoryBot.build(:downtime, artefact: nil)
+      downtime = FactoryBot.build(:downtime, artefact_id: nil)
 
       assert_not downtime.valid?
       assert_includes downtime.errors[:artefact], "can't be blank"
