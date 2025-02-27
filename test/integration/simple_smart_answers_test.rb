@@ -16,6 +16,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    UpdateWorker.stubs(:perform_async)
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)

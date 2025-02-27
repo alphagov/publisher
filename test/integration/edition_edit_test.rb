@@ -11,6 +11,7 @@ class EditionEditTest < IntegrationTest
     stub_linkables
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    UpdateWorker.stubs(:perform_async)
   end
 
   context "edit page" do
