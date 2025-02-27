@@ -2,44 +2,8 @@ require "plek"
 require "artefact_action" # Require this when running outside Rails
 require_dependency "safe_html"
 
-class Artefact
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class Artefact < ApplicationRecord
   strip_attributes only: :redirect_url
-
-  field "name",                 type: String
-  field "slug",                 type: String
-  field "paths",                type: Array, default: []
-  field "prefixes",             type: Array, default: []
-  field "kind",                 type: String
-  field "owning_app",           type: String
-  field "rendering_app",        type: String
-  field "active",               type: Boolean, default: false
-
-  field "publication_id",       type: String
-  field "description",          type: String
-  field "state",                type: String,  default: "draft"
-  field "language",             type: String,  default: "en"
-  field "latest_change_note",   type: String
-  field "public_timestamp",     type: DateTime
-  field "redirect_url",         type: String
-
-  # content_id should be unique but we have existing artefacts without it.
-  # We should therefore enforce the uniqueness as soon as:
-  #  - every current artefact will have a content id assigned
-  #  - every future artefact will be created with a content id
-  field "content_id",           type: String
-
-  index({ slug: 1 }, unique: true)
-
-  # This index allows the `relatable_artefacts` method to use an index-covered
-  # query, so it doesn't have to load each of the artefacts.
-  index name: 1,
-        state: 1,
-        kind: 1,
-        _type: 1,
-        _id: 1
 
   scope :not_archived, -> { where(:state.nin => %w[archived]) }
 
@@ -82,9 +46,9 @@ class Artefact
     "find my nearest" => "place",
   }.tap { |h| h.default_proc = ->(_, k) { k } }.freeze
 
-  embeds_many :actions, class_name: "ArtefactAction", order: { created_at: :asc }
+  has_many :artefact_actions, -> { order(created_at: :asc) }, class_name: "ArtefactAction", dependent: :destroy
 
-  embeds_many :external_links, class_name: "ArtefactExternalLink"
+  has_many :external_links, class_name: "ArtefactExternalLink"
   accepts_nested_attributes_for :external_links,
                                 allow_destroy: true,
                                 reject_if: proc { |attrs| attrs["title"].blank? && attrs["url"].blank? }
@@ -92,7 +56,6 @@ class Artefact
   before_validation :normalise, on: :create
   before_create :record_create_action
   before_update :record_update_action
-  before_update :remember_if_slug_has_changed
   after_update :update_editions
 
   validates :name, presence: { message: "Enter a title" }
@@ -146,7 +109,7 @@ class Artefact
   def update_editions
     return archive_editions if state == "archived"
 
-    if @slug_was_changed
+    if saved_change_to_attribute?("slug")
       Edition.draft_in_publishing_api.where(panopticon_id: id).each do |edition|
         edition.update_slug_from_artefact(self)
       end
@@ -171,15 +134,14 @@ class Artefact
     save_as user
   end
 
-  # Return value is used in caller chain to show errors
-  # rubocop:disable Rails/SaveBang
+  # 'valid?' populates the error context for the instance which is used in caller chain to show errors
   def save_as(user, options = {})
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
     record_action(action_type, user:)
-    save(options)
+
+    save! if valid?
   end
-  # rubocop:enable Rails/SaveBang
 
   # We should use this method when performing save actions from rake tasks,
   # message queue consumer or any other performed tasks that have no user associated
@@ -187,9 +149,9 @@ class Artefact
   def save_as_task!(task_name, options = {})
     default_action = new_record? ? "create" : "update"
     action_type = options.delete(:action_type) || default_action
-
     record_action(action_type, task_name:)
-    save!(options)
+
+    save! if valid?
   end
 
   def record_create_action
@@ -204,7 +166,7 @@ class Artefact
     user = options[:user]
     task_name = options[:task_name]
     current_snapshot = snapshot
-    last_snapshot = actions.last.snapshot if actions.last
+    last_snapshot = artefact_actions.last.snapshot if artefact_actions.last
 
     unless current_snapshot == last_snapshot
 
@@ -216,25 +178,7 @@ class Artefact
       attributes[:user] = user if user
       attributes[:task_performed_by] = task_name if task_name
 
-      # Temp-to-be-removed
-      # This will be removed once we move artefact table to postgres, currently record_action
-      # when called with options contains the user object attributes that is supported by belongs to
-      # the below code allows to use the user id foreign key instead as we are temporarily not using belongs to
-      # relationship between artefact and user
-      add_user_id_and_delete_user_key(attributes)
-      new_action = actions.build(attributes)
-      # Mongoid will not fire creation callbacks on embedded documents, so we
-      # need to trigger this manually. There is a `cascade_callbacks` option on
-      # `embeds_many`, but it doesn't appear to trigger creation events on
-      # children when an update event fires on the parent
-      new_action.set_created_at
-    end
-  end
-
-  def add_user_id_and_delete_user_key(attributes)
-    if attributes[:user]
-      attributes[:user_id] = attributes[:user].id
-      attributes.delete(:user)
+      artefact_actions.build(attributes)
     end
   end
 
@@ -248,7 +192,7 @@ class Artefact
 
   def snapshot
     attributes
-      .except("_id", "created_at", "updated_at", "actions")
+      .except("id", "created_at", "updated_at", "artefact_actions")
   end
 
   def latest_edition
@@ -284,12 +228,6 @@ class Artefact
   end
 
 private
-
-  # We need to do this because Mongoid doesn't implement 'saved_change_to_attribute?' methods like ActiveRecord does
-  # https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Dirty.html#method-i-saved_change_to_attribute-3F
-  def remember_if_slug_has_changed
-    @slug_was_changed = slug_changed?
-  end
 
   def edition_class_name
     "#{kind.camelcase}Edition"

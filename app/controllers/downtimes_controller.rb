@@ -9,7 +9,7 @@ class DowntimesController < ApplicationController
   end
 
   def new
-    @downtime = Downtime.new(artefact: @edition.artefact)
+    @downtime = Downtime.new(artefact_id: @edition.artefact.id)
   end
 
   def create
