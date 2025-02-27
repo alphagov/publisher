@@ -15,6 +15,7 @@ class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    UpdateWorker.stubs(:perform_async)
   end
 
   should "create a new CompletedTransactionEdition" do

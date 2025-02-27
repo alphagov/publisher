@@ -10,6 +10,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    UpdateWorker.stubs(:perform_async)
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
