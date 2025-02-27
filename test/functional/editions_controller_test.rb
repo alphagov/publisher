@@ -2241,7 +2241,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert_equal "External links title can't be blank", flash[:danger]
     end
 
     should "display an error message when the url is blank" do
@@ -2252,7 +2252,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert flash[:danger].include? "External links URL can't be blank"
     end
 
     should "display an error message when the url is invalid" do
@@ -2263,7 +2263,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert_equal "External links URL is invalid", flash[:danger]
     end
 
     should "update related external links and display a success message when successfully saved" do
