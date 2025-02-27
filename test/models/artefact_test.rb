@@ -136,7 +136,7 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should raise a not found exception if the slug doesn't match" do
-    assert_raise Mongoid::Errors::DocumentNotFound do
+    assert_raise ActiveRecord::RecordNotFound do
       Artefact.from_param("something-fake")
     end
   end
