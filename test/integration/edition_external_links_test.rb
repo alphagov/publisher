@@ -35,7 +35,7 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
     context "Edition already has related external links" do
       setup do
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link one", url: "https://one.com" })]
         click_link "Related external links"
       end
 
