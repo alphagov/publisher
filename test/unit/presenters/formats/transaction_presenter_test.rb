@@ -15,7 +15,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
 
   def create_downtime(message, start_time: Time.zone.yesterday.at_midnight)
     Downtime.create(
-      artefact:,
+      artefact_id: artefact.id,
       start_time:,
       end_time: Time.zone.tomorrow.at_midnight,
       message:,
@@ -137,9 +137,9 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.external_links = [link]
-      artefact.save!(validate: false)
+      link = { "url" => "http://www.foo.com", "title" => "foo" }
+      artefact.external_links = [ArtefactExternalLink.build(link)]
+      artefact.save!
       expected = [
         {
           url: link["url"],
