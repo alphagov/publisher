@@ -153,9 +153,9 @@ class SimpleSmartAnswerPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.external_links = [link]
-      artefact.save!(validate: false)
+      link = { "url" => "https://www.foo.com", "title" => "foo" }
+      artefact.external_links = [ArtefactExternalLink.build(link)]
+      artefact.save!
       expected = [
         {
           url: link["url"],
