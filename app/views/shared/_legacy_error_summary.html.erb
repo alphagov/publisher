@@ -4,7 +4,7 @@
     <ul>
       <% object.errors.each do |error| %>
       <li>
-        <% model = object.class.superclass.to_s == "Object" ? object.class : object.class.superclass %>
+        <% model = object.class %>
         <a href="#<%= model.to_s.underscore + "_" + error.attribute.to_s %>"><%= error.message %></a>
       </li>
       <% end %>

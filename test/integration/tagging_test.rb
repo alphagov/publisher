@@ -242,7 +242,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "not add duplicate external links" do # check both title and url
-      @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
+      @artefact.external_links = [ArtefactExternalLink.build({ title: "GOVUK", url: "https://www.gov.uk" })]
       assert 1, @artefact.external_links.count
 
       visit_edition @edition
@@ -269,7 +269,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "delete links" do
-      @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
+      @artefact.external_links = [ArtefactExternalLink.build({ title: "GOVUK", url: "https://www.gov.uk" })]
       assert 1, @artefact.external_links.count
 
       visit_edition @edition
