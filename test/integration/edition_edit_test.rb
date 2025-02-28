@@ -498,6 +498,178 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "published edition" do
+      should "show common content-type fields" do
+        published_edition = FactoryBot.create(
+          :edition,
+          state: "published",
+          title: "Some test title",
+          overview: "Some overview text",
+          in_beta: true,
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_css?("h3", text: "Title")
+        assert page.has_css?("p.govuk-body", text: published_edition.title)
+        assert page.has_css?("h3", text: "Meta tag description")
+        assert page.has_css?("p.govuk-body", text: published_edition.overview)
+        assert page.has_css?("h3", text: "Is this beta content?")
+        assert page.has_css?("p.govuk-body", text: "Yes")
+
+        published_edition.in_beta = false
+        published_edition.save!(validate: false)
+        visit edition_path(published_edition)
+        assert page.has_css?("p.govuk-body", text: "No")
+      end
+
+      should "show body field" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+          body: "## Some body text",
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_css?("h3", text: "Body")
+        assert page.has_css?("div", text: published_edition.body)
+      end
+
+      should "show public change field" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+          in_beta: true,
+          major_change: false,
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_css?("h3", text: "Public change note")
+        assert page.has_css?("p.govuk-body", text: "None added")
+
+        published_edition.major_change = true
+        published_edition.change_note = "Change note for test"
+        published_edition.save!(validate: false)
+        visit edition_path(published_edition)
+
+        assert page.has_text?(published_edition.change_note)
+      end
+
+      context "user is a govuk_editor" do
+        should "show a 'create new edition' button when there isn't an existing draft edition" do
+          published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+          visit edition_path(published_edition)
+
+          assert page.has_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
+
+        should "show an 'edit latest edition' link when there is an existing draft edition" do
+          published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+          FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
+          visit edition_path(published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_link?("Edit latest edition")
+        end
+      end
+
+      context "user is a welsh_editor" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        context "viewing a Welsh edition" do
+          setup do
+            @welsh_published_edition = FactoryBot.create(
+              :answer_edition,
+              :welsh,
+              state: "published",
+            )
+          end
+
+          should "show a 'create new edition' button when there isn't an existing draft edition" do
+            visit edition_path(@welsh_published_edition)
+
+            assert page.has_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+
+          should "show an 'edit latest edition' link when there is an existing draft edition" do
+            FactoryBot.create(:answer_edition, panopticon_id: @welsh_published_edition.artefact.id, state: "draft")
+            visit edition_path(@welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_link?("Edit latest edition")
+          end
+        end
+
+        context "viewing a non-Welsh edition" do
+          setup do
+            @non_welsh_published_edition = FactoryBot.create(
+              :answer_edition,
+              state: "published",
+            )
+          end
+
+          should "not show a 'create new edition' button when there isn't an existing draft edition" do
+            visit edition_path(@non_welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+
+          should "not show an 'edit latest edition' link when there is an existing draft edition" do
+            FactoryBot.create(:answer_edition, panopticon_id: @non_welsh_published_edition.artefact.id, state: "draft")
+            visit edition_path(@non_welsh_published_edition)
+
+            assert page.has_no_button?("Create new edition")
+            assert page.has_no_link?("Edit latest edition")
+          end
+        end
+      end
+
+      context "user does not have editor permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Non Editor"))
+          @published_edition = FactoryBot.create(
+            :answer_edition,
+            state: "published",
+          )
+        end
+
+        should "not show a 'create new edition' button when there isn't an existing draft edition" do
+          visit edition_path(@published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
+
+        should "not show an 'edit latest edition' link when there is an existing draft edition" do
+          FactoryBot.create(:answer_edition, panopticon_id: @published_edition.artefact.id, state: "draft")
+          visit edition_path(@published_edition)
+
+          assert page.has_no_button?("Create new edition")
+          assert page.has_no_link?("Edit latest edition")
+        end
+      end
+
+      should "show a 'view on GOV.UK' link" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          state: "published",
+        )
+        visit edition_path(published_edition)
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
+    end
+
     context "Request amendments link" do
       context "edition is not in review" do
         setup do
