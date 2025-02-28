@@ -97,25 +97,29 @@ class HostContentUpdateHistoryTest < LegacyJavascriptIntegrationTest
 
       click_on "Edition 2"
       within "#version2" do
-        within page.all(".action-content-block-update")[0] do
-          assert page.has_content?(Time.zone.parse(@edition2_content_update_event_2["created_at"]).to_fs(:govuk_date))
-          assert page.has_content?("Content block updated by User 1")
-          assert page.has_content?("Email address updated")
-        end
+        within ".collapse.in" do
+          within page.all(".action-content-block-update")[0] do
+            assert page.has_content?(Time.zone.parse(@edition2_content_update_event_2["created_at"]).to_fs(:govuk_date))
+            assert page.has_content?("Content block updated by User 1")
+            assert page.has_content?("Email address updated")
+          end
 
-        within page.all(".action-content-block-update")[1] do
-          assert page.has_content?(Time.zone.parse(@edition2_content_update_event_1["created_at"]).to_fs(:govuk_date))
-          assert page.has_content?("Content block updated by User 2")
-          assert page.has_content?("Email address updated")
+          within page.all(".action-content-block-update")[1] do
+            assert page.has_content?(Time.zone.parse(@edition2_content_update_event_1["created_at"]).to_fs(:govuk_date))
+            assert page.has_content?("Content block updated by User 2")
+            assert page.has_content?("Email address updated")
+          end
         end
       end
 
       click_on "Edition 1"
       within "#version1" do
-        within ".action-content-block-update" do
-          assert page.has_content?(Time.zone.parse(@edition1_content_update_event["created_at"]).to_fs(:govuk_date))
-          assert page.has_content?("Content block updated by User 1")
-          assert page.has_content?("Email address updated")
+        within ".collapse.in" do
+          within ".action-content-block-update" do
+            assert page.has_content?(Time.zone.parse(@edition1_content_update_event["created_at"]).to_fs(:govuk_date))
+            assert page.has_content?("Content block updated by User 1")
+            assert page.has_content?("Email address updated")
+          end
         end
       end
     end
