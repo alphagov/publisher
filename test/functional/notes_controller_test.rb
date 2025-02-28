@@ -49,6 +49,69 @@ class NotesControllerTest < ActionController::TestCase
       end
     end
 
+    context "when an important note is provided" do
+      should "confirm the note was successfully recorded" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: @note_text,
+               },
+             }
+
+        @edition.reload
+
+        assert_equal(@note_text, @edition.important_note.comment)
+        assert_redirected_to history_edition_path(@edition)
+        assert_includes flash[:success], "Note recorded"
+      end
+
+      should "resolve important note if an empty note is saved, when an important note is already present" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: @note_text,
+               },
+             }
+
+        @edition.reload
+
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: "",
+               },
+             }
+
+        @edition.reload
+
+        # assert_equal("", @edition.important_note&.comment)
+        assert @edition.important_note.nil?
+        assert_redirected_to history_edition_path(@edition)
+        assert_includes flash[:success], "Note resolved"
+      end
+
+      should "redirect to edit page if user saves an empty note, when there's no important note on the document already" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: "",
+               },
+             }
+
+        @edition.reload
+
+        assert_redirected_to history_edition_path(@edition)
+      end
+    end
+
     context "Welsh editors" do
       setup do
         login_as_welsh_editor

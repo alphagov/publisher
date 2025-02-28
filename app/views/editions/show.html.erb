@@ -23,6 +23,9 @@
     <%= render "govuk_publishing_components/components/summary_list", {
       items: document_summary_items(@resource),
     } %>
+    <% if @edition.important_note %>
+      <%= render partial: "important_note" %>
+    <% end %>
   </div>
 
   <% if @edition.in_review? && current_user.has_editor_permissions?(@edition) %>
