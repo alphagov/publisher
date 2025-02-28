@@ -14,6 +14,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
     WebMock.reset!
     stub_any_publishing_api_put_content
     stub_any_publishing_api_publish
+    DowntimeRemover.stubs(:perform_async)
   end
 
   test "Scheduling new downtime" do
