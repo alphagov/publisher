@@ -43,7 +43,7 @@ module ActionHelper
       requester = action.requester ? action.requester.name : "GOV.UK Bot"
 
       item = [
-        sanitize("<div class='heading'>
+        sanitize("<div class='action--#{action.request_type}__heading'>
           <time class='govuk-body' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
           <p class='govuk-body govuk-!-font-weight-bold'>#{action.to_s} by #{requester}</p>
         </div>")
@@ -62,15 +62,15 @@ module ActionHelper
 
         if warning
           item << sanitize(
-            "<div class='content'>
+            "<div class='action--#{action.request_type}__content'>
               #{warning}
-              <div class='#{action.request_type}'>#{comment}</div>
+              <div class='action--#{action.request_type}__comment'>#{comment}</div>
             </div>"
           )
         else
           item << sanitize(
-            "<div class='content'>
-              <div class='#{action.request_type}'>#{comment}</div>
+            "<div class='action--#{action.request_type}__content'>
+              <div class='action--#{action.request_type}__comment'>#{comment}</div>
             </div>"
           )
         end
