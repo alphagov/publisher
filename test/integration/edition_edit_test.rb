@@ -144,6 +144,10 @@ class EditionEditTest < IntegrationTest
       assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
     end
 
+    should "display the accordion section headers" do
+      assert page.has_css?(".govuk-accordion__section-header h2", text: "Edition 1")
+    end
+
     context "Edition displays the correct data for actions" do
       setup do
         user_1 = FactoryBot.create(:user, name: "Steve Ogrizovic")
@@ -168,54 +172,93 @@ class EditionEditTest < IntegrationTest
       end
 
       should "display 'Assign' action" do
-        assert page.has_css?("time", text: "3:41pm, 24 February 2024")
-        assert page.has_text?("Assign by Steve Ogrizovic")
-        assert page.has_text?("Assigned to me")
+        within :css, ".action--assign__heading" do
+          assert page.has_css?("time", text: "3:41pm, 24 February 2024")
+          assert page.has_text?("Assign by Steve Ogrizovic")
+        end
+
+        within :css, ".action--assign__comment" do
+          assert page.has_text?("Assigned to me")
+        end
       end
 
       should "display 'Note' action" do
-        assert page.has_css?("time", text: "10:30am, 1 March 2024")
-        assert page.has_text?("Note by David Phillips")
-        assert page.has_text?("This is a note")
+        within :css, ".action--note__heading" do
+          assert page.has_css?("time", text: "10:30am, 1 March 2024")
+          assert page.has_text?("Note by David Phillips")
+        end
+
+        within :css, ".action--note__content" do
+          assert page.has_text?("This is a note")
+        end
       end
 
       should "display 'Request review' action" do
-        assert page.has_css?("time", text: "5:23pm, 2 April 2024")
-        assert page.has_text?("Request review by Greg Downs")
-        assert page.has_text?("Requesting review")
+        within :css, ".action--request_review__heading" do
+          assert page.has_css?("time", text: "5:23pm, 2 April 2024")
+          assert page.has_text?("Request review by Greg Downs")
+        end
+
+        within :css, ".action--request_review__content" do
+          assert page.has_text?("Requesting review")
+        end
       end
 
       should "display 'Send fact check' action" do
-        assert page.has_css?("time", text: "6:12pm, 16 May 2024")
-        assert page.has_text?("Send fact check by Lloyd McGrath")
-        assert page.has_text?("Fact check requested")
+        within :css, ".action--send_fact_check__heading" do
+          assert page.has_css?("time", text: "6:12pm, 16 May 2024")
+          assert page.has_text?("Send fact check by Lloyd McGrath")
+        end
+
+        within :css, ".action--send_fact_check__content" do
+          assert page.has_text?("Fact check requested")
+        end
       end
 
       should "display 'Receive fact check' action" do
-        assert page.has_css?("time", text: "8:32am, 6 June 2024")
-        assert page.has_text?("Receive fact check by GOV.UK Bot")
-        assert page.has_text?("We’re happy for you to publish.")
-        assert page.has_css?("div.js-hidden", text: "Reply and confirm the content is correct.")
-        assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
+        within :css, ".action--receive_fact_check__heading" do
+          assert page.has_css?("time", text: "8:32am, 6 June 2024")
+          assert page.has_text?("Receive fact check by GOV.UK Bot")
+        end
+
+        within :css, ".action--receive_fact_check__content" do
+          assert page.has_text?("We’re happy for you to publish.")
+          assert page.has_css?("div.js-hidden", text: "Reply and confirm the content is correct.")
+          assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
+        end
       end
 
       should "display 'Request amendments' action" do
-        assert page.has_css?("time", text: "10:56am, 27 June 2024")
-        assert page.has_text?("Request amendments by Brian Kilcline")
-        assert page.has_text?("Requesting amendments")
+        within :css, ".action--request_amendments__heading" do
+          assert page.has_css?("time", text: "10:56am, 27 June 2024")
+          assert page.has_text?("Request amendments by Brian Kilcline")
+        end
+
+        within :css, ".action--request_amendments__content" do
+          assert page.has_text?("Requesting amendments")
+        end
       end
 
       should "display 'Approve review' action" do
-        assert page.has_css?("time", text: "7:31pm, 5 July 2024")
-        assert page.has_text?("Approve review by Trevor Peake")
-        assert page.has_text?("Review approved")
+        within :css, ".action--approve_review__heading" do
+          assert page.has_css?("time", text: "7:31pm, 5 July 2024")
+          assert page.has_text?("Approve review by Trevor Peake")
+        end
+
+        within :css, ".action--approve_review__content" do
+          assert page.has_text?("Review approved")
+        end
       end
 
       should "display 'Content block update' action" do
-        assert page.has_css?("time", text: "3:07pm, 22 August 2024")
-        assert page.has_text?("Content block update by Dave Bennett")
+        within :css, ".action--content_block_update__heading" do
+          assert page.has_css?("time", text: "3:07pm, 22 August 2024")
+          assert page.has_text?("Content block update by Dave Bennett")
+        end
         # TODO: This isn't working as it should - I guess it needs to be stubbed in the setup
-        # assert page.has_link?("View in Content Block Manager")
+        # within :css, ".action--content_block_update__content" do
+          # assert page.has_link?("View in Content Block Manager")
+        # end
       end
     end
   end
