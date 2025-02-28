@@ -21,6 +21,10 @@ FactoryBot.define do
     trait :welsh_editor do
       permissions { %w[welsh_editor signin] }
     end
+
+    trait :departmental_editor do
+      permissions { %w[departmental_editor signin] }
+    end
   end
 
   trait :homepage_editor do
