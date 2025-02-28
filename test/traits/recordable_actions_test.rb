@@ -24,7 +24,7 @@ class RecordableActionsTest < ActiveSupport::TestCase
     end
 
     it "returns nil when there are no published actions" do
-      assert_equal nil, object_under_test.published_by
+      assert_nil object_under_test.published_by
     end
   end
 
@@ -41,7 +41,7 @@ class RecordableActionsTest < ActiveSupport::TestCase
     end
 
     it "returns nil when there are no published actions" do
-      assert_equal nil, object_under_test.published_at
+      assert_nil object_under_test.published_at
     end
   end
 
@@ -60,14 +60,14 @@ class RecordableActionsTest < ActiveSupport::TestCase
     it "returns nil when there are no subsequent editions" do
       object_under_test.subsequent_siblings = []
 
-      assert_equal nil, object_under_test.superseded_at
+      assert_nil object_under_test.superseded_at
     end
 
     it "returns nil when the first subsequent edition is not published" do
       unpublished_edition = stub("Edition", published_at: nil)
       object_under_test.subsequent_siblings = [unpublished_edition]
 
-      assert_equal nil, object_under_test.superseded_at
+      assert_nil object_under_test.superseded_at
     end
   end
 end
