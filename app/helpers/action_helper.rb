@@ -43,7 +43,7 @@ module ActionHelper
       requester = action.requester ? action.requester.name : "GOV.UK Bot"
 
       item = [
-        sanitize("<div class='heading'>
+        sanitize("<div class='action--#{action.request_type}__heading'>
           <time class='govuk-body' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
           <p class='govuk-body govuk-!-font-weight-bold'>#{action.to_s} by #{requester}</p>
         </div>")
@@ -60,17 +60,19 @@ module ActionHelper
           text: action_note(action)
         }
 
+        classname = action.request_type == "action--#{action.request_type}__commment receive_fact_check" ? "govuk-!-text-break-word govuk-tag--light-blue" : "action--#{action.request_type}__commment"
+
         if warning
           item << sanitize(
-            "<div class='content'>
+            "<div class='action--#{action.request_type}__content'>
               #{warning}
-              <div class='#{action.request_type}'>#{comment}</div>
+              <div class='#{classname}'>#{comment}</div>
             </div>"
           )
         else
           item << sanitize(
-            "<div class='content'>
-              <div class='#{action.request_type}'>#{comment}</div>
+            "<div class='action--#{action.request_type}__content'>
+              <div class='#{classname}'>#{comment}</div>
             </div>"
           )
         end
@@ -157,7 +159,7 @@ module ActionHelper
     unless email_parts.empty?
       formatted_email_parts << tag.div(
         format_and_auto_link_plain_text(email_parts.join("")),
-        class: "js-hidden",
+        class: "action--receive_fact_check--earlier",
       )
     end
 
