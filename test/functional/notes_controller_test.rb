@@ -49,8 +49,8 @@ class NotesControllerTest < ActionController::TestCase
       end
     end
 
-    context "when an important note is provided" do
-      should "confirm the note was successfully recorded" do
+    context "when an Important note is provided" do
+      should "show 'Note recorded' and save a completed note" do
         post :create,
              params: {
                edition_id: @edition.id,
@@ -67,7 +67,51 @@ class NotesControllerTest < ActionController::TestCase
         assert_includes flash[:success], "Note recorded"
       end
 
-      should "resolve important note if an empty note is saved, when an important note is already present" do
+      should "show 'Note resolved' if a parent note exists and then an empty note is saved" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: "Parent note",
+               },
+             }
+
+        @edition.reload
+
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: "",
+               },
+             }
+        @edition.reload
+
+        assert_nil(@edition.important_note)
+        assert_redirected_to history_edition_path(@edition)
+        assert_includes flash[:success], "Note resolved"
+      end
+
+      should "show no flash message if no parent note exists and then an empty note is saved" do
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "important_note",
+                 comment: "",
+               },
+             }
+
+        assert_nil(@edition.important_note)
+        assert_redirected_to history_edition_path(@edition)
+        assert flash.empty?, "Expected no flash message, but found: #{flash.inspect}"
+      end
+
+      should "show 'Note failed to save' if an error occurs while saving the Important note" do
+        @user.stubs(:record_note).with(@edition, @note_text, "important_note").returns(false)
+
         post :create,
              params: {
                edition_id: @edition.id,
@@ -79,36 +123,8 @@ class NotesControllerTest < ActionController::TestCase
 
         @edition.reload
 
-        post :create,
-             params: {
-               edition_id: @edition.id,
-               note: {
-                 type: "important_note",
-                 comment: "",
-               },
-             }
-
-        @edition.reload
-
-        # assert_equal("", @edition.important_note&.comment)
-        assert @edition.important_note.nil?
-        assert_redirected_to history_edition_path(@edition)
-        assert_includes flash[:success], "Note resolved"
-      end
-
-      should "redirect to edit page if user saves an empty note, when there's no important note on the document already" do
-        post :create,
-             params: {
-               edition_id: @edition.id,
-               note: {
-                 type: "important_note",
-                 comment: "",
-               },
-             }
-
-        @edition.reload
-
-        assert_redirected_to history_edition_path(@edition)
+        assert_redirected_to history_update_important_note_edition_path(@edition)
+        assert_includes flash[:danger], "Note failed to save"
       end
     end
 

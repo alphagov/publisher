@@ -65,8 +65,10 @@ class EditionEditTest < IntegrationTest
       create_important_note_for_edition(@draft_edition, note_text)
       visit edition_path(@draft_edition)
 
-      assert page.has_text?("Important")
-      assert page.has_text?(note_text)
+      within :css, ".govuk-notification-banner" do
+        assert page.has_text?("Important")
+        assert page.has_text?(note_text)
+      end
     end
 
     should "display only the most recent important note at the top" do
@@ -210,6 +212,7 @@ class EditionEditTest < IntegrationTest
 
       assert page.has_text?("Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.")
       assert page.has_text?("Each edition can have only one important note at a time.")
+      assert page.has_text?("To delete the important note, clear any comments and select ‘Save’.")
 
       within :css, ".gem-c-textarea" do
         assert page.has_css?("label", text: "Important note")

@@ -9,6 +9,9 @@
       Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.
       Each edition can have only one important note at a time.
     </p>
+    <p class="govuk-body">
+      To delete the important note, clear any comments and select ‘Save’.
+    </p>
 
     <%= form_for(:note, :url=> notes_path) do %>
       <%= hidden_field_tag :edition_id, @edition.id %>
