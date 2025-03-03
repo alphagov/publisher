@@ -7,8 +7,15 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
   }
 
   HistoryAndNotes.prototype.init = function () {
-    console.log("HistoryAndNotes init!")
-    console.log("Module: ", this.$module)
+    const actions = this.$module.querySelectorAll('li')
+
+    actions.forEach(element => {
+      let commentEarlier = element.querySelector('.action--receive_fact_check--earlier') || null
+
+      if (commentEarlier) {
+        commentEarlier.classList.add('govuk-!-display-none')
+      }
+    });
   }
 
   Modules.HistoryAndNotes = HistoryAndNotes
