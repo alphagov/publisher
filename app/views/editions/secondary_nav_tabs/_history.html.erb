@@ -9,6 +9,7 @@
     } %>
 
     <%= render "govuk_publishing_components/components/accordion", {
+      data_attributes: {module: "HistoryAndNotes"},
       items: @resource.history.map do |edition|
         {
           heading: {
