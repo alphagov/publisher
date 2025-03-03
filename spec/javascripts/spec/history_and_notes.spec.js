@@ -49,7 +49,7 @@ describe('History and Notes component', function () {
   })
 
   describe('"Receive fact check" actions', function () {
-    it('should hide "history__action--receive_fact_check--earlier" sections where they exist', function () {
+    it('should hide "action--receive_fact_check--earlier" sections where they exist', function () {
       const actions = module.querySelectorAll("li")
 
       expect(actions[0].querySelector('.action--receive_fact_check--earlier')).toBe(null)
@@ -57,12 +57,28 @@ describe('History and Notes component', function () {
       expect(actions[2].querySelector('.action--receive_fact_check--earlier').classList.contains("govuk-!-display-none")).toBe(true)
     })
 
-    xit('should display a "Show earlier messages" link where there is a hidden section', function () {
-      expect(1).toEqual(1)
+    it('should display a "Show earlier messages" link where there is a hidden section', function () {
+      const actions = module.querySelectorAll("li")
+
+      expect(actions[0].querySelector('a')).toBe(null)
+      expect(actions[1].querySelector('a')).toBe(null)
+      expect(actions[2].querySelector('a').text).toEqual("Show earlier messages")
     })
 
-    xit('should toggle the display of the hidden section when the "Show earlier messages" link is clicked', function () {
-      expect(1).toEqual(1)
+    it('should toggle the display of the hidden section when the "Show earlier messages" link is clicked', function () {
+      const action = module.querySelectorAll("li")[2]
+      const toggle = action.querySelector('a')
+      let click = new Event('click')
+
+      toggle.dispatchEvent(click)
+
+      expect(action.querySelector('.action--receive_fact_check--earlier').classList.contains("govuk-!-display-none")).toBe(false)
+      expect(toggle.text).toEqual("Hide earlier messages")
+
+      toggle.dispatchEvent(click)
+
+      expect(action.querySelector('.action--receive_fact_check--earlier').classList.contains("govuk-!-display-none")).toBe(true)
+      expect(toggle.text).toEqual("Show earlier messages")
     })
   })
 })
