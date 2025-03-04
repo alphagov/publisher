@@ -26,6 +26,9 @@ jobs:
       - name: Setup Postgres
         id: setup-postgres
         uses: alphagov/govuk-infrastructure/.github/actions/setup-postgres@main
+        with:
+          POSTGRES_IMAGE_TAG: 16
+          POSTGRES_DB: publisher_test
 
       - name: Setup Redis
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
@@ -57,10 +60,14 @@ jobs:
       - name: Initialize database
         env:
           RAILS_ENV: test
+          TEST_DATABASE_URL: ${{ steps.setup-postgres.outputs.db-url }}
+          TEST_MONGODB_URI: mongodb://localhost:27017/publisher_test
         run: bundle exec rails db:setup
 
       - name: Run Minitest
         env:
           RAILS_ENV: test
+          TEST_DATABASE_URL: ${{ steps.setup-postgres.outputs.db-url }}
+          TEST_MONGODB_URI: mongodb://localhost:27017/publisher_test
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test
