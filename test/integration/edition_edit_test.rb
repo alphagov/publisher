@@ -763,10 +763,11 @@ class EditionEditTest < IntegrationTest
         published_edition = FactoryBot.create(
           :answer_edition,
           state: "published",
+          slug: "a-test-slug",
         )
         visit edition_path(published_edition)
 
-        assert page.has_link?("View on GOV.UK (opens in new tab)")
+        assert page.has_link?("View on GOV.UK (opens in new tab)", href: "#{Plek.website_root}/#{published_edition.slug}")
       end
     end
 

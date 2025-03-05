@@ -10,7 +10,13 @@ module EditionsSidebarButtonsHelper
                    link_to("Edit latest edition", edition_path(edition.in_progress_sibling), class: "govuk-link")
                  end
     end
-    buttons << link_to("View on GOV.UK (opens in new tab)", view_homepage_path, rel: "noreferrer noopener", target: "_blank", class: "govuk-link")
+    buttons << link_to(
+      "View on GOV.UK (opens in new tab)",
+      "#{Plek.website_root}/#{edition.slug}",
+      rel: "noreferrer noopener",
+      target: "_blank",
+      class: "govuk-link",
+    )
   end
 
   def non_published_sidebar_buttons(edition)
