@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "mermaid": "11.4.1",
-    "paste-html-to-govspeak": "^0.4.0"
+    "paste-html-to-govspeak": "^0.5.0"
   },
   "resolutions": {
     "stylelint/strip-ansi": "6.0.1",
