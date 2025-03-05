@@ -5,12 +5,7 @@
 
   <div class="govuk-grid-column-one-third options-sidebar">
     <div class="sidebar-components">
-      <%= render "govuk_publishing_components/components/heading", {
-        text: "Options",
-        heading_level: 3,
-        font_size: "s",
-        padding: true,
-      } %>
+      <%= sidebar_options_heading %>
 
       <%= render "govuk_publishing_components/components/list", {
         items: [

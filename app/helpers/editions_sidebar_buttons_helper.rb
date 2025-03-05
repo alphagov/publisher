@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 module EditionsSidebarButtonsHelper
+  def sidebar_options_heading
+    render "govuk_publishing_components/components/heading", {
+      text: "Options",
+      heading_level: 3,
+      font_size: "s",
+      padding: true,
+    }
+  end
+
   def published_sidebar_buttons(edition)
     buttons = []
     if current_user.has_editor_permissions?(edition)
