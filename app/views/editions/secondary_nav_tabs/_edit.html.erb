@@ -21,10 +21,7 @@
       <div class="sidebar-components">
         <%= sidebar_options_heading %>
 
-        <%= render "govuk_publishing_components/components/list", {
-          extra_spacing: true,
-          items: published_sidebar_buttons(@resource),
-        } %>
+        <%= sidebar_items_list(published_sidebar_buttons(@resource)) %>
       </div>
     </div>
   <% else %>
@@ -44,10 +41,7 @@
         <div class="sidebar-components">
           <%= sidebar_options_heading %>
 
-          <%= render "govuk_publishing_components/components/list", {
-            extra_spacing: true,
-            items: non_published_sidebar_buttons(@resource),
-          } %>
+          <%= sidebar_items_list(non_published_sidebar_buttons(@resource)) %>
         </div>
       </div>
     <% end %>

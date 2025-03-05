@@ -10,6 +10,13 @@ module EditionsSidebarButtonsHelper
     }
   end
 
+  def sidebar_items_list(items)
+    render "govuk_publishing_components/components/list", {
+      extra_spacing: true,
+      items: items,
+    }
+  end
+
   def published_sidebar_buttons(edition)
     buttons = []
     if current_user.has_editor_permissions?(edition)
