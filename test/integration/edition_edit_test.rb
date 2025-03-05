@@ -249,9 +249,7 @@ class EditionEditTest < IntegrationTest
       # New asserts go here
     end
 
-    # TODO: Test to be switched on when the "Create new edition" functionality has been implemented.
     should "not be carried forward to new editions" do
-      skip "Until this functionality is complete: #601 - Edit page for Published edition (answer and help)"
       note_text = "This important note should not appear on a new edition."
       create_published_edition
       create_important_note_for_edition(@published_edition, note_text)

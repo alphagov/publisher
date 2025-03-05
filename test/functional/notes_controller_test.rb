@@ -64,7 +64,7 @@ class NotesControllerTest < ActionController::TestCase
 
         assert_equal(@note_text, @edition.important_note.comment)
         assert_redirected_to history_edition_path(@edition)
-        assert_includes flash[:success], "Note recorded"
+        assert_equal "Note recorded", flash[:success]
       end
 
       should "show 'Note resolved' if a parent note exists and then an empty note is saved" do
@@ -91,7 +91,7 @@ class NotesControllerTest < ActionController::TestCase
 
         assert_nil(@edition.important_note)
         assert_redirected_to history_edition_path(@edition)
-        assert_includes flash[:success], "Note resolved"
+        assert_equal "Note resolved", flash[:success]
       end
 
       should "show no flash message if no parent note exists and then an empty note is saved" do
@@ -124,7 +124,7 @@ class NotesControllerTest < ActionController::TestCase
         @edition.reload
 
         assert_redirected_to history_update_important_note_edition_path(@edition)
-        assert_includes flash[:danger], "Note failed to save"
+        assert_equal "Note failed to save", flash[:danger]
       end
     end
 
