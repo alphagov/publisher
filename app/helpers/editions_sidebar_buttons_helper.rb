@@ -17,6 +17,16 @@ module EditionsSidebarButtonsHelper
     }
   end
 
+  def edit_assignee_buttons(edition)
+    [
+      (render "govuk_publishing_components/components/button", {
+        text: "Save",
+        margin_bottom: 3,
+      }),
+      link_to("Cancel", edition_path(edition), class: "govuk-link govuk-link--no-visited-state"),
+    ]
+  end
+
   def published_sidebar_buttons(edition)
     buttons = []
     if current_user.has_editor_permissions?(edition)

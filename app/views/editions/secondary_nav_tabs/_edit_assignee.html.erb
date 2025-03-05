@@ -17,15 +17,7 @@
       <div class="sidebar-components">
         <%= sidebar_options_heading %>
 
-        <%= render "govuk_publishing_components/components/list", {
-          items: [
-            (render "govuk_publishing_components/components/button", {
-              text: "Save",
-              margin_bottom: 3,
-            }),
-            link_to("Cancel", edition_path(@resource), class: "govuk-link govuk-link--no-visited-state"),
-          ],
-        } %>
+        <%= sidebar_items_list(edit_assignee_buttons) %>
       </div>
     </div>
   </div>
