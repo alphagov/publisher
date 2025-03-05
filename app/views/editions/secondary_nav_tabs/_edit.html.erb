@@ -25,7 +25,7 @@
       </div>
     </div>
   <% else %>
-    <%= form_for @resource, as: :edition, url: edition_path(@resource) do |f| %>
+    <%= form_for @resource, as: :edition, url: edition_path(@resource) do %>
       <div class="govuk-grid-column-two-thirds">
         <%= render partial: "editions/secondary_nav_tabs/edit/draft/common_fields", locals: { edition: @resource } %>
 
