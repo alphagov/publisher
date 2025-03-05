@@ -27,6 +27,7 @@
         } %>
 
         <%= render "govuk_publishing_components/components/list", {
+          extra_spacing: true,
           items: published_sidebar_buttons(@resource),
         } %>
       </div>
@@ -54,6 +55,7 @@
           } %>
 
           <%= render "govuk_publishing_components/components/list", {
+            extra_spacing: true,
             items: non_published_sidebar_buttons(@resource),
           } %>
         </div>
