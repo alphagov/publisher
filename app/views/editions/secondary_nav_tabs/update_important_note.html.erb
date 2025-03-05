@@ -1,0 +1,38 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Update important note" %>
+<% content_for :title, "Update important note" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+      Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.
+      Each edition can have only one important note at a time.
+    </p>
+    <p class="govuk-body">
+      To delete the important note, clear any comments and select ‘Save’.
+    </p>
+
+    <%= form_for(:note, :url=> notes_path) do %>
+      <%= hidden_field_tag :edition_id, @edition.id %>
+      <%= hidden_field_tag "note[type]", Action::IMPORTANT_NOTE %>
+
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Important note",
+        },
+        name: "note[comment]",
+        rows: 14,
+        value: @edition.important_note&.comment,
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+        } %>
+        <%= link_to("Cancel", history_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>

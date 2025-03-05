@@ -15,11 +15,9 @@ class EditionEditTest < IntegrationTest
   end
 
   context "edit page" do
-    setup do
-      visit_published_edition
-    end
-
     should "show all the tabs when user has required permission and edition is published" do
+      visit_published_edition
+
       assert page.has_text?("Edit")
       assert page.has_text?("Tagging")
       assert page.has_text?("Metadata")
@@ -30,6 +28,8 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show document summary and title" do
+      visit_published_edition
+
       assert page.has_title?("Edit page title")
 
       row = find_all(".govuk-summary-list__row")
@@ -42,6 +42,8 @@ class EditionEditTest < IntegrationTest
     end
 
     should "indicate when an edition does not have an assignee" do
+      visit_published_edition
+
       within all(".govuk-summary-list__row")[0] do
         assert_selector(".govuk-summary-list__key", text: "Assigned to")
         assert_selector(".govuk-summary-list__value", text: "None")
@@ -55,6 +57,32 @@ class EditionEditTest < IntegrationTest
         assert_selector(".govuk-summary-list__key", text: "Assigned to")
         assert_selector(".govuk-summary-list__value", text: @draft_edition.assignee)
       end
+    end
+
+    should "display the important note if an important note exists" do
+      note_text = "This is really really urgent!"
+      create_draft_edition
+      create_important_note_for_edition(@draft_edition, note_text)
+      visit edition_path(@draft_edition)
+
+      within :css, ".govuk-notification-banner" do
+        assert page.has_text?("Important")
+        assert page.has_text?(note_text)
+      end
+    end
+
+    should "display only the most recent important note at the top" do
+      first_note = "This is really really urgent!"
+      second_note = "This should display only!"
+      create_draft_edition
+      create_important_note_for_edition(@draft_edition, first_note)
+      create_important_note_for_edition(@draft_edition, second_note)
+
+      visit edition_path(@draft_edition)
+
+      assert page.has_text?("Important")
+      assert page.has_text?(second_note)
+      assert page.has_no_text?(first_note)
     end
   end
 
@@ -134,6 +162,16 @@ class EditionEditTest < IntegrationTest
 
       assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
     end
+
+    should "show an 'Update important note' button" do
+      assert page.has_link?("Update important note")
+    end
+
+    should "navigate to the 'Update important note' page when the button is clicked" do
+      click_link("Update important note")
+
+      assert_current_path history_update_important_note_edition_path(@draft_edition.id)
+    end
   end
 
   context "Add edition note page" do
@@ -159,6 +197,68 @@ class EditionEditTest < IntegrationTest
 
       assert page.has_button?("Save")
       assert page.has_link?("Cancel")
+    end
+  end
+
+  context "Update important note page" do
+    should "render the 'Update important note' page" do
+      create_draft_edition
+      visit history_update_important_note_edition_path(@draft_edition)
+
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Update important note")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Add important notes that anyone who works on this edition needs to see, eg “(Doesn’t) need fact check, don’t publish.”.")
+      assert page.has_text?("Each edition can have only one important note at a time.")
+      assert page.has_text?("To delete the important note, clear any comments and select ‘Save’.")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("label", text: "Important note")
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "pre-populate with the existing note" do
+      note_text = "This is really really urgent!"
+      create_draft_edition
+      create_important_note_for_edition(@draft_edition, note_text)
+      visit history_update_important_note_edition_path(@draft_edition)
+
+      assert page.has_field?("Important note", with: note_text)
+    end
+
+    # TODO: Test to be switched on when the Edition notes history is implemented.
+    should "not show important notes in edition history" do
+      skip "Until this functionality is complete: #603 - History and notes tab (excluding sidebar) [Edit page]"
+      note_text = "This is really really urgent!"
+      note_text_2 = "Another note"
+      note_text_3 = "Yet another note"
+      create_draft_edition
+      create_important_note_for_edition(@draft_edition, note_text)
+      create_important_note_for_edition(@draft_edition, note_text_2)
+      create_important_note_for_edition(@draft_edition, note_text_3)
+      visit edition_path(@draft_edition)
+      click_link("History and notes")
+
+      # TODO: Expand 'All Notes' sections! Currently in progress.
+      # New asserts go here
+    end
+
+    should "not be carried forward to new editions" do
+      note_text = "This important note should not appear on a new edition."
+      create_published_edition
+      create_important_note_for_edition(@published_edition, note_text)
+      visit edition_path(@published_edition)
+
+      assert page.has_content? note_text
+
+      click_on "Create new edition"
+      assert page.has_no_text?("Important note")
     end
   end
 
@@ -974,8 +1074,12 @@ class EditionEditTest < IntegrationTest
 
 private
 
-  def visit_draft_edition
+  def create_draft_edition
     @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+  end
+
+  def visit_draft_edition
+    create_draft_edition
     visit edition_path(@draft_edition)
   end
 
@@ -1048,7 +1152,6 @@ private
       state: "published",
       slug: "can-i-get-a-driving-licence",
     )
-    visit edition_path(@published_edition)
   end
 
   def visit_retired_edition_in_published
@@ -1077,5 +1180,15 @@ private
       change_note: "The change note",
     )
     visit edition_path(published_edition)
+  end
+
+  def create_important_note_for_edition(edition, note_text)
+    FactoryBot.create(
+      :action,
+      requester: @govuk_editor,
+      request_type: Action::IMPORTANT_NOTE,
+      edition: edition,
+      comment: note_text,
+    )
   end
 end

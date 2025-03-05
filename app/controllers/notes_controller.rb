@@ -18,13 +18,8 @@ class NotesController < InheritedResources::Base
       redirect_to history_edition_path(parent)
     else
       flash[:danger] = "Note failed to save"
-      redirect_to history_add_edition_note_edition_path(resource)
+      redirect_to type == Action::IMPORTANT_NOTE ? history_update_important_note_edition_path(resource) : history_add_edition_note_edition_path(resource)
     end
-  end
-
-  def resolve
-    resolve_important_note
-    redirect_to history_edition_path(parent)
   end
 
   def resource
@@ -38,5 +33,6 @@ private
       current_user.resolve_important_note(parent)
       flash[:success] = "Note resolved"
     end
+    redirect_to history_edition_path(parent)
   end
 end
