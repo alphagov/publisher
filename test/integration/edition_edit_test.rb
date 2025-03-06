@@ -833,6 +833,68 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "No changes needed link" do
+      context "edition is not in review" do
+        setup do
+          visit_draft_edition
+        end
+
+        should "not show the 'No changes needed' link" do
+          assert page.has_no_link?("No changes needed")
+        end
+      end
+
+      context "edition is in review" do
+        context "user does not have the required permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+          end
+
+          should "not show the 'No changes needed' link" do
+            assert page.has_no_link?("No changes needed")
+          end
+
+          should "not show 'No changes needed' link when user is a welsh editor and the edition is not welsh" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
+
+            assert page.has_no_link?("No changes needed")
+          end
+        end
+
+        context "user has the required permissions" do
+          context "current user is also the requester" do
+            setup do
+              login_as(@govuk_requester)
+              visit_in_review_edition
+            end
+
+            should "not show the 'No changes needed' link" do
+              assert page.has_no_link?("No changes needed")
+            end
+          end
+
+          context "current user is not the requester" do
+            setup do
+              login_as(@govuk_editor)
+              visit_in_review_edition
+            end
+
+            should "show the 'No changes needed' link" do
+              assert page.has_link?("No changes needed")
+            end
+
+            should "navigate to 'No changes needed' page when link is clicked" do
+              click_link("No changes needed")
+
+              assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
+            end
+          end
+        end
+      end
+    end
+
     context "edit assignee link" do
       context "user does not have required permissions" do
         setup do
