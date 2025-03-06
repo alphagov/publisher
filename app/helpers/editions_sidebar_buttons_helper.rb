@@ -1,6 +1,32 @@
 # frozen_string_literal: true
 
 module EditionsSidebarButtonsHelper
+  def sidebar_options_heading
+    render "govuk_publishing_components/components/heading", {
+      text: "Options",
+      heading_level: 3,
+      font_size: "s",
+      padding: true,
+    }
+  end
+
+  def sidebar_items_list(items)
+    render "govuk_publishing_components/components/list", {
+      extra_spacing: true,
+      items: items,
+    }
+  end
+
+  def edit_assignee_buttons(edition)
+    [
+      (render "govuk_publishing_components/components/button", {
+        text: "Save",
+        margin_bottom: 3,
+      }),
+      link_to("Cancel", edition_path(edition), class: "govuk-link govuk-link--no-visited-state"),
+    ]
+  end
+
   def published_sidebar_buttons(edition)
     buttons = []
     if current_user.has_editor_permissions?(edition)
@@ -10,7 +36,13 @@ module EditionsSidebarButtonsHelper
                    link_to("Edit latest edition", edition_path(edition.in_progress_sibling), class: "govuk-link")
                  end
     end
-    buttons << link_to("View on GOV.UK (opens in new tab)", view_homepage_path, rel: "noreferrer noopener", target: "_blank", class: "govuk-link")
+    buttons << link_to(
+      "View on GOV.UK (opens in new tab)",
+      "#{Plek.website_root}/#{edition.slug}",
+      rel: "noreferrer noopener",
+      target: "_blank",
+      class: "govuk-link",
+    )
   end
 
   def non_published_sidebar_buttons(edition)

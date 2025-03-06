@@ -7,6 +7,7 @@ class EditionsControllerTest < ActionController::TestCase
     test_strategy.switch!(:restrict_access_by_org, false)
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
+    UpdateWorker.stubs(:perform_async)
   end
 
   context "#template_folder_for" do
