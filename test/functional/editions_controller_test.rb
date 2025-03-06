@@ -153,6 +153,61 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#no_changes_needed" do
+    setup do
+      @requester = FactoryBot.create(:user, name: "Stub Requester")
+      @edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: Time.zone.now,
+      )
+    end
+
+    context "user has govuk_editor permission" do
+      should "update the edition status to 'ready' and save the comment" do
+        post :no_changes_needed, params: {
+          id: @edition.id,
+          comment: "Perfecto!",
+        }
+
+        assert_equal "2i approved", flash[:success]
+        @edition.reload
+        assert_equal "Perfecto!", @edition.latest_status_action.comment
+        assert_equal "ready", @edition.state
+      end
+
+      should "not update the edition state and render 'no_changes_needed' template with an error when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        post :no_changes_needed, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
+
+        assert_template "secondary_nav_tabs/no_changes_needed_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        @edition.reload
+        assert_equal "in_review", @edition.state
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        post :no_changes_needed, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show

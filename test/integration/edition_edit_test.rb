@@ -1073,6 +1073,22 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "No changes needed page" do
+    should "save comment to edition history" do
+      create_in_review_edition
+
+      visit no_changes_needed_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Approve 2i"
+
+      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:design_system_edit, false)
+      click_on "History and notes"
+      assert page.has_content?("Looks great")
+    end
+  end
+
 private
 
   def create_draft_edition
@@ -1105,14 +1121,18 @@ private
   end
 
   def visit_in_review_edition
+    create_in_review_edition
+
+    visit edition_path(@in_review_edition)
+  end
+
+  def create_in_review_edition
     @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
 
     @in_review_edition.actions.create!(
       request_type: Action::REQUEST_AMENDMENTS,
       requester_id: @govuk_requester.id,
     )
-
-    visit edition_path(@in_review_edition)
   end
 
   def visit_amends_needed_edition
