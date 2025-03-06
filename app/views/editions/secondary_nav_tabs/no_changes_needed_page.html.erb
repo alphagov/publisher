@@ -1,0 +1,26 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "No changes needed" %>
+<% content_for :title, "No changes needed" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(:edition, url: "#{edition_path}/no_changes_needed") do |f| %>
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Comment (optional)",
+        },
+        name: "comment",
+        rows: 14,
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Approve 2i",
+        } %>
+        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>
