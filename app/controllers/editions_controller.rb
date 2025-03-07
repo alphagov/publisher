@@ -92,7 +92,7 @@ class EditionsController < InheritedResources::Base
 
   def history
     artefact = @resource.artefact
-    @update_events = HostContentUpdateEvent.all_for_artefact(artefact)
+    @update_events = HostContentUpdateEvent.all_for_artefact(artefact) ? HostContentUpdateEvent.all_for_artefact(artefact) : []
     render action: "show"
   end
 
