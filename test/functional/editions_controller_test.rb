@@ -75,7 +75,7 @@ class EditionsControllerTest < ActionController::TestCase
       should "update the edition status to 'amends_needed' and save the comment" do
         post :request_amendments, params: {
           id: @edition.id,
-          amendment_comment: "This is a comment",
+          comment: "This is a comment",
         }
 
         assert_equal "2i amendments requested", flash[:success]

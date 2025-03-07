@@ -1135,6 +1135,22 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Request amendments page" do
+    should "save comment to edition history" do
+      create_in_review_edition
+
+      visit request_amendments_page_edition_path(@in_review_edition)
+      fill_in "Amendment details (optional)", with: "Please make these changes"
+      click_on "Request amendments"
+
+      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:design_system_edit, false)
+      click_on "History and notes"
+      assert page.has_content?("Please make these changes")
+    end
+  end
+
   context "No changes needed page" do
     should "save comment to edition history" do
       create_in_review_edition

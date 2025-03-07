@@ -85,7 +85,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def request_amendments
-    if request_amendments_for_edition(@resource, params[:amendment_comment])
+    if request_amendments_for_edition(@resource, params[:comment])
       flash.now[:success] = "2i amendments requested"
       render "show"
     else
