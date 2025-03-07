@@ -1,0 +1,23 @@
+<%# locals: (form_url:, comment_label_text:, submit_button_text:) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(:edition, url: form_url) do %>
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: comment_label_text,
+        },
+        name: "comment",
+        rows: 14,
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: submit_button_text,
+        } %>
+        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>
