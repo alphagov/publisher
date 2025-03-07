@@ -30,6 +30,7 @@ class EditionProgressor
       true
     else
       self.status_message = failure_message(action)
+      Rails.logger.warn "Unable to carry out action '#{action}' for edition #{edition.id}: #{status_message}"
       false
     end
   end

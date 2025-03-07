@@ -833,6 +833,68 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "No changes needed link" do
+      context "edition is not in review" do
+        setup do
+          visit_draft_edition
+        end
+
+        should "not show the 'No changes needed' link" do
+          assert page.has_no_link?("No changes needed")
+        end
+      end
+
+      context "edition is in review" do
+        context "user does not have the required permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+          end
+
+          should "not show the 'No changes needed' link" do
+            assert page.has_no_link?("No changes needed")
+          end
+
+          should "not show 'No changes needed' link when user is a welsh editor and the edition is not welsh" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
+
+            assert page.has_no_link?("No changes needed")
+          end
+        end
+
+        context "user has the required permissions" do
+          context "current user is also the requester" do
+            setup do
+              login_as(@govuk_requester)
+              visit_in_review_edition
+            end
+
+            should "not show the 'No changes needed' link" do
+              assert page.has_no_link?("No changes needed")
+            end
+          end
+
+          context "current user is not the requester" do
+            setup do
+              login_as(@govuk_editor)
+              visit_in_review_edition
+            end
+
+            should "show the 'No changes needed' link" do
+              assert page.has_link?("No changes needed")
+            end
+
+            should "navigate to 'No changes needed' page when link is clicked" do
+              click_link("No changes needed")
+
+              assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
+            end
+          end
+        end
+      end
+    end
+
     context "edit assignee link" do
       context "user does not have required permissions" do
         setup do
@@ -1073,6 +1135,74 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Request amendments page" do
+    should "save comment to edition history" do
+      create_in_review_edition
+
+      visit request_amendments_page_edition_path(@in_review_edition)
+      fill_in "Amendment details (optional)", with: "Please make these changes"
+      click_on "Request amendments"
+
+      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:design_system_edit, false)
+      click_on "History and notes"
+      assert page.has_content?("Please make these changes")
+    end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit request_amendments_page_edition_path(@in_review_edition)
+        fill_in "Amendment details (optional)", with: "Please make these changes"
+        click_on "Request amendments"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Please make these changes")
+      end
+    end
+  end
+
+  context "No changes needed page" do
+    should "save comment to edition history" do
+      create_in_review_edition
+
+      visit no_changes_needed_page_edition_path(@in_review_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Approve 2i"
+
+      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
+      test_strategy = Flipflop::FeatureSet.current.test!
+      test_strategy.switch!(:design_system_edit, false)
+      click_on "History and notes"
+      assert page.has_content?("Looks great")
+    end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit no_changes_needed_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "Great job!"
+        click_on "Approve 2i"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Great job!")
+      end
+    end
+  end
+
 private
 
   def create_draft_edition
@@ -1105,14 +1235,18 @@ private
   end
 
   def visit_in_review_edition
+    create_in_review_edition
+
+    visit edition_path(@in_review_edition)
+  end
+
+  def create_in_review_edition
     @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
 
     @in_review_edition.actions.create!(
       request_type: Action::REQUEST_AMENDMENTS,
       requester_id: @govuk_requester.id,
     )
-
-    visit edition_path(@in_review_edition)
   end
 
   def visit_amends_needed_edition
