@@ -1149,6 +1149,24 @@ class EditionEditTest < IntegrationTest
       click_on "History and notes"
       assert page.has_content?("Please make these changes")
     end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit request_amendments_page_edition_path(@in_review_edition)
+        fill_in "Amendment details (optional)", with: "Please make these changes"
+        click_on "Request amendments"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Please make these changes")
+      end
+    end
   end
 
   context "No changes needed page" do
@@ -1164,6 +1182,24 @@ class EditionEditTest < IntegrationTest
       test_strategy.switch!(:design_system_edit, false)
       click_on "History and notes"
       assert page.has_content?("Looks great")
+    end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+        login_as(@in_review_edition.latest_status_action.requester)
+
+        visit no_changes_needed_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "Great job!"
+        click_on "Approve 2i"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Great job!")
+      end
     end
   end
 
