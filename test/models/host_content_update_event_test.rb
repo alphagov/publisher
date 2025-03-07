@@ -145,6 +145,13 @@ class HostContentUpdateEventTest < ActiveSupport::TestCase
 
         assert_not event.is_for_edition?(edition)
       end
+
+      it "returns false if the edition was never published" do
+        edition.stubs(:published_at).returns(nil)
+        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at + 1.minute)
+
+        assert_not event.is_for_edition?(edition)
+      end
     end
   end
 
