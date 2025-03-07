@@ -84,7 +84,8 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "filter by 'assigned to'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      # reference: note_for_postgres_migration
+      assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to_id: anna.id)
       FactoryBot.create(:guide_edition)
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id).editions
@@ -94,7 +95,8 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "filter by 'not assigned'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      # reference: note_for_postgres_migration
+      FactoryBot.create(:guide_edition, assigned_to_id: anna.id)
       not_assigned = FactoryBot.create(:guide_edition)
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: "nobody").editions
@@ -104,7 +106,8 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "ignore invalid 'assigned to'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      # reference: note_for_postgres_migration
+      FactoryBot.create(:guide_edition, assigned_to_id: anna.id)
       FactoryBot.create(:guide_edition)
 
       filtered_editions =
@@ -287,5 +290,12 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal("All assignees", users[0][:text])
       assert_not_includes users.map { |user| user[:text] }, disabled_user.name
     end
+  end
+
+  def note_for_postgres_migration
+    # Temp-to-be-brought-back:
+    # Currently we are using assigned_to_id as a field to store the assigned_to_id
+    # to bypass the issue of having a belongs_to between a postgres table and a mongo table
+    # we will most likely bring back the belongs_to relationship once we move edition table to postgres.
   end
 end

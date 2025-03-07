@@ -9,7 +9,7 @@ class DowntimesHelperTest < ActionView::TestCase
     @edition_downtime = FactoryBot.create(:transaction_edition)
     @downtime = FactoryBot.create(
       :downtime,
-      artefact: @edition_downtime.artefact,
+      artefact_id: @edition_downtime.artefact.id,
       start_time: Time.zone.local(@next_year, 10, 10, 15),
       end_time: Time.zone.local(@next_year, 10, 11, 18),
     )
