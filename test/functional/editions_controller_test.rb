@@ -89,7 +89,6 @@ class EditionsControllerTest < ActionController::TestCase
 
         post :request_amendments, params: {
           id: @edition.id,
-          amendment_comment: "This is a comment",
         }
 
         assert_template "secondary_nav_tabs/request_amendments_page"
@@ -108,7 +107,6 @@ class EditionsControllerTest < ActionController::TestCase
       should "render an error message" do
         post :request_amendments, params: {
           id: @edition.id,
-          amendment_comment: "This is a comment",
         }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
