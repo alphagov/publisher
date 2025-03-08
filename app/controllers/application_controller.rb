@@ -65,6 +65,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user_accessibility_to_edition(edition)
-    render plain: "404 Not Found", status: :not_found unless edition.is_accessible_to?(current_user)
+    render html: "You do not have permission to access this page - please <a href='https://www.gov.uk/guidance/contact-the-government-digital-service/request-a-thing#change-govuk-content'>raise a content request</a> with GDS to get it updated.".html_safe, status: :not_found unless edition.is_accessible_to?(current_user)
   end
 end
