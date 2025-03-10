@@ -86,6 +86,10 @@ class EditionEditTest < IntegrationTest
       assert page.has_text?(second_note)
       assert page.has_no_text?(first_note)
     end
+
+    # TODO: should display the requester of the 2i review if the edition is in review
+    # TODO: This should be 'You've sent this edition to be reviewed' if requester == current user
+    # TODO: This should be '[Username] sent this edition to be reviewed' if requester != current user
   end
 
   context "edit assignee page" do
@@ -446,6 +450,44 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Send to 2i page" do
+    setup do
+      create_draft_edition
+      visit send_to_2i_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Send to 2i' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Send to 2i")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. If you’ve added a change note already, you do not need to add another one.")
+      assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Send to 2i")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to history and notes tab when Cancel button is pressed on Send to 2i page" do
+      click_link("Cancel")
+
+      assert_current_path history_edition_path(@draft_edition.id)
+    end
+
+    should "show success message and redirects back to the history and notes tab when Send to 2i button is pressed" do
+      fill_in "comment", with: "This is a note for 2i"
+      click_button "Send to 2i"
+
+      assert_current_path history_edition_path(@draft_edition.id)
+      assert page.has_text?("Sent to 2i")
+    end
+  end
+
   context "unpublish tab" do
     context "user does not have required permissions" do
       setup do
@@ -723,6 +765,11 @@ class EditionEditTest < IntegrationTest
         assert page.has_button?("Save")
       end
 
+      should "show 'Send to 2i' link as edition in draft state" do
+        click_link("History and notes")
+        assert page.has_link?("Send to 2i")
+      end
+
       should "show Title input box prefilled" do
         assert page.has_text?("Title")
         assert page.has_field?("edition[title]", with: "Edit page title")
@@ -783,6 +830,7 @@ class EditionEditTest < IntegrationTest
     end
 
     context "published edition" do
+      # TODO: Should we test for presence of send to 2i link.
       should "show common content-type fields" do
         published_edition = FactoryBot.create(
           :edition,
@@ -919,6 +967,7 @@ class EditionEditTest < IntegrationTest
       end
 
       context "user does not have editor permissions" do
+        # TODO? should we test for non-presence of send to 2i
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
           @published_edition = FactoryBot.create(

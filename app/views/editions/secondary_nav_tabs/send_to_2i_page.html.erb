@@ -1,0 +1,30 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Send to 2i" %>
+<% content_for :title, "Send to 2i" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+      Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card.
+      If you’ve added a change note already, you do not need to add another one.
+      <a target="_blank" rel="noopener noreferrer" href="https://gov-uk.atlassian.net/l/cp/dwn06raQ">Read guidance on writing good change notes (opens in new tab)</a>.
+    </p>
+
+    <%= form_for(:edition, url: "#{send_to_2i_edition_path(@edition)}") do %>
+      <%= hidden_field_tag :edition_id, @edition.id %>
+
+      <%= render "govuk_publishing_components/components/textarea", {
+        name: "comment",
+        rows: 14,
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Send to 2i",
+        } %>
+        <%= link_to("Cancel", history_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>
