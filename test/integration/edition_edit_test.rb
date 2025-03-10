@@ -86,6 +86,10 @@ class EditionEditTest < IntegrationTest
       assert page.has_text?(second_note)
       assert page.has_no_text?(first_note)
     end
+
+  # TODO: should display the requester of the 2i review if the edition is in review
+  # TODO: This should be 'You've sent this edition to be reviewed' if requester == current user
+  # TODO: This should be '[Username] sent this edition to be reviewed' if requester != current user
   end
 
   context "edit assignee page" do
@@ -711,6 +715,7 @@ class EditionEditTest < IntegrationTest
   end
 
   context "edit tab" do
+
     context "draft edition of a new publication" do
       setup do
         visit_draft_edition
@@ -721,6 +726,10 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Edit")
         end
         assert page.has_button?("Save")
+      end
+
+      should "show 'Send to 2i' link as edition in draft state" do
+        assert page.has_link?("Send to 2i")
       end
 
       should "show Title input box prefilled" do
