@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ContentWorkflowPresenterTest < ActiveSupport::TestCase
+class AllContentWorkflowPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
     transaction_edition = TransactionEdition.new(
       title: "Register to vote (armed forces)",
@@ -20,7 +20,7 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
 
     Edition.stubs(:published).returns([transaction_edition, guide_edition])
 
-    csv = ContentWorkflowPresenter.new(Edition.published).to_csv
+    csv = AllContentWorkflowPresenter.new(Edition.published).to_csv
     data = CSV.parse(csv, headers: true)
 
     assert_equal 10, data.length
@@ -33,6 +33,8 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
     assert_equal "Ray Khan", data.first["Current assignee"]
     assert_equal "1", data.first["Version number"]
     assert_equal "2016-01-07 17:41:57", data.first["Created at"]
+    assert_equal "2016-01-07", data.first["Date created"]
+    assert_equal "17:41", data.first["Time created"]
 
     assert_equal "The Queen's Awards for Enterprise", data[7]["Content title"]
     assert_equal "queens-awards-for-enterprise", data[7]["Content slug"]
@@ -43,6 +45,8 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
     assert_equal "Constance Cerf", data[7]["Current assignee"]
     assert_equal "1", data[7]["Version number"]
     assert_equal "2016-01-17 12:11:33", data[7]["Created at"]
+    assert_equal "2016-01-17", data[7]["Date created"]
+    assert_equal "12:11", data[7]["Time created"]
   end
 
   def actions
