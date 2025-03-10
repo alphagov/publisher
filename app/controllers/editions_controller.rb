@@ -44,6 +44,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/request_amendments_page"
   end
 
+  def send_to_2i_page
+    render "secondary_nav_tabs/send_to_2i_page"
+  end
+
   def no_changes_needed_page
     render "secondary_nav_tabs/no_changes_needed_page"
   end
@@ -341,6 +345,13 @@ private
 
     flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
     false
+  end
+
+  def send_to_2i_for_edition(edition)
+    # return unless edition.can_send_to_2i?
+    #
+    # edition.send_to_2i!
+    # flash[:success] = "Sent to 2i"
   end
 
   def require_skip_review_permission
