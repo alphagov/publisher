@@ -8,6 +8,8 @@ class EditionsControllerTest < ActionController::TestCase
     @edition = FactoryBot.create(:edition, :fact_check)
     @welsh_edition = FactoryBot.create(:edition, :fact_check, :welsh)
     UpdateWorker.stubs(:perform_async)
+    stub_events_for_all_content_ids
+    stub_users_from_signon_api
   end
 
   context "#template_folder_for" do
