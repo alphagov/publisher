@@ -26,7 +26,7 @@ module TabbedNavHelper
     when "related_external_links"
       "related_external_links"
     when "history"
-      "history/history"
+      "history"
     else
       "temp_nav_text"
     end
