@@ -31,7 +31,7 @@ class LegacyActionHelperTest < ActionView::TestCase
       assert_match(/reply/, unformatted_email.first)
       assert_match(/original/, unformatted_email.last)
 
-      formatted_email = format_email_text(text)
+      formatted_email = legacy_format_email_text(text)
       assert_equal formatted_email.length, 3
       assert_match(/reply/, formatted_email.first)
       assert_match(/Toggle earlier messages/, formatted_email.second)
@@ -63,7 +63,7 @@ class LegacyActionHelperTest < ActionView::TestCase
     host_content_update_event = FactoryBot.build(:host_content_update_event, document_type: "Something")
     action = host_content_update_event.to_action
 
-    note = action_note(action)
+    note = legacy_action_note(action)
 
     assert_match(/Something updated/, note)
     assert_match(/View in Content Block Manager/, note)
