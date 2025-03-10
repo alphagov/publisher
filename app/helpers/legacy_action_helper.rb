@@ -18,7 +18,7 @@ module LegacyActionHelper
     if action.comment.present?
       case action.request_type
       when Action::RECEIVE_FACT_CHECK
-        formatted_email_parts = format_email_text(action.comment)
+        formatted_email_parts = legacy_format_email_text(action.comment)
         notes.concat(formatted_email_parts)
       when HostContentUpdateEvent::Action::CONTENT_BLOCK_UPDATE
         notes << content_block_update_comment(action)
@@ -61,7 +61,7 @@ module LegacyActionHelper
     text.html_safe
   end
 
-  def format_email_text(text)
+  def legacy_format_email_text(text)
     email_parts = split_email_at_reply(text)
     formatted_email_parts = [format_and_auto_link_plain_text(email_parts.shift)]
 
