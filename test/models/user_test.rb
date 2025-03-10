@@ -52,7 +52,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "#gds_editor? is false if user's organisation is not GDS" do
-    user = FactoryBot.create(:user, organisation_slug: "some-other-org")
+    user = FactoryBot.create(:user, organisation_slug: "some-other-org", organisation_content_id: "some-other-org-id")
 
     assert_not user.gds_editor?
   end
