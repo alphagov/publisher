@@ -12,13 +12,13 @@ module ActionHelper
     action.comment.present? || action.is_fact_check_request? || action.request_type == "assign"
   end
 
-  def legacy_action_note(action)
+  def action_note(action)
     notes = []
 
     if action.comment.present?
       case action.request_type
       when Action::RECEIVE_FACT_CHECK
-        formatted_email_parts = legacy_format_email_text(action.comment)
+        formatted_email_parts = format_email_text(action.comment)
         notes.concat(formatted_email_parts)
       when HostContentUpdateEvent::Action::CONTENT_BLOCK_UPDATE
         notes << content_block_update_comment(action)
