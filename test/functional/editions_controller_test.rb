@@ -124,6 +124,13 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#history" do
+    should "render the 'History and notes' tab of the edit page" do
+      get :history, params: { id: @edition.id }
+      assert_template "show"
+    end
+  end
+
   context "when 'restrict_access_by_org' feature toggle is disabled" do
     %i[show metadata history admin related_external_links unpublish].each do |action|
       context "##{action}" do
