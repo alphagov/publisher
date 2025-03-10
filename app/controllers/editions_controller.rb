@@ -300,4 +300,11 @@ private
     flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
     false
   end
+
+  def send_to_2i_for_edition(edition)
+    # return unless edition.can_send_to_2i?
+    #
+    # edition.send_to_2i!
+    # flash[:success] = "Sent to 2i"
+  end
 end

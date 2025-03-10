@@ -25,6 +25,8 @@ Rails.application.routes.draw do
       member do
         get "request_amendments_page", to: "editions#request_amendments_page", as: "request_amendments_page"
         post "request_amendments", to: "editions#request_amendments", as: "request_amendments"
+        get "send_to_2i_page", to: "editions#send_to_2i_page", as: "send_to_2i_page"
+        # post "send_to_2i", to: "editions#send_to_2i", as: "send_to_2i"
         get "metadata"
         get "history"
         get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"
