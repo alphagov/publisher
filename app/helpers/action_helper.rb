@@ -38,6 +38,44 @@ module ActionHelper
     notes.join.html_safe
   end
 
+  def action_items(edition, update_events)
+    items = []
+
+    edition_actions(edition, update_events).map do |action|
+      requester = action.requester ? action.requester.name : "GOV.UK Bot"
+
+      item = [
+        sanitize("<div class='history__action--#{action.request_type}__heading'>
+          <time class='govuk-body' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
+          <p class='govuk-body govuk-!-font-weight-bold'>#{action} by #{requester}</p>
+        </div>"),
+      ]
+
+      if action_note?(action)
+        warning = if action.comment_sanitized
+                    sanitize("<div class='history__action--#{action.request_type}__warning'>#{render 'govuk_publishing_components/components/warning_text', {
+                      text: 'We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.',
+                    }}</div>")
+                  end
+
+        comment = render "govuk_publishing_components/components/inset_text", {
+          text: action_note(action),
+        }
+
+        item << sanitize(
+          "<div class='history__action--#{action.request_type}__content'>
+            #{warning if warning}
+            <div class='history__action--#{action.request_type}__commment'>#{comment}</div>
+          </div>",
+        )
+      end
+
+      items << item.join.html_safe
+    end
+
+    items
+  end
+
   def content_block_update_comment(action)
     "#{action.comment} (#{link_to 'View in Content Block Manager', action.block_url, target: '_blank', rel: 'noopener'})"
   end
