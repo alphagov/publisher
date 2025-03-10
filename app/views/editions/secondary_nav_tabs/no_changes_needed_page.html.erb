@@ -1,0 +1,10 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "No changes needed" %>
+<% content_for :title, "No changes needed" %>
+
+<%= render "editions/secondary_nav_tabs/progress_with_comment", {
+  form_url: "#{edition_path}/no_changes_needed",
+  comment_label_text: "Comment (optional)",
+  submit_button_text: "Approve 2i",
+} %>

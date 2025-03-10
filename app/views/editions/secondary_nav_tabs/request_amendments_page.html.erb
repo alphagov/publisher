@@ -3,24 +3,8 @@
 <% content_for :page_title, "Request amendments" %>
 <% content_for :title, "Request amendments" %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_for(:edition, url: "#{edition_path}/request_amendments") do |f| %>
-      <%= render "govuk_publishing_components/components/textarea", {
-        label: {
-          heading_size: "m",
-          text: "Amendment details (optional)",
-        },
-        name: "amendment_comment",
-        rows: 14,
-      } %>
-
-      <div class="govuk-button-group">
-        <%= render "govuk_publishing_components/components/button", {
-          text: "Request amendments",
-        } %>
-        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
-      </div>
-    <% end %>
-  </div>
-</div>
+<%= render "editions/secondary_nav_tabs/progress_with_comment", {
+  form_url: "#{edition_path}/request_amendments",
+  comment_label_text: "Amendment details (optional)",
+  submit_button_text: "Request amendments",
+} %>
