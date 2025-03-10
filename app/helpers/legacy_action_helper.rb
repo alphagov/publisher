@@ -1,4 +1,4 @@
-module ActionHelper
+module LegacyActionHelper
   def edition_actions(edition, update_events)
     actions = edition.actions.reject do |a|
       [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED].include?(a.request_type)
@@ -12,13 +12,13 @@ module ActionHelper
     action.comment.present? || action.is_fact_check_request? || action.request_type == "assign"
   end
 
-  def action_note(action)
+  def legacy_action_note(action)
     notes = []
 
     if action.comment.present?
       case action.request_type
       when Action::RECEIVE_FACT_CHECK
-        formatted_email_parts = format_email_text(action.comment)
+        formatted_email_parts = legacy_format_email_text(action.comment)
         notes.concat(formatted_email_parts)
       when HostContentUpdateEvent::Action::CONTENT_BLOCK_UPDATE
         notes << content_block_update_comment(action)
@@ -36,44 +36,6 @@ module ActionHelper
     end
 
     notes.join.html_safe
-  end
-
-  def action_items(edition, update_events)
-    items = []
-
-    edition_actions(edition, update_events).map do |action|
-      requester = action.requester ? action.requester.name : "GOV.UK Bot"
-
-      item = [
-        sanitize("<div class='history__action--#{action.request_type}__heading'>
-          <time class='govuk-body' datetime='#{action.created_at}'>#{action.created_at.to_fs(:govuk_date)}</time>
-          <p class='govuk-body govuk-!-font-weight-bold'>#{action} by #{requester}</p>
-        </div>"),
-      ]
-
-      if action_note?(action)
-        warning = if action.comment_sanitized
-                    sanitize("<div class='history__action--#{action.request_type}__warning'>#{render 'govuk_publishing_components/components/warning_text', {
-                      text: 'We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.',
-                    }}</div>")
-                  end
-
-        comment = render "govuk_publishing_components/components/inset_text", {
-          text: action_note(action),
-        }
-
-        item << sanitize(
-          "<div class='history__action--#{action.request_type}__content'>
-            #{warning if warning}
-            <div class='history__action--#{action.request_type}__commment'>#{comment}</div>
-          </div>",
-        )
-      end
-
-      items << item.join.html_safe
-    end
-
-    items
   end
 
   def content_block_update_comment(action)
@@ -99,15 +61,20 @@ module ActionHelper
     text.html_safe
   end
 
-  def format_email_text(text)
+  def legacy_format_email_text(text)
     email_parts = split_email_at_reply(text)
     formatted_email_parts = [format_and_auto_link_plain_text(email_parts.shift)]
 
     # if a reply was found
     unless email_parts.empty?
+      formatted_email_parts << link_to(
+        "Toggle earlier messages",
+        "#show-original",
+        class: "original-message-toggle if-no-js-hide js-toggle",
+      )
       formatted_email_parts << tag.div(
         format_and_auto_link_plain_text(email_parts.join("")),
-        class: "action--receive_fact_check--earlier",
+        class: "original-message if-js-hide js-toggle-target",
       )
     end
 
