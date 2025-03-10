@@ -42,6 +42,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/request_amendments_page"
   end
 
+  def send_to_2i_page
+    render "secondary_nav_tabs/send_to_2i_page"
+  end
+
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
     target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
@@ -299,5 +303,12 @@ private
 
     flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
     false
+  end
+
+  def send_to_2i_for_edition(edition)
+    # return unless edition.can_send_to_2i?
+    #
+    # edition.send_to_2i!
+    # flash[:success] = "Sent to 2i"
   end
 end
