@@ -12,7 +12,7 @@ module LegacyActionHelper
     action.comment.present? || action.is_fact_check_request? || action.request_type == "assign"
   end
 
-  def action_note(action)
+  def legacy_action_note(action)
     notes = []
 
     if action.comment.present?
