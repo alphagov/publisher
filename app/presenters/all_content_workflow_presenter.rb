@@ -10,6 +10,7 @@ class AllContentWorkflowPresenter < CSVPresenter
       format
       current_assignee
       created_at
+      version_number
       date_created
       time_created
     ]
@@ -30,6 +31,7 @@ private
           item.format,
           item.assignee,
           action.created_at.to_fs(:db),
+          item.version_number,
           action.created_at.to_date.to_s,
           action.created_at.to_fs(:time),
         ]

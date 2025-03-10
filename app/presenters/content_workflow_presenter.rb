@@ -9,6 +9,7 @@ class ContentWorkflowPresenter < CSVPresenter
       stage
       format
       current_assignee
+      version_number
       created_at
     ]
   end
@@ -27,6 +28,7 @@ private
           action.request_type,
           item.format,
           item.assignee,
+          item.version_number,
           action.created_at.to_fs(:db),
         ]
       end
