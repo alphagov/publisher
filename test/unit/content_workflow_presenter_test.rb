@@ -18,9 +18,9 @@ class ContentWorkflowPresenterTest < ActiveSupport::TestCase
       actions:,
     )
 
-    Edition.stubs(:published).returns([transaction_edition, guide_edition])
+    editions = [transaction_edition, guide_edition]
 
-    csv = ContentWorkflowPresenter.new(Edition.published).to_csv
+    csv = ContentWorkflowPresenter.new(editions).to_csv
     data = CSV.parse(csv, headers: true)
 
     assert_equal 10, data.length
