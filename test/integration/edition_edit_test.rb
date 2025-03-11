@@ -410,20 +410,25 @@ class EditionEditTest < IntegrationTest
       assert page.has_field?("Important note", with: note_text)
     end
 
-    # TODO: Test to be switched on when the Edition notes history is implemented.
     should "not show important notes in edition history" do
       note_text = "This is really really urgent!"
       note_text_2 = "Another note"
       note_text_3 = "Yet another note"
+
       create_draft_edition
       create_important_note_for_edition(@draft_edition, note_text)
       create_important_note_for_edition(@draft_edition, note_text_2)
       create_important_note_for_edition(@draft_edition, note_text_3)
+
       visit edition_path(@draft_edition)
       click_link("History and notes")
 
-      # TODO: Expand 'All Notes' sections! Currently in progress.
-      # New asserts go here
+      within :css, ".history__actions" do
+        assert page.has_no_text?("Important note updated by #{@govuk_editor.name}")
+        assert page.has_no_text?("This is really really urgent!")
+        assert page.has_no_text?("Another note")
+        assert page.has_no_text?("Yet another note")
+      end
     end
 
     should "not be carried forward to new editions" do
