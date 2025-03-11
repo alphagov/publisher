@@ -75,7 +75,7 @@ class EditionsControllerTest < ActionController::TestCase
       should "update the edition status to 'amends_needed' and save the comment" do
         post :request_amendments, params: {
           id: @edition.id,
-          amendment_comment: "This is a comment",
+          comment: "This is a comment",
         }
 
         assert_equal "2i amendments requested", flash[:success]
@@ -89,7 +89,6 @@ class EditionsControllerTest < ActionController::TestCase
 
         post :request_amendments, params: {
           id: @edition.id,
-          amendment_comment: "This is a comment",
         }
 
         assert_template "secondary_nav_tabs/request_amendments_page"
@@ -107,6 +106,97 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "render an error message" do
         post :request_amendments, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#no_changes_needed_page" do
+    context "user has govuk_editor permission" do
+      should "render the 'No changes needed' page" do
+        get :no_changes_needed_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/no_changes_needed_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :no_changes_needed_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user has welsh_editor permission" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "render the 'No changes needed' page when the edition is Welsh" do
+        get :no_changes_needed_page, params: { id: @welsh_edition.id }
+        assert_template "secondary_nav_tabs/no_changes_needed_page"
+      end
+
+      should "render an error message when the edition is not Welsh" do
+        get :no_changes_needed_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#no_changes_needed" do
+    setup do
+      @requester = FactoryBot.create(:user, name: "Stub Requester")
+      @edition = FactoryBot.create(
+        :edition,
+        state: "in_review",
+        review_requested_at: Time.zone.now,
+      )
+    end
+
+    context "user has govuk_editor permission" do
+      should "update the edition status to 'ready' and save the comment" do
+        post :no_changes_needed, params: {
+          id: @edition.id,
+          comment: "Perfecto!",
+        }
+
+        assert_equal "2i approved", flash[:success]
+        @edition.reload
+        assert_equal "Perfecto!", @edition.latest_status_action.comment
+        assert_equal "ready", @edition.state
+      end
+
+      should "not update the edition state and render 'no_changes_needed' template with an error when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        post :no_changes_needed, params: {
+          id: @edition.id,
+          amendment_comment: "This is a comment",
+        }
+
+        assert_template "secondary_nav_tabs/no_changes_needed_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        @edition.reload
+        assert_equal "in_review", @edition.state
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        post :no_changes_needed, params: {
           id: @edition.id,
           amendment_comment: "This is a comment",
         }
