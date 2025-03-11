@@ -153,6 +153,16 @@ class EditionEditTest < IntegrationTest
       click_link("History and notes")
     end
 
+    should "show a heading" do
+      assert page.has_css?("h2", text: "History and notes")
+    end
+
+    should "show inset text" do
+      within :css, ".gem-c-inset-text" do
+        assert page.has_text?("Send fact check responses to #{@draft_edition.fact_check_email_address} and include [#{@draft_edition.id}] in the subject line.")
+      end
+    end
+
     should "show an 'Add edition note' button" do
       assert page.has_link?("Add edition note")
     end
@@ -163,6 +173,10 @@ class EditionEditTest < IntegrationTest
       assert_current_path history_add_edition_note_edition_path(@draft_edition.id)
     end
 
+    should "display the accordion section headers" do
+      assert page.has_css?(".govuk-accordion__section-header h2", text: "Edition 1")
+    end
+
     should "show an 'Update important note' button" do
       assert page.has_link?("Update important note")
     end
@@ -171,6 +185,170 @@ class EditionEditTest < IntegrationTest
       click_link("Update important note")
 
       assert_current_path history_update_important_note_edition_path(@draft_edition.id)
+    end
+
+    context "Edition displays the correct data for actions" do
+      setup do
+        @edition = FactoryBot.create(:edition, created_at: "2024-01-23")
+      end
+
+      should "display 'Assign' action" do
+        user = FactoryBot.create(:user, name: "Steve Ogrizovic")
+        @edition.actions.create! request_type: Action::ASSIGN, requester_id: user.id, created_at: "2024-02-24 15:41:00", comment: "Assigned to me"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--assign__heading" do
+          assert page.has_css?("time", text: "3:41pm, 24 February 2024")
+          assert page.has_text?("Assign by Steve Ogrizovic")
+        end
+
+        within :css, ".history__action--assign__content" do
+          assert page.has_text?("Assigned to me")
+        end
+      end
+
+      should "display 'Note' action" do
+        user = FactoryBot.create(:user, name: "David Phillips")
+        @edition.actions.create! request_type: Action::NOTE, requester_id: user.id, created_at: "2024-03-01 10:30:00", comment: "This is a note"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--note__heading" do
+          assert page.has_css?("time", text: "10:30am, 1 March 2024")
+          assert page.has_text?("Note by David Phillips")
+        end
+
+        within :css, ".history__action--note__content" do
+          assert page.has_text?("This is a note")
+        end
+      end
+
+      should "display 'Request review' action" do
+        user = FactoryBot.create(:user, name: "Greg Downs")
+        @edition.actions.create! request_type: Action::REQUEST_REVIEW, requester_id: user.id, created_at: "2024-04-02 17:23:00", comment: "Requesting review"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--request_review__heading" do
+          assert page.has_css?("time", text: "5:23pm, 2 April 2024")
+          assert page.has_text?("Request review by Greg Downs")
+        end
+
+        within :css, ".history__action--request_review__content" do
+          assert page.has_text?("Requesting review")
+        end
+      end
+
+      should "display 'Send fact check' action" do
+        user = FactoryBot.create(:user, name: "Lloyd McGrath")
+        @edition.actions.create! request_type: Action::SEND_FACT_CHECK, requester_id: user.id, created_at: "2024-05-16 18:12:00", comment: "Fact check requested"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--send_fact_check__heading" do
+          assert page.has_css?("time", text: "6:12pm, 16 May 2024")
+          assert page.has_text?("Send fact check by Lloyd McGrath")
+        end
+
+        within :css, ".history__action--send_fact_check__content" do
+          assert page.has_text?("Fact check requested")
+        end
+      end
+
+      should "display 'Receive fact check' action" do
+        @edition.actions.create! request_type: Action::RECEIVE_FACT_CHECK, created_at: "2024-06-06 8:32:00", comment: "We’re happy for you to publish. -----Original Message----- Reply and confirm the content is correct.", comment_sanitized: true
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--receive_fact_check__heading" do
+          assert page.has_css?("time", text: "8:32am, 6 June 2024")
+          assert page.has_text?("Receive fact check by GOV.UK Bot")
+        end
+
+        within :css, ".history__action--receive_fact_check__content" do
+          assert page.has_text?("We’re happy for you to publish.")
+          assert page.has_css?("div.action--receive_fact_check--earlier", text: "Reply and confirm the content is correct.")
+          assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
+        end
+      end
+
+      should "display 'Request amendments' action" do
+        user = FactoryBot.create(:user, name: "Brian Kilcline")
+        @edition.actions.create! request_type: Action::REQUEST_AMENDMENTS, requester_id: user.id, created_at: "2024-06-27 10:56:00", comment: "Requesting amendments"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--request_amendments__heading" do
+          assert page.has_css?("time", text: "10:56am, 27 June 2024")
+          assert page.has_text?("Request amendments by Brian Kilcline")
+        end
+
+        within :css, ".history__action--request_amendments__content" do
+          assert page.has_text?("Requesting amendments")
+        end
+      end
+
+      should "display 'Approve review' action" do
+        user = FactoryBot.create(:user, name: "Trevor Peake")
+        @edition.actions.create! request_type: Action::APPROVE_REVIEW, requester_id: user.id, created_at: "2024-07-05 19:31:00", comment: "Review approved"
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--approve_review__heading" do
+          assert page.has_css?("time", text: "7:31pm, 5 July 2024")
+          assert page.has_text?("Approve review by Trevor Peake")
+        end
+
+        within :css, ".history__action--approve_review__content" do
+          assert page.has_text?("Review approved")
+        end
+      end
+
+      should "display 'Content block update' action on Published Editions only" do
+        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
+        event = create_content_update_event(updated_by_user_uid: user["uid"])
+
+        stub_events_for_all_content_ids(events: [event])
+        stub_users_from_signon_api([user.uid], [user])
+
+        visit edition_path(@edition)
+        click_link("History and notes")
+
+        assert page.has_no_css?(".history__action--content_block_update__heading")
+        assert page.has_no_css?(".history__action--content_block_update__content")
+
+        published_edition = FactoryBot.create(
+          :edition,
+          state: "published",
+        )
+
+        published_edition.actions.create!(
+          request_type: Action::PUBLISH,
+          requester: user,
+          created_at: "2024-08-06 11:26:00",
+        )
+
+        visit edition_path(published_edition)
+        click_link("History and notes")
+
+        within :css, ".history__action--content_block_update__heading" do
+          assert page.has_css?("time", text: "11:26am, 7 August 2024")
+          assert page.has_text?("Content block updated by Dave Bennett")
+        end
+
+        within :css, ".history__action--content_block_update__content" do
+          assert page.has_text?("Email address updated")
+          assert page.has_link?("View in Content Block Manager")
+        end
+      end
     end
   end
 
@@ -232,21 +410,25 @@ class EditionEditTest < IntegrationTest
       assert page.has_field?("Important note", with: note_text)
     end
 
-    # TODO: Test to be switched on when the Edition notes history is implemented.
     should "not show important notes in edition history" do
-      skip "Until this functionality is complete: #603 - History and notes tab (excluding sidebar) [Edit page]"
       note_text = "This is really really urgent!"
       note_text_2 = "Another note"
       note_text_3 = "Yet another note"
+
       create_draft_edition
       create_important_note_for_edition(@draft_edition, note_text)
       create_important_note_for_edition(@draft_edition, note_text_2)
       create_important_note_for_edition(@draft_edition, note_text_3)
+
       visit edition_path(@draft_edition)
       click_link("History and notes")
 
-      # TODO: Expand 'All Notes' sections! Currently in progress.
-      # New asserts go here
+      within :css, ".history__actions" do
+        assert page.has_no_text?("Important note updated by #{@govuk_editor.name}")
+        assert page.has_no_text?("This is really really urgent!")
+        assert page.has_no_text?("Another note")
+        assert page.has_no_text?("Yet another note")
+      end
     end
 
     should "not be carried forward to new editions" do
@@ -1325,5 +1507,19 @@ private
       edition: edition,
       comment: note_text,
     )
+  end
+
+  def create_content_update_event(updated_by_user_uid:)
+    {
+      "created_at" => "2024-08-07 11:26:00",
+      "payload" => {
+        "source_block" => {
+          "updated_by_user_uid" => updated_by_user_uid,
+          "content_id" => SecureRandom.uuid,
+          "title" => "Some content",
+          "document_type" => "content_block_email_address",
+        },
+      },
+    }
   end
 end

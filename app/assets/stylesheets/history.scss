@@ -1,0 +1,14 @@
+.history {
+  &__action--receive_fact_check__commment {
+    .govuk-inset-text {
+      @extend .govuk-tag--light-blue; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+      word-break: break-word;
+    }
+  }
+
+  &__action--receive_fact_check__warning {
+    .govuk-warning-text {
+      margin-bottom: 0;
+    }
+  }
+}
