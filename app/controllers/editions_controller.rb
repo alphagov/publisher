@@ -17,6 +17,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[confirm_destroy destroy] do
     require_destroyable
   end
+  before_action only: %i[skip_review_page] do
+    require_skip_review_permission
+  end
 
   before_action only: %i[edit_assignee update_assignee] do
     require_assignee_editable
@@ -44,6 +47,10 @@ class EditionsController < InheritedResources::Base
 
   def no_changes_needed_page
     render "secondary_nav_tabs/no_changes_needed_page"
+  end
+
+  def skip_review_page
+    render "secondary_nav_tabs/skip_review_page"
   end
 
   def duplicate
@@ -320,5 +327,12 @@ private
 
     flash.now[:danger] = "Chosen assignee does not have correct editor permissions."
     false
+  end
+
+  def require_skip_review_permission
+    return if current_user.permissions.include?("skip_review")
+
+    flash[:danger] = "You do not have correct editor permissions for this action."
+    redirect_to edition_path(resource)
   end
 end
