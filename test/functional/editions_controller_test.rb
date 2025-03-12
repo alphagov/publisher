@@ -208,6 +208,32 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#skip_review_page" do
+    context "user has skip_review permission" do
+      setup do
+        user = FactoryBot.create(:user, :skip_review)
+        login_as(user)
+      end
+
+      should "render the 'Skip review' page" do
+        get :skip_review_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/skip_review_page"
+      end
+    end
+
+    context "user does not have skip_review permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :skip_review_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
