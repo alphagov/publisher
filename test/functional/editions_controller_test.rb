@@ -65,7 +65,6 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#request_amendments" do
     setup do
-      @requester = FactoryBot.create(:user, name: "Stub Requester")
       @edition = FactoryBot.create(
         :edition,
         state: "in_review",
@@ -155,7 +154,6 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#no_changes_needed" do
     setup do
-      @requester = FactoryBot.create(:user, name: "Stub Requester")
       @edition = FactoryBot.create(
         :edition,
         state: "in_review",
