@@ -14,4 +14,13 @@
       @extend .govuk-link; // stylelint-disable-line scss/at-extend-no-missing-placeholder
     }
   }
+
+  &__action--receive_fact_check--toggle {
+    border-width: 0;
+    color: $govuk-link-colour;
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
 }
