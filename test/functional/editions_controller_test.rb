@@ -234,6 +234,102 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#skip_review" do
+    context "user is the requester and has 'skip_review' permission" do
+      setup do
+        requester = FactoryBot.create(:user, :skip_review, name: "Stub Requester")
+        @edition = FactoryBot.create(
+          :edition,
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+        )
+        @edition.actions.create!(
+          request_type: Action::REQUEST_REVIEW,
+          requester_id: requester.id,
+          created_at: Time.zone.now,
+          comment: "Requesting review",
+        )
+        login_as(requester)
+      end
+
+      should "update the edition status to 'ready' and save the comment" do
+        post :skip_review, params: {
+          id: @edition.id,
+          comment: "Review not needed",
+        }
+
+        assert_equal "2i review skipped", flash[:success]
+        @edition.reload
+        assert_equal "Review not needed", @edition.latest_status_action(:skip_review).comment
+        assert_equal "ready", @edition.state
+      end
+
+      should "not update the edition state and render 'skip_review' template with an error when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        post :skip_review, params: {
+          id: @edition.id,
+        }
+
+        assert_template "secondary_nav_tabs/skip_review_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        @edition.reload
+        assert_equal "in_review", @edition.state
+      end
+    end
+
+    context "user is not the requester" do
+      setup do
+        @edition = FactoryBot.create(
+          :edition,
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+        )
+        @edition.actions.create!(
+          request_type: Action::REQUEST_REVIEW,
+          requester_id: FactoryBot.create(:user, name: "Stub Requester").id,
+          created_at: Time.zone.now,
+          comment: "Requesting review",
+        )
+        login_as(FactoryBot.create(:user, :skip_review))
+      end
+
+      should "render an error message" do
+        post :skip_review, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+    end
+
+    context "user does not have 'skip_review' permission" do
+      setup do
+        requester = FactoryBot.create(:user, name: "Stub Requester")
+        @edition = FactoryBot.create(
+          :edition,
+          state: "in_review",
+          review_requested_at: Time.zone.now,
+        )
+        @edition.actions.create!(
+          request_type: Action::REQUEST_REVIEW,
+          requester_id: requester.id,
+          created_at: Time.zone.now,
+          comment: "Requesting review",
+        )
+        login_as(requester)
+      end
+
+      should "render an error message" do
+        post :skip_review, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
