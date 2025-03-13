@@ -17,10 +17,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[confirm_destroy destroy] do
     require_destroyable
   end
-  before_action only: %i[skip_review_page] do
+  before_action only: %i[skip_review skip_review_page] do
     require_skip_review_permission
   end
-
   before_action only: %i[edit_assignee update_assignee] do
     require_assignee_editable
   end
@@ -108,6 +107,16 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/no_changes_needed_page"
+    end
+  end
+
+  def skip_review
+    if skip_review_for_edition(@resource, params[:comment])
+      flash.now[:success] = "2i review skipped"
+      render "show"
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/skip_review_page"
     end
   end
 
@@ -238,6 +247,11 @@ private
   def no_changes_needed_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "approve_review", comment: comment })
+  end
+
+  def skip_review_for_edition(resource, comment)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "skip_review", comment: comment })
   end
 
   def unpublish_edition(artefact)

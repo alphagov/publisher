@@ -1387,6 +1387,44 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Skip review page" do
+    context "current user may skip review" do
+      setup do
+        login_as(@govuk_requester)
+        @govuk_requester.permissions << "skip_review"
+      end
+
+      should "save comment to edition history" do
+        create_in_review_edition
+
+        visit skip_review_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "Looks great"
+        click_on "Skip review"
+
+        click_on "History and notes"
+        assert page.has_content?("Skip review by Stub requester")
+        assert page.has_content?("Looks great")
+      end
+    end
+
+    context "current user is not the requester" do
+      setup do
+        @govuk_editor.permissions << "skip_review"
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+
+        visit skip_review_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "No review required"
+        click_on "Skip review"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("No review required")
+      end
+    end
+  end
+
 private
 
   def create_draft_edition
