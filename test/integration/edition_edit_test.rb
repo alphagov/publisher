@@ -1327,10 +1327,8 @@ class EditionEditTest < IntegrationTest
       fill_in "Amendment details (optional)", with: "Please make these changes"
       click_on "Request amendments"
 
-      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:design_system_edit, false)
       click_on "History and notes"
+      assert page.has_content?("Request amendments by")
       assert page.has_content?("Please make these changes")
     end
 
@@ -1361,10 +1359,8 @@ class EditionEditTest < IntegrationTest
       fill_in "Comment (optional)", with: "Looks great"
       click_on "Approve 2i"
 
-      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:design_system_edit, false)
       click_on "History and notes"
+      assert page.has_content?("Approve review by")
       assert page.has_content?("Looks great")
     end
 
