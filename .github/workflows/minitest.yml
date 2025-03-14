@@ -74,4 +74,4 @@ jobs:
           SE_BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           SE_AVOID_BROWSER_DOWNLOAD: true
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
-        run: bundle exec rake test
+        run: bundle exec rake test -t
