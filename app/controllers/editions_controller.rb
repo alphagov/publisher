@@ -344,7 +344,7 @@ private
   end
 
   def require_skip_review_permission
-    return if current_user.permissions.include?("skip_review")
+    return if current_user.skip_review?
 
     flash[:danger] = "You do not have correct editor permissions for this action."
     redirect_to edition_path(resource)
