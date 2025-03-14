@@ -31,13 +31,13 @@ jobs:
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: alphagov/publisher
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Checkout Publishing API (for Content Schemas)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: alphagov/publishing-api
           ref: ${{ inputs.publishingApiRef }}
@@ -51,6 +51,14 @@ jobs:
       - name: Setup Node
         uses: alphagov/govuk-infrastructure/.github/actions/setup-node@main
 
+#      - name: Setup Chrome
+#        id: setup-chrome
+#        uses: browser-actions/setup-chrome@v1
+#        with:
+#          chrome-version: 133
+#          install-chromedriver: true
+#          install-dependencies: true
+#
       - name: Precompile assets
         uses: alphagov/govuk-infrastructure/.github/actions/precompile-rails-assets@main
 
@@ -62,5 +70,6 @@ jobs:
       - name: Run Minitest
         env:
           RAILS_ENV: test
+          # SE_BROWSER_VERSION: 133
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test

@@ -33,6 +33,9 @@ DatabaseCleaner.clean
 
 Rails.application.load_tasks if Rake::Task.tasks.empty?
 
+# Capybara currently calls these deprecated methods, and the logs are noisy
+Selenium::WebDriver.logger.ignore(:clear_local_storage, :clear_session_storage)
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
