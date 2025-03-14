@@ -54,7 +54,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v1
         id: setup-chrome
         with:
-          chrome-version: 133
+          chrome-version: 132
           install-chromedriver: true
 
       - name: Precompile assets
