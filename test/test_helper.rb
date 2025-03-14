@@ -35,7 +35,7 @@ Rails.application.load_tasks if Rake::Task.tasks.empty?
 
 Capybara.register_driver :special_driver do |app|
   browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.add_argument('--headless=new')
+    opts.add_argument("--headless=new")
     opts.add_argument("--user-data-dir=#{Dir.mktmpdir}")
   end
 
