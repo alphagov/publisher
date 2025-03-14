@@ -51,14 +51,14 @@ jobs:
       - name: Setup Node
         uses: alphagov/govuk-infrastructure/.github/actions/setup-node@main
 
-      - name: Setup Chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 133
-          install-chromedriver: true
-          install-dependencies: true
-
+#      - name: Setup Chrome
+#        id: setup-chrome
+#        uses: browser-actions/setup-chrome@v1
+#        with:
+#          chrome-version: 133
+#          install-chromedriver: true
+#          install-dependencies: true
+#
       - name: Precompile assets
         uses: alphagov/govuk-infrastructure/.github/actions/precompile-rails-assets@main
 
