@@ -26,6 +26,10 @@ FactoryBot.define do
     trait :departmental_editor do
       permissions { %w[departmental_editor signin] }
     end
+
+    trait :skip_review do
+      permissions { %w[skip_review signin] }
+    end
   end
 
   trait :homepage_editor do

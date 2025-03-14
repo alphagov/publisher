@@ -57,6 +57,18 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.gds_editor?
   end
 
+  test "#skip_review? is true if user may skip reviews" do
+    user = FactoryBot.create(:user, :skip_review)
+
+    assert user.skip_review?
+  end
+
+  test "#skip_review? is false if user may not skip reviews" do
+    user = FactoryBot.create(:user)
+
+    assert_not user.skip_review?
+  end
+
   test "should convert to string using name by preference" do
     user = User.new(name: "Bob", email: "user@example.com")
     assert_equal "Bob", user.to_s
