@@ -70,6 +70,6 @@ jobs:
       - name: Run Minitest
         env:
           RAILS_ENV: test
-          SE_BROWSER_VERSION: 133
+          # SE_BROWSER_VERSION: 133
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test
