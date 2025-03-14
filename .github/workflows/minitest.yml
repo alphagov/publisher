@@ -18,11 +18,22 @@ jobs:
     name: Run Minitest
     runs-on: ubuntu-latest
     steps:
+      - uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: '128.0.6613.8600'
+          chromeapp: chrome
+      - run: |
+          sudo apt-get purge google-chrome-stable
+
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 128
+          install-chromedriver: 'false'
+
       - name: Setup MongoDB
         uses: alphagov/govuk-infrastructure/.github/actions/setup-mongodb@main
         with:
           version: 3.6
-
       - name: Setup Postgres
         id: setup-postgres
         uses: alphagov/govuk-infrastructure/.github/actions/setup-postgres@main
@@ -31,13 +42,13 @@ jobs:
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: alphagov/publisher
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Checkout Publishing API (for Content Schemas)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: alphagov/publishing-api
           ref: ${{ inputs.publishingApiRef }}
