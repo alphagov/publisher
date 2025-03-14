@@ -33,15 +33,6 @@ DatabaseCleaner.clean
 
 Rails.application.load_tasks if Rake::Task.tasks.empty?
 
-Capybara.register_driver :special_driver do |app|
-  browser_options = Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.add_argument("--headless=new")
-    opts.add_argument("--user-data-dir=#{Dir.mktmpdir}")
-  end
-
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
