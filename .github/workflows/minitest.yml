@@ -51,6 +51,13 @@ jobs:
       - name: Setup Node
         uses: alphagov/govuk-infrastructure/.github/actions/setup-node@main
 
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 133
+          install-chromedriver: true
+          install-dependencies: true
+
       - name: Precompile assets
         uses: alphagov/govuk-infrastructure/.github/actions/precompile-rails-assets@main
 
@@ -62,5 +69,6 @@ jobs:
       - name: Run Minitest
         env:
           RAILS_ENV: test
+          WD_CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test
