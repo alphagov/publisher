@@ -66,7 +66,7 @@ end
 
 class JavascriptIntegrationTest < IntegrationTest
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :special_driver
   end
 
   # Get a single user by their name. If the user doesn't exist, return nil.
