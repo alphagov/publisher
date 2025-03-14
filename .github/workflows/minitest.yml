@@ -70,5 +70,7 @@ jobs:
         env:
           RAILS_ENV: test
           WD_CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+          SE_BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+          SE_AVOID_BROWSER_DOWNLOAD: true
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test
