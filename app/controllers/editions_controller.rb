@@ -17,7 +17,6 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[confirm_destroy destroy] do
     require_destroyable
   end
-
   before_action only: %i[edit_assignee update_assignee] do
     require_assignee_editable
   end
