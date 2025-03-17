@@ -26,7 +26,7 @@ Rails.application.routes.draw do
         get "request_amendments_page", to: "editions#request_amendments_page", as: "request_amendments_page"
         post "request_amendments", to: "editions#request_amendments", as: "request_amendments"
         get "send_to_2i_page", to: "editions#send_to_2i_page", as: "send_to_2i_page"
-        # post "send_to_2i", to: "editions#send_to_2i", as: "send_to_2i"
+        post "send_to_2i", to: "editions#send_to_2i", as: "send_to_2i"
         get "no_changes_needed_page", to: "editions#no_changes_needed_page", as: "no_changes_needed_page"
         post "no_changes_needed", to: "editions#no_changes_needed", as: "no_changes_needed"
         get "skip_review_page", to: "editions#skip_review_page", as: "skip_review_page"
