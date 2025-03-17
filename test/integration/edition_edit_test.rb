@@ -68,6 +68,8 @@ class EditionEditTest < IntegrationTest
       within :css, ".govuk-notification-banner" do
         assert page.has_text?("Important")
         assert page.has_text?(note_text)
+        assert page.has_text?(@govuk_editor.name)
+        assert page.has_text?(Time.zone.today.to_date.to_fs(:govuk_date))
       end
     end
 
