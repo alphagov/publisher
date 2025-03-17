@@ -128,6 +128,27 @@ class NotesControllerTest < ActionController::TestCase
       end
     end
 
+    context "Send to 2i" do
+      should "be saved as a new edition note and show 'Sent to 2i' message" do
+        comment_text_for_2i = "2i comment here"
+
+        post :create,
+             params: {
+               edition_id: @edition.id,
+               note: {
+                 type: "note",
+                 comment: comment_text_for_2i,
+               },
+             }
+
+        @edition.reload
+
+        assert_equal(comment_text_for_2i, @edition.note.comment)
+        assert_redirected_to edition_path(@edition.id)
+        assert_equal "Sent to 2i", flash[:success]
+      end
+    end
+
     context "Welsh editors" do
       setup do
         login_as_welsh_editor
