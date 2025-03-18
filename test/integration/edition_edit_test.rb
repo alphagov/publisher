@@ -473,15 +473,19 @@ class EditionEditTest < IntegrationTest
       assert page.has_link?("Cancel")
     end
 
-    should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+    should "redirect to history and notes tab when Cancel button is pressed on Send to 2i page" do
       click_link("Cancel")
 
-      assert_current_path edition_path(@draft_edition.id)
+      assert_current_path history_edition_path(@draft_edition.id)
     end
 
-    # NEW TEST: On submit, check for edition status having been changed to in review, checked contents of 2i notes have been saved, check it is redirecting to the Edit tab. Test for success flash message,
-    # follow suit from importante note as per Mark's suggested changes.
-    # TEST for ERROR
+    should "show success message and redirects back to the history and notes tab when Send to 2i button is pressed" do
+      fill_in "comment", with: "This is a note for 2i"
+      click_button "Send to 2i"
+
+      assert_current_path history_edition_path(@draft_edition.id)
+      assert page.has_text?("Sent to 2i")
+    end
   end
 
   context "unpublish tab" do

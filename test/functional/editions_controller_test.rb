@@ -328,6 +328,116 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#send_to_2i_page" do
+    context "user has govuk_editor permission" do
+      should "render the 'Send to 2i' page" do
+        get :send_to_2i_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/send_to_2i_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :send_to_2i_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user has welsh_editor permission" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "render the 'Send to 2i' page when the edition is Welsh" do
+        get :send_to_2i_page, params: { id: @welsh_edition.id }
+        assert_template "secondary_nav_tabs/send_to_2i_page"
+      end
+
+      should "render an error message when the edition is not Welsh" do
+        get :send_to_2i_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#send_to_2i" do
+    # TODO: Repeat this for the 'amends_needed' state?
+    setup do
+      @requester = FactoryBot.create(:user, name: "Stub Requester")
+      @edition = FactoryBot.create(
+        :edition,
+        state: "draft",
+      )
+    end
+
+    context "user has govuk_editor permission" do
+      should "update the edition status to 'in_review' and save the comment" do
+        post :send_to_2i, params: {
+          id: @edition.id,
+          comment: "Please review this",
+        }
+
+        assert_equal "Sent to 2i", flash[:success]
+        @edition.reload
+        assert_equal "in_review", @edition.state
+        assert_equal "Please review this", @edition.latest_status_action&.comment
+      end
+
+      should "not update the edition state and render 'send_to_2i' template with an error when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        post :send_to_2i, params: {
+          id: @edition.id,
+          comment: "Please review this",
+        }
+
+        assert_template "secondary_nav_tabs/send_to_2i_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        @edition.reload
+        assert_equal "draft", @edition.state
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        post :send_to_2i, params: {
+          id: @edition.id,
+          comment: "This is a comment",
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    # TODO: fix this!
+    # context 'edition is not in a valid state' do
+    #   setup do
+    #     @edition.state = "ready"
+    #   end
+    #
+    #   should "not update the edition state and render 'send_to_2i' template with an error" do
+    #     post :send_to_2i, params: {
+    #       id: @edition.id,
+    #       comment: "Please review this",
+    #     }
+    #
+    #     assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+    #     @edition.reload
+    #     assert_equal "ready", @edition.state
+    #   end
+    # end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show

@@ -115,11 +115,12 @@ class EditionsController < InheritedResources::Base
   end
 
   def send_to_2i
-    if send_to_2i_for_edition(@resource, params[:comment_for_2i])
-      flash.now[:success] = "Sent to 2i"
-      render "show"
+    if send_to_2i_for_edition(@resource, params[:comment])
+      # Can't use flash.now because we're redirecting
+      flash[:success] = "Sent to 2i"
+      redirect_to history_edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_2i_page"
     end
   end

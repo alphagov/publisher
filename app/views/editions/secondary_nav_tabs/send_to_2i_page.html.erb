@@ -15,7 +15,7 @@
       <%= hidden_field_tag :edition_id, @edition.id %>
 
       <%= render "govuk_publishing_components/components/textarea", {
-        name: "comment_for_2i",
+        name: "comment",
         rows: 14,
       } %>
 
@@ -23,7 +23,7 @@
         <%= render "govuk_publishing_components/components/button", {
           text: "Send to 2i",
         } %>
-        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+        <%= link_to("Cancel", history_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
       </div>
     <% end %>
   </div>
