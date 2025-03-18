@@ -1080,58 +1080,67 @@ class EditionEditTest < IntegrationTest
     end
 
     context "Skip review link" do
-      context "edition is not in review" do
+      context "viewing an 'in review' edition as the review requester" do
         setup do
-          visit_draft_edition
+          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+          @requester = FactoryBot.create(:user)
+          @edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: @requester.id,
+          )
+          login_as(@requester)
         end
 
-        should "not show the 'Skip review' link" do
+        should "show the 'Skip review' link when the user has the 'skip_review' permission" do
+          @requester.permissions << "skip_review"
+
+          visit edition_path(@edition)
+
+          assert page.has_link?("Skip review")
+        end
+
+        should "navigate to 'Skip review' page when 'Skip review' link is clicked" do
+          @requester.permissions << "skip_review"
+          visit edition_path(@edition)
+
+          click_link("Skip review")
+
+          assert_current_path skip_review_page_edition_path(@edition.id)
+        end
+
+        should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
+          visit edition_path(@edition)
+
           assert page.has_no_link?("Skip review")
         end
       end
 
-      context "edition is in review" do
-        context "user does not have the required permissions" do
-          setup do
-            login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
-          end
-
-          should "not show the 'Skip review' link" do
-            assert page.has_no_link?("Skip review")
-          end
+      context "viewing an 'in review' edition as somebody other than the review requester" do
+        setup do
+          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+          @edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: FactoryBot.create(:user).id,
+          )
+          @user = FactoryBot.create(:user, :skip_review)
+          login_as(@user)
         end
 
-        context "user has the required permissions" do
-          context "current user is not the requester" do
-            setup do
-              @govuk_editor.permissions << "skip_review"
-              visit_in_review_edition
-            end
+        should "not show the 'Skip review' link" do
+          visit edition_path(@edition)
 
-            should "not show the 'Skip review' link" do
-              assert page.has_no_link?("Skip review")
-            end
-          end
-
-          context "current user is the requester" do
-            setup do
-              login_as(@govuk_requester)
-              @govuk_requester.permissions << "skip_review"
-              visit_in_review_edition
-            end
-
-            should "show the 'Skip review' link" do
-              assert page.has_link?("Skip review")
-            end
-
-            should "navigate to 'Skip review' page when link is clicked" do
-              click_link("Skip review")
-
-              assert_current_path skip_review_page_edition_path(@in_review_edition.id)
-            end
-          end
+          assert page.has_no_link?("Skip review")
         end
+      end
+
+      should "not show the 'Skip review' link when viewing an edition that is not 'in review'" do
+        edition = FactoryBot.create(:edition, state: "draft")
+        @user = FactoryBot.create(:user, :skip_review)
+        login_as(@user)
+
+        visit edition_path(edition)
+
+        assert page.has_no_link?("Skip review")
       end
     end
 
