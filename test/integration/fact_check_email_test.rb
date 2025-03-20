@@ -17,9 +17,7 @@ class FactCheckEmailTest < LegacyIntegrationTest
     message
   end
 
-  def fact_check_config
-    Publisher::Application.fact_check_config
-  end
+  delegate :fact_check_config, to: :'Publisher::Application'
 
   def assert_correct_state(key, value, state)
     answer = FactoryBot.create(:answer_edition, state: "fact_check")
