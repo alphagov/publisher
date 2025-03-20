@@ -26,6 +26,9 @@
     <% if @edition.important_note %>
       <%= render partial: "important_note" %>
     <% end %>
+    <% if @edition.state == "in_review" %>
+      <%= render partial: "review_requester" %>
+    <% end %>
   </div>
 
   <% if @edition.in_review? %>

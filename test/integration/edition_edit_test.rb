@@ -488,6 +488,33 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  # TODO: Should this be in 'edit tab' context ?
+  context "in_review edition (sent to 2i)" do
+    context "user has the required permissions" do
+      context "current user is also the requester" do
+        setup do
+          login_as(@govuk_requester)
+          visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "indicate that the current user requested a review" do
+          assert page.has_text?("You've sent this edition to be reviewed")
+        end
+      end
+
+      context "current user is not the requester" do
+        setup do
+          login_as(@govuk_editor)
+          visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "indicate which other user requested a review" do
+          assert page.has_text?("Stub requester sent this edition to be reviewed")
+        end
+      end
+    end
+  end
+
   context "unpublish tab" do
     context "user does not have required permissions" do
       setup do
@@ -830,7 +857,6 @@ class EditionEditTest < IntegrationTest
     end
 
     context "published edition" do
-      # TODO: Should we test for presence of send to 2i link.
       should "show common content-type fields" do
         published_edition = FactoryBot.create(
           :edition,
@@ -1579,18 +1605,19 @@ private
     visit edition_path(@archived_edition)
   end
 
-  def visit_in_review_edition
-    create_in_review_edition
+  def visit_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
+    # action ||= Action::REQUEST_AMENDMENTS
+    create_in_review_edition(action, requester)
 
     visit edition_path(@in_review_edition)
   end
 
-  def create_in_review_edition
+  def create_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
     @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
 
     @in_review_edition.actions.create!(
-      request_type: Action::REQUEST_AMENDMENTS,
-      requester_id: @govuk_requester.id,
+      request_type: action,
+      requester_id: requester.id
     )
   end
 

@@ -1,0 +1,12 @@
+<% if @edition.latest_status_action(Action::REQUEST_REVIEW) %>
+  <% if @edition.latest_status_action.requester == current_user %>
+    <% request_details = "You've sent this edition to be reviewed" %>
+  <% else %>
+   <% request_details = "#{@edition.latest_status_action.requester.name} sent this edition to be reviewed" %>
+  <% end %>
+<% end %>
+
+<%= render "govuk_publishing_components/components/inset_text", {
+  text: request_details
+  # TODO: Insert link
+} %>
