@@ -1079,6 +1079,71 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "Skip review link" do
+      context "viewing an 'in review' edition as the review requester" do
+        setup do
+          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+          @requester = FactoryBot.create(:user)
+          @edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: @requester.id,
+          )
+          login_as(@requester)
+        end
+
+        should "show the 'Skip review' link when the user has the 'skip_review' permission" do
+          @requester.permissions << "skip_review"
+
+          visit edition_path(@edition)
+
+          assert page.has_link?("Skip review")
+        end
+
+        should "navigate to 'Skip review' page when 'Skip review' link is clicked" do
+          @requester.permissions << "skip_review"
+          visit edition_path(@edition)
+
+          click_link("Skip review")
+
+          assert_current_path skip_review_page_edition_path(@edition.id)
+        end
+
+        should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
+          visit edition_path(@edition)
+
+          assert page.has_no_link?("Skip review")
+        end
+      end
+
+      context "viewing an 'in review' edition as somebody other than the review requester" do
+        setup do
+          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+          @edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: FactoryBot.create(:user).id,
+          )
+          @user = FactoryBot.create(:user, :skip_review)
+          login_as(@user)
+        end
+
+        should "not show the 'Skip review' link" do
+          visit edition_path(@edition)
+
+          assert page.has_no_link?("Skip review")
+        end
+      end
+
+      should "not show the 'Skip review' link when viewing an edition that is not 'in review'" do
+        edition = FactoryBot.create(:edition, state: "draft")
+        @user = FactoryBot.create(:user, :skip_review)
+        login_as(@user)
+
+        visit edition_path(edition)
+
+        assert page.has_no_link?("Skip review")
+      end
+    end
+
     context "edit assignee link" do
       context "user does not have required permissions" do
         setup do
@@ -1327,10 +1392,8 @@ class EditionEditTest < IntegrationTest
       fill_in "Amendment details (optional)", with: "Please make these changes"
       click_on "Request amendments"
 
-      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:design_system_edit, false)
       click_on "History and notes"
+      assert page.has_content?("Request amendments by")
       assert page.has_content?("Please make these changes")
     end
 
@@ -1361,10 +1424,8 @@ class EditionEditTest < IntegrationTest
       fill_in "Comment (optional)", with: "Looks great"
       click_on "Approve 2i"
 
-      # TODO: Remove this feature flag toggling once ticket #603 - History and notes tab (excluding sidebar) [Edit page] is complete
-      test_strategy = Flipflop::FeatureSet.current.test!
-      test_strategy.switch!(:design_system_edit, false)
       click_on "History and notes"
+      assert page.has_content?("Approve review by")
       assert page.has_content?("Looks great")
     end
 
@@ -1383,6 +1444,44 @@ class EditionEditTest < IntegrationTest
 
         assert page.has_content?("Due to a service problem, the request could not be made")
         assert page.has_content?("Great job!")
+      end
+    end
+  end
+
+  context "Skip review page" do
+    context "current user may skip review" do
+      setup do
+        login_as(@govuk_requester)
+        @govuk_requester.permissions << "skip_review"
+      end
+
+      should "save comment to edition history" do
+        create_in_review_edition
+
+        visit skip_review_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "Looks great"
+        click_on "Skip review"
+
+        click_on "History and notes"
+        assert page.has_content?("Skip review by Stub requester")
+        assert page.has_content?("Looks great")
+      end
+    end
+
+    context "current user is not the requester" do
+      setup do
+        @govuk_editor.permissions << "skip_review"
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_in_review_edition
+
+        visit skip_review_page_edition_path(@in_review_edition)
+        fill_in "Comment (optional)", with: "No review required"
+        click_on "Skip review"
+
+        assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("No review required")
       end
     end
   end

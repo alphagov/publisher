@@ -95,4 +95,8 @@ class User
   def gds_editor?
     organisation_content_id == PublishService::GDS_ORGANISATION_ID
   end
+
+  def skip_review?
+    permissions.include?("skip_review")
+  end
 end

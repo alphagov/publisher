@@ -78,8 +78,4 @@ module EditionActivityButtonsHelper
       link_to("Preview", preview_edition_path(edition), class: "btn btn-primary btn-large")
     end
   end
-
-  def skip_review?
-    current_user.permissions.include?("skip_review")
-  end
 end
