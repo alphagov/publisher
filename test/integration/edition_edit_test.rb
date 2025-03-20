@@ -1455,6 +1455,19 @@ class EditionEditTest < IntegrationTest
         @govuk_requester.permissions << "skip_review"
       end
 
+      should "render the 'Skip review' page" do
+        create_in_review_edition
+
+        visit skip_review_page_edition_path(@in_review_edition)
+
+        assert page.has_content?("Skip review")
+        assert page.has_content?(@in_review_edition.title)
+        assert page.has_content?("You should only skip review in exceptional circumstances")
+        assert page.has_content?("Comment (optional)")
+        assert page.has_button?("Skip review")
+        assert page.has_link?("Cancel")
+      end
+
       should "save comment to edition history" do
         create_in_review_edition
 

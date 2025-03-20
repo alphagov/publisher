@@ -1,7 +1,14 @@
-<%# locals: (form_url:, comment_label_text:, submit_button_text:) %>
+<%# locals: (form_url:, comment_label_text:, submit_button_text:, text: nil) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
+    <% if text %>
+      <p class="govuk-body">
+        <%= sanitize(text) %>
+      </p>
+    <% end %>
+
     <%= form_for(:edition, url: form_url) do %>
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
