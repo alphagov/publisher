@@ -12,7 +12,6 @@ class RoutesTest < LegacyIntegrationTest
     assert_routing("/editions/1/downtime/new", controller: "downtimes", action: "new", edition_id: "1")
   end
 
-  # rubocop:disable Rails/SaveBang
   context "new design system" do
     setup do
       @test_strategy = Flipflop::FeatureSet.current.test!
@@ -51,5 +50,4 @@ class RoutesTest < LegacyIntegrationTest
       @test_strategy.switch!(:design_system_edit, false)
     end
   end
-  # rubocop:enable Rails/SaveBang
 end
