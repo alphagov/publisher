@@ -118,7 +118,7 @@ class EditionsController < InheritedResources::Base
     if send_to_2i_for_edition(@resource, params[:comment])
       # Can't use flash.now because we're redirecting
       flash[:success] = "Sent to 2i"
-      redirect_to history_edition_path(resource)
+      redirect_to edition_path(resource)
     else
       flash[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_2i_page"
@@ -341,6 +341,13 @@ private
 
     flash[:danger] = "Cannot edit the assignee of an edition that has been published."
     redirect_to edition_path(@resource)
+  end
+
+  def require_skip_review_permission
+    return if current_user.skip_review?
+
+    flash[:danger] = "You do not have correct editor permissions for this action."
+    redirect_to edition_path(resource)
   end
 
   def update_assignment(edition, assignee_id)

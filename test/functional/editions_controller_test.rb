@@ -366,7 +366,6 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#send_to_2i" do
-    # TODO: Repeat this for the 'amends_needed' state?
     setup do
       @requester = FactoryBot.create(:user, name: "Stub Requester")
       @edition = FactoryBot.create(
@@ -419,23 +418,30 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
 
-    # TODO: fix this!
-    # context 'edition is not in a valid state' do
-    #   setup do
-    #     @edition.state = "ready"
-    #   end
-    #
-    #   should "not update the edition state and render 'send_to_2i' template with an error" do
-    #     post :send_to_2i, params: {
-    #       id: @edition.id,
-    #       comment: "Please review this",
-    #     }
-    #
-    #     assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-    #     @edition.reload
-    #     assert_equal "ready", @edition.state
-    #   end
-    # end
+    # TODO: check this - it's not clear what the expected behaviour is
+    # and the error message would indicate that it's not handled at the top
+    context "edition is not in a valid state to be sent to 2i" do
+      setup do
+        @requester = FactoryBot.create(:user, name: "Stub Requester")
+        @edition = FactoryBot.create(
+          :edition,
+          state: "ready",
+        )
+      end
+
+      should "not update the edition state and render 'send_to_2i' template with an error" do
+        post :send_to_2i, params: {
+          id: @edition.id,
+          comment: "Please review this",
+        }
+
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        # assert flash.empty?, "Expected no flash message, but found: #{flash.inspect}"
+
+        @edition.reload
+        assert_equal "ready", @edition.state
+      end
+    end
   end
 
   context "#metadata" do
