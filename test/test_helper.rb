@@ -27,6 +27,8 @@ require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
+DatabaseCleaner.allow_remote_database_url = true
+
 DatabaseCleaner.strategy = :deletion
 # initial clean
 DatabaseCleaner.clean
