@@ -314,7 +314,7 @@ class EditionEditTest < IntegrationTest
         end
       end
 
-      should "display 'Content block update' action on Published Editions only" do
+      should "display 'Content block update' action on Published and In Progress Editions" do
         user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
         event = create_content_update_event(updated_by_user_uid: user["uid"])
 
@@ -324,18 +324,25 @@ class EditionEditTest < IntegrationTest
         visit edition_path(@edition)
         click_link("History and notes")
 
-        assert page.has_no_css?(".history__action--content_block_update__heading")
-        assert page.has_no_css?(".history__action--content_block_update__content")
+        within :css, ".history__action--content_block_update__heading" do
+          assert page.has_css?("time", text: "11:26am, 7 August 2024")
+          assert page.has_text?("Content block updated by Dave Bennett")
+        end
+
+        within :css, ".history__action--content_block_update__content" do
+          assert page.has_text?("Email address updated")
+          assert page.has_link?("View in Content Block Manager")
+        end
 
         published_edition = FactoryBot.create(
           :edition,
           state: "published",
+          created_at: Time.zone.parse(event["created_at"]).to_date - 1.day,
         )
 
         published_edition.actions.create!(
           request_type: Action::PUBLISH,
           requester: user,
-          created_at: "2024-08-06 11:26:00",
         )
 
         visit edition_path(published_edition)
@@ -350,6 +357,24 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Email address updated")
           assert page.has_link?("View in Content Block Manager")
         end
+      end
+
+      should "does not display 'Content block update' action on Editions archived before the update" do
+        user = FactoryBot.create(:user, :govuk_editor, name: "Dave Bennett")
+
+        archived_edition = FactoryBot.create(:edition, state: "archived")
+        archived_edition.artefact.update!(state: "archived")
+
+        event = create_content_update_event(updated_by_user_uid: user["uid"])
+
+        stub_events_for_all_content_ids(events: [event])
+        stub_users_from_signon_api([user.uid], [user])
+
+        visit edition_path(archived_edition)
+        click_link("History and notes")
+
+        assert page.has_no_css?(".history__action--content_block_update__heading")
+        assert page.has_no_css?(".history__action--content_block_update__content")
       end
     end
   end

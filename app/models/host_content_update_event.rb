@@ -26,10 +26,14 @@ class HostContentUpdateEvent < Data.define(:author, :created_at, :content_id, :c
   end
 
   def is_for_edition?(edition)
-    if edition.published?
-      created_at.after?(edition.published_at)
-    elsif edition.archived? && edition.superseded_at && edition.published_at
-      created_at.between?(edition.published_at, edition.superseded_at)
+    if edition.archived?
+      if edition.superseded_at.present?
+        created_at.between?(edition.created_at, edition.superseded_at)
+      elsif edition.artefact.state == "archived"
+        created_at.between?(edition.created_at, edition.artefact.updated_at)
+      end
+    elsif edition.in_progress? || edition.published? || edition.scheduled_for_publishing?
+      created_at.after?(edition.created_at)
     else
       false
     end
