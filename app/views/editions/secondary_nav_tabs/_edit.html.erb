@@ -9,7 +9,7 @@
 </div>
 
 <div class="govuk-grid-row">
-  <% if @resource.published? %>
+  <% if @resource.published? || @resource.archived? %>
     <div class="govuk-grid-column-two-thirds">
       <%= render partial: "editions/secondary_nav_tabs/edit/published/common_fields", locals: { edition: @resource } %>
 
@@ -17,13 +17,15 @@
 
       <%= render partial: "editions/secondary_nav_tabs/edit/published/public_change_note", locals: { edition: @resource } %>
     </div>
-    <div class="govuk-grid-column-one-third options-sidebar">
-      <div class="sidebar-components">
-        <%= sidebar_options_heading %>
+    <% unless @resource.archived? %>
+      <div class="govuk-grid-column-one-third options-sidebar">
+        <div class="sidebar-components">
+          <%= sidebar_options_heading %>
 
-        <%= sidebar_items_list(published_sidebar_buttons(@resource)) %>
+          <%= sidebar_items_list(published_sidebar_buttons(@resource)) %>
+        </div>
       </div>
-    </div>
+    <% end %>
   <% else %>
     <%= form_for @resource, as: :edition, url: edition_path(@resource) do %>
       <div class="govuk-grid-column-two-thirds">

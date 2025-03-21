@@ -955,6 +955,97 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "archived edition" do
+      should "show a message when all editions are unpublished" do
+        published_edition = FactoryBot.create(
+          :answer_edition,
+          title: "A published edition",
+          panopticon_id: FactoryBot.create(
+            :artefact,
+          ).id,
+          state: "published",
+        )
+
+        new_edition = FactoryBot.create(
+          :answer_edition,
+          title: "A new edition of a published edition",
+          panopticon_id: published_edition.artefact.id,
+          state: "draft",
+        )
+
+        new_edition.artefact.state = "archived"
+        new_edition.artefact.save!
+        visit edition_path(new_edition)
+
+        assert page.has_text?("This content has been unpublished and is no longer available on the website. All editions have been archived.")
+      end
+
+      should "not show the sidebar" do
+        archived_edition = FactoryBot.create(
+          :edition,
+          state: "archived",
+        )
+        visit edition_path(archived_edition)
+
+        assert page.has_no_css?(".sidebar-components")
+      end
+
+      should "show common content-type fields" do
+        archived_edition = FactoryBot.create(
+          :edition,
+          state: "archived",
+          title: "Some test title",
+          overview: "Some overview text",
+          in_beta: true,
+        )
+        visit edition_path(archived_edition)
+
+        assert page.has_css?("h3", text: "Title")
+        assert page.has_css?("p.govuk-body", text: archived_edition.title)
+        assert page.has_css?("h3", text: "Meta tag description")
+        assert page.has_css?("p.govuk-body", text: archived_edition.overview)
+        assert page.has_css?("h3", text: "Is this beta content?")
+        assert page.has_css?("p.govuk-body", text: "Yes")
+
+        archived_edition.in_beta = false
+        archived_edition.save!(validate: false)
+        visit edition_path(archived_edition)
+        assert page.has_css?("p.govuk-body", text: "No")
+      end
+
+      should "show body field" do
+        archived_edition = FactoryBot.create(
+          :answer_edition,
+          state: "archived",
+          body: "## Some body text",
+        )
+        visit edition_path(archived_edition)
+
+        assert page.has_css?("h3", text: "Body")
+        assert page.has_css?("div", text: archived_edition.body)
+      end
+
+      should "show public change field" do
+        archived_edition = FactoryBot.create(
+          :answer_edition,
+          state: "archived",
+          in_beta: true,
+          major_change: false,
+        )
+        visit edition_path(archived_edition)
+
+        assert page.has_css?("h3", text: "Public change note")
+        assert page.has_css?("p.govuk-body", text: "None added")
+
+        archived_edition.major_change = true
+        archived_edition.change_note = "Change note for test"
+        archived_edition.save!(validate: false)
+        visit edition_path(archived_edition)
+
+        assert page.has_text?(archived_edition.change_note)
+      end
+    end
+
     context "Request amendments link" do
       context "edition is not in review" do
         setup do
