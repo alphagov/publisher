@@ -367,11 +367,12 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#send_to_2i" do
     setup do
-      @requester = FactoryBot.create(:user, name: "Stub Requester")
+      @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
       @edition = FactoryBot.create(
         :edition,
         state: "draft",
       )
+      login_as(@requester)
     end
 
     context "user has govuk_editor permission" do
@@ -385,6 +386,7 @@ class EditionsControllerTest < ActionController::TestCase
         @edition.reload
         assert_equal "in_review", @edition.state
         assert_equal "Please review this", @edition.latest_status_action&.comment
+        assert_equal @requester.id, @edition.latest_status_action&.requester_id
       end
 
       should "not update the edition state and render 'send_to_2i' template with an error when an error occurs" do
@@ -422,7 +424,7 @@ class EditionsControllerTest < ActionController::TestCase
     # and the error message would indicate that it's not handled at the top
     context "edition is not in a valid state to be sent to 2i" do
       setup do
-        @requester = FactoryBot.create(:user, name: "Stub Requester")
+        @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
         @edition = FactoryBot.create(
           :edition,
           state: "ready",
@@ -435,8 +437,7 @@ class EditionsControllerTest < ActionController::TestCase
           comment: "Please review this",
         }
 
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        # assert flash.empty?, "Expected no flash message, but found: #{flash.inspect}"
+        assert_equal "Edition is not in a state where it can be sent to 2i", flash[:danger]
 
         @edition.reload
         assert_equal "ready", @edition.state

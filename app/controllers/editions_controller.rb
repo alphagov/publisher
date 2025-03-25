@@ -119,6 +119,8 @@ class EditionsController < InheritedResources::Base
       # Can't use flash.now because we're redirecting
       flash[:success] = "Sent to 2i"
       redirect_to edition_path(resource)
+    elsif !%w[draft amends_needed].include?(@resource.state)
+      flash[:danger] = "Edition is not in a state where it can be sent to 2i"
     else
       flash[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_2i_page"
