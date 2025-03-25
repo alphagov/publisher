@@ -1617,11 +1617,16 @@ class EditionEditTest < IntegrationTest
 
   context "Compare editions" do
     should "render the compare editions page" do
-      published_edition = create_published_edition
+      published_edition = FactoryBot.create(
+        :answer_edition,
+        body: "Some text",
+        state: "published",
+      )
       draft_edition = FactoryBot.create(
-        :edition,
+        :answer_edition,
         panopticon_id: published_edition.panopticon_id,
         title: "My draft edition",
+        body: "Some added text",
         state: "draft",
       )
 
@@ -1632,6 +1637,7 @@ class EditionEditTest < IntegrationTest
       assert page.has_content?("Answer")
       assert page.has_content?("2 Draft")
       assert page.has_link?("Back to History and notes", href: history_edition_path(draft_edition))
+      assert page.has_css?("li.ins", text: "Some added text")
     end
   end
 

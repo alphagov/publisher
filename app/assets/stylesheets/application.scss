@@ -37,6 +37,7 @@ $govuk-page-width: 1140px;
 @import 'govuk_publishing_components/components/table';
 @import 'govuk_publishing_components/components/textarea';
 @import 'govuk_publishing_components/components/warning-text';
+@import "diff";
 @import "downtimes";
 @import "editions";
 @import "history";
