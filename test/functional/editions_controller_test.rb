@@ -993,6 +993,13 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#diff" do
+    should "render the compare editions page" do
+      get :diff, params: { id: @edition.id }
+      assert_template "diff"
+    end
+  end
+
 private
 
   def description(edition)

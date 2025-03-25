@@ -1615,6 +1615,22 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Compare editions" do
+    should "render the compare editions page" do
+      published_edition = create_published_edition
+      draft_edition = FactoryBot.create(
+        :edition,
+        panopticon_id: published_edition.panopticon_id,
+        title: "My draft edition",
+        state: "draft",
+      )
+
+      visit diff_edition_path(draft_edition)
+
+      assert page.has_content?(draft_edition.title)
+    end
+  end
+
 private
 
   def create_draft_edition

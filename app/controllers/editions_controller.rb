@@ -183,6 +183,10 @@ class EditionsController < InheritedResources::Base
     redirect_to edition_path(resource)
   end
 
+  def diff
+    @comparison = @resource.previous_siblings.last
+  end
+
   def confirm_destroy
     render "secondary_nav_tabs/confirm_destroy"
   end
