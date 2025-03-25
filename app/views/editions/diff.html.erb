@@ -1,2 +1,20 @@
 <% content_for :page_title, @resource.title %>
-<% content_for :title, @resource.title %>
+<% content_for :title_context, @resource.title %>
+<% content_for :title, "Compare edition #{@comparison.version_number} and #{@resource.version_number}" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: [
+        {
+          field: "Content type",
+          value: @resource.format.underscore.humanize,
+        },
+        {
+          field: "Edition",
+          value: edition_version_and_state_tag(@resource),
+        },
+      ],
+    } %>
+  </div>
+</div>

@@ -67,8 +67,12 @@ module EditionsHelper
       },
       {
         field: "Edition",
-        value: sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>"),
+        value: edition_version_and_state_tag(edition),
       },
     ]
+  end
+
+  def edition_version_and_state_tag(edition)
+    sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
 end

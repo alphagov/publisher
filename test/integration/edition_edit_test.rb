@@ -1628,6 +1628,9 @@ class EditionEditTest < IntegrationTest
       visit diff_edition_path(draft_edition)
 
       assert page.has_content?(draft_edition.title)
+      assert page.has_content?("Compare edition 1 and 2")
+      assert page.has_content?("Answer")
+      assert page.has_content?("2 Draft")
     end
   end
 

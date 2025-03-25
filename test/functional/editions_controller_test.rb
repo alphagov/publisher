@@ -995,7 +995,11 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#diff" do
     should "render the compare editions page" do
-      get :diff, params: { id: @edition.id }
+      edition_one = FactoryBot.create(:edition, :published)
+      edition_two = FactoryBot.create(:edition, :published, panopticon_id: edition_one.panopticon_id)
+
+      get :diff, params: { id: edition_two.id }
+
       assert_template "diff"
     end
   end
