@@ -377,6 +377,36 @@ class EditionEditTest < IntegrationTest
         assert page.has_no_css?(".history__action--content_block_update__content")
       end
     end
+
+    context "when there are previous editions" do
+      should "display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+        edition_two = FactoryBot.create(
+          :answer_edition,
+          :published,
+          panopticon_id: edition_one.panopticon_id,
+          title: "Second edition title",
+        )
+
+        visit history_edition_path(edition_two)
+        page.find("a", text: "Compare with Edition 1").click
+
+        page.find("h1", text: "Compare edition 1 and 2")
+        assert page.has_css?("h1", text: "Compare edition 1 and 2")
+        assert page.has_content?(edition_two.title)
+      end
+    end
+
+    context "when there are not previous editions" do
+      should "not display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+
+        visit history_edition_path(edition_one)
+        page.find("h2", text: "History and notes")
+
+        assert page.has_no_css?("a", text: "Compare with Edition")
+      end
+    end
   end
 
   context "Add edition note page" do
