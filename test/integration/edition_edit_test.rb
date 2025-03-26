@@ -794,16 +794,16 @@ class EditionEditTest < IntegrationTest
         visit edition_path(published_edition)
 
         assert page.has_css?("h3", text: "Title")
-        assert page.has_css?("p.govuk-body", text: published_edition.title)
+        assert page.has_css?("p", text: published_edition.title)
         assert page.has_css?("h3", text: "Meta tag description")
-        assert page.has_css?("p.govuk-body", text: published_edition.overview)
+        assert page.has_css?("p", text: published_edition.overview)
         assert page.has_css?("h3", text: "Is this beta content?")
-        assert page.has_css?("p.govuk-body", text: "Yes")
+        assert page.has_css?("p", text: "Yes")
 
         published_edition.in_beta = false
         published_edition.save!(validate: false)
         visit edition_path(published_edition)
-        assert page.has_css?("p.govuk-body", text: "No")
+        assert page.has_css?("p", text: "No")
       end
 
       should "show body field" do
@@ -828,7 +828,7 @@ class EditionEditTest < IntegrationTest
         visit edition_path(published_edition)
 
         assert page.has_css?("h3", text: "Public change note")
-        assert page.has_css?("p.govuk-body", text: "None added")
+        assert page.has_css?("p", text: "None added")
 
         published_edition.major_change = true
         published_edition.change_note = "Change note for test"
@@ -1001,16 +1001,16 @@ class EditionEditTest < IntegrationTest
         visit edition_path(archived_edition)
 
         assert page.has_css?("h3", text: "Title")
-        assert page.has_css?("p.govuk-body", text: archived_edition.title)
+        assert page.has_css?("p", text: archived_edition.title)
         assert page.has_css?("h3", text: "Meta tag description")
-        assert page.has_css?("p.govuk-body", text: archived_edition.overview)
+        assert page.has_css?("p", text: archived_edition.overview)
         assert page.has_css?("h3", text: "Is this beta content?")
-        assert page.has_css?("p.govuk-body", text: "Yes")
+        assert page.has_css?("p", text: "Yes")
 
         archived_edition.in_beta = false
         archived_edition.save!(validate: false)
         visit edition_path(archived_edition)
-        assert page.has_css?("p.govuk-body", text: "No")
+        assert page.has_css?("p", text: "No")
       end
 
       should "show body field" do
@@ -1035,7 +1035,7 @@ class EditionEditTest < IntegrationTest
         visit edition_path(archived_edition)
 
         assert page.has_css?("h3", text: "Public change note")
-        assert page.has_css?("p.govuk-body", text: "None added")
+        assert page.has_css?("p", text: "None added")
 
         archived_edition.major_change = true
         archived_edition.change_note = "Change note for test"
