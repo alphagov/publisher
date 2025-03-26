@@ -94,63 +94,124 @@ class HostContentUpdateEventTest < ActiveSupport::TestCase
   end
 
   describe "#is_for_edition?" do
-    let(:edition) { FactoryBot.build(:edition, state:) }
+    let(:created_at) { Time.zone.now - 5.weeks }
     let(:published_at) { Time.zone.now - 4.weeks }
-    let(:superseded_at) { Time.zone.now - 4.days }
 
-    before do
-      edition.stubs(:published_at).returns(published_at)
-      edition.stubs(:superseded_at).returns(superseded_at)
+    describe "if the edition is in progress" do
+      let(:in_progress_edition) { FactoryBot.build(:edition, created_at:) }
+
+      before do
+        in_progress_edition.stubs(:in_progress?).returns(true)
+      end
+
+      it "returns true if the event occurred after the created_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: created_at + 1.day)
+
+        assert event.is_for_edition?(in_progress_edition)
+      end
+
+      it "returns false if the event occurred before the created_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: created_at - 1.day)
+
+        assert_not event.is_for_edition?(in_progress_edition)
+      end
+    end
+
+    describe "if the edition is scheduled for publishing" do
+      let(:scheduled_edition) { FactoryBot.build(:edition, created_at:) }
+
+      before do
+        scheduled_edition.stubs(:scheduled_for_publishing?).returns(true)
+      end
+
+      it "returns true if the event occurred after the created_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: created_at + 1.day)
+
+        assert event.is_for_edition?(scheduled_edition)
+      end
+
+      it "returns false if the event occurred before the created_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: created_at - 1.day)
+
+        assert_not event.is_for_edition?(scheduled_edition)
+      end
     end
 
     describe "if the edition is published" do
       let(:state) { "published" }
+      let(:published_edition) { FactoryBot.build(:edition, state:, created_at:) }
+
+      before do
+        published_edition.stubs(:published_at).returns(published_at)
+      end
 
       it "returns true if the event occurred after the published_at date" do
         event = FactoryBot.build(:host_content_update_event, created_at: published_at + 1.day)
 
-        assert event.is_for_edition?(edition)
+        assert event.is_for_edition?(published_edition)
       end
 
-      it "returns false if the event occurred before the published_at date" do
-        event = FactoryBot.build(:host_content_update_event, created_at: published_at - 3.days)
+      it "returns false if the event occurred before the created_at date" do
+        event = FactoryBot.build(:host_content_update_event, created_at: created_at - 3.days)
 
-        assert_not event.is_for_edition?(edition)
+        assert_not event.is_for_edition?(published_edition)
       end
     end
 
     describe "if the edition is archived" do
       let(:state) { "archived" }
+      let(:archived_edition) { FactoryBot.build(:edition, state:, created_at:) }
+      describe "if the edition is superseded" do
+        let(:superseded_at) { Time.zone.now - 4.days }
 
-      it "returns true if the event occurred after the published_at date" do
-        event = FactoryBot.build(:host_content_update_event, created_at: published_at + 1.minute)
+        before do
+          archived_edition.stubs(:superseded_at).returns(superseded_at)
+        end
 
-        assert event.is_for_edition?(edition)
+        it "returns true if the event occurred after the created_at date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: created_at + 1.minute)
+
+          assert event.is_for_edition?(archived_edition)
+        end
+
+        it "returns true if the event occurred before the superseded date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: superseded_at - 1.minute)
+
+          assert event.is_for_edition?(archived_edition)
+        end
+
+        it "returns false if the event occurred before the created_at date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: created_at - 1.minute)
+
+          assert_not event.is_for_edition?(archived_edition)
+        end
+
+        it "returns false if the event occurred after the superseded date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: superseded_at + 1.minute)
+
+          assert_not event.is_for_edition?(archived_edition)
+        end
       end
 
-      it "returns true if the event occurred before the superseded date" do
-        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at - 1.minute)
+      describe "if the edition has been unpublished" do
+        let(:artefact_updated_at) { Time.zone.now - 4.days }
+        let(:artefact) { FactoryBot.build(:artefact, updated_at: artefact_updated_at, state: "archived") }
 
-        assert event.is_for_edition?(edition)
-      end
+        before do
+          archived_edition.stubs(:artefact).returns(artefact)
+        end
 
-      it "returns false if the event occurred before the published_at date" do
-        event = FactoryBot.build(:host_content_update_event, created_at: published_at - 1.minute)
+        it "returns true if the event occurred after the archived date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: artefact_updated_at - 1.minute)
 
-        assert_not event.is_for_edition?(edition)
-      end
+          assert event.is_for_edition?(archived_edition)
+        end
 
-      it "returns false if the event occurred after the superseded date" do
-        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at + 1.minute)
+        it "returns false if the event occurred before the archived date" do
+          event = FactoryBot.build(:host_content_update_event, created_at: artefact_updated_at + 1.minute)
 
-        assert_not event.is_for_edition?(edition)
-      end
-
-      it "returns false if the edition was never published" do
-        edition.stubs(:published_at).returns(nil)
-        event = FactoryBot.build(:host_content_update_event, created_at: superseded_at + 1.minute)
-
-        assert_not event.is_for_edition?(edition)
+          assert_not event.is_for_edition?(archived_edition)
+        end
       end
     end
   end
