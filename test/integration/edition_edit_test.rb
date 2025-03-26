@@ -1631,6 +1631,7 @@ class EditionEditTest < IntegrationTest
       assert page.has_content?("Compare edition 1 and 2")
       assert page.has_content?("Answer")
       assert page.has_content?("2 Draft")
+      assert page.has_link?("Back to History and notes", href: history_edition_path(draft_edition))
     end
   end
 
