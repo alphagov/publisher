@@ -377,6 +377,36 @@ class EditionEditTest < IntegrationTest
         assert page.has_no_css?(".history__action--content_block_update__content")
       end
     end
+
+    context "when there are previous editions" do
+      should "display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+        edition_two = FactoryBot.create(
+          :answer_edition,
+          :published,
+          panopticon_id: edition_one.panopticon_id,
+          title: "Second edition title",
+        )
+
+        visit history_edition_path(edition_two)
+        page.find("a", text: "Compare with Edition 1").click
+
+        page.find("h1", text: "Compare edition 1 and 2")
+        assert page.has_css?("h1", text: "Compare edition 1 and 2")
+        assert page.has_content?(edition_two.title)
+      end
+    end
+
+    context "when there are not previous editions" do
+      should "not display a link to compare editions" do
+        edition_one = FactoryBot.create(:answer_edition, :published)
+
+        visit history_edition_path(edition_one)
+        page.find("h2", text: "History and notes")
+
+        assert page.has_no_css?("a", text: "Compare with Edition")
+      end
+    end
   end
 
   context "Add edition note page" do
@@ -1612,6 +1642,32 @@ class EditionEditTest < IntegrationTest
         assert page.has_content?("Due to a service problem, the request could not be made")
         assert page.has_content?("No review required")
       end
+    end
+  end
+
+  context "Compare editions" do
+    should "render the compare editions page" do
+      published_edition = FactoryBot.create(
+        :answer_edition,
+        body: "Some text",
+        state: "published",
+      )
+      draft_edition = FactoryBot.create(
+        :answer_edition,
+        panopticon_id: published_edition.panopticon_id,
+        title: "My draft edition",
+        body: "Some added text",
+        state: "draft",
+      )
+
+      visit diff_edition_path(draft_edition)
+
+      assert page.has_content?(draft_edition.title)
+      assert page.has_content?("Compare edition 1 and 2")
+      assert page.has_content?("Answer")
+      assert page.has_content?("2 Draft")
+      assert page.has_link?("Back to History and notes", href: history_edition_path(draft_edition))
+      assert page.has_css?("li.ins", text: "Some added text")
     end
   end
 

@@ -1,0 +1,80 @@
+// stylelint-disable selector-no-qualifying-type, max-nesting-depth
+
+// Diff of two editions
+
+$added-color: #ddffdd;
+$strong-added-color: #77f177;
+$removed-color: #ffdddd;
+$strong-removed-color: #ffaaaa;
+
+.diff {
+  border: 1px solid $gray-lighter;
+  border-left: 40px solid $gray-lighter;
+  border-radius: 3px;
+  padding: 15px;
+
+  ul {
+    padding-left: 0;
+
+    li {
+      min-height: 24px;
+      margin: 0 -15px;
+      padding: 0 15px;
+      word-wrap: break-word;
+      list-style: none;
+      position: relative;
+
+      del,
+      ins {
+        text-decoration: none;
+      }
+    }
+
+    li.del,
+    li.ins {
+      padding-top: 2px;
+    }
+
+    li.del {
+      background-color: $removed-color;
+
+      strong {
+        font-weight: normal;
+        background-color: $strong-removed-color;
+      }
+    }
+
+    li.ins {
+      background-color: $added-color;
+
+      strong {
+        font-weight: normal;
+        background-color: $strong-added-color;
+      }
+    }
+
+    li.del::before,
+    li.ins::before {
+      position: absolute;
+      font-weight: bold;
+      margin-left: -55px;
+      width: 40px;
+      text-align: center;
+      min-height: 24px;
+      top: 0;
+      bottom: 0;
+    }
+
+    li.del::before {
+      color: $state-danger-text;
+      background-color: $removed-color;
+      content: "-";
+    }
+
+    li.ins::before {
+      color: $state-success-text;
+      background-color: $added-color;
+      content: "+";
+    }
+  }
+}

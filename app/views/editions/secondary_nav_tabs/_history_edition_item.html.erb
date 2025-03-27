@@ -1,0 +1,11 @@
+<%# locals: (edition:, update_events:) %>
+
+<% if edition.version_number > 1 %>
+  <p class="govuk-body">
+    <%= link_to "Compare with Edition #{edition.version_number - 1}", diff_edition_path(edition), class: "govuk-link govuk-link--no-visited-state" %>
+  </p>
+<% end %>
+
+<%= render "govuk_publishing_components/components/list", {
+  items: action_items(edition, update_events),
+} %>

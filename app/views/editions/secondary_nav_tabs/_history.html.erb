@@ -22,8 +22,9 @@
               text: "Edition #{edition.version_number}",
             },
             content: {
-              html: (render "govuk_publishing_components/components/list", {
-                items: action_items(edition, @update_events),
+              html: (render "editions/secondary_nav_tabs/history_edition_item", {
+                edition: edition,
+                update_events: @update_events,
               }),
             },
           }

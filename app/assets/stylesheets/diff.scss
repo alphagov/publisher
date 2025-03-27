@@ -2,79 +2,86 @@
 
 // Diff of two editions
 
-$added-color: #ddffdd;
-$strong-added-color: #77f177;
-$removed-color: #ffdddd;
-$strong-removed-color: #ffaaaa;
+$added-color: #e6fff3;
+$strong-added-color: #99ffcf;
+$removed-color: #fadede;
+$strong-removed-color: #f3aeac;
 
-.diff {
-  border: 1px solid $gray-lighter;
-  border-left: 40px solid $gray-lighter;
-  border-radius: 3px;
-  padding: 15px;
+.compare-editions {
+  .diff {
+    border: 1px solid govuk-colour("light-grey");
+    border-left: 40px solid govuk-colour("light-grey");
+    padding: 15px;
 
-  ul {
-    padding-left: 0;
+    ul {
+      padding-left: 0;
 
-    li {
-      min-height: 24px;
-      margin: 0 -15px;
-      padding: 0 15px;
-      word-wrap: break-word;
-      list-style: none;
-      position: relative;
+      li {
+        margin: 0 -15px;
+        padding: 0 15px;
+        word-wrap: break-word;
+        list-style: none;
+        position: relative;
 
-      del,
-      ins {
-        text-decoration: none;
+        &::after {
+          content: ".";
+          visibility: hidden;
+        }
+
+        del,
+        ins {
+          text-decoration: none;
+        }
       }
-    }
 
-    li.del,
-    li.ins {
-      padding-top: 2px;
-    }
+      li.del,
+      li.ins {
+        padding-top: 2px;
+      }
 
-    li.del {
-      background-color: $removed-color;
+      li.del {
+        background-color: $removed-color;
+        padding-bottom: 2px;
 
-      strong {
-        font-weight: normal;
+        strong {
+          font-weight: normal;
+          background-color: $strong-removed-color;
+          border-bottom: 2px dashed govuk-colour("black");
+        }
+      }
+
+      li.ins {
+        background-color: $added-color;
+        padding-bottom: 2px;
+
+        strong {
+          font-weight: normal;
+          background-color: $strong-added-color;
+          border-bottom: 2px dashed govuk-colour("black");
+        }
+      }
+
+      li.del::before,
+      li.ins::before {
+        position: absolute;
+        margin-left: -55px;
+        width: 40px;
+        text-align: center;
+        top: 0;
+        bottom: 0;
+      }
+
+      li.del::before {
+        color: $govuk-text-colour;
         background-color: $strong-removed-color;
+        content: "−";
       }
-    }
 
-    li.ins {
-      background-color: $added-color;
-
-      strong {
-        font-weight: normal;
+      li.ins::before {
+        color: $govuk-text-colour;
         background-color: $strong-added-color;
+        content: "+";
       }
-    }
-
-    li.del::before,
-    li.ins::before {
-      position: absolute;
-      font-weight: bold;
-      margin-left: -55px;
-      width: 40px;
-      text-align: center;
-      min-height: 24px;
-      top: 0;
-      bottom: 0;
-    }
-
-    li.del::before {
-      color: $state-danger-text;
-      background-color: $removed-color;
-      content: "-";
-    }
-
-    li.ins::before {
-      color: $state-success-text;
-      background-color: $added-color;
-      content: "+";
     }
   }
 }
