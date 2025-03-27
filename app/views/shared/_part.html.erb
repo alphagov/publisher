@@ -1,3 +1,12 @@
+<a
+    class="govuk-button"
+   id="content-block-modal"
+   data-target="content-block-modal"
+   data-toggle="modal"
+>
+  Insert Content Block
+</a>
+
 <%= form_group(f, :body) do %>
   <%= f.text_area :body, rows: 25, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control body", data: {
     module: "paste-html-to-govspeak",

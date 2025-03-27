@@ -1,0 +1,24 @@
+<%= render "govuk_publishing_components/components/modal_dialogue", {
+  id: "content-block-modal"
+} do %>
+  <h1 class="govuk-heading-l">Content Blocks</h1>
+  <%= render "govuk_publishing_components/components/summary_card", {
+    title: "Basic State Pension",
+    rows: [
+      {
+        key: "Full basic State Pension amount",
+        value: "£176.49"
+      },
+      {
+        key: "Embed code",
+        value: "{{embed:content_block_pension:b979187f-c031-4388-8259-f0e69f089d84/rates/full-basic-state-pension-amount/amount}}"
+      }
+    ],
+    summary_card_actions: [
+      {
+        label: "Use",
+        href: "#/"
+      }
+    ]
+  } %>
+<% end %>
