@@ -26,36 +26,46 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
         $insertButton.classList.add('govuk-link__copy-link')
         $insertButton.setAttribute('href', '#')
         $insertButton.setAttribute('role', 'button')
-        $insertButton.textContent = 'Copy code'
-        $insertButton.addEventListener('click', this.copyCode.bind(this))
+        $insertButton.textContent = 'Insert code'
+        $insertButton.addEventListener('click', this.insertCode.bind(this))
         // Handle when a keyboard user highlights the link and clicks return
         $insertButton.addEventListener(
             'keydown',
             function (e) {
                 if (e.keyCode === 13) {
-                    this.copyCode.bind(this)
+                    this.insertCode.bind(this)
                 }
             }.bind(this)
         )
 
         return $insertButton
     }
-
+    
     InsertEmbedCode.prototype.insertCode = function (e) {
         e.preventDefault()
-        // const embedCode = this.module.dataset.embedCode
-    }
-
-    InsertEmbedCode.prototype.copyCode = function (e) {
-        e.preventDefault()
         const embedCode = this.module.dataset.embedCode
-        
-        this.writeToClipboard(embedCode).then(this.copySuccess.bind(this))
+        const insertTarget = this.module.dataset.insertTarget
+        const textArea = document.getElementsByName(insertTarget)[0]
+
+        // Get the current cursor position
+        const position = textArea.selectionStart;
+
+        // Get the text before and after the cursor position
+        const before = textArea.value.substring(0, position);
+        const after = textArea.value.substring(position, textArea.value.length);
+
+        // Insert the new text at the cursor position
+        textArea.value = before + embedCode + after;
+
+        // Set the cursor position to after the newly inserted text
+        textArea.selectionStart = textArea.selectionEnd = position + embedCode.length;
+
+        this.copySuccess()
     }
 
     InsertEmbedCode.prototype.copySuccess = function () {
         const originalText = this.$insertButton.textContent
-        this.$insertButton.textContent = 'Code copied'
+        this.$insertButton.textContent = 'Code inserted'
         this.$insertButton.focus()
 
         setTimeout(this.restoreText.bind(this, originalText), 2000)
@@ -63,28 +73,6 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
 
     InsertEmbedCode.prototype.restoreText = function (originalText) {
         this.$insertButton.textContent = originalText
-    }
-
-    // This is a fallback for browsers that do not support the async clipboard API
-    InsertEmbedCode.prototype.writeToClipboard = function (embedCode) {
-        return new Promise(function (resolve) {
-            // Create a textarea element with the embed code
-            const textArea = document.createElement('textarea')
-            textArea.value = embedCode
-
-            document.body.appendChild(textArea)
-
-            // Select the text in the textarea
-            textArea.select()
-
-            // Copy the selected text
-            document.execCommand('copy')
-
-            // Remove our textarea
-            document.body.removeChild(textArea)
-
-            resolve()
-        })
     }
 
     Modules.InsertEmbedCode = InsertEmbedCode
