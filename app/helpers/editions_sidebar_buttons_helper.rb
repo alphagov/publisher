@@ -27,6 +27,18 @@ module EditionsSidebarButtonsHelper
     ]
   end
 
+  def scheduled_for_publishing_sidebar_buttons(edition)
+    [
+      link_to(
+        "Preview (opens in new tab)",
+        preview_edition_path(edition),
+        target: "_blank",
+        rel: "noopener",
+        class: "govuk-link",
+      ),
+    ]
+  end
+
   def published_sidebar_buttons(edition)
     buttons = []
     if current_user.has_editor_permissions?(edition)

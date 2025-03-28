@@ -17,7 +17,15 @@
 
       <%= render partial: "editions/secondary_nav_tabs/edit/published/public_change_note", locals: { edition: @resource } %>
     </div>
-    <% if @resource.published? %>
+    <% if @resource.scheduled_for_publishing? %>
+      <div class="govuk-grid-column-one-third options-sidebar">
+        <div class="sidebar-components">
+          <%= sidebar_options_heading %>
+
+          <%= sidebar_items_list(scheduled_for_publishing_sidebar_buttons(@resource)) %>
+        </div>
+      </div>
+    <% elsif @resource.published? %>
       <div class="govuk-grid-column-one-third options-sidebar">
         <div class="sidebar-components">
           <%= sidebar_options_heading %>
