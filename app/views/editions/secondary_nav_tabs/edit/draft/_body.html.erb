@@ -1,19 +1,62 @@
-<a
-  class="govuk-button"
-  id="content-block-modal"
-  data-target="content-block-modal"
-  data-toggle="modal"
->
-  Insert Content Block
-</a>
+<%
+  id ||= "body-#{SecureRandom.hex(4)}"
+  preview_id = "#{id}-preview"
 
-<%= render "govuk_publishing_components/components/textarea", {
-  label: {
-    heading_size: "m",
-    text: "Body",
-  },
-  name: "edition[body]",
-  value: edition.body,
-  rows: 14,
-  hint: ("Refer to #{link_to("Refer to the Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
-} %>
+  label_id = "#{id}-label"
+  hint ||= nil
+
+  preview_button_data_attributes ||= {}
+  preview_button_data_attributes["content-target"] = "##{id}"
+
+%>
+
+<div class="modal__container">
+  <div class="modal__toolbar">
+    <a
+      class="govuk-button"
+      id="content-block-modal"
+      data-target="content-block-modal"
+      data-toggle="modal"
+    >
+      Insert Content Block
+    </a>
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Generate preview",
+      secondary_quiet: true,
+      classes: "js-app-c-govspeak-editor__preview-button",
+      data_attributes: preview_button_data_attributes,
+      aria_controls: preview_id,
+      aria_describedby: label_id,
+      type: "button",
+    } %>
+  </div>
+  <div class="modal__text-container">
+    <div class="modal__text">
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Body",
+        },
+        name: "edition[body]",
+        value: edition.body,
+        rows: 14,
+      } %>
+    </div>
+  <div class="modal__text">
+    <div data-module="govspeak-editor">
+      <div class="app-c-govspeak-editor__preview js-locale-switcher-custom app-c-govspeak-editor__preview--show" aria-live="polite" id="edition_body-preview"><section>
+        <article class="document">
+          <div class="body">
+            <div class="govspeak"><p>something</p>
+
+              <p><span class="content-embed content-embed__content_block_pension" data-content-block="" data-document-type="content_block_pension" data-content-id="7deb351b-12de-4174-86f6-522a5a37996a" data-embed-code="{{embed:content_block_pension:7deb351b-12de-4174-86f6-522a5a37996a/rates/ratey/amount}}">£18</span></p>
+            </div>
+          </div>
+        </article>
+      </section>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>

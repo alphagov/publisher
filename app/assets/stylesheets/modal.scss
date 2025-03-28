@@ -1,0 +1,21 @@
+.modal__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.modal__text-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.modal__text {
+  width: 100%;
+  margin-right: 0 !important;
+}
