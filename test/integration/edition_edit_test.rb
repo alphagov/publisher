@@ -1027,6 +1027,11 @@ class EditionEditTest < IntegrationTest
 
         assert page.has_text?(edition.change_note)
       end
+
+      should "show a preview link in the sidebar" do
+        visit_scheduled_for_publishing_edition
+        assert page.has_link?("Preview (opens in new tab)")
+      end
     end
 
     context "published edition" do
