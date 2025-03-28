@@ -57,14 +57,27 @@ class WorkflowTest < ActiveSupport::TestCase
     [user, transaction]
   end
 
-  context "#status_text" do
+  context "#legacy_status_text" do
     should "return a capitalized text representation of the state" do
-      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").status_text
+      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").legacy_status_text
     end
 
     should "also return scheduled publishing time when the state is scheduled for publishing" do
       edition = FactoryBot.build(:edition, :scheduled_for_publishing)
       expected_status_text = "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}"
+
+      assert_equal expected_status_text, edition.legacy_status_text
+    end
+  end
+
+  context "#status_text" do
+    should "return a capitalized text representation of the state" do
+      assert_equal "Ready", FactoryBot.build(:edition, state: "ready").status_text
+    end
+
+    should "not return scheduled publishing time when the state is scheduled for publishing" do
+      edition = FactoryBot.build(:edition, :scheduled_for_publishing)
+      expected_status_text = "Scheduled for publishing"
 
       assert_equal expected_status_text, edition.status_text
     end
