@@ -839,6 +839,13 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "amends needed edition of a new publication" do
+      should "show 'Send to 2i' link" do
+        visit_amends_needed_edition
+        assert page.has_link?("Send to 2i")
+      end
+    end
+
     context "draft edition of a previously published publication" do
       setup do
         visit_new_edition_of_published_edition
