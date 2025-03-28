@@ -55,7 +55,7 @@ module EditionsHelper
   end
 
   def document_summary_items(edition)
-    [
+    items = [
       {
         field: "Assigned to",
         value: edition.assigned_to || "None",
@@ -70,6 +70,13 @@ module EditionsHelper
         value: edition_version_and_state_tag(edition),
       },
     ]
+    if edition.scheduled_for_publishing?
+      items << {
+        field: "Scheduled",
+        value: edition.publish_at.to_fs(:govuk_date).to_s,
+      }
+    end
+    items
   end
 
   def edition_version_and_state_tag(edition)
