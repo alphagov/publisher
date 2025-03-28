@@ -49,11 +49,6 @@
             secondary_solid: true,
             href: history_update_important_note_edition_path,
           }),
-          (
-            if current_user.has_editor_permissions?(@edition) && %w[draft amends_needed].include?(@edition.state)
-              link_to("Send to 2i", send_to_2i_page_edition_path(@edition), class: "govuk-link")
-            end
-          ),
         ],
       } %>
     </div>

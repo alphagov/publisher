@@ -366,6 +366,7 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#send_to_2i" do
+    # TODO: Repeat this for the 'amends_needed' state?
     setup do
       @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
       @edition = FactoryBot.create(:edition, state: "draft")
@@ -422,7 +423,6 @@ class EditionsControllerTest < ActionController::TestCase
       should "not update the edition state and render 'send_to_2i' template with an error" do
         post :send_to_2i, params: {
           id: @edition.id,
-          comment: "Please review this",
         }
 
         assert_equal "Edition is not in a state where it can be sent to 2i", flash[:danger]
