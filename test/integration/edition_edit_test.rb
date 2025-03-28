@@ -501,6 +501,74 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Send to 2i page" do
+    setup do
+      create_draft_edition
+      visit send_to_2i_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Send to 2i' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Send to 2i")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. If you’ve added a change note already, you do not need to add another one.")
+      assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
+
+      within :css, ".gem-c-textarea" do
+        assert page.has_css?("textarea")
+      end
+
+      assert page.has_button?("Send to 2i")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+      click_link("Cancel")
+
+      assert_current_path edition_path(@draft_edition.id)
+    end
+
+    should "show success message and redirect back to the edit tab when Send to 2i button is pressed" do
+      click_button "Send to 2i"
+
+      assert_current_path edition_path(@draft_edition.id)
+      assert page.has_text?("Sent to 2i")
+    end
+  end
+
+  context "in_review edition (sent to 2i)" do
+    context "user has the required permissions" do
+      context "current user is also the requester" do
+        setup do
+          login_as(@govuk_requester)
+          visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "indicate that the current user requested a review" do
+          assert page.has_text?("You've sent this edition to be reviewed")
+        end
+
+        should "not show 'Send to 2i' link as edition already in 'in review' state" do
+          visit_in_review_edition
+          assert page.has_no_link?("Send to 2i")
+        end
+      end
+
+      context "current user is not the requester" do
+        setup do
+          login_as(@govuk_editor)
+          visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "indicate which other user requested a review" do
+          assert page.has_text?("Stub requester sent this edition to be reviewed")
+        end
+      end
+    end
+  end
+
   context "unpublish tab" do
     context "user does not have required permissions" do
       setup do
@@ -778,6 +846,10 @@ class EditionEditTest < IntegrationTest
         assert page.has_button?("Save")
       end
 
+      should "show 'Send to 2i' link" do
+        assert page.has_link?("Send to 2i")
+      end
+
       should "show Title input box prefilled" do
         assert page.has_text?("Title")
         assert page.has_field?("edition[title]", with: "Edit page title")
@@ -819,6 +891,13 @@ class EditionEditTest < IntegrationTest
         assert find(".gem-c-radio input[value='1']").checked?
         assert page.has_field?("edition[body]", with: "Changed body")
         assert page.has_text?("Edition updated successfully.")
+      end
+    end
+
+    context "amends needed edition of a new publication" do
+      should "show 'Send to 2i' link" do
+        visit_amends_needed_edition
+        assert page.has_link?("Send to 2i")
       end
     end
 
@@ -1702,18 +1781,18 @@ private
     visit edition_path(@archived_edition)
   end
 
-  def visit_in_review_edition
-    create_in_review_edition
+  def visit_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
+    create_in_review_edition(action, requester)
 
     visit edition_path(@in_review_edition)
   end
 
-  def create_in_review_edition
+  def create_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
     @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
 
     @in_review_edition.actions.create!(
-      request_type: Action::REQUEST_AMENDMENTS,
-      requester_id: @govuk_requester.id,
+      request_type: action,
+      requester_id: requester.id,
     )
   end
 
