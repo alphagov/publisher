@@ -969,6 +969,66 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "scheduled_for_publishing edition" do
+      should "show common content-type fields" do
+        edition = FactoryBot.create(
+          :edition,
+          state: "scheduled_for_publishing",
+          title: "Some test title",
+          overview: "Some overview text",
+          in_beta: true,
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Title")
+        assert page.has_css?("p", text: edition.title)
+        assert page.has_css?("h3", text: "Meta tag description")
+        assert page.has_css?("p", text: edition.overview)
+        assert page.has_css?("h3", text: "Is this beta content?")
+        assert page.has_css?("p", text: "Yes")
+
+        edition.in_beta = false
+        edition.save!(validate: false)
+        visit edition_path(edition)
+        assert page.has_css?("p", text: "No")
+      end
+
+      should "show body field" do
+        edition = FactoryBot.create(
+          :answer_edition,
+          state: "scheduled_for_publishing",
+          body: "## Some body text",
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Body")
+        assert page.has_css?("div", text: edition.body)
+      end
+
+      should "show public change field" do
+        edition = FactoryBot.create(
+          :answer_edition,
+          state: "scheduled_for_publishing",
+          in_beta: true,
+          major_change: false,
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Public change note")
+        assert page.has_css?("p", text: "None added")
+
+        edition.major_change = true
+        edition.change_note = "Change note for test"
+        edition.save!(validate: false)
+        visit edition_path(edition)
+
+        assert page.has_text?(edition.change_note)
+      end
+    end
+
     context "published edition" do
       should "show common content-type fields" do
         published_edition = FactoryBot.create(
