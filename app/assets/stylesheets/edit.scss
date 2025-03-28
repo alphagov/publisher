@@ -1,5 +1,5 @@
 .edit {
-  &--published, &--archived {
+  &--scheduled_for_publishing, &--published, &--archived {
     section > p {
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
     }
