@@ -8,8 +8,8 @@
   </div>
 </div>
 
-<div class="govuk-grid-row edit--<%= @resource.state %>">
-  <% if @resource.published? || @resource.archived? %>
+<% if @resource.published? || @resource.archived? %>
+  <div class="govuk-grid-row edit--<%= @resource.state %>">
     <div class="govuk-grid-column-two-thirds">
       <%= render partial: "editions/secondary_nav_tabs/edit/published/common_fields", locals: { edition: @resource } %>
 
@@ -26,8 +26,10 @@
         </div>
       </div>
     <% end %>
-  <% else %>
-    <%= form_for @resource, as: :edition, url: edition_path(@resource) do %>
+  </div>
+<% else %>
+  <%= form_for @resource, as: :edition, url: edition_path(@resource) do %>
+    <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <%= render partial: "editions/secondary_nav_tabs/edit/draft/common_fields", locals: { edition: @resource } %>
 
@@ -46,6 +48,6 @@
           <%= sidebar_items_list(non_published_sidebar_buttons(@resource)) %>
         </div>
       </div>
-    <% end %>
+    </div>
   <% end %>
-</div>
+<% end %>
