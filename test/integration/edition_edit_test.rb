@@ -102,6 +102,35 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    should "show the 2i reviewer if assigned or message if not when the edition state is 'in_review'" do
+      %i[draft amends_needed fact_check fact_check_received ready scheduled_for_publishing published archived ].each do |state|
+        send "visit_#{state}_edition"
+
+        within :css, ".govuk-summary-list" do
+          assert page.has_css?(".govuk-summary-list__row", count: 3)
+          assert_no_selector(".govuk-summary-list__key", text: "2i reviewer")
+        end
+      end
+
+      visit_in_review_edition
+
+      within :css, ".govuk-summary-list" do
+        assert page.has_css?(".govuk-summary-list__row", count: 4)
+      end
+
+      within all(".govuk-summary-list__row")[3] do
+        assert_selector(".govuk-summary-list__key", text: "2i reviewer")
+        assert_selector(".govuk-summary-list__value", text: @in_review_edition.reviewer)
+      end
+
+      @in_review_edition.reviewer = nil
+
+      within all(".govuk-summary-list__row")[3] do
+        assert_selector(".govuk-summary-list__key", text: "2i reviewer")
+        assert_selector(".govuk-summary-list__value", text: "Not yet claimed")
+      end
+    end
+
     should "display the important note if an important note exists" do
       note_text = "This is really really urgent!"
       create_draft_edition

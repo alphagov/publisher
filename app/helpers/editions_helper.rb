@@ -69,6 +69,12 @@ module EditionsHelper
         field: "Edition",
         value: edition_version_and_state_tag(edition),
       },
+      *(if edition.state == "in_review"
+        [{
+          field: "2i reviewer",
+          value: @reviewer,
+        }]
+      end),
     ]
     if edition.scheduled_for_publishing?
       items << {
