@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -42,6 +42,10 @@ class EditionsController < InheritedResources::Base
 
   def request_amendments_page
     render "secondary_nav_tabs/request_amendments_page"
+  end
+
+  def send_to_2i_page
+    render "secondary_nav_tabs/send_to_2i_page"
   end
 
   def no_changes_needed_page
@@ -107,6 +111,19 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/no_changes_needed_page"
+    end
+  end
+
+  def send_to_2i
+    if send_to_2i_for_edition(@resource, params[:comment])
+      # Can't use flash.now because we're redirecting
+      flash[:success] = "Sent to 2i"
+      redirect_to edition_path(resource)
+    elsif !%w[draft amends_needed].include?(@resource.state)
+      flash[:danger] = "Edition is not in a state where it can be sent to 2i"
+    else
+      flash[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/send_to_2i_page"
     end
   end
 
@@ -251,6 +268,11 @@ private
   def no_changes_needed_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "approve_review", comment: comment })
+  end
+
+  def send_to_2i_for_edition(resource, comment)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "request_review", comment: comment })
   end
 
   def skip_review_for_edition(resource, comment)
