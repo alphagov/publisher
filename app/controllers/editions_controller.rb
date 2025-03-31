@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -23,6 +23,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[edit_assignee update_assignee] do
     require_assignee_editable
   end
+  before_action only: %i[edit_reviewer update_reviewer] do
+    require_reviewer_editable
+  end
 
   helper_method :locale_to_language
 
@@ -32,6 +35,7 @@ class EditionsController < InheritedResources::Base
 
   def show
     @artefact = @resource.artefact
+    @reviewer = User.where(id: @resource.reviewer).first
     render action: "show"
   end
 
@@ -269,7 +273,11 @@ class EditionsController < InheritedResources::Base
   end
 
   def edit_assignee
-    render "secondary_nav_tabs/_edit_assignee"
+    render "secondary_nav_tabs/edit_assignee_page"
+  end
+
+  def edit_reviewer
+    render "secondary_nav_tabs/edit_reviewer_page"
   end
 
   def update_assignee
@@ -279,15 +287,48 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Assigned person updated."
       redirect_to edition_path
     else
-      render "secondary_nav_tabs/_edit_assignee"
+      render "secondary_nav_tabs/edit_assignee_page"
     end
   rescue ActionController::ParameterMissing
     flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
-    render "secondary_nav_tabs/_edit_assignee"
+    render "secondary_nav_tabs/edit_assignee_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the assigned person couldn't be saved"
-    render "secondary_nav_tabs/_edit_assignee"
+    render "secondary_nav_tabs/edit_assignee_page"
+  end
+
+  def update_reviewer
+    reviewer_id = if params["reviewer_id"] == "none"
+                    nil
+                  else
+                    params.require(:reviewer_id)
+                  end
+
+    @resource.assign_attributes(reviewer: reviewer_id)
+
+    if @resource.save
+      if @resource.reviewer == current_user.id.to_s
+        flash[:success] = "You are now the 2i reviewer of this edition"
+      elsif @resource.reviewer.nil?
+        flash[:success] = "The current 2i reviewer has been unassigned"
+      else
+        reviewer = User.where(id: @resource.reviewer).first
+        flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
+      end
+
+      redirect_to edition_path
+    else
+      flash.now[:danger] = "The selected 2i reviewer could not be saved."
+      render "secondary_nav_tabs/edit_reviewer_page"
+    end
+  rescue ActionController::ParameterMissing
+    flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
+    render "secondary_nav_tabs/edit_reviewer_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = "Due to a service problem, the reviewer couldn’t be saved."
+    render "secondary_nav_tabs/edit_reviewer_page"
   end
 
 protected
@@ -401,6 +442,13 @@ private
     return if can_update_assignee?(@resource)
 
     flash[:danger] = "Cannot edit the assignee of an edition that has been published."
+    redirect_to edition_path(@resource)
+  end
+
+  def require_reviewer_editable
+    return if can_update_reviewer?(@resource)
+
+    flash[:danger] = "Cannot edit the reviewer of an edition that is not in review."
     redirect_to edition_path(@resource)
   end
 

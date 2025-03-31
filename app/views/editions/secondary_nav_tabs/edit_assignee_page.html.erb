@@ -1,0 +1,6 @@
+<%= render partial: "secondary_nav_tabs/edit_assignee/edit_assignee", locals: {
+  title: "Assign person",
+  available_assignees: available_assignee_items(@resource),
+  url: update_assignee_edition_path(@resource),
+  radio_name: "assignee_id",
+} %>

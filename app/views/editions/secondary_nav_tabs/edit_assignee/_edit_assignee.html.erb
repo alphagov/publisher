@@ -1,15 +1,17 @@
-<% content_for :title_context, @resource.title %>
-<% content_for :page_title, "Assign person" %>
-<% content_for :title, "Assign person" %>
+<%# locals: (title:, url:, radio_name:, available_assignees:) %>
 
-<%= form_for @resource, url: update_assignee_edition_path(@resource) do %>
+<% content_for :title_context, @resource.title %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
+
+<%= form_for @resource, url: url do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <%= render "govuk_publishing_components/components/radio", {
-          name: "assignee_id",
+          name: radio_name,
           heading: "Choose a person to assign",
           visually_hidden_heading: true,
-          items: available_assignee_items(@resource),
+          items: available_assignees,
         } %>
     </div>
 

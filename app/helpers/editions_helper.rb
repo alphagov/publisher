@@ -54,7 +54,9 @@ module EditionsHelper
       end
   end
 
-  def document_summary_items(edition)
+  def document_summary_items(edition, reviewer)
+    reviewer_name = reviewer.nil? ? "Not yet claimed" : reviewer.name
+
     items = [
       {
         field: "Assigned to",
@@ -76,6 +78,14 @@ module EditionsHelper
         value: edition.publish_at.to_fs(:govuk_date).to_s,
       }
     end
+    if edition.in_review?
+      items << {
+        field: "2i reviewer",
+        value: reviewer_name,
+        edit: reviewer_edit_link(edition),
+      }
+    end
+
     items
   end
 
