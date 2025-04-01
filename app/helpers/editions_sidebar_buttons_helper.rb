@@ -57,5 +57,7 @@ module EditionsSidebarButtonsHelper
     if current_user.has_editor_permissions?(edition) && %w[draft amends_needed].include?(edition.state)
       buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
     end
+
+    buttons
   end
 end
