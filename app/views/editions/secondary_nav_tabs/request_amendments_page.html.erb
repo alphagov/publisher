@@ -4,7 +4,7 @@
 <% content_for :title, "Request amendments" %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
-  form_url: "#{edition_path}/request_amendments",
+  form_url: request_amendments_edition_path(@edition),
   comment_label_text: "Amendment details (optional)",
   submit_button_text: "Request amendments",
 } %>

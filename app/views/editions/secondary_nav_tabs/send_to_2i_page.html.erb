@@ -4,7 +4,7 @@
 <% content_for :title, "Send to 2i" %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
-  form_url: "#{edition_path}/send_to_2i",
+  form_url: send_to_2i_edition_path(@edition),
   text: "Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card.
     If you’ve added a change note already, you do not need to add another one.
       <a target='_blank' rel='noopener noreferrer' href='https://gov-uk.atlassian.net/l/cp/dwn06raQ' class='govuk-link govuk-link--no-visited-state'>Read guidance on writing good change notes (opens in new tab)</a>.",
