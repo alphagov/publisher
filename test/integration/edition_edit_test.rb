@@ -546,6 +546,11 @@ class EditionEditTest < IntegrationTest
           visit_in_review_edition("request_review", @govuk_requester)
         end
 
+        should "display Save button and preview link" do
+          assert page.has_button?("Save"), "No save button present"
+          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+        end
+
         should "indicate that the current user requested a review" do
           assert page.has_text?("You've sent this edition to be reviewed")
         end
@@ -560,6 +565,11 @@ class EditionEditTest < IntegrationTest
         setup do
           login_as(@govuk_editor)
           visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "display Save button and preview link" do
+          assert page.has_button?("Save"), "No save button present"
+          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
         end
 
         should "indicate which other user requested a review" do
