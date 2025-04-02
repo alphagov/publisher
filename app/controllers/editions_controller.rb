@@ -142,7 +142,10 @@ class EditionsController < InheritedResources::Base
   end
 
   def send_to_publish
-    if send_to_publish_for_edition(@resource, params[:comment])
+    if !@resource.can_publish?
+      flash.now[:danger] = "Edition is not in a state where it can be published"
+      render "secondary_nav_tabs/send_to_publish_page"
+    elsif send_to_publish_for_edition(@resource, params[:comment])
       flash[:success] = "Published"
       redirect_to edition_path(@resource)
     else

@@ -1900,6 +1900,15 @@ class EditionEditTest < IntegrationTest
       assert page.has_content?("Edition is not in a state where it can be published")
       assert page.has_content?("Publish a go-go")
     end
+
+    should "show an error when the edition is not in a state that can be published from" do
+      edition = create_draft_edition
+
+      visit send_to_publish_page_edition_path(edition)
+      click_on "Send to publish"
+
+      assert page.has_content?("Edition is not in a state where it can be published")
+    end
   end
 
   context "Compare editions" do
