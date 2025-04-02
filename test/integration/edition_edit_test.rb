@@ -41,6 +41,49 @@ class EditionEditTest < IntegrationTest
       assert row[2].has_text?("Published")
     end
 
+    should "show scheduled date and time when an edition is scheduled for publishing" do
+      travel_to Time.zone.local(2025, 3, 4, 17, 16, 15)
+      scheduled_for_publishing_edition = FactoryBot.create(
+        :edition,
+        :scheduled_for_publishing,
+        publish_at: Time.zone.now,
+      )
+
+      visit edition_path(scheduled_for_publishing_edition)
+
+      row = find_all(".govuk-summary-list__row")
+      assert_equal 4, row.count, "Expected four rows in the summary"
+      assert row[2].has_text?(/Scheduled for publishing$/)
+      assert row[3].has_text?("Scheduled")
+      assert row[3].has_text?("5:16pm, 4 March 2025")
+    end
+
+    %i[draft amends_needed fact_check_received ready archived published].each do |state|
+      should "not show a scheduled row when an edition is in the '#{state}' state" do
+        edition = FactoryBot.create(:edition, state:)
+
+        visit edition_path(edition)
+
+        row = find_all(".govuk-summary-list__row")
+        assert_equal 3, row.count, "Expected three rows in the summary"
+        assert page.has_no_content?("Scheduled")
+      end
+    end
+
+    should "not show a scheduled row when an edition is in the 'in_review' state" do
+      edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+      edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
+
+      visit edition_path(edition)
+
+      row = find_all(".govuk-summary-list__row")
+      assert_equal 3, row.count, "Expected three rows in the summary"
+      assert page.has_no_content?("Scheduled")
+    end
+
     should "indicate when an edition does not have an assignee" do
       visit_published_edition
 
@@ -923,6 +966,71 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?("Add a public change note")
         assert page.has_text?("Telling users when published information has changed is important for transparency.")
         assert page.has_field?("edition[change_note]")
+      end
+    end
+
+    context "scheduled_for_publishing edition" do
+      should "show common content-type fields" do
+        edition = FactoryBot.create(
+          :edition,
+          state: "scheduled_for_publishing",
+          title: "Some test title",
+          overview: "Some overview text",
+          in_beta: true,
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Title")
+        assert page.has_css?("p", text: edition.title)
+        assert page.has_css?("h3", text: "Meta tag description")
+        assert page.has_css?("p", text: edition.overview)
+        assert page.has_css?("h3", text: "Is this beta content?")
+        assert page.has_css?("p", text: "Yes")
+
+        edition.in_beta = false
+        edition.save!(validate: false)
+        visit edition_path(edition)
+        assert page.has_css?("p", text: "No")
+      end
+
+      should "show body field" do
+        edition = FactoryBot.create(
+          :answer_edition,
+          state: "scheduled_for_publishing",
+          body: "## Some body text",
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Body")
+        assert page.has_css?("div", text: edition.body)
+      end
+
+      should "show public change field" do
+        edition = FactoryBot.create(
+          :answer_edition,
+          state: "scheduled_for_publishing",
+          in_beta: true,
+          major_change: false,
+          publish_at: Time.zone.now + 1.day,
+        )
+        visit edition_path(edition)
+
+        assert page.has_css?("h3", text: "Public change note")
+        assert page.has_css?("p", text: "None added")
+
+        edition.major_change = true
+        edition.change_note = "Change note for test"
+        edition.save!(validate: false)
+        visit edition_path(edition)
+
+        assert page.has_text?(edition.change_note)
+      end
+
+      should "show a preview link in the sidebar" do
+        visit_scheduled_for_publishing_edition
+        assert page.has_link?("Preview (opens in new tab)")
       end
     end
 

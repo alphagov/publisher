@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<% if @resource.published? || @resource.archived? %>
+<% if @resource.scheduled_for_publishing? || @resource.published? || @resource.archived? %>
   <div class="govuk-grid-row edit--<%= @resource.state %>">
     <div class="govuk-grid-column-two-thirds">
       <%= render partial: "editions/secondary_nav_tabs/edit/published/common_fields", locals: { edition: @resource } %>
@@ -17,7 +17,15 @@
 
       <%= render partial: "editions/secondary_nav_tabs/edit/published/public_change_note", locals: { edition: @resource } %>
     </div>
-    <% unless @resource.archived? %>
+    <% if @resource.scheduled_for_publishing? %>
+      <div class="govuk-grid-column-one-third options-sidebar">
+        <div class="sidebar-components">
+          <%= sidebar_options_heading %>
+
+          <%= sidebar_items_list(scheduled_for_publishing_sidebar_buttons(@resource)) %>
+        </div>
+      </div>
+    <% elsif @resource.published? %>
       <div class="govuk-grid-column-one-third options-sidebar">
         <div class="sidebar-components">
           <%= sidebar_options_heading %>

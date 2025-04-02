@@ -122,10 +122,14 @@ module Workflow
     actions.where(request_type: Action::APPROVE_FACT_CHECK).count.positive?
   end
 
-  def status_text
+  def legacy_status_text
     text = human_state_name.capitalize
     text += " on #{publish_at.strftime('%d/%m/%Y %H:%M')}" if scheduled_for_publishing?
     text
+  end
+
+  def status_text
+    human_state_name.capitalize
   end
 
   def denormalise_users!
