@@ -1155,7 +1155,7 @@ class EditionEditTest < IntegrationTest
           login_as_welsh_editor
         end
 
-        context "viewing a Welsh edition" do
+        context "viewing a welsh edition" do
           setup do
             @welsh_published_edition = FactoryBot.create(
               :answer_edition,
@@ -1180,7 +1180,7 @@ class EditionEditTest < IntegrationTest
           end
         end
 
-        context "viewing a non-Welsh edition" do
+        context "viewing a non-welsh edition" do
           setup do
             @non_welsh_published_edition = FactoryBot.create(
               :answer_edition,
