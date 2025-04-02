@@ -4,7 +4,7 @@
 <% content_for :title, "No changes needed" %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
-  form_url: "#{edition_path}/no_changes_needed",
+  form_url: no_changes_needed_edition_path(@edition),
   comment_label_text: "Comment (optional)",
   submit_button_text: "Approve 2i",
 } %>
