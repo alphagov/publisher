@@ -73,6 +73,7 @@ module EditionsHelper
         [{
           field: "2i reviewer",
           value: @reviewer,
+          edit: reviewer_edit_link(edition),
         }]
       end),
     ]
