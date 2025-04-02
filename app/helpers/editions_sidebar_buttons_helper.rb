@@ -28,15 +28,25 @@ module EditionsSidebarButtonsHelper
   end
 
   def scheduled_for_publishing_sidebar_buttons(edition)
-    [
-      link_to(
-        "Preview (opens in new tab)",
-        preview_edition_path(edition),
-        target: "_blank",
-        rel: "noopener",
-        class: "govuk-link",
-      ),
-    ]
+    buttons = []
+    if current_user.has_editor_permissions?(edition)
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: "Publish now",
+          href: send_to_publish_page_edition_path(edition),
+          secondary_solid: true,
+          margin_bottom: 3,
+        },
+      )
+    end
+    buttons << link_to(
+      "Preview (opens in new tab)",
+      preview_edition_path(edition),
+      target: "_blank",
+      rel: "noopener",
+      class: "govuk-link",
+    )
   end
 
   def published_sidebar_buttons(edition)

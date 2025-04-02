@@ -1032,6 +1032,41 @@ class EditionEditTest < IntegrationTest
         visit_scheduled_for_publishing_edition
         assert page.has_link?("Preview (opens in new tab)")
       end
+
+      should "show a 'publish now' button in the sidebar when user is a govuk editor" do
+        edition = FactoryBot.create(
+          :edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+        )
+        login_as_govuk_editor
+
+        visit edition_path(edition)
+
+        assert page.has_link?("Publish now", href: send_to_publish_page_edition_path(edition))
+      end
+
+      context "that is welsh" do
+        should "show a 'publish now' button in the sidebar when user is a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as_welsh_editor
+
+          visit edition_path(edition)
+
+          assert page.has_link?("Publish now", href: send_to_publish_page_edition_path(edition))
+        end
+
+        should "not show a 'publish now' button in the sidebar when user is not a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as(FactoryBot.create(:user))
+
+          visit edition_path(edition)
+
+          assert page.has_no_link?("Publish now")
+        end
+      end
     end
 
     context "published edition" do
