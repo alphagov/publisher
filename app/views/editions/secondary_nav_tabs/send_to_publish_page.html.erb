@@ -4,7 +4,7 @@
 <% content_for :title, "Send to publish" %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
-  form_url: "",
+  form_url: send_to_publish_edition_path(@edition),
   comment_label_text: "Comment (optional)",
   submit_button_text: "Send to publish",
 } %>
