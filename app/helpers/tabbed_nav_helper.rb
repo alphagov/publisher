@@ -43,6 +43,17 @@ module TabbedNavHelper
     end
   end
 
+  def reviewer_edit_link(edition)
+    if current_user.has_editor_permissions?(edition)
+      {
+        href: edit_reviewer_edition_path,
+        link_text: "Edit",
+      }
+    else
+      {}
+    end
+  end
+
 private
 
   def all_tab_names

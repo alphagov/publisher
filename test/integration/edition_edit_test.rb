@@ -131,6 +131,77 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "user is a govuk_editor" do
+      should "show an edit link" do
+        visit_in_review_edition
+
+        within all(".govuk-summary-list__row")[3] do
+          assert_selector("a", text: "Edit")
+        end
+      end
+    end
+
+    context "user is a welsh_editor" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      context "viewing a Welsh edition" do
+        setup do
+          @welsh_in_review_edition = FactoryBot.create(
+            :answer_edition,
+            :welsh,
+            state: "in_review",
+            review_requested_at: 1.hour.ago
+          )
+
+          @welsh_in_review_edition.actions.create!(
+            request_type: Action::REQUEST_REVIEW,
+            requester_id: @govuk_requester.id,
+          )
+        end
+
+        should "show an edit link" do
+          visit edition_path(@welsh_in_review_edition)
+
+          within all(".govuk-summary-list__row")[3] do
+            assert_selector("a", text: "Edit")
+          end
+        end
+      end
+
+      context "viewing a non-Welsh edition" do
+        should "not show an edit link" do
+          visit_in_review_edition
+
+          within all(".govuk-summary-list__row")[3] do
+            assert_no_selector("a", text: "Edit")
+          end
+        end
+      end
+    end
+
+    context "user does not have editor permissions" do
+      setup do
+        login_as(FactoryBot.create(:user, name: "Non Editor"))
+
+        @in_review_edition = FactoryBot.create(
+          :answer_edition,
+          state: "in_review",
+          review_requested_at: 1.hour.ago
+        )
+      end
+
+      should "not show an edit link" do
+        visit_in_review_edition
+        visit edition_path(@in_review_edition)
+
+        within all(".govuk-summary-list__row")[3] do
+          assert_no_selector("a", text: "Edit")
+        end
+      end
+    end
+
     should "display the important note if an important note exists" do
       note_text = "This is really really urgent!"
       create_draft_edition
@@ -1568,7 +1639,7 @@ class EditionEditTest < IntegrationTest
             end
 
             should "navigate to edit assignee page when 'Edit' assignee is clicked" do
-              within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[0] do
                 click_link("Edit")
               end
 
