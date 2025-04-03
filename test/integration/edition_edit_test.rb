@@ -131,77 +131,6 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    context "user is a govuk_editor" do
-      should "show an edit link" do
-        visit_in_review_edition
-
-        within all(".govuk-summary-list__row")[3] do
-          assert_selector("a", text: "Edit")
-        end
-      end
-    end
-
-    context "user is a welsh_editor" do
-      setup do
-        login_as_welsh_editor
-      end
-
-      context "viewing a Welsh edition" do
-        setup do
-          @welsh_in_review_edition = FactoryBot.create(
-            :answer_edition,
-            :welsh,
-            state: "in_review",
-            review_requested_at: 1.hour.ago
-          )
-
-          @welsh_in_review_edition.actions.create!(
-            request_type: Action::REQUEST_REVIEW,
-            requester_id: @govuk_requester.id,
-          )
-        end
-
-        should "show an edit link" do
-          visit edition_path(@welsh_in_review_edition)
-
-          within all(".govuk-summary-list__row")[3] do
-            assert_selector("a", text: "Edit")
-          end
-        end
-      end
-
-      context "viewing a non-Welsh edition" do
-        should "not show an edit link" do
-          visit_in_review_edition
-
-          within all(".govuk-summary-list__row")[3] do
-            assert_no_selector("a", text: "Edit")
-          end
-        end
-      end
-    end
-
-    context "user does not have editor permissions" do
-      setup do
-        login_as(FactoryBot.create(:user, name: "Non Editor"))
-
-        @in_review_edition = FactoryBot.create(
-          :answer_edition,
-          state: "in_review",
-          review_requested_at: 1.hour.ago
-        )
-      end
-
-      should "not show an edit link" do
-        visit_in_review_edition
-        visit edition_path(@in_review_edition)
-
-        within all(".govuk-summary-list__row")[3] do
-          assert_no_selector("a", text: "Edit")
-        end
-      end
-    end
-
     should "display the important note if an important note exists" do
       note_text = "This is really really urgent!"
       create_draft_edition
@@ -1596,7 +1525,9 @@ class EditionEditTest < IntegrationTest
 
         should "not show 'Edit' link when user is not govuk editor or welsh editor" do
           within :css, ".editions__edit__summary" do
-            assert page.has_no_link?("Edit")
+            within all(".govuk-summary-list__row")[0] do
+              assert page.has_no_link?("Edit")
+            end
           end
         end
 
@@ -1605,7 +1536,9 @@ class EditionEditTest < IntegrationTest
           visit_draft_edition
 
           within :css, ".editions__edit__summary" do
-            assert page.has_no_link?("Edit")
+            within all(".govuk-summary-list__row")[0] do
+              assert page.has_no_link?("Edit")
+            end
           end
         end
       end
@@ -1619,7 +1552,9 @@ class EditionEditTest < IntegrationTest
 
             should "not show 'Edit' link" do
               within :css, ".editions__edit__summary" do
-                assert page.has_no_link?("Edit")
+                within all(".govuk-summary-list__row")[0] do
+                  assert page.has_no_link?("Edit")
+                end
               end
             end
           end
@@ -1634,13 +1569,17 @@ class EditionEditTest < IntegrationTest
 
             should "show 'Edit' link" do
               within :css, ".editions__edit__summary" do
-                assert page.has_link?("Edit")
+                within all(".govuk-summary-list__row")[0] do
+                  assert page.has_link?("Edit")
+                end
               end
             end
 
             should "navigate to edit assignee page when 'Edit' assignee is clicked" do
-              within all(".govuk-summary-list__row")[0] do
-                click_link("Edit")
+              within :css, ".editions__edit__summary" do
+                within all(".govuk-summary-list__row")[0] do
+                  click_link("Edit")
+                end
               end
 
               assert(page.current_path.include?("/edit_assignee"))
@@ -1652,7 +1591,9 @@ class EditionEditTest < IntegrationTest
           setup do
             visit_draft_edition
             within :css, ".editions__edit__summary" do
-              click_link("Edit")
+              within all(".govuk-summary-list__row")[0] do
+                click_link("Edit")
+              end
             end
           end
 
@@ -1689,6 +1630,104 @@ class EditionEditTest < IntegrationTest
             click_link("Cancel")
 
             assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
+          end
+        end
+      end
+    end
+
+    context "edit 2i reviewer link" do
+      context "user does not have required permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_in_review_edition
+        end
+
+        should "not show 'Edit' link when user is not govuk editor or welsh editor" do
+          within :css, ".editions__edit__summary" do
+            within all(".govuk-summary-list__row")[3] do
+              assert page.has_no_link?("Edit")
+            end
+          end
+        end
+
+        should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_in_review_edition
+
+          within :css, ".editions__edit__summary" do
+            within all(".govuk-summary-list__row")[3] do
+              assert page.has_no_link?("Edit")
+            end
+          end
+        end
+      end
+
+      context "user has required permissions" do
+        should "show 'Edit' link" do
+          visit_in_review_edition
+
+          within :css, ".editions__edit__summary" do
+            within all(".govuk-summary-list__row")[3] do
+              assert page.has_link?("Edit")
+            end
+          end
+        end
+
+        should "navigate to edit 2i reviwer page when 'Edit' assignee is clicked" do
+          visit_in_review_edition
+
+          within :css, ".editions__edit__summary" do
+            within all(".govuk-summary-list__row")[3] do
+              click_link("Edit")
+            end
+          end
+
+          assert(page.current_path.include?("/edit_reviewer"))
+        end
+
+        context "edit reviewer page" do
+          setup do
+            visit_in_review_edition
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[3] do
+                click_link("Edit")
+              end
+            end
+          end
+
+          should "show title and page title" do
+            assert page.has_title?("Assign 2i reviewer")
+            assert page.has_text?(@in_review_edition.title)
+          end
+
+          should "show only enabled users as radio button options" do
+            FactoryBot.create(:user, name: "Disabled User", disabled: true)
+            all_enabled_users_names = []
+            User.enabled.each { |user| all_enabled_users_names << user.name }
+            all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+
+            assert all_user_radio_buttons.exclude?("Disabled User")
+
+            all_enabled_users_names.each do |users|
+              assert all_user_radio_buttons.include?(users)
+            end
+          end
+
+          should "allow currently assigned user to be unassigned" do
+            user = FactoryBot.create(:user, :govuk_editor)
+            @govuk_editor.assign(@in_review_edition, user)
+            visit current_path
+
+            choose "None"
+            click_on "Save"
+
+            assert_equal(page.current_path, "/editions/#{@in_review_edition.id}")
+          end
+
+          should "navigate to editions edit page when 'Cancel' link is clicked" do
+            click_link("Cancel")
+
+            assert_equal(page.current_path, "/editions/#{@in_review_edition.id}")
           end
         end
       end
