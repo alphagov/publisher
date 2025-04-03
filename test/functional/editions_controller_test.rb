@@ -554,6 +554,43 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#cancel_scheduled_publishing_page" do
+    context "user has govuk_editor permission" do
+      should "render the 'Cancel scheduled publishing' page" do
+        get :cancel_scheduled_publishing_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/cancel_scheduled_publishing_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :cancel_scheduled_publishing_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user has welsh_editor permission" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "render the 'Cancel scheduled publishing' page when the edition is welsh" do
+        get :cancel_scheduled_publishing_page, params: { id: @welsh_edition.id }
+        assert_template "secondary_nav_tabs/cancel_scheduled_publishing_page"
+      end
+
+      should "render an error message when the edition is not welsh" do
+        get :cancel_scheduled_publishing_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show

@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -58,6 +58,10 @@ class EditionsController < InheritedResources::Base
 
   def send_to_publish_page
     render "secondary_nav_tabs/send_to_publish_page"
+  end
+
+  def cancel_scheduled_publishing_page
+    render "secondary_nav_tabs/cancel_scheduled_publishing_page"
   end
 
   def duplicate
