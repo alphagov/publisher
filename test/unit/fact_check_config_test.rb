@@ -3,13 +3,13 @@ require "test_helper"
 class FactCheckConfigTest < ActiveSupport::TestCase
   subject_prefix = "test"
   reply_to_address = "factcheck+1234@example.com"
-  valid_subjects = ["‘[Some title]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184]",
-                    "‘[Some title]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184] - ticket #5678",
-                    "‘[123456]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184]",
-                    "‘[123456]’ GOV.UK preview of new edition [5e6bb57b40f0b62656e3e184] - ticket #5678",
-                    "I've edited the subject but left the ID at the end [5e6bb57b40f0b62656e3e184]",
-                    "I've edited the subject and appended something [5e6bb57b40f0b62656e3e184] - ticket #2468"]
-  valid_prefixed_subjects = valid_subjects.map { |subject| subject.gsub(/\[5e6bb57b40f0b62656e3e184\]/, "[test-5e6bb57b40f0b62656e3e184]") }
+  valid_subjects = ["‘[Some title]’ GOV.UK preview of new edition [c9d67b66-80ab-446c-9998-e602926e3e06]",
+                    "‘[Some title]’ GOV.UK preview of new edition [c9d67b66-80ab-446c-9998-e602926e3e06] - ticket #5678",
+                    "‘[123456]’ GOV.UK preview of new edition [c9d67b66-80ab-446c-9998-e602926e3e06]",
+                    "‘[123456]’ GOV.UK preview of new edition [c9d67b66-80ab-446c-9998-e602926e3e06] - ticket #5678",
+                    "I've edited the subject but left the ID at the end [c9d67b66-80ab-446c-9998-e602926e3e06]",
+                    "I've edited the subject and appended something [c9d67b66-80ab-446c-9998-e602926e3e06] - ticket #2468"]
+  valid_prefixed_subjects = valid_subjects.map { |subject| subject.gsub(/\[c9d67b66-80ab-446c-9998-e602926e3e06\]/, "[test-c9d67b66-80ab-446c-9998-e602926e3e06]") }
 
   should "fail on a nil reply-to address" do
     assert_raises ArgumentError do
@@ -65,7 +65,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "extract an item ID from a valid subject" do
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
-      assert_equal "5e6bb57b40f0b62656e3e184", config.item_id_from_string(valid_subject)
+      assert_equal "c9d67b66-80ab-446c-9998-e602926e3e06", config.item_id_from_string(valid_subject)
     end
   end
 
@@ -80,7 +80,7 @@ class FactCheckConfigTest < ActiveSupport::TestCase
     config = FactCheckConfig.new(reply_to_address)
     valid_subjects.each do |valid_subject|
       assert_raises ArgumentError do
-        config.item_id_from_string("#{valid_subject} [d682605bec3cf9b8906cf2bc]")
+        config.item_id_from_string("#{valid_subject} [bf7c2a30-d791-4af6-b7a9-ca9fa583b031]")
       end
     end
   end
@@ -88,22 +88,22 @@ class FactCheckConfigTest < ActiveSupport::TestCase
   should "fall back to reading ID from body if none in subject" do
     config = FactCheckConfig.new(reply_to_address)
     assert_equal config.item_id_from_subject_or_body("subject without id",
-                                                     "random text random text\n\nrandom text [5e6bb57b40f0b62656e3e184] more words\n\nwords words words words"),
-                 "5e6bb57b40f0b62656e3e184"
+                                                     "random text random text\n\nrandom text [c9d67b66-80ab-446c-9998-e602926e3e06] more words\n\nwords words words words"),
+                 "c9d67b66-80ab-446c-9998-e602926e3e06"
   end
 
   should "ignore ID in body if subject has one" do
     config = FactCheckConfig.new(reply_to_address)
     assert_equal config.item_id_from_subject_or_body(valid_subjects.first,
-                                                     "random text random text\n\nrandom text [d682605bec3cf9b8906cf2bc] more words\n\nwords words words words"),
-                 "5e6bb57b40f0b62656e3e184"
+                                                     "random text random text\n\nrandom text [bf7c2a30-d791-4af6-b7a9-ca9fa583b031] more words\n\nwords words words words"),
+                 "c9d67b66-80ab-446c-9998-e602926e3e06"
   end
 
   should "fail if body has multiple IDs" do
     config = FactCheckConfig.new(reply_to_address)
     assert_raises ArgumentError do
       config.item_id_from_subject_or_body("subject without id",
-                                          "random text random text\n\nrandom text [d682605bec3cf9b8906cf2bc] more words\n\nwords words [5e6bb57b40f0b62656e3e184] words words")
+                                          "random text random text\n\nrandom text [bf7c2a30-d791-4af6-b7a9-ca9fa583b031] more words\n\nwords words [c9d67b66-80ab-446c-9998-e602926e3e06] words words")
     end
   end
 end

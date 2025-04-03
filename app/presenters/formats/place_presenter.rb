@@ -16,12 +16,12 @@ module Formats
       details[:place_type] = edition.place_type if edition.place_type
 
       %i[introduction more_information need_to_know].each do |field|
-        next if edition[field].blank?
+        next if edition.editionable[field].blank?
 
         details[field] = [
           {
             content_type: "text/govspeak",
-            content: edition[field],
+            content: edition.editionable[field],
           },
         ]
       end

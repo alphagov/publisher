@@ -3,7 +3,7 @@ require "action"
 module RecordableActions
   extend ActiveSupport::Concern
   included do
-    embeds_many :actions
+    has_many :actions, dependent: :destroy
 
     def latest_status_action(type = nil)
       if type
@@ -19,7 +19,7 @@ module RecordableActions
     end
 
     def new_action(user, type, options = {})
-      actions.create!(options.merge(requester_id: user.id, request_type: type))
+      actions.create!(options.merge(requester: user, request_type: type))
     end
 
     def new_action_without_validation(user, type, options = {})

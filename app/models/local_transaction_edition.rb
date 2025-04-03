@@ -1,23 +1,19 @@
 require "local_service"
-require "edition"
 
-class LocalTransactionEdition < Edition
-  field :lgsl_code, type: Integer
-  field :lgil_override, type: Integer
-  field :lgil_code, type: Integer
-  field :introduction, type: String
-  field :more_information, type: String
-  field :need_to_know, type: String
+class LocalTransactionEdition < ApplicationRecord
+  include Editionable
 
-  embeds_one :scotland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
-  embeds_one :wales_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
-  embeds_one :northern_ireland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
+  has_one :scotland_availability, :inverse_of => :local_transaction_edition, class_name: "ScotlandAvailability", dependent: :destroy
+  has_one :wales_availability, :inverse_of => :local_transaction_edition, class_name: "WalesAvailability", dependent: :destroy
+  has_one :northern_ireland_availability, :inverse_of => :local_transaction_edition, class_name: "NorthernIrelandAvailability", dependent: :destroy
 
   accepts_nested_attributes_for :scotland_availability
   accepts_nested_attributes_for :wales_availability
   accepts_nested_attributes_for :northern_ireland_availability
 
-  after_validation :merge_embedded_errors
+  after_initialize :build_associations
+
+  after_validation :merge_errors
 
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
 
@@ -48,24 +44,30 @@ class LocalTransactionEdition < Edition
     introduction
   end
 
-  def build_clone(target_class = nil)
-    new_edition = super
-    if new_edition.is_a?(LocalTransactionEdition)
-      new_edition.scotland_availability = scotland_availability.clone
-      new_edition.wales_availability = wales_availability.clone
-      new_edition.northern_ireland_availability = northern_ireland_availability.clone
+  def build_clone(new_edition)
+    if new_edition.editionable.is_a?(LocalTransactionEdition)
+      new_edition.editionable.scotland_availability = scotland_availability.clone
+      new_edition.editionable.wales_availability = wales_availability.clone
+      new_edition.editionable.northern_ireland_availability = northern_ireland_availability.clone
     end
     new_edition
   end
 
-private
+  private
 
-  def merge_embedded_errors
+  def merge_errors
     %i[scotland_availability wales_availability northern_ireland_availability].each do |availability|
-      nested_errors = public_send(availability).errors
+      nested_errors = []
+      nested_errors = public_send(availability).errors if public_send(availability)
       nested_errors.each do |error|
         errors.add("#{availability}_attributes_#{error.attribute}", error.message)
       end
     end
+  end
+
+  def build_associations
+    self.northern_ireland_availability ||= NorthernIrelandAvailability.new
+    self.scotland_availability ||= ScotlandAvailability.new
+    self.wales_availability ||= WalesAvailability.new
   end
 end

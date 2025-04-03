@@ -1,18 +1,15 @@
-require "edition"
-require_dependency "simple_smart_answer_edition/node"
-require_dependency "simple_smart_answer_edition/node/option"
-
-class SimpleSmartAnswerEdition < Edition
-  include Mongoid::Document
-
-  field :body,              type: String
-  field :start_button_text, type: String, default: "Start now"
+class SimpleSmartAnswerEdition < ApplicationRecord
+  include Editionable
 
   validates :start_button_text, presence: true
 
-  embeds_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
+  has_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
 
   accepts_nested_attributes_for :nodes, allow_destroy: true
+
+  def title
+    self.edition.title
+  end
 
   GOVSPEAK_FIELDS = [:body].freeze
 
@@ -21,22 +18,19 @@ class SimpleSmartAnswerEdition < Edition
     unless nodes.nil?
       nodes.each do |node|
         parts << if node.kind == "question"
-                   question(node)
-                 elsif node.kind == "outcome"
-                   outcome(node)
-                 end
+          question(node)
+        elsif node.kind == "outcome"
+          outcome(node)
+        end
       end
     end
     parts.join("\n\n\n")
   end
 
-  def build_clone(target_class = nil)
-    new_edition = super(target_class)
-
-    if new_edition.is_a?(SimpleSmartAnswerEdition)
-      nodes.each { |n| new_edition.nodes << n.clone }
+  def build_clone(new_edition)
+    if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
+      new_edition.editionable.nodes = nodes.map(&:dup)
     end
-
     new_edition
   end
 
@@ -82,17 +76,17 @@ class SimpleSmartAnswerEdition < Edition
 
   def generate_mermaid
     parts = ["%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    " \
-      "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
-      "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
+               "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
+               "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
     parts << "accTitle: #{title}\naccDescr: A flowchart for the #{title} smart answer\nAA[Start]:::start"
     if nodes.present?
       parts << "AA---Q#{nodes.first.slug.split('-')[1]}"
       nodes.each do |node|
         parts << if node.kind == "question"
-                   mermaid_question(node)
-                 elsif node.kind == "outcome"
-                   mermaid_outcome(node)
-                 end
+          mermaid_question(node)
+        elsif node.kind == "outcome"
+          mermaid_outcome(node)
+        end
       end
     end
     parts << "classDef answer fill: #F3F2F1, stroke:#505A5F;\nclassDef outcome fill: #6FA4D2" \
@@ -100,7 +94,7 @@ class SimpleSmartAnswerEdition < Edition
     parts.join("\n")
   end
 
-private
+  private
 
   def question(node)
     part = ["#{node.slug.titleize}\n#{node.title}\n"]

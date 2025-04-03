@@ -8,8 +8,6 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "minitest/autorun"
 require "mocha/minitest"
-require "database_cleaner/mongoid"
-require "database_cleaner/active_record"
 require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
 require "support/tag_test_helpers"
@@ -26,15 +24,8 @@ require "govuk_schemas/assert_matchers"
 require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
-
-DatabaseCleaner[:mongoid].strategy = :deletion
-# initial clean
-DatabaseCleaner[:mongoid].clean
-DatabaseCleaner.allow_remote_database_url = true
-DatabaseCleaner.strategy = :deletion
-DatabaseCleaner.clean
-
 Rails.application.load_tasks if Rake::Task.tasks.empty?
+Rake::Task["db:test:prepare"].invoke
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -50,15 +41,9 @@ class ActiveSupport::TestCase
   include GovukSchemas::AssertMatchers
 
   setup do
-    DatabaseCleaner[:mongoid].start
-    DatabaseCleaner.start
     Sidekiq::Testing.inline!
     stub_any_publishing_api_call
-  end
-
-  teardown do
-    DatabaseCleaner[:mongoid].clean
-    DatabaseCleaner.clean
+    FactoryBot.rewind_sequences
   end
 
   def without_metadata_denormalisation(*klasses, &_block)
@@ -80,6 +65,8 @@ class ActiveSupport::TestCase
   teardown do
     WebMock.reset!
     Sidekiq::Worker.clear_all
+    Sidekiq::Testing.inline!
+    stub_any_publishing_api_call
   end
 
   def login_as(user)

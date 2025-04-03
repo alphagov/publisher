@@ -1,11 +1,6 @@
-class DevolvedAdministrationAvailability
-  include Mongoid::Document
+class DevolvedAdministrationAvailability < ApplicationRecord
 
-  embedded_in :local_transaction_edition
-  field :type, type: String, default: "local_authority_service"
-  field :alternative_url, type: String
-
-  validates :type, inclusion: { in: %w[local_authority_service devolved_administration_service unavailable] }
+  validates :authority_type, inclusion: { in: %w[local_authority_service devolved_administration_service unavailable] }
   validates :alternative_url, presence: true, if: -> { devolved_administration_service? }
   validate :alternative_url_format
 
@@ -24,6 +19,6 @@ class DevolvedAdministrationAvailability
   end
 
   def devolved_administration_service?
-    type == "devolved_administration_service"
+    authority_type == "devolved_administration_service"
   end
 end

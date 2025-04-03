@@ -1,6 +1,6 @@
 class LinkCheckReportsController < ApplicationController
   before_action :find_edition
-
+  #come back to this - need to go in depth of link check repor changes
   def create
     service = LinkCheckReportCreator.new(
       edition: @edition,
@@ -16,7 +16,7 @@ class LinkCheckReportsController < ApplicationController
 
   def show
     service = LinkCheckReportFinder.new(
-      report_id: convert_to_bson_object_id(permitted_params[:id]),
+      report_id: permitted_params[:id],
     )
 
     @report = service.call

@@ -5,21 +5,18 @@ require_dependency "safe_html"
 class Artefact < ApplicationRecord
   strip_attributes only: :redirect_url
 
-  scope :not_archived, -> { where(:state.nin => %w[archived]) }
+  scope :not_archived, -> { where.not(:state => %w[archived]) }
 
   FORMATS_BY_DEFAULT_OWNING_APP = {
     "publisher" => %w[answer
-                      campaign
                       completed_transaction
                       guide
                       help_page
-                      licence
                       local_transaction
                       place
-                      programme
                       simple_smart_answer
-                      transaction
-                      video],
+                      transaction],
+
     "smartanswers" => %w[smart-answer],
     "custom-application" => %w[custom-application], # In this case the owning_app is overriden. eg calendars, licencefinder
     "specialist-publisher" => %w[manual],
@@ -118,8 +115,8 @@ class Artefact < ApplicationRecord
 
   def archive_editions
     if state == "archived"
-      Edition.where(panopticon_id: id, :state.nin => %w[archived]).each do |edition|
-        edition.new_action(self, "note", comment: "Artefact has been archived. Archiving this edition.")
+      Edition.where(panopticon_id: id).where.not(state: %w[archived]).each do |edition|
+        edition.new_action(artefact_actions.last.user, "note", comment: "Artefact has been archived. Archiving this edition.")
         edition.perform_event_without_validations_or_timestamp(:archive!)
       end
     end
@@ -227,7 +224,7 @@ class Artefact < ApplicationRecord
     prefixes.empty?
   end
 
-private
+  private
 
   def edition_class_name
     "#{kind.camelcase}Edition"

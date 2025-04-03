@@ -365,6 +365,8 @@ protected
 
   def setup_view_paths
     setup_view_paths_for(resource)
+  rescue ActiveRecord::RecordNotFound
+    render body: { 'raw': "404 Not Found" }, status: :not_found
   end
 
 private

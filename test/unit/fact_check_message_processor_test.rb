@@ -33,6 +33,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_nothing_raised { f.process_for_publication("4e1dac78e2ba80076000000ea") }
   end
 
+  #come back to this - needs revisitng
   test "it extracts the body as utf8 acceptable to mongo" do
     windows_string = "Hallo Umläute".encode("Windows-1252")
     message = Mail.new(
