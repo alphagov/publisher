@@ -113,6 +113,23 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
+
+    context "edition is not in a valid state to request amendments" do
+      setup do
+        @edition = FactoryBot.create(:edition, state: "draft")
+      end
+
+      should "not update the edition state and render an error" do
+        post :request_amendments, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "Edition is not in a state where amendments can be requested", flash[:danger]
+
+        @edition.reload
+        assert_equal "draft", @edition.state
+      end
+    end
   end
 
   context "#no_changes_needed_page" do
@@ -204,6 +221,23 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
+
+    context "edition is not in a valid state to approve review (no changes needed)" do
+      setup do
+        @edition = FactoryBot.create(:edition, state: "draft")
+      end
+
+      should "not update the edition state and render an error" do
+        post :no_changes_needed, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "Edition is not in a state where a review can be approved", flash[:danger]
+
+        @edition.reload
+        assert_equal "draft", @edition.state
+      end
+    end
   end
 
   context "#skip_review_page" do
@@ -273,6 +307,20 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
         @edition.reload
         assert_equal "in_review", @edition.state
+      end
+
+      context "edition is not in a valid state to skip review" do
+        should "not update the edition state and render an error" do
+          @edition = FactoryBot.create(:edition, state: "draft")
+          post :skip_review, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Edition is not in a state where review can be skipped", flash[:danger]
+
+          @edition.reload
+          assert_equal "draft", @edition.state
+        end
       end
     end
 
