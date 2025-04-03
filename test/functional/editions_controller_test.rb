@@ -1290,7 +1290,7 @@ class EditionsControllerTest < ActionController::TestCase
 
         patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
 
-        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_template "secondary_nav_tabs/_edit_person"
         assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
       end
 
@@ -1298,22 +1298,117 @@ class EditionsControllerTest < ActionController::TestCase
         new_assignee = FactoryBot.create(:user, name: "Stub User")
         patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
 
-        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_template "secondary_nav_tabs/_edit_person"
         assert_equal "Chosen assignee does not have correct editor permissions.", flash[:danger]
       end
 
       should "show error when no assignee option is selected" do
         patch :update_assignee, params: { id: @edition.id }
 
-        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_template "secondary_nav_tabs/_edit_person"
         assert_equal "Please select a person to assign, or 'None' to unassign the currently assigned person.", flash[:danger]
       end
 
       should "show error when a non-existent assignee ID is provided" do
         patch :update_assignee, params: { id: @edition.id, assignee_id: "non-existent ID" }
 
-        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_template "secondary_nav_tabs/_edit_person"
         assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
+      end
+    end
+  end
+
+  context "#update_reviewer" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "show permission error and redirect to edition path" do
+          patch :update_reviewer, params: { id: @edition.id, reviewer_id: @user.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "non-Welsh, non-govuk editor" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        should "show permission error and redirect to edition path" do
+          patch :update_reviewer, params: { id: @edition.id, reviewer_id: @user.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "user with required permissions" do
+      setup do
+        @in_review_edition = FactoryBot.create(:answer_edition, :in_review)
+        @reviewer = FactoryBot.create(:user, :govuk_editor, name: "2i Reviewer")
+        @user = FactoryBot.create(:user, :govuk_editor)
+        login_as(@user)
+      end
+
+      context "user assigns themseleves as 2i reviewer" do
+        should "be able to successfully update 2i reviewer" do
+          patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.id }
+
+          assert_redirected_to edition_path(@in_review_edition.id)
+          assert_equal "You are now the 2i reviewer of this edition", flash[:success]
+        end
+      end
+
+      context "user assigns another suer as 2i reviewer" do
+        should "be able to successfully update 2i reviewer" do
+          patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
+
+          assert_redirected_to edition_path(@in_review_edition.id)
+          assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
+        end
+      end
+
+      should "update the 2i reviewer" do
+        new_reviewer = FactoryBot.create(:user, :govuk_editor, name: "Updated 2i reviewer")
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: new_reviewer.id }
+
+        @in_review_edition.reload
+        assert_equal new_reviewer.id.to_s, @in_review_edition.reviewer
+      end
+
+      should "be able to unassign the current 2i reviewer" do
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: "none" }
+
+        @edition.reload
+        assert_nil @in_review_edition.reviewer
+      end
+
+      should "show error when database save fails" do
+        Edition.any_instance.stubs(:save).raises(StandardError)
+
+        patch :update_reviewer, params: { id: @in_review_edition.id }
+
+        assert_template "secondary_nav_tabs/_edit_person"
+        assert_equal "Due to a service problem, the reviewer couldn’t be saved.", flash[:danger]
+      end
+
+      context "Welsh editor and Welsh edition" do
+        setup do
+          login_as_welsh_editor
+          @welsh_in_review_edition = FactoryBot.create(:answer_edition, :in_review, :welsh)
+        end
+
+        should "be able to successfully update 2i reviewer" do
+          patch :update_reviewer, params: { id: @welsh_in_review_edition.id, reviewer_id: @user.id }
+
+          assert_redirected_to edition_path(@welsh_in_review_edition.id)
+        end
       end
     end
   end
