@@ -1911,6 +1911,31 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Cancel scheduled publishing page" do
+    should "save comment to edition history" do
+      create_scheduled_for_publishing_edition
+
+      visit cancel_scheduled_publishing_page_edition_path(@scheduled_for_publishing_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Cancel scheduled publishing"
+
+      click_on "History and notes"
+      assert page.has_content?("Cancel scheduled publishing by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "populate comment box with submitted comment when there is an error" do
+      edition = create_draft_edition
+
+      visit cancel_scheduled_publishing_page_edition_path(edition)
+      fill_in "Comment (optional)", with: "Forget about it"
+      click_on "Cancel scheduled publishing"
+
+      assert page.has_content?("Edition is not in a state where scheduling can be cancelled")
+      assert page.has_content?("Forget about it")
+    end
+  end
+
   context "Compare editions" do
     should "render the compare editions page" do
       published_edition = FactoryBot.create(

@@ -4,7 +4,7 @@
 <% content_for :title, "Cancel scheduled publishing" %>
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
-  form_url: "",
+  form_url: cancel_scheduled_publishing_edition_path(@edition),
   comment_label_text: "Comment (optional)" ,
   submit_button_text: "Cancel scheduled publishing" ,
 } %>
