@@ -1,6 +1,6 @@
 <% content_for :title_context, @resource.title %>
-<% content_for :page_title, "Assign person" %>
-<% content_for :title, "Assign person" %>
+<% content_for :page_title, @title %>
+<% content_for :title, @title %>
 
 <%= form_for @resource, url: update_assignee_edition_path(@resource) do %>
   <div class="govuk-grid-row">
