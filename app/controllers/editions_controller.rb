@@ -227,12 +227,12 @@ class EditionsController < InheritedResources::Base
   end
 
   def edit_assignee
-    @title = "Assign person"
+    @assign = "assignee"
     render "secondary_nav_tabs/_edit_person"
   end
 
   def edit_reviewer
-    @title = "Assign 2i reviewer"
+    @assign = "reviewer"
     render "secondary_nav_tabs/_edit_person"
   end
 

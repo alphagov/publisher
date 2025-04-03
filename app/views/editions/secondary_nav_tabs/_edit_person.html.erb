@@ -1,6 +1,16 @@
+<%
+  if @assign == "assignee"
+    title = "Assign person"
+    items = available_assignee_items(@resource)
+  else
+    title = "Assign 2i reviewer"
+    items = available_reviewer_items(@resource)
+  end
+%>
+
 <% content_for :title_context, @resource.title %>
-<% content_for :page_title, @title %>
-<% content_for :title, @title %>
+<% content_for :page_title, title %>
+<% content_for :title, title %>
 
 <%= form_for @resource, url: update_assignee_edition_path(@resource) do %>
   <div class="govuk-grid-row">
@@ -9,7 +19,7 @@
           name: "assignee_id",
           heading: "Choose a person to assign",
           visually_hidden_heading: true,
-          items: available_assignee_items(@resource),
+          items: items
         } %>
     </div>
 
