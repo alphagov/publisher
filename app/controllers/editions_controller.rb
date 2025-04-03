@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -243,15 +243,36 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Assigned person updated."
       redirect_to edition_path
     else
-      render "secondary_nav_tabs/_edit_assignee"
+      render "secondary_nav_tabs/_edit_person"
     end
   rescue ActionController::ParameterMissing
     flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
-    render "secondary_nav_tabs/_edit_assignee"
+    render "secondary_nav_tabs/_edit_person"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the assigned person couldn't be saved"
-    render "secondary_nav_tabs/_edit_assignee"
+    render "secondary_nav_tabs/_edit_person"
+  end
+
+  def update_reviewer
+    @resource.reviewer = params["reviewer_id"]
+
+    if @resource.save
+      if @resource.reviewer == current_user.id.to_s
+        flash[:success] = "You are now the 2i reviewer of this edition"
+      else
+        reviewer = User.where(id: @resource.reviewer).first.name
+        flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
+      end
+
+      redirect_to edition_path
+    else
+      render "secondary_nav_tabs/_edit_person"
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = "Due to a service problem, the reviewer couldn’t be saved."
+    render "secondary_nav_tabs/_edit_person"
   end
 
 protected

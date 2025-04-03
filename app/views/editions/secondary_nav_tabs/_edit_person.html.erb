@@ -2,9 +2,13 @@
   if @assign == "assignee"
     title = "Assign person"
     items = available_assignee_items(@resource)
+    url = update_assignee_edition_path(@resource)
+    name = "assignee_id"
   else
     title = "Assign 2i reviewer"
     items = available_reviewer_items(@resource)
+    url = update_reviewer_edition_path(@resource)
+    name = "reviewer_id"
   end
 %>
 
@@ -12,11 +16,11 @@
 <% content_for :page_title, title %>
 <% content_for :title, title %>
 
-<%= form_for @resource, url: update_assignee_edition_path(@resource) do %>
+<%= form_for @resource, url: url do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <%= render "govuk_publishing_components/components/radio", {
-          name: "assignee_id",
+          name: name,
           heading: "Choose a person to assign",
           visually_hidden_heading: true,
           items: items
