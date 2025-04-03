@@ -530,7 +530,7 @@ class EditionEditTest < IntegrationTest
       assert_current_path edition_path(@draft_edition.id)
     end
 
-    should "show success message and redirect back to the edit tab when Send to 2i button is pressed" do
+    should "show success message and redirect back to the edit tab on submit" do
       click_button "Send to 2i"
 
       assert_current_path edition_path(@draft_edition.id)
@@ -1632,6 +1632,15 @@ class EditionEditTest < IntegrationTest
       assert page.has_content?("Please make these changes")
     end
 
+    should "show success message and redirect back to the edit tab on submit" do
+      create_in_review_edition
+      visit request_amendments_page_edition_path(@in_review_edition)
+      click_on "Request amendments"
+
+      assert_current_path edition_path(@in_review_edition.id)
+      assert page.has_text?("2i amendments requested")
+    end
+
     context "current user is also the requester" do
       setup do
         login_as(@govuk_requester)
@@ -1662,6 +1671,15 @@ class EditionEditTest < IntegrationTest
       click_on "History and notes"
       assert page.has_content?("Approve review by")
       assert page.has_content?("Looks great")
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      create_in_review_edition
+      visit no_changes_needed_page_edition_path(@in_review_edition)
+      click_button "Approve 2i"
+
+      assert_current_path edition_path(@in_review_edition.id)
+      assert page.has_text?("2i approved")
     end
 
     context "current user is also the requester" do
@@ -1713,6 +1731,15 @@ class EditionEditTest < IntegrationTest
         click_on "History and notes"
         assert page.has_content?("Skip review by Stub requester")
         assert page.has_content?("Looks great")
+      end
+
+      should "show success message and redirect back to the edit tab on submit" do
+        create_in_review_edition
+        visit skip_review_page_edition_path(@in_review_edition)
+        click_button "Skip review"
+
+        assert_current_path edition_path(@in_review_edition.id)
+        assert page.has_text?("2i review skipped")
       end
     end
 

@@ -96,8 +96,8 @@ class EditionsController < InheritedResources::Base
 
   def request_amendments
     if request_amendments_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i amendments requested"
-      render "show"
+      flash[:success] = "2i amendments requested"
+      redirect_to edition_path(resource)
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/request_amendments_page"
@@ -106,8 +106,8 @@ class EditionsController < InheritedResources::Base
 
   def no_changes_needed
     if no_changes_needed_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i approved"
-      render "show"
+      flash[:success] = "2i approved"
+      redirect_to edition_path(resource)
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/no_changes_needed_page"
@@ -129,8 +129,8 @@ class EditionsController < InheritedResources::Base
 
   def skip_review
     if skip_review_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i review skipped"
-      render "show"
+      flash[:success] = "2i review skipped"
+      redirect_to edition_path(resource) 
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/skip_review_page"
