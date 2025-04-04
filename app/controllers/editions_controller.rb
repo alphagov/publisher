@@ -271,12 +271,12 @@ class EditionsController < InheritedResources::Base
 
   def edit_assignee
     @assign = "assignee"
-    render "secondary_nav_tabs/_edit_person"
+    render "secondary_nav_tabs/_edit_assignee"
   end
 
   def edit_reviewer
     @assign = "reviewer"
-    render "secondary_nav_tabs/_edit_person"
+    render "secondary_nav_tabs/_edit_assignee"
   end
 
   def update_assignee
@@ -286,15 +286,15 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Assigned person updated."
       redirect_to edition_path
     else
-      render "secondary_nav_tabs/_edit_person"
+      render "secondary_nav_tabs/_edit_assignee"
     end
   rescue ActionController::ParameterMissing
     flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
-    render "secondary_nav_tabs/_edit_person"
+    render "secondary_nav_tabs/_edit_assignee"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the assigned person couldn't be saved"
-    render "secondary_nav_tabs/_edit_person"
+    render "secondary_nav_tabs/_edit_assignee"
   end
 
   def update_reviewer
@@ -310,12 +310,12 @@ class EditionsController < InheritedResources::Base
 
       redirect_to edition_path
     else
-      render "secondary_nav_tabs/_edit_person"
+      render "secondary_nav_tabs/_edit_assignee"
     end
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the reviewer couldn’t be saved."
-    render "secondary_nav_tabs/_edit_person"
+    render "secondary_nav_tabs/_edit_assignee"
   end
 
 protected
