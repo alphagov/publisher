@@ -1032,6 +1032,41 @@ class EditionEditTest < IntegrationTest
         visit_scheduled_for_publishing_edition
         assert page.has_link?("Preview (opens in new tab)")
       end
+
+      should "show a 'publish now' button in the sidebar when user is a govuk editor" do
+        edition = FactoryBot.create(
+          :edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+        )
+        login_as_govuk_editor
+
+        visit edition_path(edition)
+
+        assert page.has_link?("Publish now", href: send_to_publish_page_edition_path(edition))
+      end
+
+      context "that is welsh" do
+        should "show a 'publish now' button in the sidebar when user is a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as_welsh_editor
+
+          visit edition_path(edition)
+
+          assert page.has_link?("Publish now", href: send_to_publish_page_edition_path(edition))
+        end
+
+        should "not show a 'publish now' button in the sidebar when user is not a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as(FactoryBot.create(:user))
+
+          visit edition_path(edition)
+
+          assert page.has_no_link?("Publish now")
+        end
+      end
     end
 
     context "published edition" do
@@ -1120,7 +1155,7 @@ class EditionEditTest < IntegrationTest
           login_as_welsh_editor
         end
 
-        context "viewing a Welsh edition" do
+        context "viewing a welsh edition" do
           setup do
             @welsh_published_edition = FactoryBot.create(
               :answer_edition,
@@ -1145,7 +1180,7 @@ class EditionEditTest < IntegrationTest
           end
         end
 
-        context "viewing a non-Welsh edition" do
+        context "viewing a non-welsh edition" do
           setup do
             @non_welsh_published_edition = FactoryBot.create(
               :answer_edition,
@@ -1842,6 +1877,40 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Send to publish page" do
+    should "save comment to edition history" do
+      create_scheduled_for_publishing_edition
+
+      visit send_to_publish_page_edition_path(@scheduled_for_publishing_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Send to publish"
+
+      click_on "History and notes"
+      assert page.has_content?("Publish by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "populate comment box with submitted comment when there is an error" do
+      edition = create_draft_edition
+
+      visit send_to_publish_page_edition_path(edition)
+      fill_in "Comment (optional)", with: "Publish a go-go!"
+      click_on "Send to publish"
+
+      assert page.has_content?("Edition is not in a state where it can be published")
+      assert page.has_content?("Publish a go-go")
+    end
+
+    should "show an error when the edition is not in a state that can be published from" do
+      edition = create_draft_edition
+
+      visit send_to_publish_page_edition_path(edition)
+      click_on "Send to publish"
+
+      assert page.has_content?("Edition is not in a state where it can be published")
+    end
+  end
+
   context "Compare editions" do
     should "render the compare editions page" do
       published_edition = FactoryBot.create(
@@ -1890,8 +1959,12 @@ private
   end
 
   def visit_scheduled_for_publishing_edition
-    @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+    create_scheduled_for_publishing_edition
     visit edition_path(@scheduled_for_publishing_edition)
+  end
+
+  def create_scheduled_for_publishing_edition
+    @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
   end
 
   def visit_archived_edition

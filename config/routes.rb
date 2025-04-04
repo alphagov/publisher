@@ -31,6 +31,8 @@ Rails.application.routes.draw do
         post "no_changes_needed", to: "editions#no_changes_needed", as: "no_changes_needed"
         get "skip_review_page", to: "editions#skip_review_page", as: "skip_review_page"
         post "skip_review", to: "editions#skip_review", as: "skip_review"
+        get "send_to_publish_page", to: "editions#send_to_publish_page", as: "send_to_publish_page"
+        post "send_to_publish"
         get "metadata"
         get "history"
         get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"
