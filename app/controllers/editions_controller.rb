@@ -96,8 +96,11 @@ class EditionsController < InheritedResources::Base
 
   def request_amendments
     if request_amendments_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i amendments requested"
-      render "show"
+      flash[:success] = "2i amendments requested"
+      redirect_to edition_path(resource)
+    elsif !@resource.can_request_amendments?
+      flash.now[:danger] = "Edition is not in a state where amendments can be requested"
+      render "secondary_nav_tabs/request_amendments_page"
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/request_amendments_page"
@@ -106,8 +109,11 @@ class EditionsController < InheritedResources::Base
 
   def no_changes_needed
     if no_changes_needed_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i approved"
-      render "show"
+      flash[:success] = "2i approved"
+      redirect_to edition_path(resource)
+    elsif !@resource.can_approve_review?
+      flash.now[:danger] = "Edition is not in a state where a review can be approved"
+      render "secondary_nav_tabs/no_changes_needed_page"
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/no_changes_needed_page"
@@ -116,21 +122,24 @@ class EditionsController < InheritedResources::Base
 
   def send_to_2i
     if send_to_2i_for_edition(@resource, params[:comment])
-      # Can't use flash.now because we're redirecting
       flash[:success] = "Sent to 2i"
       redirect_to edition_path(resource)
-    elsif !%w[draft amends_needed].include?(@resource.state)
-      flash[:danger] = "Edition is not in a state where it can be sent to 2i"
+    elsif !@resource.can_request_review?
+      flash.now[:danger] = "Edition is not in a state where it can be sent to 2i"
+      render "secondary_nav_tabs/send_to_2i_page"
     else
-      flash[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_2i_page"
     end
   end
 
   def skip_review
     if skip_review_for_edition(@resource, params[:comment])
-      flash.now[:success] = "2i review skipped"
-      render "show"
+      flash[:success] = "2i review skipped"
+      redirect_to edition_path(resource)
+    elsif !@resource.can_skip_review?
+      flash.now[:danger] = "Edition is not in a state where review can be skipped"
+      render "secondary_nav_tabs/skip_review_page"
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/skip_review_page"
