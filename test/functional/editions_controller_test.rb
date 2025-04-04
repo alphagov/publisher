@@ -1015,7 +1015,7 @@ class EditionsControllerTest < ActionController::TestCase
 
         patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
 
-        assert_template "secondary_nav_tabs/_edit_person"
+        assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
       end
 
@@ -1023,21 +1023,21 @@ class EditionsControllerTest < ActionController::TestCase
         new_assignee = FactoryBot.create(:user, name: "Stub User")
         patch :update_assignee, params: { id: @edition.id, assignee_id: new_assignee.id }
 
-        assert_template "secondary_nav_tabs/_edit_person"
+        assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Chosen assignee does not have correct editor permissions.", flash[:danger]
       end
 
       should "show error when no assignee option is selected" do
         patch :update_assignee, params: { id: @edition.id }
 
-        assert_template "secondary_nav_tabs/_edit_person"
+        assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Please select a person to assign, or 'None' to unassign the currently assigned person.", flash[:danger]
       end
 
       should "show error when a non-existent assignee ID is provided" do
         patch :update_assignee, params: { id: @edition.id, assignee_id: "non-existent ID" }
 
-        assert_template "secondary_nav_tabs/_edit_person"
+        assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Due to a service problem, the assigned person couldn't be saved", flash[:danger]
       end
     end
@@ -1119,7 +1119,7 @@ class EditionsControllerTest < ActionController::TestCase
 
         patch :update_reviewer, params: { id: @in_review_edition.id }
 
-        assert_template "secondary_nav_tabs/_edit_person"
+        assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Due to a service problem, the reviewer couldn’t be saved.", flash[:danger]
       end
 
