@@ -33,6 +33,15 @@ module EditionsSidebarButtonsHelper
       buttons << render(
         "govuk_publishing_components/components/button",
         {
+          text: "Cancel scheduling",
+          href: cancel_scheduled_publishing_page_edition_path(edition),
+          secondary_solid: true,
+          margin_bottom: 3,
+        },
+      )
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
           text: "Publish now",
           href: send_to_publish_page_edition_path(edition),
           secondary_solid: true,
