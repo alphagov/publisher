@@ -255,13 +255,14 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_reviewer
-    @resource.reviewer = params["reviewer_id"]
+    reviewer = params["reviewer_id"] == 'none' ? nil : params.require(:reviewer_id)
+    @resource.assign_attributes(reviewer: reviewer)
 
     if @resource.save
       if @resource.reviewer == current_user.id.to_s
         flash[:success] = "You are now the 2i reviewer of this edition"
       else
-        reviewer = User.where(id: @resource.reviewer).first.name
+        reviewer = User.where(id: @resource.reviewer).first
         flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
       end
 
