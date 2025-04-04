@@ -1717,17 +1717,30 @@ class EditionEditTest < IntegrationTest
 
           # TODO: Update this test to define assigned reviewer
           should "allow currently assigned reviewer to be unassigned" do
-            skip("Needs work")
-            # reviewer = FactoryBot.create(:user, :govuk_editor)
-            reviewer = @govuk_requester
+            # skip("Needs work")
+            reviewer = FactoryBot.create(:user, :govuk_editor)
+            # reviewer = @govuk_requester
             @in_review_edition.reviewer = reviewer.id
             # @govuk_requester.assign(@in_review_edition, user)
-              visit current_path
+            visit current_path
+            # @in_review_edition.reload
+
+            byebug
 
             choose "None"
             click_on "Save"
 
             assert_equal(page.current_path, "/editions/#{@in_review_edition.id}")
+
+            # user = FactoryBot.create(:user, :govuk_editor)
+            # @govuk_editor.assign(@draft_edition, user)
+            # visit current_path
+
+            # choose "None"
+            # click_on "Save"
+
+            # assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
+
           end
 
           should "navigate to editions edit page when 'Cancel' link is clicked" do
