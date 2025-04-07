@@ -11,7 +11,7 @@ module Formats
     end
 
     def rendering_app
-      "government-frontend"
+      "frontend"
     end
 
     def details
