@@ -1,10 +1,3 @@
-<%
-  title = @assign == "assignee" ? "Assign person" : "Assign 2i reviewer"
-  items = @assign == "assignee" ? available_assignee_items(@resource) : available_reviewer_items(@resource)
-  url = @assign == "assignee" ? update_assignee_edition_path(@resource) : update_reviewer_edition_path(@resource)
-  name = @assign == "assignee" ? "assignee_id" : "reviewer_id"
-%>
-
 <% content_for :title_context, @resource.title %>
 <% content_for :page_title, title %>
 <% content_for :title, title %>
