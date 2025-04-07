@@ -105,7 +105,7 @@ class EditionEditTest < IntegrationTest
     should "show the 2i reviewer if assigned or message if not when the edition state is 'in_review'" do
       # TODO: I've removed scheduled from the list but needs putting back
       # The problem is that it creates an extra row
-      %i[draft amends_needed fact_check fact_check_received ready published archived ].each do |state|
+      %i[draft amends_needed fact_check fact_check_received ready published archived].each do |state|
         send "visit_#{state}_edition"
 
         within :css, ".govuk-summary-list" do

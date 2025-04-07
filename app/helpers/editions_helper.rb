@@ -54,7 +54,7 @@ module EditionsHelper
       end
   end
 
-  def document_summary_items(edition)
+  def document_summary_items(edition, reviewer)
     items = [
       {
         field: "Assigned to",
@@ -70,12 +70,12 @@ module EditionsHelper
         value: edition_version_and_state_tag(edition),
       },
       *(if edition.state == "in_review"
-        [{
-          field: "2i reviewer",
-          value: @reviewer,
-          edit: reviewer_edit_link(edition),
-        }]
-      end),
+          [{
+            field: "2i reviewer",
+            value: reviewer,
+            edit: reviewer_edit_link(edition),
+          }]
+        end),
     ]
     if edition.scheduled_for_publishing?
       items << {
