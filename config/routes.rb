@@ -33,6 +33,8 @@ Rails.application.routes.draw do
         post "skip_review", to: "editions#skip_review", as: "skip_review"
         get "send_to_publish_page", to: "editions#send_to_publish_page", as: "send_to_publish_page"
         post "send_to_publish"
+        get "cancel_scheduled_publishing_page"
+        post "cancel_scheduled_publishing"
         get "metadata"
         get "history"
         get "history/add_edition_note", to: "editions#add_edition_note", as: "history/add_edition_note"

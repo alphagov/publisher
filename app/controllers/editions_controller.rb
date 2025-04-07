@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -58,6 +58,10 @@ class EditionsController < InheritedResources::Base
 
   def send_to_publish_page
     render "secondary_nav_tabs/send_to_publish_page"
+  end
+
+  def cancel_scheduled_publishing_page
+    render "secondary_nav_tabs/cancel_scheduled_publishing_page"
   end
 
   def duplicate
@@ -160,6 +164,19 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_publish_page"
+    end
+  end
+
+  def cancel_scheduled_publishing
+    if !@resource.can_cancel_scheduled_publishing?
+      flash.now[:danger] = "Edition is not in a state where scheduling can be cancelled"
+      render "secondary_nav_tabs/cancel_scheduled_publishing_page"
+    elsif cancel_scheduled_publishing_for_edition(@resource, params[:comment])
+      flash[:success] = "Scheduling cancelled"
+      redirect_to edition_path(@resource)
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/cancel_scheduled_publishing_page"
     end
   end
 
@@ -311,6 +328,11 @@ private
     publish_succeeded = @command.progress({ request_type: "publish", comment: comment })
     PublishWorker.perform_async(resource.id.to_s) if publish_succeeded
     publish_succeeded
+  end
+
+  def cancel_scheduled_publishing_for_edition(resource, comment)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "cancel_scheduled_publishing", comment: comment })
   end
 
   def unpublish_edition(artefact)

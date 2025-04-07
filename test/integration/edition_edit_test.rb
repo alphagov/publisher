@@ -966,6 +966,17 @@ class EditionEditTest < IntegrationTest
         assert page.has_link?("Publish now", href: send_to_publish_page_edition_path(edition))
       end
 
+      should "show a 'cancel scheduling' button in the sidebar when user is a govuk editor" do
+        edition = FactoryBot.create(
+          :edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+        )
+        login_as_govuk_editor
+
+        visit edition_path(edition)
+
+        assert page.has_link?("Cancel scheduling", href: cancel_scheduled_publishing_page_edition_path(edition))
+      end
+
       context "that is welsh" do
         should "show a 'publish now' button in the sidebar when user is a welsh editor" do
           edition = FactoryBot.create(
@@ -987,6 +998,28 @@ class EditionEditTest < IntegrationTest
           visit edition_path(edition)
 
           assert page.has_no_link?("Publish now")
+        end
+
+        should "show a 'cancel scheduling' button in the sidebar when user is a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as_welsh_editor
+
+          visit edition_path(edition)
+
+          assert page.has_link?("Cancel scheduling", href: cancel_scheduled_publishing_page_edition_path(edition))
+        end
+
+        should "not show a 'cancel scheduling' button in the sidebar when user is not a welsh editor" do
+          edition = FactoryBot.create(
+            :edition, :welsh, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour
+          )
+          login_as(FactoryBot.create(:user))
+
+          visit edition_path(edition)
+
+          assert page.has_no_link?("Cancel scheduling")
         end
       end
     end
@@ -1935,6 +1968,31 @@ class EditionEditTest < IntegrationTest
       click_on "Send to publish"
 
       assert page.has_content?("Edition is not in a state where it can be published")
+    end
+  end
+
+  context "Cancel scheduled publishing page" do
+    should "save comment to edition history" do
+      create_scheduled_for_publishing_edition
+
+      visit cancel_scheduled_publishing_page_edition_path(@scheduled_for_publishing_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Cancel scheduled publishing"
+
+      click_on "History and notes"
+      assert page.has_content?("Cancel scheduled publishing by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "populate comment box with submitted comment when there is an error" do
+      edition = create_draft_edition
+
+      visit cancel_scheduled_publishing_page_edition_path(edition)
+      fill_in "Comment (optional)", with: "Forget about it"
+      click_on "Cancel scheduled publishing"
+
+      assert page.has_content?("Edition is not in a state where scheduling can be cancelled")
+      assert page.has_content?("Forget about it")
     end
   end
 
