@@ -318,6 +318,9 @@ class EditionsController < InheritedResources::Base
     else
       render "secondary_nav_tabs/_edit_assignee"
     end
+  rescue ActionController::ParameterMissing
+    flash.now[:danger] = "Please select a person to assign"
+    render "secondary_nav_tabs/_edit_assignee"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the reviewer couldn’t be saved."

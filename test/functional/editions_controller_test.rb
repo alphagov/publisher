@@ -1389,13 +1389,20 @@ class EditionsControllerTest < ActionController::TestCase
         assert_nil @in_review_edition.reviewer
       end
 
-      should "show error when database save fails" do
+      should "show an error when database save fails" do
         Edition.any_instance.stubs(:save).raises(StandardError)
 
         patch :update_reviewer, params: { id: @in_review_edition.id }
 
         assert_template "secondary_nav_tabs/_edit_assignee"
         assert_equal "Due to a service problem, the reviewer couldn’t be saved.", flash[:danger]
+      end
+
+      should "show an error when user saves with a missing parameter" do
+        patch :update_reviewer, params: { id: @in_review_edition.id }
+
+        assert_template "secondary_nav_tabs/_edit_assignee"
+        assert_equal "Please select a person to assign", flash[:danger]
       end
 
       context "Welsh editor and Welsh edition" do
