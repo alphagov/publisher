@@ -309,6 +309,8 @@ class EditionsController < InheritedResources::Base
     if @resource.save
       if @resource.reviewer == current_user.id.to_s
         flash[:success] = "You are now the 2i reviewer of this edition"
+      elsif @resource.reviewer == nil
+        flash[:success] = "The current 2i reviewer has been unassigned"
       else
         reviewer = User.where(id: @resource.reviewer).first
         flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
