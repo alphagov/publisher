@@ -71,13 +71,6 @@ module EditionsHelper
         field: "Edition",
         value: edition_version_and_state_tag(edition),
       },
-      *(if edition.state == "in_review"
-          [{
-            field: "2i reviewer",
-            value: reviewer_name,
-            edit: reviewer_edit_link(edition),
-          }]
-        end),
     ]
     if edition.scheduled_for_publishing?
       items << {
@@ -85,6 +78,14 @@ module EditionsHelper
         value: edition.publish_at.to_fs(:govuk_date).to_s,
       }
     end
+    if edition.in_review?
+      items << {
+        field: "2i reviewer",
+        value: reviewer_name,
+        edit: reviewer_edit_link(edition),
+      }
+    end
+
     items
   end
 
