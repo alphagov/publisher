@@ -1356,36 +1356,37 @@ class EditionsControllerTest < ActionController::TestCase
         login_as(@user)
       end
 
-      context "user assigns themseleves as 2i reviewer" do
-        should "be able to successfully update 2i reviewer" do
-          patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.id }
+      should "be able to assign themselves as 2i reviewer" do
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.id }
 
-          assert_redirected_to edition_path(@in_review_edition.id)
-          assert_equal "You are now the 2i reviewer of this edition", flash[:success]
-        end
+        assert_redirected_to edition_path(@in_review_edition.id)
+        assert_equal "You are now the 2i reviewer of this edition", flash[:success]
       end
 
-      context "user assigns another suer as 2i reviewer" do
-        should "be able to successfully update 2i reviewer" do
-          patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
+      should "be able to assign another user as 2i reviewer" do
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
 
-          assert_redirected_to edition_path(@in_review_edition.id)
-          assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
-        end
+        assert_redirected_to edition_path(@in_review_edition.id)
+        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
       should "update the 2i reviewer" do
-        new_reviewer = FactoryBot.create(:user, :govuk_editor, name: "Updated 2i reviewer")
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: new_reviewer.id }
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
 
         @in_review_edition.reload
-        assert_equal new_reviewer.id.to_s, @in_review_edition.reviewer
+        assert_equal @reviewer.id.to_s, @in_review_edition.reviewer
+        assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
       should "be able to unassign the current 2i reviewer" do
+        @in_review_edition.reviewer = @reviewer
+
+        assert_equal "2i Reviewer", @in_review_edition.reviewer
+
         patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: "none" }
 
-        @edition.reload
+        @in_review_edition.reload
+
         assert_nil @in_review_edition.reviewer
         assert_equal "The current 2i reviewer has been unassigned", flash[:success]
       end
@@ -1424,7 +1425,9 @@ class EditionsControllerTest < ActionController::TestCase
         should "be able to successfully update 2i reviewer" do
           patch :update_reviewer, params: { id: @welsh_in_review_edition.id, reviewer_id: @user.id }
 
-          assert_redirected_to edition_path(@welsh_in_review_edition.id)
+          @welsh_in_review_edition.reload
+
+          assert_equal @user.id.to_s, @welsh_in_review_edition.reviewer
         end
       end
     end
