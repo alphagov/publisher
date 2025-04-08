@@ -316,6 +316,7 @@ class EditionsController < InheritedResources::Base
 
       redirect_to edition_path
     else
+      flash.now[:danger] = "The selected 2i reviewer could not be saved."
       render "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
     end
   rescue ActionController::ParameterMissing

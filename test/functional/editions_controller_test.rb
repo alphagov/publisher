@@ -1390,6 +1390,15 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "The current 2i reviewer has been unassigned", flash[:success]
       end
 
+      should "show an error when the save fails" do
+        Edition.any_instance.stubs(:save).returns(false)
+        new_reviewer = FactoryBot.create(:user, :govuk_editor, name: "Updated 2i reviewer")
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: new_reviewer.id }
+
+        assert_template "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
+        assert_equal "The selected 2i reviewer could not be saved.", flash[:danger]
+      end
+
       should "show an error when database save fails" do
         Edition.any_instance.stubs(:save).raises(StandardError)
         new_reviewer = FactoryBot.create(:user, :govuk_editor, name: "Updated 2i reviewer")
