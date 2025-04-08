@@ -55,6 +55,8 @@ module EditionsHelper
   end
 
   def document_summary_items(edition, reviewer)
+    reviewer_name = reviewer.nil? ? "Not yet claimed" : reviewer.name
+
     items = [
       {
         field: "Assigned to",
@@ -72,7 +74,7 @@ module EditionsHelper
       *(if edition.state == "in_review"
           [{
             field: "2i reviewer",
-            value: reviewer,
+            value: reviewer_name,
             edit: reviewer_edit_link(edition),
           }]
         end),
