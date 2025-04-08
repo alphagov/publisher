@@ -1,3 +1,5 @@
+<%# locals: (title:, url:, radio_name:, available_assignees:) %>
+
 <% content_for :title_context, @resource.title %>
 <% content_for :page_title, title %>
 <% content_for :title, title %>
@@ -6,10 +8,10 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <%= render "govuk_publishing_components/components/radio", {
-          name: name,
+          name: radio_name,
           heading: "Choose a person to assign",
           visually_hidden_heading: true,
-          items: items,
+          items: available_assignees,
         } %>
     </div>
 

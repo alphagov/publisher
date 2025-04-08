@@ -270,11 +270,11 @@ class EditionsController < InheritedResources::Base
   end
 
   def edit_assignee
-    render "secondary_nav_tabs/edit_assignee/_edit_assignee_page"
+    render "secondary_nav_tabs/edit_assignee_page"
   end
 
   def edit_reviewer
-    render "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
+    render "secondary_nav_tabs/edit_reviewer_page"
   end
 
   def update_assignee
@@ -284,15 +284,15 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Assigned person updated."
       redirect_to edition_path
     else
-      render "secondary_nav_tabs/edit_assignee/_edit_assignee_page"
+      render "secondary_nav_tabs/edit_assignee_page"
     end
   rescue ActionController::ParameterMissing
     flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
-    render "secondary_nav_tabs/edit_assignee/_edit_assignee_page"
+    render "secondary_nav_tabs/edit_assignee_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the assigned person couldn't be saved"
-    render "secondary_nav_tabs/edit_assignee/_edit_assignee_page"
+    render "secondary_nav_tabs/edit_assignee_page"
   end
 
   def update_reviewer
@@ -317,15 +317,15 @@ class EditionsController < InheritedResources::Base
       redirect_to edition_path
     else
       flash.now[:danger] = "The selected 2i reviewer could not be saved."
-      render "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
+      render "secondary_nav_tabs/edit_reviewer_page"
     end
   rescue ActionController::ParameterMissing
     flash.now[:danger] = "Please select a person to assign"
-    render "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
+    render "secondary_nav_tabs/edit_reviewer_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = "Due to a service problem, the reviewer couldn’t be saved."
-    render "secondary_nav_tabs/edit_assignee/_edit_reviewer_page"
+    render "secondary_nav_tabs/edit_reviewer_page"
   end
 
 protected
