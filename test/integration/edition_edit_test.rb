@@ -102,34 +102,37 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    should "show the 2i reviewer if assigned or message if not when the edition state is 'in_review'" do
-      # TODO: I've removed scheduled from the list but needs putting back
-      # The problem is that it creates an extra row
-      %i[draft amends_needed fact_check fact_check_received ready published archived].each do |state|
+    should "not show the 2i reviewer row in the summary if the edition state is not 'in_review'" do
+      %i[draft amends_needed fact_check fact_check_received ready scheduled_for_publishing published archived].each do |state|
         send "visit_#{state}_edition"
 
         within :css, ".govuk-summary-list" do
-          assert page.has_css?(".govuk-summary-list__row", count: 3)
           assert_no_selector(".govuk-summary-list__key", text: "2i reviewer")
         end
       end
+    end
 
+    should "show the 2i reviewer row in the summary correctly if the edition state is 'in_review' and a reviewer is not assigned" do
       visit_in_review_edition
-
-      within :css, ".govuk-summary-list" do
-        assert page.has_css?(".govuk-summary-list__row", count: 4)
-      end
-
-      within all(".govuk-summary-list__row")[3] do
-        assert_selector(".govuk-summary-list__key", text: "2i reviewer")
-        assert_selector(".govuk-summary-list__value", text: @in_review_edition.reviewer)
-      end
-
-      @in_review_edition.reviewer = nil
 
       within all(".govuk-summary-list__row")[3] do
         assert_selector(".govuk-summary-list__key", text: "2i reviewer")
         assert_selector(".govuk-summary-list__value", text: "Not yet claimed")
+      end
+    end
+
+    should "show the 2i reviewer row in the summary correctly if the edition state is 'in_review' and a reviewer is assigned" do
+      edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.id)
+      edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
+
+      visit edition_path(edition)
+
+      within all(".govuk-summary-list__row")[3] do
+        assert_selector(".govuk-summary-list__key", text: "2i reviewer")
+        assert_selector(".govuk-summary-list__value", text: "Stub User")
       end
     end
 
@@ -1665,7 +1668,7 @@ class EditionEditTest < IntegrationTest
           end
         end
 
-        should "navigate to edit 2i reviwer page when 'Edit' assignee is clicked" do
+        should "navigate to edit 2i reviewer page when 'Edit' link is clicked" do
           visit_in_review_edition
 
           within :css, ".editions__edit__summary" do
@@ -1679,36 +1682,65 @@ class EditionEditTest < IntegrationTest
 
         context "edit reviewer page" do
           setup do
-            visit_in_review_edition
-            within :css, ".editions__edit__summary" do
-              within all(".govuk-summary-list__row")[3] do
-                click_link("Edit")
-              end
-            end
+            @edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.id)
+            @edition.actions.create!(
+              request_type: Action::REQUEST_AMENDMENTS,
+              requester_id: @govuk_requester.id,
+            )
+
+            visit edit_reviewer_edition_path(@edition)
           end
 
           should "show title and page title" do
             assert page.has_title?("Assign 2i reviewer")
-            assert page.has_text?(@in_review_edition.title)
-          end
-
-          should "show only enabled users as radio button options" do
-            FactoryBot.create(:user, name: "Disabled User", disabled: true)
-            all_enabled_users_names = []
-            User.enabled.each { |user| all_enabled_users_names << user.name }
-            all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
-
-            assert all_user_radio_buttons.exclude?("Disabled User")
-
-            all_enabled_users_names.each do |users|
-              assert all_user_radio_buttons.include?(users)
-            end
+            assert page.has_text?(@edition.title)
           end
 
           should "navigate to editions edit page when 'Cancel' link is clicked" do
             click_link("Cancel")
 
-            assert_equal(page.current_path, "/editions/#{@in_review_edition.id}")
+            assert_equal(page.current_path, "/editions/#{@edition.id}")
+          end
+
+          context "radio  buttons" do
+            setup do
+              FactoryBot.create(:user, name: "Disabled User", disabled: true)
+              @all_enabled_users_names = []
+              User.enabled.each { |user| @all_enabled_users_names << user.name }
+              @all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+            end
+
+            should "show only enabled users as radio button options" do
+              assert @all_user_radio_buttons.exclude?("Disabled User")
+
+              @all_enabled_users_names.each do |users|
+                assert @all_user_radio_buttons.include?(users)
+              end
+            end
+
+            should "show the currently assigned reviewer as the first radio button option and 'none' as the second" do
+              within all(".govuk-radios__item")[0] do
+                assert page.has_css?("input[value='#{@govuk_editor.id}']")
+              end
+
+              within all(".govuk-radios__item")[1] do
+                assert page.has_css?("input[value='none']")
+              end
+            end
+
+            should "not show a 'none' option when there is no assigned reviewer" do
+              @edition_no_reviewer = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with no reviewer assigned", review_requested_at: 1.hour.ago, reviewer: nil)
+              @edition_no_reviewer.actions.create!(
+                request_type: Action::REQUEST_AMENDMENTS,
+                requester_id: @govuk_requester.id,
+              )
+
+              visit edit_reviewer_edition_path(@edition_no_reviewer)
+
+              within :css, ".govuk-radios" do
+                assert page.has_no_css?("input[value='none']")
+              end
+            end
           end
         end
       end
