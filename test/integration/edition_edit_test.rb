@@ -1331,6 +1331,35 @@ class EditionEditTest < IntegrationTest
           assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
         end
       end
+
+      context "edition is ready" do
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_ready_edition
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_ready_edition
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "show the link to editors" do
+          login_as(@govuk_editor)
+          visit_ready_edition
+          assert page.has_link?("Request amendments")
+        end
+
+        should "navigate to the 'Request amendments' page when the link is clicked" do
+          login_as(@govuk_editor)
+          visit_ready_edition
+
+          click_link("Request amendments")
+
+          assert_current_path request_amendments_page_edition_path(@ready_edition.id)
+        end
+      end
     end
 
     context "No changes needed link" do
