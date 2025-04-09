@@ -85,7 +85,7 @@ module EditionsSidebarButtonsHelper
       })
     end
     buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
-    if current_user.has_editor_permissions?(edition) && %w[draft amends_needed].include?(edition.state)
+    if current_user.has_editor_permissions?(edition) && edition.can_request_review?
       buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
     end
 
