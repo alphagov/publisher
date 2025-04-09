@@ -78,7 +78,6 @@ module EditionsSidebarButtonsHelper
 
   def non_published_sidebar_buttons(edition)
     buttons = []
-
     if current_user.has_editor_permissions?(edition)
       unless edition.retired_format?
         buttons << (render "govuk_publishing_components/components/button", {
@@ -86,10 +85,21 @@ module EditionsSidebarButtonsHelper
           margin_bottom: 3,
         })
       end
-      buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
-      if edition.can_request_review?
-        buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
+      if edition.can_publish?
+        buttons << render(
+          "govuk_publishing_components/components/button",
+          {
+            text: "Publish",
+            href: send_to_publish_page_edition_path(edition),
+            secondary_solid: true,
+            margin_bottom: 3,
+          },
+        )
       end
+    end
+    buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
+    if edition.can_request_review?
+      buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
     end
 
     buttons
