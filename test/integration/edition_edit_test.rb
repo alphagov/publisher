@@ -1702,7 +1702,7 @@ class EditionEditTest < IntegrationTest
             assert_equal(page.current_path, "/editions/#{@edition.id}")
           end
 
-          context "radio  buttons" do
+          context "radio buttons" do
             setup do
               FactoryBot.create(:user, name: "Disabled User", disabled: true)
               @all_enabled_users_names = []
