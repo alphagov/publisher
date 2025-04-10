@@ -117,4 +117,8 @@ private
   def can_update_assignee?(resource)
     %w[published archived scheduled_for_publishing].exclude?(resource.state)
   end
+
+  def can_update_reviewer?(resource)
+    %w[in_review].include?(resource.state)
+  end
 end

@@ -23,6 +23,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[edit_assignee update_assignee] do
     require_assignee_editable
   end
+  before_action only: %i[edit_reviewer update_reviewer] do
+    require_reviewer_editable
+  end
 
   helper_method :locale_to_language
 
@@ -439,6 +442,13 @@ private
     return if can_update_assignee?(@resource)
 
     flash[:danger] = "Cannot edit the assignee of an edition that has been published."
+    redirect_to edition_path(@resource)
+  end
+
+  def require_reviewer_editable
+    return if can_update_reviewer?(@resource)
+
+    flash[:danger] = "Cannot edit the reviewer of an edition that is not in review."
     redirect_to edition_path(@resource)
   end
 
