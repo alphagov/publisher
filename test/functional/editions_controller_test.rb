@@ -1204,6 +1204,74 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#edit_reviewer" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :edit_reviewer, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "non-Welsh, non-govuk editor" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :edit_reviewer, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "user with required permissions" do
+      context "Welsh editor and Welsh edition" do
+        setup do
+          @welsh_in_review_edition = FactoryBot.create(:answer_edition, :in_review, :welsh)
+          login_as_welsh_editor
+        end
+
+        should "be able to navigate successfully to edit reviewer path" do
+          get :edit_reviewer, params: { id: @welsh_in_review_edition.id }
+
+          assert_response :success
+        end
+      end
+
+      should "be able to navigate to the edit reviewer path" do
+        @in_review_edition = FactoryBot.create(:answer_edition, :in_review)
+        get :edit_reviewer, params: { id: @in_review_edition.id }
+
+        assert_response :success
+      end
+
+      %i[draft amends_needed fact_check fact_check_received ready scheduled_for_publishing published archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour)
+          end
+
+          should "redirect to edition path with error message" do
+            get :edit_reviewer, params: { id: @edition.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Cannot edit the reviewer of an edition that is not in review.", flash[:danger]
+          end
+        end
+      end
+    end
+  end
+
   context "#update_assignee" do
     context "user without required permissions" do
       context "Welsh editor and non-Welsh edition" do
