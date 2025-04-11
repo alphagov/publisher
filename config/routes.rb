@@ -53,6 +53,8 @@ Rails.application.routes.draw do
         post "progress"
         get "edit_assignee"
         patch "update_assignee"
+        get "edit_reviewer"
+        patch "update_reviewer"
         post "skip_fact_check",
              to: "editions#progress",
              edition: {

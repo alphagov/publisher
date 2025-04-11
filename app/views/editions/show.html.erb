@@ -21,7 +21,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds editions__edit__summary">
     <%= render "govuk_publishing_components/components/summary_list", {
-      items: document_summary_items(@resource),
+      items: document_summary_items(@resource, @reviewer),
     } %>
     <% if @edition.important_note %>
       <%= render partial: "important_note" %>

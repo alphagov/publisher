@@ -1,0 +1,6 @@
+<%= render partial: "secondary_nav_tabs/edit_assignee/edit_assignee", locals: {
+  title: "Assign 2i reviewer",
+  available_assignees: available_reviewer_items(@resource),
+  url: update_reviewer_edition_path(@resource),
+  radio_name: "reviewer_id",
+} %>
