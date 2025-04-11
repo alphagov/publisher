@@ -1609,6 +1609,31 @@ class EditionEditTest < IntegrationTest
         end
       end
     end
+
+    context "'Publish' button" do
+      should "show the 'Publish' button if user has govuk_editor permission" do
+        login_as(@govuk_editor)
+        visit_ready_edition
+
+        assert page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
+      end
+
+      should "show the 'Publish' button for welsh edition if user has welsh_editor permission" do
+        login_as_welsh_editor
+        welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
+        visit edition_path(welsh_edition)
+        assert @user.has_editor_permissions?(welsh_edition)
+
+        assert page.has_link?("Publish", href: send_to_publish_page_edition_path(welsh_edition))
+      end
+
+      should "not show the 'Publish' button if the user does not have permissions" do
+        login_as(FactoryBot.create(:user, name: "Stub User"))
+        visit_ready_edition
+
+        assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
+      end
+    end
   end
 
   context "Related external links tab" do

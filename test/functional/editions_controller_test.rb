@@ -520,84 +520,166 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#send_to_publish" do
-    setup do
-      @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
-      @edition = FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
-      login_as(@requester)
-    end
-
-    context "user has govuk_editor permission" do
-      setup do
-        ScheduledPublisher.stubs(:cancel_scheduled_publishing)
-        PublishWorker.stubs(:perform_async)
-      end
-
-      should "update the edition status to 'published' and save the comment" do
-        post :send_to_publish, params: {
-          id: @edition.id,
-          comment: "Publishing with immediate effect",
-        }
-
-        assert_equal "Published", flash[:success]
-        @edition.reload
-        assert_equal "published", @edition.state
-        assert_equal "Publishing with immediate effect", @edition.latest_status_action.comment
-        assert_equal @requester.id, @edition.latest_status_action.requester_id
-      end
-
-      should "not update the edition state and render 'send_to_publish' template with an error when an error occurs" do
-        EditionProgressor.any_instance.expects(:progress).returns(false)
-
-        post :send_to_publish, params: {
-          id: @edition.id,
-        }
-
-        assert_template "secondary_nav_tabs/send_to_publish_page"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        @edition.reload
-        assert_equal "scheduled_for_publishing", @edition.state
-      end
-
-      should "notify the publishing API to publish the edition" do
-        PublishWorker.expects(:perform_async).with(@edition.id.to_s)
-
-        post :send_to_publish, params: {
-          id: @edition.id,
-        }
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        post :send_to_publish, params: {
-          id: @edition.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-
-    context "edition is not in a valid state to be published" do
+    context "edition is in 'scheduled_for_publishing' state" do
       setup do
         @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
-        @edition = FactoryBot.create(:edition, state: "draft")
+        @edition = FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+        login_as(@requester)
       end
 
-      should "not update the edition state and render 'send_to_publish' template with an error" do
-        post :send_to_publish, params: {
-          id: @edition.id,
-        }
+      context "user has govuk_editor permission" do
+        setup do
+          ScheduledPublisher.stubs(:cancel_scheduled_publishing)
+          PublishWorker.stubs(:perform_async)
+        end
 
-        assert_equal "Edition is not in a state where it can be published", flash[:danger]
+        should "update the edition status to 'published' and save the comment" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+            comment: "Publishing with immediate effect",
+          }
 
-        assert_template "secondary_nav_tabs/send_to_publish_page"
-        @edition.reload
-        assert_equal "draft", @edition.state
+          assert_equal "Published", flash[:success]
+          @edition.reload
+          assert_equal "published", @edition.state
+          assert_equal "Publishing with immediate effect", @edition.latest_status_action.comment
+          assert_equal @requester.id, @edition.latest_status_action.requester_id
+        end
+
+        should "not update the edition state and render 'send_to_publish' template with an error when an error occurs" do
+          EditionProgressor.any_instance.expects(:progress).returns(false)
+
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_template "secondary_nav_tabs/send_to_publish_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          @edition.reload
+          assert_equal "scheduled_for_publishing", @edition.state
+        end
+
+        should "notify the publishing API to publish the edition" do
+          PublishWorker.expects(:perform_async).with(@edition.id.to_s)
+
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+        end
+      end
+
+      context "user does not have govuk_editor permission" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "edition is not in a valid state to be published" do
+        setup do
+          @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
+          @edition = FactoryBot.create(:edition, state: "draft")
+        end
+
+        should "not update the edition state and render 'send_to_publish' template with an error" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Edition is not in a state where it can be published", flash[:danger]
+
+          assert_template "secondary_nav_tabs/send_to_publish_page"
+          @edition.reload
+          assert_equal "draft", @edition.state
+        end
+      end
+    end
+
+    context "edition is in 'ready' state" do
+      setup do
+        @edition = FactoryBot.create(:edition, state: "ready")
+        login_as_stub_user
+      end
+
+      context "user has govuk_editor permission" do
+        setup do
+          PublishWorker.stubs(:perform_async)
+        end
+
+        should "update the edition status to 'published' and save the comment" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+            comment: "Publishing this ready edition",
+          }
+
+          assert_equal "Published", flash[:success]
+          @edition.reload
+          assert_equal "published", @edition.state
+          assert_equal "Publishing this ready edition", @edition.latest_status_action.comment
+          assert_equal @user.id, @edition.latest_status_action.requester_id
+        end
+
+        should "not update the edition state and render 'send_to_publish' template with an error when an error occurs" do
+          EditionProgressor.any_instance.expects(:progress).returns(false)
+
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_template "secondary_nav_tabs/send_to_publish_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          @edition.reload
+          assert_equal "ready", @edition.state
+        end
+
+        should "notify the publishing API to publish the edition" do
+          PublishWorker.expects(:perform_async).with(@edition.id.to_s)
+
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+        end
+      end
+
+      context "user does not have govuk_editor permissions" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "edition is not in a valid state to be published" do
+        setup do
+          @edition = FactoryBot.create(:edition, state: "draft")
+        end
+
+        should "not update the edition state and render 'send_to_publish' template with an error" do
+          post :send_to_publish, params: {
+            id: @edition.id,
+          }
+
+          assert_equal "Edition is not in a state where it can be published", flash[:danger]
+
+          assert_template "secondary_nav_tabs/send_to_publish_page"
+          @edition.reload
+          assert_equal "draft", @edition.state
+        end
       end
     end
   end
