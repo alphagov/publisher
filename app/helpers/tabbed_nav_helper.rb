@@ -43,6 +43,17 @@ module TabbedNavHelper
     end
   end
 
+  def reviewer_edit_link(edition)
+    if current_user.has_editor_permissions?(edition)
+      {
+        href: edit_reviewer_edition_path,
+        link_text: "Edit",
+      }
+    else
+      {}
+    end
+  end
+
 private
 
   def all_tab_names
@@ -90,7 +101,24 @@ private
     items
   end
 
+  def available_reviewer_items(edition)
+    items = []
+    unless edition.reviewer.nil?
+      items << { value: edition.reviewer, text: User.where(id: edition.reviewer).first, checked: true }
+      items << { value: "none", text: "None" }
+      items << :or
+    end
+    User.enabled.order_by([%i[name asc]]).each do |user|
+      items << { value: user.id, text: user.name } unless user.id.to_s == edition.reviewer || !user.has_editor_permissions?(edition)
+    end
+    items
+  end
+
   def can_update_assignee?(resource)
     %w[published archived scheduled_for_publishing].exclude?(resource.state)
+  end
+
+  def can_update_reviewer?(resource)
+    %w[in_review].include?(resource.state)
   end
 end
