@@ -1324,124 +1324,119 @@ class EditionEditTest < IntegrationTest
 
     context "Request amendments link" do
       context "edition is not in review" do
-        setup do
+        should "not show the link" do
           visit_draft_edition
-        end
-
-        should "not show the 'Request amendments' link" do
           assert page.has_no_link?("Request amendments")
         end
       end
 
       context "edition is in review" do
-        context "user does not have the required permissions" do
-          setup do
-            login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
-          end
-
-          should "not show the 'Request amendments' link" do
-            assert page.has_no_link?("Request amendments")
-          end
-
-          should "not show 'Request amendments' link when user is a welsh editor and the edition is not welsh" do
-            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_in_review_edition
-
-            assert page.has_no_link?("Request amendments")
-          end
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_in_review_edition
+          assert page.has_no_link?("Request amendments")
         end
 
-        context "user has the required permissions" do
-          context "current user is also the requester" do
-            setup do
-              login_as(@govuk_requester)
-              visit_in_review_edition
-            end
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_in_review_edition
 
-            should "not show the 'Request amendments' link" do
-              assert page.has_no_link?("Request amendments")
-            end
-          end
+          assert page.has_no_link?("Request amendments")
+        end
 
-          context "current user is not the requester" do
-            setup do
-              login_as(@govuk_editor)
-              visit_in_review_edition
-            end
+        should "not show the link to the requester" do
+          login_as(@govuk_requester)
+          visit_in_review_edition
+          assert page.has_no_link?("Request amendments")
+        end
 
-            should "show the 'Request amendments' link" do
-              assert page.has_link?("Request amendments")
-            end
+        should "show the link to editors who are not the requester" do
+          login_as(@govuk_editor)
+          visit_in_review_edition
+          assert page.has_link?("Request amendments")
+        end
 
-            should "navigate to 'Request amendments' page when link is clicked" do
-              click_link("Request amendments")
+        should "navigate to the 'Request amendments' page when the link is clicked" do
+          login_as(@govuk_editor)
+          visit_in_review_edition
 
-              assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
-            end
-          end
+          click_link("Request amendments")
+
+          assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
+        end
+      end
+
+      context "edition is ready" do
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_ready_edition
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_ready_edition
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "show the link to editors" do
+          login_as(@govuk_editor)
+          visit_ready_edition
+          assert page.has_link?("Request amendments")
+        end
+
+        should "navigate to the 'Request amendments' page when the link is clicked" do
+          login_as(@govuk_editor)
+          visit_ready_edition
+
+          click_link("Request amendments")
+
+          assert_current_path request_amendments_page_edition_path(@ready_edition.id)
         end
       end
     end
 
     context "No changes needed link" do
       context "edition is not in review" do
-        setup do
+        should "not show the link" do
           visit_draft_edition
-        end
-
-        should "not show the 'No changes needed' link" do
           assert page.has_no_link?("No changes needed")
         end
       end
 
       context "edition is in review" do
-        context "user does not have the required permissions" do
-          setup do
-            login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
-          end
-
-          should "not show the 'No changes needed' link" do
-            assert page.has_no_link?("No changes needed")
-          end
-
-          should "not show 'No changes needed' link when user is a welsh editor and the edition is not welsh" do
-            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_in_review_edition
-
-            assert page.has_no_link?("No changes needed")
-          end
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_in_review_edition
+          assert page.has_no_link?("No changes needed")
         end
 
-        context "user has the required permissions" do
-          context "current user is also the requester" do
-            setup do
-              login_as(@govuk_requester)
-              visit_in_review_edition
-            end
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_in_review_edition
 
-            should "not show the 'No changes needed' link" do
-              assert page.has_no_link?("No changes needed")
-            end
-          end
+          assert page.has_no_link?("No changes needed")
+        end
 
-          context "current user is not the requester" do
-            setup do
-              login_as(@govuk_editor)
-              visit_in_review_edition
-            end
+        should "not show the link to the requester" do
+          login_as(@govuk_requester)
+          visit_in_review_edition
+          assert page.has_no_link?("No changes needed")
+        end
 
-            should "show the 'No changes needed' link" do
-              assert page.has_link?("No changes needed")
-            end
+        should "show the link to editors who are not the requester" do
+          login_as(@govuk_editor)
+          visit_in_review_edition
+          assert page.has_link?("No changes needed")
+        end
 
-            should "navigate to 'No changes needed' page when link is clicked" do
-              click_link("No changes needed")
+        should "navigate to the 'No changes needed' page when the link is clicked" do
+          login_as(@govuk_editor)
+          visit_in_review_edition
 
-              assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
-            end
-          end
+          click_link("No changes needed")
+
+          assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
         end
       end
     end
