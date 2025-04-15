@@ -1456,7 +1456,7 @@ class EditionsControllerTest < ActionController::TestCase
         patch :update_assignee, params: { id: @edition.id }
 
         assert_template "secondary_nav_tabs/edit_assignee_page"
-        assert_equal "Please select a person to assign, or 'None' to unassign the currently assigned person.", flash[:danger]
+        assert_equal "Select a person to assign", flash[:danger]
       end
 
       should "show error when a non-existent assignee ID is provided" do
@@ -1538,7 +1538,7 @@ class EditionsControllerTest < ActionController::TestCase
         @in_review_edition.reload
 
         assert_nil @in_review_edition.reviewer
-        assert_equal "The current 2i reviewer has been unassigned", flash[:success]
+        assert_equal "2i reviewer removed", flash[:success]
       end
 
       should "show an error when the save fails" do
@@ -1563,7 +1563,7 @@ class EditionsControllerTest < ActionController::TestCase
         patch :update_reviewer, params: { id: @in_review_edition.id }
 
         assert_template "secondary_nav_tabs/edit_reviewer_page"
-        assert_equal "Please select a person to assign, or 'None' to unassign the currently assigned person.", flash[:danger]
+        assert_equal "Select a person to assign", flash[:danger]
       end
 
       context "Welsh editor and Welsh edition" do

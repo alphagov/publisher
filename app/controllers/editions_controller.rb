@@ -290,7 +290,7 @@ class EditionsController < InheritedResources::Base
       render "secondary_nav_tabs/edit_assignee_page"
     end
   rescue ActionController::ParameterMissing
-    flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
+    flash.now[:danger] = "Select a person to assign"
     render "secondary_nav_tabs/edit_assignee_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
@@ -311,7 +311,7 @@ class EditionsController < InheritedResources::Base
       if @resource.reviewer == current_user.id.to_s
         flash[:success] = "You are now the 2i reviewer of this edition"
       elsif @resource.reviewer.nil?
-        flash[:success] = "The current 2i reviewer has been unassigned"
+        flash[:success] = "2i reviewer removed"
       else
         reviewer = User.where(id: @resource.reviewer).first
         flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
@@ -323,7 +323,7 @@ class EditionsController < InheritedResources::Base
       render "secondary_nav_tabs/edit_reviewer_page"
     end
   rescue ActionController::ParameterMissing
-    flash.now[:danger] = "Please select a person to assign, or 'None' to unassign the currently assigned person."
+    flash.now[:danger] = "Select a person to assign"
     render "secondary_nav_tabs/edit_reviewer_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
