@@ -925,6 +925,103 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "ready edition" do
+      setup do
+        visit_ready_edition
+      end
+
+      # out of scope?
+      # should "show a 'Fact check' button in the sidebar" do
+      # end
+
+      # out of scope?
+      # should "show a preview link in the sidebar" do
+      # end
+
+      context "user is a govuk editor" do
+        setup do
+          # already logged in as govuk_editor
+        end
+
+        # out of scope?
+        # should "show a 'Save' button in the sidebar" do
+        # end
+
+        should "show a 'Schedule' button in the sidebar" do
+          assert page.has_link?("Schedule")
+        end
+
+        # out of scope?
+        # should "show a 'Publish' button in the sidebar" do
+        # end
+      end
+
+      context "user is not a govuk editor" do
+        setup do
+          login_as(FactoryBot.create(:user))
+          visit_ready_edition
+        end
+
+        # out of scope?
+        # should "not show a 'Save' button in the sidebar" do
+        # end
+
+        should "not show a 'Schedule' button in the sidebar" do
+          assert page.has_no_button?("Schedule")
+        end
+
+        # out of scope?
+        # should "not show a 'Publish' button in the sidebar" do
+        # end
+      end
+
+      context "edition is welsh" do
+        setup do
+          @welsh_edition = FactoryBot.create(
+            :answer_edition, :welsh, state: "ready"
+          )
+        end
+
+        context "user is a welsh editor" do
+          setup do
+            login_as_welsh_editor
+            visit edition_path(@welsh_edition)
+          end
+
+          # out of scope?
+          # should "show a 'Save' button in the sidebar" do
+          # end
+
+          should "show a 'Schedule' button in the sidebar" do
+            assert page.has_link?("Schedule")
+          end
+
+          # out of scope?
+          # should "show a 'Publish' button in the sidebar" do
+          # end
+        end
+
+        context "user is not a welsh editor" do
+          setup do
+            login_as(FactoryBot.create(:user))
+            visit edition_path(@welsh_edition)
+          end
+
+          # out of scope?
+          # should "not show a 'Save' button in the sidebar" do
+          # end
+
+          should "not show a 'Schedule' button in the sidebar" do
+            assert page.has_no_button?("Schedule")
+          end
+
+          # out of scope?
+          # should "not show a 'Publish' button in the sidebar" do
+          # end
+        end
+      end
+    end
+
     context "scheduled_for_publishing edition" do
       should "show common content-type fields" do
         edition = FactoryBot.create(
