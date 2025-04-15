@@ -86,6 +86,17 @@ module EditionsSidebarButtonsHelper
         })
       end
       if edition.can_publish?
+        if edition.state == "ready"
+          buttons << render(
+            "govuk_publishing_components/components/button",
+            {
+              text: "Schedule",
+              href: schedule_page_edition_path(edition),
+              secondary_solid: true,
+              margin_bottom: 3,
+            },
+          )
+        end
         buttons << render(
           "govuk_publishing_components/components/button",
           {

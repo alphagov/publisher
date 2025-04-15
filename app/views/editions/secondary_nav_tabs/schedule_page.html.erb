@@ -1,0 +1,56 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Schedule publication" %>
+<% content_for :title, "Schedule publication" %>
+
+<%= render "editions/secondary_nav_tabs/progress_with_comment", {
+  form_url: schedule_edition_path(@edition),
+  comment_label_text: "Comment (optional)",
+  submit_button_text: "Schedule",
+  schedule_fields: (render "govuk_publishing_components/components/fieldset", {
+    legend_text: "Publication date",
+    heading_size: "m",
+  } do
+    render "govuk_publishing_components/components/date_input", {
+      hint: "For example, 27 4 2025",
+      items: [
+        {
+          label: "Day",
+          name: "publish_at_3i",
+          width: 2,
+        },
+        {
+          label: "Month",
+          name: "publish_at_2i",
+          width: 2,
+        },
+        {
+          label: "Year",
+          name: "publish_at_1i",
+          width: 4,
+        },
+      ],
+    }
+  end) + (render "govuk_publishing_components/components/fieldset", {
+          legend_text: "Publication time",
+          heading_size: "m",
+        } do
+          render "downtimes/time_input", {
+            hint: "For example, 09:30 or 19:30",
+            items: [
+              {
+                label: "Hour",
+                name: "publish_at_4i",
+                value: "00",
+                width: 2,
+              },
+              {
+                label: "Minute",
+                name: "publish_at_5i",
+                value: "01",
+                width: 2,
+              },
+            ],
+          }
+        end),
+} %>

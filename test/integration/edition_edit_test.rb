@@ -925,6 +925,127 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "ready edition" do
+      setup do
+        visit_ready_edition
+      end
+
+      context "user is a govuk editor" do
+        should "show a 'Schedule' button in the sidebar" do
+          assert page.has_link?("Schedule")
+        end
+      end
+
+      context "user is not a govuk editor" do
+        setup do
+          login_as(FactoryBot.create(:user))
+          visit_ready_edition
+        end
+
+        should "not show a 'Schedule' button in the sidebar" do
+          assert page.has_no_button?("Schedule")
+        end
+      end
+
+      context "edition is welsh" do
+        setup do
+          @welsh_edition = FactoryBot.create(
+            :answer_edition, :welsh, state: "ready"
+          )
+        end
+
+        context "user is a welsh editor" do
+          setup do
+            login_as_welsh_editor
+            visit edition_path(@welsh_edition)
+          end
+
+          should "show a 'Schedule' button in the sidebar" do
+            assert page.has_link?("Schedule")
+          end
+        end
+
+        context "user is not a welsh editor" do
+          setup do
+            login_as(FactoryBot.create(:user))
+            visit edition_path(@welsh_edition)
+          end
+
+          should "not show a 'Schedule' button in the sidebar" do
+            assert page.has_no_button?("Schedule")
+          end
+        end
+      end
+
+      should "navigate to the 'Schedule publication' page when the 'Schedule' button is clicked" do
+        click_link("Schedule")
+
+        assert_current_path schedule_page_edition_path(@ready_edition.id)
+      end
+    end
+
+    context "Schedule page" do
+      setup do
+        create_ready_edition
+        visit schedule_page_edition_path(@ready_edition.id)
+      end
+
+      should "render the 'Schedule' page" do
+        within :css, ".gem-c-heading" do
+          assert page.has_css?("h1", text: "Schedule publication")
+          assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
+        end
+
+        within :css, ".gem-c-textarea" do
+          assert page.has_css?("label", text: "Comment (optional)")
+          assert page.has_css?("textarea")
+        end
+
+        within all(".govuk-fieldset")[0] do
+          assert page.has_css?("legend", text: "Publication date")
+          assert page.has_css?(".govuk-hint", text: "For example, 27 4 2025")
+          assert page.has_css?(".govuk-label", text: "Day")
+          assert page.has_css?("input[name='publish_at_3i']")
+          assert page.has_css?(".govuk-label", text: "Month")
+          assert page.has_css?("input[name='publish_at_2i']")
+          assert page.has_css?(".govuk-label", text: "Year")
+          assert page.has_css?("input[name='publish_at_1i']")
+        end
+
+        within all(".govuk-fieldset")[1] do
+          assert page.has_css?("legend", text: "Publication time")
+          assert page.has_css?(".govuk-label", text: "Hour")
+          assert page.has_css?("input[name='publish_at_4i'][value='00']")
+          assert page.has_css?(".govuk-label", text: "Minute")
+          assert page.has_css?("input[name='publish_at_5i'][value='01']")
+        end
+
+        assert page.has_button?("Schedule")
+        assert page.has_link?("Cancel")
+      end
+
+      should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+        click_link("Cancel")
+
+        assert_current_path edition_path(@ready_edition.id)
+      end
+
+      should "show success message and redirect back to the edit tab on submit" do
+        date = 1.day.from_now
+
+        fill_in "Day", with: date.day
+        fill_in "Month", with: date.month
+        fill_in "Year", with: date.year
+        fill_in "Hour", with: date.hour
+        fill_in "Minute", with: date.min
+
+        click_button "Schedule"
+
+        assert_current_path edition_path(@ready_edition.id)
+        assert page.has_text?("Scheduled to publish at #{date.to_fs(:govuk_date)}")
+      end
+    end
+
     context "scheduled_for_publishing edition" do
       should "show common content-type fields" do
         edition = FactoryBot.create(
@@ -2302,8 +2423,12 @@ private
     visit edition_path(@fact_check_received_edition)
   end
 
+  def create_ready_edition
+    @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+  end
+
   def visit_ready_edition
-    @ready_edition = FactoryBot.create(:edition, title: "Edit page title", state: "ready")
+    create_ready_edition
     visit edition_path(@ready_edition)
   end
 

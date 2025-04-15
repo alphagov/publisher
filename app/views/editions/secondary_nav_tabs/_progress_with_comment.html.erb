@@ -1,4 +1,4 @@
-<%# locals: (form_url:, comment_label_text:, submit_button_text:, text: nil) %>
+<%# locals: (form_url:, comment_label_text:, submit_button_text:, text: nil, schedule_fields: nil) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -17,8 +17,10 @@
         },
         name: "comment",
         value: params[:comment],
-        rows: 14,
+        rows: schedule_fields == nil ? 14 : 5,
       } %>
+
+      <%= schedule_fields if schedule_fields %>
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
