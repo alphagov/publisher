@@ -1040,12 +1040,31 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
         end
 
-        # assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. If you’ve added a change note already, you do not need to add another one.")
-        # assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
+        within :css, ".gem-c-textarea" do
+          assert page.has_css?("label", text: "Comment (optional)")
+          assert page.has_css?("textarea")
+        end
 
-        # within :css, ".gem-c-textarea" do
-        #   assert page.has_css?("textarea")
-        # end
+        within all(".govuk-fieldset")[0] do
+          assert page.has_css?("legend", text: "Publication date")
+          assert page.has_css?(".govuk-hint", text: "For example, 27 4 2025")
+          assert page.has_css?(".govuk-label", text: "Day")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(3i)]"]')
+          assert page.has_css?(".govuk-label", text: "Month")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(2i)]"]')
+          assert page.has_css?(".govuk-label", text: "Year")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(1i)]"]')
+        end
+
+        within all(".govuk-fieldset")[1] do
+          assert page.has_css?("legend", text: "Publication time")
+          assert page.has_css?(".govuk-label", text: "Hour")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(4i)]"]')
+          # assert page.has_css?(".govuk-input", name: "edition[activity_schedule_for_publishing_attributes][publish_at(4i)]")
+          assert page.has_css?(".govuk-label", text: "Minute")
+          # assert page.has_css?(".govuk-input", name: "edition[activity_schedule_for_publishing_attributes][publish_at(5i)]")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(5i)]"]')
+        end
 
         assert page.has_button?("Schedule")
         assert page.has_link?("Cancel")

@@ -3,9 +3,53 @@
 <% content_for :page_title, "Schedule publication" %>
 <% content_for :title, "Schedule publication" %>
 
-This is the schedule page.
-
 <form>
+  <%= render "govuk_publishing_components/components/textarea", {
+    label: {
+        text: "Comment (optional)"
+      },
+    name: ""
+  } %>
+
+  <%= render "govuk_publishing_components/components/date_input", {
+    legend_text: "Publication date",
+    hint: "For example, 27 4 2025",
+    # Using "With custom items" variation because "With name" can't be used for this name pattern
+    items: [
+      {
+        label: "Day",
+        name: "edition[activity_schedule_for_publishing_attributes][publish_at(3i)]",
+        width: 2
+      },
+      {
+        label: "Month",
+        name: "edition[activity_schedule_for_publishing_attributes][publish_at(2i)]",
+        width: 2
+      },
+      {
+        label: "Year",
+        name: "edition[activity_schedule_for_publishing_attributes][publish_at(1i)]",
+        width: 4
+      }
+    ]
+  } %>
+
+  <%= render :partial => "downtimes/time_input", :locals => {
+    :legend_text => "Publication time",
+    :items => [
+      {
+        label: "Hour",
+        name: "edition[activity_schedule_for_publishing_attributes][publish_at(4i)]",
+        width: 2
+      },
+      {
+        label: "Minute",
+        name: "edition[activity_schedule_for_publishing_attributes][publish_at(5i)]",
+        width: 2
+      }
+    ]
+  } %>
+
   <div class="govuk-button-group">
     <%= render "govuk_publishing_components/components/button", {
       text: "Schedule",
