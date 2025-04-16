@@ -331,6 +331,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/edit_reviewer_page"
   end
 
+  def schedule_page
+    render "secondary_nav_tabs/schedule_page"
+  end
+
 protected
 
   def setup_view_paths

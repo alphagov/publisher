@@ -1020,6 +1020,12 @@ class EditionEditTest < IntegrationTest
           # end
         end
       end
+
+      should "navigate to the 'Schedule publication' page when the 'Schedule' button is clicked" do
+        click_link("Schedule")
+
+        assert_current_path schedule_page_edition_path(@ready_edition.id)
+      end
     end
 
     context "scheduled_for_publishing edition" do

@@ -91,7 +91,7 @@ module EditionsSidebarButtonsHelper
             "govuk_publishing_components/components/button",
             {
               text: "Schedule",
-              # href: send_to_publish_page_edition_path(edition),
+              href: schedule_page_edition_path(edition),
               secondary_solid: true,
               margin_bottom: 3,
             },
