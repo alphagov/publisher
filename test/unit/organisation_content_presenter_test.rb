@@ -38,7 +38,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     )
 
     csv = OrganisationContentPresenter.new(
-      Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
+      Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
     ).to_csv
     data = CSV.parse(csv, headers: true)
 
@@ -55,7 +55,7 @@ class OrganisationContentPresenterTest < ActiveSupport::TestCase
     )
 
     csv = OrganisationContentPresenter.new(
-      Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
+      Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
     ).to_csv
     data = CSV.parse(csv, headers: true)
 
