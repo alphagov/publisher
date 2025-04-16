@@ -4,3 +4,13 @@
 <% content_for :title, "Schedule publication" %>
 
 This is the schedule page.
+
+<form>
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Schedule",
+      # destructive: true,
+    } %>
+    <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+  </div>
+</form>

@@ -145,6 +145,10 @@ module Workflow
     !scheduled_for_publishing? && !published? && !archived?
   end
 
+  def can_schedule?
+    ready?
+  end
+
   def check_can_delete_and_notify
     raise CannotDeletePublishedPublication unless can_destroy?
   end

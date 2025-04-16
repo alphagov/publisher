@@ -1028,6 +1028,43 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "Schedule page" do
+      setup do
+        create_ready_edition
+        visit schedule_page_edition_path(@ready_edition.id)
+      end
+
+      should "render the 'Schedule' page" do
+        within :css, ".gem-c-heading" do
+          assert page.has_css?("h1", text: "Schedule publication")
+          assert page.has_css?(".gem-c-heading__context", text: @ready_edition.title)
+        end
+
+        # assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. If you’ve added a change note already, you do not need to add another one.")
+        # assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
+
+        # within :css, ".gem-c-textarea" do
+        #   assert page.has_css?("textarea")
+        # end
+
+        assert page.has_button?("Schedule")
+        assert page.has_link?("Cancel")
+      end
+
+      # should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
+      #   click_link("Cancel")
+
+      #   assert_current_path edition_path(@draft_edition.id)
+      # end
+
+      # should "show success message and redirect back to the edit tab on submit" do
+      #   click_button "Send to 2i"
+
+      #   assert_current_path edition_path(@draft_edition.id)
+      #   assert page.has_text?("Sent to 2i")
+      # end
+    end
+
     context "scheduled_for_publishing edition" do
       should "show common content-type fields" do
         edition = FactoryBot.create(
@@ -2367,8 +2404,12 @@ private
     visit edition_path(@fact_check_received_edition)
   end
 
+  def create_ready_edition
+    @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+  end
+
   def visit_ready_edition
-    @ready_edition = FactoryBot.create(:edition, title: "Edit page title", state: "ready")
+    create_ready_edition
     visit edition_path(@ready_edition)
   end
 

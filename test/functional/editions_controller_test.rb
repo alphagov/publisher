@@ -519,6 +519,76 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#schedule_page" do
+    context "user without required permissions" do
+      context "Welsh editor and non-Welsh edition" do
+        setup do
+          login_as_welsh_editor
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :schedule_page, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+
+      context "non-govuk editor and non-Welsh edition" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+        end
+
+        should "show permission error and redirect to edition path" do
+          get :schedule_page, params: { id: @edition.id }
+
+          assert_redirected_to edition_path(@edition)
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+
+    context "user with required permissions" do
+      context "Welsh editor and Welsh edition" do
+        setup do
+          @welsh_ready_edition = FactoryBot.create(:answer_edition, :ready, :welsh)
+          login_as_welsh_editor
+        end
+
+        should "be able to navigate successfully to schedule page path" do
+          get :schedule_page, params: { id: @welsh_ready_edition.id }
+
+          assert_response :success
+        end
+      end
+
+      context "govuk editor and non-Welsh edition" do
+        should "be able to navigate to the edit reviewer path" do
+          @ready_edition = FactoryBot.create(:answer_edition, :ready)
+          get :schedule_page, params: { id: @ready_edition.id }
+
+          assert_response :success
+        end
+      end
+
+      %i[draft in_review amends_needed fact_check fact_check_received scheduled_for_publishing published archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+          end
+
+          should "redirect to edition path with error message" do
+            get :schedule_page, params: { id: @edition.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Cannot schedule an edition that is not ready.", flash[:danger]
+          end
+        end
+      end
+    end
+  end
+
   context "#send_to_publish" do
     context "edition is in 'scheduled_for_publishing' state" do
       setup do
