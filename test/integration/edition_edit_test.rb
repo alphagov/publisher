@@ -1059,11 +1059,9 @@ class EditionEditTest < IntegrationTest
         within all(".govuk-fieldset")[1] do
           assert page.has_css?("legend", text: "Publication time")
           assert page.has_css?(".govuk-label", text: "Hour")
-          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(4i)]"]')
-          # assert page.has_css?(".govuk-input", name: "edition[activity_schedule_for_publishing_attributes][publish_at(4i)]")
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(4i)]"][value="00"]')
           assert page.has_css?(".govuk-label", text: "Minute")
-          # assert page.has_css?(".govuk-input", name: "edition[activity_schedule_for_publishing_attributes][publish_at(5i)]")
-          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(5i)]"]')
+          assert page.has_css?('input[name="edition[activity_schedule_for_publishing_attributes][publish_at(5i)]"][value="01"]')
         end
 
         assert page.has_button?("Schedule")
