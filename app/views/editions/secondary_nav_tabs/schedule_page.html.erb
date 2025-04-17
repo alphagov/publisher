@@ -3,15 +3,11 @@
 <% content_for :page_title, "Schedule publication" %>
 <% content_for :title, "Schedule publication" %>
 
-<form>
-  <%= render "govuk_publishing_components/components/textarea", {
-    label: {
-        text: "Comment (optional)"
-      },
-    name: ""
-  } %>
-
-  <%= render "govuk_publishing_components/components/date_input", {
+<%= render "editions/secondary_nav_tabs/progress_with_comment", {
+  form_url: schedule_edition_path(@edition),
+  comment_label_text: "Comment (optional)",
+  submit_button_text: "Schedule",
+  schedule_fields: (render "govuk_publishing_components/components/date_input", {
     legend_text: "Publication date",
     hint: "For example, 27 4 2025",
     # Using "With custom items" variation because "With name" can't be used for this name pattern
@@ -32,9 +28,9 @@
         width: 4
       }
     ]
-  } %>
+  }) +
 
-  <%= render :partial => "downtimes/time_input", :locals => {
+  (render :partial => "downtimes/time_input", :locals => {
     :legend_text => "Publication time",
     :items => [
       {
@@ -50,13 +46,5 @@
         width: 2
       }
     ]
-  } %>
-
-  <div class="govuk-button-group">
-    <%= render "govuk_publishing_components/components/button", {
-      text: "Schedule",
-      # destructive: true,
-    } %>
-    <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
-  </div>
-</form>
+  })
+} %>
