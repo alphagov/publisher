@@ -338,6 +338,26 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/schedule_page"
   end
 
+  def schedule # (resource, comment)
+    byebug
+
+    # Copied from send-to_2i
+    # Update for this action
+    if !@resource.can_request_review?
+      flash.now[:danger] = "Edition is not in a state where it can be sent to 2i"
+      render "secondary_nav_tabs/send_to_2i_page"
+    elsif send_to_2i_for_edition(@resource, params[:comment])
+      flash[:success] = "Sent to 2i"
+      redirect_to edition_path(resource)
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/send_to_2i_page"
+    end
+
+    # @command = EditionProgressor.new(resource, current_user)
+    # @command.progress({ request_type: "schedule_for_publishing", comment: params[:comment] })
+  end
+
 protected
 
   def setup_view_paths

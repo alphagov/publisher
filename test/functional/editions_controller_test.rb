@@ -589,6 +589,19 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#schedule" do
+    post :schedule, params: {
+      id: "6691241ea73bb8001d3916d8", # @edition.id,
+      comment: "Scheduling an edition",
+    }
+
+    assert_equal "Scheduled", flash[:success]
+    @edition.reload
+    assert_equal "scheduled", @edition.state
+    assert_equal "Scheduling an edition", @edition.latest_status_action.comment
+    assert_equal @user.id, @edition.latest_status_action.requester_id
+  end
+
   context "#send_to_publish" do
     context "edition is in 'scheduled_for_publishing' state" do
       setup do
