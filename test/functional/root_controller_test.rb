@@ -13,18 +13,15 @@ class RootControllerTest < ActionController::TestCase
       assert_template "root/index"
     end
 
-    should "default the state filter checkboxes when no filters are specified" do
+    should "default the state filter checkboxes to unchecked when no filters are specified" do
       get :index
 
-      # These filters should be 'checked'
-      assert_select "input.govuk-checkboxes__input[value='draft'][checked]"
-      assert_select "input.govuk-checkboxes__input[value='amends_needed'][checked]"
-      assert_select "input.govuk-checkboxes__input[value='in_review'][checked]"
-      assert_select "input.govuk-checkboxes__input[value='fact_check'][checked]"
-      assert_select "input.govuk-checkboxes__input[value='fact_check_received'][checked]"
-      assert_select "input.govuk-checkboxes__input[value='ready'][checked]"
-
-      # These filters should NOT be 'checked'
+      assert_select "input.govuk-checkboxes__input[value='draft'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='amends_needed'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='in_review'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='fact_check'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='fact_check_received'][checked]", false
+      assert_select "input.govuk-checkboxes__input[value='ready'][checked]", false
       assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing']"
       assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing'][checked]", false
       assert_select "input.govuk-checkboxes__input[value='published']"
@@ -41,19 +38,22 @@ class RootControllerTest < ActionController::TestCase
       fact_check_edition.new_action(FactoryBot.create(:user), "send_fact_check")
       FactoryBot.create(:edition, state: "fact_check_received", assigned_to: @user)
       FactoryBot.create(:edition, state: "ready", assigned_to: @user)
-      FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+      FactoryBot.create(:edition, state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour, assigned_to: @user)
       FactoryBot.create(:edition, state: "published", assigned_to: @user)
       FactoryBot.create(:edition, state: "archived", assigned_to: @user)
 
       get :index
 
-      assert_select "p.publications-table__heading", "6 document(s)"
+      assert_select "p.publications-table__heading", "9 document(s)"
       assert_select "span.govuk-tag--draft", "Draft"
-      assert_select "span.govuk-tag--amends_needed", "Amends needed"
       assert_select "span.govuk-tag--in_review", "In review"
+      assert_select "span.govuk-tag--amends_needed", "Amends needed"
       assert_select "span.govuk-tag--fact_check", "Fact check"
       assert_select "span.govuk-tag--fact_check_received", "Fact check received"
       assert_select "span.govuk-tag--ready", "Ready"
+      assert_select "span.govuk-tag--scheduled_for_publishing", "Scheduled for publishing"
+      assert_select "span.govuk-tag--published", "Published"
+      assert_select "span.govuk-tag--archived", "Archived"
     end
 
     should "filter publications by state" do

@@ -15,16 +15,10 @@ class RootController < ApplicationController
     archived
   ].freeze
 
-  DEFAULT_FILTER_STATES = %w[draft amends_needed in_review fact_check fact_check_received ready].freeze
-
   def index
     filter_params_hash = filter_params.to_h
     states_filter_params = filter_params_hash[:states_filter]
-    sanitised_states_filter_params = if user_has_submitted_filters?
-                                       states_filter_params&.select { |fp| PERMITTED_FILTER_STATES.include?(fp) }
-                                     else
-                                       DEFAULT_FILTER_STATES
-                                     end
+    sanitised_states_filter_params = states_filter_params&.select { |fp| PERMITTED_FILTER_STATES.include?(fp) }
     session[:assignee_filter] = assignee_filter
     content_type_filter = filter_params_hash[:content_type_filter]
     search_text = filter_params_hash[:search_text]
@@ -39,10 +33,6 @@ class RootController < ApplicationController
   end
 
 private
-
-  def user_has_submitted_filters?
-    filter_params.to_h[:search_text]
-  end
 
   def assignee_filter
     filter_params_hash = filter_params.to_h
