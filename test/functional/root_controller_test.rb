@@ -16,24 +16,26 @@ class RootControllerTest < ActionController::TestCase
     should "default the state filter checkboxes to unchecked when no filters are specified" do
       get :index
 
-      assert_select "input.govuk-checkboxes__input[value='draft'][checked]", false
-      assert_select "input.govuk-checkboxes__input[value='amends_needed'][checked]", false
-      assert_select "input.govuk-checkboxes__input[value='in_review'][checked]", false
-      assert_select "input.govuk-checkboxes__input[value='fact_check'][checked]", false
-      assert_select "input.govuk-checkboxes__input[value='fact_check_received'][checked]", false
-      assert_select "input.govuk-checkboxes__input[value='ready'][checked]", false
+      assert_select "input.govuk-checkboxes__input", 9
+      assert_select "input.govuk-checkboxes__input" do
+        assert_select "[checked]", false
+      end
+
+      assert_select "input.govuk-checkboxes__input[value='draft']"
+      assert_select "input.govuk-checkboxes__input[value='amends_needed']"
+      assert_select "input.govuk-checkboxes__input[value='in_review']"
+      assert_select "input.govuk-checkboxes__input[value='fact_check']"
+      assert_select "input.govuk-checkboxes__input[value='fact_check_received']"
+      assert_select "input.govuk-checkboxes__input[value='ready']"
       assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing']"
-      assert_select "input.govuk-checkboxes__input[value='scheduled_for_publishing'][checked]", false
       assert_select "input.govuk-checkboxes__input[value='published']"
-      assert_select "input.govuk-checkboxes__input[value='published'][checked]", false
       assert_select "input.govuk-checkboxes__input[value='archived']"
-      assert_select "input.govuk-checkboxes__input[value='archived'][checked]", false
     end
 
     should "default the applied state filters when no filters are specified" do
       FactoryBot.create(:edition, state: "draft", assigned_to: @user)
-      FactoryBot.create(:edition, state: "amends_needed", assigned_to: @user)
       FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago, assigned_to: @user)
+      FactoryBot.create(:edition, state: "amends_needed", assigned_to: @user)
       fact_check_edition = FactoryBot.create(:edition, state: "fact_check", title: "Check yo fax", assigned_to: @user)
       fact_check_edition.new_action(FactoryBot.create(:user), "send_fact_check")
       FactoryBot.create(:edition, state: "fact_check_received", assigned_to: @user)
@@ -59,12 +61,14 @@ class RootControllerTest < ActionController::TestCase
     should "filter publications by state" do
       FactoryBot.create(:guide_edition, state: "draft", assigned_to: @user)
       FactoryBot.create(:guide_edition, state: "published", assigned_to: @user)
+      FactoryBot.create(:edition, state: "ready", assigned_to: @user)
 
-      get :index, params: { states_filter: %w[draft] }
+      get :index, params: { states_filter: %w[draft published] }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.publications-table__heading", "2 document(s)"
       assert_select "td.govuk-table__cell", "Draft"
+      assert_select "td.govuk-table__cell", "Published"
     end
 
     should "default the assignee to the current user" do
