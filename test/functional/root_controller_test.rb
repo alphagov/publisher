@@ -13,7 +13,7 @@ class RootControllerTest < ActionController::TestCase
       assert_template "root/index"
     end
 
-    should "default the state filter checkboxes to unchecked when no filters are specified" do
+    should "default all state filter checkboxes to unchecked" do
       get :index
 
       assert_select "input.govuk-checkboxes__input", 9
@@ -32,7 +32,7 @@ class RootControllerTest < ActionController::TestCase
       assert_select "input.govuk-checkboxes__input[value='archived']"
     end
 
-    should "default the applied state filters when no filters are specified" do
+    should "default the applied state filters" do
       FactoryBot.create(:edition, state: "draft", assigned_to: @user)
       FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago, assigned_to: @user)
       FactoryBot.create(:edition, state: "amends_needed", assigned_to: @user)
@@ -78,7 +78,7 @@ class RootControllerTest < ActionController::TestCase
       assert_select "#assignee_filter > option[value='#{@user.id}'][selected]"
     end
 
-    should "default to filtering to publications assigned to the current user" do
+    should "default filtering to publications assigned to the current user" do
       anna = FactoryBot.create(:user, name: "Anna")
       FactoryBot.create(:edition, title: "Assigned to Anna", assigned_to: anna)
       FactoryBot.create(:edition, title: "Assigned to Stub User", assigned_to: @user)
