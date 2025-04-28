@@ -64,56 +64,6 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#request_amendments" do
-    setup do
-      @edition = FactoryBot.create(
-        :edition,
-        state: "in_review",
-        review_requested_at: Time.zone.now,
-      )
-    end
-
-    context "user has govuk_editor permission" do
-      should "update the edition status to 'amends_needed' and save the comment" do
-        post :request_amendments, params: {
-          id: @edition.id,
-          comment: "This is a comment",
-        }
-
-        assert_equal "2i amendments requested", flash[:success]
-        @edition.reload
-        assert_equal "This is a comment", @edition.latest_status_action.comment
-        assert_equal "amends_needed", @edition.state
-      end
-
-      should "not update the edition state and render 'request_amendments' template with an error when an error occurs" do
-        EditionProgressor.any_instance.expects(:progress).returns(false)
-
-        post :request_amendments, params: {
-          id: @edition.id,
-        }
-
-        assert_template "secondary_nav_tabs/request_amendments_page"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-        @edition.reload
-        assert_equal "in_review", @edition.state
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        post :request_amendments, params: {
-          id: @edition.id,
-        }
-
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-
     context "edition is not in a valid state to request amendments" do
       setup do
         @edition = FactoryBot.create(:edition, state: "draft")
@@ -128,6 +78,61 @@ class EditionsControllerTest < ActionController::TestCase
 
         @edition.reload
         assert_equal "draft", @edition.state
+      end
+    end
+
+    # NOTE: Eventually this list will also contain the 'fact_check_received' state
+    %i[in_review ready fact_check].each do |edition_state|
+      context "edition is in a valid state to request amendments" do
+        setup do
+          @edition = FactoryBot.create(
+            :edition,
+            state: edition_state,
+            review_requested_at: Time.zone.now,
+          )
+        end
+
+        context "user has govuk_editor permission" do
+          should "update the edition status to 'amends_needed' and save the comment" do
+            post :request_amendments, params: {
+              id: @edition.id,
+              comment: "This is a comment",
+            }
+
+            assert_equal "2i amendments requested", flash[:success]
+            @edition.reload
+            assert_equal "This is a comment", @edition.latest_status_action.comment
+            assert_equal "amends_needed", @edition.state
+          end
+
+          should "not update the edition state and render 'request_amendments' template with an error when an error occurs" do
+            EditionProgressor.any_instance.expects(:progress).returns(false)
+
+            post :request_amendments, params: {
+              id: @edition.id,
+            }
+
+            assert_template "secondary_nav_tabs/request_amendments_page"
+            assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+            @edition.reload
+            assert_equal edition_state.to_s, @edition.state
+          end
+        end
+
+        context "user does not have govuk_editor permission" do
+          setup do
+            user = FactoryBot.create(:user)
+            login_as(user)
+          end
+
+          should "render an error message" do
+            post :request_amendments, params: {
+              id: @edition.id,
+            }
+
+            assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+          end
+        end
       end
     end
   end

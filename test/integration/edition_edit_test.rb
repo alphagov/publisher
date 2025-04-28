@@ -1324,7 +1324,7 @@ class EditionEditTest < IntegrationTest
 
     context "Request amendments link" do
       context "edition is not in review" do
-        should "not show the link" do
+        should "not show the link for a draft edition" do
           visit_draft_edition
           assert page.has_no_link?("Request amendments")
         end
@@ -1388,10 +1388,48 @@ class EditionEditTest < IntegrationTest
         should "navigate to the 'Request amendments' page when the link is clicked" do
           login_as(@govuk_editor)
           visit_ready_edition
-
           click_link("Request amendments")
 
           assert_current_path request_amendments_page_edition_path(@ready_edition.id)
+        end
+      end
+
+      context "edition is out for fact check" do
+        should "not show the link to non editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Request amendments")
+        end
+
+        should "show the link to editors" do
+          login_as(@govuk_editor)
+          visit_fact_check_edition
+
+          assert page.has_link?("Request amendments")
+        end
+
+        should "show the link to welsh editors viewing a welsh edition" do
+          login_as_welsh_editor
+          welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
+          visit edition_path(welsh_edition)
+
+          assert page.has_link?("Request amendments")
+        end
+
+        should "navigate to the 'Request amendments' page when the link is clicked" do
+          login_as(@govuk_editor)
+          visit_fact_check_edition
+          click_link("Request amendments")
+
+          assert_current_path request_amendments_page_edition_path(@fact_check_edition.id)
         end
       end
     end
