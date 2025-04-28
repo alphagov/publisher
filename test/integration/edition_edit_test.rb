@@ -1996,6 +1996,35 @@ class EditionEditTest < IntegrationTest
         assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
       end
     end
+
+    context "'Fact check' button" do
+      %i[ready fact_check_received].each do |state|
+        should "show the 'Fact check' button on '#{state}' if user has govuk_editor permission" do
+          login_as(@govuk_editor)
+          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+          visit edition_path(@edition)
+
+          assert page.has_link?("Fact check", href: "#")
+        end
+
+        should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
+          login_as_welsh_editor
+          welsh_edition = FactoryBot.create(:edition, :welsh, state: state.to_s)
+          visit edition_path(welsh_edition)
+          assert @user.has_editor_permissions?(welsh_edition)
+
+          assert page.has_link?("Fact check", href: "#")
+        end
+
+        should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+          visit edition_path(@edition)
+
+          assert page.has_no_link?("Fact check", href: "#")
+        end
+      end
+    end
   end
 
   context "Related external links tab" do

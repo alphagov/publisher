@@ -5,7 +5,7 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 .bundle
-log/*.log
+log/*.log*
 tmp/
 .autotest
 coverage
