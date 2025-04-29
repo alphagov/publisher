@@ -57,6 +57,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/request_amendments_page"
   end
 
+  def send_to_fact_check_page
+    render "secondary_nav_tabs/send_to_fact_check_page"
+  end
+
   def send_to_2i_page
     render "secondary_nav_tabs/send_to_2i_page"
   end

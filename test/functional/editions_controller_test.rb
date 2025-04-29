@@ -176,6 +176,27 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#send_to_fact_check_page" do
+    context "user has govuk_editor permission" do
+      should "render the 'Send to Fact check' page" do
+        get :send_to_fact_check_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :send_to_fact_check_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#request_amendments" do
     context "edition is not in a valid state to request amendments" do
       setup do
