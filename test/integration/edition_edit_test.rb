@@ -2004,7 +2004,7 @@ class EditionEditTest < IntegrationTest
           @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
           visit edition_path(@edition)
 
-          assert page.has_link?("Fact check", href: "#")
+          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(@edition))
         end
 
         should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
@@ -2013,7 +2013,7 @@ class EditionEditTest < IntegrationTest
           visit edition_path(welsh_edition)
           assert @user.has_editor_permissions?(welsh_edition)
 
-          assert page.has_link?("Fact check", href: "#")
+          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(welsh_edition))
         end
 
         should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do

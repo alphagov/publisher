@@ -90,7 +90,7 @@ module EditionsSidebarButtonsHelper
           "govuk_publishing_components/components/button",
           {
             text: "Fact check",
-            href: "#",
+            href: send_to_fact_check_page_edition_path(edition),
             secondary_solid: true,
             margin_bottom: 3,
           },
