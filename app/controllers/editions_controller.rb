@@ -111,7 +111,7 @@ class EditionsController < InheritedResources::Base
       flash.now[:danger] = "Edition is not in a state where amendments can be requested"
       render "secondary_nav_tabs/request_amendments_page"
     elsif request_amendments_for_edition(@resource, params[:comment])
-      flash[:success] = "2i amendments requested"
+      flash[:success] = "Amendments requested"
       redirect_to edition_path(resource)
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"

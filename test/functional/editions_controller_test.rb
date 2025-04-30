@@ -99,7 +99,7 @@ class EditionsControllerTest < ActionController::TestCase
               comment: "This is a comment",
             }
 
-            assert_equal "2i amendments requested", flash[:success]
+            assert_equal "Amendments requested", flash[:success]
             @edition.reload
             assert_equal "This is a comment", @edition.latest_status_action.comment
             assert_equal "amends_needed", @edition.state

@@ -1956,7 +1956,7 @@ class EditionEditTest < IntegrationTest
       click_on "Request amendments"
 
       assert_current_path edition_path(@in_review_edition.id)
-      assert page.has_text?("2i amendments requested")
+      assert page.has_text?("Amendments requested")
     end
 
     context "current user is also the requester" do
