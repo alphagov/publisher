@@ -45,10 +45,10 @@
         <% end %>
       <% end %>
     </div>
-  <% elsif @edition.ready? %>
+  <% elsif @edition.ready? || @edition.fact_check? %>
     <div class="govuk-grid-column-two-thirds">
-      <%= render "govuk_publishing_components/components/inset_text", {} do %>
-        <% if current_user.has_editor_permissions?(@edition) %>
+      <% if current_user.has_editor_permissions?(@edition) %>
+        <%= render "govuk_publishing_components/components/inset_text", {} do %>
           <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path) %></p>
         <% end %>
       <% end %>
