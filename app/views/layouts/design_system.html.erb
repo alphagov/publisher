@@ -1,6 +1,9 @@
 <% environment = GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment %>
 
 <% content_for :head do %>
+  <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
+  <%= javascript_include_tag "admin/domain-config" %>
+  <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
   <%= javascript_include_tag "es6-components", type: "module" %>
 <% end %>
 
