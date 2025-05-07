@@ -15,6 +15,7 @@
 } do %>
 
   <% render "layouts/google_tag_manager" %>
+  <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(controller_name, action_name) %>'></div>
 
   <%= render "govuk_publishing_components/components/skip_link" %>
 
