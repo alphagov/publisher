@@ -1,3 +1,4 @@
+require "google/apis/gmail_v1"
 # Hide the implementation detail of usual methods
 # that could be part of the Message class
 class FactCheckMail
@@ -6,30 +7,24 @@ class FactCheckMail
   end
 
   def recipients
-    [@message.to, @message.cc, @message.bcc].compact.flatten
+    headers = @message.payload.headers
+    [header_value(headers, 'To'), header_value(headers, 'CC'), header_value(headers, 'BCC')].compact.flatten
   end
 
   def out_of_office?
     subject_is_out_of_office? || out_of_office_header_set?
   end
 
-  def method_missing(method_name, ...)
-    @message.public_send(method_name, ...)
-  end
-
-  def respond_to_missing?(method_name, *)
-    @message.respond_to?(method_name)
-  end
-
 private
 
   def subject_is_out_of_office?
-    @message["Subject"].to_s.downcase.include?("out of office")
+    subject = @message.payload.headers.find{|h| h.name.downcase == 'subject'}&.value.to_s.downcase.include?("out of office")
   end
 
   def out_of_office_header_set?
+    headers = @message.payload.headers.map {|header| [header.name, header.value]}
     header_names = @message.header_fields.map(&:name)
-    return true if (%w[X-Autorespond X-Auto-Response-Suppress] & header_names).present?
+    return true if (%w[X-Autorespond X-Auto-Response-Suppress] & headers.map(&:first)).any?
 
     [
       %w[Auto-Submitted auto-replied],
@@ -43,8 +38,13 @@ private
       %w[X-Precedence junk],
       %w[X-Autoreply yes],
     ].any? do |key, value|
-      @message[key].instance_of?(Mail::Field) &&
-        @message[key].to_s == value
+      header = headers.find{|h| h.first.downcase == key.downcase}
+      header && header.last.to_s == value
     end
   end
+
+  def header_value(headers, header_name)
+    headers.find (|h| h.name.downcase == header_name.downcase)&.value
+  end
+
 end
