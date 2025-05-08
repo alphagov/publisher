@@ -196,13 +196,8 @@ GEM
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     ffi (1.17.2-aarch64-linux-gnu)
-    ffi (1.17.2-aarch64-linux-musl)
-    ffi (1.17.2-arm-linux-gnu)
-    ffi (1.17.2-arm-linux-musl)
     ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
-    ffi (1.17.2-x86_64-linux-musl)
     flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
@@ -237,16 +232,10 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-logging-utils (0.2.0)
-    google-protobuf (4.30.2)
-      bigdecimal
-      rake (>= 13)
     google-protobuf (4.30.2-aarch64-linux)
       bigdecimal
       rake (>= 13)
     google-protobuf (4.30.2-arm64-darwin)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.30.2-x86_64-darwin)
       bigdecimal
       rake (>= 13)
     google-protobuf (4.30.2-x86_64-linux)
@@ -445,9 +434,6 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.4)
-    nokogiri (1.18.8)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.18.8-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.8-arm64-darwin)
@@ -841,19 +827,9 @@ GEM
       nokogiri (>= 1.16.8)
     sass-embedded (1.87.0-aarch64-linux-gnu)
       google-protobuf (~> 4.30)
-    sass-embedded (1.87.0-aarch64-linux-musl)
-      google-protobuf (~> 4.30)
-    sass-embedded (1.87.0-arm-linux-gnueabihf)
-      google-protobuf (~> 4.30)
-    sass-embedded (1.87.0-arm-linux-musleabihf)
-      google-protobuf (~> 4.30)
     sass-embedded (1.87.0-arm64-darwin)
       google-protobuf (~> 4.30)
-    sass-embedded (1.87.0-x86_64-darwin)
-      google-protobuf (~> 4.30)
     sass-embedded (1.87.0-x86_64-linux-gnu)
-      google-protobuf (~> 4.30)
-    sass-embedded (1.87.0-x86_64-linux-musl)
       google-protobuf (~> 4.30)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -962,16 +938,9 @@ GEM
 PLATFORMS
   aarch64-linux
   aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-gnueabihf
-  arm-linux-musl
-  arm-linux-musleabihf
   arm64-darwin
-  x86_64-darwin
   x86_64-linux
   x86_64-linux-gnu
-  x86_64-linux-musl
 
 DEPENDENCIES
   aws-sdk-s3 (~> 1)

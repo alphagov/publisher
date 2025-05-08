@@ -12,4 +12,5 @@ fetcher:
   port: <%=ENV.fetch("FACT_CHECK_PORT", 993) %>
   user_name: <%=ENV["FACT_CHECK_USERNAME"] %>
   password: <%=ENV["FACT_CHECK_PASSWORD"] %>
+  auth_key: <%=ENV["FACT_CHECK_API_KEY"] %>
   enable_ssl: true
