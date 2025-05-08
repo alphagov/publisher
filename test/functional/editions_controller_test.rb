@@ -487,6 +487,241 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#schedule_page" do
+    setup do
+      @ready_edition = FactoryBot.create(:answer_edition, :ready)
+    end
+
+    context "user has govuk_editor permission" do
+      should "be able to navigate successfully to schedule page path" do
+        get :schedule_page, params: { id: @ready_edition.id }
+
+        assert_response :success
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "show permission error and redirect to edition path" do
+        get :schedule_page, params: { id: @ready_edition.id }
+
+        assert_redirected_to edition_path(@ready_edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user has welsh_editor permission" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "show permission error and redirect to edition path" do
+        get :schedule_page, params: { id: @ready_edition.id }
+
+        assert_redirected_to edition_path(@ready_edition)
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "be able to navigate successfully to schedule page path" do
+        @welsh_ready_edition = FactoryBot.create(:answer_edition, :ready, :welsh)
+        get :schedule_page, params: { id: @welsh_ready_edition.id }
+
+        assert_response :success
+      end
+    end
+
+    context "edition is not in 'ready' state" do
+      %i[draft in_review amends_needed fact_check fact_check_received scheduled_for_publishing published archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+          end
+
+          should "redirect to edition path with error message" do
+            get :schedule_page, params: { id: @edition.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Cannot schedule an edition that is not ready.", flash[:danger]
+          end
+        end
+      end
+    end
+  end
+
+  context "#schedule" do
+    context "Edition is not in 'Ready' state" do
+      setup do
+        @edition = FactoryBot.create(:answer_edition, state: "draft")
+      end
+
+      should "not update the edition status and should show a warning message" do
+        post :schedule, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "Edition is not in a state where it can be scheduled for publishing", flash[:danger]
+        assert_template "secondary_nav_tabs/schedule_page"
+        @edition.reload
+        assert_equal "draft", @edition.state
+      end
+    end
+
+    context "Edition is in 'Ready' state" do
+      setup do
+        @edition = FactoryBot.create(:answer_edition, state: "ready")
+        @past_date = 1.day.ago
+        @future_date = 1.day.from_now
+      end
+
+      context "user has govuk_editor permission" do
+        setup do
+          @requester = FactoryBot.create(:user, :govuk_editor, name: "Stub Requester")
+          login_as(@requester)
+        end
+
+        should "show an error if any date/time fields are left blank" do
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_1i: nil,
+            publish_at_2i: @future_date.month,
+            publish_at_3i: @future_date.day,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_1i: @future_date.year,
+            publish_at_2i: nil,
+            publish_at_3i: @future_date.day,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_1i: @future_date.year,
+            publish_at_2i: @future_date.month,
+            publish_at_3i: nil,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_1i: @future_date.year,
+            publish_at_2i: @future_date.month,
+            publish_at_3i: @future_date.day,
+            publish_at_4i: nil,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_1i: @future_date.year,
+            publish_at_2i: @future_date.month,
+            publish_at_3i: @future_date.day,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: nil,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+        end
+
+        should "show an error if the publish at date is in the past" do
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_3i: @past_date.day,
+            publish_at_2i: @past_date.month,
+            publish_at_1i: @past_date.year,
+            publish_at_4i: @past_date.hour,
+            publish_at_5i: @past_date.min,
+          }
+
+          assert_equal "Select a future time and/or date to schedule publication.", flash[:danger]
+        end
+
+        should "update the edition state to 'scheduled_for_publishing' and save the comment" do
+          ScheduledPublisher.stubs(:enqueue)
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_3i: @future_date.day,
+            publish_at_2i: @future_date.month,
+            publish_at_1i: @future_date.year,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "Scheduled to publish at #{@future_date.to_fs(:govuk_date)}", flash[:success]
+          @edition.reload
+          assert_equal "scheduled_for_publishing", @edition.state
+          assert_equal "Scheduling for publish", @edition.latest_status_action.comment
+          assert_equal @requester.id, @edition.latest_status_action.requester_id
+        end
+
+        should "not update the edition state and render 'schedule_page' template with an error when an error occurs" do
+          EditionProgressor.any_instance.expects(:progress).returns(false)
+
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_3i: @future_date.day,
+            publish_at_2i: @future_date.month,
+            publish_at_1i: @future_date.year,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_template "secondary_nav_tabs/schedule_page"
+          assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+          @edition.reload
+          assert_equal "ready", @edition.state
+        end
+      end
+
+      context "user does not have govuk_editor or welsh_editor permissions" do
+        setup do
+          user = FactoryBot.create(:user)
+          login_as(user)
+        end
+
+        should "render an error message" do
+          post :schedule, params: {
+            id: @edition.id,
+            comment: "Scheduling for publish",
+            publish_at_3i: @future_date.day,
+            publish_at_2i: @future_date.month,
+            publish_at_1i: @future_date.year,
+            publish_at_4i: @future_date.hour,
+            publish_at_5i: @future_date.min,
+          }
+
+          assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        end
+      end
+    end
+  end
+
   context "#send_to_publish_page" do
     context "user has govuk_editor permission" do
       should "render the 'Publish now' page" do

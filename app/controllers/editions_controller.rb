@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -25,6 +25,9 @@ class EditionsController < InheritedResources::Base
   end
   before_action only: %i[edit_reviewer update_reviewer] do
     require_reviewer_editable
+  end
+  before_action only: %i[schedule_page] do
+    require_schedulable
   end
 
   helper_method :locale_to_language
@@ -58,6 +61,10 @@ class EditionsController < InheritedResources::Base
 
   def skip_review_page
     render "secondary_nav_tabs/skip_review_page"
+  end
+
+  def schedule_page
+    render "secondary_nav_tabs/schedule_page"
   end
 
   def send_to_publish_page
@@ -155,6 +162,29 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/skip_review_page"
+    end
+  end
+
+  def schedule
+    if !@resource.can_schedule_for_publishing?
+      flash.now[:danger] = "Edition is not in a state where it can be scheduled for publishing"
+      render "secondary_nav_tabs/schedule_page"
+    elsif params[:publish_at_1i].empty? || params[:publish_at_2i].empty? || params[:publish_at_3i].empty? || params[:publish_at_4i].empty? || params[:publish_at_5i].empty?
+      flash.now[:danger] = "Select a future time and/or date to schedule publication."
+      render "secondary_nav_tabs/schedule_page"
+    else
+      publish_at = Time.zone.local(params[:publish_at_1i].to_i, params[:publish_at_2i].to_i, params[:publish_at_3i].to_i, params[:publish_at_4i].to_i, params[:publish_at_5i].to_i)
+
+      if publish_at.present? && publish_at < Time.zone.now
+        flash.now[:danger] = "Select a future time and/or date to schedule publication."
+        render "secondary_nav_tabs/schedule_page"
+      elsif schedule_for_edition(@resource, params[:comment], publish_at)
+        flash[:success] = "Scheduled to publish at #{publish_at.to_fs(:govuk_date)}"
+        redirect_to edition_path(resource)
+      else
+        flash.now[:danger] = "Due to a service problem, the request could not be made"
+        render "secondary_nav_tabs/schedule_page"
+      end
     end
   end
 
@@ -364,6 +394,11 @@ private
     @command.progress({ request_type: "skip_review", comment: comment })
   end
 
+  def schedule_for_edition(resource, comment, publish_at)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "schedule_for_publishing", comment: comment, publish_at: publish_at })
+  end
+
   def send_to_publish_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     publish_succeeded = @command.progress({ request_type: "publish", comment: comment })
@@ -435,6 +470,13 @@ private
     return if @resource.can_destroy?
 
     flash[:danger] = "Cannot delete a #{description(@resource).downcase} that has ever been published."
+    redirect_to edition_path(@resource)
+  end
+
+  def require_schedulable
+    return if @resource.can_schedule_for_publishing?
+
+    flash[:danger] = "Cannot schedule an edition that is not ready."
     redirect_to edition_path(@resource)
   end
 
