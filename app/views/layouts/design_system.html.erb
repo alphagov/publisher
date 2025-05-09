@@ -1,8 +1,13 @@
 <% environment = GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment %>
 
 <% content_for :head do %>
+  <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
+  <%= javascript_include_tag "domain-config" %>
+  <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
   <%= javascript_include_tag "es6-components", type: "module" %>
 <% end %>
+
+<% sanitized_title = sanitize((yield(:page_title).presence || yield(:title))) %>
 
 <%= render "govuk_publishing_components/components/layout_for_admin", {
   product_title: "Publisher",
@@ -11,7 +16,7 @@
   head: yield(:head),
 } do %>
 
-  <% render "layouts/google_tag_manager" %>
+  <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(sanitized_title) %>'></div>
 
   <%= render "govuk_publishing_components/components/skip_link" %>
 
