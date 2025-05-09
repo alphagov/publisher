@@ -1982,7 +1982,7 @@ class EditionEditTest < IntegrationTest
     context "Document already has external links when page loads" do
       setup do
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link One", url: "https://gov.uk" }]
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
         click_link "Related external links"
       end
 
@@ -2038,7 +2038,7 @@ class EditionEditTest < IntegrationTest
     context "User deletes an external link and saves" do
       setup do
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link One", url: "https://gov.uk" }]
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
         click_link "Related external links"
       end
 
