@@ -19,7 +19,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
       slug: "slug-#{num}",
       body: "body-#{num}",
       order: num,
-      guide_edition: edition,
+      guide_edition: edition.editionable,
     )
   end
 
@@ -69,7 +69,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of parts" do
-      Part.new(guide_edition: edition).save!(validate: false)
+      Part.new(guide_edition: edition.editionable).save!(validate: false)
 
       expected = [{
         title: "",
