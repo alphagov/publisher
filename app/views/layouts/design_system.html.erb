@@ -7,8 +7,6 @@
   <%= javascript_include_tag "es6-components", type: "module" %>
 <% end %>
 
-<% sanitized_title = sanitize((yield(:page_title).presence || yield(:title))) %>
-
 <%= render "govuk_publishing_components/components/layout_for_admin", {
   product_title: "Publisher",
   browser_title: yield(:page_title),
@@ -16,7 +14,7 @@
   head: yield(:head),
 } do %>
 
-  <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(sanitized_title) %>'></div>
+  <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(action_name, controller_name) %>'></div>
 
   <%= render "govuk_publishing_components/components/skip_link" %>
 
