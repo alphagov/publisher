@@ -23,13 +23,13 @@
     <%= render "govuk_publishing_components/components/summary_list", {
       items: document_summary_items(@resource, @reviewer),
     } %>
+  </div>
+
+  <div class="govuk-grid-column-two-thirds">
     <% if @edition.important_note %>
       <%= render partial: "important_note" %>
     <% end %>
-  </div>
-
-  <% if @edition.in_review? %>
-    <div class="govuk-grid-column-two-thirds">
+    <% if @edition.in_review? %>
       <%= render "govuk_publishing_components/components/inset_text", {} do %>
         <% if @edition.latest_status_action.requester == current_user %>
           <p class="govuk-body">You've sent this edition to be reviewed</p>
@@ -44,16 +44,14 @@
           <% end %>
         <% end %>
       <% end %>
-    </div>
   <% elsif @edition.ready? || @edition.fact_check? %>
-    <div class="govuk-grid-column-two-thirds">
       <% if current_user.has_editor_permissions?(@edition) %>
         <%= render "govuk_publishing_components/components/inset_text", {} do %>
           <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path) %></p>
         <% end %>
       <% end %>
-    </div>
   <% end %>
+  </div>
 </div>
 
 <% if @resource.artefact.state == "archived" %>
