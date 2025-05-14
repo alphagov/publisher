@@ -2,6 +2,9 @@
 
 <% content_for :head do %>
   <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
+  <meta name="govuk:document_type" content='<%= "#{action_name}-#{controller_name}" %>'>
+  <meta name="govuk:publishing_app" content="Publisher">
+  <meta name="govuk:user_created_at" content="<%= current_user&.created_at&.to_date %>">
   <%= javascript_include_tag "domain-config" %>
   <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
   <%= javascript_include_tag "es6-components", type: "module" %>
