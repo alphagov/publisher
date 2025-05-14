@@ -16,9 +16,6 @@
   environment: environment,
   head: yield(:head),
 } do %>
-
-  <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(action_name, controller_name) %>'></div>
-
   <%= render "govuk_publishing_components/components/skip_link" %>
 
   <%= render "govuk_publishing_components/components/layout_header", {
