@@ -1,1 +1,57 @@
-Send to fact check
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Send to fact check" %>
+<% content_for :title, "Send to fact check" %>
+<% template = render template: "event_mailer/request_fact_check", formats: [:text] %>
+
+<%= render("govuk_publishing_components/components/error_summary", {
+      id: "error-summary",
+      title: "There is a problem",
+      items: @edition.errors.map do |error|
+        {
+          text: error.message,
+          href: "##{error.attribute.to_s}",
+        }
+      end,
+    }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition)) do %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          heading_size: "m",
+          text: "Email addresses"
+        },
+        name: "email_addresses",
+        id: "email_addresses",
+        type: "email",
+        hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
+        # required: true,
+        input_html: { class: "form-control", required: true },
+        # error_message: "enter email!",
+      } %>
+
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "m",
+          text: "Customised message",
+        },
+        name: "customised_message",
+        value: template,
+        rows: 14,
+        # required: true,
+        input_html: { class: "form-control", required: true },
+        # error_message: "enter email!",
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Send to fact check",
+        } %>
+        <%= link_to("Cancel", edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>

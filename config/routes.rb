@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :editions do
       member do
         get "send_to_fact_check_page", to: "editions#send_to_fact_check_page", as: "send_to_fact_check_page"
+        post "send_to_fact_check", to: "editions#send_to_fact_check", as: "send_to_fact_check"
         get "resend_fact_check_email_page", to: "editions#resend_fact_check_email_page", as: "resend_fact_check_email_page"
         patch "resend_fact_check_email"
         get "request_amendments_page", to: "editions#request_amendments_page", as: "request_amendments_page"

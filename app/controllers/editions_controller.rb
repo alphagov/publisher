@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page resend_fact_check_email_page resend_fact_check_email] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page send_to_fact_check send_to_fact_check_page resend_fact_check_email_page resend_fact_check_email] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -172,6 +172,21 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_2i_page"
+    end
+  end
+
+  def send_to_fact_check
+    comment = "Sent to fact check"
+    add_validation_errors
+    if !@resource.errors.empty? || !@resource.can_send_fact_check?
+      flash.now[:danger] = "Edition is not in a state where it can be sent to fact check"
+      render "secondary_nav_tabs/send_to_fact_check_page"
+    elsif send_to_fact_check_for_edition(@resource, params[:customised_message], params[:email_addresses], comment)
+      flash[:success] = "Sent to fact check"
+      redirect_to edition_path(resource)
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/send_to_fact_check_page"
     end
   end
 
@@ -415,6 +430,17 @@ private
   def send_to_2i_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "request_review", comment: comment })
+  end
+
+  def send_to_fact_check_for_edition(resource, email_addresses, customised_message, comment)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
+  end
+
+  def add_validation_errors
+    if params[:email_addresses].blank?
+      @resource.errors.add("email_addresses", "Please add your email address!")
+    end
   end
 
   def skip_review_for_edition(resource, comment)
