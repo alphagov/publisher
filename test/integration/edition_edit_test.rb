@@ -2329,45 +2329,60 @@ class EditionEditTest < IntegrationTest
   end
 
   context "in_review edition (sent to 2i)" do
-    context "user has the required permissions" do
-      context "current user is also the requester" do
-        setup do
-          login_as(@govuk_requester)
-          visit_in_review_edition("request_review", @govuk_requester)
+      context "user has the required permissions" do
+        context "current user is also the requester" do
+          setup do
+            login_as(@govuk_requester)
+            visit_in_review_edition("request_review", @govuk_requester)
+          end
+
+          should "display Save button and preview link" do
+            assert page.has_button?("Save"), "No save button present"
+            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+          end
+
+          should "indicate that the current user requested a review" do
+            assert page.has_text?("You've sent this edition to be reviewed")
+          end
+
+          should "not show 'Send to 2i' link as edition already in 'in review' state" do
+            visit_in_review_edition
+            assert page.has_no_link?("Send to 2i")
+          end
         end
 
-        should "display Save button and preview link" do
-          assert page.has_button?("Save"), "No save button present"
-          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-        end
+        context "current user is not the requester" do
+          setup do
+            login_as(@govuk_editor)
+            visit_in_review_edition("request_review", @govuk_requester)
+          end
 
-        should "indicate that the current user requested a review" do
-          assert page.has_text?("You've sent this edition to be reviewed")
-        end
+          should "display Save button and preview link" do
+            assert page.has_button?("Save"), "No save button present"
+            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+          end
 
-        should "not show 'Send to 2i' link as edition already in 'in review' state" do
-          visit_in_review_edition
-          assert page.has_no_link?("Send to 2i")
+          should "indicate which other user requested a review" do
+            assert page.has_text?("Stub requester sent this edition to be reviewed")
+          end
         end
       end
-
-      context "current user is not the requester" do
-        setup do
-          login_as(@govuk_editor)
-          visit_in_review_edition("request_review", @govuk_requester)
-        end
-
-        should "display Save button and preview link" do
-          assert page.has_button?("Save"), "No save button present"
-          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-        end
-
-        should "indicate which other user requested a review" do
-          assert page.has_text?("Stub requester sent this edition to be reviewed")
-        end
-      end
-    end
   end
+
+  # TODO: Fact check page tests
+
+  # context "Send to Fact check page" do
+  #   should "render the page" do
+  #     create_ready_edition
+  #     visit send_to_fact_check_page_edition_path(@ready_edition)
+
+  #     assert page.has_text?(@ready_edition.title)
+  #     assert page.has_text?("Send to fact check")
+  #     # assert page.has_selector?("title", text: "Send to fact check")
+  #     # assert page.has_css?("title", text: "Send to fact check - GOV.UK Publishing")
+  #     assert page.has_element?("html title")
+  #   end
+  # end
 
   context "Send to publish page" do
     should "save comment to edition history" do
@@ -2530,6 +2545,10 @@ private
   def create_ready_edition
     @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
   end
+
+  # def create_ready_edition
+  #   @ready_edition = FactoryBot.create(:edition, title: "Edit page title", state: "ready")
+  # end
 
   def visit_ready_edition
     create_ready_edition
