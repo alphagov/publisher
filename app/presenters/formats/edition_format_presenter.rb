@@ -75,7 +75,7 @@ module Formats
       "/#{edition.slug}"
     end
 
-    # TransactionEdition, CampaignEdition, HelpPageEdition
+    # TransactionEdition, HelpPageEdition
     # need to register exact routes...
     def path_type
       edition.exact_route? ? "exact" : "prefix"
