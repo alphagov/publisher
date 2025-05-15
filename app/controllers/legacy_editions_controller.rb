@@ -23,8 +23,8 @@ class LegacyEditionsController < InheritedResources::Base
   def show
     @linkables = Tagging::Linkables.new
 
-    if @resource.is_a?(Parted)
-      @ordered_parts = @resource.parts.in_order
+    if @resource.editionable.is_a?(Parted)
+      @ordered_parts = @resource.editionable.parts.in_order
     end
 
     if @resource.is_a?(Varianted)
