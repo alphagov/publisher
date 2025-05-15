@@ -1443,6 +1443,42 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "Resend fact check email link" do
+      %i[draft in_review amends_needed  fact_check_received ready scheduled_for_publishing published archived].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            send "visit_#{state}_edition"
+          end
+
+          should "not show the 'Resend fact check email' link" do
+            assert page.has_no_link?("Resend fact check email")
+          end
+        end
+      end
+
+      context "when state is 'Fact check" do
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Resend fact check email")
+        end
+
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Resend fact check email")
+        end
+
+        should "show the 'Resend fact check email' link" do
+          assert page.has_link?("Resend fact check email")
+        end
+      end
+
+      # TODO: Test that link goes to right location when clicked
+    end
+
     context "Request amendments link" do
       context "edition is not in review" do
         should "not show the link for a draft edition" do
