@@ -2369,20 +2369,20 @@ class EditionEditTest < IntegrationTest
       end
   end
 
-  # TODO: Fact check page tests
+  context "Send to Fact check page" do
+    should "render the page" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
 
-  # context "Send to Fact check page" do
-  #   should "render the page" do
-  #     create_ready_edition
-  #     visit send_to_fact_check_page_edition_path(@ready_edition)
-
-  #     assert page.has_text?(@ready_edition.title)
-  #     assert page.has_text?("Send to fact check")
-  #     # assert page.has_selector?("title", text: "Send to fact check")
-  #     # assert page.has_css?("title", text: "Send to fact check - GOV.UK Publishing")
-  #     assert page.has_element?("html title")
-  #   end
-  # end
+      assert page.has_text?(@ready_edition.title)
+      assert page.has_text?("Send to fact check")
+      assert page.has_text?("Email addresses")
+      assert page.has_css?(".gem-c-hint", text: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com")
+      assert page.has_text?("Customised message")
+      assert page.has_button?("Send to fact check")
+      assert page.has_link?("Cancel")
+    end
+  end
 
   context "Send to publish page" do
     should "save comment to edition history" do
@@ -2545,10 +2545,6 @@ private
   def create_ready_edition
     @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
   end
-
-  # def create_ready_edition
-  #   @ready_edition = FactoryBot.create(:edition, title: "Edit page title", state: "ready")
-  # end
 
   def visit_ready_edition
     create_ready_edition
