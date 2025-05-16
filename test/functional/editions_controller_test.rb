@@ -621,6 +621,56 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#send_to_fact_check_page" do
+    context "user has govuk_editor permission" do
+      should "render the 'Send to Fact check' page" do
+        edition = FactoryBot.create(:edition, :ready)
+        get :send_to_fact_check_page, params: { id: edition.id }
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      should "render an error message" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+        get :send_to_fact_check_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user has welsh_editor permission" do
+      setup do
+        login_as_welsh_editor
+      end
+
+      should "render the 'Send to Fact check' page when the edition is Welsh" do
+        welsh_edition = FactoryBot.create(:edition, :ready, :welsh)
+        get :send_to_fact_check_page, params: { id: welsh_edition.id }
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+      end
+
+      should "render an error message when the edition is not Welsh" do
+        get :send_to_fact_check_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "edition is not in transitionable state" do
+      %i[draft in_review amends_needed fact_check scheduled_for_publishing published archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          should "redirect to edition path with error message" do
+            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+            get :send_to_fact_check_page, params: { id: @edition.id }
+
+            assert_redirected_to edition_path
+            assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
+          end
+        end
+      end
+    end
+  end
+
   context "#schedule_page" do
     setup do
       @ready_edition = FactoryBot.create(:answer_edition, :ready)

@@ -29,6 +29,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[schedule_page] do
     require_schedulable
   end
+  before_action only: %i[send_to_fact_check_page] do
+    require_send_to_fact_check_available
+  end
 
   helper_method :locale_to_language
 
@@ -529,6 +532,13 @@ private
     return if @resource.can_schedule_for_publishing?
 
     flash[:danger] = "Cannot schedule an edition that is not ready."
+    redirect_to edition_path(@resource)
+  end
+
+  def require_send_to_fact_check_available
+    return if @resource.can_send_fact_check?
+
+    flash[:danger] = "Edition is not in a state where it can be sent to fact check"
     redirect_to edition_path(@resource)
   end
 
