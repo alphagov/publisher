@@ -1443,6 +1443,52 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "Resend fact check email link" do
+      %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |state|
+        context "when state is '#{state}'" do
+          setup do
+            send "visit_#{state}_edition"
+          end
+
+          should "not show the 'Resend fact check email' link" do
+            assert page.has_no_link?("Resend fact check email")
+          end
+        end
+      end
+
+      context "when state is 'Fact check" do
+        should "not show the link to non-editors" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Resend fact check email")
+        end
+
+        should "not show the link to welsh editors viewing a non-welsh edition" do
+          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+          visit_fact_check_edition
+
+          assert page.has_no_link?("Resend fact check email")
+        end
+
+        should "show the 'Resend fact check email' link to govuk editors" do
+          login_as(@govuk_editor)
+          visit_fact_check_edition
+
+          assert page.has_link?("Resend fact check email")
+        end
+      end
+
+      should "navigate to the 'Resend fact check email' page when the link is clicked" do
+        login_as(@govuk_editor)
+        visit_fact_check_edition
+
+        click_link("Resend fact check email")
+
+        assert_current_path resend_fact_check_email_page_edition_path(@fact_check_edition.id)
+      end
+    end
+
     context "Request amendments link" do
       context "edition is not in review" do
         should "not show the link for a draft edition" do
@@ -2058,6 +2104,22 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Resend fact check email page" do
+    should "render the 'Resend fact check email' page" do
+      create_fact_check_edition
+      visit resend_fact_check_email_page_edition_path(@fact_check_edition)
+
+      assert page.has_content?(@fact_check_edition.title)
+      assert page.has_content?("Resend fact check email")
+      assert page.has_content?("Email addresses")
+      assert page.has_content?("fact-checker-one@example.com, fact-checker-two@example.com")
+      assert page.has_content?("Customised message")
+      assert page.has_content?("The customised message")
+      assert page.has_button?("Resend fact check email")
+      assert page.has_link?("Cancel")
+    end
+  end
+
   context "Request amendments page" do
     should "save comment to edition history" do
       create_in_review_edition
@@ -2379,8 +2441,21 @@ private
     visit edition_path(@published_edition)
   end
 
-  def visit_fact_check_edition
+  def create_fact_check_edition
     @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+
+    FactoryBot.create(
+      :action,
+      requester: @govuk_editor,
+      request_type: Action::SEND_FACT_CHECK,
+      edition: @fact_check_edition,
+      email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+      customised_message: "The customised message",
+    )
+  end
+
+  def visit_fact_check_edition
+    create_fact_check_edition
     visit edition_path(@fact_check_edition)
   end
 
