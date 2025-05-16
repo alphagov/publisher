@@ -1,18 +1,11 @@
 require "edition"
 
-class SimpleSmartAnswerEdition < Edition
+class SimpleSmartAnswerEdition
   class Node
-    class Option
-      include Mongoid::Document
+    class Option < ApplicationRecord
+      belongs_to :node, inverse_of: :options, class_name: "SimpleSmartAnswerEdition::Node"
 
-      embedded_in :node, class_name: "SimpleSmartAnswerEdition::Node"
-
-      field :label, type: String
-      field :slug, type: String
-      field :next_node, type: String
-      field :order, type: Integer
-
-      default_scope -> { order_by(order: :asc) }
+      default_scope -> { order(order: :asc) }
 
       validate :validate_label_is_present
       validate :validate_node_is_selected
@@ -20,7 +13,7 @@ class SimpleSmartAnswerEdition < Edition
 
       before_validation :populate_slug
 
-    private
+      private
 
       def populate_slug
         if label.present? && !slug_changed?
@@ -46,3 +39,4 @@ class SimpleSmartAnswerEdition < Edition
     end
   end
 end
+
