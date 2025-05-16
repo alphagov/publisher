@@ -2382,6 +2382,23 @@ class EditionEditTest < IntegrationTest
       assert page.has_button?("Send to fact check")
       assert page.has_link?("Cancel")
     end
+    
+    should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+      click_link("Cancel")
+      assert_current_path edition_path(@ready_edition.id)
+    end
+    
+    should "redirect back to the edit tab on submit and show success message" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
   end
 
   context "Send to publish page" do

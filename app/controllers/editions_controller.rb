@@ -181,7 +181,7 @@ class EditionsController < InheritedResources::Base
     if !@resource.errors.empty? || !@resource.can_send_fact_check?
       flash.now[:danger] = "Edition is not in a state where it can be sent to fact check"
       render "secondary_nav_tabs/send_to_fact_check_page"
-    elsif send_to_fact_check_for_edition(@resource, params[:customised_message], params[:email_addresses], comment)
+    elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
       flash[:success] = "Sent to fact check"
       redirect_to edition_path(resource)
     else
