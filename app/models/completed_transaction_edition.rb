@@ -1,9 +1,6 @@
-require "edition"
-
-class CompletedTransactionEdition < Edition
+class CompletedTransactionEdition < ApplicationRecord
   include PresentationToggles
-
-  field :body, type: String
+  include Editionable
 
   GOVSPEAK_FIELDS = [:body].freeze
 

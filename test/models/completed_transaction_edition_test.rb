@@ -2,7 +2,8 @@ require "test_helper"
 
 class CompletedTransactionEditionTest < ActiveSupport::TestCase
   test "controls whether organ donor registration promotion should be displayed on a completed transaction page" do
-    completed_transaction_edition = FactoryBot.create(:completed_transaction_edition)
+    completed_transaction_edition = FactoryBot.build(:completed_transaction_edition)
+
     assert_not completed_transaction_edition.promotes_something?
 
     completed_transaction_edition.promotion_choice = "organ_donor"
