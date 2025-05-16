@@ -32,7 +32,7 @@
   minute: {
     name: "downtime[start_time(5i)]",
     label: "Minute",
-    value: params.dig("downtime", "start_time(5i)") || @downtime.start_time&.minute,
+    value: params.dig("downtime", "start_time(5i)") || @downtime.start_time&.min,
     width: 2,
   },
 } %>
@@ -69,7 +69,7 @@
   minute: {
     name: "downtime[end_time(5i)]",
     label: "Minute",
-    value: params.dig("downtime", "end_time(5i)") || @downtime.end_time&.minute,
+    value: params.dig("downtime", "end_time(5i)") || @downtime.end_time&.min,
     width: 2,
   },
 } %>
