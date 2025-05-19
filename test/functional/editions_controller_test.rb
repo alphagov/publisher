@@ -688,20 +688,54 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "user has govuk_editor permission" do
-      should "update the edition status to 'fact_check', generate the comment and save the user input" do
+      ["test@test.com", "test1@test.com, test2@test.com"].each do |email_addresses|
+        context "using email address(es) '#{email_addresses}'" do
+          should "update the edition status to 'fact_check', generate the comment and save the user input" do
+            edition = FactoryBot.create(:edition, :ready)
+            post :send_to_fact_check, params: {
+              id: edition.id,
+              email_addresses: email_addresses,
+              customised_message: "Please fact check this",
+            }
+
+            assert_equal "Sent to fact check", flash[:success]
+            edition.reload
+            assert_equal "fact_check", edition.state
+            assert_equal "Sent to fact check", edition.latest_status_action.comment
+            assert_equal email_addresses, edition.latest_status_action.email_addresses
+            assert_equal "Please fact check this", edition.latest_status_action.customised_message
+          end
+        end
+      end
+
+      should "not update the edition state and render an error message when no email addresses are provided" do
         edition = FactoryBot.create(:edition, :ready)
         post :send_to_fact_check, params: {
           id: edition.id,
-          email_addresses: "test@test.com",
+          email_addresses: "",
           customised_message: "Please fact check this",
         }
 
-        assert_equal "Sent to fact check", flash[:success]
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "You must provide at least one email address", flash[:danger]
         edition.reload
-        assert_equal "fact_check", edition.state
-        assert_equal "Sent to fact check", edition.latest_status_action.comment
-        assert_equal "test@test.com", edition.latest_status_action.email_addresses
-        assert_equal "Please fact check this", edition.latest_status_action.customised_message
+        assert_equal "ready", edition.state
+      end
+
+      should "not update the edition state and render an error message when email address is invalid" do
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "user1@example.com, another-user AT example DOT com",
+          customised_message: "Please fact check this",
+        }
+
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "Couldn't send to fact check for " \
+                       "#{description(edition)}. The email addresses " \
+                       "you entered appear to be invalid.", flash[:danger]
+        edition.reload
+        assert_equal "ready", edition.state
       end
 
       should "not update the edition state and render 'send_to_fact_check' template when an error occurs" do
