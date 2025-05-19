@@ -176,27 +176,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "#send_to_fact_check_page" do
-    context "user has govuk_editor permission" do
-      should "render the 'Send to Fact check' page" do
-        get :send_to_fact_check_page, params: { id: @edition.id }
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        get :send_to_fact_check_page, params: { id: @edition.id }
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-  end
-
   context "#request_amendments" do
     context "edition is not in a valid state to request amendments" do
       setup do
@@ -656,17 +635,89 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
 
-    context "edition is not in transitionable state" do
+    context "edition is not in a valid state to be sent to fact check" do
       %i[draft in_review amends_needed fact_check scheduled_for_publishing published archived].each do |edition_state|
         context "edition in '#{edition_state}' state" do
           should "redirect to edition path with error message" do
-            @edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
-            get :send_to_fact_check_page, params: { id: @edition.id }
+            edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+            get :send_to_fact_check_page, params: { id: edition.id }
 
             assert_redirected_to edition_path
             assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
           end
         end
+      end
+    end
+  end
+
+  context "#send_to_fact_check" do
+    context "user is not a govuk_editor or welsh editor" do
+      should "render an error message" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+        post :send_to_fact_check, params: {
+          id: @edition.id,
+        }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "user is a welsh editor but it is not a welsh edition" do
+      should "render an error message" do
+        login_as_welsh_editor
+        post :send_to_fact_check, params: {
+          id: @edition.id,
+        }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "edition is not in a valid state to be sent to fact check" do
+      %i[draft in_review amends_needed fact_check scheduled_for_publishing published archived].each do |edition_state|
+        context "edition in '#{edition_state}' state" do
+          should "redirect to edition path with error message" do
+            edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+            post :send_to_fact_check, params: {
+              id: edition.id,
+            }
+            assert_redirected_to edition_path
+            assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
+          end
+        end
+      end
+    end
+
+    context "user has govuk_editor permission" do
+      should "update the edition status to 'fact_check', generate the comment and save the user input" do
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "test@test.com",
+          customised_message: "Please fact check this",
+        }
+
+        assert_equal "Sent to fact check", flash[:success]
+        edition.reload
+        assert_equal "fact_check", edition.state
+        assert_equal "Sent to fact check", edition.latest_status_action.comment
+        assert_equal "test@test.com", edition.latest_status_action.email_addresses
+        assert_equal "Please fact check this", edition.latest_status_action.customised_message
+      end
+
+      should "not update the edition state and render 'send_to_fact_check' template when an error occurs" do
+        EditionProgressor.any_instance.expects(:progress).returns(false)
+
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "test@test.com",
+          customised_message: "Please fact check this",
+        }
+
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        edition.reload
+        assert_equal "ready", edition.state
       end
     end
   end
