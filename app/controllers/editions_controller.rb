@@ -3,6 +3,7 @@ class EditionsController < InheritedResources::Base
   layout "design_system"
 
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
+  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
 
   before_action :setup_view_paths, except: %i[index]
   before_action except: %i[index] do
@@ -180,9 +181,9 @@ class EditionsController < InheritedResources::Base
 
   def send_to_fact_check
     comment = "Sent to fact check"
-    add_validation_errors
-    if !@resource.errors.empty? || !@resource.can_send_fact_check?
-      flash.now[:danger] = "Edition is not in a state where it can be sent to fact check"
+    add_send_to_fact_check_validation_errors(@resource)
+    if !@resource.errors.empty?
+      flash.now[:danger] = @resource.errors.full_messages.join(", ")
       render "secondary_nav_tabs/send_to_fact_check_page"
     elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
       flash[:success] = "Sent to fact check"
@@ -440,12 +441,22 @@ private
     @command.progress({ request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
   end
 
-  def add_validation_errors
+  def add_send_to_fact_check_validation_errors(resource)
     if params[:email_addresses].blank?
-      @resource.errors.add("email_addresses", "Please add your email address!")
+      @resource.errors.add(:base, "You must provide at least one email address")
+    end
+    if invalid_email_addresses?(params[:email_addresses])
+      @resource.errors.add(:base, "Couldn't send to fact check for " \
+        "#{description(resource).downcase}. The email addresses " \
+        "you entered appear to be invalid.")
     end
   end
 
+  def invalid_email_addresses?(addresses)
+    addresses.split(",").any? do |address|
+      address.strip !~ EMAIL_REGEX
+    end
+  end
   def skip_review_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "skip_review", comment: comment })
