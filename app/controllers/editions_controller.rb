@@ -443,12 +443,14 @@ private
 
   def add_send_to_fact_check_validation_errors(resource)
     if params[:email_addresses].blank?
-      @resource.errors.add(:base, "You must provide at least one email address")
-    end
-    if invalid_email_addresses?(params[:email_addresses])
+      @resource.errors.add(:base, "Enter email addresses")
+    elsif invalid_email_addresses?(params[:email_addresses])
       @resource.errors.add(:base, "Couldn't send to fact check for " \
         "#{description(resource).downcase}. The email addresses " \
         "you entered appear to be invalid.")
+    end
+    if params[:customised_message].blank?
+      @resource.errors.add(:base, "Enter a customised message")
     end
   end
 

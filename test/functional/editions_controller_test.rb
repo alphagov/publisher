@@ -717,7 +717,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "You must provide at least one email address", flash[:danger]
+        assert_equal "Enter email addresses", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end
@@ -734,6 +734,20 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "Couldn't send to fact check for " \
                        "#{description(edition)}. The email addresses " \
                        "you entered appear to be invalid.", flash[:danger]
+        edition.reload
+        assert_equal "ready", edition.state
+      end
+
+      should "not update the edition state and render an error message when customised message is empty" do
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "user1@example.com",
+          customised_message: "",
+        }
+
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "Enter a customised message", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end
