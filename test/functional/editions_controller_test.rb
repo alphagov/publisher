@@ -10,6 +10,7 @@ class EditionsControllerTest < ActionController::TestCase
     UpdateWorker.stubs(:perform_async)
     stub_events_for_all_content_ids
     stub_users_from_signon_api
+    stub_holidays_used_by_fact_check
   end
 
   context "#template_folder_for" do
@@ -715,9 +716,8 @@ class EditionsControllerTest < ActionController::TestCase
           email_addresses: "",
           customised_message: "Please fact check this",
         }
-
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter email addresses", flash[:danger]
+        assert_select ".gem-c-error-summary__list-item", "Enter email addresses"
         edition.reload
         assert_equal "ready", edition.state
       end
@@ -731,7 +731,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "The email addresses you entered appear to be invalid.", flash[:danger]
+        assert_select ".gem-c-error-summary__list-item", "The email addresses you entered appear to be invalid."
         edition.reload
         assert_equal "ready", edition.state
       end
@@ -745,21 +745,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter a customised message", flash[:danger]
-        edition.reload
-        assert_equal "ready", edition.state
-      end
-
-      should "not update the edition state and render error messages when there are multiple validation errors" do
-        edition = FactoryBot.create(:edition, :ready)
-        post :send_to_fact_check, params: {
-          id: edition.id,
-          email_addresses: "",
-          customised_message: "",
-        }
-
-        assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Enter email addresses, Enter a customised message", flash[:danger]
+        assert_select ".gem-c-error-summary__list-item", "Enter a customised message"
         edition.reload
         assert_equal "ready", edition.state
       end

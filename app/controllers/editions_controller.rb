@@ -183,7 +183,6 @@ class EditionsController < InheritedResources::Base
     comment = "Sent to fact check"
     validate_send_to_fact_check_params
     if !@resource.errors.empty?
-      flash.now[:danger] = @resource.errors.full_messages.join(", ")
       render "secondary_nav_tabs/send_to_fact_check_page"
     elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
       flash[:success] = "Sent to fact check"
@@ -443,12 +442,12 @@ private
 
   def validate_send_to_fact_check_params
     if params[:email_addresses].blank?
-      @resource.errors.add(:base, "Enter email addresses")
+      @resource.errors.add(:email_addresses, "Enter email addresses")
     elsif invalid_email_addresses?(params[:email_addresses])
-      @resource.errors.add(:base, "The email addresses you entered appear to be invalid.")
+      @resource.errors.add(:email_addresses, "The email addresses you entered appear to be invalid.")
     end
     if params[:customised_message].blank?
-      @resource.errors.add(:base, "Enter a customised message")
+      @resource.errors.add(:customised_message, "Enter a customised message")
     end
   end
 
