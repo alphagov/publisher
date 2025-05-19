@@ -731,9 +731,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_equal "Couldn't send to fact check for " \
-                       "#{description(edition)}. The email addresses " \
-                       "you entered appear to be invalid.", flash[:danger]
+        assert_equal "The email addresses you entered appear to be invalid.", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end

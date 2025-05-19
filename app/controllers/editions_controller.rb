@@ -31,7 +31,7 @@ class EditionsController < InheritedResources::Base
     require_schedulable
   end
   before_action only: %i[send_to_fact_check_page send_to_fact_check] do
-    require_send_to_fact_check_available
+    require_can_send_fact_check
   end
   before_action only: %i[show admin metadata tagging history related_external_links unpublish] do
     @reviewer = User.where(name: @resource.reviewer).first if @resource.reviewer.present?
@@ -181,7 +181,7 @@ class EditionsController < InheritedResources::Base
 
   def send_to_fact_check
     comment = "Sent to fact check"
-    add_send_to_fact_check_validation_errors(@resource)
+    validate_send_to_fact_check_params
     if !@resource.errors.empty?
       flash.now[:danger] = @resource.errors.full_messages.join(", ")
       render "secondary_nav_tabs/send_to_fact_check_page"
@@ -441,13 +441,11 @@ private
     @command.progress({ request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
   end
 
-  def add_send_to_fact_check_validation_errors(resource)
+  def validate_send_to_fact_check_params
     if params[:email_addresses].blank?
       @resource.errors.add(:base, "Enter email addresses")
     elsif invalid_email_addresses?(params[:email_addresses])
-      @resource.errors.add(:base, "Couldn't send to fact check for " \
-        "#{description(resource).downcase}. The email addresses " \
-        "you entered appear to be invalid.")
+      @resource.errors.add(:base, "The email addresses you entered appear to be invalid.")
     end
     if params[:customised_message].blank?
       @resource.errors.add(:base, "Enter a customised message")
@@ -550,7 +548,7 @@ private
     redirect_to edition_path(@resource)
   end
 
-  def require_send_to_fact_check_available
+  def require_can_send_fact_check
     return if @resource.can_send_fact_check?
 
     flash[:danger] = "Edition is not in a state where it can be sent to fact check"
