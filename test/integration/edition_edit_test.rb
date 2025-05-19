@@ -2381,6 +2381,7 @@ class EditionEditTest < IntegrationTest
       assert page.has_text?("Customised message")
       assert page.has_button?("Send to fact check")
       assert page.has_link?("Cancel")
+      assert page.has_no_text?("There is a problem")
     end
     
     should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
