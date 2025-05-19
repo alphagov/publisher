@@ -29,7 +29,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[schedule_page] do
     require_schedulable
   end
-  before_action only: %i[send_to_fact_check_page] do
+  before_action only: %i[send_to_fact_check_page send_to_fact_check] do
     require_send_to_fact_check_available
   end
   before_action only: %i[show admin metadata tagging history related_external_links unpublish] do
