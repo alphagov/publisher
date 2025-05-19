@@ -752,7 +752,21 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "ready", edition.state
       end
 
-      should "not update the edition state and render 'send_to_fact_check' template when an error occurs" do
+      should "not update the edition state and render error messages when there are multiple validation errors" do
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "",
+          customised_message: "",
+        }
+
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "Enter email addresses, Enter a customised message", flash[:danger]
+        edition.reload
+        assert_equal "ready", edition.state
+      end
+
+      should "not update the edition state and render an error message when a system error occurs" do
         EditionProgressor.any_instance.expects(:progress).returns(false)
 
         edition = FactoryBot.create(:edition, :ready)
