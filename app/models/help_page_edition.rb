@@ -1,10 +1,7 @@
-require "edition"
-
-class HelpPageEdition < Edition
-  field :body, type: String
+class HelpPageEdition < ApplicationRecord
+  include Editionable
 
   GOVSPEAK_FIELDS = [:body].freeze
-  validates_with SafeHtml
 
   def whole_body
     body
