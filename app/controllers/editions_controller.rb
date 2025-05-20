@@ -3,7 +3,6 @@ class EditionsController < InheritedResources::Base
   layout "design_system"
 
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
-  EMAIL_REGEX = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
 
   before_action :setup_view_paths, except: %i[index]
   before_action except: %i[index] do
@@ -452,8 +451,9 @@ private
   end
 
   def invalid_email_addresses?(addresses)
+    email_regex = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
     addresses.split(",").any? do |address|
-      address.strip !~ EMAIL_REGEX
+      address.strip !~ email_regex
     end
   end
   def skip_review_for_edition(resource, comment)
