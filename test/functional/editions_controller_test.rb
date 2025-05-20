@@ -717,7 +717,7 @@ class EditionsControllerTest < ActionController::TestCase
           customised_message: "Please fact check this",
         }
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_select ".gem-c-error-summary__list-item", "Enter email addresses"
+        assert_equal "Enter email addresses and/or customised message", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end
@@ -731,7 +731,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_select ".gem-c-error-summary__list-item", "The email addresses you entered appear to be invalid."
+        assert_equal "Enter email addresses and/or customised message", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end
@@ -745,7 +745,7 @@ class EditionsControllerTest < ActionController::TestCase
         }
 
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
-        assert_select ".gem-c-error-summary__list-item", "Enter a customised message"
+        assert_equal "Enter email addresses and/or customised message", flash[:danger]
         edition.reload
         assert_equal "ready", edition.state
       end
