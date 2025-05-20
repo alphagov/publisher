@@ -129,6 +129,7 @@ FactoryBot.define do
 
     trait :fact_check do
       state { "fact_check" }
+      actions { [FactoryBot.build(:action, request_type: Action::SEND_FACT_CHECK)] }
     end
 
     trait :fact_check_received do
