@@ -180,8 +180,8 @@ class EditionsController < InheritedResources::Base
 
   def send_to_fact_check
     comment = "Sent to fact check"
-    validate_send_to_fact_check_params
-    if !@resource.errors.empty?
+    if !send_to_fact_check_params_valid?
+      flash.now[:danger] = "Enter email addresses and/or customised message"
       render "secondary_nav_tabs/send_to_fact_check_page"
     elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
       flash[:success] = "Sent to fact check"
@@ -439,15 +439,8 @@ private
     @command.progress({ request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
   end
 
-  def validate_send_to_fact_check_params
-    if params[:email_addresses].blank?
-      @resource.errors.add(:email_addresses, "Enter email addresses")
-    elsif invalid_email_addresses?(params[:email_addresses])
-      @resource.errors.add(:email_addresses, "The email addresses you entered appear to be invalid.")
-    end
-    if params[:customised_message].blank?
-      @resource.errors.add(:customised_message, "Enter a customised message")
-    end
+  def send_to_fact_check_params_valid?
+    !params[:email_addresses].blank? && !invalid_email_addresses?(params[:email_addresses]) && !params[:customised_message].blank?
   end
 
   def invalid_email_addresses?(addresses)
