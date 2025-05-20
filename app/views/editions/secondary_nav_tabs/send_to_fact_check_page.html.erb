@@ -4,19 +4,6 @@
 <% content_for :title, "Send to fact check" %>
 <% template = render template: "event_mailer/request_fact_check", formats: [:text] %>
 
-<% unless @edition.errors.empty? %>
-  <%=  render("govuk_publishing_components/components/error_summary", {
-          id: "error-summary",
-          title: "There is a problem",
-          items: @edition.errors.map do |error|
-            {
-              text: error.message,
-              href: "##{error.attribute.to_s}",
-            }
-          end,
-        })  %>
-<% end %>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
@@ -28,6 +15,7 @@
         },
         name: "email_addresses",
         id: "email_addresses",
+        value: params[:email_addresses],
         type: "email",
         hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
         input_html: { class: "form-control", required: true },
@@ -40,7 +28,7 @@
         },
         id: "customised_message",
         name: "customised_message",
-        value: template,
+        value: params[:customised_message] || template,
         rows: 14,
         input_html: { class: "form-control", required: true },
       } %>
