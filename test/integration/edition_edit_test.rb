@@ -1443,39 +1443,50 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    context "Resend fact check email link" do
+    context "Fact check edition" do
       %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |state|
         context "when state is '#{state}'" do
           setup do
             send "visit_#{state}_edition"
           end
 
-          should "not show the 'Resend fact check email' link" do
+          should "not show the 'Resend fact check email' link and text" do
             assert page.has_no_link?("Resend fact check email")
+            assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
           end
         end
       end
 
       context "when state is 'Fact check" do
-        should "not show the link to non-editors" do
+        should "not show the link or text to non-editors" do
           login_as(FactoryBot.create(:user, name: "Stub User"))
           visit_fact_check_edition
 
           assert page.has_no_link?("Resend fact check email")
+          assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
         end
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
+        should "not show the link or text to welsh editors viewing a non-welsh edition" do
           login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
           visit_fact_check_edition
 
           assert page.has_no_link?("Resend fact check email")
+          assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
         end
 
-        should "show the 'Resend fact check email' link to govuk editors" do
+        should "show the 'Resend fact check email' link and text to govuk editors" do
           login_as(@govuk_editor)
           visit_fact_check_edition
 
           assert page.has_link?("Resend fact check email")
+          assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        end
+
+        should "show the requester specific text to govuk editors" do
+          login_as(@govuk_editor)
+          create_fact_check_edition(@govuk_requester)
+          visit edition_path(@fact_check_edition)
+          assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
         end
       end
 
@@ -2329,44 +2340,44 @@ class EditionEditTest < IntegrationTest
   end
 
   context "in_review edition (sent to 2i)" do
-      context "user has the required permissions" do
-        context "current user is also the requester" do
-          setup do
-            login_as(@govuk_requester)
-            visit_in_review_edition("request_review", @govuk_requester)
-          end
-
-          should "display Save button and preview link" do
-            assert page.has_button?("Save"), "No save button present"
-            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-          end
-
-          should "indicate that the current user requested a review" do
-            assert page.has_text?("You've sent this edition to be reviewed")
-          end
-
-          should "not show 'Send to 2i' link as edition already in 'in review' state" do
-            visit_in_review_edition
-            assert page.has_no_link?("Send to 2i")
-          end
+    context "user has the required permissions" do
+      context "current user is also the requester" do
+        setup do
+          login_as(@govuk_requester)
+          visit_in_review_edition("request_review", @govuk_requester)
         end
 
-        context "current user is not the requester" do
-          setup do
-            login_as(@govuk_editor)
-            visit_in_review_edition("request_review", @govuk_requester)
-          end
+        should "display Save button and preview link" do
+          assert page.has_button?("Save"), "No save button present"
+          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+        end
 
-          should "display Save button and preview link" do
-            assert page.has_button?("Save"), "No save button present"
-            assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
-          end
+        should "indicate that the current user requested a review" do
+          assert page.has_text?("You've sent this edition to be reviewed")
+        end
 
-          should "indicate which other user requested a review" do
-            assert page.has_text?("Stub requester sent this edition to be reviewed")
-          end
+        should "not show 'Send to 2i' link as edition already in 'in review' state" do
+          visit_in_review_edition
+          assert page.has_no_link?("Send to 2i")
         end
       end
+
+      context "current user is not the requester" do
+        setup do
+          login_as(@govuk_editor)
+          visit_in_review_edition("request_review", @govuk_requester)
+        end
+
+        should "display Save button and preview link" do
+          assert page.has_button?("Save"), "No save button present"
+          assert page.has_link?("Preview (opens in new tab)"), "No preview link present"
+        end
+
+        should "indicate which other user requested a review" do
+          assert page.has_text?("Stub requester sent this edition to be reviewed")
+        end
+      end
+    end
   end
 
   context "Send to Fact check page" do
@@ -2545,12 +2556,12 @@ private
     visit edition_path(@published_edition)
   end
 
-  def create_fact_check_edition
+  def create_fact_check_edition(requester = @govuk_editor)
     @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
 
     FactoryBot.create(
       :action,
-      requester: @govuk_editor,
+      requester: requester,
       request_type: Action::SEND_FACT_CHECK,
       edition: @fact_check_edition,
       email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",

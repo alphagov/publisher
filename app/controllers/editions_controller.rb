@@ -440,7 +440,7 @@ private
   end
 
   def send_to_fact_check_params_valid?
-    !params[:email_addresses].blank? && !invalid_email_addresses?(params[:email_addresses]) && !params[:customised_message].blank?
+    params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
   end
 
   def invalid_email_addresses?(addresses)
@@ -449,6 +449,7 @@ private
       address.strip !~ email_regex
     end
   end
+
   def skip_review_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "skip_review", comment: comment })
