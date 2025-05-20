@@ -11,7 +11,7 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page] do
+  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page resend_fact_check_email_page resend_fact_check_email] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -46,6 +46,10 @@ class EditionsController < InheritedResources::Base
   alias_method :metadata, :show
   alias_method :tagging, :show
   alias_method :unpublish, :show
+
+  def resend_fact_check_email_page
+    render "secondary_nav_tabs/resend_fact_check_email_page"
+  end
 
   def request_amendments_page
     render "secondary_nav_tabs/request_amendments_page"
@@ -111,6 +115,19 @@ class EditionsController < InheritedResources::Base
     @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
   ensure
     render "show"
+  end
+
+  def resend_fact_check_email
+    if !@resource.can_resend_fact_check?
+      flash.now[:danger] = "Edition is not in a state where fact check emails can be re-sent"
+      render "secondary_nav_tabs/resend_fact_check_email_page"
+    elsif resend_fact_check_email_for_edition(resource)
+      flash[:success] = "Fact check email re-sent"
+      redirect_to edition_path(resource)
+    else
+      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      render "secondary_nav_tabs/resend_fact_check_email_page"
+    end
   end
 
   def request_amendments
@@ -382,6 +399,11 @@ private
   def no_changes_needed_for_edition(resource, comment)
     @command = EditionProgressor.new(resource, current_user)
     @command.progress({ request_type: "approve_review", comment: comment })
+  end
+
+  def resend_fact_check_email_for_edition(resource)
+    @command = EditionProgressor.new(resource, current_user)
+    @command.progress({ request_type: "resend_fact_check" })
   end
 
   def send_to_2i_for_edition(resource, comment)
