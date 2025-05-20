@@ -6,10 +6,3 @@
 subject_prefix: <%=ENV.fetch("FACT_CHECK_SUBJECT_PREFIX", "") %>
 reply_to_address: <%=ENV.fetch("FACT_CHECK_REPLY_TO_ADDRESS", "factcheck@dev.gov.uk") %>
 reply_to_id: <%=ENV.fetch("FACT_CHECK_REPLY_TO_ID", nil) %>
-
-fetcher:
-  address: <%=ENV.fetch("FACT_CHECK_ADDRESS", "imap.gmail.com") %>
-  port: <%=ENV.fetch("FACT_CHECK_PORT", 993) %>
-  user_name: <%=ENV["FACT_CHECK_USERNAME"] %>
-  password: <%=ENV["FACT_CHECK_PASSWORD"] %>
-  enable_ssl: true
