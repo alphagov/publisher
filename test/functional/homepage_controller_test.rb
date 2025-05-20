@@ -58,8 +58,8 @@ class HomepageControllerTest < ActionController::TestCase
     end
 
     should "update latest PopularLinksEdition with changed title and url" do
-      assert_equal "title1", @popular_links.link_items[0][:title]
-      assert_equal "/url1", @popular_links.link_items[0][:url]
+      assert_equal "title1", @popular_links.link_items[0]["title"]
+      assert_equal "/url1", @popular_links.link_items[0]["url"]
 
       new_title = "title has changed"
       new_url = "/changedurl"
@@ -72,8 +72,8 @@ class HomepageControllerTest < ActionController::TestCase
                                    "5" => { "title" => "title5", "url" => "/url5" },
                                    "6" => { "title" => "title6", "url" => "/url6" } } }
 
-      assert_equal new_title, PopularLinksEdition.last.link_items[0][:title]
-      assert_equal new_url, PopularLinksEdition.last.link_items[0][:url]
+      assert_equal new_title, PopularLinksEdition.last.link_items[0]["title"]
+      assert_equal new_url, PopularLinksEdition.last.link_items[0]["url"]
     end
 
     should "update publishing API" do
@@ -115,7 +115,7 @@ class HomepageControllerTest < ActionController::TestCase
 
     context "database errors" do
       setup do
-        PopularLinksEdition.any_instance.stubs(:save).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:save!).raises(ActiveRecord::ActiveRecordError)
       end
 
       should "alert 'application error'" do
@@ -226,7 +226,7 @@ class HomepageControllerTest < ActionController::TestCase
     end
     context "database errors" do
       setup do
-        PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:publish_popular_links).raises(ActiveRecord::ActiveRecordError)
       end
 
       should "redirect to show path" do
@@ -338,7 +338,7 @@ class HomepageControllerTest < ActionController::TestCase
       end
 
       should "redirect to show page and alert 'application error'" do
-        PopularLinksEdition.any_instance.stubs(:delete).raises(Mongoid::Errors::MongoidError.new)
+        PopularLinksEdition.any_instance.stubs(:delete).raises(ActiveRecord::ActiveRecordError)
 
         delete :destroy, params: { id: @popular_links.id }
 

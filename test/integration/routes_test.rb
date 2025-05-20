@@ -36,7 +36,8 @@ class RoutesTest < LegacyIntegrationTest
       %i[guide_edition local_transaction_edition completed_transaction_edition place_edition simple_smart_answer_edition transaction_edition].each do |content_type|
         context content_type do
           setup do
-            @edition = FactoryBot.create(content_type)
+            service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
+            @edition = content_type != :local_transaction_edition ? FactoryBot.create(content_type) : FactoryBot.create(content_type, lgsl_code: service.lgsl_code, lgil_code: 1, panopticon_id: FactoryBot.create(:artefact).id)
           end
 
           should "route to legacy editions controller" do

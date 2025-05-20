@@ -27,7 +27,7 @@
     <div class="tab-content add-top-margin">
         <div role="tabpanel" class="tab-pane <% if active_tab.name == 'edit' %>active<% end %>" id="edit">
           <div class="link-check-report col-md-4">
-            <% if @edition.class.to_s == "SimpleSmartAnswerEdition" %>
+            <% if @edition.editionable.class.to_s == "SimpleSmartAnswerEdition" %>
               <p>
                 View the <%= link_to "flow diagram (opens in a new tab)", diagram_edition_path(@edition), target: "_blank", rel: "noopener" %>
               </p>
@@ -35,7 +35,7 @@
 
             <%= render "link_check_reports/link_check_report", edition: @edition, report: @edition.latest_link_check_report %>
 
-            <% if @edition.class.to_s.in?(Edition::HAS_GOVSPEAK_FIELDS) %>
+            <% if @edition.editionable.class.to_s.in?(Edition::HAS_GOVSPEAK_FIELDS) %>
               <h3 class="remove-top-margin add-bottom-margin">Govspeak help</h3>
 
               <div class="well">
