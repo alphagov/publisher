@@ -7,7 +7,6 @@
 # gmail account and having a look.
 #
 require File.expand_path("../config/environment", __dir__)
-Publisher::Application.mail_fetcher_config.configure
 
 require "fact_check_email_handler"
 

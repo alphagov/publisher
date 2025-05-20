@@ -39,10 +39,6 @@ module Publisher
     # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#autoloaded-paths-are-no-longer-in-$load-path
     config.add_autoload_paths_to_load_path = true
 
-    # Configuration object for the fact check email fetch script
-    # See `script/mail_fetcher`
-    attr_accessor :mail_fetcher_config
-
     # Configuration object for fact check address construction and parsing
     attr_accessor :fact_check_config
 
