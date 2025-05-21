@@ -1486,6 +1486,7 @@ class EditionEditTest < IntegrationTest
           login_as(@govuk_editor)
           create_fact_check_edition(@govuk_requester)
           visit edition_path(@fact_check_edition)
+
           assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
         end
       end
@@ -2398,16 +2399,20 @@ class EditionEditTest < IntegrationTest
     should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
+
       click_link("Cancel")
+
       assert_current_path edition_path(@ready_edition.id)
     end
 
     should "redirect back to the edit tab on submit and show success message" do
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
+
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: "Please check this"
       click_button "Send to fact check"
+
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
     end
@@ -2416,8 +2421,10 @@ class EditionEditTest < IntegrationTest
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
       assert page.has_text?("The GOV.UK Content Team made the changes because")
+
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       click_button "Send to fact check"
+
       assert_current_path edition_path(@ready_edition.id)
       assert page.has_text?("Sent to fact check")
     end
@@ -2425,9 +2432,11 @@ class EditionEditTest < IntegrationTest
     should "display an error message if an email address is invalid" do
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
+
       fill_in "Email addresses", with: "fact-checker-one.com"
       fill_in "Customised message", with: "Please check this"
       click_button "Send to fact check"
+
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
     end
@@ -2435,9 +2444,11 @@ class EditionEditTest < IntegrationTest
     should "display an error message if customised message is empty" do
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
+
       fill_in "Email addresses", with: "fact-checker-one@example.com"
       fill_in "Customised message", with: ""
       click_button "Send to fact check"
+
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
     end
@@ -2445,9 +2456,11 @@ class EditionEditTest < IntegrationTest
     should "keep user inputs when there is an error" do
       create_ready_edition
       visit send_to_fact_check_page_edition_path(@ready_edition)
+
       fill_in "Email addresses", with: "fact-checker-one.com"
       fill_in "Customised message", with: "Please check this"
       click_button "Send to fact check"
+
       assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
       assert page.has_text?("Enter email addresses and/or customised message")
       assert page.has_css?("input[value='fact-checker-one.com']")
