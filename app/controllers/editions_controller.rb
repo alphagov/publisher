@@ -332,7 +332,9 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
+    if progress_edition(resource,
+                        squash_multiparameter_datetime_attributes(params[:edition][:activity]
+                                                                    .permit(:comment, :request_type, :publish_at).to_h, %w[publish_at]))
       flash[:success] = @command.status_message
     else
       flash[:danger] = @command.status_message
@@ -432,34 +434,29 @@ protected
 
 private
 
-  def progress_edition(resource, activity_params)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
-  end
-
   def request_amendments_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "request_amendments", comment: comment })
+    progress_edition(resource, { request_type: "request_amendments", comment: comment })
   end
 
   def no_changes_needed_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "approve_review", comment: comment })
+    progress_edition(resource, { request_type: "approve_review", comment: comment })
   end
 
   def resend_fact_check_email_for_edition(resource)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "resend_fact_check" })
+    progress_edition(resource, { request_type: "resend_fact_check" })
   end
 
   def send_to_2i_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "request_review", comment: comment })
+    progress_edition(resource, { request_type: "request_review", comment: comment })
   end
 
   def send_to_fact_check_for_edition(resource, email_addresses, customised_message, comment)
+    progress_edition(resource, { request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
+  end
+
+  def progress_edition(resource, options)
     @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
+    @command.progress(options)
   end
 
   def send_to_fact_check_params_valid?
