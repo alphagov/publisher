@@ -605,7 +605,9 @@ class EditionsControllerTest < ActionController::TestCase
     context "user has govuk_editor permission" do
       should "render the 'Send to Fact check' page" do
         edition = FactoryBot.create(:edition, :ready)
+
         get :send_to_fact_check_page, params: { id: edition.id }
+
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
       end
     end
@@ -614,7 +616,9 @@ class EditionsControllerTest < ActionController::TestCase
       should "render an error message" do
         user = FactoryBot.create(:user)
         login_as(user)
+
         get :send_to_fact_check_page, params: { id: @edition.id }
+
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -626,12 +630,15 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "render the 'Send to Fact check' page when the edition is Welsh" do
         welsh_edition = FactoryBot.create(:edition, :ready, :welsh)
+
         get :send_to_fact_check_page, params: { id: welsh_edition.id }
+
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
       end
 
       should "render an error message when the edition is not Welsh" do
         get :send_to_fact_check_page, params: { id: @edition.id }
+
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -641,6 +648,7 @@ class EditionsControllerTest < ActionController::TestCase
         context "edition in '#{edition_state}' state" do
           should "redirect to edition path with error message" do
             edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+
             get :send_to_fact_check_page, params: { id: edition.id }
 
             assert_redirected_to edition_path
@@ -656,9 +664,11 @@ class EditionsControllerTest < ActionController::TestCase
       should "render an error message" do
         user = FactoryBot.create(:user)
         login_as(user)
+
         post :send_to_fact_check, params: {
           id: @edition.id,
         }
+
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -666,9 +676,11 @@ class EditionsControllerTest < ActionController::TestCase
     context "user is a welsh editor but it is not a welsh edition" do
       should "render an error message" do
         login_as_welsh_editor
+
         post :send_to_fact_check, params: {
           id: @edition.id,
         }
+
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -678,9 +690,11 @@ class EditionsControllerTest < ActionController::TestCase
         context "edition in '#{edition_state}' state" do
           should "redirect to edition path with error message" do
             edition = FactoryBot.create(:edition, state: edition_state, publish_at: Time.zone.now + 1.hour, review_requested_at: 1.hour.ago)
+
             post :send_to_fact_check, params: {
               id: edition.id,
             }
+
             assert_redirected_to edition_path
             assert_equal "Edition is not in a state where it can be sent to fact check", flash[:danger]
           end
@@ -693,6 +707,7 @@ class EditionsControllerTest < ActionController::TestCase
         context "using email address(es) '#{email_addresses}'" do
           should "update the edition status to 'fact_check', generate the comment and save the user input" do
             edition = FactoryBot.create(:edition, :ready)
+
             post :send_to_fact_check, params: {
               id: edition.id,
               email_addresses: email_addresses,
@@ -711,11 +726,13 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "not update the edition state and render an error message when no email addresses are provided" do
         edition = FactoryBot.create(:edition, :ready)
+
         post :send_to_fact_check, params: {
           id: edition.id,
           email_addresses: "",
           customised_message: "Please fact check this",
         }
+
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
         assert_equal "Enter email addresses and/or customised message", flash[:danger]
         edition.reload
@@ -724,6 +741,7 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "not update the edition state and render an error message when email address is invalid" do
         edition = FactoryBot.create(:edition, :ready)
+
         post :send_to_fact_check, params: {
           id: edition.id,
           email_addresses: "user1@example.com, another-user AT example DOT com",
@@ -738,6 +756,7 @@ class EditionsControllerTest < ActionController::TestCase
 
       should "not update the edition state and render an error message when customised message is empty" do
         edition = FactoryBot.create(:edition, :ready)
+
         post :send_to_fact_check, params: {
           id: edition.id,
           email_addresses: "user1@example.com",
