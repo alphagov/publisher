@@ -11,7 +11,30 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page send_to_fact_check send_to_fact_check_page resend_fact_check_email_page resend_fact_check_email] do
+  before_action only: %i[progress
+                         admin
+                         update
+                         confirm_destroy
+                         edit_assignee
+                         update_assignee
+                         edit_reviewer
+                         update_reviewer
+                         request_amendments
+                         request_amendments_page
+                         no_changes_needed
+                         no_changes_needed_page
+                         send_to_2i
+                         send_to_2i_page
+                         send_to_publish
+                         send_to_publish_page
+                         cancel_scheduled_publishing
+                         cancel_scheduled_publishing_page
+                         schedule
+                         schedule_page
+                         send_to_fact_check
+                         send_to_fact_check_page
+                         resend_fact_check_email_page
+                         resend_fact_check_email] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
