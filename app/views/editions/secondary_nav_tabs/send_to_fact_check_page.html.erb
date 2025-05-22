@@ -18,7 +18,6 @@
         value: params[:email_addresses],
         type: "email",
         hint: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com",
-        input_html: { class: "form-control", required: true },
       } %>
 
       <%= render "govuk_publishing_components/components/textarea", {
@@ -30,7 +29,6 @@
         name: "customised_message",
         value: params[:customised_message] || template,
         rows: 14,
-        input_html: { class: "form-control", required: true },
       } %>
 
       <div class="govuk-button-group">
