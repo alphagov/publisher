@@ -177,6 +177,53 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "tagging tab" do
+    context "No tagging is set" do
+      setup do
+        visit_draft_edition
+        click_link("Tagging")
+      end
+
+      should "show 'Tagging' header" do
+        within :css, ".gem-c-heading h2" do
+          assert page.has_text?("Tagging")
+        end
+      end
+
+      should "show empty 'GOV.UK breadcrumb' summary in first position" do
+        within all(".govuk-summary-card")[0] do
+          assert page.has_text?("GOV.UK breadcrumb")
+          assert page.has_text?("No breadcrumb set")
+          assert page.has_link?("Set GOV.UK breadcrumb")
+        end
+      end
+
+      should "show empty 'Mainstream browse pages' summary in second position" do
+        within all(".govuk-summary-card")[1] do
+          assert page.has_text?("Mainstream browse pages")
+          assert page.has_text?("Not tagged to any browse pages")
+          assert page.has_link?("Tag to a browse page")
+        end
+      end
+
+      should "show empty 'Organisations' summary in third position" do
+        within all(".govuk-summary-card")[2] do
+          assert page.has_text?("Organisations")
+          assert page.has_text?("Not tagged to any organisations")
+          assert page.has_link?("Tag to an organisation")
+        end
+      end
+
+      should "show empty 'Related content' summary in fourth position" do
+        within all(".govuk-summary-card")[3] do
+          assert page.has_text?("Related content")
+          assert page.has_text?("Not tagged to any related content")
+          assert page.has_link?("Tag to related content")
+        end
+      end
+    end
+  end
+
   context "metadata tab" do
     context "when state is 'draft'" do
       setup do
