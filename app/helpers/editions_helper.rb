@@ -9,14 +9,17 @@ module EditionsHelper
   def legacy_resource_form(resource, &form_definition)
     html_options = { id: "edition-form" }
     unless resource.locked_for_edits? || resource.archived?
-      if resource.is_a?(Parted) || resource.is_a?(Varianted)
+      if resource.is_a?(Parted)
         html_options["data-module"] = "ajax-save-with-parts"
       elsif resource.format != "SimpleSmartAnswer"
         html_options["data-module"] = "ajax-save"
       end
     end
-
-    nested_form_for resource, as: :edition, url: edition_path(resource), html: html_options, &form_definition
+    if resource.editionable.class.name == "SimpleSmartAnswerEdition"
+      nested_form_for resource, as: resource.editionable, url: edition_path(resource), html: html_options, &form_definition
+    else
+      nested_form_for resource, as: resource, url: edition_path(resource), html: html_options, &form_definition
+    end
   end
 
   def legacy_format_conversion_select_options(edition)

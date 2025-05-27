@@ -9,7 +9,7 @@
     },
     name: "popular_links[#{index + 1}][title]",
     id: "title#{index + 1}",
-    value: item[:title],
+    value: item["title"],
     error_items: errors_for(form.object.errors, "title#{index + 1}".to_sym, use_full_message: false),
   } %>
 
@@ -19,7 +19,7 @@
     },
     name: "popular_links[#{index + 1}][url]",
     id: "url#{index + 1}",
-    value: item[:url],
+    value: item["url"],
     error_items: errors_for(form.object.errors, "url#{index + 1}".to_sym, use_full_message: false),
   } %>
 <% end %>
