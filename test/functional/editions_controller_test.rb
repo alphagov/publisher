@@ -1346,6 +1346,13 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#tagging" do
+    should "render the 'Tagging' tab of the edit page" do
+      get :tagging, params: { id: @edition.id }
+      assert_template "show"
+    end
+  end
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
