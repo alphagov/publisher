@@ -7,6 +7,9 @@ inherit_mode:
   merge:
     - Exclude
 
+AllCops:
+  Exclude:
+    - 'db/**/*'
 # **************************************************************
 # TRY NOT TO ADD OVERRIDES IN THIS FILE
 #
