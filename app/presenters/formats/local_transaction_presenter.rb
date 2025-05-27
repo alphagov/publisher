@@ -72,14 +72,14 @@ module Formats
 
     def all_devolved_administration_availabilities
       {
-        scotland_availability: devolved_administration_availability(edition.scotland_availability),
-        wales_availability: devolved_administration_availability(edition.wales_availability),
-        northern_ireland_availability: devolved_administration_availability(edition.northern_ireland_availability),
+        scotland_availability: devolved_administration_availability(edition.editionable.scotland_availability),
+        wales_availability: devolved_administration_availability(edition.editionable.wales_availability),
+        northern_ireland_availability: devolved_administration_availability(edition.editionable.northern_ireland_availability),
       }.compact
     end
 
     def devolved_administration_availability(availability)
-      case availability.type
+      case availability.authority_type
       when "devolved_administration_service"
         { type: "devolved_administration_service", alternative_url: availability.alternative_url }
       when "unavailable"
