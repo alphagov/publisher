@@ -2,6 +2,32 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Tagging") %>
 
-    Content for the rest of the page
+    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+      heading: "GOV.UK breadcrumb",
+      body: "No breadcrumb set",
+      link_text: "Set GOV.UK breadcrumb",
+      link_url: "#"
+    } %>
+
+    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+      heading: "Mainstream browse pages",
+      body: "Not tagged to any browse pages",
+      link_text: "Tag to a browse page",
+      link_url: "#"
+    } %>
+
+    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+      heading: "Organisations",
+      body: "Not tagged to any organisations",
+      link_text: "Tag to an organisation",
+      link_url: "#"
+    } %>
+
+    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+      heading: "Related content",
+      body: "Not tagged to any related content",
+      link_text: "Tag to related content",
+      link_url: "#"
+    } %>
   </div>
 </div>
