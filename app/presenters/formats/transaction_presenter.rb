@@ -10,9 +10,10 @@ module Formats
       "transaction"
     end
 
+  #come back to this - needs revisitng - can we stop sending variants completely?
     def details
       {
-        variants:,
+        variants: [],
         introductory_paragraph: govspeak(edition.introduction),
         start_button_text: edition.start_button_text,
         will_continue_on: edition.will_continue_on,
@@ -23,19 +24,6 @@ module Formats
         external_related_links:,
         downtime_message:,
       }.delete_if { |_, value| value.nil? }
-    end
-
-    def variants
-      edition.variants.in_order.map do |variant|
-        {
-          title: variant.title.to_s,
-          slug: variant.slug.to_s,
-          introductory_paragraph: govspeak(variant.introduction),
-          transaction_start_link: variant.link.to_s,
-          more_information: govspeak(variant.more_information),
-          other_ways_to_apply: govspeak(variant.alternate_methods),
-        }.delete_if { |_, value| value.nil? }
-      end
     end
 
     def govspeak(field)
