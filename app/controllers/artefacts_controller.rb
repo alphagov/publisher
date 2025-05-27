@@ -43,7 +43,7 @@ private
   end
 
   def metadata_artefact_path(artefact)
-    edition = Edition.where(panopticon_id: artefact.id).order_by(version_number: :desc).first
+    edition = Edition.where(panopticon_id: artefact.id).order(version_number: :desc).first
     metadata_edition_path(edition)
   end
 

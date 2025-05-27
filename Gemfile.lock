@@ -129,7 +129,6 @@ GEM
       sassc (>= 2.0.0)
     brakeman (7.0.0)
       racc
-    bson (4.15.0)
     builder (3.3.0)
     byebug (12.0.0)
     capybara (3.40.0)
@@ -161,13 +160,6 @@ GEM
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
       sass-embedded (~> 1.63)
-    database_cleaner-active_record (2.2.0)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
-    database_cleaner-mongoid (2.0.1)
-      database_cleaner-core (~> 2.0.0)
-      mongoid
     date (3.4.1)
     diffy (3.4.3)
     docile (1.4.0)
@@ -335,9 +327,6 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    kaminari-mongoid (1.0.2)
-      kaminari-core (~> 1.0)
-      mongoid
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     language_server-protocol (3.17.0.4)
@@ -387,15 +376,6 @@ GEM
       ruby2_keywords (>= 0.0.5)
     momentjs-rails (2.29.4.1)
       railties (>= 3.1)
-    mongo (2.20.1)
-      bson (>= 4.14.1, < 6.0.0)
-    mongoid (8.1.4)
-      activemodel (>= 5.1, < 7.2, != 7.0.0)
-      concurrent-ruby (>= 1.0.5, < 2.0)
-      mongo (>= 2.18.0, < 3.0.0)
-      ruby2_keywords (~> 0.0.5)
-    mongoid-sadstory (0.0.2)
-      mongoid
     mousetrap-rails (1.4.6)
     msgpack (1.7.2)
     multi_xml (0.7.1)
@@ -871,9 +851,6 @@ GEM
     state_machines-graphviz (0.0.2)
       ruby-graphviz
       state_machines
-    state_machines-mongoid (0.2.0)
-      mongoid (>= 4.0.0)
-      state_machines-activemodel (>= 0.5.0)
     statsd-ruby (1.5.0)
     stringio (3.1.7)
     strip_attributes (2.0.0)
@@ -924,8 +901,6 @@ DEPENDENCIES
   ci_reporter_minitest
   climate_control
   dartsass-rails
-  database_cleaner-active_record
-  database_cleaner-mongoid
   diffy
   erb_lint
   erubis
@@ -945,16 +920,12 @@ DEPENDENCIES
   inherited_resources
   jquery-ui-rails
   kaminari
-  kaminari-mongoid
   launchy
   mail-notify
   minitest-reporters
   mlanett-redis-lock
   mocha
   momentjs-rails
-  mongo
-  mongoid (= 8.1.4)
-  mongoid-sadstory
   mousetrap-rails
   nested_form!
   null_logger
@@ -977,7 +948,6 @@ DEPENDENCIES
   state_machines
   state_machines-activerecord
   state_machines-graphviz
-  state_machines-mongoid
   strip_attributes
   terser
   timecop

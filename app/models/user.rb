@@ -17,7 +17,6 @@ class User < ApplicationRecord
 
   def progress(edition, action_attributes)
     request_type = action_attributes.delete(:request_type)
-
     processor = GovukContentModels::ActionProcessors::REQUEST_TYPE_TO_PROCESSOR[request_type.to_sym]
     edition = GovukContentModels::ActionProcessors.const_get(processor).new(self, edition, action_attributes, {}).processed_edition
     edition.save! if edition
