@@ -27,10 +27,6 @@ class LegacyEditionsController < InheritedResources::Base
       @ordered_parts = @resource.editionable.parts.in_order
     end
 
-    if @resource.is_a?(Varianted)
-      @ordered_variants = @resource.variants.in_order
-    end
-
     @tagging_update = tagging_update_form
     @artefact = @resource.artefact
     @update_events = HostContentUpdateEvent.all_for_artefact(@artefact)
@@ -296,15 +292,14 @@ protected
         ] },
       ]
     when :transaction_edition
-      [
-        :introduction,
-        :start_button_text,
-        :will_continue_on,
-        :link,
-        :more_information,
-        :alternate_methods,
-        :need_to_know,
-        { variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy] },
+      %i[
+        introduction
+        start_button_text
+        will_continue_on
+        link
+        more_information
+        alternate_methods
+        need_to_know
       ]
     when :completed_transaction_edition
       %i[
