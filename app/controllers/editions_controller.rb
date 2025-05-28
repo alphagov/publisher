@@ -29,6 +29,9 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[schedule_page] do
     require_schedulable
   end
+  before_action only: %i[show history related_external_links] do
+    @reviewer = User.where(id: @resource.reviewer).first
+  end
 
   helper_method :locale_to_language
 
@@ -38,7 +41,6 @@ class EditionsController < InheritedResources::Base
 
   def show
     @artefact = @resource.artefact
-    @reviewer = User.where(id: @resource.reviewer).first
     render action: "show"
   end
 
