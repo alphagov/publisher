@@ -769,8 +769,8 @@ class EditionsControllerTest < ActionController::TestCase
         assert_equal "ready", edition.state
       end
 
-      should "not update the edition state and render an error message when a system error occurs" do
-        EditionProgressor.any_instance.expects(:progress).returns(false)
+      should "not update the edition state and render an error message when the edition progression is false" do
+        EditionProgressor.any_instance.stubs(:progress).returns(false)
 
         edition = FactoryBot.create(:edition, :ready)
         post :send_to_fact_check, params: {
@@ -779,6 +779,21 @@ class EditionsControllerTest < ActionController::TestCase
           customised_message: "Please fact check this",
         }
 
+        assert_template "secondary_nav_tabs/send_to_fact_check_page"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+        edition.reload
+        assert_equal "ready", edition.state
+      end
+
+      should "not update the edition state render an error message when a system error occurs" do
+        EditionProgressor.any_instance.stubs(:progress).raises(StandardError)
+
+        edition = FactoryBot.create(:edition, :ready)
+        post :send_to_fact_check, params: {
+          id: edition.id,
+          email_addresses: "test@test.com",
+          customised_message: "Please fact check this",
+        }
         assert_template "secondary_nav_tabs/send_to_fact_check_page"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
         edition.reload
