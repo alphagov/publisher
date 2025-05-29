@@ -213,6 +213,10 @@ class EditionsController < InheritedResources::Base
       flash.now[:danger] = "Due to a service problem, the request could not be made"
       render "secondary_nav_tabs/send_to_fact_check_page"
     end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = "Due to a service problem, the request could not be made"
+    render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
   def skip_review
