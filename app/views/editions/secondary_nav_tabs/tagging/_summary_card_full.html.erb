@@ -2,7 +2,7 @@
 
 <%
   if type == "browse_pages"
-    browse_pages = browse_pages(@mainstream_browse_pages)
+    browse_pages = browse_pages(@tagging_update.mainstream_browse_pages)
     rows = browse_pages.each_with_index.map do | page, index |
       {
         key: "#{key_text} #{index + 1}",
@@ -13,7 +13,7 @@
     rows = [
       {
         key: key_text,
-        value: breadcrumb(@parent[0])
+        value: breadcrumb(@tagging_update.parent[0])
       }
     ]
     end

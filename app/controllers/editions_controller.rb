@@ -77,14 +77,12 @@ class EditionsController < InheritedResources::Base
   alias_method :unpublish, :show
 
   def tagging
+    @linkables = Tagging::Linkables.new
     @tagging_update = Tagging::TaggingUpdateForm.build_from_publishing_api(
       @resource.artefact.content_id,
       @resource.artefact.language,
     )
 
-    @linkables = Tagging::Linkables.new
-    @mainstream_browse_pages = @tagging_update.mainstream_browse_pages
-    @parent = @tagging_update.parent
     render action: "show"
   end
 

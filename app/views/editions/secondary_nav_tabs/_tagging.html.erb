@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Tagging") %>
 
-    <% if @parent.count == 0 %>
+    <% if @tagging_update.parent.count == 0 %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "GOV.UK breadcrumb",
         body: "No breadcrumb set",
@@ -17,7 +17,7 @@
       } %>
     <% end %>
 
-    <% if @mainstream_browse_pages.count == 0 %>
+    <% if @tagging_update.mainstream_browse_pages.count == 0 %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "Mainstream browse pages",
         body: "Not tagged to any browse pages",
