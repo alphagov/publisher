@@ -84,6 +84,7 @@ class EditionsController < InheritedResources::Base
 
     @linkables = Tagging::Linkables.new
     @mainstream_browse_pages = @tagging_update.mainstream_browse_pages
+    @parent = @tagging_update.parent
     render action: "show"
   end
 

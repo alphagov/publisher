@@ -104,4 +104,16 @@ module EditionsHelper
 
     pages
   end
+
+  def breadcrumb(id)
+    breadcrumb = ""
+
+    @linkables.mainstream_browse_pages.each do | first, second |
+      second.each do |page|
+        breadcrumb = page[0] if page[1] == id
+      end
+    end
+
+    breadcrumb
+  end
 end
