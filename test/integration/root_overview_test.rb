@@ -180,6 +180,8 @@ class RootOverviewTest < IntegrationTest
   end
 
   should "allow a user to claim 2i" do
+    skip("Temporarily skipped due to the removal of the 2i feature because of a bug: https://trello.com/c/mHCUk2wD/715-hide-option-to-claim-2i-on-publications-page")
+
     stub_linkables
     stub_holidays_used_by_fact_check
 
@@ -208,7 +210,32 @@ class RootOverviewTest < IntegrationTest
     assert page.has_select?("Assigned to", selected: assignee.name)
   end
 
+  should "not show claim 2i button on publications page for editions out for 2nd pair of eye" do
+    stub_linkables
+    stub_holidays_used_by_fact_check
+
+    assignee = FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create(
+      :guide_edition,
+      title: "XXX",
+      state: "in_review",
+      review_requested_at: Time.zone.now,
+      assigned_to: assignee,
+    )
+
+    visit "/"
+    filter_by_user("All")
+    filter_by_status("In review")
+    find(".publications-table tr:first-child details").click
+
+    within(".publications-table tr:first-child details") do
+      assert_not page.has_button?("Claim 2i")
+    end
+  end
+
   should "prevent the current user from claiming 2i when the publication is already claimed and allow the user to claim 2i when the publication is not claimed for 2i" do
+    skip("Temporarily skipped due to the removal of the 2i feature because of a bug: https://trello.com/c/mHCUk2wD/715-hide-option-to-claim-2i-on-publications-page")
+
     stub_linkables
     stub_holidays_used_by_fact_check
 
@@ -275,6 +302,8 @@ class RootOverviewTest < IntegrationTest
   end
 
   should "allow Welsh editors to see claim 2i button in Welsh editions" do
+    skip("Temporarily skipped due to the removal of the 2i feature because of a bug: https://trello.com/c/fHyxwDZz/669-hide-option-to-claim-2i-on-publications-page")
+
     stub_linkables
     stub_holidays_used_by_fact_check
 
