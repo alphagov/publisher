@@ -92,4 +92,16 @@ module EditionsHelper
   def edition_version_and_state_tag(edition)
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
+
+  def browse_pages(mainstream_browse_pages)
+    pages = []
+
+    @linkables.mainstream_browse_pages.each do | first, second |
+      second.each do |page|
+        pages << page[0] if mainstream_browse_pages.include? page[1]
+      end
+    end
+
+    pages
+  end
 end

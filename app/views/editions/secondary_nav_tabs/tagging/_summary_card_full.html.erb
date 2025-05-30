@@ -1,0 +1,16 @@
+<%# locals: (heading:, key_text:) %>
+
+<% 
+  browse_pages = browse_pages(@mainstream_browse_pages)
+  rows = browse_pages.each_with_index.map do | page, index |
+    {
+      key: "#{key_text} #{index + 1}",
+      value: page
+    }
+  end
+%>
+
+<%= render "govuk_publishing_components/components/summary_card", {
+  title: heading,
+  rows: rows
+} %>

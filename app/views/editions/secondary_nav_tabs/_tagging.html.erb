@@ -9,12 +9,19 @@
       link_url: "#"
     } %>
 
-    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
-      heading: "Mainstream browse pages",
-      body: "Not tagged to any browse pages",
-      link_text: "Tag to a browse page",
-      link_url: "#"
-    } %>
+    <% if @mainstream_browse_pages.count == 0 %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+        heading: "Mainstream browse pages",
+        body: "Not tagged to any browse pages",
+        link_text: "Tag to a browse page",
+        link_url: "#"
+      } %>
+    <% else %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_full', locals: {
+        heading: "Mainstream browse pages",
+        key_text: "Browse page",
+      } %>
+    <% end %>
 
     <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
       heading: "Organisations",
