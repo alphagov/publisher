@@ -222,6 +222,20 @@ class EditionEditTest < IntegrationTest
         end
       end
     end
+
+    # TODO
+    context "Tagging is set for 'Mainstream browse pages'" do
+      setup do
+        # Stub values
+      end
+    end
+
+    # TODO
+    context "Tagging is set for 'Breadcrumb'" do
+      setup do
+        # Stub values
+      end
+    end
   end
 
   context "metadata tab" do
