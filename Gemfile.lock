@@ -189,7 +189,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    faraday (2.12.2)
+    faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -227,8 +227,8 @@ GEM
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
-    google-apis-gmail_v1 (0.2.0)
-      google-apis-core (~> 0.1)
+    google-apis-gmail_v1 (0.43.0)
+      google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-env (2.3.1)
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
@@ -340,7 +340,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (8.0.0)
       railties (>= 3.2.16)
-    json (2.11.3)
+    json (2.12.2)
     json-schema (5.1.1)
       addressable (~> 2.8)
       bigdecimal (~> 3.1)
