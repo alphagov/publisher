@@ -2,7 +2,8 @@ module PublicationsTableHelper
   def reviewer(publication, current_user)
     if publication.state == "in_review"
       if publication.reviewer.present?
-        publication.reviewer
+        user =  User.where(id: publication.reviewer).first
+        user.name if user
       elsif current_user != publication.assigned_to && current_user.has_editor_permissions?(publication)
         render partial: "root/claim_2i", locals: { publication:, current_user: }
       end
