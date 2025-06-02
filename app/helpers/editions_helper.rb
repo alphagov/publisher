@@ -93,38 +93,38 @@ module EditionsHelper
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
 
-  def browse_pages(mainstream_browse_pages)
-    pages = []
+  def breadcrumb(id)
+    item = ""
 
-    @linkables.mainstream_browse_pages.each do | first, second |
-      second.each do |page|
-        pages << page[0] if mainstream_browse_pages.include? page[1]
+    @linkables.mainstream_browse_pages.each do | level_1, level_2 |
+      level_2.each do | page |
+        item = page[0] if page[1] == id
       end
     end
 
-    pages
+    item.gsub(" / ", " > ")
+  end
+
+  def browse_pages(mainstream_browse_pages)
+    items = []
+
+    @linkables.mainstream_browse_pages.each do | level_1, level_2 |
+      level_2.each do | page |
+        items << page[0].gsub(" / ", " > ") if mainstream_browse_pages.include? page[1]
+      end
+    end
+
+    items
   end
 
   def organisations(tagged_organisations)
-    orgs = []
+    items = []
 
     @linkables.organisations.each do | org |
-      orgs << org[0] if tagged_organisations.include? org[1]
+      items << org[0] if tagged_organisations.include? org[1]
     end
 
-    orgs
-  end
-
-  def breadcrumb(id)
-    breadcrumb = ""
-
-    @linkables.mainstream_browse_pages.each do | first, second |
-      second.each do |page|
-        breadcrumb = page[0] if page[1] == id
-      end
-    end
-
-    breadcrumb
+    items
   end
 
   def related_content(tagged_content)
