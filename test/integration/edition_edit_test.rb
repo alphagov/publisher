@@ -122,7 +122,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show the 2i reviewer row in the summary correctly if the edition state is 'in_review' and a reviewer is assigned" do
-      edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.id)
+      edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.name)
       edition.actions.create!(
         request_type: Action::REQUEST_AMENDMENTS,
         requester_id: @govuk_requester.id,
