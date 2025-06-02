@@ -38,7 +38,7 @@ class EditionsController < InheritedResources::Base
 
   def show
     @artefact = @resource.artefact
-    @reviewer = User.where(id: @resource.reviewer).first
+    @reviewer = User.where(name: @resource.reviewer).first
     render action: "show"
   end
 
