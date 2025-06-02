@@ -85,6 +85,17 @@ module EditionsSidebarButtonsHelper
           margin_bottom: 3,
         })
       end
+      if edition.can_send_fact_check?
+        buttons << render(
+          "govuk_publishing_components/components/button",
+          {
+            text: "Fact check",
+            href: send_to_fact_check_page_edition_path(edition),
+            secondary_solid: true,
+            margin_bottom: 3,
+          },
+        )
+      end
       if edition.can_publish?
         if edition.state == "ready"
           buttons << render(

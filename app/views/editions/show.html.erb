@@ -48,9 +48,14 @@
       <% if current_user.has_editor_permissions?(@edition) %>
         <%= render "govuk_publishing_components/components/inset_text", {} do %>
           <% if @edition.fact_check? %>
+            <% if @edition.latest_status_action.requester == current_user %>
+              <p class="govuk-body">You've requested this edition to be fact checked. We're awaiting a response.</p>
+            <% else %>
+              <p class="govuk-body"><%= @edition.latest_status_action.requester.name %> requested this edition to be fact checked.
+                We're awaiting a response.</p>
+            <% end %>
             <p class="govuk-body"><%= link_to("Resend fact check email", resend_fact_check_email_page_edition_path) %></p>
           <% end %>
-
           <p class="govuk-body"><%= link_to("Request amendments", request_amendments_page_edition_path) %></p>
         <% end %>
       <% end %>

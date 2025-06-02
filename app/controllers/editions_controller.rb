@@ -11,7 +11,30 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[unpublish confirm_unpublish process_unpublish] do
     require_govuk_editor(redirect_path: edition_path(resource))
   end
-  before_action only: %i[progress admin update confirm_destroy edit_assignee update_assignee edit_reviewer update_reviewer request_amendments request_amendments_page no_changes_needed no_changes_needed_page send_to_2i send_to_2i_page send_to_publish send_to_publish_page cancel_scheduled_publishing cancel_scheduled_publishing_page schedule schedule_page resend_fact_check_email_page resend_fact_check_email] do
+  before_action only: %i[progress
+                         admin
+                         update
+                         confirm_destroy
+                         edit_assignee
+                         update_assignee
+                         edit_reviewer
+                         update_reviewer
+                         request_amendments
+                         request_amendments_page
+                         no_changes_needed
+                         no_changes_needed_page
+                         send_to_2i
+                         send_to_2i_page
+                         send_to_publish
+                         send_to_publish_page
+                         cancel_scheduled_publishing
+                         cancel_scheduled_publishing_page
+                         schedule
+                         schedule_page
+                         send_to_fact_check
+                         send_to_fact_check_page
+                         resend_fact_check_email_page
+                         resend_fact_check_email] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -29,11 +52,16 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[schedule_page] do
     require_schedulable
   end
+  before_action only: %i[send_to_fact_check_page send_to_fact_check] do
+    require_can_send_fact_check
+  end
   before_action only: %i[show admin metadata tagging history related_external_links unpublish] do
     @reviewer = User.where(name: @resource.reviewer).first if @resource.reviewer.present?
   end
 
   helper_method :locale_to_language
+
+  SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made".freeze
 
   def index
     redirect_to root_path
@@ -55,6 +83,10 @@ class EditionsController < InheritedResources::Base
 
   def request_amendments_page
     render "secondary_nav_tabs/request_amendments_page"
+  end
+
+  def send_to_fact_check_page
+    render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
   def send_to_2i_page
@@ -127,7 +159,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Fact check email re-sent"
       redirect_to edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/resend_fact_check_email_page"
     end
   end
@@ -140,7 +172,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Amendments requested"
       redirect_to edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/request_amendments_page"
     end
   end
@@ -153,7 +185,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "2i approved"
       redirect_to edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/no_changes_needed_page"
     end
   end
@@ -166,9 +198,28 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Sent to 2i"
       redirect_to edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/send_to_2i_page"
     end
+  end
+
+  def send_to_fact_check
+    begin
+      comment = "Sent to fact check"
+      if !send_to_fact_check_params_valid?
+        flash.now[:danger] = "Enter email addresses and/or customised message"
+        render "secondary_nav_tabs/send_to_fact_check_page"
+        return
+      elsif send_to_fact_check_for_edition(@resource, params[:email_addresses], params[:customised_message], comment)
+        flash[:success] = "Sent to fact check"
+        redirect_to edition_path(resource)
+        return
+      end
+    rescue StandardError => e
+      Rails.logger.error "Error #{e.class} #{e.message}"
+    end
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "secondary_nav_tabs/send_to_fact_check_page"
   end
 
   def skip_review
@@ -179,7 +230,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "2i review skipped"
       redirect_to edition_path(resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/skip_review_page"
     end
   end
@@ -201,7 +252,7 @@ class EditionsController < InheritedResources::Base
         flash[:success] = "Scheduled to publish at #{publish_at.to_fs(:govuk_date)}"
         redirect_to edition_path(resource)
       else
-        flash.now[:danger] = "Due to a service problem, the request could not be made"
+        flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
         render "secondary_nav_tabs/schedule_page"
       end
     end
@@ -215,7 +266,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Published"
       redirect_to edition_path(@resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/send_to_publish_page"
     end
   end
@@ -228,7 +279,7 @@ class EditionsController < InheritedResources::Base
       flash[:success] = "Scheduling cancelled"
       redirect_to edition_path(@resource)
     else
-      flash.now[:danger] = "Due to a service problem, the request could not be made"
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/cancel_scheduled_publishing_page"
     end
   end
@@ -288,7 +339,9 @@ class EditionsController < InheritedResources::Base
   end
 
   def progress
-    if progress_edition(resource, params[:edition][:activity].permit(:comment, :request_type, :publish_at))
+    if progress_edition(resource,
+                        squash_multiparameter_datetime_attributes(params[:edition][:activity]
+                                                                    .permit(:comment, :request_type, :publish_at).to_h, %w[publish_at]))
       flash[:success] = @command.status_message
     else
       flash[:danger] = @command.status_message
@@ -388,51 +441,58 @@ protected
 
 private
 
-  def progress_edition(resource, activity_params)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress(squash_multiparameter_datetime_attributes(activity_params.to_h, %w[publish_at]))
-  end
-
   def request_amendments_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "request_amendments", comment: comment })
+    progress_edition(resource, { request_type: "request_amendments", comment: comment })
   end
 
   def no_changes_needed_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "approve_review", comment: comment })
+    progress_edition(resource, { request_type: "approve_review", comment: comment })
   end
 
   def resend_fact_check_email_for_edition(resource)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "resend_fact_check" })
+    progress_edition(resource, { request_type: "resend_fact_check" })
   end
 
   def send_to_2i_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "request_review", comment: comment })
+    progress_edition(resource, { request_type: "request_review", comment: comment })
+  end
+
+  def send_to_fact_check_for_edition(resource, email_addresses, customised_message, comment)
+    progress_edition(resource, { request_type: "send_fact_check", comment: comment, email_addresses: email_addresses, customised_message: customised_message })
   end
 
   def skip_review_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "skip_review", comment: comment })
+    progress_edition(resource, { request_type: "skip_review", comment: comment })
   end
 
   def schedule_for_edition(resource, comment, publish_at)
-    @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "schedule_for_publishing", comment: comment, publish_at: publish_at })
+    progress_edition(resource, { request_type: "schedule_for_publishing", comment: comment, publish_at: publish_at })
   end
 
   def send_to_publish_for_edition(resource, comment)
-    @command = EditionProgressor.new(resource, current_user)
-    publish_succeeded = @command.progress({ request_type: "publish", comment: comment })
+    publish_succeeded = progress_edition(resource, { request_type: "publish", comment: comment })
     PublishWorker.perform_async(resource.id.to_s) if publish_succeeded
     publish_succeeded
   end
 
   def cancel_scheduled_publishing_for_edition(resource, comment)
+    progress_edition(resource, { request_type: "cancel_scheduled_publishing", comment: comment })
+  end
+
+  def progress_edition(resource, options)
     @command = EditionProgressor.new(resource, current_user)
-    @command.progress({ request_type: "cancel_scheduled_publishing", comment: comment })
+    @command.progress(options)
+  end
+
+  def send_to_fact_check_params_valid?
+    params[:email_addresses].present? && !invalid_email_addresses?(params[:email_addresses]) && params[:customised_message].present?
+  end
+
+  def invalid_email_addresses?(addresses)
+    email_regex = /\A[\w\d]+[^@]*@[\w\d]+[^@]*\.[\w\d]+[^@]*\z/
+    addresses.split(",").any? do |address|
+      address.strip !~ email_regex
+    end
   end
 
   def unpublish_edition(artefact)
@@ -501,6 +561,13 @@ private
     return if @resource.can_schedule_for_publishing?
 
     flash[:danger] = "Cannot schedule an edition that is not ready."
+    redirect_to edition_path(@resource)
+  end
+
+  def require_can_send_fact_check
+    return if @resource.can_send_fact_check?
+
+    flash[:danger] = "Edition is not in a state where it can be sent to fact check"
     redirect_to edition_path(@resource)
   end
 

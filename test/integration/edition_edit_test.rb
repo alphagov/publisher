@@ -1443,39 +1443,51 @@ class EditionEditTest < IntegrationTest
       end
     end
 
-    context "Resend fact check email link" do
+    context "Fact check edition" do
       %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |state|
         context "when state is '#{state}'" do
           setup do
             send "visit_#{state}_edition"
           end
 
-          should "not show the 'Resend fact check email' link" do
+          should "not show the 'Resend fact check email' link and text" do
             assert page.has_no_link?("Resend fact check email")
+            assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
           end
         end
       end
 
       context "when state is 'Fact check" do
-        should "not show the link to non-editors" do
+        should "not show the link or text to non-editors" do
           login_as(FactoryBot.create(:user, name: "Stub User"))
           visit_fact_check_edition
 
           assert page.has_no_link?("Resend fact check email")
+          assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
         end
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
+        should "not show the link or text to welsh editors viewing a non-welsh edition" do
           login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
           visit_fact_check_edition
 
           assert page.has_no_link?("Resend fact check email")
+          assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
         end
 
-        should "show the 'Resend fact check email' link to govuk editors" do
+        should "show the 'Resend fact check email' link and text to govuk editors" do
           login_as(@govuk_editor)
           visit_fact_check_edition
 
           assert page.has_link?("Resend fact check email")
+          assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
+        end
+
+        should "show the requester specific text to govuk editors" do
+          login_as(@govuk_editor)
+          create_fact_check_edition(@govuk_requester)
+          visit edition_path(@fact_check_edition)
+
+          assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
         end
       end
 
@@ -1996,6 +2008,35 @@ class EditionEditTest < IntegrationTest
         assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
       end
     end
+
+    context "'Fact check' button" do
+      %i[ready fact_check_received].each do |state|
+        should "show the 'Fact check' button on '#{state}' if user has govuk_editor permission" do
+          login_as(@govuk_editor)
+          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+          visit edition_path(@edition)
+
+          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(@edition))
+        end
+
+        should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
+          login_as_welsh_editor
+          welsh_edition = FactoryBot.create(:edition, :welsh, state: state.to_s)
+          visit edition_path(welsh_edition)
+          assert @user.has_editor_permissions?(welsh_edition)
+
+          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(welsh_edition))
+        end
+
+        should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do
+          login_as(FactoryBot.create(:user, name: "Stub User"))
+          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+          visit edition_path(@edition)
+
+          assert page.has_no_link?("Fact check", href: "#")
+        end
+      end
+    end
   end
 
   context "Related external links tab" do
@@ -2340,6 +2381,93 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Send to Fact check page" do
+    should "render the page" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      assert page.has_text?(@ready_edition.title)
+      assert page.has_text?("Send to fact check")
+      assert page.has_text?("Email addresses")
+      assert page.has_css?(".gem-c-hint", text: "You can enter multiple email addresses if you comma separate them as follows: fact-checker-one@example.com, fact-checker-two@example.com")
+      assert page.has_text?("Customised message")
+      assert page.has_text?("The GOV.UK Content Team made the changes because")
+      assert page.has_button?("Send to fact check")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      click_link("Cancel")
+
+      assert_current_path edition_path(@ready_edition.id)
+    end
+
+    should "redirect back to the edit tab on submit and show success message" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "redirect back to the edit tab and show success message when pre-filled customised message is used" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+      assert page.has_text?("The GOV.UK Content Team made the changes because")
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      click_button "Send to fact check"
+
+      assert_current_path edition_path(@ready_edition.id)
+      assert page.has_text?("Sent to fact check")
+    end
+
+    should "display an error message if an email address is invalid" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      fill_in "Email addresses", with: "fact-checker-one.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+    end
+
+    should "display an error message if customised message is empty" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: ""
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+    end
+
+    should "keep user inputs when there is an error" do
+      create_ready_edition
+      visit send_to_fact_check_page_edition_path(@ready_edition)
+
+      fill_in "Email addresses", with: "fact-checker-one.com"
+      fill_in "Customised message", with: "Please check this"
+      click_button "Send to fact check"
+
+      assert_current_path send_to_fact_check_edition_path(@ready_edition.id)
+      assert page.has_text?("Enter email addresses and/or customised message")
+      assert page.has_css?("input[value='fact-checker-one.com']")
+      assert page.has_text?("Please check this")
+    end
+  end
+
   context "Send to publish page" do
     should "save comment to edition history" do
       create_scheduled_for_publishing_edition
@@ -2441,12 +2569,12 @@ private
     visit edition_path(@published_edition)
   end
 
-  def create_fact_check_edition
+  def create_fact_check_edition(requester = @govuk_editor)
     @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
 
     FactoryBot.create(
       :action,
-      requester: @govuk_editor,
+      requester: requester,
       request_type: Action::SEND_FACT_CHECK,
       edition: @fact_check_edition,
       email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
