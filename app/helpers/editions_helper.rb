@@ -105,6 +105,16 @@ module EditionsHelper
     pages
   end
 
+  def organisations(tagged_organisations)
+    orgs = []
+
+    @linkables.organisations.each do | org |
+      orgs << org[0] if tagged_organisations.include? org[1]
+    end
+
+    orgs
+  end
+
   def breadcrumb(id)
     breadcrumb = ""
 

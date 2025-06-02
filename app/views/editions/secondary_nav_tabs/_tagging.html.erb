@@ -32,12 +32,20 @@
       } %>
     <% end %>
 
-    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
-      heading: "Organisations",
-      body: "Not tagged to any organisations",
-      link_text: "Tag to an organisation",
-      link_url: "#"
-    } %>
+    <% if @tagging_update.organisations.count == 0 %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+        heading: "Organisations",
+        body: "Not tagged to any organisations",
+        link_text: "Tag to an organisation",
+        link_url: "#"
+      } %>
+    <% else %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_full', locals: {
+        type: "organisations",
+        heading: "Organisations",
+        key_text: "Organisation",
+      } %>
+    <% end %>
 
     <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
       heading: "Related content",
