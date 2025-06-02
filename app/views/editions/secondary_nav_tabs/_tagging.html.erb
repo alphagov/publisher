@@ -47,11 +47,19 @@
       } %>
     <% end %>
 
-    <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
-      heading: "Related content",
-      body: "Not tagged to any related content",
-      link_text: "Tag to related content",
-      link_url: "#"
-    } %>
+    <% if @tagging_update.ordered_related_items.count == 0 %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
+        heading: "Related content",
+        body: "Not tagged to any related content",
+        link_text: "Tag to related content",
+        link_url: "#"
+      } %>
+    <% else %>
+      <%= render partial: 'secondary_nav_tabs/tagging/summary_card_full', locals: {
+        type: "related_content",
+        heading: "Related content",
+        key_text: "Related content",
+      } %>
+    <% end %>
   </div>
 </div>
