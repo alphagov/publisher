@@ -24,6 +24,14 @@
         value: org
       }
     end
+  elsif type == "related_content"
+    content = related_content(@tagging_update.ordered_related_items)
+    rows = content.each_with_index.map do | content, index |
+      {
+        key: "#{key_text} #{index + 1}",
+        value: content
+      }
+    end
   end
 %>
 

@@ -126,4 +126,14 @@ module EditionsHelper
 
     breadcrumb
   end
+
+  def related_content(tagged_content)
+    items = []
+
+    tagged_content.each do | item |
+      items << item['base_path']
+    end
+
+    items
+  end
 end
