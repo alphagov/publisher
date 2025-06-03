@@ -35,9 +35,11 @@
             },
           ],
         } %>
-        <%= render "govuk_publishing_components/components/button", {
-          text: "Update",
-        } %>
+        <% if current_user.has_editor_permissions? publication %>
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Update",
+          } %>
+        <% end %>
       <% end %>
     <% else %>
       <% @artefact.attributes.slice("slug", "language").each do |key, value| %>

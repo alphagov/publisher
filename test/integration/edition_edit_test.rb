@@ -178,7 +178,7 @@ class EditionEditTest < IntegrationTest
   end
 
   context "metadata tab" do
-    context "when state is 'draft'" do
+    context "when state is 'draft' and user has govuk editor permissions" do
       setup do
         visit_draft_edition
         click_link("Metadata")
@@ -206,6 +206,39 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?("Metadata has successfully updated")
         assert page.has_field?("artefact[slug]", with: "changed-slug")
       end
+
+      should "show the 'Update' button for welsh edition if user has welsh_editor permission" do
+        login_as_welsh_editor
+        welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
+        visit edition_path(welsh_edition)
+        click_link("Metadata")
+
+        assert @user.has_editor_permissions?(welsh_edition)
+        assert page.has_button?("Update")
+      end
+    end
+
+    context "when state is 'draft' but user does not have editor permissions" do
+      should "not show the 'Update' button if the user does not have editor permissions" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+        visit_draft_edition
+        click_link("Metadata")
+
+        assert_not user.has_editor_permissions?(@draft_edition)
+        assert page.has_no_button?("Update")
+      end
+
+      should "not show the update button for a Welsh edition for an non-Welsh editor" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+        welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
+        visit edition_path(welsh_edition)
+        click_link("Metadata")
+
+        assert_not user.has_editor_permissions?(welsh_edition)
+        assert page.has_no_button?("Update")
+      end
     end
 
     context "when state is not 'draft'" do
@@ -217,7 +250,6 @@ class EditionEditTest < IntegrationTest
       should "show un-editable current value for slug and language" do
         assert page.has_no_field?("artefact[slug]")
         assert page.has_no_field?("artefact[language]")
-
         assert page.has_text?("Slug")
         assert page.has_text?(/can-i-get-a-driving-licence/)
         assert page.has_text?("Language")
