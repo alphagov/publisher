@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Tagging") %>
 
-    <% if @tagging_update.parent.count == 0 %>
+    <% if @tagging_update.parent == nil %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "GOV.UK breadcrumb",
         body: "No breadcrumb set",
@@ -17,7 +17,7 @@
       } %>
     <% end %>
 
-    <% if @tagging_update.mainstream_browse_pages.count == 0 %>
+    <% if @tagging_update.mainstream_browse_pages == nil %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "Mainstream browse pages",
         body: "Not tagged to any browse pages",
@@ -32,7 +32,7 @@
       } %>
     <% end %>
 
-    <% if @tagging_update.organisations.count == 0 %>
+    <% if @tagging_update.organisations == nil %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "Organisations",
         body: "Not tagged to any organisations",
@@ -47,7 +47,7 @@
       } %>
     <% end %>
 
-    <% if @tagging_update.ordered_related_items.count == 0 %>
+    <% if @tagging_update.ordered_related_items == nil %>
       <%= render partial: 'secondary_nav_tabs/tagging/summary_card_empty', locals: {
         heading: "Related content",
         body: "Not tagged to any related content",
