@@ -180,6 +180,7 @@ class EditionEditTest < IntegrationTest
   context "tagging tab" do
     context "No tagging is set" do
       setup do
+        stub_empty_linkables
         visit_draft_edition
         click_link("Tagging")
       end
@@ -219,6 +220,79 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Related content")
           assert page.has_text?("Not tagged to any related content")
           assert page.has_link?("Tag to related content")
+        end
+      end
+    end
+
+    context "Tagging is set" do
+      setup do
+        visit_draft_edition
+        click_link("Tagging")
+      end
+
+      should "show 'GOV.UK breadcrumb' summary card in first position" do
+        within all(".gem-c-summary-card")[0] do
+          assert page.has_text?("GOV.UK breadcrumb")
+          assert page.has_css?("dt", text: "Breadcrumb")
+          assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+        end
+      end
+
+      should "show 'Mainstream browse pages' summary card in second position" do
+        within all(".gem-c-summary-card")[1] do
+          assert page.has_text?("Mainstream browse pages")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Browse page 1")
+            assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+          end
+
+          within all(".govuk-summary-list__row")[1] do
+            assert page.has_css?("dt", text: "Browse page 2")
+            assert page.has_css?("dt", text: "Tax > RTI (draft)")
+          end
+
+          within all(".govuk-summary-list__row")[2] do
+            assert page.has_css?("dt", text: "Browse page 3")
+            assert page.has_css?("dt", text: "Tax > VAT")
+          end
+        end
+      end
+
+      should "show 'Organisations' summary card in third position" do
+        within all(".gem-c-summary-card")[2] do
+          assert page.has_text?("Organisations")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Organisation 1")
+            assert page.has_css?("dt", text: "Student Loans Company")
+          end
+        end
+      end
+
+      should "show 'Related content' summary card in fourth position" do
+        within all(".gem-c-summary-card")[3] do
+          assert page.has_text?("Related content")
+
+          within all(".govuk-summary-list__row")[0] do
+            assert page.has_css?("dt", text: "Related content 1")
+            assert page.has_css?("dt", text: "/company-tax-returns")
+          end
+
+          within all(".govuk-summary-list__row")[1] do
+            assert page.has_css?("dt", text: "Related content 2")
+            assert page.has_css?("dt", text: "/prepare-file-annual-accounts-for-limited-company")
+          end
+
+          within all(".govuk-summary-list__row")[2] do
+            assert page.has_css?("dt", text: "Related content 3")
+            assert page.has_css?("dt", text: "/corporation-tax")
+          end
+
+          within all(".govuk-summary-list__row")[3] do
+            assert page.has_css?("dt", text: "Related content 4")
+            assert page.has_css?("dt", text: "/tax-help")
+          end
         end
       end
     end
