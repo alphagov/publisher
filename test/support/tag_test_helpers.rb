@@ -7,7 +7,7 @@ module TagTestHelpers
         status: 200,
         body: "{
         }",
-        headers: {}
+        headers: {},
       )
   end
 
@@ -59,7 +59,7 @@ module TagTestHelpers
               ]
             }
         }",
-        headers: {}
+        headers: {},
       )
 
     stub_publishing_api_has_linkables(

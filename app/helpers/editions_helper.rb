@@ -93,11 +93,11 @@ module EditionsHelper
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
 
-  def breadcrumb(id)
+  def breadcrumb(id, linkables)
     item = ""
 
-    @linkables.mainstream_browse_pages.each do | level_1, level_2 |
-      level_2.each do | page |
+    linkables.mainstream_browse_pages.each_value do |level_2|
+      level_2.each do |page|
         item = page[0] if page[1] == id
       end
     end
@@ -105,11 +105,11 @@ module EditionsHelper
     item.gsub(" / ", " > ")
   end
 
-  def browse_pages(mainstream_browse_pages)
+  def browse_pages(mainstream_browse_pages, linkables)
     items = []
 
-    @linkables.mainstream_browse_pages.each do | level_1, level_2 |
-      level_2.each do | page |
+    linkables.mainstream_browse_pages.each_value do |level_2|
+      level_2.each do |page|
         items << page[0].gsub(" / ", " > ") if mainstream_browse_pages.include? page[1]
       end
     end
@@ -117,10 +117,10 @@ module EditionsHelper
     items
   end
 
-  def organisations(tagged_organisations)
+  def organisations(tagged_organisations, linkables)
     items = []
 
-    @linkables.organisations.each do | org |
+    linkables.organisations.each do |org|
       items << org[0] if tagged_organisations.include? org[1]
     end
 
@@ -130,8 +130,8 @@ module EditionsHelper
   def related_content(tagged_content)
     items = []
 
-    tagged_content.each do | item |
-      items << item['base_path']
+    tagged_content.each do |item|
+      items << item["base_path"]
     end
 
     items
