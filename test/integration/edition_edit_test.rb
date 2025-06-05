@@ -180,7 +180,6 @@ class EditionEditTest < IntegrationTest
   context "tagging tab" do
     context "No tagging is set" do
       setup do
-        # stub_empty_linkables
         visit_draft_edition
         click_link("Tagging")
       end
