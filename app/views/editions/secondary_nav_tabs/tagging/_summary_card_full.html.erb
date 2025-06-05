@@ -6,22 +6,22 @@
     rows = browse_pages.each_with_index.map do | page, index |
       {
         key: "#{key_text} #{index + 1}",
-        value: page
+        value: page,
       }
     end
   elsif type == "breadcrumb"
     rows = [
       {
         key: key_text,
-        value: breadcrumb(@tagging_update.parent[0], @linkables)
-      }
+        value: breadcrumb(@tagging_update.parent[0], @linkables),
+      },
     ]
   elsif type == "organisations"
     organisations = organisations(@tagging_update.organisations, @linkables)
     rows = organisations.each_with_index.map do | org, index |
       {
         key: "#{key_text} #{index + 1}",
-        value: org
+        value: org,
       }
     end
   elsif type == "related_content"
@@ -29,7 +29,7 @@
     rows = content.each_with_index.map do | content, index |
       {
         key: "#{key_text} #{index + 1}",
-        value: content
+        value: content,
       }
     end
   end
@@ -37,5 +37,5 @@
 
 <%= render "govuk_publishing_components/components/summary_card", {
   title: heading,
-  rows: rows
+  rows: rows,
 } %>
