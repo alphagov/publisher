@@ -2,9 +2,14 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Tagging") %>
 
+    <% heading_breadcrumb = "GOV.UK breadcrumb" %>
+    <% heading_browse_pages = "Mainstream browse pages" %>
+    <% heading_organisations = "Organisations" %>
+    <% heading_related_items = "Related content" %>
+
     <% if @tagging_update.parent == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
-        heading: "GOV.UK breadcrumb",
+        heading: heading_breadcrumb,
         body: "No breadcrumb set",
         link_text: "Set GOV.UK breadcrumb",
         link_url: "#",
@@ -12,14 +17,14 @@
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "breadcrumb",
-        heading: "GOV.UK breadcrumb",
+        heading: heading_breadcrumb,
         key_text: "Breadcrumb",
       } %>
     <% end %>
 
     <% if @tagging_update.mainstream_browse_pages == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
-        heading: "Mainstream browse pages",
+        heading: heading_browse_pages,
         body: "Not tagged to any browse pages",
         link_text: "Tag to a browse page",
         link_url: "#",
@@ -27,14 +32,14 @@
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "browse_pages",
-        heading: "Mainstream browse pages",
+        heading: heading_browse_pages,
         key_text: "Browse page",
       } %>
     <% end %>
 
     <% if @tagging_update.organisations == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
-        heading: "Organisations",
+        heading: heading_organisations,
         body: "Not tagged to any organisations",
         link_text: "Tag to an organisation",
         link_url: "#",
@@ -42,14 +47,14 @@
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "organisations",
-        heading: "Organisations",
+        heading: heading_organisations,
         key_text: "Organisation",
       } %>
     <% end %>
 
     <% if @tagging_update.ordered_related_items == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
-        heading: "Related content",
+        heading: heading_related_items,
         body: "Not tagged to any related content",
         link_text: "Tag to related content",
         link_url: "#",
@@ -57,7 +62,7 @@
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "related_content",
-        heading: "Related content",
+        heading: heading_related_items,
         key_text: "Related content",
       } %>
     <% end %>
