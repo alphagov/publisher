@@ -45,7 +45,7 @@ FactoryBot.define do
     tomorrow = Time.zone.tomorrow
     start_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 15).time }
     end_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 18).time }
-    artefact
+    artefact_id { FactoryBot.create(:artefact).id }
   end
 
   factory :artefact do
