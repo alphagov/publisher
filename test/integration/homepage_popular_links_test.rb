@@ -1,10 +1,12 @@
 require "integration_test_helper"
-
 class HomepagePopularLinksTest < JavascriptIntegrationTest
+  setup do
+    @popular_links ||= FactoryBot.create(:popular_links, state: "published").editionable
+  end
+
   context "no homepage editor access" do
     setup do
       login_as(FactoryBot.create(:user, name: "Stub User"))
-      @popular_links = FactoryBot.create(:popular_links, state: "published")
       visit_popular_links
     end
 
@@ -16,7 +18,6 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
   context "homepage editor access" do
     setup do
       login_as_homepage_editor
-      @popular_links = FactoryBot.create(:popular_links, state: "published")
       visit_popular_links
     end
 
@@ -67,7 +68,6 @@ class HomepagePopularLinksTest < JavascriptIntegrationTest
     context "#create" do
       should "create and show new edition with draft status and with an option to edit popular links" do
         click_button("Create new edition")
-
         assert page.has_text?("Edition")
         assert page.has_text?(@popular_links.version_number)
         assert page.has_text?("Status")
