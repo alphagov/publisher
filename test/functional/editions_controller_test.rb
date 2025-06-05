@@ -1145,6 +1145,10 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#tagging" do
+    setup do
+      stub_empty_linkables
+    end
+
     should "render the 'Tagging' tab of the edit page" do
       get :tagging, params: { id: @edition.id }
       assert_template "show"
