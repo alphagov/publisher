@@ -1348,7 +1348,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#tagging" do
     setup do
-      stub_empty_linkables
+      stub_linkables_with_data
     end
 
     should "render the 'Tagging' tab of the edit page" do
