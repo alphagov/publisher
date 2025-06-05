@@ -2,7 +2,7 @@
 
 <%
   if type == "browse_pages"
-    browse_pages = browse_pages(@tagging_update.mainstream_browse_pages)
+    browse_pages = browse_pages(@tagging_update.mainstream_browse_pages, @linkables)
     rows = browse_pages.each_with_index.map do | page, index |
       {
         key: "#{key_text} #{index + 1}",
@@ -13,11 +13,11 @@
     rows = [
       {
         key: key_text,
-        value: breadcrumb(@tagging_update.parent[0])
+        value: breadcrumb(@tagging_update.parent[0], @linkables)
       }
     ]
   elsif type == "organisations"
-    organisations = organisations(@tagging_update.organisations)
+    organisations = organisations(@tagging_update.organisations, @linkables)
     rows = organisations.each_with_index.map do | org, index |
       {
         key: "#{key_text} #{index + 1}",
