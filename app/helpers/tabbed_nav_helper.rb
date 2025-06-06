@@ -17,6 +17,8 @@ module TabbedNavHelper
     case current_tab
     when nil
       "edit"
+    when "tagging"
+      "tagging"
     when "metadata"
       "metadata"
     when "unpublish"
