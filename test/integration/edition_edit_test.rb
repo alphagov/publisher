@@ -264,7 +264,7 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Organisations")
 
           within all(".govuk-summary-list__row")[0] do
-            assert page.has_css?("dt", text: "Organisation 1")
+            assert page.has_css?("dt", text: "Organisation")
             assert page.has_css?("dt", text: "Student Loans Company")
           end
         end
