@@ -1,41 +1,18 @@
 <%# locals: (type:, heading:, key_text:) %>
 
 <%
-  if type == "browse_pages"
-    browse_pages = browse_pages(@tagging_update.mainstream_browse_pages, @linkables)
-    rows = browse_pages.each_with_index.map do | page, index |
-      {
-        key: "#{key_text} #{index + 1}",
-        value: page,
-      }
-    end
-  elsif type == "breadcrumb"
-    rows = [
-      {
-        key: key_text,
-        value: breadcrumb(@tagging_update.parent[0], @linkables),
-      },
-    ]
+  if type == "breadcrumb"
+    items = breadcrumb(@tagging_update.parent, @linkables)
+  elsif type == "browse_pages"
+    items = browse_pages(@tagging_update.mainstream_browse_pages, @linkables)
   elsif type == "organisations"
-    organisations = organisations(@tagging_update.organisations, @linkables)
-    rows = organisations.each_with_index.map do | org, index |
-      {
-        key: "#{key_text} #{index + 1}",
-        value: org,
-      }
-    end
+    items = organisations(@tagging_update.organisations, @linkables)
   elsif type == "related_content"
-    content = related_content(@tagging_update.ordered_related_items)
-    rows = content.each_with_index.map do | content, index |
-      {
-        key: "#{key_text} #{index + 1}",
-        value: content,
-      }
-    end
+    items = related_content(@tagging_update.ordered_related_items)
   end
 %>
 
 <%= render "govuk_publishing_components/components/summary_card", {
   title: heading,
-  rows: rows,
+  rows: tag_summary_rows(items, key_text),
 } %>
