@@ -93,16 +93,16 @@ module EditionsHelper
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
 
-  def breadcrumb(id, linkables)
-    item = ""
+  def breadcrumb(parent, linkables)
+    items = []
 
     linkables.mainstream_browse_pages.each_value do |level_2|
       level_2.each do |page|
-        item = page[0] if page[1] == id
+        items << page[0].gsub(" / ", " > ") if parent.include? page[1]
       end
     end
 
-    item.gsub(" / ", " > ")
+    items
   end
 
   def browse_pages(mainstream_browse_pages, linkables)
@@ -135,5 +135,16 @@ module EditionsHelper
     end
 
     items
+  end
+
+  def tag_summary_rows(items, key_text)
+    rows = items.each_with_index.map do | item, index |
+      key = items.count == 1 ? key_text : "#{key_text} #{index + 1}"
+
+      {
+        key: key,
+        value: item,
+      }
+    end
   end
 end
