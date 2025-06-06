@@ -6,8 +6,6 @@ require_dependency "safe_html"
 class User < ApplicationRecord
   include GDS::SSO::User
 
-  has_many :artefact_actions, class_name: "ArtefactAction"
-
   scope :alphabetized, -> { order(name: :asc) }
   scope :enabled, -> { where("disabled IS NULL OR disabled = ?", false) }
 
@@ -17,7 +15,6 @@ class User < ApplicationRecord
 
   def progress(edition, action_attributes)
     request_type = action_attributes.delete(:request_type)
-
     processor = GovukContentModels::ActionProcessors::REQUEST_TYPE_TO_PROCESSOR[request_type.to_sym]
     edition = GovukContentModels::ActionProcessors.const_get(processor).new(self, edition, action_attributes, {}).processed_edition
     edition.save! if edition

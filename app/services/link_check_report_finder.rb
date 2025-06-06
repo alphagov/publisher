@@ -11,8 +11,9 @@ private
 
   attr_reader :report_id
 
+  # come back to this - need to go in depth of link check report changes
   def edition
-    @edition ||= Edition.find_by("link_check_reports._id": report_id)
+    @edition ||= LinkCheckReport.find(report_id).edition
   end
 
   def link_check_report
