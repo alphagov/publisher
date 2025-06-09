@@ -9,7 +9,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
 
-    @edition = FactoryBot.create(:guide_edition)
+    @edition = FactoryBot.create(:guide_edition, title: "Test guide")
     @artefact = @edition.artefact
     @artefact.external_links = []
     @content_id = @edition.artefact.content_id
