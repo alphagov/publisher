@@ -1,56 +1,54 @@
 module TaggingHelper
-  def breadcrumb(parent, linkables)
-    items = []
-
-    linkables.mainstream_browse_pages.each_value do |level_2|
-      level_2.each do |page|
-        items << page[0].gsub(" / ", " > ") if parent.include? page[1]
-      end
+  def tag_summary_rows(type, tagging_update, linkables, key_text)
+    case type
+    when "breadcrumb"
+      items = breadcrumb(tagging_update.parent, linkables)
+    when "browse_pages"
+      items = browse_pages(tagging_update.mainstream_browse_pages, linkables)
+    when "organisations"
+      items = organisations(tagging_update.organisations, linkables)
+    when "related_content"
+      items = related_content(tagging_update.ordered_related_items)
+    else
+      []
     end
 
-    items
+    tag_rows(items, key_text)
+  end
+
+  def breadcrumb(parent, linkables)
+    get_from_mainstream_browse_pages(parent, linkables)
   end
 
   def browse_pages(mainstream_browse_pages, linkables)
-    items = []
-
-    linkables.mainstream_browse_pages.each_value do |level_2|
-      level_2.each do |page|
-        items << page[0].gsub(" / ", " > ") if mainstream_browse_pages.include? page[1]
-      end
-    end
-
-    items
+    get_from_mainstream_browse_pages(mainstream_browse_pages, linkables)
   end
 
   def organisations(tagged_organisations, linkables)
-    items = []
-
-    linkables.organisations.each do |org|
-      items << org[0] if tagged_organisations.include? org[1]
-    end
-
-    items
+    linkables.organisations
+             .select { |org| tagged_organisations.include? org[1] }
+             .map { |org| org[0] }
   end
 
   def related_content(tagged_content)
-    items = []
-
-    tagged_content.each do |item|
-      items << item["base_path"]
-    end
-
-    items
+    tagged_content.map { |item| item["base_path"] }
   end
 
-  def tag_summary_rows(items, key_text)
+  def tag_rows(items, key_text)
     items.each_with_index.map do |item, index|
       key = items.count == 1 ? key_text : "#{key_text} #{index + 1}"
-
       {
         key: key,
         value: item,
       }
+    end
+  end
+
+  def get_from_mainstream_browse_pages(reference, linkables)
+    linkables.mainstream_browse_pages.each_value
+             .flat_map do |level_2|
+      level_2.select { |page| reference.include? page[1] }
+             .map { |page| page[0].gsub(" / ", " > ") }
     end
   end
 end
