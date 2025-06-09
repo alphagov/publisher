@@ -1,0 +1,6 @@
+<%# locals: (type:, heading:, key_text:) %>
+
+<%= render "govuk_publishing_components/components/summary_card", {
+  title: heading,
+  rows: tag_summary_rows(type, @tagging_update, @linkables, key_text),
+} %>

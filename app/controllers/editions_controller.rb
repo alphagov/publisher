@@ -74,8 +74,17 @@ class EditionsController < InheritedResources::Base
 
   alias_method :admin, :show
   alias_method :metadata, :show
-  alias_method :tagging, :show
   alias_method :unpublish, :show
+
+  def tagging
+    @linkables = Tagging::Linkables.new
+    @tagging_update = Tagging::TaggingUpdateForm.build_from_publishing_api(
+      @resource.artefact.content_id,
+      @resource.artefact.language,
+    )
+
+    render action: "show"
+  end
 
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
