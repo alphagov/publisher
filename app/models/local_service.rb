@@ -3,6 +3,7 @@ require_dependency "safe_html"
 
 class LocalService < ApplicationRecord
   validates :lgsl_code, :providing_tier, presence: true
+
   # rubocop/disable Rails/UniqueValidationWithoutIndex
   validates :lgsl_code, uniqueness: true
   # rubocop/enable Rails/UniqueValidationWithoutIndex

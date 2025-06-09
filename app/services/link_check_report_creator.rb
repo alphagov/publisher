@@ -28,7 +28,7 @@ class LinkCheckReportCreator
     report.save!
 
     report
-  rescue Mongoid::Errors::Validations => e
+  rescue StandardError => e
     raise InvalidReport, e
   end
 
@@ -53,7 +53,7 @@ private
   end
 
   def map_link_attrs(link)
-    {
+    attr = {
       uri: link.fetch(:uri),
       status: link.fetch(:status),
       checked_at: link.fetch(:checked),
@@ -62,5 +62,9 @@ private
       problem_summary: link.fetch(:problem_summary),
       suggested_fix: link.fetch(:suggested_fix),
     }
+
+    # rubocop:disable Rails/SaveBang
+    Link.create(attr)
+    # rubocop:enable Rails/SaveBang
   end
 end

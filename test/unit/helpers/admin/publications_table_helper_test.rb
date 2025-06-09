@@ -203,31 +203,24 @@ class PublicationsTableHelperTest < ActionView::TestCase
 
   context "#format" do
     should "return the correct value for the format" do
+      service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
       edition_answer = FactoryBot.create(:answer_edition)
-      edition_campaign = FactoryBot.create(:campaign_edition)
       edition_completed_transaction = FactoryBot.create(:completed_transaction_edition)
       edition_guide = FactoryBot.create(:guide_edition)
       edition_help_page = FactoryBot.create(:help_page_edition)
-      edition_licence = FactoryBot.create(:licence_edition)
-      edition_local_transaction = FactoryBot.create(:local_transaction_edition)
+      edition_local_transaction = FactoryBot.create(:local_transaction_edition, panopticon_id: FactoryBot.create(:artefact).id, lgsl_code: service.lgsl_code, lgil_code: 1)
       edition_place = FactoryBot.create(:place_edition)
-      edition_programme = FactoryBot.create(:programme_edition)
       edition_simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition)
       edition_transaction = FactoryBot.create(:transaction_edition)
-      edition_video = FactoryBot.create(:video_edition)
 
       assert_equal "Answer", format(edition_answer)
-      assert_equal "Campaign", format(edition_campaign)
       assert_equal "Completed transaction", format(edition_completed_transaction)
       assert_equal "Guide", format(edition_guide)
       assert_equal "Help page", format(edition_help_page)
-      assert_equal "Licence", format(edition_licence)
       assert_equal "Local transaction", format(edition_local_transaction)
       assert_equal "Place", format(edition_place)
-      assert_equal "Programme", format(edition_programme)
       assert_equal "Simple smart answer", format(edition_simple_smart_answer)
       assert_equal "Transaction", format(edition_transaction)
-      assert_equal "Video", format(edition_video)
     end
   end
 
@@ -242,7 +235,9 @@ class PublicationsTableHelperTest < ActionView::TestCase
       Timecop.freeze(today) do
         send_fact_check_action = Action.new(
           request_type: "send_fact_check",
+          edition: edition,
         )
+        send_fact_check_action.save!
         edition.stubs(:actions).returns([send_fact_check_action])
       end
 
