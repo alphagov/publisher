@@ -13,13 +13,13 @@ namespace :permissions do
       Edition.where(panopticon_id: document.id).each do |edition|
         owning_org_content_ids = edition.owning_org_content_ids
         owning_org_content_ids << args[:org_content_id]
-        edition.set(owning_org_content_ids:)
+        edition.update_columns(owning_org_content_ids: owning_org_content_ids)
       end
       document.save_as_task!("PermissionsAddition")
       message = "Access permission for organisation ID: #{args[:org_content_id]}, successfully assigned to document with ID: #{document.id}"
     end
     args[:log_file] ? args[:log_file].puts(message) : puts(message)
-  rescue Mongoid::Errors::DocumentNotFound => e
+  rescue ActiveRecord::RecordNotFound => e
     error_message = "An error occurred while processing document ID #{args[:document_content_id]}: #{e.message}"
     args[:log_file] ? args[:log_file].puts(error_message) : puts(error_message)
   end

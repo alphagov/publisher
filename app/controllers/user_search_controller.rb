@@ -1,3 +1,4 @@
+require "edition"
 class UserSearchController < ApplicationController
   respond_to :html
 
@@ -21,13 +22,14 @@ class UserSearchController < ApplicationController
       editions = filtered_editions.for_user(@user)
     end
 
-    editions = editions.excludes(state: "archived")
-    editions = editions.order_by([sort_column, sort_direction])
+    editions = editions.where.not(state: "archived")
+    editions = editions.order("#{sort_column} #{sort_direction}")
 
     # Need separate assignments here because Kaminari won't preserve pagination
     # info across a map, and we don't want to load every edition and paginate
     # the resulting array
     @page_info = editions.page(params[:page]).per(20)
+
     @editions = @page_info.map { |e| UserSearchEditionDecorator.new e, @user }
   end
 
@@ -40,6 +42,6 @@ private
   def filtered_editions
     return Edition if format_filter == "edition"
 
-    Edition.where(_type: "#{format_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{format_filter.camelcase}Edition")
   end
 end

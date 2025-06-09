@@ -2,21 +2,10 @@ require "test_helper"
 
 class AllContentWorkflowPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
-    transaction_edition = TransactionEdition.new(
-      title: "Register to vote (armed forces)",
-      slug: "register-to-vote-armed-forces",
-      state: "published",
-      assignee: "Ray Khan",
-      actions:,
-    )
-
-    guide_edition = GuideEdition.new(
-      title: "The Queen's Awards for Enterprise",
-      slug: "queens-awards-for-enterprise",
-      state: "published",
-      assignee: "Constance Cerf",
-      actions:,
-    )
+    transaction_user = FactoryBot.create(:user, :govuk_editor, name: "Ray Khan")
+    guide_user = FactoryBot.create(:user, :govuk_editor, name: "Constance Cerf")
+    transaction_edition = FactoryBot.create(:transaction_edition, title: "Register to vote (armed forces)", slug: "register-to-vote-armed-forces", state: "published", assigned_to_id: transaction_user.id, actions:)
+    guide_edition = FactoryBot.create(:guide_edition, title: "The Queen's Awards for Enterprise", slug: "queens-awards-for-enterprise", state: "published", assigned_to_id: guide_user.id, actions:)
 
     editions = [transaction_edition, guide_edition]
 

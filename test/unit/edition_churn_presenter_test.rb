@@ -20,7 +20,7 @@ class EditionChurnPresenterTest < LegacyIntegrationTest
     )
 
     csv = EditionChurnPresenter.new(
-      Edition.not_in(state: %w[archived]).order(:title.asc),
+      Edition.where.not(state: %w[archived]).order(:title),
     ).to_csv
 
     data = CSV.parse(csv, headers: true)
