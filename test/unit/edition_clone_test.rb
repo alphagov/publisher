@@ -28,7 +28,7 @@ class EditionCloneTest < ActiveSupport::TestCase
 
     answer_edition = guide_edition.build_clone(AnswerEdition)
 
-    assert_equal GuideEdition, guide_edition.class
+    assert_equal GuideEdition, guide_edition.editionable.class
     assert_equal AnswerEdition, answer_edition.editionable.class
 
     assert_equal guide_edition.title, answer_edition.title
@@ -45,7 +45,7 @@ class EditionCloneTest < ActiveSupport::TestCase
     guide_edition = answer_edition.build_clone(GuideEdition)
 
     assert_equal AnswerEdition, answer_edition.editionable.class
-    assert_equal GuideEdition, guide_edition.class
+    assert_equal GuideEdition, guide_edition.editionable.class
 
     assert_equal guide_edition.title, answer_edition.title
   end
@@ -62,7 +62,7 @@ class EditionCloneTest < ActiveSupport::TestCase
 
     cloned_edition = edition.build_clone(AnswerEdition)
 
-    assert_equal GuideEdition, guide_edition.class
+    assert_equal GuideEdition, edition.editionable.class
     assert_equal AnswerEdition, cloned_edition.editionable.class
 
     assert_equal "# Some Part Title!\n\nThis is some **version** text.\n\n# Another Part Title\n\nThis is [link](http://example.net/) text.", edition.whole_body
@@ -80,9 +80,10 @@ class EditionCloneTest < ActiveSupport::TestCase
     fact_check_and_publish(answer_edition)
 
     guide_edition = answer_edition.build_clone(GuideEdition)
+    guide_edition.save!
 
-    assert_equal GuideEdition, guide_edition.class
     assert_equal AnswerEdition, answer_edition.editionable.class
+    assert_equal GuideEdition, guide_edition.editionable.class
 
     assert_equal "# Part One\n\nBleep, bloop, blop", guide_edition.whole_body
     assert_equal guide_edition.title, answer_edition.title

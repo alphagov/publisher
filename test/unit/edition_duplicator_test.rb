@@ -61,7 +61,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     publish_item(@guide, @laura)
     artefact = @guide.artefact
 
-    assert_equal GuideEdition, artefact.latest_edition.class
+    assert_equal GuideEdition, artefact.latest_edition.editionable.class
 
     command = EditionDuplicator.new(@guide, @laura)
     assert command.duplicate("answer_edition", @fred)
