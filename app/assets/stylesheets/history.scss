@@ -3,17 +3,22 @@
     padding-top: 0;
   }
 
+  // stylelint-disable scss/at-extend-no-missing-placeholder
+  &__actions {
+    a {
+      @extend .govuk-link;
+      @extend .govuk-link--no-visited-state;
+    }
+  }
+
   &__action--receive_fact_check__commment {
     .govuk-inset-text {
-      @extend .govuk-tag--light-blue; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+      @extend .govuk-tag--light-blue;
       color: $govuk-text-colour;
       word-break: break-word;
     }
-
-    a {
-      @extend .govuk-link; // stylelint-disable-line scss/at-extend-no-missing-placeholder
-    }
   }
+  // stylelint-enable scss/at-extend-no-missing-placeholder
 
   &__action--receive_fact_check--toggle {
     border-width: 0;
