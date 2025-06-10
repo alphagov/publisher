@@ -33,7 +33,7 @@
         } %>
       <% end %>
 
-      <%= render partial: "local_transactions/devolved_administrations", locals: { f: f, resource: @resource } %>
+      <%= render partial: "local_transactions/devolved_administrations", locals: { f: f, resource: @resource.editionable } %>
     </fieldset>
   </div>
 </div>
