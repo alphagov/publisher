@@ -17,7 +17,7 @@ class ArtefactsControllerTest < ActionController::TestCase
 
       assert_response :redirect
       assert_redirected_to root_path
-      assert_includes flash[:danger], "do not have permission"
+      assert_includes flash[:danger], "You do not have permission to see this page."
     end
 
     should "not allow creation if no permissions" do
@@ -28,7 +28,7 @@ class ArtefactsControllerTest < ActionController::TestCase
 
       assert_response :redirect
       assert_redirected_to root_path
-      assert_includes flash[:danger], "do not have permission"
+      assert_includes flash[:danger], "You do not have permission to see this page."
     end
   end
 

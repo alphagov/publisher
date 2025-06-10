@@ -275,6 +275,7 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?(/can-i-get-a-driving-licence/)
         assert page.has_text?("Language")
         assert page.has_text?(/English/)
+        assert page.has_no_button?("Update")
       end
     end
   end
