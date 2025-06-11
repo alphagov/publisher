@@ -299,7 +299,7 @@ class EditionEditTest < IntegrationTest
   end
 
   context "metadata tab" do
-    context "when state is 'draft'" do
+    context "when state is 'draft' and user has govuk editor permissions" do
       setup do
         visit_draft_edition
         click_link("Metadata")
@@ -329,20 +329,74 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "when user has welsh editor permissions" do
+      should "show read-only values and no 'Update' button for welsh edition" do
+        @welsh_edition = FactoryBot.create(
+          :edition,
+          title: "Edit page title",
+          panopticon_id: FactoryBot.create(
+            :artefact,
+            slug: "welsh-language-edition-test",
+            language: "cy",
+          ).id,
+          state: "ready",
+          slug: "welsh-language-edition-test",
+        )
+
+        login_as_welsh_editor
+        visit edition_path(@welsh_edition)
+        click_link("Metadata")
+
+        assert @user.has_editor_permissions?(@welsh_edition)
+        assert page.has_no_field?("artefact[slug]")
+        assert page.has_no_field?("artefact[language]")
+        assert page.has_text?("Slug")
+        assert page.has_text?(/welsh-language-edition-test/)
+        assert page.has_text?("Language")
+        assert page.has_text?(/Welsh/)
+        assert page.has_no_button?("Update")
+      end
+
+      should "show read-only values and no 'Update' button for a non-welsh edition" do
+        visit_draft_edition
+        login_as_welsh_editor
+        click_link("Metadata")
+
+        assert_not @user.has_editor_permissions?(@draft_edition)
+        assert page.has_no_field?("artefact[slug]")
+        assert page.has_no_field?("artefact[language]")
+        assert page.has_text?("Slug")
+        assert page.has_text?("Language")
+        assert page.has_no_button?("Update")
+      end
+    end
+
+    context "when user has no permissions" do
+      should "show read-only values and no 'Update' button" do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+        visit_draft_edition
+        click_link("Metadata")
+
+        assert_not user.has_editor_permissions?(@draft_edition)
+        assert page.has_no_button?("Update")
+      end
+    end
+
     context "when state is not 'draft'" do
       setup do
         visit_published_edition
         click_link("Metadata")
       end
 
-      should "show un-editable current value for slug and language" do
+      should "show read-only values and no 'Update' button" do
         assert page.has_no_field?("artefact[slug]")
         assert page.has_no_field?("artefact[language]")
-
         assert page.has_text?("Slug")
         assert page.has_text?(/can-i-get-a-driving-licence/)
         assert page.has_text?("Language")
         assert page.has_text?(/English/)
+        assert page.has_no_button?("Update")
       end
     end
   end

@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= header_for("Metadata") %>
 
-    <% if Edition::PUBLISHING_API_DRAFT_STATES.include? publication.state %>
+    <% if Edition::PUBLISHING_API_DRAFT_STATES.include?(publication.state) && current_user.govuk_editor? %>
       <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact" }) do |f| %>
         <%= f.hidden_field :id, value: @artefact.id %>
 
