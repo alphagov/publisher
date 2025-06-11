@@ -24,7 +24,7 @@ module GovukContentModels
         editionable = publication_class.build(publication_class_attributes.to_h)
         @edition = Edition.build(edition_attributes.to_h)
         @edition.editionable = editionable
-        @edition.save!
+        @edition.save! if @edition.valid?
         @edition
       end
 
