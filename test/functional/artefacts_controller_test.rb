@@ -58,8 +58,8 @@ class ArtefactsControllerTest < ActionController::TestCase
       patch :update, params: { id: welsh_edition.artefact.id }
 
       assert_response :redirect
-      assert_redirected_to edition_path(welsh_edition.id)
-      assert_includes flash[:danger], "You do not have correct editor permissions for this action."
+      assert_redirected_to metadata_edition_path(welsh_edition.id)
+      assert_includes flash[:danger], "You do not have permissions to update this page"
     end
 
     should "not allow update if no editor permissions" do
@@ -70,8 +70,8 @@ class ArtefactsControllerTest < ActionController::TestCase
       patch :update, params: { id: edition.artefact.id }
 
       assert_response :redirect
-      assert_redirected_to edition_path(edition.id)
-      assert_includes flash[:danger], "You do not have correct editor permissions for this action."
+      assert_redirected_to metadata_edition_path(edition.id)
+      assert_includes flash[:danger], "You do not have permissions to update this page"
     end
   end
 end

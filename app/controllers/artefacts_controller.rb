@@ -59,9 +59,9 @@ private
     return if current_user.govuk_editor?
 
     if params[:action] == "update"
-      flash[:danger] = "You do not have correct editor permissions for this action."
+      flash[:danger] = "You do not have permissions to update this page"
       artefact = Artefact.find(params[:id])
-      redirect_to edition_path(artefact.latest_edition)
+      redirect_to metadata_edition_path(artefact.latest_edition)
     else
       flash[:danger] = "You do not have permission to see this page."
       redirect_to root_path
