@@ -1,5 +1,5 @@
 <div class="publications-table" data-module="publications-table">
-  <p class="govuk-heading-m govuk-!-margin-bottom-3 publications-table__heading"><%= @presenter.editions.length %> document(s)</p>
+  <p class="govuk-heading-m govuk-!-margin-bottom-3 publications-table__heading"><%= pluralize(number_with_delimiter(@presenter.editions.length), "document" ) %></p>
 
   <%= render "govuk_publishing_components/components/table", {
     head: [
