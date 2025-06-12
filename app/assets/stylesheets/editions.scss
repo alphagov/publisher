@@ -1,18 +1,24 @@
-.editions__edit__summary {
-  .govuk-tag {
-    display: inline;
+.editions {
+  &__edit__summary {
+    .govuk-tag {
+      display: inline;
+    }
+  }
+
+  &__admin__tab {
+    .govuk-link {
+      margin-top: govuk-spacing(3)
+    }
+  }
+
+  &__important-note__details {
+    white-space: pre;
   }
 }
 
 .edit_edition__change_note {
   border-top: 1px solid $govuk-border-colour;
   @include govuk-responsive-padding(4, "top");
-}
-
-.editions__admin__tab {
-  .govuk-link {
-    margin-top: govuk-spacing(3)
-  }
 }
 
 .gem-c-notice + .gem-c-inset-text {
