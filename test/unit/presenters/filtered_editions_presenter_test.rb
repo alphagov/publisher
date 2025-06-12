@@ -40,7 +40,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       states = FilteredEditionsPresenter.new(a_gds_user).edition_states
 
       assert_equal(9, states.count)
-      assert_includes(states, { label: "Drafts", value: :draft })
+      assert_includes(states, { label: "Draft", value: :draft })
       assert_includes(states, { label: "In review", value: :in_review })
       assert_includes(states, { label: "Amends needed", value: :amends_needed })
       assert_includes(states, { label: "Out for fact check", value: :fact_check })

@@ -89,7 +89,7 @@ private
 
   def state_names
     {
-      draft: "Drafts",
+      draft: "Draft",
       in_review: "In review",
       amends_needed: "Amends needed",
       fact_check: "Out for fact check",
