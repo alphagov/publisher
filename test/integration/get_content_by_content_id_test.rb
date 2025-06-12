@@ -16,7 +16,7 @@ class GetContentByContentIdTest < IntegrationTest
       create_draft_edition
       visit "by-content-id/#{@draft_edition.content_id}"
 
-      assert_content("1 document(s)")
+      assert_content("1 document")
       assert page.has_content?("some title")
     end
 
@@ -24,7 +24,7 @@ class GetContentByContentIdTest < IntegrationTest
       create_published_edition
       visit "by-content-id/#{@published_edition.content_id}"
 
-      assert_content("1 document(s)")
+      assert_content("1 document")
       assert page.has_content?("some title")
     end
 
@@ -33,7 +33,7 @@ class GetContentByContentIdTest < IntegrationTest
       create_draft_edition
       visit "by-content-id/#{@published_edition.content_id}"
 
-      assert_content("2 document(s)")
+      assert_content("2 documents")
       assert page.has_content?("some title")
     end
   end

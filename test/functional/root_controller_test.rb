@@ -46,7 +46,7 @@ class RootControllerTest < ActionController::TestCase
 
       get :index
 
-      assert_select "p.publications-table__heading", "9 document(s)"
+      assert_select "p.publications-table__heading", "9 documents"
       assert_select "span.govuk-tag--draft", "Draft"
       assert_select "span.govuk-tag--in_review", "In review"
       assert_select "span.govuk-tag--amends_needed", "Amends needed"
@@ -66,7 +66,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { states_filter: %w[draft published] }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "2 document(s)"
+      assert_select "p.publications-table__heading", "2 documents"
       assert_select "td.govuk-table__cell", "Draft"
       assert_select "td.govuk-table__cell", "Published"
     end
@@ -86,7 +86,7 @@ class RootControllerTest < ActionController::TestCase
       get :index
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document"
       assert_select "td.govuk-table__cell", "Stub User"
     end
 
@@ -108,7 +108,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { assignee_filter: anna.id }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document"
       assert_select "td.govuk-table__cell", "Anna"
     end
 
@@ -138,7 +138,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { content_type_filter: "guide" }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document"
       assert_select "dd.govuk-summary-list__value", "Guide"
     end
 
@@ -149,7 +149,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { search_text: "zombie" }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "1 document(s)"
+      assert_select "p.publications-table__heading", "1 document"
       assert_select "p.title", /What to do in the event of a zombie apocalypse/
     end
 
@@ -177,7 +177,7 @@ class RootControllerTest < ActionController::TestCase
       get :index
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} document(s)"
+      assert_select "p.publications-table__heading", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} documents"
       assert_select ".govuk-table__row .title", FilteredEditionsPresenter::ITEMS_PER_PAGE
     end
 
@@ -189,7 +189,7 @@ class RootControllerTest < ActionController::TestCase
       get :index, params: { page: 2 }
 
       assert_response :ok
-      assert_select "p.publications-table__heading", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} document(s)"
+      assert_select "p.publications-table__heading", "#{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1} documents"
       assert_select ".govuk-table__row .title", 1
     end
   end
