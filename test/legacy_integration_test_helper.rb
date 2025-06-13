@@ -10,15 +10,11 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
   setup do
-    DatabaseCleaner[:mongoid].start
-    DatabaseCleaner.start
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit, false)
   end
 
   teardown do
-    DatabaseCleaner[:mongoid].clean
-    DatabaseCleaner.clean
     Capybara.reset_sessions! # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
     GDS::SSO.test_user = nil
@@ -146,8 +142,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     end
 
     save_edition_and_assert_success
-
-    guide.reload
   end
 
   # Fill in some sample variants for a transaction
@@ -172,8 +166,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     end
 
     save_edition_and_assert_success
-
-    transaction.reload
   end
 
   def switch_tab(tab)
@@ -204,6 +196,7 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     else
       assert page.has_content? "edition was successfully updated."
     end
+    page.refresh
   end
 
   def save_edition_and_assert_error(error_message = nil, link_href = nil)
