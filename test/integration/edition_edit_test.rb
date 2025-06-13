@@ -566,7 +566,7 @@ class EditionEditTest < IntegrationTest
 
         within :css, ".history__action--receive_fact_check__content" do
           assert page.has_text?("We’re happy for you to publish.")
-          assert page.has_css?("div.action--receive_fact_check--earlier", text: "Reply and confirm the content is correct.")
+          assert page.has_css?("div.js-earlier", text: "Reply and confirm the content is correct.")
           assert page.has_text?("We found some potentially harmful content in this email which has been automatically removed. Please check the content of the message in case any text has been deleted as well.")
         end
       end
