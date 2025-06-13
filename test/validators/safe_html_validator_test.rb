@@ -69,7 +69,7 @@ class SafeHtmlTest < ActiveSupport::TestCase
 
       Dir[models_dir]
         .map { |file| File.basename(file, ".rb").camelize.constantize }
-        .select { |klass| klass.included_modules.include?(Mongoid::Document) && klass.const_defined?(:GOVSPEAK_FIELDS) }
+        .select { |klass| klass.const_defined?(:GOVSPEAK_FIELDS) }
         .each { |klass| assert_includes klass.validators.map(&:class), SafeHtml, "#{klass} must be validated with SafeHtml" }
     end
   end
