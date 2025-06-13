@@ -14,7 +14,7 @@ class EditionTest < ActiveSupport::TestCase
   end
 
   should "raise an exception when publish_anonymously! fails to publish" do
-    edition = FactoryBot.create(:guide_edition_with_two_parts, state: "ready")
+    edition = FactoryBot.build(:guide_edition_with_two_parts, state: "ready")
     # simulate validation error causing failure to publish anonymously
     edition.parts.first.body = "[register your vehicle](registering-an-imported-vehicle)"
     edition.parts.first.save!(validate: false)

@@ -1,15 +1,11 @@
 require "csv"
 require_dependency "safe_html"
 
-class LocalService
-  include Mongoid::Document
-
-  field :description,    type: String
-  field :lgsl_code,      type: Integer
-  field :providing_tier, type: Array
-
+class LocalService < ApplicationRecord
   validates :lgsl_code, :providing_tier, presence: true
+  # rubocop/disable Rails/UniqueValidationWithoutIndex
   validates :lgsl_code, uniqueness: true
+  # rubocop/enable Rails/UniqueValidationWithoutIndex
   validate :eligible_providing_tier
 
   def self.find_by_lgsl_code(lgsl_code)
