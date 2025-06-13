@@ -27,7 +27,7 @@ describe('History and Notes component', function () {
           <div>
             <div class="history__action--receive_fact_check__content">
               <p>A current message</p>
-              <div class="history__action--receive_fact_check--earlier">
+              <div class="js-earlier">
                 <p>An earlier message</p>
                 <p>Another earlier message</p>
               </div>
@@ -38,7 +38,7 @@ describe('History and Notes component', function () {
           <div>
             <div class="history__action--receive_fact_check__content">
               <p>A current message</p>
-              <div class="history__action--receive_fact_check--earlier">
+              <div class="js-earlier">
                 <p>An earlier message</p>
                 <p>Another earlier message</p>
               </div>
@@ -62,13 +62,13 @@ describe('History and Notes component', function () {
   })
 
   describe('"Receive fact check" actions', function () {
-    it('should hide "history__action--receive_fact_check--earlier" sections where they exist', function () {
+    it('should hide "js-earlier" sections where they exist', function () {
       const actions = module.querySelectorAll('li')
 
-      expect(actions[0].querySelector('.history__action--receive_fact_check--earlier')).toBe(null)
-      expect(actions[1].querySelector('.history__action--receive_fact_check--earlier')).toBe(null)
-      expect(actions[2].querySelector('.history__action--receive_fact_check--earlier').classList.contains('govuk-!-display-none')).toBe(true)
-      expect(actions[3].querySelector('.history__action--receive_fact_check--earlier').classList.contains('govuk-!-display-none')).toBe(true)
+      expect(actions[0].querySelector('.js-earlier')).toBe(null)
+      expect(actions[1].querySelector('.js-earlier')).toBe(null)
+      expect(actions[2].querySelector('.js-earlier').classList.contains('govuk-!-display-none')).toBe(true)
+      expect(actions[3].querySelector('.js-earlier').classList.contains('govuk-!-display-none')).toBe(true)
     })
 
     it('should display "Show earlier messages" buttons where there is a hidden section', function () {
@@ -87,8 +87,8 @@ describe('History and Notes component', function () {
     it('should add IDs to the hidden sections', function () {
       const actions = module.querySelectorAll('li')
 
-      expect(actions[2].querySelector('.history__action--receive_fact_check--earlier').id).toEqual('toggledContent_1')
-      expect(actions[3].querySelector('.history__action--receive_fact_check--earlier').id).toEqual('toggledContent_2')
+      expect(actions[2].querySelector('.js-earlier').id).toEqual('toggledContent_1')
+      expect(actions[3].querySelector('.js-earlier').id).toEqual('toggledContent_2')
     })
 
     it('should toggle the display of the hidden section when the "Show earlier messages" link is clicked', function () {
@@ -98,14 +98,14 @@ describe('History and Notes component', function () {
 
       toggle.dispatchEvent(click)
 
-      expect(action.querySelector('.history__action--receive_fact_check--earlier').classList.contains('govuk-!-display-none')).toBe(false)
-      expect(toggle.text).toEqual('Hide earlier messages')
+      expect(action.querySelector('.js-earlier').classList.contains('govuk-!-display-none')).toBe(false)
+      expect(toggle.textContent).toEqual('Hide earlier messages')
       expect(toggle.getAttribute('aria-expanded')).toEqual('true')
 
       toggle.dispatchEvent(click)
 
-      expect(action.querySelector('.history__action--receive_fact_check--earlier').classList.contains('govuk-!-display-none')).toBe(true)
-      expect(toggle.text).toEqual('Show earlier messages')
+      expect(action.querySelector('.js-earlier').classList.contains('govuk-!-display-none')).toBe(true)
+      expect(toggle.textContent).toEqual('Show earlier messages')
       expect(toggle.getAttribute('aria-expanded')).toEqual('false')
     })
   })
