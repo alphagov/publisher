@@ -18,21 +18,23 @@
         end
       %>
 
-      <%= render "govuk_publishing_components/components/add_another", {
-        fieldset_legend: "Link",
-        add_button_text: "Add related external link",
-        empty_fields: true,
-        items: items,
-        empty: empty,
-      } %>
+      <% if current_user.has_editor_permissions?(@resource) %>
+        <%= render "govuk_publishing_components/components/add_another", {
+          fieldset_legend: "Link",
+          add_button_text: "Add related external link",
+          empty_fields: true,
+          items: items,
+          empty: empty,
+        } %>
 
-      <%= render "govuk_publishing_components/components/inset_text", {
-        text: "After saving, changes to related external links will be visible on the site the next time this publication is published.",
-      } %>
+        <%= render "govuk_publishing_components/components/inset_text", {
+          text: "After saving, changes to related external links will be visible on the site the next time this publication is published.",
+        } %>
 
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Save",
-      } %>
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+        } %>
+      <% end %>
     <% end %>
   </div>
 </div>
