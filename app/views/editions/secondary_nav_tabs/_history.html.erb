@@ -33,25 +33,27 @@
     </div>
   </div>
 
-  <div class="govuk-grid-column-one-third options-sidebar">
-    <div class="sidebar-components">
-      <%= sidebar_options_heading %>
+  <% if current_user.has_editor_permissions?(@resource) %>
+    <div class="govuk-grid-column-one-third options-sidebar">
+      <div class="sidebar-components">
+        <%= sidebar_options_heading %>
 
-      <%= render "govuk_publishing_components/components/list", {
-        items: [
-          (render "govuk_publishing_components/components/button", {
-            text: "Add edition note",
-            margin_bottom: 3,
-            href: history_add_edition_note_edition_path,
-          }),
-          (render "govuk_publishing_components/components/button", {
-            text: "Update important note",
-            margin_bottom: 3,
-            secondary_solid: true,
-            href: history_update_important_note_edition_path,
-          }),
-        ],
-      } %>
+        <%= render "govuk_publishing_components/components/list", {
+          items: [
+            (render "govuk_publishing_components/components/button", {
+              text: "Add edition note",
+              margin_bottom: 3,
+              href: history_add_edition_note_edition_path,
+            }),
+            (render "govuk_publishing_components/components/button", {
+              text: "Update important note",
+              margin_bottom: 3,
+              secondary_solid: true,
+              href: history_update_important_note_edition_path,
+            }),
+          ],
+        } %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
