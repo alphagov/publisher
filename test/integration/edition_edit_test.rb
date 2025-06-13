@@ -455,25 +455,32 @@ class EditionEditTest < IntegrationTest
 
     context "when the user has welsh editor permissions" do
       setup do
-        @user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+        @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+        @user_welsh = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
         login_as(@user)
       end
 
       should "hide the note action buttons from the user on a non welsh document" do
         visit_draft_edition
+        login_as(@user_welsh)
         click_link("History and notes")
 
-        assert_not @user.has_editor_permissions?(@draft_edition)
+        assert_not @user_welsh.has_editor_permissions?(@draft_edition)
         assert_not page.has_content?("Add edition note")
         assert_not page.has_content?("Update important note")
       end
 
       should "show the note action buttons for the user on a welsh document" do
-        edition = FactoryBot.create(:answer_edition, :fact_check, :welsh)
+        edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
+        edition.state = "fact_check"
+        edition.save!
+
+        login_as(@user_welsh)
+
         visit edition_path(edition)
         click_link("History and notes")
 
-        assert @user.has_editor_permissions?(edition)
+        assert @user_welsh.has_editor_permissions?(edition)
         assert page.has_content?("Add edition note")
         assert page.has_content?("Update important note")
       end
