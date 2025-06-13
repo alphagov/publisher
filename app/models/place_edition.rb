@@ -1,4 +1,3 @@
-
 class PlaceEdition < ApplicationRecord
   include Editionable
 
