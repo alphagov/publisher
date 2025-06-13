@@ -3,8 +3,8 @@
 <% note_details = @edition.important_note&.comment %>
 <%= render "govuk_publishing_components/components/notice", {
   description_govspeak:
-    sanitize("<div>
-      <p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word'>#{h(note_details)}</p>
+    sanitize("<div class='editions__important-note'>
+      <p class='govuk-body govuk-!-font-weight-bold govuk-!-text-break-word editions__important-note__details'>#{h(note_details)}</p>
       <p class='govuk-body-m'>#{h(note_author_name)} added an important note on
       <time class='govuk-body' datetime='#{note_date}'>#{note_date.to_fs(:govuk_date)}</time></p>
       </div>"),
