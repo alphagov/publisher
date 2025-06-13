@@ -23,12 +23,8 @@ class LegacyEditionsController < InheritedResources::Base
   def show
     @linkables = Tagging::Linkables.new
 
-    if @resource.is_a?(Parted)
-      @ordered_parts = @resource.parts.in_order
-    end
-
-    if @resource.is_a?(Varianted)
-      @ordered_variants = @resource.variants.in_order
+    if @resource.editionable.is_a?(Parted)
+      @ordered_parts = @resource.editionable.parts.in_order
     end
 
     @tagging_update = tagging_update_form
@@ -51,7 +47,6 @@ class LegacyEditionsController < InheritedResources::Base
     class_identifier = params[:edition].delete(:kind).to_sym
     create_params = permitted_params(subtype: :"#{class_identifier}_edition")
     @publication = current_user.create_edition(class_identifier, create_params[:edition])
-
     if @publication.persisted?
       UpdateWorker.perform_async(@publication.id.to_s)
 
@@ -109,6 +104,9 @@ class LegacyEditionsController < InheritedResources::Base
         UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
         return_to = params[:return_to] || edition_path(resource)
+
+        flash[:notice] = "#{description(resource)} edition was successfully updated."
+
         redirect_to return_to
       end
       failure.html do
@@ -251,7 +249,7 @@ class LegacyEditionsController < InheritedResources::Base
 protected
 
   def permitted_params(subtype: nil)
-    subtype = @resource.class.to_s.underscore.to_sym if subtype.nil?
+    subtype = @resource.editionable.class.to_s.underscore.to_sym if subtype.nil?
     params.permit(edition: type_specific_params(subtype) + common_params)
   end
 
@@ -296,15 +294,14 @@ protected
         ] },
       ]
     when :transaction_edition
-      [
-        :introduction,
-        :start_button_text,
-        :will_continue_on,
-        :link,
-        :more_information,
-        :alternate_methods,
-        :need_to_know,
-        { variants_attributes: %i[title slug introduction link more_information alternate_methods order id _destroy] },
+      %i[
+        introduction
+        start_button_text
+        will_continue_on
+        link
+        more_information
+        alternate_methods
+        need_to_know
       ]
     when :completed_transaction_edition
       %i[
@@ -385,10 +382,9 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
-
-    params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-      :request_type, :email_addresses, :customised_message, :comment, :publish_at
-    )
+      params[:edition]["activity_#{attempted_activity}_attributes"].permit(
+        :request_type, :email_addresses, :customised_message, :comment, :publish_at
+      )
   end
 
   def remove_activity_params

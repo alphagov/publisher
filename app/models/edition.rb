@@ -23,7 +23,7 @@ class Edition < ApplicationRecord
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
-  has_many :link_check_reports, inverse_of: :edition
+  has_many :link_check_reports, inverse_of: :edition, dependent: :destroy
 
   scope :accessible_to,
         lambda { |user|
