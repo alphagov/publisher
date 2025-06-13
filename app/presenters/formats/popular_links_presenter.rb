@@ -30,7 +30,7 @@ module Formats
 
     def details
       {
-        link_items: popular_links_edition.link_items,
+        link_items: get_schema_ready_link_items,
       }
     end
 
@@ -41,6 +41,10 @@ module Formats
 
     def public_updated_at
       popular_links_edition.updated_at
+    end
+
+    def get_schema_ready_link_items
+      popular_links_edition.link_items.map(&:symbolize_keys)
     end
   end
 end
