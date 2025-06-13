@@ -11,21 +11,21 @@ describe('History and Notes component', function () {
       `<ul>
         <li>
           <div>
-            <div class="history__action--note__content">
+            <div>
               <p>A current message</p>
             </div>
           </div>
         </li>
         <li>
           <div>
-            <div class="history__action--receive_fact_check__content">
+            <div>
               <p>A current message</p>
             </div>
           </div>
         </li>
         <li>
           <div>
-            <div class="history__action--receive_fact_check__content">
+            <div>
               <p>A current message</p>
               <div class="js-earlier">
                 <p>An earlier message</p>
@@ -36,7 +36,7 @@ describe('History and Notes component', function () {
         </li>
         <li>
           <div>
-            <div class="history__action--receive_fact_check__content">
+            <div>
               <p>A current message</p>
               <div class="js-earlier">
                 <p>An earlier message</p>
