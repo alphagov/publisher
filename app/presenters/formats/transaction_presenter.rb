@@ -10,7 +10,7 @@ module Formats
       "transaction"
     end
 
-  #come back to this - needs revisitng - can we stop sending variants completely?
+    # come back to this - needs revisitng - can we stop sending variants completely?
     def details
       {
         variants: [],
