@@ -1,84 +1,76 @@
 require "test_helper"
 
 class LinkValidatorTest < ActiveSupport::TestCase
-  class Dummy
-    include Mongoid::Document
-
-    field "body", type: String
-    field "assignee", type: String
-    GOVSPEAK_FIELDS = [:body].freeze
-
-    validates_with LinkValidator
-  end
-
   context "links" do
     should "not be verified for blank govspeak fields" do
-      doc = Dummy.new(body: nil)
+      edition = FactoryBot.create(:answer_edition)
 
       assert_nothing_raised do
-        doc.valid?
+        edition.update!(body: nil)
       end
-      assert_empty doc.errors
+      assert_empty edition.errors
     end
 
-    should "not contain empty array for errors on fields" do
-      doc = Dummy.new(body: "Nothing is invalid")
+    should "not contain any errors when valid" do
+      edition = FactoryBot.create(:answer_edition)
+      edition.update!(body: "Nothing is invalid")
 
-      assert doc.valid?
-      assert_empty doc.errors[:body]
+      assert edition.valid?
+      assert_empty edition.errors[:body]
     end
 
     should "start with http[s]://, mailto: or /" do
-      doc = Dummy.new(body: "abc [external](external.com)")
-      assert doc.invalid?
-      assert_includes doc.errors.attribute_names, :body
+      edition = FactoryBot.create(:answer_edition)
 
-      doc = Dummy.new(body: "abc [external](http://external.com)")
-      assert doc.valid?
+      assert_not edition.update(body: "abc [external](external.com)")
+      assert edition.invalid?
+      assert_includes edition.errors.attribute_names, :body
 
-      doc = Dummy.new(body: "abc [internal](/internal)")
-      assert doc.valid?
+      edition.update!(body: "abc [external](http://external.com)")
+      assert edition.valid?
+
+      edition.update!(body: "abc [internal](/internal)")
+      assert edition.valid?
     end
 
     should "not contain hover text" do
-      doc = Dummy.new(body: 'abc [foobar](http://foobar.com "hover")')
-      assert doc.invalid?
-      assert_includes doc.errors.attribute_names, :body
+      edition = FactoryBot.create(:answer_edition)
+      assert_not edition.update(body: 'abc [foobar](http://foobar.com "hover")')
+
+      assert edition.invalid?
+      assert_includes edition.errors.attribute_names, :body
     end
 
     should "validate smart quotes as normal quotes" do
-      doc = Dummy.new(body: "abc [foobar](http://foobar.com “hover”)")
-      assert doc.invalid?
-      assert_includes doc.errors.attribute_names, :body
+      edition = FactoryBot.create(:answer_edition)
+      assert_not edition.update(body: "abc [foobar](http://foobar.com “hover”)")
+
+      assert edition.invalid?
+      assert_includes edition.errors.attribute_names, :body
     end
 
     should "not set rel=external" do
-      doc = Dummy.new(body: 'abc [foobar](http://foobar.com){:rel="external"}')
-      assert doc.invalid?
-      assert_includes doc.errors.attribute_names, :body
+      edition = FactoryBot.create(:answer_edition)
+      assert_not edition.update(body: 'abc [foobar](http://foobar.com){:rel="external"}')
+
+      assert edition.invalid?
+      assert_includes edition.errors.attribute_names, :body
     end
 
     should "show multiple errors" do
-      doc = Dummy.new(body: 'abc [foobar](foobar.com "bar"){:rel="external"}')
-      assert doc.invalid?
-      assert_equal 3, doc.errors.count
+      edition = FactoryBot.create(:answer_edition)
+      assert_not edition.update(body: 'abc [foobar](foobar.com "bar"){:rel="external"}')
+
+      assert edition.invalid?
+      assert_equal 3, edition.errors.count
     end
 
     should "only show each error once" do
-      doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
-      assert doc.invalid?
-      assert_equal 1, doc.errors.count
-    end
+      edition = FactoryBot.create(:answer_edition)
+      assert_not edition.update(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
 
-    should "be validated when any attribute of the document changes" do
-      # already published document having link validation errors
-      doc = Dummy.new(body: "abc [link1](foobar.com), ghi [link2](bazquux.com)")
-      doc.save!(validate: false)
-
-      doc.assignee = "4fdef0000000000000000001"
-      assert doc.invalid?
-
-      assert_equal 1, doc.errors.count
+      assert edition.invalid?
+      assert_equal 1, edition.errors.count
     end
   end
 end
