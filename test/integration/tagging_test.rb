@@ -9,7 +9,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
 
-    @edition = FactoryBot.create(:guide_edition)
+    @edition = FactoryBot.create(:guide_edition, title: "Test guide")
     @artefact = @edition.artefact
     @artefact.external_links = []
     @content_id = @edition.artefact.content_id
@@ -239,7 +239,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     should "handle 404s from publishing-api (e.g. straight after a new artefact is created)" do
       stub_request(:get, "#{PUBLISHING_API_V2_ENDPOINT}/links/#{@content_id}")
         .to_return(status: 404)
-
       visit_edition @edition
 
       assert page.has_content?("Test guide")

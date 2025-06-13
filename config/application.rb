@@ -34,7 +34,6 @@ module Publisher
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
-
     # Due to how we initialize state_count_reporter we need to disable a new
     # optimisation put in place in Rails 7.1.
     # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#autoloaded-paths-are-no-longer-in-$load-path
