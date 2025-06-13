@@ -441,6 +441,40 @@ class EditionEditTest < IntegrationTest
       assert_current_path history_update_important_note_edition_path(@draft_edition.id)
     end
 
+    should "hide the note action buttons from a user with no permissions" do
+      user = FactoryBot.create(:user, name: "Stub User")
+      login_as(user)
+      visit_draft_edition
+      click_link("History and notes")
+
+      assert_not user.has_editor_permissions?(@draft_edition)
+      assert_not page.has_content?("Add edition note")
+      assert_not page.has_content?("Update important note")
+    end
+
+    should "hide the note action buttons from a user with welsh editor permissions on a non welsh document" do
+      user = user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+      login_as(user)
+      visit_draft_edition
+      click_link("History and notes")
+
+      assert_not user.has_editor_permissions?(@draft_edition)
+      assert_not page.has_content?("Add edition note")
+      assert_not page.has_content?("Update important note")
+    end
+
+    should "show the note action buttons from a user with welsh editor permissions on a welsh document" do
+      user = user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+      login_as(user)
+      edition = FactoryBot.create(:answer_edition, :fact_check, :welsh)
+      visit edition_path(edition)
+      click_link("History and notes")
+
+      assert user.has_editor_permissions?(edition)
+      assert page.has_content?("Add edition note")
+      assert page.has_content?("Update important note")
+    end
+
     context "Edition displays the correct data for actions" do
       setup do
         @edition = FactoryBot.create(:edition, created_at: "2024-01-23")
