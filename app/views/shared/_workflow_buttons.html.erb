@@ -15,7 +15,7 @@
           <% end %>
           <%= progress_buttons(@resource, skip_disabled_buttons: true) %>
         <% else %>
-          <% if current_user.has_editor_permissions?(@resource) && !@resource.retired_format? %>
+          <% if current_user.has_editor_permissions?(@resource) %>
             <%= f.submit "Save", id: "save-edition", class: "btn btn-success btn-large js-save" %>
           <% end %>
           <%= preview_button(@resource) %>
