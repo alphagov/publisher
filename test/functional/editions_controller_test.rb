@@ -15,9 +15,9 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#template_folder_for" do
     should "be able to create a view path for a given publication" do
-      l = LocalTransactionEdition.new
+      l = FactoryBot.build(:local_transaction_edition, panopticon_id: FactoryBot.create(:artefact).id)
       assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-      g = GuideEdition.new
+      g = FactoryBot.build(:guide_edition)
       assert_equal "app/views/guides", @controller.template_folder_for(g)
     end
   end
@@ -32,7 +32,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     should "return a 404 when requesting a publication that doesn't exist" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "104" }
       assert_response :not_found
     end
 
@@ -1677,7 +1677,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         should "render confirm destroy page with error if deleting from database fails" do
-          Edition.any_instance.stubs(:destroy!).raises(Mongoid::Errors::MongoidError.new)
+          Edition.any_instance.stubs(:destroy!).raises(ActiveRecord::RecordInvalid.new)
 
           delete :destroy, params: { id: @edition.id }
 

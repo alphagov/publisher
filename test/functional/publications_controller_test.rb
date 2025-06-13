@@ -40,7 +40,7 @@ class PublicationsControllerTest < ActionController::TestCase
       should "redirect to new edition when requesting a panopticon_id" do
         get :show, params: { id: @artefact.id }
 
-        latest_edition = GuideEdition.find_by(slug: "hedgehog-topiary")
+        latest_edition = Edition.find_by(slug: "hedgehog-topiary")
         assert_redirected_to(controller: "editions", action: "show", id: latest_edition.id)
       end
 
@@ -59,6 +59,7 @@ class PublicationsControllerTest < ActionController::TestCase
         name: "Foo bar",
         owning_app: "publisher",
       )
+
       assert Edition.where(panopticon_id: artefact.id).first.nil?
 
       get :show, params: { id: artefact.id }
