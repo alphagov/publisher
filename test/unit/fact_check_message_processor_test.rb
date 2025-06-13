@@ -33,7 +33,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_nothing_raised { f.process_for_publication("4e1dac78e2ba80076000000ea") }
   end
 
-  test "it extracts the body as utf8 acceptable to mongo" do
+  test "it extracts the body as utf8" do
     windows_string = "Hallo Umläute".encode("Windows-1252")
     message = Mail.new(
       to: "factchecke@dev.gov.uk",
@@ -42,7 +42,8 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
       content_type: "text/plain; charset=Windows-1252",
     )
     f = FactCheckMessageProcessor.new(message)
-    f.process_for_publication(sample_publication.id)
+
+    assert_nothing_raised { f.process_for_publication(sample_publication.id) }
   end
 
   test "it takes the text part of multipart emails" do
