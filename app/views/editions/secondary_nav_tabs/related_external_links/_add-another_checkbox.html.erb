@@ -1,5 +1,7 @@
-<%= render "govuk_publishing_components/components/checkboxes", { 
-  name: "artefact[external_links_attributes][#{index}][_destroy]",
-  id: "artefact_external_links_attributes_#{index}__destroy",
-  items: [{label: "Delete", value: "1" }],
-} %>
+<% if current_user.has_editor_permissions?(@resource) %>
+  <%= render "govuk_publishing_components/components/checkboxes", { 
+    name: "artefact[external_links_attributes][#{index}][_destroy]",
+    id: "artefact_external_links_attributes_#{index}__destroy",
+    items: [{label: "Delete", value: "1" }],
+  } %>
+<% end %>
