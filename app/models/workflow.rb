@@ -1,7 +1,8 @@
-require "state_machines-mongoid"
+require "state_machines-activerecord"
 
 module Workflow
   class CannotDeletePublishedPublication < RuntimeError; end
+
   extend ActiveSupport::Concern
   included do
     validate :not_editing_published_item
@@ -11,19 +12,9 @@ module Workflow
     before_save :denormalise_users!
     after_create :notify_siblings_of_new_edition
 
-    field :state, type: String, default: "draft"
+    attribute :state, :string, default: "draft"
 
-    # Temp-to-be-removed
-    # This will be removed once we move workflow module to support postgres models, this temporarily
-    # allows to support the belongs_to relation between workflow and user
-    field :assigned_to_id, type: BSON::ObjectId
-
-    # Temp-to-be-brought-back
-    # Currently we are using assigned_to_id as a field to store the assigned_to_id
-    # to bypass the issue of having a belongs_to between a postgres table and a mongo table
-    # we will most likely bring back the belongs_to relationship once we move workflow to support postgres.
-
-    # belongs_to :assigned_to, class_name: "User", optional: true
+    belongs_to :assigned_to, class_name: "User", optional: true
 
     state_machine initial: :draft do
       after_transition on: :request_amendments do |edition, _transition|
@@ -145,10 +136,16 @@ module Workflow
 
   def denormalise_users!
     new_assignee = assigned_to.try(:name)
-    set(assignee: new_assignee) unless new_assignee == assignee
-    update_user_action("creator",   [Action::CREATE, Action::NEW_VERSION])
+    unless new_assignee == assignee
+      if new_record?
+        self.assignee = new_assignee
+      else
+        update_column(:assignee, new_assignee)
+      end
+    end
+    update_user_action("creator", [Action::CREATE, Action::NEW_VERSION])
     update_user_action("publisher", [Action::PUBLISH])
-    update_user_action("archiver",  [Action::ARCHIVE])
+    update_user_action("archiver", [Action::ARCHIVE])
     self
   end
 
@@ -161,7 +158,7 @@ module Workflow
   end
 
   def mark_as_rejected
-    inc(rejected_count: 1)
+    self.rejected_count += 1
   end
 
   def previous_edition
@@ -202,21 +199,8 @@ module Workflow
   end
 
   def important_note
-    action = actions.where(:request_type.in => [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
+    action = actions.where(request_type: [Action::IMPORTANT_NOTE, Action::IMPORTANT_NOTE_RESOLVED]).last
     action if action.try(:request_type) == Action::IMPORTANT_NOTE
-  end
-
-  # Temp-to-be-removed
-  # The method below are getters and setters for assigned_to that allows us to set the assigned_to_id and get assigned_to.
-  # We are unable to use belongs_to :assigned_to, class_name: "User" as the User table is
-  # in postgres and using a combination of setter and getter methods with a assigned_to_id field
-  # to be able to achieve congruent result as  having a belongs to while we are moving other table to postgres
-  def assigned_to_id=(id)
-    self[:assigned_to_id] = id
-  end
-
-  def assigned_to
-    User.find(assigned_to_id) if assigned_to_id
   end
 
 private
@@ -230,13 +214,13 @@ private
   end
 
   def update_user_action(property, statuses)
-    actions.where(:request_type.in => statuses).limit(1).each do |action|
+    actions.where(request_type: [statuses]).limit(1).each do |action|
       # This can be invoked by Panopticon when it updates an artefact and associated
       # editions. The problem is that Panopticon and Publisher users live in different
       # collections, but share a model and relationships with eg actions.
       # Therefore, Panopticon might not find a user for an action.
-      if action.requester
-        set(property => action.requester.name)
+      if action.requester && !new_record?
+        update_column(property, action.requester.name)
       end
     end
   end

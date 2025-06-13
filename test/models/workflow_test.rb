@@ -13,14 +13,8 @@ class WorkflowTest < ActiveSupport::TestCase
     [user, other_user]
   end
 
-  def template_programme
-    p = ProgrammeEdition.new(slug: "childcare", title: "Children", panopticon_id: @artefact.id)
-    p.save!
-    p
-  end
-
   def template_guide
-    edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    edition = FactoryBot.build(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
     edition.save!
     edition
   end
@@ -99,21 +93,22 @@ class WorkflowTest < ActiveSupport::TestCase
     assert transaction.persisted?
     assert transaction.published?
 
-    reloaded_transaction = TransactionEdition.find(transaction.id)
-    new_edition = user.new_version(reloaded_transaction)
+    transaction.reload
+    new_edition = user.new_version(transaction)
 
     assert new_edition.save
+    assert new_edition.panopticon_id == transaction.panopticon_id
+    assert new_edition.id != transaction.id
   end
 
   test "should allow creation of new editions from GuideEdition to AnswerEdition" do
     user, guide = publisher_and_guide
     new_edition = user.new_version(guide, AnswerEdition)
-
-    assert_equal "AnswerEdition", new_edition._type
+    assert_equal "AnswerEdition", new_edition.editionable_type
   end
 
   test "a new answer is in draft" do
-    g = AnswerEdition.new(slug: "childcare", panopticon_id: @artefact.id, title: "My new answer")
+    g = FactoryBot.create(:answer_edition, slug: "childcare", panopticon_id: @artefact.id, title: "My new answer")
     assert g.draft?
   end
 
@@ -335,43 +330,25 @@ class WorkflowTest < ActiveSupport::TestCase
     assert_not approve_review(user, edition)
   end
 
-  test "a new programme has drafts but isn't published" do
-    p = template_programme
-    assert p.draft?
-    assert_not p.published?
+  test "a new edition has drafts but isn't published" do
+    guide = template_guide
+    assert guide.draft?
+    assert_not guide.published?
   end
 
-  test "a programme should be marked as having reviewables if requested for review" do
-    programme = template_programme
+  test "an edition should be marked as having reviewables if requested for review" do
+    guide = template_guide
     user, _other_user = template_users
 
-    assert_not programme.in_review?
-    request_review(user, programme)
-    assert programme.in_review?, "A review was not requested for this programme."
+    assert_not guide.in_review?
+    request_review(user, guide)
+    assert guide.in_review?, "A review was not requested for this edition."
   end
 
-  test "programme workflow" do
-    user, other_user = template_users
-
-    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
-
-    assert edition.can_request_review?
-    request_review(user, edition)
-    assert_not edition.can_request_review?
-    assert edition.can_request_amendments?
-    request_amendments(other_user, edition)
-    assert_not edition.can_request_amendments?
-    request_review(user, edition)
-    assert edition.can_approve_review?
-    approve_review(other_user, edition)
-    assert edition.can_request_amendments?
-    assert edition.can_publish?
-  end
-
-  test "user should not be able to okay a programme they requested review for" do
+  test "user should not be able to okay an edition they requested review for" do
     user, _other_user = template_users
 
-    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    edition = user.create_edition(:answer, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
 
     assert edition.can_request_review?
     request_review(user, edition)
@@ -380,7 +357,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
   test "you can only create a new edition from a published edition" do
     user, _other_user = template_users
-    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    edition = user.create_edition(:answer, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
     assert_not edition.published?
     assert_not user.new_version(edition)
   end
@@ -388,19 +365,19 @@ class WorkflowTest < ActiveSupport::TestCase
   test "an edition can be moved into archive state" do
     user, _other_user = template_users
 
-    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    edition = user.create_edition(:answer, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
     user.progress(edition, request_type: :archive)
     assert_equal "archived", edition.state
   end
 
   test "an edition cannot be created if not govuk_editor" do
     user = FactoryBot.create(:user)
-    assert_nil user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    assert_nil user.create_edition(:answer, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
   end
 
   test "an edition cannot be moved into archive state if not govuk_editor" do
     user = FactoryBot.create(:user, :govuk_editor)
-    edition = user.create_edition(:programme, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
+    edition = user.create_edition(:answer, panopticon_id: @artefact.id, title: "My title", slug: "my-slug")
     other_user = FactoryBot.create(:user)
     other_user.progress(edition, request_type: :archive)
     assert_not_equal "archive", edition.state
@@ -457,7 +434,7 @@ class WorkflowTest < ActiveSupport::TestCase
 
     context "creating an edition of a different type" do
       should "build a clone of a new type" do
-        assert_equal GuideEdition, @user.new_version(@edition, "GuideEdition").class
+        assert_equal GuideEdition, @user.new_version(@edition, "GuideEdition").editionable.class
       end
 
       should "record the action" do
@@ -488,7 +465,6 @@ class WorkflowTest < ActiveSupport::TestCase
       @edition = FactoryBot.create(:guide_edition_with_two_parts, state: :fact_check)
       # Internal links must start with a forward slash eg [link text](/link-destination)
       @edition.parts.first.body = "[register and tax your vehicle](registering-an-imported-vehicle)"
-      @edition.parts.first.save!(validate: false)
     end
 
     should "transition an edition with link validation errors to fact_check_received state" do
