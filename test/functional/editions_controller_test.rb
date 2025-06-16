@@ -156,6 +156,48 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#add_edition_note" do
+    context "user has govuk_editor permission" do
+      should "render the 'Add Edition Note' page" do
+        get :add_edition_note, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/add_edition_note"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :add_edition_note, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#update_important_note" do
+    context "user has govuk_editor permission" do
+      should "render the 'Update Important Note' page" do
+        get :update_important_note, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/update_important_note"
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :update_important_note, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#request_amendments_page" do
     context "user has govuk_editor permission" do
       should "render the 'Request amendments' page" do
