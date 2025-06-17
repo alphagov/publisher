@@ -5,6 +5,9 @@ ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
 
 FROM --platform=$TARGETPLATFORM $builder_image AS builder
 
+RUN curl -O https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian12-x86_64-100.12.2.deb
+RUN mv mongodb-database-tools-debian12-x86_64-100.12.2.deb /usr/local/bin/
+
 WORKDIR $APP_HOME
 COPY Gemfile* .ruby-version ./
 RUN bundle install
