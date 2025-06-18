@@ -136,7 +136,7 @@ class ArtefactTest < ActiveSupport::TestCase
   end
 
   test "should raise a not found exception if the slug doesn't match" do
-    assert_raise Mongoid::Errors::DocumentNotFound do
+    assert_raise ActiveRecord::RecordNotFound do
       Artefact.from_param("something-fake")
     end
   end
@@ -157,7 +157,7 @@ class ArtefactTest < ActiveSupport::TestCase
     edition = FactoryBot.create(:answer_edition, panopticon_id: artefact.id)
     two_days_ago = Time.zone.today - 2
     old_updated_at = Time.zone.local(two_days_ago.year, two_days_ago.month, two_days_ago.day).time
-    edition.set(updated_at: old_updated_at)
+    edition.update_column(:updated_at, old_updated_at)
 
     artefact.language = "cy"
     artefact.save!
@@ -199,7 +199,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
 
@@ -223,7 +223,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "published"
     edition.save!
 
@@ -244,7 +244,7 @@ class ArtefactTest < ActiveSupport::TestCase
     )
 
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
     edition.state = "draft"
     edition.save!
 
@@ -263,7 +263,7 @@ class ArtefactTest < ActiveSupport::TestCase
       owning_app: "publisher",
     )
     user1 = FactoryBot.create(:user, :govuk_editor)
-    edition = AnswerEdition.find_or_create_from_panopticon_data(artefact.id, user1)
+    edition = Edition.find_or_create_from_panopticon_data(artefact.id, user1)
 
     assert_not artefact.any_editions_published?
 
@@ -273,25 +273,14 @@ class ArtefactTest < ActiveSupport::TestCase
     assert artefact.any_editions_published?
   end
 
-  test "should have 'video' as a supported FORMAT" do
-    assert_includes Artefact::FORMATS, "video"
-  end
-
   test "should find the default owning_app for a format" do
     assert_equal "publisher", Artefact.default_app_for_format("guide")
-  end
-
-  test "should allow creation of artefacts with 'video' as the kind" do
-    artefact = Artefact.create!(slug: "omlette-du-fromage", name: "Omlette du fromage", kind: "video", owning_app: "Dexter's Lab")
-
-    assert_not artefact.nil?
-    assert_equal "video", artefact.kind
   end
 
   test "should archive all editions when archived" do
     artefact = FactoryBot.create(:artefact, state: "live")
     editions = %w[draft ready published archived].map do |state|
-      FactoryBot.create(:programme_edition, panopticon_id: artefact.id, state:)
+      FactoryBot.create(:edition, panopticon_id: artefact.id, state:)
     end
     user1 = FactoryBot.create(:user)
 
@@ -327,7 +316,7 @@ class ArtefactTest < ActiveSupport::TestCase
 
   test "should restrict what attributes can be updated on an edition that has an archived artefact" do
     artefact = FactoryBot.create(:artefact, state: "live")
-    edition = FactoryBot.create(:programme_edition, panopticon_id: artefact.id, state: "published")
+    edition = FactoryBot.create(:edition, panopticon_id: artefact.id, state: "published")
     artefact.state = "archived"
     artefact.save!
     assert_raise RuntimeError do
@@ -383,37 +372,28 @@ class ArtefactTest < ActiveSupport::TestCase
       end
 
       should "be true if its owning_app is publisher and its kind is that of an exact route edition" do
-        assert FactoryBot.build(:artefact, kind: "campaign", prefixes: []).exact_route?
         assert FactoryBot.build(:artefact, kind: "help_page", prefixes: []).exact_route?
 
         # regardless of prefixes
-        assert FactoryBot.build(:artefact, kind: "campaign", prefixes: ["/hats"]).exact_route?
         assert FactoryBot.build(:artefact, kind: "help_page", prefixes: ["/shoes"]).exact_route?
       end
 
       should "be false if its owning_app is not publisher and its kind is not that of an exact route edition" do
         assert_not FactoryBot.build(:artefact, kind: "answer", prefixes: []).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: []).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "guide", prefixes: []).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "licence", prefixes: []).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "local_transaction", prefixes: []).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "place", prefixes: []).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "programme", prefixes: []).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: []).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "transaction", prefixes: []).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "video", prefixes: []).exact_route?
 
         # regardless of prefixes
         assert_not FactoryBot.build(:artefact, kind: "answer", prefixes: ["/hats"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "completed_transaction", prefixes: ["/scarves"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "guide", prefixes: ["/underwear"]).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "licence", prefixes: ["/jumpers"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "local_transaction", prefixes: ["/gloves"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "place", prefixes: ["/belts"]).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "programme", prefixes: ["/socks"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "simple_smart_answer", prefixes: ["/onesies"]).exact_route?
         assert_not FactoryBot.build(:artefact, kind: "transaction", prefixes: ["/scarves"]).exact_route?
-        assert_not FactoryBot.build(:artefact, kind: "video", prefixes: ["/all-other-clothing"]).exact_route?
       end
     end
 
