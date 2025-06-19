@@ -12,21 +12,52 @@ class RootOverviewTest < IntegrationTest
     test_strategy.switch!(:design_system_publications_filter, true)
   end
 
+  should "show number of documents in pluralized format if there are multiple results" do
+    FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
+    FactoryBot.create(:guide_edition, title: "YYY", slug: "yyy")
+
+    visit "/"
+    filter_by_user("All")
+
+    assert_content("2 documents")
+  end
+
+  should "show number of documents in singular format if there is a single result" do
+    FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create(:guide_edition, title: "XXX", slug: "xxx")
+
+    visit "/"
+    filter_by_user("All")
+
+    assert_content("1 document")
+  end
+
+  should "show number of documents formatted to include a comma if there are more than a 1000 results" do
+    FactoryBot.create(:user, :govuk_editor)
+    FactoryBot.create_list(:guide_edition, 1000)
+
+    visit "/"
+    filter_by_user("All")
+
+    assert_content("1,000 documents")
+  end
+
   should "be able to view different pages of results" do
     alice = FactoryBot.create(:user, :govuk_editor, name: "Alice", uid: "alice")
     FactoryBot.create(:guide_edition, title: "Guides and Gals", assigned_to: alice)
     FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE, assigned_to: alice)
 
     visit "/"
-    assert_content("21 document(s)")
+    assert_content("21 documents")
     assert_no_content("Guides and Gals")
 
     click_on "Next"
-    assert_content("21 document(s)")
+    assert_content("21 documents")
     assert_content("Guides and Gals")
 
     click_on "Prev"
-    assert_content("21 document(s)")
+    assert_content("21 documents")
     assert_no_content("Guides and Gals")
   end
 

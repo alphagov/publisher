@@ -7,10 +7,9 @@
 
     <%= render "govuk_publishing_components/components/input", {
       label: {
-        text: "Search",
+        text: "Title or slug",
         bold: true,
       },
-      hint: "Search by title or slug",
       name: "search_text",
       id: "search_text",
       value: @presenter.search_text,
@@ -34,6 +33,7 @@
       name: "states_filter[]",
       heading: "Status",
       heading_size: "s",
+      small: true,
       items: @presenter.edition_states,
     } %>
 

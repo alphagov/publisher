@@ -39,7 +39,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   def search_by_title_or_slug(substring)
     within ".publications-filter form" do
-      fill_in "Search", with: substring
+      fill_in "Title or slug", with: substring
       click_on "Search"
     end
   end
