@@ -1,5 +1,5 @@
 <div class="publications-filter govuk-!-padding-5">
-  <%= form_with url: root_path, method: :get do |form| %>
+  <%= form_with url: root_path, method: :get, data: { module: "ga4-finder-tracker", ga4_section: "Filter by" } do |form| %>
     <%= render "govuk_publishing_components/components/heading", {
       text: "Filter",
       margin_bottom: 4,
@@ -35,6 +35,11 @@
       heading_size: "s",
       small: true,
       items: @presenter.edition_states,
+      data_attributes: {
+        ga4_section: "Announcements",
+        ga4_change_category: "update-filter checkbox",
+        ga4_filter_parent: true,
+      },
     } %>
 
     <%= render "govuk_publishing_components/components/button", {
