@@ -1,6 +1,6 @@
 require "integration_test_helper"
 
-class HomepagePopularLinksTest < JavascriptIntegrationTest
+class HomepagePopularLinksTest < IntegrationTest
   context "no homepage editor access" do
     setup do
       login_as(FactoryBot.create(:user, name: "Stub User"))
