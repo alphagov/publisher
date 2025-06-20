@@ -8,8 +8,6 @@ window.GOVUK.analyticsGa4.analyticsModules =
 
   Modules.analyticsModules.Ga4FinderSetup = {
     init: function () {
-      console.log('finder init!')
-
       const finders = Array.from(
         document.querySelectorAll("[data-module~='ga4-finder-tracker']")
       )
