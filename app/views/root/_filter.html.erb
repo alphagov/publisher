@@ -1,5 +1,5 @@
 <div class="publications-filter govuk-!-padding-5">
-  <%= form_with url: root_path, method: :get, data: { module: "ga4-finder-tracker", ga4_section: "Filter by" } do |form| %>
+  <%= form_with url: root_path, method: :get, data: { module: "ga4-finder-tracker", ga4_section: "Filter" } do |form| %>
     <%= render "govuk_publishing_components/components/heading", {
       text: "Filter",
       margin_bottom: 4,
@@ -20,6 +20,11 @@
       full_width: true,
       label: "Assigned to",
       options: @presenter.assignees,
+      data_attributes: {
+        ga4_change_category: "update-filter select",
+        ga4_filter_parent: true,
+        ga4_section: "Assigned to",
+      },
     } %>
 
     <%= render "govuk_publishing_components/components/select", {
@@ -27,6 +32,11 @@
       label: "Content type",
       full_width: true,
       options: @presenter.content_types,
+      data_attributes: {
+        ga4_change_category: "update-filter select",
+        ga4_filter_parent: true,
+        ga4_section: "Content type",
+      },
     } %>
 
     <%= render "govuk_publishing_components/components/checkboxes", {
@@ -36,7 +46,7 @@
       small: true,
       items: @presenter.edition_states,
       data_attributes: {
-        ga4_section: "Announcements",
+        ga4_section: "Status",
         ga4_change_category: "update-filter checkbox",
         ga4_filter_parent: true,
       },
@@ -48,7 +58,7 @@
     } %>
 
     <p class="govuk-body">
-      <%= link_to "Reset all fields", root_path, class: "govuk-link" %>
+      <%= link_to "Reset all fields", root_path, class: "govuk-link", data: { ga4_link: { action: "remove", event_name: "select_content", type: controller_name }.to_json } %>
     </p>
   <% end %>
 </div>
