@@ -17,7 +17,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     let i = 1
 
     actions.forEach(element => {
-      const commentEarlier = element.querySelector('.action--receive_fact_check--earlier') || null
+      const commentEarlier = element.querySelector('.js-earlier') || null
 
       if (commentEarlier) {
         const toggle = document.createElement('button')
@@ -37,15 +37,15 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
 
           const hiddenClass = 'govuk-!-display-none'
           const toggle = e.target
-          const earlierSection = toggle.parentNode.querySelector('.action--receive_fact_check--earlier')
+          const earlierSection = toggle.parentNode.querySelector('.js-earlier')
 
           if (earlierSection.classList.contains('govuk-!-display-none')) {
             earlierSection.classList.remove(hiddenClass)
-            toggle.text = this.toggleHideText
+            toggle.textContent = this.toggleHideText
             toggle.setAttribute('aria-expanded', true)
           } else {
             earlierSection.classList.add(hiddenClass)
-            toggle.text = this.toggleShowText
+            toggle.textContent = this.toggleShowText
             toggle.setAttribute('aria-expanded', false)
           }
         })

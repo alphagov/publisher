@@ -107,7 +107,7 @@ module ActionHelper
     unless email_parts.empty?
       formatted_email_parts << tag.div(
         format_and_auto_link_plain_text(email_parts.join("")),
-        class: "action--receive_fact_check--earlier",
+        class: "js-earlier",
       )
     end
 
