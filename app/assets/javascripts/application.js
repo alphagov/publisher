@@ -7,6 +7,7 @@
 //= require govuk_publishing_components/components/table
 
 //= require analytics_modules/ga4-finder-setup.js
+//= require analytics_modules/ga4-index-section-setup.js
 
 window.GOVUK.approveAllCookieTypes()
 window.GOVUK.cookie('cookies_preferences_set', 'true', { days: 365 })
