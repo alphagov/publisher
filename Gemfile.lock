@@ -167,7 +167,7 @@ GEM
       mongoid
     date (3.4.1)
     declarative (0.0.20)
-    diffy (3.4.3)
+    diffy (3.4.4)
     docile (1.4.0)
     domain_name (0.6.20240107)
     drb (2.2.3)
