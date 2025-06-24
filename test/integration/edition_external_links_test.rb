@@ -79,6 +79,28 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
       assert page.has_no_css?("label[for='artefact_external_links_attributes_1_url']")
       assert page.has_css?("button", text: "Add related external link")
     end
+
+    context "User does not have editor permissions" do
+      setup do
+        user = FactoryBot.create(:user, name: "Stub User")
+        login_as(user)
+        visit_draft_edition
+        @draft_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        click_link "Related external links"
+      end
+
+      should "not have access to the editor actions" do
+        assert page.has_no_css?("button", text: "Delete")
+        assert page.has_no_css?("button", text: "Add related external link")
+        assert page.has_no_css?("button", text: "Save")
+        assert page.has_no_text?("After saving, changes to related external links will be visible on the site the next time this publication is published.")
+      end
+
+      should "see a read only version of the eternal links" do
+        assert page.has_css?("h3", text: "Link one")
+        assert page.has_css?(".govuk-body", text: "https://one.com")
+      end
+    end
   end
 
 private
