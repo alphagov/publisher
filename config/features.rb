@@ -10,7 +10,7 @@ Flipflop.configure do
   end
 
   feature :design_system_publications_filter,
-          default: false,
+          default: true,
           description: "Update the publications page to use the GOV.UK Design System"
 
   feature :design_system_edit,
