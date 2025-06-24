@@ -1,0 +1,34 @@
+'use strict'
+window.GOVUK = window.GOVUK || {}
+window.GOVUK.analyticsGa4 = window.GOVUK.analyticsGa4 || {}
+window.GOVUK.analyticsGa4.analyticsModules =
+  window.GOVUK.analyticsGa4.analyticsModules || {}
+;(function (Modules) {
+  Modules.Ga4ButtonSetup = {
+    init: function () {
+      const moduleElements = document.querySelectorAll(
+        "[data-module~='ga4-button-setup']"
+      )
+
+      moduleElements.forEach(function (moduleElement) {
+        const buttons = moduleElement.querySelectorAll('button')
+        buttons.forEach((button) => {
+          // Removing this allows some data to be sent
+          // Trouble is that I think we need it cos form submission gives us what we need
+          // Except it doesn't right now
+          // if (button.type === 'submit') return
+
+          const event = {
+            event_name: 'select_content',
+            type: 'button',
+            text: button.textContent
+          }
+          if (button.dataset.ga4Event) {
+            Object.assign(event, JSON.parse(button.dataset.ga4Event))
+          }
+          button.dataset.ga4Event = JSON.stringify(event)
+        })
+      })
+    }
+  }
+})(window.GOVUK.analyticsGa4.analyticsModules)
