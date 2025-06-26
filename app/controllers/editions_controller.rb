@@ -37,7 +37,8 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email
                          add_edition_note
                          update_important_note
-                         tagging_mainstream_browse_page] do
+                         tagging_mainstream_browse_page
+                         tagging_related_content_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -86,7 +87,6 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
-<<<<<<< HEAD
   def update_tagging
     form = Tagging::TaggingUpdateForm.new(tagging_update_params)
 
@@ -102,10 +102,6 @@ class EditionsController < InheritedResources::Base
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
-=======
-  def tagging_related_content_page
-    render "secondary_nav_tabs/tagging_related_content_page"
->>>>>>> cf4b0d11 (Add new view and routes)
   end
 
   def resend_fact_check_email_page
