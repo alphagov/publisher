@@ -1397,6 +1397,23 @@ class EditionsControllerTest < ActionController::TestCase
       get :tagging, params: { id: @edition.id }
       assert_template "show"
     end
+
+    should "render the 'Tag related content' page if the user has correct permissions" do
+      get :tagging_related_content_page, params: { id: @edition.id }
+      assert_template "secondary_nav_tabs/tagging_related_content_page"
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message if the user does not have correct permissions" do
+        get :tagging_related_content_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
   end
 
   context "#tagging_mainstream_browse_page" do
