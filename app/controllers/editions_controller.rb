@@ -88,6 +88,10 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
+  def tagging_related_content_page
+    render "secondary_nav_tabs/tagging_related_content_page"
+  end
+
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
   end
