@@ -21,10 +21,17 @@
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Related content",
         add_button_text: "Add another related content item",
-        empty_fields: true,
+        empty_fields: false,
         items: items,
         empty: empty
       } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+        } %>
+        <%= link_to("Cancel", tagging_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
     <% end %>
   </div>
 </div>
