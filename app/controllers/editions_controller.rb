@@ -86,6 +86,7 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
+<<<<<<< HEAD
   def update_tagging
     form = Tagging::TaggingUpdateForm.new(tagging_update_params)
 
@@ -101,6 +102,10 @@ class EditionsController < InheritedResources::Base
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
+=======
+  def tagging_related_content_page
+    render "secondary_nav_tabs/tagging_related_content_page"
+>>>>>>> cf4b0d11 (Add new view and routes)
   end
 
   def resend_fact_check_email_page
