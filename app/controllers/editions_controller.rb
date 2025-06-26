@@ -36,7 +36,8 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email_page
                          resend_fact_check_email
                          add_edition_note
-                         update_important_note] do
+                         update_important_note
+                         tagging_related_content_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
