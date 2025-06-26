@@ -2,11 +2,36 @@
 <% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Tag related content" %>
 <% content_for :title, "Tag related content" %>
+<%
+  items = [
+    {
+      fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
+      destroy_checkbox: render(partial: "secondary_nav_tabs/related_external_links/add-another_checkbox", locals: { index: 0, id: nil }),
+    }
+  ]
+  
+  empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
+%>
 
-<h1>Tag related content</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">Related content items are displayed in the sidebar.</p>
 
-<%# render "editions/secondary_nav_tabs/tagging_related_content_page", {
-  form_url: request_amendments_edition_path(@edition),
-  comment_label_text: "Amendment details (optional)",
-  submit_button_text: "Request amendments",
-} %>
+    <%= form_for(:edition, :url=>edition_path) do %>
+      <%= render "govuk_publishing_components/components/add_another", {
+        fieldset_legend: "Related content",
+        add_button_text: "Add another related content item",
+        empty_fields: false,
+        items: items,
+        empty: empty
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+        } %>
+        <%= link_to("Cancel", tagging_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>
