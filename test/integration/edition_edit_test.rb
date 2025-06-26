@@ -298,6 +298,35 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Tag related content page" do
+    setup do
+      create_draft_edition
+      visit tagging_related_content_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag related content' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag related content")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Related content items are displayed in the sidebar.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    context "Document has no related content items when page loads" do
+      should "render an empty Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?("input")
+        end
+      end
+    end
+  end
+
   context "metadata tab" do
     context "when state is 'draft' and user has govuk editor permissions" do
       setup do
