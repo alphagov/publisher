@@ -23,7 +23,7 @@ class JsonImporter
       processed_line << process_line(line)
       log line_no, "Completed"
       line_no += 1
-      processed_line[0]['editionable_id'] = @editionable_id
+      processed_line[0]['editionable_id'] = @editionable_id unless @model_class == User
       @model_class.insert(processed_line[0])
       log(" saved")
       processed_line = []

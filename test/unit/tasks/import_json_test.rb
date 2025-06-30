@@ -113,4 +113,20 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal 1, HelpPageEdition.count
     end
   end
+
+  context "Users" do
+    should "insert User correctly from json file record" do
+      file_with_user_data = "test/fixtures/migration/mongo_user_data.json"
+      @import_json_task.invoke("User", file_with_user_data)
+
+      assert_equal 1, User.count
+      assert_equal "670cea84a90e05001d898d1e", User.last.mongo_id
+      assert_equal ["signin"], User.last.permissions
+      assert_equal "f65d93a0-d55c-013b-1567-3e3f44448a15", User.last.uid
+      assert_equal "syed.ali1@digital.cabinet-office.gov.uk", User.last.email
+      assert_equal "Syed Ali", User.last.name
+      assert_equal "government-digital-service", User.last.organisation_slug
+      assert_equal "af07d5a5-df63-4ddc-9383-6a666845ebe9", User.last.organisation_content_id
+    end
+  end
 end
