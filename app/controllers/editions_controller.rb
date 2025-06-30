@@ -104,6 +104,12 @@ class EditionsController < InheritedResources::Base
                 }
   end
 
+  def tagging_related_content_page
+    build_tagging_update_form
+
+    render "secondary_nav_tabs/tagging_related_content_page"
+  end
+
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
   end

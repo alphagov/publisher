@@ -17,7 +17,10 @@
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-body">Related content items are displayed in the sidebar.</p>
 
-    <%= form_for(:edition, :url=>edition_path) do %>
+    <%= form_for (@tagging_update), url: update_tagging_edition_path(@resource) do |f| %>
+      <%= f.hidden_field :content_id %>
+      <%= f.hidden_field :previous_version %>
+
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Related content",
         add_button_text: "Add another related content item",
