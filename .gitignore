@@ -14,6 +14,7 @@ test/reports
 .rakeTasks
 /app/assets/builds/*
 !/app/assets/builds/.keep
+lib/mongo_import_file
 
 *.daemonette-dump
 data/local_interactions.csv

@@ -3,7 +3,7 @@ require_dependency "part"
 module Parted
   def self.included(klass)
     class_to_sym = klass.to_s.underscore.to_sym
-    klass.has_many :parts, inverse_of: class_to_sym
+    klass.has_many :parts, inverse_of: class_to_sym, dependent: :destroy
 
     klass.accepts_nested_attributes_for :parts,
                                         allow_destroy: true,

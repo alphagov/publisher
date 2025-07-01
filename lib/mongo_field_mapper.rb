@@ -1,6 +1,7 @@
 # Maps fields from a source Mongo JSON object
 # into the corresponding field in our ActiveRecord models
 class MongoFieldMapper
+  @user_missing = []
   MAPPINGS = {
     Edition => {
       rename: {
@@ -8,12 +9,21 @@ class MongoFieldMapper
       },
       process: {
         "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "panopticon_id" => ->(_key, value) { { "panopticon_id" => map_to_artifact_id(value) } },
+        "assigned_to_id" => ->(_key, value) { { "assigned_to_id" => get_assigned_to_id(value) } },
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "publish_at" => ->(key, value) { rails_timestamp(key, value) },
         "review_requested_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
     LocalTransactionEdition => {
+      process: {
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    CompletedTransactionEdition => {
       process: {
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
@@ -61,7 +71,37 @@ class MongoFieldMapper
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
+    ProgrammeEdition => {
+      process: {
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    VideoEdition => {
+      process: {
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    LicenceEdition => {
+      process: {
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    CampaignEdition => {
+      process: {
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
     Part => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    Variant => {
       process: {
         "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
@@ -92,24 +132,65 @@ class MongoFieldMapper
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
-    # PublishIntent => {
-    #   rename: {
-    #     "_id" => "base_path",
-    #   },
-    #   process: {
-    #     "publish_time" => ->(key, value) { { key => unpack_datetime(value) } },
-    #     "created_at" => ->(key, value) { rails_timestamp(key, value) },
-    #     "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-    #
-    #   },
-    # },
-    # ScheduledPublishingLogEntry => {
-    #   process: {
-    #     "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-    #     "scheduled_publication_time" => ->(key, value) { { key => unpack_datetime(value) } },
-    #     "created_at" => ->(key, value) { rails_timestamp(key, value) },
-    #   },
-    # },
+    Action => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "recipient_id" => ->(_key, value) { { "recipient_id" => get_recipient_id(value) } },
+        "request_details" => ->(_key, value) { { "request_details" => request_details(value) } },
+        "requester_id" => ->(_key, value) { { "requester_id" => get_requester_id(value) } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    Artefact => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "public_timestamp" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    ArtefactAction => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "user_id" => ->(_key, value) { { "user_id" => get_artefact_action_user_id(value) } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    LocalService => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    ArtefactExternalLink => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+      },
+    },
+    OverviewDashboard => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+      },
+    },
+    LinkCheckReport => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "edition_id" => ->(_key, value) { { "edition_id" => get_link_check_report_edition_id(value) } },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "completed_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    Link => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "checked_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
   }.freeze
 
   def initialize(model_class)
@@ -152,6 +233,69 @@ class MongoFieldMapper
     end
   end
 
+  def self.request_details(value)
+    request_detail = {}
+    request_detail['scheduled_time']= value['scheduled_time']['$date'] unless value.nil? || value.empty?
+    request_detail
+  end
+
+  def self.map_to_artifact_id(value)
+    artefact = Artefact.where(mongo_id: value).last
+    if artefact.nil?
+      puts "Error: artefact with mongo_id #{value} does not exist"
+    end
+    artefact.id
+  end
+
+  def self.get_assigned_to_id(value)
+    return if value.nil?
+    assigned_to_user = User.where(mongo_id: value["$oid"]).last
+    if assigned_to_user.nil?
+      return nil
+    end
+    assigned_to_user.id
+  end
+
+  def self.get_recipient_id(value)
+    return if value.nil?
+
+    recipient = User.where(mongo_id: value["$oid"]).last
+    if recipient.nil?
+      return nil
+    end
+    recipient.id
+  end
+
+  def self.get_requester_id(value)
+    return if value.nil?
+
+    requester = User.where(mongo_id: value["$oid"]).last
+    if requester.nil?
+      return nil
+    end
+    requester.id
+  end
+
+  def self.get_artefact_action_user_id(value)
+    return if value.nil?
+
+    artefact_action_user = User.where(mongo_id: value["$oid"]).last
+    if artefact_action_user.nil?
+      return nil
+    end
+    artefact_action_user.id
+  end
+
+  def get_link_check_report_edition_id(value)
+    link_check_report_edition = Edition.where(mongo_id: value["$oid"]).last
+    if link_check_report_edition.nil?
+      puts "Error: edition with mongo_id #{value['$oid']} does not exist"
+      raise LinkCheckReportEditionError, "Error: edition with mongo_id #{value['$oid']} does not exist"
+    else
+      link_check_report_edition.id
+    end
+  end
+
   # Return the given key with the unpacked date value if given,
   # otherwise return empty hash, to avoid conflicting with
   # the not-null constraint on Rails' timestamp keys
@@ -161,6 +305,13 @@ class MongoFieldMapper
   end
 
   private
+
+  def self.add_missing_user_to_print(value)
+    unless @user_missing.include?(value)
+      @user_missing << value
+      puts "Users with mongo_ids #{@user_missing} are missing"
+    end
+  end
 
   def process(key, value)
     if (proc = MAPPINGS[@model_class][:process][key])
@@ -178,4 +329,16 @@ class MongoFieldMapper
   def target_key(key)
     MAPPINGS[@model_class][:rename].try(:[], key) || key
   end
+end
+
+class AssignedToError < StandardError
+end
+
+class RecipientError < StandardError
+end
+
+class RequesterError < StandardError
+end
+
+class LinkCheckReportEditionError < StandardError
 end
