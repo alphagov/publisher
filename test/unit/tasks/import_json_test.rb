@@ -128,5 +128,36 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal "government-digital-service", User.last.organisation_slug
       assert_equal "af07d5a5-df63-4ddc-9383-6a666845ebe9", User.last.organisation_content_id
     end
+
+    should "update the edition assigned_to to new postgres ID using old mongo ID to match user" do
+      file_with_user_data = "test/fixtures/migration/mongo_assigned_to_user_data.json"
+      @import_json_task.invoke("User", file_with_user_data)
+      mongo_id_for_user = User.last.mongo_id
+
+      @import_json_task.reenable
+
+      file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
+      @import_json_task.invoke("Edition", file_with_guide_edition_data)
+      assigned_to_id = Edition.last.assigned_to_id
+      assigned_to_user = User.find(assigned_to_id)
+
+      assert_equal mongo_id_for_user, assigned_to_user.mongo_id
+    end
+
+    should "throw an exception if old mongo id does not match any user" do
+      file_with_user_data = "test/fixtures/migration/mongo_assigned_to_user_data.json"
+      @import_json_task.invoke("User", file_with_user_data)
+      mongo_id_for_user = User.last.mongo_id
+
+      @import_json_task.reenable
+
+      file_with_guide_edition_data = "test/fixtures/migration/mongo_answer_edition_data.json"
+      @import_json_task.invoke("Edition", file_with_guide_edition_data)
+      assigned_to_id = Edition.last.assigned_to_id
+      assigned_to_user = User.find(assigned_to_id)
+
+      # TODO: Assert that the exception is thrown
+      assert_equal mongo_id_for_user, assigned_to_user.mongo_id
+    end
   end
 end

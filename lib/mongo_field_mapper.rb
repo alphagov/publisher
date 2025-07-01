@@ -8,6 +8,7 @@ class MongoFieldMapper
       },
       process: {
         "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "assigned_to_id" => ->(_key, value) { { "assigned_to_id" => get_assigned_to_id(value) } },
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
         "review_requested_at" => ->(key, value) { rails_timestamp(key, value) },
@@ -177,5 +178,21 @@ class MongoFieldMapper
 
   def target_key(key)
     MAPPINGS[@model_class][:rename].try(:[], key) || key
+  end
+
+  def self.get_assigned_to_id(value)
+    assigned_to_user = User.where(mongo_id: value["$oid"]).last
+    unless assigned_to_user.nil?
+      assigned_to_user.id
+    end
+
+    puts "Error: user with mongo_id #{value["$oid"]} does not exist"
+    raise AssignedToError.new("Error: user with mongo_id #{value["$oid"]} does not exist")
+  end
+end
+
+class AssignedToError < StandardError
+  def initialize(message)
+    super(message)
   end
 end

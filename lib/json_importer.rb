@@ -27,6 +27,9 @@ class JsonImporter
       @model_class.insert(processed_line[0])
       log(" saved")
       processed_line = []
+    rescue StandardError => e
+      puts "Line: #{line[0..50]}, Error: #{e}"
+      log "Line: #{line[0..50]}, Error: #{e}"
     end
   end
 
