@@ -73,7 +73,7 @@ class ActionHelperTest < ActionView::TestCase
     edition = FactoryBot.create(:edition)
 
     edition_actions = [
-      stub(:create_action, request_type: Action::CREATE, created_at: Time.zone.now - 1.week),
+      stub(:create_action_and_link_check_reports, request_type: Action::CREATE, created_at: Time.zone.now - 1.week),
       stub(:note_action, request_type: Action::NOTE, created_at: Time.zone.now - 2.days),
       stub(:sent_fact_check_action, request_type: Action::SEND_FACT_CHECK, created_at: Time.zone.now - 3.days),
       stub(:receive_fact_check_action, request_type: Action::RECEIVE_FACT_CHECK, created_at: Time.zone.now - 1.day),

@@ -1,6 +1,7 @@
 class CreateLink < ActiveRecord::Migration[7.1]
   def change
     create_table :links do |t|
+      t.text :mongo_id
       t.string :uri
       t.string :status
       t.datetime :checked_at

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.uuid "edition_id"
     t.bigint "requester_id"
     t.bigint "recipient_id"
+    t.text "mongo_id"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
     t.index ["requester_id"], name: "index_actions_on_requester_id"
@@ -48,16 +49,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "artefact_id"
+    t.text "mongo_id"
     t.index ["artefact_id"], name: "index_artefact_actions_on_artefact_id"
     t.index ["user_id"], name: "index_artefact_actions_on_user_id"
   end
 
   create_table "artefact_external_links", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "title"
     t.string "url"
     t.bigint "artefact_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["artefact_id"], name: "index_artefact_external_links_on_artefact_id"
   end
 
@@ -80,8 +81,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.string "content_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mongo_id"
     t.index ["name", "state", "kind", "id"], name: "index_artefacts_on_name_and_state_and_kind_and_id"
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true
+  end
+
+  create_table "campaign_editions", force: :cascade do |t|
+    t.string "body"
+    t.string "organisation_formatted_name"
+    t.string "organisation_url"
+    t.string "organisation_brand_colour"
+    t.string "organisation_crest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "completed_transaction_editions", force: :cascade do |t|
@@ -161,7 +173,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "licence_editions", force: :cascade do |t|
+    t.string "licence_identifier"
+    t.string "licence_short_description"
+    t.string "licence_overview"
+    t.string "will_continue_on"
+    t.string "continuation_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "link_check_reports", force: :cascade do |t|
+    t.text "mongo_id"
     t.integer "batch_id"
     t.string "status"
     t.datetime "completed_at"
@@ -172,6 +195,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
   end
 
   create_table "links", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "uri"
     t.string "status"
     t.datetime "checked_at"
@@ -191,6 +215,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.string "providing_tier", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mongo_id"
   end
 
   create_table "local_transaction_editions", force: :cascade do |t|
@@ -205,6 +230,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
   end
 
   create_table "overview_dashboards", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "dashboard_type"
     t.string "result_group"
     t.integer "count"
@@ -216,20 +242,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.integer "fact_check"
     t.integer "published"
     t.integer "archived"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "parts", force: :cascade do |t|
+    t.text "mongo_id"
     t.integer "order"
     t.string "title"
     t.string "body"
     t.string "slug"
     t.bigint "guide_edition_id"
+    t.bigint "programme_edition_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["guide_edition_id"], name: "index_parts_on_guide_edition_id"
+    t.index ["programme_edition_id"], name: "index_parts_on_programme_edition_id"
   end
 
   create_table "place_editions", force: :cascade do |t|
@@ -243,6 +269,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
 
   create_table "popular_links_editions", force: :cascade do |t|
     t.jsonb "link_items"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "programme_editions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -308,6 +339,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
   end
 
   create_table "variants", force: :cascade do |t|
+    t.text "mongo_id"
     t.integer "order"
     t.string "title"
     t.string "slug"
@@ -315,6 +347,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.string "link"
     t.string "more_information"
     t.string "alternate_methods"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "video_editions", force: :cascade do |t|
+    t.string "video_url"
+    t.string "video_summary"
+    t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -331,6 +371,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
   add_foreign_key "link_check_reports", "editions"
   add_foreign_key "links", "link_check_reports"
   add_foreign_key "parts", "guide_editions"
+  add_foreign_key "parts", "programme_editions"
   add_foreign_key "simple_smart_answer_edition_node_options", "simple_smart_answer_edition_nodes", column: "node_id"
   add_foreign_key "simple_smart_answer_edition_nodes", "simple_smart_answer_editions"
 end
