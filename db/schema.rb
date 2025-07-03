@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_03_092542) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_30_145311) do
     t.uuid "edition_id"
     t.bigint "requester_id"
     t.bigint "recipient_id"
+    t.text "mongo_id"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
     t.index ["requester_id"], name: "index_actions_on_requester_id"

@@ -24,12 +24,22 @@ class JsonImporter
       log line_no, "Completed"
       line_no += 1
       processed_line[0]['editionable_id'] = @editionable_id unless @model_class == User
-      @model_class.insert(processed_line[0])
+      model = @model_class.insert(processed_line[0])
+      model_id = model[0]['id']
+      create_action(model_id, @parsed_obj) if @model_class == Edition
       log(" saved")
       processed_line = []
+    rescue AssignedToError => e
+      puts "Line: #{line[0..50]}, AssignedToError: #{e}"
+      log "Line: #{line[0..50]}, AssignedToError: #{e}"
+    rescue RecipientError => e
+      puts "Line: #{line[0..50]}, RecipientError: #{e}"
+      log "Line: #{line[0..50]}, RecipientError: #{e}"
+    rescue RequesterError => e
+      puts "Line: #{line[0..50]}, RequesterError: #{e}"
+      log "Line: #{line[0..50]}, RequesterError: #{e}"
     rescue StandardError => e
-      puts "Line: #{line[0..50]}, Error: #{e}"
-      log "Line: #{line[0..50]}, Error: #{e}"
+      puts "Line: #{line}, StandardError: #{e}"
     end
   end
 
@@ -37,15 +47,15 @@ class JsonImporter
 
   def process_line(line)
     log("parsing...")
-    obj = JSON.parse(line)
-    @content_type = obj['_type']
-    create_editionable(obj)
-    id = id_value(obj)
+    @parsed_obj = JSON.parse(line)
+    @content_type = @parsed_obj['_type']
+    create_editionable(@parsed_obj) if @model_class == Edition
+    id = id_value(@parsed_obj)
     log(id, " checking existence")
     if exists?(id)
       log(id, " exists, skipping")
     else
-      @mapper.active_record_attributes(obj)
+      @mapper.active_record_attributes(@parsed_obj)
     end
   end
 
@@ -57,8 +67,8 @@ class JsonImporter
     end
   end
 
-  def exists?(id)
-      @model_class.where(id:).exists?
+  def exists?(mongo_id)
+      @model_class.where(mongo_id:).exists?
   end
 
   def log(*args)

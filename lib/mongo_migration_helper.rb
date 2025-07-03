@@ -102,4 +102,13 @@ module MongoMigrationHelper
       end
     end
   end
+
+  def create_action(id, object)
+    mapper = MongoFieldMapper.new(Action)
+    object["actions"].each do |obj|
+      attrs = mapper.active_record_attributes(obj)
+      attrs["edition_id"] = id
+      Action.insert(attrs)
+    end
+  end
 end
