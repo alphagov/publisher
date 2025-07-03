@@ -93,6 +93,15 @@ class MongoFieldMapper
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
+    Action => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "recipient_id" => ->(_key, value) { { "recipient_id" => get_recipient_id(value) } },
+        "requester_id" => ->(_key, value) { { "requester_id" => get_requester_id(value) } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
     # PublishIntent => {
     #   rename: {
     #     "_id" => "base_path",
@@ -153,6 +162,36 @@ class MongoFieldMapper
     end
   end
 
+  def self.get_assigned_to_id(value)
+    assigned_to_user = User.where(mongo_id: value["$oid"]).last
+    if assigned_to_user.nil?
+      puts "Error: user with mongo_id #{value['$oid']} does not exist"
+      raise AssignedToError, "Error: user with mongo_id #{value['$oid']} does not exist"
+    else
+      assigned_to_user.id
+    end
+  end
+
+  def self.get_recipient_id(value)
+    recipient = User.where(mongo_id: value["$oid"]).last
+    if recipient.nil?
+      puts "Error: user with mongo_id #{value['$oid']} does not exist"
+      raise RecipientError, "Error: user with mongo_id #{value['$oid']} does not exist"
+    else
+      recipient.id
+    end
+  end
+
+  def self.get_requester_id(value)
+    requester = User.where(mongo_id: value["$oid"]).last
+    if requester.nil?
+      puts "Error: user with mongo_id #{value['$oid']} does not exist"
+      raise RequesterError, "Error: user with mongo_id #{value['$oid']} does not exist"
+    else
+      requester.id
+    end
+  end
+
   # Return the given key with the unpacked date value if given,
   # otherwise return empty hash, to avoid conflicting with
   # the not-null constraint on Rails' timestamp keys
@@ -161,7 +200,7 @@ class MongoFieldMapper
     date ? { key => date } : {}
   end
 
-  private
+private
 
   def process(key, value)
     if (proc = MAPPINGS[@model_class][:process][key])
@@ -179,20 +218,13 @@ class MongoFieldMapper
   def target_key(key)
     MAPPINGS[@model_class][:rename].try(:[], key) || key
   end
-
-  def self.get_assigned_to_id(value)
-    assigned_to_user = User.where(mongo_id: value["$oid"]).last
-    unless assigned_to_user.nil?
-      assigned_to_user.id
-    end
-
-    puts "Error: user with mongo_id #{value["$oid"]} does not exist"
-    raise AssignedToError.new("Error: user with mongo_id #{value["$oid"]} does not exist")
-  end
 end
 
 class AssignedToError < StandardError
-  def initialize(message)
-    super(message)
-  end
+end
+
+class RecipientError < StandardError
+end
+
+class RequesterError < StandardError
 end

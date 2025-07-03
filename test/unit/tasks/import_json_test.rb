@@ -5,13 +5,21 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
   setup do
     @import_json_task = Rake::Task["import:json"]
     @import_json_task.reenable
+    TOTAL_USER_COUNT = 791
+    seed_user_data unless User.count == TOTAL_USER_COUNT
+  end
+
+  def seed_user_data
+    file_with_user_data = "test/fixtures/migration/mongo_user_data.json"
+    @import_json_task.invoke("User", file_with_user_data)
+    @import_json_task.reenable
   end
 
   should "insert Edition correctly from json file record" do
     file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
     @import_json_task.invoke("Edition", file_with_guide_edition_data)
 
-    assert_equal 1, Edition.count
+    assert_equal 2, Edition.count
   end
 
   should "insert Editionable correctly from the json file record" do
@@ -86,10 +94,10 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "AnswerEdition" do
     should "insert AnswerEdition correctly from json file record" do
-      file_with_answer_edition_data = "test/fixtures/migration/mongo_answer_edition_data.json"
+      file_with_answer_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
       @import_json_task.invoke("Edition", file_with_answer_edition_data)
 
-      assert_equal 1, Edition.count
+      assert_equal 2, Edition.count
       assert_equal 1, AnswerEdition.count
     end
   end
@@ -116,48 +124,62 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "Users" do
     should "insert User correctly from json file record" do
-      file_with_user_data = "test/fixtures/migration/mongo_user_data.json"
-      @import_json_task.invoke("User", file_with_user_data)
-
-      assert_equal 1, User.count
-      assert_equal "670cea84a90e05001d898d1e", User.last.mongo_id
-      assert_equal ["signin"], User.last.permissions
-      assert_equal "f65d93a0-d55c-013b-1567-3e3f44448a15", User.last.uid
-      assert_equal "syed.ali1@digital.cabinet-office.gov.uk", User.last.email
-      assert_equal "Syed Ali", User.last.name
-      assert_equal "government-digital-service", User.last.organisation_slug
-      assert_equal "af07d5a5-df63-4ddc-9383-6a666845ebe9", User.last.organisation_content_id
+      assert_equal 791, User.count
+      assert_equal "633ea4aa8fa8f54662895951", User.last.mongo_id
+      assert_equal ["signin","welsh_editor"], User.last.permissions
+      assert_equal "329428f0-0070-013b-4e5d-02ede1ddf010", User.last.uid
+      assert_equal "maria.morris@justice.gov.uk", User.last.email
+      assert_equal "Maria Morris", User.last.name
+      assert_equal "hm-courts-and-tribunals-service", User.last.organisation_slug
+      assert_equal "6f757605-ab8f-4b62-84e4-99f79cf085c2", User.last.organisation_content_id
     end
 
-    should "update the edition assigned_to to new postgres ID using old mongo ID to match user" do
-      file_with_user_data = "test/fixtures/migration/mongo_assigned_to_user_data.json"
-      @import_json_task.invoke("User", file_with_user_data)
-      mongo_id_for_user = User.last.mongo_id
-
-      @import_json_task.reenable
-
+    should "update the edition assigned_to_id to new postgres ID using old mongo ID to match user" do
       file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
       @import_json_task.invoke("Edition", file_with_guide_edition_data)
-      assigned_to_id = Edition.last.assigned_to_id
+
+      assigned_to_id = Edition.where("editionable_type": "GuideEdition").last.assigned_to_id
       assigned_to_user = User.find(assigned_to_id)
 
-      assert_equal mongo_id_for_user, assigned_to_user.mongo_id
+      assert_equal "623078cbd3bf7f203b47947a", assigned_to_user.mongo_id
     end
 
-    should "throw an exception if old mongo id does not match any user" do
-      file_with_user_data = "test/fixtures/migration/mongo_assigned_to_user_data.json"
-      @import_json_task.invoke("User", file_with_user_data)
-      mongo_id_for_user = User.last.mongo_id
+    should "log an error and not save Edition if old mongo id does not match any user" do
+      nonexistent_assigned_to_id = "test/fixtures/migration/mongo_edition_with_nonexistent_assigned_to_id_data.json"
 
-      @import_json_task.reenable
+      assert_output( /Error: user with mongo_id 4f7974a0a4254a2c9f00011c does not exist/ ) do
+          @import_json_task.invoke("Edition", nonexistent_assigned_to_id)
+      end
+      assert_equal 0, Edition.count
+    end
+  end
 
-      file_with_guide_edition_data = "test/fixtures/migration/mongo_answer_edition_data.json"
+  context "Actions" do
+    should "add all the actions for the edition" do
+      file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
       @import_json_task.invoke("Edition", file_with_guide_edition_data)
-      assigned_to_id = Edition.last.assigned_to_id
-      assigned_to_user = User.find(assigned_to_id)
 
-      # TODO: Assert that the exception is thrown
-      assert_equal mongo_id_for_user, assigned_to_user.mongo_id
+      assert_equal 11, Action.count
+
+      assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].requester_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
+      assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].recipient_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
+      assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[4].requester_id, User.where(mongo_id: "60a26d41d3bf7f719f9533dd").first.id
+    end
+
+    should "log an error if old mongo id does not match any requester for the action" do
+      nonexistent_requester_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_requester_id_for_first_action_data.json"
+
+      assert_output( /Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/ ) do
+        @import_json_task.invoke("Edition", nonexistent_requester_to_id)
+      end
+    end
+
+    should "log an error Edition if old mongo id does not match any recipient for the action" do
+      nonexistent_recipient_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_recipient_id_for_first_action_data.json"
+
+      assert_output( /Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/ ) do
+        @import_json_task.invoke("Edition", nonexistent_recipient_to_id)
+      end
     end
   end
 end
