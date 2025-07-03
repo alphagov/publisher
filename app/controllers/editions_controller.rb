@@ -36,7 +36,8 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email_page
                          resend_fact_check_email
                          add_edition_note
-                         update_important_note] do
+                         update_important_note
+                         tagging_mainstream_browse_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -136,6 +137,10 @@ class EditionsController < InheritedResources::Base
 
   def cancel_scheduled_publishing_page
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
+  end
+
+  def tagging_mainstream_browse_page
+    render "secondary_nav_tabs/tagging_mainstream_browse_page"
   end
 
   def duplicate
