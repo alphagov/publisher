@@ -1,14 +1,14 @@
 module TaggingHelper
-  def tag_summary_rows(type, tagging_update, linkables, key_text)
+  def tag_summary_rows(type, tagging_update_form_values, linkables, key_text)
     case type
     when "breadcrumb"
-      items = breadcrumb(tagging_update.parent, linkables)
+      items = breadcrumb(tagging_update_form_values.parent, linkables)
     when "browse_pages"
-      items = browse_pages(tagging_update.mainstream_browse_pages, linkables)
+      items = browse_pages(tagging_update_form_values.mainstream_browse_pages, linkables)
     when "organisations"
-      items = organisations(tagging_update.organisations, linkables)
+      items = organisations(tagging_update_form_values.organisations, linkables)
     when "related_content"
-      items = related_content(tagging_update.ordered_related_items)
+      items = related_content(tagging_update_form_values.ordered_related_items)
     else
       []
     end

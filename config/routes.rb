@@ -51,6 +51,8 @@ Rails.application.routes.draw do
         get "related_external_links"
         patch "update_related_external_links"
         get "tagging", to: "editions#tagging"
+        post "update_tagging", to: "editions#update_tagging", as: "update_tagging"
+        get "tagging_mainstream_browse_page", to: "editions#tagging_mainstream_browse_page", as: "tagging_mainstream_browse_page"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"

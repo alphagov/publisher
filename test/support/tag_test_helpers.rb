@@ -54,7 +54,8 @@ module TagTestHelpers
                   \"content_id\": \"CONTENT-ID-CAPITAL\"
                 }
               ]
-            }
+            },
+          \"version\": 1
         }",
         headers: {},
       )
@@ -69,6 +70,9 @@ module TagTestHelpers
         { base_path: "/browse/tax/capital-gains", internal_name: "Tax / Capital Gains Tax", publication_state: "published", content_id: "CONTENT-ID-CAPITAL" },
         { base_path: "/browse/tax/rti", internal_name: "Tax / RTI", publication_state: "draft", content_id: "CONTENT-ID-RTI" },
         { base_path: "/browse/tax/nil", internal_name: nil, publication_state: "draft", content_id: "CONTENT-ID-NIL" },
+        { base_path: "/browse/benefits/families", internal_name: "Benefits / Benefits and financial support for families", publication_state: "draft", content_id: "CONTENT-ID-FAMILIES" },
+        { base_path: "/browse/benefits/help-for-carers", internal_name: "Benefits / Benefits and financial support if you're caring for someone", publication_state: "draft", content_id: "CONTENT-ID-HELP-FOR-CARERS" },
+        { base_path: "/browse/benefits/disability", internal_name: "Benefits / Benefits and financial support if you're disabled or have a health condition", publication_state: "draft", content_id: "CONTENT-ID-DISABILITY" },
       ],
       document_type: "mainstream_browse_page",
     )
@@ -104,5 +108,12 @@ module TagTestHelpers
       ],
       document_type: "need",
     )
+
+    stub_publishing_api_has_lookups({
+      "/company-tax-returns" => "830e403b-7d81-45f1-8862-81dcd55b4ec7",
+      "/prepare-file-annual-accounts-for-limited-company" => "5cb58486-0b00-4da8-8076-382e474b4f03",
+      "/corporation-tax" => "853feaf2-152c-4aa5-8edb-ba84a88860bf",
+      "/tax-help" => "91fef6f6-3a59-42ab-a14d-42c4e5eee1a1",
+    })
   end
 end

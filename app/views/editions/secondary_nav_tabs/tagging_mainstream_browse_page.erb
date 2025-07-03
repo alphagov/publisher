@@ -1,0 +1,42 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Tag browse pages" %>
+<% content_for :title, "Tag browse pages" %>
+<%= form_for @tagging_update_form_values, url: update_tagging_edition_path(@edition) do |f| %>
+  <%= f.hidden_field :content_id %>
+  <%= f.hidden_field :previous_version %>
+  <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
+    <%= f.hidden_field :parent, value: parent_id, multiple: true %>
+  <% end %>
+  <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
+    <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+  <% end %>
+  <% Array(@tagging_update_form_values.ordered_related_items).to_a.map { |item| item["base_path"] }.each do |base_path| %>
+    <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
+  <% end %>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= render "govuk_publishing_components/components/hint", {
+        text: "Select all that apply",
+      } %>
+      <% @checkbox_groups.each do |checkbox_group| %>
+        <%= render "govuk_publishing_components/components/checkboxes", {
+          name: "#{f.object_name}[mainstream_browse_pages][]",
+          heading: checkbox_group[:heading],
+          heading_size: "s",
+          small: true,
+          no_hint_text: true,
+          items: checkbox_group[:items],
+        } %>
+        <% end %>
+    </div>
+
+    <div class="govuk-grid-column-one-third options-sidebar">
+      <div class="sidebar-components">
+        <%= sidebar_options_heading %>
+        <%= sidebar_items_list(base_edition_sidebar_buttons(tagging_edition_path(@edition))) %>
+      </div>
+    </div>
+  </div>
+<% end %>
