@@ -2,10 +2,14 @@
 <% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Tag browse pages" %>
 <% content_for :title, "Tag browse pages" %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  </div>
 
-<div class="govuk-grid-column-one-third options-sidebar">
-  <div class="sidebar-components">
-    <%= sidebar_options_heading %>
-    <%= sidebar_items_list(tagging_mainstream_browse_pages_buttons) %>
+  <div class="govuk-grid-column-one-third options-sidebar">
+    <div class="sidebar-components">
+      <%= sidebar_options_heading %>
+      <%= sidebar_items_list(base_edition_sidebar_buttons(tagging_edition_path(@edition))) %>
+    </div>
   </div>
 </div>
