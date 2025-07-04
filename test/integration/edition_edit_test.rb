@@ -226,6 +226,7 @@ class EditionEditTest < IntegrationTest
         should "show the 'Tag to a browse page' page" do
           click_link("Tag to a browse page")
 
+          assert page.has_text?(@draft_edition.title)
           assert page.has_text?("Tag browse pages")
         end
       end
