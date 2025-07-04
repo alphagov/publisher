@@ -221,6 +221,14 @@ class EditionEditTest < IntegrationTest
           assert page.has_link?("Tag to related content")
         end
       end
+
+      context "Adding Tags to a browse page" do
+        should "show the 'Tag to a browse page' page" do
+          click_link("Tag to a browse page")
+
+          assert page.has_text?("Tag browse pages")
+        end
+      end
     end
 
     context "Tagging is set" do
@@ -2767,7 +2775,7 @@ class EditionEditTest < IntegrationTest
     end
   end
 
-private
+  private
 
   def create_draft_edition
     @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
