@@ -126,4 +126,14 @@ module EditionsSidebarButtonsHelper
 
     buttons
   end
+
+  def tagging_mainstream_browse_pages_buttons
+    [
+      (render "govuk_publishing_components/components/button", {
+        text: "Save",
+        margin_bottom: 3,
+      }),
+      link_to("Cancel", "#", class: "govuk-link govuk-link--no-visited-state"),
+    ]
+  end
 end
