@@ -12,7 +12,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
   def edition
     @edition ||= FactoryBot.create(
       :local_transaction_edition,
-      :published,
+      state: "published",
       title: "Catch all rats",
       slug: "pest-control",
       panopticon_id: artefact.id,
@@ -148,14 +148,13 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       end
 
       should "not present the data if local_authority_service was selected" do
-        edition.scotland_availability = { type: "local_authority_service", alternative_url: "" }
-        edition.save!(validate: false)
+        FactoryBot.create(:scotland_availability, authority_type: "local_authority_service", alternative_url: "", local_transaction_edition: edition.editionable)
 
         assert_not result[:details].key?(:scotland_availability)
       end
 
       should "present the type data if unavailable was selected" do
-        edition.wales_availability.type = "unavailable"
+        edition.editionable.wales_availability.authority_type = "unavailable"
 
         edition.save!(validate: false)
 
@@ -164,9 +163,7 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
       end
 
       should "present the type and url data if devolved_administration_service was selected" do
-        edition.northern_ireland_availability = { type: "devolved_administration_service", alternative_url: "https://www.ni.gov/service" }
-
-        edition.save!(validate: false)
+        FactoryBot.create(:northern_ireland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.ni.gov/service", local_transaction_edition: edition.editionable)
 
         expected = { type: "devolved_administration_service", alternative_url: "https://www.ni.gov/service" }
         assert_equal expected, result[:details][:northern_ireland_availability]

@@ -85,7 +85,8 @@ class EditionExternalLinksTest < JavascriptIntegrationTest
         user = FactoryBot.create(:user, name: "Stub User")
         login_as(user)
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        link = { title: "Link one", url: "https://one.com" }
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build(link)]
         click_link "Related external links"
       end
 

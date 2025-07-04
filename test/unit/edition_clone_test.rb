@@ -28,8 +28,8 @@ class EditionCloneTest < ActiveSupport::TestCase
 
     answer_edition = guide_edition.build_clone(AnswerEdition)
 
-    assert_equal GuideEdition, guide_edition.class
-    assert_equal AnswerEdition, answer_edition.class
+    assert_equal GuideEdition, guide_edition.editionable.class
+    assert_equal AnswerEdition, answer_edition.editionable.class
 
     assert_equal guide_edition.title, answer_edition.title
   end
@@ -44,8 +44,8 @@ class EditionCloneTest < ActiveSupport::TestCase
 
     guide_edition = answer_edition.build_clone(GuideEdition)
 
-    assert_equal AnswerEdition, answer_edition.class
-    assert_equal GuideEdition, guide_edition.class
+    assert_equal AnswerEdition, answer_edition.editionable.class
+    assert_equal GuideEdition, guide_edition.editionable.class
 
     assert_equal guide_edition.title, answer_edition.title
   end
@@ -53,21 +53,21 @@ class EditionCloneTest < ActiveSupport::TestCase
   test "should convert GuideEdition with parts into an AnswerEdition" do
     stub_register_published_content
 
-    guide_edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
-    guide_edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
-    guide_edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
-    guide_edition.save!
+    edition = FactoryBot.create(:guide_edition, slug: "childcare", title: "One", panopticon_id: @artefact.id)
+    edition.parts.build(title: "Some Part Title!", body: "This is some **version** text.", slug: "part-one")
+    edition.parts.build(title: "Another Part Title", body: "This is [link](http://example.net/) text.", slug: "part-two")
+    edition.save!
 
-    fact_check_and_publish(guide_edition)
+    fact_check_and_publish(edition)
 
-    answer_edition = guide_edition.build_clone(AnswerEdition)
+    cloned_edition = edition.build_clone(AnswerEdition)
 
-    assert_equal GuideEdition, guide_edition.class
-    assert_equal AnswerEdition, answer_edition.class
+    assert_equal GuideEdition, edition.editionable.class
+    assert_equal AnswerEdition, cloned_edition.editionable.class
 
-    assert_equal "# Some Part Title!\n\nThis is some **version** text.\n\n# Another Part Title\n\nThis is [link](http://example.net/) text.", guide_edition.whole_body
-    assert_equal guide_edition.whole_body, answer_edition.whole_body
-    assert_equal guide_edition.title, answer_edition.title
+    assert_equal "# Some Part Title!\n\nThis is some **version** text.\n\n# Another Part Title\n\nThis is [link](http://example.net/) text.", edition.whole_body
+    assert_equal edition.whole_body, cloned_edition.whole_body
+    assert_equal edition.title, cloned_edition.title
   end
 
   test "should convert AnswerEdition into a GuideEdition" do
@@ -80,9 +80,10 @@ class EditionCloneTest < ActiveSupport::TestCase
     fact_check_and_publish(answer_edition)
 
     guide_edition = answer_edition.build_clone(GuideEdition)
+    guide_edition.save!
 
-    assert_equal AnswerEdition, answer_edition.class
-    assert_equal GuideEdition, guide_edition.class
+    assert_equal AnswerEdition, answer_edition.editionable.class
+    assert_equal GuideEdition, guide_edition.editionable.class
 
     assert_equal "# Part One\n\nBleep, bloop, blop", guide_edition.whole_body
     assert_equal guide_edition.title, answer_edition.title
