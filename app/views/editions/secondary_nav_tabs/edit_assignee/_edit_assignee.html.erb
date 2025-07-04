@@ -19,7 +19,7 @@
       <div class="sidebar-components">
         <%= sidebar_options_heading %>
 
-        <%= sidebar_items_list(edit_assignee_buttons(@resource)) %>
+        <%= sidebar_items_list(base_edition_sidebar_buttons(edition_path(@resource))) %>
       </div>
     </div>
   </div>
