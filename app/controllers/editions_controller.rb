@@ -481,7 +481,7 @@ private
   end
 
   def tagging_update_params
-    params[:tagging_tagging_update_form].permit(
+    params.require(:tagging_tagging_update_form).permit(
       :content_id,
       :previous_version,
       :parent,
