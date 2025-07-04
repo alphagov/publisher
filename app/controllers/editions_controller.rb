@@ -79,13 +79,27 @@ class EditionsController < InheritedResources::Base
   alias_method :unpublish, :show
 
   def tagging
+    build_tagging_update_form
     @linkables = Tagging::Linkables.new
-    @tagging_update = Tagging::TaggingUpdateForm.build_from_publishing_api(
-      @resource.artefact.content_id,
-      @resource.artefact.language,
-    )
 
     render action: "show"
+  end
+
+  def update_tagging
+    form = Tagging::TaggingUpdateForm.new(tagging_update_params)
+
+    if form.valid?
+      form.publish!
+      flash[:success] = "Tags have been updated!"
+    else
+      flash[:danger] = form.errors.full_messages.join("\n")
+    end
+    redirect_to tagging_edition_path
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
   end
 
   def resend_fact_check_email_page
@@ -451,6 +465,24 @@ protected
   end
 
 private
+
+  def build_tagging_update_form
+    @tagging_update = Tagging::TaggingUpdateForm.build_from_publishing_api(
+      @resource.artefact.content_id,
+      @resource.artefact.language,
+    )
+  end
+
+  def tagging_update_params
+    params[:tagging_tagging_update_form].permit(
+      :content_id,
+      :previous_version,
+      :parent,
+      mainstream_browse_pages: [],
+      organisations: [],
+      ordered_related_items: [],
+    ).to_h
+  end
 
   def request_amendments_for_edition(resource, comment)
     progress_edition(resource, { request_type: "request_amendments", comment: comment })
