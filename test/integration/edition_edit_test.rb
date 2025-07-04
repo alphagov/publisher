@@ -228,6 +228,9 @@ class EditionEditTest < IntegrationTest
 
           assert page.has_text?(@draft_edition.title)
           assert page.has_text?("Tag browse pages")
+          assert page.has_text?("Options")
+          assert page.has_button?("Save")
+          assert page.has_link?("Cancel")
         end
       end
     end
@@ -2776,7 +2779,7 @@ class EditionEditTest < IntegrationTest
     end
   end
 
-  private
+private
 
   def create_draft_edition
     @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
