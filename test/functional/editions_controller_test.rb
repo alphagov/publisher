@@ -1456,6 +1456,31 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
   end
+  
+  context "#update_tagging" do
+    # Needs more work to allow the test to run this line in the controller: 
+    # params.require(:tagging_tagging_update_form)
+    should "save a value for the tag when the user submits the form" do
+      form = Tagging::TaggingUpdateForm.any_instance
+      form.stubs(:new).returns(
+        content_id: @edition.id,
+        previous_version: 0,
+        ordered_related_items: []
+      )
+      form.stubs(:valid?).returns(true)
+      form.stubs(:publish!).returns(true)
+
+      post :update_tagging, params: {
+        id: @edition.id,
+        content_id: @edition.id,
+        previous_version: 0,
+        ordered_related_items: ["/pay-vat"],
+      }
+
+      assert_redirected_to tagging_edition_path(@edition)
+      assert_equal "Tags have been updated!", flash[:success]
+    end
+  end
 
   context "#metadata" do
     should "alias to show method" do
