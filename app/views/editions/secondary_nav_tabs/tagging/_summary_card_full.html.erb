@@ -1,6 +1,20 @@
 <%# locals: (type:, heading:, key_text:) %>
 
+<%
+  if type === "related_content"
+    href = tagging_related_content_page_edition_path
+  else
+    href = "#"
+  end
+%>
+
 <%= render "govuk_publishing_components/components/summary_card", {
   title: heading,
   rows: tag_summary_rows(type, @tagging_update, @linkables, key_text),
+  summary_card_actions: [
+    {
+      label: "Edit",
+      href: href
+    }
+  ]
 } %>
