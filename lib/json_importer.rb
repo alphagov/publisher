@@ -23,27 +23,29 @@ class JsonImporter
       processed_line << process_line(line)
       log line_no, "Completed"
       line_no += 1
-      processed_line[0]['editionable_id'] = @editionable_id unless @model_class == User
+      processed_line[0]['editionable_id'] = @editionable_id if @model_class == Edition
       model = @model_class.insert(processed_line[0])
       model_id = model[0]['id']
       create_action(model_id, @parsed_obj) if @model_class == Edition
+      create_artefact_action(model_id, @parsed_obj) if @model_class == Artefact
       log(" saved")
       processed_line = []
     rescue AssignedToError => e
-      puts "Line: #{line[0..50]}, AssignedToError: #{e}"
-      log "Line: #{line[0..50]}, AssignedToError: #{e}"
+      puts "Line: #{line[0..50]}, AssignedToError: #{e.message}"
+      log "Line: #{line[0..50]}, AssignedToError: #{e.message}"
     rescue RecipientError => e
-      puts "Line: #{line[0..50]}, RecipientError: #{e}"
+      puts "Line: #{line[0..50]}, RecipientError: #{e.message}"
       puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create Action due to RecipientError"
-      log "Line: #{line[0..50]}, RecipientError: #{e}"
+      log "Line: #{line[0..50]}, RecipientError: #{e.message}"
     rescue RequesterError => e
-      puts "Line: #{line[0..50]}, RequesterError: #{e}"
+      puts "Line: #{line[0..50]}, RequesterError: #{e.message}"
       puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create Action due to RequesterError"
-      log "Line: #{line[0..50]}, RequesterError: #{e}"
+      log "Line: #{line[0..50]}, RequesterError: #{e.message}"
+      # puts "ArtefactActionUserError: #{e.message} Artefact with mongo_id #{id_value(@parsed_obj)} failed to create ArtefactAction due to ArtefactActionUserError"
     rescue StandardError => e
       puts "Line: #{line}, StandardError: #{e}"
-      puts "Edition with mongo_id #{id_value(@parsed_obj)} due to Error"
-      log "Line: #{line[0..50]}, Error: #{e}"
+      puts "Model with mongo_id #{id_value(@parsed_obj)} due to Error"
+      log "Line: #{line[0..50]}, Error: #{e.message}"
     end
   end
 

@@ -102,24 +102,21 @@ class MongoFieldMapper
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
-    # PublishIntent => {
-    #   rename: {
-    #     "_id" => "base_path",
-    #   },
-    #   process: {
-    #     "publish_time" => ->(key, value) { { key => unpack_datetime(value) } },
-    #     "created_at" => ->(key, value) { rails_timestamp(key, value) },
-    #     "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-    #
-    #   },
-    # },
-    # ScheduledPublishingLogEntry => {
-    #   process: {
-    #     "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-    #     "scheduled_publication_time" => ->(key, value) { { key => unpack_datetime(value) } },
-    #     "created_at" => ->(key, value) { rails_timestamp(key, value) },
-    #   },
-    # },
+    Artefact => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "public_timestamp" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    ArtefactAction => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "user_id" => ->(_key, value) { { "user_id" => get_artefact_action_user_id(value) } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
   }.freeze
 
   def initialize(model_class)
@@ -192,6 +189,21 @@ class MongoFieldMapper
     end
   end
 
+  def self.get_artefact_action_user_id(value)
+    return if value.nil?
+
+    artefact_action_user = User.where(mongo_id: value["$oid"]).last
+    if artefact_action_user.nil?
+      puts "Error: user with mongo_id #{value['$oid']} does not exist so inserted 'Dummy user' id"
+      gds_organisation_id = "af07d5a5-df63-4ddc-9383-6a666845ebe9"
+
+      get_dummy_user_id(gds_organisation_id)
+      return User.where(name: 'Dummy user').last.id
+    else
+      artefact_action_user.id
+    end
+  end
+
   # Return the given key with the unpacked date value if given,
   # otherwise return empty hash, to avoid conflicting with
   # the not-null constraint on Rails' timestamp keys
@@ -201,6 +213,20 @@ class MongoFieldMapper
   end
 
 private
+
+  def self.get_dummy_user_id(gds_organisation_id)
+    dummy_user = User.where(name: "Dummy user")
+
+    if dummy_user.exists?
+      return dummy_user.last.id
+    end
+
+    User.create!(
+      name: "Dummy user",
+      permissions: %w[signin],
+      organisation_content_id: gds_organisation_id,
+    )
+  end
 
   def process(key, value)
     if (proc = MAPPINGS[@model_class][:process][key])

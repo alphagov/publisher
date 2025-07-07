@@ -111,4 +111,13 @@ module MongoMigrationHelper
       Action.insert(attrs)
     end
   end
+
+  def create_artefact_action(id, object)
+    mapper = MongoFieldMapper.new(ArtefactAction)
+    object["actions"].each do |obj|
+      attrs = mapper.active_record_attributes(obj)
+      attrs["artefact_id"] = id
+      ArtefactAction.insert(attrs)
+    end
+  end
 end

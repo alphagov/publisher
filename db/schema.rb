@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_03_092542) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_07_141905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_03_092542) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "artefact_id"
+    t.text "mongo_id"
     t.index ["artefact_id"], name: "index_artefact_actions_on_artefact_id"
     t.index ["user_id"], name: "index_artefact_actions_on_user_id"
   end
@@ -81,6 +82,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_03_092542) do
     t.string "content_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mongo_id"
     t.index ["name", "state", "kind", "id"], name: "index_artefacts_on_name_and_state_and_kind_and_id"
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true
   end

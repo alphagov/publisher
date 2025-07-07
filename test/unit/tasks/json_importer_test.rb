@@ -182,4 +182,37 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context 'Artefact' do
+    should 'insert Artefact correctly from json file record' do
+      file_with_artefact_data = "test/fixtures/migration/mongo_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_artefact_data)
+      created_artefact = Artefact.last
+
+      assert_equal 1, Artefact.count
+      assert_equal "4fa11ce19d5eb5495b000049", created_artefact.mongo_id
+      assert_equal "bereavement-allowance", created_artefact.slug
+      assert_equal ["/bereavement-allowance.json"], created_artefact.paths
+      assert_equal ["/bereavement-allowance"], created_artefact.prefixes
+      assert_equal "1e9de9b2-76d1-403c-ba80-81f115e158f0", created_artefact.content_id
+    end
+
+    should "add all the actions for the artefact" do
+      file_with_artefact_data = "test/fixtures/migration/mongo_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_artefact_data)
+
+
+      assert_equal 36, ArtefactAction.count
+      assert_equal 36, Artefact.last.artefact_actions.count
+      assert_equal User.where(mongo_id: "4f7974a0a4254a2c9f00001b").last.id, Artefact.last.artefact_actions[10].user_id
+      assert_equal "51387db9ed915d586f00000e", Artefact.last.artefact_actions[10].mongo_id
+      assert_equal "update", Artefact.last.artefact_actions[10].action_type
+
+
+      #
+      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].requester_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
+      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].recipient_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
+      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[4].requester_id, User.where(mongo_id: "60a26d41d3bf7f719f9533dd").first.id
+    end
+  end
 end
