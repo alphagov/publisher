@@ -2,7 +2,29 @@
 <% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Tag related content" %>
 <% content_for :title, "Tag related content" %>
+
 <%
+  if @tagging_update.ordered_related_items == nil
+    # byebug
+    items = [
+      {
+        fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
+        destroy_checkbox: render(partial: "secondary_nav_tabs/related_external_links/add-another_checkbox", locals: { index: 0, id: nil }),
+      }
+    ]
+    empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
+  else
+    items = @tagging_update.ordered_related_items.each_with_index.map do | related_item, index |
+      {
+        fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: related_item["base_path"] }),
+        destroy_checkbox: render(partial: "secondary_nav_tabs/related_external_links/add-another_checkbox", locals: {index: index}),
+      }
+    end
+    empty = render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index: @tagging_update.ordered_related_items.count, value: nil })
+  end
+%>
+
+<%#
   items = [
     {
       fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
