@@ -112,12 +112,19 @@ module MongoMigrationHelper
     end
   end
 
-  def create_artefact_action(id, object)
+  def create_artefact_actions_and_external_links(id, object)
     mapper = MongoFieldMapper.new(ArtefactAction)
     object["actions"].each do |obj|
       attrs = mapper.active_record_attributes(obj)
       attrs["artefact_id"] = id
       ArtefactAction.insert(attrs)
+    end
+
+    mapper = MongoFieldMapper.new(ArtefactExternalLink)
+    object["external_links"].each do |obj|
+      attrs = mapper.active_record_attributes(obj)
+      attrs["artefact_id"] = id
+      ArtefactExternalLink.insert(attrs)
     end
   end
 end

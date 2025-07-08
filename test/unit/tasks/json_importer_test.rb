@@ -208,6 +208,17 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal "51387db9ed915d586f00000e", Artefact.last.artefact_actions[10].mongo_id
       assert_equal "update", Artefact.last.artefact_actions[10].action_type
     end
+
+    should 'add all external_links for an Artefact' do
+      file_with_artefact_and_link_data = "test/fixtures/migration/mongo_artefact_with_external_links_data.json"
+      @import_json_task.invoke("Artefact", file_with_artefact_and_link_data)
+      external_link = ArtefactExternalLink.where(mongo_id: "6760222e1cfe840014d535e5").last
+
+      assert_equal 5, ArtefactExternalLink.count
+      assert_equal 5, Artefact.last.external_links.count
+      assert_equal " A child's legal rights (NSPCC)", external_link.title
+      assert_equal "https://www.nspcc.org.uk/preventing-abuse/child-protection-system/legal-defin", external_link.url
+    end
   end
 
   context 'LocalService' do
@@ -220,6 +231,19 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal "Find out abut school transport for a child with special educational needs", LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.description
       assert_equal ["county","unitary"], LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.providing_tier
       assert_equal 40, LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.lgsl_code
+    end
+  end
+
+  context 'OverviewDashboard' do
+    should "insert OverviewDashboard correctly from json file record" do
+      file_with_overview_dashboard_data = "test/fixtures/migration/mongo_overview_dashboard_data.json"
+      @import_json_task.invoke("OverviewDashboard", file_with_overview_dashboard_data)
+      overview_dashboard = OverviewDashboard.where(mongo_id: "504472529d5eb535de000066").last
+
+      assert_equal 118, OverviewDashboard.count
+      assert_equal 'Section',overview_dashboard.dashboard_type
+      assert_equal 'Driving:MOT',overview_dashboard.result_group
+      assert_equal 5, overview_dashboard.count
     end
   end
 end

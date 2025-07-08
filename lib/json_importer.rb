@@ -27,7 +27,7 @@ class JsonImporter
       model = @model_class.insert(processed_line[0])
       model_id = model[0]['id']
       create_action(model_id, @parsed_obj) if @model_class == Edition
-      create_artefact_action(model_id, @parsed_obj) if @model_class == Artefact
+      create_artefact_actions_and_external_links(model_id, @parsed_obj) if @model_class == Artefact
       log(" saved")
       processed_line = []
     rescue AssignedToError => e

@@ -55,11 +55,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
   end
 
   create_table "artefact_external_links", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "title"
     t.string "url"
     t.bigint "artefact_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["artefact_id"], name: "index_artefact_external_links_on_artefact_id"
   end
 
@@ -209,6 +208,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
   end
 
   create_table "overview_dashboards", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "dashboard_type"
     t.string "result_group"
     t.integer "count"
@@ -220,8 +220,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
     t.integer "fact_check"
     t.integer "published"
     t.integer "archived"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "parts", force: :cascade do |t|

@@ -124,6 +124,16 @@ class MongoFieldMapper
         "updated_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
+    ArtefactExternalLink => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+      },
+    },
+    OverviewDashboard => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+      },
+    },
   }.freeze
 
   def initialize(model_class)
