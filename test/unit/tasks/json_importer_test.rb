@@ -207,12 +207,19 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal User.where(mongo_id: "4f7974a0a4254a2c9f00001b").last.id, Artefact.last.artefact_actions[10].user_id
       assert_equal "51387db9ed915d586f00000e", Artefact.last.artefact_actions[10].mongo_id
       assert_equal "update", Artefact.last.artefact_actions[10].action_type
+    end
+  end
 
+  context 'LocalService' do
+    should "insert LocalService correctly from json file record" do
+      file_with_local_services_data = "test/fixtures/migration/mongo_local_service_data.json"
+      @import_json_task.invoke("LocalService", file_with_local_services_data)
 
-      #
-      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].requester_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
-      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].recipient_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
-      # assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[4].requester_id, User.where(mongo_id: "60a26d41d3bf7f719f9533dd").first.id
+      assert_equal 135, LocalService.count
+
+      assert_equal "Find out abut school transport for a child with special educational needs", LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.description
+      assert_equal ["county","unitary"], LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.providing_tier
+      assert_equal 40, LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.lgsl_code
     end
   end
 end

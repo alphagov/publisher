@@ -117,6 +117,13 @@ class MongoFieldMapper
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
+    LocalService => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
   }.freeze
 
   def initialize(model_class)
