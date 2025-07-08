@@ -230,6 +230,14 @@ class EditionEditTest < IntegrationTest
         should "show the 'Tag to a browse page' page" do
           assert page.has_text?(@draft_edition.title)
           assert page.has_text?("Tag browse pages")
+          assert page.has_element?("legend", text: "Tax")
+          assert page.has_unchecked_field?("Capital Gains Tax")
+          assert page.has_unchecked_field?("RTI (draft)")
+          assert page.has_unchecked_field?("VAT")
+          assert page.has_element?("legend", text: "Benefits")
+          assert page.has_unchecked_field?("Benefits and financial support for families")
+          assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+          assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
           assert page.has_text?("Options")
           assert page.has_button?("Save")
           assert page.has_link?("Cancel")
@@ -2787,7 +2795,7 @@ class EditionEditTest < IntegrationTest
     end
   end
 
-  private
+private
 
   def create_draft_edition
     @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")

@@ -4,6 +4,16 @@
 <% content_for :title, "Tag browse pages" %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <% @tagging_options.each do |tagging_option| %>
+      <%= render "govuk_publishing_components/components/checkboxes", {
+        name: "mainstream_browse_page_tags[]",
+        heading: tagging_option[:heading],
+        heading_size: "s",
+        small: true,
+        no_hint_text: true,
+        items: tagging_option[:items],
+      } %>
+      <% end %>
   </div>
 
   <div class="govuk-grid-column-one-third options-sidebar">

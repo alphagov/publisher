@@ -140,6 +140,8 @@ class EditionsController < InheritedResources::Base
   end
 
   def tagging_mainstream_browse_page
+    mainstream_browse_pages = Tagging::Linkables.new.mainstream_browse_pages
+    @tagging_options = mainstream_browse_pages.map { |k, v| { heading: k, items: v.map { |item| { label: item.first.split(" / ").last } } } }
     render "secondary_nav_tabs/tagging_mainstream_browse_page"
   end
 

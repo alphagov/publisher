@@ -1400,6 +1400,10 @@ class EditionsControllerTest < ActionController::TestCase
   end
 
   context "#tagging_mainstream_browse_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
     context "user has govuk_editor permission" do
       should "render the 'Tag to a browse page' page" do
         get :tagging_mainstream_browse_page, params: { id: @edition.id }
@@ -2286,7 +2290,7 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
-  private
+private
 
   def description(edition)
     edition.format.underscore.humanize.downcase
