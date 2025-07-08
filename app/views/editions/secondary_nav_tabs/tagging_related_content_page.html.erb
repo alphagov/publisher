@@ -5,11 +5,10 @@
 
 <%
   if @tagging_update.ordered_related_items == nil
-    # byebug
     items = [
       {
         fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
-        destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: 0, id: nil }),
+        destroy_checkbox: nil # This will be added as a future piece of work
       }
     ]
     empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
@@ -17,26 +16,15 @@
     items = @tagging_update.ordered_related_items.each_with_index.map do | related_item, index |
       {
         fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: related_item["base_path"] }),
-        destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: {index: index, id: related_item["content_id"] }),
+        destroy_checkbox: nil # This will be added as a future piece of work
       }
     end
     empty = render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index: @tagging_update.ordered_related_items.count, value: nil })
   end
 %>
 
-<%#
-  items = [
-    {
-      fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
-      destroy_checkbox: render(partial: "secondary_nav_tabs/related_external_links/add-another_checkbox", locals: { index: 0, id: nil }),
-    }
-  ]
-  
-  empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
-%>
-
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds tagging">
     <p class="govuk-body">Related content items are displayed in the sidebar.</p>
 
     <%= form_for (@tagging_update), url: update_tagging_edition_path(@resource) do |f| %>
