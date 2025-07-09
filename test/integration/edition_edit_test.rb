@@ -323,6 +323,29 @@ class EditionEditTest < IntegrationTest
           end
         end
       end
+
+      context "Editing tags for a browse page" do
+        setup do
+          within all(".gem-c-summary-card")[1] do
+            click_link("Edit")
+          end
+        end
+
+        should "show the 'Tag to a browse page' page with preselected options" do
+          assert page.has_text?(@draft_edition.title)
+          assert page.has_text?("Tag browse pages")
+          assert page.has_element?("legend", text: "Tax")
+          assert page.has_checked_field?("Capital Gains Tax")
+          assert page.has_checked_field?("RTI (draft)")
+          assert page.has_checked_field?("VAT")
+          assert page.has_element?("legend", text: "Benefits")
+          assert page.has_unchecked_field?("Benefits and financial support for families")
+          assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+          assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+          assert page.has_button?("Save")
+          assert page.has_link?("Cancel")
+        end
+      end
     end
   end
 
