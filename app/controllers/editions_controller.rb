@@ -514,6 +514,7 @@ private
       mainstream_browse_pages: [],
       organisations: [],
       ordered_related_items: [],
+      ordered_related_items_destroy: []
     ).to_h
   end
 
