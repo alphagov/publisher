@@ -9,7 +9,7 @@
 class JsonImporter
   include MongoMigrationHelper
 
-  def initialize(model_class:, file:, batch_size: 1)
+  def initialize(model_class:, file:)
     @model_class = model_class.constantize
     @mapper = MongoFieldMapper.new(@model_class)
     @file = file
@@ -24,11 +24,13 @@ class JsonImporter
       log line_no, "Completed"
       line_no += 1
       processed_line[0]['editionable_id'] = @editionable_id if @model_class == Edition
+      unless record_exists?
       model = @model_class.insert(processed_line[0])
       model_id = model[0]['id']
-      create_action(model_id, @parsed_obj) if @model_class == Edition
+      create_action_and_link_check_reports(model_id, @parsed_obj) if @model_class == Edition
       create_artefact_actions_and_external_links(model_id, @parsed_obj) if @model_class == Artefact
       log(" saved")
+      end
       processed_line = []
     rescue AssignedToError => e
       puts "Line: #{line[0..50]}, AssignedToError: #{e.message}"
@@ -41,15 +43,22 @@ class JsonImporter
       puts "Line: #{line[0..50]}, RequesterError: #{e.message}"
       puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create Action due to RequesterError"
       log "Line: #{line[0..50]}, RequesterError: #{e.message}"
-      # puts "ArtefactActionUserError: #{e.message} Artefact with mongo_id #{id_value(@parsed_obj)} failed to create ArtefactAction due to ArtefactActionUserError"
+    rescue LinkCheckReportEditionError => e
+      puts "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
+      puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create LinkCheckReport due to LinkCheckReportEditionError"
+      log "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
     rescue StandardError => e
       puts "Line: #{line}, StandardError: #{e}"
-      puts "Model with mongo_id #{id_value(@parsed_obj)} due to Error"
+      puts "Model class #{@model_class} with mongo_id #{id_value(@parsed_obj)} due to Error"
       log "Line: #{line[0..50]}, Error: #{e.message}"
     end
   end
 
   private
+
+  def record_exists?
+    @model_class.attribute_names.include?("mongo_id") && @model_class.where(mongo_id: id_value(@parsed_obj)).exists?
+  end
 
   def process_line(line)
     log("parsing...")

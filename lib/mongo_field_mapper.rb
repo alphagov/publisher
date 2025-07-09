@@ -1,6 +1,7 @@
 # Maps fields from a source Mongo JSON object
 # into the corresponding field in our ActiveRecord models
 class MongoFieldMapper
+  @user_missing = []
   MAPPINGS = {
     Edition => {
       rename: {
@@ -63,6 +64,12 @@ class MongoFieldMapper
       },
     },
     Part => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    Variant => {
       process: {
         "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
         "created_at" => ->(key, value) { rails_timestamp(key, value) },
@@ -132,6 +139,23 @@ class MongoFieldMapper
     OverviewDashboard => {
       process: {
         "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+      },
+    },
+    LinkCheckReport => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "edition_id" => ->(_key, value) { { "edition_id" => get_link_check_report_edition_id(value) } },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "completed_at" => ->(key, value) { rails_timestamp(key, value) },
+      },
+    },
+    Link => {
+      process: {
+        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "checked_at" => ->(key, value) { rails_timestamp(key, value) },
       },
     },
   }.freeze
@@ -211,13 +235,23 @@ class MongoFieldMapper
 
     artefact_action_user = User.where(mongo_id: value["$oid"]).last
     if artefact_action_user.nil?
-      puts "Error: user with mongo_id #{value['$oid']} does not exist so inserted 'Dummy user' id"
+      add_missing_user_to_print(value["$oid"])
       gds_organisation_id = "af07d5a5-df63-4ddc-9383-6a666845ebe9"
 
       get_dummy_user_id(gds_organisation_id)
       return User.where(name: 'Dummy user').last.id
     else
       artefact_action_user.id
+    end
+  end
+
+  def get_link_check_report_edition_id(value)
+    link_check_report_edition = Edition.where(mongo_id: value["$oid"]).last
+    if link_check_report_edition.nil?
+      puts "Error: edition with mongo_id #{value['$oid']} does not exist"
+      raise LinkCheckReportEditionError, "Error: edition with mongo_id #{value['$oid']} does not exist"
+    else
+      link_check_report_edition.id
     end
   end
 
@@ -229,7 +263,14 @@ class MongoFieldMapper
     date ? { key => date } : {}
   end
 
-private
+  private
+
+  def self.add_missing_user_to_print(value)
+    unless @user_missing.include?(value)
+      @user_missing << value
+      puts "Users with mongo_ids #{@user_missing} are missing"
+    end
+  end
 
   def self.get_dummy_user_id(gds_organisation_id)
     dummy_user = User.where(name: "Dummy user")
@@ -270,4 +311,7 @@ class RecipientError < StandardError
 end
 
 class RequesterError < StandardError
+end
+
+class LinkCheckReportEditionError < StandardError
 end

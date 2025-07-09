@@ -7,8 +7,10 @@ module MongoMigrationHelper
       create_local_transaction_edition(object)
     when "SimpleSmartAnswerEdition"
       create_simple_smart_answer_edition(object)
+    when "TransactionEdition"
+      create_transaction_edition(object)
     else
-      [PlaceEdition, TransactionEdition, AnswerEdition, HelpPageEdition].each do |content_type|
+      [PlaceEdition, AnswerEdition, HelpPageEdition, PopularLinksEdition].each do |content_type|
         create_content_type(object, content_type)
       end
     end
@@ -31,12 +33,30 @@ module MongoMigrationHelper
     guide_edition
   end
 
+  def create_transaction_edition(object)
+    mapper = MongoFieldMapper.new(TransactionEdition)
+    attrs = mapper.active_record_attributes(object)
+    guide_edition = TransactionEdition.insert(attrs)
+    @editionable_id = guide_edition.to_a[0]['id']
+    if object["variants"]
+      create_variants_for_transaction_edition(object["variants"])
+    end
+  end
+
   def create_parts_for_guide_edition(object)
     mapper = MongoFieldMapper.new(Part)
     object.each do |obj|
       attrs = mapper.active_record_attributes(obj)
       attrs["guide_edition_id"] = @editionable_id
       Part.insert(attrs)
+    end
+  end
+
+  def create_variants_for_transaction_edition(object)
+    mapper = MongoFieldMapper.new(Variant)
+    object.each do |obj|
+      attrs = mapper.active_record_attributes(obj)
+      Variant.insert(attrs)
     end
   end
 
@@ -103,28 +123,62 @@ module MongoMigrationHelper
     end
   end
 
-  def create_action(id, object)
-    mapper = MongoFieldMapper.new(Action)
-    object["actions"].each do |obj|
-      attrs = mapper.active_record_attributes(obj)
-      attrs["edition_id"] = id
-      Action.insert(attrs)
+  def create_action_and_link_check_reports(id, object)
+    unless object["actions"].nil?
+      mapper = MongoFieldMapper.new(Action)
+      object["actions"].each do |obj|
+        attrs = mapper.active_record_attributes(obj)
+        attrs["edition_id"] = id
+        Action.insert(attrs)
+      end
+    end
+    create_link_check_reports(id, object)
+  end
+
+  def create_link_check_reports(id, object)
+    mapper = MongoFieldMapper.new(LinkCheckReport)
+    unless object["link_check_reports"].nil?
+      object["link_check_reports"].each do |obj|
+        attrs = mapper.active_record_attributes(obj)
+        attrs["edition_id"] = id
+        link_check_report = LinkCheckReport.insert(attrs)
+        link_check_report_id = link_check_report.to_a[0]['id']
+        mapper = MongoFieldMapper.new(Link)
+        obj["links"].each do |link_obj|
+          attrs = mapper.active_record_attributes(link_obj)
+          attrs["link_check_report_id"] = link_check_report_id
+          Link.insert(attrs)
+        end
+      end
     end
   end
 
   def create_artefact_actions_and_external_links(id, object)
-    mapper = MongoFieldMapper.new(ArtefactAction)
-    object["actions"].each do |obj|
-      attrs = mapper.active_record_attributes(obj)
-      attrs["artefact_id"] = id
-      ArtefactAction.insert(attrs)
+    unless object["actions"].nil?
+      mapper = MongoFieldMapper.new(ArtefactAction)
+      object["actions"].each do |obj|
+        attrs = mapper.active_record_attributes(obj)
+        attrs["artefact_id"] = id
+        ArtefactAction.insert(attrs)
+      end
     end
 
-    mapper = MongoFieldMapper.new(ArtefactExternalLink)
-    object["external_links"].each do |obj|
+    unless object["external_links"].nil?
+      mapper = MongoFieldMapper.new(ArtefactExternalLink)
+      object["external_links"].each do |obj|
+        attrs = mapper.active_record_attributes(obj)
+        attrs["artefact_id"] = id
+        ArtefactExternalLink.insert(attrs)
+      end
+    end
+  end
+
+  def create_link_check_report_links(id, object)
+    mapper = MongoFieldMapper.new(Link)
+    object["links"].each do |obj|
       attrs = mapper.active_record_attributes(obj)
-      attrs["artefact_id"] = id
-      ArtefactExternalLink.insert(attrs)
+      attrs["link_check_report_id"] = id
+      Link.insert(attrs)
     end
   end
 end

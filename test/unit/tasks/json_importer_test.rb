@@ -110,6 +110,16 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal 1, Edition.count
       assert_equal 1, TransactionEdition.count
     end
+
+    should "insert TransactionEdition and variant correctly from json file record" do
+      file_with_transaction_edition_with_variant_data = "test/fixtures/migration/mongo_transaction_edition_with_variant_data.json"
+      @import_json_task.invoke("Edition", file_with_transaction_edition_with_variant_data)
+      transaction_variant = Variant.where(mongo_id: "5c18df2eed915d22e59f6a30").last
+
+      assert_equal 1, Edition.count
+      assert_equal 1, TransactionEdition.count
+      assert_equal "https://www.tax.service.gov.uk/check-your-state-pension/signin/verify", transaction_variant.link
+    end
   end
 
   context "HelpPageEdition" do
@@ -126,7 +136,7 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "insert User correctly from json file record" do
       assert_equal 791, User.count
       assert_equal "633ea4aa8fa8f54662895951", User.last.mongo_id
-      assert_equal ["signin","welsh_editor"], User.last.permissions
+      assert_equal ["signin", "welsh_editor"], User.last.permissions
       assert_equal "329428f0-0070-013b-4e5d-02ede1ddf010", User.last.uid
       assert_equal "maria.morris@justice.gov.uk", User.last.email
       assert_equal "Maria Morris", User.last.name
@@ -147,8 +157,8 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "log an error and not save Edition if old mongo id does not match any user" do
       nonexistent_assigned_to_id = "test/fixtures/migration/mongo_edition_with_nonexistent_assigned_to_id_data.json"
 
-      assert_output( /Error: user with mongo_id 4f7974a0a4254a2c9f00011c does not exist/ ) do
-          @import_json_task.invoke("Edition", nonexistent_assigned_to_id)
+      assert_output(/Error: user with mongo_id 4f7974a0a4254a2c9f00011c does not exist/) do
+        @import_json_task.invoke("Edition", nonexistent_assigned_to_id)
       end
       assert_equal 0, Edition.count
     end
@@ -169,7 +179,7 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "log an error if old mongo id does not match any requester for the action" do
       nonexistent_requester_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_requester_id_for_first_action_data.json"
 
-      assert_output( /Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/ ) do
+      assert_output(/Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
         @import_json_task.invoke("Edition", nonexistent_requester_to_id)
       end
     end
@@ -177,7 +187,7 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "log an error Edition if old mongo id does not match any recipient for the action" do
       nonexistent_recipient_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_recipient_id_for_first_action_data.json"
 
-      assert_output( /Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/ ) do
+      assert_output(/Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
         @import_json_task.invoke("Edition", nonexistent_recipient_to_id)
       end
     end
@@ -200,7 +210,6 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "add all the actions for the artefact" do
       file_with_artefact_data = "test/fixtures/migration/mongo_artefact_data.json"
       @import_json_task.invoke("Artefact", file_with_artefact_data)
-
 
       assert_equal 36, ArtefactAction.count
       assert_equal 36, Artefact.last.artefact_actions.count
@@ -229,7 +238,7 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       assert_equal 135, LocalService.count
 
       assert_equal "Find out abut school transport for a child with special educational needs", LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.description
-      assert_equal ["county","unitary"], LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.providing_tier
+      assert_equal ["county", "unitary"], LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.providing_tier
       assert_equal 40, LocalService.where(mongo_id: "4f340dce1d41c87e59000009").first.lgsl_code
     end
   end
@@ -241,9 +250,31 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
       overview_dashboard = OverviewDashboard.where(mongo_id: "504472529d5eb535de000066").last
 
       assert_equal 118, OverviewDashboard.count
-      assert_equal 'Section',overview_dashboard.dashboard_type
-      assert_equal 'Driving:MOT',overview_dashboard.result_group
+      assert_equal 'Section', overview_dashboard.dashboard_type
+      assert_equal 'Driving:MOT', overview_dashboard.result_group
       assert_equal 5, overview_dashboard.count
+    end
+  end
+
+  context 'LinkCheckReports' do
+    should "insert LinkCheckReport and child Links correctly from json record" do
+      file_with_link_check_report_data = "test/fixtures/migration/mongo_edition_with_link_checker_reports_data.json"
+      @import_json_task.invoke("Edition", file_with_link_check_report_data)
+      link_check_report = LinkCheckReport.where(mongo_id: "67af61a20ce2cb0014028ddf").last
+      link = Link.where(mongo_id: "67af61a20ce2cb0014028dc4").last
+
+      assert_equal 1, LinkCheckReport.count
+      assert_equal 51, link_check_report.links.count
+      assert_equal 24084930, link_check_report.batch_id
+      assert_equal "https://www.eoni.org.uk/Vote/Voting-by-post-or-proxy", link.uri
+    end
+  end
+
+  context 'Homepage PopularLinks' do
+    should "insert PopularLinksEdition and child LinkItems correctly from json record" do
+      file_with_popular_links_data = "test/fixtures/migration/mongo_popular_links_edition_data.json"
+      @import_json_task.invoke("Edition", file_with_popular_links_data)
+      assert_equal 1, PopularLinksEdition.count
     end
   end
 end

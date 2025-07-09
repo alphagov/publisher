@@ -164,6 +164,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
   end
 
   create_table "link_check_reports", force: :cascade do |t|
+    t.text "mongo_id"
     t.integer "batch_id"
     t.string "status"
     t.datetime "completed_at"
@@ -174,6 +175,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
   end
 
   create_table "links", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "uri"
     t.string "status"
     t.datetime "checked_at"
@@ -310,6 +312,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_08_135745) do
   end
 
   create_table "variants", force: :cascade do |t|
+    t.text "mongo_id"
     t.integer "order"
     t.string "title"
     t.string "slug"
