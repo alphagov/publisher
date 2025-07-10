@@ -1,6 +1,6 @@
 module ErrorSummaryHelper
   def errors_to_display(edition)
-    case edition
+    case edition.editionable
     when SimpleSmartAnswerEdition
       smart_answer_errors(edition)
     when GuideEdition
@@ -37,9 +37,20 @@ private
       end
     end
 
+    combined_errors = edition_errors + nested_errors
+    repeated_errors = []
+
+    combined_errors.each do |error|
+      repeated_errors << error unless
+        SimpleSmartAnswerEdition.column_names.include?(error[0].attribute.to_s) ||
+          SimpleSmartAnswerEdition::Node.column_names.include?(error[0].attribute.to_s) ||
+          SimpleSmartAnswerEdition::Node::Option.column_names.include?(error[0].attribute.to_s)
+    end
+
+    combined_errors -= repeated_errors
     # Errors with attributes of options or nodes will be an error for a option / node as a whole (rather than the individual field) and not helpful
     # Errors with an attribute of 'slug' will be slugs which are derived, rather than being input explicitly, so are not useful error messages
-    (edition_errors + nested_errors)
+    combined_errors
       .reject { |error, _| %i[nodes options slug].include?(error.attribute) }
       .map { |error, href| [error.message, href] }
   end

@@ -24,6 +24,7 @@ private
   def update_links!(links_payload)
     links_payload.each do |link_payload|
       link = report.links.find_by(uri: link_payload.fetch("uri"))
+      raise ActiveRecord::RecordNotFound unless link
 
       attributes = link_attributes(link_payload)
 
