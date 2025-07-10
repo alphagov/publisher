@@ -45,6 +45,17 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
           LocalServiceCleaner.new(@input).run
           assert LocalService.where(id: @service.id).any?
         end
+
+        context "but the edition is archived" do
+          setup do
+            Edition.last.update!(state: "archived")
+          end
+
+          should "destroy service" do
+            LocalServiceCleaner.new(@input).run
+            assert_not LocalService.where(id: @service.id).any?
+          end
+        end
       end
     end
   end
