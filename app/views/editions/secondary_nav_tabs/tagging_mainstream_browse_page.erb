@@ -2,17 +2,19 @@
 <% content_for :title_context, @edition.title %>
 <% content_for :page_title, "Tag browse pages" %>
 <% content_for :title, "Tag browse pages" %>
-<%= form_for @tagging_update, url: update_tagging_edition_path(@edition) do %>
+<%= form_for @tagging_update, url: update_tagging_edition_path(@edition) do |f| %>
+  <%= f.hidden_field :content_id %>
+  <%= f.hidden_field :previous_version %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <% @tagging_options.each do |tagging_option| %>
+      <% @checkbox_groups.each do |checkbox_group| %>
         <%= render "govuk_publishing_components/components/checkboxes", {
-          name: "tagging_tagging_update_form[mainstream_browse_pages][]",
-          heading: tagging_option[:heading],
+          name: "#{f.object_name}[mainstream_browse_pages][]",
+          heading: checkbox_group[:heading],
           heading_size: "s",
           small: true,
           no_hint_text: true,
-          items: tagging_option[:items],
+          items: checkbox_group[:items],
         } %>
         <% end %>
     </div>

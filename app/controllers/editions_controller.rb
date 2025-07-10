@@ -141,20 +141,7 @@ class EditionsController < InheritedResources::Base
 
   def tagging_mainstream_browse_page
     build_tagging_update_form
-    mainstream_browse_pages = Tagging::Linkables.new.mainstream_browse_pages
-    @tagging_options = mainstream_browse_pages
-                         .map do |k, v|
-                           {
-                             heading: k,
-                             items: v.map do |item|
-                               {
-                                 label: item.first.split(" / ").last,
-                                 value: item.last,
-                                 checked: @tagging_update.mainstream_browse_pages&.include?(item.last),
-                               }
-                             end,
-                           }
-                         end
+    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update)
     render "secondary_nav_tabs/tagging_mainstream_browse_page"
   end
 
@@ -485,6 +472,22 @@ protected
   end
 
 private
+
+  def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update)
+    Tagging::Linkables.new.mainstream_browse_pages
+      .map do |k, v|
+      {
+        heading: k,
+        items: v.map do |item|
+          {
+            label: item.first.split(" / ").last,
+            value: item.last,
+            checked: tagging_update.mainstream_browse_pages&.include?(item.last),
+          }
+        end,
+      }
+    end
+  end
 
   def build_tagging_update_form
     @tagging_update = Tagging::TaggingUpdateForm.build_from_publishing_api(

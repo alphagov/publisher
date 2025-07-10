@@ -54,7 +54,8 @@ module TagTestHelpers
                   \"content_id\": \"CONTENT-ID-CAPITAL\"
                 }
               ]
-            }
+            },
+          \"version\": 1
         }",
         headers: {},
       )
@@ -107,5 +108,7 @@ module TagTestHelpers
       ],
       document_type: "need",
     )
+
+    stub_publishing_api_has_lookups({})
   end
 end

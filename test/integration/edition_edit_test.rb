@@ -248,6 +248,21 @@ class EditionEditTest < IntegrationTest
 
           assert_current_path tagging_edition_path(@draft_edition.id)
         end
+
+        should "save the selected tags to the browse page when the form is submitted" do
+          check("Capital Gains Tax")
+          click_button("Save")
+          assert_requested :patch,
+                           "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                           body: { "links": { "organisations": [],
+                                              "meets_user_needs": [],
+                                              "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL],
+                                              "ordered_related_items": [],
+                                              "parent": [] },
+                                   "previous_version": 0 }
+          assert_current_path tagging_edition_path(@draft_edition.id)
+          assert page.has_text?("Tags have been updated!")
+        end
       end
     end
 
@@ -344,6 +359,23 @@ class EditionEditTest < IntegrationTest
           assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
           assert page.has_button?("Save")
           assert page.has_link?("Cancel")
+        end
+
+        should "update the the tags for the browse page when the form is submitted" do
+          uncheck("RTI (draft)")
+          uncheck("VAT")
+          check("Benefits and financial support for families")
+          click_button("Save")
+          assert_requested :patch,
+                           "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                           body: { "links": { "organisations": [],
+                                              "meets_user_needs": [],
+                                              "mainstream_browse_pages": %w[CONTENT-ID-FAMILIES CONTENT-ID-CAPITAL],
+                                              "ordered_related_items": [],
+                                              "parent": [] },
+                                   "previous_version": 1 }
+          assert_current_path tagging_edition_path(@draft_edition.id)
+          assert page.has_text?("Tags have been updated!")
         end
       end
     end
