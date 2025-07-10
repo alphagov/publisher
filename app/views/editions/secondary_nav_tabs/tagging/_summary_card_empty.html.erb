@@ -9,8 +9,11 @@
       margin_bottom: 4,
     } %>
     <p class="govuk-body"><%= body %></p>
-    <p class="govuk-body">
-      <%= link_to link_text, link_url, class: "govuk-link govuk-link--no-visited-state" %>
-    </p>
+
+    <% if current_user.has_editor_permissions?(@edition) %>
+      <p class="govuk-body">
+        <%= link_to link_text, link_url, class: "govuk-link govuk-link--no-visited-state" %>
+      </p>
+    <% end %>
   </div>
 </div>

@@ -221,6 +221,21 @@ class EditionEditTest < IntegrationTest
           assert page.has_link?("Tag to related content")
         end
       end
+
+      context "User does not have correct permissions" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+          visit_draft_edition
+          click_link("Tagging")
+        end
+
+        should "not show the 'Tag to related content' link" do
+          within all(".govuk-summary-card")[3] do
+            assert page.has_no_link?("Tag to related content")
+          end
+        end
+      end
     end
 
     context "Tagging is set" do
