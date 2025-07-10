@@ -16,7 +16,7 @@
               destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: 0, f: f }),
             }
           ]
-          empty = render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { f: f })
+          empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
         else
           items = @tagging_update.ordered_related_items.each_with_index.map do | related_item, index |
             {
