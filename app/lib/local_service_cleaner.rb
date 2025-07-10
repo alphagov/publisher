@@ -28,7 +28,7 @@ private
   end
 
   def in_local_transaction?(local_service)
-    LocalTransactionEdition.where(lgsl_code: local_service.lgsl_code).any?
+    LocalTransactionEdition.where(lgsl_code: local_service.lgsl_code).not(state: "archived").any?
   end
 
   def fetch_lgsls_from_csv
