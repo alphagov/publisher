@@ -230,6 +230,7 @@ class EditionEditTest < IntegrationTest
         should "show the 'Tag to a browse page' page" do
           assert page.has_text?(@draft_edition.title)
           assert page.has_text?("Tag browse pages")
+          assert page.has_text?("Select all that apply")
           assert page.has_element?("legend", text: "Tax")
           assert page.has_unchecked_field?("Capital Gains Tax")
           assert page.has_unchecked_field?("RTI (draft)")
@@ -349,6 +350,7 @@ class EditionEditTest < IntegrationTest
         should "show the 'Tag to a browse page' page with preselected options" do
           assert page.has_text?(@draft_edition.title)
           assert page.has_text?("Tag browse pages")
+          assert page.has_text?("Select all that apply")
           assert page.has_element?("legend", text: "Tax")
           assert page.has_checked_field?("Capital Gains Tax")
           assert page.has_checked_field?("RTI (draft)")
