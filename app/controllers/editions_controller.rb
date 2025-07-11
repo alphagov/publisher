@@ -143,6 +143,10 @@ class EditionsController < InheritedResources::Base
     build_tagging_update_form
     @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update)
     render "secondary_nav_tabs/tagging_mainstream_browse_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
   end
 
   def duplicate
@@ -474,8 +478,7 @@ protected
 private
 
   def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update)
-    Tagging::Linkables.new.mainstream_browse_pages
-      .map do |k, v|
+    Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
         items: v.map do |item|

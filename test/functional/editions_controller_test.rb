@@ -1409,6 +1409,15 @@ class EditionsControllerTest < ActionController::TestCase
         get :tagging_mainstream_browse_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_mainstream_browse_page"
       end
+
+      should "render the tagging tab and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
     end
 
     context "user does not have editor permissions" do
