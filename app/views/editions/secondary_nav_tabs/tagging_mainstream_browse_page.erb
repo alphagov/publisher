@@ -5,6 +5,16 @@
 <%= form_for @tagging_update, url: update_tagging_edition_path(@edition) do |f| %>
   <%= f.hidden_field :content_id %>
   <%= f.hidden_field :previous_version %>
+  <% Array(@tagging_update.parent).each do |parent_id| %>
+    <%= f.hidden_field :parent, value: parent_id, multiple: true %>
+  <% end %>
+  <% Array(@tagging_update.organisations).each do |org_id| %>
+    <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+  <% end %>
+  <% Array(@tagging_update.ordered_related_items).to_a.map { |item| item["base_path"] }.each do |base_path| %>
+    <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
+  <% end %>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <% @checkbox_groups.each do |checkbox_group| %>

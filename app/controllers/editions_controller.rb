@@ -500,7 +500,7 @@ private
     params[:tagging_tagging_update_form].permit(
       :content_id,
       :previous_version,
-      :parent,
+      parent: [],
       mainstream_browse_pages: [],
       organisations: [],
       ordered_related_items: [],
