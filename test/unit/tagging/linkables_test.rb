@@ -7,13 +7,16 @@ class LinkablesTest < ActiveSupport::TestCase
 
   test "returns sorted browse pages" do
     assert_equal(
-      {
+      { "Benefits" => [
+          ["Benefits / Benefits and financial support for families (draft)", "CONTENT-ID-FAMILIES"],
+          ["Benefits / Benefits and financial support if you're caring for someone (draft)", "CONTENT-ID-HELP-FOR-CARERS"],
+          ["Benefits / Benefits and financial support if you're disabled or have a health condition (draft)", "CONTENT-ID-DISABILITY"],
+        ],
         "Tax" => [
           ["Tax / Capital Gains Tax", "CONTENT-ID-CAPITAL"],
           ["Tax / RTI (draft)", "CONTENT-ID-RTI"],
           ["Tax / VAT", "CONTENT-ID-VAT"],
-        ],
-      },
+        ] },
       Tagging::Linkables.new.mainstream_browse_pages,
     )
   end

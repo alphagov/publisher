@@ -27,13 +27,19 @@
         heading: heading_browse_pages,
         body: "Not tagged to any browse pages",
         link_text: "Tag to a browse page",
-        link_url: "#",
+        link_url: tagging_mainstream_browse_page_edition_path,
       } %>
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "browse_pages",
         heading: heading_browse_pages,
         key_text: "Browse page",
+        actions: [
+          {
+            label: "Edit",
+            href: tagging_mainstream_browse_page_edition_path,
+          },
+        ],
       } %>
     <% end %>
 
