@@ -3,6 +3,17 @@
 <%#
   if type === "related_content"
     href = tagging_related_content_page_edition_path
+
+    if current_user.has_editor_permissions?(@edition)
+      summary_card_actions = [
+        {
+          label: "Edit",
+          href: href
+        }
+      ]
+    else
+      summary_card_actions = []
+    end
   else
     href = "#"
   end

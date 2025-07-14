@@ -318,6 +318,29 @@ class EditionEditTest < IntegrationTest
           end
         end
       end
+
+      context "User has permissions" do
+        should "show 'Edit' link on 'Related content' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_link?("Edit")
+          end
+        end
+      end
+
+      context "User does not have permissions" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+          visit_draft_edition
+          click_link("Tagging")
+        end
+
+        should "not show 'Edit' link on 'Related content' summary card when user dos not have permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+      end
     end
   end
 
