@@ -454,7 +454,28 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?("legend", text: "Related content 1")
           assert page.has_css?("label", text: "URL or path")
           assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
-          assert page.has_css?("input")
+          assert page.has_css?(".govuk-input", count: 2)
+          assert page.has_css?(".govuk-input[value='']", count: 2)
+        end
+      end
+    end
+
+    context "Document has related content items when page loads" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_related_content_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?(".govuk-input", count: 5)
+          assert page.has_css?("input[value='/company-tax-returns']")
+          assert page.has_css?("input[value='/prepare-file-annual-accounts-for-limited-company']")
+          assert page.has_css?("input[value='/corporation-tax']")
+          assert page.has_css?("input[value='/tax-help']")
         end
       end
     end
