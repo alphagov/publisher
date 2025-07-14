@@ -295,6 +295,7 @@ class EditionEditTest < IntegrationTest
       should "show 'Related content' summary card in fourth position" do
         within all(".gem-c-summary-card")[3] do
           assert page.has_text?("Related content")
+          assert page.has_no_link?("Tag to related content")
 
           within all(".govuk-summary-list__row")[0] do
             assert page.has_css?("dt", text: "Related content 1")
