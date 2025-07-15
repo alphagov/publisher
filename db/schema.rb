@@ -42,6 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
   end
 
   create_table "artefact_actions", force: :cascade do |t|
+    t.text "mongo_id"
     t.string "action_type"
     t.jsonb "snapshot"
     t.string "task_performed_by"
@@ -49,7 +50,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "artefact_id"
-    t.text "mongo_id"
     t.index ["artefact_id"], name: "index_artefact_actions_on_artefact_id"
     t.index ["user_id"], name: "index_artefact_actions_on_user_id"
   end

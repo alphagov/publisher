@@ -1,3 +1,4 @@
+# if exists?(id)
 # Designed for importing JSON from MongoDB's mongoexport tool
 # In this format, each line is one complete JSON object
 # There is no surrounding array delimiter, or separating comma
@@ -26,31 +27,21 @@ class JsonImporter
       line_no += 1
       processed_line[0]['editionable_id'] = @editionable_id if @model_class == Edition
       unless record_exists?
-      model = @model_class.insert(processed_line[0])
-      model_id = model[0]['id']
-      create_action_and_link_check_reports(model_id, @parsed_obj) if @model_class == Edition
-      create_artefact_actions_and_external_links(model_id, @parsed_obj) if @model_class == Artefact
-      log(" saved")
+        log "Creating #{@model_class} with ID #{id_value(@parsed_obj)}"
+        model = @model_class.insert(processed_line[0])
+        model_id = model[0]['id']
+        create_action_and_link_check_reports(model_id, @parsed_obj) if @model_class == Edition
+        create_artefact_actions_and_external_links(model_id, @parsed_obj) if @model_class == Artefact
+        log " saved"
       end
       processed_line = []
-    rescue AssignedToError => e
-      puts "Line: #{line[0..50]}, AssignedToError: #{e.message}"
-      log "Line: #{line[0..50]}, AssignedToError: #{e.message}"
-    rescue RecipientError => e
-      puts "Line: #{line[0..50]}, RecipientError: #{e.message}"
-      puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create Action due to RecipientError"
-      log "Line: #{line[0..50]}, RecipientError: #{e.message}"
-    rescue RequesterError => e
-      puts "Line: #{line[0..50]}, RequesterError: #{e.message}"
-      puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create Action due to RequesterError"
-      log "Line: #{line[0..50]}, RequesterError: #{e.message}"
     rescue LinkCheckReportEditionError => e
-      puts "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
-      puts "Edition with mongo_id #{id_value(@parsed_obj)} failed to create LinkCheckReport due to LinkCheckReportEditionError"
+      log "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
+      log "Edition with mongo_id #{id_value(@parsed_obj)} failed to create LinkCheckReport due to LinkCheckReportEditionError"
       log "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
     rescue StandardError => e
-      puts "Line: #{line}, StandardError: #{e}"
-      puts "Model class #{@model_class} with mongo_id #{id_value(@parsed_obj)} due to Error"
+      log "Line: #{line}, StandardError: #{e}"
+      log "Model class #{@model_class} with mongo_id #{id_value(@parsed_obj)} due to Error"
       log "Line: #{line[0..50]}, Error: #{e.message}"
       break
     end
@@ -66,14 +57,10 @@ class JsonImporter
     log("parsing...")
     @parsed_obj = JSON.parse(line)
     @content_type = @parsed_obj['_type']
-    create_editionable(@parsed_obj) if @model_class == Edition
     id = id_value(@parsed_obj)
-    log(id, " checking existence")
-    # if exists?(id)
-    #   log(id, " exists, skipping")
-    # else
-      @mapper.active_record_attributes(@parsed_obj)
-    # end
+    log(id, "Working on #{@model} with ID #{id}")
+    create_editionable(@parsed_obj) if @model_class == Edition
+    @mapper.active_record_attributes(@parsed_obj)
   end
 
   def id_value(obj)
@@ -85,7 +72,7 @@ class JsonImporter
   end
 
   def exists?(mongo_id)
-      @model_class.where(mongo_id:).exists?
+    @model_class.where(mongo_id:).exists?
   end
 
   def log(*args)
