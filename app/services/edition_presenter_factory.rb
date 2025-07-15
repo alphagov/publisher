@@ -1,7 +1,7 @@
 class EditionPresenterFactory
   class << self
     def get_presenter(edition)
-      presenter_class(edition.class.to_s).constantize.new(edition)
+      presenter_class(edition.editionable_class.to_s).constantize.new(edition)
     end
 
     def presenter_class(edition_class)
