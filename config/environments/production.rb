@@ -104,6 +104,7 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
+    /publisher\..*\.gov.uk/,
     /publisher-on-pg\..*\.gov.uk/,
   ]
 

@@ -16,13 +16,21 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
   end
 
   should "insert Edition correctly from json file record" do
+    file_with_guide_edition_artefact_data = "test/fixtures/migration/mongo_guide_edition_artefact_data.json"
+    @import_json_task.invoke("Artefact", file_with_guide_edition_artefact_data)
+    @import_json_task.reenable
+
     file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
     @import_json_task.invoke("Edition", file_with_guide_edition_data)
 
-    assert_equal 2, Edition.count
+    assert_equal 1, Edition.count
   end
 
   should "insert Editionable correctly from the json file record" do
+    file_with_guide_edition_artefact_data = "test/fixtures/migration/mongo_guide_edition_artefact_data.json"
+    @import_json_task.invoke("Artefact", file_with_guide_edition_artefact_data)
+    @import_json_task.reenable
+
     file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
     @import_json_task.invoke("Edition", file_with_guide_edition_data)
 
@@ -64,14 +72,20 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "SimpleSmartAnswerEdition" do
     should "insert SimpleSmartAnswerEdition correctly from json file record" do
+      file_with_simple_smart_answer_artefact_data = "test/fixtures/migration/mongo_simple_smart_answer_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_simple_smart_answer_artefact_data)
+      @import_json_task.reenable
       file_with_simple_smart_answer_edition_data = "test/fixtures/migration/mongo_simple_smart_answer_edition_data.json"
       @import_json_task.invoke("Edition", file_with_simple_smart_answer_edition_data)
 
-      assert_equal 1, Edition.count
-      assert_equal 1, SimpleSmartAnswerEdition.count
+      assert_equal 1, Edition.count, "No edition added"
+      assert_equal 1, SimpleSmartAnswerEdition.count, "No node added"
     end
 
     should "insert SimpleSmartAnswerEdition::Nodes correctly from json file record" do
+      file_with_simple_smart_answer_artefact_data = "test/fixtures/migration/mongo_simple_smart_answer_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_simple_smart_answer_artefact_data)
+      @import_json_task.reenable
       file_with_simple_smart_answer_edition_data = "test/fixtures/migration/mongo_simple_smart_answer_edition_data.json"
       @import_json_task.invoke("Edition", file_with_simple_smart_answer_edition_data)
 
@@ -84,8 +98,12 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "PlaceEdition" do
     should "insert PlaceEdition correctly from json file record" do
-      file_with_place_edition_data = "test/fixtures/migration/mongo_place_edition_data.json"
-      @import_json_task.invoke("Edition", file_with_place_edition_data)
+      file_with_place_edition_artefact_data = "test/fixtures/migration/mongo_place_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_place_edition_artefact_data)
+      @import_json_task.reenable
+
+      file_with_place_edition_artefact_data = "test/fixtures/migration/mongo_place_edition_data.json"
+      @import_json_task.invoke("Edition", file_with_place_edition_artefact_data)
 
       assert_equal 1, Edition.count
       assert_equal 1, PlaceEdition.count
@@ -94,16 +112,23 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "AnswerEdition" do
     should "insert AnswerEdition correctly from json file record" do
-      file_with_answer_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
+      file_with_answer_edition_artefact_data = "test/fixtures/migration/mongo_answer_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_answer_edition_artefact_data)
+      @import_json_task.reenable
+
+      file_with_answer_edition_data = "test/fixtures/migration/mongo_answer_edition_data.json"
       @import_json_task.invoke("Edition", file_with_answer_edition_data)
 
-      assert_equal 2, Edition.count
+      assert_equal 1, Edition.count
       assert_equal 1, AnswerEdition.count
     end
   end
 
   context "TransactionEdition" do
     should "insert TransactionEdition correctly from json file record" do
+      file_with_transaction_edition_artefact_data = "test/fixtures/migration/mongo_transaction_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_transaction_edition_artefact_data)
+      @import_json_task.reenable
       file_with_transaction_edition_data = "test/fixtures/migration/mongo_transaction_edition_data.json"
       @import_json_task.invoke("Edition", file_with_transaction_edition_data)
 
@@ -112,6 +137,9 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     end
 
     should "insert TransactionEdition and variant correctly from json file record" do
+      file_with_transaction_edition_with_variant_artefact_data = "test/fixtures/migration/mongo_transaction_edition_with_variant_data_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_transaction_edition_with_variant_artefact_data)
+      @import_json_task.reenable
       file_with_transaction_edition_with_variant_data = "test/fixtures/migration/mongo_transaction_edition_with_variant_data.json"
       @import_json_task.invoke("Edition", file_with_transaction_edition_with_variant_data)
       transaction_variant = Variant.where(mongo_id: "5c18df2eed915d22e59f6a30").last
@@ -137,7 +165,10 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "CompletedTransactionEdition" do
     should "insert TransactionEdition correctly from json file record" do
-      file_with_completed_transaction_edition_data = "test/fixtures/migration/completed_transaction_edition_data.json"
+      file_with_completed_transaction_artefact_data = "test/fixtures/migration/mongo_completed_transaction_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_completed_transaction_artefact_data)
+      @import_json_task.reenable
+      file_with_completed_transaction_edition_data = "test/fixtures/migration/mongo_completed_transaction_edition_data.json"
       @import_json_task.invoke("Edition", file_with_completed_transaction_edition_data)
 
       assert_equal 1, Edition.count
@@ -158,6 +189,9 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     end
 
     should "update the edition assigned_to_id to new postgres ID using old mongo ID to match user" do
+      file_with_guide_edition_artefact_data = "test/fixtures/migration/mongo_guide_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_guide_edition_artefact_data)
+      @import_json_task.reenable
       file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
       @import_json_task.invoke("Edition", file_with_guide_edition_data)
 
@@ -170,7 +204,7 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     should "log an error and not save Edition if old mongo id does not match any user" do
       nonexistent_assigned_to_id = "test/fixtures/migration/mongo_edition_with_nonexistent_assigned_to_id_data.json"
 
-      assert_output(/Error: user with mongo_id 4f7974a0a4254a2c9f00011c does not exist/) do
+      assert_output(/Error: assigned to user with mongo_id 4f7974a0a4254a2c9f00011c does not exist/) do
         @import_json_task.invoke("Edition", nonexistent_assigned_to_id)
       end
       assert_equal 0, Edition.count
@@ -179,10 +213,14 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context "Actions" do
     should "add all the actions for the edition" do
+      file_with_guide_edition_artefact_data = "test/fixtures/migration/mongo_guide_edition_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_guide_edition_artefact_data)
+      @import_json_task.reenable
+
       file_with_guide_edition_data = "test/fixtures/migration/mongo_guide_edition_data.json"
       @import_json_task.invoke("Edition", file_with_guide_edition_data)
 
-      assert_equal 11, Action.count
+      assert_equal 5, Action.count
 
       assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].requester_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
       assert_equal Edition.where(editionable_type: "GuideEdition").first.actions[1].recipient_id, User.where(mongo_id: "623078cbd3bf7f203b47947a").first.id
@@ -190,17 +228,24 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
     end
 
     should "log an error if old mongo id does not match any requester for the action" do
+      file_with_guide_no_requester_artefact_data = "test/fixtures/migration/mongo_guide_edition_no_requester_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_guide_no_requester_artefact_data)
+      @import_json_task.reenable
+
       nonexistent_requester_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_requester_id_for_first_action_data.json"
 
-      assert_output(/Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
+      assert_output(/Error: requester user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
         @import_json_task.invoke("Edition", nonexistent_requester_to_id)
       end
     end
 
     should "log an error Edition if old mongo id does not match any recipient for the action" do
+      file_with_guide_no_recipient_artefact_data = "test/fixtures/migration/mongo_guide_edition_no_recipient_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_guide_no_recipient_artefact_data)
+      @import_json_task.reenable
       nonexistent_recipient_to_id = "test/fixtures/migration/mongo_guide_edition_with_nonexistant_recipient_id_for_first_action_data.json"
 
-      assert_output(/Error: user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
+      assert_output(/Error: recipient user with mongo_id 623078cbd3bf7f203b47947b does not exist/) do
         @import_json_task.invoke("Edition", nonexistent_recipient_to_id)
       end
     end
@@ -271,6 +316,9 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
 
   context 'LinkCheckReports' do
     should "insert LinkCheckReport and child Links correctly from json record" do
+      file_with_link_check_report_artefact_data = "test/fixtures/migration/mongo_link_check_reports_artefact_data.json"
+      @import_json_task.invoke("Artefact", file_with_link_check_report_artefact_data)
+      @import_json_task.reenable
       file_with_link_check_report_data = "test/fixtures/migration/mongo_edition_with_link_checker_reports_data.json"
       @import_json_task.invoke("Edition", file_with_link_check_report_data)
       link_check_report = LinkCheckReport.where(mongo_id: "67af61a20ce2cb0014028ddf").last

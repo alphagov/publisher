@@ -44,11 +44,6 @@ gem "strip_attributes"
 gem "terser"
 gem "whenever", require: false
 
-# postgres dependencies
-gem "pg"
-gem "state_machines-activerecord"
-gem "database_cleaner-active_record"
-
 group :test do
   gem "capybara-select-2"
   gem "ci_reporter_minitest"

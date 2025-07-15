@@ -242,7 +242,7 @@ class MongoFieldMapper
   def self.map_to_artifact_id(value)
     artefact = Artefact.where(mongo_id: value).last
     if artefact.nil?
-      puts "Error: artefact with mongo_id #{value} does not exist"
+      log "Error: artefact with mongo_id #{value} does not exist"
     end
     artefact.id
   end
@@ -251,6 +251,7 @@ class MongoFieldMapper
     return if value.nil?
     assigned_to_user = User.where(mongo_id: value["$oid"]).last
     if assigned_to_user.nil?
+      puts "Error: assigned to user with mongo_id #{value["$oid"]} does not exist"
       return nil
     end
     assigned_to_user.id
@@ -261,6 +262,7 @@ class MongoFieldMapper
 
     recipient = User.where(mongo_id: value["$oid"]).last
     if recipient.nil?
+      puts "Error: recipient user with mongo_id #{value["$oid"]} does not exist"
       return nil
     end
     recipient.id
@@ -271,6 +273,7 @@ class MongoFieldMapper
 
     requester = User.where(mongo_id: value["$oid"]).last
     if requester.nil?
+      puts "Error: requester user with mongo_id #{value["$oid"]} does not exist"
       return nil
     end
     requester.id
@@ -281,6 +284,7 @@ class MongoFieldMapper
 
     artefact_action_user = User.where(mongo_id: value["$oid"]).last
     if artefact_action_user.nil?
+      log "Error: artefact action user with mongo_id #{value["$oid"]} does not exist"
       return nil
     end
     artefact_action_user.id
@@ -289,7 +293,7 @@ class MongoFieldMapper
   def get_link_check_report_edition_id(value)
     link_check_report_edition = Edition.where(mongo_id: value["$oid"]).last
     if link_check_report_edition.nil?
-      puts "Error: edition with mongo_id #{value['$oid']} does not exist"
+      log "Error: edition with mongo_id #{value['$oid']} does not exist"
       raise LinkCheckReportEditionError, "Error: edition with mongo_id #{value['$oid']} does not exist"
     else
       link_check_report_edition.id
@@ -309,7 +313,7 @@ class MongoFieldMapper
   def self.add_missing_user_to_print(value)
     unless @user_missing.include?(value)
       @user_missing << value
-      puts "Users with mongo_ids #{@user_missing} are missing"
+      log "Users with mongo_ids #{@user_missing} are missing"
     end
   end
 
@@ -328,6 +332,11 @@ class MongoFieldMapper
 
   def target_key(key)
     MAPPINGS[@model_class][:rename].try(:[], key) || key
+  end
+
+  def self.log(*args)
+    line = args.prepend(Time.zone.now.iso8601).join("\t")
+    Rails.logger.info line
   end
 end
 

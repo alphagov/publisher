@@ -3,7 +3,7 @@ class SimpleSmartAnswerEdition < ApplicationRecord
 
   validates :start_button_text, presence: true
 
-  has_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
+  has_many :nodes, class_name: "SimpleSmartAnswerEdition::Node", dependent: :destroy
 
   accepts_nested_attributes_for :nodes, allow_destroy: true
 
