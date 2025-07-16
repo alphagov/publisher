@@ -129,7 +129,7 @@ GEM
       sassc (>= 2.0.0)
     brakeman (7.0.2)
       racc
-    bson (4.15.0)
+    bson (5.1.1)
     builder (3.3.0)
     byebug (12.0.0)
     capybara (3.40.0)
@@ -410,7 +410,8 @@ GEM
       ruby2_keywords (>= 0.0.5)
     momentjs-rails (2.29.4.1)
       railties (>= 3.1)
-    mongo (2.20.1)
+    mongo (2.21.2)
+      base64
       bson (>= 4.14.1, < 6.0.0)
     mongoid (8.1.4)
       activemodel (>= 5.1, < 7.2, != 7.0.0)
