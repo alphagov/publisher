@@ -7,7 +7,7 @@
     <% heading_organisations = "Organisations" %>
     <% heading_related_items = "Related content" %>
 
-    <% if @tagging_update.parent == nil %>
+    <% if @tagging_update_form_values.parent == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
         heading: heading_breadcrumb,
         body: "No breadcrumb set",
@@ -22,22 +22,28 @@
       } %>
     <% end %>
 
-    <% if @tagging_update.mainstream_browse_pages == nil %>
+    <% if @tagging_update_form_values.mainstream_browse_pages == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
         heading: heading_browse_pages,
         body: "Not tagged to any browse pages",
         link_text: "Tag to a browse page",
-        link_url: "#",
+        link_url: tagging_mainstream_browse_page_edition_path,
       } %>
     <% else %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "browse_pages",
         heading: heading_browse_pages,
         key_text: "Browse page",
+        actions: [
+          {
+            label: "Edit",
+            href: tagging_mainstream_browse_page_edition_path,
+          },
+        ],
       } %>
     <% end %>
 
-    <% if @tagging_update.organisations == nil %>
+    <% if @tagging_update_form_values.organisations == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
         heading: heading_organisations,
         body: "Not tagged to any organisations",
@@ -52,7 +58,7 @@
       } %>
     <% end %>
 
-    <% if @tagging_update.ordered_related_items == nil %>
+    <% if @tagging_update_form_values.ordered_related_items == nil %>
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_empty", locals: {
         heading: heading_related_items,
         body: "Not tagged to any related content",
