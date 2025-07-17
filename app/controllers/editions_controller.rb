@@ -105,7 +105,7 @@ class EditionsController < InheritedResources::Base
   end
 
   def tagging_related_content_page
-    build_tagging_update_form
+    populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
   end
