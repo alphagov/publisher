@@ -54,7 +54,6 @@ Rails.application.routes.draw do
         post "update_tagging", to: "editions#update_tagging", as: "update_tagging"
         get "tagging_mainstream_browse_page", to: "editions#tagging_mainstream_browse_page", as: "tagging_mainstream_browse_page"
         get "tagging_related_content_page", to: "editions#tagging_related_content_page", as: "tagging_related_content_page"
-        post "update_tagging", to: "editions#update_tagging", as: "update_tagging"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"

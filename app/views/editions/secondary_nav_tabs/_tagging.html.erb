@@ -30,16 +30,22 @@
         link_url: tagging_mainstream_browse_page_edition_path,
       } %>
     <% else %>
-      <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
-        type: "browse_pages",
-        heading: heading_browse_pages,
-        key_text: "Browse page",
-        actions: [
+      <% if current_user.has_editor_permissions?(@edition) %>
+        <% actions = [
           {
             label: "Edit",
             href: tagging_mainstream_browse_page_edition_path,
           },
-        ],
+        ] %>
+      <% else %>
+        <% actions = [] %>
+      <% end %>
+
+      <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
+        type: "browse_pages",
+        heading: heading_browse_pages,
+        key_text: "Browse page",
+        actions: actions,
       } %>
     <% end %>
 
@@ -66,10 +72,22 @@
         link_url: tagging_related_content_page_edition_path,
       } %>
     <% else %>
+      <% if current_user.has_editor_permissions?(@edition) %>
+        <% actions = [
+          {
+            label: "Edit",
+            href: tagging_related_content_page_edition_path,
+          }
+        ] %>
+      <% else %>
+        <% actions = [] %>
+      <% end %>
+
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "related_content",
         heading: heading_related_items,
         key_text: "Related content",
+        actions: actions,
       } %>
     <% end %>
   </div>
