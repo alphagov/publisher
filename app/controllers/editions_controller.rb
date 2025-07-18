@@ -104,10 +104,24 @@ class EditionsController < InheritedResources::Base
                 }
   end
 
+  def tagging_mainstream_browse_page
+    populate_tagging_form_values_from_publishing_api
+    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_mainstream_browse_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
   def tagging_related_content_page
     populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
   end
 
   def resend_fact_check_email_page
@@ -144,16 +158,6 @@ class EditionsController < InheritedResources::Base
 
   def cancel_scheduled_publishing_page
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
-  end
-
-  def tagging_mainstream_browse_page
-    populate_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
-    render "secondary_nav_tabs/tagging_mainstream_browse_page"
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
   end
 
   def duplicate
