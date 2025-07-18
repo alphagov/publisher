@@ -1,12 +1,8 @@
 require "test_helper"
 
 class CompletedTransactionPresenterTest < ActiveSupport::TestCase
-  def subject
-    Formats::CompletedTransactionPresenter.new(edition)
-  end
-
-  def edition
-    @edition ||= FactoryBot.create(
+  setup do
+    @edition = FactoryBot.create(
       :completed_transaction_edition,
       :published,
       title: "Whacked all moles",
@@ -14,6 +10,12 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
       panopticon_id: artefact.id,
     )
   end
+
+  def subject
+    Formats::CompletedTransactionPresenter.new(@edition)
+  end
+
+  attr_reader :edition
 
   def artefact
     @artefact ||= FactoryBot.create(:artefact, kind: "completed_transaction", slug: "done/artefact")
@@ -35,7 +37,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
 
   context "[:details]" do
     should "[:promotion]" do
-      edition.presentation_toggles["promotion_choice"] = {
+      @edition.presentation_toggles["promotion_choice"] = {
         "choice" => "mot_reminder",
         "url" => "http://www.foo.com",
       }
@@ -49,7 +51,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "opt in and opt out [:promotion]" do
-      edition.presentation_toggles["promotion_choice"] = {
+      @edition.presentation_toggles["promotion_choice"] = {
         "choice" => "organ_donor",
         "url" => "http://www.foo.com",
         "opt_in_url" => "http://www.bar.com",
@@ -67,7 +69,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "no [:promotion]" do
-      edition.presentation_toggles["promotion_choice"] = {
+      @edition.presentation_toggles["promotion_choice"] = {
         "choice" => "none",
         "url" => "",
       }
@@ -76,9 +78,9 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.external_links = [link]
-      artefact.save!(validate: false)
+      link = { "url" => "https://www.foo.com", "title" => "foo" }
+      artefact.external_links = [ArtefactExternalLink.build(link)]
+      artefact.save!
       expected = [
         {
           url: link["url"],
@@ -95,7 +97,7 @@ class CompletedTransactionPresenterTest < ActiveSupport::TestCase
   end
 
   should "[:routes]" do
-    edition.update!(slug: "foo")
+    @edition.update!(slug: "foo")
     expected = [
       { path: "/foo", type: "prefix" },
     ]
