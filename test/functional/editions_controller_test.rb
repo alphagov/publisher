@@ -1397,10 +1397,27 @@ class EditionsControllerTest < ActionController::TestCase
       get :tagging, params: { id: @edition.id }
       assert_template "show"
     end
+  end
 
-    should "render the 'Tag related content' page if the user has correct permissions" do
-      get :tagging_related_content_page, params: { id: @edition.id }
-      assert_template "secondary_nav_tabs/tagging_related_content_page"
+  context "#tagging_related_content_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      should "render the 'Tag related content' page" do
+        get :tagging_related_content_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_related_content_page"
+      end
+
+      should "render the tagging tab and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_related_content_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
     end
 
     context "user does not have govuk_editor permission" do
@@ -1409,7 +1426,7 @@ class EditionsControllerTest < ActionController::TestCase
         login_as(user)
       end
 
-      should "render an error message if the user does not have correct permissions" do
+      should "render an error message" do
         get :tagging_related_content_page, params: { id: @edition.id }
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
