@@ -237,9 +237,8 @@ class EditionEditTest < IntegrationTest
         end
 
         should "not show the 'Tag to related content' link" do
-            within all(".govuk-summary-card")[3] do
-              assert page.has_no_link?("Tag to related content")
-            end
+          within all(".govuk-summary-card")[3] do
+            assert page.has_no_link?("Tag to related content")
           end
         end
       end
@@ -344,7 +343,12 @@ class EditionEditTest < IntegrationTest
     end
   end
 
-  context "Related browse pages page" do
+  context "Mainstream browse pages page" do
+    setup do
+      visit_draft_edition
+      click_link("Tagging")
+    end
+
     context "Adding Tags to a browse page" do
       setup do
         click_link("Tag to a browse page")
@@ -391,6 +395,9 @@ class EditionEditTest < IntegrationTest
 
     context "Editing tags for a browse page" do
       setup do
+        stub_linkables_with_data
+        visit_draft_edition
+        click_link("Tagging")
         within all(".gem-c-summary-card")[1] do
           click_link("Edit")
         end
@@ -448,7 +455,7 @@ class EditionEditTest < IntegrationTest
       assert page.has_link?("Cancel")
     end
 
-    context "Document has no related content items when page loads" do
+    context "Adding tags for a related content page" do
       should "render an empty Add Another form" do
         within :css, ".gem-c-add-another" do
           assert page.has_css?("legend", text: "Related content 1")
@@ -458,9 +465,32 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?(".govuk-input[value='']", count: 2)
         end
       end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save the added 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        click_button("Save")
+        assert_requested :patch,
+                          "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                          body: { "links": { "organisations": [],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": ["830e403b-7d81-45f1-8862-81dcd55b4ec7"],
+                                            "parent": [] },
+                                  "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Tags have been updated!")
+      end
     end
 
-    context "Document has related content items when page loads" do
+    context "Editing tags for a related content page" do
       setup do
         stub_linkables_with_data
         visit tagging_related_content_page_edition_path(@draft_edition)
@@ -477,6 +507,35 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?("input[value='/corporation-tax']")
           assert page.has_css?("input[value='/tax-help']")
         end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save the edited 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          check("Delete")
+        end
+        within all(".js-add-another__fieldset")[1] do
+          check("Delete")
+        end
+        within all(".js-add-another__fieldset")[2] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        click_button("Save")
+        assert_requested :patch,
+                          "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                          body: { "links": { "organisations": ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": ["CONTENT-ID-CAPITAL", "CONTENT-ID-RTI", "CONTENT-ID-VAT"],
+                                            "ordered_related_items": ["830e403b-7d81-45f1-8862-81dcd55b4ec7", "91fef6f6-3a59-42ab-a14d-42c4e5eee1a1"],
+                                            "parent": ["CONTENT-ID-CAPITAL"] },
+                                  "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Tags have been updated!")
       end
     end
   end
