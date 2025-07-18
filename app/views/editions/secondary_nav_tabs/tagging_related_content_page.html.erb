@@ -30,6 +30,15 @@
 
       <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
+      <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
+        <%= f.hidden_field :parent, value: parent_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
+        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
+        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
+      <% end %>
 
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Related content",
