@@ -1473,7 +1473,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
     end
   end
-  
+
   context "#metadata" do
     should "alias to show method" do
       assert_equal EditionsController.new.method(:metadata).super_method.name, :show
