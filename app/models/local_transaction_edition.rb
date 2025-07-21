@@ -9,8 +9,8 @@ class LocalTransactionEdition < Edition
   field :more_information, type: String
   field :need_to_know, type: String
   field :cta_text, type: String
-  field :before_text, type: String
-  field :after_text, type: String
+  field :before_results, type: String
+  field :after_results, type: String
 
   embeds_one :scotland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
   embeds_one :wales_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
