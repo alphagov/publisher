@@ -8,6 +8,9 @@ class LocalTransactionEdition < Edition
   field :introduction, type: String
   field :more_information, type: String
   field :need_to_know, type: String
+  field :cta_text, type: String
+  field :before_text, type: String
+  field :after_text, type: String
 
   embeds_one :scotland_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
   embeds_one :wales_availability, class_name: DevolvedAdministrationAvailability, autobuild: true
@@ -17,9 +20,12 @@ class LocalTransactionEdition < Edition
   accepts_nested_attributes_for :wales_availability
   accepts_nested_attributes_for :northern_ireland_availability
 
+  validates :cta_text, presence: true
+  validates_with SafeHtml
+
   after_validation :merge_embedded_errors
 
-  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
+  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know before_text after_text].freeze
 
   validate :valid_lgsl_code, if: -> { lgsl_code.present? }
   validates :lgil_code, presence: { message: "Enter a LGIL code" }
