@@ -88,11 +88,17 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
+    if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
+      success_message = "Related content updated"
+    else
+      success_message = "Tags have been updated!"
+    end
+
     form = Tagging::TaggingUpdateForm.new(tagging_update_params)
 
     if form.valid?
       form.publish!
-      flash[:success] = "Tags have been updated!"
+      flash[:success] = success_message
     else
       flash[:danger] = form.errors.full_messages.join("\n")
     end
@@ -514,6 +520,7 @@ private
     params.require(:tagging_tagging_update_form).permit(
       :content_id,
       :previous_version,
+      :tagging_type,
       parent: [],
       mainstream_browse_pages: [],
       organisations: [],

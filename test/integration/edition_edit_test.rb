@@ -486,7 +486,7 @@ class EditionEditTest < IntegrationTest
                                             "parent": [] },
                                   "previous_version": 0 }
         assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Tags have been updated!")
+        assert page.has_text?("Related content updated")
       end
     end
 
@@ -535,7 +535,7 @@ class EditionEditTest < IntegrationTest
                                             "parent": ["CONTENT-ID-CAPITAL"] },
                                   "previous_version": 1 }
         assert_current_path tagging_edition_path(@draft_edition.id)
-        assert page.has_text?("Tags have been updated!")
+        assert page.has_text?("Related content updated")
       end
     end
   end

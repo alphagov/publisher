@@ -1,7 +1,7 @@
 module Tagging
   class TaggingUpdateForm
     include ActiveModel::Model
-    attr_accessor :content_id, :previous_version, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent, :ordered_related_items_destroy
+    attr_accessor :content_id, :previous_version, :tagging_type, :organisations, :meets_user_needs, :mainstream_browse_pages, :ordered_related_items, :parent, :ordered_related_items_destroy
 
     validate :ordered_related_items_paths_exist
 
