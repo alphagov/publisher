@@ -20,7 +20,6 @@ class LocalTransactionEdition < Edition
   accepts_nested_attributes_for :wales_availability
   accepts_nested_attributes_for :northern_ireland_availability
 
-  validates :cta_text, presence: true
   validates_with SafeHtml
 
   after_validation :merge_embedded_errors
