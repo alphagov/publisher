@@ -88,21 +88,23 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
+    populate_tagging_form_values_from_publishing_api
+
     if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
       success_message = "Related content updated"
     else
       success_message = "Tags have been updated!"
     end
 
-    form = Tagging::TaggingUpdateForm.new(tagging_update_params)
+    create_tagging_update_form(tagging_update_params)
 
-    if form.valid?
-      form.publish!
+    if @form_submitted_values.valid?
+      @form_submitted_values.publish!
       flash[:success] = success_message
+      redirect_to tagging_edition_path
     else
-      flash[:danger] = form.errors.full_messages.join("\n")
+      render "secondary_nav_tabs/tagging_related_content_page"
     end
-    redirect_to tagging_edition_path
   rescue GdsApi::HTTPConflict
     redirect_to tagging_edition_path,
                 flash: {
@@ -514,6 +516,10 @@ private
       @resource.artefact.content_id,
       @resource.artefact.language,
     )
+  end
+
+  def create_tagging_update_form(tagging_update_params)
+    @form_submitted_values = Tagging::TaggingUpdateForm.new(tagging_update_params)
   end
 
   def tagging_update_params

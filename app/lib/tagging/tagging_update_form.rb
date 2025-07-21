@@ -47,7 +47,7 @@ module Tagging
       (Array(ordered_related_items) - ordered_related_items_path_by_ids.keys).each do |missing_path|
         next if missing_path.blank?
 
-        errors.add(:ordered_related_items, "#{missing_path} is not a known URL on GOV.UK")
+        errors.add(:ordered_related_items, "#{missing_path} is not a known URL on GOV.UK, check URL or path is correctly entered.")
       end
     end
 

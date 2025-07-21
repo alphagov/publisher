@@ -472,6 +472,18 @@ class EditionEditTest < IntegrationTest
         assert_current_path tagging_edition_path(@draft_edition.id)
       end
 
+      should "display an error when the form is submitted if a value entered is not a valid path" do
+        Services.publishing_api.stubs(:lookup_content_ids).returns({"/company-tax-returns"=>"830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company"=>"5cb58486-0b00-4da8-8076-382e474b4f03"})
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/invalid-path"
+        end
+
+        click_button("Save")
+
+        assert_current_path update_tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
+      end
+
       should "save the added 'Related content' tags when the form is submitted" do
         within all(".js-add-another__fieldset")[0] do
           fill_in "URL or path", with: "/company-tax-returns"
