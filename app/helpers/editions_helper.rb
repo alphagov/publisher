@@ -15,11 +15,7 @@ module EditionsHelper
         html_options["data-module"] = "ajax-save"
       end
     end
-    if resource.editionable.instance_of?(::SimpleSmartAnswerEdition)
-      nested_form_for resource, as: resource.editionable, url: edition_path(resource), html: html_options, &form_definition
-    else
       nested_form_for resource, as: resource, url: edition_path(resource), html: html_options, &form_definition
-    end
   end
 
   def legacy_format_conversion_select_options(edition)

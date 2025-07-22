@@ -45,9 +45,9 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
       within ".builder-container" do
         assert page.has_content? "Start now"
-        assert page.has_checked_field? "simple_smart_answer_edition_start_button_text_start_now"
+        assert page.has_checked_field? "edition_start_button_text_start_now"
         ["Continue", "Find contact details", "Next"].each do |option|
-          assert page.has_unchecked_field? "simple_smart_answer_edition_start_button_text_#{option.tr(' ', '_').underscore}"
+          assert page.has_unchecked_field? "edition_start_button_text_#{option.tr(' ', '_').underscore}"
         end
 
         assert page.has_content? "Question 1"
@@ -257,7 +257,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
     end
 
     should "raise appropriate validation errors" do
-      find("#simple_smart_answer_edition_title").set("")
+      find("#edition_title").set("")
 
       click_link("Add outcome")
 
@@ -452,12 +452,12 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
         within ".nodes .node:first-child" do
           assert page.has_content?("Question 1")
-          assert page.has_field?("simple_smart_answer_edition_nodes_attributes_0_title", with: "To be or not to be?")
+          assert page.has_field?("edition_nodes_attributes_0_title", with: "To be or not to be?")
 
           assert page.has_css?(".option", count: 2)
 
           within ".options > div:nth-of-type(1)" do
-            assert page.has_field?("simple_smart_answer_edition_nodes_attributes_0_options_attributes_0_label", with: "That is the question")
+            assert page.has_field?("edition_nodes_attributes_0_options_attributes_0_label", with: "That is the question")
             assert page.has_select?(
               "next-node-list",
               options: [
@@ -470,7 +470,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
           end
 
           within ".options > div:nth-of-type(2)" do
-            assert page.has_field?("simple_smart_answer_edition_nodes_attributes_0_options_attributes_1_label", with: "That is not the question")
+            assert page.has_field?("edition_nodes_attributes_0_options_attributes_1_label", with: "That is not the question")
             assert page.has_select?(
               "next-node-list",
               options: ["Select a node..", "Outcome 1 (Outcome One)", "Outcome 2 (Outcome Two)"],
@@ -481,14 +481,14 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
         within ".nodes .node:nth-child(2)" do
           assert page.has_content?("Outcome 1")
-          assert page.has_field?("simple_smart_answer_edition_nodes_attributes_1_title", with: "Outcome One")
+          assert page.has_field?("edition_nodes_attributes_1_title", with: "Outcome One")
 
           assert page.has_no_css?(".options")
         end
 
         within ".nodes .node:nth-child(3)" do
           assert page.has_content?("Outcome 2")
-          assert page.has_field?("simple_smart_answer_edition_nodes_attributes_2_title", with: "Outcome Two")
+          assert page.has_field?("edition_nodes_attributes_2_title", with: "Outcome Two")
 
           assert page.has_no_css?(".options")
         end
@@ -500,12 +500,12 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
 
       within ".nodes .node:first-child .option:nth-child(2)" do
         click_link "Remove answer"
-        assert_equal "1", page.find(:css, "#simple_smart_answer_edition_nodes_attributes_0_options_attributes_1__destroy", visible: false).value
+        assert_equal "1", page.find(:css, "#edition_nodes_attributes_0_options_attributes_1__destroy", visible: false).value
       end
 
       within ".nodes .outcome:nth-child(3)" do
         click_link("Remove outcome")
-        assert_equal "1", page.find(:css, "#simple_smart_answer_edition_nodes_attributes_2__destroy", visible: false).value
+        assert_equal "1", page.find(:css, "#edition_nodes_attributes_2__destroy", visible: false).value
       end
       assert page.has_no_content?("Outcome 2")
       assert page.has_selector?(".nodes .outcome:nth-child(3)", visible: false)
@@ -527,7 +527,7 @@ class SimpleSmartAnswersTest < LegacyJavascriptIntegrationTest
       end
 
       within ".nodes .node:first-child .option:nth-child(2)" do
-        assert_equal "", page.find(:css, "#simple_smart_answer_edition_nodes_attributes_0_options_attributes_1_next_node", visible: false).value
+        assert_equal "", page.find(:css, "#edition_nodes_attributes_0_options_attributes_1_next_node", visible: false).value
         assert page.has_select?(
           "next-node-list",
           options: ["Select a node..", "Outcome 1 (Outcome One)"],
