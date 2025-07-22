@@ -8,7 +8,7 @@ class LocalTransactionEdition < Edition
   field :introduction, type: String
   field :more_information, type: String
   field :need_to_know, type: String
-  field :cta_text, type: String, default: "Find now"
+  field :cta_text, type: String
   field :before_results, type: String
   field :after_results, type: String
 
