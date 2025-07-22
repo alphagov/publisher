@@ -1,6 +1,6 @@
 class LinkCheckReport < ApplicationRecord
   belongs_to :edition, inverse_of: :link_check_reports
-  has_many :links, inverse_of: :link_check_report
+  has_many :links, inverse_of: :link_check_report, dependent: :destroy
 
   accepts_nested_attributes_for :links
 
