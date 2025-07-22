@@ -251,9 +251,6 @@ protected
 
   def permitted_params(subtype: nil)
     subtype = @resource.editionable.class.to_s.underscore.to_sym if subtype.nil?
-    if @resource && resource.editionable_type == "SimpleSmartAnswerEdition"
-      params[:edition] = params.delete :simple_smart_answer_edition
-    end
     params.permit(edition: type_specific_params(subtype) + common_params)
   end
 
@@ -388,16 +385,9 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
-
-    if resource.editionable_type == "SimpleSmartAnswerEdition"
-      params[:simple_smart_answer_edition]["activity_#{attempted_activity}_attributes"].permit(
-        :request_type, :email_addresses, :customised_message, :comment, :publish_at
-      )
-    else
       params[:edition]["activity_#{attempted_activity}_attributes"].permit(
         :request_type, :email_addresses, :customised_message, :comment, :publish_at
       )
-    end
   end
 
   def remove_activity_params
