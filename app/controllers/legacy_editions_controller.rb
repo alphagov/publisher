@@ -402,7 +402,6 @@ private
       :parent,
       mainstream_browse_pages: [],
       organisations: [],
-      meets_user_needs: [],
       ordered_related_items: [],
     ).to_h
   end
