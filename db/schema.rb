@@ -142,7 +142,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.string "change_note"
     t.string "state", default: "draft"
     t.datetime "review_requested_at"
-    t.string "auth_bypass_id", default: "gen_random_uuid()"
+    t.uuid "auth_bypass_id", default: -> { "gen_random_uuid()" }
     t.string "owning_org_content_ids", default: [], array: true
     t.text "mongo_id"
     t.datetime "created_at", null: false
