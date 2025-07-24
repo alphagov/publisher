@@ -11,6 +11,12 @@
 <% end %>
 <% render "layouts/google_tag_manager" %>
 
+<%= render partial: "/shared/maintenance_banner", locals: { 
+  heading: "Planned downtime",
+  content: "Publisher will be unavailable on Friday 1 August due to a planned database migration.",
+} %>
+
+
 <% content_for :body_start do %>
   <%= render "govuk_publishing_components/components/skip_link" %>
 <% end %>
