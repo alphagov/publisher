@@ -266,8 +266,11 @@ protected
         :lgsl_code,
         :lgil_code,
         :introduction,
+        :cta_text,
         :more_information,
         :need_to_know,
+        :before_results,
+        :after_results,
         { scotland_availability_attributes: %i[type alternative_url] },
         { wales_availability_attributes: %i[type alternative_url] },
         { northern_ireland_availability_attributes: %i[type alternative_url] },
@@ -385,9 +388,10 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
-      params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-        :request_type, :email_addresses, :customised_message, :comment, :publish_at
-      )
+
+    params[:edition]["activity_#{attempted_activity}_attributes"].permit(
+      :request_type, :email_addresses, :customised_message, :comment, :publish_at
+    )
   end
 
   def remove_activity_params
