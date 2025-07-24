@@ -20,7 +20,7 @@ class CreateEdition < ActiveRecord::Migration[7.1]
       t.string :change_note
       t.string :state, default: "draft"
       t.datetime :review_requested_at
-      t.string :auth_bypass_id, default: SecureRandom.uuid
+      t.string :auth_bypass_id, default: 'gen_random_uuid()'
       t.string :owning_org_content_ids, array: true, default: []
       t.text :mongo_id
       t.timestamps

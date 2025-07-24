@@ -29,7 +29,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.uuid "edition_id"
     t.bigint "requester_id"
     t.bigint "recipient_id"
-    t.text "mongo_id"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
     t.index ["requester_id"], name: "index_actions_on_requester_id"
@@ -143,7 +142,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.string "change_note"
     t.string "state", default: "draft"
     t.datetime "review_requested_at"
-    t.uuid "auth_bypass_id", default: -> { "gen_random_uuid()" }
+    t.string "auth_bypass_id", default: "gen_random_uuid()"
     t.string "owning_org_content_ids", default: [], array: true
     t.text "mongo_id"
     t.datetime "created_at", null: false
