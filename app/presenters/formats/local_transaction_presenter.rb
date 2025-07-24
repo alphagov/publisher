@@ -26,8 +26,11 @@ module Formats
 
     def optional_details
       {}.merge(introduction)
+        .merge(cta_text: edition.cta_text || "")
         .merge(more_information)
         .merge(need_to_know)
+        .merge(before_results)
+        .merge(after_results)
         .merge(all_devolved_administration_availabilities)
     end
 
@@ -65,6 +68,32 @@ module Formats
           {
             content_type: "text/govspeak",
             content: edition.need_to_know,
+          },
+        ],
+      }
+    end
+
+    def before_results
+      return {} if edition.before_results.nil?
+
+      {
+        before_results: [
+          {
+            content_type: "text/govspeak",
+            content: edition.before_results,
+          },
+        ],
+      }
+    end
+
+    def after_results
+      return {} if edition.after_results.nil?
+
+      {
+        after_results: [
+          {
+            content_type: "text/govspeak",
+            content: edition.after_results,
           },
         ],
       }

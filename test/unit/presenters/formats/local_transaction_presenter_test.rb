@@ -114,6 +114,42 @@ class LocalTransactionPresenterTest < ActiveSupport::TestCase
           assert_not_includes result[:details].keys, :need_to_know
         end
       end
+
+      context "[:before_results]" do
+        should "present the data" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: "##before",
+            },
+          ]
+          assert_equal expected, result[:details][:before_results]
+        end
+
+        should "not present the data if nil" do
+          edition.before_results = nil
+          edition.save!(validate: false)
+          assert_not_includes result[:details].keys, :before_results
+        end
+      end
+
+      context "[:after_results]" do
+        should "present the data" do
+          expected = [
+            {
+              content_type: "text/govspeak",
+              content: "##after",
+            },
+          ]
+          assert_equal expected, result[:details][:after_results]
+        end
+
+        should "not present the data if nil" do
+          edition.after_results = nil
+          edition.save!(validate: false)
+          assert_not_includes result[:details].keys, :after_results
+        end
+      end
     end
 
     should "[:external_related_links]" do
