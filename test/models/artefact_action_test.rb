@@ -37,6 +37,7 @@ class ArtefactActionTest < ActiveSupport::TestCase
       public_timestamp: nil,
       latest_change_note: nil,
       content_id: nil,
+      mongo_id: nil,
     }
   end
 
@@ -46,7 +47,6 @@ class ArtefactActionTest < ActiveSupport::TestCase
 
   test "a new artefact should have a create action" do
     @artefact.reload
-
     assert_equal 1, @artefact.artefact_actions.size
     action = @artefact.artefact_actions.first
     assert_equal "create", action[:action_type]
