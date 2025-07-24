@@ -374,9 +374,12 @@ FactoryBot.define do
     transient do
       lgil_code { "" }
       lgsl_code { "" }
+      cta_text { "Find your local council" }
       introduction { "Test introduction" }
       more_information { "This is more information" }
       need_to_know { "This service is only available in England and Wales" }
+      before_results { "##before" }
+      after_results { "##after" }
       scotland_availability { build(:scotland_availability) }
       wales_availability { build(:wales_availability) }
       northern_ireland_availability { build(:northern_ireland_availability) }
