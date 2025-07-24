@@ -25,11 +25,11 @@ class JsonImporter
       processed_line << process_line(line)
       log line_no, "Completed"
       line_no += 1
-      processed_line[0]['editionable_id'] = @editionable_id if @model_class == Edition
+      processed_line[0]["editionable_id"] = @editionable_id if @model_class == Edition
       unless record_exists?
         log "Creating #{@model_class} with ID #{id_value(@parsed_obj)}"
         model = @model_class.insert(processed_line[0])
-        model_id = model[0]['id']
+        model_id = model[0]["id"]
         create_action_and_link_check_reports(model_id, @parsed_obj) if @model_class == Edition
         create_artefact_actions_and_external_links(model_id, @parsed_obj) if @model_class == Artefact
         log " saved"
@@ -47,7 +47,7 @@ class JsonImporter
     end
   end
 
-  private
+private
 
   def record_exists?
     @model_class.attribute_names.include?("mongo_id") && @model_class.where(mongo_id: id_value(@parsed_obj)).exists?
@@ -56,7 +56,7 @@ class JsonImporter
   def process_line(line)
     log("parsing...")
     @parsed_obj = JSON.parse(line)
-    @content_type = @parsed_obj['_type']
+    @content_type = @parsed_obj["_type"]
     id = id_value(@parsed_obj)
     log(id, "Working on #{@model} with ID #{id}")
     create_editionable(@parsed_obj) if @model_class == Edition

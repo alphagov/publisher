@@ -235,7 +235,7 @@ class MongoFieldMapper
 
   def self.request_details(value)
     request_detail = {}
-    request_detail['scheduled_time']= value['scheduled_time']['$date'] unless value.nil? || value.empty?
+    request_detail["scheduled_time"] = value["scheduled_time"]["$date"] if value.present?
     request_detail
   end
 
@@ -249,9 +249,10 @@ class MongoFieldMapper
 
   def self.get_assigned_to_id(value)
     return if value.nil?
+
     assigned_to_user = User.where(mongo_id: value["$oid"]).last
     if assigned_to_user.nil?
-      puts "Error: assigned to user with mongo_id #{value["$oid"]} does not exist"
+      puts "Error: assigned to user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     assigned_to_user.id
@@ -262,7 +263,7 @@ class MongoFieldMapper
 
     recipient = User.where(mongo_id: value["$oid"]).last
     if recipient.nil?
-      puts "Error: recipient user with mongo_id #{value["$oid"]} does not exist"
+      puts "Error: recipient user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     recipient.id
@@ -273,7 +274,7 @@ class MongoFieldMapper
 
     requester = User.where(mongo_id: value["$oid"]).last
     if requester.nil?
-      puts "Error: requester user with mongo_id #{value["$oid"]} does not exist"
+      puts "Error: requester user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     requester.id
@@ -284,7 +285,7 @@ class MongoFieldMapper
 
     artefact_action_user = User.where(mongo_id: value["$oid"]).last
     if artefact_action_user.nil?
-      log "Error: artefact action user with mongo_id #{value["$oid"]} does not exist"
+      log "Error: artefact action user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     artefact_action_user.id
@@ -307,8 +308,6 @@ class MongoFieldMapper
     date = unpack_datetime(value)
     date ? { key => date } : {}
   end
-
-  private
 
   def self.add_missing_user_to_print(value)
     unless @user_missing.include?(value)
