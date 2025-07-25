@@ -31,12 +31,14 @@
       } %>
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
-        <% actions = [
-          {
-            label: "Edit",
-            href: tagging_mainstream_browse_page_edition_path,
-          },
-        ] %>
+        <% actions =
+          [
+            {
+              label: "Edit",
+              href: tagging_mainstream_browse_page_edition_path,
+            },
+          ]
+        %>
       <% else %>
         <% actions = [] %>
       <% end %>
@@ -73,12 +75,14 @@
       } %>
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
-        <% actions = [
-          {
-            label: "Edit",
-            href: tagging_related_content_page_edition_path,
-          }
-        ] %>
+        <% actions =
+          [
+            {
+              label: "Edit",
+              href: tagging_related_content_page_edition_path,
+            },
+          ]
+        %>
       <% else %>
         <% actions = [] %>
       <% end %>

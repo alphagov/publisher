@@ -3,7 +3,7 @@
 <% content_for :page_title, "Tag related content" %>
 <% content_for :title, "Tag related content" %>
 
-<% @form_values = @form_submitted_values.present? ? @form_submitted_values : @tagging_update_form_values %>
+<% @form_values = (@form_submitted_values.presence || @tagging_update_form_values) %>
 
 <% if @form_submitted_values.present? && !@form_submitted_values.errors.empty? %>
   <% @errors = @form_submitted_values.errors %>
@@ -36,12 +36,12 @@
             {
               fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
               destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: 0, f: f }),
-            }
+            },
           ]
           empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
         else
           items = @form_values.ordered_related_items.each_with_index.map do | related_item, index |
-            item = related_item["base_path"].present? ? related_item["base_path"] : related_item
+            item = (related_item["base_path"].presence || related_item)
 
             {
               fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: item }),
@@ -70,7 +70,7 @@
         add_button_text: "Add another related content item",
         empty_fields: false,
         items: items,
-        empty: empty
+        empty: empty,
       } %>
 
       <div class="govuk-button-group govuk-!-margin-top-6">
