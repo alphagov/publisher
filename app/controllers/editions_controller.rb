@@ -37,7 +37,8 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email
                          add_edition_note
                          update_important_note
-                         tagging_mainstream_browse_page] do
+                         tagging_mainstream_browse_page
+                         tagging_related_content_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -87,20 +88,48 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    form = Tagging::TaggingUpdateForm.new(tagging_update_params)
+    populate_tagging_form_values_from_publishing_api
 
-    if form.valid?
-      form.publish!
-      flash[:success] = "Tags have been updated!"
+    success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
+                        "Related content updated"
+                      else
+                        "Tags have been updated!"
+                      end
+
+    create_tagging_update_form(tagging_update_params)
+
+    if @form_submitted_values.valid?
+      @form_submitted_values.publish!
+      flash[:success] = success_message
+      redirect_to tagging_edition_path
     else
-      flash[:danger] = form.errors.full_messages.join("\n")
+      render "secondary_nav_tabs/tagging_related_content_page"
     end
-    redirect_to tagging_edition_path
   rescue GdsApi::HTTPConflict
     redirect_to tagging_edition_path,
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
+  end
+
+  def tagging_mainstream_browse_page
+    populate_tagging_form_values_from_publishing_api
+    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_mainstream_browse_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
+  def tagging_related_content_page
+    populate_tagging_form_values_from_publishing_api
+
+    render "secondary_nav_tabs/tagging_related_content_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
   end
 
   def resend_fact_check_email_page
@@ -137,16 +166,6 @@ class EditionsController < InheritedResources::Base
 
   def cancel_scheduled_publishing_page
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
-  end
-
-  def tagging_mainstream_browse_page
-    populate_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
-    render "secondary_nav_tabs/tagging_mainstream_browse_page"
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
   end
 
   def duplicate
@@ -499,14 +518,20 @@ private
     )
   end
 
+  def create_tagging_update_form(tagging_update_params)
+    @form_submitted_values = Tagging::TaggingUpdateForm.new(tagging_update_params)
+  end
+
   def tagging_update_params
-    params[:tagging_tagging_update_form].permit(
+    params.require(:tagging_tagging_update_form).permit(
       :content_id,
       :previous_version,
+      :tagging_type,
       parent: [],
       mainstream_browse_pages: [],
       organisations: [],
       ordered_related_items: [],
+      ordered_related_items_destroy: [],
     ).to_h
   end
 
