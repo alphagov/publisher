@@ -1,7 +1,7 @@
 class EditionPresenterFactory
   class << self
     def get_presenter(edition)
-      if edition.class.to_s == "PopularLinksEdition"
+      if edition.instance_of?(::PopularLinksEdition)
         presenter_class(edition.class.to_s).constantize.new(edition)
       else
         presenter_class(edition.editionable_class.to_s).constantize.new(edition)

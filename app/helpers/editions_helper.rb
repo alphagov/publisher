@@ -15,7 +15,7 @@ module EditionsHelper
         html_options["data-module"] = "ajax-save"
       end
     end
-      nested_form_for resource, as: resource, url: edition_path(resource), html: html_options, &form_definition
+    nested_form_for resource, as: resource, url: edition_path(resource), html: html_options, &form_definition
   end
 
   def legacy_format_conversion_select_options(edition)

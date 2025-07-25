@@ -385,9 +385,10 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
-      params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-        :request_type, :email_addresses, :customised_message, :comment, :publish_at
-      )
+
+    params[:edition]["activity_#{attempted_activity}_attributes"].permit(
+      :request_type, :email_addresses, :customised_message, :comment, :publish_at
+    )
   end
 
   def remove_activity_params

@@ -30,7 +30,7 @@ private
   def in_local_transaction?(local_service)
     local_transactions = LocalTransactionEdition.where(lgsl_code: local_service.lgsl_code)
     local_transactions.each do |transaction|
-      if transaction.edition.state != 'archived'
+      if transaction.edition.state != "archived"
         return true
       end
     end
