@@ -1,7 +1,7 @@
 class SimpleSmartAnswerEdition
   class Node < ApplicationRecord
     belongs_to :simple_smart_answer_edition, class_name: "SimpleSmartAnswerEdition"
-    has_many :options, inverse_of: :node, class_name: "SimpleSmartAnswerEdition::Node::Option", dependent: :destroy
+    has_many :options, dependent: :destroy, class_name: "SimpleSmartAnswerEdition::Node::Option"
 
     accepts_nested_attributes_for :options, allow_destroy: true
 

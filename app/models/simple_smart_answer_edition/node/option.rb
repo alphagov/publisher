@@ -3,7 +3,7 @@ require "edition"
 class SimpleSmartAnswerEdition
   class Node
     class Option < ApplicationRecord
-      belongs_to :node, inverse_of: :options, class_name: "SimpleSmartAnswerEdition::Node"
+      belongs_to :node, class_name: "SimpleSmartAnswerEdition::Node"
 
       default_scope -> { order(order: :asc) }
 
