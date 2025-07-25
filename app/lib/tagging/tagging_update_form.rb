@@ -59,20 +59,20 @@ module Tagging
       checkboxes = []
       base_paths = []
 
-      if ordered_related_items != nil
-        ordered_related_items_destroy.each_with_index.map { |item, index|
-          if item == "0" && (ordered_related_items_destroy[index + 1] == "0" || ordered_related_items_destroy[index + 1] == nil)
+      unless ordered_related_items.nil?
+        ordered_related_items_destroy.each_with_index.map do |item, index|
+          if item == "0" && ["0", nil].include?(ordered_related_items_destroy[index + 1])
             checkboxes << 0
           elsif item == "1" && ordered_related_items_destroy[index + 1] == "0"
             checkboxes << 1
           end
-        }
+        end
 
-        ordered_related_items.each_with_index.map { |item, index|
+        ordered_related_items.each_with_index.map do |_item, index|
           if checkboxes[index] != 1
             base_paths << ordered_related_items[index]
           end
-        }
+        end
       end
 
       Array(base_paths).reject!(&:blank?)

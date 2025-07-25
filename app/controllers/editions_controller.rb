@@ -90,11 +90,11 @@ class EditionsController < InheritedResources::Base
   def update_tagging
     populate_tagging_form_values_from_publishing_api
 
-    if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
-      success_message = "Related content updated"
-    else
-      success_message = "Tags have been updated!"
-    end
+    success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
+                        "Related content updated"
+                      else
+                        "Tags have been updated!"
+                      end
 
     create_tagging_update_form(tagging_update_params)
 
@@ -531,7 +531,7 @@ private
       mainstream_browse_pages: [],
       organisations: [],
       ordered_related_items: [],
-      ordered_related_items_destroy: []
+      ordered_related_items_destroy: [],
     ).to_h
   end
 

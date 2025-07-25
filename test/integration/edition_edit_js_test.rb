@@ -138,7 +138,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       end
 
       should "display an error when the form is submitted if a value entered is not a valid path" do
-        Services.publishing_api.stubs(:lookup_content_ids).returns({"/company-tax-returns"=>"830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company"=>"5cb58486-0b00-4da8-8076-382e474b4f03"})
+        Services.publishing_api.stubs(:lookup_content_ids).returns({ "/company-tax-returns" => "830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company" => "5cb58486-0b00-4da8-8076-382e474b4f03" })
         fill_in "URL or path", with: "/invalid-path"
 
         click_button("Save")
@@ -151,13 +151,13 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "URL or path", with: "/company-tax-returns"
         click_button("Save")
         assert_requested :patch,
-                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
-                          body: { "links": { "organisations": [],
+                         "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
+                         body: { "links": { "organisations": [],
                                             "meets_user_needs": [],
                                             "mainstream_browse_pages": [],
-                                            "ordered_related_items": ["830e403b-7d81-45f1-8862-81dcd55b4ec7"],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7],
                                             "parent": [] },
-                                  "previous_version": 0 }
+                                 "previous_version": 0 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
         assert page.has_text?("Related content updated")
       end
@@ -215,13 +215,13 @@ class EditionEditJSTest < JavascriptIntegrationTest
         end
         click_button("Save")
         assert_requested :patch,
-                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
-                          body: { "links": { "organisations": ["9a9111aa-1db8-4025-8dd2-e08ec3175e72"],
+                         "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
                                             "meets_user_needs": [],
-                                            "mainstream_browse_pages": ["CONTENT-ID-CAPITAL", "CONTENT-ID-RTI", "CONTENT-ID-VAT"],
-                                            "ordered_related_items": ["830e403b-7d81-45f1-8862-81dcd55b4ec7", "91fef6f6-3a59-42ab-a14d-42c4e5eee1a1"],
-                                            "parent": ["CONTENT-ID-CAPITAL"] },
-                                  "previous_version": 1 }
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
         assert page.has_text?("Related content updated")
       end
