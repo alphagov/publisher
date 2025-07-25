@@ -32,7 +32,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
     assert_operator email_count_before_start + 1, :<=, ActionMailer::Base.deliveries.count
     assert_match(
-      /Created Local transaction: "Foo bar"/,
+      "[PUBLISHER] Created Local transaction: \"Foo bar\" (by Author)",
       ActionMailer::Base.deliveries.last.subject,
     )
   end
@@ -78,7 +78,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
   with_and_without_javascript do
     should "save the LGSL and LGIL fields" do
-      edition = FactoryBot.create(
+      edition = FactoryBot.build(
         :local_transaction_edition,
         panopticon_id: @artefact.id,
         slug: @artefact.slug,
@@ -87,6 +87,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
         lgil_code: 2,
       )
 
+      edition.save!
       visit_edition edition
 
       assert page.has_content?(/Foo transaction\W#1/)
@@ -95,7 +96,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
       save_edition_and_assert_success
 
-      edition = LocalTransactionEdition.find(edition.id)
+      edition = LocalTransactionEdition.find(edition.editionable.id)
       assert_equal 2, edition.lgil_code
 
       # Ensure it gets set to nil when clearing field

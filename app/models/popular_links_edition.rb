@@ -1,5 +1,6 @@
-class PopularLinksEdition < Edition
-  field :link_items, type: Array
+class PopularLinksEdition < ApplicationRecord
+  include Editionable
+
   validate :six_link_items_present
   validate :all_valid_urls_and_titles_are_present
 
@@ -11,7 +12,7 @@ class PopularLinksEdition < Edition
     link_items.each_with_index do |item, index|
       errors.add("url#{index + 1}", "URL is required for Link #{index + 1}") unless url_present?(item)
       errors.add("title#{index + 1}", "Title is required for Link #{index + 1}") unless title_present?(item)
-      errors.add("url#{index + 1}", "URL is invalid for Link #{index + 1}, all URLs should start with '/'") if url_present?(item) && url_is_not_valid_relative_url?(item[:url])
+      errors.add("url#{index + 1}", "URL is invalid for Link #{index + 1}, all URLs should start with '/'") if url_present?(item) && url_is_not_valid_relative_url?(item["url"])
     end
   end
 
@@ -20,18 +21,21 @@ class PopularLinksEdition < Edition
   end
 
   def title_present?(item)
-    item.key?(:title) && !item[:title].empty?
+    item.key?("title") && !item["title"].empty?
   end
 
   def url_present?(item)
-    item.key?(:url) && !item[:url].empty?
+    item.key?("url") && !item["url"].empty?
   end
 
   def create_draft_popular_links_from_last_record
     last_popular_links = PopularLinksEdition.last
-    popular_links = PopularLinksEdition.new(title: last_popular_links.title, link_items: last_popular_links.link_items, version_number: last_popular_links.version_number.next)
-    popular_links.save!
-    popular_links
+    edition = Edition.build(last_popular_links.edition.attributes.except("id", "created_at", "updated_at", "version_number", "state", "panopticon_id"))
+    edition.version_number = last_popular_links.version_number.next
+    popular_links = PopularLinksEdition.new(link_items: last_popular_links.edition.link_items)
+    edition.editionable = popular_links
+    edition.save!
+    edition.editionable
   end
 
   def publish_latest
