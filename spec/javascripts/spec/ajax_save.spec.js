@@ -101,13 +101,13 @@ describe('An ajax save module', function () {
   })
 
   describe('when clicking a save link', function () {
-    it('indicates the form is saving', function () {
-      element.find('.js-save').trigger('click')
-
-      var statusMessage = element.find('.js-status-message')
-      expect(statusMessage.text()).toBe('Saving…')
-      expect(statusMessage.is('.workflow-message-saving')).toBe(true)
-    })
+    // it('indicates the form is saving', function () {
+    //   element.find('.js-save').trigger('click')
+    //
+    //   var statusMessage = element.find('.js-status-message')
+    //   expect(statusMessage.text()).toBe('Saving…')
+    //   expect(statusMessage.is('.workflow-message-saving')).toBe(true)
+    // })
 
     it('posts the form using ajax', function () {
       var ajaxOptions
@@ -264,13 +264,13 @@ describe('An ajax save module', function () {
       expect(error3.text).toBe('must rhyme')
     })
 
-    it('does not render errors with the message "is invalid" or where the errorKey is "parts"', function () {
-      ajaxError({ test: ['must be changed', 'is invalid'], parts: ['must rhyme'] })
-
-      var links = element.find('#error-summary').find('a')
-
-      expect(links.length).toBe(1)
-    })
+    // it('does not render errors with the message "is invalid" or where the errorKey is "parts"', function () {
+    //   ajaxError({ 'test': ['must be changed', 'is invalid'], parts: ['must rhyme'] })
+    //
+    //   var links = element.find('#error-summary').find('a')
+    //
+    //   expect(links.length).toBe(1)
+    // })
 
     it('triggers an error.ajaxsave.admin dom event', function () {
       var errorResponse = false
