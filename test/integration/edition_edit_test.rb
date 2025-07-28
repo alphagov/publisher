@@ -235,49 +235,11 @@ class EditionEditTest < IntegrationTest
             assert page.has_no_link?("Tag to a browse page")
           end
         end
-      end
 
-      context "Adding Tags to a browse page" do
-        setup do
-          click_link("Tag to a browse page")
-        end
-
-        should "show the 'Tag to a browse page' page" do
-          assert page.has_text?(@draft_edition.title)
-          assert page.has_text?("Tag browse pages")
-          assert page.has_text?("Select all that apply")
-          assert page.has_element?("legend", text: "Tax")
-          assert page.has_unchecked_field?("Capital Gains Tax")
-          assert page.has_unchecked_field?("RTI (draft)")
-          assert page.has_unchecked_field?("VAT")
-          assert page.has_element?("legend", text: "Benefits")
-          assert page.has_unchecked_field?("Benefits and financial support for families")
-          assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-          assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-          assert page.has_text?("Options")
-          assert page.has_button?("Save")
-          assert page.has_link?("Cancel")
-        end
-
-        should "redirect to tagging tab when Cancel link is clicked" do
-          click_link("Cancel")
-
-          assert_current_path tagging_edition_path(@draft_edition.id)
-        end
-
-        should "save the selected tags to the browse page when the form is submitted" do
-          check("Capital Gains Tax")
-          click_button("Save")
-          assert_requested :patch,
-                           "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                           body: { "links": { "organisations": [],
-                                              "meets_user_needs": [],
-                                              "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL],
-                                              "ordered_related_items": [],
-                                              "parent": [] },
-                                   "previous_version": 0 }
-          assert_current_path tagging_edition_path(@draft_edition.id)
-          assert page.has_text?("Tags have been updated!")
+        should "not show the 'Tag to related content' link" do
+          within all(".govuk-summary-card")[3] do
+            assert page.has_no_link?("Tag to related content")
+          end
         end
       end
     end
@@ -332,6 +294,7 @@ class EditionEditTest < IntegrationTest
       should "show 'Related content' summary card in fourth position" do
         within all(".gem-c-summary-card")[3] do
           assert page.has_text?("Related content")
+          assert page.has_no_link?("Tag to related content")
 
           within all(".govuk-summary-list__row")[0] do
             assert page.has_css?("dt", text: "Related content 1")
@@ -355,45 +318,236 @@ class EditionEditTest < IntegrationTest
         end
       end
 
-      context "Editing tags for a browse page" do
-        setup do
-          within all(".gem-c-summary-card")[1] do
-            click_link("Edit")
+      context "User has permissions" do
+        should "show 'Edit' link on 'Related content' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_link?("Edit")
           end
         end
+      end
 
-        should "show the 'Tag to a browse page' page with preselected options" do
-          assert page.has_text?(@draft_edition.title)
-          assert page.has_text?("Tag browse pages")
-          assert page.has_text?("Select all that apply")
-          assert page.has_element?("legend", text: "Tax")
-          assert page.has_checked_field?("Capital Gains Tax")
-          assert page.has_checked_field?("RTI (draft)")
-          assert page.has_checked_field?("VAT")
-          assert page.has_element?("legend", text: "Benefits")
-          assert page.has_unchecked_field?("Benefits and financial support for families")
-          assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
-          assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
-          assert page.has_button?("Save")
-          assert page.has_link?("Cancel")
+      context "User does not have permissions" do
+        setup do
+          user = FactoryBot.create(:user, name: "Stub User")
+          login_as(user)
+          visit_draft_edition
+          click_link("Tagging")
         end
 
-        should "update the tags for the browse page when the form is submitted" do
-          uncheck("RTI (draft)")
-          uncheck("VAT")
-          check("Benefits and financial support for families")
-          click_button("Save")
-          assert_requested :patch,
-                           "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
-                           body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-                                              "meets_user_needs": [],
-                                              "mainstream_browse_pages": %w[CONTENT-ID-FAMILIES CONTENT-ID-CAPITAL],
-                                              "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                              "parent": %w[CONTENT-ID-CAPITAL] },
-                                   "previous_version": 1 }
-          assert_current_path tagging_edition_path(@draft_edition.id)
-          assert page.has_text?("Tags have been updated!")
+        should "not show 'Edit' link on 'Related content' summary card when user dos not have permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_no_link?("Edit")
+          end
         end
+      end
+    end
+  end
+
+  context "Mainstream browse pages page" do
+    setup do
+      visit_draft_edition
+      click_link("Tagging")
+    end
+
+    context "Adding Tags to a browse page" do
+      setup do
+        click_link("Tag to a browse page")
+      end
+
+      should "show the 'Tag to a browse page' page" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Tag browse pages")
+        assert page.has_text?("Select all that apply")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_unchecked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save the selected tags to the browse page when the form is submitted" do
+        check("Capital Gains Tax")
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL],
+                                            "ordered_related_items": [],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Tags have been updated!")
+      end
+    end
+
+    context "Editing tags for a browse page" do
+      setup do
+        stub_linkables_with_data
+        visit_draft_edition
+        click_link("Tagging")
+        within all(".gem-c-summary-card")[1] do
+          click_link("Edit")
+        end
+      end
+
+      should "show the 'Tag to a browse page' page with preselected options" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Tag browse pages")
+        assert page.has_text?("Select all that apply")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_checked_field?("Capital Gains Tax")
+        assert page.has_checked_field?("RTI (draft)")
+        assert page.has_checked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "update the tags for the browse page when the form is submitted" do
+        uncheck("RTI (draft)")
+        uncheck("VAT")
+        check("Benefits and financial support for families")
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-FAMILIES CONTENT-ID-CAPITAL],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Tags have been updated!")
+      end
+    end
+  end
+
+  context "Tag related content page" do
+    setup do
+      create_draft_edition
+      visit tagging_related_content_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag related content' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag related content")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Related content items are displayed in the sidebar.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    context "Adding tags for a related content page" do
+      should "render an empty Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?(".govuk-input", count: 2)
+          assert page.has_css?(".govuk-input[value='']", count: 2)
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "display an error when the form is submitted if a value entered is not a valid path" do
+        Services.publishing_api.stubs(:lookup_content_ids).returns({ "/company-tax-returns" => "830e403b-7d81-45f1-8862-81dcd55b4ec7", "/prepare-file-annual-accounts-for-limited-company" => "5cb58486-0b00-4da8-8076-382e474b4f03" })
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/invalid-path"
+        end
+
+        click_button("Save")
+
+        assert_current_path update_tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
+      end
+
+      should "save the added 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
+      end
+    end
+
+    context "Editing tags for a related content page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_related_content_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Add Another form" do
+        within :css, ".gem-c-add-another" do
+          assert page.has_css?("legend", text: "Related content 1")
+          assert page.has_css?("label", text: "URL or path")
+          assert page.has_css?(".gem-c-hint", text: "For example, /pay-vat")
+          assert page.has_css?(".govuk-input", count: 5)
+          assert page.has_css?("input[value='/company-tax-returns']")
+          assert page.has_css?("input[value='/prepare-file-annual-accounts-for-limited-company']")
+          assert page.has_css?("input[value='/corporation-tax']")
+          assert page.has_css?("input[value='/tax-help']")
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "save the edited 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          check("Delete")
+        end
+        within all(".js-add-another__fieldset")[1] do
+          check("Delete")
+        end
+        within all(".js-add-another__fieldset")[2] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
       end
     end
   end

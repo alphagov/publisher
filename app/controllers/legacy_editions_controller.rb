@@ -141,7 +141,7 @@ class LegacyEditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    form = Tagging::TaggingUpdateForm.new(tagging_update_form_params)
+    form = Tagging::LegacyTaggingUpdateForm.new(tagging_update_form_params)
     if form.valid?
       form.publish!
       flash[:success] = "Tags have been updated!"
