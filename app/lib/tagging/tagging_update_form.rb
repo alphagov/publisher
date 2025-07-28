@@ -5,6 +5,19 @@ module Tagging
 
     validate :ordered_related_items_paths_exist
 
+    def self.build_from_submitted_form(tagging_update_params)
+      new(
+        content_id: tagging_update_params["content_id"],
+        previous_version: tagging_update_params["previous_version"],
+        organisations: tagging_update_params["organisations"],
+        meets_user_needs: tagging_update_params["meets_user_needs"],
+        mainstream_browse_pages: tagging_update_params["mainstream_browse_pages"],
+        ordered_related_items: tagging_update_params["ordered_related_items"],
+        ordered_related_items_destroy: tagging_update_params["ordered_related_items_destroy"],
+        parent: tagging_update_params["parent"],
+      )
+    end
+
     def self.build_from_publishing_api(content_id, locale)
       link_set = LinkSet.find(content_id, locale)
 

@@ -3,13 +3,13 @@
 <% content_for :page_title, "Tag related content" %>
 <% content_for :title, "Tag related content" %>
 
-<% @form_values = (@form_submitted_values.presence || @tagging_update_form_values) %>
+<% @form_values = @tagging_update_form_values %>
 
-<% if @form_submitted_values.present? && !@form_submitted_values.errors.empty? %>
-  <% @errors = @form_submitted_values.errors %>
+<% if @tagging_update_form_values.present? && !@tagging_update_form_values.errors.empty? %>
+  <% @errors = @tagging_update_form_values.errors %>
 
   <div class="govuk-grid-row">
-    <% unless @form_submitted_values.errors.empty? %>
+    <% unless @tagging_update_form_values.errors.empty? %>
       <% content_for :error_summary do %>
         <%= render("govuk_publishing_components/components/error_summary", {
           id: "error-summary",
