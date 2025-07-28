@@ -527,15 +527,12 @@ class EditionEditTest < IntegrationTest
         assert_current_path tagging_edition_path(@draft_edition.id)
       end
 
-      should "save the edited 'Related content' tags when the form is submitted" do
-        within all(".js-add-another__fieldset")[0] do
-          check("Delete")
-        end
+      should "save deleted 'Related content' tags when the form is submitted" do
         within all(".js-add-another__fieldset")[1] do
           check("Delete")
         end
-        within all(".js-add-another__fieldset")[2] do
-          fill_in "URL or path", with: "/company-tax-returns"
+        within all(".js-add-another__fieldset")[3] do
+          check("Delete")
         end
         click_button("Save")
         assert_requested :patch,
@@ -543,7 +540,33 @@ class EditionEditTest < IntegrationTest
                          body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
                                             "meets_user_needs": [],
                                             "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
-                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 853feaf2-152c-4aa5-8edb-ba84a88860bf],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Related content updated")
+      end
+
+      should "save edited 'Related content' tags when the form is submitted" do
+        within all(".js-add-another__fieldset")[0] do
+          fill_in "URL or path", with: "/tax-help"
+        end
+        within all(".js-add-another__fieldset")[1] do
+          fill_in "URL or path", with: "/corporation-tax"
+        end
+        within all(".js-add-another__fieldset")[2] do
+          fill_in "URL or path", with: "/company-tax-returns"
+        end
+        within all(".js-add-another__fieldset")[3] do
+          fill_in "URL or path", with: "/prepare-file-annual-accounts-for-limited-company"
+        end
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf 830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03],
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@draft_edition.id)
