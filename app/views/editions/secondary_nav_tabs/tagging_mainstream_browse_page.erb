@@ -15,6 +15,7 @@
     <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
   <% end %>
   <%= f.hidden_field :ordered_related_items_destroy, value: [], multiple: true %>
+  <%= f.hidden_field :tagging_type, value: "mainstream_browse_page" %>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -25,7 +26,7 @@
         <%= render "govuk_publishing_components/components/checkboxes", {
           name: "#{f.object_name}[mainstream_browse_pages][]",
           heading: checkbox_group[:heading],
-          heading_size: "s",
+          heading_size: "m",
           small: true,
           no_hint_text: true,
           items: checkbox_group[:items],

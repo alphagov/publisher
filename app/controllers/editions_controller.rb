@@ -92,6 +92,8 @@ class EditionsController < InheritedResources::Base
 
     success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
                         "Related content updated"
+                      elsif params[:tagging_tagging_update_form][:tagging_type] == "mainstream_browse_page"
+                        "Mainstream browse pages updated"
                       else
                         "Tags have been updated!"
                       end
