@@ -18,6 +18,11 @@
 
   <div data-module="ga4-page-view-tracking" data-attributes='<%= track_analytics_data_on_load(sanitized_title) %>'></div>
 
+  <%= render partial: "/shared/maintenance_banner", locals: { 
+  heading: "Planned downtime",
+  content: "Publisher will be unavailable on Friday 1 August due to a planned database migration.",
+} %>
+
   <%= render "govuk_publishing_components/components/skip_link" %>
 
   <%= render "govuk_publishing_components/components/layout_header", {
