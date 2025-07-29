@@ -74,9 +74,11 @@ module Tagging
 
       unless ordered_related_items.nil?
         ordered_related_items_destroy.each_with_index.map do |item, index|
-          if item == "0" && ["0", nil].include?(ordered_related_items_destroy[index + 1])
-            checkboxes << 0
-          elsif item == "1" && ordered_related_items_destroy[index + 1] == "0"
+          if item == "0"
+            unless ordered_related_items_destroy[index - 1] == "1"
+              checkboxes << 0
+            end
+          elsif item == "1" # && ordered_related_items_destroy[index + 1] == "1"
             checkboxes << 1
           end
         end
