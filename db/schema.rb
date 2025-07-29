@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.uuid "edition_id"
     t.bigint "requester_id"
     t.bigint "recipient_id"
+    t.text "mongo_id"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
     t.index ["requester_id"], name: "index_actions_on_requester_id"
@@ -228,6 +229,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.string "need_to_know"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cta_text"
+    t.string "before_results"
+    t.string "after_results"
   end
 
   create_table "overview_dashboards", force: :cascade do |t|
