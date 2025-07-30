@@ -324,8 +324,8 @@ class Edition < ApplicationRecord
       new_edition.clone_whole_body_from(self)
     end
 
-    if self.editionable.respond_to?(:build_clone)
-      new_edition = self.editionable.build_clone(new_edition)
+    if self.editionable.respond_to?(:copy_to)
+      new_edition = self.editionable.copy_to(new_edition)
     end
 
     new_edition

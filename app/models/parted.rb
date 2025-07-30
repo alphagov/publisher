@@ -11,7 +11,7 @@ module Parted
     klass.after_validation :merge_embedded_parts_errors
   end
 
-  def build_clone(new_edition)
+  def copy_to(new_edition)
     # If the new edition is of the same type or another type that has parts,
     # copy over the parts from this edition
     if new_edition.editionable.respond_to?(:parts)

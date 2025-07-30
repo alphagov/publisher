@@ -44,7 +44,7 @@ class LocalTransactionEdition < ApplicationRecord
     introduction
   end
 
-  def build_clone(new_edition)
+  def copy_to(new_edition)
     if new_edition.editionable.is_a?(LocalTransactionEdition)
       new_edition.editionable.scotland_availability = scotland_availability.clone
       new_edition.editionable.wales_availability = wales_availability.clone
@@ -57,9 +57,9 @@ private
 
   def merge_errors
     %i[scotland_availability wales_availability northern_ireland_availability].each do |availability|
-      nested_errors = []
-      public_send_availability = public_send(availability)
-      nested_errors = public_send_availability.errors if public_send_availability
+      nested_errors = public_send(availability)&.errors
+      next if nested_errors.nil?
+
       nested_errors.each do |error|
         errors.add("#{availability}_attributes_#{error.attribute}", error.message)
       end
