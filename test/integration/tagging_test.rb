@@ -97,7 +97,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       switch_tab "Tagging"
 
       ordered_related_items_fields = all(
-        'input[name="tagging_tagging_update_form[ordered_related_items][]"]',
+        'input[name="tagging_legacy_tagging_update_form[ordered_related_items][]"]',
       )
 
       assert ordered_related_items_fields[0].value, "/vat-returns"
@@ -109,11 +109,11 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       click_on "Add related item"
 
       within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[1]' do
-        assert page.has_field?("tagging_tagging_update_form[ordered_related_items][]", with: "/vat-returns")
+        assert page.has_field?("tagging_legacy_tagging_update_form[ordered_related_items][]", with: "/vat-returns")
       end
 
       within :xpath, '//ul[contains(@class,"js-base-path-list")]/li[2]' do
-        assert page.has_field?("tagging_tagging_update_form[ordered_related_items][]", with: "/reclaim-vat")
+        assert page.has_field?("tagging_legacy_tagging_update_form[ordered_related_items][]", with: "/reclaim-vat")
       end
 
       stub_publishing_api_has_lookups(
@@ -146,7 +146,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "tag to parent" do
-      skip("Skipping for deployment banners temporarily as causing issues.")
       visit_edition @edition
       switch_tab "Tagging"
 

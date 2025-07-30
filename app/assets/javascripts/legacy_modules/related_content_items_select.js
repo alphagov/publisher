@@ -60,7 +60,7 @@
       var $dragEl = $('<span class="input-group-addon">↕</span>')
       var $inputEl = $('<input />', {
         type: 'text',
-        name: 'tagging_tagging_update_form[ordered_related_items][]',
+        name: 'tagging_legacy_tagging_update_form[ordered_related_items][]',
         value: path,
         class: 'form-control',
         readonly: true
