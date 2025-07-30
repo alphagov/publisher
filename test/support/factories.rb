@@ -264,8 +264,11 @@ FactoryBot.define do
 
     lgil_code { "1" }
     introduction { "Test introduction" }
+    cta_text { "Find your local council" }
     more_information { "This is more information" }
     need_to_know { "This service is only available in England and Wales" }
+    before_results { "##before" }
+    after_results { "##after" }
   end
 
   factory :transaction_edition, parent: :edition, class: "TransactionEdition" do
