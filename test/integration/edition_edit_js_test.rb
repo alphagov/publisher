@@ -204,10 +204,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
       end
 
       should "save deleted 'Related content' tags when the form is submitted" do
-        within all(".js-add-another__fieldset")[1] do
+        within all(".js-add-another__fieldset")[3] do
           click_button("Delete")
         end
-        within all(".js-add-another__fieldset")[2] do
+        within all(".js-add-another__fieldset")[1] do
           click_button("Delete")
         end
         click_button("Save")
