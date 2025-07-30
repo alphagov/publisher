@@ -69,23 +69,12 @@ module Tagging
     end
 
     def remove_deleted_items(ordered_related_items, ordered_related_items_destroy)
-      checkboxes = []
       base_paths = []
 
       unless ordered_related_items.nil?
-        ordered_related_items_destroy.each_with_index.map do |item, index|
-          if item == "0"
-            unless ordered_related_items_destroy[index - 1] == "1"
-              checkboxes << 0
-            end
-          elsif item == "1"
-            checkboxes << 1
-          end
-        end
-
-        ordered_related_items.each_with_index.map do |_item, index|
-          if checkboxes[index] != 1
-            base_paths << ordered_related_items[index]
+        ordered_related_items.each_with_index.map do |item, index|
+          unless ordered_related_items_destroy&.include?(index.to_s)
+            base_paths << item
           end
         end
       end
