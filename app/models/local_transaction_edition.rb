@@ -44,7 +44,7 @@ class LocalTransactionEdition < ApplicationRecord
     introduction
   end
 
-  def build_clone(new_edition)
+  def copy_to(new_edition)
     if new_edition.editionable.is_a?(LocalTransactionEdition)
       new_edition.editionable.scotland_availability = scotland_availability.clone
       new_edition.editionable.wales_availability = wales_availability.clone
