@@ -11,6 +11,8 @@
 <% end %>
 <% render "layouts/google_tag_manager" %>
 
+<%= render partial: "/shared/maintenance_banner" %>
+
 <% content_for :body_start do %>
   <%= render "govuk_publishing_components/components/skip_link" %>
 <% end %>
