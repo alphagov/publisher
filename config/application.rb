@@ -11,6 +11,7 @@ require "rails/test_unit/railtie"
 
 require "open-uri"
 require "builder"
+require_relative "../app/middleware/maintenance_mode"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -108,5 +109,8 @@ module Publisher
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.autoload_paths << Rails.root.join("app/middleware")
+    config.middleware.use MaintenanceMode
   end
 end
