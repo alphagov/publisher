@@ -45,7 +45,7 @@ module Tagging
         organisations: clean_content_ids(organisations),
         meets_user_needs: clean_content_ids(meets_user_needs),
         mainstream_browse_pages: clean_content_ids(mainstream_browse_pages),
-        ordered_related_items: transform_base_paths_to_content_ids(ordered_related_items, ordered_related_items_destroy),
+        ordered_related_items: remove_deleted_items(ordered_related_items, ordered_related_items_destroy),
         parent: clean_content_ids(parent),
       }
     end
@@ -68,7 +68,7 @@ module Tagging
       @ordered_related_items_path_by_ids ||= Services.publishing_api.lookup_content_ids(base_paths: ordered_related_items)
     end
 
-    def transform_base_paths_to_content_ids(ordered_related_items, ordered_related_items_destroy)
+    def remove_deleted_items(ordered_related_items, ordered_related_items_destroy)
       checkboxes = []
       base_paths = []
 
@@ -78,7 +78,7 @@ module Tagging
             unless ordered_related_items_destroy[index - 1] == "1"
               checkboxes << 0
             end
-          elsif item == "1" # && ordered_related_items_destroy[index + 1] == "1"
+          elsif item == "1"
             checkboxes << 1
           end
         end
