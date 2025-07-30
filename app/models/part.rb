@@ -1,8 +1,8 @@
 require_dependency "safe_html"
 
 class Part < ApplicationRecord
-  belongs_to :guide_edition, inverse_of: :parts, optional: true
-  belongs_to :programme_edition, inverse_of: :parts, optional: true
+  belongs_to :guide_edition, optional: true
+  belongs_to :programme_edition, optional: true
 
   scope :in_order, -> { order(:order) }
 
