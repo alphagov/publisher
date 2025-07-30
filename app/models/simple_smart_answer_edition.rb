@@ -25,7 +25,7 @@ class SimpleSmartAnswerEdition < ApplicationRecord
     parts.join("\n\n\n")
   end
 
-  def build_clone(new_edition)
+  def copy_to(new_edition)
     if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
       new_edition.editionable.nodes = nodes.map(&:dup)
     end
