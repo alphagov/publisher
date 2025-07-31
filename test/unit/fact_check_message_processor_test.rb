@@ -116,4 +116,14 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_match(/Please change hyperlink for ‘ffeil credyd’ to lead to the following page/, f.body_as_utf8)
     assert_no_match(/\?\?\?/, f.body_as_utf8)
   end
+
+  test "it should be able process emails where mongo_id exists" do
+    edition = FactoryBot.create(:guide_edition, title: "Hello", slug: "hello-#{Time.zone.now.to_i}", mongo_id: "4e1dac78e2ba80076000000ea")
+    message = Mail.read(File.expand_path("../fixtures/fact_check_emails/hidden_nasty.txt", __dir__))
+    f = FactCheckMessageProcessor.new(message)
+    f.process_for_publication("4e1dac78e2ba80076000000ea")
+
+    assert_includes(edition.actions.last.comment, "This is some text")
+    assert_includes(edition.actions.last.comment, "<script>")
+  end
 end
