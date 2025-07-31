@@ -10,6 +10,7 @@ class CreateUser < ActiveRecord::Migration[7.1]
       t.string   :permissions, array: true, default: []
       t.boolean  :remotely_signed_out, default: false
       t.boolean  :disabled, default: false
+      t.text :mongo_id
       t.timestamps
       t.index :disabled
     end

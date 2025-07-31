@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.jsonb "request_details", default: {}
     t.string "email_addresses"
     t.string "customised_message"
+    t.text "mongo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "edition_id"
@@ -78,9 +79,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.datetime "public_timestamp"
     t.string "redirect_url"
     t.string "content_id"
+    t.text "mongo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["name", "state", "kind", "id"], name: "index_artefacts_on_name_and_state_and_kind_and_id"
     t.index ["slug"], name: "index_artefacts_on_slug", unique: true
   end
@@ -97,19 +98,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
 
   create_table "completed_transaction_editions", force: :cascade do |t|
     t.string "body"
+    t.json "presentation_toggles", default: {"promotion_choice"=>{"choice"=>"none", "url"=>""}}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.json "presentation_toggles", default: {"promotion_choice"=>{"choice"=>"none", "url"=>""}}
   end
 
   create_table "devolved_administration_availabilities", force: :cascade do |t|
     t.string "authority_type", default: "local_authority_service"
     t.string "alternative_url"
     t.string "type"
+    t.text "mongo_id"
     t.bigint "local_transaction_edition_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["local_transaction_edition_id"], name: "idx_on_local_transaction_edition_id_ebafa42399"
   end
 
@@ -212,10 +213,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
   create_table "local_services", force: :cascade do |t|
     t.string "description"
     t.integer "lgsl_code"
+    t.text "mongo_id"
     t.string "providing_tier", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["lgsl_code"], name: "index_local_services_on_lgsl_code", unique: true
   end
 
@@ -284,10 +285,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.string "slug"
     t.string "next_node"
     t.integer "order"
+    t.text "mongo_id"
     t.bigint "node_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["node_id"], name: "index_simple_smart_answer_edition_node_options_on_node_id"
   end
 
@@ -297,10 +298,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.text "body"
     t.integer "order"
     t.string "kind"
+    t.text "mongo_id"
     t.bigint "simple_smart_answer_edition_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["simple_smart_answer_edition_id"], name: "idx_on_simple_smart_answer_edition_id_43adae8a85"
   end
 
@@ -333,9 +334,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.string "permissions", default: [], array: true
     t.boolean "remotely_signed_out", default: false
     t.boolean "disabled", default: false
+    t.text "mongo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "mongo_id"
     t.index ["disabled"], name: "index_users_on_disabled"
   end
 
