@@ -9,6 +9,7 @@ class CreateAction < ActiveRecord::Migration[7.1]
       t.jsonb :request_details, default: {}
       t.string :email_addresses
       t.string :customised_message
+      t.text :mongo_id
       t.timestamps
 
       t.references :edition, foreign_key: true, type: :uuid

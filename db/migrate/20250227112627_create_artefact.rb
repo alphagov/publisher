@@ -17,6 +17,7 @@ class CreateArtefact < ActiveRecord::Migration[7.1]
       t.datetime :public_timestamp
       t.string :redirect_url
       t.string :content_id
+      t.text :mongo_id
       t.timestamps
       t.index %i[name state kind id]
       t.index :slug, unique: true
