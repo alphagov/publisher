@@ -72,7 +72,7 @@ module Tagging
       base_paths = []
 
       unless ordered_related_items.nil?
-        ordered_related_items.each_with_index.map do |item, index|
+        ordered_related_items.each_with_index do |item, index|
           unless ordered_related_items_destroy&.include?(index.to_s)
             base_paths << item
           end
