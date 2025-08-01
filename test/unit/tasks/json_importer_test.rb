@@ -5,8 +5,8 @@ class ImportJsonTaskTest < ActiveSupport::TestCase
   setup do
     @import_json_task = Rake::Task["import:json"]
     @import_json_task.reenable
-    TOTAL_USER_COUNT = 791
-    seed_user_data unless User.count == TOTAL_USER_COUNT
+    total_user_count = 791
+    seed_user_data unless User.count == total_user_count
   end
 
   def seed_user_data
