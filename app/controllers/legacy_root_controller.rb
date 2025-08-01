@@ -38,7 +38,7 @@ private
   def filtered_editions
     return Edition if format_filter == "edition"
 
-    Edition.where(_type: "#{format_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{format_filter.camelcase}Edition")
   end
 
   def list_parameter_from_state(state)
@@ -47,10 +47,9 @@ private
 
   def build_presenter(user_filter, current_page = nil)
     user_filter, user = process_user_filter(user_filter)
-
-    editions = filtered_editions.order_by([sort_column, sort_direction])
+    editions = filtered_editions.order("#{sort_column}  #{sort_direction}")
     editions = editions.page(current_page).per(ITEMS_PER_PAGE)
-    editions = editions.where.not(_type: "PopularLinksEdition")
+    editions = editions.where.not(editionable_type: "PopularLinksEdition")
 
     [PrimaryListingPresenter.new(editions, user), user_filter]
   end

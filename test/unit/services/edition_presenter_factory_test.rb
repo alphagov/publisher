@@ -6,9 +6,10 @@ class EditionPresenterFactoryTest < ActiveSupport::TestCase
   context ".get_presenter" do
     should "return an object" do
       edition = stub(class: "foo")
+      edition.expects(:editionable_class).returns("editionable")
       Klass.expects(:new).with(edition).returns("bar")
 
-      EditionPresenterFactory.expects(:presenter_class).with("foo").returns("EditionPresenterFactoryTest::Klass")
+      EditionPresenterFactory.expects(:presenter_class).with("editionable").returns("EditionPresenterFactoryTest::Klass")
 
       result = EditionPresenterFactory.get_presenter(edition)
       assert result == "bar"

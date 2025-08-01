@@ -44,8 +44,12 @@
   </div>
   <div class="row">
     <div class="col-md-8">
-      <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add question".html_safe, :nodes, :class => "btn btn-primary add-question add-right-margin", :data => { :target => "#nodes" } %>
-      <%= f.link_to_add "<i class=\"glyphicon glyphicon-plus\"></i> Add outcome".html_safe, :nodes, :class => "btn btn-danger add-outcome", :data => { :target => "#nodes" } %>
+      <%= f.link_to_add(:nodes, :model_object => SimpleSmartAnswerEdition::Node.new, :data => { :target => "#nodes" }, :class => "btn btn-primary add-question add-right-margin" ) do %>
+        <i class="glyphicon glyphicon-plus"></i>Add question
+      <% end %>
+      <%= f.link_to_add(:nodes, :model_object => SimpleSmartAnswerEdition::Node.new, :data => { :target => "#nodes" }, :class => "btn btn-danger add-outcome" ) do %>
+        <i class="glyphicon glyphicon-plus"></i>Add outcome
+      <% end %>
     </div>
   </div>
 </div>

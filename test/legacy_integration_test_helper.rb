@@ -142,8 +142,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     end
 
     save_edition_and_assert_success
-
-    guide.reload
   end
 
   # Fill in some sample variants for a transaction
@@ -169,7 +167,7 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
 
     save_edition_and_assert_success
 
-    transaction.reload
+    # transaction.reload
   end
 
   def switch_tab(tab)
@@ -200,6 +198,7 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     else
       assert page.has_content? "edition was successfully updated."
     end
+    page.refresh
   end
 
   def save_edition_and_assert_error(error_message = nil, link_href = nil)
