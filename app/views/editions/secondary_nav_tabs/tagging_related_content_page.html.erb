@@ -3,24 +3,18 @@
 <% content_for :page_title, "Tag related content" %>
 <% content_for :title, "Tag related content" %>
 
-<% @form_values = (@form_submitted_values.presence || @tagging_update_form_values) %>
-
-<% if @form_submitted_values.present? && !@form_submitted_values.errors.empty? %>
-  <% @errors = @form_submitted_values.errors %>
-
+<% if !@tagging_update_form_values.errors.empty? %>
   <div class="govuk-grid-row">
-    <% unless @form_submitted_values.errors.empty? %>
-      <% content_for :error_summary do %>
-        <%= render("govuk_publishing_components/components/error_summary", {
-          id: "error-summary",
-          title: "There is a problem",
-          items: @errors.map do |error|
-            {
-              text: error.message,
-            }
-          end,
-        }) %>
-      <% end %>
+    <% content_for :error_summary do %>
+      <%= render("govuk_publishing_components/components/error_summary", {
+        id: "error-summary",
+        title: "There is a problem",
+        items: @tagging_update_form_values.errors.map do |error|
+          {
+            text: error.message,
+          }
+        end,
+      }) %>
     <% end %>
   </div>
 <% end %>
@@ -31,7 +25,7 @@
 
     <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
       <%
-        if @form_values.ordered_related_items == nil
+        if @tagging_update_form_values.ordered_related_items == nil
           items = [
             {
               fields: render(partial: "secondary_nav_tabs/tagging/related_content_input"),
@@ -40,7 +34,7 @@
           ]
           empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
         else
-          items = @form_values.ordered_related_items.each_with_index.map do | related_item, index |
+          items = @tagging_update_form_values.ordered_related_items.each_with_index.map do | related_item, index |
             item = (related_item["base_path"].presence || related_item)
 
             {
@@ -48,7 +42,7 @@
               destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: index, f: f }),
             }
           end
-          empty = render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index: @form_values.ordered_related_items.count, value: nil })
+          empty = render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index: @tagging_update_form_values.ordered_related_items.count, value: nil })
         end
       %>
 
