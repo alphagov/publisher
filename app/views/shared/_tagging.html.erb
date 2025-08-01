@@ -83,7 +83,7 @@
             <ul class="list-unstyled js-list-sortable js-base-path-list">
             <% Array(@tagging_update.ordered_related_items).each do |related_item| %>
               <li>
-                <%= text_field_tag "tagging_tagging_update_form[ordered_related_items][]",
+                <%= text_field_tag "tagging_legacy_tagging_update_form[ordered_related_items][]",
                       related_item["base_path"],
                       class: "form-control",
                       data: { title: related_item["title"] } %>
@@ -91,7 +91,7 @@
             <% end %>
             <% 5.times do %>
               <li>
-                <%= text_field_tag "tagging_tagging_update_form[ordered_related_items][]", "",
+                <%= text_field_tag "tagging_legacy_tagging_update_form[ordered_related_items][]", "",
                       class: "form-control" %>
               </li>
             <% end %>
