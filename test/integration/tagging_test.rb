@@ -146,7 +146,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "tag to parent" do
-      # skip("Skipping for deployment banners temporarily as causing issues.")
       visit_edition @edition
       switch_tab "Tagging"
 
