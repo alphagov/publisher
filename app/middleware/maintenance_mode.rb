@@ -4,7 +4,7 @@ class MaintenanceMode
   end
 
   def call(env)
-    if maintenance_enabled?
+    if maintenance_enabled? && !healthcheck_request?(env)
       return [503, { "Content-Type" => "text/html" }, [maintenance_page]]
     end
 
@@ -12,6 +12,10 @@ class MaintenanceMode
   end
 
 private
+
+  def healthcheck_request?(env)
+    env.fetch("PATH_INFO").start_with?("/healthcheck")
+  end
 
   def maintenance_enabled?
     value = ENV["MAINTENANCE_MODE"]
