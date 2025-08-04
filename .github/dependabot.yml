@@ -4,11 +4,13 @@ updates:
     directory: /
     schedule:
       interval: daily
+    open-pull-requests-limit: 0
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
+    open-pull-requests-limit: 0
 
   # Ruby needs to be upgraded manually in multiple places, so cannot
   # be upgraded by Dependabot. That effectively makes the below
@@ -21,8 +23,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 0
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 0
