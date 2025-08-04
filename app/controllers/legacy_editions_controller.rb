@@ -377,7 +377,7 @@ private
   end
 
   def tagging_update_form
-    Tagging::TaggingUpdateForm.build_from_publishing_api(
+    Tagging::LegacyTaggingUpdateForm.build_from_publishing_api(
       @resource.artefact.content_id,
       @resource.artefact.language,
     )
@@ -396,7 +396,7 @@ private
   end
 
   def tagging_update_form_params
-    params[:tagging_tagging_update_form].permit(
+    params[:tagging_legacy_tagging_update_form].permit(
       :content_id,
       :previous_version,
       :parent,
