@@ -7,7 +7,6 @@ class CreateSimpleSmartAnswerEditionNodeOptions < ActiveRecord::Migration[7.1]
       t.integer :order
       t.text :mongo_id
       t.references :node, foreign_key: { to_table: :simple_smart_answer_edition_nodes }
-      t.timestamps
     end
   end
 end
