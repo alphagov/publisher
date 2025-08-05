@@ -15,6 +15,7 @@ on:
         type: choice
         options:
         - integration
+        - staging
         default: 'integration'
   release:
     types: [released]
