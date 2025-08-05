@@ -13,11 +13,6 @@ window.GOVUK.analyticsGa4.analyticsModules =
       moduleElements.forEach(function (moduleElement) {
         const buttons = moduleElement.querySelectorAll('button')
         buttons.forEach((button) => {
-          // Removing this allows some data to be sent
-          // Trouble is that I think we need it cos form submission gives us what we need
-          // Except it doesn't right now
-          // if (button.type === 'submit') return
-
           const event = {
             event_name: 'select_content',
             type: 'button',
