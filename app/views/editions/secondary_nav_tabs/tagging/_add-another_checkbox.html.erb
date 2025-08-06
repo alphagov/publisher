@@ -3,7 +3,5 @@
 <%= render "govuk_publishing_components/components/checkboxes", {
   name: "tagging_tagging_update_form[ordered_related_items_destroy][]",
   id: "tagging_tagging_update_form_ordered_related_items_#{index}__destroy",
-  items: [{label: "Delete", value: "1" }],
+  items: [{ label: "Delete", value: index }],
 } %>
-
-<%= f.hidden_field :tagging_tagging_update_form, name: "tagging_tagging_update_form[ordered_related_items_destroy][]", value: 0 %>

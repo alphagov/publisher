@@ -88,8 +88,6 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    populate_tagging_form_values_from_publishing_api
-
     success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
                         "Related content updated"
                       elsif params[:tagging_tagging_update_form][:tagging_type] == "mainstream_browse_page"
@@ -98,10 +96,10 @@ class EditionsController < InheritedResources::Base
                         "Tags have been updated!"
                       end
 
-    create_tagging_update_form(tagging_update_params)
+    create_tagging_update_form_values(tagging_update_params)
 
-    if @form_submitted_values.valid?
-      @form_submitted_values.publish!
+    if @tagging_update_form_values.valid?
+      @tagging_update_form_values.publish!
       flash[:success] = success_message
       redirect_to tagging_edition_path
     else
@@ -520,8 +518,8 @@ private
     )
   end
 
-  def create_tagging_update_form(tagging_update_params)
-    @form_submitted_values = Tagging::TaggingUpdateForm.new(tagging_update_params)
+  def create_tagging_update_form_values(tagging_update_params)
+    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
   end
 
   def tagging_update_params

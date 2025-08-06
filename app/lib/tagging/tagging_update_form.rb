@@ -5,6 +5,19 @@ module Tagging
 
     validate :ordered_related_items_paths_exist
 
+    def self.build_from_submitted_form(tagging_update_params)
+      new(
+        content_id: tagging_update_params["content_id"],
+        previous_version: tagging_update_params["previous_version"],
+        organisations: tagging_update_params["organisations"],
+        meets_user_needs: tagging_update_params["meets_user_needs"],
+        mainstream_browse_pages: tagging_update_params["mainstream_browse_pages"],
+        ordered_related_items: tagging_update_params["ordered_related_items"],
+        ordered_related_items_destroy: tagging_update_params["ordered_related_items_destroy"],
+        parent: tagging_update_params["parent"],
+      )
+    end
+
     def self.build_from_publishing_api(content_id, locale)
       link_set = LinkSet.find(content_id, locale)
 
@@ -32,7 +45,7 @@ module Tagging
         organisations: clean_content_ids(organisations),
         meets_user_needs: clean_content_ids(meets_user_needs),
         mainstream_browse_pages: clean_content_ids(mainstream_browse_pages),
-        ordered_related_items: transform_base_paths_to_content_ids(ordered_related_items, ordered_related_items_destroy),
+        ordered_related_items: transform_base_paths_to_content_ids(remove_deleted_items(ordered_related_items, ordered_related_items_destroy)),
         parent: clean_content_ids(parent),
       }
     end
@@ -41,6 +54,10 @@ module Tagging
 
     def clean_content_ids(select_form_input)
       Array(select_form_input).select(&:present?)
+    end
+
+    def transform_base_paths_to_content_ids(base_paths)
+      base_paths.map { |base_path| ordered_related_items_path_by_ids[base_path] }
     end
 
     def ordered_related_items_paths_exist
@@ -55,30 +72,20 @@ module Tagging
       @ordered_related_items_path_by_ids ||= Services.publishing_api.lookup_content_ids(base_paths: ordered_related_items)
     end
 
-    def transform_base_paths_to_content_ids(ordered_related_items, ordered_related_items_destroy)
-      checkboxes = []
+    def remove_deleted_items(ordered_related_items, ordered_related_items_destroy)
       base_paths = []
 
       unless ordered_related_items.nil?
-        ordered_related_items_destroy.each_with_index.map do |item, index|
-          if item == "0" && ["0", nil].include?(ordered_related_items_destroy[index + 1])
-            checkboxes << 0
-          elsif item == "1" && ordered_related_items_destroy[index + 1] == "0"
-            checkboxes << 1
-          end
-        end
-
-        ordered_related_items.each_with_index.map do |_item, index|
-          if checkboxes[index] != 1
-            base_paths << ordered_related_items[index]
+        ordered_related_items.each_with_index do |item, index|
+          unless ordered_related_items_destroy&.include?(index.to_s)
+            base_paths << item
           end
         end
       end
 
       Array(base_paths).reject!(&:blank?)
-      return [] if base_paths.blank?
 
-      base_paths.map { |base_path| ordered_related_items_path_by_ids[base_path] }
+      base_paths
     end
   end
 end
