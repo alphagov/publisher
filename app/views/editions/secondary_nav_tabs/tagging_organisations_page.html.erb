@@ -24,29 +24,10 @@
 
       <%= render "govuk_publishing_components/components/select_with_search", {
         id: "dropdown-with-multiple",
-        label: "Select your country",
+        label: "Organisations",
         include_blank: true,
         multiple: true,
-        options: [
-          {
-            text: "France",
-            value: "fr",
-            selected: false
-          },
-          {
-            text: "Germany",
-            value: "de",
-            selected: false
-          },
-          {
-            text: "The United Kingdom of Great Britain and Northern Ireland",
-            value: "uk"
-          },
-          {
-            text: "Democratic Republic of the Congo",
-            value: "cg"
-          }
-        ]
+        options: @linkables,
       } %>
 
       <div class="govuk-button-group govuk-!-margin-top-6">

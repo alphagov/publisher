@@ -133,6 +133,14 @@ class EditionsController < InheritedResources::Base
   end
 
   def tagging_organisations_page
+    @linkables = Tagging::Linkables.new.organisations.map do |linkable|
+      {
+        text: linkable[0],
+        value: linkable[1],
+        selected: false
+      }
+    end
+
     populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_organisations_page"
