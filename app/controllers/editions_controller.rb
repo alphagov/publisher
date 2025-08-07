@@ -38,7 +38,8 @@ class EditionsController < InheritedResources::Base
                          add_edition_note
                          update_important_note
                          tagging_mainstream_browse_page
-                         tagging_related_content_page] do
+                         tagging_related_content_page
+                         tagging_organisations_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -88,10 +89,13 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
+    success_message = case params[:tagging_tagging_update_form][:tagging_type]
+                      when "related_content"
                         "Related content updated"
-                      elsif params[:tagging_tagging_update_form][:tagging_type] == "mainstream_browse_page"
+                      when "mainstream_browse_page"
                         "Mainstream browse pages updated"
+                      when "organisations"
+                        "Organisations updated"
                       else
                         "Tags have been updated!"
                       end
@@ -110,6 +114,10 @@ class EditionsController < InheritedResources::Base
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
   end
 
   def tagging_mainstream_browse_page
@@ -126,6 +134,24 @@ class EditionsController < InheritedResources::Base
     populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
+  def tagging_organisations_page
+    populate_tagging_form_values_from_publishing_api
+
+    @linkables = Tagging::Linkables.new.organisations.map do |linkable|
+      {
+        text: linkable[0],
+        value: linkable[1],
+        selected: @tagging_update_form_values.organisations&.include?(linkable[1]),
+      }
+    end
+
+    render "secondary_nav_tabs/tagging_organisations_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
