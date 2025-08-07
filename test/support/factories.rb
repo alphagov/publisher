@@ -138,6 +138,9 @@ FactoryBot.define do
     factory :non_publisher_artefact, traits: [:non_publisher]
   end
 
+  factory :artefact_action do
+  end
+
   factory :edition do
     transient do
       body { "Some body text" }
