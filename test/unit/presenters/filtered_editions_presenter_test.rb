@@ -179,8 +179,6 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.count)
-      # need to look into this bit more, why testing like this? dont know why filtered_editions count will be greater than items per page
-      # assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.count)
     end
 
     should "return the specified 'page' of results" do
