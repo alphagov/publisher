@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,7 +29,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.uuid "edition_id"
     t.bigint "requester_id"
     t.bigint "recipient_id"
-    t.text "mongo_id"
     t.index ["edition_id"], name: "index_actions_on_edition_id"
     t.index ["recipient_id"], name: "index_actions_on_recipient_id"
     t.index ["requester_id"], name: "index_actions_on_requester_id"
@@ -191,6 +190,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.uuid "edition_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["batch_id"], name: "index_link_check_reports_on_batch_id", unique: true
     t.index ["edition_id"], name: "index_link_check_reports_on_edition_id"
   end
 
@@ -216,6 +216,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_143410) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "mongo_id"
+    t.index ["lgsl_code"], name: "index_local_services_on_lgsl_code", unique: true
   end
 
   create_table "local_transaction_editions", force: :cascade do |t|

@@ -21,14 +21,14 @@ module MongoMigrationHelper
     mapper = MongoFieldMapper.new(content_type)
     attrs = mapper.active_record_attributes(object)
     edition = content_type.insert(attrs)
-    @editionable_id = edition.to_a[0]['id']
+    @editionable_id = edition.to_a[0]["id"]
   end
 
   def create_guide_edition(object)
     mapper = MongoFieldMapper.new(GuideEdition)
     attrs = mapper.active_record_attributes(object)
     guide_edition = GuideEdition.insert(attrs)
-    @editionable_id = guide_edition.to_a[0]['id']
+    @editionable_id = guide_edition.to_a[0]["id"]
     create_parts(object["parts"])
   end
 
@@ -36,7 +36,7 @@ module MongoMigrationHelper
     mapper = MongoFieldMapper.new(ProgrammeEdition)
     attrs = mapper.active_record_attributes(object)
     programme_edition = ProgrammeEdition.insert(attrs)
-    @editionable_id = programme_edition.to_a[0]['id']
+    @editionable_id = programme_edition.to_a[0]["id"]
     create_parts(object["parts"])
   end
 
@@ -44,14 +44,14 @@ module MongoMigrationHelper
     mapper = MongoFieldMapper.new(TransactionEdition)
     attrs = mapper.active_record_attributes(object)
     transaction_edition = TransactionEdition.insert(attrs)
-    @editionable_id = transaction_edition.to_a[0]['id']
+    @editionable_id = transaction_edition.to_a[0]["id"]
     if object["variants"]
       create_variants_for_transaction_edition(object["variants"])
     end
   end
 
   def create_parts(object)
-    unless object.nil? || object.empty?
+    if object.present?
       mapper = MongoFieldMapper.new(Part)
       object.each do |obj|
         attrs = mapper.active_record_attributes(obj)
@@ -62,7 +62,7 @@ module MongoMigrationHelper
   end
 
   def create_variants_for_transaction_edition(object)
-    unless object.nil? || object.empty?
+    if object.present?
       mapper = MongoFieldMapper.new(Variant)
       object.each do |obj|
         attrs = mapper.active_record_attributes(obj)
@@ -75,7 +75,7 @@ module MongoMigrationHelper
     mapper = MongoFieldMapper.new(LocalTransactionEdition)
     attrs = mapper.active_record_attributes(object)
     local_transaction_edition = LocalTransactionEdition.insert(attrs)
-    @editionable_id = local_transaction_edition.to_a[0]['id']
+    @editionable_id = local_transaction_edition.to_a[0]["id"]
     num_records_before_adding = DevolvedAdministrationAvailability.count
     create_administration_for_local_transaction(object)
     if DevolvedAdministrationAvailability.count == num_records_before_adding
@@ -111,7 +111,7 @@ module MongoMigrationHelper
     mapper = MongoFieldMapper.new(SimpleSmartAnswerEdition)
     attrs = mapper.active_record_attributes(object)
     simple_smart_answer_edition = SimpleSmartAnswerEdition.insert(attrs)
-    @editionable_id = simple_smart_answer_edition.to_a[0]['id']
+    @editionable_id = simple_smart_answer_edition.to_a[0]["id"]
     create_simple_smart_answer_edition_nodes(object["nodes"])
     simple_smart_answer_edition
   end
@@ -123,14 +123,14 @@ module MongoMigrationHelper
         attrs = mapper.active_record_attributes(obj)
         attrs["simple_smart_answer_edition_id"] = @editionable_id
         node = SimpleSmartAnswerEdition::Node.insert(attrs)
-        node_id = node.to_a[0]['id']
+        node_id = node.to_a[0]["id"]
         mapper_option = MongoFieldMapper.new(SimpleSmartAnswerEdition::Node::Option)
-        unless obj["options"].nil?
-          obj["options"].each do |obj_node|
-            attrs_option = mapper_option.active_record_attributes(obj_node)
-            attrs_option["node_id"] = node_id
-            SimpleSmartAnswerEdition::Node::Option.insert(attrs_option)
-          end
+        next if obj["options"].nil?
+
+        obj["options"].each do |obj_node|
+          attrs_option = mapper_option.active_record_attributes(obj_node)
+          attrs_option["node_id"] = node_id
+          SimpleSmartAnswerEdition::Node::Option.insert(attrs_option)
         end
       end
     end
@@ -155,7 +155,7 @@ module MongoMigrationHelper
         attrs = mapper.active_record_attributes(obj)
         attrs["edition_id"] = id
         link_check_report = LinkCheckReport.insert(attrs)
-        link_check_report_id = link_check_report.to_a[0]['id']
+        link_check_report_id = link_check_report.to_a[0]["id"]
         mapper = MongoFieldMapper.new(Link)
         obj["links"].each do |link_obj|
           attrs = mapper.active_record_attributes(link_obj)
