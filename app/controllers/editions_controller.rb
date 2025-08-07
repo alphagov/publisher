@@ -132,6 +132,16 @@ class EditionsController < InheritedResources::Base
     render "show"
   end
 
+  def tagging_organisations_page
+    populate_tagging_form_values_from_publishing_api
+
+    render "secondary_nav_tabs/tagging_organisations_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
   end
