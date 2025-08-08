@@ -28,10 +28,10 @@ private
   def row_status
     {
       draft: 1,
-      ammends_needed: 1,
+      amends_needed: 1,
       in_review: 1,
       ready: 1,
-      fact_check_recieved: 1,
+      fact_check_received: 1,
       fact_check: 1,
       published: 1,
       archived: 1,

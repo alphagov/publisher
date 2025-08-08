@@ -1,17 +1,13 @@
-class LinkCheckReport
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  embedded_in :edition
-  embeds_many :links
+class LinkCheckReport < ApplicationRecord
+  belongs_to :edition
+  has_many :links, dependent: :destroy
 
   accepts_nested_attributes_for :links
 
-  field :batch_id, type: Integer
-  field :status, type: String
-  field :completed_at, type: DateTime
-
+  # rubocop/disable Rails/UniqueValidationWithoutIndex
   validates :batch_id, presence: true, uniqueness: true
+  # rubocop/enable Rails/UniqueValidationWithoutIndex
+  #
   validates :status, presence: true
   validates :links, presence: true
 

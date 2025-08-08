@@ -1,23 +1,12 @@
 require "test_helper"
 
 class SlugTest < ActiveSupport::TestCase
-  class Dummy
-    include Mongoid::Document
-
-    field "name", type: String
-    field "slug", type: String
-    field "kind", type: String
-
-    validates :name, presence: true
-    validates :slug, presence: true, uniqueness: true, slug: true
-  end
-
-  def document_with_slug(slug, override_options = {})
-    default_options = {
-      name: "Test",
-      slug:,
-    }
-    Dummy.new(default_options.merge(override_options))
+  def document_with_slug(slug, kind: nil)
+    if kind
+      FactoryBot.build(:artefact, slug:, kind:)
+    else
+      FactoryBot.build(:artefact, slug:)
+    end
   end
 
   context "default slugs" do
@@ -30,7 +19,6 @@ class SlugTest < ActiveSupport::TestCase
     end
 
     should "allow consecutive dashes in a slug" do
-      # Gems like friendly_id use -- to de-dup slug collisions
       assert document_with_slug("normal-slug--1").valid?
     end
   end

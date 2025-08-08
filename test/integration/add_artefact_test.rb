@@ -33,11 +33,11 @@ class AddArtefactTest < LegacyIntegrationTest
 
     click_button "Save and go to item"
 
-    assert %r{^/editions/[a-f0-9]*$} =~ page.current_path
+    assert %r{^/editions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]*$} =~ page.current_path
 
-    edition = HelpPageEdition.last
-    assert edition.artefact.name == "Thingy McThingface"
-    assert edition.artefact.slug == "help/thingy"
+    help_page_edition = HelpPageEdition.last
+    assert help_page_edition.edition.artefact.name == "Thingy McThingface"
+    assert help_page_edition.edition.artefact.slug == "help/thingy"
   end
 
   should "not allow the creation of a retired format artefact" do

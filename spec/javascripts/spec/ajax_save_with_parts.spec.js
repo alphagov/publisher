@@ -192,16 +192,16 @@ describe('An ajax save with parts module', function () {
 
     it('shows the error messages', function () {
       expect(form.find('#edition_parts_attributes_100_slug_input').is('.has-error')).toBe(true)
-      expect(form.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(2)
+      expect(form.find('#edition_parts_attributes_100_slug_input ul li').length).toBe(4)
       expect(form.find('#edition_parts_attributes_100_slug_input ul li:first').text()).toBe('can\'t be blank')
       expect(form.find('#edition_parts_attributes_100_slug_input ul li:last').text()).toBe('is invalid')
 
       expect(form.find('#edition_parts_attributes_101_title_input').is('.has-error')).toBe(true)
-      expect(form.find('#edition_parts_attributes_101_title_input ul li').length).toBe(1)
+      expect(form.find('#edition_parts_attributes_101_title_input ul li').length).toBe(2)
       expect(form.find('#edition_parts_attributes_101_title_input ul li:first').text()).toBe('can\'t be blank')
 
       expect(form.find('#edition_parts_attributes_4535667_title_input').is('.has-error')).toBe(true)
-      expect(form.find('#edition_parts_attributes_4535667_title_input ul li').length).toBe(1)
+      expect(form.find('#edition_parts_attributes_4535667_title_input ul li').length).toBe(2)
       expect(form.find('#edition_parts_attributes_4535667_title_input ul li:first').text()).toBe('must not walk on the grass')
     })
 
