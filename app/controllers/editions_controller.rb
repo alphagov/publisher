@@ -38,7 +38,8 @@ class EditionsController < InheritedResources::Base
                          add_edition_note
                          update_important_note
                          tagging_mainstream_browse_page
-                         tagging_related_content_page] do
+                         tagging_related_content_page
+                         tagging_organisations_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
