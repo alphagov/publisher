@@ -575,6 +575,40 @@ class EditionEditTest < IntegrationTest
     end
   end
 
+  context "Tag organisation page" do
+    setup do
+      create_draft_edition
+      visit tagging_organisations_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag organisations' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag organisations")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Tagging a page to an organisation makes it appear in searches filtered by that organisation.")
+      assert page.has_text?("For example, a search for documents published by HMRC.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to tagging tab when Cancel link is clicked" do
+      click_link("Cancel")
+
+      assert_current_path tagging_edition_path(@draft_edition.id)
+    end
+
+    context "Adding tags for an organisations page" do
+      should "render an empty select-with-search component" do
+        within :css, ".gem-c-select-with-search" do
+          assert page.has_css?("label", text: "Organisations")
+          assert page.has_css?("select")
+        end
+      end
+    end
+  end
+
   context "metadata tab" do
     context "when state is 'draft' and user has govuk editor permissions" do
       setup do
