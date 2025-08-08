@@ -236,6 +236,12 @@ class EditionEditTest < IntegrationTest
           end
         end
 
+        should "not show the 'Tag to organisations page' link" do
+          within all(".govuk-summary-card")[2] do
+            assert page.has_no_link?("Tag to an organisation")
+          end
+        end
+
         should "not show the 'Tag to related content' link" do
           within all(".govuk-summary-card")[3] do
             assert page.has_no_link?("Tag to related content")
@@ -319,6 +325,18 @@ class EditionEditTest < IntegrationTest
       end
 
       context "User has permissions" do
+        should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "show 'Edit' link on 'Organisations' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_link?("Edit")
+          end
+        end
+
         should "show 'Edit' link on 'Related content' summary card when user has permissions" do
           within all(".gem-c-summary-card")[3] do
             assert page.has_link?("Edit")
@@ -334,7 +352,19 @@ class EditionEditTest < IntegrationTest
           click_link("Tagging")
         end
 
-        should "not show 'Edit' link on 'Related content' summary card when user dos not have permissions" do
+        should "not show 'Edit' link on 'Mainstream browse pages' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Organisations' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Related content' summary card when user does not have permissions" do
           within all(".gem-c-summary-card")[3] do
             assert page.has_no_link?("Edit")
           end
