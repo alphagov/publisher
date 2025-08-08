@@ -630,7 +630,7 @@ class EditionEditTest < IntegrationTest
     end
 
     context "Adding tags for an organisations page" do
-      should "render an empty select-with-search component" do
+      should "render an empty Organisations form" do
         within :css, ".gem-c-select-with-search" do
           assert page.has_css?("label", text: "Organisations")
           assert page.has_css?("select")
@@ -651,6 +651,19 @@ class EditionEditTest < IntegrationTest
                                  "previous_version": 0 }
         assert_current_path tagging_edition_path(@draft_edition.id)
         assert page.has_text?("Organisations updated")
+      end
+    end
+
+    context "Editing tags for an organisations page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_organisations_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Organisations form" do
+        within :css, "select" do
+          assert find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").selected?
+        end
       end
     end
   end
