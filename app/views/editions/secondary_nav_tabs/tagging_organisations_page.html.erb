@@ -11,7 +11,7 @@
     <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
       <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "related_content" %>
+      <%= f.hidden_field :tagging_type, value: "organisations" %>
       <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
         <%= f.hidden_field :parent, value: parent_id, multiple: true %>
       <% end %>
@@ -23,7 +23,7 @@
       <% end %>
 
       <%= render "govuk_publishing_components/components/select_with_search", {
-        id: "dropdown-with-multiple",
+        id: "tagging_tagging_update_form[organisations][]",
         label: "Organisations",
         include_blank: true,
         multiple: true,

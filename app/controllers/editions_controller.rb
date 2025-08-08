@@ -93,6 +93,8 @@ class EditionsController < InheritedResources::Base
                         "Related content updated"
                       elsif params[:tagging_tagging_update_form][:tagging_type] == "mainstream_browse_page"
                         "Mainstream browse pages updated"
+                      elsif params[:tagging_tagging_update_form][:tagging_type] == "organisations"
+                        "Organisations updated"
                       else
                         "Tags have been updated!"
                       end

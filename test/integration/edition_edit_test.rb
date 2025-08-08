@@ -606,6 +606,22 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?("select")
         end
       end
+
+      should "save the added 'Organisations' tags when the form is submitted" do
+        select "Student Loans Company", :from => "Organisations"
+
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": [],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
     end
   end
 
