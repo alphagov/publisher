@@ -665,6 +665,40 @@ class EditionEditTest < IntegrationTest
           assert find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").selected?
         end
       end
+
+      should "delete 'Organisations' tags when the form is submitted" do
+        within :css, "select" do
+          find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").unselect
+        end
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf 830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+
+      should "add 'Organisations' tags when the form is submitted" do
+        within :css, "select" do
+          find("option[value='ebd15ade-73b2-4eaf-b1c3-43034a42eb37']").select
+        end
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72 ebd15ade-73b2-4eaf-b1c3-43034a42eb37],
+                                            "meets_user_needs": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf 830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
     end
   end
 

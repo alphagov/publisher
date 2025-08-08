@@ -96,6 +96,14 @@ module TagTestHelpers
           "base_path" => "/government/organisations/student-loans-company",
           "internal_name" => "Student Loans Company",
         },
+        {
+          "public_updated_at" => "2014-10-16 14:35:22",
+          "title" => "Department for Education",
+          "content_id" => "ebd15ade-73b2-4eaf-b1c3-43034a42eb37",
+          "publication_state" => "live",
+          "base_path" => "/government/organisations/department-for-education",
+          "internal_name" => "Department for Education",
+        },
       ],
       document_type: "organisation",
     )
