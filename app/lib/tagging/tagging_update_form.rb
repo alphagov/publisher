@@ -10,7 +10,6 @@ module Tagging
         content_id: tagging_update_params["content_id"],
         previous_version: tagging_update_params["previous_version"],
         organisations: tagging_update_params["organisations"],
-        meets_user_needs: tagging_update_params["meets_user_needs"],
         mainstream_browse_pages: tagging_update_params["mainstream_browse_pages"],
         ordered_related_items: tagging_update_params["ordered_related_items"],
         ordered_related_items_destroy: tagging_update_params["ordered_related_items_destroy"],
