@@ -58,22 +58,6 @@
         </div>
 
         <div class="form-group">
-          <%= f.label :meets_user_needs, "User Needs", class: "control-label" %>
-          <%= f.select :meets_user_needs,
-                       @linkables.meets_user_needs,
-                       {},
-                       { multiple: true,
-                         class: "select2",
-                         data: { module: "tagging", placeholder: "Choose user needs\u2026" } } %>
-
-           <p class='help-block'>
-             Needs are managed through Maslow, and the list of user needs which a
-             item of content meets is displayed on the info page for that
-             content.
-           </p>
-        </div>
-
-        <div class="form-group">
           <fieldset data-module="related-content-items-select">
             <legend class="remove-bottom-margin">
               <label for="add-related-item">

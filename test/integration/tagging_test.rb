@@ -27,7 +27,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
         @content_id,
         links: {
           organisations: [],
-          meets_user_needs: [],
           mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
           ordered_related_items: [],
           parent: [],
@@ -47,27 +46,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
         @content_id,
         links: {
           organisations: %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
-          meets_user_needs: [],
-          mainstream_browse_pages: [],
-          ordered_related_items: [],
-          parent: [],
-        },
-        previous_version: 0,
-      )
-    end
-
-    should "tag to user needs" do
-      visit_edition @edition
-      switch_tab "Tagging"
-
-      select2 "As a user, I need to pay a VAT bill, so that I can pay HMRC what I owe (100550)", from: "User Needs"
-
-      save_tags_and_assert_success
-      assert_publishing_api_patch_links(
-        @edition.artefact.content_id,
-        links: {
-          organisations: [],
-          meets_user_needs: %w[CONTENT-ID-USER-NEED],
           mainstream_browse_pages: [],
           ordered_related_items: [],
           parent: [],
@@ -126,7 +104,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
         @content_id,
         links: {
           organisations: [],
-          meets_user_needs: [],
           mainstream_browse_pages: [],
           ordered_related_items: %w[CONTENT-ID-VAT-RETURNS CONTENT-ID-RECLAIM-VAT],
           parent: [],
@@ -156,7 +133,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
         @content_id,
         links: {
           organisations: [],
-          meets_user_needs: [],
           mainstream_browse_pages: [],
           ordered_related_items: [],
           parent: %w[CONTENT-ID-RTI],
@@ -202,7 +178,6 @@ class TaggingTest < LegacyJavascriptIntegrationTest
         @content_id,
         links: {
           organisations: [],
-          meets_user_needs: [],
           mainstream_browse_pages: %w[CONTENT-ID-RTI CONTENT-ID-VAT],
           ordered_related_items: [],
           parent: %w[CONTENT-ID-CAPITAL],
