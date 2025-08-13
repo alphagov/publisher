@@ -37,6 +37,7 @@
 
             <div class="form-group col-md-6">
               <%= f.label :next_node, "Next question for user", for: "edition_nodes_attributes_#{o.options[:parent_builder].index}_options_attributes_#{o.index}_node" %>
+              <%= o.hidden_field :order, :value => o.index.to_i + 1 %>
               <%= o.hidden_field :next_node, class: "next-node-id" %>
               <%= form_errors(o.object.errors[:next_node], "node") %>
               <select id="edition_nodes_attributes_<%= o.options[:parent_builder].index %>_options_attributes_<%= o.index %>_node" class="form-control required next-node-list" name="next-node-list">

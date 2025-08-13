@@ -1265,7 +1265,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
       put :update,
           params: {
             id: @edition.id,
-            simple_smart_answer_edition: atts,
+            edition: atts,
           }
       assert_redirected_to edition_path(@edition)
 
