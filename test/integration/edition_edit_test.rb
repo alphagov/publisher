@@ -236,6 +236,12 @@ class EditionEditTest < IntegrationTest
           end
         end
 
+        should "not show the 'Tag to organisations page' link" do
+          within all(".govuk-summary-card")[2] do
+            assert page.has_no_link?("Tag to an organisation")
+          end
+        end
+
         should "not show the 'Tag to related content' link" do
           within all(".govuk-summary-card")[3] do
             assert page.has_no_link?("Tag to related content")
@@ -319,9 +325,42 @@ class EditionEditTest < IntegrationTest
       end
 
       context "User has permissions" do
+        should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag browse pages' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[1] do
+            click_link("Edit")
+            assert_current_path tagging_mainstream_browse_page_edition_path(@draft_edition)
+          end
+        end
+
+        should "show 'Edit' link on 'Organisations' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag organisations' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[2] do
+            click_link("Edit")
+            assert_current_path tagging_organisations_page_edition_path(@draft_edition)
+          end
+        end
+
         should "show 'Edit' link on 'Related content' summary card when user has permissions" do
           within all(".gem-c-summary-card")[3] do
             assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Tag related content' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[3] do
+            click_link("Edit")
+            assert_current_path tagging_related_content_page_edition_path(@draft_edition)
           end
         end
       end
@@ -334,7 +373,19 @@ class EditionEditTest < IntegrationTest
           click_link("Tagging")
         end
 
-        should "not show 'Edit' link on 'Related content' summary card when user dos not have permissions" do
+        should "not show 'Edit' link on 'Mainstream browse pages' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[1] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Organisations' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[2] do
+            assert page.has_no_link?("Edit")
+          end
+        end
+
+        should "not show 'Edit' link on 'Related content' summary card when user does not have permissions" do
           within all(".gem-c-summary-card")[3] do
             assert page.has_no_link?("Edit")
           end
@@ -566,6 +617,96 @@ class EditionEditTest < IntegrationTest
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@draft_edition.id)
         assert page.has_text?("Related content updated")
+      end
+    end
+  end
+
+  context "Tag organisations page" do
+    setup do
+      create_draft_edition
+      visit tagging_organisations_page_edition_path(@draft_edition)
+    end
+
+    should "render the 'Tag organisations' page" do
+      within :css, ".gem-c-heading" do
+        assert page.has_css?("h1", text: "Tag organisations")
+        assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
+      end
+
+      assert page.has_text?("Tagging a page to an organisation makes it appear in searches filtered by that organisation.")
+      assert page.has_text?("For example, a search for documents published by HMRC.")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "redirect to tagging tab when Cancel link is clicked" do
+      click_link("Cancel")
+
+      assert_current_path tagging_edition_path(@draft_edition.id)
+    end
+
+    context "Adding tags for an organisations page" do
+      should "render an empty Organisations form" do
+        within :css, ".gem-c-select-with-search" do
+          assert page.has_css?("label", text: "Organisations")
+          assert page.has_css?("select")
+        end
+      end
+
+      should "save the added 'Organisations' tags when the form is submitted" do
+        select "Student Loans Company", from: "Organisations"
+
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": [],
+                                            "parent": [] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+    end
+
+    context "Editing tags for an organisations page" do
+      setup do
+        stub_linkables_with_data
+        visit tagging_organisations_page_edition_path(@draft_edition)
+      end
+
+      should "render a pre-populated Organisations form" do
+        within :css, "select" do
+          assert find("option[value='9a9111aa-1db8-4025-8dd2-e08ec3175e72']").selected?
+        end
+      end
+
+      should "delete 'Organisations' tags when the form is submitted" do
+        page.unselect "Student Loans Company", from: "Organisations"
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
+      end
+
+      should "add 'Organisations' tags when the form is submitted" do
+        page.select "Department for Education", from: "Organisations"
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[ebd15ade-73b2-4eaf-b1c3-43034a42eb37 9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("Organisations updated")
       end
     end
   end
