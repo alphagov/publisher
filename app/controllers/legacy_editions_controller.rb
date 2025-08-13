@@ -291,7 +291,7 @@ protected
           :kind,
           :id,
           :_destroy,
-          { options_attributes: %i[label next_node id _destroy] },
+          { options_attributes: %i[label order next_node id _destroy] },
         ] },
       ]
     when :transaction_edition
