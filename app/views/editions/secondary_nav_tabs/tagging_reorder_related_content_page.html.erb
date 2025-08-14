@@ -24,31 +24,15 @@
     <p class="govuk-hint">Use the up and down buttons to reorder related content items, or select and hold on an item to reorder using drag and drop</p>
 
     <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
+      <%=render "govuk_publishing_components/components/reorderable_list", {
 
-      <%= render "govuk_publishing_components/components/reorderable_list", {
-
-        items: [
+        items: @tagging_update_form_values.ordered_related_items.each_with_index.map do |related_item, index|
           {
-            id: "ce99dd60-67dc-11eb-ae93-0242ac130002",
-            title: "Budget 2018"
-          },
-          {
-            id: "d321cb86-67dc-11eb-ae93-0242ac130002",
-            title: "Budget 2018 (web)"
-          },
-          {
-            id: "63a6d29e-6b6d-4157-9067-84c1a390e352",
-            title: "Impact on households: distributional analysis to accompany Budget 2018"
-          },
-          {
-            id: "0a4d377d-68f4-472f-b2e3-ef71dc750f85",
-            title: "Table 2.1: Budget 2018 policy decisions"
-          },
-          {
-            id: "5ebd75d7-6c37-4b93-b444-1b7c49757fb9",
-            title: "Table 2.2: Measures announced at Autumn Budget 2017 or earlier that will take effect from November 2018 or later (£ million)"
+            id: index,
+            title: related_item['base_path'],
+            related_item: related_item,
           }
-        ]
+        end
       } %>
 
       <%= f.hidden_field :content_id %>
