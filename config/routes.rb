@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         get "tagging_mainstream_browse_page"
         get "tagging_related_content_page"
         get "tagging_organisations_page"
+        get "tagging_breadcrumb_page"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"
