@@ -1,7 +1,7 @@
 class CreateEdition < ActiveRecord::Migration[7.1]
   def change
     enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
-    create_table :editions, id: :uuid, default: 'gen_random_uuid()' do |t|
+    create_table :editions, id: :uuid, default: -> { "gen_random_uuid()" } do |t|
       t.string :panopticon_id
       t.integer :version_number, default: 1
       t.integer :sibling_in_progress, default: nil
@@ -20,7 +20,7 @@ class CreateEdition < ActiveRecord::Migration[7.1]
       t.string :change_note
       t.string :state, default: "draft"
       t.datetime :review_requested_at
-      t.string :auth_bypass_id, default: SecureRandom.uuid
+      t.uuid :auth_bypass_id, default: -> { "gen_random_uuid()" }
       t.string :owning_org_content_ids, array: true, default: []
       t.text :mongo_id
       t.timestamps
