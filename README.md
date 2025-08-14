@@ -35,6 +35,12 @@ This is a Rails application and should follow [our Rails app conventions](https:
 
 You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies.  Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 
+The current up-to-date version of GOV.UK Docker has been noted to have some compatibility issues with Publisher. For a known working version, after cloning the repository run:
+
+```shell
+git checkout 1b19821
+```
+
 ### Setting up Publisher
 **You will need the [GDS CLI installed and configured](https://docs.publishing.service.gov.uk/manual/get-started.html#7-install-and-configure-the-gds-cli) for these instructions.**
 
