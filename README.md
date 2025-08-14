@@ -117,7 +117,7 @@ You can now access your local Publisher at http://publisher.dev.gov.uk/
 The default `rake` task runs all the tests:
 
 ```sh
-bundle exec rake
+govuk-docker run publisher-lite bundle exec rake
 ```
 
 ### State machine
@@ -127,7 +127,7 @@ A diagram of the current state machine can be seen here: [state machine diagram]
 The diagram can be (re)generated using the [state_machines-graphviz gem](https://github.com/state-machines/state_machines-graphviz), by doing:
 
 ```sh
-bundle exec rake state_machines:draw CLASS=Edition TARGET=docs
+govuk-docker run publisher-lite bundle exec rake state_machines:draw CLASS=Edition TARGET=docs
 ```
 
 This will generate a diagram in the `docs/state_machines` folder.
