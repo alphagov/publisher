@@ -1,6 +1,7 @@
 class CreateLinkCheckReport < ActiveRecord::Migration[7.1]
   def change
     create_table :link_check_reports do |t|
+      t.text :mongo_id
       t.integer :batch_id
       t.string :status
       t.datetime :completed_at
