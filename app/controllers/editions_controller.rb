@@ -153,6 +153,16 @@ class EditionsController < InheritedResources::Base
     render "show"
   end
 
+  def tagging_reorder_related_content_page
+    populate_tagging_form_values_from_publishing_api
+
+    render "secondary_nav_tabs/tagging_reorder_related_content_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
   def tagging_organisations_page
     populate_tagging_form_values_from_publishing_api
 

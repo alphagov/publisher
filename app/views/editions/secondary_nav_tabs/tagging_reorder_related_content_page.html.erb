@@ -1,0 +1,75 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Reorder related content" %>
+<% content_for :title, "Reorder related content" %>
+
+<% if !@tagging_update_form_values.errors.empty? %>
+  <div class="govuk-grid-row">
+    <% content_for :error_summary do %>
+      <%= render("govuk_publishing_components/components/error_summary", {
+        id: "error-summary",
+        title: "There is a problem",
+        items: @tagging_update_form_values.errors.map do |error|
+          {
+            text: error.message,
+          }
+        end,
+      }) %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds tagging">
+    <p class="govuk-hint">Use the up and down buttons to reorder related content items, or select and hold on an item to reorder using drag and drop</p>
+
+    <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
+
+      <%= render "govuk_publishing_components/components/reorderable_list", {
+
+        items: [
+          {
+            id: "ce99dd60-67dc-11eb-ae93-0242ac130002",
+            title: "Budget 2018"
+          },
+          {
+            id: "d321cb86-67dc-11eb-ae93-0242ac130002",
+            title: "Budget 2018 (web)"
+          },
+          {
+            id: "63a6d29e-6b6d-4157-9067-84c1a390e352",
+            title: "Impact on households: distributional analysis to accompany Budget 2018"
+          },
+          {
+            id: "0a4d377d-68f4-472f-b2e3-ef71dc750f85",
+            title: "Table 2.1: Budget 2018 policy decisions"
+          },
+          {
+            id: "5ebd75d7-6c37-4b93-b444-1b7c49757fb9",
+            title: "Table 2.2: Measures announced at Autumn Budget 2017 or earlier that will take effect from November 2018 or later (£ million)"
+          }
+        ]
+      } %>
+
+      <%= f.hidden_field :content_id %>
+      <%= f.hidden_field :previous_version %>
+      <%= f.hidden_field :tagging_type, value: "related_content" %>
+      <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
+        <%= f.hidden_field :parent, value: parent_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
+        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
+        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
+      <% end %>
+
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Update order",
+        } %>
+        <%= link_to("Cancel", tagging_edition_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>

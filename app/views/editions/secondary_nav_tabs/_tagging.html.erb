@@ -46,8 +46,7 @@
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
         <% actions =
-          [
-            {
+          [{
               label: "Edit",
               href: tagging_mainstream_browse_page_edition_path,
             },
@@ -104,7 +103,11 @@
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
         <% actions =
-          [
+          [#TODO: Make this conditional on having more than one entry
+            {
+              label: "Reorder",
+              href: tagging_reorder_related_content_page_edition_path
+            },
             {
               label: "Edit",
               href: tagging_related_content_page_edition_path,
