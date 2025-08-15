@@ -221,6 +221,12 @@ class EditionEditTest < IntegrationTest
         end
       end
 
+      should "not show 'Reorder' button in 'Related Content' when no related content items are present" do
+        within all(".govuk-summary-card")[3] do
+          assert page.has_no_text?("Reorder")
+        end
+      end
+
       context "User does not have correct permissions" do
         setup do
           user = FactoryBot.create(:user, name: "Stub User")
@@ -375,6 +381,19 @@ class EditionEditTest < IntegrationTest
             assert_current_path tagging_related_content_page_edition_path(@draft_edition)
           end
         end
+
+        should "show 'Reoroder' link on 'Related content' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_link?("Reorder")
+          end
+        end
+
+        should "navigate to the 'Reorder related content' page when the 'Reorder' link is clicked" do
+          within all(".gem-c-summary-card")[3] do
+            click_link("Reorder")
+            assert_current_path tagging_reorder_related_content_page_edition_path(@draft_edition)
+          end
+        end
       end
 
       context "User does not have permissions" do
@@ -401,6 +420,26 @@ class EditionEditTest < IntegrationTest
           within all(".gem-c-summary-card")[3] do
             assert page.has_no_link?("Edit")
           end
+        end
+
+        should "not show 'Reorder' link on 'Related content' summary card when user does not have permissions" do
+          within all(".gem-c-summary-card")[3] do
+            assert page.has_no_link?("Reorder")
+          end
+        end
+      end
+    end
+    context "minimal tagging is present" do
+      setup do
+        stub_linkables_with_minimal_data
+        visit_draft_edition
+        click_link("Tagging")
+      end
+
+      should "not show 'Reorder' link on 'Related content' summary card when only one related content item is present" do
+        within all(".gem-c-summary-card")[3] do
+          assert page.has_link?("Edit")
+          assert page.has_no_link?("Reorder")
         end
       end
     end

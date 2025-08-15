@@ -63,6 +63,32 @@ module TagTestHelpers
     stub_publishing_api_data
   end
 
+  def stub_linkables_with_minimal_data
+    # variation of stub_linkables_with_data only populating one entry for related content
+    stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/expanded-links/.+})
+      .to_return(
+        status: 200,
+        body: "{
+          \"expanded_links\":
+            {
+              \"mainstream_browse_pages\": [],
+              \"ordered_related_items\": [
+                {
+                  \"content_id\": \"830e403b-7d81-45f1-8862-81dcd55b4ec7\",
+                  \"base_path\": \"/company-tax-returns\"
+                }
+              ],
+              \"organisations\": [],
+              \"parent\": []
+            },
+          \"version\": 1
+        }",
+        headers: {},
+      )
+
+    stub_publishing_api_data
+  end
+
   def stub_publishing_api_data
     stub_publishing_api_has_linkables(
       [
