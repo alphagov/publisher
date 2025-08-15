@@ -47,7 +47,6 @@ class LegacyEditionsController < InheritedResources::Base
     class_identifier = params[:edition].delete(:kind).to_sym
     create_params = permitted_params(subtype: :"#{class_identifier}_edition")
     @publication = current_user.create_edition(class_identifier, create_params[:edition])
-
     if @publication.persisted?
       UpdateWorker.perform_async(@publication.id.to_s)
 
@@ -380,10 +379,9 @@ private
 
   def attempted_activity_params
     return unless attempted_activity
-
-    params[:edition]["activity_#{attempted_activity}_attributes"].permit(
-      :request_type, :email_addresses, :customised_message, :comment, :publish_at
-    )
+      params[:edition]["activity_#{attempted_activity}_attributes"].permit(
+        :request_type, :email_addresses, :customised_message, :comment, :publish_at
+      )
   end
 
   def remove_activity_params

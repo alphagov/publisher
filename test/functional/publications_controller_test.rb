@@ -59,6 +59,7 @@ class PublicationsControllerTest < ActionController::TestCase
         name: "Foo bar",
         owning_app: "publisher",
       )
+
       assert Edition.where(panopticon_id: artefact.id).first.nil?
 
       get :show, params: { id: artefact.id }
