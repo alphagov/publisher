@@ -32,7 +32,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     should "return a 404 when requesting a publication that doesn't exist" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "104" }
       assert_response :not_found
     end
 

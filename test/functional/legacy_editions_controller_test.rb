@@ -829,7 +829,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal "Guide edition was successfully updated.", flash[:notice]
         assert_equal @welsh_edition.state, "ready"
       end
 
@@ -1042,7 +1042,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "101" }
       assert_response :not_found
     end
 

@@ -19,7 +19,6 @@ class SlugTest < ActiveSupport::TestCase
     end
 
     should "allow consecutive dashes in a slug" do
-      # Gems like friendly_id use -- to de-dup slug collisions
       assert document_with_slug("normal-slug--1").valid?
     end
   end

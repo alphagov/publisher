@@ -1,3 +1,4 @@
+require "edition"
 class UserSearchController < ApplicationController
   respond_to :html
 
