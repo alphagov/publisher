@@ -79,8 +79,8 @@ private
     result = apply_assigned_to_filter(result)
     result = apply_search_text(result)
     result = result.accessible_to(user)
-    result = result.where.not(_type: "PopularLinksEdition")
-    result.order_by(%w[updated_at desc]).page(@page).per(ITEMS_PER_PAGE)
+    result = result.where.not(editionable_type: "PopularLinksEdition")
+    result.order(updated_at: :desc).page(@page).per(ITEMS_PER_PAGE)
   end
 
   def available_users
@@ -113,13 +113,13 @@ private
   def editions_by_content_type
     return Edition.all unless content_type_filter && content_type_filter != "all"
 
-    Edition.where(_type: "#{content_type_filter.camelcase}Edition")
+    Edition.where(editionable_type: "#{content_type_filter.camelcase}Edition")
   end
 
   def apply_states_filter(editions)
     return editions if states_filter.empty?
 
-    editions.in_states(states_filter)
+    editions.where(state: states_filter)
   end
 
   def apply_assigned_to_filter(editions)
@@ -131,7 +131,7 @@ private
       begin
         assigned_user = User.find(assigned_to_filter)
         editions = editions.assigned_to(assigned_user) if assigned_user
-      rescue Mongoid::Errors::DocumentNotFound
+      rescue ActiveRecord::RecordNotFound
         Rails.logger.warn "An attempt was made to filter by an unknown user ID: '#{assigned_to_filter}'"
       end
     end

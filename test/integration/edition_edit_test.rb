@@ -167,9 +167,8 @@ class EditionEditTest < IntegrationTest
 
   context "edit assignee page" do
     should "only show editors as available for assignment" do
-      edition = FactoryBot.create(:answer_edition, state: "draft")
+      edition = FactoryBot.create(:edition, state: "draft")
       non_editor_user = FactoryBot.create(:user, name: "Non Editor User")
-
       visit edit_assignee_edition_path(edition)
 
       assert_selector "label", text: @govuk_editor.name
@@ -869,25 +868,32 @@ class EditionEditTest < IntegrationTest
 
     context "when the user has welsh editor permissions" do
       setup do
-        @user = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
+        @user = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
+        @user_welsh = FactoryBot.create(:user, :welsh_editor, name: "Stub User")
         login_as(@user)
       end
 
       should "hide the note action buttons from the user on a non welsh document" do
         visit_draft_edition
+        login_as(@user_welsh)
         click_link("History and notes")
 
-        assert_not @user.has_editor_permissions?(@draft_edition)
+        assert_not @user_welsh.has_editor_permissions?(@draft_edition)
         assert_not page.has_content?("Add edition note")
         assert_not page.has_content?("Update important note")
       end
 
       should "show the note action buttons for the user on a welsh document" do
-        edition = FactoryBot.create(:answer_edition, :fact_check, :welsh)
+        edition = @user.create_edition(:answer, panopticon_id: FactoryBot.create(:artefact, language: "cy").id, title: "My Title", slug: "my-title")
+        edition.state = "fact_check"
+        edition.save!
+
+        login_as(@user_welsh)
+
         visit edition_path(edition)
         click_link("History and notes")
 
-        assert @user.has_editor_permissions?(edition)
+        assert @user_welsh.has_editor_permissions?(edition)
         assert page.has_content?("Add edition note")
         assert page.has_content?("Update important note")
       end
@@ -1382,17 +1388,6 @@ class EditionEditTest < IntegrationTest
       end
 
       context "when state is 'published'" do
-        context "content type is retired" do
-          setup do
-            visit_retired_edition_in_published
-            click_link("Admin")
-          end
-
-          should "not show the 'Update content type' form" do
-            assert page.has_no_text?("Update content type")
-          end
-        end
-
         context "edition is not the latest version of a publication" do
           setup do
             visit_old_edition_of_published_edition
@@ -1832,7 +1827,7 @@ class EditionEditTest < IntegrationTest
 
       should "show body field" do
         published_edition = FactoryBot.create(
-          :answer_edition,
+          :edition,
           state: "published",
           body: "## Some body text",
         )
@@ -1844,7 +1839,7 @@ class EditionEditTest < IntegrationTest
 
       should "show public change field" do
         published_edition = FactoryBot.create(
-          :answer_edition,
+          :edition,
           state: "published",
           in_beta: true,
           major_change: false,
@@ -1865,7 +1860,7 @@ class EditionEditTest < IntegrationTest
       context "user is a govuk_editor" do
         should "show a 'create new edition' button when there isn't an existing draft edition" do
           published_edition = FactoryBot.create(
-            :answer_edition,
+            :edition,
             state: "published",
           )
           visit edition_path(published_edition)
@@ -1876,10 +1871,10 @@ class EditionEditTest < IntegrationTest
 
         should "show an 'edit latest edition' link when there is an existing draft edition" do
           published_edition = FactoryBot.create(
-            :answer_edition,
+            :edition,
             state: "published",
           )
-          FactoryBot.create(:answer_edition, panopticon_id: published_edition.artefact.id, state: "draft")
+          FactoryBot.create(:edition, panopticon_id: published_edition.artefact.id, state: "draft")
           visit edition_path(published_edition)
 
           assert page.has_no_button?("Create new edition")
@@ -1895,7 +1890,7 @@ class EditionEditTest < IntegrationTest
         context "viewing a welsh edition" do
           setup do
             @welsh_published_edition = FactoryBot.create(
-              :answer_edition,
+              :edition,
               :welsh,
               state: "published",
             )
@@ -1909,7 +1904,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show an 'edit latest edition' link when there is an existing draft edition" do
-            FactoryBot.create(:answer_edition, panopticon_id: @welsh_published_edition.artefact.id, state: "draft")
+            FactoryBot.create(:edition, panopticon_id: @welsh_published_edition.artefact.id, state: "draft")
             visit edition_path(@welsh_published_edition)
 
             assert page.has_no_button?("Create new edition")
@@ -1920,7 +1915,7 @@ class EditionEditTest < IntegrationTest
         context "viewing a non-welsh edition" do
           setup do
             @non_welsh_published_edition = FactoryBot.create(
-              :answer_edition,
+              :edition,
               state: "published",
             )
           end
@@ -1933,7 +1928,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "not show an 'edit latest edition' link when there is an existing draft edition" do
-            FactoryBot.create(:answer_edition, panopticon_id: @non_welsh_published_edition.artefact.id, state: "draft")
+            FactoryBot.create(:edition, panopticon_id: @non_welsh_published_edition.artefact.id, state: "draft")
             visit edition_path(@non_welsh_published_edition)
 
             assert page.has_no_button?("Create new edition")
@@ -1946,7 +1941,7 @@ class EditionEditTest < IntegrationTest
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
           @published_edition = FactoryBot.create(
-            :answer_edition,
+            :edition,
             state: "published",
           )
         end
@@ -1959,7 +1954,7 @@ class EditionEditTest < IntegrationTest
         end
 
         should "not show an 'edit latest edition' link when there is an existing draft edition" do
-          FactoryBot.create(:answer_edition, panopticon_id: @published_edition.artefact.id, state: "draft")
+          FactoryBot.create(:edition, panopticon_id: @published_edition.artefact.id, state: "draft")
           visit edition_path(@published_edition)
 
           assert page.has_no_button?("Create new edition")
@@ -1969,7 +1964,7 @@ class EditionEditTest < IntegrationTest
 
       should "show a 'view on GOV.UK' link" do
         published_edition = FactoryBot.create(
-          :answer_edition,
+          :edition,
           state: "published",
           slug: "a-test-slug",
         )
@@ -2696,7 +2691,7 @@ class EditionEditTest < IntegrationTest
     context "Document already has external links when page loads" do
       setup do
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link One", url: "https://gov.uk" }]
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
         click_link "Related external links"
       end
 
@@ -2752,7 +2747,7 @@ class EditionEditTest < IntegrationTest
     context "User deletes an external link and saves" do
       setup do
         visit_draft_edition
-        @draft_edition.artefact.external_links = [{ title: "Link One", url: "https://gov.uk" }]
+        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
         click_link "Related external links"
       end
 
@@ -3265,10 +3260,9 @@ private
   def visit_new_edition_of_published_edition
     create_published_edition
     new_edition = FactoryBot.create(
-      :answer_edition,
+      :edition,
       panopticon_id: @published_edition.artefact.id,
       state: "draft",
-      version_number: 2,
       change_note: "The change note",
     )
     visit edition_path(new_edition)
@@ -3287,14 +3281,6 @@ private
     )
   end
 
-  def visit_retired_edition_in_published
-    @published_edition = FactoryBot.create(
-      :campaign_edition,
-      state: "published",
-    )
-    visit edition_path(@published_edition)
-  end
-
   def visit_old_edition_of_published_edition
     published_edition = FactoryBot.create(
       :edition,
@@ -3305,6 +3291,7 @@ private
       state: "published",
       sibling_in_progress: 2,
     )
+
     FactoryBot.create(
       :edition,
       panopticon_id: published_edition.artefact.id,

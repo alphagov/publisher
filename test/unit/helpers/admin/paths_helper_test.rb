@@ -50,7 +50,7 @@ class PathsHelperTest < ActionView::TestCase
 
     context "when navigated to preview path" do
       should "append a valid JWT token" do
-        popular_links = FactoryBot.build(:popular_links, auth_bypass_id: "123")
+        popular_links = FactoryBot.build(:popular_links, auth_bypass_id: "8a773f31-3cd2-4bee-9b87-7a9754860094")
         result = preview_homepage_path(popular_links)
 
         path = result.gsub(/^(.*)\?.*$/, '\1')
@@ -59,7 +59,7 @@ class PathsHelperTest < ActionView::TestCase
         token = result.gsub(/.*token=(.*)$/, '\1')
         payload = decoded_token_payload(token)
 
-        assert_equal payload["sub"], "123"
+        assert_equal payload["sub"], "8a773f31-3cd2-4bee-9b87-7a9754860094"
         assert_equal payload["content_id"], "ad7968d0-0339-40b2-80bc-3ea1db8ef1b7"
         assert_equal payload["iat"], Time.zone.now.to_i
         assert_equal payload["exp"], 1.month.from_now.to_i
