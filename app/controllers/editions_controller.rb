@@ -558,7 +558,7 @@ private
           {
             text: item.first.split(" / ").last,
             value: item.last,
-            checked: tagging_update_form_values.mainstream_browse_pages&.include?(item.last),
+            checked: tagging_update_form_values.parent&.include?(item.last),
           }
         end,
       }
