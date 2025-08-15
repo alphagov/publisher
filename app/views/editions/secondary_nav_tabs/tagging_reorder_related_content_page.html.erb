@@ -24,20 +24,19 @@
     <p class="govuk-hint">Use the up and down buttons to reorder related content items, or select and hold on an item to reorder using drag and drop</p>
 
     <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
-      <%=render "govuk_publishing_components/components/reorderable_list", {
-
-        items: @tagging_update_form_values.ordered_related_items.each_with_index.map do |related_item, index|
+      <%= render "govuk_publishing_components/components/reorderable_list", {
+        items: @tagging_update_form_values.ordered_related_items.map do |related_item|
           {
-            id: index,
-            title: related_item['base_path'],
-            related_item: related_item,
+            id: related_item["base_path"],
+            title: related_item["base_path"],
           }
-        end
+        end,
+        input_name: "reordered_related_items",
       } %>
 
       <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "related_content" %>
+      <%= f.hidden_field :tagging_type, value: "related_content_order" %>
       <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
         <%= f.hidden_field :parent, value: parent_id, multiple: true %>
       <% end %>
