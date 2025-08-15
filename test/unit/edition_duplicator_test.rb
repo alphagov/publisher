@@ -66,7 +66,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     command = EditionDuplicator.new(@guide, @laura)
     assert command.duplicate("answer_edition", @fred)
 
-    assert_equal AnswerEdition, artefact.reload.latest_edition.class
+    assert_equal AnswerEdition, artefact.reload.latest_edition.editionable.class
   end
 
   test "changing the format while duplicating will also update the kind of the artefact" do

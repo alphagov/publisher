@@ -251,7 +251,7 @@ class LegacyEditionsController < InheritedResources::Base
 protected
 
   def permitted_params(subtype: nil)
-    subtype = @resource.class.to_s.underscore.to_sym if subtype.nil?
+    subtype = @resource.editionable.class.to_s.underscore.to_sym if subtype.nil?
     params.permit(edition: type_specific_params(subtype) + common_params)
   end
 
