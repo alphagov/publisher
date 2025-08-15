@@ -15,9 +15,9 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#template_folder_for" do
     should "be able to create a view path for a given publication" do
-      l = LocalTransactionEdition.new
+      l = FactoryBot.build(:local_transaction_edition)
       assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-      g = GuideEdition.new
+      g = FactoryBot.build(:guide_edition)
       assert_equal "app/views/guides", @controller.template_folder_for(g)
     end
   end
