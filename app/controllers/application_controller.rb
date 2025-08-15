@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   rescue_from Notifications::Client::BadRequestError, with: :notify_bad_request
 
   def template_folder_for(publication)
-    tmpl_folder = publication.class.to_s.underscore.pluralize.downcase.gsub("_edition", "")
+    tmpl_folder = publication.editionable.class.to_s.underscore.pluralize.downcase.gsub("_edition", "")
     "app/views/#{tmpl_folder}"
   end
 
