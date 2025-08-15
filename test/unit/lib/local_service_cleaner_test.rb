@@ -34,11 +34,13 @@ class LocalServiceCleanerTest < ActiveSupport::TestCase
 
       context "but lgsl used by local transaction edition" do
         setup do
-          @edition = FactoryBot.create(
+          @edition = FactoryBot.build(
             :local_transaction_edition,
             lgsl_code: 9012,
             lgil_code: 1,
+            panopticon_id: FactoryBot.create(:artefact).id,
           )
+          @edition.save!
         end
 
         should "not destroy service" do
