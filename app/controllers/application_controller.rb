@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from Notifications::Client::BadRequestError, with: :notify_bad_request
 
   def template_folder_for(publication)
