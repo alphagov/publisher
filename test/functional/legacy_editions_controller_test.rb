@@ -829,7 +829,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal "Guide edition was successfully updated.", flash[:notice]
         assert_equal @welsh_edition.state, "ready"
       end
 
