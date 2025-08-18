@@ -105,6 +105,9 @@ class LegacyEditionsController < InheritedResources::Base
         UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
         return_to = params[:return_to] || edition_path(resource)
+
+        flash[:notice] = "#{description(resource)} edition was successfully updated."
+
         redirect_to return_to
       end
       failure.html do

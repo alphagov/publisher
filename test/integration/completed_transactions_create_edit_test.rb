@@ -2,7 +2,7 @@ require "legacy_integration_test_helper"
 
 class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(
+    @artefact ||= FactoryBot.create(
       :artefact,
       slug: "done/stick-a-fork-in-me-im",
       kind: "completed_transaction",
