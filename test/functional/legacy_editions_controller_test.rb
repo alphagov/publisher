@@ -1042,7 +1042,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "101" }
       assert_response :not_found
     end
 
