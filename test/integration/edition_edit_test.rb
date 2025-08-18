@@ -325,6 +325,19 @@ class EditionEditTest < IntegrationTest
       end
 
       context "User has permissions" do
+        should "show 'Edit' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[0] do
+            assert page.has_link?("Edit")
+          end
+        end
+
+        should "navigate to the 'Set GOV.UK breadcrumb' page when the 'Edit' link is clicked" do
+          within all(".gem-c-summary-card")[0] do
+            click_link("Edit")
+            assert_current_path tagging_breadcrumb_page_edition_path(@draft_edition)
+          end
+        end
+
         should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
           within all(".gem-c-summary-card")[1] do
             assert page.has_link?("Edit")
@@ -390,6 +403,104 @@ class EditionEditTest < IntegrationTest
             assert page.has_no_link?("Edit")
           end
         end
+      end
+    end
+  end
+
+  context "Breadcrumb page" do
+    setup do
+      visit_draft_edition
+      click_link("Tagging")
+    end
+
+    context "Setting a breadcrumb" do
+      setup do
+        click_link("Set GOV.UK breadcrumb")
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "show the 'Set GOV.UK breadcrumb' page" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Set GOV.UK breadcrumb")
+        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_unchecked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "save the selected breadcrumb when the form is submitted" do
+        choose("Capital Gains Tax")
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": [],
+                                            "mainstream_browse_pages": [],
+                                            "ordered_related_items": [],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 0 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("GOV.UK breadcrumbs updated")
+      end
+    end
+
+    context "Editing a breadcrumb" do
+      setup do
+        stub_linkables_with_data
+        visit_draft_edition
+        click_link("Tagging")
+        within all(".gem-c-summary-card")[0] do
+          click_link("Edit")
+        end
+      end
+
+      should "redirect to tagging tab when Cancel link is clicked" do
+        click_link("Cancel")
+
+        assert_current_path tagging_edition_path(@draft_edition.id)
+      end
+
+      should "show the 'Set GOV.UK breadcrumb' page with preselected radio" do
+        assert page.has_text?(@draft_edition.title)
+        assert page.has_text?("Set GOV.UK breadcrumb")
+        assert page.has_text?("Select the browse page you want to appear in the breadcrumb")
+        assert page.has_element?("legend", text: "Tax")
+        assert page.has_checked_field?("Capital Gains Tax")
+        assert page.has_unchecked_field?("RTI (draft)")
+        assert page.has_unchecked_field?("VAT")
+        assert page.has_element?("legend", text: "Benefits")
+        assert page.has_unchecked_field?("Benefits and financial support for families")
+        assert page.has_unchecked_field?("Benefits and financial support if you're caring for someone")
+        assert page.has_unchecked_field?("Benefits and financial support if you're disabled or have a health condition")
+        assert page.has_text?("Options")
+        assert page.has_button?("Save")
+        assert page.has_link?("Cancel")
+      end
+
+      should "update the breadcrumb when the form is submitted" do
+        choose("VAT")
+        click_button("Save")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                            "parent": %w[CONTENT-ID-VAT] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@draft_edition.id)
+        assert page.has_text?("GOV.UK breadcrumbs updated")
       end
     end
   end
