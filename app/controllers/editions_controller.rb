@@ -133,6 +133,11 @@ class EditionsController < InheritedResources::Base
     render "show"
   end
 
+  def tagging_remove_breadcrumb_page
+    populate_tagging_form_values_from_publishing_api
+    render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+  end
+
   def tagging_mainstream_browse_page
     populate_tagging_form_values_from_publishing_api
     @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
