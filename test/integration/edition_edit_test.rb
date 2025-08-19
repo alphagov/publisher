@@ -343,6 +343,18 @@ class EditionEditTest < IntegrationTest
           end
         end
 
+        should "show 'Remove' link on 'GOV.UK breadcrumb' summary card when user has permissions" do
+          within all(".gem-c-summary-card")[0] do
+            assert page.has_link?("Remove")
+          end
+        end
+
+        should "navigate to the remove breadcrumb page when the 'Remove' link is clicked" do
+          within all(".gem-c-summary-card")[0] do
+            click_link("Remove")
+            assert_current_path tagging_remove_breadcrumb_page_edition_path(@draft_edition)
+          end
+        end
         should "show 'Edit' link on 'Mainstream browse pages' summary card when user has permissions" do
           within all(".gem-c-summary-card")[1] do
             assert page.has_link?("Edit")
@@ -541,6 +553,58 @@ class EditionEditTest < IntegrationTest
         assert_current_path tagging_edition_path(@draft_edition.id)
         assert page.has_text?("GOV.UK breadcrumbs updated")
       end
+    end
+  end
+
+  context "Removing a breadcrumb" do
+    setup do
+      stub_linkables_with_data
+      visit_draft_edition
+      click_link("Tagging")
+      within all(".gem-c-summary-card")[0] do
+        click_link("Remove")
+      end
+    end
+
+    should "show the remove breadcrumb page " do
+      assert page.has_text?(@draft_edition.title)
+      assert page.has_text?("Are you sure you want to remove the breadcumb?")
+      assert page.has_text?("Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).")
+      assert page.has_unchecked_field?("Yes, remove the breadcrumb")
+      assert page.has_unchecked_field?("No, keep the breadcrumb")
+      assert page.has_button?("Save")
+      assert page.has_link?("Cancel")
+    end
+
+    should "remove the breadcrumb when the form is submitted if the user selects 'Yes'" do
+      choose("Yes, remove the breadcrumb")
+      click_button("Save")
+      assert_requested :patch,
+                       "#{Plek.find('publishing-api')}/v2/links/#{@draft_edition.content_id}",
+                       body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                          "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                          "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
+                                          "parent": [] },
+                               "previous_version": 1 }
+      assert_current_path tagging_edition_path(@draft_edition.id)
+      assert page.has_text?("GOV.UK breadcrumb removed")
+    end
+
+    should "retain the breadcrumb when the form is submitted if the user selects 'No'" do
+      choose("No, keep the breadcrumb")
+      click_button("Save")
+      assert_current_path tagging_edition_path(@draft_edition.id)
+      within all(".govuk-summary-card")[0] do
+        assert page.has_text?("GOV.UK breadcrumb")
+        assert page.has_css?("dt", text: "Breadcrumb")
+        assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+      end
+    end
+
+    should "redirect to tagging tab when Cancel link is clicked" do
+      click_link("Cancel")
+
+      assert_current_path tagging_edition_path(@draft_edition.id)
     end
   end
 
