@@ -63,7 +63,7 @@ module TagTestHelpers
     stub_publishing_api_data
   end
 
-  def stub_linkables_with_minimal_data
+  def stub_linkables_with_single_related_item
     # variation of stub_linkables_with_data only populating one entry for related content
     stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/expanded-links/.+})
       .to_return(

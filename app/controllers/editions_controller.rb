@@ -93,7 +93,7 @@ class EditionsController < InheritedResources::Base
     success_message = case params[:tagging_tagging_update_form][:tagging_type]
                       when "related_content"
                         "Related content updated"
-                      when "related_content_order"
+                      when "reorder_related_content"
                         "Related content order updated"
                       when "mainstream_browse_page"
                         "Mainstream browse pages updated"
@@ -589,7 +589,7 @@ private
   end
 
   def tagging_update_params
-    tagging_update_params = params.require(:tagging_tagging_update_form).permit(
+    update_params = params.require(:tagging_tagging_update_form).permit(
       :content_id,
       :previous_version,
       :tagging_type,
@@ -599,12 +599,12 @@ private
       ordered_related_items: [],
       ordered_related_items_destroy: [],
     ).to_h
-    if params[:tagging_tagging_update_form][:tagging_type] == "related_content_order"
-      tagging_update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
+    if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
+      update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
                                                               .to_h[:reordered_related_items]
                                                               .sort_by(&:last).map { |url| url[0] }
     end
-    tagging_update_params
+    update_params
   end
 
   def request_amendments_for_edition(resource, comment)
@@ -714,10 +714,6 @@ private
 
   def permitted_external_links_params
     params.require(:artefact).permit(external_links_attributes: %i[title url id _destroy])
-  end
-
-  def permitted_ordered_related_items
-    params.permit(ordering: {})[:ordering].to_h
   end
 
   def require_destroyable

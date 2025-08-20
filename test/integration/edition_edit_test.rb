@@ -382,7 +382,7 @@ class EditionEditTest < IntegrationTest
           end
         end
 
-        should "show 'Reoroder' link on 'Related content' summary card when user has permissions" do
+        should "show 'Reorder' link on 'Related content' summary card when user has permissions" do
           within all(".gem-c-summary-card")[3] do
             assert page.has_link?("Reorder")
           end
@@ -429,9 +429,10 @@ class EditionEditTest < IntegrationTest
         end
       end
     end
+
     context "minimal tagging is present" do
       setup do
-        stub_linkables_with_minimal_data
+        stub_linkables_with_single_related_item
         visit_draft_edition
         click_link("Tagging")
       end
@@ -768,6 +769,7 @@ class EditionEditTest < IntegrationTest
         assert page.has_text?("Related content updated")
       end
     end
+
     context "Reordering tags for a related content page" do
       setup do
         stub_linkables_with_data
