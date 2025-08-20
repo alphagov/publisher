@@ -9,17 +9,18 @@
 class JsonImporter
   include MongoMigrationHelper
 
-  def initialize(model_class:, file:)
+  def initialize(model_class:, import_file:, log_file:)
     @model_class = model_class.constantize
-    @mapper = MongoFieldMapper.new(@model_class)
-    @file = file
+    @log_file = log_file
+    @import_file = import_file
+    @mapper = MongoFieldMapper.new(@model_class, @log_file)
   end
 
   def call
     line_no = 0
     processed_line = []
 
-    IO.foreach(@file) do |line|
+    IO.foreach(@import_file) do |line|
       log line_no, "Processing"
       processed_line << process_line(line)
       log line_no, "Completed"
@@ -40,7 +41,7 @@ class JsonImporter
       log "Line: #{line[0..50]}, LinkCheckReportEditionError: #{e.message}"
     rescue StandardError => e
       log "Line: #{line}, StandardError: #{e}"
-      log "Model class #{@model_class} with mongo_id #{id_value(@parsed_obj)} due to Error"
+      log "Model class #{@model_class} with mongo_id #{id_value(@parsed_obj)}"
       log "Line: #{line[0..50]}, Error: #{e.message}"
       break
     end
@@ -57,7 +58,7 @@ private
     @parsed_obj = JSON.parse(line)
     @content_type = @parsed_obj["_type"]
     id = id_value(@parsed_obj)
-    log(id, "Working on #{@model} with ID #{id}")
+    log(id, "Working on #{@model_class} with ID #{id}")
     create_editionable(@parsed_obj) if @model_class == Edition
     @mapper.active_record_attributes(@parsed_obj)
   end
@@ -76,6 +77,8 @@ private
 
   def log(*args)
     line = args.prepend(Time.zone.now.iso8601).join("\t")
-    Rails.logger.info line
+    puts line
+    # Rails.logger.info line
+    @log_file&.puts(line)
   end
 end
