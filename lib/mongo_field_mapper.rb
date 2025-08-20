@@ -1,200 +1,200 @@
 # Maps fields from a source Mongo JSON object
 # into the corresponding field in our ActiveRecord models
 class MongoFieldMapper
-  @user_missing = []
   MAPPINGS = {
     Edition => {
       rename: {
         "_type" => "editionable_type",
       },
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "panopticon_id" => ->(_key, value) { { "panopticon_id" => map_to_artifact_id(value) } },
-        "assigned_to_id" => ->(_key, value) { { "assigned_to_id" => get_assigned_to_id(value) } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-        "publish_at" => ->(key, value) { rails_timestamp(key, value) },
-        "review_requested_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "panopticon_id" => ->(obj, _key, value) { { "panopticon_id" => obj.map_to_artifact_id(value) } },
+        "assigned_to_id" => ->(obj, _key, value) { { "assigned_to_id" => obj.get_assigned_to_id(value) } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "publish_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "review_requested_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     LocalTransactionEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     CompletedTransactionEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     GuideEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     SimpleSmartAnswerEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     PlaceEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     AnswerEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     PopularLinksEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     TransactionEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     HelpPageEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     ProgrammeEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     VideoEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     LicenceEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     CampaignEdition => {
       process: {
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     Part => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     Variant => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     DevolvedAdministrationAvailability => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     SimpleSmartAnswerEdition::Node => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     SimpleSmartAnswerEdition::Node::Option => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     User => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     Action => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "recipient_id" => ->(_key, value) { { "recipient_id" => get_recipient_id(value) } },
-        "request_details" => ->(_key, value) { { "request_details" => request_details(value) } },
-        "requester_id" => ->(_key, value) { { "requester_id" => get_requester_id(value) } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "recipient_id" => ->(obj, _key, value) { { "recipient_id" => obj.get_recipient_id(value) } },
+        "request_details" => ->(_obj, _key, value) { { "request_details" => request_details(value) } },
+        "requester_id" => ->(obj, _key, value) { { "requester_id" => obj.get_requester_id(value) } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     Artefact => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-        "public_timestamp" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "public_timestamp" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     ArtefactAction => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "user_id" => ->(_key, value) { { "user_id" => get_artefact_action_user_id(value) } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "user_id" => ->(obj, _key, value) { { "user_id" => obj.get_artefact_action_user_id(value) } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     LocalService => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     ArtefactExternalLink => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
       },
     },
     OverviewDashboard => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
       },
     },
     LinkCheckReport => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "edition_id" => ->(_key, value) { { "edition_id" => get_link_check_report_edition_id(value) } },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "completed_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "edition_id" => ->(obj, _key, value) { { "edition_id" => obj.get_link_check_report_edition_id(value) } },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "completed_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
     Link => {
       process: {
-        "_id" => ->(_key, value) { { "mongo_id" => value["$oid"] } },
-        "created_at" => ->(key, value) { rails_timestamp(key, value) },
-        "updated_at" => ->(key, value) { rails_timestamp(key, value) },
-        "checked_at" => ->(key, value) { rails_timestamp(key, value) },
+        "_id" => ->(_obj, _key, value) { { "mongo_id" => value["$oid"] } },
+        "created_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "updated_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
+        "checked_at" => ->(_obj, key, value) { rails_timestamp(key, value) },
       },
     },
   }.freeze
 
-  def initialize(model_class)
+  def initialize(model_class, log_file)
     @model_class = model_class
+    @log_file = log_file
   end
 
   def active_record_attributes(obj)
@@ -239,7 +239,7 @@ class MongoFieldMapper
     request_detail
   end
 
-  def self.map_to_artifact_id(value)
+  def map_to_artifact_id(value)
     artefact = Artefact.where(mongo_id: value).last
     if artefact.nil?
       log "Error: artefact with mongo_id #{value} does not exist"
@@ -247,40 +247,40 @@ class MongoFieldMapper
     artefact.id
   end
 
-  def self.get_assigned_to_id(value)
+  def get_assigned_to_id(value)
     return if value.nil?
 
     assigned_to_user = User.where(mongo_id: value["$oid"]).last
     if assigned_to_user.nil?
-      puts "Error: assigned to user with mongo_id #{value['$oid']} does not exist"
+      log "Error: assigned to user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     assigned_to_user.id
   end
 
-  def self.get_recipient_id(value)
+  def get_recipient_id(value)
     return if value.nil?
 
     recipient = User.where(mongo_id: value["$oid"]).last
     if recipient.nil?
-      puts "Error: recipient user with mongo_id #{value['$oid']} does not exist"
+      log "Error: recipient user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     recipient.id
   end
 
-  def self.get_requester_id(value)
+  def get_requester_id(value)
     return if value.nil?
 
     requester = User.where(mongo_id: value["$oid"]).last
     if requester.nil?
-      puts "Error: requester user with mongo_id #{value['$oid']} does not exist"
+      log "Error: requester user with mongo_id #{value['$oid']} does not exist"
       return nil
     end
     requester.id
   end
 
-  def self.get_artefact_action_user_id(value)
+  def get_artefact_action_user_id(value)
     return if value.nil?
 
     artefact_action_user = User.where(mongo_id: value["$oid"]).last
@@ -309,16 +309,9 @@ class MongoFieldMapper
     date ? { key => date } : {}
   end
 
-  def self.add_missing_user_to_print(value)
-    unless @user_missing.include?(value)
-      @user_missing << value
-      log "Users with mongo_ids #{@user_missing} are missing"
-    end
-  end
-
   def process(key, value)
     if (proc = MAPPINGS[@model_class][:process][key])
-      proc.call(key, value)
+      proc.call(self, key, value)
     else
       processed_key = target_key(key)
       keep_this_key?(processed_key) ? { processed_key => value } : {}
@@ -333,9 +326,10 @@ class MongoFieldMapper
     MAPPINGS[@model_class][:rename].try(:[], key) || key
   end
 
-  def self.log(*args)
+  def log(*args)
     line = args.prepend(Time.zone.now.iso8601).join("\t")
-    Rails.logger.info line
+    puts line
+    @log_file&.puts(line)
   end
 end
 
