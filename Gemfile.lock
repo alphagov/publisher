@@ -202,7 +202,7 @@ GEM
     flipflop (2.8.0)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
-    gds-api-adapters (99.2.0)
+    gds-api-adapters (101.0.0)
       addressable
       link_header
       null_logger
@@ -396,7 +396,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0527)
+    mime-types-data (3.2025.0812)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.25.5)
