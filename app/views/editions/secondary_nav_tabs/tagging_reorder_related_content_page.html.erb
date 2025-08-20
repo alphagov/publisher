@@ -36,7 +36,7 @@
 
       <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "related_content_order" %>
+      <%= f.hidden_field :tagging_type, value: "reorder_related_content" %>
       <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
         <%= f.hidden_field :parent, value: parent_id, multiple: true %>
       <% end %>
