@@ -40,7 +40,8 @@ class EditionsController < InheritedResources::Base
                          tagging_mainstream_browse_page
                          tagging_related_content_page
                          tagging_organisations_page
-                         tagging_breadcrumb_page] do
+                         tagging_breadcrumb_page
+                         tagging_remove_breadcrumb_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
