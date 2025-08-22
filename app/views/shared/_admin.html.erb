@@ -18,7 +18,7 @@
 <%= render partial: "shared/clone_buttons",
     locals: {
       edition: @edition,
-      edition_class: @edition.class,
+      edition_class: @edition.editionable.class,
     }
 %>
 

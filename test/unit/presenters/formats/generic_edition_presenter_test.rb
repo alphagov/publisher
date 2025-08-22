@@ -9,10 +9,11 @@ class GenericEditionPresenterTest < ActiveSupport::TestCase
         { title: "GOVUK", url: "https://www.gov.uk" },
         { title: "GOVUK", url: "https://www.gov.uk" },
       ]
-      artefact.external_links = expected_external_related_links
+
+      artefact.external_links = ArtefactExternalLink.build(expected_external_related_links)
 
       @edition = FactoryBot.create(
-        :video_edition,
+        :edition,
         :published,
         major_change: true,
         updated_at: Time.zone.local(2017, 2, 6, 17, 36, 58),

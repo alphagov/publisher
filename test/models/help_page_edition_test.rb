@@ -16,7 +16,7 @@ class HelpPageEditionTest < ActiveSupport::TestCase
   end
 
   should "give a friendly (legacy supporting) description of its format" do
-    help_page = HelpPageEdition.new
+    help_page = FactoryBot.build(:help_page_edition)
     assert_equal "HelpPage", help_page.format
   end
 

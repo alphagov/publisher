@@ -5,29 +5,39 @@ class DowntimesController < ApplicationController
   layout "design_system"
 
   def index
-    @transactions = TransactionEdition.published.order_by(%i[title asc])
+    @transactions = Edition.where(editionable_type: "TransactionEdition", state: "published").order(%i[title])
   end
 
   def new
-    @downtime = Downtime.new(artefact: @edition.artefact)
+    @downtime = Downtime.new(artefact_id: @edition.artefact.id)
   end
 
   def create
-    @downtime = Downtime.new(downtime_params)
     datetime_validation_errors = datetime_validation_errors(downtime_params, %w[start_time end_time])
+    begin
+      @downtime = Downtime.new(downtime_params)
 
-    if datetime_validation_errors.empty? && @downtime.save
-      DowntimeScheduler.schedule_publish_and_expiry(@downtime)
-      flash[:success] = "#{@edition.title} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
-      redirect_to downtimes_path
-    else
-      @downtime.valid? # Make sure the model validations have run
-      datetime_validation_errors.each do |name, message|
-        # Remove any default messages for this field added by the model validation
-        @downtime.errors.delete(name)
-        @downtime.errors.add(name, message)
+      if datetime_validation_errors.empty? && @downtime.save
+        DowntimeScheduler.schedule_publish_and_expiry(@downtime)
+        flash[:success] = "#{@edition.title} downtime message scheduled (from #{view_context.downtime_datetime(@downtime)})".html_safe
+        redirect_to downtimes_path
+      else
+        @downtime.valid? # Make sure the model validations have run
+        add_errors(datetime_validation_errors)
+        render :new
       end
+    rescue ActiveRecord::MultiparameterAssignmentErrors
+      @downtime = Downtime.new(artefact_id: downtime_params[:artefact_id])
+      add_errors(datetime_validation_errors)
       render :new
+    end
+  end
+
+  def add_errors(datetime_validation_errors)
+    datetime_validation_errors.each do |name, message|
+      # Remove any default messages for this field added by the model validation
+      @downtime.errors.delete(name)
+      @downtime.errors.add(name, message)
     end
   end
 

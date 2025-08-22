@@ -45,7 +45,7 @@ class HelpPageCreateEditTest < LegacyJavascriptIntegrationTest
       fill_in "Title", with: "This title has changed"
       save_edition_and_assert_success
 
-      h = HelpPageEdition.find(help_page.id)
+      h = Edition.find(help_page.id)
       assert_equal "This body has changed", h.body
       assert_equal "This title has changed", h.title
     end
