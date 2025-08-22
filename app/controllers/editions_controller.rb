@@ -100,6 +100,8 @@ class EditionsController < InheritedResources::Base
                         "Organisations updated"
                       when "breadcrumb"
                         "GOV.UK breadcrumbs updated"
+                      when "remove_breadcrumb"
+                        "GOV.UK breadcrumb removed"
                       else
                         "Tags have been updated!"
                       end

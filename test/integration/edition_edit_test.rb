@@ -545,10 +545,10 @@ class EditionEditTest < IntegrationTest
                        body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
                                           "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
                                           "ordered_related_items": %w[830e403b-7d81-45f1-8862-81dcd55b4ec7 5cb58486-0b00-4da8-8076-382e474b4f03 853feaf2-152c-4aa5-8edb-ba84a88860bf 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1],
-                                          "parent":[] },
+                                          "parent": [] },
                                "previous_version": 1 }
       assert_current_path tagging_edition_path(@draft_edition.id)
-      #assert page.has_text?("GOV.UK breadcrumb removed")
+      assert page.has_text?("GOV.UK breadcrumb removed")
     end
 
     should "redirect to tagging tab when Cancel link is clicked" do
