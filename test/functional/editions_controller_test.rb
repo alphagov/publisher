@@ -1589,7 +1589,6 @@ class EditionsControllerTest < ActionController::TestCase
     end
 
     context "user has govuk_editor permission" do
-
       should "render the remove breadcrumb page" do
         get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_remove_breadcrumb_page"

@@ -474,7 +474,7 @@ class EditionEditTest < IntegrationTest
         visit_draft_edition
         click_link("Tagging")
         within all(".gem-c-summary-card")[0] do
-        click_link("Edit")
+          click_link("Edit")
         end
       end
 
@@ -523,7 +523,7 @@ class EditionEditTest < IntegrationTest
       visit_draft_edition
       click_link("Tagging")
       within all(".gem-c-summary-card")[0] do
-      click_link("Remove")
+        click_link("Remove")
       end
     end
 
