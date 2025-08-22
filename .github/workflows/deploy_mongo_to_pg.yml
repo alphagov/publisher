@@ -16,6 +16,7 @@ on:
         options:
         - integration
         - staging
+        - production
         default: 'integration'
   release:
     types: [released]
