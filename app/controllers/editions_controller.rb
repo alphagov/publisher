@@ -108,7 +108,9 @@ class EditionsController < InheritedResources::Base
 
     create_tagging_update_form_values(tagging_update_params)
 
-    if @tagging_update_form_values.valid?
+    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb" && params[:tagging_tagging_update_form][:remove_parent] == "no"
+      redirect_to tagging_edition_path
+    elsif @tagging_update_form_values.valid?
       @tagging_update_form_values.publish!
       flash[:success] = success_message
       redirect_to tagging_edition_path

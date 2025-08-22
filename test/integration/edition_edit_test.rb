@@ -537,7 +537,7 @@ class EditionEditTest < IntegrationTest
       assert page.has_link?("Cancel")
     end
 
-    should "remove the breadcrumb when the form is submitted" do
+    should "remove the breadcrumb when the form is submitted if the user selects 'Yes'" do
       choose("Yes, remove the breadcrumb")
       click_button("Save")
       assert_requested :patch,
@@ -549,6 +549,17 @@ class EditionEditTest < IntegrationTest
                                "previous_version": 1 }
       assert_current_path tagging_edition_path(@draft_edition.id)
       assert page.has_text?("GOV.UK breadcrumb removed")
+    end
+
+    should "retain the breadcrumb when the form is submitted if the user selects 'No'" do
+      choose("No, keep the breadcrumb")
+      click_button("Save")
+      assert_current_path tagging_edition_path(@draft_edition.id)
+      within all(".govuk-summary-card")[0] do
+        assert page.has_text?("GOV.UK breadcrumb")
+        assert page.has_css?("dt", text: "Breadcrumb")
+        assert page.has_css?("dt", text: "Tax > Capital Gains Tax")
+      end
     end
 
     should "redirect to tagging tab when Cancel link is clicked" do
