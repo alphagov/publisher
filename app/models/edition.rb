@@ -19,7 +19,7 @@ class Edition < ApplicationRecord
 
   delegate_missing_to :editionable
 
-  delegate :introduction, :more_information, :need_to_know, to: :editionable
+  delegate :introduction, :cta_text, :more_information, :need_to_know, :before_results, :after_results, to: :editionable
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
