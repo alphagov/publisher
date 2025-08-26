@@ -5,13 +5,13 @@
   id: "title",
   name: "edition[title]",
   value: edition.title,
-  heading_size: "m",
+  heading_size: "s",
   error_items: errors_for(edition.errors, "title".to_sym, use_full_message: false),
 } %>
 
 <%= render "govuk_publishing_components/components/textarea", {
   label: {
-    heading_size: "m",
+    heading_size: "s",
     text: "Meta tag description",
   },
   name: "edition[overview]",
@@ -23,7 +23,7 @@
   heading: "Is this beta content?",
   name: "edition[in_beta]",
   inline: true,
-  heading_size: "m",
+  heading_size: "s",
   items: [
     {
       value: 1,
