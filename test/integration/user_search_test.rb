@@ -91,12 +91,13 @@ class UserSearchTest < LegacyIntegrationTest
   end
 
   test "selecting another user" do
-    guides = FactoryBot.build_list(:guide_edition, 2)
+    guide_1 = FactoryBot.build(:guide_edition)
+    guide_2 = FactoryBot.build(:guide_edition, title: "if elephants could fly")
     other_user = FactoryBot.create(:user, name: "Bob", uid: "bob")
 
     # Assigning manually so it doesn't show up in Alice's list too
-    guides[0].assigned_to_id = other_user.id
-    guides[0].save!
+    guide_1.assigned_to_id = other_user.id
+    guide_1.save!
 
     visit "/user_search"
 
@@ -104,8 +105,8 @@ class UserSearchTest < LegacyIntegrationTest
 
     assert page.has_content?("Search by user")
 
-    assert page.has_content?(guides[0].title)
-    assert page.has_no_content?(guides[1].title)
+    assert page.has_content?(guide_1.title)
+    assert page.has_no_content?(guide_2.title)
   end
 
   test "doesn't show disabled users in 'Filter by user' select box" do

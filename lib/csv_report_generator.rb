@@ -18,19 +18,19 @@ class CsvReportGenerator
   def presenters
     @presenters ||= [
       EditorialProgressPresenter.new(
-        Edition.not_in(state: %w[archived]),
+        Edition.where.not(state: %w[archived]),
       ),
 
       EditionChurnPresenter.new(
-        Edition.not_in(state: %w[archived]).order(created_at: 1),
+        Edition.where.not(state: %w[archived]).order(:created_at),
       ),
 
       AllEditionChurnPresenter.new(
-        Edition.all.order(created_at: 1),
+        Edition.all.order(:created_at),
       ),
 
       OrganisationContentPresenter.new(
-        Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
+        Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
       ),
 
       ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
@@ -38,7 +38,7 @@ class CsvReportGenerator
       AllContentWorkflowPresenter.new(Edition.all.order(created_at: :desc)),
 
       AllUrlsPresenter.new(
-        Artefact.where(owning_app: "publisher").not_in(state: %w[archived]),
+        Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
       ),
     ]
   end

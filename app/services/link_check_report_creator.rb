@@ -22,13 +22,13 @@ class LinkCheckReportCreator
       batch_id: link_report.fetch(:id),
       completed_at: link_report.fetch(:completed_at),
       status: link_report.fetch(:status),
-      links: link_report.fetch(:links).map { |link| map_link_attrs(link) },
+      links: link_report.fetch(:links).map { |link_report_link| build_link_model(link_report_link) },
     )
 
     report.save!
 
     report
-  rescue Mongoid::Errors::Validations => e
+  rescue StandardError => e
     raise InvalidReport, e
   end
 
@@ -52,8 +52,8 @@ private
     )
   end
 
-  def map_link_attrs(link)
-    {
+  def build_link_model(link)
+    attr = {
       uri: link.fetch(:uri),
       status: link.fetch(:status),
       checked_at: link.fetch(:checked),
@@ -62,5 +62,7 @@ private
       problem_summary: link.fetch(:problem_summary),
       suggested_fix: link.fetch(:suggested_fix),
     }
+
+    Link.build(attr)
   end
 end

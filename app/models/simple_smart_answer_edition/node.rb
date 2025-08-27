@@ -1,20 +1,11 @@
-require "edition"
-
-class SimpleSmartAnswerEdition < Edition
-  class Node
-    include Mongoid::Document
-    embedded_in :edition, class_name: "SimpleSmartAnswerEdition"
-    embeds_many :options, class_name: "SimpleSmartAnswerEdition::Node::Option"
+class SimpleSmartAnswerEdition
+  class Node < ApplicationRecord
+    belongs_to :simple_smart_answer_edition, class_name: "SimpleSmartAnswerEdition"
+    has_many :options, dependent: :destroy, class_name: "SimpleSmartAnswerEdition::Node::Option"
 
     accepts_nested_attributes_for :options, allow_destroy: true
 
-    field :slug, type: String
-    field :title, type: String
-    field :body, type: String
-    field :order, type: Integer
-    field :kind, type: String
-
-    default_scope -> { order_by(order: :asc) }
+    default_scope -> { order(order: :asc) }
 
     GOVSPEAK_FIELDS = [:body].freeze
 

@@ -31,10 +31,12 @@ class FactCheckMessageProcessor
   end
 
   def process_for_publication(publication_id)
-    edition = Edition.find(publication_id)
-    progress_publication_edition(edition)
-  rescue Mongoid::Errors::DocumentNotFound
-    Rails.logger.warn "Ignoring message for non-existant edition: '#{publication_id}'"
+    edition = Edition.where(id: publication_id).or(Edition.where(mongo_id: publication_id)).first
+    if edition
+      progress_publication_edition(edition)
+    else
+      Rails.logger.warn "Ignoring message for non-existant edition: '#{publication_id}'"
+    end
   end
 
   def self.process(message, publication_id)
@@ -59,8 +61,8 @@ private
   def try_decode(string, *encodings)
     encodings.each do |encoding|
       return string.force_encoding(encoding)
-        .encode(Encoding::UTF_32BE)
-        .encode(Encoding::UTF_8)
+                   .encode(Encoding::UTF_32BE)
+                   .encode(Encoding::UTF_8)
     rescue EncodingError => e
       Rails.logger.info e.inspect
     end

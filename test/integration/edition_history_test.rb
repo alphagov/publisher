@@ -18,7 +18,7 @@ class EditionHistoryTest < LegacyJavascriptIntegrationTest
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
       @answer.new_action(@author, Action::PUBLISH, comment: "third")
 
-      assert_equal %w[first second third], @answer.actions.map(&:comment)
+      assert_equal %w[first second third], @answer.actions.sort_by(&:created_at).map(&:comment)
 
       @guide = @answer.build_clone(GuideEdition)
       @guide.save!
@@ -28,7 +28,7 @@ class EditionHistoryTest < LegacyJavascriptIntegrationTest
       @guide.new_action(@author, Action::PUBLISH, comment: "sixth")
       @guide.new_action(@author, Action::NOTE, comment: "link http://www.some-link.com")
 
-      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.map(&:comment)
+      assert_equal ["fourth", "fifth", "sixth", "link http://www.some-link.com"], @guide.actions.sort_by(&:created_at).map(&:comment)
     end
 
     should "direct the user to view a published edition on GOV.UK directly, not draft" do

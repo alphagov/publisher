@@ -34,7 +34,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
     context "Edition already has related external links" do
       setup do
         visit_related_external_links_page
-        @external_links_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        @external_links_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link one", url: "https://one.com" })]
         click_link "Related external links"
       end
 
@@ -84,7 +84,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         user = FactoryBot.create(:user, name: "Stub User")
         login_as(user)
         visit_related_external_links_page
-        @external_links_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        @external_links_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link one", url: "https://one.com" })]
         click_link "Related external links"
       end
 

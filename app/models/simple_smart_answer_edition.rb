@@ -1,18 +1,13 @@
-require "edition"
-require_dependency "simple_smart_answer_edition/node"
-require_dependency "simple_smart_answer_edition/node/option"
-
-class SimpleSmartAnswerEdition < Edition
-  include Mongoid::Document
-
-  field :body,              type: String
-  field :start_button_text, type: String, default: "Start now"
+class SimpleSmartAnswerEdition < ApplicationRecord
+  include Editionable
 
   validates :start_button_text, presence: true
 
-  embeds_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
+  has_many :nodes, class_name: "SimpleSmartAnswerEdition::Node", dependent: :destroy
 
   accepts_nested_attributes_for :nodes, allow_destroy: true
+
+  delegate :title, to: :edition
 
   GOVSPEAK_FIELDS = [:body].freeze
 
@@ -30,13 +25,10 @@ class SimpleSmartAnswerEdition < Edition
     parts.join("\n\n\n")
   end
 
-  def build_clone(target_class = nil)
-    new_edition = super(target_class)
-
-    if new_edition.is_a?(SimpleSmartAnswerEdition)
-      nodes.each { |n| new_edition.nodes << n.clone }
+  def copy_to(new_edition)
+    if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
+      new_edition.editionable.nodes = nodes.map(&:dup)
     end
-
     new_edition
   end
 
@@ -82,8 +74,8 @@ class SimpleSmartAnswerEdition < Edition
 
   def generate_mermaid
     parts = ["%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    " \
-      "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
-      "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
+               "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
+               "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
     parts << "accTitle: #{title}\naccDescr: A flowchart for the #{title} smart answer\nAA[Start]:::start"
     if nodes.present?
       parts << "AA---Q#{nodes.first.slug.split('-')[1]}"

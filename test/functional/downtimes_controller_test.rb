@@ -142,7 +142,7 @@ class DowntimesControllerTest < ActionController::TestCase
 
   context "#index" do
     should "list all published transaction editions" do
-      unpublished_transaction_edition = FactoryBot.create(:transaction_edition)
+      unpublished_transaction_edition = FactoryBot.create(:transaction_edition, title: "unpublished transaction")
       transaction_editions = FactoryBot.create_list(:transaction_edition, 2, :published)
 
       get :index
@@ -150,7 +150,7 @@ class DowntimesControllerTest < ActionController::TestCase
       assert_response :ok
       assert_select ".govuk-table__cell", count: 0, text: unpublished_transaction_edition.title
       transaction_editions.each do |edition|
-        assert_select ".govuk-table__cell", text: edition.title
+        assert_select ".govuk-table__cell", text: edition.editionable.title
       end
     end
 
@@ -178,7 +178,7 @@ class DowntimesControllerTest < ActionController::TestCase
   end
 
   def downtime
-    @downtime ||= FactoryBot.create(:downtime, artefact: edition.artefact)
+    @downtime ||= FactoryBot.create(:downtime, artefact_id: edition.artefact.id)
   end
 
   def create_downtime

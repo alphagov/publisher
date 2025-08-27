@@ -63,7 +63,7 @@ class TransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
       save_edition_and_assert_success
 
-      t = TransactionEdition.find(transaction.id)
+      t = TransactionEdition.find(transaction.editionable.id)
       assert_equal "Get your licence to fly to Mars", t.introduction
       assert_equal "UK Terrestrial Mars Office", t.will_continue_on
     end

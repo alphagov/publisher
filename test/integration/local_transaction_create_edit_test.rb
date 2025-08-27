@@ -32,7 +32,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
     assert_operator email_count_before_start + 1, :<=, ActionMailer::Base.deliveries.count
     assert_match(
-      /Created Local transaction: "Foo bar"/,
+      "[PUBLISHER] Created Local transaction: \"Foo bar\" (by Author)",
       ActionMailer::Base.deliveries.last.subject,
     )
   end
@@ -95,7 +95,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
       save_edition_and_assert_success
 
-      edition = LocalTransactionEdition.find(edition.id)
+      edition = LocalTransactionEdition.find(edition.editionable.id)
       assert_equal 2, edition.lgil_code
 
       # Ensure it gets set to nil when clearing field

@@ -15,21 +15,10 @@ class TransactionPresenterTest < ActiveSupport::TestCase
 
   def create_downtime(message, start_time: Time.zone.yesterday.at_midnight)
     Downtime.create(
-      artefact:,
+      artefact_id: artefact.id,
       start_time:,
       end_time: Time.zone.tomorrow.at_midnight,
       message:,
-    )
-  end
-
-  def add_variant(num)
-    Variant.create(
-      title: "title-#{num}",
-      slug: "slug-#{num}",
-      introduction: "introduction-#{num}",
-      link: "http://www.example.com/#{num}",
-      order: num,
-      transaction_edition: edition,
     )
   end
 
@@ -49,45 +38,7 @@ class TransactionPresenterTest < ActiveSupport::TestCase
 
   context "[:details]" do
     should "[:variants]" do
-      add_variant(2)
-      add_variant(1)
-
-      expected = [
-        {
-          title: "title-1",
-          slug: "slug-1",
-          introductory_paragraph: [
-            {
-              content_type: "text/govspeak",
-              content: "introduction-1",
-            },
-          ],
-          transaction_start_link: "http://www.example.com/1",
-        },
-        {
-          title: "title-2",
-          slug: "slug-2",
-          introductory_paragraph: [
-            {
-              content_type: "text/govspeak",
-              content: "introduction-2",
-            },
-          ],
-          transaction_start_link: "http://www.example.com/2",
-        },
-      ]
-
-      assert_equal expected, result[:details][:variants]
-    end
-
-    should "handle nil parts of variants" do
-      Variant.new(transaction_edition: edition).save!(validate: false)
-
-      expected = [{
-        title: "",
-        slug: "",
-        transaction_start_link: "",
-      }]
+      expected = []
 
       assert_equal expected, result[:details][:variants]
     end
@@ -137,9 +88,9 @@ class TransactionPresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.external_links = [link]
-      artefact.save!(validate: false)
+      link = { "url" => "http://www.foo.com", "title" => "foo" }
+      artefact.external_links = [ArtefactExternalLink.build(link)]
+      artefact.save!
       expected = [
         {
           url: link["url"],

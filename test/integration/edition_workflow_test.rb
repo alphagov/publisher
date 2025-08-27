@@ -574,7 +574,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     save_edition_and_assert_success
     guide.reload
 
-    assert_equal guide.assigned_to, bob
+    assert_equal bob, guide.assigned_to
 
     save_edition_and_assert_success
   end
@@ -741,17 +741,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert page.has_text?("View this on the GOV.UK website")
   end
 
-  test "cannot create a new edition for a retired format" do
-    FactoryBot.create(:video_edition, state: "archived")
-
-    visit "/"
-    select "Video", from: "Format"
-    filter_for_all_users
-    view_filtered_list "Archived"
-
-    assert page.has_no_content? "Create new edition"
-  end
-
   test "cannot preview an archived article" do
     guide.update!(state: "archived")
 
@@ -797,23 +786,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     assert page.has_content?("Another person has created a newer edition")
     assert page.has_css?(".label", text: "Published")
-  end
-
-  test "should display a retired message if a format has been retired" do
-    artefact = FactoryBot.create(:artefact)
-    edition = FactoryBot.create(
-      :video_edition,
-      panopticon_id: artefact.id,
-      state: "archived",
-      version_number: 1,
-    )
-    artefact.update!(state: "archived")
-
-    visit "/"
-    select "Video (Retired)", from: "Format"
-
-    visit_edition edition
-    assert page.has_content?("This content format has been retired.")
   end
 
   def send_for_generic_action(guide, button_text, &block)

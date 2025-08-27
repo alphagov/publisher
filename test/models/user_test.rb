@@ -87,7 +87,7 @@ class UserTest < ActiveSupport::TestCase
   test "should return enabled users" do
     disabled = FactoryBot.create(:user, disabled: true)
 
-    FactoryBot.create(:user).unset(:disabled)
+    FactoryBot.create(:user, disabled: false)
     FactoryBot.create(:user, disabled: false)
     FactoryBot.create(:user, disabled: nil)
 
