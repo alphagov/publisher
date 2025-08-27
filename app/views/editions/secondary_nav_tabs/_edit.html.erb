@@ -44,7 +44,7 @@
         <%= render partial: "editions/secondary_nav_tabs/edit/draft/body", locals: { edition: @resource } %>
 
         <% if @resource.published_edition %>
-          <div class="edit_edition__change_note">
+          <div class="edit_edition__supplementary_information">
             <%= render partial: "editions/secondary_nav_tabs/edit/draft/public_change_note", locals: { edition: @resource } %>
           </div>
         <% end %>
