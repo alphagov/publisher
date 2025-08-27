@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_27_080300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -229,6 +229,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_115859) do
     t.string "need_to_know"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cta_text"
+    t.string "before_results"
+    t.string "after_results"
   end
 
   create_table "overview_dashboards", force: :cascade do |t|
