@@ -181,6 +181,14 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.count)
     end
 
+    should "make the total number of editions available when there's more than one page of results" do
+      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
+
+      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.total_count)
+    end
+
     should "return the specified 'page' of results" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
