@@ -15,7 +15,7 @@ class LocalTransactionEdition < ApplicationRecord
 
   after_validation :merge_errors
 
-  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know].freeze
+  GOVSPEAK_FIELDS = %i[introduction more_information need_to_know before_text after_text].freeze
 
   validate :valid_lgsl_code, if: -> { lgsl_code.present? }
   validates :lgil_code, presence: { message: "Enter a LGIL code" }
