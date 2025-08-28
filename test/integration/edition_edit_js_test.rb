@@ -221,6 +221,31 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert page.has_text?("Related content updated")
       end
     end
+    context "Reordering tags for a related content page" do
+      setup do
+        stub_linkables_with_data
+        visit_tagging_reorder_related_content_page_edition_path
+      end
+
+      should "submit reordered tags when the form is submitted with changes" do
+        within all(".gem-c-reorderable-list__item")[0] do
+          click_button("Down")
+        end
+        within all(".gem-c-reorderable-list__item")[3] do
+          click_button("Up")
+        end
+        click_button("Update order")
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[5cb58486-0b00-4da8-8076-382e474b4f03 830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@tagging_edition.id)
+        assert page.has_text?("Related content order updated")
+      end
+    end
   end
 
 private
@@ -233,5 +258,10 @@ private
   def visit_tagging_related_content_page
     @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
     visit tagging_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_tagging_reorder_related_content_page_edition_path
+    @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
+    visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
   end
 end
