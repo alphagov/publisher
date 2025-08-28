@@ -18,32 +18,17 @@ window.GOVUK.analyticsGa4.analyticsModules =
         })
 
         Modules.Ga4FinderTracker = Modules.Ga4FinderTracker || {}
-        Modules.Ga4FinderTracker.extraSupportedElements = {
-          // for select with search with multiple choice
-          'select-multiple': function (eventTarget, event) {
-            const eventValue = event.detail.value
-            const elementValue = eventTarget.querySelector(
-              `option[value="${eventValue}"]`
-            ).text
-            const selectedEventOption = eventTarget.querySelector(
-              `option[value="${eventValue}"]:checked`
-            )
-
-            return {
-              elementValue,
-              wasFilterRemoved: !selectedEventOption
-            }
-          }
-        }
       }
     },
 
     onFinderChange: function (event) {
       let ga4ChangeCategory = event.target.closest('[data-ga4-change-category]')
+
       if (ga4ChangeCategory) {
         ga4ChangeCategory = ga4ChangeCategory.getAttribute(
           'data-ga4-change-category'
         )
+
         window.GOVUK.analyticsGa4.Ga4FinderTracker.trackChangeEvent(
           event,
           ga4ChangeCategory
