@@ -21,6 +21,8 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
   PublicationsTable.prototype.addExpandlink = function () {
     var expandLink = document.createElement('a')
     expandLink.classList.add('govuk-link', 'publications-table--expand-link')
+    expandLink.setAttribute('href', '#')
+    expandLink.setAttribute('data-ga4-link', '{"action":"remove","event_name":"select_content","type":"Publications"}')
     expandLink.textContent = 'Expand all'
     this.$module.querySelector('.publications-table__heading').append(expandLink)
   }
