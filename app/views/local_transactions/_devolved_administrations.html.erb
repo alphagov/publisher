@@ -10,7 +10,7 @@
     <div class="form-group">
       <div class="radio">
         <%= f.label :type_local_authority_service, class: "control-label" do %>
-          <%= f.radio_button :type, "local_authority_service", disabled: @resource.locked_for_edits? %>
+          <%= f.radio_button :authority_type, "local_authority_service", disabled: @resource.locked_for_edits? %>
           Service available from local council
         <% end %>
       </div>
@@ -19,7 +19,7 @@
     <div class="form-group">
       <div class="radio">
         <%= f.label :type_devolved_administration_service, class: "control-label" do %>
-          <%= f.radio_button :type, "devolved_administration_service", disabled: @resource.locked_for_edits? %>
+          <%= f.radio_button :authority_type, "devolved_administration_service", disabled: @resource.locked_for_edits? %>
           Service available from devolved administration (or a similar service is available)
         <% end %>
       </div>
@@ -32,7 +32,7 @@
     <div class="form-group">
       <div class="radio">
         <%= f.label :type_unavailable, class: "control-label" do %>
-          <%= f.radio_button :type, "unavailable", disabled: @resource.locked_for_edits? %>
+          <%= f.radio_button :authority_type, "unavailable", disabled: @resource.locked_for_edits? %>
           Service not available
         <% end %>
       </div>

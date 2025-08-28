@@ -268,9 +268,9 @@ protected
         :introduction,
         :more_information,
         :need_to_know,
-        { scotland_availability_attributes: %i[type alternative_url] },
-        { wales_availability_attributes: %i[type alternative_url] },
-        { northern_ireland_availability_attributes: %i[type alternative_url] },
+        { scotland_availability_attributes: %i[authority_type alternative_url] },
+        { wales_availability_attributes: %i[authority_type alternative_url] },
+        { northern_ireland_availability_attributes: %i[authority_type alternative_url] },
       ]
     when :place_edition
       %i[

@@ -121,6 +121,25 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
       save_edition_and_assert_error("Enter a title", "#edition_title")
     end
+
+    should "save devolved administration availability fields" do
+      edition = FactoryBot.create(
+        :local_transaction_edition,
+        panopticon_id: @artefact.id,
+        slug: @artefact.slug,
+        title: "Foo transaction",
+        lgsl_code: 1,
+        lgil_code: 2,
+      )
+
+      visit_edition edition
+      choose "Service available from local council", name: "edition[scotland_availability_attributes][authority_type]"
+      choose "Service available from devolved administration (or a similar service is available)", name: "edition[wales_availability_attributes][authority_type]"
+      fill_in "Enter the URL of the devolved administration website page", with: "https://test", name: "edition[wales_availability_attributes][alternative_url]"
+      choose "Service not available", name: "edition[northern_ireland_availability_attributes][authority_type]"
+
+      save_edition_and_assert_success
+    end
   end
 
   should "disable fields for a published edition" do
