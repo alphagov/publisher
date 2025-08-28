@@ -15,6 +15,8 @@
 
       <%= render partial: "editions/secondary_nav_tabs/edit/published/body", locals: { edition: @resource } %>
 
+      <%= render partial: "editions/secondary_nav_tabs/edit/published/beta_content_radio", locals: { edition: @resource } %>
+
       <%= render partial: "editions/secondary_nav_tabs/edit/published/public_change_note", locals: { edition: @resource } %>
     </div>
     <% if @resource.scheduled_for_publishing? %>
@@ -43,11 +45,13 @@
 
         <%= render partial: "editions/secondary_nav_tabs/edit/draft/body", locals: { edition: @resource } %>
 
-        <% if @resource.published_edition %>
-          <div class="edit_edition__change_note">
+        <div class="edit_edition__supplementary_information">
+          <%= render partial: "editions/secondary_nav_tabs/edit/draft/beta_content_radio", locals: { edition: @resource } %>
+
+          <% if @resource.published_edition %>
             <%= render partial: "editions/secondary_nav_tabs/edit/draft/public_change_note", locals: { edition: @resource } %>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
       <div class="govuk-grid-column-one-third options-sidebar">
         <div class="sidebar-components">
