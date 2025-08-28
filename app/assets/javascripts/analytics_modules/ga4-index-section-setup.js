@@ -12,17 +12,17 @@ window.GOVUK.analyticsGa4.analyticsModules =
 
       moduleElements.forEach(function (moduleElement) {
         const indexedElements = moduleElement.querySelectorAll(
-          'select, textarea, input:not([data-module~="select-with-search"] input):not([type="radio"]):not([type="hidden"]), fieldset'
+          'select, textarea, input:not([data-module~="select-with-search"] input):not([type="text"]):not([type="radio"]):not([type="checkbox"]):not([type="hidden"]), fieldset'
         )
 
         indexedElements.forEach((element, index) => {
           if (element.tagName === 'FIELDSET' || !element.closest('fieldset')) {
             const indexData = {
-              index_section: index,
+              index_section: index + 1,
               index_section_count: indexedElements.length
             }
             element.dataset.ga4Index = JSON.stringify(indexData)
-            element.dataset.ga4IndexSection = index
+            element.dataset.ga4IndexSection = index + 1
 
             if (element.closest('[data-module~="ga4-finder-tracker"]')) {
               element.dataset.ga4FilterParent = true
