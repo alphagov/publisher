@@ -38,6 +38,7 @@ class EditionsController < InheritedResources::Base
                          add_edition_note
                          update_important_note
                          tagging_mainstream_browse_page
+                         tagging_reorder_related_content_page
                          tagging_related_content_page
                          tagging_organisations_page
                          tagging_breadcrumb_page] do
