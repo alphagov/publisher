@@ -7990,7 +7990,10 @@ task move_parts_to_programmes: :environment do
     guide_ed_id = part.guide_edition_id
     next if guide_ed_id.nil?
 
-    part.update!(programme_edition_id: guide_ed_id, guide_edition_id: nil)
+    part.programme_edition_id = guide_ed_id
+    part.guide_edition_id = nil
+    part.save(validate: false)
+
     puts "Migrated part #{part.id} from guide_edition_id #{guide_ed_id} to programme_edition_id #{part.programme_edition_id}"
   end
 end
