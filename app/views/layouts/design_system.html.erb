@@ -26,9 +26,17 @@
     product_name: "Publisher",
     environment: environment,
     navigation_items: navigation_items(is_editor: current_user.govuk_editor?, path: request.path, user_name: current_user.name),
+    data_attributes: {
+      ga4_no_copy: true
+    }
   } %>
 
-  <div class="govuk-width-container" data-module="ga4-event-tracker ga4-index-section-setup ga4-paste-tracker ga4-link-tracker ga4-button-setup" data-ga4-filter-type="<%= sanitized_title %>">
+  <div
+    class="govuk-width-container"
+    data-module="ga4-event-tracker ga4-index-section-setup ga4-paste-tracker ga4-link-tracker ga4-button-setup"
+    data-ga4-filter-type="<%= sanitized_title %>"
+    data-ga4-no-copy="true"
+  >
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
       <%= render "shared/flash", flash: flash %>
@@ -75,5 +83,8 @@
         ],
       },
     ],
+    data_attributes: {
+      ga4_no_copy: true
+    }
   } %>
 <% end %>
