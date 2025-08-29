@@ -2,6 +2,10 @@
 
 <% content_for :head do %>
   <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
+  <meta name="govuk:user-id" content="<%= current_user&.anonymous_user_id %>">
+  <meta name="govuk:user-created-at" content="<%= current_user&.created_at&.to_date %>">
+  <meta name="govuk:user-organisation-name" content="<%= current_user&.gds_editor? ? "Government Digital Service" : "nil" %>">
+  <meta name="govuk:user-role" content="<%= current_user&.role %>">
   <%= javascript_include_tag "domain-config" %>
   <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
   <%= javascript_include_tag "es6-components", type: "module" %>
