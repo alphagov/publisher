@@ -7988,12 +7988,20 @@ task move_parts_to_programmes: :environment do
 
   Part.where(mongo_id: part_ids).each do |part|
     guide_ed_id = part.guide_edition_id
-    next if guide_ed_id.nil?
+    if guide_ed_id.nil?
+      puts "Skipping part #{part.id} (with mongo_id #{part.mongo_id}) as it has no guide_edition_id"
+      next
+    end
+
+    if part.created_at > Time.zone.local(2025, 8, 27, 9, 45)
+      puts "Skipping part #{part.id} (with mongo_id #{part.mongo_id}) created at #{part.created_at}, after migration cutoff"
+      next
+    end
 
     part.programme_edition_id = guide_ed_id
     part.guide_edition_id = nil
     part.save!(validate: false)
 
-    puts "Migrated part #{part.id} from guide_edition_id #{guide_ed_id} to programme_edition_id #{part.programme_edition_id}"
+    puts "Migrated part #{part.id} (with mongo_id #{part.mongo_id}) from guide_edition_id #{guide_ed_id} to programme_edition_id #{part.programme_edition_id}"
   end
 end
