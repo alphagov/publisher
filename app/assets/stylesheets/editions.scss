@@ -6,20 +6,20 @@
   }
 
   &__admin__tab {
-  &__important-note__details {
-    white-space: pre-wrap;
-    margin-top: govuk-spacing(3)
-  }
+    .govuk-link {
+      margin-top: govuk-spacing(3)
+    }
   }
 
-  border-top: 1px solid $govuk-border-colour;
-  @include govuk-responsive-padding(4, "top");
-}
+  &__important-note__details {
+    white-space: pre-wrap;
   }
 }
 
 .edit_edition__supplementary_information {
-  .govuk-link {
+  border-top: 1px solid $govuk-border-colour;
+  @include govuk-responsive-padding(4, "top");
+}
 
 .gem-c-notice + .gem-c-inset-text {
   padding-top: 0;

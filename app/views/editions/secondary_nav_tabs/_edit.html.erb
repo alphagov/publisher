@@ -11,13 +11,11 @@
 <% if @resource.scheduled_for_publishing? || @resource.published? || @resource.archived? %>
   <div class="govuk-grid-row edit--<%= @resource.state %>">
     <div class="govuk-grid-column-two-thirds">
-      <%= render partial: "editions/secondary_nav_tabs/edit/published/common_fields", locals: { edition: @resource } %>
+      <%= render partial: "editions/secondary_nav_tabs/edit/published/#{@resource.kind_for_artefact}", locals: { edition: @resource } %>
 
-      <%= render partial: "editions/secondary_nav_tabs/edit/published/body", locals: { edition: @resource } %>
+      <%= render partial: "editions/secondary_nav_tabs/edit/published/components/beta_content_radio", locals: { edition: @resource } %>
 
-      <%= render partial: "editions/secondary_nav_tabs/edit/published/beta_content_radio", locals: { edition: @resource } %>
-
-      <%= render partial: "editions/secondary_nav_tabs/edit/published/public_change_note", locals: { edition: @resource } %>
+      <%= render partial: "editions/secondary_nav_tabs/edit/published/components/public_change_note", locals: { edition: @resource } %>
     </div>
     <% if @resource.scheduled_for_publishing? %>
       <div class="govuk-grid-column-one-third options-sidebar">
@@ -41,15 +39,13 @@
   <%= form_for @resource, as: :edition, url: edition_path(@resource) do %>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <%= render partial: "editions/secondary_nav_tabs/edit/draft/common_fields", locals: { edition: @resource } %>
-
-        <%= render partial: "editions/secondary_nav_tabs/edit/draft/body", locals: { edition: @resource } %>
+        <%= render partial: "editions/secondary_nav_tabs/edit/draft/#{@resource.kind_for_artefact}", locals: { edition: @resource } %>
 
         <div class="edit_edition__supplementary_information">
-          <%= render partial: "editions/secondary_nav_tabs/edit/draft/beta_content_radio", locals: { edition: @resource } %>
+          <%= render partial: "editions/secondary_nav_tabs/edit/draft/components/beta_content_radio", locals: { edition: @resource } %>
 
           <% if @resource.published_edition %>
-            <%= render partial: "editions/secondary_nav_tabs/edit/draft/public_change_note", locals: { edition: @resource } %>
+            <%= render partial: "editions/secondary_nav_tabs/edit/draft/components/public_change_note", locals: { edition: @resource } %>
           <% end %>
         </div>
       </div>
