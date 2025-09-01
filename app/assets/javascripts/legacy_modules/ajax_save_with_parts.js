@@ -14,8 +14,7 @@
           for (var i = 0, l = parts.length; i < l; i++) {
             updatePart(parts[i])
           }
-        }
-        else {
+        } else {
           // Temporary workaround for issue with the API not returning parts - reload
           // the page to refresh the parts from the server
           window.location.reload()
