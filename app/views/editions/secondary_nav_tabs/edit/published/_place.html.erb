@@ -1,0 +1,63 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/published/components/title", locals: { edition: @resource } %>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/published/components/meta_tag_description", locals: { edition: @resource } %>
+
+<section>
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Places Manager service identifier",
+  heading_level: 3,
+  font_size: "s",
+} %>
+<p>
+  <% if edition.editionable.place_type != "" %>
+    <%= edition.editionable.place_type %>
+  <% else %>
+    None added
+  <% end %>
+</p>
+</section>
+
+<section>
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Introduction",
+  heading_level: 3,
+  font_size: "s",
+} %>
+<p>
+  <% if edition.editionable.introduction != "" %>
+    <%= edition.editionable.introduction %>
+  <% else %>
+    None added
+  <% end %>
+</p>
+</section>
+
+<section>
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Further information (optional)",
+  heading_level: 3,
+  font_size: "s",
+} %>
+<p>
+  <% if edition.editionable.more_information != "" %>
+    <%= edition.editionable.more_information %>
+  <% else %>
+    None added
+  <% end %>
+</p>
+</section>
+
+<section>
+<%= render "govuk_publishing_components/components/heading", {
+  text: "What you need to know (optional)",
+  heading_level: 3,
+  font_size: "s",
+} %>
+<p>
+  <% if edition.editionable.need_to_know != "" %>
+    <%= edition.editionable.need_to_know %>
+  <% else %>
+    None added
+  <% end %>
+</p>
+</section>
