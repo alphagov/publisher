@@ -15,6 +15,12 @@
             updatePart(parts[i])
           }
         }
+        else {
+          // Temporary workaround for issue with the API not returning parts - reload
+          // the page to refresh the parts from the server
+          window.location.reload()
+          return
+        }
         removeDeletedParts()
       }
 
