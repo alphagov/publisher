@@ -3,6 +3,7 @@ require "parted"
 class GuideEdition < ApplicationRecord
   include Editionable
   include Parted
+  default_scope { includes(:parts) }
 
   strip_attributes only: :video_url
 

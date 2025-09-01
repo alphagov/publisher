@@ -25,6 +25,8 @@ class Edition < ApplicationRecord
 
   has_many :link_check_reports, dependent: :destroy
 
+  default_scope { includes(:editionable) }
+
   scope :accessible_to,
         lambda { |user|
           return all unless Flipflop.enabled?(:restrict_access_by_org)
