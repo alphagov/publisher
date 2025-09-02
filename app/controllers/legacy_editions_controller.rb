@@ -125,7 +125,11 @@ class LegacyEditionsController < InheritedResources::Base
 
         UpdateWorker.perform_async(resource.id.to_s, update_action_is_publish?)
 
-        render json: resource
+        if resource.editionable.is_a?(Parted)
+          render json: resource.as_json.merge(parts: resource.parts)
+        else
+          render json: resource
+        end
       end
       failure.json { render json: resource.errors, status: :not_acceptable }
     end
