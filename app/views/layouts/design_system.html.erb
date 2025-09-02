@@ -40,6 +40,8 @@
     data-module="ga4-event-tracker ga4-index-section-setup ga4-paste-tracker ga4-link-tracker ga4-button-setup"
     data-ga4-filter-type="<%= sanitized_title %>"
     data-ga4-no-copy="true"
+    data-ga4-filter-type="<%= controller_name %>",
+    data-ga4-document-type="<%= action_name %>-<%= controller_name %>"
   >
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 

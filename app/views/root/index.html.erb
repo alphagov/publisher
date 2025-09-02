@@ -1,7 +1,12 @@
 <% content_for :page_title, "Publications" %>
 <% content_for :title, "Publications" %>
 
-<div class="govuk-grid-row">
+<div
+  class="govuk-grid-row"
+  data-ga4-ecommerce
+  data-ga4-ecommerce-start-index="<%= page_start_index(params[:page]) %>"
+  data-ga4-search-query="<%= params[:search_text] %>"
+>
   <div class="govuk-grid-column-one-third">
     <%= render :partial => "filter" %>
   </div>

@@ -1,5 +1,10 @@
 <div class="publications-filter govuk-!-padding-5">
-  <%= form_with url: root_path, method: :get, data: { module: "ga4-finder-tracker", ga4_section: "Filter" } do |form| %>
+  <%= form_with url: root_path, method: :get, data: {
+    module: "ga4-finder-tracker",
+    ga4_section: "Filter",
+    ga4_search_section: "Filter",
+    ga4_search_input_name: "Title or slug"
+  } do |form| %>
     <%= render "govuk_publishing_components/components/heading", {
       text: "Filter",
       margin_bottom: 4,
@@ -11,6 +16,7 @@
         bold: true,
       },
       name: "search_text",
+      type: "search",
       id: "search_text",
       value: @presenter.search_text,
     } %>
