@@ -19,3 +19,4 @@
 //= require analytics_modules/ga4-finder-setup.js
 //= require analytics_modules/ga4-index-section-setup.js
 //= require analytics_modules/ga4-paste-tracker.js
+//= require analytics_modules/ga4-search-setup.js
