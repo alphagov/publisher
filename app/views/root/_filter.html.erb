@@ -58,7 +58,7 @@
     } %>
 
     <p class="govuk-body">
-      <%= link_to "Reset all fields", root_path, class: "govuk-link", data: { ga4_link: { action: "remove", event_name: "select_content", type: controller_name }.to_json } %>
+      <%= link_to "Reset all fields", root_path, class: "govuk-link", data: { ga4_link: { action: "reset", event_name: "select_content", type: "Publications" }.to_json } %>
     </p>
   <% end %>
 </div>
