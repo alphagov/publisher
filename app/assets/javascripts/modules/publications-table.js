@@ -22,7 +22,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     var expandLink = document.createElement('a')
     expandLink.classList.add('govuk-link', 'publications-table--expand-link')
     expandLink.setAttribute('href', '#')
-    expandLink.setAttribute('data-ga4-link', '{"action":"remove","event_name":"select_content","type":"Publications"}')
+    expandLink.setAttribute('data-ga4-link', '{"action":"opened","event_name":"select_content","type":"Publications"}')
     expandLink.textContent = 'Expand all'
     this.$module.querySelector('.publications-table__heading').append(expandLink)
   }
@@ -35,6 +35,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
       })
 
       this.openDetailsCount = this.numDetails
+      e.target.setAttribute('data-ga4-link', '{"action":"opened","event_name":"select_content","type":"Publications"}')
       e.target.textContent = 'Collapse all'
     } else if (this.openDetailsCount === this.numDetails) {
       this.details.forEach(function (section) {
@@ -42,6 +43,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
       })
 
       this.openDetailsCount = 0
+      e.target.setAttribute('data-ga4-link', '{"action":"closed","event_name":"select_content","type":"Publications"}')
       e.target.textContent = 'Expand all'
     }
   }
