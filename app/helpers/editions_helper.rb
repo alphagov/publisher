@@ -100,4 +100,10 @@ module EditionsHelper
     }
     options[edition.editionable.send("#{administration}_availability").authority_type]
   end
+
+  def page_start_index(page)
+    return 0 unless page
+
+    (page.to_i - 1) * FilteredEditionsPresenter::ITEMS_PER_PAGE
+  end
 end
