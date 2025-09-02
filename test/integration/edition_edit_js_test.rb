@@ -228,13 +228,24 @@ class EditionEditJSTest < JavascriptIntegrationTest
       end
 
       should "submit reordered tags when the form is submitted with changes" do
+        # Assert that javascript buttons change visible order for user
         within all(".gem-c-reorderable-list__item")[0] do
+          assert page.has_text?("/company-tax-returns")
           click_button("Down")
         end
+        within all(".gem-c-reorderable-list__item")[1] do
+          assert page.has_text?("/company-tax-returns", wait: 1)
+        end
         within all(".gem-c-reorderable-list__item")[3] do
+          assert page.has_text?("/tax-help")
           click_button("Up")
         end
+        within all(".gem-c-reorderable-list__item")[2] do
+          assert page.has_text?("/tax-help", wait: 1)
+        end
         click_button("Update order")
+
+        # Assert that updated order is submitted in http request
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
