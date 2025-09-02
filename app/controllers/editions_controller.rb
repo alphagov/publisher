@@ -720,7 +720,45 @@ private
   end
 
   def permitted_update_params
-    params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
+    subtype = @resource.editionable.class.to_s.underscore.to_sym
+    params.require(:edition).permit(type_specific_params(subtype) + common_params)
+  end
+
+  def type_specific_params(subtype)
+    case subtype
+    when :place_edition
+      %i[
+        place_type
+        introduction
+        more_information
+        need_to_know
+      ]
+    when :transaction_edition
+      %i[
+        introduction
+        start_button_text
+        will_continue_on
+        link
+        more_information
+        alternate_methods
+        need_to_know
+      ]
+    else
+      # answer_edition, help_page_edition
+      [
+        :body,
+      ]
+    end
+  end
+
+  def common_params
+    %i[
+      title
+      overview
+      in_beta
+      change_note
+      major_change
+    ]
   end
 
   def permitted_external_links_params
