@@ -76,6 +76,7 @@ describe('Publications Table component', function () {
       expect(heading.querySelector('a')).not.toBeNull()
       expect(heading.querySelector('a').classList).toContain('publications-table--expand-link')
       expect(heading.querySelector('a').textContent).toBe('Expand all')
+      expect(JSON.parse(heading.querySelector('a').dataset.ga4Link).action).toBe('opened')
     })
 
     it('all "More details" sections should be closed', function () {
@@ -103,6 +104,7 @@ describe('Publications Table component', function () {
       publicationsTable.openDetailsCount = 0
 
       expect(expandContractLink.textContent).toBe('Expand all')
+      expect(JSON.parse(expandContractLink.dataset.ga4Link).action).toBe('opened')
     })
 
     it('should be labelled "Expand all" when some of the "More details" sections are closed', function () {
@@ -112,6 +114,7 @@ describe('Publications Table component', function () {
       publicationsTable.openDetailsCount = 2
 
       expect(expandContractLink.textContent).toBe('Expand all')
+      expect(JSON.parse(expandContractLink.dataset.ga4Link).action).toBe('opened')
     })
 
     it('should open all the "More details" sections when all of them are closed', function () {
@@ -151,6 +154,7 @@ describe('Publications Table component', function () {
       expandContractLink.dispatchEvent(clickEvent)
 
       expect(expandContractLink.textContent).toBe('Collapse all')
+      expect(JSON.parse(expandContractLink.dataset.ga4Link).action).toBe('opened')
     })
 
     it('should close all the "More details" sections when they are all open', function () {
