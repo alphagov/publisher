@@ -21,6 +21,10 @@
         } %>
       <% end %>
 
+      <%= form_group(f, :cta_text, label: "CTA Text", help: "Text for the search button. If empty, the default 'Find your local council' will be used") do %>
+        <%= f.text_field :cta_text, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control" %>
+      <% end %>
+
       <%= form_group(f, :more_information) do %>
         <%= f.text_area :more_information, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
           module: "paste-html-to-govspeak",
@@ -29,6 +33,18 @@
 
       <%= form_group(f, :need_to_know, label: "What you need to know") do %>
         <%= f.text_area :need_to_know, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
+          module: "paste-html-to-govspeak",
+        } %>
+      <% end %>
+
+     <%= form_group(f, :before_results, label: "Before results", help: "If present, will appear above the search results") do %>
+        <%= f.text_area :before_results, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
+          module: "paste-html-to-govspeak",
+        } %>
+      <% end %>
+
+      <%= form_group(f, :after_results, label: "After results", help: "If present, will appear below the search results") do %>
+        <%= f.text_area :after_results, rows: 4, disabled: @resource.locked_for_edits?, class: "input-md-7 form-control", data: {
           module: "paste-html-to-govspeak",
         } %>
       <% end %>
