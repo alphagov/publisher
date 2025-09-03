@@ -1,0 +1,10 @@
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Title",
+  },
+  id: "title",
+  name: "edition[title]",
+  value: edition.title,
+  heading_size: "s",
+  error_items: errors_for(edition.errors, "title".to_sym, use_full_message: false),
+} %>
