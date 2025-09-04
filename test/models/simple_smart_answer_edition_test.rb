@@ -45,6 +45,36 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal %w[question1 left right], new_edition.nodes.all.map(&:slug)
   end
 
+  should "copy the node options when cloning an edition" do
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
+    edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
+    edition.nodes.build(slug: "left", title: "As you wander through the door, it slams shut behind you, as a lion starts pacing towards you...", order: 2, kind: "outcome")
+    edition.nodes.build(slug: "right", title: "As you wander through the door, it slams shut behind you, as a tiger starts pacing towards you...", order: 3, kind: "outcome")
+    edition.nodes[0].options.build(slug: "node1-option1", label: "lion eats you", next_node: edition.nodes[1], order: 1)
+    edition.nodes[0].options.build(slug: "node1-option2", label: "tiger eats you", next_node: edition.nodes[2], order: 2)
+    edition.save!
+
+    cloned_edition = edition.build_clone
+    cloned_edition.save!
+
+    old_edition = SimpleSmartAnswerEdition.find(edition.editionable.id)
+    new_edition = SimpleSmartAnswerEdition.find(cloned_edition.editionable.id)
+    assert_equal old_edition.nodes[0].options[0].slug, new_edition.nodes[0].options[0].slug
+    assert_equal old_edition.nodes[0].options[0].label, new_edition.nodes[0].options[0].label
+    assert_equal old_edition.nodes[0].options[0].next_node, new_edition.nodes[0].options[0].next_node
+    assert_equal old_edition.nodes[0].options[0].order, new_edition.nodes[0].options[0].order
+
+    assert_equal old_edition.nodes[0].options[1].slug, new_edition.nodes[0].options[1].slug
+    assert_equal old_edition.nodes[0].options[1].label, new_edition.nodes[0].options[1].label
+    assert_equal old_edition.nodes[0].options[1].next_node, new_edition.nodes[0].options[1].next_node
+    assert_equal old_edition.nodes[0].options[1].order, new_edition.nodes[0].options[1].order
+  end
+
   should "not copy nodes when new edition is not a smart answer" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
