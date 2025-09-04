@@ -72,4 +72,23 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
     assert_equal edition.scotland_availability.authority_type, "devolved_administration_service"
     assert_not cloned_edition.editionable.respond_to?(:scotland_availability)
   end
+
+  should "not copy the devolved administration availability mongo_id fields when cloning an edition" do
+    edition = FactoryBot.build(
+      :local_transaction_edition,
+      panopticon_id: @artefact.id,
+      state: "published",
+      scotland_availability: FactoryBot.build(:scotland_availability, alternative_url: "https://test.com", mongo_id: "OldMongoId1"),
+      wales_availability: FactoryBot.build(:wales_availability, alternative_url: "https://test.com", mongo_id: "OldMongoId2"),
+      northern_ireland_availability: FactoryBot.build(:northern_ireland_availability, alternative_url: "https://test.com", mongo_id: "OldMongoId3"),
+    )
+
+    edition.save!(validate: false)
+    cloned_edition = edition.build_clone
+    cloned_edition.save!(validate: false)
+
+    assert_nil cloned_edition.scotland_availability.mongo_id
+    assert_nil cloned_edition.wales_availability.mongo_id
+    assert_nil cloned_edition.northern_ireland_availability.mongo_id
+  end
 end

@@ -47,8 +47,11 @@ class LocalTransactionEdition < ApplicationRecord
   def copy_to(new_edition)
     if new_edition.editionable.is_a?(LocalTransactionEdition)
       new_edition.editionable.scotland_availability = scotland_availability.clone
+      new_edition.editionable.scotland_availability.mongo_id = nil
       new_edition.editionable.wales_availability = wales_availability.clone
+      new_edition.editionable.wales_availability.mongo_id = nil
       new_edition.editionable.northern_ireland_availability = northern_ireland_availability.clone
+      new_edition.editionable.northern_ireland_availability.mongo_id = nil
     end
     new_edition
   end
