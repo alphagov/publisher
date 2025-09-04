@@ -27,7 +27,18 @@ class SimpleSmartAnswerEdition < ApplicationRecord
 
   def copy_to(new_edition)
     if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
-      new_edition.editionable.nodes = nodes.map(&:dup)
+      new_edition.editionable.nodes = nodes.map do |node|
+        new_node = node.dup
+        new_node.mongo_id = nil
+        new_node.options = node.options.map do |option|
+          new_option = option.dup
+          new_option.mongo_id = nil
+
+          new_option
+        end
+
+        new_node
+      end
     end
     new_edition
   end
