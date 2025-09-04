@@ -29,7 +29,13 @@ class SimpleSmartAnswerEdition < ApplicationRecord
     if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
       new_edition.editionable.nodes = nodes.map do |node|
         new_node = node.dup
-        new_node.options = node.options.map(&:dup)
+        new_node.mongo_id = nil
+        new_node.options = node.options.map do |option|
+          new_option = option.dup
+          new_option.mongo_id = nil
+
+          new_option
+        end
 
         new_node
       end

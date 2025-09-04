@@ -75,6 +75,24 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     assert_equal old_edition.nodes[0].options[1].order, new_edition.nodes[0].options[1].order
   end
 
+  should "not copy across old mongo_ids for nodes and options when cloning an edition" do
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
+    edition.nodes.build(slug: "question1", title: "a", kind: "question", order: 1, mongo_id: "MongoIsGone!")
+    edition.nodes.build(slug: "question2", title: "b", kind: "question", order: 2)
+    edition.nodes[0].options.build(slug: "node1-option1", label: "a", next_node: edition.nodes[1], order: 1, mongo_id: "MongoIsReallyGone")
+    edition.save!
+
+    cloned_edition = edition.build_clone
+
+    assert_nil cloned_edition.nodes[0].mongo_id
+    assert_nil cloned_edition.nodes[0].options[0].mongo_id
+  end
+
   should "not copy nodes when new edition is not a smart answer" do
     edition = FactoryBot.create(
       :simple_smart_answer_edition,
