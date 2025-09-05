@@ -18,11 +18,11 @@ window.GOVUK.analyticsGa4.analyticsModules =
         indexedElements.forEach((element, index) => {
           if (element.tagName === 'FIELDSET' || !element.closest('fieldset')) {
             const indexData = {
-              index_section: index + 1,
+              index_section: index,
               index_section_count: indexedElements.length
             }
             element.dataset.ga4Index = JSON.stringify(indexData)
-            element.dataset.ga4IndexSection = index + 1
+            element.dataset.ga4IndexSection = index
 
             if (element.closest('[data-module~="ga4-finder-tracker"]')) {
               element.dataset.ga4FilterParent = true
