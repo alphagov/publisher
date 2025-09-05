@@ -1783,6 +1783,53 @@ class EditionEditTest < IntegrationTest
         assert page.has_field?("edition[body]", with: "Changed body")
         assert page.has_text?("Edition updated successfully.")
       end
+
+      context "place edition" do
+        setup do
+          visit_draft_place_edition
+        end
+
+        should "show fields for place edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_field?("edition[overview]", with: "metatags")
+
+          assert page.has_css?(".govuk-label", text: "Places Manager service identifier")
+          assert page.has_css?(".govuk-hint", text: "This is assigned in the Places Manager application")
+          assert page.has_field?("edition[place_type]", with: "The place type")
+
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Refer to the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[introduction]", with: "some intro")
+
+          assert page.has_css?(".govuk-label", text: "Further information (optional)")
+          assert page.has_field?("edition[more_information]", with: "some more info")
+
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+          assert page.has_field?("edition[need_to_know]", with: "some need to know")
+
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update place edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          fill_in "edition[place_type]", with: "Changed place type"
+          fill_in "edition[introduction]", with: "Changed intro"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[need_to_know]", with: "Changed need to know"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[place_type]", with: "Changed place type")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
+      end
     end
 
     context "amends needed edition of a new publication" do
@@ -2059,6 +2106,29 @@ class EditionEditTest < IntegrationTest
           assert page.has_no_link?("Cancel scheduling")
         end
       end
+
+      context "place edition" do
+        should "show public change note field" do
+          edition = FactoryBot.create(
+            :place_edition,
+            state: "scheduled_for_publishing",
+            in_beta: true,
+            major_change: false,
+            publish_at: Time.zone.now + 1.day,
+          )
+          visit edition_path(edition)
+
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          edition.major_change = true
+          edition.change_note = "Change note for test"
+          edition.save!(validate: false)
+          visit edition_path(edition)
+
+          assert page.has_text?(edition.change_note)
+        end
+      end
     end
 
     context "published edition" do
@@ -2115,6 +2185,45 @@ class EditionEditTest < IntegrationTest
         visit edition_path(published_edition)
 
         assert page.has_text?(published_edition.change_note)
+      end
+
+      context "place edition" do
+        should "show published place edition fields as read only" do
+          published_place_edition = FactoryBot.create(
+            :place_edition,
+            state: "published",
+            title: "Some test title",
+            overview: "Some overview text",
+            place_type: "Some place type",
+            introduction: "Some introduction",
+            more_information: "Some more info",
+            need_to_know: "Some need info",
+            in_beta: true,
+          )
+          visit edition_path(published_place_edition)
+
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p", text: published_place_edition.title)
+          assert page.has_css?("h3", text: "Meta tag description")
+          assert page.has_css?("p", text: published_place_edition.overview)
+          assert page.has_css?("h3", text: "Places Manager service identifier")
+          assert page.has_css?("p", text: published_place_edition.place_type)
+          assert page.has_css?("h3", text: "Introduction")
+          assert page.has_css?("p", text: published_place_edition.introduction)
+          assert page.has_css?("h3", text: "Further information (optional)")
+          assert page.has_css?("p", text: published_place_edition.more_information)
+          assert page.has_css?("h3", text: "What you need to know (optional)")
+          assert page.has_css?("p", text: published_place_edition.need_to_know)
+          assert page.has_css?("h3", text: "Is this beta content?")
+          assert page.has_css?("p", text: "Yes")
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          published_place_edition.in_beta = false
+          published_place_edition.save!(validate: false)
+          visit edition_path(published_place_edition)
+          assert page.has_css?("p", text: "No")
+        end
       end
 
       context "user is a govuk_editor" do
@@ -3444,6 +3553,15 @@ private
   def visit_draft_edition
     create_draft_edition
     visit edition_path(@draft_edition)
+  end
+
+  def create_draft_place_edition
+    @draft_place_edition = FactoryBot.create(:place_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, place_type: "The place type", introduction: "some intro", more_information: "some more info", need_to_know: "some need to know")
+  end
+
+  def visit_draft_place_edition
+    create_draft_place_edition
+    visit edition_path(@draft_place_edition)
   end
 
   def visit_published_edition
