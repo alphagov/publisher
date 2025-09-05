@@ -240,6 +240,23 @@ class EditionTest < ActiveSupport::TestCase
     assert_equal 3, clone1.version_number
   end
 
+  test "cloning an edition should not copy the mongo_id from the previous edition" do
+    edition = FactoryBot.create(
+      :guide_edition,
+      state: "published",
+      panopticon_id: @artefact.id,
+      version_number: 1,
+      title: "Dolly the sheep",
+      overview: "To be cloned",
+      in_beta: true,
+      owning_org_content_ids: %w[org-1],
+      mongo_id: "12345mongo",
+    )
+    clone_edition = edition.build_clone
+
+    assert_nil clone_edition.mongo_id
+  end
+
   # test cloning into different edition types
   Edition.subclasses.permutation(2).each do |source_class, destination_class|
     next if source_class.instance_of?(PopularLinksEdition.class) || destination_class.instance_of?(PopularLinksEdition.class)

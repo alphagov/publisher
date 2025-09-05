@@ -16,7 +16,7 @@ class GuideEditionTest < ActiveSupport::TestCase
     user = FactoryBot.create(:user, :govuk_editor, uid: "123", name: "Ben")
     other_user = FactoryBot.create(:user, :govuk_editor, uid: "321", name: "James")
 
-    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title")
+    guide = user.create_edition(:guide, panopticon_id: FactoryBot.create(:artefact).id, overview: "My Overview", title: "My Title", slug: "my-title", mongo_id: "OldMongoId1")
     edition = guide
     request_review(user, edition)
     approve_review(other_user, edition)
@@ -54,6 +54,13 @@ class GuideEditionTest < ActiveSupport::TestCase
 
     new_edition = user.new_version(edition)
     assert_equal edition.overview, new_edition.overview
+  end
+
+  test "cloning a guide should not copy the old mongo_id" do
+    _, guide = publisher_and_guide
+    cloned_edition = guide.published_edition.build_clone
+
+    assert_nil cloned_edition.mongo_id
   end
 
   test "it should trim whitespace from URLs" do
