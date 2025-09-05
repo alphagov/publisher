@@ -35,9 +35,9 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
       :local_transaction_edition,
       panopticon_id: @artefact.id,
       state: "published",
-      scotland_availability: FactoryBot.build(:scotland_availability, alternative_url: "https://test.com"),
-      wales_availability: FactoryBot.build(:wales_availability, alternative_url: "https://test.com"),
-      northern_ireland_availability: FactoryBot.build(:northern_ireland_availability, alternative_url: "https://test.com"),
+      scotland_availability: FactoryBot.build(:scotland_availability, alternative_url: "https://test.com", authority_type: "local_authority_service"),
+      wales_availability: FactoryBot.build(:wales_availability, alternative_url: "https://test.com", authority_type: "devolved_administration_service"),
+      northern_ireland_availability: FactoryBot.build(:northern_ireland_availability, alternative_url: "https://test.com", authority_type: "unavailable"),
     )
 
     edition.save!(validate: false)
@@ -47,9 +47,12 @@ class LocalTransactionEditionTest < ActiveSupport::TestCase
 
     assert_equal edition.scotland_availability.type, cloned_edition.scotland_availability.type
     assert_equal edition.scotland_availability.alternative_url, cloned_edition.scotland_availability.alternative_url
+    assert_equal edition.scotland_availability.authority_type, cloned_edition.scotland_availability.authority_type
     assert_equal edition.wales_availability.type, cloned_edition.wales_availability.type
     assert_equal edition.wales_availability.alternative_url, cloned_edition.wales_availability.alternative_url
+    assert_equal edition.wales_availability.authority_type, cloned_edition.wales_availability.authority_type
     assert_equal edition.northern_ireland_availability.type, cloned_edition.northern_ireland_availability.type
+    assert_equal edition.northern_ireland_availability.authority_type, cloned_edition.northern_ireland_availability.authority_type
   end
 
   should "not copy the devolved administration availability fields when new edition is not a LocalTransactionEdition" do
