@@ -3,10 +3,10 @@
 
 <div
   class="govuk-grid-row"
-  data-ga4-ecommerce data-ga4-ecommerce-start-index="0"
+  data-ga4-ecommerce
+  data-ga4-ecommerce-start-index="<%= page_start_index(params[:page]) %>"
   data-ga4-search-query="<%= params[:search_text] %>"
-> <!-- page_start_index(params[:page], @filter.options) -->
-
+>
   <div class="govuk-grid-column-one-third">
     <%= render :partial => "filter" %>
   </div>

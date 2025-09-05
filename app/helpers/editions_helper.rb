@@ -91,4 +91,10 @@ module EditionsHelper
   def edition_version_and_state_tag(edition)
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
+
+  def page_start_index(page)
+    return 0 unless page
+
+    (page.to_i - 1) * FilteredEditionsPresenter::ITEMS_PER_PAGE
+  end
 end
