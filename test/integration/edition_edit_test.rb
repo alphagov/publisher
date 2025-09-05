@@ -1832,6 +1832,76 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    context "transaction edition" do
+      setup do
+        visit_transaction_edition(state: "draft", in_beta: true)
+      end
+
+      should "show fields for transaction edition" do
+        assert page.has_field?("edition[title]", with: "Edit page title")
+        assert page.has_css?(".govuk-label", text: "Title")
+
+        assert page.has_field?("edition[overview]", with: "metatags")
+        assert page.has_css?(".govuk-label", text: "Meta tag description")
+        assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
+
+        assert page.has_field?("edition[introduction]", with: "Transaction introduction")
+        assert page.has_css?(".govuk-label", text: "Introduction")
+        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab).")
+
+        assert page.has_field?("edition[start_button_text]")
+        assert page.has_css?(".govuk-label", text: "Start button text")
+        assert find(".gem-c-radio input[value='Start now']").checked?
+
+        assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
+        assert page.has_css?(".govuk-label", text: "Text below the start button (optional)")
+        assert page.has_css?(".govuk-hint", text: "Following ‘on’, for example “the HMRC website”")
+
+        assert page.has_field?("edition[link]", with: "http://continue.com")
+        assert page.has_css?(".govuk-label", text: "Link to start of transaction")
+        assert page.has_css?(".govuk-hint", text: "Link as deep as possible")
+
+        assert page.has_field?("edition[more_information]", with: "Transaction more information")
+        assert page.has_css?(".govuk-label", text: "More information (optional)")
+
+        assert page.has_field?("edition[alternate_methods]", with: "Method A or B")
+        assert page.has_css?(".govuk-label", text: "Other ways to apply (optional)")
+        assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
+
+        assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
+
+        assert page.has_field?("edition[is_beta]")
+        assert page.has_css?(".govuk-label", text: "Is this beta content?")
+        assert find(".gem-c-radio input[value='0']").checked?
+      end
+
+      should "update transaction edition and show success message" do
+        fill_in "edition[title]", with: "Changed Title"
+        fill_in "edition[overview]", with: "Changed Meta tag description"
+        fill_in "edition[introduction]", with: "Changed intro"
+        choose("Sign in")
+        fill_in "edition[will_continue_on]", with: "Continue on changed"
+        fill_in "edition[link]", with: "http://changed.com"
+        fill_in "edition[more_information]", with: "Changed more info"
+        fill_in "edition[alternate_methods]", with: "Method C or D"
+        fill_in "edition[need_to_know]", with: "Changed need to"
+        choose("Yes")
+        click_button("Save")
+
+        assert page.has_field?("edition[title]", with: "Changed Title")
+        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+        assert page.has_field?("edition[introduction]", with: "Changed intro")
+        assert find(".gem-c-radio input[value='Sign in']").checked?
+        assert page.has_field?("edition[will_continue_on]", with: "Continue on changed")
+        assert page.has_field?("edition[link]", with: "http://changed.com")
+        assert page.has_field?("edition[more_information]", with: "Changed more info")
+        assert page.has_field?("edition[alternate_methods]", with: "Method C or D")
+        assert page.has_field?("edition[need_to_know]", with: "Changed need to")
+        assert find(".gem-c-radio input[value='1']").checked?
+        assert page.has_text?("Edition updated successfully.")
+      end
+    end
+
     context "amends needed edition of a new publication" do
       should "show 'Send to 2i' link" do
         visit_amends_needed_edition
@@ -2129,6 +2199,22 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?(edition.change_note)
         end
       end
+
+      context "transaction edition" do
+        should "show public change note field" do
+          visit_transaction_edition(state: "scheduled_for_publishing")
+
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          @transaction_edition.major_change = true
+          @transaction_edition.change_note = "Change note for test"
+          @transaction_edition.save!(validate: false)
+          visit edition_path(@transaction_edition)
+
+          assert page.has_text?(@transaction_edition.change_note)
+        end
+      end
     end
 
     context "published edition" do
@@ -2222,6 +2308,52 @@ class EditionEditTest < IntegrationTest
           published_place_edition.in_beta = false
           published_place_edition.save!(validate: false)
           visit edition_path(published_place_edition)
+          assert page.has_css?("p", text: "No")
+        end
+      end
+
+      context "transaction edition" do
+        setup do
+          visit_transaction_edition(state: "published", in_beta: true)
+        end
+
+        should "show fields for transaction edition" do
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p", text: @transaction_edition.title)
+
+          assert page.has_css?("h3", text: "Meta tag description")
+          assert page.has_css?("p", text: @transaction_edition.overview)
+
+          assert page.has_css?("h3", text: "Introduction")
+          assert page.has_css?("p", text: @transaction_edition.introduction)
+
+          assert page.has_css?("h3", text: "Start button text")
+          assert page.has_css?("p", text: @transaction_edition.start_button_text)
+
+          assert page.has_css?("h3", text: "Text below the start button (optional)")
+          assert page.has_css?("p", text: @transaction_edition.will_continue_on)
+
+          assert page.has_css?("h3", text: "Link to start of transaction")
+          assert page.has_css?("p", text: @transaction_edition.link)
+
+          assert page.has_css?("h3", text: "More information (optional)")
+          assert page.has_css?("p", text: @transaction_edition.more_information)
+
+          assert page.has_css?("h3", text: "Other ways to apply (optional)")
+          assert page.has_css?("p", text: @transaction_edition.alternate_methods)
+
+          assert page.has_css?("h3", text: "What you need to know (optional)")
+          assert page.has_css?("p", text: @transaction_edition.need_to_know)
+
+          assert page.has_css?("h3", text: "Is this beta content?")
+          assert page.has_css?("p", text: "Yes")
+
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          @transaction_edition.in_beta = false
+          @transaction_edition.save!(validate: false)
+          visit edition_path(@transaction_edition)
           assert page.has_css?("p", text: "No")
         end
       end
@@ -3562,6 +3694,26 @@ private
   def visit_draft_place_edition
     create_draft_place_edition
     visit edition_path(@draft_place_edition)
+  end
+
+  def create_transaction_edition(state: "draft", in_beta: true)
+    @transaction_edition = FactoryBot.create(:transaction_edition,
+                                             title: "Edit page title",
+                                             state: state,
+                                             overview: "metatags",
+                                             in_beta: in_beta,
+                                             introduction: "Transaction introduction",
+                                             more_information: "Transaction more information",
+                                             need_to_know: "Transaction need to",
+                                             link: "http://continue.com",
+                                             will_continue_on: "To be continued...",
+                                             alternate_methods: "Method A or B",
+                                             publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil)
+  end
+
+  def visit_transaction_edition(state: "draft", in_beta: true)
+    create_transaction_edition(state: state, in_beta: in_beta)
+    visit edition_path(@transaction_edition)
   end
 
   def visit_published_edition
