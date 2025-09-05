@@ -536,14 +536,13 @@ class EditionsController < InheritedResources::Base
     @resource.assign_attributes(reviewer: reviewer_id)
 
     if @resource.save
-      if @resource.reviewer == current_user.id.to_s
-        flash[:success] = "You are now the 2i reviewer of this edition"
-      elsif @resource.reviewer.nil?
-        flash[:success] = "2i reviewer removed"
-      else
-        reviewer = User.where(id: @resource.reviewer).first
-        flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
-      end
+      flash[:success] = if @resource.reviewer == current_user.id.to_s
+                          "You are now the 2i reviewer of this edition"
+                        elsif @resource.reviewer.nil?
+                          "2i reviewer removed"
+                        else
+                          "#{@resource.reviewer} is now the 2i reviewer of this edition"
+                        end
 
       redirect_to edition_path
     else
