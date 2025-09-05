@@ -15,7 +15,11 @@ module Parted
     # If the new edition is of the same type or another type that has parts,
     # copy over the parts from this edition
     if new_edition.editionable.respond_to?(:parts)
-      new_edition.editionable.parts = parts.map(&:dup)
+      new_edition.editionable.parts = parts.map do |part|
+        part_copy = part.dup
+        part_copy.mongo_id = nil
+        part_copy
+      end
     end
 
     new_edition

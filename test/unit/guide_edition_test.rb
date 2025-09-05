@@ -56,11 +56,12 @@ class GuideEditionTest < ActiveSupport::TestCase
     assert_equal edition.overview, new_edition.overview
   end
 
-  test "cloning a guide should not copy the old mongo_id" do
-    _, guide = publisher_and_guide
-    cloned_edition = guide.published_edition.build_clone
+  test "cloning a guide with parts should not copy the old mongo_ids from parts" do
+    mongo_part_edition = FactoryBot.create(:guide_edition_and_parts_have_mongo_ids, panopticon_id: @artefact.id, state: "published")
+    cloned_edition = mongo_part_edition.build_clone
 
-    assert_nil cloned_edition.mongo_id
+    assert_nil cloned_edition.parts[0].mongo_id
+    assert_nil cloned_edition.parts[1].mongo_id
   end
 
   test "it should trim whitespace from URLs" do

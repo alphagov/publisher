@@ -325,16 +325,37 @@ FactoryBot.define do
   end
 
   factory :guide_edition_with_two_parts, parent: :guide_edition do
-    after :build do |getp|
-      getp.parts.build(
+    after :build do |guide_edition|
+      guide_edition.parts.build(
         title: "PART !",
         body: "This is some version text.",
         slug: "part-one",
+        order: 1,
       )
-      getp.parts.build(
+      guide_edition.parts.build(
         title: "PART !!",
         body: "This is some more version text.",
         slug: "part-two",
+        order: 2,
+      )
+    end
+  end
+
+  factory :guide_edition_and_parts_have_mongo_ids, parent: :guide_edition do
+    after :build do |guide_edition|
+      guide_edition.parts.build(
+        title: "PART !",
+        body: "This is some version text.",
+        slug: "part-one",
+        order: 1,
+        mongo_id: "MongoIsNoMore1",
+      )
+      guide_edition.parts.build(
+        title: "PART !!",
+        body: "This is some more version text.",
+        slug: "part-two",
+        order: 2,
+        mongo_id: "MongoIsNoMore2",
       )
     end
   end
