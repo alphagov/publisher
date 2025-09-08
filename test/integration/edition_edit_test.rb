@@ -1847,10 +1847,10 @@ class EditionEditTest < IntegrationTest
 
         assert page.has_field?("edition[introduction]", with: "Transaction introduction")
         assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab).")
+        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
 
         assert page.has_field?("edition[start_button_text]")
-        assert page.has_css?(".govuk-label", text: "Start button text")
+        assert page.has_text?("Start button text")
         assert find(".gem-c-radio input[value='Start now']").checked?
 
         assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
@@ -1869,10 +1869,11 @@ class EditionEditTest < IntegrationTest
         assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
 
         assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
+        assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
 
-        assert page.has_field?("edition[is_beta]")
-        assert page.has_css?(".govuk-label", text: "Is this beta content?")
-        assert find(".gem-c-radio input[value='0']").checked?
+        assert page.has_field?("edition[in_beta]")
+        assert page.has_text?("Is this beta content?")
+        assert find(".gem-c-radio input[value='1']").checked?
       end
 
       should "update transaction edition and show success message" do
@@ -3697,18 +3698,20 @@ private
   end
 
   def create_transaction_edition(state: "draft", in_beta: true)
-    @transaction_edition = FactoryBot.create(:transaction_edition,
-                                             title: "Edit page title",
-                                             state: state,
-                                             overview: "metatags",
-                                             in_beta: in_beta,
-                                             introduction: "Transaction introduction",
-                                             more_information: "Transaction more information",
-                                             need_to_know: "Transaction need to",
-                                             link: "http://continue.com",
-                                             will_continue_on: "To be continued...",
-                                             alternate_methods: "Method A or B",
-                                             publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil)
+    @transaction_edition = FactoryBot.create(
+      :transaction_edition,
+      title: "Edit page title",
+      state: state,
+      overview: "metatags",
+      in_beta: in_beta,
+      introduction: "Transaction introduction",
+      more_information: "Transaction more information",
+      need_to_know: "Transaction need to",
+      link: "http://continue.com",
+      will_continue_on: "To be continued...",
+      alternate_methods: "Method A or B",
+      publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil,
+    )
   end
 
   def visit_transaction_edition(state: "draft", in_beta: true)
