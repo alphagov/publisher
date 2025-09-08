@@ -2374,7 +2374,7 @@ class EditionsControllerTest < ActionController::TestCase
 
     context "user with required permissions" do
       setup do
-        @in_review_edition = FactoryBot.create(:answer_edition, :in_review)
+        @in_review_edition = FactoryBot.create(:answer_edition, :in_review, reviewer: "2i Reviewer")
         @reviewer = FactoryBot.create(:user, :govuk_editor, name: "2i Reviewer")
         @user = FactoryBot.create(:user, :govuk_editor)
         login_as(@user)
@@ -2388,17 +2388,16 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to assign another user as 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
 
         assert_redirected_to edition_path(@in_review_edition.id)
         assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
       should "update the 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
-
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
         @in_review_edition.reload
-        assert_equal @reviewer.id.to_s, @in_review_edition.reviewer
+        assert_equal @reviewer.name, @in_review_edition.reviewer
         assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
