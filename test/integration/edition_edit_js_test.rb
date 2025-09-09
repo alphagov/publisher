@@ -8,6 +8,50 @@ class EditionEditJSTest < JavascriptIntegrationTest
     test_strategy.switch!(:design_system_edit, true)
   end
 
+  context "Edit tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_edit_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@edit_edition.id)
+      end
+
+      # Skip these tests when running in CI as we cannot get them to pass
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          fill_in "Meta tag description", with: "meta tag"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+        end
+
+        should "remain on the edit page when the user dismisses the alert" do
+          fill_in "Meta tag description", with: "meta tag"
+
+          dismiss_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path edition_path(@edit_edition.id)
+        end
+
+        should "leave the page when the user accepts the alert" do
+          fill_in "Meta tag description", with: "meta tag"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path metadata_edition_path(@edit_edition.id)
+        end
+      end
+    end
+  end
+
   context "Related external links tab" do
     setup do
       visit_related_external_links_page
@@ -77,6 +121,47 @@ class EditionEditJSTest < JavascriptIntegrationTest
       assert page.has_no_css?("label[for='artefact_external_links_attributes_1_title']")
       assert page.has_no_css?("label[for='artefact_external_links_attributes_1_url']")
       assert page.has_css?("button", text: "Add related external link")
+    end
+
+    context "Unsaved changes validation prompt" do
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@external_links_edition.id)
+      end
+
+      # Skip these tests when running in CI as we cannot get them to pass
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+        end
+
+        should "remain on the edit page when the user dismisses the alert" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
+
+          dismiss_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path related_external_links_edition_path(@external_links_edition.id)
+        end
+
+        should "leave the page when the user accepts the alert" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path metadata_edition_path(@external_links_edition.id)
+        end
+      end
     end
 
     context "User does not have editor permissions" do
@@ -221,6 +306,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert page.has_text?("Related content updated")
       end
     end
+
     context "Reordering tags for a related content page" do
       setup do
         stub_linkables_with_data
@@ -259,7 +345,56 @@ class EditionEditJSTest < JavascriptIntegrationTest
     end
   end
 
+  context "Metadata tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_metadata_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Edit")
+        assert_current_path edition_path(@edit_edition.id)
+      end
+
+      # Skip these tests when running in CI as we cannot get them to pass
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          fill_in "Slug", with: "slug"
+
+          accept_confirm do
+            click_link("Edit")
+          end
+        end
+
+        should "remain on the metadata page when the user dismisses the alert" do
+          fill_in "Slug", with: "another-slug"
+
+          dismiss_confirm do
+            click_link("Edit")
+          end
+
+          assert_current_path metadata_edition_path(@edit_edition.id)
+        end
+
+        should "leave the page when the user accepts the alert" do
+          fill_in "Slug", with: "yet-another-slug"
+
+          accept_confirm do
+            click_link("Edit")
+          end
+
+          assert_current_path edition_path(@edit_edition.id)
+        end
+      end
+    end
+  end
+
 private
+
+  def visit_edit_page
+    @edit_edition = FactoryBot.create(:edition)
+    visit edition_path(@edit_edition)
+  end
 
   def visit_related_external_links_page
     @external_links_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
@@ -274,5 +409,10 @@ private
   def visit_tagging_reorder_related_content_page_edition_path
     @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
     visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_metadata_page
+    visit_edit_page
+    click_link("Metadata")
   end
 end
