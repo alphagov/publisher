@@ -117,7 +117,6 @@ class EditionsController < InheritedResources::Base
       elsif !params[:tagging_tagging_update_form][:remove_parent]
         @resource.errors.add(:remove_parent, "Select an option")
         render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
-        # redirect_to tagging_remove_breadcrumb_page_edition_path
       else
         @tagging_update_form_values.publish!
         flash[:success] = success_message
