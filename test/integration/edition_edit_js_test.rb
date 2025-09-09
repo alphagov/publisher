@@ -8,6 +8,44 @@ class EditionEditJSTest < JavascriptIntegrationTest
     test_strategy.switch!(:design_system_edit, true)
   end
 
+  context "Edit tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_edit_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@edit_edition.id)
+      end
+
+      should "display an alert when the user has made changes to the form and tries to navigate away" do
+        fill_in "Meta tag description", with: "meta tag"
+        click_link("Metadata")
+
+        assert page.driver.browser.switch_to.alert
+      end
+
+      should "remain on the edit page when the user dismisses the alert" do
+        fill_in "Meta tag description", with: "meta tag"
+        click_link("Metadata")
+
+        page.driver.browser.switch_to.alert.dismiss
+
+        assert_current_path edition_path(@edit_edition.id)
+      end
+
+      should "leave the page when the user accepts the alert" do
+        fill_in "Meta tag description", with: "meta tag"
+        click_link("Metadata")
+
+        page.driver.browser.switch_to.alert.accept
+
+        assert_current_path metadata_edition_path(@edit_edition.id)
+      end
+    end
+  end
+
   context "Related external links tab" do
     setup do
       visit_related_external_links_page
@@ -260,6 +298,11 @@ class EditionEditJSTest < JavascriptIntegrationTest
   end
 
 private
+
+  def visit_edit_page
+    @edit_edition = FactoryBot.create(:edition)
+    visit edition_path(@edit_edition)
+  end
 
   def visit_related_external_links_page
     @external_links_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
