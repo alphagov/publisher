@@ -2311,14 +2311,31 @@ class EditionEditTest < IntegrationTest
           visit edition_path(published_place_edition)
           assert page.has_css?("p", text: "No")
         end
+
+        should "show 'None added' for empty fields in place edition" do
+          [nil, ""].each do |empty_value|
+            empty_place_edition = FactoryBot.create(
+              :place_edition,
+              state: "published",
+              title: "Edit page title",
+              overview: empty_value,
+              place_type: empty_value,
+              introduction: empty_value,
+              more_information: empty_value,
+              need_to_know: empty_value,
+              in_beta: true,
+            )
+            visit edition_path(empty_place_edition)
+
+            assert page.has_css?("p", text: "None added", count: 6)
+          end
+        end
       end
 
       context "transaction edition" do
-        setup do
-          visit_transaction_edition(state: "published", in_beta: true)
-        end
-
         should "show fields for transaction edition" do
+          visit_transaction_edition(state: "published", in_beta: true)
+
           assert page.has_css?("h3", text: "Title")
           assert page.has_css?("p", text: @transaction_edition.title)
 
@@ -2356,6 +2373,27 @@ class EditionEditTest < IntegrationTest
           @transaction_edition.save!(validate: false)
           visit edition_path(@transaction_edition)
           assert page.has_css?("p", text: "No")
+        end
+
+        should "show 'None added' for empty fields in transaction edition" do
+          [nil, ""].each do |empty_value|
+            empty_transaction_edition = FactoryBot.create(
+              :transaction_edition,
+              title: "Edit page title",
+              state: "published",
+              overview: empty_value,
+              in_beta: true,
+              introduction: empty_value,
+              more_information: empty_value,
+              need_to_know: empty_value,
+              link: empty_value,
+              will_continue_on: empty_value,
+              alternate_methods: empty_value,
+            )
+            visit edition_path(empty_transaction_edition)
+
+            assert page.has_css?("p", text: "None added", count: 8)
+          end
         end
       end
 
@@ -3717,6 +3755,18 @@ private
   def visit_transaction_edition(state: "draft", in_beta: true)
     create_transaction_edition(state: state, in_beta: in_beta)
     visit edition_path(@transaction_edition)
+  end
+
+  def create_empty_edition(type)
+    @empty_edition = FactoryBot.create(
+      type,
+      title: "Edit page title",
+    )
+  end
+
+  def visit_empty_edition(type)
+    create_empty_edition(type)
+    visit edition_path(@empty_edition)
   end
 
   def visit_published_edition
