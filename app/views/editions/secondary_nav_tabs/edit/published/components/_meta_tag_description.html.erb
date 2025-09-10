@@ -5,5 +5,5 @@
     font_size: "s",
   } %>
 
-  <p><%= edition.overview != "" ? edition.overview : "None added" %></p>
+  <p><%= edition.overview.presence || "None added" %></p>
 </section>

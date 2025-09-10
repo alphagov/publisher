@@ -8,13 +8,9 @@
   heading_level: 3,
   font_size: "s",
 } %>
-<p>
-  <% if edition.editionable.place_type == "" || edition.editionable.place_type.nil? %>
-    None added
-  <% else %>
-    <%= edition.editionable.place_type %>
-  <% end %>
-</p>
+  <p>
+    <%= edition.place_type.presence || "None added" %>
+  </p>
 </section>
 
 <section>
@@ -23,13 +19,9 @@
   heading_level: 3,
   font_size: "s",
 } %>
-<p>
-  <% if edition.editionable.introduction == "" || edition.editionable.introduction.nil? %>
-    None added
-  <% else %>
-    <%= edition.editionable.introduction %>
-  <% end %>
-</p>
+  <p>
+    <%= edition.introduction.presence || "None added" %>
+  </p>
 </section>
 
 <section>
@@ -38,13 +30,9 @@
   heading_level: 3,
   font_size: "s",
 } %>
-<p>
-  <% if edition.editionable.more_information == "" || edition.editionable.more_information.nil? %>
-    None added
-  <% else %>
-    <%= edition.editionable.more_information %>
-  <% end %>
-</p>
+  <p>
+    <%= edition.more_information.presence || "None added" %>
+  </p>
 </section>
 
 <section>
@@ -53,11 +41,7 @@
   heading_level: 3,
   font_size: "s",
 } %>
-<p>
-  <% if edition.editionable.need_to_know == "" || edition.editionable.need_to_know.nil? %>
-    None added
-  <% else %>
-    <%= edition.editionable.need_to_know %>
-  <% end %>
-</p>
+  <p>
+    <%= edition.need_to_know.presence || "None added" %>
+  </p>
 </section>

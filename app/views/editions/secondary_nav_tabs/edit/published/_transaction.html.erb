@@ -9,7 +9,7 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.introduction != "" ? edition.introduction : "None added" %>
+    <%= edition.introduction.presence || "None added" %>
   </p>
 </section>
 
@@ -31,7 +31,7 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.will_continue_on != "" ? edition.will_continue_on : "None added" %>
+    <%= edition.will_continue_on.presence || "None added" %>
   </p>
 </section>
 
@@ -42,7 +42,7 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.link != "" ? edition.link : "None added" %>
+    <%= edition.link.presence || "None added" %>
   </p>
 </section>
 
@@ -53,7 +53,7 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.more_information != "" ? edition.more_information : "None added" %>
+    <%= edition.more_information.presence || "None added" %>
   </p>
 </section>
 
@@ -64,7 +64,7 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.alternate_methods != "" ? edition.alternate_methods : "None added" %>
+    <%= edition.alternate_methods.presence || "None added" %>
   </p>
 </section>
 
@@ -75,6 +75,6 @@
     font_size: "s",
   } %>
   <p>
-    <%= edition.need_to_know != "" ? edition.need_to_know : "None added" %>
+    <%= edition.need_to_know.presence || "None added" %>
   </p>
 </section>
