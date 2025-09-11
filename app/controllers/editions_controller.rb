@@ -751,6 +751,14 @@ private
         alternate_methods
         need_to_know
       ]
+    when :completed_transaction_edition
+      %i[
+        body
+        promotion_choice
+        promotion_choice_url
+        promotion_choice_opt_in_url
+        promotion_choice_opt_out_url
+      ]
     else
       # answer_edition, help_page_edition
       [
