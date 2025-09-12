@@ -21,6 +21,7 @@ test: &test
 
 # set these environment variables on your prod server
 production:
+  <<: *default
   clients:
     default:
       uri: <%= ENV['DATABASE_URL'] %>
