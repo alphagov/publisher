@@ -22,7 +22,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     var expandLink = document.createElement('a')
     expandLink.classList.add('govuk-link', 'publications-table--expand-link')
     expandLink.setAttribute('href', '#')
-    expandLink.setAttribute('data-ga4-link', '{"action":"expand","event_name":"select_content","type":"Publications"}')
+    expandLink.setAttribute('data-ga4-link', '{"action":"opened/closed","event_name":"select_content","type":"Publications"}')
     expandLink.textContent = 'Expand all'
     this.$module.querySelector('.publications-table__heading').append(expandLink)
   }
