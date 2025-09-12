@@ -601,6 +601,11 @@ class EditionEditTest < IntegrationTest
       end
     end
 
+    should "display an error if the user tries to save with no option selected" do
+      click_button("Save")
+      assert page.has_text?("Select an option")
+    end
+
     should "redirect to tagging tab when Cancel link is clicked" do
       click_link("Cancel")
 
