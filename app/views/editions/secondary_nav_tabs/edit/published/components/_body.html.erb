@@ -5,5 +5,5 @@
     font_size: "s",
   } %>
 
-  <%= simple_format(edition.body) %>
+  <%= edition.body.presence || "None added" %>
 </section>
