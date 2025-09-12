@@ -138,6 +138,52 @@ class EditionEditJSTest < JavascriptIntegrationTest
     end
   end
 
+  context "Tag breadcrumb page" do
+    setup do
+      stub_linkables
+      visit_tagging_breadcrumb_page
+      # TODO fo straight to page not via the clicking
+      # visit_draft_edition
+      # click_link("Tagging")
+      # click_link("Set GOV.UK breadcrumb")
+    end
+
+    should "leave the page with no alert when the user has not made changes to the form" do
+      # stub_linkables_with_data
+      # click_link("Set GOV.UK breadcrumb")
+      click_link("Publications")
+      assert_current_path root_path
+    end
+
+    should "display an alert when the user has made changes to the form and tries to navigate away" do
+      # stub_linkables_with_data
+      # click_link("Set GOV.UK breadcrumb")
+      choose("VAT") # Not found
+      click_button("Save")
+
+      assert page.driver.browser.switch_to.alert
+    end
+
+    # To be updated
+    should "remain on the edit page when the user dismisses the alert" do
+      fill_in "Meta tag description", with: "meta tag"
+      click_link("Metadata")
+
+      page.driver.browser.switch_to.alert.dismiss
+
+      assert_current_path edition_path(@edit_edition.id)
+    end
+
+    should "leave the page when the user accepts the alert" do
+      fill_in "Meta tag description", with: "meta tag"
+      click_link("Metadata")
+
+      page.driver.browser.switch_to.alert.accept
+
+      assert_current_path metadata_edition_path(@edit_edition.id)
+    end
+  end
+
   context "Tag related content page" do
     setup do
       stub_linkables
@@ -305,6 +351,16 @@ private
   def visit_related_external_links_page
     @external_links_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
     visit related_external_links_edition_path(@external_links_edition)
+  end
+
+  # def visit_draft_edition
+  #   @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+  #   visit edition_path(@draft_edition)
+  # end
+
+  def visit_tagging_breadcrumb_page
+    @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
+    visit tagging_breadcrumb_page_edition_path(@tagging_edition)
   end
 
   def visit_tagging_related_content_page
