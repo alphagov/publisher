@@ -108,11 +108,11 @@ module EditionsSidebarButtonsHelper
           },
         )
       end
+      if edition.can_request_review?
+        buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
+      end
     end
     buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
-    if edition.can_request_review?
-      buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
-    end
 
     buttons
   end
