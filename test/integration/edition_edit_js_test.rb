@@ -259,6 +259,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert page.has_text?("Related content updated")
       end
     end
+
     context "Reordering tags for a related content page" do
       setup do
         stub_linkables_with_data
@@ -297,6 +298,44 @@ class EditionEditJSTest < JavascriptIntegrationTest
     end
   end
 
+  context "Metadata tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_metadata_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Edit")
+        assert_current_path edition_path(@edit_edition.id)
+      end
+
+      should "display an alert when the user has made changes to the form and tries to navigate away" do
+        fill_in "Slug", with: "slug"
+        click_link("Edit")
+
+        assert page.driver.browser.switch_to.alert
+      end
+
+      should "remain on the metadata page when the user dismisses the alert" do
+        fill_in "Slug", with: "another-slug"
+        click_link("Edit")
+
+        page.driver.browser.switch_to.alert.dismiss
+
+        assert_current_path metadata_edition_path(@edit_edition.id)
+      end
+
+      should "leave the page when the user accepts the alert" do
+        fill_in "Slug", with: "yet-another-slug"
+        click_link("Edit")
+
+        page.driver.browser.switch_to.alert.accept
+
+        assert_current_path edition_path(@edit_edition.id)
+      end
+    end
+  end
+
 private
 
   def visit_edit_page
@@ -317,5 +356,10 @@ private
   def visit_tagging_reorder_related_content_page_edition_path
     @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
     visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_metadata_page
+    visit_edit_page
+    click_link("Metadata")
   end
 end
