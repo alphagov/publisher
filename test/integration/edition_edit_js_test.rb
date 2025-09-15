@@ -117,6 +117,41 @@ class EditionEditJSTest < JavascriptIntegrationTest
       assert page.has_css?("button", text: "Add related external link")
     end
 
+    context "Unsaved changes validation prompt" do
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@external_links_edition.id)
+      end
+
+      should "display an alert when the user has made changes to the form and tries to navigate away" do
+        click_button("Add related external link")
+        fill_in "Title", with: "title"
+        click_link("Metadata")
+
+        assert page.driver.browser.switch_to.alert
+      end
+
+      should "remain on the edit page when the user dismisses the alert" do
+        click_button("Add related external link")
+        fill_in "Title", with: "title"
+        click_link("Metadata")
+
+        page.driver.browser.switch_to.alert.dismiss
+
+        assert_current_path related_external_links_edition_path(@external_links_edition.id)
+      end
+
+      should "leave the page when the user accepts the alert" do
+        click_button("Add related external link")
+        fill_in "Title", with: "title"
+        click_link("Metadata")
+
+        page.driver.browser.switch_to.alert.accept
+
+        assert_current_path metadata_edition_path(@external_links_edition.id)
+      end
+    end
+
     context "User does not have editor permissions" do
       setup do
         user = FactoryBot.create(:user, name: "Stub User")
