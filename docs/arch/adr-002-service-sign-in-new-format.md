@@ -42,3 +42,8 @@ hacky usage of other formats into transactions to meet those needs, it may make
 more sense to have a less flexible format or extension to transactions which
 could potentially make the publisher workflow easier and allow consistent
 iterations to start pages as a product.
+
+## Update (15/09/2025)
+There are currently no live service-sign-in pages, so support for this format is
+being removed.
+

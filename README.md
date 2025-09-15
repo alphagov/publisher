@@ -59,7 +59,7 @@ This will generate a diagram in the `docs/state_machines` folder.
 
 ### Querying the database of a deployed publisher app
 
-Publisher stores its data in DocumentDB, which can't be queried using the instructions detailed in the GOV.UK developer docs. Instead, follow [these instructions for querying the database](docs/database-querying.md). 
+Publisher stores its data in DocumentDB, which can't be queried using the instructions detailed in the GOV.UK developer docs. Instead, follow [these instructions for querying the database](docs/database-querying.md).
 
 ### Feature flags
 
@@ -72,12 +72,6 @@ For instructions on how to add a new type of promotion to Completed Transactions
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
-
-### Working with Service Sign In pages
-
-These pages do not have an admin interface and are instead managed through rake tasks.
-
-See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Licence
 
