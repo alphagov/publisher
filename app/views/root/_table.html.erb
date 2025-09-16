@@ -26,6 +26,9 @@
             tag.p("/#{publication.slug}", class: "govuk-body") +
             (render "govuk_publishing_components/components/details", {
               title: "More details",
+              ga4_attributes: {
+                index_section_count: @presenter.editions.total_count,
+              },
             } do
               render "govuk_publishing_components/components/summary_list", {
                 items: [
