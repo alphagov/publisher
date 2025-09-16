@@ -6,6 +6,7 @@
   <meta name="govuk:user-created-at" content="<%= current_user&.created_at&.to_date %>">
   <meta name="govuk:user-organisation-name" content="<%= current_user&.gds_editor? ? "Government Digital Service" : "nil" %>">
   <meta name="govuk:user-role" content="<%= current_user&.role %>">
+  <meta name="govuk:format" content="<%= action_name %>-<%= controller_name %>">
   <%= javascript_include_tag "domain-config" %>
   <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
   <%= javascript_include_tag "es6-components", type: "module" %>
@@ -40,8 +41,6 @@
     data-module="ga4-event-tracker ga4-index-section-setup ga4-paste-tracker ga4-link-tracker ga4-button-setup"
     data-ga4-filter-type="<%= sanitized_title %>"
     data-ga4-no-copy="true"
-    data-ga4-filter-type="<%= controller_name %>",
-    data-ga4-document-type="<%= action_name %>-<%= controller_name %>"
   >
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 
