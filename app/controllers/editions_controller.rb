@@ -111,8 +111,17 @@ class EditionsController < InheritedResources::Base
 
     create_tagging_update_form_values(tagging_update_params)
 
-    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb" && params[:tagging_tagging_update_form][:remove_parent] == "no"
-      redirect_to tagging_edition_path
+    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb"
+      if params[:tagging_tagging_update_form][:remove_parent] == "no"
+        redirect_to tagging_edition_path
+      elsif !params[:tagging_tagging_update_form][:remove_parent]
+        @resource.errors.add(:remove_parent, "Select an option")
+        render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+      else
+        @tagging_update_form_values.publish!
+        flash[:success] = success_message
+        redirect_to tagging_edition_path
+      end
     elsif @tagging_update_form_values.valid?
       @tagging_update_form_values.publish!
       flash[:success] = success_message
