@@ -2381,7 +2381,7 @@ class EditionsControllerTest < ActionController::TestCase
       end
 
       should "be able to assign themselves as 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.id }
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.name }
 
         assert_redirected_to edition_path(@in_review_edition.id)
         assert_equal "You are now the 2i reviewer of this edition", flash[:success]

@@ -536,7 +536,7 @@ class EditionsController < InheritedResources::Base
     @resource.assign_attributes(reviewer: reviewer_id)
 
     if @resource.save
-      flash[:success] = if @resource.reviewer == current_user.id.to_s
+      flash[:success] = if @resource.reviewer == current_user.name
                           "You are now the 2i reviewer of this edition"
                         elsif @resource.reviewer.nil?
                           "2i reviewer removed"
