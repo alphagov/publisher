@@ -774,6 +774,19 @@ private
         alternate_methods
         need_to_know
       ]
+    when :local_transaction_edition
+      [
+        :lgil_code,
+        :introduction,
+        :cta_text,
+        :more_information,
+        :need_to_know,
+        :before_results,
+        :after_results,
+        { scotland_availability_attributes: %i[authority_type alternative_url] },
+        { wales_availability_attributes: %i[authority_type alternative_url] },
+        { northern_ireland_availability_attributes: %i[authority_type alternative_url] },
+      ]
     when :completed_transaction_edition
       %i[
         body
