@@ -1,6 +1,6 @@
 class DevolvedAdministrationAvailability < ApplicationRecord
   validates :authority_type, inclusion: { in: %w[local_authority_service devolved_administration_service unavailable] }
-  validates :alternative_url, presence: true, if: -> { devolved_administration_service? }
+  validates :alternative_url, presence: { message: "Enter the URL of the devolved administration website page" }, if: -> { devolved_administration_service? }
   validate :alternative_url_format
 
   def alternative_url_format
