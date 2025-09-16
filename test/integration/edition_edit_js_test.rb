@@ -23,14 +23,18 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Meta tag description", with: "meta tag"
         click_link("Metadata")
 
-        assert page.driver.browser.switch_to.alert
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        assert alert
       end
 
       should "remain on the edit page when the user dismisses the alert" do
         fill_in "Meta tag description", with: "meta tag"
         click_link("Metadata")
 
-        page.driver.browser.switch_to.alert.dismiss
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.dismiss
 
         assert_current_path edition_path(@edit_edition.id)
       end
@@ -39,7 +43,9 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Meta tag description", with: "meta tag"
         click_link("Metadata")
 
-        page.driver.browser.switch_to.alert.accept
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.accept
 
         assert_current_path metadata_edition_path(@edit_edition.id)
       end
@@ -128,7 +134,9 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Title", with: "title"
         click_link("Metadata")
 
-        assert page.driver.browser.switch_to.alert
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        assert alert
       end
 
       should "remain on the edit page when the user dismisses the alert" do
@@ -136,7 +144,9 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Title", with: "title"
         click_link("Metadata")
 
-        page.driver.browser.switch_to.alert.dismiss
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.dismiss
 
         assert_current_path related_external_links_edition_path(@external_links_edition.id)
       end
@@ -146,7 +156,9 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Title", with: "title"
         click_link("Metadata")
 
-        page.driver.browser.switch_to.alert.accept
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.accept
 
         assert_current_path metadata_edition_path(@external_links_edition.id)
       end
@@ -348,14 +360,18 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Slug", with: "slug"
         click_link("Edit")
 
-        assert page.driver.browser.switch_to.alert
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        assert alert
       end
 
       should "remain on the metadata page when the user dismisses the alert" do
         fill_in "Slug", with: "another-slug"
         click_link("Edit")
 
-        page.driver.browser.switch_to.alert.dismiss
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.dismiss
 
         assert_current_path metadata_edition_path(@edit_edition.id)
       end
@@ -364,7 +380,9 @@ class EditionEditJSTest < JavascriptIntegrationTest
         fill_in "Slug", with: "yet-another-slug"
         click_link("Edit")
 
-        page.driver.browser.switch_to.alert.accept
+        wait = Selenium::WebDriver::Wait.new(timeout: 5)
+        alert = wait.until { page.driver.browser.switch_to.alert }
+        alert.accept
 
         assert_current_path edition_path(@edit_edition.id)
       end
