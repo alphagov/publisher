@@ -1746,6 +1746,10 @@ class EditionEditTest < IntegrationTest
         assert page.has_link?("Send to 2i")
       end
 
+      should "show Preview link" do
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
       should "show Title input box prefilled" do
         assert page.has_text?("Title")
         assert page.has_field?("edition[title]", with: "Edit page title")
@@ -1787,6 +1791,31 @@ class EditionEditTest < IntegrationTest
         assert find(".gem-c-radio input[value='1']").checked?
         assert page.has_field?("edition[body]", with: "Changed body")
         assert page.has_text?("Edition updated successfully.")
+      end
+
+      context "user does not have editor permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Non Editor"))
+          visit_draft_edition
+        end
+
+        should "not show any editable components" do
+          assert page.has_no_css?(".govuk-textarea")
+          assert page.has_no_css?(".govuk-input")
+          assert page.has_no_css?(".govuk-radios")
+        end
+
+        should "not show the send to 2i button" do
+          assert page.has_no_link?("Send to 2i")
+        end
+
+        should "not show the Save button" do
+          assert page.has_no_button?("Save")
+        end
+
+        should "show the Preview link" do
+          assert page.has_link?("Preview (opens in new tab)")
+        end
       end
 
       context "place edition" do
@@ -1913,6 +1942,36 @@ class EditionEditTest < IntegrationTest
         visit_amends_needed_edition
         assert page.has_link?("Send to 2i")
       end
+
+      should "show Preview link" do
+        visit_amends_needed_edition
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      context "user does not have editor permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Non Editor"))
+          visit_amends_needed_edition
+        end
+
+        should "not show any editable components" do
+          assert page.has_no_css?(".govuk-textarea")
+          assert page.has_no_css?(".govuk-input")
+          assert page.has_no_css?(".govuk-radios")
+        end
+
+        should "not show the send to 2i button" do
+          assert page.has_no_link?("Send to 2i")
+        end
+
+        should "not show the Save button" do
+          assert page.has_no_button?("Save")
+        end
+
+        should "show the Preview link" do
+          assert page.has_link?("Preview (opens in new tab)")
+        end
+      end
     end
 
     context "draft edition of a previously published publication" do
@@ -1938,6 +1997,10 @@ class EditionEditTest < IntegrationTest
       context "user is a govuk editor" do
         should "show a 'Schedule' button in the sidebar" do
           assert page.has_link?("Schedule")
+        end
+
+        should "show Preview link" do
+          assert page.has_link?("Preview (opens in new tab)")
         end
       end
 
@@ -1986,6 +2049,27 @@ class EditionEditTest < IntegrationTest
         click_link("Schedule")
 
         assert_current_path schedule_page_edition_path(@ready_edition.id)
+      end
+
+      context "user does not have editor permissions" do
+        setup do
+          login_as(FactoryBot.create(:user, name: "Non Editor"))
+          visit_ready_edition
+        end
+
+        should "not show any editable components" do
+          assert page.has_no_css?(".govuk-textarea")
+          assert page.has_no_css?(".govuk-input")
+          assert page.has_no_css?(".govuk-radios")
+        end
+
+        should "not show the Save button" do
+          assert page.has_no_button?("Save")
+        end
+
+        should "show the Preview link" do
+          assert page.has_link?("Preview (opens in new tab)")
+        end
       end
     end
 
@@ -2111,6 +2195,12 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show a preview link in the sidebar" do
+        visit_scheduled_for_publishing_edition
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a preview link when user is not an editor" do
+        login_as(FactoryBot.create(:user, name: "Non Editor"))
         visit_scheduled_for_publishing_edition
         assert page.has_link?("Preview (opens in new tab)")
       end
@@ -2655,6 +2745,61 @@ class EditionEditTest < IntegrationTest
           visit edition_path(@fact_check_edition)
 
           assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
+        end
+
+        should "show Preview link" do
+          visit_fact_check_edition
+          assert page.has_link?("Preview (opens in new tab)")
+        end
+
+        context "user does not have editor permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            visit_fact_check_edition
+          end
+
+          should "not show any editable components" do
+            assert page.has_no_css?(".govuk-textarea")
+            assert page.has_no_css?(".govuk-input")
+            assert page.has_no_css?(".govuk-radios")
+          end
+
+          should "not show the Save button" do
+            assert page.has_no_button?("Save")
+          end
+
+          should "show the Preview link" do
+            assert page.has_link?("Preview (opens in new tab)")
+          end
+        end
+      end
+
+      context "when state is 'Fact check received'" do
+        should "show Preview link" do
+          login_as(FactoryBot.create(:user, :govuk_editor))
+          visit_fact_check_received_edition
+          assert page.has_link?("Preview (opens in new tab)")
+        end
+
+        context "user does not have editor permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            visit_fact_check_received_edition
+          end
+
+          should "not show any editable components" do
+            assert page.has_no_css?(".govuk-textarea")
+            assert page.has_no_css?(".govuk-input")
+            assert page.has_no_css?(".govuk-radios")
+          end
+
+          should "not show the Save button" do
+            assert page.has_no_button?("Save")
+          end
+
+          should "show the Preview link" do
+            assert page.has_link?("Preview (opens in new tab)")
+          end
         end
       end
 
@@ -3544,6 +3689,27 @@ class EditionEditTest < IntegrationTest
         should "indicate which other user requested a review" do
           assert page.has_text?("Stub requester sent this edition to be reviewed")
         end
+      end
+    end
+
+    context "user does not have editor permissions" do
+      setup do
+        login_as(FactoryBot.create(:user, name: "Non Editor"))
+        visit_in_review_edition
+      end
+
+      should "not show any editable components" do
+        assert page.has_no_css?(".govuk-textarea")
+        assert page.has_no_css?(".govuk-input")
+        assert page.has_no_css?(".govuk-radios")
+      end
+
+      should "not show the Save button" do
+        assert page.has_no_button?("Save")
+      end
+
+      should "show the Preview link" do
+        assert page.has_link?("Preview (opens in new tab)")
       end
     end
   end
