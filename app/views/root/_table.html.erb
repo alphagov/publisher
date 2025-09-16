@@ -26,6 +26,10 @@
             tag.p("/#{publication.slug}", class: "govuk-body") +
             (render "govuk_publishing_components/components/details", {
               title: "More details",
+              ga4_attributes: {
+                index_section_count: 20, # needs to reflect the bumber of details sections on the page, i.e. results per page OR total (if fewer)
+                # type: "not the default"
+              },
             } do
               render "govuk_publishing_components/components/summary_list", {
                 items: [
