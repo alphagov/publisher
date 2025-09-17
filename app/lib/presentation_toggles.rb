@@ -2,7 +2,7 @@ module PresentationToggles
   extend ActiveSupport::Concern
 
   included do
-    validates :promotion_choice_url, presence: true, if: :promotes_something?
+    validates :promotion_choice_url, presence: {message: "Promotion URL can't be blank"}, if: :promotes_something?
     validates :promotion_choice, inclusion: { in: %w[none organ_donor bring_id_to_vote mot_reminder electric_vehicle] }
   end
 
@@ -14,12 +14,36 @@ module PresentationToggles
     promotion_choice_key["url"] = value
   end
 
+  def promotion_choice_url_organ_donor=(value)
+    if promotion_choice == "organ_donor"
+      promotion_choice_key["url"] = value
+    end
+  end
+
+  def promotion_choice_url_bring_id_to_vote=(value)
+    if promotion_choice == "bring_id_to_vote"
+      promotion_choice_key["url"] = value
+    end
+  end
+
+  def promotion_choice_url_mot_reminder=(value)
+    if promotion_choice == "mot_reminder"
+      promotion_choice_key["url"] = value
+    end
+  end
+
+  def promotion_choice_url_electric_vehicle=(value)
+    if promotion_choice == "electric_vehicle"
+      promotion_choice_key["url"] = value
+    end
+  end
+
   def promotion_choice_opt_in_url=(value)
-    promotion_choice_key["opt_in_url"] = value
+    promotion_choice_key["opt_in_url"] = promotion_choice == "organ_donor" ? value : ""
   end
 
   def promotion_choice_opt_out_url=(value)
-    promotion_choice_key["opt_out_url"] = value
+    promotion_choice_key["opt_out_url"] = promotion_choice == "organ_donor" ? value : ""
   end
 
   def promotion_choice

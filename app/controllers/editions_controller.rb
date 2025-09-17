@@ -756,6 +756,10 @@ private
         body
         promotion_choice
         promotion_choice_url
+        promotion_choice_url_organ_donor
+        promotion_choice_url_bring_id_to_vote
+        promotion_choice_url_mot_reminder
+        promotion_choice_url_electric_vehicle
         promotion_choice_opt_in_url
         promotion_choice_opt_out_url
       ]
