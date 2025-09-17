@@ -9,7 +9,7 @@
 </div>
 
 <% if !@resource.is_editable_by?(current_user) %>
-  <div class="govuk-grid-row edit--<%= @resource.state %>">
+  <div class="govuk-grid-row edit--readonly">
     <div class="govuk-grid-column-two-thirds">
       <%= render partial: "editions/secondary_nav_tabs/edit/readonly/#{@resource.kind_for_artefact}", locals: { edition: @resource } %>
 
@@ -31,6 +31,14 @@
           <%= sidebar_options_heading %>
 
           <%= sidebar_items_list(published_sidebar_buttons(@resource)) %>
+        </div>
+      </div>
+    <% elsif !@resource.archived? %>
+      <div class="govuk-grid-column-one-third options-sidebar">
+        <div class="sidebar-components">
+          <%= sidebar_options_heading %>
+
+          <%= sidebar_items_list(non_published_sidebar_buttons(@resource)) %>
         </div>
       </div>
     <% end %>
