@@ -19,7 +19,7 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "allowed content types" do
-      %i[answer_edition help_page_edition place_edition transaction_edition].each do |content_type|
+      %i[answer_edition help_page_edition place_edition transaction_edition completed_transaction_edition].each do |content_type|
         context content_type do
           setup do
             @edition = FactoryBot.create(content_type)
@@ -33,7 +33,7 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "not allowed content types" do
-      %i[guide_edition local_transaction_edition completed_transaction_edition simple_smart_answer_edition].each do |content_type|
+      %i[guide_edition local_transaction_edition simple_smart_answer_edition].each do |content_type|
         context content_type do
           setup do
             service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
