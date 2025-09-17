@@ -25,7 +25,7 @@ class CompletedTransactionEditionTest < ActiveSupport::TestCase
     )
 
     assert completed_transaction_edition.invalid?
-    assert_includes completed_transaction_edition.errors[:promotion_choice_url], "can't be blank"
+    assert_includes completed_transaction_edition.errors[:promotion_choice_url], "Promotion URL can't be blank"
   end
 
   test "invalid if promotion_choice is not one of the allowed ones" do

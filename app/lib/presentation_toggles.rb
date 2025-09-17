@@ -2,12 +2,13 @@ module PresentationToggles
   extend ActiveSupport::Concern
 
   included do
-    validates :promotion_choice_url, presence: {message: "Promotion URL can't be blank"}, if: :promotes_something?
+    validates :promotion_choice_url, presence: { message: "Promotion URL can't be blank" }, if: :promotes_something?
     validates :promotion_choice, inclusion: { in: %w[none organ_donor bring_id_to_vote mot_reminder electric_vehicle] }
   end
 
   def promotion_choice=(value)
     promotion_choice_key["choice"] = value
+    promotion_choice_key["url"] = value == "none" ? "" : promotion_choice_key["url"]
   end
 
   def promotion_choice_url=(value)
