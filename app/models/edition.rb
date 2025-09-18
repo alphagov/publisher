@@ -537,6 +537,10 @@ class Edition < ApplicationRecord
     owning_org_content_ids.include?(user.organisation_content_id)
   end
 
+  def is_editable_by?(user)
+    !scheduled_for_publishing? && !published? && !archived? && user.has_editor_permissions?(self)
+  end
+
 private
 
   def base_field_keys

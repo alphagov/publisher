@@ -1537,4 +1537,51 @@ class EditionTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#is_editable_by?" do
+    should "return true when edition is in editable state and user has edit permissions" do
+      user = FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :draft)
+
+      user.stubs(:has_editor_permissions?).returns(true)
+
+      assert edition.is_editable_by?(user)
+    end
+
+    should "return false when Edition is scheduled for publishing" do
+      user = FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+
+      user.stubs(:has_editor_permissions?).returns(true)
+
+      assert_not edition.is_editable_by?(user)
+    end
+
+    should "return false when Edition is archived" do
+      user = FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :archived)
+
+      user.stubs(:has_editor_permissions?).returns(true)
+
+      assert_not edition.is_editable_by?(user)
+    end
+
+    should "return false when Edition is published" do
+      user = FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :published)
+
+      user.stubs(:has_editor_permissions?).returns(true)
+
+      assert_not edition.is_editable_by?(user)
+    end
+
+    should "return false when user does not have editor permissions" do
+      user = FactoryBot.create(:user)
+      edition = FactoryBot.create(:edition, :draft)
+
+      user.stubs(:has_editor_permissions?).returns(false)
+
+      assert_not edition.is_editable_by?(user)
+    end
+  end
 end
