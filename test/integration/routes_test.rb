@@ -42,10 +42,16 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "phase 2 content types" do
-      %i[place_edition transaction_edition completed_transaction_edition].each do |content_type|
+      %i[place_edition transaction_edition completed_transaction_edition local_transaction_edition].each do |content_type|
         context content_type do
           setup do
-            @edition = FactoryBot.create(content_type)
+            service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
+            @edition = if content_type != :local_transaction_edition
+                         FactoryBot.build(content_type)
+                       else
+                         FactoryBot.build(content_type, lgsl_code: service.lgsl_code, lgil_code: 1, panopticon_id: FactoryBot.create(:artefact).id)
+                       end
+            @edition.save!
           end
 
           should "route to editions controller with phase 2 enabled" do
@@ -66,15 +72,10 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "un-migrated content types" do
-      %i[guide_edition local_transaction_edition simple_smart_answer_edition].each do |content_type|
+      %i[guide_edition simple_smart_answer_edition].each do |content_type|
         context content_type do
           setup do
-            service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
-            @edition = if content_type != :local_transaction_edition
-                         FactoryBot.build(content_type)
-                       else
-                         FactoryBot.build(content_type, lgsl_code: service.lgsl_code, lgil_code: 1, panopticon_id: FactoryBot.create(:artefact).id)
-                       end
+            @edition = FactoryBot.build(content_type)
             @edition.save!
 
             @test_strategy.switch!(:design_system_edit_phase_1, true)
