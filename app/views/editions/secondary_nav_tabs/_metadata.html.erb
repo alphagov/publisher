@@ -3,7 +3,7 @@
     <%= header_for("Metadata") %>
 
     <% if Edition::PUBLISHING_API_DRAFT_STATES.include?(publication.state) && current_user.govuk_editor? %>
-      <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact" }) do |f| %>
+      <%= form_for(@artefact, :html => { :class => "artefact", :id => "edit_artefact", :data => { module: "unsaved-changes-prompt" }}) do |f| %>
         <%= f.hidden_field :id, value: @artefact.id %>
 
         <%= render "govuk_publishing_components/components/input", {
