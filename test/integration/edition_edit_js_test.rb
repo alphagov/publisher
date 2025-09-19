@@ -22,7 +22,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "display an alert when the user has made changes to the form and tries to navigate away" do
         fill_in "Meta tag description", with: "meta tag"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Metadata")
         end
       end
@@ -30,7 +30,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "remain on the edit page when the user dismisses the alert" do
         fill_in "Meta tag description", with: "meta tag"
 
-        dismiss_confirm do
+        dismiss_confirm(wait: 20) do
           click_link("Metadata")
         end
 
@@ -40,7 +40,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "leave the page when the user accepts the alert" do
         fill_in "Meta tag description", with: "meta tag"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Metadata")
         end
 
@@ -130,7 +130,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         click_button("Add related external link")
         fill_in "Title", with: "title"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Metadata")
         end
       end
@@ -139,7 +139,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         click_button("Add related external link")
         fill_in "Title", with: "title"
 
-        dismiss_confirm do
+        dismiss_confirm(wait: 20) do
           click_link("Metadata")
         end
 
@@ -150,7 +150,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
         click_button("Add related external link")
         fill_in "Title", with: "title"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Metadata")
         end
 
@@ -353,7 +353,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "display an alert when the user has made changes to the form and tries to navigate away" do
         fill_in "Slug", with: "slug"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Edit")
         end
       end
@@ -361,7 +361,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "remain on the metadata page when the user dismisses the alert" do
         fill_in "Slug", with: "another-slug"
 
-        dismiss_confirm do
+        dismiss_confirm(wait: 20) do
           click_link("Edit")
         end
 
@@ -371,7 +371,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "leave the page when the user accepts the alert" do
         fill_in "Slug", with: "yet-another-slug"
 
-        accept_confirm do
+        accept_confirm(wait: 20) do
           click_link("Edit")
         end
 
