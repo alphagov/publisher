@@ -1,0 +1,44 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/title", locals: { edition: @resource } %>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/meta_tag_description", locals: { edition: @resource } %>
+
+<%= render "govuk_publishing_components/components/radio", {
+  heading: "Promotions",
+  heading_size: "s",
+  heading_level: 0,
+  name: "edition[promotion_choice]",
+  id: "promotion_choice_url",
+  hint: "Display a promotion above the satisfaction survey",
+  items: [
+    {
+      value: "none",
+      text: "Do not promote anything on this page",
+      checked: edition.promotion_choice == "none",
+    },
+    :or,
+    {
+      value: "organ_donor",
+      text: "Organ donation",
+      checked: edition.promotion_choice == "organ_donor",
+      conditional: render(partial: "editions/secondary_nav_tabs/edit/editable/components/organ_donation", locals: { edition: @resource }),
+    },
+    {
+      value: "bring_id_to_vote",
+      text: "Bring photo ID to vote",
+      checked: edition.promotion_choice == "bring_id_to_vote",
+      conditional: render(partial: "editions/secondary_nav_tabs/edit/editable/components/promotion_choice_url", locals: { edition: @resource, choice: "bring_id_to_vote" }),
+    },
+    {
+      value: "mot_reminder",
+      text: "MOT reminders",
+      checked: edition.promotion_choice == "mot_reminder",
+      conditional: render(partial: "editions/secondary_nav_tabs/edit/editable/components/promotion_choice_url", locals: { edition: @resource, choice: "mot_reminder" }),
+    },
+    {
+      value: "electric_vehicle",
+      text: "Electric vehicles",
+      checked: edition.promotion_choice == "electric_vehicle",
+      conditional: render(partial: "editions/secondary_nav_tabs/edit/editable/components/promotion_choice_url", locals: { edition: @resource, choice: "electric_vehicle" }),
+    },
+  ],
+} %>

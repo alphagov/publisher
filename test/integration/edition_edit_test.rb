@@ -1864,76 +1864,210 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?("Edition updated successfully.")
         end
       end
-    end
 
-    context "transaction edition" do
-      setup do
-        visit_transaction_edition(state: "draft", in_beta: true)
+      context "transaction edition" do
+        setup do
+          visit_transaction_edition(state: "draft", in_beta: true)
+        end
+
+        should "show fields for transaction edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_css?(".govuk-label", text: "Title")
+
+          assert page.has_field?("edition[overview]", with: "metatags")
+          assert page.has_css?(".govuk-label", text: "Meta tag description")
+          assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
+
+          assert page.has_field?("edition[introduction]", with: "Transaction introduction")
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
+
+          assert page.has_field?("edition[start_button_text]")
+          assert page.has_text?("Start button text")
+          assert find(".gem-c-radio input[value='Start now']").checked?
+
+          assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
+          assert page.has_css?(".govuk-label", text: "Text below the start button (optional)")
+          assert page.has_css?(".govuk-hint", text: "Following ‘on’, for example “the HMRC website”")
+
+          assert page.has_field?("edition[link]", with: "https://continue.com")
+          assert page.has_css?(".govuk-label", text: "Link to start of transaction")
+          assert page.has_css?(".govuk-hint", text: "Link as deep as possible")
+
+          assert page.has_field?("edition[more_information]", with: "Transaction more information")
+          assert page.has_css?(".govuk-label", text: "More information (optional)")
+
+          assert page.has_field?("edition[alternate_methods]", with: "Method A or B")
+          assert page.has_css?(".govuk-label", text: "Other ways to apply (optional)")
+          assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
+
+          assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+
+          assert page.has_field?("edition[in_beta]")
+          assert page.has_text?("Is this beta content?")
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update transaction edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          fill_in "edition[introduction]", with: "Changed intro"
+          choose("Sign in")
+          fill_in "edition[will_continue_on]", with: "Continue on changed"
+          fill_in "edition[link]", with: "https://changed.com"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[alternate_methods]", with: "Method C or D"
+          fill_in "edition[need_to_know]", with: "Changed need to"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert find(".gem-c-radio input[value='Sign in']").checked?
+          assert page.has_field?("edition[will_continue_on]", with: "Continue on changed")
+          assert page.has_field?("edition[link]", with: "https://changed.com")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[alternate_methods]", with: "Method C or D")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to")
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
       end
 
-      should "show fields for transaction edition" do
-        assert page.has_field?("edition[title]", with: "Edit page title")
-        assert page.has_css?(".govuk-label", text: "Title")
+      context "completed transaction edition" do
+        should "show correct fields for no promotion" do
+          visit_completed_transaction_edition(state: "draft", in_beta: true)
 
-        assert page.has_field?("edition[overview]", with: "metatags")
-        assert page.has_css?(".govuk-label", text: "Meta tag description")
-        assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_css?(".govuk-label", text: "Title")
 
-        assert page.has_field?("edition[introduction]", with: "Transaction introduction")
-        assert page.has_css?(".govuk-label", text: "Introduction")
-        assert page.has_css?(".govuk-hint", text: "Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[overview]", with: "metatags")
+          assert page.has_css?(".govuk-label", text: "Meta tag description")
+          assert page.has_css?(".govuk-hint", text: "Some search engines will display this if they cannot find what they need in the main text")
 
-        assert page.has_field?("edition[start_button_text]")
-        assert page.has_text?("Start button text")
-        assert find(".gem-c-radio input[value='Start now']").checked?
+          assert page.has_text?("Promotions")
+          assert page.has_css?(".govuk-hint", text: "Display a promotion above the satisfaction survey")
 
-        assert page.has_field?("edition[will_continue_on]", with: "To be continued...")
-        assert page.has_css?(".govuk-label", text: "Text below the start button (optional)")
-        assert page.has_css?(".govuk-hint", text: "Following ‘on’, for example “the HMRC website”")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "none")
 
-        assert page.has_field?("edition[link]", with: "http://continue.com")
-        assert page.has_css?(".govuk-label", text: "Link to start of transaction")
-        assert page.has_css?(".govuk-hint", text: "Link as deep as possible")
+          assert page.has_field?("edition[in_beta]")
+          assert page.has_text?("Is this beta content?")
+          assert page.has_checked_field?("edition[in_beta]", with: "1")
+        end
 
-        assert page.has_field?("edition[more_information]", with: "Transaction more information")
-        assert page.has_css?(".govuk-label", text: "More information (optional)")
+        should "show correct fields for organ donation" do
+          visit_completed_transaction_edition(
+            state: "draft",
+            choice: "organ_donor",
+            url: "https://example.com",
+            opt_in_url: "https://opt-in.com",
+            opt_out_url: "https://opt-out.com",
+          )
 
-        assert page.has_field?("edition[alternate_methods]", with: "Method A or B")
-        assert page.has_css?(".govuk-label", text: "Other ways to apply (optional)")
-        assert page.has_css?(".govuk-hint", text: "Alternative ways of completing this transaction")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
 
-        assert page.has_field?("edition[need_to_know]", with: "Transaction need to")
-        assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://example.com")
 
-        assert page.has_field?("edition[in_beta]")
-        assert page.has_text?("Is this beta content?")
-        assert find(".gem-c-radio input[value='1']").checked?
-      end
+          assert page.has_css?(".govuk-label", text: "Opt-in URL (optional)")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://opt-in.com")
 
-      should "update transaction edition and show success message" do
-        fill_in "edition[title]", with: "Changed Title"
-        fill_in "edition[overview]", with: "Changed Meta tag description"
-        fill_in "edition[introduction]", with: "Changed intro"
-        choose("Sign in")
-        fill_in "edition[will_continue_on]", with: "Continue on changed"
-        fill_in "edition[link]", with: "http://changed.com"
-        fill_in "edition[more_information]", with: "Changed more info"
-        fill_in "edition[alternate_methods]", with: "Method C or D"
-        fill_in "edition[need_to_know]", with: "Changed need to"
-        choose("Yes")
-        click_button("Save")
+          assert page.has_css?(".govuk-label", text: "Opt-out URL (optional)")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://opt-out.com")
+        end
 
-        assert page.has_field?("edition[title]", with: "Changed Title")
-        assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-        assert page.has_field?("edition[introduction]", with: "Changed intro")
-        assert find(".gem-c-radio input[value='Sign in']").checked?
-        assert page.has_field?("edition[will_continue_on]", with: "Continue on changed")
-        assert page.has_field?("edition[link]", with: "http://changed.com")
-        assert page.has_field?("edition[more_information]", with: "Changed more info")
-        assert page.has_field?("edition[alternate_methods]", with: "Method C or D")
-        assert page.has_field?("edition[need_to_know]", with: "Changed need to")
-        assert find(".gem-c-radio input[value='1']").checked?
-        assert page.has_text?("Edition updated successfully.")
+        should "show correct fields for photo ID" do
+          visit_completed_transaction_edition(state: "draft", choice: "bring_id_to_vote", url: "https://example.com")
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
+
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://example.com")
+        end
+
+        should "show correct fields for MOT reminder" do
+          visit_completed_transaction_edition(state: "draft", choice: "mot_reminder", url: "https://example.com")
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
+
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://example.com")
+        end
+
+        should "show correct fields for electric vehicles" do
+          visit_completed_transaction_edition(state: "draft", choice: "electric_vehicle", url: "https://example.com")
+
+          assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
+
+          assert page.has_css?(".govuk-label", text: "Promotion URL")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://example.com")
+        end
+
+        should "amend fields and show success message when edition is updated" do
+          visit_completed_transaction_edition(state: "draft", in_beta: true)
+
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+          choose("Organ donation")
+          fill_in "edition[promotion_choice_url_organ_donor]", with: "https://organ.com"
+          fill_in "edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com"
+          fill_in "edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com"
+          choose("Yes")
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "https://organ.com")
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "https://organ_opt_in.com")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "https://organ_opt_out.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
+          assert page.has_checked_field?("edition[in_beta]", with: "1")
+          assert page.has_text?("Edition updated successfully.")
+
+          choose("Bring photo ID to vote")
+          fill_in "edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "https://photo.com")
+          assert page.has_field?("edition[promotion_choice_url_organ_donor]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_in_url]", with: "")
+          assert page.has_field?("edition[promotion_choice_opt_out_url]", with: "")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
+
+          choose("MOT reminders")
+          fill_in "edition[promotion_choice_url_mot_reminder]", with: "https://mot.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_bring_id_to_vote]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "https://mot.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
+
+          choose("Electric vehicles")
+          fill_in "edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com"
+          click_button("Save")
+
+          assert page.has_field?("edition[promotion_choice_url_mot_reminder]", with: "")
+          assert page.has_field?("edition[promotion_choice_url_electric_vehicle]", with: "https://electric.com")
+          assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
+        end
+
+        should "raise an error and not save changes if Promotion URL is not filled out" do
+          ["Organ donation", "Bring photo ID to vote", "MOT reminders", "Electric vehicles"].each do |promotion_choice|
+            visit_completed_transaction_edition(state: "draft")
+
+            choose(promotion_choice)
+            click_button("Save")
+
+            assert page.has_css?(".gem-c-error-summary__list-item", text: "Promotion URL can't be blank")
+            assert page.has_css?(".govuk-error-message", text: "Promotion URL can't be blank")
+            assert page.has_css?(".govuk-input--error")
+          end
+        end
       end
     end
 
@@ -2311,6 +2445,22 @@ class EditionEditTest < IntegrationTest
           assert page.has_text?(@transaction_edition.change_note)
         end
       end
+
+      context "completed transaction edition" do
+        should "show public change note field" do
+          visit_completed_transaction_edition(state: "scheduled_for_publishing")
+
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          @completed_transaction_edition.major_change = true
+          @completed_transaction_edition.change_note = "Change note for test"
+          @completed_transaction_edition.save!(validate: false)
+          visit edition_path(@completed_transaction_edition)
+
+          assert page.has_text?(@completed_transaction_edition.change_note)
+        end
+      end
     end
 
     context "published edition" do
@@ -2488,6 +2638,112 @@ class EditionEditTest < IntegrationTest
             visit edition_path(empty_transaction_edition)
 
             assert page.has_css?("p", text: "None added", count: 8)
+          end
+        end
+      end
+
+      context "completed transaction edition" do
+        should "show fields for completed transaction edition with no promotion" do
+          visit_completed_transaction_edition(state: "published", in_beta: true)
+
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p", text: @completed_transaction_edition.title)
+
+          assert page.has_css?("h3", text: "Meta tag description")
+          assert page.has_css?("p", text: @completed_transaction_edition.overview)
+
+          assert page.has_css?("h3", text: "Promotion")
+          assert page.has_css?("p", text: "None added", count: 2)
+
+          assert page.has_css?("h3", text: "Is this beta content?")
+          assert page.has_css?("p", text: "Yes")
+
+          assert page.has_css?("h3", text: "Public change note")
+
+          @completed_transaction_edition.in_beta = false
+          @completed_transaction_edition.save!(validate: false)
+          visit edition_path(@completed_transaction_edition)
+          assert page.has_css?("p", text: "No")
+        end
+
+        should "show fields for completed transaction edition with organ donation promotion" do
+          visit_completed_transaction_edition(
+            state: "published",
+            choice: "organ_donor",
+            url: "https://example.com",
+            opt_in_url: "https://opt-in.com",
+            opt_out_url: "https://opt-out.com",
+          )
+
+          assert page.has_css?("h3", text: "Promotion")
+          assert page.has_css?("p", text: "Organ donation")
+
+          assert page.has_css?("h3", text: "Promotion URL")
+          assert page.has_css?("p", text: "https://example.com")
+
+          assert page.has_css?("h3", text: "Opt-in URL")
+          assert page.has_css?("p", text: "https://opt-in.com")
+
+          assert page.has_css?("h3", text: "Opt-out URL")
+          assert page.has_css?("p", text: "https://opt-out.com")
+        end
+
+        should "show fields for completed transaction edition with photo id promotion" do
+          visit_completed_transaction_edition(
+            state: "published",
+            choice: "bring_id_to_vote",
+            url: "https://example.com",
+          )
+
+          assert page.has_css?("h3", text: "Promotion")
+          assert page.has_css?("p", text: "Bring photo ID to vote")
+
+          assert page.has_css?("h3", text: "Promotion URL")
+          assert page.has_css?("p", text: "https://example.com")
+        end
+
+        should "show fields for completed transaction edition with mot reminder promotion" do
+          visit_completed_transaction_edition(
+            state: "published",
+            choice: "mot_reminder",
+            url: "https://example.com",
+          )
+
+          assert page.has_css?("h3", text: "Promotion")
+          assert page.has_css?("p", text: "MOT reminders")
+
+          assert page.has_css?("h3", text: "Promotion URL")
+          assert page.has_css?("p", text: "https://example.com")
+        end
+
+        should "show fields for completed transaction edition with electric vehicle promotion" do
+          visit_completed_transaction_edition(
+            state: "published",
+            choice: "electric_vehicle",
+            url: "https://example.com",
+          )
+
+          assert page.has_css?("h3", text: "Promotion")
+          assert page.has_css?("p", text: "Electric vehicles")
+
+          assert page.has_css?("h3", text: "Promotion URL")
+          assert page.has_css?("p", text: "https://example.com")
+        end
+
+        should "show 'None added' for empty fields in completed transaction edition" do
+          [nil, ""].each do |empty_value|
+            empty_completed_transaction_edition = FactoryBot.create(
+              :completed_transaction_edition,
+              title: "Edit page title",
+              overview: empty_value,
+              state: "published",
+              presentation_toggles: { promotion_choice: { choice: "none" } },
+              in_beta: true,
+            )
+
+            visit edition_path(empty_completed_transaction_edition)
+
+            assert page.has_css?("p", text: "None added", count: 3)
           end
         end
       end
@@ -3906,6 +4162,24 @@ private
     visit edition_path(@draft_place_edition)
   end
 
+  def create_completed_transaction_edition(state: "draft", in_beta: true, choice: "", url: "", opt_in_url: "", opt_out_url: "")
+    @completed_transaction_edition = FactoryBot.create(
+      :completed_transaction_edition,
+      title: "Edit page title",
+      overview: "metatags",
+      state: state,
+      body: "completed transaction body",
+      presentation_toggles: { promotion_choice: { choice: choice, url: url, opt_in_url: opt_in_url, opt_out_url: opt_out_url } },
+      in_beta: in_beta,
+      publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil,
+    )
+  end
+
+  def visit_completed_transaction_edition(state: "draft", in_beta: true, choice: "none", url: "", opt_in_url: "", opt_out_url: "")
+    create_completed_transaction_edition(state: state, in_beta: in_beta, choice: choice, url: url, opt_in_url: opt_in_url, opt_out_url: opt_out_url)
+    visit edition_path(@completed_transaction_edition)
+  end
+
   def create_transaction_edition(state: "draft", in_beta: true)
     @transaction_edition = FactoryBot.create(
       :transaction_edition,
@@ -3916,7 +4190,7 @@ private
       introduction: "Transaction introduction",
       more_information: "Transaction more information",
       need_to_know: "Transaction need to",
-      link: "http://continue.com",
+      link: "https://continue.com",
       will_continue_on: "To be continued...",
       alternate_methods: "Method A or B",
       publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil,
