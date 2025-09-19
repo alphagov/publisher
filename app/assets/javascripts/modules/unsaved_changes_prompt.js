@@ -30,7 +30,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
       if (userChange && !formSubmit) {
         e.preventDefault()
 
-        e.returnValue = true;
+        e.returnValue = true
       }
     })
   }

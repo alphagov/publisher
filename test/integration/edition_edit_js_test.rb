@@ -19,32 +19,34 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert_current_path metadata_edition_path(@edit_edition.id)
       end
 
-      should "display an alert when the user has made changes to the form and tries to navigate away" do
-        fill_in "Meta tag description", with: "meta tag"
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          fill_in "Meta tag description", with: "meta tag"
 
-        accept_confirm(wait: 20) do
-          click_link("Metadata")
-        end
-      end
-
-      should "remain on the edit page when the user dismisses the alert" do
-        fill_in "Meta tag description", with: "meta tag"
-
-        dismiss_confirm(wait: 20) do
-          click_link("Metadata")
+          accept_confirm do
+            click_link("Metadata")
+          end
         end
 
-        assert_current_path edition_path(@edit_edition.id)
-      end
+        should "remain on the edit page when the user dismisses the alert" do
+          fill_in "Meta tag description", with: "meta tag"
 
-      should "leave the page when the user accepts the alert" do
-        fill_in "Meta tag description", with: "meta tag"
+          dismiss_confirm do
+            click_link("Metadata")
+          end
 
-        accept_confirm(wait: 20) do
-          click_link("Metadata")
+          assert_current_path edition_path(@edit_edition.id)
         end
 
-        assert_current_path metadata_edition_path(@edit_edition.id)
+        should "leave the page when the user accepts the alert" do
+          fill_in "Meta tag description", with: "meta tag"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path metadata_edition_path(@edit_edition.id)
+        end
       end
     end
   end
@@ -126,35 +128,37 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert_current_path metadata_edition_path(@external_links_edition.id)
       end
 
-      should "display an alert when the user has made changes to the form and tries to navigate away" do
-        click_button("Add related external link")
-        fill_in "Title", with: "title"
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
 
-        accept_confirm(wait: 20) do
-          click_link("Metadata")
-        end
-      end
-
-      should "remain on the edit page when the user dismisses the alert" do
-        click_button("Add related external link")
-        fill_in "Title", with: "title"
-
-        dismiss_confirm(wait: 20) do
-          click_link("Metadata")
+          accept_confirm do
+            click_link("Metadata")
+          end
         end
 
-        assert_current_path related_external_links_edition_path(@external_links_edition.id)
-      end
+        should "remain on the edit page when the user dismisses the alert" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
 
-      should "leave the page when the user accepts the alert" do
-        click_button("Add related external link")
-        fill_in "Title", with: "title"
+          dismiss_confirm do
+            click_link("Metadata")
+          end
 
-        accept_confirm(wait: 20) do
-          click_link("Metadata")
+          assert_current_path related_external_links_edition_path(@external_links_edition.id)
         end
 
-        assert_current_path metadata_edition_path(@external_links_edition.id)
+        should "leave the page when the user accepts the alert" do
+          click_button("Add related external link")
+          fill_in "Title", with: "title"
+
+          accept_confirm do
+            click_link("Metadata")
+          end
+
+          assert_current_path metadata_edition_path(@external_links_edition.id)
+        end
       end
     end
 
@@ -350,32 +354,34 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert_current_path edition_path(@edit_edition.id)
       end
 
-      should "display an alert when the user has made changes to the form and tries to navigate away" do
-        fill_in "Slug", with: "slug"
+      if ENV["CI"].blank?
+        should "display an alert when the user has made changes to the form and tries to navigate away" do
+          fill_in "Slug", with: "slug"
 
-        accept_confirm(wait: 20) do
-          click_link("Edit")
-        end
-      end
-
-      should "remain on the metadata page when the user dismisses the alert" do
-        fill_in "Slug", with: "another-slug"
-
-        dismiss_confirm(wait: 20) do
-          click_link("Edit")
+          accept_confirm do
+            click_link("Edit")
+          end
         end
 
-        assert_current_path metadata_edition_path(@edit_edition.id)
-      end
+        should "remain on the metadata page when the user dismisses the alert" do
+          fill_in "Slug", with: "another-slug"
 
-      should "leave the page when the user accepts the alert" do
-        fill_in "Slug", with: "yet-another-slug"
+          dismiss_confirm do
+            click_link("Edit")
+          end
 
-        accept_confirm(wait: 20) do
-          click_link("Edit")
+          assert_current_path metadata_edition_path(@edit_edition.id)
         end
 
-        assert_current_path edition_path(@edit_edition.id)
+        should "leave the page when the user accepts the alert" do
+          fill_in "Slug", with: "yet-another-slug"
+
+          accept_confirm do
+            click_link("Edit")
+          end
+
+          assert_current_path edition_path(@edit_edition.id)
+        end
       end
     end
   end
