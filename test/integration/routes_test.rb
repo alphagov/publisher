@@ -19,10 +19,16 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "allowed content types" do
-      %i[answer_edition help_page_edition place_edition transaction_edition].each do |content_type|
+      %i[answer_edition help_page_edition place_edition transaction_edition local_transaction_edition].each do |content_type|
         context content_type do
           setup do
-            @edition = FactoryBot.create(content_type)
+            service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
+            @edition = if content_type != :local_transaction_edition
+                         FactoryBot.build(content_type)
+                       else
+                         FactoryBot.build(content_type, lgsl_code: service.lgsl_code, lgil_code: 1, panopticon_id: FactoryBot.create(:artefact).id)
+                       end
+            @edition.save!
           end
 
           should "route to editions controller" do
@@ -33,16 +39,10 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     context "not allowed content types" do
-      %i[guide_edition local_transaction_edition completed_transaction_edition simple_smart_answer_edition].each do |content_type|
+      %i[guide_edition completed_transaction_edition simple_smart_answer_edition].each do |content_type|
         context content_type do
           setup do
-            service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
-            @edition = if content_type != :local_transaction_edition
-                         FactoryBot.build(content_type)
-                       else
-                         FactoryBot.build(content_type, lgsl_code: service.lgsl_code, lgil_code: 1, panopticon_id: FactoryBot.create(:artefact).id)
-                       end
-            @edition.save!
+            @edition = FactoryBot.build(content_type)
           end
 
           should "route to legacy editions controller" do
