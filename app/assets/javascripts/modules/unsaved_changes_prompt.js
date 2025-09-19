@@ -29,6 +29,8 @@ window.GOVUK.Modules = window.GOVUK.Modules || {};
     window.addEventListener('beforeunload', function (e) {
       if (userChange && !formSubmit) {
         e.preventDefault()
+
+        e.returnValue = true;
       }
     })
   }
