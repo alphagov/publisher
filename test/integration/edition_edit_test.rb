@@ -2063,8 +2063,8 @@ class EditionEditTest < IntegrationTest
             choose(promotion_choice)
             click_button("Save")
 
-            assert page.has_css?(".gem-c-error-summary__list-item", text: "Promotion URL can't be blank")
-            assert page.has_css?(".govuk-error-message", text: "Promotion URL can't be blank")
+            assert page.has_css?(".gem-c-error-summary__list-item", text: "Enter a promotion URL")
+            assert page.has_css?(".govuk-error-message", text: "Enter a promotion URL")
             assert page.has_css?(".govuk-input--error")
           end
         end
