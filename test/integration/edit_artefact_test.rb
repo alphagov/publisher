@@ -8,7 +8,8 @@ class EditArtefactTest < LegacyIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit, false)
+    test_strategy.switch!(:design_system_edit_phase_1, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
   end
 
   should "edit a draft artefact" do

@@ -12,6 +12,10 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_1, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
     @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
