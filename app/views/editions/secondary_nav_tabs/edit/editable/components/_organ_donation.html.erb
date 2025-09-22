@@ -1,0 +1,21 @@
+<%# locals: (edition:) -%>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/promotion_choice_url", locals: { edition: @resource, choice: "organ_donor" } %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    heading_size: "s",
+    text: "Opt-in URL (optional)",
+  },
+  name: "edition[promotion_choice_opt_in_url]",
+  value: edition.promotion_choice == "organ_donor" ? edition.promotion_choice_opt_in_url : "",
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    heading_size: "s",
+    text: "Opt-out URL (optional)",
+  },
+  name: "edition[promotion_choice_opt_out_url]",
+  value: edition.promotion_choice == "organ_donor" ? edition.promotion_choice_opt_out_url : "",
+} %>

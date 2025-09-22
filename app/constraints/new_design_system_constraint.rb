@@ -3,6 +3,7 @@ class NewDesignSystemConstraint
     AllowedContentTypesConstraint.new([AnswerEdition,
                                        HelpPageEdition,
                                        PlaceEdition,
-                                       TransactionEdition]).matches?(request) && FeatureConstraint.new("design_system_edit").matches?(request)
+                                       TransactionEdition,
+                                       CompletedTransactionEdition]).matches?(request) && FeatureConstraint.new("design_system_edit").matches?(request)
   end
 end
