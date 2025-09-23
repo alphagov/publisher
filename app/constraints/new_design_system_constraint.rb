@@ -1,9 +1,24 @@
 class NewDesignSystemConstraint
   def matches?(request)
-    AllowedContentTypesConstraint.new([AnswerEdition,
-                                       HelpPageEdition,
-                                       PlaceEdition,
-                                       TransactionEdition,
-                                       CompletedTransactionEdition]).matches?(request) && FeatureConstraint.new("design_system_edit").matches?(request)
+    design_system_edit_phase_1(request) || design_system_edit_phase_2(request)
+  end
+
+  def design_system_edit_phase_1(request)
+    phase_1_content_types = [
+      AnswerEdition,
+      HelpPageEdition,
+    ]
+
+    AllowedContentTypesConstraint.new(phase_1_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_1").matches?(request)
+  end
+
+  def design_system_edit_phase_2(request)
+    phase_2_content_types = [
+      PlaceEdition,
+      TransactionEdition,
+      CompletedTransactionEdition,
+    ]
+
+    AllowedContentTypesConstraint.new(phase_2_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_2").matches?(request)
   end
 end

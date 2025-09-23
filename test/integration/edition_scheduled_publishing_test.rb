@@ -12,6 +12,8 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_1, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
   end
 
   teardown do

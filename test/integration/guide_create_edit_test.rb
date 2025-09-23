@@ -9,6 +9,10 @@ class GuideCreateEditTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_1, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+
     @artefact = FactoryBot.create(
       :artefact,
       slug: "hedgehog-topiary",
