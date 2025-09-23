@@ -19,9 +19,7 @@
   heading_level: 3,
   font_size: "s",
 } %>
-  <p>
-    <%= edition.introduction.presence || "None added" %>
-  </p>
+  <p><%= edition.introduction.presence || "None added" %></p>
 </section>
 
 <section>
@@ -30,9 +28,7 @@
   heading_level: 3,
   font_size: "s",
 } %>
-  <p>
-    <%= edition.more_information.presence || "None added" %>
-  </p>
+  <p><%= edition.more_information.presence || "None added" %></p>
 </section>
 
 <section>
@@ -41,7 +37,5 @@
   heading_level: 3,
   font_size: "s",
 } %>
-  <p>
-    <%= edition.need_to_know.presence || "None added" %>
-  </p>
+  <p><%= edition.need_to_know.presence || "None added" %></p>
 </section>

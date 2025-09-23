@@ -8,8 +8,7 @@
     heading_level: 3,
     font_size: "s",
   } %>
-  <p>
-    <%= case edition.promotion_choice.presence.to_sym when :promotion_choice
+  <p><%= case edition.promotion_choice.presence.to_sym when :promotion_choice
         when :organ_donor
           "Organ donation"
         when :bring_id_to_vote
@@ -21,8 +20,7 @@
         else
           "None added"
         end
-    %>
-  </p>
+    %></p>
 </section>
 
 <% if edition.promotion_choice != "none" %>
@@ -32,9 +30,7 @@
       heading_level: 3,
       font_size: "s",
     } %>
-    <p>
-      <%= edition.promotion_choice_url.presence || "None added" %>
-    </p>
+    <p><%= edition.promotion_choice_url.presence || "None added" %></p>
   </section>
 <% end %>
 
@@ -45,9 +41,7 @@
       heading_level: 3,
       font_size: "s",
     } %>
-    <p>
-      <%= edition.promotion_choice_opt_in_url.presence || "None added" %>
-    </p>
+    <p><%= edition.promotion_choice_opt_in_url.presence || "None added" %></p>
   </section>
 
   <section>

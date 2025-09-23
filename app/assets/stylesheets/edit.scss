@@ -2,6 +2,7 @@
   &--readonly {
     section > p {
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+      white-space: pre-line;
     }
   }
 
