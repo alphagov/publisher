@@ -45,7 +45,7 @@
   </div>
 <% else %>
   <%= form_for @resource, as: :edition, url: edition_path(@resource), data: {module: "unsaved-changes-prompt"} do %>
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row edit--editable">
       <div class="govuk-grid-column-two-thirds">
         <%= render partial: "editions/secondary_nav_tabs/edit/editable/#{@resource.kind_for_artefact}", locals: { edition: @resource } %>
 
