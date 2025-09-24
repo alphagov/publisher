@@ -6,6 +6,12 @@
     }
   }
 
+  &--editable {
+    input[id='lgil_code'] {
+      @extend .govuk-input--extra-letter-spacing; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+    }
+  }
+
   &--resend-fact-check-email-page {
     &__message {
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
