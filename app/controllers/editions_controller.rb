@@ -13,6 +13,8 @@ class EditionsController < InheritedResources::Base
   end
   before_action only: %i[progress
                          admin
+                         approve_fact_check
+                         approve_fact_check_page
                          update
                          confirm_destroy
                          edit_assignee
@@ -211,6 +213,10 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/request_amendments_page"
   end
 
+  def approve_fact_check_page
+    render "secondary_nav_tabs/approve_fact_check_page"
+  end
+
   def send_to_fact_check_page
     render "secondary_nav_tabs/send_to_fact_check_page"
   end
@@ -313,6 +319,19 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/no_changes_needed_page"
+    end
+  end
+
+  def approve_fact_check
+    if !@resource.can_approve_fact_check?
+      flash.now[:danger] = "Edition is not in a state where fact check can be approved"
+      render "secondary_nav_tabs/approve_fact_check_page"
+    elsif approve_fact_check_for_edition(@resource, params[:comment])
+      flash[:success] = "Fact check approved"
+      redirect_to edition_path(resource)
+    else
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+      render "secondary_nav_tabs/send_to_fact_check_page"
     end
   end
 
@@ -662,6 +681,10 @@ private
 
   def cancel_scheduled_publishing_for_edition(resource, comment)
     progress_edition(resource, { request_type: "cancel_scheduled_publishing", comment: comment })
+  end
+
+  def approve_fact_check_for_edition(resource, comment)
+    progress_edition(resource, { request_type: "approve_fact_check", comment: comment })
   end
 
   def progress_edition(resource, options)
