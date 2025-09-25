@@ -3032,684 +3032,778 @@ class EditionEditTest < IntegrationTest
       end
 
       context "when state is 'Fact check received'" do
-        should "show Preview link" do
-          login_as(FactoryBot.create(:user, :govuk_editor))
-          visit_fact_check_received_edition
-          assert page.has_link?("Preview (opens in new tab)")
-        end
-
-        context "user does not have editor permissions" do
+        context "when user has govuk editor permissions" do
           setup do
-            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            login_as(FactoryBot.create(:user, :govuk_editor))
             visit_fact_check_received_edition
           end
 
-          should "not show any editable components" do
-            assert page.has_no_css?(".govuk-textarea")
-            assert page.has_no_css?(".govuk-input")
-            assert page.has_no_css?(".govuk-radios")
-          end
-
-          should "not show the Save button" do
-            assert page.has_no_button?("Save")
-          end
-
-          should "show the Preview link" do
+          should "show Preview link" do
             assert page.has_link?("Preview (opens in new tab)")
           end
+
+          should "show the fact check inset text" do
+            assert page.has_text?("We have received a fact check response for this edition.")
+            assert page.has_text?("Please check the response in History and notes and select an action below.")
+          end
+
+          context "user does not have editor permissions" do
+            setup do
+              login_as(FactoryBot.create(:user, name: "Non Editor"))
+              visit_fact_check_received_edition
+            end
+
+            should "not show any editable components" do
+              assert page.has_no_css?(".govuk-textarea")
+              assert page.has_no_css?(".govuk-input")
+              assert page.has_no_css?(".govuk-radios")
+            end
+
+            should "not show the Save button" do
+              assert page.has_no_button?("Save")
+            end
+
+            should "not show the fact check inset text" do
+              assert page.has_no_text?("We have received a fact check response for this edition./nPlease check the response in History & Notes, and select an action below.")
+            end
+
+            should "show the Preview link" do
+              assert page.has_link?("Preview (opens in new tab)")
+            end
+          end
+
+          should "navigate to the 'Resend fact check email' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_fact_check_edition
+
+            click_link("Resend fact check email")
+
+            assert_current_path resend_fact_check_email_page_edition_path(@fact_check_edition.id)
+          end
         end
       end
 
-      should "navigate to the 'Resend fact check email' page when the link is clicked" do
-        login_as(@govuk_editor)
-        visit_fact_check_edition
+      context "Request amendments link" do
+        context "edition is not in review" do
+          should "not show the link for a draft edition" do
+            visit_draft_edition
+            assert page.has_no_link?("Request amendments")
+          end
+        end
 
-        click_link("Resend fact check email")
+        context "edition is in review" do
+          should "not show the link to non-editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+            assert page.has_no_link?("Request amendments")
+          end
 
-        assert_current_path resend_fact_check_email_page_edition_path(@fact_check_edition.id)
-      end
-    end
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
 
-    context "Request amendments link" do
-      context "edition is not in review" do
-        should "not show the link for a draft edition" do
-          visit_draft_edition
-          assert page.has_no_link?("Request amendments")
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "not show the link to the requester" do
+            login_as(@govuk_requester)
+            visit_in_review_edition
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "show the link to editors who are not the requester" do
+            login_as(@govuk_editor)
+            visit_in_review_edition
+            assert page.has_link?("Request amendments")
+          end
+
+          should "navigate to the 'Request amendments' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_in_review_edition
+
+            click_link("Request amendments")
+
+            assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
+          end
+        end
+
+        context "edition is ready" do
+          should "not show the link to non-editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_ready_edition
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_ready_edition
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "show the link to editors" do
+            login_as(@govuk_editor)
+            visit_ready_edition
+            assert page.has_link?("Request amendments")
+          end
+
+          should "navigate to the 'Request amendments' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_ready_edition
+            click_link("Request amendments")
+
+            assert_current_path request_amendments_page_edition_path(@ready_edition.id)
+          end
+        end
+
+        context "edition is out for fact check" do
+          should "not show the link to non editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_fact_check_edition
+
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_fact_check_edition
+
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "show the link to editors" do
+            login_as(@govuk_editor)
+            visit_fact_check_edition
+
+            assert page.has_link?("Request amendments")
+          end
+
+          should "show the link to welsh editors viewing a welsh edition" do
+            login_as_welsh_editor
+            welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
+            visit edition_path(welsh_edition)
+
+            assert page.has_link?("Request amendments")
+          end
+
+          should "navigate to the 'Request amendments' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_fact_check_edition
+            click_link("Request amendments")
+
+            assert_current_path request_amendments_page_edition_path(@fact_check_edition.id)
+          end
+        end
+
+        context "edition is fact check received" do
+          should "not show the link to non editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_fact_check_received_edition
+
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_fact_check_received_edition
+
+            assert page.has_no_link?("Request amendments")
+          end
+
+          should "show the link to editors" do
+            login_as(@govuk_editor)
+            visit_fact_check_received_edition
+
+            assert page.has_link?("Request amendments")
+          end
+
+          should "show the link to welsh editors viewing a welsh edition" do
+            login_as_welsh_editor
+            welsh_edition = FactoryBot.create(:edition, :welsh, :fact_check_received)
+            visit edition_path(welsh_edition)
+
+            assert page.has_link?("Request amendments")
+          end
+
+          should "navigate to the 'Request amendments' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_fact_check_received_edition
+            click_link("Request amendments")
+
+            assert_current_path request_amendments_page_edition_path(@fact_check_received_edition.id)
+          end
         end
       end
 
-      context "edition is in review" do
-        should "not show the link to non-editors" do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_in_review_edition
-          assert page.has_no_link?("Request amendments")
-        end
+      context "No changes needed link (fact_check_received state)" do
+        context "edition is fact check received" do
+          should "not show the link to non editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_fact_check_received_edition
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_in_review_edition
+            assert page.has_no_link?("No changes needed")
+          end
 
-          assert page.has_no_link?("Request amendments")
-        end
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_fact_check_received_edition
 
-        should "not show the link to the requester" do
-          login_as(@govuk_requester)
-          visit_in_review_edition
-          assert page.has_no_link?("Request amendments")
-        end
+            assert page.has_no_link?("No changes needed")
+          end
 
-        should "show the link to editors who are not the requester" do
-          login_as(@govuk_editor)
-          visit_in_review_edition
-          assert page.has_link?("Request amendments")
-        end
+          should "show the link to editors" do
+            login_as(@govuk_editor)
+            visit_fact_check_received_edition
 
-        should "navigate to the 'Request amendments' page when the link is clicked" do
-          login_as(@govuk_editor)
-          visit_in_review_edition
+            assert page.has_link?("No changes needed")
+          end
 
-          click_link("Request amendments")
+          should "show the link to welsh editors viewing a welsh edition" do
+            login_as_welsh_editor
+            welsh_edition = FactoryBot.create(:edition, :welsh, :fact_check_received)
+            visit edition_path(welsh_edition)
 
-          assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
-        end
-      end
+            assert page.has_link?("No changes needed")
+          end
 
-      context "edition is ready" do
-        should "not show the link to non-editors" do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_ready_edition
-          assert page.has_no_link?("Request amendments")
-        end
+          should "navigate to the 'Approve fact check' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_fact_check_received_edition
+            click_link("No changes needed")
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_ready_edition
-          assert page.has_no_link?("Request amendments")
-        end
-
-        should "show the link to editors" do
-          login_as(@govuk_editor)
-          visit_ready_edition
-          assert page.has_link?("Request amendments")
-        end
-
-        should "navigate to the 'Request amendments' page when the link is clicked" do
-          login_as(@govuk_editor)
-          visit_ready_edition
-          click_link("Request amendments")
-
-          assert_current_path request_amendments_page_edition_path(@ready_edition.id)
+            assert_current_path approve_fact_check_page_edition_path(@fact_check_received_edition.id)
+          end
         end
       end
 
-      context "edition is out for fact check" do
-        should "not show the link to non editors" do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_fact_check_edition
-
-          assert page.has_no_link?("Request amendments")
+      context "No changes needed link (in_review state)" do
+        context "edition is not in review" do
+          should "not show the link" do
+            visit_draft_edition
+            assert page.has_no_link?("No changes needed")
+          end
         end
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_fact_check_edition
+        context "edition is in review" do
+          should "not show the link to non-editors" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+            assert page.has_no_link?("No changes needed")
+          end
 
-          assert page.has_no_link?("Request amendments")
-        end
+          should "not show the link to welsh editors viewing a non-welsh edition" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
 
-        should "show the link to editors" do
-          login_as(@govuk_editor)
-          visit_fact_check_edition
+            assert page.has_no_link?("No changes needed")
+          end
 
-          assert page.has_link?("Request amendments")
-        end
+          should "not show the link to the requester" do
+            login_as(@govuk_requester)
+            visit_in_review_edition
+            assert page.has_no_link?("No changes needed")
+          end
 
-        should "show the link to welsh editors viewing a welsh edition" do
-          login_as_welsh_editor
-          welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
-          visit edition_path(welsh_edition)
+          should "show the link to editors who are not the requester" do
+            login_as(@govuk_editor)
+            visit_in_review_edition
+            assert page.has_link?("No changes needed")
+          end
 
-          assert page.has_link?("Request amendments")
-        end
+          should "navigate to the 'No changes needed' page when the link is clicked" do
+            login_as(@govuk_editor)
+            visit_in_review_edition
 
-        should "navigate to the 'Request amendments' page when the link is clicked" do
-          login_as(@govuk_editor)
-          visit_fact_check_edition
-          click_link("Request amendments")
+            click_link("No changes needed")
 
-          assert_current_path request_amendments_page_edition_path(@fact_check_edition.id)
-        end
-      end
-    end
-
-    context "No changes needed link" do
-      context "edition is not in review" do
-        should "not show the link" do
-          visit_draft_edition
-          assert page.has_no_link?("No changes needed")
+            assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
+          end
         end
       end
 
-      context "edition is in review" do
-        should "not show the link to non-editors" do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_in_review_edition
-          assert page.has_no_link?("No changes needed")
+      context "Skip review link" do
+        context "viewing an 'in review' edition as the review requester" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+            @requester = FactoryBot.create(:user)
+            @edition.actions.create!(
+              request_type: Action::REQUEST_AMENDMENTS,
+              requester_id: @requester.id,
+            )
+            login_as(@requester)
+          end
+
+          should "show the 'Skip review' link when the user has the 'skip_review' permission" do
+            @requester.permissions << "skip_review"
+
+            visit edition_path(@edition)
+
+            assert page.has_link?("Skip review")
+          end
+
+          should "navigate to 'Skip review' page when 'Skip review' link is clicked" do
+            @requester.permissions << "skip_review"
+            visit edition_path(@edition)
+
+            click_link("Skip review")
+
+            assert_current_path skip_review_page_edition_path(@edition.id)
+          end
+
+          should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
+            visit edition_path(@edition)
+
+            assert page.has_no_link?("Skip review")
+          end
         end
 
-        should "not show the link to welsh editors viewing a non-welsh edition" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_in_review_edition
+        context "viewing an 'in review' edition as somebody other than the review requester" do
+          setup do
+            @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
+            @edition.actions.create!(
+              request_type: Action::REQUEST_AMENDMENTS,
+              requester_id: FactoryBot.create(:user).id,
+            )
+            @user = FactoryBot.create(:user, :skip_review)
+            login_as(@user)
+          end
 
-          assert page.has_no_link?("No changes needed")
+          should "not show the 'Skip review' link" do
+            visit edition_path(@edition)
+
+            assert page.has_no_link?("Skip review")
+          end
         end
 
-        should "not show the link to the requester" do
-          login_as(@govuk_requester)
-          visit_in_review_edition
-          assert page.has_no_link?("No changes needed")
-        end
-
-        should "show the link to editors who are not the requester" do
-          login_as(@govuk_editor)
-          visit_in_review_edition
-          assert page.has_link?("No changes needed")
-        end
-
-        should "navigate to the 'No changes needed' page when the link is clicked" do
-          login_as(@govuk_editor)
-          visit_in_review_edition
-
-          click_link("No changes needed")
-
-          assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
-        end
-      end
-    end
-
-    context "Skip review link" do
-      context "viewing an 'in review' edition as the review requester" do
-        setup do
-          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
-          @requester = FactoryBot.create(:user)
-          @edition.actions.create!(
-            request_type: Action::REQUEST_AMENDMENTS,
-            requester_id: @requester.id,
-          )
-          login_as(@requester)
-        end
-
-        should "show the 'Skip review' link when the user has the 'skip_review' permission" do
-          @requester.permissions << "skip_review"
-
-          visit edition_path(@edition)
-
-          assert page.has_link?("Skip review")
-        end
-
-        should "navigate to 'Skip review' page when 'Skip review' link is clicked" do
-          @requester.permissions << "skip_review"
-          visit edition_path(@edition)
-
-          click_link("Skip review")
-
-          assert_current_path skip_review_page_edition_path(@edition.id)
-        end
-
-        should "not show the 'Skip review' link when the user does not have the 'skip_review' permission" do
-          visit edition_path(@edition)
-
-          assert page.has_no_link?("Skip review")
-        end
-      end
-
-      context "viewing an 'in review' edition as somebody other than the review requester" do
-        setup do
-          @edition = FactoryBot.create(:edition, state: "in_review", review_requested_at: 1.hour.ago)
-          @edition.actions.create!(
-            request_type: Action::REQUEST_AMENDMENTS,
-            requester_id: FactoryBot.create(:user).id,
-          )
+        should "not show the 'Skip review' link when viewing an edition that is not 'in review'" do
+          edition = FactoryBot.create(:edition, state: "draft")
           @user = FactoryBot.create(:user, :skip_review)
           login_as(@user)
-        end
 
-        should "not show the 'Skip review' link" do
-          visit edition_path(@edition)
+          visit edition_path(edition)
 
           assert page.has_no_link?("Skip review")
         end
       end
 
-      should "not show the 'Skip review' link when viewing an edition that is not 'in review'" do
-        edition = FactoryBot.create(:edition, state: "draft")
-        @user = FactoryBot.create(:user, :skip_review)
-        login_as(@user)
+      context "edit assignee link" do
+        context "user does not have required permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_draft_edition
+          end
 
-        visit edition_path(edition)
-
-        assert page.has_no_link?("Skip review")
-      end
-    end
-
-    context "edit assignee link" do
-      context "user does not have required permissions" do
-        setup do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_draft_edition
-        end
-
-        should "not show 'Edit' link when user is not govuk editor or welsh editor" do
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[0] do
-              assert page.has_no_link?("Edit")
+          should "not show 'Edit' link when user is not govuk editor or welsh editor" do
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[0] do
+                assert page.has_no_link?("Edit")
+              end
             end
           end
-        end
 
-        should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_draft_edition
+          should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_draft_edition
 
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[0] do
-              assert page.has_no_link?("Edit")
-            end
-          end
-        end
-      end
-
-      context "user has required permissions" do
-        %i[published archived scheduled_for_publishing].each do |state|
-          context "when state is '#{state}'" do
-            setup do
-              send "visit_#{state}_edition"
-            end
-
-            should "not show 'Edit' link" do
-              within :css, ".editions__edit__summary" do
-                within all(".govuk-summary-list__row")[0] do
-                  assert page.has_no_link?("Edit")
-                end
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[0] do
+                assert page.has_no_link?("Edit")
               end
             end
           end
         end
 
-        %i[draft amends_needed in_review fact_check_received fact_check ready].each do |state|
-          context "when state is '#{state}'" do
-            setup do
-              send "visit_#{state}_edition"
-              click_link("Admin")
-            end
+        context "user has required permissions" do
+          %i[published archived scheduled_for_publishing].each do |state|
+            context "when state is '#{state}'" do
+              setup do
+                send "visit_#{state}_edition"
+              end
 
-            should "show 'Edit' link" do
-              within :css, ".editions__edit__summary" do
-                within all(".govuk-summary-list__row")[0] do
-                  assert page.has_link?("Edit")
+              should "not show 'Edit' link" do
+                within :css, ".editions__edit__summary" do
+                  within all(".govuk-summary-list__row")[0] do
+                    assert page.has_no_link?("Edit")
+                  end
                 end
               end
             end
+          end
 
-            should "navigate to edit assignee page when 'Edit' assignee is clicked" do
+          %i[draft amends_needed in_review fact_check_received fact_check ready].each do |state|
+            context "when state is '#{state}'" do
+              setup do
+                send "visit_#{state}_edition"
+                click_link("Admin")
+              end
+
+              should "show 'Edit' link" do
+                within :css, ".editions__edit__summary" do
+                  within all(".govuk-summary-list__row")[0] do
+                    assert page.has_link?("Edit")
+                  end
+                end
+              end
+
+              should "navigate to edit assignee page when 'Edit' assignee is clicked" do
+                within :css, ".editions__edit__summary" do
+                  within all(".govuk-summary-list__row")[0] do
+                    click_link("Edit")
+                  end
+                end
+
+                assert(page.current_path.include?("/edit_assignee"))
+              end
+            end
+          end
+
+          context "edit assignee page" do
+            setup do
+              visit_draft_edition
               within :css, ".editions__edit__summary" do
                 within all(".govuk-summary-list__row")[0] do
                   click_link("Edit")
                 end
               end
-
-              assert(page.current_path.include?("/edit_assignee"))
             end
-          end
-        end
 
-        context "edit assignee page" do
-          setup do
-            visit_draft_edition
-            within :css, ".editions__edit__summary" do
-              within all(".govuk-summary-list__row")[0] do
-                click_link("Edit")
-              end
-            end
-          end
-
-          should "show title and page title" do
-            assert page.has_title?("Assign person")
-            assert page.has_text?(@draft_edition.title)
-          end
-
-          should "show only enabled users as radio button options" do
-            FactoryBot.create(:user, name: "Disabled User", disabled: true)
-            all_enabled_users_names = []
-            User.enabled.each { |user| all_enabled_users_names << user.name }
-            all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
-
-            assert all_user_radio_buttons.exclude?("Disabled User")
-
-            all_enabled_users_names.each do |users|
-              assert all_user_radio_buttons.include?(users)
-            end
-          end
-
-          should "allow currently assigned user to be unassigned" do
-            user = FactoryBot.create(:user, :govuk_editor)
-            @govuk_editor.assign(@draft_edition, user)
-            visit current_path
-
-            choose "None"
-            click_on "Save"
-
-            assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
-          end
-
-          should "navigate to editions edit page when 'Cancel' link is clicked" do
-            click_link("Cancel")
-
-            assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
-          end
-        end
-      end
-    end
-
-    context "edit 2i reviewer link" do
-      context "user does not have required permissions" do
-        setup do
-          login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_in_review_edition
-        end
-
-        should "not show 'Edit' link when user is not govuk editor or welsh editor" do
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[3] do
-              assert page.has_no_link?("Edit")
-            end
-          end
-        end
-
-        should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
-          login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_in_review_edition
-
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[3] do
-              assert page.has_no_link?("Edit")
-            end
-          end
-        end
-      end
-
-      context "user has required permissions" do
-        should "show 'Edit' link" do
-          visit_in_review_edition
-
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[3] do
-              assert page.has_link?("Edit")
-            end
-          end
-        end
-
-        should "navigate to edit 2i reviewer page when 'Edit' link is clicked" do
-          visit_in_review_edition
-
-          within :css, ".editions__edit__summary" do
-            within all(".govuk-summary-list__row")[3] do
-              click_link("Edit")
-            end
-          end
-
-          assert(page.current_path.include?("/edit_reviewer"))
-        end
-
-        context "edit reviewer page" do
-          setup do
-            @edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.id)
-            @edition.actions.create!(
-              request_type: Action::REQUEST_AMENDMENTS,
-              requester_id: @govuk_requester.id,
-            )
-
-            visit edit_reviewer_edition_path(@edition)
-          end
-
-          should "show title and page title" do
-            assert page.has_title?("Assign 2i reviewer")
-            assert page.has_text?(@edition.title)
-          end
-
-          should "navigate to editions edit page when 'Cancel' link is clicked" do
-            click_link("Cancel")
-
-            assert_equal(page.current_path, "/editions/#{@edition.id}")
-          end
-
-          context "radio buttons" do
-            setup do
-              FactoryBot.create(:user, name: "Disabled User", disabled: true)
-              @all_enabled_users_names = []
-              User.enabled.each { |user| @all_enabled_users_names << user.name }
-              @all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+            should "show title and page title" do
+              assert page.has_title?("Assign person")
+              assert page.has_text?(@draft_edition.title)
             end
 
             should "show only enabled users as radio button options" do
-              assert @all_user_radio_buttons.exclude?("Disabled User")
+              FactoryBot.create(:user, name: "Disabled User", disabled: true)
+              all_enabled_users_names = []
+              User.enabled.each { |user| all_enabled_users_names << user.name }
+              all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
 
-              @all_enabled_users_names.each do |users|
-                assert @all_user_radio_buttons.include?(users)
+              assert all_user_radio_buttons.exclude?("Disabled User")
+
+              all_enabled_users_names.each do |users|
+                assert all_user_radio_buttons.include?(users)
               end
             end
 
-            should "show the currently assigned reviewer as the first radio button option and 'none' as the second" do
-              within all(".govuk-radios__item")[0] do
-                assert page.has_css?("input[value='#{@govuk_editor.id}']")
-              end
+            should "allow currently assigned user to be unassigned" do
+              user = FactoryBot.create(:user, :govuk_editor)
+              @govuk_editor.assign(@draft_edition, user)
+              visit current_path
 
-              within all(".govuk-radios__item")[1] do
-                assert page.has_css?("input[value='none']")
+              choose "None"
+              click_on "Save"
+
+              assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
+            end
+
+            should "navigate to editions edit page when 'Cancel' link is clicked" do
+              click_link("Cancel")
+
+              assert_equal(page.current_path, "/editions/#{@draft_edition.id}")
+            end
+          end
+        end
+      end
+
+      context "edit 2i reviewer link" do
+        context "user does not have required permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            visit_in_review_edition
+          end
+
+          should "not show 'Edit' link when user is not govuk editor or welsh editor" do
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_no_link?("Edit")
+              end
+            end
+          end
+
+          should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
+            login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
+            visit_in_review_edition
+
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_no_link?("Edit")
+              end
+            end
+          end
+        end
+
+        context "user has required permissions" do
+          should "show 'Edit' link" do
+            visit_in_review_edition
+
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_link?("Edit")
+              end
+            end
+          end
+
+          should "navigate to edit 2i reviewer page when 'Edit' link is clicked" do
+            visit_in_review_edition
+
+            within :css, ".editions__edit__summary" do
+              within all(".govuk-summary-list__row")[3] do
+                click_link("Edit")
               end
             end
 
-            should "not show a 'none' option when there is no assigned reviewer" do
-              @edition_no_reviewer = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with no reviewer assigned", review_requested_at: 1.hour.ago, reviewer: nil)
-              @edition_no_reviewer.actions.create!(
+            assert(page.current_path.include?("/edit_reviewer"))
+          end
+
+          context "edit reviewer page" do
+            setup do
+              @edition = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with a reviewer assigned", review_requested_at: 1.hour.ago, reviewer: @govuk_editor.id)
+              @edition.actions.create!(
                 request_type: Action::REQUEST_AMENDMENTS,
                 requester_id: @govuk_requester.id,
               )
 
-              visit edit_reviewer_edition_path(@edition_no_reviewer)
+              visit edit_reviewer_edition_path(@edition)
+            end
 
-              within :css, ".govuk-radios" do
-                assert page.has_no_css?("input[value='none']")
+            should "show title and page title" do
+              assert page.has_title?("Assign 2i reviewer")
+              assert page.has_text?(@edition.title)
+            end
+
+            should "navigate to editions edit page when 'Cancel' link is clicked" do
+              click_link("Cancel")
+
+              assert_equal(page.current_path, "/editions/#{@edition.id}")
+            end
+
+            context "radio buttons" do
+              setup do
+                FactoryBot.create(:user, name: "Disabled User", disabled: true)
+                @all_enabled_users_names = []
+                User.enabled.each { |user| @all_enabled_users_names << user.name }
+                @all_user_radio_buttons = find_all(".govuk-radios__item").map(&:text)
+              end
+
+              should "show only enabled users as radio button options" do
+                assert @all_user_radio_buttons.exclude?("Disabled User")
+
+                @all_enabled_users_names.each do |users|
+                  assert @all_user_radio_buttons.include?(users)
+                end
+              end
+
+              should "show the currently assigned reviewer as the first radio button option and 'none' as the second" do
+                within all(".govuk-radios__item")[0] do
+                  assert page.has_css?("input[value='#{@govuk_editor.id}']")
+                end
+
+                within all(".govuk-radios__item")[1] do
+                  assert page.has_css?("input[value='none']")
+                end
+              end
+
+              should "not show a 'none' option when there is no assigned reviewer" do
+                @edition_no_reviewer = FactoryBot.create(:answer_edition, state: "in_review", title: "An edition with no reviewer assigned", review_requested_at: 1.hour.ago, reviewer: nil)
+                @edition_no_reviewer.actions.create!(
+                  request_type: Action::REQUEST_AMENDMENTS,
+                  requester_id: @govuk_requester.id,
+                )
+
+                visit edit_reviewer_edition_path(@edition_no_reviewer)
+
+                within :css, ".govuk-radios" do
+                  assert page.has_no_css?("input[value='none']")
+                end
               end
             end
           end
         end
       end
-    end
 
-    context "content block guidance" do
-      context "when show_link_to_content_block_manager? is false" do
-        setup do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:show_link_to_content_block_manager, false)
-          visit_draft_edition
+      context "content block guidance" do
+        context "when show_link_to_content_block_manager? is false" do
+          setup do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:show_link_to_content_block_manager, false)
+            visit_draft_edition
+          end
+
+          should "not show the content block guidance" do
+            assert_not page.has_text?("Content block")
+          end
         end
 
-        should "not show the content block guidance" do
-          assert_not page.has_text?("Content block")
+        context "when show_link_to_content_block_manager? is true" do
+          setup do
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:show_link_to_content_block_manager, true)
+            visit_draft_edition
+          end
+
+          should "show the content block guidance" do
+            assert page.has_text?("Content block")
+          end
         end
       end
 
-      context "when show_link_to_content_block_manager? is true" do
-        setup do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:show_link_to_content_block_manager, true)
-          visit_draft_edition
-        end
-
-        should "show the content block guidance" do
-          assert page.has_text?("Content block")
-        end
-      end
-    end
-
-    context "'Publish' button" do
-      should "show the 'Publish' button if user has govuk_editor permission" do
-        login_as(@govuk_editor)
-        visit_ready_edition
-
-        assert page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
-      end
-
-      should "show the 'Publish' button for welsh edition if user has welsh_editor permission" do
-        login_as_welsh_editor
-        welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
-        visit edition_path(welsh_edition)
-        assert @user.has_editor_permissions?(welsh_edition)
-
-        assert page.has_link?("Publish", href: send_to_publish_page_edition_path(welsh_edition))
-      end
-
-      should "not show the 'Publish' button if the user does not have permissions" do
-        login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit_ready_edition
-
-        assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
-      end
-    end
-
-    context "'Fact check' button" do
-      %i[ready fact_check_received].each do |state|
-        should "show the 'Fact check' button on '#{state}' if user has govuk_editor permission" do
+      context "'Publish' button" do
+        should "show the 'Publish' button if user has govuk_editor permission" do
           login_as(@govuk_editor)
-          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
-          visit edition_path(@edition)
+          visit_ready_edition
 
-          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(@edition))
+          assert page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
         end
 
-        should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
+        should "show the 'Publish' button for welsh edition if user has welsh_editor permission" do
           login_as_welsh_editor
-          welsh_edition = FactoryBot.create(:edition, :welsh, state: state.to_s)
+          welsh_edition = FactoryBot.create(:edition, :welsh, state: "ready")
           visit edition_path(welsh_edition)
           assert @user.has_editor_permissions?(welsh_edition)
 
-          assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(welsh_edition))
+          assert page.has_link?("Publish", href: send_to_publish_page_edition_path(welsh_edition))
         end
 
-        should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do
+        should "not show the 'Publish' button if the user does not have permissions" do
           login_as(FactoryBot.create(:user, name: "Stub User"))
-          @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
-          visit edition_path(@edition)
+          visit_ready_edition
 
-          assert page.has_no_link?("Fact check", href: "#")
+          assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
+        end
+      end
+
+      context "'Fact check' button" do
+        %i[ready fact_check_received].each do |state|
+          should "show the 'Fact check' button on '#{state}' if user has govuk_editor permission" do
+            login_as(@govuk_editor)
+            @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+            visit edition_path(@edition)
+
+            assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(@edition))
+          end
+
+          should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
+            login_as_welsh_editor
+            welsh_edition = FactoryBot.create(:edition, :welsh, state: state.to_s)
+            visit edition_path(welsh_edition)
+            assert @user.has_editor_permissions?(welsh_edition)
+
+            assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(welsh_edition))
+          end
+
+          should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do
+            login_as(FactoryBot.create(:user, name: "Stub User"))
+            @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+            visit edition_path(@edition)
+
+            assert page.has_no_link?("Fact check", href: "#")
+          end
         end
       end
     end
-  end
 
-  context "Related external links tab" do
-    setup do
-      visit_draft_edition
-      click_link "Related external links"
-    end
-
-    should "render 'Related external links' header, inset text and save button" do
-      assert page.has_css?("h2", text: "Related external links")
-      assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
-      assert page.has_css?("button.gem-c-button", text: "Save")
-    end
-
-    context "Document has no external links when page loads" do
+    context "Related external links tab" do
       setup do
         visit_draft_edition
         click_link "Related external links"
       end
 
-      should "render an empty 'Add another' form" do
-        assert page.has_css?("legend", text: "Link 1")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-      end
-    end
-
-    context "Document already has external links when page loads" do
-      setup do
-        visit_draft_edition
-        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
-        click_link "Related external links"
+      should "render 'Related external links' header, inset text and save button" do
+        assert page.has_css?("h2", text: "Related external links")
+        assert page.has_css?("div.gem-c-inset-text", text: "After saving, changes to related external links will be visible on the site the next time this publication is published.")
+        assert page.has_css?("button.gem-c-button", text: "Save")
       end
 
-      should "render a pre-populated 'Add another' form" do
-        # Link 1
-        assert page.has_css?("legend", text: "Link 1")
-        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-        assert_equal "Link One", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-        assert_equal "https://gov.uk", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-
-        # Link 2 (empty fields)
-        assert page.has_css?("legend", text: "Link 2")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
-      end
-    end
-
-    context "User adds a new external link and saves" do
-      setup do
-        visit_draft_edition
-        click_link "Related external links"
-      end
-
-      should "render a pre-populated 'Add another' form" do
-        within :css, ".gem-c-add-another .js-add-another__empty" do
-          fill_in "Title", with: "A new external link"
-          fill_in "URL", with: "https://foo.com"
+      context "Document has no external links when page loads" do
+        setup do
+          visit_draft_edition
+          click_link "Related external links"
         end
 
-        click_button("Save")
-
-        # Link 1
-        assert page.has_css?("legend", text: "Link 1")
-        assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-        assert_equal "A new external link", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-        assert_equal "https://foo.com", page.find("input[name='artefact[external_links_attributes][0][url]']").value
-
-        # Link 2 (empty fields)
-        assert page.has_css?("legend", text: "Link 2")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
-      end
-    end
-
-    context "User deletes an external link and saves" do
-      setup do
-        visit_draft_edition
-        @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
-        click_link "Related external links"
+        should "render an empty 'Add another' form" do
+          assert page.has_css?("legend", text: "Link 1")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+        end
       end
 
-      should "render an empty 'Add another' form" do
-        within :css, ".gem-c-add-another .js-add-another__fieldset:first-of-type" do
-          check("Delete")
+      context "Document already has external links when page loads" do
+        setup do
+          visit_draft_edition
+          @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
+          click_link "Related external links"
         end
 
-        click_button("Save")
+        should "render a pre-populated 'Add another' form" do
+          # Link 1
+          assert page.has_css?("legend", text: "Link 1")
+          assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+          assert_equal "Link One", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+          assert_equal "https://gov.uk", page.find("input[name='artefact[external_links_attributes][0][url]']").value
 
-        assert page.has_css?("legend", text: "Link 1")
-        assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
-        assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
-        assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+          # Link 2 (empty fields)
+          assert page.has_css?("legend", text: "Link 2")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+        end
+      end
+
+      context "User adds a new external link and saves" do
+        setup do
+          visit_draft_edition
+          click_link "Related external links"
+        end
+
+        should "render a pre-populated 'Add another' form" do
+          within :css, ".gem-c-add-another .js-add-another__empty" do
+            fill_in "Title", with: "A new external link"
+            fill_in "URL", with: "https://foo.com"
+          end
+
+          click_button("Save")
+
+          # Link 1
+          assert page.has_css?("legend", text: "Link 1")
+          assert page.has_css?("input[name='artefact[external_links_attributes][0][_destroy]']")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+          assert_equal "A new external link", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+          assert_equal "https://foo.com", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+
+          # Link 2 (empty fields)
+          assert page.has_css?("legend", text: "Link 2")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_1_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_1_url']").text
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][title]']").value
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][1][url]']").value
+        end
+      end
+
+      context "User deletes an external link and saves" do
+        setup do
+          visit_draft_edition
+          @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
+          click_link "Related external links"
+        end
+
+        should "render an empty 'Add another' form" do
+          within :css, ".gem-c-add-another .js-add-another__fieldset:first-of-type" do
+            check("Delete")
+          end
+
+          click_button("Save")
+
+          assert page.has_css?("legend", text: "Link 1")
+          assert_equal "Title", page.find("label[for='artefact_external_links_attributes_0_title']").text
+          assert_equal "URL", page.find("label[for='artefact_external_links_attributes_0_url']").text
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][title]']").value
+          assert_equal "", page.find("input[name='artefact[external_links_attributes][0][url]']").value
+        end
       end
     end
   end
@@ -3807,6 +3901,50 @@ class EditionEditTest < IntegrationTest
         click_on "Approve 2i"
 
         assert page.has_content?("Due to a service problem, the request could not be made")
+        assert page.has_content?("Great job!")
+      end
+    end
+  end
+
+  context "Approve fact check page" do
+    should "save comment to edition history" do
+      create_fact_check_received_edition
+
+      visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+      fill_in "Comment (optional)", with: "Looks great"
+      click_on "Approve fact check"
+
+      click_on "History and notes"
+      assert page.has_content?("Approve fact check by")
+      assert page.has_content?("Looks great")
+    end
+
+    should "show success message and redirect back to the edit tab on submit" do
+      create_fact_check_received_edition
+
+      visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+      click_button "Approve fact check"
+
+      assert_current_path edition_path(@fact_check_received_edition.id)
+      assert page.has_text?("Fact check approved")
+    end
+
+    context "current user is also the requester" do
+      setup do
+        login_as(@govuk_requester)
+      end
+
+      should "populate comment box with submitted comment when there is an error" do
+        create_fact_check_received_edition
+        visit approve_fact_check_page_edition_path(@fact_check_received_edition)
+
+        @fact_check_received_edition.state = "ready"
+        @fact_check_received_edition.save!
+
+        fill_in "Comment (optional)", with: "Great job!"
+        click_on "Approve fact check"
+
+        assert page.has_content?("Edition is not in a state where fact check can be approved")
         assert page.has_content?("Great job!")
       end
     end
@@ -4228,6 +4366,19 @@ private
       requester: requester,
       request_type: Action::SEND_FACT_CHECK,
       edition: @fact_check_edition,
+      email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+      customised_message: "The customised message",
+    )
+  end
+
+  def create_fact_check_received_edition(requester = @govuk_editor)
+    @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
+
+    FactoryBot.create(
+      :action,
+      requester: requester,
+      request_type: Action::SEND_FACT_CHECK,
+      edition: @fact_check_received_edition,
       email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
       customised_message: "The customised message",
     )
