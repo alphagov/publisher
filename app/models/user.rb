@@ -49,17 +49,6 @@ class User < ApplicationRecord
     GovukContentModels::ActionProcessors::AssignProcessor.new(self, edition).processed_edition
   end
 
-  def role
-    if gds_editor? then "GDS Editor"
-    elsif govuk_editor? then "GOVUK Editor"
-    elsif departmental_editor? then "Departmental Editor"
-    elsif welsh_editor? then "Welsh Editor"
-    elsif skip_review? then "Skip Review"
-    else
-      "Writer"
-    end
-  end
-
   def govuk_editor?
     permissions.include?("govuk_editor")
   end
