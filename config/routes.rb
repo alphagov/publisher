@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         post "send_to_fact_check"
         get "resend_fact_check_email_page"
         patch "resend_fact_check_email"
+        get "approve_fact_check_page"
+        post "approve_fact_check"
         get "request_amendments_page"
         post "request_amendments"
         get "send_to_2i_page"

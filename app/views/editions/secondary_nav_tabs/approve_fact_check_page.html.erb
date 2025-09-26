@@ -1,0 +1,10 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Approve fact check" %>
+<% content_for :title, "Approve fact check" %>
+
+<%= render "editions/secondary_nav_tabs/progress_with_comment", {
+  form_url: approve_fact_check_edition_path(@edition),
+  comment_label_text: "Comment (optional)",
+  submit_button_text: "Approve fact check",
+} %>
