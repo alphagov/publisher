@@ -13,8 +13,6 @@ class LocalTransactionEdition < ApplicationRecord
 
   after_initialize :build_associations
 
-  after_validation :merge_errors
-
   GOVSPEAK_FIELDS = %i[introduction more_information need_to_know before_text after_text].freeze
 
   validate :valid_lgsl_code, if: -> { lgsl_code.present? }
@@ -57,17 +55,6 @@ class LocalTransactionEdition < ApplicationRecord
   end
 
 private
-
-  def merge_errors
-    %i[scotland_availability wales_availability northern_ireland_availability].each do |availability|
-      nested_errors = public_send(availability)&.errors
-      next if nested_errors.nil?
-
-      nested_errors.each do |error|
-        errors.add("#{availability}_attributes_#{error.attribute}", error.message)
-      end
-    end
-  end
 
   def build_associations
     self.northern_ireland_availability ||= NorthernIrelandAvailability.new

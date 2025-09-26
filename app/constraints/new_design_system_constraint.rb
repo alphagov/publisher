@@ -17,6 +17,7 @@ class NewDesignSystemConstraint
       PlaceEdition,
       TransactionEdition,
       CompletedTransactionEdition,
+      LocalTransactionEdition,
     ]
 
     AllowedContentTypesConstraint.new(phase_2_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_2").matches?(request)
