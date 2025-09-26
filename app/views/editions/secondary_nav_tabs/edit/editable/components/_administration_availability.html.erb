@@ -18,7 +18,7 @@
         label: {
           text: "URL of the devolved administration website page",
         },
-        id: "#{administration}_availability.alternative_url",
+        id: "#{administration}_availability_attributes_alternative_url",
         name: "edition[#{administration}_availability_attributes][alternative_url]",
         value: edition.editionable.send("#{administration}_availability").alternative_url,
         error_items: errors_for(edition.editionable.send("#{administration}_availability").errors, :alternative_url, use_full_message: false),
