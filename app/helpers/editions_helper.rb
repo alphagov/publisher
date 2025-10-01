@@ -91,4 +91,13 @@ module EditionsHelper
   def edition_version_and_state_tag(edition)
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
   end
+
+  def administration_authority(edition, administration)
+    options = {
+      "local_authority_service" => "Service available from local council",
+      "devolved_administration_service" => "Service available from devolved administration (or a similar service is available)",
+      "unavailable" => "Service not available",
+    }
+    options[edition.editionable.send("#{administration}_availability").authority_type]
+  end
 end

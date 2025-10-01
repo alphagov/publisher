@@ -1866,6 +1866,120 @@ class EditionEditTest < IntegrationTest
         end
       end
 
+      context "local transaction edition" do
+        setup do
+          visit_draft_local_transaction_edition
+        end
+
+        should "show fields for local transaction edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+
+          assert page.has_css?(".govuk-label", text: "LGSL code")
+          assert page.has_text?("9012")
+
+          assert page.has_css?(".govuk-label", text: "LGIL code")
+          assert page.has_field?("edition[lgil_code]", with: "23")
+
+          assert page.has_css?(".govuk-label", text: "Button text (optional)")
+          assert page.has_css?(".govuk-hint", text: "If left blank, the default text ‘Find your local council’ will be used")
+          assert page.has_field?("edition[cta_text]", with: "Find your local council")
+
+          assert page.has_css?(".govuk-label", text: "Introduction")
+          assert page.has_css?(".govuk-hint", text: "Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the Govspeak guidance (opens in new tab)")
+          assert page.has_field?("edition[introduction]", with: "Test introduction")
+
+          assert page.has_css?(".govuk-label", text: "Further information (optional)")
+          assert page.has_field?("edition[more_information]", with: "some more info")
+
+          assert page.has_css?(".govuk-label", text: "What you need to know (optional)")
+          assert page.has_field?("edition[need_to_know]", with: "some need to know")
+
+          assert page.has_css?(".govuk-label", text: "Above results content (optional)")
+          assert page.has_field?("edition[before_results]", with: "before results")
+
+          assert page.has_css?(".govuk-label", text: "Below results content (optional)")
+          assert page.has_field?("edition[after_results]", with: "after results")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Northern Ireland")
+            assert find(".gem-c-radio input[value='local_authority_service']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Scotland")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
+            assert page.has_field?("edition[scotland_availability_attributes][alternative_url]", with: "https://www.google.com")
+          end
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='unavailable']").checked?
+          end
+
+          assert find(".gem-c-radio input[value='1']").checked?
+        end
+
+        should "update local transaction edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[lgil_code]", with: "25"
+          fill_in "edition[cta_text]", with: "Changed button text"
+          fill_in "edition[introduction]", with: "Changed intro"
+          fill_in "edition[more_information]", with: "Changed more info"
+          fill_in "edition[need_to_know]", with: "Changed need to know"
+          fill_in "edition[before_results]", with: "Changed above results"
+          fill_in "edition[after_results]", with: "Changed below results"
+
+          within all(".govuk-fieldset")[0] do
+            choose("Service not available")
+          end
+
+          within all(".govuk-fieldset")[1] do
+            choose("Service available from local council")
+          end
+
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com"
+          end
+
+          choose("Yes")
+
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[lgil_code]", with: "25")
+          assert page.has_field?("edition[cta_text]", with: "Changed button text")
+          assert page.has_field?("edition[introduction]", with: "Changed intro")
+          assert page.has_field?("edition[more_information]", with: "Changed more info")
+          assert page.has_field?("edition[need_to_know]", with: "Changed need to know")
+          assert page.has_field?("edition[before_results]", with: "Changed above results")
+          assert page.has_field?("edition[after_results]", with: "Changed below results")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Northern Ireland")
+            assert find(".gem-c-radio input[value='unavailable']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Scotland")
+            assert find(".gem-c-radio input[value='local_authority_service']").checked?
+          end
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_css?(".govuk-label", text: "URL of the devolved administration website page")
+            assert page.has_field?("edition[wales_availability_attributes][alternative_url]", with: "https://www.google.com")
+          end
+
+          assert find(".gem-c-radio input[value='1']").checked?
+          assert page.has_text?("Edition updated successfully.")
+        end
+      end
+
       context "transaction edition" do
         setup do
           visit_transaction_edition(state: "draft", in_beta: true)
@@ -2574,6 +2688,91 @@ class EditionEditTest < IntegrationTest
             visit edition_path(empty_place_edition)
 
             assert page.has_css?("p", text: "None added", count: 6)
+          end
+        end
+      end
+
+      context "local transaction edition" do
+        should "show published local transaction edition fields as read only" do
+          @local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+          scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
+          wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
+          published_local_transaction_edition = FactoryBot.create(
+            :local_transaction_edition,
+            state: "published",
+            title: "Some test title",
+            lgsl_code: @local_service.lgsl_code,
+            panopticon_id: FactoryBot.create(:artefact).id,
+            lgil_code: 23,
+            cta_text: "Some cta text",
+            introduction: "Some introduction",
+            more_information: "Some more info",
+            need_to_know: "Some need info",
+            before_results: "Some above results",
+            after_results: "Some below results",
+            scotland_availability:,
+            wales_availability:,
+            in_beta: true,
+          )
+          visit edition_path(published_local_transaction_edition)
+
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p", text: published_local_transaction_edition.title)
+          assert page.has_css?("h3", text: "LGSL code")
+          assert page.has_css?("p", text: published_local_transaction_edition.lgsl_code)
+          assert page.has_css?("h3", text: "LGIL code")
+          assert page.has_css?("p", text: published_local_transaction_edition.lgil_code)
+
+          assert page.has_css?("h3", text: "Introduction")
+          assert page.has_css?("p", text: published_local_transaction_edition.introduction)
+          assert page.has_css?("h3", text: "Further information (optional)")
+          assert page.has_css?("p", text: published_local_transaction_edition.more_information)
+          assert page.has_css?("h3", text: "What you need to know (optional)")
+          assert page.has_css?("p", text: published_local_transaction_edition.need_to_know)
+          assert page.has_css?("h3", text: "Above results content (optional)")
+          assert page.has_css?("p", text: published_local_transaction_edition.before_results)
+          assert page.has_css?("h3", text: "Below results content (optional)")
+          assert page.has_css?("p", text: published_local_transaction_edition.after_results)
+          assert page.has_css?("h3", text: "Northern Ireland")
+          assert page.has_css?("p", text: "Service available from local council")
+          assert page.has_css?("h3", text: "Scotland")
+          assert page.has_css?("p", text: "Service available from devolved administration (or a similar service is available)")
+          assert page.has_css?("h3", text: "URL of the devolved administration website page")
+          assert page.has_css?("p", text: "https://www.google.com")
+          assert page.has_css?("h3", text: "Wales")
+          assert page.has_css?("p", text: "Service not available")
+          assert page.has_css?("h3", text: "Is this beta content?")
+          assert page.has_css?("p", text: "Yes")
+          assert page.has_css?("h3", text: "Public change note")
+          assert page.has_css?("p", text: "None added")
+
+          published_local_transaction_edition.in_beta = false
+          published_local_transaction_edition.save!(validate: false)
+          visit edition_path(published_local_transaction_edition)
+          assert page.has_css?("p", text: "No")
+        end
+
+        should "show 'None added' for empty fields in local transaction edition" do
+          @local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+          [nil, ""].each do |empty_value|
+            empty_local_transaction_edition = FactoryBot.create(
+              :local_transaction_edition,
+              state: "published",
+              title: "Edit page title",
+              lgsl_code: @local_service.lgsl_code,
+              panopticon_id: FactoryBot.create(:artefact).id,
+              lgil_code: 35,
+              cta_text: empty_value,
+              introduction: empty_value,
+              more_information: empty_value,
+              need_to_know: empty_value,
+              before_results: empty_value,
+              after_results: empty_value,
+              in_beta: true,
+            )
+            visit edition_path(empty_local_transaction_edition)
+
+            assert page.has_css?("p", text: "None added", count: 7)
           end
         end
       end
@@ -4296,9 +4495,24 @@ private
     @draft_place_edition = FactoryBot.create(:place_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, place_type: "The place type", introduction: "some intro", more_information: "some more info", need_to_know: "some need to know")
   end
 
+  def create_draft_local_transaction_edition
+    @local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+    scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
+    wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
+
+    @draft_local_transcation_edition = FactoryBot.create(:local_transaction_edition, title: "Edit page title", state: "draft", in_beta: 1, lgsl_code: @local_service.lgsl_code,
+                                                                                     panopticon_id: FactoryBot.create(:artefact).id, lgil_code: 23, cta_text: "Find your local council", introduction: "Test introduction", more_information: "some more info",
+                                                                                     need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
+  end
+
   def visit_draft_place_edition
     create_draft_place_edition
     visit edition_path(@draft_place_edition)
+  end
+
+  def visit_draft_local_transaction_edition
+    create_draft_local_transaction_edition
+    visit edition_path(@draft_local_transcation_edition)
   end
 
   def create_completed_transaction_edition(state: "draft", in_beta: true, choice: "", url: "", opt_in_url: "", opt_out_url: "")

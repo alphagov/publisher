@@ -1,0 +1,81 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/title", locals: { edition: @resource } %>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "LGSL code",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.lgsl_code.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "LGIL code",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.lgil_code.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Button text (optional)",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.cta_text.presence || "None added" %></p>
+</section>
+
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Introduction",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.introduction.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Further information (optional)",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.more_information.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "What you need to know (optional)",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.need_to_know.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Above results content (optional)",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.before_results.presence || "None added" %></p>
+</section>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Below results content (optional)",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= edition.editionable.after_results.presence || "None added" %></p>
+</section>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/readonly/components/administration_availability" ,locals: { edition: @resource , heading: "Northern Ireland" , administration: "northern_ireland"} %>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/readonly/components/administration_availability" ,locals: { edition: @resource , heading: "Scotland" , administration: "scotland"} %>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/readonly/components/administration_availability" ,locals: { edition: @resource , heading: "Wales" , administration: "wales"} %>
+

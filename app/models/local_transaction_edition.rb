@@ -64,6 +64,7 @@ private
       next if nested_errors.nil?
 
       nested_errors.each do |error|
+        errors.delete("#{availability}.#{error.attribute}")
         errors.add("#{availability}_attributes_#{error.attribute}", error.message)
       end
     end
