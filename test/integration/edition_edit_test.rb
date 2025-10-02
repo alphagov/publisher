@@ -1978,6 +1978,54 @@ class EditionEditTest < IntegrationTest
           assert find(".gem-c-radio input[value='1']").checked?
           assert page.has_text?("Edition updated successfully.")
         end
+
+        should "should show an error message when URL of the devolved administration is blank" do
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: ""
+          end
+
+          click_button("Save")
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_text?("Enter the URL of the devolved administration website page")
+          end
+        end
+
+        should "should show an error message when URL of the devolved administration is invalid" do
+          within all(".govuk-fieldset")[2] do
+            choose("Service available from devolved administration (or a similar service is available)")
+            fill_in "edition[wales_availability_attributes][alternative_url]", with: "some text"
+          end
+
+          click_button("Save")
+
+          within all(".govuk-fieldset")[2] do
+            assert page.has_css?("legend", text: "Wales")
+            assert find(".gem-c-radio input[value='devolved_administration_service']").checked?
+
+            assert page.has_text?("Must be a full URL, starting with https://")
+          end
+        end
+
+        should "should show an error message when LGIL code is blank" do
+          fill_in "edition[lgil_code]", with: ""
+
+          click_button("Save")
+
+          assert page.has_text?("Enter a LGIL code")
+        end
+
+        should "should show an error message when LGIL code is invalid" do
+          fill_in "edition[lgil_code]", with: "some text"
+
+          click_button("Save")
+
+          assert page.has_text?("LGIL code can only be a whole number between 0 and 999")
+        end
       end
 
       context "transaction edition" do

@@ -13,7 +13,7 @@ class DevolvedAdministrationAvailability < ApplicationRecord
     end
 
     unless uri.is_a?(URI::HTTPS)
-      errors.add(:alternative_url, "must be a full URL, starting with https://")
+      errors.add(:alternative_url, "Must be a full URL, starting with https://")
     end
   end
 
