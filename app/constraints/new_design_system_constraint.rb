@@ -22,4 +22,12 @@ class NewDesignSystemConstraint
 
     AllowedContentTypesConstraint.new(phase_2_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_2").matches?(request)
   end
+
+  def design_system_edit_phase_3a(request)
+    phase_3a_content_types = [
+      GuideEdition,
+    ]
+
+    AllowedContentTypesConstraint.new(phase_3a_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_3a").matches?(request)
+  end
 end
