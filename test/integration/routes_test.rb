@@ -27,6 +27,7 @@ class RoutesTest < LegacyIntegrationTest
           should "route to editions controller with phase 1 enabled" do
             @test_strategy.switch!(:design_system_edit_phase_1, true)
             @test_strategy.switch!(:design_system_edit_phase_2, false)
+            @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_editions_controller
           end
@@ -34,6 +35,7 @@ class RoutesTest < LegacyIntegrationTest
           should "route to legacy editions controller with phase 1 disabled" do
             @test_strategy.switch!(:design_system_edit_phase_1, false)
             @test_strategy.switch!(:design_system_edit_phase_2, false)
+            @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_legacy_editions_controller
           end
@@ -57,6 +59,7 @@ class RoutesTest < LegacyIntegrationTest
           should "route to editions controller with phase 2 enabled" do
             @test_strategy.switch!(:design_system_edit_phase_1, false)
             @test_strategy.switch!(:design_system_edit_phase_2, true)
+            @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_editions_controller
           end
@@ -64,6 +67,7 @@ class RoutesTest < LegacyIntegrationTest
           should "route to legacy editions controller with phase 2 disabled" do
             @test_strategy.switch!(:design_system_edit_phase_1, false)
             @test_strategy.switch!(:design_system_edit_phase_2, false)
+            @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_legacy_editions_controller
           end
@@ -80,6 +84,7 @@ class RoutesTest < LegacyIntegrationTest
 
             @test_strategy.switch!(:design_system_edit_phase_1, true)
             @test_strategy.switch!(:design_system_edit_phase_2, true)
+            @test_strategy.switch!(:design_system_edit_phase_3a, true)
           end
 
           should "route to legacy editions controller" do
@@ -92,6 +97,7 @@ class RoutesTest < LegacyIntegrationTest
     teardown do
       @test_strategy.switch!(:design_system_edit_phase_1, false)
       @test_strategy.switch!(:design_system_edit_phase_2, false)
+      @test_strategy.switch!(:design_system_edit_phase_3a, false)
     end
   end
 

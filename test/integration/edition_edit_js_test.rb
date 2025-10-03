@@ -7,6 +7,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_1, true)
     test_strategy.switch!(:design_system_edit_phase_2, true)
+    test_strategy.switch!(:design_system_edit_phase_3a, true)
   end
 
   context "Edit tab" do
