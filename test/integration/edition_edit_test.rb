@@ -8,6 +8,7 @@ class EditionEditTest < IntegrationTest
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_1, true)
     test_strategy.switch!(:design_system_edit_phase_2, true)
+    test_strategy.switch!(:design_system_edit_phase_3a, true)
     stub_holidays_used_by_fact_check
     stub_linkables
     stub_events_for_all_content_ids

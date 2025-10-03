@@ -14,6 +14,7 @@ class EditionLinkCheckTest < LegacyJavascriptIntegrationTest
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_edit_phase_1, false)
     test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
 
     @stubbed_api_request = stub_link_checker_api_create_batch(
       uris: ["https://www.gov.uk"],
