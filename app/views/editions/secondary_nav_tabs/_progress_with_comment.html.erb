@@ -5,7 +5,7 @@
 
     <% if text %>
       <p class="govuk-body">
-        <%= sanitize(text) %>
+        <%= sanitize(text, attributes: %w[href target class]) %>
       </p>
     <% end %>
 
