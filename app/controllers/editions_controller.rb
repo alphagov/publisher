@@ -799,6 +799,11 @@ private
         promotion_choice_opt_in_url
         promotion_choice_opt_out_url
       ]
+    when :guide_edition
+      [
+        :hide_chapter_navigation,
+        { parts_attributes: %i[title body slug order id _destroy] },
+      ]
     else
       # answer_edition, help_page_edition
       [
