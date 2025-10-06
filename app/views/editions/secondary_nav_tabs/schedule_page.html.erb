@@ -12,7 +12,7 @@
     heading_size: "m",
   } do
     render "govuk_publishing_components/components/date_input", {
-      hint: "For example, 27 4 2025",
+      hint: "For example, #{(Time.zone.now + 3.months).strftime("%-d %-m %Y")}",
       items: [
         {
           label: "Day",
