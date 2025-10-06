@@ -75,8 +75,34 @@ class RoutesTest < LegacyIntegrationTest
       end
     end
 
+    context "phase 3a content types" do
+      %i[guide_edition].each do |content_type|
+        context content_type do
+          setup do
+            @edition = FactoryBot.create(content_type)
+          end
+
+          should "route to editions controller with phase 3a enabled" do
+            @test_strategy.switch!(:design_system_edit_phase_1, false)
+            @test_strategy.switch!(:design_system_edit_phase_2, false)
+            @test_strategy.switch!(:design_system_edit_phase_3a, true)
+
+            assert_editions_controller
+          end
+
+          should "route to legacy editions controller with phase 3a disabled" do
+            @test_strategy.switch!(:design_system_edit_phase_1, false)
+            @test_strategy.switch!(:design_system_edit_phase_2, false)
+            @test_strategy.switch!(:design_system_edit_phase_3a, false)
+
+            assert_legacy_editions_controller
+          end
+        end
+      end
+    end
+
     context "un-migrated content types" do
-      %i[guide_edition simple_smart_answer_edition].each do |content_type|
+      %i[simple_smart_answer_edition].each do |content_type|
         context content_type do
           setup do
             @edition = FactoryBot.build(content_type)
