@@ -2390,7 +2390,6 @@ class EditionEditTest < IntegrationTest
 
         within all(".govuk-fieldset")[0] do
           assert page.has_css?("legend", text: "Publication date")
-          assert page.has_css?(".govuk-hint", text: "For example, 27 4 2025")
           assert page.has_css?(".govuk-label", text: "Day")
           assert page.has_css?("input[name='publish_at_3i']")
           assert page.has_css?(".govuk-label", text: "Month")
@@ -2409,6 +2408,13 @@ class EditionEditTest < IntegrationTest
 
         assert page.has_button?("Schedule")
         assert page.has_link?("Cancel")
+      end
+
+      should "generate a date hint test 3 months in the future" do
+        travel_to Time.zone.local(2025, 10, 1, 0, 0, 0)
+        visit schedule_page_edition_path(@ready_edition.id)
+
+        assert page.has_css?(".govuk-hint", text: "For example, 1 1 2026")
       end
 
       should "redirect to edit tab when Cancel button is pressed on Send to 2i page" do
