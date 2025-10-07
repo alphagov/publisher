@@ -890,7 +890,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    state_machines (0.100.1)
+    state_machines (0.100.2)
     state_machines-activemodel (0.31.0)
       activemodel (>= 7.1)
       state_machines (>= 0.31.0)
