@@ -891,12 +891,12 @@ GEM
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
     state_machines (0.100.1)
-    state_machines-activemodel (0.9.0)
-      activemodel (>= 6.0)
-      state_machines (>= 0.6.0)
-    state_machines-activerecord (0.9.0)
-      activerecord (>= 6.0)
-      state_machines-activemodel (>= 0.9.0)
+    state_machines-activemodel (0.31.0)
+      activemodel (>= 7.1)
+      state_machines (>= 0.31.0)
+    state_machines-activerecord (0.31.0)
+      activerecord (>= 7.1)
+      state_machines-activemodel (>= 0.10.0)
     state_machines-graphviz (0.0.2)
       ruby-graphviz
       state_machines
