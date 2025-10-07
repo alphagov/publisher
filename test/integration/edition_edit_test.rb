@@ -2029,6 +2029,59 @@ class EditionEditTest < IntegrationTest
         end
       end
 
+      context "guide edition" do
+        setup do
+          visit_draft_guide_edition
+        end
+
+        should "show fields for guide edition" do
+          assert page.has_field?("edition[title]", with: "Edit page title")
+          assert page.has_field?("edition[overview]", with: "metatags")
+
+          assert page.has_css?(".govuk-heading-m", text: "Chapters")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert find(".gem-c-radio input[value='1']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Is this beta content?")
+            assert find(".gem-c-radio input[value='1']").checked?
+          end
+        end
+
+        should "update guide edition and show success message" do
+          fill_in "edition[title]", with: "Changed Title"
+          fill_in "edition[overview]", with: "Changed Meta tag description"
+
+          within all(".govuk-fieldset")[0] do
+            choose("Yes")
+          end
+
+          within all(".govuk-fieldset")[1] do
+            choose("Yes")
+          end
+
+          click_button("Save")
+
+          assert page.has_field?("edition[title]", with: "Changed Title")
+          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+
+          within all(".govuk-fieldset")[0] do
+            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert find(".gem-c-radio input[value='1']").checked?
+          end
+
+          within all(".govuk-fieldset")[1] do
+            assert page.has_css?("legend", text: "Is this beta content?")
+            assert find(".gem-c-radio input[value='1']").checked?
+          end
+
+          assert page.has_text?("Edition updated successfully.")
+        end
+      end
+
       context "transaction edition" do
         setup do
           visit_transaction_edition(state: "draft", in_beta: true)
@@ -2822,6 +2875,50 @@ class EditionEditTest < IntegrationTest
             visit edition_path(empty_local_transaction_edition)
 
             assert page.has_css?("p", text: "None added", count: 7)
+          end
+        end
+      end
+
+      context "guide edition" do
+        should "show published guide edition fields as read only" do
+          published_guide_edition = FactoryBot.create(
+            :guide_edition,
+            state: "published",
+            title: "Some test title",
+            overview: "Some overview text",
+            hide_chapter_navigation: true,
+            in_beta: true,
+          )
+          visit edition_path(published_guide_edition)
+
+          assert page.has_css?("h3", text: "Title")
+          assert page.has_css?("p", text: published_guide_edition.title)
+
+          assert page.has_css?("h3", text: "Meta tag description")
+          assert page.has_css?("p", text: published_guide_edition.overview)
+
+          assert page.has_css?("h3", text: "Chapters")
+
+          assert page.has_css?("h3", text: "Is every chapter part of a step by step?")
+
+          assert page.has_css?("h3", text: "Is this beta content?")
+
+          assert page.has_css?("p", text: "Yes", count: 2)
+        end
+
+        should "show 'None added' for empty fields in guide edition" do
+          [nil, ""].each do |empty_value|
+            empty_guide_edition = FactoryBot.create(
+              :guide_edition,
+              state: "published",
+              title: "Edit page title",
+              overview: empty_value,
+              hide_chapter_navigation: true,
+              in_beta: true,
+            )
+            visit edition_path(empty_guide_edition)
+
+            assert page.has_css?("p", text: "None added", count: 2)
           end
         end
       end
@@ -4554,6 +4651,10 @@ private
                                                                                      need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
   end
 
+  def create_draft_guide_edition
+    @draft_guide_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
+  end
+
   def visit_draft_place_edition
     create_draft_place_edition
     visit edition_path(@draft_place_edition)
@@ -4562,6 +4663,11 @@ private
   def visit_draft_local_transaction_edition
     create_draft_local_transaction_edition
     visit edition_path(@draft_local_transcation_edition)
+  end
+
+  def visit_draft_guide_edition
+    create_draft_guide_edition
+    visit edition_path(@draft_guide_edition)
   end
 
   def create_completed_transaction_edition(state: "draft", in_beta: true, choice: "", url: "", opt_in_url: "", opt_out_url: "")

@@ -1,6 +1,6 @@
 class NewDesignSystemConstraint
   def matches?(request)
-    design_system_edit_phase_1(request) || design_system_edit_phase_2(request)
+    design_system_edit_phase_1(request) || design_system_edit_phase_2(request) || design_system_edit_phase_3a(request)
   end
 
   def design_system_edit_phase_1(request)
