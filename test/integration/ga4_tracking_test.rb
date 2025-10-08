@@ -8,7 +8,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     test_strategy.switch!(:design_system_publications_filter, true)
   end
 
-  should "render the correct ga4 data-attributes on page load]" do
+  should "render the correct ga4 data-attributes on page load" do
     visit "/"
 
     assert page.has_css?("header[data-ga4-no-copy='true']")
@@ -20,6 +20,17 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     setup do
       @edition_1 = FactoryBot.create(:edition, title: "The first document")
       @edition_2 = FactoryBot.create(:edition, title: "The second document")
+    end
+
+    should "add the corect GA4 parameters to the filter section" do
+      visit "/"
+
+      assert page.has_css?("input[name='search_text'][data-ga4-filter-parent='true'][data-ga4-index-section='1'][data-ga4-index='{\"index_section\":1,\"index_section_count\":4}']")
+      assert page.has_css?("select[name='assignee_filter'][data-ga4-change-category='update-filter select'][data-ga4-filter-parent='true'][data-ga4-section='Assigned to'][data-ga4-index-section='2'][data-ga4-index='{\"index_section\":2,\"index_section_count\":4}']")
+      assert page.has_css?("select[name='content_type_filter'][data-ga4-change-category='update-filter select'][data-ga4-filter-parent='true'][data-ga4-section='Content type'][data-ga4-index-section='3'][data-ga4-index='{\"index_section\":3,\"index_section_count\":4}']")
+      assert page.has_css?("fieldset[data-ga4-index-section='4'][data-ga4-filter-parent='true'][data-ga4-index='{\"index_section\":4,\"index_section_count\":4}']")
+      assert page.has_css?("button[data-ga4-event='{\"event_name\":\"select_content\",\"type\":\"button\",\"text\":\"Search\"}']", text: "Search")
+      assert page.has_css?("a[data-ga4-link='{\"action\":\"reset\",\"event_name\":\"select_content\",\"type\":\"Publications\"}']", text: "Reset all fields")
     end
 
     should "render the correct ga4 data-attributes" do
