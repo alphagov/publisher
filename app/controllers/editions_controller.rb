@@ -44,7 +44,9 @@ class EditionsController < InheritedResources::Base
                          tagging_related_content_page
                          tagging_organisations_page
                          tagging_breadcrumb_page
-                         tagging_remove_breadcrumb_page] do
+                         tagging_remove_breadcrumb_page
+                         guide_add_new_chapter_page
+                         guide_add_new_chapter ] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -243,6 +245,27 @@ class EditionsController < InheritedResources::Base
 
   def cancel_scheduled_publishing_page
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
+  end
+
+  def guide_add_new_chapter_page
+    render "secondary_nav_tabs/guide_add_new_chapter_page"
+  end
+
+  def guide_add_new_chapter
+    @part = Part.new(guide_edition: @resource.editionable)
+    @part.assign_attributes(permitted_parts_params)
+    if @part.save
+      flash.now[:success] = "New chapter added successfully."
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
+  ensure
+    if params[:save] == 'edit'
+      flash.now[:success] = "Not implemented yet."
+    elsif params[:save] == 'summary'
+      render "show"
+    end
   end
 
   def duplicate
@@ -577,13 +600,13 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/edit_reviewer_page"
   end
 
-protected
+  protected
 
   def setup_view_paths
     setup_view_paths_for(resource)
   end
 
-private
+  private
 
   def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
@@ -639,8 +662,8 @@ private
     ).to_h
     if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
       update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
-                                                              .to_h[:reordered_related_items]
-                                                              .sort_by(&:last).map { |url| url[0] }
+                                                      .to_h[:reordered_related_items]
+                                                      .sort_by(&:last).map { |url| url[0] }
     end
     update_params
   end
@@ -755,6 +778,19 @@ private
     params.require(:edition).permit(type_specific_params(subtype) + common_params)
   end
 
+  def permitted_parts_params
+    params.require(:part).permit(part_type_params)
+  end
+
+  def part_type_params
+    %i[
+      body
+      slug
+      title
+      id
+    ]
+  end
+
   def type_specific_params(subtype)
     case subtype
     when :place_edition
@@ -802,8 +838,9 @@ private
     when :guide_edition
       [
         :hide_chapter_navigation,
-        { parts_attributes: %i[title body slug order id _destroy] },
       ]
+    when :part
+
     else
       # answer_edition, help_page_edition
       [

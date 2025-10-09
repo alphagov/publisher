@@ -1,0 +1,88 @@
+<% @edition = @resource %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds editions__edit__summary">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: document_summary_items(@resource, @reviewer),
+    } %>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <%= render partial: "secondary_navigation" %>
+    </div>
+  </div>
+
+  <% content_for :page_title, "Add new chapter" %>
+  <% content_for :title, "Add new chapter" %>
+
+  <%= render "govuk_publishing_components/components/back_link", {
+    text: "Back to summary",
+    href: edit_edition_path(@edition)
+  } %>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= form_with url: guide_add_new_chapter_edition_path(@edition) do %>
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            text: "Title",
+          },
+          name: "part[title]",
+          heading_size: "s",
+        } %>
+
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            text: "Slug",
+          },
+          name: "part[slug]",
+          heading_size: "s",
+          hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)"
+        } %>
+        <%= render "govuk_publishing_components/components/textarea", {
+          label: {
+            heading_size: "s",
+            text: "Body",
+          },
+          name: "part[body]",
+          value: params[:body],
+          rows: 14,
+          hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
+        } %>
+        </div>
+
+        <% if current_user.has_editor_permissions?(@resource) %>
+          <div class="govuk-grid-column-one-third options-sidebar">
+            <div class="sidebar-components">
+              <%= sidebar_options_heading %>
+
+              <%= render "govuk_publishing_components/components/list", {
+                items: [
+                  (render "govuk_publishing_components/components/button", {
+                    text: "Save",
+                    margin_bottom: 3,
+                    name: "save",
+                    value: "edit"
+                  }),
+                  (render "govuk_publishing_components/components/button", {
+                    text: "Save and go to summary",
+                    margin_bottom: 3,
+                    secondary_solid: true,
+                    name: "save",
+                    value: "summary"
+                  }),
+                  (link_to(
+                    "Preview (opens in new tab)",
+                    preview_edition_path(@edition),
+                    target: "_blank",
+                    rel: "noopener",
+                    class: "govuk-link",
+                  )),
+                ],
+              } %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      </div>
+</div>
