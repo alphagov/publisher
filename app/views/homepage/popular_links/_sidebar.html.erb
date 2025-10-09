@@ -8,7 +8,7 @@
     <%= render "govuk_publishing_components/components/list", {
       items: [
         primary_button_for(@latest_popular_links, create_popular_links_path, "Create new edition"),
-        link_to("View on GOV.UK (opens in new tab)", view_homepage_path, rel:"noreferrer noopener", target:"_blank", class: "govuk-link"),
+        link_to("View on GOV.UK (opens in new tab)", view_homepage_path, rel:"noreferrer noopener", target:"_blank", class: "govuk-link govuk-link--no-visited-state"),
       ],
     } %>
   <% else %>
@@ -16,8 +16,8 @@
       items: [
         primary_link_button_for(edit_popular_links_path(@latest_popular_links), "Edit popular links") ,
         secondary_button_for(@latest_popular_links, publish_popular_links_path(@latest_popular_links), "Publish"),
-        link_to("Preview (opens in new tab)", preview_homepage_path(@latest_popular_links), rel:"noreferrer noopener", target:"_blank", class: "govuk-link"),
-        link_to("Delete draft", confirm_destroy_popular_links_path(@latest_popular_links), class: "govuk-link gem-link--destructive"),
+        link_to("Preview (opens in new tab)", preview_homepage_path(@latest_popular_links), rel:"noreferrer noopener", target:"_blank", class: "govuk-link govuk-link--no-visited-state"),
+        link_to("Delete draft", confirm_destroy_popular_links_path(@latest_popular_links), class: "govuk-link gem-link--destructive govuk-link--no-visited-state"),
       ],
     } %>
   <% end %>
