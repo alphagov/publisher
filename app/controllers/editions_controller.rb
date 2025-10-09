@@ -44,7 +44,9 @@ class EditionsController < InheritedResources::Base
                          tagging_related_content_page
                          tagging_organisations_page
                          tagging_breadcrumb_page
-                         tagging_remove_breadcrumb_page] do
+                         tagging_remove_breadcrumb_page
+                         guide_add_new_chapter_page
+                         guide_add_new_chapter ] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -245,6 +247,13 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
   end
 
+  def guide_add_new_chapter_page
+    render "secondary_nav_tabs/guide_add_new_chapter_page"
+  end
+
+  def guide_add_new_chapter
+
+  end
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
     target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
