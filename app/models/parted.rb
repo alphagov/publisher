@@ -8,7 +8,7 @@ module Parted
     klass.accepts_nested_attributes_for :parts,
                                         allow_destroy: true,
                                         reject_if: proc { |attrs| attrs["title"].blank? && attrs["body"].blank? }
-    klass.after_validation :merge_embedded_parts_errors
+    #klass.after_validation :merge_embedded_parts_errors
   end
 
   def copy_to(new_edition)
@@ -42,6 +42,7 @@ private
     return if parts.empty?
 
     if errors.any?
+      puts('***parted errors'+errors.size.to_s)
       parts_errors = parts.each_with_object({}) do |part, result|
         result["#{part.id}:#{part.order}"] = part.errors.messages if part.errors.present?
       end
@@ -49,5 +50,6 @@ private
       errors.delete("parts.slug")
       errors.add(:parts, parts_errors)
     end
+    puts('***parted errors'+errors.size.to_s)
   end
 end

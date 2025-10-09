@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /govuk/publisher/test/integration/edition_edit_test.rb:1914 :
+
+    [1;34m1909[0m:             assert find([31m[1;31m"[0m[31m.gem-c-radio input[value='local_authority_service'][1;31m"[0m[31m[0m).checked?
+    [1;34m1910[0m:           [32mend[0m
+    [1;34m1911[0m: 
+    [1;34m1912[0m:           within all([31m[1;31m"[0m[31m.govuk-fieldset[1;31m"[0m[31m[0m)[[1;34m2[0m] [32mdo[0m
+    [1;34m1913[0m:             binding.pry
+ => [1;34m1914[0m:             assert page.has_css?([31m[1;31m"[0m[31mlegend[1;31m"[0m[31m[0m, [35mtext[0m: [31m[1;31m"[0m[31mWales[1;31m"[0m[31m[0m)
+    [1;34m1915[0m:             assert find([31m[1;31m"[0m[31m.gem-c-radio input[value='local_authority_service'][1;31m"[0m[31m[0m).checked?
+    [1;34m1916[0m:           [32mend[0m
+    [1;34m1917[0m:         [32mend[0m
+    [1;34m1918[0m: 
+    [1;34m1919[0m:         should [31m[1;31m"[0m[31mupdate place edition and show success message[1;31m"[0m[31m[0m [32mdo[0m
+

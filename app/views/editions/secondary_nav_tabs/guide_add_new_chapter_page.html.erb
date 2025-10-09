@@ -1,0 +1,116 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.format %>
+<% content_for :page_title, @edition.title %>
+<% content_for :title, @edition.title %>
+
+<% unless @edition.errors.empty? %>
+  <% content_for :error_summary do %>
+    <%= render("govuk_publishing_components/components/error_summary", {
+      id: "error-summary",
+      title: "There is a problem",
+      items: errors_to_display(@edition).map do |error_message,href|
+        {
+          text: error_message,
+          href: "#{href}",
+        }
+      end,
+    }) %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds editions__edit__summary">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: document_summary_items(@resource, @reviewer),
+    } %>
+  </div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <%= render partial: "secondary_navigation" %>
+    </div>
+</div>
+
+<%= render "govuk_publishing_components/components/back_link", {
+    text: "Back to summary",
+    href: edit_edition_path(@edition),
+    margin_bottom: 6,
+  } %>
+
+<%= render "govuk_publishing_components/components/heading", {
+    text: "Add new chapter",
+    heading_level: 2,
+    font_size: "l",
+    margin_bottom: 5,
+  } %>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= form_with url: guide_add_new_chapter_edition_path(@edition), data: {module: "unsaved-changes-prompt"} do %>
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            text: "Title",
+          },
+          id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_title",
+          name: "part[title]",
+          heading_size: "s",
+          error_items: errors_for(@part.errors , :title, use_full_message: false),
+        } %>
+
+        <%= render "govuk_publishing_components/components/input", {
+          label: {
+            text: "Slug",
+          },
+          id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_slug",
+          name: "part[slug]",
+          heading_size: "s",
+          hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
+          error_items: errors_for(@part.errors , :slug, use_full_message: false),
+        } %>
+        <%= render "govuk_publishing_components/components/textarea", {
+          label: {
+            heading_size: "s",
+            text: "Body",
+          },
+          name: "part[body]",
+          value: params[:body],
+          rows: 14,
+          hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
+        } %>
+        </div>
+
+        <% if current_user.has_editor_permissions?(@resource) %>
+          <div class="govuk-grid-column-one-third options-sidebar">
+            <div class="sidebar-components">
+              <%= sidebar_options_heading %>
+
+              <%= render "govuk_publishing_components/components/list", {
+                items: [
+                  (render "govuk_publishing_components/components/button", {
+                    text: "Save",
+                    margin_bottom: 3,
+                    name: "save",
+                    value: "save",
+                  }),
+                  (render "govuk_publishing_components/components/button", {
+                    text: "Save and go to summary",
+                    margin_bottom: 3,
+                    secondary_solid: true,
+                    name: "save",
+                    value: "save and summary",
+                  }),
+                  (link_to(
+                    "Preview (opens in new tab)",
+                    preview_edition_path(@edition),
+                    target: "_blank",
+                    rel: "noopener",
+                    class: "govuk-link",
+                  )),
+                ],
+              } %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      </div>
+</div>
