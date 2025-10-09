@@ -5,10 +5,10 @@ class EditionEditTest < IntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor, name: "Stub requester")
     login_as(@govuk_editor)
-    @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_1, true)
-    @test_strategy.switch!(:design_system_edit_phase_2, true)
-    @test_strategy.switch!(:design_system_edit_phase_3a, true)
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_1, true)
+    test_strategy.switch!(:design_system_edit_phase_2, true)
+    test_strategy.switch!(:design_system_edit_phase_3a, true)
     stub_holidays_used_by_fact_check
     stub_linkables
     stub_events_for_all_content_ids
@@ -3974,24 +3974,24 @@ class EditionEditTest < IntegrationTest
       context "content block guidance" do
         context "when show_link_to_content_block_manager? is false" do
           setup do
-            @test_strategy.switch!(:show_link_to_content_block_manager, false)
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:show_link_to_content_block_manager, false)
             visit_draft_edition
           end
 
           should "not show the content block guidance" do
-            skip("not implemented")
             assert_not page.has_text?("Content block")
           end
         end
 
         context "when show_link_to_content_block_manager? is true" do
           setup do
-            @test_strategy.switch!(:show_link_to_content_block_manager, true)
+            test_strategy = Flipflop::FeatureSet.current.test!
+            test_strategy.switch!(:show_link_to_content_block_manager, true)
             visit_draft_edition
           end
 
           should "show the content block guidance" do
-            skip("not implemented")
             assert page.has_text?("Content block")
           end
         end

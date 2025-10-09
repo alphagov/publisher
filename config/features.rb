@@ -14,7 +14,7 @@ Flipflop.configure do
           description: "Update the publications page to use the GOV.UK Design System"
 
   feature :design_system_edit_phase_1,
-          default: true,
+          default: false,
           description: "Update the publications edit page for Answer and Help content types to use the GOV.UK Design System"
 
   feature :design_system_edit_phase_2,
