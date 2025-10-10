@@ -236,7 +236,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
       should "save the added 'Related content' tags when the form is submitted" do
         fill_in "URL or path", with: "/company-tax-returns"
+
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": [],
@@ -245,7 +248,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": [] },
                                  "previous_version": 0 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
       end
     end
 
@@ -297,6 +299,8 @@ class EditionEditJSTest < JavascriptIntegrationTest
           click_button("Delete")
         end
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
@@ -305,7 +309,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
       end
     end
 
@@ -332,6 +335,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
           assert page.has_text?("/tax-help", wait: 1)
         end
         click_button("Update order")
+        assert page.has_content?("Related content order updated")
 
         # Assert that updated order is submitted in http request
         assert_requested :patch,
@@ -342,7 +346,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content order updated")
       end
     end
   end

@@ -235,6 +235,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
@@ -255,6 +256,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
@@ -276,6 +278,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       switch_tab "Related external links"
       click_on "Remove this URL"
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length
@@ -292,6 +295,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links URL is invalid")
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length

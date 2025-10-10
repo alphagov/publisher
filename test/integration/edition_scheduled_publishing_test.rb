@@ -41,6 +41,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
       select "15", from: "edition_activity_schedule_for_publishing_attributes_publish_at_5i"
       click_on "Schedule for publishing"
     end
+    assert page.has_content?("edition was successfully updated", exact: false)
 
     visit_editions
     within(:css, "div.sidebar-nav li.scheduled_for_publishing") do
