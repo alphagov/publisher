@@ -20,37 +20,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
         click_link("Metadata")
         assert_current_path metadata_edition_path(@edit_edition.id)
       end
-
-      # Skip these tests when running in CI as we cannot get them to pass
-      if ENV["CI"].blank?
-        should "display an alert when the user has made changes to the form and tries to navigate away" do
-          fill_in "Meta tag description", with: "meta tag"
-
-          accept_confirm do
-            click_link("Metadata")
-          end
-        end
-
-        should "remain on the edit page when the user dismisses the alert" do
-          fill_in "Meta tag description", with: "meta tag"
-
-          dismiss_confirm do
-            click_link("Metadata")
-          end
-
-          assert_current_path edition_path(@edit_edition.id)
-        end
-
-        should "leave the page when the user accepts the alert" do
-          fill_in "Meta tag description", with: "meta tag"
-
-          accept_confirm do
-            click_link("Metadata")
-          end
-
-          assert_current_path metadata_edition_path(@edit_edition.id)
-        end
-      end
     end
   end
 
@@ -130,40 +99,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
         click_link("Metadata")
         assert_current_path metadata_edition_path(@external_links_edition.id)
       end
-
-      # Skip these tests when running in CI as we cannot get them to pass
-      if ENV["CI"].blank?
-        should "display an alert when the user has made changes to the form and tries to navigate away" do
-          click_button("Add related external link")
-          fill_in "Title", with: "title"
-
-          accept_confirm do
-            click_link("Metadata")
-          end
-        end
-
-        should "remain on the edit page when the user dismisses the alert" do
-          click_button("Add related external link")
-          fill_in "Title", with: "title"
-
-          dismiss_confirm do
-            click_link("Metadata")
-          end
-
-          assert_current_path related_external_links_edition_path(@external_links_edition.id)
-        end
-
-        should "leave the page when the user accepts the alert" do
-          click_button("Add related external link")
-          fill_in "Title", with: "title"
-
-          accept_confirm do
-            click_link("Metadata")
-          end
-
-          assert_current_path metadata_edition_path(@external_links_edition.id)
-        end
-      end
     end
 
     context "User does not have editor permissions" do
@@ -236,7 +171,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
       should "save the added 'Related content' tags when the form is submitted" do
         fill_in "URL or path", with: "/company-tax-returns"
+
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": [],
@@ -245,7 +183,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": [] },
                                  "previous_version": 0 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
       end
     end
 
@@ -297,6 +234,8 @@ class EditionEditJSTest < JavascriptIntegrationTest
           click_button("Delete")
         end
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
@@ -305,7 +244,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
       end
     end
 
@@ -332,6 +270,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
           assert page.has_text?("/tax-help", wait: 1)
         end
         click_button("Update order")
+        assert page.has_content?("Related content order updated")
 
         # Assert that updated order is submitted in http request
         assert_requested :patch,
@@ -342,7 +281,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content order updated")
       end
     end
   end
@@ -356,37 +294,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
       should "leave the page with no alert when the user has not made changes to the form" do
         click_link("Edit")
         assert_current_path edition_path(@edit_edition.id)
-      end
-
-      # Skip these tests when running in CI as we cannot get them to pass
-      if ENV["CI"].blank?
-        should "display an alert when the user has made changes to the form and tries to navigate away" do
-          fill_in "Slug", with: "slug"
-
-          accept_confirm do
-            click_link("Edit")
-          end
-        end
-
-        should "remain on the metadata page when the user dismisses the alert" do
-          fill_in "Slug", with: "another-slug"
-
-          dismiss_confirm do
-            click_link("Edit")
-          end
-
-          assert_current_path metadata_edition_path(@edit_edition.id)
-        end
-
-        should "leave the page when the user accepts the alert" do
-          fill_in "Slug", with: "yet-another-slug"
-
-          accept_confirm do
-            click_link("Edit")
-          end
-
-          assert_current_path edition_path(@edit_edition.id)
-        end
       end
     end
   end

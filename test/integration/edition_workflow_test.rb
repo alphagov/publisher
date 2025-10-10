@@ -77,8 +77,9 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+      click_on "Send to Fact check"
     end
+    assert page.has_content?("Guide updated")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -95,8 +96,9 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+      click_on "Send to Fact check"
     end
+    assert page.has_content?("Guide updated")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -474,6 +476,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     filter_for_all_users
     view_filtered_list "Published"
     click_on "Create new edition"
+    assert page.has_content? "New edition created"
 
     login_as("WelshEditor")
 
@@ -814,7 +817,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_for_generic_action(guide, button_text) do
       fill_in "Email", with: email
       fill_in "Customised message", with: message
-      click_on "Send"
+      click_on "Send to Fact check"
     end
     assert page.has_content?("updated")
   end
