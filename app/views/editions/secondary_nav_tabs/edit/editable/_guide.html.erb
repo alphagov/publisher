@@ -16,6 +16,11 @@
   margin_bottom: 6,
 } %>
 
+debug chapters
+
+<%= edition.parts.all.map do |part| %>
+  <% [part.id, part.title, part.slug, part.body] %>
+<% end %>
 
 <%= render "govuk_publishing_components/components/radio", {
   heading: "Is every chapter part of a step by step?",
@@ -36,3 +41,4 @@
     },
   ],
 } %>
+

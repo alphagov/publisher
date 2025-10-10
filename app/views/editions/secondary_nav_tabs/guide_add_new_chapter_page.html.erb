@@ -22,14 +22,12 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <%= form_with url: guide_add_new_chapter_edition_path(@edition) do %>
         <%= render "govuk_publishing_components/components/input", {
           label: {
             text: "Title",
           },
-          name: "[title]",
-          value: params[:title],
+          name: "part[title]",
           heading_size: "s",
         } %>
 
@@ -37,8 +35,7 @@
           label: {
             text: "Slug",
           },
-          name: "[slug]",
-          value: params[:slug],
+          name: "part[slug]",
           heading_size: "s",
           hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)"
         } %>
@@ -47,7 +44,7 @@
             heading_size: "s",
             text: "Body",
           },
-          name: "[body]",
+          name: "part[body]",
           value: params[:body],
           rows: 14,
           hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,

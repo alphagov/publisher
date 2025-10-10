@@ -252,8 +252,18 @@ class EditionsController < InheritedResources::Base
   end
 
   def guide_add_new_chapter
-
+    @part = Part.new(guide_edition: @resource.editionable)
+    @part.assign_attributes(permitted_parts_params)
+    if @part.save
+      flash.now[:success] = "New chapter created successfully."
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
+  ensure
+    render "show"
   end
+
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
     target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
@@ -764,6 +774,19 @@ private
     params.require(:edition).permit(type_specific_params(subtype) + common_params)
   end
 
+  def permitted_parts_params
+    params.require(:part).permit(part_type_params)
+  end
+
+  def part_type_params
+    %i[
+      body
+      slug
+      title
+      id
+    ]
+  end
+
   def type_specific_params(subtype)
     case subtype
     when :place_edition
@@ -811,8 +834,9 @@ private
     when :guide_edition
       [
         :hide_chapter_navigation,
-        { parts_attributes: %i[title body slug order id _destroy] },
       ]
+    when :part
+
     else
       # answer_edition, help_page_edition
       [
