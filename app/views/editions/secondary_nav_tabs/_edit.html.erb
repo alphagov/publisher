@@ -16,6 +16,10 @@
       <%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/beta_content_radio", locals: { edition: @resource } %>
 
       <%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/public_change_note", locals: { edition: @resource } %>
+
+      <% if Flipflop.enabled?(:show_link_to_content_block_manager) %>
+        <%= render partial: "editions/secondary_nav_tabs/edit/shared/content_block_manager_link" %>
+      <% end %>
     </div>
     <% if @resource.scheduled_for_publishing? %>
       <div class="govuk-grid-column-one-third options-sidebar">
@@ -54,6 +58,10 @@
 
           <% if @resource.published_edition %>
             <%= render partial: "editions/secondary_nav_tabs/edit/editable/components/public_change_note", locals: { edition: @resource } %>
+          <% end %>
+
+          <% if Flipflop.enabled?(:show_link_to_content_block_manager) %>
+            <%= render partial: "editions/secondary_nav_tabs/edit/shared/content_block_manager_link" %>
           <% end %>
         </div>
       </div>
