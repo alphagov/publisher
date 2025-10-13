@@ -3979,8 +3979,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "not show the content block guidance" do
-            skip("not implemented")
-            assert_not page.has_text?("Content block")
+            assert_not page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
           end
         end
 
@@ -3991,8 +3990,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show the content block guidance" do
-            skip("not implemented")
-            assert page.has_text?("Content block")
+            assert page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
           end
         end
       end
