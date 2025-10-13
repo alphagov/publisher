@@ -22,3 +22,9 @@
     }
   }
 }
+
+.editions__edit__summary{
+  a{
+    @extend .govuk-link--no-visited-state; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+  }
+}
