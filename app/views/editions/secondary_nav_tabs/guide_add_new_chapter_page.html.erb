@@ -1,4 +1,7 @@
 <% @edition = @resource %>
+<% content_for :title_context, @edition.format %>
+<% content_for :page_title, @edition.title %>
+<% content_for :title, @edition.title %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds editions__edit__summary">
@@ -12,17 +15,22 @@
     </div>
   </div>
 
-  <% content_for :page_title, "Add new chapter" %>
-  <% content_for :title, "Add new chapter" %>
-
   <%= render "govuk_publishing_components/components/back_link", {
     text: "Back to summary",
-    href: edit_edition_path(@edition)
+    href: edit_edition_path(@edition),
+    margin_bottom: 6
+  } %>
+
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Add new chapter",
+    heading_level: 2,
+    font_size: "l",
+    margin_bottom: 5
   } %>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <%= form_with url: guide_add_new_chapter_edition_path(@edition) do %>
+      <%= form_with url: guide_add_new_chapter_edition_path(@edition), data: {module: "unsaved-changes-prompt"} do %>
         <%= render "govuk_publishing_components/components/input", {
           label: {
             text: "Title",

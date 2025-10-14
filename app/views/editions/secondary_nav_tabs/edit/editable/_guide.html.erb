@@ -4,6 +4,7 @@
 
 <%= render partial: "editions/secondary_nav_tabs/edit/editable/components/guide_chapter_list", locals: { edition: @resource } %>
 
+<% if @resource.is_editable_by?(current_user) %>
 <%= render "govuk_publishing_components/components/button", {
   text: "Add new chapter",
   secondary_solid: true,
@@ -11,7 +12,7 @@
   margin_bottom: 6,
 } %>
 
-
+<% end %>
 <%= render "govuk_publishing_components/components/radio", {
   heading: "Is every chapter part of a step by step?",
   heading_size: "s",
