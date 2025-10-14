@@ -1399,7 +1399,7 @@ class EditionEditTest < IntegrationTest
         assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
       end
 
-      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. You can also add an edition note when you send the edition for 2i review. Read guidance on writing good change notes (opens in new tab).")
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. You can also add an edition note when you send the edition for 2i review. Read guidance on writing good change notes (opens in new tab).")
 
       within :css, ".gem-c-textarea" do
         assert page.has_css?("label", text: "Edition note")
@@ -4372,7 +4372,7 @@ class EditionEditTest < IntegrationTest
         assert page.has_css?(".gem-c-heading__context", text: @draft_edition.title)
       end
 
-      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card. If you’ve added a change note already, you do not need to add another one.")
+      assert page.has_text?("Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card. If you’ve added a change note already, you do not need to add another one.")
       assert page.has_link?("Read guidance on writing good change notes (opens in new tab)", href: "https://gov-uk.atlassian.net/l/cp/dwn06raQ")
 
       within :css, ".gem-c-textarea" do
