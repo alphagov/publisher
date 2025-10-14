@@ -2,12 +2,7 @@
 
 <%= render partial: "editions/secondary_nav_tabs/edit/editable/components/meta_tag_description", locals: { edition: @resource } %>
 
-<%= render "govuk_publishing_components/components/heading", {
-  text: "Chapters",
-  heading_level: 3,
-  font_size: "m",
-  margin_bottom: 5,
-} %>
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/guide_chapter_list", locals: { edition: @resource } %>
 
 <%= render "govuk_publishing_components/components/button", {
   text: "Add new chapter",
@@ -16,11 +11,6 @@
   margin_bottom: 6,
 } %>
 
-debug chapters
-
-<%= edition.parts.all.map do |part| %>
-  <% [part.id, part.title, part.slug, part.body] %>
-<% end %>
 
 <%= render "govuk_publishing_components/components/radio", {
   heading: "Is every chapter part of a step by step?",
@@ -41,4 +31,3 @@ debug chapters
     },
   ],
 } %>
-
