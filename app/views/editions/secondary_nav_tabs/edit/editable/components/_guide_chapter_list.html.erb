@@ -1,0 +1,17 @@
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Chapters",
+  heading_level: 3,
+  font_size: "m",
+  margin_bottom: 5,
+} %>
+
+<% edition.parts.presence %>
+<tag.ul class="govuk-list govuk-summary-list">
+  <% edition.parts.each do |part| %>
+    <tag.li class="govuk-summary-list__row">
+  <span class="govuk-body">
+   <%= part.title %> </span>
+      <span class="govuk-body govuk-summary-list__actions"><a class="govuk-link govuk-link--no-visited-state" href='#'>Edit</a></span>
+    </tag.li>
+  <% end %>
+</tag.ul>
