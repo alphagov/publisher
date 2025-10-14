@@ -36,6 +36,7 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
 
   def visit_edition(edition)
     visit "/editions/#{edition.to_param}"
+    assert page.has_content?(edition.title)
   end
 
   def visit_editions
