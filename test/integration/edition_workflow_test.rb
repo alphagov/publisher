@@ -14,7 +14,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
-    test_strategy.switch!(:design_system_edit_phase_1, false)
     test_strategy.switch!(:design_system_edit_phase_2, false)
     test_strategy.switch!(:design_system_edit_phase_3a, false)
 
@@ -593,7 +592,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not see buttons to respond to fact checks" do
-    edition = FactoryBot.create(:edition, :fact_check_received)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -604,7 +603,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
-    edition = FactoryBot.create(:edition, :fact_check_received, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -615,7 +614,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not request more work for fact checked edition" do
-    edition = FactoryBot.create(:edition, :fact_check)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -625,7 +624,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may request more work for fact checked Welsh edition" do
-    edition = FactoryBot.create(:edition, :fact_check, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -635,7 +634,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not request more work for 'ready' non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :ready)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -645,7 +644,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may request more work for 'ready' Welsh editions" do
-    edition = FactoryBot.create(:edition, :ready, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -655,7 +654,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
-    edition = FactoryBot.create(:edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -665,7 +664,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
-    edition = FactoryBot.create(:edition, :ready, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -675,7 +674,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -685,7 +684,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -695,7 +694,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see review buttons for non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -705,7 +704,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see review buttons for Welsh editions" do
-    edition = FactoryBot.create(:edition, :in_review, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -715,7 +714,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -724,7 +723,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see buttons to request a review for Welsh editions" do
-    edition = FactoryBot.create(:edition, :draft, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
