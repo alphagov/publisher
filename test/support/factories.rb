@@ -509,6 +509,10 @@ FactoryBot.define do
       a.id if a
     end
 
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
     sequence(:version_number)
   end
 

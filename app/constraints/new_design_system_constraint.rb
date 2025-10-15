@@ -9,7 +9,7 @@ class NewDesignSystemConstraint
       HelpPageEdition,
     ]
 
-    AllowedContentTypesConstraint.new(phase_1_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_1").matches?(request)
+    AllowedContentTypesConstraint.new(phase_1_content_types).matches?(request)
   end
 
   def design_system_edit_phase_2(request)

@@ -10,7 +10,7 @@ class PreviousEditionDifferencesTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
 
     @first_edition = FactoryBot.create(
-      :answer_edition,
+      :simple_smart_answer_edition,
       state: "published",
       body: "test body 1",
     )
@@ -27,7 +27,7 @@ class PreviousEditionDifferencesTest < LegacyJavascriptIntegrationTest
 
   context "Subsequent editions" do
     setup do
-      @second_edition = @first_edition.build_clone(AnswerEdition)
+      @second_edition = @first_edition.build_clone(SimpleSmartAnswerEdition)
       @second_edition.update!(body: "Test Body 2")
       @second_edition.reload
 
@@ -59,7 +59,7 @@ class PreviousEditionDifferencesTest < LegacyJavascriptIntegrationTest
 
   context "Editions scheduled for publishing" do
     setup do
-      @second_edition = @first_edition.build_clone(AnswerEdition)
+      @second_edition = @first_edition.build_clone(SimpleSmartAnswerEdition)
       @second_edition.body = "Test Body 2"
       @second_edition.state = :scheduled_for_publishing
       @second_edition.save!(validate: false)

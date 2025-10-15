@@ -12,7 +12,6 @@ class LegacyEditionEditTest < LegacyIntegrationTest
     UpdateWorker.stubs(:perform_async)
 
     @test_strategy = Flipflop::FeatureSet.current.test!
-    @test_strategy.switch!(:design_system_edit_phase_1, false)
     @test_strategy.switch!(:design_system_edit_phase_2, false)
     @test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
@@ -42,7 +41,7 @@ class LegacyEditionEditTest < LegacyIntegrationTest
   end
 
   def create_draft_edition
-    @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+    @draft_edition = FactoryBot.create(:simple_smart_answer_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
   end
 
   def visit_draft_edition

@@ -5,7 +5,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_1, true)
     test_strategy.switch!(:design_system_edit_phase_2, true)
     test_strategy.switch!(:design_system_edit_phase_3a, true)
   end
@@ -301,22 +300,22 @@ class EditionEditJSTest < JavascriptIntegrationTest
 private
 
   def visit_edit_page
-    @edit_edition = FactoryBot.create(:edition)
+    @edit_edition = FactoryBot.create(:guide_edition)
     visit edition_path(@edit_edition)
   end
 
   def visit_related_external_links_page
-    @external_links_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+    @external_links_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1)
     visit related_external_links_edition_path(@external_links_edition)
   end
 
   def visit_tagging_related_content_page
-    @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
+    @tagging_edition = FactoryBot.create(:guide_edition, title: "The edition to tag")
     visit tagging_related_content_page_edition_path(@tagging_edition)
   end
 
   def visit_tagging_reorder_related_content_page_edition_path
-    @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
+    @tagging_edition = FactoryBot.create(:guide_edition, title: "The edition to tag")
     visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
   end
 

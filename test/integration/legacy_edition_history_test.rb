@@ -10,14 +10,13 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
     UpdateWorker.stubs(:perform_async)
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_1, false)
     test_strategy.switch!(:design_system_edit_phase_2, false)
     test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   context "viewing the history and notes tab" do
     setup do
-      @answer = FactoryBot.create(:answer_edition, state: "published", slug: "test-slug")
+      @answer = FactoryBot.create(:simple_smart_answer_edition, state: "published", slug: "test-slug")
 
       @answer.new_action(@author, Action::SEND_FACT_CHECK, comment: "first", email_addresses: "a@a.com, b@b.com")
       @answer.new_action(@author, Action::RECEIVE_FACT_CHECK, comment: "second")
@@ -139,7 +138,7 @@ class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
 
       should "not be carried forward to new editions" do
         @edition = FactoryBot.create(
-          :answer_edition,
+          :simple_smart_answer_edition,
           state: "published",
         )
         @edition.actions.create!(
