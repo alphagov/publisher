@@ -248,26 +248,22 @@ class EditionsController < InheritedResources::Base
   end
 
   def guide_add_new_chapter_page
+    @part = Part.new
     render "secondary_nav_tabs/guide_add_new_chapter_page"
   end
-
   def guide_add_new_chapter
-    @part = Part.new(guide_edition: @resource.editionable)
-    @part.assign_attributes(permitted_parts_params)
-    if @part.save
-      flash.now[:success] = "New chapter added successfully."
+    @part = @resource.editionable.parts.build(permitted_parts_params.merge(order: @resource.editionable.parts.size))
+
+    if @resource.save
+      flash[:success] = "New chapter added successfully."
+      redirect_to edition_path(@resource)
+    else
+      render "secondary_nav_tabs/guide_add_new_chapter_page"
     end
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
-  ensure
-    if params[:save] == 'edit'
-      flash.now[:success] = "Not implemented yet."
-    elsif params[:save] == 'summary'
-      render "show"
-    end
   end
-
   def duplicate
     command = EditionDuplicator.new(@resource, current_user)
     target_edition_class_name = "#{params[:to]}_edition".classify if params[:to]
@@ -600,13 +596,13 @@ class EditionsController < InheritedResources::Base
     render "secondary_nav_tabs/edit_reviewer_page"
   end
 
-  protected
+protected
 
   def setup_view_paths
     setup_view_paths_for(resource)
   end
 
-  private
+private
 
   def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
