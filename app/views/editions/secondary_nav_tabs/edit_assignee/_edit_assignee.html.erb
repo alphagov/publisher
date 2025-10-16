@@ -4,7 +4,7 @@
 <% content_for :page_title, title %>
 <% content_for :title, title %>
 
-<%= form_for @resource, url: url do %>
+<%= form_for @resource, url: url, data: {module: ""} do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <%= render "govuk_publishing_components/components/radio", {
