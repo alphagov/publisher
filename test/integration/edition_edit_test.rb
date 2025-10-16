@@ -3992,6 +3992,11 @@ class EditionEditTest < IntegrationTest
           should "show the content block guidance" do
             assert page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
           end
+
+          should "not show the content block guidance when content type has no GOVSPEAK field" do
+            visit_completed_transaction_edition
+            assert_not page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
+          end
         end
       end
 
