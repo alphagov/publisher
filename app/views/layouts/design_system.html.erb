@@ -32,7 +32,8 @@
     navigation_items: navigation_items(is_editor: current_user.govuk_editor?, path: request.path, user_name: current_user.name),
     data_attributes: {
       module: "ga4-link-tracker",
-      ga4_link: '{ "event_name": "navigation", "type": "generic_link" }'
+      ga4_link: '{ "event_name": "navigation", "type": "generic_link" }',
+      ga4_no_copy: true
     }
   } %>
 
@@ -43,6 +44,7 @@
       role="main"
       data-module="ga4-link-tracker"
       data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
+      data-ga4-no-copy="true"
     >
       <%= render "shared/flash", flash: flash %>
 
@@ -88,5 +90,8 @@
         ],
       },
     ],
+    data_attributes: {
+      ga4_no_copy: true
+    }
   } %>
 <% end %>
