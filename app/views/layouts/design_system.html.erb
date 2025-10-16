@@ -42,10 +42,12 @@
       id="main-content"
       class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
       role="main"
-      data-module="ga4-link-tracker"
+      data-module="ga4-link-tracker ga4-form-setup"
       data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
       data-ga4-no-copy="true"
-    >
+      data-ga4-document-type="some-value"
+    > <!-- data-ga4-document-type is given as #{action_name}-#{controller_name} on Whitehall -->
+
       <%= render "shared/flash", flash: flash %>
 
       <% if content_for?(:error_summary) %>
