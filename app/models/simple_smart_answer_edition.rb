@@ -111,7 +111,7 @@ private
     part << ""
     node.options.each.with_index(1) do |option, index|
       part << "Answer #{index}\n#{option.label}"
-      title = (nodes.select { |single_node| single_node["slug"] == option.next_node })[0].title.to_s
+      title = nodes.select { |single_node| single_node["slug"] == option.next_node }[0].title.to_s
       next_node_title, next_node_number = option.next_node.split("-")
       part << "Next question for user: #{next_node_title.capitalize} #{next_node_number} (#{title})\n"
     end
