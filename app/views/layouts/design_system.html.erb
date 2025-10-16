@@ -33,7 +33,13 @@
   } %>
 
   <div class="govuk-width-container">
-    <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <main
+      class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" 
+      id="main-content"
+      role="main"
+      data-module="ga4-form-setup"
+      data-ga4-document-type="some-value"
+    > <!-- data-ga4-document-type is given as #{action_name}-#{controller_name} on Whitehall -->
 
       <%= render "shared/flash", flash: flash %>
 
