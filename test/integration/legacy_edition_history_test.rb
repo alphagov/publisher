@@ -1,6 +1,6 @@
 require "legacy_integration_test_helper"
 
-class EditionHistoryTest < LegacyJavascriptIntegrationTest
+class LegacyEditionHistoryTest < LegacyJavascriptIntegrationTest
   setup do
     setup_users
     stub_linkables
