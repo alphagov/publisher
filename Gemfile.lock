@@ -250,7 +250,7 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
-    govspeak (10.4.1)
+    govspeak (10.5.0)
       actionview (>= 6, < 8.0.3)
       addressable (>= 2.3.8, < 2.8.8)
       govuk_publishing_components (>= 43)
@@ -957,7 +957,7 @@ DEPENDENCIES
   gds-api-adapters
   gds-sso
   google-apis-gmail_v1
-  govspeak
+  govspeak (~> 10.5.0)
   govuk_admin_template
   govuk_app_config
   govuk_publishing_components
