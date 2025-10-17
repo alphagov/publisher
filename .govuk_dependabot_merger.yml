@@ -5,3 +5,5 @@ defaults:
 overrides:
   - dependency: rails # should be upgraded manually, see https://docs.publishing.service.gov.uk/manual/keeping-software-current.html#rails
     auto_merge: false
+  - dependency: govspeak
+    auto_merge: false
