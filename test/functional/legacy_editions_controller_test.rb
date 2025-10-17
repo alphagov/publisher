@@ -341,7 +341,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
            }
 
       @guide.reload
-      assert_equal 1, (@guide.actions.count { |a| a.request_type == Action::ASSIGN })
+      assert_equal(1, @guide.actions.count { |a| a.request_type == Action::ASSIGN })
     end
 
     should "show the edit page again if updating fails" do
