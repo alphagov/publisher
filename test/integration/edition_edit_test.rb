@@ -3986,16 +3986,18 @@ class EditionEditTest < IntegrationTest
         context "when show_link_to_content_block_manager? is true" do
           setup do
             @test_strategy.switch!(:show_link_to_content_block_manager, true)
-            visit_draft_edition
           end
 
-          should "show the content block guidance" do
-            assert page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
-          end
+          %w[draft ready published archived].each do |state|
+            should "show the content block guidance with content in #{state} state" do
+              visit_transaction_edition(state: state)
+              assert page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
+            end
 
-          should "not show the content block guidance when content type has no GOVSPEAK field" do
-            visit_completed_transaction_edition
-            assert_not page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
+            should "not show the content block guidance when content type has no GOVSPEAK field in #{state} state" do
+              visit_completed_transaction_edition(state: state)
+              assert_not page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
+            end
           end
         end
       end
