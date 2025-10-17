@@ -17,4 +17,5 @@
 
 // Analytics modules
 //= require modules/ga4-form-setup
+//= require modules/ga4-form-tracker
 //= require modules/ga4-index-section-setup
