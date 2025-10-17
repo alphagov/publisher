@@ -16,7 +16,7 @@ class RequestTracingTest < LegacyIntegrationTest
            params: {
              edition: {
                panopticon_id: artefact.id,
-               kind: "answer",
+               kind: "simple_smart_answer",
                title: "a title",
              },
            },

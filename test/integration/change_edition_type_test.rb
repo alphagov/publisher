@@ -10,7 +10,6 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
     UpdateWorker.stubs(:perform_async)
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_1, false)
     test_strategy.switch!(:design_system_edit_phase_2, false)
     test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
@@ -18,6 +17,8 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
   teardown do
     GDS::SSO.test_user = nil
   end
+
+  fully_transitioned_types = %w[answer help_page]
 
   def select_target_edition(format)
     select(format.to_s.humanize, from: "to")
@@ -53,7 +54,8 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
   ])
 
   without_javascript do
-    conversions = Edition.convertible_formats.permutation(2).reject { |pair| pair[0] == pair[1] }
+    formats = Edition.convertible_formats - fully_transitioned_types
+    conversions = formats.permutation(2).reject { |pair| pair[0] == pair[1] }
 
     conversions.each do |to, from|
       should "be able to convert #{from} into #{to}" do
