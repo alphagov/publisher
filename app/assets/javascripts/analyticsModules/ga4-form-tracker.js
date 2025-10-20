@@ -152,8 +152,9 @@ window.GOVUK.Modules.Ga4FormTracker = window.GOVUK.Modules.Ga4FormTracker || {}
   // we need to override the default `startModule`
   // to add a listener to track changes to the form
   Ga4FormTracker.prototype.startModule = function () {
-    this.module.addEventListener('change', this.trackFormChange.bind(this))
+    console.log('startModule!')
 
+    this.module.addEventListener('change', this.trackFormChange.bind(this))
     this.module.addEventListener('submit', this.trackFormSubmit.bind(this))
   }
 })(window.GOVUK.Modules.Ga4FormTracker)

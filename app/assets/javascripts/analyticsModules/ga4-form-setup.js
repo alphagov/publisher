@@ -1,8 +1,7 @@
 'use strict'
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.analyticsGa4 = window.GOVUK.analyticsGa4 || {}
-window.GOVUK.analyticsGa4.analyticsModules =
-  window.GOVUK.analyticsGa4.analyticsModules || {}
+window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analyticsModules || {}
 ;(function (Modules) {
   Modules.Ga4FormSetup = {
     // Dunnno what this does - consider removing
@@ -21,6 +20,8 @@ window.GOVUK.analyticsGa4.analyticsModules =
         .map((trackedComponent) => `[data-module~="${trackedComponent}"]`)
         .join(',')
 
+      console.log('trackedComponentsSelector: ', trackedComponentsSelector)
+
       $modules.forEach(($module) => {
         const forms = $module.querySelectorAll(
           "form:not([data-module~='ga4-finder-tracker']):not([data-module~='ga4-form-tracker'])"
@@ -37,6 +38,9 @@ window.GOVUK.analyticsGa4.analyticsModules =
           // Guess they need to be
           const sectionContainer = form.closest('[data-ga4-section]')
           const documentTypeContainer = form.closest('[data-ga4-document-type]')
+
+          console.log('sectionContainer: ', sectionContainer)
+          console.log('documentTypeContainer: ', documentTypeContainer)
 
           let eventData = {
             event_name: 'form_response',

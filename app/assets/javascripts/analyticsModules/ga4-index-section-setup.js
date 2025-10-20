@@ -1,12 +1,15 @@
 'use strict'
+// window.GOVUK = window.GOVUK || {}
+// window.GOVUK.Modules = window.GOVUK.Modules || {}
+// window.GOVUK.AnalyticsModules = window.GOVUK.AnalyticsModules || {}
+
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.analyticsGa4 = window.GOVUK.analyticsGa4 || {}
-window.GOVUK.analyticsGa4.analyticsModules =
-  window.GOVUK.analyticsGa4.analyticsModules || {}
+window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analyticsModules || {}
 ;(function (Modules) {
   Modules.Ga4IndexSectionSetup = {
     init: function () {
-      console.log('Ga4IndexSectionSetup init!')
+      // console.log('Ga4IndexSectionSetup init!')
 
       const moduleElements = document.querySelectorAll(
         "[data-module~='ga4-index-section-setup']"
@@ -77,3 +80,4 @@ window.GOVUK.analyticsGa4.analyticsModules =
     }
   }
 })(window.GOVUK.analyticsGa4.analyticsModules)
+// })(window.GOVUK.Modules)

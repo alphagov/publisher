@@ -16,6 +16,6 @@
 //= require govuk_publishing_components/components/skip-link
 
 // Analytics modules
-//= require modules/ga4-form-setup
-//= require modules/ga4-form-tracker
-//= require modules/ga4-index-section-setup
+//= require analyticsModules/ga4-form-setup
+//= require analyticsModules/ga4-form-tracker
+//= require analyticsModules/ga4-index-section-setup
