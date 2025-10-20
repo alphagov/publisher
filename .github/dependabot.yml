@@ -4,6 +4,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      - dependency-name: "govspeak"
 
   - package-ecosystem: npm
     directory: /
