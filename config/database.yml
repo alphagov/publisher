@@ -9,7 +9,7 @@ development:
   <<: *default
   clients:
     default:
-      uri: <%= ENV['DATABASE_URL'] || "postgresql://postgres@postgres-16/publisher" %>
+      uri: <%= ENV['DATABASE_URL'] || "postgresql://postgres@postgres-17/publisher" %>
   options:
 
 test: &test
