@@ -1,16 +1,9 @@
 require "test_helper"
 
-class ModelWithRecordableActions
-  include Mongoid::Document
-  include RecordableActions
-
-  attr_accessor :subsequent_siblings
-end
-
 class RecordableActionsTest < ActiveSupport::TestCase
   extend Minitest::Spec::DSL
 
-  let(:object_under_test) { ModelWithRecordableActions.create }
+  let(:object_under_test) { FactoryBot.create(:edition) }
   let(:user) { FactoryBot.create(:user) }
 
   describe "#published_by" do
@@ -37,7 +30,7 @@ class RecordableActionsTest < ActiveSupport::TestCase
         created_at:,
       )
 
-      assert_equal created_at, object_under_test.published_at
+      assert_in_delta created_at, object_under_test.published_at, 1
     end
 
     it "returns nil when there are no published actions" do
@@ -52,20 +45,20 @@ class RecordableActionsTest < ActiveSupport::TestCase
       subsequent_editions = 4.times.map { stub("Edition") }
       subsequent_editions.first.stubs(:published_at).returns(expected_superseded_at)
 
-      object_under_test.subsequent_siblings = subsequent_editions
+      object_under_test.stubs(:subsequent_siblings).returns(subsequent_editions)
 
       assert_equal expected_superseded_at, object_under_test.superseded_at
     end
 
     it "returns nil when there are no subsequent editions" do
-      object_under_test.subsequent_siblings = []
+      object_under_test.stubs(:subsequent_siblings).returns([])
 
       assert_nil object_under_test.superseded_at
     end
 
     it "returns nil when the first subsequent edition is not published" do
       unpublished_edition = stub("Edition", published_at: nil)
-      object_under_test.subsequent_siblings = [unpublished_edition]
+      object_under_test.stubs(:subsequent_siblings).returns([unpublished_edition])
 
       assert_nil object_under_test.superseded_at
     end

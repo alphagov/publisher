@@ -4,6 +4,56 @@ require "artefact"
 require "user"
 
 FactoryBot.define do
+  trait :scheduled_for_publishing do
+    state { "scheduled_for_publishing" }
+    publish_at { 1.day.from_now }
+  end
+
+  trait :published do
+    state { "published" }
+  end
+
+  trait :ready do
+    state { "ready" }
+  end
+
+  trait :fact_check do
+    state { "fact_check" }
+  end
+
+  trait :fact_check_received do
+    state { "fact_check_received" }
+  end
+
+  trait :in_review do
+    state { "in_review" }
+    review_requested_at { Time.zone.now }
+  end
+
+  trait :draft do
+    state { "draft" }
+  end
+
+  trait :archived do
+    state { "archived" }
+  end
+
+  trait :with_link_check_report do
+    transient do
+      batch_id { 1 }
+      link_uris { [] }
+    end
+
+    link_check_reports do
+      [FactoryBot.build(
+        :link_check_report,
+        :with_links,
+        batch_id:,
+        link_uris:,
+      )]
+    end
+  end
+
   factory :user do
     sequence(:uid) { |n| "uid-#{n}" }
     sequence(:name) { |n| "Joe Bloggs #{n}" }
@@ -45,16 +95,16 @@ FactoryBot.define do
     tomorrow = Time.zone.tomorrow
     start_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 15).time }
     end_time { Time.zone.local(tomorrow.year, tomorrow.month, tomorrow.day, 18).time }
-    artefact
+    artefact_id { FactoryBot.create(:artefact).id }
   end
 
   factory :artefact do
     sequence(:name) { |n| "Artefact #{n}" }
     sequence(:slug) { |n| "slug-#{n}" }
-    kind            { Artefact::FORMATS.first }
-    owning_app      { "publisher" }
-    content_id      { SecureRandom.uuid }
-    language        { "en" }
+    kind { Artefact::FORMATS.first }
+    owning_app { "publisher" }
+    content_id { SecureRandom.uuid }
+    language { "en" }
 
     trait :with_published_edition do
       after(:create) do |object|
@@ -88,15 +138,20 @@ FactoryBot.define do
     factory :non_publisher_artefact, traits: [:non_publisher]
   end
 
-  factory :edition, class: AnswerEdition do
-    id              { SecureRandom.hex(12) }
+  factory :edition do
+    transient do
+      body { "Some body text" }
+    end
+
+    editionable do
+      build(:create_answer, body:)
+    end
+
+    sequence(:version_number)
 
     panopticon_id do
       a = create(:artefact, kind: kind_for_artefact)
       a.id
-    end
-    transient do
-      version_number { nil }
     end
 
     sequence(:slug) { |n| "slug-#{n}" }
@@ -148,93 +203,159 @@ FactoryBot.define do
     trait :with_body do
       body { "Some body text" }
     end
+  end
 
-    trait :with_link_check_report do
-      transient do
-        batch_id { 1 }
-        link_uris { [] }
-      end
+  factory :answer_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      body { "some body" }
+    end
 
-      link_check_reports do
-        [FactoryBot.build(
-          :link_check_report,
-          :with_links,
-          batch_id:,
-          link_uris:,
-        )]
-      end
+    editionable do
+      build(:create_answer, body:)
+    end
+
+    sequence(:version_number)
+
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
+    panopticon_id do
+      a = create(:artefact)
+      a.id if a
     end
   end
-  factory :answer_edition, traits: [:with_body], parent: :edition do
+
+  factory :create_answer, class: "AnswerEdition" do
   end
 
   factory :answer_edition_with_link_check_report, traits: [:with_link_check_report], parent: :answer_edition do
   end
 
-  factory :help_page_edition, traits: [:with_body], parent: :edition, class: "HelpPageEdition" do
+  factory :help_page_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      body { "Some body text" }
+    end
+
+    editionable do
+      build(:create_help_page, body:)
+    end
+
+    panopticon_id do
+      a = create(:artefact)
+      a.id
+    end
+
     sequence(:slug) { |n| "help/slug-#{n}" }
+    sequence(:version_number)
+  end
+
+  factory :create_help_page, class: "HelpPageEdition" do
+  end
+
+  factory :completed_transaction_edition, class: "Edition" do
+    sequence(:slug) { |n| "help/slug-#{n}" }
+    sequence(:version_number)
+
+    title { "New Title" }
+    transient do
+      promotion_choice { "" }
+      body { "Some body text" }
+    end
+
+    editionable do
+      build(:create_completed_transaction, body:, promotion_choice:)
+    end
+
     panopticon_id do
-      a = create(:artefact, kind: kind_for_artefact, slug:)
+      a = create(:artefact)
       a.id
     end
   end
 
-  factory :campaign_edition, traits: [:with_body], parent: :edition, class: "CampaignEdition" do
+  factory :create_completed_transaction, class: "CompletedTransactionEdition" do
   end
 
-  factory :campaign_edition_with_link_check_report, traits: [:with_link_check_report], parent: :campaign_edition do
-  end
+  factory :guide_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      video_url { "some video url" }
+    end
 
-  factory :completed_transaction_edition, traits: [:with_body], parent: :edition, class: "CompletedTransactionEdition" do
-    sequence(:slug) { |n| "done/slug-#{n}" }
+    editionable do
+      video_url.eql?("some video url") ? build(:create_guide) : build(:create_guide, video_url:)
+    end
+
     panopticon_id do
-      a = create(:artefact, kind: kind_for_artefact, slug:)
+      a = create(:artefact, kind: "guide")
       a.id
     end
+
+    state { "draft" }
+
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
+    sequence(:version_number)
   end
 
-  factory :video_edition, traits: [:with_body], parent: :edition, class: "VideoEdition" do
+  factory :create_guide, class: "GuideEdition" do
   end
 
-  factory :guide_edition, parent: :edition, class: "GuideEdition" do
-    sequence(:title) { |n| "Test guide #{n}" }
-  end
-
-  factory :popular_links, class: "PopularLinksEdition" do
+  factory :popular_links, class: "Edition" do
     title { "Homepage Popular Links" }
-    link_items { [{ url: "/url1", title: "title1" }, { url: "/url2", title: "title2" }, { url: "/url3", title: "title3" }, { url: "/url4", title: "title4" }, { url: "/url5", title: "title5" }, { url: "/url6", title: "title6" }] }
-  end
-
-  factory :programme_edition, parent: :edition, class: "ProgrammeEdition" do
-    sequence(:title) { |n| "Test programme #{n}" }
-  end
-
-  factory :programme_edition_with_multiple_parts, parent: :programme_edition do
-    after :create do |getp|
-      getp.parts.build(
-        title: "PART !",
-        body: "This is some programme version text.",
-        slug: "part-one",
-      )
-      getp.parts.build(
-        title: "PART !!",
-        body: "This is some more programme version text.",
-        slug: "part-two",
-      )
+    auth_bypass_id { SecureRandom.uuid }
+    transient do
+      link_items { [{ "url": "/url1", "title": "title1" }, { "url": "/url2", "title": "title2" }, { "url": "/url3", "title": "title3" }, { "url": "/url4", "title": "title4" }, { "url": "/url5", "title": "title5" }, { "url": "/url6", "title": "title6" }] }
     end
+    editionable do
+      build(:create_popular_links, link_items:)
+    end
+
+    panopticon_id do
+      a = build(:artefact)
+      a.id
+    end
+  end
+
+  factory :create_popular_links, class: "PopularLinksEdition" do
   end
 
   factory :guide_edition_with_two_parts, parent: :guide_edition do
-    after :create do |getp|
-      getp.parts.build(
+    after :build do |guide_edition|
+      guide_edition.parts.build(
         title: "PART !",
         body: "This is some version text.",
         slug: "part-one",
+        order: 1,
       )
-      getp.parts.build(
+      guide_edition.parts.build(
         title: "PART !!",
         body: "This is some more version text.",
         slug: "part-two",
+        order: 2,
+      )
+    end
+  end
+
+  factory :guide_edition_and_parts_have_mongo_ids, parent: :guide_edition do
+    after :build do |guide_edition|
+      guide_edition.parts.build(
+        title: "PART !",
+        body: "This is some version text.",
+        slug: "part-one",
+        order: 1,
+        mongo_id: "MongoIsNoMore1",
+      )
+      guide_edition.parts.build(
+        title: "PART !!",
+        body: "This is some more version text.",
+        slug: "part-two",
+        order: 2,
+        mongo_id: "MongoIsNoMore2",
       )
     end
   end
@@ -254,48 +375,77 @@ FactoryBot.define do
     end
   end
 
-  factory :devolved_administration_availability
+  factory :scotland_availability, class: "ScotlandAvailability", parent: :devolved_administration_availability do
+  end
 
-  factory :local_transaction_edition, parent: :edition, class: "LocalTransactionEdition" do
+  factory :wales_availability, class: "WalesAvailability", parent: :devolved_administration_availability do
+  end
+
+  factory :northern_ireland_availability, class: "NorthernIrelandAvailability", parent: :devolved_administration_availability do
+  end
+
+  factory :local_transaction_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      lgil_code { "" }
+      lgsl_code { "" }
+      cta_text { "Find your local council" }
+      introduction { "Test introduction" }
+      more_information { "This is more information" }
+      need_to_know { "This service is only available in England and Wales" }
+      before_results { "##before" }
+      after_results { "##after" }
+      scotland_availability { build(:scotland_availability) }
+      wales_availability { build(:wales_availability) }
+      northern_ireland_availability { build(:northern_ireland_availability) }
+    end
+
+    editionable do
+      build(:create_local_transaction, lgil_code:, lgsl_code:, introduction:, cta_text:, more_information:, need_to_know:, before_results:, after_results:, scotland_availability:, wales_availability:, northern_ireland_availability:)
+    end
+
+    panopticon_id do
+      a = build(:artefact)
+      a.id if a
+    end
+
+    sequence(:version_number)
+  end
+
+  factory :create_local_transaction, class: "LocalTransactionEdition" do
     lgsl_code do
-      local_service = FactoryBot.create(:local_service)
+      local_service = FactoryBot.build(:local_service)
       local_service.lgsl_code
     end
-
-    lgil_code { "1" }
-    introduction { "Test introduction" }
-    more_information { "This is more information" }
-    need_to_know { "This service is only available in England and Wales" }
   end
 
-  factory :transaction_edition, parent: :edition, class: "TransactionEdition" do
-    introduction { "Test introduction" }
-    more_information { "This is more information" }
-    need_to_know { "This service is only available in England and Wales" }
-    link { "http://continue.com" }
-    will_continue_on { "To be continued..." }
-    alternate_methods { "Method A or Method B" }
+  factory :devolved_administration_availability, class: "DevolvedAdministrationAvailability" do
   end
 
-  factory :transaction_edition_with_two_variants, parent: :transaction_edition do
-    after :create do |getp|
-      getp.variants.build(
-        title: "VARIANT !",
-        introduction: "This is some version text.",
-        slug: "variant-one",
-      )
-      getp.variants.build(
-        title: "VARIANT !!",
-        introduction: "This is some more version text.",
-        slug: "variant-two",
-      )
+  factory :transaction_edition, class: "Edition" do
+    title { "New Title" }
+    transient do
+      introduction { "Test introduction" }
+      more_information { "This is more information" }
+      need_to_know { "This service is only available in England and Wales" }
+      link { "http://continue.com" }
+      will_continue_on { "To be continued..." }
+      alternate_methods { "Method A or Method B" }
     end
+
+    editionable do
+      build(:create_transaction, introduction:, more_information:, need_to_know:, link:, will_continue_on:, alternate_methods:)
+    end
+
+    panopticon_id do
+      a = create(:artefact, kind: "transaction")
+      a.id if a
+    end
+
+    sequence(:version_number)
   end
 
-  factory :licence_edition, parent: :edition, class: "LicenceEdition" do
-    licence_identifier { "AB1234" }
-    licence_short_description { "This is a licence short description." }
-    licence_overview { "This is a licence overview." }
+  factory :create_transaction, class: "TransactionEdition" do
   end
 
   factory :local_service do |ls|
@@ -310,12 +460,28 @@ FactoryBot.define do
     tier { "county" }
   end
 
-  factory :place_edition, parent: :edition, class: "PlaceEdition" do
+  factory :place_edition, class: "Edition" do
     title { "Far far away" }
-    introduction { "Test introduction" }
-    more_information { "More information" }
-    need_to_know { "This service is only available in England and Wales" }
-    place_type { "Location location location" }
+    transient do
+      introduction { "Test introduction" }
+      more_information { "More information" }
+      need_to_know { "This service is only available in England and Wales" }
+      place_type { "Location location location" }
+    end
+
+    editionable do
+      build(:create_place, introduction:, more_information:, need_to_know:, place_type:)
+    end
+
+    panopticon_id do
+      a = create(:artefact, kind: "place")
+      a.id if a
+    end
+
+    sequence(:version_number)
+  end
+
+  factory :create_place, class: "PlaceEdition" do
   end
 
   factory :curated_list do
@@ -328,9 +494,35 @@ FactoryBot.define do
     summary { "My summary" }
   end
 
-  factory :simple_smart_answer_edition, parent: :edition, class: "SimpleSmartAnswerEdition" do
+  factory :simple_smart_answer_edition, class: "Edition" do
     title { "Simple smart answer" }
-    body { "Introduction to the smart answer" }
+    transient do
+      body { "Introduction to the smart answer" }
+    end
+
+    editionable do
+      build(:create_simple_smart_answer, body:)
+    end
+
+    panopticon_id do
+      a = create(:artefact, kind: "simple_smart_answer")
+      a.id if a
+    end
+
+    trait :welsh do
+      panopticon_id { create(:artefact, language: "cy", kind: kind_for_artefact).id }
+    end
+
+    sequence(:version_number)
+  end
+
+  factory :create_simple_smart_answer, class: "SimpleSmartAnswerEdition" do
+  end
+
+  factory :node, class: "SimpleSmartAnswerEdition::Node" do
+  end
+
+  factory :option, class: "SimpleSmartAnswerEdition::Node::Option" do
   end
 
   factory :link do
@@ -376,6 +568,7 @@ FactoryBot.define do
   factory :link_check_report do
     batch_id { 1 }
     status { "in_progress" }
+    edition { FactoryBot.create(:edition) }
     links { [FactoryBot.build(:link)] }
 
     trait :completed do

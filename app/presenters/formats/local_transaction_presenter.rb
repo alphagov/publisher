@@ -26,8 +26,11 @@ module Formats
 
     def optional_details
       {}.merge(introduction)
+        .merge(cta_text: edition.cta_text || "")
         .merge(more_information)
         .merge(need_to_know)
+        .merge(before_results)
+        .merge(after_results)
         .merge(all_devolved_administration_availabilities)
     end
 
@@ -70,16 +73,42 @@ module Formats
       }
     end
 
+    def before_results
+      return {} if edition.before_results.nil?
+
+      {
+        before_results: [
+          {
+            content_type: "text/govspeak",
+            content: edition.before_results,
+          },
+        ],
+      }
+    end
+
+    def after_results
+      return {} if edition.after_results.nil?
+
+      {
+        after_results: [
+          {
+            content_type: "text/govspeak",
+            content: edition.after_results,
+          },
+        ],
+      }
+    end
+
     def all_devolved_administration_availabilities
       {
-        scotland_availability: devolved_administration_availability(edition.scotland_availability),
-        wales_availability: devolved_administration_availability(edition.wales_availability),
-        northern_ireland_availability: devolved_administration_availability(edition.northern_ireland_availability),
+        scotland_availability: devolved_administration_availability(edition.editionable.scotland_availability),
+        wales_availability: devolved_administration_availability(edition.editionable.wales_availability),
+        northern_ireland_availability: devolved_administration_availability(edition.editionable.northern_ireland_availability),
       }.compact
     end
 
     def devolved_administration_availability(availability)
-      case availability.type
+      case availability.authority_type
       when "devolved_administration_service"
         { type: "devolved_administration_service", alternative_url: availability.alternative_url }
       when "unavailable"

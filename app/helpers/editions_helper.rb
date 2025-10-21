@@ -9,13 +9,12 @@ module EditionsHelper
   def legacy_resource_form(resource, &form_definition)
     html_options = { id: "edition-form" }
     unless resource.locked_for_edits? || resource.archived?
-      if resource.is_a?(Parted) || resource.is_a?(Varianted)
+      if resource.editionable.is_a?(Parted)
         html_options["data-module"] = "ajax-save-with-parts"
       elsif resource.format != "SimpleSmartAnswer"
         html_options["data-module"] = "ajax-save"
       end
     end
-
     nested_form_for resource, as: :edition, url: edition_path(resource), html: html_options, &form_definition
   end
 
@@ -91,5 +90,14 @@ module EditionsHelper
 
   def edition_version_and_state_tag(edition)
     sanitize("#{edition.version_number} <span class='govuk-tag govuk-tag--#{edition.state}'>#{edition.status_text}</span>")
+  end
+
+  def administration_authority(edition, administration)
+    options = {
+      "local_authority_service" => "Service available from local council",
+      "devolved_administration_service" => "Service available from devolved administration (or a similar service is available)",
+      "unavailable" => "Service not available",
+    }
+    options[edition.editionable.send("#{administration}_availability").authority_type]
   end
 end

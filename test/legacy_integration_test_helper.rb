@@ -11,7 +11,7 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
 
   setup do
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
   end
 
   teardown do
@@ -35,6 +35,7 @@ class LegacyIntegrationTest < ActionDispatch::IntegrationTest
 
   def visit_edition(edition)
     visit "/editions/#{edition.to_param}"
+    assert page.has_content?(edition.title)
   end
 
   def visit_editions
@@ -142,8 +143,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     end
 
     save_edition_and_assert_success
-
-    guide.reload
   end
 
   # Fill in some sample variants for a transaction
@@ -168,8 +167,6 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     end
 
     save_edition_and_assert_success
-
-    transaction.reload
   end
 
   def switch_tab(tab)
@@ -200,6 +197,7 @@ class LegacyJavascriptIntegrationTest < LegacyIntegrationTest
     else
       assert page.has_content? "edition was successfully updated."
     end
+    page.refresh
   end
 
   def save_edition_and_assert_error(error_message = nil, link_href = nil)

@@ -1,0 +1,87 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/title", locals: { edition: @resource } %>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/meta_tag_description", locals: { edition: @resource } %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Introduction",
+  },
+  name: "edition[introduction]",
+  value: edition.introduction,
+  rows: 16,
+  hint: ("Set the scene for the user. What is about to happen? For example, “you will need to fill in a form, print it out and take it to the post office”. Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+} %>
+
+<%= render "govuk_publishing_components/components/radio", {
+  heading: "Start button text",
+  heading_size: "s",
+  heading_level: 0,
+  name: "edition[start_button_text]",
+  inline: true,
+
+  items: [
+    {
+      value: "Start now",
+      text: "Start now",
+      checked: edition.start_button_text == "Start now",
+    },
+    {
+      value: "Sign in",
+      text: "Sign in",
+      checked: edition.start_button_text == "Sign in",
+    },
+  ],
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    heading_size: "s",
+    text: "Text below the start button (optional)",
+  },
+  name: "edition[will_continue_on]",
+  value: edition.will_continue_on,
+  hint: "Following ‘on’, for example “the HMRC website”",
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    heading_size: "s",
+    text: "Link to start of transaction",
+  },
+  name: "edition[link]",
+  value: edition.link,
+  hint: "Link as deep as possible",
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "More information (optional)",
+  },
+  name: "edition[more_information]",
+  value: edition.more_information,
+  rows: 16,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Other ways to apply (optional)",
+  },
+  name: "edition[alternate_methods]",
+  value: edition.alternate_methods,
+  rows: 16,
+  hint: "Alternative ways of completing this transaction",
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "What you need to know (optional)",
+  },
+  name: "edition[need_to_know]",
+  value: edition.editionable.need_to_know,
+  rows: 16,
+} %>
+

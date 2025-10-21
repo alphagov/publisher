@@ -1,0 +1,11 @@
+<%# locals: (edition:, choice:) -%>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    heading_size: "s",
+    text: "Promotion URL",
+  },
+  name: "edition[promotion_choice_url_#{choice}]",
+  value: edition.promotion_choice == choice ? edition.promotion_choice_url : "",
+  error_items: errors_for(edition.errors, :promotion_choice_url, use_full_message: false),
+} %>

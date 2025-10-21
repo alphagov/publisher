@@ -62,7 +62,7 @@
       }
 
       function updatePart (part) {
-        var partId = part._id.$oid
+        var partId = part.id
         var $partContainer = identifyPartContainer(partId, part.order)
         var $hiddenInputId = $partContainer.find('input[value="' + partId + '"]')
 

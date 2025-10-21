@@ -1,0 +1,57 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/title", locals: { edition: @resource } %>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/meta_tag_description", locals: { edition: @resource } %>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: "Promotion",
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= case edition.promotion_choice.presence.to_sym when :promotion_choice
+        when :organ_donor
+          "Organ donation"
+        when :bring_id_to_vote
+          "Bring photo ID to vote"
+        when :mot_reminder
+          "MOT reminders"
+        when :electric_vehicle
+          "Electric vehicles"
+        else
+          "None added"
+        end
+    %></p>
+</section>
+
+<% if edition.promotion_choice != "none" %>
+  <section>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Promotion URL",
+      heading_level: 3,
+      font_size: "s",
+    } %>
+    <p><%= edition.promotion_choice_url.presence || "None added" %></p>
+  </section>
+<% end %>
+
+<% if edition.promotion_choice == "organ_donor" %>
+  <section>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Opt-in URL",
+      heading_level: 3,
+      font_size: "s",
+    } %>
+    <p><%= edition.promotion_choice_opt_in_url.presence || "None added" %></p>
+  </section>
+
+  <section>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Opt-out URL",
+      heading_level: 3,
+      font_size: "s",
+    } %>
+    <p>
+      <%= edition.promotion_choice_opt_out_url.presence || "None added" %>
+    </p>
+  </section>
+<% end %>

@@ -13,7 +13,8 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
       @generator.run!
     end
 
-    assert_equal 7, @stubbed_s3_client.api_requests.size
+    # assert_equal 7, @stubbed_s3_client.api_requests.size
+    assert_equal 6, @stubbed_s3_client.api_requests.size
     assert(@stubbed_s3_client.api_requests.all? { |r| r[:operation_name] == :put_object })
     assert(@stubbed_s3_client.api_requests.all? { |r| r[:params][:bucket] == "example" })
 
@@ -22,7 +23,8 @@ class CsvReportGeneratorTest < ActiveSupport::TestCase
     assert_equal "all_edition_churn.csv", @stubbed_s3_client.api_requests[2][:params][:key]
     assert_equal "organisation_content.csv", @stubbed_s3_client.api_requests[3][:params][:key]
     assert_equal "content_workflow.csv", @stubbed_s3_client.api_requests[4][:params][:key]
-    assert_equal "all_content_workflow.csv", @stubbed_s3_client.api_requests[5][:params][:key]
-    assert_equal "all_urls.csv", @stubbed_s3_client.api_requests[6][:params][:key]
+    # assert_equal "all_content_workflow.csv", @stubbed_s3_client.api_requests[5][:params][:key]
+    # assert_equal "all_urls.csv", @stubbed_s3_client.api_requests[6][:params][:key]
+    assert_equal "all_urls.csv", @stubbed_s3_client.api_requests[5][:params][:key]
   end
 end

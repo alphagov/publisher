@@ -12,6 +12,8 @@ COPY package.json yarn.lock ./
 RUN yarn install --production --frozen-lockfile --non-interactive --link-duplicates
 COPY . .
 RUN bootsnap precompile --gemfile .
+RUN rails tmp:clear
+RUN rake assets:clobber
 RUN rails assets:precompile && rm -fr log node_modules
 
 
@@ -32,5 +34,6 @@ COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
 COPY --from=builder $BOOTSNAP_CACHE_DIR $BOOTSNAP_CACHE_DIR
 COPY --from=builder $APP_HOME .
 
+RUN chown -R app:app /app
 USER app
 CMD ["puma"]

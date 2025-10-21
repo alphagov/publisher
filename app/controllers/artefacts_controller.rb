@@ -31,11 +31,7 @@ class ArtefactsController < ApplicationController
 private
 
   def show_success_message
-    if Flipflop.enabled?("design_system_edit".to_sym)
-      flash[:success] = "Metadata has successfully updated".html_safe
-    else
-      flash[:notice] = "Metadata updated"
-    end
+    flash[:success] = "Metadata has successfully updated".html_safe
   end
 
   def formats
@@ -43,7 +39,7 @@ private
   end
 
   def metadata_artefact_path(artefact)
-    edition = Edition.where(panopticon_id: artefact.id).order_by(version_number: :desc).first
+    edition = Edition.where(panopticon_id: artefact.id).order(version_number: :desc).first
     metadata_edition_path(edition)
   end
 

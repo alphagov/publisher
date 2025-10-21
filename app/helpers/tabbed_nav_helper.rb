@@ -97,7 +97,7 @@ private
       items << { value: "none", text: "None" }
       items << :or
     end
-    User.enabled.order_by([%i[name asc]]).each do |user|
+    User.enabled.order([:name]).each do |user|
       items << { value: user.id, text: user.name } unless user.name == edition.assignee || !user.has_editor_permissions?(edition)
     end
     items
@@ -110,7 +110,7 @@ private
       items << { value: "none", text: "None" }
       items << :or
     end
-    User.enabled.order_by([%i[name asc]]).each do |user|
+    User.enabled.order(name: :asc).each do |user|
       items << { value: user.name, text: user.name } unless user.name.to_s == edition.reviewer || !user.has_editor_permissions?(edition)
     end
     items

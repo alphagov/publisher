@@ -1,7 +1,5 @@
-require "edition"
-
-class AnswerEdition < Edition
-  field :body, type: String
+class AnswerEdition < ApplicationRecord
+  include Editionable
 
   GOVSPEAK_FIELDS = [:body].freeze
 

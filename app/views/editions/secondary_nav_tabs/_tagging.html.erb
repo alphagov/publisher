@@ -12,13 +12,31 @@
         heading: heading_breadcrumb,
         body: "No breadcrumb set",
         link_text: "Set GOV.UK breadcrumb",
-        link_url: "#",
+        link_url: tagging_breadcrumb_page_edition_path,
       } %>
     <% else %>
+      <% if current_user.has_editor_permissions?(@edition) %>
+        <% actions =
+          [
+            {
+              label: "Remove",
+              href: tagging_remove_breadcrumb_page_edition_path,
+            },
+            {
+              label: "Edit",
+              href: tagging_breadcrumb_page_edition_path,
+            },
+          ]
+        %>
+      <% else %>
+        <% actions = [] %>
+      <% end %>
+
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "breadcrumb",
         heading: heading_breadcrumb,
         key_text: "Breadcrumb",
+        actions: actions,
       } %>
     <% end %>
 
@@ -32,8 +50,7 @@
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
         <% actions =
-          [
-            {
+          [{
               label: "Edit",
               href: tagging_mainstream_browse_page_edition_path,
             },
@@ -56,13 +73,27 @@
         heading: heading_organisations,
         body: "Not tagged to any organisations",
         link_text: "Tag to an organisation",
-        link_url: "#",
+        link_url: tagging_organisations_page_edition_path,
       } %>
     <% else %>
+      <% if current_user.has_editor_permissions?(@edition) %>
+        <% actions =
+          [
+            {
+              label: "Edit",
+              href: tagging_organisations_page_edition_path,
+            },
+          ]
+        %>
+      <% else %>
+        <% actions = [] %>
+      <% end %>
+
       <%= render partial: "secondary_nav_tabs/tagging/summary_card_full", locals: {
         type: "organisations",
         heading: heading_organisations,
         key_text: "Organisation",
+        actions: actions,
       } %>
     <% end %>
 
@@ -76,13 +107,19 @@
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
         <% actions =
-          [
-            {
+          [{
               label: "Edit",
               href: tagging_related_content_page_edition_path,
-            },
-          ]
+           }]
         %>
+        <% if @tagging_update_form_values.ordered_related_items.length > 1 %>
+          <% actions.unshift(
+               {
+                 label: "Reorder",
+                 href: tagging_reorder_related_content_page_edition_path,
+               })
+          %>
+        <% end %>
       <% else %>
         <% actions = [] %>
       <% end %>

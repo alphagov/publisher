@@ -13,6 +13,8 @@ class EditionsController < InheritedResources::Base
   end
   before_action only: %i[progress
                          admin
+                         approve_fact_check
+                         approve_fact_check_page
                          update
                          confirm_destroy
                          edit_assignee
@@ -38,7 +40,11 @@ class EditionsController < InheritedResources::Base
                          add_edition_note
                          update_important_note
                          tagging_mainstream_browse_page
-                         tagging_related_content_page] do
+                         tagging_reorder_related_content_page
+                         tagging_related_content_page
+                         tagging_organisations_page
+                         tagging_breadcrumb_page
+                         tagging_remove_breadcrumb_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -88,17 +94,37 @@ class EditionsController < InheritedResources::Base
   end
 
   def update_tagging
-    success_message = if params[:tagging_tagging_update_form][:tagging_type] == "related_content"
+    success_message = case params[:tagging_tagging_update_form][:tagging_type]
+                      when "related_content"
                         "Related content updated"
-                      elsif params[:tagging_tagging_update_form][:tagging_type] == "mainstream_browse_page"
+                      when "reorder_related_content"
+                        "Related content order updated"
+                      when "mainstream_browse_page"
                         "Mainstream browse pages updated"
+                      when "organisations"
+                        "Organisations updated"
+                      when "breadcrumb"
+                        "GOV.UK breadcrumbs updated"
+                      when "remove_breadcrumb"
+                        "GOV.UK breadcrumb removed"
                       else
                         "Tags have been updated!"
                       end
 
     create_tagging_update_form_values(tagging_update_params)
 
-    if @tagging_update_form_values.valid?
+    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb"
+      if params[:tagging_tagging_update_form][:remove_parent] == "no"
+        redirect_to tagging_edition_path
+      elsif !params[:tagging_tagging_update_form][:remove_parent]
+        @resource.errors.add(:remove_parent, "Select an option")
+        render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+      else
+        @tagging_update_form_values.publish!
+        flash[:success] = success_message
+        redirect_to tagging_edition_path
+      end
+    elsif @tagging_update_form_values.valid?
       @tagging_update_form_values.publish!
       flash[:success] = success_message
       redirect_to tagging_edition_path
@@ -110,6 +136,25 @@ class EditionsController < InheritedResources::Base
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
+  def tagging_breadcrumb_page
+    populate_tagging_form_values_from_publishing_api
+    @radio_groups = build_radio_groups_for_tagging_breadcrumb_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_breadcrumb_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
+  def tagging_remove_breadcrumb_page
+    populate_tagging_form_values_from_publishing_api
+    render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
   def tagging_mainstream_browse_page
@@ -132,12 +177,44 @@ class EditionsController < InheritedResources::Base
     render "show"
   end
 
+  def tagging_reorder_related_content_page
+    populate_tagging_form_values_from_publishing_api
+
+    render "secondary_nav_tabs/tagging_reorder_related_content_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
+  def tagging_organisations_page
+    populate_tagging_form_values_from_publishing_api
+
+    @linkables = Tagging::Linkables.new.organisations.map do |linkable|
+      {
+        text: linkable[0],
+        value: linkable[1],
+        selected: @tagging_update_form_values.organisations&.include?(linkable[1]),
+      }
+    end
+
+    render "secondary_nav_tabs/tagging_organisations_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "show"
+  end
+
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
   end
 
   def request_amendments_page
     render "secondary_nav_tabs/request_amendments_page"
+  end
+
+  def approve_fact_check_page
+    render "secondary_nav_tabs/approve_fact_check_page"
   end
 
   def send_to_fact_check_page
@@ -242,6 +319,19 @@ class EditionsController < InheritedResources::Base
     else
       flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
       render "secondary_nav_tabs/no_changes_needed_page"
+    end
+  end
+
+  def approve_fact_check
+    if !@resource.can_approve_fact_check?
+      flash.now[:danger] = "Edition is not in a state where fact check can be approved"
+      render "secondary_nav_tabs/approve_fact_check_page"
+    elsif approve_fact_check_for_edition(@resource, params[:comment])
+      flash[:success] = "Fact check approved"
+      redirect_to edition_path(resource)
+    else
+      flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+      render "secondary_nav_tabs/send_to_fact_check_page"
     end
   end
 
@@ -465,14 +555,13 @@ class EditionsController < InheritedResources::Base
     @resource.assign_attributes(reviewer: reviewer_id)
 
     if @resource.save
-      if @resource.reviewer == current_user.id.to_s
-        flash[:success] = "You are now the 2i reviewer of this edition"
-      elsif @resource.reviewer.nil?
-        flash[:success] = "2i reviewer removed"
-      else
-        reviewer = User.where(id: @resource.reviewer).first
-        flash[:success] = "#{reviewer} is now the 2i reviewer of this edition"
-      end
+      flash[:success] = if @resource.reviewer == current_user.name
+                          "You are now the 2i reviewer of this edition"
+                        elsif @resource.reviewer.nil?
+                          "2i reviewer removed"
+                        else
+                          "#{@resource.reviewer} is now the 2i reviewer of this edition"
+                        end
 
       redirect_to edition_path
     else
@@ -511,6 +600,21 @@ private
     end
   end
 
+  def build_radio_groups_for_tagging_breadcrumb_page(tagging_update_form_values)
+    Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
+      {
+        heading: k,
+        items: v.map do |item|
+          {
+            text: item.first.split(" / ").last,
+            value: item.last,
+            checked: tagging_update_form_values.parent&.include?(item.last),
+          }
+        end,
+      }
+    end
+  end
+
   def populate_tagging_form_values_from_publishing_api
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_publishing_api(
       @resource.artefact.content_id,
@@ -523,7 +627,7 @@ private
   end
 
   def tagging_update_params
-    params.require(:tagging_tagging_update_form).permit(
+    update_params = params.require(:tagging_tagging_update_form).permit(
       :content_id,
       :previous_version,
       :tagging_type,
@@ -533,6 +637,12 @@ private
       ordered_related_items: [],
       ordered_related_items_destroy: [],
     ).to_h
+    if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
+      update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
+                                                              .to_h[:reordered_related_items]
+                                                              .sort_by(&:last).map { |url| url[0] }
+    end
+    update_params
   end
 
   def request_amendments_for_edition(resource, comment)
@@ -571,6 +681,10 @@ private
 
   def cancel_scheduled_publishing_for_edition(resource, comment)
     progress_edition(resource, { request_type: "cancel_scheduled_publishing", comment: comment })
+  end
+
+  def approve_fact_check_for_edition(resource, comment)
+    progress_edition(resource, { request_type: "approve_fact_check", comment: comment })
   end
 
   def progress_edition(resource, options)
@@ -637,7 +751,75 @@ private
   end
 
   def permitted_update_params
-    params.require(:edition).permit(%i[title overview in_beta body major_change change_note])
+    subtype = @resource.editionable.class.to_s.underscore.to_sym
+    params.require(:edition).permit(type_specific_params(subtype) + common_params)
+  end
+
+  def type_specific_params(subtype)
+    case subtype
+    when :place_edition
+      %i[
+        place_type
+        introduction
+        more_information
+        need_to_know
+      ]
+    when :transaction_edition
+      %i[
+        introduction
+        start_button_text
+        will_continue_on
+        link
+        more_information
+        alternate_methods
+        need_to_know
+      ]
+    when :local_transaction_edition
+      [
+        :lgil_code,
+        :introduction,
+        :cta_text,
+        :more_information,
+        :need_to_know,
+        :before_results,
+        :after_results,
+        { scotland_availability_attributes: %i[authority_type alternative_url] },
+        { wales_availability_attributes: %i[authority_type alternative_url] },
+        { northern_ireland_availability_attributes: %i[authority_type alternative_url] },
+      ]
+    when :completed_transaction_edition
+      %i[
+        body
+        promotion_choice
+        promotion_choice_url
+        promotion_choice_url_organ_donor
+        promotion_choice_url_bring_id_to_vote
+        promotion_choice_url_mot_reminder
+        promotion_choice_url_electric_vehicle
+        promotion_choice_opt_in_url
+        promotion_choice_opt_out_url
+      ]
+    when :guide_edition
+      [
+        :hide_chapter_navigation,
+        { parts_attributes: %i[title body slug order id _destroy] },
+      ]
+    else
+      # answer_edition, help_page_edition
+      [
+        :body,
+      ]
+    end
+  end
+
+  def common_params
+    %i[
+      title
+      overview
+      in_beta
+      change_note
+      major_change
+    ]
   end
 
   def permitted_external_links_params

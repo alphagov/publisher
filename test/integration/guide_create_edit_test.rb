@@ -9,6 +9,10 @@ class GuideCreateEditTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
+
     @artefact = FactoryBot.create(
       :artefact,
       slug: "hedgehog-topiary",
@@ -69,7 +73,8 @@ class GuideCreateEditTest < LegacyJavascriptIntegrationTest
       panopticon_id: @artefact.id,
       title: "Foo bar",
     )
-    guide.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
+
+    guide.editionable.parts.build(title: "Placeholder", body: "placeholder", slug: "placeholder", order: 1)
     guide.save!
 
     visit_edition guide
@@ -91,8 +96,8 @@ class GuideCreateEditTest < LegacyJavascriptIntegrationTest
     end
 
     save_edition_and_assert_success
+    g = GuideEdition.find(guide.editionable.id)
 
-    g = GuideEdition.find(guide.id)
     assert_equal ["Part One", "Part Two"], g.parts.map(&:title)
     assert_equal [1, 2], g.parts.map(&:order)
   end
@@ -111,7 +116,7 @@ class GuideCreateEditTest < LegacyJavascriptIntegrationTest
 
     assert page.has_content?(/Foo bar\W#2/)
 
-    g2 = GuideEdition.where(version_number: 2).first
+    g2 = Edition.where(editionable_type: "GuideEdition", version_number: 2).first
 
     assert_equal guide.parts.map(&:title), g2.parts.map(&:title)
   end

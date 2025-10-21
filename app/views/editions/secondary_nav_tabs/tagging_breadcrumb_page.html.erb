@@ -1,0 +1,44 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :page_title, "Set GOV.UK breadcrumb" %>
+<% content_for :title, "Set GOV.UK breadcrumb" %>
+
+<%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= render "govuk_publishing_components/components/hint", {
+        text: "Select the browse page you want to appear in the breadcrumb",
+      } %>
+
+      <%= f.hidden_field :content_id %>
+      <%= f.hidden_field :previous_version %>
+      <%= f.hidden_field :tagging_type, value: "breadcrumb" %>
+      <% Array(@tagging_update_form_values.ordered_related_items).to_a.map { |item| item["base_path"] }.each do |base_path| %>
+        <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
+        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
+        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+      <% end %>
+
+      <% @radio_groups.each do |radio_group| %>
+        <%= render "govuk_publishing_components/components/radio", {
+          name: "#{f.object_name}[parent][]",
+          heading: radio_group[:heading],
+          heading_size: "m",
+          small: true,
+          items: radio_group[:items],
+        } %>
+      <% end %>
+    </div>
+
+    <div class="govuk-grid-column-one-third options-sidebar">
+      <div class="sidebar-components">
+        <%= sidebar_options_heading %>
+        <%= sidebar_items_list(base_edition_sidebar_buttons(tagging_edition_path(@edition))) %>
+      </div>
+    </div>
+  </div>
+<% end %>

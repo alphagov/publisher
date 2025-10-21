@@ -1,12 +1,6 @@
-class DevolvedAdministrationAvailability
-  include Mongoid::Document
-
-  embedded_in :local_transaction_edition
-  field :type, type: String, default: "local_authority_service"
-  field :alternative_url, type: String
-
-  validates :type, inclusion: { in: %w[local_authority_service devolved_administration_service unavailable] }
-  validates :alternative_url, presence: true, if: -> { devolved_administration_service? }
+class DevolvedAdministrationAvailability < ApplicationRecord
+  validates :authority_type, inclusion: { in: %w[local_authority_service devolved_administration_service unavailable] }
+  validates :alternative_url, presence: { message: "Enter the URL of the devolved administration website page" }, if: -> { devolved_administration_service? }
   validate :alternative_url_format
 
   def alternative_url_format
@@ -19,11 +13,11 @@ class DevolvedAdministrationAvailability
     end
 
     unless uri.is_a?(URI::HTTPS)
-      errors.add(:alternative_url, "must be a full URL, starting with https://")
+      errors.add(:alternative_url, "Must be a full URL, starting with https://")
     end
   end
 
   def devolved_administration_service?
-    type == "devolved_administration_service"
+    authority_type == "devolved_administration_service"
   end
 end

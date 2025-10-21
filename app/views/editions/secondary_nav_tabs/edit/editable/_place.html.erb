@@ -1,0 +1,45 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/title", locals: { edition: @resource } %>
+
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/meta_tag_description", locals: { edition: @resource } %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Places Manager service identifier",
+  },
+  name: "edition[place_type]",
+  value: edition.editionable.place_type,
+  heading_size: "s",
+  hint:("This is assigned in the #{link_to("Places Manager application", Plek.external_url_for("places-manager"), target: "_blank", rel: "noopener", class: "govuk-link")}").html_safe,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Introduction",
+  },
+  name: "edition[introduction]",
+  value: edition.editionable.introduction,
+  rows: 16,
+  hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Further information (optional)",
+  },
+  name: "edition[more_information]",
+  value: edition.editionable.more_information,
+  rows: 16,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "What you need to know (optional)",
+  },
+  name: "edition[need_to_know]",
+  value: edition.editionable.need_to_know,
+  rows: 6,
+} %>
+

@@ -2,7 +2,7 @@ require "legacy_integration_test_helper"
 
 class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
   setup do
-    @artefact = FactoryBot.create(
+    @artefact ||= FactoryBot.create(
       :artefact,
       slug: "done/stick-a-fork-in-me-im",
       kind: "completed_transaction",
@@ -16,6 +16,10 @@ class CompletedTransactionCreateEditTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   should "create a new CompletedTransactionEdition" do

@@ -63,6 +63,32 @@ module TagTestHelpers
     stub_publishing_api_data
   end
 
+  def stub_linkables_with_single_related_item
+    # variation of stub_linkables_with_data only populating one entry for related content
+    stub_request(:get, %r{\A#{PUBLISHING_API_V2_ENDPOINT}/expanded-links/.+})
+      .to_return(
+        status: 200,
+        body: "{
+          \"expanded_links\":
+            {
+              \"mainstream_browse_pages\": [],
+              \"ordered_related_items\": [
+                {
+                  \"content_id\": \"830e403b-7d81-45f1-8862-81dcd55b4ec7\",
+                  \"base_path\": \"/company-tax-returns\"
+                }
+              ],
+              \"organisations\": [],
+              \"parent\": []
+            },
+          \"version\": 1
+        }",
+        headers: {},
+      )
+
+    stub_publishing_api_data
+  end
+
   def stub_publishing_api_data
     stub_publishing_api_has_linkables(
       [
@@ -95,6 +121,14 @@ module TagTestHelpers
           "publication_state" => "live",
           "base_path" => "/government/organisations/student-loans-company",
           "internal_name" => "Student Loans Company",
+        },
+        {
+          "public_updated_at" => "2014-10-16 14:35:22",
+          "title" => "Department for Education",
+          "content_id" => "ebd15ade-73b2-4eaf-b1c3-43034a42eb37",
+          "publication_state" => "live",
+          "base_path" => "/government/organisations/department-for-education",
+          "internal_name" => "Department for Education",
         },
       ],
       document_type: "organisation",

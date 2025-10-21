@@ -11,11 +11,13 @@ class MarkEditionInBetaTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   with_and_without_javascript do
     should "allow marking an edition as in beta" do
-      edition = FactoryBot.create(:edition)
+      edition = FactoryBot.create(:guide_edition)
       visit_edition edition
 
       assert_not find("#edition_in_beta").checked?
@@ -30,7 +32,7 @@ class MarkEditionInBetaTest < LegacyJavascriptIntegrationTest
     end
 
     should "allow marking an edition as not in beta" do
-      edition = FactoryBot.create(:edition, in_beta: true)
+      edition = FactoryBot.create(:guide_edition, in_beta: true)
       visit_edition edition
 
       assert find("#edition_in_beta").checked?

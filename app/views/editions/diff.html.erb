@@ -22,7 +22,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-body">
-      <%= link_to("Back to History and notes", history_edition_path(@resource), class: "govuk-link") %>
+      <%= link_to("Back to History and notes", history_edition_path(@resource.history.first), class: "govuk-link") %>
     </p>
     <div class="govuk-body compare-editions">
       <%= diff_html(@comparison.whole_body, @resource.whole_body) %>

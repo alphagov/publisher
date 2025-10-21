@@ -23,7 +23,7 @@ class LinkablesTest < ActiveSupport::TestCase
 
   test "returns organisations" do
     assert_equal(
-      [["Student Loans Company", "9a9111aa-1db8-4025-8dd2-e08ec3175e72"]],
+      [["Department for Education", "ebd15ade-73b2-4eaf-b1c3-43034a42eb37"], ["Student Loans Company", "9a9111aa-1db8-4025-8dd2-e08ec3175e72"]],
       Tagging::Linkables.new.organisations,
     )
   end

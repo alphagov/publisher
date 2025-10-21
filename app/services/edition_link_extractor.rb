@@ -32,8 +32,8 @@ private
   end
 
   def links_in_govspeak_fields
-    edition.class::GOVSPEAK_FIELDS.flat_map do |govspeak_field_name|
-      govspeak_body = edition.read_attribute(govspeak_field_name)
+    edition.editionable.class::GOVSPEAK_FIELDS.flat_map do |govspeak_field_name|
+      govspeak_body = edition.editionable.read_attribute(govspeak_field_name)
 
       extract_links_from_document(govspeak_body)
     end

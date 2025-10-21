@@ -8,6 +8,10 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
+
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   teardown do
@@ -15,7 +19,7 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
   end
 
   test "doesn't show change note until an edition has been published" do
-    edition = FactoryBot.create(:answer_edition)
+    edition = FactoryBot.create(:guide_edition)
     visit_edition edition
     assert page.has_no_field?("edition_change_note")
     assert page.has_no_field?("edition_major_change")
@@ -24,7 +28,7 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
   without_javascript do
     context "change note fields" do
       setup do
-        @edition = FactoryBot.create(:answer_edition, state: "published")
+        @edition = FactoryBot.create(:guide_edition, state: "published")
       end
 
       should "show change note fields once an edition has been published" do
@@ -36,7 +40,7 @@ class EditionMajorChangeTest < LegacyJavascriptIntegrationTest
       context "for an edition in a published series" do
         setup do
           @second_edition = @edition.build_clone
-          @second_edition.update!(body: "Some different body text", state: "draft")
+          @second_edition.save!
         end
 
         should "be visible" do

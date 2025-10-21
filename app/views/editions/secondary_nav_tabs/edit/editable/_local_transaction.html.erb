@@ -1,0 +1,91 @@
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/title", locals: { edition: @resource } %>
+
+<div class="govuk-form-group">
+<%= render "govuk_publishing_components/components/label", {
+  text: "LGSL code",
+  html_for: nil,
+  bold: true,
+} %>
+<p class="govuk-body"><%= edition.lgsl_code.presence || "None added" %></p>
+</div>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "LGIL code",
+  },
+  id: "lgil_code",
+  name: "edition[lgil_code]",
+  value: edition.lgil_code,
+  heading_size: "s",
+  width: 2,
+  error_items: errors_for(edition.errors, :lgil_code, use_full_message: false),
+} %>
+
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Button text (optional)",
+  },
+  name: "edition[cta_text]",
+  value: edition.editionable.cta_text,
+  heading_size: "s",
+  hint:"If left blank, the default text ‘Find your local council’ will be used",
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Introduction",
+  },
+  name: "edition[introduction]",
+  value: edition.editionable.introduction,
+  rows: 16,
+  hint: ("Set the scene for the user. Explain that it’s the responsibility of the local council and that we’ll take you there. Read the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Further information (optional)",
+  },
+  name: "edition[more_information]",
+  value: edition.editionable.more_information,
+  rows: 16,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "What you need to know (optional)",
+  },
+  name: "edition[need_to_know]",
+  value: edition.editionable.need_to_know,
+  rows: 6,
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Above results content (optional)",
+  },
+  name: "edition[before_results]",
+  value: edition.editionable.before_results,
+  rows: 6,
+  hint:"This content appears above the address lookup results, below the page heading",
+} %>
+
+<%= render "govuk_publishing_components/components/textarea", {
+  label: {
+    heading_size: "s",
+    text: "Below results content (optional)",
+  },
+  name: "edition[after_results]",
+  value: edition.editionable.after_results,
+  rows: 6,
+  hint:"This content appears below the address lookup results",
+} %>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/editable/components/administration_availability" ,locals: { edition: @resource , heading: "Northern Ireland" , administration: "northern_ireland"} %>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/editable/components/administration_availability" ,locals: { edition: @resource , heading: "Scotland" , administration: "scotland"} %>
+
+<%= render partial:  "editions/secondary_nav_tabs/edit/editable/components/administration_availability" ,locals: { edition: @resource , heading: "Wales" , administration: "wales"} %>

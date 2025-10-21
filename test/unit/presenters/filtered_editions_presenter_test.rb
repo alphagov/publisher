@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 class FilteredEditionsPresenterTest < ActiveSupport::TestCase
@@ -11,20 +9,16 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     should "return content types with none selected when no content type filter has been specified" do
       content_types = FilteredEditionsPresenter.new(a_gds_user).content_types
 
-      assert_equal(13, content_types.count)
+      assert_equal(9, content_types.count)
       assert_includes(content_types, { text: "All", value: "all" })
       assert_includes(content_types, { text: "Answer", value: "answer" })
-      assert_includes(content_types, { text: "Campaign (Retired)", value: "campaign" })
       assert_includes(content_types, { text: "Completed transaction", value: "completed_transaction" })
       assert_includes(content_types, { text: "Guide", value: "guide" })
       assert_includes(content_types, { text: "Help page", value: "help_page" })
-      assert_includes(content_types, { text: "Licence (Retired)", value: "licence" })
       assert_includes(content_types, { text: "Local transaction", value: "local_transaction" })
       assert_includes(content_types, { text: "Place", value: "place" })
-      assert_includes(content_types, { text: "Programme (Retired)", value: "programme" })
       assert_includes(content_types, { text: "Simple smart answer", value: "simple_smart_answer" })
       assert_includes(content_types, { text: "Transaction", value: "transaction" })
-      assert_includes(content_types, { text: "Video (Retired)", value: "video" })
     end
 
     should "mark the relevant content type as selected when a content type filter has been specified" do
@@ -84,7 +78,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "filter by 'assigned to'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      assigned_to_anna = FactoryBot.create(:guide_edition, assigned_to: anna)
       FactoryBot.create(:guide_edition)
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: anna.id).editions
@@ -94,7 +88,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "filter by 'not assigned'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      FactoryBot.create(:guide_edition, assigned_to: anna)
       not_assigned = FactoryBot.create(:guide_edition)
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user, assigned_to_filter: "nobody").editions
@@ -104,7 +98,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
     should "ignore invalid 'assigned to'" do
       anna = FactoryBot.create(:user, name: "Anna")
-      FactoryBot.create(:guide_edition, assigned_to: anna.id)
+      FactoryBot.create(:guide_edition, assigned_to: anna)
       FactoryBot.create(:guide_edition)
 
       filtered_editions =
@@ -184,8 +178,15 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
 
-      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.count)
-      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.to_a.count)
+      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.count)
+    end
+
+    should "make the total number of editions available when there's more than one page of results" do
+      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
+
+      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.total_count)
     end
 
     should "return the specified 'page' of results" do

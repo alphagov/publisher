@@ -3,40 +3,13 @@ require "cgi"
 require "gds-sso/user"
 require_dependency "safe_html"
 
-class User
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class User < ApplicationRecord
   include GDS::SSO::User
 
-  # Let an app configure the symbolized collection name to use,
-  # e.g. set a constant in an initializer.
-  if defined?(USER_COLLECTION_NAME)
-    store_in collection: USER_COLLECTION_NAME.to_sym
-  else
-    store_in collection: :users
-  end
+  has_many :artefact_actions, class_name: "ArtefactAction"
 
-  field "name",                    type: String
-  field "uid",                     type: String
-  field "version",                 type: Integer
-  field "email",                   type: String
-  field "permissions",             type: Array, default: []
-  field "remotely_signed_out",     type: Boolean, default: false
-  field "organisation_slug",       type: String
-  field "disabled",                type: Boolean, default: false
-  field "organisation_content_id", type: String
-
-  index({ uid: 1 }, unique: true)
-  index disabled: 1
-
-  scope :alphabetized, -> { order_by(name: :asc) }
-  scope :enabled,
-        lambda {
-          any_of(
-            { :disabled.exists => false },
-            { :disabled.in => [false, nil] },
-          )
-        }
+  scope :alphabetized, -> { order(name: :asc) }
+  scope :enabled, -> { where("disabled IS NULL OR disabled = ?", false) }
 
   def to_s
     name || email || ""
@@ -74,6 +47,17 @@ class User
 
   def unassign(edition)
     GovukContentModels::ActionProcessors::AssignProcessor.new(self, edition).processed_edition
+  end
+
+  def role
+    if gds_editor? then "GDS Editor"
+    elsif govuk_editor? then "GOVUK Editor"
+    elsif departmental_editor? then "Departmental Editor"
+    elsif welsh_editor? then "Welsh Editor"
+    elsif skip_review? then "Skip Review"
+    else
+      "Writer"
+    end
   end
 
   def govuk_editor?

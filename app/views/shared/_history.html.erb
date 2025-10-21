@@ -9,7 +9,7 @@
         <fieldset class="inputs">
           <%= hidden_field_tag :edition_id, resource.id %>
           <div class="modal-body">
-            <p class="help-block">Explain what changes you did or did not make and why. <% if current_user.govuk_editor? %>Include a link to the relevant Zendesk ticket and Trello card.<% end %> You can also add an edition note when you send the edition for review (2nd pair of eyes).</p>
+            <p class="help-block">Explain what changes you did or did not make and why. <% if current_user.govuk_editor? %>Include a link to the relevant Zendesk ticket and Jira card.<% end %> You can also add an edition note when you send the edition for review (2nd pair of eyes).</p>
             <% if current_user.govuk_editor? %>
               <p class="help-block">Read the <a href="https://gov-uk.atlassian.net/l/cp/dwn06raQ" rel="noreferrer noopener" target="_blank">guidance on writing good change notes on the GOV.UK wiki (opens in a new tab)</a>.</p>
             <% end %>

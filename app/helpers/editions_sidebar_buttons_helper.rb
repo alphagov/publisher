@@ -44,7 +44,7 @@ module EditionsSidebarButtonsHelper
       preview_edition_path(edition),
       target: "_blank",
       rel: "noopener",
-      class: "govuk-link",
+      class: "govuk-link govuk-link--no-visited-state",
     )
   end
 
@@ -62,7 +62,7 @@ module EditionsSidebarButtonsHelper
       "#{Plek.website_root}/#{edition.slug}",
       rel: "noreferrer noopener",
       target: "_blank",
-      class: "govuk-link",
+      class: "govuk-link govuk-link--no-visited-state",
     )
   end
 
@@ -108,11 +108,11 @@ module EditionsSidebarButtonsHelper
           },
         )
       end
+      if edition.can_request_review?
+        buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link govuk-link--no-visited-state")
+      end
     end
-    buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link")
-    if edition.can_request_review?
-      buttons << link_to("Send to 2i", send_to_2i_page_edition_path(edition), class: "govuk-link")
-    end
+    buttons << link_to("Preview (opens in new tab)", preview_edition_path(edition), target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")
 
     buttons
   end

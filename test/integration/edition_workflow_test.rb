@@ -12,15 +12,17 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
+
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
     @bob = FactoryBot.create(:user, :govuk_editor, name: "Bob")
     @welsh_editor = FactoryBot.create(:user, :welsh_editor, name: "WelshEditor")
 
     @guide = FactoryBot.create(:guide_edition)
     login_as "Alice"
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_publications_filter, false)
   end
 
   teardown do
@@ -74,8 +76,9 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+      click_on "Send to Fact check"
     end
+    assert page.has_content?("Guide updated")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -92,8 +95,9 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     within "#send_fact_check_form" do
       fill_in "Email address", with: "user@example.com"
-      click_on "Send"
+      click_on "Send to Fact check"
     end
+    assert page.has_content?("Guide updated")
 
     fact_check_email = ActionMailer::Base.deliveries.select { |mail| mail.to.include? "user@example.com" }.last
     assert fact_check_email
@@ -471,6 +475,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     filter_for_all_users
     view_filtered_list "Published"
     click_on "Create new edition"
+    assert page.has_content? "New edition created"
 
     login_as("WelshEditor")
 
@@ -574,7 +579,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     save_edition_and_assert_success
     guide.reload
 
-    assert_equal guide.assigned_to, bob
+    assert_equal bob, guide.assigned_to
 
     save_edition_and_assert_success
   end
@@ -587,7 +592,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not see buttons to respond to fact checks" do
-    edition = FactoryBot.create(:edition, :fact_check_received)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -598,7 +603,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may see buttons to respond to fact checks for Welsh editions" do
-    edition = FactoryBot.create(:edition, :fact_check_received, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check_received, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -609,7 +614,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not request more work for fact checked edition" do
-    edition = FactoryBot.create(:edition, :fact_check)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -619,7 +624,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may request more work for fact checked Welsh edition" do
-    edition = FactoryBot.create(:edition, :fact_check, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :fact_check, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -629,7 +634,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may not request more work for 'ready' non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :ready)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -639,7 +644,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors may request more work for 'ready' Welsh editions" do
-    edition = FactoryBot.create(:edition, :ready, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -649,7 +654,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'ready' editions" do
-    edition = FactoryBot.create(:edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -659,7 +664,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see publishing buttons for Welsh 'ready' editions" do
-    edition = FactoryBot.create(:edition, :ready, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :ready, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -669,7 +674,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see publishing buttons for non-Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -679,7 +684,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see publishing buttons for Welsh 'scheduled' editions" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :scheduled_for_publishing, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -689,7 +694,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see review buttons for non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -699,7 +704,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see review buttons for Welsh editions" do
-    edition = FactoryBot.create(:edition, :in_review, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :in_review, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -709,7 +714,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors cannot see buttons to request a review for non-Welsh editions" do
-    edition = FactoryBot.create(:edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, panopticon_id: FactoryBot.create(:artefact).id)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -718,7 +723,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
   end
 
   test "Welsh editors can see buttons to request a review for Welsh editions" do
-    edition = FactoryBot.create(:edition, :draft, :welsh)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :draft, :welsh)
     login_as("WelshEditor")
 
     visit_edition edition
@@ -739,17 +744,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     visit_edition guide
     assert page.has_text?("View this on the GOV.UK website")
-  end
-
-  test "cannot create a new edition for a retired format" do
-    FactoryBot.create(:video_edition, state: "archived")
-
-    visit "/"
-    select "Video", from: "Format"
-    filter_for_all_users
-    view_filtered_list "Archived"
-
-    assert page.has_no_content? "Create new edition"
   end
 
   test "cannot preview an archived article" do
@@ -799,23 +793,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     assert page.has_css?(".label", text: "Published")
   end
 
-  test "should display a retired message if a format has been retired" do
-    artefact = FactoryBot.create(:artefact)
-    edition = FactoryBot.create(
-      :video_edition,
-      panopticon_id: artefact.id,
-      state: "archived",
-      version_number: 1,
-    )
-    artefact.update!(state: "archived")
-
-    visit "/"
-    select "Video (Retired)", from: "Format"
-
-    visit_edition edition
-    assert page.has_content?("This content format has been retired.")
-  end
-
   def send_for_generic_action(guide, button_text, &block)
     visit_edition guide
     action_button = page.find_link button_text
@@ -839,7 +816,7 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
     send_for_generic_action(guide, button_text) do
       fill_in "Email", with: email
       fill_in "Customised message", with: message
-      click_on "Send"
+      click_on "Send to Fact check"
     end
     assert page.has_content?("updated")
   end

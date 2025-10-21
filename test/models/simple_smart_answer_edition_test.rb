@@ -35,15 +35,62 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     cloned_edition = edition.build_clone
     cloned_edition.save!
-
-    old_edition = SimpleSmartAnswerEdition.find(edition.id)
+    old_edition = SimpleSmartAnswerEdition.find(edition.editionable.id)
     assert_equal %w[question outcome outcome], old_edition.nodes.all.map(&:kind)
     assert_equal %w[question1 left right], old_edition.nodes.all.map(&:slug)
 
-    new_edition = SimpleSmartAnswerEdition.find(cloned_edition.id)
+    new_edition = SimpleSmartAnswerEdition.find(cloned_edition.editionable.id)
     assert_equal edition.body, new_edition.body
     assert_equal %w[question outcome outcome], new_edition.nodes.all.map(&:kind)
     assert_equal %w[question1 left right], new_edition.nodes.all.map(&:slug)
+  end
+
+  should "copy the node options when cloning an edition" do
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
+    edition.nodes.build(slug: "question1", title: "You approach two open doors. Which do you choose?", kind: "question", order: 1)
+    edition.nodes.build(slug: "left", title: "As you wander through the door, it slams shut behind you, as a lion starts pacing towards you...", order: 2, kind: "outcome")
+    edition.nodes.build(slug: "right", title: "As you wander through the door, it slams shut behind you, as a tiger starts pacing towards you...", order: 3, kind: "outcome")
+    edition.nodes[0].options.build(slug: "node1-option1", label: "lion eats you", next_node: edition.nodes[1], order: 1)
+    edition.nodes[0].options.build(slug: "node1-option2", label: "tiger eats you", next_node: edition.nodes[2], order: 2)
+    edition.save!
+
+    cloned_edition = edition.build_clone
+    cloned_edition.save!
+
+    old_edition = SimpleSmartAnswerEdition.find(edition.editionable.id)
+    new_edition = SimpleSmartAnswerEdition.find(cloned_edition.editionable.id)
+    assert_equal old_edition.nodes[0].options[0].slug, new_edition.nodes[0].options[0].slug
+    assert_equal old_edition.nodes[0].options[0].label, new_edition.nodes[0].options[0].label
+    assert_equal old_edition.nodes[0].options[0].next_node, new_edition.nodes[0].options[0].next_node
+    assert_equal old_edition.nodes[0].options[0].order, new_edition.nodes[0].options[0].order
+
+    assert_equal old_edition.nodes[0].options[1].slug, new_edition.nodes[0].options[1].slug
+    assert_equal old_edition.nodes[0].options[1].label, new_edition.nodes[0].options[1].label
+    assert_equal old_edition.nodes[0].options[1].next_node, new_edition.nodes[0].options[1].next_node
+    assert_equal old_edition.nodes[0].options[1].order, new_edition.nodes[0].options[1].order
+  end
+
+  should "not copy across old mongo_ids for nodes and options when cloning an edition" do
+    edition = FactoryBot.create(
+      :simple_smart_answer_edition,
+      panopticon_id: @artefact.id,
+      body: "This smart answer is somewhat unique and calls for a different kind of introduction",
+      state: "published",
+    )
+    edition.nodes.build(slug: "question1", title: "a", kind: "question", order: 1, mongo_id: "MongoIsGone!")
+    edition.nodes.build(slug: "question2", title: "b", kind: "question", order: 2)
+    edition.nodes[0].options.build(slug: "node1-option1", label: "a", next_node: edition.nodes[1], order: 1, mongo_id: "MongoIsReallyGone")
+    edition.save!
+
+    cloned_edition = edition.build_clone
+
+    assert_nil cloned_edition.nodes[0].mongo_id
+    assert_nil cloned_edition.nodes[0].options[0].mongo_id
   end
 
   should "not copy nodes when new edition is not a smart answer" do
@@ -60,7 +107,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
 
     assert_equal "This smart answer is somewhat unique and calls for a different kind of introduction\n\n\nQuestion 1\nYou approach two open doors. Which do you choose?\n\n", new_edition.body
 
-    assert new_edition.is_a?(AnswerEdition)
+    assert new_edition.editionable.is_a?(AnswerEdition)
     assert_not new_edition.respond_to?(:nodes)
   end
 
@@ -75,22 +122,20 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   end
 
   should "format the questions and outcomes correctly for the history" do
-    edition = FactoryBot.create(:simple_smart_answer_edition)
+    edition = FactoryBot.build(:simple_smart_answer_edition)
     edition.nodes.build(slug: "question-1",
                         title: "The first question",
                         kind: "question",
                         body: "Body",
                         order: 1,
                         options: [
-                          {
-                            label: "option one",
-                            next_node: "outcome-1",
-                          },
-                          { label: "option two",
-                            next_node: "outcome-2" },
+                          FactoryBot.build(:option, label: "option one", next_node: "outcome-1"),
+                          FactoryBot.build(:option, label: "option two", next_node: "outcome-2"),
                         ])
+
     edition.nodes.build(slug: "outcome-1", title: "The first outcome", order: 3, kind: "outcome", body: "Outcome body")
     edition.nodes.build(slug: "outcome-2", title: "The second outcome", order: 4, kind: "outcome")
+    edition.save!
 
     assert_equal "Introduction to the smart answer\n\n\nQuestion 1\nThe first question\n\nBody\n\nAnswer 1\noption one" \
       "\nNext question for user: Outcome 1 (The first outcome)\n\nAnswer 2\noption two\nNext question for" \
@@ -122,7 +167,6 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     edition.update!(nodes_attributes: {
       "1" => { "id" => edition.nodes.first.id, "_destroy" => "1" },
     })
-    edition.reload
 
     assert_equal 1, edition.nodes.size
   end
@@ -173,9 +217,10 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
   # rubocop:disable Rails/SaveBang
   context "update method" do
     setup do
-      @edition = FactoryBot.create(:simple_smart_answer_edition)
+      @edition = FactoryBot.build(:simple_smart_answer_edition)
       @edition.nodes.build(slug: "question1", title: "Question 1", kind: "question", order: 1)
       @edition.nodes.build(slug: "question2", title: "Question 2", kind: "question", order: 1)
+
       @edition.nodes.first.options.build(
         label: "Option 1", next_node: "question2", order: 1,
       )
@@ -194,8 +239,6 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
                    } },
         },
       )
-
-      @edition.reload
 
       assert_equal "Smarter than the average answer", @edition.title
       assert_equal "No developers were involved in the changing of this copy", @edition.body
@@ -219,8 +262,6 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
         "3" => { "kind" => "outcome", "title" => "Outcome 1", "slug" => "outcome1" },
       })
 
-      @edition.reload
-
       assert_equal 3, @edition.nodes.size
       assert_equal 0, @edition.nodes.first.options.size
       assert_equal "Question 3", @edition.nodes.second.title
@@ -234,7 +275,6 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
         "0" => { "id" => @edition.nodes.first.id, "title" => "Question the first" },
         "1" => { "title" => "", "slug" => "", "kind" => "outcome", "_destroy" => "1" },
       })
-      @edition.reload
 
       assert_equal "Question the first", @edition.nodes.first.title
       assert_equal 2, @edition.nodes.size
@@ -274,7 +314,7 @@ class SimpleSmartAnswerEditionTest < ActiveSupport::TestCase
     should "generate mermaid.js syntax from a simple smart answer with multiple nodes" do
       edition = FactoryBot.build(:simple_smart_answer_edition, panopticon_id: @artefact.id)
 
-      edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [{ label: "A tiger fights you", next_node: "outcome-1" }])
+      edition.nodes.build(slug: "question-1", title: "You approach two locked doors. Which do you choose?", kind: "question", options: [FactoryBot.build(:option, label: "A tiger fights you", next_node: "outcome-1")])
       edition.nodes.build(slug: "outcome-1", title: "Tiger wins", kind: "outcome")
       edition.save!
 

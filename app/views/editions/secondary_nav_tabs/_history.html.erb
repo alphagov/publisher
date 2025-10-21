@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds history">
     <%= render "govuk_publishing_components/components/inset_text", {
-      text: sanitize("Send fact check responses to #{mail_to resource.fact_check_email_address, class: "govuk-link"} and include [#{resource.id}] in the subject line."),
+      text: sanitize("Send fact check responses to #{mail_to resource.fact_check_email_address, class: "govuk-link govuk-link--no-visited-state"} and include [#{resource.id}] in the subject line."),
     } %>
 
     <%= render "govuk_publishing_components/components/heading", {
@@ -27,6 +27,7 @@
                 update_events: @update_events,
               }),
             },
+            expanded: edition.latest_edition? ? true : false,
           }
         end,
       } %>

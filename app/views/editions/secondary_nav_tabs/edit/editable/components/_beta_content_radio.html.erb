@@ -1,0 +1,19 @@
+<%= render "govuk_publishing_components/components/radio", {
+  heading: "Is this beta content?",
+  heading_size: "s",
+  heading_level: 0,
+  name: "edition[in_beta]",
+  inline: true,
+  items: [
+    {
+      value: 1,
+      text: "Yes",
+      checked: edition.in_beta,
+    },
+    {
+      value: 0,
+      text: "No",
+      checked: !edition.in_beta,
+    },
+  ],
+} %>

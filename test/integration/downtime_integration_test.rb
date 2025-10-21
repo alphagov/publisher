@@ -116,7 +116,7 @@ class DowntimeIntegrationTest < JavascriptIntegrationTest
 
   def create_downtime
     Downtime.create!(
-      artefact: @edition.artefact,
+      artefact_id: @edition.artefact.id,
       start_time: first_of_july_next_year_at_midday_bst,
       end_time: first_of_july_next_year_at_six_pm_bst,
       message: "foo",

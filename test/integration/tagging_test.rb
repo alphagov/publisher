@@ -9,7 +9,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
 
-    @edition = FactoryBot.create(:guide_edition)
+    @edition = FactoryBot.create(:guide_edition, title: "Test guide")
     @artefact = @edition.artefact
     @artefact.external_links = []
     @content_id = @edition.artefact.content_id
@@ -235,6 +235,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
@@ -242,7 +243,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "not add duplicate external links" do # check both title and url
-      @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
+      @artefact.external_links = [ArtefactExternalLink.build({ title: "GOVUK", url: "https://www.gov.uk" })]
       assert 1, @artefact.external_links.count
 
       visit_edition @edition
@@ -255,6 +256,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 1, @artefact.external_links.length
@@ -269,13 +271,14 @@ class TaggingTest < LegacyJavascriptIntegrationTest
     end
 
     should "delete links" do
-      @artefact.external_links = [{ title: "GOVUK", url: "https://www.gov.uk" }]
+      @artefact.external_links = [ArtefactExternalLink.build({ title: "GOVUK", url: "https://www.gov.uk" })]
       assert 1, @artefact.external_links.count
 
       visit_edition @edition
       switch_tab "Related external links"
       click_on "Remove this URL"
       click_on "Save links"
+      assert page.has_content?("External links have been saved")
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length
@@ -292,6 +295,7 @@ class TaggingTest < LegacyJavascriptIntegrationTest
       end
 
       click_on "Save links"
+      assert page.has_content?("External links URL is invalid")
       @artefact.reload
 
       assert_equal 0, @artefact.external_links.length

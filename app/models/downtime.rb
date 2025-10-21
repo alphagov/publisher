@@ -1,11 +1,4 @@
-class Downtime
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  field :message, type: String
-  field :start_time, type: DateTime
-  field :end_time, type: DateTime
-
+class Downtime < ApplicationRecord
   belongs_to :artefact, optional: true
 
   validate :start_time_precedes_end_time

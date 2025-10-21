@@ -1,16 +1,5 @@
-class ArtefactAction
-  include Mongoid::Document
-  include Mongoid::Timestamps::Created
-
-  field "action_type", type: String
-  field "snapshot", type: Hash
-  field "task_performed_by", type: String
-
-  embedded_in :artefact
-
-  # Ideally we would like to use the UID field here, since that will be the
-  # same across all applications, but Mongoid doesn't yet support using a
-  # custom primary key on a related field
+class ArtefactAction < ApplicationRecord
+  belongs_to :artefact
   belongs_to :user, optional: true
 
   # Not validating presence of a user just yet, since there may be some

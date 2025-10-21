@@ -1,0 +1,30 @@
+# This file is overwritten by one in alphagov-deployment at deploy time
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  pool: 12
+  template: template0
+
+development:
+  <<: *default
+  clients:
+    default:
+      uri: <%= ENV['DATABASE_URL'] || "postgresql://postgres@postgres-16/publisher" %>
+  options:
+
+test: &test
+  <<: *default
+  database: publisher_test
+  username: publisher
+  password: publisher
+  url: <%= ENV["TEST_DATABASE_URL"] %>
+
+# set these environment variables on your prod server
+production:
+  <<: *default
+  clients:
+    default:
+      uri: <%= ENV['DATABASE_URL'] %>
+  options:
+#    use_activesupport_time_zone: true
+  #    belongs_to_required_by_default: false

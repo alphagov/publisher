@@ -15,9 +15,9 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#template_folder_for" do
     should "be able to create a view path for a given publication" do
-      l = LocalTransactionEdition.new
+      l = FactoryBot.build(:local_transaction_edition)
       assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-      g = GuideEdition.new
+      g = FactoryBot.build(:guide_edition)
       assert_equal "app/views/guides", @controller.template_folder_for(g)
     end
   end
@@ -32,7 +32,7 @@ class EditionsControllerTest < ActionController::TestCase
 
   context "#show" do
     should "return a 404 when requesting a publication that doesn't exist" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "104" }
       assert_response :not_found
     end
 
@@ -1433,6 +1433,107 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#tagging_reorder_related_content_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      should "render the 'Tag related content' page" do
+        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_reorder_related_content_page"
+      end
+
+      should "render the tagging tab and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+    end
+
+    context "user does not have govuk_editor permission" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "reorder_related_content" do
+      should "create tagging_update_form_values using reordered_related_items when it is present" do
+        post :update_tagging, params: { "id" => @edition.id,
+                                        "reordered_related_items" => { "/pay-vat" => "1", "/" => "3", "/universal-credit" => "2" },
+                                        "tagging_tagging_update_form" => { "content_id" => "3db5234c-a87f-4a30-b058-adee1236329e",
+                                                                           "previous_version" => "22",
+                                                                           "tagging_type" => "reorder_related_content",
+                                                                           "parent" => %w[1159936b-be05-44cb-b52c-87b3c9153959],
+                                                                           "organisations" => %w[ebd15ade-73b2-4eaf-b1c3-43034a42eb37],
+                                                                           "mainstream_browse_pages" => %w[1159936b-be05-44cb-b52c-87b3c9153959 932a86f4-4916-4d9f-99cb-dfd34d7ee5d1 a1c39054-4fd5-44e9-8d1d-0c7acd57a6a4] } }
+        expected_reordered_related_items = %w[/pay-vat /universal-credit /]
+
+        assert_equal expected_reordered_related_items, @controller.instance_variable_get(:@tagging_update_form_values).ordered_related_items
+      end
+    end
+  end
+
+  context "#tagging_organisation_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      should "render the 'Tag organisations' page" do
+        get :tagging_organisations_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_organisations_page"
+      end
+
+      should "render the edit page and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_organisations_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+
+      should "render the edit page and display an error message if invalid organisation data is submitted" do
+        Tagging::TaggingUpdateForm.stubs(:publish!).raises(StandardError)
+
+        post :update_tagging, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+    end
+
+    context "user does not have editor permissions" do
+      setup do
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "render an error message" do
+        get :tagging_organisations_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not a Welsh edition" do
+        login_as_welsh_editor
+
+        get :tagging_organisations_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#tagging_mainstream_browse_page" do
     setup do
       stub_linkables_with_data
@@ -1468,6 +1569,96 @@ class EditionsControllerTest < ActionController::TestCase
         login_as_welsh_editor
 
         get :tagging_mainstream_browse_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#tagging_breadcrumb_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      should "render the 'Set GOV.UK breadcrumb' page" do
+        get :tagging_breadcrumb_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_breadcrumb_page"
+      end
+
+      should "render the tagging tab and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_breadcrumb_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+
+        get :tagging_breadcrumb_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        get :tagging_breadcrumb_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#tagging_remove_breadcrumb_page" do
+    setup do
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      should "render the remove breadcrumb page" do
+        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+      end
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+
+        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user is not a govuk_editor and tries to remove breadcrumb" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+
+        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh and tries to remove breadcrumb" do
+        login_as_welsh_editor
+
+        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -1711,7 +1902,7 @@ class EditionsControllerTest < ActionController::TestCase
         end
 
         should "render confirm destroy page with error if deleting from database fails" do
-          Edition.any_instance.stubs(:destroy!).raises(Mongoid::Errors::MongoidError.new)
+          Edition.any_instance.stubs(:destroy!).raises(ActiveRecord::RecordInvalid.new)
 
           delete :destroy, params: { id: @edition.id }
 
@@ -2183,31 +2374,30 @@ class EditionsControllerTest < ActionController::TestCase
 
     context "user with required permissions" do
       setup do
-        @in_review_edition = FactoryBot.create(:answer_edition, :in_review)
+        @in_review_edition = FactoryBot.create(:answer_edition, :in_review, reviewer: "2i Reviewer")
         @reviewer = FactoryBot.create(:user, :govuk_editor, name: "2i Reviewer")
         @user = FactoryBot.create(:user, :govuk_editor)
         login_as(@user)
       end
 
       should "be able to assign themselves as 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.id }
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @user.name }
 
         assert_redirected_to edition_path(@in_review_edition.id)
         assert_equal "You are now the 2i reviewer of this edition", flash[:success]
       end
 
       should "be able to assign another user as 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
 
         assert_redirected_to edition_path(@in_review_edition.id)
         assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
       should "update the 2i reviewer" do
-        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.id }
-
+        patch :update_reviewer, params: { id: @in_review_edition.id, reviewer_id: @reviewer.name }
         @in_review_edition.reload
-        assert_equal @reviewer.id.to_s, @in_review_edition.reviewer
+        assert_equal @reviewer.name, @in_review_edition.reviewer
         assert_equal "2i Reviewer is now the 2i reviewer of this edition", flash[:success]
       end
 
@@ -2275,7 +2465,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert_equal "External links title can't be blank", flash[:danger]
     end
 
     should "display an error message when the url is blank" do
@@ -2286,7 +2476,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert flash[:danger].include? "External links URL can't be blank"
     end
 
     should "display an error message when the url is invalid" do
@@ -2297,7 +2487,7 @@ class EditionsControllerTest < ActionController::TestCase
         },
       }
 
-      assert_equal "External links is invalid", flash[:danger]
+      assert_equal "External links URL is invalid", flash[:danger]
     end
 
     should "update related external links and display a success message when successfully saved" do

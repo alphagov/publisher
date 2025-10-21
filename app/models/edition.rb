@@ -2,44 +2,28 @@ require_dependency "workflow"
 
 require "digest"
 
-class Edition
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class Edition < ApplicationRecord
   include Workflow
   include RecordableActions
   include BaseHelper
 
+  def self.delegated_types
+    %w[AnswerEdition GuideEdition TransactionEdition HelpPageEdition SimpleSmartAnswerEdition CompletedTransactionEdition LocalTransactionEdition PlaceEdition PopularLinksEdition]
+  end
+
+  delegated_type :editionable, types: delegated_types, dependent: :destroy
+  accepts_nested_attributes_for :editionable
+
   class ResurrectionError < RuntimeError
   end
 
-  field :panopticon_id,        type: String
-  field :version_number,       type: Integer,  default: 1
-  field :sibling_in_progress,  type: Integer,  default: nil
+  delegate_missing_to :editionable
 
-  field :title,                type: String
-  field :in_beta,              type: Boolean,  default: false
-  field :created_at,           type: DateTime, default: -> { Time.zone.now }
-  field :publish_at,           type: DateTime
-  field :overview,             type: String
-  field :slug,                 type: String
-  field :rejected_count,       type: Integer, default: 0
-
-  field :assignee,             type: String
-  field :reviewer,             type: String
-  field :creator,              type: String
-  field :publisher,            type: String
-  field :archiver,             type: String
-  field :major_change,         type: Boolean, default: false
-  field :change_note,          type: String
-  field :review_requested_at,  type: DateTime
-
-  field :auth_bypass_id,       type: String, default: -> { SecureRandom.uuid }
-
-  field :owning_org_content_ids, type: Array, default: []
+  delegate :introduction, :more_information, :need_to_know, to: :editionable
 
   belongs_to :assigned_to, class_name: "User", optional: true
 
-  embeds_many :link_check_reports
+  has_many :link_check_reports, dependent: :destroy
 
   scope :accessible_to,
         lambda { |user|
@@ -47,56 +31,49 @@ class Edition
           return all if user.gds_editor?
           return all unless user.departmental_editor?
 
-          where(owning_org_content_ids: user.organisation_content_id)
+          where(owning_org_content_ids: [user.organisation_content_id])
         }
 
   # state_machine comes from Workflow
   state_machine.states.map(&:name).each do |state|
     scope state, -> { where(state:) }
   end
-  scope :archived_or_published, -> { where(:state.in => %w[archived published]) }
-  scope :in_progress, -> { where(:state.nin => %w[archived published]) }
+  scope :archived_or_published, -> { where(state: %w[archived published]) }
+  scope :in_progress, -> { where.not(state: %w[archived published]) }
   scope :assigned_to,
         lambda { |user|
           if user
             where(assigned_to_id: user.id)
           else
-            where(:assigned_to_id.exists => false)
+            where("assigned_to_id" => nil)
           end
         }
   scope :major_updates, -> { where(major_change: true) }
 
-  scope :internal_search,
+  scope :slug_title_and_overview_search,
         lambda { |term|
-          regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
-          any_of({ title: regex }, { slug: regex }, { overview: regex }, licence_identifier: regex)
+          wildcard_term = "%#{term}%"
+          where("title ILIKE ? OR slug ILIKE ? OR overview ILIKE ?", wildcard_term, wildcard_term, wildcard_term)
         }
 
   # Including recipient_id on actions will include anything that has been
   # assigned to the user we're looking at, but include the check anyway to
   # account for manual assignments
-  scope :for_user,
-        lambda { |user|
-          any_of(
-            { assigned_to_id: user.id },
-            { "actions.requester_id" => user.id },
-            "actions.recipient_id" => user.id,
-          )
-        }
 
   scope :user_search,
         lambda { |user, term|
-          all_of(for_user(user).selector, internal_search(term).selector)
+          for_user(user).merge(slug_title_and_overview_search(term))
         }
 
   scope :published, -> { where(state: "published") }
-  scope :draft_in_publishing_api, -> { where(state: { "$in" => PUBLISHING_API_DRAFT_STATES }) }
+  scope :draft_in_publishing_api, -> { where(state: [PUBLISHING_API_DRAFT_STATES]) }
 
-  scope :in_states, ->(states) { where(state: { "$in" => states }) }
+  scope :in_states, ->(states) { where(state: states) }
+
   scope :search_title_and_slug,
         lambda { |term|
-          regex = ::Regexp.new(::Regexp.escape(term), true) # case-insensitive
-          any_of({ title: regex }, { slug: regex })
+          wildcard_term = "%#{term}%"
+          where("title ILIKE ? OR slug ILIKE ?", wildcard_term, wildcard_term)
         }
 
   ACTIONS = {
@@ -117,12 +94,9 @@ class Edition
     cancel_scheduled_publishing: "Cancel scheduled publishing",
   }.freeze
   PUBLISHING_API_DRAFT_STATES = %w[fact_check amends_needed fact_check_received draft ready in_review scheduled_for_publishing].freeze
-
   EXACT_ROUTE_EDITION_CLASSES = %w[
-    CampaignEdition
     HelpPageEdition
   ].freeze
-
   HAS_GOVSPEAK_FIELDS = %w[
     AnswerEdition
     GuideEdition
@@ -138,8 +112,6 @@ class Edition
   validates :title, presence: { message: "Enter a title" }
   validates :version_number, presence: true, uniqueness: { scope: :panopticon_id }, unless: :popular_links_edition?
   validates :panopticon_id, presence: true, unless: :popular_links_edition?
-  validates_with SafeHtml, unless: :popular_links_edition?
-  validates_with LinkValidator, on: :update, unless: :archived_or_popular_links?
   validates_with ReviewerValidator
   validates :change_note, presence: { if: :major_change }
 
@@ -153,21 +125,32 @@ class Edition
     destroy_artefact
   end
 
-  index assigned_to_id: 1
-  index({ panopticon_id: 1, version_number: 1 }, unique: true)
-  index state: 1
-  index created_at: 1
-  index updated_at: 1
+  after_validation :merge_editionable_errors
 
-  alias_method :admin_list_title, :title
+  alias_attribute :admin_list_title, :title
+  delegate :variant, to: :transaction_edition
 
   def self.state_names
     state_machine.states.map(&:name)
   end
 
+  def self.for_user(user_id)
+    editions = Action.where(requester_id: user_id).or(Action.where(recipient_id: user_id)).map(&:edition)
+    Edition.where(id: editions.map(&:id)).or(Edition.where(assigned_to_id: user_id))
+  end
+
+  def merge_editionable_errors
+    unless editionable.valid?
+      editionable.errors.each do |err|
+        errors.add(err.attribute, err.message)
+        errors.delete("editionable.#{err.attribute}")
+      end
+    end
+  end
+
   def self.by_format(format)
-    edition_class = "#{format}_edition".classify.constantize
-    edition_class.all
+    edition_class = "#{format}_edition".classify
+    Edition.where(editionable_type: edition_class)
   end
 
   def self.convertible_formats
@@ -179,19 +162,19 @@ class Edition
   end
 
   def history
-    series.order(%i[version_number desc])
+    series.order([version_number: :desc])
   end
 
   def siblings
-    series.excludes(id:)
+    series.where.not(id:)
   end
 
   def previous_siblings
-    siblings.where(:version_number.lt => version_number).order(version_number: "asc")
+    siblings.where("version_number < ?", version_number).order(version_number: "asc")
   end
 
   def subsequent_siblings
-    siblings.where(:version_number.gt => version_number).order(version_number: "asc")
+    siblings.where("version_number > ?", version_number).order(version_number: "asc")
   end
 
   def latest_edition?
@@ -260,7 +243,14 @@ class Edition
   end
 
   def indexable_content
-    respond_to?(:parts) ? indexable_content_with_parts : indexable_content_without_parts
+    content = if editionable.respond_to?(:indexable_content)
+                "#{content} #{editionable.indexable_content}"
+              elsif respond_to?(:parts)
+                indexable_content_with_parts
+              else
+                indexable_content_without_parts
+              end
+    content.strip
   end
 
   def indexable_content_without_parts
@@ -284,7 +274,7 @@ class Edition
   # we are changing the type of the edition, any fields other than the base
   # fields will likely be meaningless.
   def fields_to_copy(target_class)
-    if target_class == self.class
+    if target_class == editionable.class
       base_field_keys + type_specific_field_keys
     else
       base_field_keys + common_type_specific_field_keys(target_class)
@@ -292,6 +282,8 @@ class Edition
   end
 
   def build_clone(target_class = nil)
+    target_class_attributes = []
+    edition_attributes = []
     unless state == "published"
       raise "Cloning of non published edition not allowed"
     end
@@ -301,12 +293,24 @@ class Edition
              is not allowed"
     end
 
-    target_class ||= self.class
-    new_edition = target_class.new(version_number: get_next_version_number)
+    target_class ||= editionable.class
 
     fields_to_copy(target_class).each do |attr|
-      new_edition[attr] = self[attr]
+      attribute = []
+      attribute << attr.to_sym
+      if target_class.has_attribute?(attr)
+        attribute << editionable[attr.to_sym]
+        target_class_attributes << attribute
+      else
+        attribute << self[attr.to_sym]
+        edition_attributes << attribute
+      end
     end
+
+    edition_attributes << [:version_number, get_next_version_number]
+    editionable = target_class.build(target_class_attributes.to_h)
+    new_edition = Edition.build(edition_attributes.to_h)
+    new_edition.editionable = editionable
 
     # If the type is changing, then take the combined body (whole_body) from
     # the old and decide where to put it in the new.
@@ -316,8 +320,12 @@ class Edition
     #
     # We don't need to copy parts between Parted types here, because the
     # Parted module does that.
-    if target_class != self.class && !cloning_between_parted_types?(new_edition)
+    if target_class != self.editionable.class && !cloning_between_parted_types?(new_edition.editionable)
       new_edition.clone_whole_body_from(self)
+    end
+
+    if self.editionable.respond_to?(:copy_to)
+      new_edition = self.editionable.copy_to(new_edition)
     end
 
     new_edition
@@ -328,11 +336,11 @@ class Edition
       setup_default_parts if respond_to?(:setup_default_parts)
       parts.build(title: "Part One", body: origin_edition.whole_body, slug: "part-one")
     elsif respond_to?(:more_information=)
-      self.more_information = origin_edition.whole_body
+      editionable.more_information = origin_edition.whole_body
     elsif respond_to?(:body=)
-      self.body = origin_edition.whole_body
+      editionable.body = origin_edition.whole_body
     elsif respond_to?(:licence_overview=)
-      self.licence_overview = origin_edition.whole_body
+      editionable.licence_overview = origin_edition.whole_body
     else
       raise "Nowhere to copy whole_body content for conversion from: #{origin_edition.class} to: #{self.class}"
     end
@@ -344,7 +352,7 @@ class Edition
 
   def self.find_or_create_from_panopticon_data(panopticon_id, importing_user)
     existing_publication = Edition.where(panopticon_id:)
-                                  .order_by(version_number: :desc).first
+                                  .order(version_number: :desc).first
     return existing_publication if existing_publication
 
     metadata = Artefact.find(panopticon_id)
@@ -363,7 +371,7 @@ class Edition
     scope = where(slug:)
 
     if edition.present? && (edition == "latest")
-      scope.order_by(version_number: :asc).last
+      scope.order(version_number: :asc).last
     elsif edition.present?
       scope.where(version_number: edition).first
     else
@@ -372,11 +380,15 @@ class Edition
   end
 
   def format
-    self.class.to_s.gsub("Edition", "")
+    editionable.class.to_s.gsub("Edition", "")
   end
 
   def format_name
-    format
+    if editionable.respond_to?(:format_name)
+      editionable.format_name
+    else
+      format
+    end
   end
 
   def kind_for_artefact
@@ -384,7 +396,7 @@ class Edition
   end
 
   def has_video?
-    false
+    editionable.respond_to?(:has_video?) ? editionable.has_video? : false
   end
 
   def safe_to_preview?
@@ -463,7 +475,7 @@ class Edition
   end
 
   def exact_route?
-    self.class.name.in? EXACT_ROUTE_EDITION_CLASSES
+    editionable.class.name.in? EXACT_ROUTE_EDITION_CLASSES
   end
 
   def publish_anonymously!
@@ -488,7 +500,9 @@ class Edition
     end
   end
 
-  delegate :content_id, to: :artefact
+  def content_id
+    editionable_type == "PopularLinksEdition" ? editionable.content_id : artefact.content_id
+  end
 
   def latest_link_check_report
     link_check_reports.last
@@ -523,11 +537,17 @@ class Edition
     owning_org_content_ids.include?(user.organisation_content_id)
   end
 
+  def is_editable_by?(user)
+    !scheduled_for_publishing? && !published? && !archived? && user.has_editor_permissions?(self)
+  end
+
 private
 
   def base_field_keys
     %i[
       title
+      editionable_type
+      editionable_id
       in_beta
       panopticon_id
       overview
@@ -537,18 +557,14 @@ private
   end
 
   def type_specific_field_keys
-    (fields.keys - Edition.fields.keys).map(&:to_sym)
+    (editionable.attribute_names - Edition.attribute_names).map(&:to_sym)
   end
 
   def common_type_specific_field_keys(target_class)
-    ((fields.keys & target_class.fields.keys) - Edition.fields.keys).map(&:to_sym)
+    ((editionable.attribute_names & target_class.attribute_names) - Edition.attribute_names).map(&:to_sym)
   end
 
   def popular_links_edition?
-    instance_of?(::PopularLinksEdition)
-  end
-
-  def archived_or_popular_links?
-    archived? || popular_links_edition?
+    editionable_type == "PopularLinksEdition"
   end
 end

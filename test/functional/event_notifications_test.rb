@@ -11,6 +11,7 @@ class EventNotificationsTest < ActiveSupport::TestCase
   def action_email(action)
     guide = FactoryBot.create(:guide_edition, title: "Test Guide 2")
     requester = User.new(name: "Testing Person")
+    requester.save!
     action = guide.actions.create!(request_type: action, requester:)
     EventNotifierService.any_action(action)
   end

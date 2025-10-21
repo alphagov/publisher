@@ -1,0 +1,34 @@
+<%# locals: (edition:, heading:, administration:) -%>
+
+<%= render "govuk_publishing_components/components/radio", {
+  heading: heading,
+  heading_level: 0,
+  name: "edition[#{administration}_availability_attributes][authority_type]",
+  items: [
+    {
+      value: "local_authority_service",
+      text: "Service available from local council",
+      checked: edition.editionable.send("#{administration}_availability").authority_type == "local_authority_service",
+    },
+    {
+      value: "devolved_administration_service",
+      text: "Service available from devolved administration (or a similar service is available)",
+      checked: edition.editionable.send("#{administration}_availability").authority_type == "devolved_administration_service",
+      conditional: render("govuk_publishing_components/components/input", {
+        label: {
+          text: "URL of the devolved administration website page",
+        },
+        id: "#{administration}_availability_attributes_alternative_url",
+        name: "edition[#{administration}_availability_attributes][alternative_url]",
+        value: edition.editionable.send("#{administration}_availability").alternative_url,
+        error_items: errors_for(edition.editionable.send("#{administration}_availability").errors, :alternative_url, use_full_message: false),
+      }),
+
+    },
+    {
+      value: "unavailable",
+      text: "Service not available",
+      checked: edition.editionable.send("#{administration}_availability").authority_type == "unavailable",
+    },
+  ],
+} %>

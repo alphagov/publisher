@@ -8,7 +8,7 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
   setup do
     @laura = FactoryBot.create(:user, :govuk_editor)
     @fred  = FactoryBot.create(:user, :govuk_editor)
-    @guide = FactoryBot.create(:guide_edition)
+    @guide = FactoryBot.create(:guide_edition, mongo_id: "MongoIsNoMore1")
     stub_register_published_content
   end
 
@@ -48,6 +48,15 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     assert_nil command.new_edition.assigned_to
   end
 
+  test "should not copy the old mongo ID to the new edition" do
+    publish_item(@guide, @laura)
+
+    command = EditionDuplicator.new(@guide, @laura)
+    command.duplicate
+
+    assert_nil command.new_edition.mongo_id
+  end
+
   test "can provide an appropriate error message if new edition failed" do
     @laura.stubs(:new_version).with(@guide, nil).returns(false)
 
@@ -61,12 +70,12 @@ class EditionDuplicatorTest < ActiveSupport::TestCase
     publish_item(@guide, @laura)
     artefact = @guide.artefact
 
-    assert_equal GuideEdition, artefact.latest_edition.class
+    assert_equal GuideEdition, artefact.latest_edition.editionable.class
 
     command = EditionDuplicator.new(@guide, @laura)
     assert command.duplicate("answer_edition", @fred)
 
-    assert_equal AnswerEdition, artefact.reload.latest_edition.class
+    assert_equal AnswerEdition, artefact.reload.latest_edition.editionable.class
   end
 
   test "changing the format while duplicating will also update the kind of the artefact" do

@@ -1,0 +1,21 @@
+<%# locals: (edition:, heading:, administration:) -%>
+
+<section>
+  <%= render "govuk_publishing_components/components/heading", {
+    text: heading,
+    heading_level: 3,
+    font_size: "s",
+  } %>
+  <p><%= administration_authority(edition, administration) || "None added" %></p>
+  <% if edition.editionable.send("#{administration}_availability").alternative_url.presence %>
+  <section>
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "URL of the devolved administration website page",
+      heading_level: 3,
+      font_size: "s",
+    } %>
+    <p><%= edition.editionable.send("#{administration}_availability").alternative_url || "None added" %></p>
+  </section>
+  <% end %>
+</section>
+

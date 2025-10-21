@@ -8,11 +8,12 @@ class EditArtefactTest < LegacyIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   should "edit a draft artefact" do
-    edition = FactoryBot.create(:edition)
+    edition = FactoryBot.create(:simple_smart_answer_edition)
     visit metadata_edition_path(edition)
 
     fill_in "Slug", with: ""
@@ -26,12 +27,12 @@ class EditArtefactTest < LegacyIntegrationTest
     click_button "Update metadata"
     edition.reload
 
-    assert page.has_content?("Metadata updated")
+    assert page.has_content?("Metadata has successfully updated")
     assert edition.artefact.slug == "thingy-mc-thingface"
   end
 
   should "not be able to edit metadata for a published edition" do
-    edition = FactoryBot.create(:edition, :published)
+    edition = FactoryBot.create(:simple_smart_answer_edition, :published)
     visit metadata_edition_path(edition)
 
     assert_not page.has_button?("Update metadata")

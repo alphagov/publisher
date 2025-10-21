@@ -128,7 +128,7 @@ class SimpleSmartAnswerNodeTest < ActiveSupport::TestCase
     should "expose the simple smart answer edition" do
       @node = @edition.nodes.build(@atts)
 
-      assert_equal @node.edition, @edition
+      assert_equal @node.simple_smart_answer_edition, @edition.editionable
     end
   end
 end

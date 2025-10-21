@@ -1,18 +1,13 @@
-require "edition"
-require_dependency "simple_smart_answer_edition/node"
-require_dependency "simple_smart_answer_edition/node/option"
-
-class SimpleSmartAnswerEdition < Edition
-  include Mongoid::Document
-
-  field :body,              type: String
-  field :start_button_text, type: String, default: "Start now"
+class SimpleSmartAnswerEdition < ApplicationRecord
+  include Editionable
 
   validates :start_button_text, presence: true
 
-  embeds_many :nodes, class_name: "SimpleSmartAnswerEdition::Node"
+  has_many :nodes, class_name: "SimpleSmartAnswerEdition::Node", dependent: :destroy
 
   accepts_nested_attributes_for :nodes, allow_destroy: true
+
+  delegate :title, to: :edition
 
   GOVSPEAK_FIELDS = [:body].freeze
 
@@ -30,13 +25,21 @@ class SimpleSmartAnswerEdition < Edition
     parts.join("\n\n\n")
   end
 
-  def build_clone(target_class = nil)
-    new_edition = super(target_class)
+  def copy_to(new_edition)
+    if new_edition.editionable.is_a?(SimpleSmartAnswerEdition)
+      new_edition.editionable.nodes = nodes.map do |node|
+        new_node = node.dup
+        new_node.mongo_id = nil
+        new_node.options = node.options.map do |option|
+          new_option = option.dup
+          new_option.mongo_id = nil
 
-    if new_edition.is_a?(SimpleSmartAnswerEdition)
-      nodes.each { |n| new_edition.nodes << n.clone }
+          new_option
+        end
+
+        new_node
+      end
     end
-
     new_edition
   end
 
@@ -82,8 +85,8 @@ class SimpleSmartAnswerEdition < Edition
 
   def generate_mermaid
     parts = ["%%{ init: {\n'theme': 'base',\n'themeVariables': {\n    " \
-      "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
-      "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
+               "'background': '#FFFFFF',\n    'primaryTextColor': '#0B0C0C',\n    " \
+               "'lineColor': '#0b0c0c',\n    'fontSize': '23.75px' } } }%%\nflowchart TD"]
     parts << "accTitle: #{title}\naccDescr: A flowchart for the #{title} smart answer\nAA[Start]:::start"
     if nodes.present?
       parts << "AA---Q#{nodes.first.slug.split('-')[1]}"
@@ -108,7 +111,7 @@ private
     part << ""
     node.options.each.with_index(1) do |option, index|
       part << "Answer #{index}\n#{option.label}"
-      title = (nodes.select { |single_node| single_node["slug"] == option.next_node })[0].title.to_s
+      title = nodes.select { |single_node| single_node["slug"] == option.next_node }[0].title.to_s
       next_node_title, next_node_number = option.next_node.split("-")
       part << "Next question for user: #{next_node_title.capitalize} #{next_node_number} (#{title})\n"
     end

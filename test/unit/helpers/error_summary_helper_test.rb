@@ -4,14 +4,15 @@ class ErrorSummaryHelperTest < ActionView::TestCase
   include ErrorSummaryHelper
 
   def guide_with_title_and_parts(title, parts)
-    GuideEdition.new(title:, parts:, panopticon_id: "Some_id")
+    editionable = GuideEdition.new(parts:)
+    Edition.new(title:, panopticon_id: "Some_id", editionable:)
   end
 
   context "A Guide Edition" do
     should "For a Guide, errors_to_display returns useful error messages and correct hrefs for invalid fields" do
-      valid_part = Part.new(title: "some part", slug: "another-slug")
-      invalid_part_1 = Part.new(title: "", slug: "invalid slug with spaces")
-      invalid_part_2 = Part.new(title: "valid title", slug: "another invalid slug")
+      valid_part = Part.new(title: "some part", slug: "another-slug", order: 1)
+      invalid_part_1 = Part.new(title: "", slug: "invalid slug with spaces", order: 2)
+      invalid_part_2 = Part.new(title: "valid title", slug: "another invalid slug", order: 3)
 
       guide_with_invalid_data = guide_with_title_and_parts("", [valid_part, invalid_part_1, invalid_part_2])
 
@@ -39,7 +40,7 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
       outcome_node_without_title = SimpleSmartAnswerEdition::Node.new(kind: "outcome", title: "", slug: "node-3", order: 3)
 
-      simple_smart_answer = SimpleSmartAnswerEdition.new(title: "", panopticon_id: "Some_id", nodes: [valid_outcome_node, question_node_with_valid_and_invalid_options, outcome_node_without_title])
+      simple_smart_answer = FactoryBot.build(:simple_smart_answer_edition, title: "", panopticon_id: "Some_id", nodes: [valid_outcome_node, question_node_with_valid_and_invalid_options, outcome_node_without_title])
 
       simple_smart_answer.valid?
 
@@ -57,7 +58,7 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
   context "An Edition without nested fields" do
     should "For an Edition without nested fields, errors_to_display returns useful error messages and correct hrefs for invalid fields" do
-      invalid_edition = LocalTransactionEdition.new(title: "", panopticon_id: "Some_id", lgil_code: 1.11)
+      invalid_edition = FactoryBot.build(:local_transaction_edition, title: "", panopticon_id: "Some_id", lgil_code: 1.11)
 
       invalid_edition.valid?
 

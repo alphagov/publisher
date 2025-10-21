@@ -49,7 +49,7 @@ class PrimaryListingPresenter
   end
 
   def filter_by_substring(string)
-    @scope = @scope.internal_search(string)
+    @scope = @scope.slug_title_and_overview_search(string)
   end
 
   def step_by_step_review_url

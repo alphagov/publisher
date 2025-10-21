@@ -27,6 +27,11 @@ class FactCheckEmailHandler
 
   # takes an optional block to call after processing each message
   def process
+    if maintenance_mode_enabled?
+      Rails.logger.info "Skipping processing of fact check emails because maintenance mode is enabled."
+      return
+    end
+
     unprocessed_emails_count = 0
 
     mail = get_gmail_inbox
@@ -88,5 +93,10 @@ class FactCheckEmailHandler
       google_id,
       Google::Apis::GmailV1::ModifyMessageRequest.new(remove_label_ids: %w[INBOX UNREAD]),
     )
+  end
+
+  def maintenance_mode_enabled?
+    value = ENV.fetch("MAINTENANCE_MODE", "false")
+    value == "true"
   end
 end

@@ -14,7 +14,7 @@
       <% end %>
       
       <% if activity == :request_review %>
-        <p class="help-block">Explain what changes you did or did not make and why. <% if current_user.govuk_editor? %>Include a link to the relevant Zendesk ticket and Trello card.<% end %> If you’ve added an edition note already, you do not need to add another one.</p>
+        <p class="help-block">Explain what changes you did or did not make and why. <% if current_user.govuk_editor? %>Include a link to the relevant Zendesk ticket and Jira card.<% end %> If you’ve added an edition note already, you do not need to add another one.</p>
         <% if current_user.govuk_editor? %>
           <p class="help-block">Read the <a href="https://gov-uk.atlassian.net/l/cp/dwn06raQ" rel="noreferrer noopener" target="_blank">guidance on writing good change notes on the GOV.UK wiki (opens in a new tab)</a>.</p>
         <% end %>

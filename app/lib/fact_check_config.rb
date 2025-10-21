@@ -10,7 +10,8 @@ class FactCheckConfig
     @reply_to_id = reply_to_id
 
     @subject_prefix = subject_prefix.present? ? "#{subject_prefix}-" : ""
-    @subject_pattern = /\[#{@subject_prefix}(?<id>[0-9a-f]{24})\]/
+    @subject_pattern_with_mongo_id = /\[#{@subject_prefix}(?<id>[0-9a-f]{24})\]/
+    @subject_pattern_with_postgres_id = /\[#{@subject_prefix}(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\]/
   end
 
   def address
@@ -18,7 +19,12 @@ class FactCheckConfig
   end
 
   def item_id_from_string(string)
-    match = string.scan(@subject_pattern)
+    match = string.scan(@subject_pattern_with_postgres_id)
+
+    if match.empty?
+      match = string.scan(@subject_pattern_with_mongo_id)
+    end
+
     if match.length == 1
       match[0][0]
     elsif match.length > 1

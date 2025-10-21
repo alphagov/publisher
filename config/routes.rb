@@ -2,7 +2,7 @@
 Rails.application.routes.draw do
   get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
   get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
-    GovukHealthcheck::Mongoid,
+    GovukHealthcheck::ActiveRecord,
     GovukHealthcheck::SidekiqRedis,
   )
 
@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         post "send_to_fact_check"
         get "resend_fact_check_email_page"
         patch "resend_fact_check_email"
+        get "approve_fact_check_page"
+        post "approve_fact_check"
         get "request_amendments_page"
         post "request_amendments"
         get "send_to_2i_page"
@@ -54,6 +56,10 @@ Rails.application.routes.draw do
         post "update_tagging"
         get "tagging_mainstream_browse_page"
         get "tagging_related_content_page"
+        get "tagging_reorder_related_content_page"
+        get "tagging_organisations_page"
+        get "tagging_breadcrumb_page"
+        get "tagging_remove_breadcrumb_page"
         get "unpublish"
         get "unpublish/confirm-unpublish", to: "editions#confirm_unpublish", as: "confirm_unpublish"
         post "process_unpublish"

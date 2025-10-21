@@ -48,4 +48,22 @@ class FactCheckEmailHandlerTest < ActiveSupport::TestCase
 
     local_handler.process
   end
+
+  test "#process does not process emails when in maintenance mode" do
+    ClimateControl.modify(MAINTENANCE_MODE: "true") do
+      handler = handler(message)
+      handler.expects(:authenticate_gmail).never
+
+      handler.process
+    end
+  end
+
+  test "#process processes emails when maintenance mode is explicitly disabled" do
+    ClimateControl.modify(MAINTENANCE_MODE: "false") do
+      handler = handler(message)
+      handler.expects(:authenticate_gmail).once
+
+      handler.process
+    end
+  end
 end

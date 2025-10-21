@@ -1,7 +1,14 @@
 .edit {
-  &--scheduled_for_publishing, &--published, &--archived {
+  &--readonly {
     section > p {
       @extend .govuk-body; // stylelint-disable-line scss/at-extend-no-missing-placeholder
+      white-space: pre-line;
+    }
+  }
+
+  &--editable {
+    input[id='lgil_code'] {
+      @extend .govuk-input--extra-letter-spacing; // stylelint-disable-line scss/at-extend-no-missing-placeholder
     }
   }
 
@@ -13,5 +20,11 @@
       word-break: break-word;
       overflow-wrap: break-word;
     }
+  }
+}
+
+.editions__edit__summary{
+  a{
+    @extend .govuk-link--no-visited-state; // stylelint-disable-line scss/at-extend-no-missing-placeholder
   }
 }

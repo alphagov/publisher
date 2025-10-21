@@ -11,7 +11,7 @@ class UnpublishTest < LegacyIntegrationTest
     )
 
     @edition = FactoryBot.create(
-      :answer_edition,
+      :simple_smart_answer_edition,
       panopticon_id: @artefact.id,
       body: "They're quite gross.",
     )
@@ -23,6 +23,8 @@ class UnpublishTest < LegacyIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   should "unpublishing an artefact archives all editions" do

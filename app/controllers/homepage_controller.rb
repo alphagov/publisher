@@ -22,13 +22,12 @@ class HomepageController < ApplicationController
     create_params = permitted_params
     @latest_popular_links.link_items = remove_leading_and_trailing_url_spaces(create_params[:popular_links].values)
     @latest_popular_links.save_draft
-
     flash[:success] = "Popular links draft saved.".html_safe
     redirect_to show_popular_links_path
   rescue GdsApi::HTTPErrorResponse
     flash[:danger] = publishing_api_save_error_message.html_safe
     render "homepage/popular_links/edit"
-  rescue Mongoid::Errors::Validations
+  rescue ActiveRecord::RecordInvalid
     render "homepage/popular_links/edit"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"

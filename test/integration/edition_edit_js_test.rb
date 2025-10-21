@@ -5,7 +5,21 @@ class EditionEditJSTest < JavascriptIntegrationTest
     @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Stub User")
     login_as(@govuk_editor)
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit, true)
+    test_strategy.switch!(:design_system_edit_phase_2, true)
+    test_strategy.switch!(:design_system_edit_phase_3a, true)
+  end
+
+  context "Edit tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_edit_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@edit_edition.id)
+      end
+    end
   end
 
   context "Related external links tab" do
@@ -34,7 +48,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
     context "Edition already has related external links" do
       setup do
         visit_related_external_links_page
-        @external_links_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        @external_links_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link one", url: "https://one.com" })]
         click_link "Related external links"
       end
 
@@ -79,12 +93,19 @@ class EditionEditJSTest < JavascriptIntegrationTest
       assert page.has_css?("button", text: "Add related external link")
     end
 
+    context "Unsaved changes validation prompt" do
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Metadata")
+        assert_current_path metadata_edition_path(@external_links_edition.id)
+      end
+    end
+
     context "User does not have editor permissions" do
       setup do
         user = FactoryBot.create(:user, name: "Stub User")
         login_as(user)
         visit_related_external_links_page
-        @external_links_edition.artefact.external_links = [{ title: "Link one", url: "https://one.com" }]
+        @external_links_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link one", url: "https://one.com" })]
         click_link "Related external links"
       end
 
@@ -149,7 +170,10 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
       should "save the added 'Related content' tags when the form is submitted" do
         fill_in "URL or path", with: "/company-tax-returns"
+
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": [],
@@ -158,7 +182,6 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": [] },
                                  "previous_version": 0 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
       end
     end
 
@@ -210,6 +233,8 @@ class EditionEditJSTest < JavascriptIntegrationTest
           click_button("Delete")
         end
         click_button("Save")
+
+        assert page.has_text?("Related content updated")
         assert_requested :patch,
                          "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
                          body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
@@ -218,20 +243,84 @@ class EditionEditJSTest < JavascriptIntegrationTest
                                             "parent": %w[CONTENT-ID-CAPITAL] },
                                  "previous_version": 1 }
         assert_current_path tagging_edition_path(@tagging_edition.id)
-        assert page.has_text?("Related content updated")
+      end
+    end
+
+    context "Reordering tags for a related content page" do
+      setup do
+        stub_linkables_with_data
+        visit_tagging_reorder_related_content_page_edition_path
+      end
+
+      should "submit reordered tags when the form is submitted with changes" do
+        # Assert that javascript buttons change visible order for user
+        within all(".gem-c-reorderable-list__item")[0] do
+          assert page.has_text?("/company-tax-returns")
+          click_button("Down")
+        end
+        within all(".gem-c-reorderable-list__item")[1] do
+          assert page.has_text?("/company-tax-returns", wait: 1)
+        end
+        within all(".gem-c-reorderable-list__item")[3] do
+          assert page.has_text?("/tax-help")
+          click_button("Up")
+        end
+        within all(".gem-c-reorderable-list__item")[2] do
+          assert page.has_text?("/tax-help", wait: 1)
+        end
+        click_button("Update order")
+        assert page.has_content?("Related content order updated")
+
+        # Assert that updated order is submitted in http request
+        assert_requested :patch,
+                         "#{Plek.find('publishing-api')}/v2/links/#{@tagging_edition.content_id}",
+                         body: { "links": { "organisations": %w[9a9111aa-1db8-4025-8dd2-e08ec3175e72],
+                                            "mainstream_browse_pages": %w[CONTENT-ID-CAPITAL CONTENT-ID-RTI CONTENT-ID-VAT],
+                                            "ordered_related_items": %w[5cb58486-0b00-4da8-8076-382e474b4f03 830e403b-7d81-45f1-8862-81dcd55b4ec7 91fef6f6-3a59-42ab-a14d-42c4e5eee1a1 853feaf2-152c-4aa5-8edb-ba84a88860bf],
+                                            "parent": %w[CONTENT-ID-CAPITAL] },
+                                 "previous_version": 1 }
+        assert_current_path tagging_edition_path(@tagging_edition.id)
+      end
+    end
+  end
+
+  context "Metadata tab" do
+    context "Unsaved changes validation prompt" do
+      setup do
+        visit_metadata_page
+      end
+
+      should "leave the page with no alert when the user has not made changes to the form" do
+        click_link("Edit")
+        assert_current_path edition_path(@edit_edition.id)
       end
     end
   end
 
 private
 
+  def visit_edit_page
+    @edit_edition = FactoryBot.create(:guide_edition)
+    visit edition_path(@edit_edition)
+  end
+
   def visit_related_external_links_page
-    @external_links_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+    @external_links_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1)
     visit related_external_links_edition_path(@external_links_edition)
   end
 
   def visit_tagging_related_content_page
-    @tagging_edition = FactoryBot.create(:answer_edition, title: "The edition to tag")
+    @tagging_edition = FactoryBot.create(:guide_edition, title: "The edition to tag")
     visit tagging_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_tagging_reorder_related_content_page_edition_path
+    @tagging_edition = FactoryBot.create(:guide_edition, title: "The edition to tag")
+    visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_metadata_page
+    visit_edit_page
+    click_link("Metadata")
   end
 end

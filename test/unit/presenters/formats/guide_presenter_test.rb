@@ -19,7 +19,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
       slug: "slug-#{num}",
       body: "body-#{num}",
       order: num,
-      guide_edition: edition,
+      guide_edition: edition.editionable,
     )
   end
 
@@ -69,7 +69,7 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "handle nil parts of parts" do
-      Part.new(guide_edition: edition).save!(validate: false)
+      Part.new(guide_edition: edition.editionable).save!(validate: false)
 
       expected = [{
         title: "",
@@ -84,9 +84,9 @@ class GuidePresenterTest < ActiveSupport::TestCase
     end
 
     should "[:external_related_links]" do
-      link = { "url" => "www.foo.com", "title" => "foo" }
-      artefact.external_links = [link]
-      artefact.save!(validate: false)
+      link = { "url" => "https://www.foo.com", "title" => "foo" }
+      artefact.external_links = [ArtefactExternalLink.build(link)]
+      artefact.save!
       expected = [
         {
           url: link["url"],
@@ -115,6 +115,6 @@ class GuidePresenterTest < ActiveSupport::TestCase
   end
 
   should "[:rendering_app]" do
-    assert_equal "government-frontend", result[:rendering_app]
+    assert_equal "frontend", result[:rendering_app]
   end
 end

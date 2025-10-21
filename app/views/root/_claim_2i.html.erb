@@ -1,4 +1,4 @@
-<%= form_for :edition, url: review_edition_path(publication._id), method: :put do |f| %>
+<%= form_for :edition, url: review_edition_path(publication.id), method: :put do |f| %>
   <%= f.hidden_field :reviewer, value: current_user.name %>
 
   <%= render "govuk_publishing_components/components/button", {

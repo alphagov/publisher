@@ -11,14 +11,14 @@ module Tagging
         previous_version: tagging_update_params["previous_version"],
         organisations: tagging_update_params["organisations"],
         mainstream_browse_pages: tagging_update_params["mainstream_browse_pages"],
-        ordered_related_items: tagging_update_params["ordered_related_items"],
+        ordered_related_items: tagging_update_params["reordered_related_items"] || tagging_update_params["ordered_related_items"],
         ordered_related_items_destroy: tagging_update_params["ordered_related_items_destroy"],
         parent: tagging_update_params["parent"],
       )
     end
 
     def self.build_from_publishing_api(content_id, locale)
-      link_set = LinkSet.find(content_id, locale)
+      link_set = Tagging::LinkSet.find(content_id, locale)
 
       new(
         content_id:,

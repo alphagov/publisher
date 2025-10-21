@@ -150,13 +150,13 @@ class PrimaryListingPresenterTest < ActiveSupport::TestCase
     assert c.draft?
 
     presenter = PrimaryListingPresenter.new(Edition, bob)
-    assert_equal [b, c].sort_by(&:title), presenter.draft.to_a.sort_by(&:title)
+    assert_same_elements [b, c], presenter.draft.to_a
 
     presenter = PrimaryListingPresenter.new(Edition, :nobody)
-    assert_equal [a], presenter.draft.to_a
+    assert_same_elements [a], presenter.draft.to_a
 
     presenter = PrimaryListingPresenter.new(Edition, :all)
-    assert_equal [a, b, c].sort_by(&:title), presenter.draft.to_a.sort_by(&:title)
+    assert_same_elements [a, b, c], presenter.draft.to_a
   end
 
   test "can filter publications by title substring" do

@@ -12,6 +12,8 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   teardown do
@@ -19,7 +21,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
   end
 
   test "should schedule publishing of an edition" do
-    edition = FactoryBot.create(:edition, state: "ready", assigned_to: @author)
+    edition = FactoryBot.create(:guide_edition, state: "ready", assigned_to: @author)
     visit_edition edition
     click_on "Schedule"
 
@@ -38,6 +40,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
       select "15", from: "edition_activity_schedule_for_publishing_attributes_publish_at_5i"
       click_on "Schedule for publishing"
     end
+    assert page.has_content?("edition was successfully updated", exact: false)
 
     visit_editions
     within(:css, "div.sidebar-nav li.scheduled_for_publishing") do
@@ -56,7 +59,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
   end
 
   test "should allow a scheduled edition to be published now" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+    edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing)
     stub_register_published_content
 
     visit_edition edition
@@ -72,7 +75,7 @@ class EditionScheduledPublishingTest < LegacyJavascriptIntegrationTest
   end
 
   test "should cancel the publishing of a scheduled edition" do
-    edition = FactoryBot.create(:edition, :scheduled_for_publishing)
+    edition = FactoryBot.create(:guide_edition, :scheduled_for_publishing)
 
     visit_edition edition
     assert page.has_css?(".label", text: "Scheduled for publishing on #{edition.publish_at.strftime('%d/%m/%Y %H:%M')}")

@@ -1,5 +1,5 @@
 <div class="publications-table" data-module="publications-table">
-  <p class="govuk-heading-m govuk-!-margin-bottom-3 publications-table__heading"><%= pluralize(number_with_delimiter(@presenter.editions.length), "document" ) %></p>
+  <p class="govuk-heading-m govuk-!-margin-bottom-3 publications-table__heading"><%= pluralize(number_with_delimiter(@presenter.editions.total_count), "document" ) %></p>
 
   <%= render "govuk_publishing_components/components/table", {
     head: [
@@ -20,7 +20,7 @@
       [
         {
           text:
-            sanitize("<p class='title govuk-body govuk-!-margin-bottom-0'><a href='editions/#{publication._id}' class='govuk-link govuk-!-font-weight-bold'>#{publication.title}</a></p>") +
+            sanitize("<p class='title govuk-body govuk-!-margin-bottom-0'><a href='editions/#{publication.id}' class='govuk-link govuk-!-font-weight-bold'>#{publication.title}</a></p>") +
               sanitize("<p class='govuk-body'>/#{publication.slug}</p>") +
               (render "govuk_publishing_components/components/details", {
                 title: "More details",

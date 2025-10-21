@@ -16,7 +16,7 @@
   }
 }
 
-.edit_edition__change_note {
+.edit_edition__supplementary_information, .edit_edition__content_block_link {
   border-top: 1px solid $govuk-border-colour;
   @include govuk-responsive-padding(4, "top");
 }

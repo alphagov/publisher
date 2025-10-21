@@ -3,7 +3,7 @@ class LinkCheckerApiController < ApplicationController
   skip_before_action :authenticate_user!
   before_action :verify_signature
 
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :render_no_content
+  rescue_from ActiveRecord::RecordNotFound, with: :render_no_content
 
   def callback
     if link_check_report
@@ -27,7 +27,7 @@ private
   end
 
   def edition
-    @edition ||= Edition.find_by("link_check_reports.batch_id": batch_id)
+    @edition ||= LinkCheckReport.where(batch_id:).first.edition
   end
 
   def link_check_report

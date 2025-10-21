@@ -3,6 +3,7 @@ require_relative "boot"
 require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
+require "active_record/railtie"
 require "active_job/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -34,7 +35,6 @@ module Publisher
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
-
     # Due to how we initialize state_count_reporter we need to disable a new
     # optimisation put in place in Rails 7.1.
     # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#autoloaded-paths-are-no-longer-in-$load-path
@@ -64,7 +64,7 @@ module Publisher
     }
 
     config.generators do |g|
-      g.orm :mongoid
+      g.orm :active_record
       g.template_engine :erb # this could be :haml or whatever
       g.test_framework :test_unit, fixture: false # this could be :rpsec or whatever
     end

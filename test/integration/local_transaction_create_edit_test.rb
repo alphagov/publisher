@@ -32,7 +32,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
     assert_operator email_count_before_start + 1, :<=, ActionMailer::Base.deliveries.count
     assert_match(
-      /Created Local transaction: "Foo bar"/,
+      "[PUBLISHER] Created Local transaction: \"Foo bar\" (by Author)",
       ActionMailer::Base.deliveries.last.subject,
     )
   end
@@ -95,7 +95,7 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
 
       save_edition_and_assert_success
 
-      edition = LocalTransactionEdition.find(edition.id)
+      edition = LocalTransactionEdition.find(edition.editionable.id)
       assert_equal 2, edition.lgil_code
 
       # Ensure it gets set to nil when clearing field
@@ -120,6 +120,74 @@ class LocalTransactionCreateEditTest < LegacyJavascriptIntegrationTest
       fill_in "Title", with: ""
 
       save_edition_and_assert_error("Enter a title", "#edition_title")
+    end
+
+    should "save devolved administration availability fields" do
+      edition = FactoryBot.create(
+        :local_transaction_edition,
+        panopticon_id: @artefact.id,
+        slug: @artefact.slug,
+        title: "Foo transaction",
+        lgsl_code: 1,
+        lgil_code: 2,
+      )
+
+      visit_edition edition
+      choose "Service available from local council", name: "edition[scotland_availability_attributes][authority_type]"
+      choose "Service available from devolved administration (or a similar service is available)", name: "edition[wales_availability_attributes][authority_type]"
+      fill_in "Enter the URL of the devolved administration website page", with: "https://test-this-slug", name: "edition[wales_availability_attributes][alternative_url]"
+      choose "Service not available", name: "edition[northern_ireland_availability_attributes][authority_type]"
+
+      save_edition_and_assert_success
+      edition.reload
+
+      scotland_availability = edition.editionable.scotland_availability
+      wales_availability = edition.editionable.wales_availability
+      northern_ireland_availability = edition.northern_ireland_availability
+      assert_equal "local_authority_service", scotland_availability.authority_type
+      assert_equal "devolved_administration_service", wales_availability.authority_type
+      assert_equal "https://test-this-slug", wales_availability.alternative_url
+      assert_equal "unavailable", northern_ireland_availability.authority_type
+    end
+
+    should "save cta text field" do
+      edition = FactoryBot.create(
+        :local_transaction_edition,
+        panopticon_id: @artefact.id,
+        slug: @artefact.slug,
+        title: "Foo transaction",
+        lgsl_code: 1,
+        lgil_code: 2,
+      )
+
+      visit_edition edition
+
+      fill_in "CTA Text", with: "Some test CTA text"
+      save_edition_and_assert_success
+
+      edition.reload
+      assert_equal "Some test CTA text", edition.editionable.cta_text
+    end
+
+    should "save before and after results" do
+      edition = FactoryBot.create(
+        :local_transaction_edition,
+        panopticon_id: @artefact.id,
+        slug: @artefact.slug,
+        title: "Foo transaction",
+        lgsl_code: 1,
+        lgil_code: 2,
+      )
+
+      visit_edition edition
+
+      fill_in "Before results", with: "Important stuff to know beforehand"
+      fill_in "After results", with: "No more to add"
+      save_edition_and_assert_success
+
+      edition.reload
+      assert_equal "Important stuff to know beforehand", edition.editionable.before_results
+      assert_equal "No more to add", edition.editionable.after_results
     end
   end
 

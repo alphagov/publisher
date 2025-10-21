@@ -11,6 +11,8 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
+    test_strategy.switch!(:design_system_edit_phase_2, false)
+    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   context "creating a guide with parts" do
@@ -26,8 +28,8 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
       add_new_part
       within :css, "#parts div.fields:first-of-type" do
         fill_in "Title", with: "Part One"
-        fill_in "Body",  with: "Body text"
-        fill_in "Slug",  with: "part-one"
+        fill_in "Body", with: "Body text"
+        fill_in "Slug", with: "part-one"
       end
 
       assert page.has_css?("#parts div.fields", count: 1)
@@ -35,8 +37,8 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
       add_new_part
       within :css, "#parts div.fields:nth-of-type(2)" do
         fill_in "Title", with: "Part Two"
-        fill_in "Body",  with: "Body text"
-        fill_in "Slug",  with: "part-two"
+        fill_in "Body", with: "Body text"
+        fill_in "Slug", with: "part-two"
       end
 
       assert page.has_css?("#parts div.fields", count: 2)
@@ -44,8 +46,8 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
       add_new_part
       within :css, "#parts div.fields:nth-of-type(3)" do
         fill_in "Title", with: "Part Three"
-        fill_in "Body",  with: "Body text"
-        fill_in "Slug",  with: "part-three"
+        fill_in "Body", with: "Body text"
+        fill_in "Slug", with: "part-three"
       end
     end
 
@@ -64,8 +66,8 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
       assert page.has_css?('#part-one[aria-expanded="true"]')
       within :css, "#parts div.fields:nth-of-type(1)" do
         fill_in "Title", with: "Part One (edited)"
-        fill_in "Body",  with: "Body text"
-        fill_in "Slug",  with: "part-one-edited"
+        fill_in "Body", with: "Body text"
+        fill_in "Slug", with: "part-one-edited"
       end
       save_edition_and_assert_success
 
@@ -130,7 +132,7 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
 
       should "not save when a part is invalid" do
         within :css, "#parts div.fields:nth-of-type(2)" do
-          fill_in "Slug",  with: ""
+          fill_in "Slug", with: ""
         end
 
         within :css, "#parts div.fields:nth-of-type(3)" do
@@ -139,7 +141,6 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
         end
 
         save_edition_and_assert_error
-
         assert page.has_css?("#parts .has-error", count: 2)
 
         within :css, "#parts div.fields:nth-of-type(2)" do
@@ -170,11 +171,11 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
     add_new_part
     within :css, "#parts .fields:first-of-type .part" do
       fill_in "Title", with: "Part One"
-      fill_in "Body",  with: "Body text"
+      fill_in "Body", with: "Body text"
       assert_equal "part-one", find(:css, ".slug").value
 
       fill_in "Title", with: "Part One changed"
-      fill_in "Body",  with: "Body text"
+      fill_in "Body", with: "Body text"
       assert_equal "part-one-changed", find(:css, ".slug").value
     end
   end
@@ -188,15 +189,15 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
     within :css, "#parts .fields:first-of-type .part" do
       assert_equal "part-one", find(:css, ".slug").value
       fill_in "Title", with: "Part One changed"
-      fill_in "Body",  with: "Body text"
+      fill_in "Body", with: "Body text"
       assert_equal "part-one", find(:css, ".slug").value
     end
   end
 
   def assert_correct_parts(count = 3)
-    assert page.has_css?("#parts .panel-part", count:)
-    assert page.has_css?("#parts .panel-title", count:)
-    assert page.has_css?("#parts .panel-body", count:)
+    assert page.has_css?(".panel-part", count:)
+    assert page.has_css?(".panel-title", count:)
+    assert page.has_css?(".panel-body", count:)
 
     if count > 0 # rubocop:disable Style/NumericPredicate
       assert page.has_css?("#part-one", count: 1)

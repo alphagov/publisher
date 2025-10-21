@@ -16,7 +16,7 @@ class LinkCheckReportsController < ApplicationController
 
   def show
     service = LinkCheckReportFinder.new(
-      report_id: convert_to_bson_object_id(permitted_params[:id]),
+      report_id: permitted_params[:id],
     )
 
     @report = service.call
@@ -28,10 +28,6 @@ class LinkCheckReportsController < ApplicationController
   end
 
 private
-
-  def convert_to_bson_object_id(id)
-    BSON::ObjectId.from_string(id)
-  end
 
   def permitted_params
     params.permit(:edition_id, :id)

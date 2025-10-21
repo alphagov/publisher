@@ -3,6 +3,8 @@ require "rake"
 
 class AccessAndPermissionsTaskTest < ActiveSupport::TestCase
   setup do
+    $stdout.stubs(puts: "")
+
     @add_organisation_access_task = Rake::Task["permissions:add_organisation_access"]
     @bulk_process_task = Rake::Task["permissions:bulk_process_access_flags"]
 

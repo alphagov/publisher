@@ -61,4 +61,17 @@ class LegacyRootControllerTest < ActionController::TestCase
     )
     assert_select "td.title", /Stuff/i
   end
+
+  test "it shows a correct count in the 'filter by status' list when there are more than a page of results" do
+    FactoryBot.create_list(:edition, FilteredEditionsPresenter::ITEMS_PER_PAGE, :draft)
+    get(
+      :index,
+      params: {
+        user_filter: "all",
+      },
+    )
+
+    # There will be one more than created above, as there's a guide created in the setup
+    assert_select ".status-option.drafts", "Drafts #{FilteredEditionsPresenter::ITEMS_PER_PAGE + 1}"
+  end
 end

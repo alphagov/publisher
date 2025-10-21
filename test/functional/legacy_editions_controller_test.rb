@@ -84,9 +84,9 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#template_folder_for" do
     should "be able to create a view path for a given publication" do
-      l = LocalTransactionEdition.new
+      l = FactoryBot.build(:local_transaction_edition)
       assert_equal "app/views/local_transactions", @controller.template_folder_for(l)
-      g = GuideEdition.new
+      g = FactoryBot.build(:guide_edition)
       assert_equal "app/views/guides", @controller.template_folder_for(g)
     end
   end
@@ -94,7 +94,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
   context "#duplicate" do
     context "Standard behaviour" do
       setup do
-        @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+        @guide = FactoryBot.create(:guide_edition)
         EditionDuplicator.any_instance.expects(:duplicate).returns(true)
         EditionDuplicator.any_instance.expects(:new_edition).returns(@guide)
       end
@@ -142,7 +142,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#progress" do
     setup do
-      @guide = FactoryBot.create(:guide_edition, panopticon_id: FactoryBot.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition)
     end
 
     should "update status via progress and redirect to parent" do
@@ -341,7 +341,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
            }
 
       @guide.reload
-      assert_equal 1, (@guide.actions.count { |a| a.request_type == Action::ASSIGN })
+      assert_equal(1, @guide.actions.count { |a| a.request_type == Action::ASSIGN })
     end
 
     should "show the edit page again if updating fails" do
@@ -829,7 +829,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
         assert_redirected_to edition_path(@welsh_edition)
         @welsh_edition.reload
-        assert_equal flash[:notice], "Guide edition was successfully updated."
+        assert_equal "Guide edition was successfully updated.", flash[:notice]
         assert_equal @welsh_edition.state, "ready"
       end
 
@@ -940,7 +940,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      @transaction = TransactionEdition.create!(title: "test", slug: "test", panopticon_id: artefact1.id)
+      @transaction = FactoryBot.create(:transaction_edition, title: "test", slug: "test", panopticon_id: artefact1.id)
 
       artefact2 = FactoryBot.create(
         :artefact,
@@ -949,7 +949,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = FactoryBot.create(:guide_edition, title: "test", slug: "test2", panopticon_id: artefact2.id)
 
       stub_request(:delete, "#{Plek.find('arbiter')}/slugs/test").to_return(status: 200)
     end
@@ -1038,11 +1038,11 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      @guide = GuideEdition.create!(title: "test", slug: "test2", panopticon_id: artefact2.id)
+      @guide = FactoryBot.create(:guide_edition, title: "test", slug: "test2", panopticon_id: artefact2.id)
     end
 
     should "requesting a publication that doesn't exist returns a 404" do
-      get :show, params: { id: "4e663834e2ba80480a0000e6" }
+      get :show, params: { id: "101" }
       assert_response :not_found
     end
 
@@ -1060,10 +1060,9 @@ class LegacyEditionsControllerTest < ActionController::TestCase
         name: "test",
         owning_app: "publisher",
       )
-      simple_smart_answer = SimpleSmartAnswerEdition.create!(
-        title: "test ssa",
-        panopticon_id: simple_smart_answer_artefact.id,
-      )
+      simple_smart_answer = FactoryBot.create(:simple_smart_answer_edition,
+                                              title: "test ssa",
+                                              panopticon_id: simple_smart_answer_artefact.id)
 
       get :show, params: { id: simple_smart_answer.id }
 
@@ -1125,7 +1124,7 @@ class LegacyEditionsControllerTest < ActionController::TestCase
 
   context "#unpublish" do
     setup do
-      @guide = FactoryBot.create(:guide_edition, :published, panopticon_id: FactoryBot.create(:artefact).id)
+      @guide = FactoryBot.create(:guide_edition, :published)
       @redirect_url = "https://www.example.com/somewhere_else"
     end
 

@@ -1,0 +1,62 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.title %>
+<% content_for :title, "Are you sure you want to remove the breadcumb?" %>
+<% content_for :page_title, "Are you sure you want to remove the breadcumb?" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% unless @edition.errors.empty? %>
+      <% content_for :error_summary do %>
+        <%= render("govuk_publishing_components/components/error_summary", {
+          id: "error-summary",
+          title: "There is a problem",
+          items: @edition.errors.map do |error|
+            {
+              text: error.message,
+              href: "##{error.attribute.to_s}",
+            }
+          end,
+        }) %>
+      <% end %>
+    <% end %>
+
+    <%= form_for @tagging_update_form_values, url: update_tagging_edition_path(@resource) do |f| %>
+      <%= f.hidden_field :content_id %>
+      <%= f.hidden_field :previous_version %>
+      <%= f.hidden_field :tagging_type, value: "remove_breadcrumb" %>
+      <% Array(@tagging_update_form_values.ordered_related_items).to_a.map { |item| item["base_path"] }.each do |base_path| %>
+        <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
+        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
+      <% end %>
+      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
+        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
+      <% end %>
+
+      <%= render "govuk_publishing_components/components/radio", {
+        name: "#{f.object_name}[remove_parent]",
+        id: "remove_parent",
+        hint: "Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).",
+        error_message: @edition.errors.empty? ? nil : @edition.errors.first.message,
+        items: [
+          {
+            value: "yes",
+            text: "Yes, remove the breadcrumb",
+          },
+          {
+            value: "no",
+            text: "No, keep the breadcrumb",
+          },
+        ],
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Save",
+        } %>
+        <%= link_to("Cancel", tagging_edition_path(@edition), class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </div>
+</div>

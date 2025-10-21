@@ -33,7 +33,7 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     assert_nothing_raised { f.process_for_publication("4e1dac78e2ba80076000000ea") }
   end
 
-  test "it extracts the body as utf8 acceptable to mongo" do
+  test "it extracts the body as utf8" do
     windows_string = "Hallo Umläute".encode("Windows-1252")
     message = Mail.new(
       to: "factchecke@dev.gov.uk",
@@ -42,7 +42,8 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
       content_type: "text/plain; charset=Windows-1252",
     )
     f = FactCheckMessageProcessor.new(message)
-    f.process_for_publication(sample_publication.id)
+
+    assert_nothing_raised { f.process_for_publication(sample_publication.id) }
   end
 
   test "it takes the text part of multipart emails" do
@@ -114,5 +115,15 @@ class FactCheckMessageProcessorTest < ActiveSupport::TestCase
     f = FactCheckMessageProcessor.new(message)
     assert_match(/Please change hyperlink for ‘ffeil credyd’ to lead to the following page/, f.body_as_utf8)
     assert_no_match(/\?\?\?/, f.body_as_utf8)
+  end
+
+  test "it should be able process emails where mongo_id exists" do
+    edition = FactoryBot.create(:guide_edition, title: "Hello", slug: "hello-#{Time.zone.now.to_i}", mongo_id: "4e1dac78e2ba80076000000ea")
+    message = Mail.read(File.expand_path("../fixtures/fact_check_emails/hidden_nasty.txt", __dir__))
+    f = FactCheckMessageProcessor.new(message)
+    f.process_for_publication("4e1dac78e2ba80076000000ea")
+
+    assert_includes(edition.actions.last.comment, "This is some text")
+    assert_includes(edition.actions.last.comment, "<script>")
   end
 end

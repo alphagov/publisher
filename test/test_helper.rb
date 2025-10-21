@@ -1,5 +1,4 @@
 ENV["RAILS_ENV"] = "test"
-
 # Must go at top of file
 require "simplecov"
 SimpleCov.start
@@ -9,9 +8,9 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "minitest/autorun"
 require "mocha/minitest"
-require "database_cleaner/mongoid"
 require "webmock/minitest"
 require "gds_api/test_helpers/publishing_api"
+require "selenium_error_patch"
 require "support/tag_test_helpers"
 require "support/tab_test_helpers"
 require "support/holidays_test_helpers"
@@ -26,13 +25,8 @@ require "govuk_schemas/assert_matchers"
 require "govuk_sidekiq/testing"
 
 WebMock.disable_net_connect!(allow_localhost: true)
-DatabaseCleaner.allow_remote_database_url = true
-
-DatabaseCleaner.strategy = :deletion
-# initial clean
-DatabaseCleaner.clean
-
 Rails.application.load_tasks if Rake::Task.tasks.empty?
+Rake::Task["db:test:prepare"].invoke
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -47,14 +41,10 @@ class ActiveSupport::TestCase
   include WebMock::API
   include GovukSchemas::AssertMatchers
 
-  def clean_db
-    DatabaseCleaner.clean
-  end
-  set_callback :teardown, :after, :clean_db
-
   setup do
     Sidekiq::Testing.inline!
     stub_any_publishing_api_call
+    FactoryBot.rewind_sequences
   end
 
   def without_metadata_denormalisation(*klasses, &_block)
@@ -76,6 +66,8 @@ class ActiveSupport::TestCase
   teardown do
     WebMock.reset!
     Sidekiq::Worker.clear_all
+    Sidekiq::Testing.inline!
+    stub_any_publishing_api_call
   end
 
   def login_as(user)

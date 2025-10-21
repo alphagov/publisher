@@ -11,7 +11,7 @@ module Formats
     end
 
     def path_type
-      case @edition
+      case @edition.editionable
       when TransactionEdition
         "exact"
       else

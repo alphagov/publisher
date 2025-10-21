@@ -5,9 +5,9 @@
 
 <%= render "editions/secondary_nav_tabs/progress_with_comment", {
   form_url: send_to_2i_edition_path(@edition),
-  text: "Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Trello card.
+  text: "Explain what changes you did or did not make and why. Include a link to the relevant Zendesk ticket and Jira card.
     If you’ve added a change note already, you do not need to add another one.
-      <a target='_blank' rel='noopener noreferrer' href='https://gov-uk.atlassian.net/l/cp/dwn06raQ' class='govuk-link govuk-link--no-visited-state'>Read guidance on writing good change notes (opens in new tab)</a>.",
+    #{link_to("Read guidance on writing good change notes (opens in new tab)", "https://gov-uk.atlassian.net/l/cp/dwn06raQ", target: "_blank", rel: "noopener noreferrer", class: "govuk-link govuk-link--no-visited-state")}".html_safe,
   comment_label_text: "Comment (optional)" ,
   submit_button_text: "Send to 2i",
 } %>

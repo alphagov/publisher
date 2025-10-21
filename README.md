@@ -146,7 +146,7 @@ This will generate a diagram in the `docs/state_machines` folder.
 
 ### Querying the database of a deployed publisher app
 
-Publisher stores its data in a PostgreSQL database. You can interact with the database in the [Rails Console using ActiveRecord](https://guides.rubyonrails.org/active_record_querying.html), or you can query it directly with SQL commands by following [the instructions detailed in the GOV.UK developer docs](https://docs.publishing.service.gov.uk/manual/databases.html#open-a-database-commmand-line-session).
+Publisher stores its data in a PostgreSQL database. You can interact with the database by connecting to one of the Kubernetes pod and using the [Rails Console with ActiveRecord](https://guides.rubyonrails.org/active_record_querying.html), or you can query it directly with SQL commands by following [the instructions detailed in the GOV.UK developer docs](https://docs.publishing.service.gov.uk/manual/databases.html#open-a-database-commmand-line-session).
 
 ### Feature flags
 
@@ -159,12 +159,6 @@ For instructions on how to add a new type of promotion to Completed Transactions
 ## Further documentation
 
 - [Fact Checking](docs/fact-checking.md)
-
-### Working with Service Sign In pages
-
-These pages do not have an admin interface and are instead managed through rake tasks.
-
-See the [README](lib/service_sign_in/README.md) for more details.
 
 ## Licence
 
