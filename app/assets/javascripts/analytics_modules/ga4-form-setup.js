@@ -8,19 +8,19 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     trackedComponents: ['reorderable-list'],
 
     init: function () {
-      console.log('Ga4FormSetup init!')
+      // console.log('Ga4FormSetup init!')
 
       const $modules = document.querySelectorAll(
         "[data-module~='ga4-form-setup']"
       )
 
-      console.log('$modules: ', $modules)
+      // console.log('$modules: ', $modules)
 
       const trackedComponentsSelector = Modules.Ga4FormSetup.trackedComponents
         .map((trackedComponent) => `[data-module~="${trackedComponent}"]`)
         .join(',')
 
-      console.log('trackedComponentsSelector: ', trackedComponentsSelector)
+      // console.log('trackedComponentsSelector: ', trackedComponentsSelector)
 
       $modules.forEach(($module) => {
         const forms = $module.querySelectorAll(
@@ -28,7 +28,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
         )
 
         forms.forEach(function (form) {
-          console.log('form: ', form)
+          // console.log('form: ', form)
 
           if (!form.querySelector(trackedComponentsSelector)) {
             form.setAttribute('data-ga4-form-change-tracking', '')
@@ -39,8 +39,8 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
           const sectionContainer = form.closest('[data-ga4-section]')
           const documentTypeContainer = form.closest('[data-ga4-document-type]')
 
-          console.log('sectionContainer: ', sectionContainer)
-          console.log('documentTypeContainer: ', documentTypeContainer)
+          // console.log('sectionContainer: ', sectionContainer)
+          // console.log('documentTypeContainer: ', documentTypeContainer)
 
           let eventData = {
             event_name: 'form_response',
@@ -67,7 +67,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
               tool_name: toolName
             }
 
-            console.log('eventData: ', eventData)
+            // console.log('eventData: ', eventData)
           }
 
           form.setAttribute('data-ga4-form', JSON.stringify(eventData))
