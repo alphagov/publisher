@@ -1,28 +1,34 @@
+'use strict'
+
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.analyticsGa4 = window.GOVUK.analyticsGa4 || {}
 window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analyticsModules || {}
-// window.GOVUK.analyticsModules = window.GOVUK.analyticsModules || {}
 
-// window.GOVUK = window.GOVUK || {}
-// window.GOVUK.Modules = window.GOVUK.Modules || {};
+;(function (Modules) {
+  function Ga4IndexSectionSetup() {}
 
-// (function (Modules) {
-//   function Ga4IndexSectionSetup () {
-//     this.thing = "thing"
-//   }
+  Ga4IndexSectionSetup.prototype.init = function () {
+    const modules = document.querySelectorAll(
+      "[data-module~='ga4-index-section-setup']"
+    )
 
-//   Modules.Ga4IndexSectionSetup = Ga4IndexSectionSetup
-// })(window.GOVUK.analyticsGa4.analyticsModules)
+    Array.from(modules).map((module) => {
+      this.indexElements(module)
+    })
+  }
 
-(function (analyticsModules) {
-  'use strict'
+  Ga4IndexSectionSetup.prototype.indexElements = function (module) {
+    // Find instances of these form elements: 
+    // select, textarea, input (except hidden)
+    const indexedElements = module.querySelectorAll(
+      'select, textarea, input:not([type="hidden"])'
+    )
 
-  var Ga4IndexSectionSetup = {
-    // thing: "thing"
-    init: function () {
-      // do analytics stuff, like send a page view
-      console.log('Ga4IndexSectionSetup init!')
-    }
+    // Add data-attributes to element
+    indexedElements.forEach((element, index) => {
+      element.dataset.ga4Index = "{\"index_section\": " + index + ", \"index_section_count\": " + indexedElements.length + "}"
+    })
+  }
 
 // // ;(function (analyticsGa4.analyticsModules) {
 // //   analyticsGa4.analyticsModules.Ga4IndexSectionSetup = {
@@ -96,9 +102,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 //           })
 //       })
 //     }
-  }
-  analyticsModules.Ga4IndexSectionSetup = Ga4IndexSectionSetup
+  // }
 
-  console.log('Ga4IndexSectionSetup: ', Ga4IndexSectionSetup)
-})(window.GOVUK.analyticsGa4.analyticsModules)
-// // })(window.GOVUK.Modules)
+  Modules.Ga4IndexSectionSetup = Ga4IndexSectionSetup
+})(window.GOVUK.Modules)
