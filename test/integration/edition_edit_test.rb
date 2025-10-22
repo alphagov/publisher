@@ -2100,17 +2100,17 @@ class EditionEditTest < IntegrationTest
             fill_in "Title", with: "Part One"
             fill_in "Slug", with: "part-one"
             fill_in "Body", with: "body-text"
-
-            click_button("Save")
+            byebug
+            click_button("Save and go to summary")
 
             assert_current_path edition_path(@draft_guide_edition.id)
 
-            assert page.has_content?("New chapter added successfully.", wait: 10)
+            assert page.has_content?("New chapter added successfully.")
             # assert page.has_text?("New chapter added successfully.")
           end
 
           should "show validation error when Title is empty" do
-            fill_in "Title", with: ""
+            fill_in "Title", with: " "
             fill_in "Slug", with: "part-one"
             fill_in "Body", with: "body-text"
 
@@ -2126,7 +2126,7 @@ class EditionEditTest < IntegrationTest
 
             click_button("Save and go to summary")
 
-            # assert page.has_content?("Enter a slug for Part 1")
+             assert page.has_content?("Enter a slug for Part")
             # assert page.has_content?(/Enter a slug for Part\W#2/)
           end
 
