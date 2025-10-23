@@ -7,7 +7,12 @@ describe('GA4IndexSectionSetup', function () {
     var moduleHtml =
       `<div data-module="ga4-index-section-setup">
         <form>
-          <input type="text">
+          <input type="text" id="input_1">
+          <textarea id="input_2"></textarea>
+          <fieldset id="input_3">
+            <input type="radio" name="radio_1">
+            <input type="radio" name="radio_1">
+          </fieldset>
         </form>
       </div>`
 
@@ -25,12 +30,20 @@ describe('GA4IndexSectionSetup', function () {
 
   describe('When the page loads', function () {
     it('adds the correct data attributes to the form input elements', function () {
-      const inputs = module.querySelectorAll('input')
+      // input [type="text"]
+      var input_1 = module.querySelector("#input_1")
+      expect(JSON.parse(input_1.dataset.ga4Index).index_section).toBe(0)
+      expect(JSON.parse(input_1.dataset.ga4Index).index_section_count).toBe(3)
 
-      Array.from(inputs).map((input) => {
-        expect(JSON.parse(input.dataset.ga4Index).index_section).toBe(0)
-        expect(JSON.parse(input.dataset.ga4Index).index_section_count).toBe(1)
-      })
+      // textarea
+      var input_2 = module.querySelector("#input_2")
+      expect(JSON.parse(input_2.dataset.ga4Index).index_section).toBe(1)
+      expect(JSON.parse(input_2.dataset.ga4Index).index_section_count).toBe(3)
+
+      // fieldset
+      var input_3 = module.querySelector("#input_3")
+      expect(JSON.parse(input_3.dataset.ga4Index).index_section).toBe(2)
+      expect(JSON.parse(input_3.dataset.ga4Index).index_section_count).toBe(3)
     })
   })
 })
