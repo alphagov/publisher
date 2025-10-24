@@ -29,10 +29,61 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     console.log('forms: ', forms)
 
     Array.from(forms).map((form) => {
+      this.addDataAttributes(form)
       this.callFormTracker(form)
     })
   }
 
+  Ga4FormSetup.prototype.addDataAttributes = function(form) {
+    console.log('addDataAttributes!')
+    console.log('form: ', form)
+
+    // Needs defining so it can be added to the data-ga4-form
+    var eventData = "{&quot;event_name&quot;:&quot;form_response&quot;,&quot;action&quot;:&quot;Save&quot;,&quot;section&quot;:&quot;Edit publication&quot;,&quot;type&quot;:&quot;edit&quot;,&quot;tool_name&quot;:&quot;publications&quot;}"
+
+    // What does this do and is it needed?
+    // Looks like it's specific to a component on WH we don't have (yet)
+    // if (!form.querySelector(trackedComponentsSelector)) {
+      form.setAttribute('data-ga4-form-change-tracking', '')
+    // }
+
+    // What does this do and is it needed?
+    if (
+      form.querySelectorAll(
+        'fieldset, input:not([type="checkbox"],[type="hidden"],[type="radio"],[type="search"]), select'
+      ).length > 1
+    ) {
+      console.log('Set these attributes!')
+      // WH: only record JSON if number of fields larger than 1
+      form.setAttribute('data-ga4-form-record-json', '')
+      form.setAttribute('data-ga4-form-split-response-text', '')
+    }
+
+    form.setAttribute('data-ga4-form', eventData) // JSON.stringify(eventData)
+    form.setAttribute('data-ga4-form-include-text', '')
+    form.setAttribute('data-ga4-form-use-text-count', '')
+    form.setAttribute('data-ga4-form-use-select-count', '')
+
+    // this.callFormTracker(form)
+  }
+
+  // ga4 form attributes on whitehall
+  //   data-ga4-form-change-tracking="" 
+  //   data-ga4-form="{&quot;event_name&quot;:&quot;form_response&quot;,&quot;action&quot;:&quot;Save&quot;,&quot;section&quot;:&quot;Edit publication&quot;,&quot;type&quot;:&quot;edit&quot;,&quot;tool_name&quot;:&quot;publications&quot;}" 
+  //   data-ga4-form-record-json="" 
+  //   data-ga4-form-split-response-text="" 
+  //   data-ga4-form-include-text="" 
+  //   data-ga4-form-use-text-count="" 
+  //   data-ga4-form-use-select-count="" 
+
+  // on publisher
+  // data-ga4-form-record-json="" 
+  // data-ga4-form-split-response-text="" 
+  // data-ga4-form="{&amp;quot;event_name&amp;quot;:&amp;quot;form_response&amp;quot;,&amp;quot;action&amp;quot;:&amp;quot;Save&amp;quot;,&amp;quot;section&amp;quot;:&amp;quot;Edit publication&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;edit&amp;quot;,&amp;quot;tool_name&amp;quot;:&amp;quot;publications&amp;quot;}" 
+  // data-ga4-form-include-text="" 
+  // data-ga4-form-use-text-count="" 
+  // data-ga4-form-use-select-count="" 
+  
   Ga4FormSetup.prototype.callFormTracker = function (form) {
     console.log('callFormTracker!')
 
@@ -40,7 +91,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 
     console.log('ga4FormTracker: ', ga4FormTracker)
 
-    // ga4FormTracker.init()
+    ga4FormTracker.init()
   }
 
   // Modules.Ga4FormSetup = {
