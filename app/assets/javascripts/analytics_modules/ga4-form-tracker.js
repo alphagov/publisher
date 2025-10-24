@@ -1,8 +1,25 @@
 'use strict'
+
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.Modules = window.GOVUK.Modules || {}
-window.GOVUK.Modules.Ga4FormTracker = window.GOVUK.Modules.Ga4FormTracker || {}
-;(function (Ga4FormTracker) {
+// window.GOVUK.analyticsGa4 = window.GOVUK.analyticsGa4 || {}
+// window.GOVUK.analyticsGa4.core = window.GOVUK.analyticsGa4.core || {}
+// window.GOVUK.analyticsGa4.core.trackFunctions = window.GOVUK.analyticsGa4.core.trackFunctions || {}
+// window.GOVUK.Modules.Ga4FormTracker = window.GOVUK.Modules.Ga4FormTracker || {}
+
+;(function (Modules) {
+// ;(function (Ga4FormTracker) {
+  function Ga4FormTracker(form) {
+    this.module = form
+  }
+
+  Ga4FormTracker.prototype.init = function() {
+    console.log('Ga4FormTracker init!')
+    console.log('module: ', this.module)
+
+    this.startModule()
+  }
+
   // extra utility function for parsing
   // JSON string data attributes (convention
   // of the components library tracking)
@@ -88,6 +105,8 @@ window.GOVUK.Modules.Ga4FormTracker = window.GOVUK.Modules.Ga4FormTracker || {}
   // Ga4FormTracker does not track form changes
   // so we need to define an extra function
   Ga4FormTracker.prototype.trackFormChange = function (event) {
+    console.log('trackFormChange!')
+
     const form =
       window.GOVUK.analyticsGa4.core.trackFunctions.findTrackingAttributes(
         event.target,
@@ -152,9 +171,15 @@ window.GOVUK.Modules.Ga4FormTracker = window.GOVUK.Modules.Ga4FormTracker || {}
   // we need to override the default `startModule`
   // to add a listener to track changes to the form
   Ga4FormTracker.prototype.startModule = function () {
-    // console.log('startModule!')
+    console.log('startModule!')
+    console.log('module: ', this.module)
 
     this.module.addEventListener('change', this.trackFormChange.bind(this))
     this.module.addEventListener('submit', this.trackFormSubmit.bind(this))
   }
-})(window.GOVUK.Modules.Ga4FormTracker)
+
+  // Ga4FormTracker.init()
+
+  Modules.Ga4FormTracker = Ga4FormTracker
+})(window.GOVUK.Modules)
+// })(window.GOVUK.Modules.Ga4FormTracker)
