@@ -48,11 +48,11 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
 
   Ga4FormTracker.prototype.getSection = function (target, checkableValue) {
     const { id } = target
-    const form =
-      window.GOVUK.analyticsGa4.core.trackFunctions.findTrackingAttributes(
-        event.target,
-        this.trackingTrigger
-      )
+    const form = this.module
+      // window.GOVUK.analyticsGa4.core.trackFunctions.findTrackingAttributes(
+      //   event.target,
+      //   this.trackingTrigger
+      // )
     const fieldset = target.closest('fieldset')
     const legend = fieldset && fieldset.querySelector('legend')
     const sectionContainer = form.closest('[data-ga4-section]')
@@ -106,12 +106,15 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
   // so we need to define an extra function
   Ga4FormTracker.prototype.trackFormChange = function (event) {
     console.log('trackFormChange!')
+    console.log('trackingTrigger: ', this.trackingTrigger)
 
-    const form =
-      window.GOVUK.analyticsGa4.core.trackFunctions.findTrackingAttributes(
-        event.target,
-        this.trackingTrigger
-      )
+    const form = this.module
+      // window.GOVUK.analyticsGa4.core.trackFunctions.findTrackingAttributes(
+      //   event.target,
+      //   this.trackingTrigger
+      // )
+
+    console.log('form: ', form)
 
     if (!form) return
 
@@ -175,7 +178,9 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
     console.log('module: ', this.module)
 
     this.module.addEventListener('change', this.trackFormChange.bind(this))
-    this.module.addEventListener('submit', this.trackFormSubmit.bind(this))
+    // Is this required?
+    // Thought this was handled by the other module
+    // this.module.addEventListener('submit', this.trackFormSubmit.bind(this))
   }
 
   // Ga4FormTracker.init()
