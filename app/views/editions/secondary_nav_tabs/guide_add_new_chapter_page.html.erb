@@ -8,7 +8,7 @@
     <%= render("govuk_publishing_components/components/error_summary", {
       id: "error-summary",
       title: "There is a problem",
-      items: errors_to_display(@edition).map do |error_message,href|
+      items: errors_to_display(@edition).map do |error_message, href|
         {
           text: error_message,
           href: "#{href}",
@@ -25,11 +25,7 @@
     } %>
   </div>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <%= render partial: "secondary_navigation" %>
-    </div>
-  </div>
+  <%= render partial: "secondary_navigation" %>
 
   <%= render "govuk_publishing_components/components/back_link", {
     text: "Back to summary",
@@ -46,7 +42,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <%= form_with url: guide_add_new_chapter_edition_path(@edition), data: {module: "unsaved-changes-prompt"} do %>
+      <%= form_with url: guide_add_new_chapter_edition_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
         <%= render "govuk_publishing_components/components/input", {
           label: {
             text: "Title",
@@ -54,7 +50,7 @@
           id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_title",
           name: "part[title]",
           heading_size: "s",
-          error_items: errors_for(@part.errors , :title, use_full_message: false),
+          error_items: errors_for(@part.errors, :title, use_full_message: false),
         } %>
 
         <%= render "govuk_publishing_components/components/input", {
@@ -65,7 +61,7 @@
           name: "part[slug]",
           heading_size: "s",
           hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
-          error_items: errors_for(@part.errors , :slug, use_full_message: false),
+          error_items: errors_for(@part.errors, :slug, use_full_message: false),
         } %>
         <%= render "govuk_publishing_components/components/textarea", {
           label: {
@@ -105,7 +101,7 @@
                     target: "_blank",
                     rel: "noopener",
                     class: "govuk-link",
-                    )),
+                  )),
                 ],
               } %>
             </div>
