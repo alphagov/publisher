@@ -70,7 +70,6 @@ class EditionsController < InheritedResources::Base
   before_action only: %i[show admin metadata tagging history related_external_links unpublish] do
     @reviewer = User.where(name: @resource.reviewer).first if @resource.reviewer.present?
   end
-
   before_action only: %i[guide_add_new_chapter_page guide_add_new_chapter] do
     require_allowed_state
   end
@@ -258,7 +257,6 @@ class EditionsController < InheritedResources::Base
 
   def guide_add_new_chapter
     @part = @resource.editionable.parts.build(permitted_parts_params.merge(order: @resource.editionable.parts.size))
-
     if @resource.save
       if params[:save] == "save and summary"
         flash[:success] = "New chapter added successfully."
@@ -846,8 +844,6 @@ private
       [
         :hide_chapter_navigation,
       ]
-    when :part
-
     else
       # answer_edition, help_page_edition
       [
@@ -932,8 +928,9 @@ private
     redirect_to edition_path(resource)
   end
 
+
   def require_allowed_state
-    return if @resource.state != "published" && "archived" && "scheduled_for_publishing"
+    return if %w[published archived scheduled_for_publishing].exclude? @resource.state
 
     flash[:danger] = "You are not allowed to perform this action in the current state."
     redirect_to edition_path(resource)
