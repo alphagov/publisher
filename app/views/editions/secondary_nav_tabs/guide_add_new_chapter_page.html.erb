@@ -1,0 +1,97 @@
+<% @edition = @resource %>
+<% content_for :title_context, @edition.format %>
+<% content_for :page_title, @edition.title %>
+<% content_for :title, @edition.title %>
+
+<% unless @edition.errors.empty? %>
+  <% content_for :error_summary do %>
+    <%= render("govuk_publishing_components/components/error_summary", {
+      id: "error-summary",
+      title: "There is a problem",
+      items: errors_to_display(@edition).map do |error_message, href|
+        {
+          text: error_message,
+          href: "#{href}",
+        }
+      end,
+    }) %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds editions__edit__summary">
+    <%= render "govuk_publishing_components/components/summary_list", {
+      items: document_summary_items(@resource, @reviewer),
+    } %>
+  </div>
+</div>
+
+<%= render partial: "secondary_navigation" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  <%= render "govuk_publishing_components/components/back_link", {
+    text: "Back to summary",
+    href: edit_edition_path(@edition),
+    margin_bottom: 6,
+  } %>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Add new chapter",
+      heading_level: 2,
+      font_size: "l",
+      margin_bottom: 5,
+      margin_top: 5,
+    } %>
+  </div>
+
+  <%= form_with url: guide_add_new_chapter_edition_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
+    <div class="govuk-grid-column-two-thirds">
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Title",
+        },
+        id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_title",
+        name: "part[title]",
+        value: @part.title,
+        heading_size: "s",
+        error_items: errors_for(@part.errors, :title, use_full_message: false),
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Slug",
+        },
+        id: "edition_parts_attributes_#{@edition.parts.find_index(@part) || @edition.parts.size}_slug",
+        name: "part[slug]",
+        value: @part.slug,
+        heading_size: "s",
+        hint: "For example, title-of-chapter (no spaces, apostrophes or acronyms)",
+        error_items: errors_for(@part.errors, :slug, use_full_message: false),
+      } %>
+      <%= render "govuk_publishing_components/components/textarea", {
+        label: {
+          heading_size: "s",
+          text: "Body",
+        },
+        name: "part[body]",
+        value: @part.body,
+        rows: 14,
+        hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
+      } %>
+    </div>
+
+    <% if current_user.has_editor_permissions?(@resource) %>
+      <div class="govuk-grid-column-one-third options-sidebar">
+        <div class="sidebar-components">
+          <%= sidebar_options_heading %>
+          <%= sidebar_items_list(guide_add_chapter_sidebar_buttons(@edition)) %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
