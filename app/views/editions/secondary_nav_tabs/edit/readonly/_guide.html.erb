@@ -2,13 +2,7 @@
 
 <%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/meta_tag_description", locals: { edition: @resource } %>
 
-<section>
-<%= render "govuk_publishing_components/components/heading", {
-  text: "Chapters",
-  heading_level: 3,
-  font_size: "m",
-} %>
-</section>
+<%= render partial: "editions/secondary_nav_tabs/edit/readonly/components/guide_chapter_list", locals: { edition: @resource } %>
 
 <section>
   <%= render "govuk_publishing_components/components/heading", {

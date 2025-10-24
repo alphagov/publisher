@@ -2,6 +2,8 @@
 
 <%= render partial: "editions/secondary_nav_tabs/edit/editable/components/meta_tag_description", locals: { edition: @resource } %>
 
+<%= render partial: "editions/secondary_nav_tabs/edit/editable/components/guide_chapter_list", locals: { edition: @resource } %>
+
 <%= render "govuk_publishing_components/components/button", {
   text: "Add new chapter",
   secondary_solid: true,

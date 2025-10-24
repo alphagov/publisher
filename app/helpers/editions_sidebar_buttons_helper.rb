@@ -127,6 +127,43 @@ module EditionsSidebarButtonsHelper
     ]
   end
 
+  def guide_add_chapter_sidebar_buttons(edition)
+    buttons = []
+
+    if current_user.has_editor_permissions?(edition)
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: "Save",
+          margin_bottom: 3,
+          name: "save",
+          value: "save",
+        },
+      )
+
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: "Save and go to summary",
+          margin_bottom: 3,
+          secondary_solid: true,
+          name: "save",
+          value: "save and summary",
+        },
+      )
+      buttons <<
+        link_to(
+          "Preview (opens in new tab)",
+          preview_edition_path(edition),
+          target: "_blank",
+          rel: "noopener",
+          class: "govuk-link govuk-link--no-visited-state",
+        )
+    end
+
+    buttons
+  end
+
   def history_and_notes_sidebar_buttons(edition)
     buttons = []
 
