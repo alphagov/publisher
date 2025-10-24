@@ -44,7 +44,9 @@ class EditionsController < InheritedResources::Base
                          tagging_related_content_page
                          tagging_organisations_page
                          tagging_breadcrumb_page
-                         tagging_remove_breadcrumb_page] do
+                         tagging_remove_breadcrumb_page
+                         guide_add_new_chapter_page
+                         guide_add_new_chapter ] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -67,6 +69,9 @@ class EditionsController < InheritedResources::Base
   end
   before_action only: %i[show admin metadata tagging history related_external_links unpublish] do
     @reviewer = User.where(name: @resource.reviewer).first if @resource.reviewer.present?
+  end
+  before_action only: %i[guide_add_new_chapter_page guide_add_new_chapter] do
+    require_allowed_state
   end
 
   helper_method :locale_to_language
@@ -243,6 +248,29 @@ class EditionsController < InheritedResources::Base
 
   def cancel_scheduled_publishing_page
     render "secondary_nav_tabs/cancel_scheduled_publishing_page"
+  end
+
+  def guide_add_new_chapter_page
+    @part = Part.new
+    render "secondary_nav_tabs/guide_add_new_chapter_page"
+  end
+
+  def guide_add_new_chapter
+    @part = @resource.editionable.parts.build(permitted_parts_params.merge(order: @resource.editionable.parts.size))
+    if @resource.save
+      if params[:save] == "save and summary"
+        flash[:success] = "New chapter added successfully."
+        redirect_to edition_path(@resource)
+      elsif params[:save] == "save"
+        flash[:success] = "Not implemented yet."
+        redirect_to edition_path(@resource)
+      end
+    else
+      render "secondary_nav_tabs/guide_add_new_chapter_page"
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
   end
 
   def duplicate
@@ -755,6 +783,19 @@ private
     params.require(:edition).permit(type_specific_params(subtype) + common_params)
   end
 
+  def permitted_parts_params
+    params.require(:part).permit(part_type_params)
+  end
+
+  def part_type_params
+    %i[
+      body
+      slug
+      title
+      id
+    ]
+  end
+
   def type_specific_params(subtype)
     case subtype
     when :place_edition
@@ -885,6 +926,13 @@ private
     return if current_user.skip_review?
 
     flash[:danger] = "You do not have correct editor permissions for this action."
+    redirect_to edition_path(resource)
+  end
+
+  def require_allowed_state
+    return if %w[published archived scheduled_for_publishing].exclude? @resource.state
+
+    flash[:danger] = "You are not allowed to perform this action in the current state."
     redirect_to edition_path(resource)
   end
 end
