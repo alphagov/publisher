@@ -2523,6 +2523,37 @@ class EditionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "add chapter guide edition" do
+    context "When user has no permission" do
+      setup do
+        @edition = FactoryBot.create(:guide_edition)
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+      should "render an error message" do
+        post :guide_add_new_chapter, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "When user has permission and edition is published" do
+      setup do
+        @edition = FactoryBot.create(:guide_edition, :published)
+        login_as_govuk_editor
+      end
+      should "render an error message when edition is published and user tries to add chapter" do
+        post :guide_add_new_chapter, params: {
+          id: @edition.id,
+        }
+
+        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+      end
+    end
+  end
+
 private
 
   def description(edition)
