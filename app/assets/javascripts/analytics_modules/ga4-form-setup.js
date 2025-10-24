@@ -8,10 +8,39 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   function Ga4FormSetup() {
     // Dunnno what this does - consider removing
     // trackedComponents: ['reorderable-list'],
+    // this.forms
   }
 
   Ga4FormSetup.prototype.init = function () {
     console.log('Ga4FormSetup init!')
+
+    var forms
+
+    const modules = document.querySelectorAll(
+      "[data-module~='ga4-form-setup']"
+    )
+
+    console.log('modules: ', modules)
+
+    Array.from(modules).map((module) => {
+      forms = module.querySelectorAll('form')
+    })
+
+    console.log('forms: ', forms)
+
+    Array.from(forms).map((form) => {
+      this.callFormTracker(form)
+    })
+  }
+
+  Ga4FormSetup.prototype.callFormTracker = function (form) {
+    console.log('callFormTracker!')
+
+    const ga4FormTracker = new window.GOVUK.Modules.Ga4FormTracker(form)
+
+    console.log('ga4FormTracker: ', ga4FormTracker)
+
+    // ga4FormTracker.init()
   }
 
   // Modules.Ga4FormSetup = {

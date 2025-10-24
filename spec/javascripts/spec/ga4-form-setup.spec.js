@@ -4,8 +4,9 @@ describe('GA4FormSetup', function () {
   var module, ga4FormSetup
 
   beforeEach(function () {
+    // Probably don't need the full form but only the <form> element itself
     var moduleHtml =
-      `<div data-module="ga4-index-section-setup">
+      `<div data-module="ga4-form-setup">
         <form>
           <input type="text" id="input_1">
           <textarea id="input_2"></textarea>
@@ -28,9 +29,13 @@ describe('GA4FormSetup', function () {
     document.body.removeChild(module)
   })
 
-  describe('in initial state', function () {
-    it('does nothing', function () {
-      expect(3).toBe(3)
+  describe('when loaded', function () {
+    // TODO: make this test work
+    // Probably should be init not getJson
+    xit('starts the FormTracker module', function () {
+      const Ga4FormTrackerSpy = spyOn(new window.GOVUK.Modules.Ga4FormTracker(), 'getJson')
+
+      expect(Ga4FormTrackerSpy).toHaveBeenCalled()
     })
   })
 })
