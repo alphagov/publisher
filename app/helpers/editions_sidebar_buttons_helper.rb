@@ -126,4 +126,30 @@ module EditionsSidebarButtonsHelper
       link_to("Cancel", cancel_link_path, class: "govuk-link govuk-link--no-visited-state"),
     ]
   end
+
+  def history_and_notes_sidebar_buttons(edition)
+    buttons = []
+    if current_user.has_editor_permissions?(edition)
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: "Add edition note",
+          margin_bottom: 3,
+          href: history_add_edition_note_edition_path,
+        },
+        )
+
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: "Update important note",
+          margin_bottom: 3,
+          secondary_solid: true,
+          href: history_update_important_note_edition_path,
+        },
+        )
+    end
+
+
+  end
 end
