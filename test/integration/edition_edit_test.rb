@@ -1119,6 +1119,66 @@ class EditionEditTest < IntegrationTest
       assert_current_path history_update_important_note_edition_path(@draft_edition.id)
     end
 
+    context "show a Preview or a view on GOV.UK link" do
+      should "show a Preview button when the edition is draft" do
+        visit_draft_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is in review" do
+        visit_in_review_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is out for fact check" do
+        visit_fact_check_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is ready" do
+        visit_ready_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a Preview button when the edition is scheduled for publishing" do
+        visit_scheduled_for_publishing_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+
+      should "show a View on GOV.UK button when the edition is published" do
+        visit_published_edition
+        click_link("History and notes")
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
+
+      should "show a View on GOV.UK button when the edition is archived" do
+        visit_archived_edition
+        click_link("History and notes")
+
+        assert page.has_link?("View on GOV.UK (opens in new tab)")
+      end
+
+      should "still show the conditional preview/view link when the user does not have editor permissions" do
+        @stub_user = FactoryBot.create(:user, name: "Stub user")
+        login_as(@stub_user)
+        visit_draft_edition
+        click_link("History and notes")
+
+        assert page.has_link?("Preview (opens in new tab)")
+      end
+    end
+
     context "when the user has no permissions" do
       should "hide the note action buttons from the user" do
         user = FactoryBot.create(:user, name: "Stub User")
