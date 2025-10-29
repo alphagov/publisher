@@ -1,0 +1,21 @@
+ <%= render "govuk_publishing_components/components/heading", {
+    text: "Chapters",
+    heading_level: 3,
+    font_size: "m",
+    margin_bottom: 5,
+  } %>
+
+ <% if edition.parts.presence %>
+  <%= tag.ul class: "govuk-list govuk-summary-list" do %>
+    <% edition.parts.each do |part| %>
+      <%= tag.li class: "govuk-summary-list__row" do %>
+        <%= tag.span class: "govuk-body" do %>
+          <%= part.title %>
+        <% end %>
+        <%= tag.span class: "govuk-body govuk-summary-list__actions" do %>
+          <%= link_to "View", "#", class: "govuk-link govuk-link--no-visited-state" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
