@@ -72,4 +72,4 @@ group :development, :test do
   gem "rubocop-govuk"
 end
 
-gem 'fact_check', path: 'fact_check'
+gem "fact_check", path: "fact_check"

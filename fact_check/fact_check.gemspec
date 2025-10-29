@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = "http://example.com"
   spec.summary     = "http://example.com/summary"
   spec.description = "http://example.com/description"
+  spec.required_ruby_version = ">= 3.3.1"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
   # to allow pushing to a single host or delete this section to allow pushing to any host.
