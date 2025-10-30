@@ -27,8 +27,8 @@ class ReportsController < ApplicationController
     redirect_to Report.new("content_workflow").url, allow_other_host: true
   end
 
-  def all_content_workflow
-    redirect_to Report.new("all_content_workflow").url, allow_other_host: true
+  def recent_content_workflow
+    redirect_to Report.new("recent_content_workflow").url, allow_other_host: true
   end
 
   def all_urls

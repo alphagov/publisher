@@ -9,7 +9,7 @@ class AllContentWorkflowPresenterTest < ActiveSupport::TestCase
 
     editions = [transaction_edition, guide_edition]
 
-    csv = AllContentWorkflowPresenter.new(editions).to_csv
+    csv = RecentContentWorkflowPresenter.new(editions).to_csv
     data = CSV.parse(csv, headers: true)
 
     assert_equal 10, data.length
