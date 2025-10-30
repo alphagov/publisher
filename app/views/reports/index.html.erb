@@ -63,12 +63,12 @@
         },
         {
           link: {
-            text: "Content summary and workflow history for all editions",
-            path: all_content_workflow_report_path(format: :csv),
+            text: "Content summary and workflow history for editions created or updated in the last two years",
+            path: recent_content_workflow_report_path(format: :csv),
           },
           metadata: {
-            updated_at_time: report_generated_time_message("all_content_workflow"),
-            public_updated_at: report_last_updated("all_content_workflow"),
+            updated_at_time: report_generated_time_message("recent_content_workflow"),
+            public_updated_at: report_last_updated("recent_content_workflow"),
           },
         },
         {
