@@ -27,7 +27,7 @@ class ReportsControllerTest < ActionController::TestCase
         edition_churn
         all_edition_churn
         content_workflow
-        all_content_workflow
+        recent_content_workflow
         all_urls
       ].each do |action|
         get action

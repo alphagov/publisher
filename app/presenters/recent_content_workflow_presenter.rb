@@ -1,4 +1,4 @@
-class AllContentWorkflowPresenter < CSVPresenter
+class RecentContentWorkflowPresenter < CSVPresenter
   def initialize(scope = Edition.all)
     super(scope)
     self.column_headings = %i[

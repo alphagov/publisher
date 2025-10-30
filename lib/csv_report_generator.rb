@@ -35,7 +35,7 @@ class CsvReportGenerator
 
       ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
 
-      # AllContentWorkflowPresenter.new(Edition.all.order(created_at: :desc)),
+      RecentContentWorkflowPresenter.new(Edition.all.order(created_at: :desc)),
 
       AllUrlsPresenter.new(
         Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),

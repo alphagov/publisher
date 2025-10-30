@@ -122,7 +122,7 @@ Rails.application.routes.draw do
   get "reports/edition-churn" => "reports#edition_churn", as: "edition_churn_report"
   get "reports/all-edition-churn" => "reports#all_edition_churn", as: "all_edition_churn_report"
   get "reports/content-workflow" => "reports#content_workflow", as: "content_workflow_report"
-  get "reports/all-content-workflow" => "reports#all_content_workflow", as: "all_content_workflow_report"
+  get "reports/recent-content-workflow" => "reports#recent_content_workflow", as: "recent_content_workflow_report"
   get "reports/all-urls" => "reports#all_urls", as: "all_urls_report"
 
   get "user_search" => "user_search#index"

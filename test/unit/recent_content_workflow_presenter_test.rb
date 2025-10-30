@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AllContentWorkflowPresenterTest < ActiveSupport::TestCase
+class RecentContentWorkflowPresenterTest < ActiveSupport::TestCase
   should "provide a CSV export of content workflow" do
     transaction_user = FactoryBot.create(:user, :govuk_editor, name: "Ray Khan")
     guide_user = FactoryBot.create(:user, :govuk_editor, name: "Constance Cerf")
@@ -9,7 +9,7 @@ class AllContentWorkflowPresenterTest < ActiveSupport::TestCase
 
     editions = [transaction_edition, guide_edition]
 
-    csv = AllContentWorkflowPresenter.new(editions).to_csv
+    csv = RecentContentWorkflowPresenter.new(editions).to_csv
     data = CSV.parse(csv, headers: true)
 
     assert_equal 10, data.length
