@@ -5,7 +5,7 @@
 <%= render partial: "editions/secondary_nav_tabs/edit/editable/components/guide_chapter_list", locals: { edition: @resource } %>
 
 <%= render "govuk_publishing_components/components/button", {
-  text: "Add new chapter",
+  text: "Add a new chapter",
   secondary_solid: true,
   href: guide_add_new_chapter_page_edition_path(edition),
   margin_bottom: 6,
@@ -17,6 +17,7 @@
   heading_level: 0,
   name: "edition[hide_chapter_navigation]",
   inline: true,
+  hint: "The chapter navigation will be hidden if they all are",
   items: [
     {
       value: 1,

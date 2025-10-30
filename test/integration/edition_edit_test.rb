@@ -2097,10 +2097,11 @@ class EditionEditTest < IntegrationTest
           assert page.has_field?("edition[overview]", with: "metatags")
 
           assert page.has_css?(".govuk-heading-m", text: "Chapters")
-          assert page.has_css?(".govuk-button", text: "Add new chapter")
+          assert page.has_css?(".govuk-button", text: "Add a new chapter")
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
@@ -2121,10 +2122,11 @@ class EditionEditTest < IntegrationTest
           assert page.has_css?(".govuk-summary-list__row", text: "PART !")
           assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
 
-          assert page.has_css?(".govuk-button", text: "Add new chapter")
+          assert page.has_css?(".govuk-button", text: "Add a new chapter")
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
@@ -2153,6 +2155,7 @@ class EditionEditTest < IntegrationTest
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
@@ -2165,7 +2168,7 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show Add new chapter page when Add new chapter button is clicked" do
-          click_link("Add new chapter")
+          click_link("Add a new chapter")
 
           assert page.has_content?("Add new chapter")
 
@@ -2176,7 +2179,7 @@ class EditionEditTest < IntegrationTest
 
         context "Add new chapter" do
           setup do
-            click_link("Add new chapter")
+            click_link("Add a new chapter")
           end
 
           should "show add new chapter page to the guide edition and redirect to edit guide page when save and summary button is clicked" do
