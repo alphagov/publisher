@@ -2101,6 +2101,7 @@ class EditionEditTest < IntegrationTest
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
@@ -2125,6 +2126,7 @@ class EditionEditTest < IntegrationTest
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
@@ -2153,6 +2155,7 @@ class EditionEditTest < IntegrationTest
 
           within all(".govuk-fieldset")[0] do
             assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
             assert find(".gem-c-radio input[value='1']").checked?
           end
 
