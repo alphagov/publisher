@@ -16,6 +16,9 @@ class CsvReportGenerator
   end
 
   def presenters
+    two_years_ago = 2.years.ago.at_beginning_of_day
+    current_time = Time.zone.now
+
     @presenters ||= [
       EditorialProgressPresenter.new(
         Edition.where.not(state: %w[archived]),
@@ -35,7 +38,8 @@ class CsvReportGenerator
 
       ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
 
-      RecentContentWorkflowPresenter.new(Edition.all.order(created_at: :desc)),
+      RecentContentWorkflowPresenter.new(Edition.where(updated_at: two_years_ago..current_time)
+                                         .or(Edition.where(created_at: two_years_ago..current_time)).order(created_at: :desc)),
 
       AllUrlsPresenter.new(
         Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
