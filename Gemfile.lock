@@ -5,6 +5,12 @@ GIT
   specs:
     nested_form (0.3.2)
 
+PATH
+  remote: fact_check
+  specs:
+    fact_check (0.1.0)
+      rails (>= 7.1.5.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -906,6 +912,7 @@ DEPENDENCIES
   diffy
   erb_lint
   erubis
+  fact_check!
   factory_bot_rails
   flipflop
   gds-api-adapters
