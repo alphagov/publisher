@@ -28,4 +28,8 @@ Flipflop.configure do
   feature :show_link_to_content_block_manager,
           default: %w[integration staging].include?(ENV["GOVUK_ENVIRONMENT"]),
           description: "Shows link to Content Block Manager from Mainstream editor"
+
+  feature :ga4_form_tracking,
+          default: false,
+          description: "Add tracking to forms across publisher"
 end
