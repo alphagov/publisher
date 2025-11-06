@@ -24,7 +24,7 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
-    var dataModule = form.dataset.module
+    var dataModule = form.dataset.module || null
     var eventData = {
       event_name: 'form_response',
       type: 'edit',
@@ -33,7 +33,11 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
       tool_name: 'publisher'
     }
 
-    form.setAttribute('data-module', dataModule + ' ga4-form-tracker')
+    if (dataModule) {
+      form.setAttribute('data-module', dataModule + ' ga4-form-tracker')
+    } else {
+      form.setAttribute('data-module', 'ga4-form-tracker')
+    }
     form.setAttribute('data-ga4-form-include-text', '')
     form.setAttribute('data-ga4-form-change-tracking', '')
     form.setAttribute('data-ga4-form-record-json', '')

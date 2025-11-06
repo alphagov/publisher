@@ -6,6 +6,7 @@ describe('GA4FormSetup', function () {
   beforeEach(function () {
     var moduleHtml =
       `<div data-module="ga4-form-setup">
+        <form></form>
         <form data-module="some-other-module"></form>
       </div>`
 
@@ -22,12 +23,25 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when loaded', function () {
+    it('adds/updates the "data-module" parameter of the form', function() {
+      var form, formGA4Data
+
+      form = module.querySelectorAll('form')[0]
+      formGA4Data = form.dataset
+
+      expect(formGA4Data.module).toBe('ga4-form-tracker')
+
+      form = module.querySelectorAll('form')[1]
+      formGA4Data = form.dataset
+
+      expect(formGA4Data.module).toBe('some-other-module ga4-form-tracker')
+    })
+
     it('adds the correct parameters to the form', function () {
-      var form = module.querySelector('form')
+      var form = module.querySelectorAll('form')[0]
       var formGA4Data = form.dataset
       var formEventData = JSON.parse(formGA4Data.ga4Form)
 
-      expect(formGA4Data.module).toBe('some-other-module ga4-form-tracker')
       expect(formEventData.action).toBe('Save')
       expect(formEventData.event_name).toBe('form_response')
       expect(formEventData.section).toBe('Edit edition')
