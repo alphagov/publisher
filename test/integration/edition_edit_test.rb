@@ -2201,7 +2201,7 @@ class EditionEditTest < IntegrationTest
 
             click_button("Save and go to summary")
 
-            assert_current_path guide_add_new_chapter_edition_path(@draft_guide_edition.id)
+            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
 
             assert page.has_field?("part[title]", with: "")
             assert page.has_field?("part[slug]", with: "part-one")
@@ -2217,7 +2217,7 @@ class EditionEditTest < IntegrationTest
 
             click_button("Save and go to summary")
 
-            assert_current_path guide_add_new_chapter_edition_path(@draft_guide_edition.id)
+            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
 
             assert page.has_field?("part[title]", with: "Part one")
             assert page.has_field?("part[slug]", with: "")
@@ -2233,7 +2233,7 @@ class EditionEditTest < IntegrationTest
 
             click_button("Save and go to summary")
 
-            assert_current_path guide_add_new_chapter_edition_path(@draft_guide_edition.id)
+            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
 
             assert page.has_field?("part[title]", with: "Part one")
             assert page.has_field?("part[slug]", with: "@")
