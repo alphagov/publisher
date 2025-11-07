@@ -42,6 +42,10 @@ module BaseHelper
     end
   end
 
+  def ga4_form_tracking?
+    Flipflop.enabled?("ga4_form_tracking".to_sym)
+  end
+
 private
 
   def scope_path_options(scope)

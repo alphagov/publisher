@@ -1,5 +1,7 @@
 <% environment = GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment %>
 
+<% data_module_main = ga4_form_tracking? ? "ga4-link-tracker ga4-form-setup ga4-index-section-setup" : "ga4-link-tracker" %>
+
 <% content_for :head do %>
   <meta name="govuk:components_gem_version" content="<%= GovukPublishingComponents::VERSION %>">
   <meta name="govuk:user-id" content="<%= current_user&.anonymous_user_id %>">
@@ -42,7 +44,7 @@
       id="main-content"
       class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
       role="main"
-      data-module="ga4-link-tracker"
+      data-module="<%= data_module_main %>"
       data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
       data-ga4-no-copy="true"
     >
