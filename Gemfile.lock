@@ -280,7 +280,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (59.2.1)
+    govuk_publishing_components (61.4.1)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -368,7 +368,8 @@ GEM
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    mail (2.8.1)
+    mail (2.9.0)
+      logger
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -409,7 +410,7 @@ GEM
     mutex_m (0.3.0)
     net-http (0.6.0)
       uri
-    net-imap (0.5.10)
+    net-imap (0.5.12)
       date
       net-protocol
     net-pop (0.1.2)
@@ -732,7 +733,7 @@ GEM
     retriable (3.1.2)
     rexml (3.4.4)
     rinku (2.0.6)
-    rouge (4.6.0)
+    rouge (4.6.1)
     rubocop (1.79.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -860,7 +861,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.4.0)
     timecop (0.9.10)
-    timeout (0.4.3)
+    timeout (0.4.4)
     trailblazer-option (0.1.2)
     tsort (0.2.0)
     tzinfo (2.0.6)
