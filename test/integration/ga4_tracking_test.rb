@@ -22,7 +22,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_includes form_module_data, "ga4-form-tracker"
       assert_equal form_ga4_event_data["action"], "Save"
       assert_equal form_ga4_event_data["event_name"], "form_response"
-      assert_equal form_ga4_event_data["section"], "Edit edition"
+      assert_equal form_ga4_event_data["section"], "Answer edition"
       assert_equal form_ga4_event_data["tool_name"], "publisher"
       assert_equal form_ga4_event_data["type"], "edit"
 
@@ -143,8 +143,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_includes form_module_data, "ga4-form-tracker"
       assert_equal form_ga4_event_data["action"], "Save"
       assert_equal form_ga4_event_data["event_name"], "form_response"
-      # Needs update
-      # assert_equal form_ga4_event_data["section"], "Assign person"
+      assert_equal form_ga4_event_data["section"], "Assign person"
       assert_equal form_ga4_event_data["tool_name"], "publisher"
       assert_equal form_ga4_event_data["type"], "edit"
 

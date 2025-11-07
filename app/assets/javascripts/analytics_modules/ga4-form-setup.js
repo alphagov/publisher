@@ -24,11 +24,12 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
+    var section = form.closest("[data-ga4-section]")
     var dataModule = form.dataset.module || null
     var eventData = {
       event_name: 'form_response',
       type: 'edit',
-      section: 'Edit edition',
+      section: section.getAttribute("data-ga4-section"),
       action: 'Save',
       tool_name: 'publisher'
     }
@@ -46,9 +47,9 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
   }
 
   Ga4FormSetup.prototype.callFormChangeTracker = function (form) {
-    var ga4FormTracker = new window.GOVUK.Modules.Ga4FormChangeTracker(form)
+    var ga4FormChangeTracker = new window.GOVUK.Modules.Ga4FormChangeTracker(form)
 
-    ga4FormTracker.init()
+    ga4FormChangeTracker.init()
   }
 
   Modules.Ga4FormSetup = Ga4FormSetup
