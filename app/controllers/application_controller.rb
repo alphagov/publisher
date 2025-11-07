@@ -57,11 +57,11 @@ class ApplicationController < ActionController::Base
     redirect_to redirect_path
   end
 
-  def require_editor_permissions
-    return if current_user.has_editor_permissions?(resource)
+  def require_editor_permissions(edition = resource)
+    return if current_user.has_editor_permissions?(edition)
 
     flash[:danger] = "You do not have correct editor permissions for this action."
-    redirect_to edition_path(resource)
+    redirect_to edition_path(edition)
   end
 
   def require_user_accessibility_to_edition(edition)

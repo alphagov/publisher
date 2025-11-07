@@ -37,7 +37,7 @@ module TabbedNavHelper
   def assignee_edit_link(edition)
     if current_user.has_editor_permissions?(edition) && can_update_assignee?(edition)
       {
-        href: edit_assignee_edition_path,
+        href: edit_assignee_edition_path(edition),
         link_text: "Edit",
       }
     else

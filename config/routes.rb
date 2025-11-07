@@ -78,9 +78,8 @@ Rails.application.routes.draw do
                  comment: "Fact check skipped by request.",
                },
              }
-        get "guide_add_new_chapter_page"
-        post "guide_add_new_chapter"
       end
+      resources :guide_parts, only: %i[create new]
     end
   end
 
