@@ -42,8 +42,7 @@ class EditionsController < InheritedResources::Base
                          tagging_mainstream_browse_page
                          tagging_reorder_related_content_page
                          tagging_related_content_page
-                         tagging_organisations_page
-                         tagging_remove_breadcrumb_page] do
+                         tagging_organisations_page] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -139,11 +138,6 @@ class EditionsController < InheritedResources::Base
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "show"
-  end
-
-  def tagging_remove_breadcrumb_page
-    populate_tagging_form_values_from_publishing_api
-    render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
   def tagging_mainstream_browse_page
