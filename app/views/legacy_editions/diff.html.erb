@@ -8,6 +8,6 @@
     Changes from edition <%= @resource.version_number-1 %> to edition <%= @resource.version_number %>
   </h2>
 
-  <%= diff_html(@comparison.whole_body, @resource.whole_body) %>
+  <%= diff_html(@comparison.editionable.whole_body, @resource.editionable.whole_body) %>
 
 <% content_for :page_title, "Editing #{@resource.title}" %>
