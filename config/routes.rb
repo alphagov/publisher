@@ -79,7 +79,18 @@ Rails.application.routes.draw do
                },
              }
       end
-      resources :guide_parts, only: %i[create new]
+
+      resources :guide_parts do
+        member do
+          get "new"
+          post "create"
+        end
+
+        collection do
+          get "reorder"
+          post "bulk_update_reorder"
+        end
+      end
     end
   end
 

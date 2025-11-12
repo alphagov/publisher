@@ -13,11 +13,20 @@ class GuidePartsController < InheritedResources::Base
   before_action do
     require_user_accessibility_to_edition(@edition)
   end
-  before_action only: %i[new create] do
+  before_action only: %i[new
+                         create
+                         reorder
+                         bulk_update_reorder] do
     require_editor_permissions(@edition)
   end
-  before_action only: %i[new create] do
+  before_action only: %i[new
+                         create
+                         reorder
+                         bulk_update_reorder] do
     require_editing_state(@edition)
+  end
+  before_action only: %i[reorder bulk_update_reorder] do
+    require_multiple_parts(@edition)
   end
 
   def new
@@ -45,6 +54,22 @@ class GuidePartsController < InheritedResources::Base
     render "secondary_nav_tabs/guide_add_new_chapter_page"
   end
 
+  def reorder
+    render "secondary_nav_tabs/guide_reorder_chapters_page"
+  end
+
+  def bulk_update_reorder
+    chapters = params.permit(reordered_chapters: {}).to_h[:reordered_chapters]
+    reorder_chapters(@edition, chapters)
+
+    flash[:success] = "Chapter order updated"
+    redirect_to edition_path(@edition)
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @edition.errors.add(:show, "Due to a service problem, the chapter order couldn't be updated")
+    redirect_to edition_path(@edition)
+  end
+
 private
 
   def setup_view_paths
@@ -69,5 +94,17 @@ private
 
     flash[:danger] = "You are not allowed to perform this action in the current state."
     redirect_to edition_path(edition)
+  end
+
+  def require_multiple_parts(edition)
+    return if edition.parts.count > 1
+
+    flash[:danger] = "You can only reorder chapters when there are at least 2."
+    redirect_to edition_path(edition)
+  end
+
+  def reorder_chapters(edition, chapters)
+    chapters.each { |chapter_id, new_index| edition.parts.find(chapter_id).update(order: new_index.to_i) }
+    edition.save!
   end
 end
