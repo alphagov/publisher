@@ -39,7 +39,6 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email
                          add_edition_note
                          update_important_note
-                         tagging_reorder_related_content_page
                          tagging_organisations_page] do
     require_editor_permissions
   end
@@ -135,16 +134,6 @@ class EditionsController < InheritedResources::Base
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
-  end
-
-  def tagging_reorder_related_content_page
-    populate_tagging_form_values_from_publishing_api
-
-    render "secondary_nav_tabs/tagging_reorder_related_content_page"
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "show"
   end
 

@@ -1404,34 +1404,6 @@ class EditionsControllerTest < ActionController::TestCase
       stub_linkables_with_data
     end
 
-    context "user has govuk_editor permission" do
-      should "render the 'Tag related content' page" do
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
-        assert_template "secondary_nav_tabs/tagging_reorder_related_content_page"
-      end
-
-      should "render the tagging tab and display an error message if an error occurs during the request" do
-        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
-
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
-
-        assert_template "show"
-        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
-      end
-    end
-
-    context "user does not have govuk_editor permission" do
-      setup do
-        user = FactoryBot.create(:user)
-        login_as(user)
-      end
-
-      should "render an error message" do
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
-        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
-      end
-    end
-
     context "reorder_related_content" do
       should "create tagging_update_form_values using reordered_related_items when it is present" do
         post :update_tagging, params: { "id" => @edition.id,
