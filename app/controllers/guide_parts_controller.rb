@@ -13,10 +13,10 @@ class GuidePartsController < InheritedResources::Base
   before_action do
     require_user_accessibility_to_edition(@edition)
   end
-  before_action only: %i[new create] do
+  before_action only: %i[new create edit update] do
     require_editor_permissions(@edition)
   end
-  before_action only: %i[new create] do
+  before_action only: %i[new create edit update] do
     require_editing_state(@edition)
   end
 
@@ -43,6 +43,26 @@ class GuidePartsController < InheritedResources::Base
     Rails.logger.error "Error #{e.class} #{e.message}"
     @edition.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
     render "secondary_nav_tabs/guide_add_new_chapter_page"
+  end
+
+  def update
+    @part = Part.find(params[:id])
+    @part.assign_attributes(permitted_parts_params)
+
+    if @part.save
+      if params[:save] == "save and summary"
+        flash[:success] = "Chapter updated successfully."
+        redirect_to edition_path(@edition)
+      elsif params[:save] == "save"
+        flash[:success] = "Chapter updated successfully."
+        redirect_to edit_edition_guide_part_path(@edition, @part)
+      end
+    else
+      render "secondary_nav_tabs/guide_add_new_chapter_page"
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
   end
 
 private
