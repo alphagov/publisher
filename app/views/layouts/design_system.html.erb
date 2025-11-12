@@ -47,6 +47,7 @@
       data-module="<%= data_module_main %>"
       data-ga4-link='{ "event_name": "navigation", "type": "generic_link" }'
       data-ga4-no-copy="true"
+      data-ga4-section="<%= yield(:title) %>"
     >
       <%= render "shared/flash", flash: flash %>
 
