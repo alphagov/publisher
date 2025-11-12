@@ -9,6 +9,7 @@ class TaggingController < InheritedResources::Base
   before_action only: %i[
     tagging_breadcrumb_page
     tagging_remove_breadcrumb_page
+    tagging_mainstream_browse_page
   ] do
     require_editor_permissions
   end
@@ -28,6 +29,16 @@ class TaggingController < InheritedResources::Base
   def tagging_remove_breadcrumb_page
     populate_tagging_form_values_from_publishing_api
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+  end
+
+  def tagging_mainstream_browse_page
+    populate_tagging_form_values_from_publishing_api
+    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_mainstream_browse_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
   end
 
 protected
@@ -54,6 +65,21 @@ private
             text: item.first.split(" / ").last,
             value: item.last,
             checked: tagging_update_form_values.parent&.include?(item.last),
+          }
+        end,
+      }
+    end
+  end
+
+  def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update_form_values)
+    Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
+      {
+        heading: k,
+        items: v.map do |item|
+          {
+            label: item.first.split(" / ").last,
+            value: item.last,
+            checked: tagging_update_form_values.mainstream_browse_pages&.include?(item.last),
           }
         end,
       }

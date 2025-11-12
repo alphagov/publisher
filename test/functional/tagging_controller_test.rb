@@ -105,4 +105,50 @@ class TaggingControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "#tagging_mainstream_browse_page" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+      stub_linkables_with_data
+    end
+
+    context "user has govuk_editor permission" do
+      setup do
+        login_as_stub_user
+      end
+
+      should "render the 'Tag to a browse page' page" do
+        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_mainstream_browse_page"
+      end
+
+      should "render the tagging tab and display an error message if an error occurs during the request" do
+        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+
+        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        user = FactoryBot.create(:user)
+        login_as(user)
+
+        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user is a Welsh editor and non-Welsh edition" do
+        login_as_welsh_editor
+
+        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
 end

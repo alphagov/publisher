@@ -39,7 +39,6 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email
                          add_edition_note
                          update_important_note
-                         tagging_mainstream_browse_page
                          tagging_reorder_related_content_page
                          tagging_related_content_page
                          tagging_organisations_page] do
@@ -137,16 +136,6 @@ class EditionsController < InheritedResources::Base
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
-  end
-
-  def tagging_mainstream_browse_page
-    populate_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
-    render "secondary_nav_tabs/tagging_mainstream_browse_page"
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "show"
   end
 
@@ -567,21 +556,6 @@ protected
   end
 
 private
-
-  def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update_form_values)
-    Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
-      {
-        heading: k,
-        items: v.map do |item|
-          {
-            label: item.first.split(" / ").last,
-            value: item.last,
-            checked: tagging_update_form_values.mainstream_browse_pages&.include?(item.last),
-          }
-        end,
-      }
-    end
-  end
 
   def populate_tagging_form_values_from_publishing_api
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_publishing_api(
