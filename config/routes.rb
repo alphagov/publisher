@@ -80,12 +80,7 @@ Rails.application.routes.draw do
              }
       end
 
-      resources :guide_parts do
-        member do
-          get "new"
-          post "create"
-        end
-
+      resources :guide_parts, only: %i[new create show edit update] do
         collection do
           get "reorder"
           post "bulk_update_reorder"
