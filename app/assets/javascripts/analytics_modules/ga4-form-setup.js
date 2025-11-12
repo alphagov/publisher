@@ -25,13 +25,14 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 
   Ga4FormSetup.prototype.addDataAttributes = function (form) {
     var section = form.closest("[data-ga4-section]")
+    var toolName = form.closest("[data-ga4-tool-name]")
     var dataModule = form.dataset.module || null
     var eventData = {
       event_name: 'form_response',
       type: 'edit',
       section: section.getAttribute("data-ga4-section"),
       action: 'Save',
-      tool_name: 'publisher'
+      tool_name: toolName.getAttribute("data-ga4-tool-name")
     }
 
     if (dataModule) {

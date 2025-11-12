@@ -5,8 +5,8 @@ describe('GA4FormSetup', function () {
 
   beforeEach(function () {
     var moduleHtml =
-      `<div data-module="ga4-form-setup" data-ga4-section="The section name">
-        <form></form>
+      `<div data-module="ga4-form-setup" data-ga4-section="The section name" data-ga4-tool-name="Answer">
+        <form data-module=""></form>
         <form data-module="some-other-module"></form>
       </div>`
 
@@ -45,7 +45,7 @@ describe('GA4FormSetup', function () {
       expect(formEventData.action).toBe('Save')
       expect(formEventData.event_name).toBe('form_response')
       expect(formEventData.section).toBe('The section name')
-      expect(formEventData.tool_name).toBe('publisher')
+      expect(formEventData.tool_name).toBe('Answer')
       expect(formEventData.type).toBe('edit')
       expect(Object.keys(formGA4Data)).toContain('ga4FormIncludeText')
       expect(Object.keys(formGA4Data)).toContain('ga4FormChangeTracking')

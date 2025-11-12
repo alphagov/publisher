@@ -23,7 +23,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal form_ga4_event_data["action"], "Save"
       assert_equal form_ga4_event_data["event_name"], "form_response"
       assert_equal form_ga4_event_data["section"], "Answer edition"
-      assert_equal form_ga4_event_data["tool_name"], "publisher"
+      assert_equal form_ga4_event_data["tool_name"], "Answer"
       assert_equal form_ga4_event_data["type"], "edit"
 
       assert page.has_css?("form[data-ga4-form-include-text]")
@@ -144,7 +144,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal form_ga4_event_data["action"], "Save"
       assert_equal form_ga4_event_data["event_name"], "form_response"
       assert_equal form_ga4_event_data["section"], "Assign person"
-      assert_equal form_ga4_event_data["tool_name"], "publisher"
+      assert_equal form_ga4_event_data["tool_name"], "Answer"
       assert_equal form_ga4_event_data["type"], "edit"
 
       assert page.has_css?("form[data-ga4-form-include-text]")
