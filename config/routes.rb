@@ -55,7 +55,7 @@ Rails.application.routes.draw do
         get "tagging", to: "editions#tagging"
         post "update_tagging"
         get "tagging_mainstream_browse_page", to: "tagging#tagging_mainstream_browse_page"
-        get "tagging_related_content_page"
+        get "tagging_related_content_page", to: "tagging#tagging_related_content_page"
         get "tagging_reorder_related_content_page"
         get "tagging_organisations_page"
         get "tagging_breadcrumb_page", to: "tagging#tagging_breadcrumb_page"
