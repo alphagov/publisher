@@ -38,8 +38,7 @@ class EditionsController < InheritedResources::Base
                          resend_fact_check_email_page
                          resend_fact_check_email
                          add_edition_note
-                         update_important_note
-                         tagging_organisations_page] do
+                         update_important_note] do
     require_editor_permissions
   end
   before_action only: %i[confirm_destroy destroy] do
@@ -134,24 +133,6 @@ class EditionsController < InheritedResources::Base
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
-  end
-
-  def tagging_organisations_page
-    populate_tagging_form_values_from_publishing_api
-
-    @linkables = Tagging::Linkables.new.organisations.map do |linkable|
-      {
-        text: linkable[0],
-        value: linkable[1],
-        selected: @tagging_update_form_values.organisations&.include?(linkable[1]),
-      }
-    end
-
-    render "secondary_nav_tabs/tagging_organisations_page"
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "show"
   end
 
