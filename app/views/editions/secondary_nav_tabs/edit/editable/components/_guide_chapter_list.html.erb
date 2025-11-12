@@ -13,7 +13,7 @@
           <%= part.title %>
         <% end %>
         <%= tag.span class: "govuk-body govuk-summary-list__actions" do %>
-          <%= link_to "Edit", "#", class: "govuk-link govuk-link--no-visited-state" %>
+          <%= link_to "Edit", edit_edition_guide_part_path(edition, part), class: "govuk-link govuk-link--no-visited-state" %>
         <% end %>
       <% end %>
     <% end %>

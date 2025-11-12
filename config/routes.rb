@@ -84,6 +84,8 @@ Rails.application.routes.draw do
         member do
           get "new"
           post "create"
+          get "edit"
+          patch "update"
         end
 
         collection do
