@@ -7,6 +7,7 @@ FROM --platform=$TARGETPLATFORM $builder_image AS builder
 
 WORKDIR $APP_HOME
 COPY Gemfile* .ruby-version ./
+COPY fact_check ./fact_check
 RUN bundle install
 COPY package.json yarn.lock ./
 RUN yarn install --production --frozen-lockfile --non-interactive --link-duplicates
