@@ -2,7 +2,7 @@ require "integration_test_helper"
 
 class Ga4TrackingTest < JavascriptIntegrationTest
   setup do
-    FactoryBot.create(:user, :govuk_editor, name: "Valdimir Lenin")
+    FactoryBot.create(:user, :govuk_editor, name: "Test User")
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:ga4_form_tracking, true)
@@ -12,6 +12,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     setup do
       edition = FactoryBot.create(:answer_edition, title: "Answer edition")
       visit edition_path(edition)
+      disable_form_submit
     end
 
     should "render the correct ga4 data-attributes on the form" do
@@ -59,14 +60,16 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       fill_in "Body", with: "The body text"
       page.find("label", text: "Yes").click
       page.find("label", text: "No").click
+      click_button "Save"
 
       dataLayer = evaluate_script('window.dataLayer')
 
-      event_data_title = dataLayer[dataLayer.count - 5]['event_data']
-      event_data_meta = dataLayer[dataLayer.count - 4]['event_data']
-      event_data_body = dataLayer[dataLayer.count - 3]['event_data']
-      event_data_radio_yes = dataLayer[dataLayer.count - 2]['event_data']
-      event_data_radio_no = dataLayer[dataLayer.count - 1]['event_data']
+      event_data_title = dataLayer[dataLayer.count - 6]['event_data']
+      event_data_meta = dataLayer[dataLayer.count - 5]['event_data']
+      event_data_body = dataLayer[dataLayer.count - 4]['event_data']
+      event_data_radio_yes = dataLayer[dataLayer.count - 3]['event_data']
+      event_data_radio_no = dataLayer[dataLayer.count - 2]['event_data']
+      event_data_save = dataLayer[dataLayer.count - 1]['event_data']
 
       assert_equal "select", event_data_title['action']
       assert_equal "select_content", event_data_title['event_name']
@@ -103,25 +106,12 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal "4", event_data_radio_no['index']['index_section']
       assert_equal "4", event_data_radio_no['index']['index_section_count']
 
-      # Struggling to test for clicking "Save"
-      # because the page reloads and the dataLayer is repopulated
-      # and the event data for the click action is lost
-
-      # click_button "Save"
-
-      # dataLayer = evaluate_script('window.dataLayer')
-      # event_data_save = dataLayer[dataLayer.count - 1]['event_data']
-
-      # print "++++++++++++++++"
-      # print event_data_save
-      # print "++++++++++++++++"
-
-      # assert_equal "Save", event_data_save['action']
-      # assert_equal "form_response", event_data_save['event_name']
-      # assert_equal "Edit edition", event_data_save['section']
-      # assert_equal "No", event_data_save['text']
-      # assert_equal "publisher", event_data_save['tool_name']
-      # assert_equal "edit", event_data_save['type']
+      assert_equal "Save", event_data_save['action']
+      assert_equal "form_response", event_data_save['event_name']
+      assert_equal "Answer edition", event_data_save['section']
+      assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data_save['text']
+      assert_equal "Answer", event_data_save['tool_name']
+      assert_equal "edit", event_data_save['type']
     end
   end
 
@@ -133,6 +123,8 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       within all(".govuk-summary-list__row")[0] do
         click_link("Edit")
       end
+
+      disable_form_submit
     end
 
     should "render the correct ga4 data-attributes on the form" do
@@ -162,19 +154,34 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     end
 
     should "push the correct values to the dataLayer when events are triggered" do
-      page.find("label", text: "Valdimir Lenin").click
+      page.find("label", text: "Test User").click
+      click_button "Save"
 
       dataLayer = evaluate_script('window.dataLayer')
-      event_data_radio_user = dataLayer[dataLayer.count - 1]['event_data']
+      event_data_radio_user = dataLayer[dataLayer.count - 2]['event_data']
+      event_data_save = dataLayer[dataLayer.count - 1]['event_data']
 
       assert_equal "select", event_data_radio_user['action']
       assert_equal "select_content", event_data_radio_user['event_name']
       assert_equal "Choose a person to assign", event_data_radio_user['section']
-      assert_equal "Valdimir Lenin", event_data_radio_user['text']
+      assert_equal "Test User", event_data_radio_user['text']
       assert_equal "1", event_data_radio_user['index']['index_section']
       assert_equal "1", event_data_radio_user['index']['index_section_count']
-    end
 
-    # Add test for clicking "Save" if I work it out
+      assert_equal "Save", event_data_save['action']
+      assert_equal "form_response", event_data_save['event_name']
+      assert_equal "Assign person", event_data_save['section']
+      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data_save['text']
+      assert_equal "Answer", event_data_save['tool_name']
+      assert_equal "edit", event_data_save['type']
+    end
+  end
+
+private
+
+  def disable_form_submit
+    # Disable submission of the form so that all event data can be gathered
+    # including the data collected on the "Save" (or equivalent) button being clicked
+    execute_script("document.querySelector('form').addEventListener('submit',function(e){e.preventDefault()})")
   end
 end
