@@ -62,56 +62,56 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       page.find("label", text: "No").click
       click_button "Save"
 
-      dataLayer = evaluate_script('window.dataLayer')
+      data_layer = evaluate_script("window.dataLayer")
 
-      event_data_title = dataLayer[dataLayer.count - 6]['event_data']
-      event_data_meta = dataLayer[dataLayer.count - 5]['event_data']
-      event_data_body = dataLayer[dataLayer.count - 4]['event_data']
-      event_data_radio_yes = dataLayer[dataLayer.count - 3]['event_data']
-      event_data_radio_no = dataLayer[dataLayer.count - 2]['event_data']
-      event_data_save = dataLayer[dataLayer.count - 1]['event_data']
+      event_data_title = data_layer[data_layer.count - 6]["event_data"]
+      event_data_meta = data_layer[data_layer.count - 5]["event_data"]
+      event_data_body = data_layer[data_layer.count - 4]["event_data"]
+      event_data_radio_yes = data_layer[data_layer.count - 3]["event_data"]
+      event_data_radio_no = data_layer[data_layer.count - 2]["event_data"]
+      event_data_save = data_layer[data_layer.count - 1]["event_data"]
 
-      assert_equal "select", event_data_title['action']
-      assert_equal "select_content", event_data_title['event_name']
-      assert_equal "Title", event_data_title['section']
-      assert_equal "9", event_data_title['text']
-      assert_equal "1", event_data_title['index']['index_section']
-      assert_equal "4", event_data_title['index']['index_section_count']
+      assert_equal "select", event_data_title["action"]
+      assert_equal "select_content", event_data_title["event_name"]
+      assert_equal "Title", event_data_title["section"]
+      assert_equal "9", event_data_title["text"]
+      assert_equal "1", event_data_title["index"]["index_section"]
+      assert_equal "4", event_data_title["index"]["index_section_count"]
 
-      assert_equal "select", event_data_meta['action']
-      assert_equal "select_content", event_data_meta['event_name']
-      assert_equal "Meta tag description", event_data_meta['section']
-      assert_equal "24", event_data_meta['text']
-      assert_equal "2", event_data_meta['index']['index_section']
-      assert_equal "4", event_data_meta['index']['index_section_count']
+      assert_equal "select", event_data_meta["action"]
+      assert_equal "select_content", event_data_meta["event_name"]
+      assert_equal "Meta tag description", event_data_meta["section"]
+      assert_equal "24", event_data_meta["text"]
+      assert_equal "2", event_data_meta["index"]["index_section"]
+      assert_equal "4", event_data_meta["index"]["index_section_count"]
 
-      assert_equal "select", event_data_body['action']
-      assert_equal "select_content", event_data_body['event_name']
-      assert_equal "Body", event_data_body['section']
-      assert_equal "13", event_data_body['text']
-      assert_equal "3", event_data_body['index']['index_section']
-      assert_equal "4", event_data_body['index']['index_section_count']
+      assert_equal "select", event_data_body["action"]
+      assert_equal "select_content", event_data_body["event_name"]
+      assert_equal "Body", event_data_body["section"]
+      assert_equal "13", event_data_body["text"]
+      assert_equal "3", event_data_body["index"]["index_section"]
+      assert_equal "4", event_data_body["index"]["index_section_count"]
 
-      assert_equal "select", event_data_radio_yes['action']
-      assert_equal "select_content", event_data_radio_yes['event_name']
-      assert_equal "Is this beta content?", event_data_radio_yes['section']
-      assert_equal "Yes", event_data_radio_yes['text']
-      assert_equal "4", event_data_radio_yes['index']['index_section']
-      assert_equal "4", event_data_radio_yes['index']['index_section_count']
+      assert_equal "select", event_data_radio_yes["action"]
+      assert_equal "select_content", event_data_radio_yes["event_name"]
+      assert_equal "Is this beta content?", event_data_radio_yes["section"]
+      assert_equal "Yes", event_data_radio_yes["text"]
+      assert_equal "4", event_data_radio_yes["index"]["index_section"]
+      assert_equal "4", event_data_radio_yes["index"]["index_section_count"]
 
-      assert_equal "select", event_data_radio_no['action']
-      assert_equal "select_content", event_data_radio_no['event_name']
-      assert_equal "Is this beta content?", event_data_radio_no['section']
-      assert_equal "No", event_data_radio_no['text']
-      assert_equal "4", event_data_radio_no['index']['index_section']
-      assert_equal "4", event_data_radio_no['index']['index_section_count']
+      assert_equal "select", event_data_radio_no["action"]
+      assert_equal "select_content", event_data_radio_no["event_name"]
+      assert_equal "Is this beta content?", event_data_radio_no["section"]
+      assert_equal "No", event_data_radio_no["text"]
+      assert_equal "4", event_data_radio_no["index"]["index_section"]
+      assert_equal "4", event_data_radio_no["index"]["index_section_count"]
 
-      assert_equal "Save", event_data_save['action']
-      assert_equal "form_response", event_data_save['event_name']
-      assert_equal "Answer edition", event_data_save['section']
-      assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data_save['text']
-      assert_equal "Answer", event_data_save['tool_name']
-      assert_equal "edit", event_data_save['type']
+      assert_equal "Save", event_data_save["action"]
+      assert_equal "form_response", event_data_save["event_name"]
+      assert_equal "Answer edition", event_data_save["section"]
+      assert_equal "{\"Title\":\"9\",\"Meta tag description\":\"24\",\"Body\":\"13\",\"Is this beta content?\":\"No\"}", event_data_save["text"]
+      assert_equal "Answer", event_data_save["tool_name"]
+      assert_equal "edit", event_data_save["type"]
     end
   end
 
@@ -157,23 +157,23 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       page.find("label", text: "Test User").click
       click_button "Save"
 
-      dataLayer = evaluate_script('window.dataLayer')
-      event_data_radio_user = dataLayer[dataLayer.count - 2]['event_data']
-      event_data_save = dataLayer[dataLayer.count - 1]['event_data']
+      data_layer = evaluate_script("window.dataLayer")
+      event_data_radio_user = data_layer[data_layer.count - 2]["event_data"]
+      event_data_save = data_layer[data_layer.count - 1]["event_data"]
 
-      assert_equal "select", event_data_radio_user['action']
-      assert_equal "select_content", event_data_radio_user['event_name']
-      assert_equal "Choose a person to assign", event_data_radio_user['section']
-      assert_equal "Test User", event_data_radio_user['text']
-      assert_equal "1", event_data_radio_user['index']['index_section']
-      assert_equal "1", event_data_radio_user['index']['index_section_count']
+      assert_equal "select", event_data_radio_user["action"]
+      assert_equal "select_content", event_data_radio_user["event_name"]
+      assert_equal "Choose a person to assign", event_data_radio_user["section"]
+      assert_equal "Test User", event_data_radio_user["text"]
+      assert_equal "1", event_data_radio_user["index"]["index_section"]
+      assert_equal "1", event_data_radio_user["index"]["index_section_count"]
 
-      assert_equal "Save", event_data_save['action']
-      assert_equal "form_response", event_data_save['event_name']
-      assert_equal "Assign person", event_data_save['section']
-      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data_save['text']
-      assert_equal "Answer", event_data_save['tool_name']
-      assert_equal "edit", event_data_save['type']
+      assert_equal "Save", event_data_save["action"]
+      assert_equal "form_response", event_data_save["event_name"]
+      assert_equal "Assign person", event_data_save["section"]
+      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data_save["text"]
+      assert_equal "Answer", event_data_save["tool_name"]
+      assert_equal "edit", event_data_save["type"]
     end
   end
 
