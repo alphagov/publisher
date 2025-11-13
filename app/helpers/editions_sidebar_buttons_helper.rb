@@ -75,6 +75,17 @@ module EditionsSidebarButtonsHelper
           margin_bottom: 3,
         })
       end
+      if edition.editionable.is_a?(GuideEdition) && edition.parts.count > 1
+        buttons << render(
+          "govuk_publishing_components/components/button",
+          {
+            text: "Reorder chapters",
+            href: reorder_edition_guide_parts_path(edition),
+            secondary_solid: true,
+            margin_bottom: 3,
+          },
+        )
+      end
       if edition.can_send_fact_check?
         buttons << render(
           "govuk_publishing_components/components/button",
