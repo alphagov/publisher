@@ -2092,162 +2092,281 @@ class EditionEditTest < IntegrationTest
           visit_draft_guide_edition
         end
 
-        should "show fields for guide edition" do
-          assert page.has_field?("edition[title]", with: "Edit page title")
-          assert page.has_field?("edition[overview]", with: "metatags")
+        context "user has editor permissions" do
+          should "show fields for guide edition" do
+            assert page.has_field?("edition[title]", with: "Edit page title")
+            assert page.has_field?("edition[overview]", with: "metatags")
 
-          assert page.has_css?(".govuk-heading-m", text: "Chapters")
-          assert page.has_css?(".govuk-button", text: "Add a new chapter")
+            assert page.has_css?(".govuk-heading-m", text: "Chapters")
+            assert page.has_css?(".govuk-button", text: "Add a new chapter")
 
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
           end
 
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-        end
+          should "show guide chapter list for guide edition if present" do
+            visit_draft_guide_edition_with_parts
 
-        should "show guide chapter list for guide edition if present" do
-          visit_draft_guide_edition_with_parts
+            assert page.has_field?("edition[title]", with: "Edit page title")
+            assert page.has_field?("edition[overview]", with: "metatags")
 
-          assert page.has_field?("edition[title]", with: "Edit page title")
-          assert page.has_field?("edition[overview]", with: "metatags")
+            assert page.has_css?(".govuk-heading-m", text: "Chapters")
 
-          assert page.has_css?(".govuk-heading-m", text: "Chapters")
+            assert page.has_css?(".govuk-summary-list__row", text: "PART !")
+            assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
 
-          assert page.has_css?(".govuk-summary-list__row", text: "PART !")
-          assert page.has_css?(".govuk-summary-list__row", text: "PART !!")
+            assert page.has_css?(".govuk-button", text: "Add a new chapter")
 
-          assert page.has_css?(".govuk-button", text: "Add a new chapter")
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
 
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-        end
-
-        should "update guide edition and show success message" do
-          fill_in "edition[title]", with: "Changed Title"
-          fill_in "edition[overview]", with: "Changed Meta tag description"
-
-          within all(".govuk-fieldset")[0] do
-            choose("Yes")
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
           end
 
-          within all(".govuk-fieldset")[1] do
-            choose("Yes")
+          should "update guide edition and show success message" do
+            fill_in "edition[title]", with: "Changed Title"
+            fill_in "edition[overview]", with: "Changed Meta tag description"
+
+            within all(".govuk-fieldset")[0] do
+              choose("Yes")
+            end
+
+            within all(".govuk-fieldset")[1] do
+              choose("Yes")
+            end
+
+            click_button("Save")
+
+            assert page.has_field?("edition[title]", with: "Changed Title")
+            assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
+
+            within all(".govuk-fieldset")[0] do
+              assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
+              assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            within all(".govuk-fieldset")[1] do
+              assert page.has_css?("legend", text: "Is this beta content?")
+              assert find(".gem-c-radio input[value='1']").checked?
+            end
+
+            assert page.has_text?("Edition updated successfully.")
           end
 
-          click_button("Save")
-
-          assert page.has_field?("edition[title]", with: "Changed Title")
-          assert page.has_field?("edition[overview]", with: "Changed Meta tag description")
-
-          within all(".govuk-fieldset")[0] do
-            assert page.has_css?("legend", text: "Is every chapter part of a step by step?")
-            assert page.has_css?(".govuk-hint", text: "The chapter navigation will be hidden if they all are")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          within all(".govuk-fieldset")[1] do
-            assert page.has_css?("legend", text: "Is this beta content?")
-            assert find(".gem-c-radio input[value='1']").checked?
-          end
-
-          assert page.has_text?("Edition updated successfully.")
-        end
-
-        should "show Add new chapter page when Add new chapter button is clicked" do
-          click_link("Add a new chapter")
-
-          assert page.has_content?("Add new chapter")
-
-          assert page.has_css?(".govuk-label", text: "Title")
-          assert page.has_css?(".govuk-label", text: "Slug")
-          assert page.has_css?(".govuk-label", text: "Body")
-        end
-
-        context "Add new chapter" do
-          setup do
+          should "show Add new chapter page when Add new chapter button is clicked" do
             click_link("Add a new chapter")
+
+            assert page.has_content?("Add new chapter")
+
+            assert page.has_css?(".govuk-label", text: "Title")
+            assert page.has_css?(".govuk-label", text: "Slug")
+            assert page.has_css?(".govuk-label", text: "Body")
           end
 
-          should "show add new chapter page to the guide edition and redirect to edit guide page when save and summary button is clicked" do
-            fill_in "Title", with: "Part One"
-            fill_in "Slug", with: "part-one"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_path(@draft_guide_edition.id)
-
-            assert page.has_content?("New chapter added successfully.")
+          should "not show 'Reorder chapters' button when no parts are present" do
+            assert page.has_no_link?("Reorder chapters")
           end
 
-          should "show validation error when Title is empty" do
-            fill_in "Title", with: ""
-            fill_in "Slug", with: "part-one"
-            fill_in "Body", with: "body-text"
+          should "not show 'Reorder chapters' button when 1 part is present" do
+            @draft_guide_edition.parts.build(
+              title: "PART !",
+              body: "This is some version text.",
+              slug: "part-one",
+              order: 1,
+            )
+            @draft_guide_edition.save!
+            @draft_guide_edition.reload
 
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
-
-            assert page.has_field?("part[title]", with: "")
-            assert page.has_field?("part[slug]", with: "part-one")
-            assert page.has_field?("part[body]", with: "body-text")
-
-            assert page.has_content?("Enter a title for Part 1")
+            assert page.has_no_link?("Reorder chapters")
           end
 
-          should "show validation error when Slug is empty" do
-            fill_in "Title", with: "Part one"
-            fill_in "Slug", with: ""
-            fill_in "Body", with: "body-text"
+          should "show an error if the user tries to directly access the reorder chapters page with less than two parts" do
+            visit reorder_edition_guide_parts_path(@draft_guide_edition)
 
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
-
-            assert page.has_field?("part[title]", with: "Part one")
-            assert page.has_field?("part[slug]", with: "")
-            assert page.has_field?("part[body]", with: "body-text")
-
-            assert page.has_content?("Enter a slug for Part 1")
+            assert current_path == edition_path(@draft_guide_edition.id)
+            assert page.has_content?("You can only reorder chapters when there are at least 2.")
           end
 
-          should "show validation error when Slug is invalid" do
-            fill_in "Title", with: "Part one"
-            fill_in "Slug", with: "@"
-            fill_in "Body", with: "body-text"
-
-            click_button("Save and go to summary")
-
-            assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
-
-            assert page.has_field?("part[title]", with: "Part one")
-            assert page.has_field?("part[slug]", with: "@")
-            assert page.has_field?("part[body]", with: "body-text")
-
-            assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+          should "show 'Reorder chapters' button when two parts are present" do
+            visit_draft_guide_edition_with_parts
+            assert page.has_link?("Reorder chapters")
           end
 
-          should "show redirect to guide edit page when back to summary link is clicked" do
-            click_link("Back to summary")
+          context "Add new chapter" do
+            setup do
+              click_link("Add a new chapter")
+            end
 
-            assert_current_path edition_path(@draft_guide_edition.id)
+            should "show add new chapter page to the guide edition and redirect to edit guide page when save and summary button is clicked" do
+              fill_in "Title", with: "Part One"
+              fill_in "Slug", with: "part-one"
+              fill_in "Body", with: "body-text"
 
-            assert page.has_content?("Edit")
+              click_button("Save and go to summary")
+
+              assert_current_path edition_path(@draft_guide_edition.id)
+
+              assert page.has_content?("New chapter added successfully.")
+            end
+
+            should "show validation error when Title is empty" do
+              fill_in "Title", with: ""
+              fill_in "Slug", with: "part-one"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
+
+              assert page.has_field?("part[title]", with: "")
+              assert page.has_field?("part[slug]", with: "part-one")
+              assert page.has_field?("part[body]", with: "body-text")
+
+              assert page.has_content?("Enter a title for Part 1")
+            end
+
+            should "show validation error when Slug is empty" do
+              fill_in "Title", with: "Part one"
+              fill_in "Slug", with: ""
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
+
+              assert page.has_field?("part[title]", with: "Part one")
+              assert page.has_field?("part[slug]", with: "")
+              assert page.has_field?("part[body]", with: "body-text")
+
+              assert page.has_content?("Enter a slug for Part 1")
+            end
+
+            should "show validation error when Slug is invalid" do
+              fill_in "Title", with: "Part one"
+              fill_in "Slug", with: "@"
+              fill_in "Body", with: "body-text"
+
+              click_button("Save and go to summary")
+
+              assert_current_path edition_guide_parts_path(@draft_guide_edition.id)
+
+              assert page.has_field?("part[title]", with: "Part one")
+              assert page.has_field?("part[slug]", with: "@")
+              assert page.has_field?("part[body]", with: "body-text")
+
+              assert page.has_content?("Slug can only consist of lower case characters, numbers and hyphens")
+            end
+
+            should "show redirect to guide edit page when back to summary link is clicked" do
+              click_link("Back to summary")
+
+              assert_current_path edition_path(@draft_guide_edition.id)
+
+              assert page.has_content?("Edit")
+            end
+          end
+
+          context "Reorder Chapters" do
+            setup do
+              visit_draft_guide_edition_with_parts
+              click_link("Reorder chapters")
+            end
+
+            should "reorder chapters and redirect to guide edit page when update order is clicked" do
+              within all(".gem-c-reorderable-list__item")[0] do
+                fill_in "Position", with: "2"
+              end
+              within all(".gem-c-reorderable-list__item")[1] do
+                fill_in "Position", with: "1"
+              end
+
+              click_button "Update order"
+
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_text?("PART !!")
+              end
+              within all(".govuk-summary-list__row")[4] do
+                assert page.has_text?("PART !")
+              end
+            end
+
+            should "not reorder chapters and redirect to guide edit page when cancel is clicked" do
+              within all(".gem-c-reorderable-list__item")[0] do
+                fill_in "Position", with: "2"
+              end
+              within all(".gem-c-reorderable-list__item")[1] do
+                fill_in "Position", with: "1"
+              end
+
+              click_link "Cancel"
+
+              within all(".govuk-summary-list__row")[3] do
+                assert page.has_text?("PART !")
+              end
+              within all(".govuk-summary-list__row")[4] do
+                assert page.has_text?("PART !!")
+              end
+            end
+          end
+
+          %w[scheduled_for_publishing published archived].each do |state|
+            context "when state is #{state}" do
+              setup do
+                visit_draft_guide_edition_with_parts(state: state)
+              end
+
+              should "not show 'Add new chapter' button" do
+                assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
+              end
+
+              should "not show 'Reorder chapters' button even with two parts present" do
+                assert page.has_no_link?("Reorder chapters")
+              end
+
+              should "not allow user to load reorder chapters page" do
+                visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
+
+                assert current_path == edition_path(@draft_guide_edition_with_parts.id)
+                assert page.has_content?("You are not allowed to perform this action in the current state.")
+              end
+            end
+          end
+        end
+
+        context "user has no editor permissions" do
+          setup do
+            login_as(FactoryBot.create(:user, name: "Non Editor"))
+            visit_draft_guide_edition_with_parts
+          end
+
+          should "not show 'Add new chapter' button" do
+            assert_not page.has_css?(".govuk-button", text: "Add a new chapter")
+          end
+
+          should "not show 'Reorder chapters' button even with two parts present" do
+            assert page.has_no_link?("Reorder chapters")
+          end
+
+          should "not allow user to load reorder chapters page" do
+            visit reorder_edition_guide_parts_path(@draft_guide_edition_with_parts)
+
+            assert current_path == edition_path(@draft_guide_edition_with_parts.id)
+            assert page.has_content?("You do not have correct editor permissions for this action.")
           end
         end
       end
@@ -4869,8 +4988,8 @@ private
     @draft_guide_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
   end
 
-  def create_draft_guide_edition_with_parts
-    @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id)
+  def create_draft_guide_edition_with_parts(state: "draft")
+    @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: state, overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
   end
 
   def visit_draft_place_edition
@@ -4888,8 +5007,8 @@ private
     visit edition_path(@draft_guide_edition)
   end
 
-  def visit_draft_guide_edition_with_parts
-    create_draft_guide_edition_with_parts
+  def visit_draft_guide_edition_with_parts(state: "draft")
+    create_draft_guide_edition_with_parts(state: state)
     visit edition_path(@draft_guide_edition_with_parts)
   end
 
