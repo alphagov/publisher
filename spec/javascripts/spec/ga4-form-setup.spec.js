@@ -23,7 +23,7 @@ describe('GA4FormSetup', function () {
   })
 
   describe('when loaded', function () {
-    it('adds/updates the "data-module" parameter of the form', function() {
+    it('adds/updates the "data-module" parameter of the form', function () {
       var form, formGA4Data
 
       form = module.querySelectorAll('form')[0]
