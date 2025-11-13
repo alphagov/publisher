@@ -3,7 +3,7 @@
 require "test_helper"
 
 class TaggingControllerTest < ActionController::TestCase
-  context "#tagging_breadcrumb_page" do
+  context "#breadcrumb_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_holidays_used_by_fact_check
@@ -18,14 +18,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Set GOV.UK breadcrumb' page" do
-        get :tagging_breadcrumb_page, params: { id: @edition.id }
+        get :breadcrumb_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_breadcrumb_page"
       end
 
       should "render the tagging tab and display an error message when an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :tagging_breadcrumb_page, params: { id: @edition.id }
+        get :breadcrumb_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -37,7 +37,7 @@ class TaggingControllerTest < ActionController::TestCase
         user = FactoryBot.create(:user)
         login_as(user)
 
-        get :tagging_breadcrumb_page, params: { id: @edition.id }
+        get :breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -45,14 +45,14 @@ class TaggingControllerTest < ActionController::TestCase
       should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
         login_as_welsh_editor
 
-        get :tagging_breadcrumb_page, params: { id: @edition.id }
+        get :breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
   end
 
-  context "#tagging_remove_breadcrumb_page" do
+  context "#remove_breadcrumb_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -64,7 +64,7 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the remove breadcrumb page" do
-        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        get :remove_breadcrumb_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_remove_breadcrumb_page"
       end
     end
@@ -74,7 +74,7 @@ class TaggingControllerTest < ActionController::TestCase
         user = FactoryBot.create(:user)
         login_as(user)
 
-        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        get :remove_breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -82,7 +82,7 @@ class TaggingControllerTest < ActionController::TestCase
       should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
         login_as_welsh_editor
 
-        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        get :remove_breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -91,7 +91,7 @@ class TaggingControllerTest < ActionController::TestCase
         user = FactoryBot.create(:user)
         login_as(user)
 
-        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        get :remove_breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -99,14 +99,14 @@ class TaggingControllerTest < ActionController::TestCase
       should "render an error message if the user has welsh_editor permission and the edition is not Welsh and tries to remove breadcrumb" do
         login_as_welsh_editor
 
-        get :tagging_remove_breadcrumb_page, params: { id: @edition.id }
+        get :remove_breadcrumb_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
   end
 
-  context "#tagging_mainstream_browse_page" do
+  context "#mainstream_browse_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -118,14 +118,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Tag to a browse page' page" do
-        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_mainstream_browse_page"
       end
 
       should "render the tagging tab and display an error message if an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -137,7 +137,7 @@ class TaggingControllerTest < ActionController::TestCase
         user = FactoryBot.create(:user)
         login_as(user)
 
-        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -145,14 +145,14 @@ class TaggingControllerTest < ActionController::TestCase
       should "render an error message if the user is a Welsh editor and non-Welsh edition" do
         login_as_welsh_editor
 
-        get :tagging_mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
   end
 
-  context "#tagging_related_content_page" do
+  context "#related_content_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -164,14 +164,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Tag related content' page" do
-        get :tagging_related_content_page, params: { id: @edition.id }
+        get :related_content_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_related_content_page"
       end
 
       should "render the tagging tab and display an error message if an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :tagging_related_content_page, params: { id: @edition.id }
+        get :related_content_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -185,13 +185,13 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render an error message" do
-        get :tagging_related_content_page, params: { id: @edition.id }
+        get :related_content_page, params: { id: @edition.id }
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
   end
 
-  context "#tagging_reorder_related_content_page" do
+  context "#reorder_related_content_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -203,14 +203,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Tag related content' page" do
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+        get :reorder_related_content_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_reorder_related_content_page"
       end
 
       should "render the tagging tab and display an error message if an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+        get :reorder_related_content_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -240,13 +240,13 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render an error message" do
-        get :tagging_reorder_related_content_page, params: { id: @edition.id }
+        get :reorder_related_content_page, params: { id: @edition.id }
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
   end
 
-  context "#tagging_organisation_page" do
+  context "#organisations_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -258,14 +258,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Tag organisations' page" do
-        get :tagging_organisations_page, params: { id: @edition.id }
+        get :organisations_page, params: { id: @edition.id }
         assert_template "secondary_nav_tabs/tagging_organisations_page"
       end
 
       should "render the edit page and display an error message if an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :tagging_organisations_page, params: { id: @edition.id }
+        get :organisations_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -288,14 +288,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render an error message" do
-        get :tagging_organisations_page, params: { id: @edition.id }
+        get :organisations_page, params: { id: @edition.id }
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
 
       should "render an error message if the user has welsh_editor permission and the edition is not a Welsh edition" do
         login_as_welsh_editor
 
-        get :tagging_organisations_page, params: { id: @edition.id }
+        get :organisations_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end

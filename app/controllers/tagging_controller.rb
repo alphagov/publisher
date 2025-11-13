@@ -7,21 +7,21 @@ class TaggingController < InheritedResources::Base
 
   before_action :setup_view_paths
   before_action only: %i[
-    tagging_breadcrumb_page
-    tagging_remove_breadcrumb_page
-    tagging_mainstream_browse_page
-    tagging_related_content_page
-    tagging_reorder_related_content_page
-    tagging_organisations_page
+    breadcrumb_page
+    remove_breadcrumb_page
+    mainstream_browse_page
+    related_content_page
+    reorder_related_content_page
+    organisations_page
   ] do
     require_editor_permissions
   end
 
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made"
 
-  def tagging_breadcrumb_page
+  def breadcrumb_page
     populate_tagging_form_values_from_publishing_api
-    @radio_groups = build_radio_groups_for_tagging_breadcrumb_page(@tagging_update_form_values)
+    @radio_groups = build_radio_groups_for_breadcrumb_page(@tagging_update_form_values)
     render "secondary_nav_tabs/tagging_breadcrumb_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
@@ -29,14 +29,14 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
-  def tagging_remove_breadcrumb_page
+  def remove_breadcrumb_page
     populate_tagging_form_values_from_publishing_api
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
-  def tagging_mainstream_browse_page
+  def mainstream_browse_page
     populate_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_tagging_mainstream_browse_page(@tagging_update_form_values)
+    @checkbox_groups = build_checkbox_groups_for_mainstream_browse_page(@tagging_update_form_values)
     render "secondary_nav_tabs/tagging_mainstream_browse_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
@@ -44,7 +44,7 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
-  def tagging_related_content_page
+  def related_content_page
     populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
@@ -54,7 +54,7 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
-  def tagging_reorder_related_content_page
+  def reorder_related_content_page
     populate_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_reorder_related_content_page"
@@ -64,7 +64,7 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
-  def tagging_organisations_page
+  def organisations_page
     populate_tagging_form_values_from_publishing_api
 
     @linkables = Tagging::Linkables.new.organisations.map do |linkable|
@@ -146,7 +146,7 @@ private
     )
   end
 
-  def build_radio_groups_for_tagging_breadcrumb_page(tagging_update_form_values)
+  def build_radio_groups_for_breadcrumb_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
@@ -161,7 +161,7 @@ private
     end
   end
 
-  def build_checkbox_groups_for_tagging_mainstream_browse_page(tagging_update_form_values)
+  def build_checkbox_groups_for_mainstream_browse_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
