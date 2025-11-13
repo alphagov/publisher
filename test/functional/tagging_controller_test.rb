@@ -215,6 +215,22 @@ class TaggingControllerTest < ActionController::TestCase
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
       end
+
+      context "reorder_related_content" do
+        should "create tagging_update_form_values using reordered_related_items when it is present" do
+          post :update_tagging, params: { "id" => @edition.id,
+                                          "reordered_related_items" => { "/pay-vat" => "1", "/" => "3", "/universal-credit" => "2" },
+                                          "tagging_tagging_update_form" => { "content_id" => "3db5234c-a87f-4a30-b058-adee1236329e",
+                                                                             "previous_version" => "22",
+                                                                             "tagging_type" => "reorder_related_content",
+                                                                             "parent" => %w[1159936b-be05-44cb-b52c-87b3c9153959],
+                                                                             "organisations" => %w[ebd15ade-73b2-4eaf-b1c3-43034a42eb37],
+                                                                             "mainstream_browse_pages" => %w[1159936b-be05-44cb-b52c-87b3c9153959 932a86f4-4916-4d9f-99cb-dfd34d7ee5d1 a1c39054-4fd5-44e9-8d1d-0c7acd57a6a4] } }
+          expected_reordered_related_items = %w[/pay-vat /universal-credit /]
+
+          assert_equal expected_reordered_related_items, @controller.instance_variable_get(:@tagging_update_form_values).ordered_related_items
+        end
+      end
     end
 
     context "user does not have govuk_editor permission" do
@@ -250,6 +266,15 @@ class TaggingControllerTest < ActionController::TestCase
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
         get :tagging_organisations_page, params: { id: @edition.id }
+
+        assert_template "show"
+        assert_equal "Due to a service problem, the request could not be made", flash[:danger]
+      end
+
+      should "render the edit page and display an error message if invalid organisation data is submitted" do
+        Tagging::TaggingUpdateForm.stubs(:publish!).raises(StandardError)
+
+        post :update_tagging, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]

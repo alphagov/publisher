@@ -87,55 +87,6 @@ class EditionsController < InheritedResources::Base
     render action: "show"
   end
 
-  def update_tagging
-    success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "related_content"
-                        "Related content updated"
-                      when "reorder_related_content"
-                        "Related content order updated"
-                      when "mainstream_browse_page"
-                        "Mainstream browse pages updated"
-                      when "organisations"
-                        "Organisations updated"
-                      when "breadcrumb"
-                        "GOV.UK breadcrumbs updated"
-                      when "remove_breadcrumb"
-                        "GOV.UK breadcrumb removed"
-                      else
-                        "Tags have been updated!"
-                      end
-
-    create_tagging_update_form_values(tagging_update_params)
-
-    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb"
-      if params[:tagging_tagging_update_form][:remove_parent] == "no"
-        redirect_to tagging_edition_path
-      elsif !params[:tagging_tagging_update_form][:remove_parent]
-        @resource.errors.add(:remove_parent, "Select an option")
-        render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
-      else
-        @tagging_update_form_values.publish!
-        flash[:success] = success_message
-        redirect_to tagging_edition_path
-      end
-    elsif @tagging_update_form_values.valid?
-      @tagging_update_form_values.publish!
-      flash[:success] = success_message
-      redirect_to tagging_edition_path
-    else
-      render "secondary_nav_tabs/tagging_related_content_page"
-    end
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "show"
-  end
-
   def resend_fact_check_email_page
     render "secondary_nav_tabs/resend_fact_check_email_page"
   end
@@ -521,29 +472,6 @@ private
       @resource.artefact.content_id,
       @resource.artefact.language,
     )
-  end
-
-  def create_tagging_update_form_values(tagging_update_params)
-    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
-  end
-
-  def tagging_update_params
-    update_params = params.require(:tagging_tagging_update_form).permit(
-      :content_id,
-      :previous_version,
-      :tagging_type,
-      parent: [],
-      mainstream_browse_pages: [],
-      organisations: [],
-      ordered_related_items: [],
-      ordered_related_items_destroy: [],
-    ).to_h
-    if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
-      update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
-                                                              .to_h[:reordered_related_items]
-                                                              .sort_by(&:last).map { |url| url[0] }
-    end
-    update_params
   end
 
   def request_amendments_for_edition(resource, comment)

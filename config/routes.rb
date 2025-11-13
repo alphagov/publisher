@@ -53,7 +53,7 @@ Rails.application.routes.draw do
         get "related_external_links"
         patch "update_related_external_links"
         get "tagging", to: "editions#tagging"
-        post "update_tagging"
+        post "update_tagging", to: "tagging#update_tagging"
         get "tagging_mainstream_browse_page", to: "tagging#tagging_mainstream_browse_page"
         get "tagging_related_content_page", to: "tagging#tagging_related_content_page"
         get "tagging_reorder_related_content_page", to: "tagging#tagging_reorder_related_content_page"
