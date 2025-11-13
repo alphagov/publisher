@@ -1,5 +1,5 @@
 class AllContentWorkflowPresenter < CSVPresenter
-  def initialize(scope = Edition.all)
+  def initialize(scope)
     super(scope)
     self.column_headings = %i[
       content_title
@@ -20,18 +20,18 @@ private
 
   def build_csv(csv)
     csv << column_headings.collect { |ch| ch.to_s.humanize }
-    scope.each do |item|
-      item.actions.each do |action|
+    @scope.find_each(batch_size: 500) do |edition|
+      edition.actions.find_each(batch_size: 500) do |action|
         csv << [
-          item.title,
-          item.slug,
-          "#{Plek.website_root}/#{item.slug}",
-          item.state,
+          edition.title,
+          edition.slug,
+          "#{Plek.website_root}/#{edition.slug}",
+          edition.state,
           action.request_type,
-          item.format,
-          item.assignee,
+          edition.format,
+          edition.assignee,
           action.created_at.to_fs(:db),
-          item.version_number,
+          edition.version_number,
           action.created_at.to_date.to_s,
           action.created_at.to_fs(:time),
         ]

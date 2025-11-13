@@ -15,6 +15,17 @@ class CsvReportGenerator
     Rails.logger.debug("Failed to get lock for report generation (#{e.message}). Another process probably got there first.")
   end
 
+  def editions_active_in_past_two_years
+    @start_time = 2.years.ago.at_beginning_of_day
+    @end_time = Time.zone.now.at_beginning_of_day
+
+    Edition.where(
+      "updated_at BETWEEN :start_time AND :end_time OR created_at BETWEEN :start_time AND :end_time",
+      start_time: @start_time,
+      end_time: @end_time,
+    ).order(created_at: :desc).includes(:actions)
+  end
+
   def presenters
     @presenters ||= [
       EditorialProgressPresenter.new(
@@ -33,9 +44,11 @@ class CsvReportGenerator
         Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
       ),
 
-      ContentWorkflowPresenter.new(Edition.published.order(created_at: :desc)),
+      ContentWorkflowPresenter.new(
+        Edition.published.order(created_at: :desc),
+      ),
 
-      # AllContentWorkflowPresenter.new(Edition.all.order(created_at: :desc)),
+      AllContentWorkflowPresenter.new(editions_active_in_past_two_years),
 
       AllUrlsPresenter.new(
         Artefact.where(owning_app: "publisher").where.not(state: %w[archived]),
