@@ -52,30 +52,160 @@ class GuidePartsControllerTest < ActionController::TestCase
     end
   end
 
+  context "editing an existing chapter" do
+    context "when user has editor permissions" do
+      setup do
+        @edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
+        login_as_govuk_editor
+      end
+      should "able render edit page for an existing chapter" do
+        get :edit, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_response :ok
+        assert_select "h2", "Edit chapter"
+      end
+
+      should "able to update an existing chapter" do
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save",
+        }
+
+        assert_equal "Chapter updated successfully.", flash[:success]
+      end
+
+      should "able to update an existing chapter and redirect to edit guide page" do
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save and summary",
+        }
+
+        assert_redirected_to edition_path(@edition.id)
+        assert_equal "Chapter updated successfully.", flash[:success]
+      end
+    end
+
+    context "when user has no editor permissions" do
+      setup do
+        @edition = FactoryBot.create(:guide_edition_with_two_parts, :draft)
+        user = FactoryBot.create(:user)
+        login_as(user)
+      end
+
+      should "prevent an existing chapter being edited" do
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save",
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "prevent the 'edit chapter' page from being displayed" do
+        get :edit, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+
+    context "when user has editor permissions and edition is published" do
+      setup do
+        @edition = FactoryBot.create(:guide_edition_with_two_parts, :published)
+        login_as_govuk_editor
+      end
+
+      should "prevent an existing chapter being edited" do
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save",
+        }
+
+        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+      end
+
+      should "prevent the 'edit chapter' page from being displayed" do
+        get :edit, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+      end
+    end
+  end
+
   context "when 'restrict_access_by_org' feature toggle is enabled" do
-    %i[new].each do |action|
-      context "GET action: '##{action}'" do
-        setup do
-          test_strategy = Flipflop::FeatureSet.current.test!
-          test_strategy.switch!(:restrict_access_by_org, true)
-          @edition = FactoryBot.create(:guide_edition, owning_org_content_ids: %w[org-two])
-        end
+    context "GET action: new chapter" do
+      setup do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:restrict_access_by_org, true)
+        @edition = FactoryBot.create(:guide_edition, owning_org_content_ids: %w[org-two])
+      end
 
-        should "return a 404 when requesting the '#{action}' action on an edition owned by a different organisation and user has departmental_editor permission" do
-          login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+      should "return a 404 when requesting the new chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
 
-          get action, params: { edition_id: @edition.id }
+        get :new, params: { edition_id: @edition.id }
 
-          assert_response :not_found
-        end
+        assert_response :not_found
+      end
 
-        should "return a 200 when requesting the '#{action}' action on an edition owned by a different organisation and user does not have departmental_editor permission" do
-          login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+      should "return a 200 when requesting the new chapter action on an edition owned by a different organisation and user does not have departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
 
-          get action, params: { edition_id: @edition.id }
+        get :new, params: { edition_id: @edition.id }
 
-          assert_response :ok
-        end
+        assert_response :ok
+      end
+    end
+
+    context "GET action: edit chapter" do
+      setup do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:restrict_access_by_org, true)
+        @edition = FactoryBot.create(:guide_edition_with_two_parts, owning_org_content_ids: %w[org-two])
+      end
+
+      should "return a 404 when requesting the new chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+
+        get :edit, params: { edition_id: @edition.id, id: @edition.parts.first.id }
+
+        assert_response :not_found
+      end
+
+      should "return a 200 when requesting the new chapter action on an edition owned by a different organisation and user does not have departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+
+        get :edit, params: { edition_id: @edition.id, id: @edition.parts.first.id }
+
+        assert_response :ok
       end
     end
 
@@ -109,6 +239,46 @@ class GuidePartsControllerTest < ActionController::TestCase
 
           assert_response :redirect
         end
+      end
+    end
+
+    context "PATCH action: update chapter" do
+      setup do
+        test_strategy = Flipflop::FeatureSet.current.test!
+        test_strategy.switch!(:restrict_access_by_org, true)
+        @edition = FactoryBot.create(:guide_edition_with_two_parts, owning_org_content_ids: %w[org-two])
+      end
+
+      should "return a 404 when requesting the update chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save and summary",
+        }
+
+        assert_response :not_found
+      end
+
+      should "return a 302 when requesting the update chapter  action on an edition owned by a different organisation and user does not have departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+
+        patch :update, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+          part: {
+            title: "Part2",
+            slug: "a",
+          },
+          save: "save and summary",
+        }
+
+        assert_response :redirect
       end
     end
   end
