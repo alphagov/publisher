@@ -79,7 +79,7 @@ Rails.application.routes.draw do
                },
              }
       end
-      resources :guide_parts, only: %i[create new edit update]
+      resources :guide_parts, only: %i[create new edit update show]
     end
   end
 
