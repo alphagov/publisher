@@ -1,0 +1,48 @@
+<% unless @edition.errors.empty? %>
+  <% content_for :error_summary do %>
+    <%= render("govuk_publishing_components/components/error_summary", {
+      id: "error-summary",
+      title: "There is a problem",
+      items: errors_to_display(@edition).map do |error_message, href|
+        {
+          text: error_message,
+          href: "#{href}",
+        }
+      end,
+    }) %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Reorder chapters",
+      context: @edition.title,
+      context_inside: true,
+      heading_level: 2,
+      font_size: "xl",
+    } %>
+  </div>
+
+  <%= form_with url: bulk_update_reorder_edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-hint">Use the up and down buttons to reorder chapters, or select and hold on an item to reorder using drag and drop</p>
+
+      <%= render "govuk_publishing_components/components/reorderable_list", {
+        items: @edition.order_parts.map do |part|
+          {
+            id: part["id"],
+            title: part["title"],
+          }
+        end,
+        input_name: "reordered_chapters",
+      } %>
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Update order",
+        } %>
+        <%= link_to("Cancel", edition_path(@edition), class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    </div>
+  <% end %>
+</div>

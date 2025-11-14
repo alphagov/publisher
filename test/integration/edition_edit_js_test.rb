@@ -20,6 +20,65 @@ class EditionEditJSTest < JavascriptIntegrationTest
         assert_current_path metadata_edition_path(@edit_edition.id)
       end
     end
+
+    context "guide edition" do
+      setup do
+        visit_draft_guide_edition_with_parts
+      end
+
+      context "reordering chapters" do
+        setup do
+          click_link "Reorder chapters"
+        end
+
+        should "reorder chapters and redirect to guide edit page when update order is clicked" do
+          # Assert that javascript buttons change visible order for user
+          within all(".gem-c-reorderable-list__item")[0] do
+            assert page.has_text?("PART !")
+            click_button("Down")
+          end
+          within all(".gem-c-reorderable-list__item")[1] do
+            assert page.has_text?("PART !", wait: 1)
+          end
+          within all(".gem-c-reorderable-list__item")[0] do
+            assert page.has_text?("PART !!", wait: 1)
+          end
+
+          click_button("Update order")
+
+          assert page.has_content?("Chapter order updated")
+
+          within all(".govuk-summary-list__row")[3] do
+            assert page.has_text?("PART !!")
+          end
+          within all(".govuk-summary-list__row")[4] do
+            assert page.has_text?("PART !")
+          end
+        end
+
+        should "not reorder chapters and redirect to guide edit page when cancel is clicked" do
+          within all(".gem-c-reorderable-list__item")[0] do
+            assert page.has_text?("PART !")
+            click_button("Down")
+          end
+          within all(".gem-c-reorderable-list__item")[1] do
+            assert page.has_text?("PART !", wait: 1)
+          end
+          within all(".gem-c-reorderable-list__item")[0] do
+            assert page.has_text?("PART !!", wait: 1)
+          end
+
+          click_link "Cancel"
+
+          within all(".govuk-summary-list__row")[3] do
+            assert page.has_text?("PART !")
+          end
+          within all(".govuk-summary-list__row")[4] do
+            assert page.has_text?("PART !!")
+          end
+        end
+      end
+    end
   end
 
   context "Related external links tab" do
@@ -317,6 +376,15 @@ private
   def visit_tagging_reorder_related_content_page_edition_path
     @tagging_edition = FactoryBot.create(:guide_edition, title: "The edition to tag")
     visit tagging_reorder_related_content_page_edition_path(@tagging_edition)
+  end
+
+  def visit_draft_guide_edition_with_parts
+    create_draft_guide_edition_with_parts
+    visit edition_path(@draft_guide_edition_with_parts)
+  end
+
+  def create_draft_guide_edition_with_parts
+    @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id)
   end
 
   def visit_metadata_page
