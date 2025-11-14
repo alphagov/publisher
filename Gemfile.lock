@@ -404,7 +404,7 @@ GEM
       ruby-progressbar
     mlanett-redis-lock (0.2.7)
       redis
-    mocha (2.7.1)
+    mocha (2.8.0)
       ruby2_keywords (>= 0.0.5)
     momentjs-rails (2.29.4.1)
       railties (>= 3.1)
