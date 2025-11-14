@@ -138,10 +138,10 @@ module EditionsSidebarButtonsHelper
     ]
   end
 
-  def guide_add_chapter_sidebar_buttons(edition)
+  def guide_chapter_sidebar_buttons(edition)
     buttons = []
 
-    if current_user.has_editor_permissions?(edition)
+    if edition.is_editable_by?(current_user)
       buttons << render(
         "govuk_publishing_components/components/button",
         {
@@ -162,16 +162,25 @@ module EditionsSidebarButtonsHelper
           value: "save and summary",
         },
       )
-      buttons <<
-        link_to(
-          "Preview (opens in new tab)",
-          preview_edition_path(edition),
-          target: "_blank",
-          rel: "noopener",
-          class: "govuk-link govuk-link--no-visited-state",
-        )
     end
 
+    buttons << if edition.published? || edition.archived?
+                 link_to(
+                   "View on GOV.UK (opens in new tab)",
+                   "#{Plek.website_root}/#{edition.slug}",
+                   rel: "noreferrer noopener",
+                   target: "_blank",
+                   class: "govuk-link govuk-link--no-visited-state",
+                 )
+               else
+                 link_to(
+                   "Preview (opens in new tab)",
+                   preview_edition_path(edition),
+                   target: "_blank",
+                   rel: "noopener",
+                   class: "govuk-link govuk-link--no-visited-state",
+                 )
+               end
     buttons
   end
 
