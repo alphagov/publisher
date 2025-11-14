@@ -33,3 +33,12 @@
     hint: ("Refer to the #{link_to("Govspeak guidance (opens in new tab)", "https://govspeak-preview.publishing.service.gov.uk/guide", target: "_blank", rel: "noopener", class: "govuk-link govuk-link--no-visited-state")}").html_safe,
   } %>
 </div>
+
+<% if current_user.has_editor_permissions?(@edition) %>
+  <div class="govuk-grid-column-one-third options-sidebar">
+    <div class="sidebar-components">
+      <%= sidebar_options_heading %>
+      <%= sidebar_items_list(guide_chapter_sidebar_buttons(@edition)) %>
+    </div>
+  </div>
+<% end %>

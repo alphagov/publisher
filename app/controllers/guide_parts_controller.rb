@@ -20,12 +20,6 @@ class GuidePartsController < InheritedResources::Base
     require_editing_state(@edition)
   end
 
-  def new
-    @part = Part.new
-
-    render "secondary_nav_tabs/guide_add_new_chapter_page"
-  end
-
   def create
     @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size))
     if @edition.save
@@ -33,16 +27,16 @@ class GuidePartsController < InheritedResources::Base
         flash[:success] = "New chapter added successfully."
         redirect_to edition_path(@edition)
       elsif params[:save] == "save"
-        flash[:success] = "Not implemented yet."
-        redirect_to edition_path(@edition)
+        flash[:success] = "New chapter added successfully."
+        redirect_to edit_edition_guide_part_path(@edition, @part)
       end
     else
-      render "secondary_nav_tabs/guide_add_new_chapter_page"
+      render "new"
     end
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     @edition.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
-    render "secondary_nav_tabs/guide_add_new_chapter_page"
+    render "new"
   end
 
   def update
@@ -58,11 +52,12 @@ class GuidePartsController < InheritedResources::Base
         redirect_to edit_edition_guide_part_path(@edition, @part)
       end
     else
-      render "secondary_nav_tabs/guide_add_new_chapter_page"
+      render "edit"
     end
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     @resource.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
+    render "edit"
   end
 
 private
