@@ -86,6 +86,7 @@ Rails.application.routes.draw do
           post "create"
           get "edit"
           patch "update"
+          get "show"
         end
 
         collection do
