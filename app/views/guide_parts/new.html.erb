@@ -17,25 +17,7 @@
   <% end %>
 <% end %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds editions__edit__summary">
-    <%= render "govuk_publishing_components/components/summary_list", {
-      items: document_summary_items(@edition, @reviewer),
-    } %>
-  </div>
-</div>
-
-<%= render partial: "/secondary_navigation" %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-  <%= render "govuk_publishing_components/components/back_link", {
-    text: "Back to summary",
-    href: edit_edition_path(@edition),
-    margin_bottom: 6,
-  } %>
-  </div>
-</div>
+<%= render partial: "guide_parts/common_items", locals: { edition: @resource, reviewer: @reviewer } %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
@@ -47,8 +29,11 @@
       margin_top: 5,
     } %>
   </div>
+</div>
 
-  <%= form_with url: edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
+<%= form_with url: edition_guide_parts_path(@edition), data: { module: "unsaved-changes-prompt" } do %>
+
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= render "govuk_publishing_components/components/input", {
         label: {
@@ -88,9 +73,10 @@
       <div class="govuk-grid-column-one-third options-sidebar">
         <div class="sidebar-components">
           <%= sidebar_options_heading %>
-          <%= sidebar_items_list(guide_add_chapter_sidebar_buttons(@edition)) %>
+          <%= sidebar_items_list(guide_chapter_sidebar_buttons(@edition)) %>
         </div>
       </div>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>
+

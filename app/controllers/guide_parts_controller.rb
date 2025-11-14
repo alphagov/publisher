@@ -33,12 +33,6 @@ class GuidePartsController < InheritedResources::Base
     require_multiple_parts(@edition)
   end
 
-  def new
-    @part = Part.new
-
-    render "secondary_nav_tabs/guide_add_new_chapter_page"
-  end
-
   def create
     @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size))
     if @edition.save
@@ -76,7 +70,7 @@ class GuidePartsController < InheritedResources::Base
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     @edition.errors.add(:show, "Due to a service problem, the edition couldn't be updated")
-     render "edit"
+    render "edit"
   end
 
   def reorder
