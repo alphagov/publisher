@@ -2,7 +2,8 @@ require "integration_test_helper"
 
 class Ga4TrackingTest < JavascriptIntegrationTest
   setup do
-    FactoryBot.create(:user, :govuk_editor, name: "Test User")
+    @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Test User")
+    @govuk_requester = FactoryBot.create(:user, :govuk_editor)
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
 
     test_strategy = Flipflop::FeatureSet.current.test!
@@ -155,6 +156,73 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal "Save", event_data_save["action"]
       assert_equal "form_response", event_data_save["event_name"]
       assert_equal "Assign person", event_data_save["section"]
+      assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data_save["text"]
+      assert_equal "Answer", event_data_save["tool_name"]
+      assert_equal "edit", event_data_save["type"]
+    end
+  end
+
+  context "Assign 21 reviewer page" do
+    setup do
+      @edition.state = "in_review"
+      @edition.review_requested_at = 1.day.ago
+      @edition.save!
+      @edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
+
+      visit edition_path(@edition)
+
+      within all(".govuk-summary-list__row")[3] do
+        click_link("Edit")
+      end
+
+      disable_form_submit
+    end
+
+    should "render the correct ga4 data-attributes on the form" do
+      get_form_data_attributes
+
+      assert_includes @form_module_data, "ga4-form-tracker"
+      assert_equal @form_ga4_event_data["action"], "Save"
+      assert_equal @form_ga4_event_data["event_name"], "form_response"
+      assert_equal @form_ga4_event_data["section"], "Assign 2i reviewer"
+      assert_equal @form_ga4_event_data["tool_name"], "Answer"
+      assert_equal @form_ga4_event_data["type"], "edit"
+
+      assert page.has_css?("form[data-ga4-form-include-text]")
+      assert page.has_css?("form[data-ga4-form-change-tracking]")
+      assert page.has_css?("form[data-ga4-form-record-json]")
+      assert page.has_css?("form[data-ga4-form-use-text-count]")
+    end
+
+    should "render the correct ga4 data-attributes on the form elements" do
+      assign_field_data = get_field_index_data(find("fieldset"))
+
+      assert_equal 1, assign_field_data["index_section"]
+      assert_equal 1, assign_field_data["index_section_count"]
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      page.find("label", text: "Test User").click
+      click_button "Save"
+
+      data_layer = evaluate_script("window.dataLayer")
+
+      event_data_radio_user = data_layer[data_layer.count - 2]["event_data"]
+      event_data_save = data_layer[data_layer.count - 1]["event_data"]
+
+      assert_equal "select", event_data_radio_user["action"]
+      assert_equal "select_content", event_data_radio_user["event_name"]
+      assert_equal "Choose a person to assign", event_data_radio_user["section"]
+      assert_equal "Test User", event_data_radio_user["text"]
+      assert_equal "1", event_data_radio_user["index"]["index_section"]
+      assert_equal "1", event_data_radio_user["index"]["index_section_count"]
+
+      assert_equal "Save", event_data_save["action"]
+      assert_equal "form_response", event_data_save["event_name"]
+      assert_equal "Assign 2i reviewer", event_data_save["section"]
       assert_equal "{\"Choose a person to assign\":\"Test User\"}", event_data_save["text"]
       assert_equal "Answer", event_data_save["tool_name"]
       assert_equal "edit", event_data_save["type"]
