@@ -79,7 +79,7 @@ Rails.application.routes.draw do
                },
              }
       end
-      resources :guide_parts, only: %i[create new]
+      resources :guide_parts, only: %i[create new edit update show]
     end
   end
 
@@ -160,5 +160,5 @@ Rails.application.routes.draw do
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
   mount GovukPublishingComponents::Engine, at: "/component-guide"
-  mount FactCheck::Engine, at: "/fact-check"
+  # mount FactCheck::Engine, at: "/fact-check"
 end
