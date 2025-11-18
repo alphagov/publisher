@@ -191,10 +191,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal @form_ga4_event_data["tool_name"], "Answer"
       assert_equal @form_ga4_event_data["type"], "edit"
 
-      assert page.has_css?("form[data-ga4-form-include-text]")
-      assert page.has_css?("form[data-ga4-form-change-tracking]")
-      assert page.has_css?("form[data-ga4-form-record-json]")
-      assert page.has_css?("form[data-ga4-form-use-text-count]")
+      test_common_form_attributes
     end
 
     should "render the correct ga4 data-attributes on the form elements" do
