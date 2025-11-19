@@ -18,10 +18,6 @@ jobs:
     name: Run Minitest
     runs-on: ubuntu-latest
     steps:
-      - name: Setup MongoDB
-        uses: alphagov/govuk-infrastructure/.github/actions/setup-mongodb@main
-        with:
-          version: 3.6
       - name: Setup Postgres
         id: setup-postgres
         uses: alphagov/govuk-infrastructure/.github/actions/setup-postgres@main
@@ -60,13 +56,11 @@ jobs:
         env:
           RAILS_ENV: test
           TEST_DATABASE_URL: ${{ steps.setup-postgres.outputs.db-url }}
-          TEST_MONGODB_URI: mongodb://localhost:27017/publisher_test
         run: bundle exec rails db:setup
 
       - name: Run Minitest
         env:
           RAILS_ENV: test
           TEST_DATABASE_URL: ${{ steps.setup-postgres.outputs.db-url }}
-          TEST_MONGODB_URI: mongodb://localhost:27017/publisher_test
           GOVUK_CONTENT_SCHEMAS_PATH: vendor/publishing-api/content_schemas
         run: bundle exec rake test
