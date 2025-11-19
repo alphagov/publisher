@@ -20,14 +20,6 @@ RUN rails assets:precompile && rm -fr log node_modules
 
 FROM --platform=$TARGETPLATFORM $base_image
 
-# Install MongoDB tools
-
-RUN install_packages curl gnupg && \
-    curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-    gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor && \
-    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-8.0.list && \
-    install_packages mongodb-org-tools
-
 ENV GOVUK_APP_NAME=publisher
 
 WORKDIR $APP_HOME
