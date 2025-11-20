@@ -145,6 +145,7 @@ Rails.application.routes.draw do
   get "/admin(/*path)", to: redirect { |params, _req| "/#{params[:path]}" }
 
   get "/govuk-sitemap.xml" => "sitemap#index"
+  resources :mermaid
 
   get "/homepage/popular-links" => "homepage#show", as: "show_popular_links"
   post "/homepage/popular-links/create" => "homepage#create", as: "create_popular_links"
