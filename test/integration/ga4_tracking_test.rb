@@ -2,7 +2,7 @@ require "integration_test_helper"
 
 class Ga4TrackingTest < JavascriptIntegrationTest
   setup do
-    @govuk_editor = FactoryBot.create(:user, :govuk_editor, name: "Test User")
+    FactoryBot.create(:user, :govuk_editor, name: "Test User")
     @govuk_requester = FactoryBot.create(:user, :govuk_editor)
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
 
@@ -20,11 +20,11 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       get_form_data_attributes
 
       assert_includes @form_module_data, "ga4-form-tracker"
-      assert_equal @form_ga4_event_data["action"], "Save"
-      assert_equal @form_ga4_event_data["event_name"], "form_response"
-      assert_equal @form_ga4_event_data["section"], "Answer edition"
-      assert_equal @form_ga4_event_data["tool_name"], "Answer"
-      assert_equal @form_ga4_event_data["type"], "edit"
+      assert_equal "Save", @form_ga4_event_data["action"]
+      assert_equal "form_response", @form_ga4_event_data["event_name"]
+      assert_equal "Answer edition", @form_ga4_event_data["section"]
+      assert_equal "Answer", @form_ga4_event_data["tool_name"]
+      assert_equal "edit", @form_ga4_event_data["type"]
 
       test_common_form_attributes
     end
@@ -114,11 +114,11 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       get_form_data_attributes
 
       assert_includes @form_module_data, "ga4-form-tracker"
-      assert_equal @form_ga4_event_data["action"], "Save"
-      assert_equal @form_ga4_event_data["event_name"], "form_response"
-      assert_equal @form_ga4_event_data["section"], "Assign person"
-      assert_equal @form_ga4_event_data["tool_name"], "Answer"
-      assert_equal @form_ga4_event_data["type"], "edit"
+      assert_equal "Save", @form_ga4_event_data["action"]
+      assert_equal "form_response", @form_ga4_event_data["event_name"]
+      assert_equal "Assign person", @form_ga4_event_data["section"]
+      assert_equal "Answer", @form_ga4_event_data["tool_name"]
+      assert_equal "edit", @form_ga4_event_data["type"]
 
       test_common_form_attributes
     end
@@ -175,11 +175,11 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       get_form_data_attributes
 
       assert_includes @form_module_data, "ga4-form-tracker"
-      assert_equal @form_ga4_event_data["action"], "Save"
-      assert_equal @form_ga4_event_data["event_name"], "form_response"
-      assert_equal @form_ga4_event_data["section"], "Assign 2i reviewer"
-      assert_equal @form_ga4_event_data["tool_name"], "Answer"
-      assert_equal @form_ga4_event_data["type"], "edit"
+      assert_equal "Save", @form_ga4_event_data["action"]
+      assert_equal "form_response", @form_ga4_event_data["event_name"]
+      assert_equal "Assign 2i reviewer", @form_ga4_event_data["section"]
+      assert_equal "Answer", @form_ga4_event_data["tool_name"]
+      assert_equal "edit", @form_ga4_event_data["type"]
 
       test_common_form_attributes
     end
