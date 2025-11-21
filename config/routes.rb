@@ -1,4 +1,5 @@
-# Having a long routes file is not a style violation
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
   get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
@@ -168,6 +169,7 @@ Rails.application.routes.draw do
 
   get "by-content-id/:content_id" => "content_item#by_content_id"
 
+  mount SidekiqGdsSsoMiddleware, at: "/sidekiq"
   mount GovukAdminTemplate::Engine, at: "/style-guide"
   mount Flipflop::Engine => "/flipflop"
   mount GovukPublishingComponents::Engine, at: "/component-guide"

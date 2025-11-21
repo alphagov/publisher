@@ -75,7 +75,7 @@ And then run:
 u = User.first
 ```
 ```ruby
-u.permissions.append("govuk_editor", "skip_review", "welsh_editor")
+u.permissions.append("govuk_editor", "skip_review", "welsh_editor", "sidekiq_admin")
 ```
 ```ruby
 u.save
