@@ -222,6 +222,15 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
+    should "render the correct ga4 data-attributes on the form" do
+      get_form_data_attributes
+
+      assert_equal "Send to 2i", @form_ga4_event_data["section"]
+      assert_equal "Answer", @form_ga4_event_data["tool_name"]
+
+      test_common_form_attributes
+    end
+
     should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Comment (optional)", with: "Some comment"
       click_button "Send to 2i"
@@ -259,6 +268,10 @@ private
   end
 
   def test_common_form_attributes
+    assert_includes @form_module_data, "ga4-form-tracker"
+    assert_equal "edit", @form_ga4_event_data["type"]
+    assert_equal "Save", @form_ga4_event_data["action"]
+    assert_equal "form_response", @form_ga4_event_data["event_name"]
     assert page.has_css?("form[data-ga4-form-include-text]")
     assert page.has_css?("form[data-ga4-form-change-tracking]")
     assert page.has_css?("form[data-ga4-form-record-json]")
