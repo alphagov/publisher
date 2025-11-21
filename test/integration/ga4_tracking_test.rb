@@ -231,6 +231,13 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       test_common_form_attributes
     end
 
+    should "render the correct ga4 data-attributes on the form elements" do
+      comment_field_data = get_field_index_data(find("textarea[name='comment']"))
+
+      assert_equal 1, comment_field_data["index_section"]
+      assert_equal 1, comment_field_data["index_section_count"]
+    end
+
     should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Comment (optional)", with: "Some comment"
       click_button "Send to 2i"
