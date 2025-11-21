@@ -1,0 +1,55 @@
+<% content_for :title_context, @edition.format %>
+<% content_for :page_title, @edition.title %>
+<% content_for :title, @edition.title %>
+
+<%= render partial: "guide_parts/common_items", locals: { edition: @resource, reviewer: @reviewer } %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "View chapter",
+      heading_level: 2,
+      font_size: "l",
+      margin_bottom: 5,
+      margin_top: 5,
+    } %>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Title",
+        heading_level: 3,
+        font_size: "s",
+      } %>
+      <p class="govuk-body"> <%= @part.title.presence || "None added" %></p>
+    </section>
+
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Slug",
+        heading_level: 3,
+        font_size: "s",
+      } %>
+      <p class="govuk-body"><%= @part.slug.presence || "None added" %></p>
+    </section>
+
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Body",
+        heading_level: 3,
+        font_size: "s",
+      } %>
+      <p class="govuk-body"><%= @part.body.presence || "None added" %></p>
+    </section>
+  </div>
+
+  <div class="govuk-grid-column-one-third options-sidebar">
+    <div class="sidebar-components">
+      <%= sidebar_options_heading %>
+      <%= sidebar_items_list(guide_chapter_sidebar_buttons(@edition)) %>
+    </div>
+  </div>
+</div>
