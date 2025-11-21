@@ -33,6 +33,11 @@ class GuidePartsController < InheritedResources::Base
     require_multiple_parts(@edition)
   end
 
+  def show
+    @part = Part.find(params[:id])
+    render action: "show"
+  end
+
   def create
     @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size))
     if @edition.save
