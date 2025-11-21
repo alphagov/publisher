@@ -9,7 +9,7 @@
       </p>
     <% end %>
 
-    <%= form_for(:edition, url: form_url) do %>
+    <%= form_for(:edition, url: form_url, data: {module: ""}) do %>
       <%= render "govuk_publishing_components/components/textarea", {
         label: {
           heading_size: "m",
