@@ -29,7 +29,7 @@ module Publisher
     config.flipflop.raise_strategy_errors = nil
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -99,9 +99,14 @@ module Publisher
     # Enable origin-checking CSRF mitigation. Previous versions had false.
     Rails.application.config.action_controller.forgery_protection_origin_check = false
 
-    # Make Ruby 2.4 preserve the timezone of the receiver when calling `to_time`.
-    # Previous versions had false.
-    ActiveSupport.to_time_preserves_timezone = false
+    ###
+    # Specifies whether `to_time` methods preserve the UTC offset of their receivers or preserves the timezone.
+    # If set to `:zone`, `to_time` methods will use the timezone of their receivers.
+    # If set to `:offset`, `to_time` methods will use the UTC offset.
+    # If `false`, `to_time` methods will convert to the local system UTC offset instead.
+    #++
+    Rails.application.config.active_support.to_time_preserves_timezone = false
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
