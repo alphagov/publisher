@@ -17,7 +17,6 @@ class EditionTest < ActiveSupport::TestCase
     edition = FactoryBot.build(:guide_edition_with_two_parts, state: "ready")
     # simulate validation error causing failure to publish anonymously
     edition.parts.first.body = "[register your vehicle](registering-an-imported-vehicle)"
-    edition.parts.first.save!(validate: false)
 
     exception = assert_raises(StateMachines::InvalidTransition) { edition.publish_anonymously! }
     assert_match "Cannot transition state via :publish from :ready (Reason(s): Parts", exception.message
