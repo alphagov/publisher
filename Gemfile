@@ -71,5 +71,3 @@ group :development, :test do
   gem "rack"
   gem "rubocop-govuk"
 end
-
-gem "fact_check", path: "fact_check"
