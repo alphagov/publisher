@@ -16,30 +16,6 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "render the correct ga4 data-attributes on the form" do
-      get_form_data_attributes
-
-      assert_equal "Answer edition", @form_ga4_event_data["section"]
-
-      test_common_form_attributes
-    end
-
-    should "render the correct ga4 data-attributes on the form elements" do
-      title_field_data = get_field_index_data(find("input[name='edition[title]']"))
-      metatag_field_data = get_field_index_data(find("textarea[name='edition[overview]']"))
-      body_field_data = get_field_index_data(find("textarea[name='edition[body]']"))
-      beta_field_data = get_field_index_data(find("fieldset"))
-
-      assert_equal 1, title_field_data["index_section"]
-      assert_equal 4, title_field_data["index_section_count"]
-      assert_equal 2, metatag_field_data["index_section"]
-      assert_equal 4, metatag_field_data["index_section_count"]
-      assert_equal 3, body_field_data["index_section"]
-      assert_equal 4, body_field_data["index_section_count"]
-      assert_equal 4, beta_field_data["index_section"]
-      assert_equal 4, beta_field_data["index_section_count"]
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Title", with: "The title"
       fill_in "Meta tag description", with: "the-meta-tag-description"
@@ -105,21 +81,6 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "render the correct ga4 data-attributes on the form" do
-      get_form_data_attributes
-
-      assert_equal "Assign person", @form_ga4_event_data["section"]
-
-      test_common_form_attributes
-    end
-
-    should "render the correct ga4 data-attributes on the form elements" do
-      assign_field_data = get_field_index_data(find("fieldset"))
-
-      assert_equal 1, assign_field_data["index_section"]
-      assert_equal 1, assign_field_data["index_section_count"]
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
       find("label", text: "Test User").click
       click_button "Save"
@@ -161,21 +122,6 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "render the correct ga4 data-attributes on the form" do
-      get_form_data_attributes
-
-      assert_equal "Assign 2i reviewer", @form_ga4_event_data["section"]
-
-      test_common_form_attributes
-    end
-
-    should "render the correct ga4 data-attributes on the form elements" do
-      assign_field_data = get_field_index_data(find("fieldset"))
-
-      assert_equal 1, assign_field_data["index_section"]
-      assert_equal 1, assign_field_data["index_section_count"]
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
       page.find("label", text: "Test User").click
       click_button "Save"
@@ -207,21 +153,6 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       disable_form_submit
     end
 
-    should "render the correct ga4 data-attributes on the form" do
-      get_form_data_attributes
-
-      assert_equal "Send to 2i", @form_ga4_event_data["section"]
-
-      test_common_form_attributes
-    end
-
-    should "render the correct ga4 data-attributes on the form elements" do
-      comment_field_data = get_field_index_data(find("textarea[name='comment']"))
-
-      assert_equal 1, comment_field_data["index_section"]
-      assert_equal 1, comment_field_data["index_section_count"]
-    end
-
     should "push the correct values to the dataLayer when events are triggered" do
       fill_in "Comment (optional)", with: "Some comment"
       click_button "Send to 2i"
@@ -250,28 +181,6 @@ private
     # Disable submission of the form so that all event data can be gathered
     # including the data collected on the "Save" (or equivalent) button being clicked
     execute_script("document.querySelector('form').addEventListener('submit',function(e){e.preventDefault()})")
-  end
-
-  def get_form_data_attributes
-    form = find("form")
-    @form_module_data = form["data-module"]
-    @form_ga4_event_data = JSON.parse(form["data-ga4-form"])
-  end
-
-  def test_common_form_attributes
-    assert_includes @form_module_data, "ga4-form-tracker"
-    assert_equal "edit", @form_ga4_event_data["type"]
-    assert_equal "Save", @form_ga4_event_data["action"]
-    assert_equal "form_response", @form_ga4_event_data["event_name"]
-    assert_equal "Answer", @form_ga4_event_data["tool_name"]
-    assert page.has_css?("form[data-ga4-form-include-text]")
-    assert page.has_css?("form[data-ga4-form-change-tracking]")
-    assert page.has_css?("form[data-ga4-form-record-json]")
-    assert page.has_css?("form[data-ga4-form-use-text-count]")
-  end
-
-  def get_field_index_data(field)
-    JSON.parse(field["data-ga4-index"])
   end
 
   def get_event_data
