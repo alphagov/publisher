@@ -29,13 +29,13 @@ jobs:
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: alphagov/publisher
           ref: ${{ inputs.ref || github.ref }}
 
       - name: Checkout Publishing API (for Content Schemas)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: alphagov/publishing-api
           ref: ${{ inputs.publishingApiRef }}
