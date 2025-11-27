@@ -97,6 +97,30 @@ class GuidePartsControllerTest < ActionController::TestCase
         assert_redirected_to edition_path(@edition.id)
         assert_equal "Chapter updated successfully.", flash[:success]
       end
+
+      should "allow the 'confirm destroy' page to be displayed" do
+        get :confirm_destroy, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_response :ok
+        assert_select "h2", "Are you sure you want to delete this chapter?"
+      end
+
+      should "allow an existing chapter to be deleted" do
+        part = @edition.parts.first
+
+        delete :destroy, params: {
+          edition_id: @edition.id,
+          id: part.id,
+        }
+
+        @edition.reload
+        assert_redirected_to edition_path(@edition.id)
+        assert_equal "Chapter deleted successfully", flash[:success]
+        assert @edition.parts.exclude? part
+      end
     end
 
     context "when user has no editor permissions" do
@@ -127,6 +151,28 @@ class GuidePartsControllerTest < ActionController::TestCase
         }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "prevent the 'confirm destroy' page from being displayed" do
+        get :confirm_destroy, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "prevent an existing chapter from being deleted" do
+        part = @edition.parts.first
+
+        delete :destroy, params: {
+          edition_id: @edition.id,
+          id: part.id,
+        }
+
+        @edition.reload
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+        assert @edition.parts.include? part
       end
 
       should "show view chapter page" do
@@ -167,6 +213,28 @@ class GuidePartsControllerTest < ActionController::TestCase
         }
 
         assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+      end
+
+      should "prevent the 'confirm destroy' page from being displayed" do
+        get :confirm_destroy, params: {
+          edition_id: @edition.id,
+          id: @edition.parts.first.id,
+        }
+
+        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+      end
+
+      should "prevent an existing chapter from being deleted" do
+        part = @edition.parts.first
+
+        delete :destroy, params: {
+          edition_id: @edition.id,
+          id: part.id,
+        }
+
+        @edition.reload
+        assert_equal "You are not allowed to perform this action in the current state.", flash[:danger]
+        assert @edition.parts.include? part
       end
     end
   end
@@ -406,6 +474,47 @@ class GuidePartsControllerTest < ActionController::TestCase
         }
 
         assert_response :redirect
+      end
+    end
+
+    context "GET action: confirm_destroy" do
+      should "return a 404 when requesting the confirm_destroy action on an edition owned by a different organisation and user has departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+
+        get :confirm_destroy, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
+
+        assert_response :not_found
+      end
+
+      should "return a 200 when requesting the confirm_destroy action on an edition owned by a different organisation and user does not have departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+
+        get :confirm_destroy, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
+
+        assert_response :ok
+        assert_select "h2", "Are you sure you want to delete this chapter?"
+      end
+    end
+
+    context "DELETE action: delete chapter" do
+      should "return a 404 when requesting the destroy chapter action on an edition owned by a different organisation and user has departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :departmental_editor, organisation_content_id: "org-one"))
+
+        delete :destroy, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
+
+        assert_response :not_found
+      end
+
+      should "return a 302 when requesting the destroy chapter action on an edition owned by a different organisation and user does not have departmental_editor permission" do
+        login_as(FactoryBot.create(:user, :govuk_editor, organisation_content_id: "org-one"))
+        part = @edition_with_parts.parts.first
+
+        delete :destroy, params: { edition_id: @edition_with_parts.id, id: @edition_with_parts.parts.first.id }
+
+        @edition_with_parts.reload
+        assert_redirected_to edition_path(@edition_with_parts.id)
+        assert_equal "Chapter deleted successfully", flash[:success]
+        assert @edition_with_parts.parts.exclude? part
       end
     end
   end
