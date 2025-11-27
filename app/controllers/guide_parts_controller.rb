@@ -18,7 +18,9 @@ class GuidePartsController < InheritedResources::Base
                          edit
                          update
                          reorder
-                         bulk_update_reorder] do
+                         bulk_update_reorder
+                         confirm_destroy
+                         destroy] do
     require_editor_permissions(@edition)
   end
   before_action only: %i[new
@@ -26,7 +28,9 @@ class GuidePartsController < InheritedResources::Base
                          edit
                          update
                          reorder
-                         bulk_update_reorder] do
+                         bulk_update_reorder
+                         confirm_destroy
+                         destroy] do
     require_editing_state(@edition)
   end
   before_action only: %i[reorder bulk_update_reorder] do
@@ -87,6 +91,24 @@ class GuidePartsController < InheritedResources::Base
     Rails.logger.error "Error #{e.class} #{e.message}"
     @edition.errors.add(:show, "Due to a service problem, the chapter order couldn't be updated")
     redirect_to edition_path(@edition)
+  end
+
+  def confirm_destroy
+    @part = Part.find(params[:id])
+  end
+
+  def destroy
+    @part = Part.find(params[:id])
+    if @part.destroy!
+      flash[:success] = "Chapter deleted successfully"
+      redirect_to edition_path(@edition)
+    else
+      render "confirm_destroy"
+    end
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = "Due to a service problem, the chapter couldn't be deleted"
+    render "confirm_destroy"
   end
 
 private
