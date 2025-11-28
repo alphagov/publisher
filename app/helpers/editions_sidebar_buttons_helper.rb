@@ -138,7 +138,7 @@ module EditionsSidebarButtonsHelper
     ]
   end
 
-  def guide_chapter_sidebar_buttons(edition)
+  def guide_chapter_sidebar_buttons(edition, chapter_persisted: true)
     buttons = []
 
     if edition.is_editable_by?(current_user)
@@ -160,6 +160,16 @@ module EditionsSidebarButtonsHelper
           secondary_solid: true,
           name: "save",
           value: "save and summary",
+        },
+      )
+
+      buttons << render(
+        "govuk_publishing_components/components/button",
+        {
+          text: chapter_persisted ? "Delete chapter" : "Cancel and discard changes",
+          margin_bottom: 3,
+          destructive: true,
+          href: chapter_persisted ? confirm_destroy_edition_guide_part_path(edition) : edit_edition_path(edition),
         },
       )
     end
