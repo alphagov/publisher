@@ -2295,6 +2295,14 @@ class EditionEditTest < IntegrationTest
 
               assert page.has_content?("Edit")
             end
+
+            should "display the guide edit page when the 'Cancel and discard changes' link is clicked" do
+              click_link("Cancel and discard changes")
+
+              assert_current_path edition_path(@draft_guide_edition.id)
+
+              assert page.has_content?("Edit")
+            end
           end
 
           context "Reorder Chapters" do
@@ -2441,6 +2449,13 @@ class EditionEditTest < IntegrationTest
 
               assert page.has_content?("Edit")
             end
+
+            should "display the Delete chapter confirmation page when the 'Delete chapter' link is clicked" do
+              click_link("Delete chapter")
+
+              assert_current_path confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts.id, @part_id)
+              assert page.has_content?("Are you sure you want to delete this chapter?")
+            end
           end
         end
 
@@ -2463,6 +2478,33 @@ class EditionEditTest < IntegrationTest
 
             assert current_path == edition_path(@draft_guide_edition_with_parts.id)
             assert page.has_content?("You do not have correct editor permissions for this action.")
+          end
+
+          should "not show the 'Delete chapter' button'" do
+            assert page.has_no_link?("Delete chapter")
+          end
+        end
+
+        context "Delete chapter confirmation" do
+          setup do
+            create_draft_guide_edition_with_parts
+            @part = @draft_guide_edition_with_parts.parts.last
+            visit confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
+          end
+
+          should "redirect to edit guide page and show a success message when the 'Delete chapter' button is clicked" do
+            click_button("Delete chapter")
+
+            @draft_guide_edition_with_parts.reload
+            assert_current_path edition_path(@draft_guide_edition_with_parts.id)
+            assert page.has_content?("Chapter deleted successfully")
+            assert @draft_guide_edition_with_parts.parts.exclude? @part
+          end
+
+          should "direct the user to the edit chapter page when the 'Cancel' button is clicked" do
+            click_link("Cancel")
+
+            assert_current_path edit_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
           end
         end
       end
