@@ -233,6 +233,47 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     end
   end
 
+  context "Send to fact check page" do
+    setup do
+      stub_holidays_used_by_fact_check
+      @edition.state = "ready"
+      @edition.save!
+
+      visit send_to_fact_check_page_edition_path(@edition.id)
+
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      fill_in "Email addresses", with: "fact-checker-one@example.com"
+      fill_in "Customised message", with: "Some message"
+      click_button "Send to fact check"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Email addresses", event_data[0]["section"]
+      assert_equal "28", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "2", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Customised message", event_data[1]["section"]
+      assert_equal "12", event_data[1]["text"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "2", event_data[1]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Send to fact check", event_data[2]["section"]
+      assert_equal "{\"Email addresses\":\"28\",\"Customised message\":\"12\"}", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "edit", event_data[2]["type"]
+    end
+  end
+
 private
 
   def disable_form_submit

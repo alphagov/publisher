@@ -7,7 +7,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }) do %>
+    <%= form_for(:edition, url: send_to_fact_check_edition_path(@edition), html: { novalidate: "novalidate" }, data: { module: "" }) do %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           heading_size: "m",
