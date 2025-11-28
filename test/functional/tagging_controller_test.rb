@@ -23,7 +23,7 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the tagging tab and display an error message when an error occurs during the request" do
-        Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
+        stub_publishing_api_isnt_available
 
         get :breadcrumb_page, params: { id: @edition.id }
 

@@ -20,9 +20,29 @@ class TaggingController < InheritedResources::Base
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made"
 
   def breadcrumb_page
-    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
-    @radio_groups = build_radio_groups_for_breadcrumb_page(@tagging_update_form_values)
+    @breadcrumb = breadcrumb_from_publishing_api(resource)
+    @radio_groups = build_radio_groups_for_breadcrumb_page(@breadcrumb)
     render "secondary_nav_tabs/tagging_breadcrumb_page"
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
+  end
+
+  def update_breadcrumb
+    Tagging::TaggingProxy.new.publish_breadcrumb!(
+      resource.artefact.content_id,
+      resource.artefact.language,
+      breadcrumb_update_params[:value],
+      breadcrumb_update_params[:previous_version],
+    )
+    redirect_to tagging_edition_path,
+                flash: { success: "GOV.UK breadcrumbs updated" }
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
@@ -92,8 +112,6 @@ class TaggingController < InheritedResources::Base
                         "Mainstream browse pages updated"
                       when "organisations"
                         "Organisations updated"
-                      when "breadcrumb"
-                        "GOV.UK breadcrumbs updated"
                       when "remove_breadcrumb"
                         "GOV.UK breadcrumb removed"
                       else
@@ -146,7 +164,13 @@ private
     )
   end
 
-  def build_radio_groups_for_breadcrumb_page(tagging_update_form_values)
+  def breadcrumb_from_publishing_api(edition)
+    Tagging::Breadcrumb.build_from_publishing_api(
+      edition.artefact.content_id, edition.artefact.language
+    )
+  end
+
+  def build_radio_groups_for_breadcrumb_page(current_breadcrumb)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
@@ -154,7 +178,7 @@ private
           {
             text: item.first.split(" / ").last,
             value: item.last,
-            checked: tagging_update_form_values.parent&.include?(item.last),
+            checked: current_breadcrumb.value&.include?(item.last),
           }
         end,
       }
@@ -178,6 +202,10 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def breadcrumb_update_params
+    params.require(:tagging_breadcrumb).permit(:previous_version, value: [])
   end
 
   def tagging_update_params
