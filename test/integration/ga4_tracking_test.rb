@@ -235,6 +235,7 @@ class Ga4TrackingTest < JavascriptIntegrationTest
 
   context "Send to fact check page" do
     setup do
+      stub_holidays_used_by_fact_check
       @edition.state = "ready"
       @edition.save!
 
