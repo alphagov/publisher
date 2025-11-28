@@ -20,7 +20,7 @@ class TaggingController < InheritedResources::Base
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made"
 
   def breadcrumb_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     @radio_groups = build_radio_groups_for_breadcrumb_page(@tagging_update_form_values)
     render "secondary_nav_tabs/tagging_breadcrumb_page"
   rescue StandardError => e
@@ -30,12 +30,12 @@ class TaggingController < InheritedResources::Base
   end
 
   def remove_breadcrumb_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
   def mainstream_browse_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     @checkbox_groups = build_checkbox_groups_for_mainstream_browse_page(@tagging_update_form_values)
     render "secondary_nav_tabs/tagging_mainstream_browse_page"
   rescue StandardError => e
@@ -45,7 +45,7 @@ class TaggingController < InheritedResources::Base
   end
 
   def related_content_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
   rescue StandardError => e
@@ -55,7 +55,7 @@ class TaggingController < InheritedResources::Base
   end
 
   def reorder_related_content_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_reorder_related_content_page"
   rescue StandardError => e
@@ -65,7 +65,7 @@ class TaggingController < InheritedResources::Base
   end
 
   def organisations_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     @linkables = Tagging::Linkables.new.organisations.map do |linkable|
       {
@@ -139,8 +139,8 @@ protected
 
 private
 
-  def populate_tagging_form_values_from_publishing_api
-    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_publishing_api(
+  def build_tagging_form_values_from_publishing_api
+    Tagging::TaggingUpdateForm.build_from_publishing_api(
       resource.artefact.content_id,
       resource.artefact.language,
     )
