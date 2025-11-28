@@ -29,6 +29,33 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_breadcrumb
+    success_message = "GOV.UK breadcrumbs updated"
+
+    new_breadcrumb = breadcrumb_update_params["parent"]
+
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+    @tagging_update_form_values.parent = new_breadcrumb
+
+    byebug
+    if @tagging_update_form_values.valid?
+      @tagging_update_form_values.publish!
+      flash[:success] = success_message
+      redirect_to tagging_edition_path
+    else
+      render "secondary_nav_tabs/tagging_related_content_page"
+    end
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
+  end
+
   def remove_breadcrumb_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
@@ -178,6 +205,10 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def breadcrumb_update_params
+    params.require(:tagging_tagging_update_form).permit(parent: []).to_h
   end
 
   def tagging_update_params
