@@ -5,7 +5,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds edit--resend-fact-check-email-page">
-    <%= form_for @resource, url: resend_fact_check_email_edition_path(@resource) do %>
+    <%= form_for @resource, url: resend_fact_check_email_edition_path(@resource), data: { module: ""} do %>
       <section class="govuk-!-margin-bottom-6">
         <%= render "govuk_publishing_components/components/heading", {
           text: "Email addresses",
