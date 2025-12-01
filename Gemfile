@@ -62,6 +62,7 @@ group :test do
 end
 
 group :development do
+  gem "rails-erd"
   gem "state_machines-graphviz"
 end
 
