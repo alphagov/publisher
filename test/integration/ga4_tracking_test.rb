@@ -274,6 +274,40 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     end
   end
 
+  context "Resend fact check email page" do
+    setup do
+      stub_holidays_used_by_fact_check
+      @edition.state = "fact_check"
+      @edition.save!
+
+      FactoryBot.create(
+        :action,
+        requester: @govuk_requester,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
+
+      visit resend_fact_check_email_page_edition_path(@edition.id)
+
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      click_button "Resend fact check email"
+
+      event_data = get_event_data
+
+      assert_equal "Save", event_data[0]["action"]
+      assert_equal "form_response", event_data[0]["event_name"]
+      assert_equal "Resend fact check email", event_data[0]["section"]
+      assert_equal "{}", event_data[0]["text"]
+      assert_equal "Answer", event_data[0]["tool_name"]
+      assert_equal "edit", event_data[0]["type"]
+    end
+  end
+
 private
 
   def disable_form_submit
