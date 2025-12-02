@@ -2,7 +2,7 @@
 
 Tracking is added to Publisher via GA4. The full documentation is avaialable in [GA4 Publishing Implementation guide](https://docs.google.com/document/d/19RaqZttDTZXsgX4k87wAAOhsol1STM3iTPPPKNlXRl0/edit?tab=t.0#heading=h.eo3rk3rxuz4n).
 
-Via this means we are tracking:
+Via GA4 we are tracking:
 - Page views
 - Navigation
 - Form interactions
@@ -13,10 +13,10 @@ Most of the code exists in the govuk_publishing_components gem. On publisher we 
 
 Tracking can be tested locally with these steps:
 - ensure that the "Ga4 form tracking" feature is set to "On" via FlipFlop
-- ensure that "Preserve log" is set to "On" in the browser console
+- run `document.querySelector('form').addEventListener('submit',function(e){e.preventDefault()})` in the browser console. This will disable form submissions so the full set of data from user interactions can be observed without leaving the page and saving any changes. 
 - run `window.GOVUK.analyticsGa4.showDebug = true` in the browser console. The console will then display the tracking data for all user interactions with the form as they occur.
 
-Running `window.dataLayer` in the browser console at any point will display the data that has been collected during user interactions with the page. In this work we are interested in the "event_data" events. There should be one of these for each user event with the form since the page was loaded.
+Running `window.dataLayer` in the browser console after performing a save will display the data that has been collected during user interactions with the page. In this work we are interested in the "event_data" events. There should be one of these for each user event with the form since the page was loaded.
 
 ## Automated tests
 
