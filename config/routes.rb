@@ -81,10 +81,14 @@ Rails.application.routes.draw do
              }
       end
 
-      resources :guide_parts, only: %i[new create show edit update] do
+      resources :guide_parts, only: %i[new create show edit update destroy] do
         collection do
           get "reorder"
           post "bulk_update_reorder"
+        end
+
+        member do
+          get "confirm_destroy"
         end
       end
     end
