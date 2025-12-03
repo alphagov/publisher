@@ -144,6 +144,24 @@ govuk-docker run publisher-lite bundle exec rake state_machines:draw CLASS=Editi
 
 This will generate a diagram in the `docs/state_machines` folder.
 
+### Entity Relationship Diagram
+
+The `rails-erd` gem creates an Entity Relationship Diagram for the ActiveRecord models in the database.
+Previously generated diagrams can be seen here: 
+* [ERD (with inheritance)](docs/entity_relationship_diagrams/publisher-erd-inheritance.pdf) 
+* [ERD (without inheritance)](docs/entity_relationship_diagrams/publisher-erd.pdf)
+
+The diagram can be (re)generated locally using the [rails-erd gem](https://github.com/voormedia/rails-erd), (see [docs](https://voormedia.github.io/rails-erd/)) by running the app locally, connecting to the running Docker container, installing graphviz and then running the following in the Docker container:
+
+ERD with inheritance hierarchies included:
+```sh
+bundle exec rake erd attributes=foreign_keys,primary_keys,timestamps,inheritance,content notation=bachman inheritance=true
+```
+ERD without inheritance hierarchies included:
+```sh
+bundle exec rake erd attributes=foreign_keys,primary_keys,timestamps,inheritance,content notation=bachman
+```
+
 ### Querying the database of a deployed publisher app
 
 Publisher stores its data in a PostgreSQL database. You can interact with the database by connecting to one of the Kubernetes pod and using the [Rails Console with ActiveRecord](https://guides.rubyonrails.org/active_record_querying.html), or you can query it directly with SQL commands by following [the instructions detailed in the GOV.UK developer docs](https://docs.publishing.service.gov.uk/manual/databases.html#open-a-database-commmand-line-session).
