@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "8.0.2.1"
+gem "rails", "8.1.1"
 
 gem "aws-sdk-s3", "~> 1"
 gem "bootsnap", require: false
@@ -14,7 +14,7 @@ gem "gds-api-adapters"
 gem "gds-sso"
 gem "google-apis-gmail_v1"
 # Upgrading the govspeak dependency to 10.6 or higher causes the app to fail to start in govuk-docker
-gem "govspeak", "~> 10.5.0"
+gem "govspeak", "~> 10.8.3"
 gem "govuk_admin_template"
 gem "govuk_app_config"
 gem "govuk_publishing_components"
