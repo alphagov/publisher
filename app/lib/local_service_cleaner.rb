@@ -4,7 +4,7 @@ class LocalServiceCleaner
   end
 
   def run
-    LocalService.all.each do |local_service|
+    LocalService.all.find_each do |local_service|
       Rails.logger.debug "Looking at #{local_service.lgsl_code} -"
       if in_csv? local_service
         Rails.logger.debug " in csv"

@@ -7986,7 +7986,7 @@ task move_parts_to_programmes: :environment do
 
   part_ids = part_ids_str.split("\n").reject(&:empty?)
 
-  Part.where(mongo_id: part_ids).each do |part|
+  Part.where(mongo_id: part_ids).find_each do |part|
     guide_ed_id = part.guide_edition_id
     if guide_ed_id.nil?
       puts "Skipping part #{part.id} (with mongo_id #{part.mongo_id}) as it has no guide_edition_id"

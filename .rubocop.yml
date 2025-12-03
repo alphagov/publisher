@@ -19,11 +19,3 @@ AllCops:
 #
 # See https://github.com/alphagov/rubocop-govuk/blob/main/CONTRIBUTING.md
 # **************************************************************
-
-# This is not supported for Mongoid
-Rails/FindEach:
-  Enabled: false
-
-# This is not supported for Mongoid
-Rails/FindBy:
-  Enabled: false

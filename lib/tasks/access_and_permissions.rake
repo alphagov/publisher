@@ -10,7 +10,7 @@ namespace :permissions do
     elsif document.latest_edition.owning_org_content_ids.include?(args[:org_content_id])
       message = "Organisation with ID: #{args[:org_content_id]} already has permission to access the document with ID: #{document.id}"
     else
-      Edition.where(panopticon_id: document.id).each do |edition|
+      Edition.where(panopticon_id: document.id).find_each do |edition|
         owning_org_content_ids = edition.owning_org_content_ids
         owning_org_content_ids << args[:org_content_id]
         edition.update_columns(owning_org_content_ids: owning_org_content_ids)
