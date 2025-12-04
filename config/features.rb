@@ -21,6 +21,10 @@ Flipflop.configure do
           default: false,
           description: "Update the publications edit page for Guide content type to use the GOV.UK Design System"
 
+  feature :design_system_edit_phase_3b,
+          default: false,
+          description: "Update the publications page to use the GOV.UK Design System with a multi-page design"
+
   feature :restrict_access_by_org,
           default: true,
           description: "Restrict access to editions based on the user's org and which org(s) own the edition"
