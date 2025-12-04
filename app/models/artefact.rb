@@ -107,7 +107,7 @@ class Artefact < ApplicationRecord
     return archive_editions if state == "archived"
 
     if saved_change_to_attribute?("slug")
-      Edition.draft_in_publishing_api.where(panopticon_id: id).each do |edition|
+      Edition.draft_in_publishing_api.where(panopticon_id: id).find_each do |edition|
         edition.update_slug_from_artefact(self)
       end
     end
@@ -115,7 +115,7 @@ class Artefact < ApplicationRecord
 
   def archive_editions
     if state == "archived"
-      Edition.where(panopticon_id: id).where.not(state: %w[archived]).each do |edition|
+      Edition.where(panopticon_id: id).where.not(state: %w[archived]).find_each do |edition|
         edition.new_action(artefact_actions.last.user, "note", comment: "Artefact has been archived. Archiving this edition.")
         edition.perform_event_without_validations_or_timestamp(:archive!)
       end
