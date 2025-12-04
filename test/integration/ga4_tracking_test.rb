@@ -308,6 +308,57 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     end
   end
 
+  context "Schedule publication page" do
+    setup do
+      @edition.state = "ready"
+      @edition.save!
+
+      visit schedule_page_edition_path(@edition.id)
+
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      fill_in "Comment (optional)", with: "A comment about scheduling"
+      fill_in "Day", with: "1"
+      fill_in "Month", with: "12"
+      fill_in "Year", with: "2026"
+      fill_in "Hour", with: "09"
+      fill_in "Minute", with: "01"
+      click_button "Schedule"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Comment (optional)", event_data[0]["section"]
+      assert_equal "26", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "3", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Publication date", event_data[1]["section"]
+      assert_equal "1/12/2026", event_data[1]["text"]
+      assert_equal "2", event_data[1]["index"]["index_section"]
+      assert_equal "3", event_data[1]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[2]["action"]
+      assert_equal "select_content", event_data[2]["event_name"]
+      assert_equal "Publication time", event_data[2]["section"]
+      assert_equal "09/01", event_data[2]["text"]
+      assert_equal "3", event_data[2]["index"]["index_section"]
+      assert_equal "3", event_data[2]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[3]["action"]
+      assert_equal "form_response", event_data[3]["event_name"]
+      assert_equal "Schedule publication", event_data[3]["section"]
+      assert_equal "{\"Comment (optional)\":\"26\",\"Publication date - Day\":\"1\",\"Publication date - Month\":\"12\",\"Publication date - Year\":\"2026\",\"Publication time - Hour\":\"09\",\"Publication time - Minute\":\"01\"}", event_data[3]["text"]
+      assert_equal "Answer", event_data[3]["tool_name"]
+      assert_equal "edit", event_data[3]["type"]
+    end
+  end
+
 private
 
   def disable_form_submit
