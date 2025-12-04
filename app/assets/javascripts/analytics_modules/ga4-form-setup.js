@@ -45,6 +45,16 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     form.setAttribute('data-ga4-form-record-json', '')
     form.setAttribute('data-ga4-form-use-text-count', '')
     form.setAttribute('data-ga4-form', JSON.stringify(eventData))
+
+    // If the form contains date-input components add ga4-form-section data-attributes
+    var dateInputs = form.querySelectorAll('.govuk-date-input') || null
+
+    if (dateInputs) {
+      Array.from(dateInputs).forEach(function (dateInput) {
+        var fieldset = dateInput.closest('fieldset')
+        fieldset.setAttribute('data-ga4-form-section', fieldset.querySelector('legend').textContent)
+      })
+    }
   }
 
   Ga4FormSetup.prototype.callFormChangeTracker = function (form) {
