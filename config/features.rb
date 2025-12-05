@@ -13,10 +13,6 @@ Flipflop.configure do
           default: false,
           description: "Update the publications page to use the GOV.UK Design System"
 
-  feature :design_system_edit_phase_2,
-          default: true,
-          description: "Update the publications edit page for Place, Transaction, Local Transaction and Completed Transaction content types to use the GOV.UK Design System"
-
   feature :design_system_edit_phase_3a,
           default: false,
           description: "Update the publications edit page for Guide content type to use the GOV.UK Design System"

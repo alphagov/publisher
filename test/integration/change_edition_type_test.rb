@@ -10,7 +10,6 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
     UpdateWorker.stubs(:perform_async)
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_2, false)
     test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
@@ -18,7 +17,7 @@ class ChangeEditionTypeTest < LegacyJavascriptIntegrationTest
     GDS::SSO.test_user = nil
   end
 
-  fully_transitioned_types = %w[answer help_page]
+  fully_transitioned_types = %w[answer help_page place transaction completed_transaction local_transaction]
 
   def select_target_edition(format)
     select(format.to_s.humanize, from: "to")
