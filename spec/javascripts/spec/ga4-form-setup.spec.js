@@ -6,7 +6,12 @@ describe('GA4FormSetup', function () {
   beforeEach(function () {
     var moduleHtml =
       `<div data-module="ga4-form-setup" data-ga4-section="The section name" data-ga4-tool-name="Answer">
-        <form data-module=""></form>
+        <form data-module="">
+          <fieldset>
+            <legend>Some date</legend>
+            <div class="govuk-date-input"></div>
+          </fieldset>
+        </form>
         <form data-module="some-other-module"></form>
       </div>`
 
@@ -51,6 +56,12 @@ describe('GA4FormSetup', function () {
       expect(Object.keys(formGA4Data)).toContain('ga4FormChangeTracking')
       expect(Object.keys(formGA4Data)).toContain('ga4FormRecordJson')
       expect(Object.keys(formGA4Data)).toContain('ga4FormUseTextCount')
+    })
+
+    it('adds the correct parameters to the form elements', function () {
+      var form = module.querySelectorAll('form')[0]
+
+      expect(form.querySelector('fieldset').dataset.ga4FormSection).toBe('Some date')
     })
   })
 })
