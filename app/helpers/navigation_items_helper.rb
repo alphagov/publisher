@@ -1,7 +1,7 @@
 module NavigationItemsHelper
   def navigation_items(is_editor: false, user_name: "", path: "")
     list = [
-      { text: "Publications", href: root_path, active: path.end_with?(root_path) },
+      { text: "My content", href: my_content_path, active: path.end_with?(my_content_path) },
     ]
 
     if is_editor

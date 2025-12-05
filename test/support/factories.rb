@@ -38,6 +38,10 @@ FactoryBot.define do
     state { "archived" }
   end
 
+  trait :amends_needed do
+    state { "amends_needed" }
+  end
+
   trait :with_link_check_report do
     transient do
       batch_id { 1 }

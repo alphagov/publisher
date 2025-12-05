@@ -1,0 +1,29 @@
+<% content_for :page_title, "My content" %>
+<% content_for :title, "My content" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <% if @presenter.editions.any? %>
+      <%= render "govuk_publishing_components/components/table", {
+        head: [
+          { text: "Title" },
+          { text: "Status" },
+          { text: "Updated" },
+          { text: "Content type" },
+        ],
+        rows: @presenter.editions.map do | edition |
+          [
+            { text: link_to(edition.title, edit_edition_path(edition), class: "govuk-link govuk-!-font-weight-bold") + edition_status_hint(edition) },
+            { text: render("govuk_publishing_components/components/tag", { text: edition.state.humanize, colour: edition_status_tag_colour(edition) }) },
+            { text: "#{time_ago_in_words(edition.updated_at).capitalize} ago" },
+            { text: edition.format.underscore.humanize },
+          ]
+        end,
+        } %>
+
+        <%= paginate @presenter.editions %>
+      <% else %>
+        <p class="govuk-body">There are no publications to display</p>
+      <% end %>
+  </div>
+</div>
