@@ -60,3 +60,28 @@ $width: 40;
     }
   }
 }
+
+.my-content {
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 45%;
+    }
+    // Status
+    :nth-child(2) {
+      width: 20%;
+    }
+    // Updated
+    :nth-child(3) {
+      width: 20%;
+    }
+    // Content type
+    :nth-child(4) {
+      width: 15%;
+    }
+  }
+
+  .govuk-table__header > .govuk-hint {
+    margin-top: govuk-spacing(1);
+  }
+}
