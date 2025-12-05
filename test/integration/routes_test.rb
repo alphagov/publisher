@@ -17,25 +17,8 @@ class RoutesTest < LegacyIntegrationTest
       @test_strategy = Flipflop::FeatureSet.current.test!
     end
 
-    context "non-legacy (old phase 1) content types" do
-      %i[answer_edition help_page_edition].each do |content_type|
-        context content_type do
-          setup do
-            @edition = FactoryBot.create(content_type)
-          end
-
-          should "route to editions controller" do
-            @test_strategy.switch!(:design_system_edit_phase_2, false)
-            @test_strategy.switch!(:design_system_edit_phase_3a, false)
-
-            assert_editions_controller
-          end
-        end
-      end
-    end
-
-    context "phase 2 content types" do
-      %i[place_edition transaction_edition completed_transaction_edition local_transaction_edition].each do |content_type|
+    context "migrated design system content types" do
+      %i[answer_edition help_page_edition place_edition transaction_edition completed_transaction_edition local_transaction_edition].each do |content_type|
         context content_type do
           setup do
             service = LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
@@ -47,18 +30,10 @@ class RoutesTest < LegacyIntegrationTest
             @edition.save!
           end
 
-          should "route to editions controller with phase 2 enabled" do
-            @test_strategy.switch!(:design_system_edit_phase_2, true)
+          should "route to editions controller" do
             @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_editions_controller
-          end
-
-          should "route to legacy editions controller with phase 2 disabled" do
-            @test_strategy.switch!(:design_system_edit_phase_2, false)
-            @test_strategy.switch!(:design_system_edit_phase_3a, false)
-
-            assert_legacy_editions_controller
           end
         end
       end
@@ -72,14 +47,12 @@ class RoutesTest < LegacyIntegrationTest
           end
 
           should "route to editions controller with phase 3a enabled" do
-            @test_strategy.switch!(:design_system_edit_phase_2, false)
             @test_strategy.switch!(:design_system_edit_phase_3a, true)
 
             assert_editions_controller
           end
 
           should "route to legacy editions controller with phase 3a disabled" do
-            @test_strategy.switch!(:design_system_edit_phase_2, false)
             @test_strategy.switch!(:design_system_edit_phase_3a, false)
 
             assert_legacy_editions_controller
@@ -95,7 +68,6 @@ class RoutesTest < LegacyIntegrationTest
             @edition = FactoryBot.build(content_type)
             @edition.save!
 
-            @test_strategy.switch!(:design_system_edit_phase_2, true)
             @test_strategy.switch!(:design_system_edit_phase_3a, true)
           end
 
@@ -107,7 +79,6 @@ class RoutesTest < LegacyIntegrationTest
     end
 
     teardown do
-      @test_strategy.switch!(:design_system_edit_phase_2, false)
       @test_strategy.switch!(:design_system_edit_phase_3a, false)
     end
   end

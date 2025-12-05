@@ -9,7 +9,6 @@ class EditionHistoryJSTest < JavascriptIntegrationTest
     stub_users_from_signon_api
 
     test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_2, true)
     test_strategy.switch!(:design_system_edit_phase_3a, true)
   end
 

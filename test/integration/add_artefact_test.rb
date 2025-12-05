@@ -40,6 +40,64 @@ class AddArtefactTest < LegacyIntegrationTest
     assert help_page_edition.edition.artefact.slug == "help/thingy"
   end
 
+  should "create a CompletedTransaction artefact" do
+    visit root_path
+    click_link "Add artefact"
+
+    fill_in "Title", with: "Thingy McThingface"
+    fill_in "Slug", with: "done/stick-a-fork-in-me-im"
+    select "Completed transaction", from: "Format"
+
+    click_button "Save and go to item"
+
+    assert %r{^/editions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]*$} =~ page.current_path
+
+    completed_transaction = CompletedTransactionEdition.last
+    assert completed_transaction.edition.artefact.name == "Thingy McThingface"
+    assert completed_transaction.edition.artefact.slug == "done/stick-a-fork-in-me-im"
+  end
+
+  should "create a Transaction artefact" do
+    visit root_path
+    click_link "Add artefact"
+
+    fill_in "Title", with: "Register for space flight"
+    fill_in "Slug", with: "register-for-space-flight"
+    select "Transaction", from: "Format"
+
+    click_button "Save and go to item"
+
+    assert %r{^/editions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]*$} =~ page.current_path
+
+    transaction = TransactionEdition.last
+    assert transaction.edition.artefact.name == "Register for space flight"
+    assert transaction.edition.artefact.slug == "register-for-space-flight"
+  end
+
+  should "create a LocalTransaction artefact" do
+    LocalService.create!(lgsl_code: 1, providing_tier: %w[county unitary])
+
+    @artefact = FactoryBot.create(
+      :artefact,
+      slug: "hedgehog-topiary",
+      kind: "local_transaction",
+      name: "Foo bar",
+      owning_app: "publisher",
+    )
+
+    visit "/publications/#{@artefact.id}"
+    fill_in "LGSL code", with: "1"
+    fill_in "LGIL code", with: "2"
+
+    click_button "Create Local transaction"
+
+    assert %r{^/editions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]*$} =~ page.current_path
+
+    local_transaction = LocalTransactionEdition.last
+    assert local_transaction.edition.artefact.name == "Foo bar"
+    assert local_transaction.edition.artefact.slug == "hedgehog-topiary"
+  end
+
   should "not allow the creation of a retired format artefact" do
     visit root_path
     click_link "Add artefact"
