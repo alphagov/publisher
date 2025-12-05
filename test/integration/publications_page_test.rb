@@ -1,0 +1,128 @@
+# frozen_string_literal: true
+
+require_relative "../integration_test_helper"
+
+class PublicationsPageTest < IntegrationTest
+  setup do
+    @other_user = FactoryBot.create(:user, name: "Other User")
+    login_as_govuk_editor
+    test_strategy = Flipflop::FeatureSet.current.test!
+    test_strategy.switch!(:design_system_edit_phase_3b, true)
+  end
+
+  context "my_content page" do
+    should "redirect to the my-content page when visiting the root" do
+      visit "/"
+
+      assert_current_path my_content_path
+    end
+
+    should "display publications assigned to the current user" do
+      @draft_edition = FactoryBot.create(:edition, :draft, title: "Draft edition", updated_at: 1.day.ago, assigned_to: @user)
+      @amends_needed_edition = FactoryBot.create(:guide_edition, :amends_needed, title: "Amends needed edition", updated_at: 2.days.ago, assigned_to: @user)
+      @in_review_edition = FactoryBot.create(:help_page_edition, :in_review, title: "In review edition", updated_at: 3.days.ago, assigned_to: @user)
+      @ready_edition = FactoryBot.create(:transaction_edition, :ready, title: "Ready edition", updated_at: 4.days.ago, assigned_to: @user)
+
+      visit my_content_path
+
+      within find(".govuk-table__row", text: "Draft edition") do
+        assert_link "Draft edition", href: edition_path(@draft_edition)
+        assert_css ".govuk-tag--yellow", text: "Draft"
+        assert_text "1 day ago"
+        assert_text "Answer"
+      end
+
+      within find(".govuk-table__row", text: "Amends needed edition") do
+        assert_link "Amends needed edition", href: edition_path(@amends_needed_edition)
+        assert page.has_css?(".govuk-tag--red", text: "Amends needed")
+        assert_text "2 days ago"
+        assert_text "Guide"
+      end
+
+      within find(".govuk-table__row", text: "In review edition") do
+        assert_link "In review edition", href: edition_path(@in_review_edition)
+        assert page.has_css?(".govuk-tag--grey", text: "In review")
+        assert_text "3 days ago"
+        assert_text "Help page"
+      end
+
+      within find(".govuk-table__row", text: "Ready edition") do
+        assert_link "Ready edition", href: edition_path(@ready_edition)
+        assert page.has_css?(".govuk-tag--green", text: "Ready")
+        assert_text "4 days ago"
+        assert_text "Transaction"
+      end
+    end
+
+    should "display the correct hint text for a 'Claimed 2i' publication" do
+      @claimed_2i_edition = FactoryBot.create(:edition, :in_review, title: "Claimed 2i edition", assigned_to: @user, reviewer: @other_user)
+
+      visit my_content_path
+
+      within find(".govuk-table__row", text: "Claimed 2i edition") do
+        assert_link "Claimed 2i edition", href: edition_path(@claimed_2i_edition)
+        assert_text "2i reviewer: Other User"
+      end
+    end
+
+    should "display the correct hint text for an 'Unclaimed 2i' publication" do
+      @unclaimed_2i_edition = FactoryBot.create(:edition, :in_review, title: "Unclaimed 2i edition", assigned_to: @user, reviewer: nil)
+
+      visit my_content_path
+
+      within find(".govuk-table__row", text: "Unclaimed 2i edition") do
+        assert_link "Unclaimed 2i edition", href: edition_path(@unclaimed_2i_edition)
+        assert_text "Not yet claimed"
+      end
+    end
+
+    should "display the correct hint text for a 'Scheduled' publication" do
+      publish_at = 1.month.from_now
+      @scheduled_for_publishing_edition = FactoryBot.create(:edition, :scheduled_for_publishing, publish_at:, title: "Scheduled for publishing edition", assigned_to: @user)
+
+      visit my_content_path
+
+      within find(".govuk-table__row", text: "Scheduled for publishing edition") do
+        assert_link "Scheduled for publishing edition", href: edition_path(@scheduled_for_publishing_edition)
+        assert_text "Scheduled for #{publish_at.to_fs(:govuk_date_short)}"
+      end
+    end
+
+    should "display the correct hint text for a 'Fact check sent' publication" do
+      @fact_check_edition = FactoryBot.create(:edition, :fact_check, updated_at: 2.days.ago, title: "Edition 1", assigned_to: @user)
+      @fact_check_edition_2 = FactoryBot.create(:edition, :fact_check, updated_at: 3.hours.ago, title: "Edition 2", assigned_to: @user)
+
+      visit my_content_path
+
+      within find(".govuk-table__row", text: "Edition 1") do
+        assert_link "Edition 1", href: edition_path(@fact_check_edition)
+        assert_text "Sent 2 days ago"
+      end
+
+      within find(".govuk-table__row", text: "Edition 2") do
+        assert_link "Edition 2", href: edition_path(@fact_check_edition_2)
+        assert_text "Sent about 3 hours ago"
+      end
+    end
+
+    should "not display publications not assigned to the current user" do
+      @other_user_edition = FactoryBot.create(:edition, :draft, title: "Assigned to Other User edition", assigned_to: @other_user)
+
+      visit my_content_path
+
+      assert_text "You do not have any content assigned to you."
+      assert_no_link "Assigned to Other User edition"
+    end
+
+    should "not display publications that are in a published or archived state" do
+      @published_edition = FactoryBot.create(:edition, :published, title: "Published edition", assigned_to: @user)
+      @archived_edition = FactoryBot.create(:edition, :archived, title: "Archived edition", assigned_to: @user)
+
+      visit my_content_path
+
+      assert_text "You do not have any content assigned to you."
+      assert_no_link "Published edition"
+      assert_no_link "Archived edition"
+    end
+  end
+end
