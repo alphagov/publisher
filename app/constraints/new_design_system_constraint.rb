@@ -20,7 +20,7 @@ class NewDesignSystemConstraint
       LocalTransactionEdition,
     ]
 
-    AllowedContentTypesConstraint.new(phase_2_content_types).matches?(request) && FeatureConstraint.new("design_system_edit_phase_2").matches?(request)
+    AllowedContentTypesConstraint.new(phase_2_content_types).matches?(request)
   end
 
   def design_system_edit_phase_3a(request)
