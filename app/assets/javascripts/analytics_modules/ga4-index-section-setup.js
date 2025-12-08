@@ -19,14 +19,21 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
 
   Ga4IndexSectionSetup.prototype.indexElements = function (module) {
     // Find instances of these form elements:
-    // select, textarea, fieldset, input (except hidden, radio)
-    const indexedElements = module.querySelectorAll(
+    // select, textarea, fieldset, input (except hidden), input(not in fieldset), radio
+    var indexableElements = []
+    var elements = module.querySelectorAll(
       'select, textarea, fieldset, input:not([type="hidden"], [type="radio"])'
     )
 
+    Array.from(elements).forEach(function (element) {
+      if (element.type === 'fieldset' || element.closest('fieldset') == null) {
+        indexableElements.push(element)
+      }
+    })
+
     // Add data-attributes to element
-    indexedElements.forEach((element, index) => {
-      element.dataset.ga4Index = '{"index_section": ' + (index + 1).toString() + ', "index_section_count": ' + indexedElements.length + '}'
+    indexableElements.forEach((element, index) => {
+      element.dataset.ga4Index = '{"index_section": ' + (index + 1).toString() + ', "index_section_count": ' + indexableElements.length + '}'
     })
   }
 
