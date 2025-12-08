@@ -54,7 +54,22 @@ module Tagging
     end
 
     def transform_base_paths_to_content_ids(base_paths)
-      base_paths.map { |base_path| ordered_related_items_path_by_ids[base_path] }
+      content_ids = []
+      base_paths.each do |base_path|
+        content_id = ordered_related_items_path_by_ids[base_path]
+
+        if content_id.nil?
+          errors.add(:ordered_related_items, "#{base_path} is not a known URL on GOV.UK, check URL or path is correctly entered.")
+        else
+          content_ids << content_id
+        end
+      end
+
+      if errors[:ordered_related_items].empty?
+        content_ids
+      else
+        raise ActiveModel::ValidationError.new(self) # rubocop:disable Style/RaiseArgs
+      end
     end
 
     def ordered_related_items_paths_exist

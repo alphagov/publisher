@@ -80,6 +80,18 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_related_content
+    update_tags(
+      related_content_update_params[:previous_version],
+      "Related content updated",
+    ) do |form_values|
+      form_values.ordered_related_items = related_content_update_params[:ordered_related_items]
+      form_values.ordered_related_items_destroy = related_content_update_params[:ordered_related_items_destroy]
+    end
+  rescue ActiveModel::ValidationError
+    render "secondary_nav_tabs/tagging_related_content_page"
+  end
+
   def reorder_related_content_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
@@ -110,8 +122,6 @@ class TaggingController < InheritedResources::Base
 
   def update_tagging
     success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "related_content"
-                        "Related content updated"
                       when "reorder_related_content"
                         "Related content order updated"
                       when "mainstream_browse_page"
@@ -165,6 +175,8 @@ private
                 flash: {
                   danger: "Somebody changed the tags before you could. Your changes have not been saved.",
                 }
+  rescue ActiveModel::ValidationError
+    raise
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
@@ -210,6 +222,14 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def related_content_update_params
+    params.require(:tagging_tagging_update_form).permit(
+      :previous_version,
+      ordered_related_items: [],
+      ordered_related_items_destroy: [],
+    )
   end
 
   def breadcrumb_remove_params

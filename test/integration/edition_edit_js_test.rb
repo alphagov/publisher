@@ -223,7 +223,7 @@ class EditionEditJSTest < JavascriptIntegrationTest
 
         click_button("Save")
 
-        assert_current_path update_tagging_edition_path(@tagging_edition.id)
+        assert_current_path update_related_content_edition_path(@tagging_edition.id)
         assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
       end
 
