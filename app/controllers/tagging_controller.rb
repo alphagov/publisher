@@ -30,23 +30,12 @@ class TaggingController < InheritedResources::Base
   end
 
   def update_breadcrumb
-    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
-    @tagging_update_form_values.parent = breadcrumb_update_params[:parent]
-    @tagging_update_form_values.previous_version = breadcrumb_update_params[:previous_version]
-
-    @tagging_update_form_values.publish!
-
-    redirect_to tagging_edition_path,
-                flash: { success: "GOV.UK breadcrumbs updated" }
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "editions/show"
+    update_tags(
+      breadcrumb_update_params[:previous_version],
+      "GOV.UK breadcrumbs updated",
+    ) do |form_values|
+      form_values.parent = breadcrumb_update_params[:parent]
+    end
   end
 
   def remove_breadcrumb_page
@@ -58,26 +47,17 @@ class TaggingController < InheritedResources::Base
     if breadcrumb_remove_params[:remove_parent] == "no"
       redirect_to tagging_edition_path
     elsif !breadcrumb_remove_params[:remove_parent]
+      @tagging_update_form_values = build_tagging_form_values_from_publishing_api
       @resource.errors.add(:remove_parent, "Select an option")
       render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
     else
-      @tagging_update_form_values = build_tagging_form_values_from_publishing_api
-      @tagging_update_form_values.parent = nil
-      @tagging_update_form_values.previous_version = breadcrumb_remove_params[:previous_version]
-
-      @tagging_update_form_values.publish!
-      redirect_to tagging_edition_path,
-                  flash: { success: "GOV.UK breadcrumb removed" }
+      update_tags(
+        breadcrumb_remove_params[:previous_version],
+        "GOV.UK breadcrumb removed",
+      ) do |form_values|
+        form_values.parent = nil
+      end
     end
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "editions/show"
   end
 
   def mainstream_browse_page
@@ -169,6 +149,27 @@ protected
   end
 
 private
+
+  def update_tags(previous_version, success_message, &update_form_values)
+    raise "Must provide a block" unless block_given?
+
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+    @tagging_update_form_values.previous_version = previous_version
+    update_form_values.call(@tagging_update_form_values)
+
+    @tagging_update_form_values.publish!
+    redirect_to tagging_edition_path,
+                flash: { success: success_message }
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
+  end
 
   def build_tagging_form_values_from_publishing_api
     Tagging::TaggingUpdateForm.build_from_publishing_api(
