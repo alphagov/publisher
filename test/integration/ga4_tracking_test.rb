@@ -359,6 +359,39 @@ class Ga4TrackingTest < JavascriptIntegrationTest
     end
   end
 
+  context "Cancel scheduled publication page" do
+    setup do
+      @edition.state = "scheduled_for_publishing"
+      @edition.publish_at = Time.zone.now + 1.day
+      @edition.save!
+
+      visit cancel_scheduled_publishing_page_edition_path(@edition.id)
+
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      fill_in "Comment (optional)", with: "A comment about cancelling the schedule"
+      click_button "Cancel scheduled publishing"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Comment (optional)", event_data[0]["section"]
+      assert_equal "39", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[1]["action"]
+      assert_equal "form_response", event_data[1]["event_name"]
+      assert_equal "Cancel scheduled publishing", event_data[1]["section"]
+      assert_equal "{\"Comment (optional)\":\"39\"}", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "edit", event_data[1]["type"]
+    end
+  end
+
 private
 
   def disable_form_submit
