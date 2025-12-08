@@ -20,19 +20,8 @@
       <% end %>
     <% end %>
 
-    <%= form_for @tagging_update_form_values, url: update_tagging_edition_path(@resource) do |f| %>
-      <%= f.hidden_field :content_id %>
+    <%= form_with model: @tagging_update_form_values, url: remove_breadcrumb_edition_path(@resource) do |f| %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "remove_breadcrumb" %>
-      <% Array(@tagging_update_form_values.ordered_related_items).each do |base_path| %>
-        <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
-        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
-        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
-      <% end %>
 
       <%= render "govuk_publishing_components/components/radio", {
         name: "#{f.object_name}[remove_parent]",

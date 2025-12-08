@@ -54,6 +54,32 @@ class TaggingController < InheritedResources::Base
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
+  def remove_breadcrumb
+    if breadcrumb_remove_params[:remove_parent] == "no"
+      redirect_to tagging_edition_path
+    elsif !breadcrumb_remove_params[:remove_parent]
+      @resource.errors.add(:remove_parent, "Select an option")
+      render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+    else
+      @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+      @tagging_update_form_values.parent = nil
+      @tagging_update_form_values.previous_version = breadcrumb_remove_params[:previous_version]
+
+      @tagging_update_form_values.publish!
+      redirect_to tagging_edition_path,
+                  flash: { success: "GOV.UK breadcrumb removed" }
+    end
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
+  end
+
   def mainstream_browse_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     @checkbox_groups = build_checkbox_groups_for_mainstream_browse_page(@tagging_update_form_values)
@@ -112,26 +138,13 @@ class TaggingController < InheritedResources::Base
                         "Mainstream browse pages updated"
                       when "organisations"
                         "Organisations updated"
-                      when "remove_breadcrumb"
-                        "GOV.UK breadcrumb removed"
                       else
                         "Tags have been updated!"
                       end
 
     create_tagging_update_form_values(tagging_update_params)
 
-    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb"
-      if params[:tagging_tagging_update_form][:remove_parent] == "no"
-        redirect_to tagging_edition_path
-      elsif !params[:tagging_tagging_update_form][:remove_parent]
-        @resource.errors.add(:remove_parent, "Select an option")
-        render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
-      else
-        @tagging_update_form_values.publish!
-        flash[:success] = success_message
-        redirect_to tagging_edition_path
-      end
-    elsif @tagging_update_form_values.valid?
+    if @tagging_update_form_values.valid?
       @tagging_update_form_values.publish!
       flash[:success] = success_message
       redirect_to tagging_edition_path
@@ -196,6 +209,10 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def breadcrumb_remove_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, :remove_parent)
   end
 
   def breadcrumb_update_params
