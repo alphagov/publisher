@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         get "related_external_links"
         patch "update_related_external_links"
         get "tagging", to: "editions#tagging"
+        post "update_breadcrumb", to: "tagging#update_breadcrumb"
         post "update_tagging", to: "tagging#update_tagging"
         get "tagging_mainstream_browse_page", to: "tagging#mainstream_browse_page"
         get "tagging_related_content_page", to: "tagging#related_content_page"
