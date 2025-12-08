@@ -8,7 +8,7 @@ module TaggingHelper
     when "organisations"
       items = organisations(tagging_update_form_values.organisations, linkables)
     when "related_content"
-      items = related_content(tagging_update_form_values.ordered_related_items)
+      items = tagging_update_form_values.ordered_related_items
     else
       []
     end
@@ -28,10 +28,6 @@ module TaggingHelper
     linkables.organisations
              .select { |org| tagged_organisations.include? org[1] }
              .map { |org| org[0] }
-  end
-
-  def related_content(tagged_content)
-    tagged_content.map { |item| item["base_path"] }
   end
 
   def tag_rows(items, key_text)

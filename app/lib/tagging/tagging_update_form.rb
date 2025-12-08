@@ -25,7 +25,7 @@ module Tagging
         previous_version: link_set.version,
         organisations: link_set.links["organisations"],
         mainstream_browse_pages: link_set.links["mainstream_browse_pages"],
-        ordered_related_items: link_set.expanded_links["ordered_related_items"],
+        ordered_related_items: link_set.expanded_links["ordered_related_items"]&.map { |item| item["base_path"] },
         parent: link_set.links["parent"],
       )
     end

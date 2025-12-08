@@ -35,10 +35,8 @@
           empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
         else
           items = @tagging_update_form_values.ordered_related_items.each_with_index.map do | related_item, index |
-            item = (related_item["base_path"].presence || related_item)
-
             {
-              fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: item }),
+              fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: related_item }),
               destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: index, f: f }),
             }
           end

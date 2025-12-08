@@ -27,8 +27,8 @@
       <%= render "govuk_publishing_components/components/reorderable_list", {
         items: @tagging_update_form_values.ordered_related_items.map do |related_item|
           {
-            id: related_item["base_path"],
-            title: related_item["base_path"],
+            id: related_item,
+            title: related_item,
           }
         end,
         input_name: "reordered_related_items",

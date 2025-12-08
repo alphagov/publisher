@@ -24,7 +24,7 @@
       <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
       <%= f.hidden_field :tagging_type, value: "remove_breadcrumb" %>
-      <% Array(@tagging_update_form_values.ordered_related_items).to_a.map { |item| item["base_path"] }.each do |base_path| %>
+      <% Array(@tagging_update_form_values.ordered_related_items).each do |base_path| %>
         <%= f.hidden_field :ordered_related_items, value: base_path, multiple: true %>
       <% end %>
       <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
