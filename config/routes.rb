@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         post "update_breadcrumb", to: "tagging#update_breadcrumb"
         post "remove_breadcrumb", to: "tagging#remove_breadcrumb"
         post "update_related_content", to: "tagging#update_related_content"
+        post "reorder_related_content", to: "tagging#reorder_related_content"
         post "update_tagging", to: "tagging#update_tagging"
         get "tagging_mainstream_browse_page", to: "tagging#mainstream_browse_page"
         get "tagging_related_content_page", to: "tagging#related_content_page"

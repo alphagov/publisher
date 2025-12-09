@@ -102,6 +102,16 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def reorder_related_content
+    update_tags(
+      related_content_reorder_params[:previous_version],
+      "Related content order updated",
+    ) do |form_values|
+      form_values.ordered_related_items =
+        related_content_reorder_params[:reordered_related_items]
+    end
+  end
+
   def organisations_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
@@ -122,8 +132,6 @@ class TaggingController < InheritedResources::Base
 
   def update_tagging
     success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "reorder_related_content"
-                        "Related content order updated"
                       when "mainstream_browse_page"
                         "Mainstream browse pages updated"
                       when "organisations"
@@ -222,6 +230,22 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def related_content_reorder_params
+    update_params =
+      params.require(:tagging_tagging_update_form)
+            .permit(:previous_version)
+            .to_h
+    update_params[:reordered_related_items] = reordered_related_content_paths
+    update_params
+  end
+
+  def reordered_related_content_paths
+    params.permit(reordered_related_items: {})
+          .to_h[:reordered_related_items]
+          .sort_by(&:last)
+          .map { |item| item[0] }
   end
 
   def related_content_update_params

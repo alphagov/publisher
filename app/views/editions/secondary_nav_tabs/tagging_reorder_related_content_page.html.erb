@@ -23,7 +23,7 @@
   <div class="govuk-grid-column-two-thirds tagging">
     <p class="govuk-hint">Use the up and down buttons to reorder related content items, or select and hold on an item to reorder using drag and drop</p>
 
-    <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: reorder_related_content_edition_path(@resource) do |f| %>
       <%= render "govuk_publishing_components/components/reorderable_list", {
         items: @tagging_update_form_values.ordered_related_items.map do |related_item|
           {
@@ -34,18 +34,7 @@
         input_name: "reordered_related_items",
       } %>
 
-      <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "reorder_related_content" %>
-      <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
-        <%= f.hidden_field :parent, value: parent_id, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
-        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
-        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
-      <% end %>
 
       <div class="govuk-button-group govuk-!-margin-top-6">
         <%= render "govuk_publishing_components/components/button", {
