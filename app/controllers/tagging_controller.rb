@@ -70,6 +70,15 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_mainstream_browse_pages
+    update_tags(
+      mainstream_browse_pages_update_params[:previous_version],
+      "Mainstream browse pages updated",
+    ) do |form_values|
+      form_values.mainstream_browse_pages = mainstream_browse_pages_update_params[:mainstream_browse_pages]
+    end
+  end
+
   def related_content_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
@@ -132,8 +141,6 @@ class TaggingController < InheritedResources::Base
 
   def update_tagging
     success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "mainstream_browse_page"
-                        "Mainstream browse pages updated"
                       when "organisations"
                         "Organisations updated"
                       else
@@ -254,6 +261,10 @@ private
       ordered_related_items: [],
       ordered_related_items_destroy: [],
     )
+  end
+
+  def mainstream_browse_pages_update_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, mainstream_browse_pages: [])
   end
 
   def breadcrumb_remove_params

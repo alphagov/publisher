@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         get "tagging", to: "editions#tagging"
         post "update_breadcrumb", to: "tagging#update_breadcrumb"
         post "remove_breadcrumb", to: "tagging#remove_breadcrumb"
+        post "update_mainstream_browse_pages", to: "tagging#update_mainstream_browse_pages"
         post "update_related_content", to: "tagging#update_related_content"
         post "reorder_related_content", to: "tagging#reorder_related_content"
         post "update_tagging", to: "tagging#update_tagging"
