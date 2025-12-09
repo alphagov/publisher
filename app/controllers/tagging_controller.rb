@@ -139,13 +139,17 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_organisations
+    update_tags(
+      organisations_update_params[:previous_version],
+      "Organisations updated",
+    ) do |form_values|
+      form_values.organisations = organisations_update_params[:organisations]
+    end
+  end
+
   def update_tagging
-    success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "organisations"
-                        "Organisations updated"
-                      else
-                        "Tags have been updated!"
-                      end
+    success_message = "Tags have been updated!"
 
     create_tagging_update_form_values(tagging_update_params)
 
@@ -237,6 +241,10 @@ private
 
   def create_tagging_update_form_values(tagging_update_params)
     @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  end
+
+  def organisations_update_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, organisations: [])
   end
 
   def related_content_reorder_params
