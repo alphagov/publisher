@@ -126,6 +126,20 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#remove_breadcrumb" do
+    should "display an error message if the 'remove_parent' param is invalid" do
+      stub_linkables_with_data
+      login_as_stub_user
+
+      post :remove_breadcrumb,
+           params: {
+             id: @edition.id,
+             tagging_tagging_update_form: { remove_parent: "invalid", previous_version: 1 },
+           }
+
+      assert_select "p", "Error: Select an option"
+      assert_template "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+    end
+
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))

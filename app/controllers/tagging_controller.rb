@@ -37,7 +37,7 @@ class TaggingController < InheritedResources::Base
   def remove_breadcrumb
     if breadcrumb_remove_params[:remove_parent] == "no"
       redirect_to tagging_edition_path
-    elsif !breadcrumb_remove_params[:remove_parent]
+    elsif breadcrumb_remove_params[:remove_parent] != "yes"
       @tagging_update_form_values = build_tagging_form_values_from_publishing_api
       @resource.errors.add(:remove_parent, "Select an option")
       render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
