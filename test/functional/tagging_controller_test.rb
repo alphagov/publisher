@@ -3,13 +3,13 @@
 require "test_helper"
 
 class TaggingControllerTest < ActionController::TestCase
+  setup do
+    @edition = FactoryBot.create(:edition)
+  end
+
   context "#breadcrumb_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
-      stub_holidays_used_by_fact_check
-      stub_linkables
-      stub_events_for_all_content_ids
-      stub_users_from_signon_api
+      stub_linkables_with_data
     end
 
     context "user has govuk_editor permission" do
@@ -53,10 +53,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#update_breadcrumb" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
@@ -78,7 +74,6 @@ class TaggingControllerTest < ActionController::TestCase
 
   context "#remove_breadcrumb_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
     end
 
@@ -131,10 +126,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#remove_breadcrumb" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
@@ -156,7 +147,6 @@ class TaggingControllerTest < ActionController::TestCase
 
   context "#mainstream_browse_pages_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
     end
 
@@ -201,10 +191,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#update_mainstream_browse_pages" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
@@ -226,7 +212,6 @@ class TaggingControllerTest < ActionController::TestCase
 
   context "#related_content_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
     end
 
@@ -264,10 +249,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#update_related_content" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
@@ -289,7 +270,6 @@ class TaggingControllerTest < ActionController::TestCase
 
   context "#reorder_related_content_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
     end
 
@@ -327,10 +307,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#reorder_related_content" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
@@ -352,7 +328,6 @@ class TaggingControllerTest < ActionController::TestCase
 
   context "#organisations_page" do
     setup do
-      @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
     end
 
@@ -414,10 +389,6 @@ class TaggingControllerTest < ActionController::TestCase
   end
 
   context "#update_organisations" do
-    setup do
-      @edition = FactoryBot.create(:edition)
-    end
-
     context "user does not have editor permissions" do
       should "render an error message if the user is not a govuk_editor" do
         login_as(FactoryBot.create(:user))
