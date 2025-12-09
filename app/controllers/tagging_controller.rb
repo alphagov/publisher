@@ -148,29 +148,6 @@ class TaggingController < InheritedResources::Base
     end
   end
 
-  def update_tagging
-    success_message = "Tags have been updated!"
-
-    create_tagging_update_form_values(tagging_update_params)
-
-    if @tagging_update_form_values.valid?
-      @tagging_update_form_values.publish!
-      flash[:success] = success_message
-      redirect_to tagging_edition_path
-    else
-      render "secondary_nav_tabs/tagging_related_content_page"
-    end
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "editions/show"
-  end
-
 protected
 
   def setup_view_paths
@@ -239,10 +216,6 @@ private
     end
   end
 
-  def create_tagging_update_form_values(tagging_update_params)
-    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
-  end
-
   def organisations_update_params
     params.require(:tagging_tagging_update_form).permit(:previous_version, organisations: [])
   end
@@ -281,24 +254,5 @@ private
 
   def breadcrumb_update_params
     params.require(:tagging_tagging_update_form).permit(:previous_version, parent: [])
-  end
-
-  def tagging_update_params
-    update_params = params.require(:tagging_tagging_update_form).permit(
-      :content_id,
-      :previous_version,
-      :tagging_type,
-      parent: [],
-      mainstream_browse_pages: [],
-      organisations: [],
-      ordered_related_items: [],
-      ordered_related_items_destroy: [],
-    ).to_h
-    if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
-      update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
-                                                      .to_h[:reordered_related_items]
-                                                      .sort_by(&:last).map { |url| url[0] }
-    end
-    update_params
   end
 end

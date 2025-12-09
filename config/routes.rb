@@ -60,7 +60,6 @@ Rails.application.routes.draw do
         post "update_related_content", to: "tagging#update_related_content"
         post "reorder_related_content", to: "tagging#reorder_related_content"
         post "update_organisations", to: "tagging#update_organisations"
-        post "update_tagging", to: "tagging#update_tagging"
         get "tagging_mainstream_browse_page", to: "tagging#mainstream_browse_page"
         get "tagging_related_content_page", to: "tagging#related_content_page"
         get "tagging_reorder_related_content_page", to: "tagging#reorder_related_content_page"
