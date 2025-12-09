@@ -52,6 +52,30 @@ class TaggingControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_breadcrumb" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :update_breadcrumb, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        post :update_breadcrumb, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#remove_breadcrumb_page" do
     setup do
       @edition = FactoryBot.create(:edition)
@@ -106,6 +130,30 @@ class TaggingControllerTest < ActionController::TestCase
     end
   end
 
+  context "#remove_breadcrumb" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :remove_breadcrumb, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        get :remove_breadcrumb, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#mainstream_browse_pages_page" do
     setup do
       @edition = FactoryBot.create(:edition)
@@ -152,6 +200,30 @@ class TaggingControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_mainstream_browse_pages" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :update_mainstream_browse_pages, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        post :update_mainstream_browse_pages, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#related_content_page" do
     setup do
       @edition = FactoryBot.create(:edition)
@@ -191,6 +263,30 @@ class TaggingControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update_related_content" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :update_related_content, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        post :update_related_content, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
   context "#reorder_related_content_page" do
     setup do
       @edition = FactoryBot.create(:edition)
@@ -225,6 +321,30 @@ class TaggingControllerTest < ActionController::TestCase
 
       should "render an error message" do
         get :reorder_related_content_page, params: { id: @edition.id }
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#reorder_related_content" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :reorder_related_content, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        post :reorder_related_content, params: { id: @edition.id }
+
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
     end
@@ -287,6 +407,30 @@ class TaggingControllerTest < ActionController::TestCase
         login_as_welsh_editor
 
         get :organisations_page, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+    end
+  end
+
+  context "#update_organisations" do
+    setup do
+      @edition = FactoryBot.create(:edition)
+    end
+
+    context "user does not have editor permissions" do
+      should "render an error message if the user is not a govuk_editor" do
+        login_as(FactoryBot.create(:user))
+
+        post :update_organisations, params: { id: @edition.id }
+
+        assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
+      end
+
+      should "render an error message if the user has welsh_editor permission and the edition is not Welsh" do
+        login_as_welsh_editor
+
+        post :update_organisations, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end

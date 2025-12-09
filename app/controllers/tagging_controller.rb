@@ -6,16 +6,7 @@ class TaggingController < InheritedResources::Base
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
 
   before_action :setup_view_paths
-  before_action only: %i[
-    breadcrumb_page
-    remove_breadcrumb_page
-    mainstream_browse_pages_page
-    related_content_page
-    reorder_related_content_page
-    organisations_page
-  ] do
-    require_editor_permissions
-  end
+  before_action :require_editor_permissions
 
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made"
 
