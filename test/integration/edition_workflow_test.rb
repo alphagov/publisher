@@ -14,7 +14,6 @@ class EditionWorkflowTest < LegacyJavascriptIntegrationTest
 
     test_strategy = Flipflop::FeatureSet.current.test!
     test_strategy.switch!(:design_system_publications_filter, false)
-    test_strategy.switch!(:design_system_edit_phase_2, false)
     test_strategy.switch!(:design_system_edit_phase_3a, false)
 
     @alice = FactoryBot.create(:user, :govuk_editor, name: "Alice")
