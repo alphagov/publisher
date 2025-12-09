@@ -106,7 +106,7 @@ class TaggingControllerTest < ActionController::TestCase
     end
   end
 
-  context "#mainstream_browse_page" do
+  context "#mainstream_browse_pages_page" do
     setup do
       @edition = FactoryBot.create(:edition)
       stub_linkables_with_data
@@ -118,14 +118,14 @@ class TaggingControllerTest < ActionController::TestCase
       end
 
       should "render the 'Tag to a browse page' page" do
-        get :mainstream_browse_page, params: { id: @edition.id }
-        assert_template "secondary_nav_tabs/tagging_mainstream_browse_page"
+        get :mainstream_browse_pages_page, params: { id: @edition.id }
+        assert_template "secondary_nav_tabs/tagging_mainstream_browse_pages_page"
       end
 
       should "render the tagging tab and display an error message if an error occurs during the request" do
         Tagging::TaggingUpdateForm.stubs(:build_from_publishing_api).raises(StandardError)
 
-        get :mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_pages_page, params: { id: @edition.id }
 
         assert_template "show"
         assert_equal "Due to a service problem, the request could not be made", flash[:danger]
@@ -137,7 +137,7 @@ class TaggingControllerTest < ActionController::TestCase
         user = FactoryBot.create(:user)
         login_as(user)
 
-        get :mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_pages_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end
@@ -145,7 +145,7 @@ class TaggingControllerTest < ActionController::TestCase
       should "render an error message if the user is a Welsh editor and non-Welsh edition" do
         login_as_welsh_editor
 
-        get :mainstream_browse_page, params: { id: @edition.id }
+        get :mainstream_browse_pages_page, params: { id: @edition.id }
 
         assert_equal "You do not have correct editor permissions for this action.", flash[:danger]
       end

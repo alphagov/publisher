@@ -9,7 +9,7 @@ class TaggingController < InheritedResources::Base
   before_action only: %i[
     breadcrumb_page
     remove_breadcrumb_page
-    mainstream_browse_page
+    mainstream_browse_pages_page
     related_content_page
     reorder_related_content_page
     organisations_page
@@ -60,10 +60,11 @@ class TaggingController < InheritedResources::Base
     end
   end
 
-  def mainstream_browse_page
+  def mainstream_browse_pages_page
     @tagging_update_form_values = build_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_mainstream_browse_page(@tagging_update_form_values)
-    render "secondary_nav_tabs/tagging_mainstream_browse_page"
+    @checkbox_groups =
+      build_checkboxes_for_mainstream_browse_pages_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_mainstream_browse_pages_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
@@ -201,7 +202,7 @@ private
     end
   end
 
-  def build_checkbox_groups_for_mainstream_browse_page(tagging_update_form_values)
+  def build_checkboxes_for_mainstream_browse_pages_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
