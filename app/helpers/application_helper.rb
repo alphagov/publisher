@@ -21,7 +21,13 @@ module ApplicationHelper
   end
 
   def diff_html(version1, version2)
-    Diffy::Diff.new(version1, version2, allow_empty_diff: false).to_s(:html).html_safe
+    content_blocks = ContentBlockTools::ContentBlockReference.find_all_in_document(version1)
+
+    ref = content_blocks.first
+
+    block = ContentBlockTools::ContentBlock.from_embed_code(ref.embed_code)
+
+    block.render
   end
 
   def permitted_params
