@@ -5,12 +5,13 @@ class FilteredEditionsPresenter
 
   attr_reader :search_text
 
-  def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, search_text: nil, page: nil)
+  def initialize(user, states_filter: [], assigned_to_filter: nil, content_type_filter: nil, search_text: nil, paginate: false, page: nil)
     @user = user
     @states_filter = states_filter || []
     @assigned_to_filter = assigned_to_filter
     @content_type_filter = content_type_filter
     @search_text = search_text
+    @paginate = paginate
     @page = page
   end
 
@@ -80,7 +81,8 @@ private
     result = apply_search_text(result)
     result = result.accessible_to(user)
     result = result.where.not(editionable_type: "PopularLinksEdition")
-    result.order(updated_at: :desc).page(@page).per(ITEMS_PER_PAGE)
+    result = result.order(updated_at: :desc)
+    apply_pagination(result)
   end
 
   def available_users
@@ -142,6 +144,12 @@ private
     return editions if search_text.blank?
 
     editions.search_title_and_slug(search_text)
+  end
+
+  def apply_pagination(editions)
+    return editions unless @paginate
+
+    editions.page(@page).per(ITEMS_PER_PAGE)
   end
 
   attr_reader :user, :states_filter, :assigned_to_filter, :content_type_filter, :page

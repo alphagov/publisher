@@ -173,10 +173,18 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
       assert_equal([guide_fawkes], filtered_editions.to_a)
     end
 
-    should "return a single 'page' of results when no page number is specified" do
+    should "not paginate results by default" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
       filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
+
+      assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.count)
+    end
+
+    should "return a single 'page' of results when no page number is specified" do
+      FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
+
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, paginate: true).editions
 
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE, filtered_editions.count)
     end
@@ -184,7 +192,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     should "make the total number of editions available when there's more than one page of results" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user).editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, paginate: true).editions
 
       assert_equal(FilteredEditionsPresenter::ITEMS_PER_PAGE + 1, filtered_editions.total_count)
     end
@@ -192,7 +200,7 @@ class FilteredEditionsPresenterTest < ActiveSupport::TestCase
     should "return the specified 'page' of results" do
       FactoryBot.create_list(:guide_edition, FilteredEditionsPresenter::ITEMS_PER_PAGE + 1)
 
-      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, page: 2).editions
+      filtered_editions = FilteredEditionsPresenter.new(a_gds_user, paginate: true, page: 2).editions
 
       assert_equal(1, filtered_editions.to_a.count)
     end
