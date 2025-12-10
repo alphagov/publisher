@@ -3,7 +3,7 @@
 <% content_for :page_title, "Set GOV.UK breadcrumb" %>
 <% content_for :title, "Set GOV.UK breadcrumb" %>
 
-<%= form_with model: @tagging_update_form_values, url: update_breadcrumb_edition_path(@resource) do |f| %>
+<%= form_with model: @tagging_update_form_values, url: update_breadcrumb_edition_path(@resource), data: { module: "" } do |f| %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <%= render "govuk_publishing_components/components/hint", {
