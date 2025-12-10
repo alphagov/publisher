@@ -3,7 +3,7 @@ require "integration_test_helper"
 class Ga4TrackingTest < JavascriptIntegrationTest
   setup do
     FactoryBot.create(:user, :govuk_editor, name: "Test User")
-    @govuk_requester = FactoryBot.create(:user, :govuk_editor)
+    @govuk_requester = FactoryBot.create(:user, :govuk_editor, :skip_review)
     @edition = FactoryBot.create(:answer_edition, title: "Answer edition")
 
     test_strategy = Flipflop::FeatureSet.current.test!
@@ -170,6 +170,37 @@ class Ga4TrackingTest < JavascriptIntegrationTest
       assert_equal "form_response", event_data[1]["event_name"]
       assert_equal "Send to 2i", event_data[1]["section"]
       assert_equal "{\"Comment (optional)\":\"12\"}", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "edit", event_data[1]["type"]
+    end
+  end
+
+  context "Skip review page" do
+    setup do
+      login_as(@govuk_requester)
+
+      visit skip_review_page_edition_path(@edition)
+
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      fill_in "Comment (optional)", with: "Comment on skipping review"
+      click_button "Skip review"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Comment (optional)", event_data[0]["section"]
+      assert_equal "26", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[1]["action"]
+      assert_equal "form_response", event_data[1]["event_name"]
+      assert_equal "Skip review", event_data[1]["section"]
+      assert_equal "{\"Comment (optional)\":\"26\"}", event_data[1]["text"]
       assert_equal "Answer", event_data[1]["tool_name"]
       assert_equal "edit", event_data[1]["type"]
     end
