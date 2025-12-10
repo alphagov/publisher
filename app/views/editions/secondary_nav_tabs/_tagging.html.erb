@@ -45,14 +45,14 @@
         heading: heading_browse_pages,
         body: "Not tagged to any browse pages",
         link_text: "Tag to a browse page",
-        link_url: tagging_mainstream_browse_page_edition_path,
+        link_url: tagging_mainstream_browse_pages_page_edition_path,
       } %>
     <% else %>
       <% if current_user.has_editor_permissions?(@edition) %>
         <% actions =
           [{
               label: "Edit",
-              href: tagging_mainstream_browse_page_edition_path,
+              href: tagging_mainstream_browse_pages_page_edition_path,
             },
           ]
         %>

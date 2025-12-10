@@ -23,7 +23,7 @@
   <div class="govuk-grid-column-two-thirds tagging">
     <p class="govuk-body">Related content items are displayed in the sidebar.</p>
 
-    <%= form_for (@tagging_update_form_values), url: update_tagging_edition_path(@resource) do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: update_related_content_edition_path(@resource) do |f| %>
       <%
         if @tagging_update_form_values.ordered_related_items == nil
           items = [
@@ -35,10 +35,8 @@
           empty = render(partial: "secondary_nav_tabs/tagging/related_content_input")
         else
           items = @tagging_update_form_values.ordered_related_items.each_with_index.map do | related_item, index |
-            item = (related_item["base_path"].presence || related_item)
-
             {
-              fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: item }),
+              fields: render(partial: "secondary_nav_tabs/tagging/related_content_input", locals: { index:, value: related_item }),
               destroy_checkbox: render(partial: "secondary_nav_tabs/tagging/add-another_checkbox", locals: { index: index, f: f }),
             }
           end
@@ -46,18 +44,7 @@
         end
       %>
 
-      <%= f.hidden_field :content_id %>
       <%= f.hidden_field :previous_version %>
-      <%= f.hidden_field :tagging_type, value: "related_content" %>
-      <% Array(@tagging_update_form_values.parent).each do |parent_id| %>
-        <%= f.hidden_field :parent, value: parent_id, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.organisations).each do |org_id| %>
-        <%= f.hidden_field :organisations, value: org_id, multiple: true %>
-      <% end %>
-      <% Array(@tagging_update_form_values.mainstream_browse_pages).each do |page_id| %>
-        <%= f.hidden_field :mainstream_browse_pages, value: page_id, multiple: true %>
-      <% end %>
 
       <%= render "govuk_publishing_components/components/add_another", {
         fieldset_legend: "Related content",

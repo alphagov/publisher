@@ -364,7 +364,7 @@ class EditionEditTest < IntegrationTest
         should "navigate to the 'Tag browse pages' page when the 'Edit' link is clicked" do
           within all(".gem-c-summary-card")[1] do
             click_link("Edit")
-            assert_current_path tagging_mainstream_browse_page_edition_path(@draft_edition)
+            assert_current_path tagging_mainstream_browse_pages_page_edition_path(@draft_edition)
           end
         end
 
@@ -748,7 +748,7 @@ class EditionEditTest < IntegrationTest
 
         click_button("Save")
 
-        assert_current_path update_tagging_edition_path(@draft_edition.id)
+        assert_current_path update_related_content_edition_path(@draft_edition.id)
         assert page.has_text?("/invalid-path is not a known URL on GOV.UK, check URL or path is correctly entered.")
       end
 

@@ -6,21 +6,12 @@ class TaggingController < InheritedResources::Base
   defaults resource_class: Edition, collection_name: "editions", instance_name: "resource"
 
   before_action :setup_view_paths
-  before_action only: %i[
-    breadcrumb_page
-    remove_breadcrumb_page
-    mainstream_browse_page
-    related_content_page
-    reorder_related_content_page
-    organisations_page
-  ] do
-    require_editor_permissions
-  end
+  before_action :require_editor_permissions
 
   SERVICE_REQUEST_ERROR_MESSAGE = "Due to a service problem, the request could not be made"
 
   def breadcrumb_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     @radio_groups = build_radio_groups_for_breadcrumb_page(@tagging_update_form_values)
     render "secondary_nav_tabs/tagging_breadcrumb_page"
   rescue StandardError => e
@@ -29,23 +20,59 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_breadcrumb
+    update_tags(
+      breadcrumb_update_params[:previous_version],
+      "GOV.UK breadcrumbs updated",
+    ) do |form_values|
+      form_values.parent = breadcrumb_update_params[:parent]
+    end
+  end
+
   def remove_breadcrumb_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
     render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
   end
 
-  def mainstream_browse_page
-    populate_tagging_form_values_from_publishing_api
-    @checkbox_groups = build_checkbox_groups_for_mainstream_browse_page(@tagging_update_form_values)
-    render "secondary_nav_tabs/tagging_mainstream_browse_page"
+  def remove_breadcrumb
+    if breadcrumb_remove_params[:remove_parent] == "no"
+      redirect_to tagging_edition_path
+    elsif breadcrumb_remove_params[:remove_parent] != "yes"
+      @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+      @resource.errors.add(:remove_parent, "Select an option")
+      render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
+    else
+      update_tags(
+        breadcrumb_remove_params[:previous_version],
+        "GOV.UK breadcrumb removed",
+      ) do |form_values|
+        form_values.parent = nil
+      end
+    end
+  end
+
+  def mainstream_browse_pages_page
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+    @checkbox_groups =
+      build_checkboxes_for_mainstream_browse_pages_page(@tagging_update_form_values)
+    render "secondary_nav_tabs/tagging_mainstream_browse_pages_page"
   rescue StandardError => e
     Rails.logger.error "Error #{e.class} #{e.message}"
     flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
     render "editions/show"
   end
 
+  def update_mainstream_browse_pages
+    update_tags(
+      mainstream_browse_pages_update_params[:previous_version],
+      "Mainstream browse pages updated",
+    ) do |form_values|
+      form_values.mainstream_browse_pages = mainstream_browse_pages_update_params[:mainstream_browse_pages]
+    end
+  end
+
   def related_content_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_related_content_page"
   rescue StandardError => e
@@ -54,8 +81,20 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def update_related_content
+    update_tags(
+      related_content_update_params[:previous_version],
+      "Related content updated",
+    ) do |form_values|
+      form_values.ordered_related_items = related_content_update_params[:ordered_related_items]
+      form_values.ordered_related_items_destroy = related_content_update_params[:ordered_related_items_destroy]
+    end
+  rescue ActiveModel::ValidationError
+    render "secondary_nav_tabs/tagging_related_content_page"
+  end
+
   def reorder_related_content_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     render "secondary_nav_tabs/tagging_reorder_related_content_page"
   rescue StandardError => e
@@ -64,8 +103,18 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
+  def reorder_related_content
+    update_tags(
+      related_content_reorder_params[:previous_version],
+      "Related content order updated",
+    ) do |form_values|
+      form_values.ordered_related_items =
+        related_content_reorder_params[:reordered_related_items]
+    end
+  end
+
   def organisations_page
-    populate_tagging_form_values_from_publishing_api
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
 
     @linkables = Tagging::Linkables.new.organisations.map do |linkable|
       {
@@ -82,53 +131,13 @@ class TaggingController < InheritedResources::Base
     render "editions/show"
   end
 
-  def update_tagging
-    success_message = case params[:tagging_tagging_update_form][:tagging_type]
-                      when "related_content"
-                        "Related content updated"
-                      when "reorder_related_content"
-                        "Related content order updated"
-                      when "mainstream_browse_page"
-                        "Mainstream browse pages updated"
-                      when "organisations"
-                        "Organisations updated"
-                      when "breadcrumb"
-                        "GOV.UK breadcrumbs updated"
-                      when "remove_breadcrumb"
-                        "GOV.UK breadcrumb removed"
-                      else
-                        "Tags have been updated!"
-                      end
-
-    create_tagging_update_form_values(tagging_update_params)
-
-    if params[:tagging_tagging_update_form][:tagging_type] == "remove_breadcrumb"
-      if params[:tagging_tagging_update_form][:remove_parent] == "no"
-        redirect_to tagging_edition_path
-      elsif !params[:tagging_tagging_update_form][:remove_parent]
-        @resource.errors.add(:remove_parent, "Select an option")
-        render "secondary_nav_tabs/tagging_remove_breadcrumb_page"
-      else
-        @tagging_update_form_values.publish!
-        flash[:success] = success_message
-        redirect_to tagging_edition_path
-      end
-    elsif @tagging_update_form_values.valid?
-      @tagging_update_form_values.publish!
-      flash[:success] = success_message
-      redirect_to tagging_edition_path
-    else
-      render "secondary_nav_tabs/tagging_related_content_page"
+  def update_organisations
+    update_tags(
+      organisations_update_params[:previous_version],
+      "Organisations updated",
+    ) do |form_values|
+      form_values.organisations = organisations_update_params[:organisations]
     end
-  rescue GdsApi::HTTPConflict
-    redirect_to tagging_edition_path,
-                flash: {
-                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
-                }
-  rescue StandardError => e
-    Rails.logger.error "Error #{e.class} #{e.message}"
-    flash[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
-    render "editions/show"
   end
 
 protected
@@ -139,8 +148,31 @@ protected
 
 private
 
-  def populate_tagging_form_values_from_publishing_api
-    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_publishing_api(
+  def update_tags(previous_version, success_message, &update_form_values)
+    raise "Must provide a block" unless block_given?
+
+    @tagging_update_form_values = build_tagging_form_values_from_publishing_api
+    @tagging_update_form_values.previous_version = previous_version
+    update_form_values.call(@tagging_update_form_values)
+
+    @tagging_update_form_values.publish!
+    redirect_to tagging_edition_path,
+                flash: { success: success_message }
+  rescue GdsApi::HTTPConflict
+    redirect_to tagging_edition_path,
+                flash: {
+                  danger: "Somebody changed the tags before you could. Your changes have not been saved.",
+                }
+  rescue ActiveModel::ValidationError
+    raise
+  rescue StandardError => e
+    Rails.logger.error "Error #{e.class} #{e.message}"
+    flash.now[:danger] = SERVICE_REQUEST_ERROR_MESSAGE
+    render "editions/show"
+  end
+
+  def build_tagging_form_values_from_publishing_api
+    Tagging::TaggingUpdateForm.build_from_publishing_api(
       resource.artefact.content_id,
       resource.artefact.language,
     )
@@ -161,7 +193,7 @@ private
     end
   end
 
-  def build_checkbox_groups_for_mainstream_browse_page(tagging_update_form_values)
+  def build_checkboxes_for_mainstream_browse_pages_page(tagging_update_form_values)
     Tagging::Linkables.new.mainstream_browse_pages.map do |k, v|
       {
         heading: k,
@@ -176,26 +208,43 @@ private
     end
   end
 
-  def create_tagging_update_form_values(tagging_update_params)
-    @tagging_update_form_values = Tagging::TaggingUpdateForm.build_from_submitted_form(tagging_update_params)
+  def organisations_update_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, organisations: [])
   end
 
-  def tagging_update_params
-    update_params = params.require(:tagging_tagging_update_form).permit(
-      :content_id,
+  def related_content_reorder_params
+    update_params =
+      params.require(:tagging_tagging_update_form)
+            .permit(:previous_version)
+            .to_h
+    update_params[:reordered_related_items] = reordered_related_content_paths
+    update_params
+  end
+
+  def reordered_related_content_paths
+    params.permit(reordered_related_items: {})
+          .to_h[:reordered_related_items]
+          .sort_by(&:last)
+          .map { |item| item[0] }
+  end
+
+  def related_content_update_params
+    params.require(:tagging_tagging_update_form).permit(
       :previous_version,
-      :tagging_type,
-      parent: [],
-      mainstream_browse_pages: [],
-      organisations: [],
       ordered_related_items: [],
       ordered_related_items_destroy: [],
-    ).to_h
-    if params[:tagging_tagging_update_form][:tagging_type] == "reorder_related_content"
-      update_params[:reordered_related_items] = params.permit(reordered_related_items: {})
-                                                      .to_h[:reordered_related_items]
-                                                      .sort_by(&:last).map { |url| url[0] }
-    end
-    update_params
+    )
+  end
+
+  def mainstream_browse_pages_update_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, mainstream_browse_pages: [])
+  end
+
+  def breadcrumb_remove_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, :remove_parent)
+  end
+
+  def breadcrumb_update_params
+    params.require(:tagging_tagging_update_form).permit(:previous_version, parent: [])
   end
 end

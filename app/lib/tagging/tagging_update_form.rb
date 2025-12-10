@@ -1,21 +1,9 @@
 module Tagging
   class TaggingUpdateForm
     include ActiveModel::Model
-    attr_accessor :content_id, :previous_version, :tagging_type, :organisations, :mainstream_browse_pages, :ordered_related_items, :parent, :ordered_related_items_destroy
+    attr_accessor :content_id, :previous_version, :organisations, :mainstream_browse_pages, :ordered_related_items, :parent, :ordered_related_items_destroy
 
     validate :ordered_related_items_paths_exist
-
-    def self.build_from_submitted_form(tagging_update_params)
-      new(
-        content_id: tagging_update_params["content_id"],
-        previous_version: tagging_update_params["previous_version"],
-        organisations: tagging_update_params["organisations"],
-        mainstream_browse_pages: tagging_update_params["mainstream_browse_pages"],
-        ordered_related_items: tagging_update_params["reordered_related_items"] || tagging_update_params["ordered_related_items"],
-        ordered_related_items_destroy: tagging_update_params["ordered_related_items_destroy"],
-        parent: tagging_update_params["parent"],
-      )
-    end
 
     def self.build_from_publishing_api(content_id, locale)
       link_set = Tagging::LinkSet.find(content_id, locale)
@@ -25,7 +13,7 @@ module Tagging
         previous_version: link_set.version,
         organisations: link_set.links["organisations"],
         mainstream_browse_pages: link_set.links["mainstream_browse_pages"],
-        ordered_related_items: link_set.expanded_links["ordered_related_items"],
+        ordered_related_items: link_set.expanded_links["ordered_related_items"]&.map { |item| item["base_path"] },
         parent: link_set.links["parent"],
       )
     end
@@ -54,7 +42,22 @@ module Tagging
     end
 
     def transform_base_paths_to_content_ids(base_paths)
-      base_paths.map { |base_path| ordered_related_items_path_by_ids[base_path] }
+      content_ids = []
+      base_paths.each do |base_path|
+        content_id = ordered_related_items_path_by_ids[base_path]
+
+        if content_id.nil?
+          errors.add(:ordered_related_items, "#{base_path} is not a known URL on GOV.UK, check URL or path is correctly entered.")
+        else
+          content_ids << content_id
+        end
+      end
+
+      if errors[:ordered_related_items].empty?
+        content_ids
+      else
+        raise ActiveModel::ValidationError.new(self) # rubocop:disable Style/RaiseArgs
+      end
     end
 
     def ordered_related_items_paths_exist
