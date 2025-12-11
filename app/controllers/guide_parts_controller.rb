@@ -40,6 +40,7 @@ class GuidePartsController < InheritedResources::Base
   def create
     @part = @edition.editionable.parts.build(permitted_parts_params.merge(order: @edition.editionable.parts.size))
     if @edition.save
+      UpdateWorker.perform_async(@edition.id.to_s)
       if params[:save] == "save and summary"
         flash[:success] = "New chapter added successfully."
         redirect_to edition_path(@edition)
@@ -61,6 +62,7 @@ class GuidePartsController < InheritedResources::Base
     @part.assign_attributes(permitted_parts_params)
 
     if @part.save
+      UpdateWorker.perform_async(@edition.id.to_s)
       if params[:save] == "save and summary"
         flash[:success] = "Chapter updated successfully."
         redirect_to edition_path(@edition)
@@ -100,6 +102,7 @@ class GuidePartsController < InheritedResources::Base
   def destroy
     @part = Part.find(params[:id])
     if @part.destroy!
+      UpdateWorker.perform_async(@edition.id.to_s)
       flash[:success] = "Chapter deleted successfully"
       redirect_to edition_path(@edition)
     else
@@ -146,6 +149,6 @@ private
 
   def reorder_chapters(edition, chapters)
     chapters.each { |chapter_id, new_index| edition.parts.find(chapter_id).update(order: new_index.to_i) }
-    edition.save!
+    UpdateWorker.perform_async(edition.id.to_s) if edition.save!
   end
 end
