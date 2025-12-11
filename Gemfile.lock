@@ -157,7 +157,7 @@ GEM
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
       sass-embedded (~> 1.63)
-    date (3.5.0)
+    date (3.5.1)
     declarative (0.0.20)
     diffy (3.4.4)
     docile (1.4.1)
@@ -279,7 +279,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (62.2.1)
+    govuk_publishing_components (62.3.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -642,7 +642,7 @@ GEM
     pry-byebug (3.11.0)
       byebug (~> 12.0)
       pry (>= 0.13, < 0.16)
-    psych (5.2.6)
+    psych (5.3.0)
       date
       stringio
     public_suffix (6.0.2)
@@ -864,7 +864,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.4.0)
     timecop (0.9.10)
-    timeout (0.4.4)
+    timeout (0.5.0)
     trailblazer-option (0.1.2)
     tsort (0.2.0)
     tzinfo (2.0.6)
