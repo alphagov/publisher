@@ -3,6 +3,10 @@
 require "test_helper"
 
 class GuidePartsControllerTest < ActionController::TestCase
+  setup do
+    UpdateWorker.stubs(:perform_async)
+  end
+
   context "adding a chapter to a guide" do
     context "when user has no editor permissions" do
       setup do
@@ -70,6 +74,8 @@ class GuidePartsControllerTest < ActionController::TestCase
       end
 
       should "be able to update an existing chapter" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+
         patch :update, params: {
           edition_id: @edition.id,
           id: @edition.parts.first.id,
@@ -79,11 +85,14 @@ class GuidePartsControllerTest < ActionController::TestCase
           },
           save: "save",
         }
+
         assert_redirected_to edit_edition_guide_part_path(@edition.id, @edition.parts.first.id)
         assert_equal "Chapter updated successfully.", flash[:success]
       end
 
       should "be able to update an existing chapter and redirect to edit guide page" do
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+
         patch :update, params: {
           edition_id: @edition.id,
           id: @edition.parts.first.id,
@@ -110,6 +119,7 @@ class GuidePartsControllerTest < ActionController::TestCase
 
       should "allow an existing chapter to be deleted" do
         part = @edition.parts.first
+        UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
 
         delete :destroy, params: {
           edition_id: @edition.id,
@@ -299,6 +309,8 @@ class GuidePartsControllerTest < ActionController::TestCase
     end
 
     should "reorder chapters according to params input" do
+      UpdateWorker.expects(:perform_async).with(@edition.id.to_s)
+
       post :bulk_update_reorder, params: { edition_id: @edition.id, reordered_chapters: { @chapter_two.id => "1", @chapter_one.id => "2" } }
 
       assert_equal @chapter_one.reload.order, 2
