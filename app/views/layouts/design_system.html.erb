@@ -79,21 +79,7 @@
   </div>
 
   <%= render "govuk_publishing_components/components/layout_footer", {
-    navigation: [
-      {
-        title: "Support and feedback",
-        items: [
-          {
-            href: Plek.external_url_for("support"),
-            text: "Raise a support request",
-          },
-          {
-            href: "https://status.publishing.service.gov.uk/",
-            text: "Check if publishing apps are working or if there’s any maintenance planned",
-          },
-        ],
-      },
-    ],
+    navigation: footer_items(is_editor: current_user.govuk_editor?),
     data_attributes: {
       ga4_no_copy: true,
     },
