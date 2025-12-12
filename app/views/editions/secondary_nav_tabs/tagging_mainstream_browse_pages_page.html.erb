@@ -3,7 +3,7 @@
 <% content_for :page_title, "Tag browse pages" %>
 <% content_for :title, "Tag browse pages" %>
 
-<%= form_with model: @tagging_update_form_values, url: update_mainstream_browse_pages_edition_path(@edition) do |f| %>
+<%= form_with model: @tagging_update_form_values, url: update_mainstream_browse_pages_edition_path(@edition), data: {module: ""} do |f| %>
   <%= f.hidden_field :previous_version %>
 
   <div class="govuk-grid-row">
