@@ -1,4 +1,16 @@
 module EditionsHelper
+  EDITION_STATUS_TAG_COLOURS = {
+    amends_needed: "red",
+    archived: "blue",
+    draft: "yellow",
+    fact_check: "purple",
+    fact_check_received: "pink",
+    ready: "green",
+    scheduled_for_publishing: "turquoise",
+    published: "orange",
+    in_review: "grey",
+  }.freeze
+
   # edition transitions are done using fields inlined in the edition form.
   # we need to render activity forms to allow edition transitions on views
   # where the edition form is not present i.e. editions diff view.
@@ -99,5 +111,20 @@ module EditionsHelper
       "unavailable" => "Service not available",
     }
     options[edition.editionable.send("#{administration}_availability").authority_type]
+  end
+
+  def edition_status_hint_text(edition)
+    case edition.state
+    when "fact_check"
+      "Sent #{time_ago_in_words(edition.updated_at)} ago"
+    when "in_review"
+      edition.reviewer.present? ? "2i reviewer: #{edition.reviewer}" : "Not yet claimed"
+    when "scheduled_for_publishing"
+      "Scheduled for #{edition.publish_at.to_fs(:govuk_date_short)}"
+    end
+  end
+
+  def edition_status_tag_colour(edition)
+    EDITION_STATUS_TAG_COLOURS.fetch(edition.state.to_sym, nil)
   end
 end
