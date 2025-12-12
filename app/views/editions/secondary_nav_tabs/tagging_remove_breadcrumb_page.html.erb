@@ -20,11 +20,14 @@
       <% end %>
     <% end %>
 
-    <%= form_with model: @tagging_update_form_values, url: remove_breadcrumb_edition_path(@resource) do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: remove_breadcrumb_edition_path(@resource), data: { module: "" } do |f| %>
       <%= f.hidden_field :previous_version %>
 
       <%= render "govuk_publishing_components/components/radio", {
         name: "#{f.object_name}[remove_parent]",
+        heading: "Are you sure you want to remove the breadcumb?",
+        heading_level: 0,
+        visually_hidden_heading: true,
         id: "remove_parent",
         hint: "Breadcrumbs are displayed at the top of the page and help users to navigate. There may be some situations where you do not need a breadcrumb to display (for example, on Welsh translation pages).",
         error_message: @edition.errors.empty? ? nil : @edition.errors.first.message,

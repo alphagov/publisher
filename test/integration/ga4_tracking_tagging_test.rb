@@ -49,4 +49,41 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[2]["type"]
     end
   end
+
+  context "Remove GOVUK breadcrumb page" do
+    setup do
+      stub_linkables_with_data
+      visit tagging_remove_breadcrumb_page_edition_path(@edition)
+      disable_form_submit
+    end
+
+    should "push the correct values to the dataLayer when events are triggered" do
+      find("label", text: "Yes, remove the breadcrumb").click
+      find("label", text: "No, keep the breadcrumb").click
+      click_button "Save"
+
+      event_data = get_event_data
+
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Are you sure you want to remove the breadcumb?", event_data[0]["section"]
+      assert_equal "Yes, remove the breadcrumb", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Are you sure you want to remove the breadcumb?", event_data[1]["section"]
+      assert_equal "No, keep the breadcrumb", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "1", event_data[1]["index"]["index_section_count"]
+
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Are you sure you want to remove the breadcumb?", event_data[2]["section"]
+      assert_equal "{\"Are you sure you want to remove the breadcumb?\":\"No, keep the breadcrumb\"}", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "edit", event_data[2]["type"]
+    end
+  end
 end
