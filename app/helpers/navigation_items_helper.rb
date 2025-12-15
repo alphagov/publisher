@@ -9,7 +9,7 @@ module NavigationItemsHelper
 
   def old_navigation_items(is_editor, user_name, path)
     list = [
-      { text: "My content", href: my_content_path, active: path.end_with?(my_content_path) },
+      { text: "Publications", href: root_path, active: path.end_with?(root_path) },
     ]
 
     if is_editor
