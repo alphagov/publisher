@@ -14,3 +14,4 @@
 //= require govuk_publishing_components/components/radio
 //= require govuk_publishing_components/components/select-with-search
 //= require govuk_publishing_components/components/skip-link
+//= require govuk_publishing_components/components/tabs
