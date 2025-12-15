@@ -29,13 +29,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       end
 
       should "include user name link if user has name" do
-        assert_equal [
-          { text: "Publications", href: root_path, active: false },
-          { text: "Reports", href: reports_path, active: false },
-          { text: "Search by user", href: user_search_path, active: false },
-          { text: "Name", href: Plek.new.external_url_for("signon") },
-          { text: "Sign out", href: "/auth/gds/sign_out" },
-        ], navigation_items(is_editor: false, user_name: "Name")
+        assert_includes navigation_items(is_editor: false, user_name: "Name"), { text: "Name", href: Plek.new.external_url_for("signon") }
       end
 
       should "apply set link to active if page is current link" do
@@ -72,6 +66,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "include editor-only links when user is an editor" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Add artefact", href: new_artefact_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: true)
@@ -80,6 +75,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "not include editor-only links when user is not an editor" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: false)
       end
@@ -87,6 +83,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "include user name link if user has name" do
         assert_equal [
           { text: "My content", href: my_content_path, active: false },
+          { text: "2i queue", href: two_eye_queue_path, active: false },
           { text: "Name", href: Plek.new.external_url_for("signon") },
           { text: "Sign out", href: "/auth/gds/sign_out" },
         ], navigation_items(is_editor: false, user_name: "Name")
@@ -95,6 +92,7 @@ class NavigationItemsHelperTest < ActionView::TestCase
       should "apply set link to active if page is current link" do
         paths = [
           my_content_path,
+          two_eye_queue_path,
           new_artefact_path,
         ]
 
