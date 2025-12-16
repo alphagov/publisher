@@ -20,6 +20,10 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     Array.from(forms).forEach(function (form) {
       this.addDataAttributes(form)
       this.callFormChangeTracker(form)
+
+      if (form.querySelector('select[multiple="multiple"]')) {
+        this.setUpMultipleSelect(form)
+      }
     }.bind(this))
   }
 
@@ -40,10 +44,12 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     } else {
       form.setAttribute('data-module', 'ga4-form-tracker')
     }
+
     form.setAttribute('data-ga4-form-include-text', '')
     form.setAttribute('data-ga4-form-change-tracking', '')
     form.setAttribute('data-ga4-form-record-json', '')
     form.setAttribute('data-ga4-form-use-text-count', '')
+    form.setAttribute('data-ga4-form-use-select-count', '')
     form.setAttribute('data-ga4-form', JSON.stringify(eventData))
 
     // If the form contains date-input components add ga4-form-section data-attributes
@@ -61,6 +67,32 @@ window.GOVUK.analyticsGa4.analyticsModules = window.GOVUK.analyticsGa4.analytics
     var ga4FormChangeTracker = new window.GOVUK.Modules.Ga4FormChangeTracker(form)
 
     ga4FormChangeTracker.init()
+  }
+
+  // If there are "multiple" select elements we need to
+  // set the "ga4-form-use-select-count" data-attribute
+  // when multiple selections are made
+  Ga4FormSetup.prototype.setUpMultipleSelect = function (form) {
+    var select = form.querySelector('select')
+    var optionsSelected = []
+
+    select.addEventListener('change', function (e) {
+      Array.from(e.target.options).forEach(function (option) {
+        if (option.selected && !optionsSelected.includes(option)) {
+          optionsSelected.push(option)
+        } else if (!option.selected && optionsSelected.includes(option)) {
+          optionsSelected = optionsSelected.filter(function (optionSelected) {
+            return optionSelected !== option
+          })
+        }
+      })
+
+      if (optionsSelected.length > 1) {
+        form.setAttribute('data-ga4-form-use-select-count', '')
+      } else {
+        form.removeAttribute('data-ga4-form-use-select-count')
+      }
+    })
   }
 
   Modules.Ga4FormSetup = Ga4FormSetup

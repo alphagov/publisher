@@ -8,7 +8,7 @@
     <p class="govuk-body">Tagging a page to an organisation makes it appear in searches filtered by that organisation.</p>
     <p class="govuk-body">For example, <%= link_to "a search for documents published by HMRC", "https://www.gov.uk/search/all?keywords=taxes&order=relevance&organisations%5B%5D=hm-revenue-customs", class: "govuk-link" %>.</p>
 
-    <%= form_with model: @tagging_update_form_values, url: update_organisations_edition_path(@resource) do |f| %>
+    <%= form_with model: @tagging_update_form_values, url: update_organisations_edition_path(@resource), data: { module: "" } do |f| %>
       <%= f.hidden_field :previous_version %>
 
       <%= render "govuk_publishing_components/components/select_with_search", {

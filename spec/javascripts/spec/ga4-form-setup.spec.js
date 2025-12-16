@@ -11,6 +11,10 @@ describe('GA4FormSetup', function () {
             <legend>Some date</legend>
             <div class="govuk-date-input"></div>
           </fieldset>
+          <select multiple="multiple">
+            <option></option>
+            <option></option>
+          </select>
         </form>
         <form data-module="some-other-module"></form>
       </div>`
@@ -62,6 +66,54 @@ describe('GA4FormSetup', function () {
       var form = module.querySelectorAll('form')[0]
 
       expect(form.querySelector('fieldset').dataset.ga4FormSection).toBe('Some date')
+    })
+  })
+
+  describe('when the form contains a multiple select element', function () {
+    var form, select, options, change
+
+    describe('the correct "data-module" attribute of the form is set', function () {
+      beforeEach(function () {
+        form = module.querySelectorAll('form')[0]
+        select = form.querySelector('select')
+        options = select.querySelectorAll('option')
+        change = new Event('change')
+      })
+
+      describe('if one option is selected', function () {
+        it('does not update the data-attribute of the form', function () {
+          options[0].setAttribute('selected', 'selected')
+          options[1].removeAttribute('selected')
+
+          select.dispatchEvent(change)
+
+          expect(form.dataset.ga4FormUseSelectCount).not.toBeDefined()
+        })
+      })
+
+      describe('if two options are selected', function () {
+        it('adds the relevant data-attribute to the form', function () {
+          options[0].setAttribute('selected', 'selected')
+          options[1].setAttribute('selected', 'selected')
+
+          select.dispatchEvent(change)
+
+          expect(form.dataset.ga4FormUseSelectCount).toBeDefined()
+        })
+      })
+
+      describe('if a selected option is deselected', function () {
+        it('removes the relevant "data-module" attribute of the form', function () {
+          form.dataset.ga4FormUseSelectCount = true
+
+          options[0].removeAttribute('selected')
+          options[1].setAttribute('selected', 'selected')
+
+          select.dispatchEvent(change)
+
+          expect(form.dataset.ga4FormUseSelectCount).not.toBeDefined()
+        })
+      })
     })
   })
 })
