@@ -146,4 +146,78 @@ class Ga4TrackingTaggingTest < JavascriptIntegrationTest
       assert_equal "edit", event_data[4]["type"]
     end
   end
+
+  context "Tag to an organisation page" do
+    setup do
+      stub_linkables
+      visit tagging_organisations_page_edition_path(@edition)
+      disable_form_submit
+      # Activate search with select so we can interact with it
+      find(".gem-c-select-with-search").click
+    end
+
+    should "push the correct values to the dataLayer when the user selects two organisations" do
+      within(".choices__list--dropdown .choices__list") do
+        div = find_all("div")
+        div[0].click
+        div[1].click
+      end
+
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # Select "Department for Education"
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Organisations", event_data[0]["section"]
+      assert_equal "Department for Education", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      # Select "Student Loans Company"
+      assert_equal "select", event_data[1]["action"]
+      assert_equal "select_content", event_data[1]["event_name"]
+      assert_equal "Organisations", event_data[1]["section"]
+      assert_equal "Student Loans Company", event_data[1]["text"]
+      assert_equal "1", event_data[1]["index"]["index_section"]
+      assert_equal "1", event_data[1]["index"]["index_section_count"]
+
+      # Save 2 selections
+      assert_equal "Save", event_data[2]["action"]
+      assert_equal "form_response", event_data[2]["event_name"]
+      assert_equal "Tag organisations", event_data[2]["section"]
+      assert_equal "{\"Organisations\":\"2\"}", event_data[2]["text"]
+      assert_equal "Answer", event_data[2]["tool_name"]
+      assert_equal "edit", event_data[2]["type"]
+    end
+
+    should "push the correct values to the dataLayer when the user selects one organisation" do
+      # Select 1 organisation
+      within(".choices__list--dropdown .choices__list") do
+        div = find_all("div")
+        div[1].click
+      end
+
+      click_button "Save"
+
+      event_data = get_event_data
+
+      # Select "Student Loans Company"
+      assert_equal "select", event_data[0]["action"]
+      assert_equal "select_content", event_data[0]["event_name"]
+      assert_equal "Organisations", event_data[0]["section"]
+      assert_equal "Student Loans Company", event_data[0]["text"]
+      assert_equal "1", event_data[0]["index"]["index_section"]
+      assert_equal "1", event_data[0]["index"]["index_section_count"]
+
+      # Save 1 selection
+      assert_equal "Save", event_data[1]["action"]
+      assert_equal "form_response", event_data[1]["event_name"]
+      assert_equal "Tag organisations", event_data[1]["section"]
+      assert_equal "{\"Organisations\":\"Student Loans Company\"}", event_data[1]["text"]
+      assert_equal "Answer", event_data[1]["tool_name"]
+      assert_equal "edit", event_data[1]["type"]
+    end
+  end
 end
