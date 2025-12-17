@@ -154,6 +154,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.5)
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
       sass-embedded (~> 1.63)
@@ -909,6 +910,7 @@ DEPENDENCIES
   capybara-select-2
   ci_reporter_minitest
   climate_control
+  csv
   dartsass-rails
   diffy
   erb_lint
