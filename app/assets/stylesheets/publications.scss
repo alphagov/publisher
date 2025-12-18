@@ -85,3 +85,51 @@ $width: 40;
     margin-top: govuk-spacing(1);
   }
 }
+
+.two-eye-queue {
+  .item-count {
+    color: $govuk-secondary-text-colour;
+    font-size: 19px;
+    font-weight: normal;
+    margin-left: govuk-spacing(3);
+    vertical-align: middle;
+  }
+
+  th > .important-note {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: govuk-spacing(1);
+    margin-top: govuk-spacing(1);
+
+    &::before {
+      content: open-quote;
+    }
+
+    &::after {
+      content: close-quote;
+    }
+  }
+
+  thead tr {
+    // Title
+    :nth-child(1) {
+      width: 40%;
+    }
+    // Content type
+    :nth-child(2) {
+      width: 15%;
+    }
+    // Assigned to
+    :nth-child(3) {
+      width: 15%;
+    }
+    // Time in queue
+    :nth-child(4) {
+      width: 15%;
+    }
+    // 2i reviewer
+    :nth-child(5) {
+      width: 15%;
+    }
+  }
+}
