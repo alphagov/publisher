@@ -9,9 +9,6 @@ class EditionTabTest < LegacyJavascriptIntegrationTest
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
 
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_edit_phase_3a, false)
-
     @guide = FactoryBot.create(:guide_edition, state: "draft")
   end
 

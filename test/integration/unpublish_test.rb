@@ -20,10 +20,6 @@ class UnpublishTest < LegacyIntegrationTest
     stub_holidays_used_by_fact_check
     stub_events_for_all_content_ids
     stub_users_from_signon_api
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_publications_filter, false)
-    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   should "unpublishing an artefact archives all editions" do

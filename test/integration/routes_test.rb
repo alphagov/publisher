@@ -13,10 +13,6 @@ class RoutesTest < LegacyIntegrationTest
   end
 
   context "new design system" do
-    setup do
-      @test_strategy = Flipflop::FeatureSet.current.test!
-    end
-
     context "migrated design system content types" do
       %i[answer_edition help_page_edition place_edition transaction_edition completed_transaction_edition local_transaction_edition].each do |content_type|
         context content_type do
