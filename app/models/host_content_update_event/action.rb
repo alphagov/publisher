@@ -29,7 +29,6 @@ class HostContentUpdateEvent
     def block_url
       [
         Plek.external_url_for("content-block-manager"),
-        "content-block",
         "content-id",
         host_content_update_event.content_id,
       ].join("/")
