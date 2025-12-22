@@ -11,7 +11,7 @@ class Part < ApplicationRecord
   validate :validate_title_is_present
   validate :validate_slug_is_present
   validates :slug, exclusion: { in: %w[video], message: "Can not be video" }
-  validates :slug, format: { with: /\A[a-z0-9-]+\Z/i, message: "Slug can only consist of lower case characters, numbers and hyphens" }
+  validates :slug, format: { with: /\A[a-z0-9-]+\Z/i, message: "Slug can only consist of lower case characters, numbers and hyphens" }, allow_blank: true
   validates_with SafeHtml
   validates_with LinkValidator
 
