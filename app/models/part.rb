@@ -18,10 +18,10 @@ class Part < ApplicationRecord
 private
 
   def validate_title_is_present
-    errors.add(:title, "Enter a title for Part #{guide_edition.parts.find_index(self) + 1}") if title.blank?
+    errors.add(:title, "Enter a title for Chapter #{guide_edition.parts.find_index(self) + 1}") if title.blank?
   end
 
   def validate_slug_is_present
-    errors.add(:slug, "Enter a slug for Part #{guide_edition.parts.find_index(self) + 1}") if slug.blank?
+    errors.add(:slug, "Enter a slug for Chapter #{guide_edition.parts.find_index(self) + 1}") if slug.blank?
   end
 end
