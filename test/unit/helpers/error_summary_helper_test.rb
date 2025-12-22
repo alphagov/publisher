@@ -20,7 +20,7 @@ class ErrorSummaryHelperTest < ActionView::TestCase
 
       expected_errors = [
         ["Enter a title", "#edition_title"],
-        ["Enter a title for Part 2", "#edition_parts_attributes_1_title"],
+        ["Enter a title for Chapter 2", "#edition_parts_attributes_1_title"],
         ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_1_slug"],
         ["Slug can only consist of lower case characters, numbers and hyphens", "#edition_parts_attributes_2_slug"],
       ]
