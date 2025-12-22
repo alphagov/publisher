@@ -8,10 +8,6 @@ class MarkEditionInBetaTest < LegacyJavascriptIntegrationTest
     stub_events_for_all_content_ids
     stub_users_from_signon_api
     UpdateWorker.stubs(:perform_async)
-
-    test_strategy = Flipflop::FeatureSet.current.test!
-    test_strategy.switch!(:design_system_publications_filter, false)
-    test_strategy.switch!(:design_system_edit_phase_3a, false)
   end
 
   with_and_without_javascript do
