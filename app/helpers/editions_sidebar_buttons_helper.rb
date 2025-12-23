@@ -140,6 +140,7 @@ module EditionsSidebarButtonsHelper
 
   def guide_chapter_sidebar_buttons(edition, chapter)
     buttons = []
+    chapter_persisted = chapter.persisted?
 
     if edition.is_editable_by?(current_user)
       buttons << render(
@@ -163,7 +164,6 @@ module EditionsSidebarButtonsHelper
         },
       )
 
-      chapter_persisted = chapter.persisted?
       buttons << render(
         "govuk_publishing_components/components/button",
         {
@@ -183,7 +183,7 @@ module EditionsSidebarButtonsHelper
                    target: "_blank",
                    class: "govuk-link govuk-link--no-visited-state",
                  )
-               else
+               elsif chapter_persisted
                  link_to(
                    "Preview (opens in new tab)",
                    preview_edition_guide_part_path(edition, chapter),
