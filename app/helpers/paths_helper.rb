@@ -13,6 +13,16 @@ module PathsHelper
     path
   end
 
+  def preview_edition_guide_part_path(edition, chapter)
+    path = edition_front_end_path(edition) << "/#{chapter.slug}"
+
+    if should_have_auth_bypass_id?(edition)
+      path << "?token=#{jwt_token(edition)}"
+    end
+
+    path
+  end
+
   def preview_homepage_path(edition)
     path = "#{preview_url(edition)}" # rubocop:disable Style/RedundantInterpolation
 
