@@ -2252,7 +2252,7 @@ class EditionEditTest < IntegrationTest
               assert page.has_field?("part[slug]", with: "part-one")
               assert page.has_field?("part[body]", with: "body-text")
 
-              assert page.has_content?("Enter a title for Part 1")
+              assert page.has_content?("Enter a title for Chapter 1")
             end
 
             should "show validation error when Slug is empty" do
@@ -2268,7 +2268,7 @@ class EditionEditTest < IntegrationTest
               assert page.has_field?("part[slug]", with: "")
               assert page.has_field?("part[body]", with: "body-text")
 
-              assert page.has_content?("Enter a slug for Part 1")
+              assert page.has_content?("Enter a slug for Chapter 1")
             end
 
             should "show validation error when Slug is invalid" do
@@ -2406,7 +2406,7 @@ class EditionEditTest < IntegrationTest
               assert page.has_field?("part[slug]", with: "part-two")
               assert page.has_field?("part[body]", with: "body-text")
 
-              assert page.has_content?("Enter a title for Part 2")
+              assert page.has_content?("Enter a title for Chapter 2")
             end
 
             should "show validation error when Slug is empty" do
@@ -2422,7 +2422,7 @@ class EditionEditTest < IntegrationTest
               assert page.has_field?("part[slug]", with: "")
               assert page.has_field?("part[body]", with: "body-text")
 
-              assert page.has_content?("Enter a slug for Part 2")
+              assert page.has_content?("Enter a slug for Chapter 2")
             end
 
             should "show validation error when Slug is invalid" do

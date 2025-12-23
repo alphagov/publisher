@@ -8,7 +8,7 @@ class PartedTest < ActiveSupport::TestCase
     edition.parts.build(id: "103", order: "3", title: "Valid", slug: "valid")
     assert_not edition.valid?
 
-    assert_equal({ title: ["Enter a title for Part 1"] }, edition.editionable.errors[:parts][0]["101:1"])
+    assert_equal({ title: ["Enter a title for Chapter 1"] }, edition.editionable.errors[:parts][0]["101:1"])
     assert_equal 2, edition.editionable.errors[:parts][0].length
   end
 

@@ -141,13 +141,13 @@ class AddingPartsToGuidesTest < LegacyJavascriptIntegrationTest
         within :css, "#parts div.fields:nth-of-type(2)" do
           assert page.has_css?('.has-error[id*="slug"]')
           assert page.has_css?(".has-error li", count: 1)
-          assert page.has_css?(".has-error li", text: "Enter a slug for Part 2")
+          assert page.has_css?(".has-error li", text: "Enter a slug for Chapter 2")
         end
 
         within :css, "#parts div.fields:nth-of-type(3)" do
           assert page.has_css?('.has-error[id*="title"]')
           assert page.has_css?(".has-error li", count: 2)
-          assert page.has_css?(".has-error li", text: "Enter a title for Part 3")
+          assert page.has_css?(".has-error li", text: "Enter a title for Chapter 3")
           assert page.has_css?(".has-error li", text: "Slug can only consist of lower case characters, numbers and hyphens")
         end
       end
