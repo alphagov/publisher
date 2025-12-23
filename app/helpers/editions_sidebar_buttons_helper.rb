@@ -138,7 +138,7 @@ module EditionsSidebarButtonsHelper
     ]
   end
 
-  def guide_chapter_sidebar_buttons(edition, chapter_persisted: true)
+  def guide_chapter_sidebar_buttons(edition, chapter)
     buttons = []
 
     if edition.is_editable_by?(current_user)
@@ -163,6 +163,7 @@ module EditionsSidebarButtonsHelper
         },
       )
 
+      chapter_persisted = chapter.persisted?
       buttons << render(
         "govuk_publishing_components/components/button",
         {
@@ -177,7 +178,7 @@ module EditionsSidebarButtonsHelper
     buttons << if edition.published? || edition.archived?
                  link_to(
                    "View on GOV.UK (opens in new tab)",
-                   "#{Plek.website_root}/#{edition.slug}",
+                   "#{Plek.website_root}/#{edition.slug}/#{chapter.slug}",
                    rel: "noreferrer noopener",
                    target: "_blank",
                    class: "govuk-link govuk-link--no-visited-state",
@@ -185,7 +186,7 @@ module EditionsSidebarButtonsHelper
                else
                  link_to(
                    "Preview (opens in new tab)",
-                   preview_edition_path(edition),
+                   preview_edition_guide_part_path(edition, chapter),
                    target: "_blank",
                    rel: "noopener",
                    class: "govuk-link govuk-link--no-visited-state",

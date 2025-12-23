@@ -73,7 +73,7 @@
       <div class="govuk-grid-column-one-third options-sidebar">
         <div class="sidebar-components">
           <%= sidebar_options_heading %>
-          <%= sidebar_items_list(guide_chapter_sidebar_buttons(@edition, chapter_persisted: false)) %>
+          <%= sidebar_items_list(guide_chapter_sidebar_buttons(@edition, @part)) %>
         </div>
       </div>
     <% end %>
