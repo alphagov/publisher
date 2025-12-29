@@ -16,7 +16,18 @@ class EditionEditTest < IntegrationTest
 
   context "edit page" do
     should "show all the tabs when user has required permission and edition is published" do
-      visit_published_edition
+      @published_edition = FactoryBot.create(
+        :edition,
+        title: "Edit page title",
+        panopticon_id: FactoryBot.create(
+          :artefact,
+          slug: "can-i-get-a-driving-licence",
+        ).id,
+        state: "published",
+        slug: "can-i-get-a-driving-licence",
+      )
+
+      visit edition_path(@published_edition)
 
       assert page.has_text?("Edit")
       assert page.has_text?("Tagging")
@@ -28,7 +39,18 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show document summary and title" do
-      visit_published_edition
+      @published_edition = FactoryBot.create(
+        :edition,
+        title: "Edit page title",
+        panopticon_id: FactoryBot.create(
+          :artefact,
+          slug: "can-i-get-a-driving-licence",
+        ).id,
+        state: "published",
+        slug: "can-i-get-a-driving-licence",
+      )
+
+      visit edition_path(@published_edition)
 
       assert page.has_title?("Edit page title")
 
@@ -60,8 +82,7 @@ class EditionEditTest < IntegrationTest
 
     %i[draft amends_needed fact_check_received ready archived published].each do |state|
       should "not show a scheduled row when an edition is in the '#{state}' state" do
-        edition = FactoryBot.create(:edition, state:)
-
+        edition = FactoryBot.create(:edition, state)
         visit edition_path(edition)
 
         row = find_all(".govuk-summary-list__row")
@@ -85,7 +106,18 @@ class EditionEditTest < IntegrationTest
     end
 
     should "indicate when an edition does not have an assignee" do
-      visit_published_edition
+      @published_edition = FactoryBot.create(
+        :edition,
+        title: "Edit page title",
+        panopticon_id: FactoryBot.create(
+          :artefact,
+          slug: "can-i-get-a-driving-licence",
+        ).id,
+        state: "published",
+        slug: "can-i-get-a-driving-licence",
+      )
+
+      visit edition_path(@published_edition)
 
       within all(".govuk-summary-list__row")[0] do
         assert_selector(".govuk-summary-list__key", text: "Assigned to")
@@ -94,7 +126,8 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show the person assigned to an edition" do
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
 
       within all(".govuk-summary-list__row")[0] do
         assert_selector(".govuk-summary-list__key", text: "Assigned to")
@@ -104,7 +137,8 @@ class EditionEditTest < IntegrationTest
 
     should "not show the 2i reviewer row in the summary if the edition state is not 'in_review'" do
       %i[draft amends_needed fact_check fact_check_received ready scheduled_for_publishing published archived].each do |state|
-        send "visit_#{state}_edition"
+        edition = FactoryBot.create(:edition, state)
+        visit edition_path(edition)
 
         within :css, ".govuk-summary-list" do
           assert_no_selector(".govuk-summary-list__key", text: "2i reviewer")
@@ -113,7 +147,12 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show the 2i reviewer row in the summary correctly if the edition state is 'in_review' and a reviewer is not assigned" do
-      visit_in_review_edition
+      @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+      @in_review_edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
+      visit edition_path(@in_review_edition)
 
       within all(".govuk-summary-list__row")[3] do
         assert_selector(".govuk-summary-list__key", text: "2i reviewer")
@@ -138,7 +177,7 @@ class EditionEditTest < IntegrationTest
 
     should "display the important note if an important note exists" do
       note_text = "This is really really urgent!"
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       create_important_note_for_edition(@draft_edition, note_text)
       visit edition_path(@draft_edition)
 
@@ -153,7 +192,7 @@ class EditionEditTest < IntegrationTest
     should "display only the most recent important note at the top" do
       first_note = "This is really really urgent!"
       second_note = "This should display only!"
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       create_important_note_for_edition(@draft_edition, first_note)
       create_important_note_for_edition(@draft_edition, second_note)
 
@@ -179,7 +218,8 @@ class EditionEditTest < IntegrationTest
   context "tagging tab" do
     context "No tagging is set" do
       setup do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Tagging")
       end
 
@@ -231,7 +271,8 @@ class EditionEditTest < IntegrationTest
         setup do
           user = FactoryBot.create(:user, name: "Stub User")
           login_as(user)
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           click_link("Tagging")
         end
 
@@ -258,7 +299,8 @@ class EditionEditTest < IntegrationTest
     context "Tagging is set" do
       setup do
         stub_linkables_with_data
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Tagging")
       end
 
@@ -412,7 +454,8 @@ class EditionEditTest < IntegrationTest
         setup do
           user = FactoryBot.create(:user, name: "Stub User")
           login_as(user)
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           click_link("Tagging")
         end
 
@@ -445,7 +488,8 @@ class EditionEditTest < IntegrationTest
     context "minimal tagging is present" do
       setup do
         stub_linkables_with_single_related_item
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Tagging")
       end
 
@@ -460,7 +504,8 @@ class EditionEditTest < IntegrationTest
 
   context "Breadcrumb page" do
     setup do
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
       click_link("Tagging")
     end
 
@@ -510,7 +555,8 @@ class EditionEditTest < IntegrationTest
     context "Editing a breadcrumb" do
       setup do
         stub_linkables_with_data
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Tagging")
         within all(".gem-c-summary-card")[0] do
           click_link("Edit")
@@ -559,7 +605,8 @@ class EditionEditTest < IntegrationTest
   context "Removing a breadcrumb" do
     setup do
       stub_linkables_with_data
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
       click_link("Tagging")
       within all(".gem-c-summary-card")[0] do
         click_link("Remove")
@@ -615,7 +662,8 @@ class EditionEditTest < IntegrationTest
 
   context "Mainstream browse pages page" do
     setup do
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
       click_link("Tagging")
     end
 
@@ -665,7 +713,8 @@ class EditionEditTest < IntegrationTest
     context "Editing tags for a browse page" do
       setup do
         stub_linkables_with_data
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Tagging")
         within all(".gem-c-summary-card")[1] do
           click_link("Edit")
@@ -708,7 +757,7 @@ class EditionEditTest < IntegrationTest
 
   context "Tag related content page" do
     setup do
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       visit tagging_related_content_page_edition_path(@draft_edition)
     end
 
@@ -887,7 +936,7 @@ class EditionEditTest < IntegrationTest
 
   context "Tag organisations page" do
     setup do
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       visit tagging_organisations_page_edition_path(@draft_edition)
     end
 
@@ -978,7 +1027,8 @@ class EditionEditTest < IntegrationTest
   context "metadata tab" do
     context "when state is 'draft' and user has govuk editor permissions" do
       setup do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Metadata")
       end
 
@@ -1035,7 +1085,8 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show read-only values and no 'Update' button for a non-welsh edition" do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         login_as_welsh_editor
         click_link("Metadata")
 
@@ -1052,7 +1103,8 @@ class EditionEditTest < IntegrationTest
       should "show read-only values and no 'Update' button" do
         user = FactoryBot.create(:user, name: "Stub User")
         login_as(user)
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("Metadata")
 
         assert_not user.has_editor_permissions?(@draft_edition)
@@ -1062,7 +1114,18 @@ class EditionEditTest < IntegrationTest
 
     context "when state is not 'draft'" do
       setup do
-        visit_published_edition
+        @published_edition = FactoryBot.create(
+          :edition,
+          title: "Edit page title",
+          panopticon_id: FactoryBot.create(
+            :artefact,
+            slug: "can-i-get-a-driving-licence",
+          ).id,
+          state: "published",
+          slug: "can-i-get-a-driving-licence",
+        )
+
+        visit edition_path(@published_edition)
         click_link("Metadata")
       end
 
@@ -1080,7 +1143,8 @@ class EditionEditTest < IntegrationTest
 
   context "History and notes tab" do
     setup do
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
       click_link("History and notes")
     end
 
@@ -1120,49 +1184,78 @@ class EditionEditTest < IntegrationTest
 
     context "show a Preview or a view on GOV.UK link" do
       should "show a Preview button when the edition is draft" do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is in review" do
-        visit_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
+        visit edition_path(@in_review_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is out for fact check" do
-        visit_fact_check_edition
+        @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+        FactoryBot.create(
+          :action,
+          requester: @govuk_editor,
+          request_type: Action::SEND_FACT_CHECK,
+          edition: @fact_check_edition,
+          email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+          customised_message: "The customised message",
+        )
+        visit edition_path(@fact_check_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is ready" do
-        visit_ready_edition
+        @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+        visit edition_path(@ready_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a Preview button when the edition is scheduled for publishing" do
-        visit_scheduled_for_publishing_edition
+        @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+        visit edition_path(@scheduled_for_publishing_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a View on GOV.UK button when the edition is published" do
-        visit_published_edition
+        @published_edition = FactoryBot.create(
+          :edition,
+          title: "Edit page title",
+          panopticon_id: FactoryBot.create(
+            :artefact,
+            slug: "can-i-get-a-driving-licence",
+          ).id,
+          state: "published",
+          slug: "can-i-get-a-driving-licence",
+        )
+
+        visit edition_path(@published_edition)
         click_link("History and notes")
 
         assert page.has_link?("View on GOV.UK (opens in new tab)")
       end
 
       should "show a View on GOV.UK button when the edition is archived" do
-        visit_archived_edition
+        @archived_edition = FactoryBot.create(:edition, title: "Edit page title", state: "archived")
+        visit edition_path(@archived_edition)
         click_link("History and notes")
 
         assert page.has_link?("View on GOV.UK (opens in new tab)")
@@ -1171,7 +1264,8 @@ class EditionEditTest < IntegrationTest
       should "still show the conditional preview/view link when the user does not have editor permissions" do
         @stub_user = FactoryBot.create(:user, name: "Stub user")
         login_as(@stub_user)
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("History and notes")
 
         assert page.has_link?("Preview (opens in new tab)")
@@ -1182,7 +1276,8 @@ class EditionEditTest < IntegrationTest
       should "hide the note action buttons from the user" do
         user = FactoryBot.create(:user, name: "Stub User")
         login_as(user)
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link("History and notes")
 
         assert_not user.has_editor_permissions?(@draft_edition)
@@ -1199,7 +1294,8 @@ class EditionEditTest < IntegrationTest
       end
 
       should "hide the note action buttons from the user on a non welsh document" do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         login_as(@user_welsh)
         click_link("History and notes")
 
@@ -1446,7 +1542,8 @@ class EditionEditTest < IntegrationTest
 
   context "Add edition note page" do
     setup do
-      visit_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+      visit edition_path(@draft_edition)
       click_link("History and notes")
       click_link("Add edition note")
     end
@@ -1471,7 +1568,7 @@ class EditionEditTest < IntegrationTest
 
   context "Update important note page" do
     should "render the 'Update important note' page" do
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       visit history_update_important_note_edition_path(@draft_edition)
 
       within :css, ".gem-c-heading" do
@@ -1494,7 +1591,7 @@ class EditionEditTest < IntegrationTest
 
     should "pre-populate with the existing note" do
       note_text = "This is really really urgent!"
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       create_important_note_for_edition(@draft_edition, note_text)
       visit history_update_important_note_edition_path(@draft_edition)
 
@@ -1506,7 +1603,7 @@ class EditionEditTest < IntegrationTest
       note_text_2 = "Another note"
       note_text_3 = "Yet another note"
 
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       create_important_note_for_edition(@draft_edition, note_text)
       create_important_note_for_edition(@draft_edition, note_text_2)
       create_important_note_for_edition(@draft_edition, note_text_3)
@@ -1524,7 +1621,16 @@ class EditionEditTest < IntegrationTest
 
     should "not be carried forward to new editions" do
       note_text = "This important note should not appear on a new edition."
-      create_published_edition
+      @published_edition = FactoryBot.create(
+        :edition,
+        title: "Edit page title",
+        panopticon_id: FactoryBot.create(
+          :artefact,
+          slug: "can-i-get-a-driving-licence",
+        ).id,
+        state: "published",
+        slug: "can-i-get-a-driving-licence",
+      )
       create_important_note_for_edition(@published_edition, note_text)
       visit edition_path(@published_edition)
 
@@ -1539,7 +1645,8 @@ class EditionEditTest < IntegrationTest
     context "user does not have required permissions" do
       setup do
         login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
       end
 
       should "not show unpublish tab when user is not govuk editor" do
@@ -1549,12 +1656,24 @@ class EditionEditTest < IntegrationTest
 
     context "user has required permissions" do
       setup do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
       end
 
       context "when state is 'published'" do
         setup do
-          visit_published_edition
+          @published_edition = FactoryBot.create(
+            :edition,
+            title: "Edit page title",
+            panopticon_id: FactoryBot.create(
+              :artefact,
+              slug: "can-i-get-a-driving-licence",
+            ).id,
+            state: "published",
+            slug: "can-i-get-a-driving-licence",
+          )
+
+          visit edition_path(@published_edition)
           click_link("Unpublish")
         end
 
@@ -1598,7 +1717,8 @@ class EditionEditTest < IntegrationTest
     context "user does not have required permissions" do
       setup do
         login_as(FactoryBot.create(:user, name: "Stub User"))
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
       end
 
       should "not show when user is not govuk editor or welsh editor" do
@@ -1607,7 +1727,8 @@ class EditionEditTest < IntegrationTest
 
       should "not show when user is welsh editor and edition is not welsh" do
         login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
 
         assert page.has_no_text?("Admin")
       end
@@ -1617,7 +1738,8 @@ class EditionEditTest < IntegrationTest
       %i[draft amends_needed in_review fact_check_received ready archived scheduled_for_publishing].each do |state|
         context "when state is '#{state}'" do
           setup do
-            send "visit_#{state}_edition"
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
             click_link("Admin")
           end
 
@@ -1630,7 +1752,8 @@ class EditionEditTest < IntegrationTest
       %i[published archived scheduled_for_publishing].each do |state|
         context "when state is '#{state}'" do
           setup do
-            send "visit_#{state}_edition"
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
             click_link("Admin")
           end
 
@@ -1650,7 +1773,8 @@ class EditionEditTest < IntegrationTest
       %i[draft amends_needed in_review fact_check_received ready].each do |state|
         context "when state is '#{state}'" do
           setup do
-            send "visit_#{state}_edition"
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
             click_link("Admin")
           end
 
@@ -1669,7 +1793,16 @@ class EditionEditTest < IntegrationTest
 
       context "when state is 'fact_check'" do
         setup do
-          visit_fact_check_edition
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+          visit edition_path(@fact_check_edition)
           click_link("Admin")
         end
 
@@ -1714,7 +1847,24 @@ class EditionEditTest < IntegrationTest
       context "when state is 'published'" do
         context "edition is not the latest version of a publication" do
           setup do
-            visit_old_edition_of_published_edition
+            published_edition = FactoryBot.create(
+              :edition,
+              panopticon_id: FactoryBot.create(
+                :artefact,
+                slug: "can-i-get-a-driving-licence",
+              ).id,
+              state: "published",
+              sibling_in_progress: 2,
+            )
+
+            FactoryBot.create(
+              :edition,
+              panopticon_id: published_edition.artefact.id,
+              state: "draft",
+              version_number: 2,
+              change_note: "The change note",
+            )
+            visit edition_path(published_edition)
             click_link("Admin")
           end
 
@@ -1725,7 +1875,18 @@ class EditionEditTest < IntegrationTest
 
         context "content type is not retired, edition is the latest version of a publication" do
           setup do
-            visit_published_edition
+            @published_edition = FactoryBot.create(
+              :edition,
+              title: "Edit page title",
+              panopticon_id: FactoryBot.create(
+                :artefact,
+                slug: "can-i-get-a-driving-licence",
+              ).id,
+              state: "published",
+              slug: "can-i-get-a-driving-licence",
+            )
+
+            visit edition_path(@published_edition)
             click_link("Admin")
           end
 
@@ -1752,7 +1913,8 @@ class EditionEditTest < IntegrationTest
 
       context "confirm delete" do
         setup do
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           click_link("Admin")
           click_link("Delete edition #{@draft_edition.version_number}")
         end
@@ -1791,7 +1953,8 @@ class EditionEditTest < IntegrationTest
   context "edit tab" do
     context "draft edition of a new publication" do
       setup do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
       end
 
       should "show 'Metadata' header and an update button" do
@@ -1855,7 +2018,8 @@ class EditionEditTest < IntegrationTest
       context "user does not have editor permissions" do
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
         end
 
         should "not show any editable components" do
@@ -1879,7 +2043,8 @@ class EditionEditTest < IntegrationTest
 
       context "place edition" do
         setup do
-          visit_draft_place_edition
+          @draft_place_edition = FactoryBot.create(:place_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, place_type: "The place type", introduction: "some intro", more_information: "some more info", need_to_know: "some need to know")
+          visit edition_path(@draft_place_edition)
         end
 
         should "show fields for place edition" do
@@ -1926,7 +2091,14 @@ class EditionEditTest < IntegrationTest
 
       context "local transaction edition" do
         setup do
-          visit_draft_local_transaction_edition
+          @local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
+          scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
+          wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
+
+          @draft_local_transcation_edition = FactoryBot.create(:local_transaction_edition, title: "Edit page title", state: "draft", in_beta: 1, lgsl_code: @local_service.lgsl_code,
+                                                                                           panopticon_id: FactoryBot.create(:artefact).id, lgil_code: 23, cta_text: "Find your local council", introduction: "Test introduction", more_information: "some more info",
+                                                                                           need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
+          visit edition_path(@draft_local_transcation_edition)
         end
 
         should "show fields for local transaction edition" do
@@ -2088,7 +2260,8 @@ class EditionEditTest < IntegrationTest
 
       context "guide edition" do
         setup do
-          visit_draft_guide_edition
+          @draft_guide_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
+          visit edition_path(@draft_guide_edition)
         end
 
         context "user has editor permissions" do
@@ -2112,7 +2285,8 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show guide chapter list for guide edition if present" do
-            visit_draft_guide_edition_with_parts
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(@draft_guide_edition_with_parts)
 
             assert page.has_field?("edition[title]", with: "Edit page title")
             assert page.has_field?("edition[overview]", with: "metatags")
@@ -2179,7 +2353,8 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show Edit chapter page when Edit chapter link is clicked" do
-            visit_draft_guide_edition_with_parts
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(@draft_guide_edition_with_parts)
 
             within all(".govuk-summary-list__row").last do
               click_link("Edit")
@@ -2216,7 +2391,8 @@ class EditionEditTest < IntegrationTest
           end
 
           should "show 'Reorder chapters' button when two parts are present" do
-            visit_draft_guide_edition_with_parts
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(@draft_guide_edition_with_parts)
             assert page.has_link?("Reorder chapters")
           end
 
@@ -2306,7 +2482,8 @@ class EditionEditTest < IntegrationTest
 
           context "Reorder Chapters" do
             setup do
-              visit_draft_guide_edition_with_parts
+              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+              visit edition_path(@draft_guide_edition_with_parts)
               click_link("Reorder chapters")
             end
 
@@ -2350,7 +2527,8 @@ class EditionEditTest < IntegrationTest
           %w[scheduled_for_publishing published archived].each do |state|
             context "when state is #{state}" do
               setup do
-                visit_draft_guide_edition_with_parts(state: state)
+                @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: state, overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+                visit edition_path(@draft_guide_edition_with_parts)
               end
 
               should "not show 'Add new chapter' button" do
@@ -2372,7 +2550,8 @@ class EditionEditTest < IntegrationTest
 
           context "Edit chapter" do
             setup do
-              visit_draft_guide_edition_with_parts
+              @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+              visit edition_path(@draft_guide_edition_with_parts)
               @part_id = @draft_guide_edition_with_parts.parts.last.id
               within all(".govuk-summary-list__row").last do
                 click_link("Edit")
@@ -2461,7 +2640,8 @@ class EditionEditTest < IntegrationTest
         context "user has no editor permissions" do
           setup do
             login_as(FactoryBot.create(:user, name: "Non Editor"))
-            visit_draft_guide_edition_with_parts
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
+            visit edition_path(@draft_guide_edition_with_parts)
           end
 
           should "not show 'Add new chapter' button" do
@@ -2486,7 +2666,7 @@ class EditionEditTest < IntegrationTest
 
         context "Delete chapter confirmation" do
           setup do
-            create_draft_guide_edition_with_parts
+            @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
             @part = @draft_guide_edition_with_parts.parts.last
             visit confirm_destroy_edition_guide_part_path(@draft_guide_edition_with_parts, @part)
           end
@@ -2510,7 +2690,21 @@ class EditionEditTest < IntegrationTest
 
       context "transaction edition" do
         setup do
-          visit_transaction_edition(state: "draft", in_beta: true)
+          @transaction_edition = FactoryBot.create(
+            :transaction_edition,
+            title: "Edit page title",
+            state: "draft",
+            overview: "metatags",
+            in_beta: true,
+            introduction: "Transaction introduction",
+            more_information: "Transaction more information",
+            need_to_know: "Transaction need to",
+            link: "https://continue.com",
+            will_continue_on: "To be continued...",
+            alternate_methods: "Method A or B",
+            publish_at: nil,
+          )
+          visit edition_path(@transaction_edition)
         end
 
         should "show fields for transaction edition" do
@@ -2581,7 +2775,17 @@ class EditionEditTest < IntegrationTest
 
       context "completed transaction edition" do
         should "show correct fields for no promotion" do
-          visit_completed_transaction_edition(state: "draft", in_beta: true)
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "draft",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_field?("edition[title]", with: "Edit page title")
           assert page.has_css?(".govuk-label", text: "Title")
@@ -2601,13 +2805,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show correct fields for organ donation" do
-          visit_completed_transaction_edition(
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
             state: "draft",
-            choice: "organ_donor",
-            url: "https://example.com",
-            opt_in_url: "https://opt-in.com",
-            opt_out_url: "https://opt-out.com",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "organ_donor", url: "https://example.com", opt_in_url: "https://opt-in.com", opt_out_url: "https://opt-out.com" } },
+            in_beta: true,
+            publish_at: nil,
           )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_checked_field?("edition[promotion_choice]", with: "organ_donor")
 
@@ -2622,7 +2830,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show correct fields for photo ID" do
-          visit_completed_transaction_edition(state: "draft", choice: "bring_id_to_vote", url: "https://example.com")
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "draft",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "bring_id_to_vote", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_checked_field?("edition[promotion_choice]", with: "bring_id_to_vote")
 
@@ -2631,7 +2849,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show correct fields for MOT reminder" do
-          visit_completed_transaction_edition(state: "draft", choice: "mot_reminder", url: "https://example.com")
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "draft",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "mot_reminder", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_checked_field?("edition[promotion_choice]", with: "mot_reminder")
 
@@ -2640,7 +2868,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show correct fields for electric vehicles" do
-          visit_completed_transaction_edition(state: "draft", choice: "electric_vehicle", url: "https://example.com")
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "draft",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "electric_vehicle", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_checked_field?("edition[promotion_choice]", with: "electric_vehicle")
 
@@ -2649,7 +2887,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "amend fields and show success message when edition is updated" do
-          visit_completed_transaction_edition(state: "draft", in_beta: true)
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "draft",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           fill_in "edition[title]", with: "Changed Title"
           fill_in "edition[overview]", with: "Changed Meta tag description"
@@ -2701,7 +2949,17 @@ class EditionEditTest < IntegrationTest
 
         should "raise an error and not save changes if Promotion URL is not filled out" do
           ["Organ donation", "Bring photo ID to vote", "MOT reminders", "Electric vehicles"].each do |promotion_choice|
-            visit_completed_transaction_edition(state: "draft")
+            @completed_transaction_edition = FactoryBot.create(
+              :completed_transaction_edition,
+              title: "Edit page title",
+              overview: "metatags",
+              state: "draft",
+              body: "completed transaction body",
+              presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+              in_beta: true,
+              publish_at: nil,
+            )
+            visit edition_path(@completed_transaction_edition)
 
             choose(promotion_choice)
             click_button("Save")
@@ -2716,19 +2974,24 @@ class EditionEditTest < IntegrationTest
 
     context "amends needed edition of a new publication" do
       should "show 'Send to 2i' link" do
-        visit_amends_needed_edition
+        @amends_needed_edition = FactoryBot.create(:edition, title: "Edit page title", state: "amends_needed")
+        visit edition_path(@amends_needed_edition)
+
         assert page.has_link?("Send to 2i")
       end
 
       should "show Preview link" do
-        visit_amends_needed_edition
+        @amends_needed_edition = FactoryBot.create(:edition, title: "Edit page title", state: "amends_needed")
+        visit edition_path(@amends_needed_edition)
+
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       context "user does not have editor permissions" do
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
-          visit_amends_needed_edition
+          @amends_needed_edition = FactoryBot.create(:edition, title: "Edit page title", state: "amends_needed")
+          visit edition_path(@amends_needed_edition)
         end
 
         should "not show any editable components" do
@@ -2753,7 +3016,24 @@ class EditionEditTest < IntegrationTest
 
     context "draft edition of a previously published publication" do
       setup do
-        visit_new_edition_of_published_edition
+        @published_edition = FactoryBot.create(
+          :edition,
+          title: "Edit page title",
+          panopticon_id: FactoryBot.create(
+            :artefact,
+            slug: "can-i-get-a-driving-licence",
+          ).id,
+          state: "published",
+          slug: "can-i-get-a-driving-licence",
+        )
+
+        new_edition = FactoryBot.create(
+          :edition,
+          panopticon_id: @published_edition.artefact.id,
+          state: "draft",
+          change_note: "The change note",
+        )
+        visit edition_path(new_edition)
       end
 
       should "show Change Note field for a new edition of a published document" do
@@ -2768,7 +3048,8 @@ class EditionEditTest < IntegrationTest
 
     context "ready edition" do
       setup do
-        visit_ready_edition
+        @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+        visit edition_path(@ready_edition)
       end
 
       context "user is a govuk editor" do
@@ -2784,7 +3065,8 @@ class EditionEditTest < IntegrationTest
       context "user is not a govuk editor" do
         setup do
           login_as(FactoryBot.create(:user))
-          visit_ready_edition
+          @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+          visit edition_path(@ready_edition)
         end
 
         should "not show a 'Schedule' button in the sidebar" do
@@ -2831,7 +3113,8 @@ class EditionEditTest < IntegrationTest
       context "user does not have editor permissions" do
         setup do
           login_as(FactoryBot.create(:user, name: "Non Editor"))
-          visit_ready_edition
+          @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+          visit edition_path(@ready_edition)
         end
 
         should "not show any editable components" do
@@ -2852,7 +3135,7 @@ class EditionEditTest < IntegrationTest
 
     context "Schedule page" do
       setup do
-        create_ready_edition
+        @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
         visit schedule_page_edition_path(@ready_edition.id)
       end
 
@@ -2978,13 +3261,17 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show a preview link in the sidebar" do
-        visit_scheduled_for_publishing_edition
+        @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+        visit edition_path(@scheduled_for_publishing_edition)
+
         assert page.has_link?("Preview (opens in new tab)")
       end
 
       should "show a preview link when user is not an editor" do
         login_as(FactoryBot.create(:user, name: "Non Editor"))
-        visit_scheduled_for_publishing_edition
+        @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
+        visit edition_path(@scheduled_for_publishing_edition)
+
         assert page.has_link?("Preview (opens in new tab)")
       end
 
@@ -3081,7 +3368,21 @@ class EditionEditTest < IntegrationTest
 
       context "transaction edition" do
         should "show public change note field" do
-          visit_transaction_edition(state: "scheduled_for_publishing")
+          @transaction_edition = FactoryBot.create(
+            :transaction_edition,
+            title: "Edit page title",
+            state: "scheduled_for_publishing",
+            overview: "metatags",
+            in_beta: true,
+            introduction: "Transaction introduction",
+            more_information: "Transaction more information",
+            need_to_know: "Transaction need to",
+            link: "https://continue.com",
+            will_continue_on: "To be continued...",
+            alternate_methods: "Method A or B",
+            publish_at: Time.zone.now + 1.hour,
+          )
+          visit edition_path(@transaction_edition)
 
           assert page.has_css?("h3", text: "Public change note")
           assert page.has_css?("p", text: "None added")
@@ -3097,7 +3398,17 @@ class EditionEditTest < IntegrationTest
 
       context "completed transaction edition" do
         should "show public change note field" do
-          visit_completed_transaction_edition(state: "scheduled_for_publishing")
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "scheduled_for_publishing",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: Time.zone.now + 1.hour,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Public change note")
           assert page.has_css?("p", text: "None added")
@@ -3417,7 +3728,21 @@ class EditionEditTest < IntegrationTest
 
       context "transaction edition" do
         should "show fields for transaction edition" do
-          visit_transaction_edition(state: "published", in_beta: true)
+          @transaction_edition = FactoryBot.create(
+            :transaction_edition,
+            title: "Edit page title",
+            state: "published",
+            overview: "metatags",
+            in_beta: true,
+            introduction: "Transaction introduction",
+            more_information: "Transaction more information",
+            need_to_know: "Transaction need to",
+            link: "https://continue.com",
+            will_continue_on: "To be continued...",
+            alternate_methods: "Method A or B",
+            publish_at: nil,
+          )
+          visit edition_path(@transaction_edition)
 
           assert page.has_css?("h3", text: "Title")
           assert page.has_css?("p", text: @transaction_edition.title)
@@ -3482,7 +3807,17 @@ class EditionEditTest < IntegrationTest
 
       context "completed transaction edition" do
         should "show fields for completed transaction edition with no promotion" do
-          visit_completed_transaction_edition(state: "published", in_beta: true)
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
+            state: "published",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
+          )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Title")
           assert page.has_css?("p", text: @completed_transaction_edition.title)
@@ -3505,13 +3840,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show fields for completed transaction edition with organ donation promotion" do
-          visit_completed_transaction_edition(
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
             state: "published",
-            choice: "organ_donor",
-            url: "https://example.com",
-            opt_in_url: "https://opt-in.com",
-            opt_out_url: "https://opt-out.com",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "organ_donor", url: "https://example.com", opt_in_url: "https://opt-in.com", opt_out_url: "https://opt-out.com" } },
+            in_beta: true,
+            publish_at: nil,
           )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Promotion")
           assert page.has_css?("p", text: "Organ donation")
@@ -3527,11 +3866,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show fields for completed transaction edition with photo id promotion" do
-          visit_completed_transaction_edition(
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
             state: "published",
-            choice: "bring_id_to_vote",
-            url: "https://example.com",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "bring_id_to_vote", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
           )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Promotion")
           assert page.has_css?("p", text: "Bring photo ID to vote")
@@ -3541,11 +3886,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show fields for completed transaction edition with mot reminder promotion" do
-          visit_completed_transaction_edition(
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
             state: "published",
-            choice: "mot_reminder",
-            url: "https://example.com",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "mot_reminder", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
           )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Promotion")
           assert page.has_css?("p", text: "MOT reminders")
@@ -3555,11 +3906,17 @@ class EditionEditTest < IntegrationTest
         end
 
         should "show fields for completed transaction edition with electric vehicle promotion" do
-          visit_completed_transaction_edition(
+          @completed_transaction_edition = FactoryBot.create(
+            :completed_transaction_edition,
+            title: "Edit page title",
+            overview: "metatags",
             state: "published",
-            choice: "electric_vehicle",
-            url: "https://example.com",
+            body: "completed transaction body",
+            presentation_toggles: { promotion_choice: { choice: "electric_vehicle", url: "https://example.com", opt_in_url: "", opt_out_url: "" } },
+            in_beta: true,
+            publish_at: nil,
           )
+          visit edition_path(@completed_transaction_edition)
 
           assert page.has_css?("h3", text: "Promotion")
           assert page.has_css?("p", text: "Electric vehicles")
@@ -3798,7 +4155,8 @@ class EditionEditTest < IntegrationTest
       %i[draft in_review amends_needed fact_check_received ready scheduled_for_publishing published archived].each do |state|
         context "when state is '#{state}'" do
           setup do
-            send "visit_#{state}_edition"
+            edition = FactoryBot.create(:edition, state)
+            visit edition_path(edition)
           end
 
           should "not show the 'Resend fact check email' link and text" do
@@ -3811,7 +4169,16 @@ class EditionEditTest < IntegrationTest
       context "when state is 'Fact check" do
         should "not show the link or text to non-editors" do
           login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_fact_check_edition
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+          visit edition_path(@fact_check_edition)
 
           assert page.has_no_link?("Resend fact check email")
           assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
@@ -3819,7 +4186,16 @@ class EditionEditTest < IntegrationTest
 
         should "not show the link or text to welsh editors viewing a non-welsh edition" do
           login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-          visit_fact_check_edition
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+          visit edition_path(@fact_check_edition)
 
           assert page.has_no_link?("Resend fact check email")
           assert page.has_no_text?("You've requested this edition to be fact checked. We're awaiting a response.")
@@ -3827,7 +4203,16 @@ class EditionEditTest < IntegrationTest
 
         should "show the 'Resend fact check email' link and text to govuk editors" do
           login_as(@govuk_editor)
-          visit_fact_check_edition
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+          visit edition_path(@fact_check_edition)
 
           assert page.has_link?("Resend fact check email")
           assert page.has_text?("You've requested this edition to be fact checked. We're awaiting a response.")
@@ -3835,21 +4220,48 @@ class EditionEditTest < IntegrationTest
 
         should "show the requester specific text to govuk editors" do
           login_as(@govuk_editor)
-          create_fact_check_edition(@govuk_requester)
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_requester,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
           visit edition_path(@fact_check_edition)
 
           assert page.has_text?("Stub requester requested this edition to be fact checked. We're awaiting a response.")
         end
 
         should "show Preview link" do
-          visit_fact_check_edition
+          @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+          FactoryBot.create(
+            :action,
+            requester: @govuk_editor,
+            request_type: Action::SEND_FACT_CHECK,
+            edition: @fact_check_edition,
+            email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+            customised_message: "The customised message",
+          )
+          visit edition_path(@fact_check_edition)
+
           assert page.has_link?("Preview (opens in new tab)")
         end
 
         context "user does not have editor permissions" do
           setup do
             login_as(FactoryBot.create(:user, name: "Non Editor"))
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
           end
 
           should "not show any editable components" do
@@ -3872,7 +4284,8 @@ class EditionEditTest < IntegrationTest
         context "when user has govuk editor permissions" do
           setup do
             login_as(FactoryBot.create(:user, :govuk_editor))
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
           end
 
           should "show Preview link" do
@@ -3887,7 +4300,8 @@ class EditionEditTest < IntegrationTest
           context "user does not have editor permissions" do
             setup do
               login_as(FactoryBot.create(:user, name: "Non Editor"))
-              visit_fact_check_received_edition
+              @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+              visit edition_path(@fact_check_received_edition)
             end
 
             should "not show any editable components" do
@@ -3911,7 +4325,16 @@ class EditionEditTest < IntegrationTest
 
           should "navigate to the 'Resend fact check email' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
 
             click_link("Resend fact check email")
 
@@ -3923,41 +4346,51 @@ class EditionEditTest < IntegrationTest
       context "Request amendments link" do
         context "edition is not in review" do
           should "not show the link for a draft edition" do
-            visit_draft_edition
+            @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+            visit edition_path(@draft_edition)
             assert page.has_no_link?("Request amendments")
           end
         end
 
         context "edition is in review" do
+          setup do
+            @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+            @in_review_edition.actions.create!(
+              request_type: Action::REQUEST_AMENDMENTS,
+              requester_id: @govuk_requester.id,
+            )
+          end
           should "not show the link to non-editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_no_link?("Request amendments")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
 
             assert page.has_no_link?("Request amendments")
           end
 
           should "not show the link to the requester" do
             login_as(@govuk_requester)
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_no_link?("Request amendments")
           end
 
           should "show the link to editors who are not the requester" do
             login_as(@govuk_editor)
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_link?("Request amendments")
           end
 
           should "navigate to the 'Request amendments' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_in_review_edition
-
+            visit edition_path(@in_review_edition)
             click_link("Request amendments")
 
             assert_current_path request_amendments_page_edition_path(@in_review_edition.id)
@@ -3967,25 +4400,32 @@ class EditionEditTest < IntegrationTest
         context "edition is ready" do
           should "not show the link to non-editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_ready_edition
+            @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+            visit edition_path(@ready_edition)
+
             assert page.has_no_link?("Request amendments")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_ready_edition
+            @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+            visit edition_path(@ready_edition)
+
             assert page.has_no_link?("Request amendments")
           end
 
           should "show the link to editors" do
             login_as(@govuk_editor)
-            visit_ready_edition
+            @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+            visit edition_path(@ready_edition)
+
             assert page.has_link?("Request amendments")
           end
 
           should "navigate to the 'Request amendments' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_ready_edition
+            @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+            visit edition_path(@ready_edition)
             click_link("Request amendments")
 
             assert_current_path request_amendments_page_edition_path(@ready_edition.id)
@@ -3995,21 +4435,48 @@ class EditionEditTest < IntegrationTest
         context "edition is out for fact check" do
           should "not show the link to non editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
 
             assert page.has_no_link?("Request amendments")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
 
             assert page.has_no_link?("Request amendments")
           end
 
           should "show the link to editors" do
             login_as(@govuk_editor)
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
 
             assert page.has_link?("Request amendments")
           end
@@ -4024,7 +4491,16 @@ class EditionEditTest < IntegrationTest
 
           should "navigate to the 'Request amendments' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_fact_check_edition
+            @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+            FactoryBot.create(
+              :action,
+              requester: @govuk_editor,
+              request_type: Action::SEND_FACT_CHECK,
+              edition: @fact_check_edition,
+              email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+              customised_message: "The customised message",
+            )
+            visit edition_path(@fact_check_edition)
             click_link("Request amendments")
 
             assert_current_path request_amendments_page_edition_path(@fact_check_edition.id)
@@ -4034,21 +4510,24 @@ class EditionEditTest < IntegrationTest
         context "edition is fact check received" do
           should "not show the link to non editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_no_link?("Request amendments")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_no_link?("Request amendments")
           end
 
           should "show the link to editors" do
             login_as(@govuk_editor)
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_link?("Request amendments")
           end
@@ -4063,7 +4542,8 @@ class EditionEditTest < IntegrationTest
 
           should "navigate to the 'Request amendments' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
             click_link("Request amendments")
 
             assert_current_path request_amendments_page_edition_path(@fact_check_received_edition.id)
@@ -4075,21 +4555,24 @@ class EditionEditTest < IntegrationTest
         context "edition is fact check received" do
           should "not show the link to non editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_no_link?("No changes needed")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_no_link?("No changes needed")
           end
 
           should "show the link to editors" do
             login_as(@govuk_editor)
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
 
             assert page.has_link?("No changes needed")
           end
@@ -4104,7 +4587,8 @@ class EditionEditTest < IntegrationTest
 
           should "navigate to the 'Approve fact check' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_fact_check_received_edition
+            @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
+            visit edition_path(@fact_check_received_edition)
             click_link("No changes needed")
 
             assert_current_path approve_fact_check_page_edition_path(@fact_check_received_edition.id)
@@ -4115,41 +4599,52 @@ class EditionEditTest < IntegrationTest
       context "No changes needed link (in_review state)" do
         context "edition is not in review" do
           should "not show the link" do
-            visit_draft_edition
+            @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+            visit edition_path(@draft_edition)
             assert page.has_no_link?("No changes needed")
           end
         end
 
         context "edition is in review" do
+          setup do
+            @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+            @in_review_edition.actions.create!(
+              request_type: Action::REQUEST_AMENDMENTS,
+              requester_id: @govuk_requester.id,
+            )
+          end
+
           should "not show the link to non-editors" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_no_link?("No changes needed")
           end
 
           should "not show the link to welsh editors viewing a non-welsh edition" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
 
             assert page.has_no_link?("No changes needed")
           end
 
           should "not show the link to the requester" do
             login_as(@govuk_requester)
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_no_link?("No changes needed")
           end
 
           should "show the link to editors who are not the requester" do
             login_as(@govuk_editor)
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
+
             assert page.has_link?("No changes needed")
           end
 
           should "navigate to the 'No changes needed' page when the link is clicked" do
             login_as(@govuk_editor)
-            visit_in_review_edition
-
+            visit edition_path(@in_review_edition)
             click_link("No changes needed")
 
             assert_current_path no_changes_needed_page_edition_path(@in_review_edition.id)
@@ -4226,7 +4721,8 @@ class EditionEditTest < IntegrationTest
         context "user does not have required permissions" do
           setup do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_draft_edition
+            @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+            visit edition_path(@draft_edition)
           end
 
           should "not show 'Edit' link when user is not govuk editor or welsh editor" do
@@ -4239,7 +4735,8 @@ class EditionEditTest < IntegrationTest
 
           should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_draft_edition
+            @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+            visit edition_path(@draft_edition)
 
             within :css, ".editions__edit__summary" do
               within all(".govuk-summary-list__row")[0] do
@@ -4253,7 +4750,8 @@ class EditionEditTest < IntegrationTest
           %i[published archived scheduled_for_publishing].each do |state|
             context "when state is '#{state}'" do
               setup do
-                send "visit_#{state}_edition"
+                edition = FactoryBot.create(:edition, state)
+                visit edition_path(edition)
               end
 
               should "not show 'Edit' link" do
@@ -4269,7 +4767,8 @@ class EditionEditTest < IntegrationTest
           %i[draft amends_needed in_review fact_check_received fact_check ready].each do |state|
             context "when state is '#{state}'" do
               setup do
-                send "visit_#{state}_edition"
+                edition = FactoryBot.create(:edition, state)
+                visit edition_path(edition)
                 click_link("Admin")
               end
 
@@ -4295,7 +4794,8 @@ class EditionEditTest < IntegrationTest
 
           context "edit assignee page" do
             setup do
-              visit_draft_edition
+              @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+              visit edition_path(@draft_edition)
               within :css, ".editions__edit__summary" do
                 within all(".govuk-summary-list__row")[0] do
                   click_link("Edit")
@@ -4342,10 +4842,18 @@ class EditionEditTest < IntegrationTest
       end
 
       context "edit 2i reviewer link" do
+        setup do
+          @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+          @in_review_edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: @govuk_requester.id,
+          )
+        end
+
         context "user does not have required permissions" do
           setup do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
           end
 
           should "not show 'Edit' link when user is not govuk editor or welsh editor" do
@@ -4358,7 +4866,7 @@ class EditionEditTest < IntegrationTest
 
           should "not show 'Edit' link when user is welsh editor and edition is not welsh" do
             login_as(FactoryBot.create(:user, :welsh_editor, name: "Stub User"))
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
 
             within :css, ".editions__edit__summary" do
               within all(".govuk-summary-list__row")[3] do
@@ -4370,7 +4878,7 @@ class EditionEditTest < IntegrationTest
 
         context "user has required permissions" do
           should "show 'Edit' link" do
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
 
             within :css, ".editions__edit__summary" do
               within all(".govuk-summary-list__row")[3] do
@@ -4380,7 +4888,7 @@ class EditionEditTest < IntegrationTest
           end
 
           should "navigate to edit 2i reviewer page when 'Edit' link is clicked" do
-            visit_in_review_edition
+            visit edition_path(@in_review_edition)
 
             within :css, ".editions__edit__summary" do
               within all(".govuk-summary-list__row")[3] do
@@ -4461,7 +4969,8 @@ class EditionEditTest < IntegrationTest
         context "when show_link_to_content_block_manager? is false" do
           setup do
             @test_strategy.switch!(:show_link_to_content_block_manager, false)
-            visit_draft_edition
+            @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+            visit edition_path(@draft_edition)
           end
 
           should "not show the content block guidance" do
@@ -4476,12 +4985,38 @@ class EditionEditTest < IntegrationTest
 
           %w[draft ready published archived].each do |state|
             should "show the content block guidance with content in #{state} state" do
-              visit_transaction_edition(state: state)
+              @transaction_edition = FactoryBot.create(
+                :transaction_edition,
+                title: "Edit page title",
+                state: state,
+                overview: "metatags",
+                in_beta: true,
+                introduction: "Transaction introduction",
+                more_information: "Transaction more information",
+                need_to_know: "Transaction need to",
+                link: "https://continue.com",
+                will_continue_on: "To be continued...",
+                alternate_methods: "Method A or B",
+                publish_at: nil,
+              )
+              visit edition_path(@transaction_edition)
+
               assert page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
             end
 
             should "not show the content block guidance when content type has no GOVSPEAK field in #{state} state" do
-              visit_completed_transaction_edition(state: state)
+              @completed_transaction_edition = FactoryBot.create(
+                :completed_transaction_edition,
+                title: "Edit page title",
+                overview: "metatags",
+                state: state,
+                body: "completed transaction body",
+                presentation_toggles: { promotion_choice: { choice: "none", url: "", opt_in_url: "", opt_out_url: "" } },
+                in_beta: true,
+                publish_at: nil,
+              )
+              visit edition_path(@completed_transaction_edition)
+
               assert_not page.has_text?("Use Content Block Manager (opens in new tab) to create, edit and use standardised content across GOV.UK")
             end
           end
@@ -4491,7 +5026,8 @@ class EditionEditTest < IntegrationTest
       context "'Publish' button" do
         should "show the 'Publish' button if user has govuk_editor permission" do
           login_as(@govuk_editor)
-          visit_ready_edition
+          @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+          visit edition_path(@ready_edition)
 
           assert page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
         end
@@ -4507,7 +5043,8 @@ class EditionEditTest < IntegrationTest
 
         should "not show the 'Publish' button if the user does not have permissions" do
           login_as(FactoryBot.create(:user, name: "Stub User"))
-          visit_ready_edition
+          @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
+          visit edition_path(@ready_edition)
 
           assert_not page.has_link?("Publish", href: send_to_publish_page_edition_path(@ready_edition))
         end
@@ -4517,7 +5054,7 @@ class EditionEditTest < IntegrationTest
         %i[ready fact_check_received].each do |state|
           should "show the 'Fact check' button on '#{state}' if user has govuk_editor permission" do
             login_as(@govuk_editor)
-            @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+            @edition = FactoryBot.create(:edition, state)
             visit edition_path(@edition)
 
             assert page.has_link?("Fact check", href: send_to_fact_check_page_edition_path(@edition))
@@ -4525,7 +5062,7 @@ class EditionEditTest < IntegrationTest
 
           should "show the 'Fact check' button on '#{state}' for welsh edition if user has welsh_editor permission" do
             login_as_welsh_editor
-            welsh_edition = FactoryBot.create(:edition, :welsh, state: state.to_s)
+            welsh_edition = FactoryBot.create(:edition, :welsh, state)
             visit edition_path(welsh_edition)
             assert @user.has_editor_permissions?(welsh_edition)
 
@@ -4534,7 +5071,7 @@ class EditionEditTest < IntegrationTest
 
           should "not show the 'Fact check' button on '#{state}' if the user does not have permissions" do
             login_as(FactoryBot.create(:user, name: "Stub User"))
-            @edition = FactoryBot.create(:edition, title: "Edit page title", state: state.to_s)
+            @edition = FactoryBot.create(:edition, state)
             visit edition_path(@edition)
 
             assert page.has_no_link?("Fact check", href: "#")
@@ -4545,7 +5082,8 @@ class EditionEditTest < IntegrationTest
 
     context "Related external links tab" do
       setup do
-        visit_draft_edition
+        @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+        visit edition_path(@draft_edition)
         click_link "Related external links"
       end
 
@@ -4557,7 +5095,8 @@ class EditionEditTest < IntegrationTest
 
       context "Document has no external links when page loads" do
         setup do
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           click_link "Related external links"
         end
 
@@ -4572,7 +5111,8 @@ class EditionEditTest < IntegrationTest
 
       context "Document already has external links when page loads" do
         setup do
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
           click_link "Related external links"
         end
@@ -4597,7 +5137,8 @@ class EditionEditTest < IntegrationTest
 
       context "User adds a new external link and saves" do
         setup do
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           click_link "Related external links"
         end
 
@@ -4628,7 +5169,8 @@ class EditionEditTest < IntegrationTest
 
       context "User deletes an external link and saves" do
         setup do
-          visit_draft_edition
+          @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
+          visit edition_path(@draft_edition)
           @draft_edition.artefact.external_links = [ArtefactExternalLink.build({ title: "Link One", url: "https://gov.uk" })]
           click_link "Related external links"
         end
@@ -4652,7 +5194,15 @@ class EditionEditTest < IntegrationTest
 
   context "Resend fact check email page" do
     should "render the 'Resend fact check email' page" do
-      create_fact_check_edition
+      @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @fact_check_edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
       visit resend_fact_check_email_page_edition_path(@fact_check_edition)
 
       assert page.has_content?(@fact_check_edition.title)
@@ -4668,7 +5218,11 @@ class EditionEditTest < IntegrationTest
 
   context "Request amendments page" do
     should "save comment to edition history" do
-      create_in_review_edition
+      @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+      @in_review_edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
 
       visit request_amendments_page_edition_path(@in_review_edition)
       fill_in "Amendment details (optional)", with: "Please make these changes"
@@ -4680,7 +5234,11 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show success message and redirect back to the edit tab on submit" do
-      create_in_review_edition
+      @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+      @in_review_edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
       visit request_amendments_page_edition_path(@in_review_edition)
       click_on "Request amendments"
 
@@ -4694,7 +5252,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "populate comment box with submitted comment when there is an error" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
         login_as(@in_review_edition.latest_status_action.requester)
 
         visit request_amendments_page_edition_path(@in_review_edition)
@@ -4709,7 +5271,11 @@ class EditionEditTest < IntegrationTest
 
   context "No changes needed page" do
     should "save comment to edition history" do
-      create_in_review_edition
+      @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+      @in_review_edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
 
       visit no_changes_needed_page_edition_path(@in_review_edition)
       fill_in "Comment (optional)", with: "Looks great"
@@ -4721,7 +5287,11 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show success message and redirect back to the edit tab on submit" do
-      create_in_review_edition
+      @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+      @in_review_edition.actions.create!(
+        request_type: Action::REQUEST_AMENDMENTS,
+        requester_id: @govuk_requester.id,
+      )
       visit no_changes_needed_page_edition_path(@in_review_edition)
       click_button "Approve 2i"
 
@@ -4735,7 +5305,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "populate comment box with submitted comment when there is an error" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
         login_as(@in_review_edition.latest_status_action.requester)
 
         visit no_changes_needed_page_edition_path(@in_review_edition)
@@ -4750,7 +5324,15 @@ class EditionEditTest < IntegrationTest
 
   context "Approve fact check page" do
     should "save comment to edition history" do
-      create_fact_check_received_edition
+      @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @fact_check_received_edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
 
       visit approve_fact_check_page_edition_path(@fact_check_received_edition)
       fill_in "Comment (optional)", with: "Looks great"
@@ -4762,7 +5344,15 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show success message and redirect back to the edit tab on submit" do
-      create_fact_check_received_edition
+      @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
+      FactoryBot.create(
+        :action,
+        requester: @govuk_editor,
+        request_type: Action::SEND_FACT_CHECK,
+        edition: @fact_check_received_edition,
+        email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+        customised_message: "The customised message",
+      )
 
       visit approve_fact_check_page_edition_path(@fact_check_received_edition)
       click_button "Approve fact check"
@@ -4777,7 +5367,15 @@ class EditionEditTest < IntegrationTest
       end
 
       should "populate comment box with submitted comment when there is an error" do
-        create_fact_check_received_edition
+        @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
+        FactoryBot.create(
+          :action,
+          requester: @govuk_editor,
+          request_type: Action::SEND_FACT_CHECK,
+          edition: @fact_check_received_edition,
+          email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
+          customised_message: "The customised message",
+        )
         visit approve_fact_check_page_edition_path(@fact_check_received_edition)
 
         @fact_check_received_edition.state = "ready"
@@ -4800,7 +5398,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "render the 'Skip review' page" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
 
         visit skip_review_page_edition_path(@in_review_edition)
 
@@ -4813,7 +5415,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "save comment to edition history" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
 
         visit skip_review_page_edition_path(@in_review_edition)
         fill_in "Comment (optional)", with: "Looks great"
@@ -4825,7 +5431,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "show success message and redirect back to the edit tab on submit" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
         visit skip_review_page_edition_path(@in_review_edition)
         click_button "Skip review"
 
@@ -4840,7 +5450,11 @@ class EditionEditTest < IntegrationTest
       end
 
       should "populate comment box with submitted comment when there is an error" do
-        create_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
 
         visit skip_review_page_edition_path(@in_review_edition)
         fill_in "Comment (optional)", with: "No review required"
@@ -4854,7 +5468,7 @@ class EditionEditTest < IntegrationTest
 
   context "Send to 2i page" do
     setup do
-      create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
       visit send_to_2i_page_edition_path(@draft_edition)
     end
 
@@ -4894,7 +5508,12 @@ class EditionEditTest < IntegrationTest
       context "current user is also the requester" do
         setup do
           login_as(@govuk_requester)
-          visit_in_review_edition("request_review", @govuk_requester)
+          @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+          @in_review_edition.actions.create!(
+            request_type: Action::REQUEST_REVIEW,
+            requester_id: @govuk_requester.id,
+          )
+          visit edition_path(@in_review_edition)
         end
 
         should "display Save button and preview link" do
@@ -4907,7 +5526,12 @@ class EditionEditTest < IntegrationTest
         end
 
         should "not show 'Send to 2i' link as edition already in 'in review' state" do
-          visit_in_review_edition
+          @in_review_edition.actions.create!(
+            request_type: Action::REQUEST_AMENDMENTS,
+            requester_id: @govuk_requester.id,
+          )
+          visit edition_path(@in_review_edition)
+
           assert page.has_no_link?("Send to 2i")
         end
       end
@@ -4915,7 +5539,12 @@ class EditionEditTest < IntegrationTest
       context "current user is not the requester" do
         setup do
           login_as(@govuk_editor)
-          visit_in_review_edition("request_review", @govuk_requester)
+          @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+          @in_review_edition.actions.create!(
+            request_type: Action::REQUEST_REVIEW,
+            requester_id: @govuk_requester.id,
+          )
+          visit edition_path(@in_review_edition)
         end
 
         should "display Save button and preview link" do
@@ -4932,7 +5561,12 @@ class EditionEditTest < IntegrationTest
     context "user does not have editor permissions" do
       setup do
         login_as(FactoryBot.create(:user, name: "Non Editor"))
-        visit_in_review_edition
+        @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
+        @in_review_edition.actions.create!(
+          request_type: Action::REQUEST_AMENDMENTS,
+          requester_id: @govuk_requester.id,
+        )
+        visit edition_path(@in_review_edition)
       end
 
       should "not show any editable components" do
@@ -4953,7 +5587,7 @@ class EditionEditTest < IntegrationTest
 
   context "Send to Fact check page" do
     should "render the page" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       assert page.has_text?(@ready_edition.title)
@@ -4967,7 +5601,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "redirect to edit tab when Cancel button is pressed on Send to Fact check page" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       click_link("Cancel")
@@ -4976,7 +5610,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "redirect back to the edit tab on submit and show success message" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
@@ -4988,7 +5622,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "redirect back to the edit tab and show success message when pre-filled customised message is used" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
       assert page.has_text?("The GOV.UK Content Team made the changes because")
 
@@ -5000,7 +5634,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "display an error message if an email address is invalid" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       fill_in "Email addresses", with: "fact-checker-one.com"
@@ -5012,7 +5646,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "display an error message if customised message is empty" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       fill_in "Email addresses", with: "fact-checker-one@example.com"
@@ -5024,7 +5658,7 @@ class EditionEditTest < IntegrationTest
     end
 
     should "keep user inputs when there is an error" do
-      create_ready_edition
+      @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
       visit send_to_fact_check_page_edition_path(@ready_edition)
 
       fill_in "Email addresses", with: "fact-checker-one.com"
@@ -5040,7 +5674,7 @@ class EditionEditTest < IntegrationTest
 
   context "Send to publish page" do
     should "save comment to edition history" do
-      create_scheduled_for_publishing_edition
+      @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
 
       visit send_to_publish_page_edition_path(@scheduled_for_publishing_edition)
       fill_in "Comment (optional)", with: "Looks great"
@@ -5052,9 +5686,9 @@ class EditionEditTest < IntegrationTest
     end
 
     should "populate comment box with submitted comment when there is an error" do
-      edition = create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
 
-      visit send_to_publish_page_edition_path(edition)
+      visit send_to_publish_page_edition_path(@draft_edition)
       fill_in "Comment (optional)", with: "Publish a go-go!"
       click_on "Send to publish"
 
@@ -5063,9 +5697,9 @@ class EditionEditTest < IntegrationTest
     end
 
     should "show an error when the edition is not in a state that can be published from" do
-      edition = create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
 
-      visit send_to_publish_page_edition_path(edition)
+      visit send_to_publish_page_edition_path(@draft_edition)
       click_on "Send to publish"
 
       assert page.has_content?("Edition is not in a state where it can be published")
@@ -5074,7 +5708,7 @@ class EditionEditTest < IntegrationTest
 
   context "Cancel scheduled publishing page" do
     should "save comment to edition history" do
-      create_scheduled_for_publishing_edition
+      @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
 
       visit cancel_scheduled_publishing_page_edition_path(@scheduled_for_publishing_edition)
       fill_in "Comment (optional)", with: "Looks great"
@@ -5086,9 +5720,9 @@ class EditionEditTest < IntegrationTest
     end
 
     should "populate comment box with submitted comment when there is an error" do
-      edition = create_draft_edition
+      @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
 
-      visit cancel_scheduled_publishing_page_edition_path(edition)
+      visit cancel_scheduled_publishing_page_edition_path(@draft_edition)
       fill_in "Comment (optional)", with: "Forget about it"
       click_on "Cancel scheduled publishing"
 
@@ -5124,238 +5758,6 @@ class EditionEditTest < IntegrationTest
   end
 
 private
-
-  def create_draft_edition
-    @draft_edition = FactoryBot.create(:edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, body: "The body")
-  end
-
-  def visit_draft_edition
-    create_draft_edition
-    visit edition_path(@draft_edition)
-  end
-
-  def create_draft_place_edition
-    @draft_place_edition = FactoryBot.create(:place_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, place_type: "The place type", introduction: "some intro", more_information: "some more info", need_to_know: "some need to know")
-  end
-
-  def create_draft_local_transaction_edition
-    @local_service = FactoryBot.create(:local_service, lgsl_code: 9012, description: "Whatever", providing_tier: %w[district unitary county])
-    scotland_availability = FactoryBot.build(:scotland_availability, authority_type: "devolved_administration_service", alternative_url: "https://www.google.com")
-    wales_availability = FactoryBot.build(:wales_availability, authority_type: "unavailable")
-
-    @draft_local_transcation_edition = FactoryBot.create(:local_transaction_edition, title: "Edit page title", state: "draft", in_beta: 1, lgsl_code: @local_service.lgsl_code,
-                                                                                     panopticon_id: FactoryBot.create(:artefact).id, lgil_code: 23, cta_text: "Find your local council", introduction: "Test introduction", more_information: "some more info",
-                                                                                     need_to_know: "some need to know", before_results: "before results", after_results: "after results", scotland_availability:, wales_availability:)
-  end
-
-  def create_draft_guide_edition
-    @draft_guide_edition = FactoryBot.create(:guide_edition, title: "Edit page title", state: "draft", overview: "metatags", in_beta: 1, hide_chapter_navigation: 1)
-  end
-
-  def create_draft_guide_edition_with_parts(state: "draft")
-    @draft_guide_edition_with_parts = FactoryBot.create(:guide_edition_with_two_parts, title: "Edit page title", state: state, overview: "metatags", in_beta: 1, hide_chapter_navigation: 1, panopticon_id: FactoryBot.create(:artefact).id, publish_at: Time.zone.now + 1.hour)
-  end
-
-  def visit_draft_place_edition
-    create_draft_place_edition
-    visit edition_path(@draft_place_edition)
-  end
-
-  def visit_draft_local_transaction_edition
-    create_draft_local_transaction_edition
-    visit edition_path(@draft_local_transcation_edition)
-  end
-
-  def visit_draft_guide_edition
-    create_draft_guide_edition
-    visit edition_path(@draft_guide_edition)
-  end
-
-  def visit_draft_guide_edition_with_parts(state: "draft")
-    create_draft_guide_edition_with_parts(state: state)
-    visit edition_path(@draft_guide_edition_with_parts)
-  end
-
-  def create_completed_transaction_edition(state: "draft", in_beta: true, choice: "", url: "", opt_in_url: "", opt_out_url: "")
-    @completed_transaction_edition = FactoryBot.create(
-      :completed_transaction_edition,
-      title: "Edit page title",
-      overview: "metatags",
-      state: state,
-      body: "completed transaction body",
-      presentation_toggles: { promotion_choice: { choice: choice, url: url, opt_in_url: opt_in_url, opt_out_url: opt_out_url } },
-      in_beta: in_beta,
-      publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil,
-    )
-  end
-
-  def visit_completed_transaction_edition(state: "draft", in_beta: true, choice: "none", url: "", opt_in_url: "", opt_out_url: "")
-    create_completed_transaction_edition(state: state, in_beta: in_beta, choice: choice, url: url, opt_in_url: opt_in_url, opt_out_url: opt_out_url)
-    visit edition_path(@completed_transaction_edition)
-  end
-
-  def create_transaction_edition(state: "draft", in_beta: true)
-    @transaction_edition = FactoryBot.create(
-      :transaction_edition,
-      title: "Edit page title",
-      state: state,
-      overview: "metatags",
-      in_beta: in_beta,
-      introduction: "Transaction introduction",
-      more_information: "Transaction more information",
-      need_to_know: "Transaction need to",
-      link: "https://continue.com",
-      will_continue_on: "To be continued...",
-      alternate_methods: "Method A or B",
-      publish_at: state == "scheduled_for_publishing" ? Time.zone.now + 1.hour : nil,
-    )
-  end
-
-  def visit_transaction_edition(state: "draft", in_beta: true)
-    create_transaction_edition(state: state, in_beta: in_beta)
-    visit edition_path(@transaction_edition)
-  end
-
-  def create_empty_edition(type)
-    @empty_edition = FactoryBot.create(
-      type,
-      title: "Edit page title",
-    )
-  end
-
-  def visit_empty_edition(type)
-    create_empty_edition(type)
-    visit edition_path(@empty_edition)
-  end
-
-  def visit_published_edition
-    create_published_edition
-    visit edition_path(@published_edition)
-  end
-
-  def create_fact_check_edition(requester = @govuk_editor)
-    @fact_check_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check")
-
-    FactoryBot.create(
-      :action,
-      requester: requester,
-      request_type: Action::SEND_FACT_CHECK,
-      edition: @fact_check_edition,
-      email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-      customised_message: "The customised message",
-    )
-  end
-
-  def create_fact_check_received_edition(requester = @govuk_editor)
-    @fact_check_received_edition = FactoryBot.create(:edition, :fact_check_received, title: "Edit page title")
-
-    FactoryBot.create(
-      :action,
-      requester: requester,
-      request_type: Action::SEND_FACT_CHECK,
-      edition: @fact_check_received_edition,
-      email_addresses: "fact-checker-one@example.com, fact-checker-two@example.com",
-      customised_message: "The customised message",
-    )
-  end
-
-  def visit_fact_check_edition
-    create_fact_check_edition
-    visit edition_path(@fact_check_edition)
-  end
-
-  def visit_scheduled_for_publishing_edition
-    create_scheduled_for_publishing_edition
-    visit edition_path(@scheduled_for_publishing_edition)
-  end
-
-  def create_scheduled_for_publishing_edition
-    @scheduled_for_publishing_edition = FactoryBot.create(:edition, title: "Edit page title", state: "scheduled_for_publishing", publish_at: Time.zone.now + 1.hour)
-  end
-
-  def visit_archived_edition
-    @archived_edition = FactoryBot.create(:edition, title: "Edit page title", state: "archived")
-    visit edition_path(@archived_edition)
-  end
-
-  def visit_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
-    create_in_review_edition(action, requester)
-
-    visit edition_path(@in_review_edition)
-  end
-
-  def create_in_review_edition(action = Action::REQUEST_AMENDMENTS, requester = @govuk_requester)
-    @in_review_edition = FactoryBot.create(:edition, title: "Edit page title", state: "in_review", review_requested_at: 1.hour.ago)
-
-    @in_review_edition.actions.create!(
-      request_type: action,
-      requester_id: requester.id,
-    )
-  end
-
-  def visit_amends_needed_edition
-    @amends_needed_edition = FactoryBot.create(:edition, title: "Edit page title", state: "amends_needed")
-    visit edition_path(@amends_needed_edition)
-  end
-
-  def visit_fact_check_received_edition
-    @fact_check_received_edition = FactoryBot.create(:edition, title: "Edit page title", state: "fact_check_received")
-    visit edition_path(@fact_check_received_edition)
-  end
-
-  def create_ready_edition
-    @ready_edition = FactoryBot.create(:answer_edition, title: "Ready edition", state: "ready")
-  end
-
-  def visit_ready_edition
-    create_ready_edition
-    visit edition_path(@ready_edition)
-  end
-
-  def visit_new_edition_of_published_edition
-    create_published_edition
-    new_edition = FactoryBot.create(
-      :edition,
-      panopticon_id: @published_edition.artefact.id,
-      state: "draft",
-      change_note: "The change note",
-    )
-    visit edition_path(new_edition)
-  end
-
-  def create_published_edition
-    @published_edition = FactoryBot.create(
-      :edition,
-      title: "Edit page title",
-      panopticon_id: FactoryBot.create(
-        :artefact,
-        slug: "can-i-get-a-driving-licence",
-      ).id,
-      state: "published",
-      slug: "can-i-get-a-driving-licence",
-    )
-  end
-
-  def visit_old_edition_of_published_edition
-    published_edition = FactoryBot.create(
-      :edition,
-      panopticon_id: FactoryBot.create(
-        :artefact,
-        slug: "can-i-get-a-driving-licence",
-      ).id,
-      state: "published",
-      sibling_in_progress: 2,
-    )
-
-    FactoryBot.create(
-      :edition,
-      panopticon_id: published_edition.artefact.id,
-      state: "draft",
-      version_number: 2,
-      change_note: "The change note",
-    )
-    visit edition_path(published_edition)
-  end
 
   def create_important_note_for_edition(edition, note_text)
     FactoryBot.create(
